@@ -92,7 +92,7 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
     }
 
     isSticked(): boolean {
-        return this._$owner.isStickyHeader() && !this.isHiddenGroup();
+        return this._$owner.isStickyGroup() && !this.isHiddenGroup();
     }
 
     getStickyColumn(): GridLadderUtil.IStickyColumn {

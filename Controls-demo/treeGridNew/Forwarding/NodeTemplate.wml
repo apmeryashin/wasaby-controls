@@ -1,0 +1,16 @@
+<ws:partial template="Controls/grid:ColumnTemplate" itemData="{{itemData}}">
+   <ws:contentTemplate>
+      <ws:if data="{{item.contents.nodeType === 'group'}}">
+         <Controls.scroll:IntersectionObserverContainer
+            threshold="{{threshold}}"
+            data="{{item.contents}}"
+            rootMargin="{{rootMargin}}"
+         >
+            <b>{{ item.contents.name }}</b>
+         </Controls.scroll:IntersectionObserverContainer>
+      </ws:if>
+      <ws:else>
+         {{item.contents.name}}
+      </ws:else>
+   </ws:contentTemplate>
+</ws:partial>
