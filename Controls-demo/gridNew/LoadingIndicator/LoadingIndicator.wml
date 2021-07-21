@@ -3,7 +3,9 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Up/Index' }}">
-            <a href="{{content.href}}">Подгрузка вверх</a>
+            <a href="{{content.href}}">
+                <Controls.heading:Title caption="Подгрузка вверх" fontSize="2xl"/>
+            </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Up.Index/>
     </div>
@@ -12,7 +14,9 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Down/Index' }}">
-            <a href="{{content.href}}">Подгрузка вниз</a>
+            <a href="{{content.href}}">
+                <Controls.heading:Title caption="Подгрузка вниз" fontSize="2xl"/>
+            </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Down.Index/>
     </div>
@@ -21,7 +25,9 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Both/Index' }}">
-            <a href="{{content.href}}">Подгрузка в обе стороны</a>
+            <a href="{{content.href}}">
+                <Controls.heading:Title caption="Подгрузка в обе стороны" fontSize="2xl"/>
+            </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Both.Index/>
     </div>
@@ -30,7 +36,9 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/LoadingIndicator/Middle/Index' }}">
-            <a href="{{content.href}}">Ромашка по центру</a>
+            <a href="{{content.href}}">
+                <Controls.heading:Title caption="Ромашка по центру" fontSize="2xl"/>
+            </a>
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Middle.Index/>
     </div>

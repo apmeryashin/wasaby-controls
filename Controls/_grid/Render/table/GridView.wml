@@ -103,11 +103,6 @@
                         style="{{ _options.style }}"
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         </ws:if>
-
-        <!--Global loading indicator-->
-        <ws:partial if="{{ _listModel.getGlobalIndicator() }}"
-                    template="{{_listModel.getGlobalIndicator().getTemplate()}}"
-                    item="{{_listModel.getGlobalIndicator()}}"/>
     </table>
 </ws:template>
 
@@ -152,4 +147,9 @@
                 on:touchmove="_onColumnScrollDragScrolling('touch')"
                 on:mouseup="_onColumnScrollStopDragScrolling('mouse')"
                 on:touchend="_onColumnScrollStopDragScrolling('touch')"/>
+
+    <!--Global loading indicator-->
+    <ws:partial if="{{ _listModel.getGlobalIndicator() }}"
+                template="{{_listModel.getGlobalIndicator().getTemplate()}}"
+                item="{{_listModel.getGlobalIndicator()}}"/>
 </div>
