@@ -34,5 +34,14 @@
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Both.HasHeaderAndFooter.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/gridNew/LoadingIndicator/Both/HasHeaderAndResults/Index' }}">
+            <a href="{{content.href}}">С заголовком и результатами</a>
+        </Router.router:Reference>
+        <Controls-demo.gridNew.LoadingIndicator.Both.HasHeaderAndResults.Index/>
+    </div>
 </div>
 
