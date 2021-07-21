@@ -12,6 +12,8 @@ export enum EIndicatorState {
 export interface IOptions extends ICollectionOptions<null> {
     position: TIndicatorPosition;
     state: TIndicatorState;
+    portionedSearchTemplate: TemplateFunction|string;
+    continueSearchTemplate: TemplateFunction|string;
 }
 
 export default class Indicator extends CollectionItem<null> {

@@ -6,6 +6,7 @@ import LoadingTrigger, {
     TLoadingTriggerPosition,
     IOptions as ILoadingTriggerOptions, DEFAULT_TOP_TRIGGER_OFFSET, DEFAULT_BOTTOM_TRIGGER_OFFSET,
 } from './LoadingTrigger';
+import {TemplateFunction} from "UI/Base";
 
 export interface ITriggerOffset {
     top: number;
@@ -19,6 +20,9 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
 
     protected _topLoadingTrigger: LoadingTrigger = null;
     protected _bottomLoadingTrigger: LoadingTrigger = null;
+
+    protected _$portionedSearchTemplate: TemplateFunction|string;
+    protected _$continueSearchTemplate: TemplateFunction|string;
 
     // region Indicator
 
@@ -73,7 +77,9 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         const indicator = this.createItem({
             itemModule: 'Controls/display:Indicator',
             position,
-            state
+            state,
+            portionedSearchTemplate: this._$portionedSearchTemplate,
+            continueSearchTemplate: this._$continueSearchTemplate
         });
 
         const indicatorName = this._getIndicatorName(position);
@@ -173,4 +179,6 @@ Object.assign(IndicatorsMixin.prototype, {
     _globalIndicator: null,
     _topTrigger: null,
     _bottomTrigger: null,
+    _$portionedSearchTemplate: 'Controls/baseList:LoadingIndicatorTemplate',
+    _$continueSearchTemplate: 'Controls/baseList:ContinueSearchTemplate'
 });
