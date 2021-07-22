@@ -168,8 +168,16 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 
 .controls-BaseControl__portionedSearch {
    position: sticky;
-   padding-top: var(--offset_s);
+}
+
+.controls-BaseControl__portionedSearch__state-top {
+   top: var(--scrollpaging_offset-vertical_list);
+   padding-bottom: var(--offset_s);
+}
+
+.controls-BaseControl__portionedSearch__state-bottom {
    bottom: var(--scrollpaging_offset-vertical_list);
+   padding-top: var(--offset_s);
 }
 
 // По стандарту индикатор загрузки данных вниз должен "прилипать" к нижней границе вьюпорта списка.

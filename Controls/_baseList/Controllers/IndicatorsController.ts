@@ -1,8 +1,12 @@
 import {
-    Collection, EIndicatorState, ITriggerOffset,
-    DEFAULT_BOTTOM_TRIGGER_OFFSET, DEFAULT_TOP_TRIGGER_OFFSET
+    Collection,
+    DEFAULT_BOTTOM_TRIGGER_OFFSET,
+    DEFAULT_TOP_TRIGGER_OFFSET,
+    EIndicatorState,
+    ITriggerOffset
 } from 'Controls/display';
 import {RecordSet} from 'Types/collection';
+import {TIndicatorState} from "Controls/_display/Indicator";
 
 export interface IIndicatorsControllerOptions {
     model: Collection;
@@ -19,6 +23,7 @@ export interface IIndicatorsControllerOptions {
 }
 
 const INDICATOR_DELAY = 2000;
+export const INDICATOR_HEIGHT = 48;
 
 const SEARCH_MAX_DURATION = 30 * 1000;
 const SEARCH_CONTINUED_MAX_DURATION = 2 * 60 * 1000;
@@ -35,7 +40,7 @@ type TPortionedSearchDirection = 'top'|'bottom';
 
 export const DIRECTION_COMPATIBILITY = {
     'top': 'up',
-    'up': 'down',
+    'up': 'top',
     'bottom': 'down',
     'down': 'bottom',
 }
@@ -104,7 +109,8 @@ export default class IndicatorsController {
             return;
         }
 
-        this._model.displayIndicator('top', EIndicatorState.Loading);
+        const indicatorState = this._getLoadingIndicatorState();
+        this._model.displayIndicator('top', indicatorState);
 
         if (scrollToFirstItem) {
             this._options.scrollToFirstItem(() => this._model.displayLoadingTopTrigger());
@@ -124,7 +130,7 @@ export default class IndicatorsController {
             return;
         }
 
-        const indicatorState = this._isPortionedSearch() ? EIndicatorState.PortionedSearch : EIndicatorState.Loading;
+        const indicatorState = this._getLoadingIndicatorState();
         this._model.displayIndicator('bottom', indicatorState);
     }
 
@@ -233,6 +239,19 @@ export default class IndicatorsController {
             clearTimeout(this._displayIndicatorTimer);
             this._displayIndicatorTimer = null;
         }
+    }
+
+    private _getLoadingIndicatorState(): TIndicatorState {
+        let state = EIndicatorState.Loading;
+
+        if (this.isPortionedSearchInProgress()) {
+            state = EIndicatorState.PortionedSearch;
+        }
+        if (this._searchState === SEARCH_STATES.STOPPED) {
+            state = EIndicatorState.ContinueSearch;
+        }
+
+        return state;
     }
 
     // endregion LoadingIndicator

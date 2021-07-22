@@ -109,8 +109,9 @@ import {IMovableList} from './interface/IMovableList';
 import {saveConfig} from 'Controls/Application/SettingsController';
 import IndicatorsController, {
     DIRECTION_COMPATIBILITY,
-    IIndicatorsControllerOptions
-} from "Controls/_baseList/Controllers/IndicatorsController";
+    IIndicatorsControllerOptions,
+    INDICATOR_HEIGHT
+} from './Controllers/IndicatorsController';
 
 //#endregion
 
@@ -6307,8 +6308,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void): void {
         const scrollAndShowTrigger = () => {
-            const scrollResult = this._scrollToFirstItem();
-            scrollResult.then(showTriggerCallback);
+            if (this._scrollTop) {
+                // если уже список проскроллен, то корректируем scrollTop на высоту уромашки, чтобы не было прыжков
+                this._notify('doScroll', [this._scrollTop + INDICATOR_HEIGHT], { bubbling: true });
+                showTriggerCallback();
+            } else {
+                const scrollResult = this._scrollToFirstItem();
+                scrollResult.then(showTriggerCallback);
+            }
         }
 
         // Скроллить нужно после того как ромашка отрисуется, то есть на _afterRender

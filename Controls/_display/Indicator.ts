@@ -68,6 +68,7 @@ export default class Indicator extends CollectionItem<null> {
                 break;
             case "portioned-search":
                 classes += ' controls-BaseControl__indicator controls-BaseControl__portionedSearch';
+                classes += ` controls-BaseControl__portionedSearch__state-${this._$position}`;
                 break;
             case "continue-search":
                 classes += ' controls-BaseControl__continueSearch ws-justify-content-center';
