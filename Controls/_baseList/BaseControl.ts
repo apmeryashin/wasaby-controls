@@ -3375,7 +3375,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.createScrollController(self, newOptions);
         // scrollController зависит от indicatorsController и наоборот, поэтому после создания scrollController-а
         // нужно пересчитать индикаторы, т.к. именно они зависят от scrollController
-        self._recountIndicators('all', false, newOptions);
+        if (self._listViewModel) {
+            self._recountIndicators('all', false, newOptions);
+        }
 
         if (receivedState.errorConfig) {
             _private.showError(self, receivedState.errorConfig);
