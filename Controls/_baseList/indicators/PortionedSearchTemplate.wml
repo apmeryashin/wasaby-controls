@@ -1,4 +1,4 @@
-<div class="controls-BaseControl__indicator-content controls-BaseControl__portionedSearch-content">
+<div class="controls-BaseControl__loadingIndicator-content controls-BaseControl__portionedSearch-content">
   <div class="controls-BaseControl__loadingIndicatorImage"></div>
   <div class="ws-flexbox ws-flex-column">
      <div class="js-controls-BaseControl__abortSearch controls-BaseControl__abortSearch">

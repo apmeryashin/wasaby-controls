@@ -63,11 +63,11 @@ export default class Indicator extends CollectionItem<null> {
 
         switch (this._$state) {
             case "loading":
-                classes += ' controls-BaseControl__indicator';
+                classes += ' controls-BaseControl__loadingIndicator';
                 classes += ` controls-BaseControl__loadingIndicator__state-${this._$position}`;
                 break;
             case "portioned-search":
-                classes += ' controls-BaseControl__indicator controls-BaseControl__portionedSearch';
+                classes += ' controls-BaseControl__loadingIndicator controls-BaseControl__portionedSearch';
                 classes += ` controls-BaseControl__portionedSearch__state-${this._$position}`;
                 break;
             case "continue-search":
