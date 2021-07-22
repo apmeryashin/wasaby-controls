@@ -23,8 +23,12 @@ export default class extends MassAction {
     }
 
     onSelectionChanged(items, selection): void {
-        if (this.id === 'sum') {
-            this.visible = selection.selected.length > 1;
+        if (this._$id === 'sum') {
+          if (selection.selected.length > 1) {
+              this._$iconStyle = 'success';
+          } else {
+              this._$iconStyle = 'label'
+          }
         }
     }
 }

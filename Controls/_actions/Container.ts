@@ -6,7 +6,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
-import {Object as EventObject} from 'Env/Event';
+import {Object as EventObject} from "Env/Event";
 import {TKeySelection} from 'Controls/interface';
 
 interface IContainerOptions extends IControlOptions {
@@ -18,33 +18,29 @@ interface IContainerOptions extends IControlOptions {
     excludedKeys: TKeySelection;
 }
 
-export default class ActionsContainer extends Control<IContainerOptions> {
+export default class actionsContainer extends Control<IContainerOptions> {
     protected _template: TemplateFunction = template;
     protected _actionsCollection: ActionsCollection;
-    protected _operations: RecordSet;
+    protected _operations: IAction[];
     private _sourceController: SourceController;
 
     protected _beforeMount(options: IContainerOptions): void {
-        this._updateActions = this._updateActions.bind(this);
         this._subscribeCollectionChange(options._dataOptionsValue);
         this._actionsCollection = new ActionsCollection({
             items: options.items
         });
         this._actionsCollection.subscribe('toolbarConfigChanged', (event, items) => {
-            this._operations = new RecordSet({
-                keyProperty: 'id',
-                rawData: items
-            });
+            this._operations = items;
         });
     }
 
-    protected _beforeUpdate(newOptions: IContainerOptions): void {
+    protected _beforeUpdate(newOptions: IContainerOptions) {
         if (newOptions.selectedKeys !== this._options.selectedKeys ||
             newOptions.excludedKeys !== this._options.excludedKeys) {
             this._actionsCollection.selectionChange(newOptions._dataOptionsValue.items, {
                 selected: newOptions.selectedKeys,
                 excluded: newOptions.excludedKeys
-            });
+            })
         }
         if (newOptions.items !== this._options.items) {
             this._actionsCollection.update(newOptions);
@@ -64,17 +60,11 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     private _subscribeCollectionChange(dataContext): void {
         if (dataContext.sourceController) {
             this._sourceController = dataContext.sourceController;
-            this._sourceController.subscribe('itemsChanged', this._updateActions);
+            this._sourceController.subscribe('itemsChanged', this._updateActions.bind(this));
         }
     }
 
     private _updateActions(event: EventObject, items: RecordSet): void {
         this._actionsCollection.collectionChange(items);
-    }
-
-    protected _beforeUnmount(): void {
-        if (this._sourceController) {
-            this._sourceController.unsubscribe('itemsChanged', this._updateActions);
-        }
     }
 }

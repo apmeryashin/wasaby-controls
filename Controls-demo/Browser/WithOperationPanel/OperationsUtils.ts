@@ -9,21 +9,7 @@ export function getPanelData() {
             name: 'Печать'
         },
         parent: null
-    },
-        {
-            id: 'sum',
-            '@parent': false,
-            icon: 'icon-Sum',
-            iconStyle: 'label',
-            visible: false,
-            title: 'Суммировать',
-            actionName: 'Controls-demo/Browser/WithOperationPanel/Action',
-            actionOptions: {
-                name: 'Суммирование'
-            },
-            parent: null
-        },
-        {
+    }, {
         id: 'save',
         '@parent': true,
         icon: 'icon-Save',
