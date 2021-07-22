@@ -36,7 +36,8 @@ import 'css!Controls/search';
  * Контрол "Разворачиваемый поиск". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
  *
  * @extends UI/Base:Control
- * @mixes Controls/search:Input
+ * @implements Controls/search:Input
+ * @implements Controls/search:IExpandableInput
  * @public
  * @demo Controls-demo/Search/ExpandableInput/Index
  * @author Мельникова Е.А.
