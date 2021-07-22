@@ -3376,7 +3376,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // scrollController зависит от indicatorsController и наоборот, поэтому после создания scrollController-а
         // нужно пересчитать индикаторы, т.к. именно они зависят от scrollController
         if (self._listViewModel) {
-            self._recountIndicators('all', false, newOptions);
+            const changed = self._indicatorsController.recountResetTriggerOffsets();
+            if (changed) {
+                self._updateScrollController();
+            }
         }
 
         if (receivedState.errorConfig) {
