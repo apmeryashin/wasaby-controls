@@ -1,42 +1,56 @@
-<ws:template name="tileView">
-   <Controls.treeTile:View
-      displayProperty="title"
-      parentProperty="parent"
-      nodeProperty="parent@"
-      multiSelectVisibility="visible"
-      bind:selectedKeys="_selectedKeys"
-      tileMode="static"
-      itemActions="{{_itemActions}}"
-      tileWidth="410"
-      imageProperty="image"
-      keyProperty="id"
-      roundBorder="{{roundBorder}}"
-      source="{{_viewSource}}">
-      <ws:itemTemplate>
-         <ws:partial
-            template="Controls/tile:RichTemplate"
-            border="{{false}}"
-            gradientColor="{{itemTemplate.item.contents.gradientColor}}"
-            titleLines="{{itemTemplate.item.contents.titleLines}}"
-            descriptionLines="{{itemTemplate.item.contents.titleLines}}"
-            imageSize="{{itemTemplate.item.contents.imageSize}}"
-            imageViewMode="{{itemTemplate.item.contents.imageViewMode}}"
-            imagePosition="{{itemTemplate.item.contents.imagePosition}}"
-            description="{{itemTemplate.item.contents.description}}"
-            imageCompressionCoefficient="{{itemTemplate.item.contents.imageCompressionCoefficient}}"
-            imageEffect="gradient"
-            scope="{{itemTemplate}}">
-         </ws:partial>
-      </ws:itemTemplate>
-   </Controls.treeTile:View>
-</ws:template>
-
 <div class="controlsDemo__wrapper">
-   <ws:for data="radius in _roundBorders">
-   <div class="controlsDemo__cell" attr:key="{{radius}}">
-      <div class="controls-text-label">Скругления размера '{{radius}}'</div>
-      <ws:partial template="tileView" 
-                  roundBorder="{{ {'tl': radius, 'tr': radius, 'br': radius, 'bl': radius} }}"></ws:partial>
-   </div>
-   </ws:for>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-richTemplate_roundBorder-null">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/RoundBorder/null/Index' }}">
+            <a href="{{content.href}}">Скругления размера null</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.RoundBorder.null.Index />
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-richTemplate_roundBorder-3xs">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/RoundBorder/3xs/Index' }}">
+            <a href="{{content.href}}">Скругления размера 3xs</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.RoundBorder.3xs.Index />
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-richTemplate_roundBorder-2xs">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/RoundBorder/2xs/Index' }}">
+            <a href="{{content.href}}">Скругления размера 2xs</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.RoundBorder.2xs.Index />
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-richTemplate_roundBorder-xs">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/RoundBorder/xs/Index' }}">
+            <a href="{{content.href}}">Скругления размера xs</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.RoundBorder.xs.Index />
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-richTemplate_roundBorder-s">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/RoundBorder/s/Index' }}">
+            <a href="{{content.href}}">Скругления размера s</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.RoundBorder.s.Index />
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-richTemplate_roundBorder-m">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/RoundBorder/m/Index' }}">
+            <a href="{{content.href}}">Скругления размера m</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.RoundBorder.m.Index />
+    </div>
 </div>
