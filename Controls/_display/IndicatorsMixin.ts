@@ -25,13 +25,6 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
     protected _$portionedSearchTemplate: TemplateFunction|string;
     protected _$continueSearchTemplate: TemplateFunction|string;
 
-    protected constructor() {
-        // сразу создаем верхний и нижний индикаторы, они отображаются с помощью display: none
-        // это сделано только для того, чтобы можно было показывать индикаторы при долгой отрисовке
-        this._createIndicator('top', EIndicatorState.Loading);
-        this._createIndicator('bottom', EIndicatorState.Loading);
-    }
-
     // region Indicator
 
     hasIndicator(position: TIndicatorPosition): boolean {
@@ -39,6 +32,11 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
     }
 
     getGlobalIndicator(): Indicator {
+        if (!this._globalIndicator) {
+            // сразу создаем глобальный индикатор, он отображается с помощью display: none
+            // это сделано только для того, чтобы можно было показывать индикатор при долгой отрисовке
+            this._createIndicator('global', EIndicatorState.Loading);
+        }
         return this._globalIndicator;
     }
 
@@ -50,11 +48,11 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         return this._bottomIndicator;
     }
 
-    displayIndicator(position: TIndicatorPosition, state: TIndicatorState): void {
+    displayIndicator(position: TIndicatorPosition, state: TIndicatorState, topOffset?: number): void {
         const indicator = this._getIndicator(position);
         if (indicator) {
-            const changedState = indicator.setState(state);
-            if (changedState) {
+            const changed = indicator.display(state, topOffset);
+            if (changed) {
                 this._nextVersion();
             }
         } else {
@@ -67,10 +65,10 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         const indicator = this._getIndicator(position);
         if (indicator) {
             if (position === 'global') {
+                indicator.hide();
+            } else {
                 const indicatorName = this._getIndicatorName(position);
                 this[indicatorName] = null;
-            } else {
-                indicator.hide();
             }
             this._nextVersion();
         }
@@ -90,7 +88,8 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
             itemModule: 'Controls/display:Indicator',
             position,
             state,
-            visible: position === 'global', // только глобальный индикатор сразу виден
+            // только глобальный индикатор изначально скрыт, т.к. он показывается с помощью стиля display
+            visible: position !== 'global',
             portionedSearchTemplate: this._$portionedSearchTemplate,
             continueSearchTemplate: this._$continueSearchTemplate
         });

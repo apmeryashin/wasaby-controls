@@ -2971,7 +2971,9 @@ define([
 
             baseControl.saveOptions(cfg);
             await baseControl._beforeMount(cfg);
-            baseControl._children.listView = {};
+            baseControl._children.listView = {
+               getGlobalIndicator: () => null,
+            };
             assert.isFalse(isRegistered);
 
             baseControl._afterMount(cfg);

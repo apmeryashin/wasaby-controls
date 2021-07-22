@@ -115,7 +115,7 @@ const _private = {
 
         const eventResult = self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [item]);
         if (eventResult instanceof Promise) {
-            self._indicatorsController.displayGlobalIndicator();
+            self._displayGlobalIndicator();
             return eventResult.then(
                 () => {
                     self._indicatorsController.hideGlobalIndicator();
@@ -261,7 +261,7 @@ const _private = {
     loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<object> {
         const sourceController = self.getSourceController();
 
-        self._indicatorsController.displayGlobalIndicator();
+        self._displayGlobalIndicator();
         return sourceController.load('down', nodeKey).then((list) => {
                 self.stopBatchAdding();
                 return list;
@@ -1426,7 +1426,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             return;
         }
 
-        this._indicatorsController.displayGlobalIndicator();
+        this._displayGlobalIndicator();
         return baseSourceController
             .load(undefined, nodeKey)
             .then((list) => {

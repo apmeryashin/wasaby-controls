@@ -57,8 +57,7 @@ export default class IndicatorsController {
     private _portionedSearchTimer: number = null;
     private _searchState: SEARCH_STATES = 0;
 
-    private _topIndicatorElement: HTMLElement;
-    private _bottomIndicatorElement: HTMLElement;
+    private _globalIndicatorElement: HTMLElement;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -137,10 +136,10 @@ export default class IndicatorsController {
         this._model.displayIndicator('bottom', indicatorState);
     }
 
-    displayGlobalIndicator(): void {
+    displayGlobalIndicator(topOffset: number): void {
         if (!this._displayIndicatorTimer) {
             this._startDisplayIndicatorTimer(
-                () => this._model.displayIndicator('global', EIndicatorState.Loading)
+                () => this._model.displayIndicator('global', EIndicatorState.Loading, topOffset)
             );
         }
     }
@@ -157,26 +156,21 @@ export default class IndicatorsController {
 
     /**
      * Отображает индикатор, который обозначает долгую отрисовку элементов
-     * @param position
      */
-    displayDrawingIndicator(position: 'top'|'bottom'): void {
+    displayDrawingIndicator(topOffset: number): void {
         this._startDisplayIndicatorTimer(() => {
-            const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
             // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
             // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
             // скорее всего не выполнится
-            indicatorElement.style.display = '';
-            indicatorElement.style.position = 'sticky';
-            indicatorElement.style[position] = '0';
+            this._globalIndicatorElement.style.display = '';
+            this._globalIndicatorElement.style.top = topOffset+'px';
         });
     }
 
-    hideDrawingIndicator(position: 'top'|'bottom'): void {
+    hideDrawingIndicator(): void {
         this._clearDisplayIndicatorTimer();
-        const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
-        indicatorElement.style.display = 'none';
-        indicatorElement.style.position = '';
-        indicatorElement.style[position] = '';
+        this._globalIndicatorElement.style.display = 'none';
+        this._globalIndicatorElement.style.top = '';
     }
 
     recountIndicators(direction: 'up'|'down'|'all', scrollToFirstItem: boolean = false): boolean {
@@ -214,9 +208,8 @@ export default class IndicatorsController {
         );
     }
 
-    setIndicatorElements(topIndicator: HTMLElement, bottomIndicator: HTMLElement): void {
-        this._topIndicatorElement = topIndicator;
-        this._bottomIndicatorElement = bottomIndicator;
+    setGlobalIndicatorElement(globalIndicator: HTMLElement): void {
+        this._globalIndicatorElement = globalIndicator;
     }
 
     private _recountTopIndicator(scrollToFirstItem: boolean = false): void {
@@ -494,6 +487,5 @@ export default class IndicatorsController {
         const metaData = this._options.items && this._options.items.getMetaData();
         return !!(metaData && metaData['iterative']);
     }
-
     // endregion PortionedSearch
 }

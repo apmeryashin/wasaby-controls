@@ -28,6 +28,11 @@ export default class Indicator extends CollectionItem<null> {
     protected _$position: TIndicatorPosition;
     protected _$state: TIndicatorState;
     protected _$visible: boolean;
+    /**
+     * Вертикальная позиция глобального индикатора
+     * @protected
+     */
+    protected _topOffset: number = 0;
 
     protected _$portionedSearchTemplate: TemplateFunction|string;
     protected _$continueSearchTemplate: TemplateFunction|string;
@@ -36,13 +41,24 @@ export default class Indicator extends CollectionItem<null> {
         return `${this._$state}-` + this._$position + this._instancePrefix;
     }
 
-    display(): boolean {
+    display(state: TIndicatorState, topOffset?: number): boolean {
         const isHidden = !this._$visible;
         if (isHidden) {
             this._$visible = true;
             this._nextVersion();
         }
-        return isHidden;
+
+        const stateChanged = this._$state !== state;
+        if (stateChanged) {
+            this._$state = state;
+            this._nextVersion();
+        }
+
+        if (topOffset !== undefined && this._topOffset !== topOffset) {
+            this._topOffset = topOffset;
+        }
+
+        return isHidden || stateChanged;
     }
 
     hide(): boolean {
@@ -52,15 +68,6 @@ export default class Indicator extends CollectionItem<null> {
             this._nextVersion();
         }
         return isVisible;
-    }
-
-    setState(state: TIndicatorState): boolean {
-        const changed = this._$state !== state;
-        if (changed) {
-            this._$state = state;
-            this._nextVersion();
-        }
-        return changed;
     }
 
     getTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction | string): TemplateFunction | string {
@@ -102,7 +109,11 @@ export default class Indicator extends CollectionItem<null> {
         let styles = '';
 
         if (!this._$visible) {
-            styles = ' display: none;';
+            styles += ' display: none;';
+        }
+
+        if (this.isGlobalIndicator()) {
+            styles += ` top: ${this._topOffset}px;`;
         }
 
         return styles;

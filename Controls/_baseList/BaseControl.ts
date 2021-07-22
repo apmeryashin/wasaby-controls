@@ -685,7 +685,7 @@ const _private = {
             } else {
                 self._recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
-                    self._indicatorsController.displayGlobalIndicator();
+                    self._displayGlobalIndicator();
                 }
             }
 
@@ -3063,7 +3063,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * @private
      */
     private _handleLoadToDirection: boolean;
-    private _drawingIndicatorDirection: 'top'|'bottom';
+    private _displayDrawingIndicator: boolean = false;
 
     protected _listViewModel: Collection = null;
     _viewModelConstructor = null;
@@ -3661,10 +3661,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._indicatorsController.displayTopIndicator(true);
         }
         if (this._children.listView) {
-            this._indicatorsController.setIndicatorElements(
-                this._children.listView.getTopIndicator(),
-                this._children.listView.getBottomIndicator()
-            );
+            this._indicatorsController.setGlobalIndicatorElement(this._children.listView.getGlobalIndicator());
         }
 
         _private.tryLoadToDirectionAgain(this);
@@ -4022,7 +4019,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._indicatorsController.endPortionedSearch();
         }
         if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
-            this._indicatorsController.displayGlobalIndicator();
+            this._displayGlobalIndicator();
         }
 
         // endregion Indicators
@@ -4350,9 +4347,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } });
             this._scrollController.setRendering(false);
 
-            if (this._drawingIndicatorDirection) {
-                this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
-                this._drawingIndicatorDirection = null;
+            if (this._displayDrawingIndicator) {
+                this._indicatorsController.hideDrawingIndicator();
+                this._displayDrawingIndicator = false;
             }
 
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
@@ -4472,8 +4469,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (result) {
                 _private.handleScrollControllerResult(this, result);
                 this._handleLoadToDirection = false;
-                this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
-                this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
+                this._displayDrawingIndicator = true;
+                this._indicatorsController.displayDrawingIndicator(this._countGlobalIndicatorPosition());
                 resolver();
             } else {
                 this._loadMore(direction).then(() => {
@@ -4708,7 +4705,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (self._sourceController) {
             self._indicatorsController.endPortionedSearch();
-            self._indicatorsController.displayGlobalIndicator();
+            self._displayGlobalIndicator();
 
             if (cfg.groupProperty) {
                 const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
@@ -5238,7 +5235,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (_private.hasHoverFreezeController(this)) {
             this._hoverFreezeController.unfreezeHover();
         }
-        this._indicatorsController.displayGlobalIndicator();
+        this._displayGlobalIndicator();
         return this._getEditInPlaceController().edit(userOptions, { columnIndex }).then((result) => {
             if (shouldActivateInput && !(result && result.canceled)) {
                 this._editInPlaceInputHelper.shouldActivate();
@@ -5254,7 +5251,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _beginAdd(userOptions, {shouldActivateInput = true, addPosition = 'bottom', targetItem, columnIndex}: IBeginAddOptions = {}) {
         _private.closeSwipe(this);
-        this._indicatorsController.displayGlobalIndicator();
+        this._displayGlobalIndicator();
         return this._getEditInPlaceController().add(userOptions, {addPosition, targetItem, columnIndex}).then((addResult) => {
             if (addResult && addResult.canceled) {
                 return addResult;
@@ -5282,7 +5279,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
-        this._indicatorsController.displayGlobalIndicator();
+        this._displayGlobalIndicator();
         return this._getEditInPlaceController().cancel(force).finally(() => {
             if (_private.hasSelectionController(this)) {
                 const controller = _private.getSelectionController(this);
@@ -5296,7 +5293,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
-        this._indicatorsController.displayGlobalIndicator();
+        this._displayGlobalIndicator();
         return this._getEditInPlaceController().commit(commitStrategy).finally(() => {
             this._indicatorsController.hideGlobalIndicator();
         });
@@ -6321,6 +6318,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController = null;
     }
 
+    private _countGlobalIndicatorPosition(): number {
+        return this._scrollTop + this._viewportSize / 2 - INDICATOR_HEIGHT / 2;
+    }
+
+    private _displayGlobalIndicator(): void {
+        this._indicatorsController.displayGlobalIndicator(this._countGlobalIndicatorPosition());
+    }
+
     private _recountIndicators(
         direction: 'up'|'down'|'all', scrollToFirstItem?: boolean, options?: IBaseControlOptions
     ): void {
@@ -6698,7 +6703,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
         if (this._dndListController) {
             if (dragEndResult instanceof Promise) {
-                this._indicatorsController.displayGlobalIndicator();
+                this._displayGlobalIndicator();
                 dragEndResult.finally(() => {
                     endDrag();
                     this._indicatorsController.hideGlobalIndicator();

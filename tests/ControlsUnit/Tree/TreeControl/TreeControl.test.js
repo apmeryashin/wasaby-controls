@@ -919,6 +919,7 @@ define([
                    displayGlobalIndicator: () => null,
                    hideGlobalIndicator: () => null
                 },
+                _displayGlobalIndicator: () => null,
                 _listViewModel: {
                    setHasMoreStorage: function (hasMoreStorage) {
                       hasMore = hasMoreStorage;

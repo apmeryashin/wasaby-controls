@@ -1,4 +1,4 @@
-<div name="{{item.isTopIndicator() ? 'topIndicator' : item.isBottomIndicator() ? 'bottomIndicator' }}"
+<div name="{{item.isGlobalIndicator() ? 'globalIndicator' }}"
      class="{{ item.getClasses() }}" style="{{ item.getStyles() }}" data-qa="{{ item.getQAData() }}">
     <ws:partial if="{{ item.getContentTemplate() }}" template="{{ item.getContentTemplate() }}"/>
 </div>
