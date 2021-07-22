@@ -16,11 +16,11 @@
                             <ws:templateOptions
                                     root="{{null}}"
                                     rootVisible="{{true}}"
+                                    rootTitle="Каталог"
                                     keyProperty="key"
                                     parentProperty="parent"
                                     displayProperty="title"
                                     hasChildrenProperty="hasChild"
-                                    rootTitle="Каталог"
                                     searchParam="title"
                                     nodeProperty="type"
                                     source="{{_viewSource}}"

@@ -39,7 +39,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_dropdown.less переменные тем оформления dropdown}
  * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_dropdownPopup.less переменные тем оформления dropdownPopup}
  *
- * @class Controls/_dropdown/ComboBox
  * @extends UI/Base:Control
  * @implements Controls/interface:ISource
  * @implements Controls/dropdown:IBaseDropdown
@@ -64,7 +63,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">Demo-example</a>.
- * @class Controls/_dropdown/ComboBox
  * @extends UI/Base:Control
  * @implements Controls/interface:ISource
  * @implements Controls/interface/IItemTemplate
@@ -103,7 +101,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
 
       this._controller = new Controller(this._getControllerOptions(options));
       this._borderStyle = this._getBorderStyle(options.borderStyle, options.validationStatus);
-      return loadItems(this._controller, receivedState, options.source);
+      return loadItems(this._controller, receivedState, options);
    }
 
    protected _afterMount(options: IComboboxOptions): void {
@@ -131,7 +129,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
       return { ...controllerOptions, ...{
             selectedKeys: [options.selectedKey],
             markerVisibility: 'hidden',
-            dataLoadCallback: this._dataLoadCallback.bind(this),
+            dataLoadCallback: this._dataLoadCallback.bind(this, options),
             popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'),
             typeShadow: 'suggestionsContainer',
             close: this._onClose,
@@ -140,8 +138,8 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
             selectedItemsChangedCallback: this._setText.bind(this, options),
             theme: options.theme,
             itemPadding: {
-               right: 'menu-xs',
-               left: 'menu-xs'
+               right: 'menu-s',
+               left: 'menu-s'
             },
             targetPoint: this._targetPoint,
             openerControl: this,
@@ -163,22 +161,22 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
       };
    }
 
-   _dataLoadCallback(items: RecordSet<Model>): void {
+   _dataLoadCallback(options: IComboboxOptions, items: RecordSet<Model>): void {
       this._countItems = items.getCount();
       if (this._countItems === 1) {
          this._selectedItem = items.at(0);
       }
-      if (this._countItems && this._options.emptyText) {
+      if (this._countItems && options.emptyText) {
          this._countItems += 1;
       }
-      const readOnly = this._getReadOnly(this._options.readOnly);
+      const readOnly = this._getReadOnly(options.readOnly);
       if (readOnly !== this._readOnly) {
          this._readOnly = readOnly;
-         this._controller.update(this._getControllerOptions(this._options));
+         this._controller.update(this._getControllerOptions(options));
       }
 
-      if (this._options.dataLoadCallback) {
-         this._options.dataLoadCallback(items);
+      if (options.dataLoadCallback) {
+         options.dataLoadCallback(items);
       }
    }
 
@@ -238,7 +236,8 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
    protected _deactivated(event: SyntheticEvent<Event>): void {
       // если фокус ушел в меню, не закрываем его
       // TODO https://online.sbis.ru/opendoc.html?guid=b34ba2ef-fec0-42df-87d8-77541ec82c34
-      if (!event.nativeEvent.relatedTarget?.closest('.controls-Menu__popup') && this._options.closeMenuOnOutsideClick) {
+      if (event.nativeEvent.relatedTarget &&
+          !event.nativeEvent.relatedTarget?.closest('.controls-Menu__popup') && this._options.closeMenuOnOutsideClick) {
          this.closeMenu();
       }
    }
