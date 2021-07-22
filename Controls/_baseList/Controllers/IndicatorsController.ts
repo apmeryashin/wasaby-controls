@@ -22,7 +22,7 @@ export interface IIndicatorsControllerOptions {
     stopPortionedSearchCallback: () => void;
 }
 
-const INDICATOR_DELAY = 2000;
+const INDICATOR_DELAY = 500;
 export const INDICATOR_HEIGHT = 48;
 
 const SEARCH_MAX_DURATION = 30 * 1000;
@@ -56,6 +56,9 @@ export default class IndicatorsController {
     private _portionedSearchDirection: TPortionedSearchDirection;
     private _portionedSearchTimer: number = null;
     private _searchState: SEARCH_STATES = 0;
+
+    private _topIndicatorElement: HTMLElement;
+    private _bottomIndicatorElement: HTMLElement;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -152,6 +155,30 @@ export default class IndicatorsController {
         this._clearDisplayIndicatorTimer();
     }
 
+    /**
+     * Отображает индикатор, который обозначает долгую отрисовку элементов
+     * @param position
+     */
+    displayDrawingIndicator(position: 'top'|'bottom'): void {
+        this._startDisplayIndicatorTimer(() => {
+            const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
+            // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
+            // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
+            // скорее всего не выполнится
+            indicatorElement.style.display = '';
+            indicatorElement.style.position = 'sticky';
+            indicatorElement.style[position] = '0';
+        });
+    }
+
+    hideDrawingIndicator(position: 'top'|'bottom'): void {
+        this._clearDisplayIndicatorTimer();
+        const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
+        indicatorElement.style.display = 'none';
+        indicatorElement.style.position = '';
+        indicatorElement.style[position] = '';
+    }
+
     recountIndicators(direction: 'up'|'down'|'all', scrollToFirstItem: boolean = false): boolean {
         let changedResetTrigger = false;
 
@@ -185,6 +212,11 @@ export default class IndicatorsController {
             this._model.hasIndicator('bottom') ||
             this._model.hasIndicator('global')
         );
+    }
+
+    setIndicatorElements(topIndicator: HTMLElement, bottomIndicator: HTMLElement): void {
+        this._topIndicatorElement = topIndicator;
+        this._bottomIndicatorElement = bottomIndicator;
     }
 
     private _recountTopIndicator(scrollToFirstItem: boolean = false): void {

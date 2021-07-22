@@ -376,6 +376,14 @@ const ListView = Control.extend(
             return this._children.bottomLoadingTrigger;
         },
 
+        getTopIndicator(): HTMLElement {
+            return this._children.topIndicator;
+        },
+
+        getBottomIndicator(): HTMLElement {
+            return this._children.bottomIndicator;
+        },
+
         _onIndicatorClick(event: SyntheticEvent): void {
             if (event.target.closest('.js-controls-BaseControl__continueSearch')) {
                 this._notify('continueSearchClick');

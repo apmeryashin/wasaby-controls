@@ -884,6 +884,7 @@ export default class Collection<
         super(options);
         SerializableMixin.call(this);
         EventRaisingMixin.call(this, options);
+        IndicatorsMixin.call(this);
 
         this._$navigation = options.navigation;
         this._$filter = this._$filter || [];

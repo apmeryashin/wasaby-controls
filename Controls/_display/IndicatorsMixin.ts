@@ -1,4 +1,5 @@
 import Indicator, {
+    EIndicatorState,
     IOptions as ILoadingIndicatorOptions,
     TIndicatorPosition, TIndicatorState
 } from './Indicator';
@@ -23,6 +24,13 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
 
     protected _$portionedSearchTemplate: TemplateFunction|string;
     protected _$continueSearchTemplate: TemplateFunction|string;
+
+    protected constructor() {
+        // сразу создаем верхний и нижний индикаторы, они отображаются с помощью display: none
+        // это сделано только для того, чтобы можно было показывать индикаторы при долгой отрисовке
+        this._createIndicator('top', EIndicatorState.Loading);
+        this._createIndicator('bottom', EIndicatorState.Loading);
+    }
 
     // region Indicator
 
@@ -56,10 +64,14 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
     }
 
     hideIndicator(position: TIndicatorPosition): void {
-        const indicatorIsShowed = !!this._getIndicator(position);
-        if (indicatorIsShowed) {
-            const indicatorName = this._getIndicatorName(position);
-            this[indicatorName] = null;
+        const indicator = this._getIndicator(position);
+        if (indicator) {
+            if (position === 'global') {
+                const indicatorName = this._getIndicatorName(position);
+                this[indicatorName] = null;
+            } else {
+                indicator.hide();
+            }
             this._nextVersion();
         }
     }
@@ -78,6 +90,7 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
             itemModule: 'Controls/display:Indicator',
             position,
             state,
+            visible: position === 'global', // только глобальный индикатор сразу виден
             portionedSearchTemplate: this._$portionedSearchTemplate,
             continueSearchTemplate: this._$continueSearchTemplate
         });

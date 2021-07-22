@@ -12,6 +12,7 @@ export enum EIndicatorState {
 export interface IOptions extends ICollectionOptions<null> {
     position: TIndicatorPosition;
     state: TIndicatorState;
+    visible: boolean;
     portionedSearchTemplate: TemplateFunction|string;
     continueSearchTemplate: TemplateFunction|string;
 }
@@ -26,12 +27,40 @@ export default class Indicator extends CollectionItem<null> {
 
     protected _$position: TIndicatorPosition;
     protected _$state: TIndicatorState;
+    protected _$visible: boolean;
 
     protected _$portionedSearchTemplate: TemplateFunction|string;
     protected _$continueSearchTemplate: TemplateFunction|string;
 
     get key(): string {
         return `${this._$state}-` + this._$position + this._instancePrefix;
+    }
+
+    display(): boolean {
+        const isHidden = !this._$visible;
+        if (isHidden) {
+            this._$visible = true;
+            this._nextVersion();
+        }
+        return isHidden;
+    }
+
+    hide(): boolean {
+        const isVisible = this._$visible;
+        if (isVisible) {
+            this._$visible = false;
+            this._nextVersion();
+        }
+        return isVisible;
+    }
+
+    setState(state: TIndicatorState): boolean {
+        const changed = this._$state !== state;
+        if (changed) {
+            this._$state = state;
+            this._nextVersion();
+        }
+        return changed;
     }
 
     getTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction | string): TemplateFunction | string {
@@ -47,15 +76,6 @@ export default class Indicator extends CollectionItem<null> {
             case "continue-search":
                 return this._$continueSearchTemplate;
         }
-    }
-
-    setState(state: TIndicatorState): boolean {
-        const changed = this._$state !== state;
-        if (changed) {
-            this._$state = state;
-            this._nextVersion();
-        }
-        return changed;
     }
 
     getClasses(): string {
@@ -76,6 +96,16 @@ export default class Indicator extends CollectionItem<null> {
         }
 
         return classes
+    }
+
+    getStyles(): string {
+        let styles = '';
+
+        if (!this._$visible) {
+            styles = ' display: none;';
+        }
+
+        return styles;
     }
 
     isTopIndicator(): boolean {
@@ -101,6 +131,7 @@ Object.assign(Indicator.prototype, {
     _instancePrefix: '-indicator',
     _$position: null,
     _$state: null,
+    _$visible: false,
     _$portionedSearchTemplate: 'Controls/baseList:LoadingIndicatorTemplate',
     _$continueSearchTemplate: 'Controls/baseList:ContinueSearchTemplate'
 });

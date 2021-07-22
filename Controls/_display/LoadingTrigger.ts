@@ -84,7 +84,7 @@ export default class LoadingTrigger extends CollectionItem<null> {
         return isHidden;
     }
 
-    hide() {
+    hide(): boolean {
         const isVisible = this._$visible;
         if (isVisible) {
             this._$visible = false;
