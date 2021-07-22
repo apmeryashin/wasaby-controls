@@ -1403,6 +1403,9 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET) {
+                // перезагрузили список, нужно пересчитать hasMore
+
+                self._updateIndicatorsController();
                 if (self._options.searchValue) {
                     _private.tryLoadToDirectionAgain(self);
                 }
