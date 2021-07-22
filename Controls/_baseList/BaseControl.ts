@@ -683,7 +683,7 @@ const _private = {
             if (self._shouldStartPortionedSearch()) {
                 self._startPortionedSearch(direction);
             } else {
-                self._indicatorsController.recountIndicators(direction);
+                self._recountIndicators(direction);
             }
 
             if (self._options.groupProperty) {
@@ -722,7 +722,7 @@ const _private = {
                 // Пересчитывать ромашки нужно сразу после загрузки, а не по событию add, т.к.
                 // например при порционном поиске последний запрос в сторону может подгрузить пустой список
                 // и событие add не сработает
-                self._indicatorsController.recountIndicators(direction);
+                self._recountIndicators(direction);
 
                 // Скрываем ошибку после успешной загрузки данных
                 _private.hideError(self);
@@ -741,7 +741,7 @@ const _private = {
 
                 if (hideIndicatorOnCancelQuery) {
                     // при пересчете скроем все ненужые индикаторы
-                    self._indicatorsController.recountIndicators(direction);
+                    self._recountIndicators(direction);
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
@@ -1412,10 +1412,7 @@ const _private = {
                 if (self._shouldStartPortionedSearch()) {
                     self._startPortionedSearch();
                 } else {
-                    const changedResetTrigger = self._indicatorsController.recountIndicators('all', true);
-                    if (changedResetTrigger) {
-                        self._updateScrollController();
-                    }
+                    self._recountIndicators('all', true);
                 }
             }
             if (action === IObservable.ACTION_ADD) {
@@ -3376,6 +3373,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         self._createIndicatorsController(newOptions);
         _private.createScrollController(self, newOptions);
+        // scrollController зависит от indicatorsController и наоборот, поэтому после создания scrollController-а
+        // нужно пересчитать индикаторы, т.к. именно они зависят от scrollController
+        self._recountIndicators('all', false, newOptions);
 
         if (receivedState.errorConfig) {
             _private.showError(self, receivedState.errorConfig);
@@ -4753,10 +4753,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         data: list
                     });
 
-                    const changedResetTrigger = self._indicatorsController.recountIndicators('all', true);
-                    if (changedResetTrigger) {
-                        self._updateScrollController();
-                    }
+                    self._recountIndicators('all', true);
                     _private.resetScrollAfterLoad(self);
                     _private.tryLoadToDirectionAgain(self, list);
                 });
@@ -6303,6 +6300,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _destroyIndicatorsController(): void {
         this._indicatorsController.destroy();
         this._indicatorsController = null;
+    }
+
+    private _recountIndicators(
+        direction: 'up'|'down'|'all', scrollToFirstItem?: boolean, options?: IBaseControlOptions
+    ): void {
+        const changedResetTrigger = this._indicatorsController.recountIndicators(direction, scrollToFirstItem);
+        if (changedResetTrigger) {
+            this._updateScrollController(options);
+        }
     }
 
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {

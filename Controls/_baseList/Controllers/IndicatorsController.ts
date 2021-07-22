@@ -163,7 +163,7 @@ export default class IndicatorsController {
                 this._recountBottomIndicator();
                 break;
             case 'all':
-                changedResetTrigger = this.recountResetTriggerOffsets('all');
+                changedResetTrigger = this.recountResetTriggerOffsets();
                 this._recountTopIndicator(scrollToFirstItem);
                 this._recountBottomIndicator();
                 // после перезагрузки скрываем глобальный индикатор
@@ -268,34 +268,34 @@ export default class IndicatorsController {
 
     /**
      * Сбрасывает флаг resetTriggerOffset для направления directionOfLoadItems
+     * Если в параметры прокинули 'up'|'down', то сбрасываем соответствующий флаг resetOffset,
+     * т.к. последующие подгрузки должны происходить заранее
      * @param directionOfLoadItems Направление подгрузки данных
      */
-    recountResetTriggerOffsets(directionOfLoadItems: 'up'|'down'|'all'): boolean {
+    recountResetTriggerOffsets(directionOfLoadItems?: 'up'|'down'): boolean {
         let changed = false;
 
-        if (directionOfLoadItems === 'all') {
+        if (directionOfLoadItems) {
+            // Последующие подгрузки должны происходить заранее, поэтому если произошла хоть одна подгрузка в сторону,
+            // то сбрасываем флаг в эту сторону
+            if (directionOfLoadItems === 'up' && this._resetTopTriggerOffset) {
+                this._resetTopTriggerOffset = false;
+                changed = true;
+            }
+            if (directionOfLoadItems === 'down' && this._resetBottomTriggerOffset) {
+                this._resetBottomTriggerOffset = false;
+                changed = true;
+            }
+        } else {
             // триггер после перезагрузки сбрасываем только если нужно показывать индикатор
-            const displayTopTrigger = this.shouldDisplayTopIndicator();
-            const displayBottomTrigger = this.shouldDisplayBottomIndicator();
+            const newResetTopTriggerOffset = this.shouldDisplayTopIndicator();
+            const newResetBottomTriggerOffset = this.shouldDisplayBottomIndicator();
 
-            if (displayTopTrigger && !this._resetTopTriggerOffset) {
-                this._resetTopTriggerOffset = true;
-                changed = true;
-            }
+            changed = changed || this._resetTopTriggerOffset !== newResetTopTriggerOffset;
+            this._resetTopTriggerOffset = newResetTopTriggerOffset;
 
-            if (displayBottomTrigger && !this._resetBottomTriggerOffset) {
-                this._resetBottomTriggerOffset = true;
-                changed = true;
-            }
-        }
-
-        if (directionOfLoadItems === 'up' && this._resetTopTriggerOffset) {
-            this._resetTopTriggerOffset = false;
-            changed = true;
-        }
-        if (directionOfLoadItems === 'down' && this._resetBottomTriggerOffset) {
-            this._resetBottomTriggerOffset = false;
-            changed = true;
+            changed = changed || this._resetBottomTriggerOffset !== newResetBottomTriggerOffset;
+            this._resetBottomTriggerOffset = newResetBottomTriggerOffset;
         }
 
         return changed;
