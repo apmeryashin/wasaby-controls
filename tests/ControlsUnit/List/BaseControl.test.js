@@ -4781,7 +4781,6 @@ define([
                _options: {
                   root: 5
                },
-               _prevRootId: 5,
                _selectionController: {
                   isAllSelected: () => true,
                   clearSelection: () => {},

@@ -684,6 +684,9 @@ const _private = {
                 self._startPortionedSearch(direction);
             } else {
                 self._recountIndicators(direction);
+                if (!self._indicatorsController.hasDisplayedIndicator()) {
+                    self._indicatorsController.displayGlobalIndicator();
+                }
             }
 
             if (self._options.groupProperty) {
@@ -1976,6 +1979,7 @@ const _private = {
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
+            this._indicatorsController.hideGlobalIndicator();
             return this.isEditing() && !isEndEditProcessing ?
                 this._cancelEdit(true) :
                 void 0;
@@ -1991,6 +1995,7 @@ const _private = {
         if (this._shouldEndPortionedSearch(items)) {
             this._indicatorsController.endPortionedSearch();
         }
+        this._indicatorsController.hideGlobalIndicator();
 
         if (this._isMounted && this._scrollController) {
             _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
@@ -2487,6 +2492,15 @@ const _private = {
     // endregion
 
     createScrollController(self: BaseControl, options: any): void {
+        // indicatorsController создается после scrollController, т.к. отображение ромашек зависит от скрыты ли элементы
+        // виртуальным скроллом
+        const resetTopTriggerOffset = self._indicatorsController
+            ? self._indicatorsController.isResetTopTriggerOffset()
+            : true;
+        const resetBottomTriggerOffset = self._indicatorsController
+            ? self._indicatorsController.isResetBottomTriggerOffset()
+            : true;
+
         self._scrollController = new ScrollController({
             disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -2496,8 +2510,8 @@ const _private = {
             forceInitVirtualScroll: self._needScrollCalculation,
             topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
             bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
-            resetTopTriggerOffset: self._indicatorsController.isResetTopTriggerOffset(),
-            resetBottomTriggerOffset: self._indicatorsController.isResetBottomTriggerOffset(),
+            resetTopTriggerOffset,
+            resetBottomTriggerOffset,
             notifyKeyOnRender: options.notifyKeyOnRender
         });
         const result = self._scrollController.handleResetItems();
@@ -3116,7 +3130,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _itemActionsController = null;
     protected _sourceController: SourceController = null;
-    _prevRootId = null;
     _loadedBySourceController = false;
 
     _notifyHandler = EventUtils.tmplNotify;
@@ -3371,16 +3384,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.initVisibleItemActions(self, newOptions);
         }
 
-        self._createIndicatorsController(newOptions);
         _private.createScrollController(self, newOptions);
-        // scrollController зависит от indicatorsController и наоборот, поэтому после создания scrollController-а
-        // нужно пересчитать индикаторы, т.к. именно они зависят от scrollController
-        if (self._listViewModel) {
-            const changed = self._indicatorsController.recountResetTriggerOffsets();
-            if (changed) {
-                self._updateScrollController();
-            }
-        }
+        self._createIndicatorsController(newOptions);
 
         if (receivedState.errorConfig) {
             _private.showError(self, receivedState.errorConfig);
@@ -3776,7 +3781,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.setReloadingState(this, true);
         }
 
-        this._prevRootId = this._options.root;
         if (navigationChanged) {
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
@@ -4012,9 +4016,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
             this._indicatorsController.displayGlobalIndicator();
-        }
-        if (this._loadedBySourceController) {
-            this._indicatorsController.hideGlobalIndicator();
         }
 
         // endregion Indicators
@@ -6317,7 +6318,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {
-        return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
+        return !this._scrollController.isRangeOnEdge(direction);
     }
 
     private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void): void {

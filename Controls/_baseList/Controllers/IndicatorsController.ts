@@ -302,6 +302,11 @@ export default class IndicatorsController {
     }
 
     setLoadingTriggerOffset(offset: ITriggerOffset): void {
+        // TODO LI кривые юниты нужно фиксить
+        if (!this._model || this._model.destroyed) {
+            return;
+        }
+
         const newOffset = this._correctTriggerOffset(offset);
         this._model.setLoadingTriggerOffset(newOffset);
     }
