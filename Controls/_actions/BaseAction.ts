@@ -12,126 +12,98 @@ import {IToolBarItem} from 'Controls/toolbars';
 export interface IBaseAction {
     execute: (options: unknown) => Promise<unknown>;
 }
-export interface ICommandOptions {
-    [key: string]: any;
-}
 
-export interface IViewCommandOptions {
-    [key: string]: any;
-}
+export interface IBaseActionOptions extends IAction {}
 
-export interface IBaseActionOptions {
-    id: string;
-    visible: boolean;
-    iconStyle: string;
-    icon: string;
-    commandName?: string;
-    commandOptions: ICommandOptions;
-    viewCommandOptions: IViewCommandOptions;
-    viewCommandName?: string;
-    order?: number;
-    title?: string;
-    tooltip?: string;
-    onExecuteHandler?: Function;
-    parent?: string | number;
-}
-
-const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent'];
+const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visibility'];
 
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
 ) implements IBaseAction {
-    readonly id: string;
-    readonly order: number;
-    readonly parent: string | number;
-    readonly onExecuteHandler: Function;
-    commandName: string;
-    commandOptions: Record<string, any>;
-    viewCommandName: string;
-    viewCommandOptions: Record<string, any>;
-    viewMode: string = 'toolButton';
-    private _iconStyle: string;
-    private _icon: string;
-    private _title: string;
-    private _tooltip: string;
-    private _visible: boolean;
-
-    protected get icon(): string {
-        return this._icon;
+    protected get _$icon(): string {
+        return this.icon;
+    };
+    protected set _$icon(value: string) {
+        this._setProperty('icon', value);
     }
 
-    protected set icon(value: string) {
-        this._setProperty('_icon', value);
+    protected get _$title(): string {
+        return this.title;
+    };
+    protected set _$title(value: string) {
+        this._setProperty('title', value);
     }
 
-    protected get title(): string {
-        return this._title;
+    protected get _$tooltip(): string {
+        return this.tooltip;
+    };
+    protected set _$tooltip(value: string) {
+        this._setProperty('tooltip', value);
     }
 
-    protected set title(value: string) {
-        this._setProperty('_title', value);
+    protected get _$visibility(): string {
+        return this.visibility;
+    };
+    protected set _$visibility(value: string) {
+        this._setProperty('visibility', value);
     }
 
-    protected get tooltip(): string {
-        return this._tooltip;
+    protected get _$iconStyle(): string {
+        return this.iconStyle;
+    };
+    protected set _$iconStyle(value: string) {
+        this._setProperty('iconStyle', value);
     }
+    protected _$id: unknown;
+    protected _$order: number;
+    protected _$commandName: string;
+    protected _$commandOptions: object;
+    protected _$viewCommandName: string;
+    protected _$viewCommandOptions: object;
 
-    protected set tooltip(value: string) {
-        this._setProperty('_tooltip', value);
-    }
+    private title: string;
+    private tooltip: string;
+    private visibility: string;
+    private icon: string;
+    private iconStyle: string;
 
-    protected get visible(): boolean {
-        return this._visible;
-    }
-
-    protected set visible(value: boolean) {
-        this._setProperty('_visible', value);
-    }
-
-    protected get iconStyle(): string {
-        return this._iconStyle;
-    }
-
-    protected set iconStyle(value: string) {
-        this._setProperty('_iconStyle', value);
-    }
+    private readonly _$onExecuteHandler: Function = null;
 
     constructor(options: IBaseActionOptions) {
         super();
 
-        this.icon = options.icon || this.icon;
-        this.title = options.title || this.title;
-        this.tooltip = options.tooltip || this.tooltip;
-        this.visible = options.hasOwnProperty('visible') ? options.visible as boolean : this.visible;
-        this.iconStyle = options.iconStyle || this.iconStyle;
-        this.order = options.order || this.order;
-        this.onExecuteHandler = options.onExecuteHandler || this._executeCommand;
-        this.commandName = options.commandName || this.commandName;
-        this.commandOptions = options.commandOptions || this.commandOptions;
-        this.viewCommandName = options.viewCommandName || this.viewCommandName;
-        this.viewCommandOptions = options.viewCommandOptions || this.viewCommandOptions;
-        this.parent = options.parent;
-        this.id = options.id || this.id;
+        this._$icon = options.icon || this._$icon;
+        this._$title = options.title || this._$title;
+        this._$tooltip = options.tooltip || this._$tooltip;
+        this._$visibility = options.visibility as string || this._$visibility;
+        this._$iconStyle = options.iconStyle || this._$iconStyle;
+        this._$id = options.id || this._$id;
+        this._$order = options.order || this._$order;
+        this._$onExecuteHandler = options.onExecuteHandler || this._executeCommand;
+        this._$commandName = options.commandName || this._$commandName;
+        this._$commandOptions = options.commandOptions || this._$commandOptions;
+        this._$viewCommandName = options.viewCommandName || this._$viewCommandName;
+        this._$viewCommandOptions = options.viewCommandName || this._$viewCommandOptions;
 
         EventRaisingMixin.call(this, options);
     }
 
     execute(options): Promise<unknown> {
-        return this.onExecuteHandler(options);
+        return this._$onExecuteHandler(options);
     }
 
     private _executeCommand(options): Promise<unknown> {
-        if (this.commandName) {
+        if (this._$commandName) {
             const commandOptions = this._getCommandOptions(options);
-            this._createCommand(commandOptions, this.commandName).then((commandClass) => {
-                if (this.viewCommandName) {
+            this._createCommand(commandOptions, this._$commandName).then((commandClass) => {
+                if (this._$viewCommandName) {
                     this._createCommand({
                             ...commandOptions,
                             command: commandClass,
                             sourceController: options.sourceController,
-                            ...this.viewCommandOptions
+                            ...this._$viewCommandOptions
                         },
-                        this.viewCommandName).then((viewCommandClass) => {
+                        this._$viewCommandName).then((viewCommandClass) => {
                         return this._actionExecute(commandOptions, viewCommandClass);
                     });
                 } else {
@@ -142,7 +114,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     }
 
     private _getCommandOptions(commandParams: IExecuteCommandParams): object {
-        const commandOptions = object.clone(this.commandOptions) || {};
+        const commandOptions = object.clone(this._$commandOptions) || {};
         merge(commandOptions, {
             source: commandParams.source,
             filter: commandParams.filter,
@@ -166,8 +138,8 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         return command.execute(commandOptions);
     }
 
-    getState(): IToolBarItem {
-        const config = {id: this.id};
+    public getToolbarItem(): IToolBarItem {
+        const config = {id: this._$id};
         TOOLBAR_PROPS.forEach((prop) => {
             config[prop] = this[prop];
         });
@@ -177,11 +149,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     private _setProperty(prop: string, value: unknown): void {
         if (this[prop] !== value) {
             this[prop] = value;
-            this._notify('itemChanged', this.getState());
+            this._notify('itemChanged', this.getToolbarItem());
         }
     }
 }
-
-Object.assign(BaseAction.prototype, {
-    visible: true
-});
