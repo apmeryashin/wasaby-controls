@@ -143,6 +143,11 @@ export default class IndicatorsController {
     }
 
     hideGlobalIndicator(): void {
+        // TODO LI кривые юниты нужно фиксить
+        if (!this._model || this._model.destroyed) {
+            return;
+        }
+
         this._model.hideIndicator('global');
         this._clearDisplayIndicatorTimer();
     }
