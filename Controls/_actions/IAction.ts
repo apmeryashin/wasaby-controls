@@ -9,7 +9,4 @@ export interface IAction extends IToolBarItem {
     commandOptions?: ICommandOptions;
     viewCommandName?: string;
     viewCommandOptions?: unknown;
-    permissions?: string[];
-    requiredLevel?: string;
-    visible?: boolean;
 }
