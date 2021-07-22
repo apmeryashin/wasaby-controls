@@ -9,7 +9,7 @@ import template = require('wml!Controls/_validate/SelectionContainer');
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/SelectionContainer
  * @extends Controls/_validate/Container
- * 
+ *
  * @public
  * @author Красильников А.С.
  */
@@ -19,8 +19,10 @@ class Selection extends Container {
     _shouldValidate: boolean;
 
     _deactivatedHandler(): void {
-        this._shouldValidate = true;
-        this._forceUpdate();
+        if (!this._options.readOnly) {
+            this._shouldValidate = true;
+            this._forceUpdate();
+        }
     }
 
     _selectedKeysChangedHandler(event: Event, value: string): void {
