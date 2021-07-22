@@ -116,6 +116,7 @@
    attr:class="controls-newBrowser"
    masterVisibility="{{_masterVisibility}}"
    propStorageId="{{_basePropStorageId + 'masterWidth'}}"
+   newDesign="{{_options.master.newDesign}}"
    masterWidth="{{_options.master ? _options.master.width}}"
    masterMinWidth="{{_options.master ? _options.master.minWidth}}"
    masterMaxWidth="{{_options.master ? _options.master.maxWidth}}"
