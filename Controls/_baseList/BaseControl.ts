@@ -1979,7 +1979,9 @@ const _private = {
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
-            this._indicatorsController.hideGlobalIndicator();
+            if (this._indicatorsController) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
             return this.isEditing() && !isEndEditProcessing ?
                 this._cancelEdit(true) :
                 void 0;
