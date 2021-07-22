@@ -220,7 +220,7 @@ type TAddPosition = 'top' | 'bottom';
  * @public
  * @author Авраменко А.С.
  */
-interface IItemAddOptions {
+export interface IItemAddOptions {
     /**
      * @name Controls/_grid/interface/IItemAddOptions#item
      * @cfg {Types/entity:Model} Запись, которая будет запущена на добавление.
@@ -256,7 +256,7 @@ interface IItemAddOptions {
  * @public
  * @author Авраменко А.С.
  */
-interface IItemEditOptions {
+export interface IItemEditOptions {
     /**
      * @name Controls/_grid/interface/IItemEditOptions#item
      * @cfg {Types/entity:Model} Запись, которая будет запущена на редактирование.
@@ -296,7 +296,7 @@ type TBeforeBeginEditEventSyncResult = editing.CANCEL | IBeforeBeginEditEventRes
  * @typedef {TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>} TBeforeBeginEditEventResult
  * @description Значения, которые можно возвращать из обработчика события {@link beforeBeginEdit}.
  */
-type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
+export type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
 
 /**
  * @typedef {String | undefined} TBeforeEndEditEventSyncResult

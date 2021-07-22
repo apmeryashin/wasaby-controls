@@ -128,6 +128,8 @@ export {
 
 export { IGridControl } from 'Controls/_grid/display/interface/IGridControl';
 
+export * from 'Controls/_grid/interface/IEditableGrid';
+
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_grid/display/Row';
 import { default as GridItemActionsCell } from 'Controls/_grid/display/ItemActionsCell';
 import GridCell, {IOptions as IGridCellOptions} from 'Controls/_grid/display/Cell';
