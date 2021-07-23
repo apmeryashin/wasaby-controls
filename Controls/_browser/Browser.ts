@@ -844,7 +844,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
         if (configsCount > 1) {
             this._dataLoader.each(({searchController}) => {
-                searchController.reset(Object.keys(this._dataLoader.getState()).length === 1);
+                searchController?.reset(Object.keys(this._dataLoader.getState()).length === 1);
             });
         } else {
             const filter = this._getSearchControllerSync().reset(true);
