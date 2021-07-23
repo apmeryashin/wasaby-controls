@@ -31,7 +31,7 @@ export default class BaseTemplate extends Control<IOptions> {
     _containerWidth: number;
 
     protected _beforeMount(options?: IOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._headingCaption = options.headingCaption || rk('Выбор раздела');
+        this._headingCaption = options.headingCaption || rk('Куда переместить');
         this._containerWidth = this._calculateWidth();
     }
 
@@ -43,7 +43,7 @@ export default class BaseTemplate extends Control<IOptions> {
 /**
  * @name Controls/_moverDialog/BaseTemplate#headingCaption
  * @cfg {String} Заголовок окна перемещения.
- * @default 'Выбор раздела'
+ * @default 'Куда переместить'
  */
 
 /**

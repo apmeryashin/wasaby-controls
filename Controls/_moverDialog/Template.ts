@@ -168,7 +168,7 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
         record.addField( { name: this._options.nodeProperty, type: 'boolean', defaultValue: null });
         record.addField({ name: this._options.keyProperty, type: 'string', defaultValue: 'root' });
         record.addField({
-            name: this._options.displayProperty,
+            name: this._columns[0].displayProperty,
             type: 'string',
             defaultValue: this._options.rootTitle || rk('В корень')
         });
@@ -236,7 +236,7 @@ Object.defineProperty(MoverDialogTemplate, 'defaultProps', {
 /**
  * @name Controls/_moverDialog/Template#headingCaption
  * @cfg {String} Заголовок окна перемещения.
- * @default 'Выбор раздела'
+ * @default 'Куда переместить'
  */
 
 /**
