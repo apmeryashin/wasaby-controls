@@ -166,9 +166,9 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         const visible = !isTopTrigger;
 
         let offset = 0;
-        if (isTopTrigger && this.hasIndicator('top')) {
+        if (isTopTrigger && this.getTopIndicator().isDisplayed()) {
             offset = DEFAULT_TOP_TRIGGER_OFFSET;
-        } else if (this.hasIndicator('bottom')) {
+        } else if (this.getBottomIndicator().isDisplayed()) {
             offset = DEFAULT_BOTTOM_TRIGGER_OFFSET;
         }
 

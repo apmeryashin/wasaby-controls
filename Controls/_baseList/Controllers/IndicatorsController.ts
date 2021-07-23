@@ -107,7 +107,7 @@ export default class IndicatorsController {
     }
 
     displayTopIndicator(scrollToFirstItem: boolean): void {
-        const isDisplayedIndicator = this._model.hasIndicator('top');
+        const isDisplayedIndicator = this._model.getTopIndicator().isDisplayed();
         if (isDisplayedIndicator) {
             return;
         }
@@ -128,7 +128,7 @@ export default class IndicatorsController {
     }
 
     displayBottomIndicator(): void {
-        const isDisplayedIndicator = this._model.hasIndicator('bottom');
+        const isDisplayedIndicator = this._model.getBottomIndicator().isDisplayed();
         if (isDisplayedIndicator) {
             return;
         }
@@ -359,10 +359,10 @@ export default class IndicatorsController {
     private _correctTriggerOffset(offset: ITriggerOffset): ITriggerOffset {
         const newOffset = {...offset};
 
-        if (this._model.hasIndicator('top')) {
+        if (this._model.getTopIndicator().isDisplayed()) {
             newOffset.top = newOffset.top + DEFAULT_TOP_TRIGGER_OFFSET;
         }
-        if (this._model.hasIndicator('bottom')) {
+        if (this._model.getBottomIndicator().isDisplayed()) {
             newOffset.bottom = newOffset.bottom + DEFAULT_BOTTOM_TRIGGER_OFFSET;
         }
 
