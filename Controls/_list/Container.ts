@@ -65,8 +65,10 @@ export default class ListContainer extends Control<IListContainerOptions> {
         if (options.id) {
             const dataOptions = options._dataOptionsValue;
             listOptions = dataOptions.listsConfigs[options.id];
-            listOptions.selectedKeys = dataOptions.listsSelectedKeys?.[options.id];
-            listOptions.excludedKeys = dataOptions.listsExcludedKeys?.[options.id];
+            if (listOptions) {
+                listOptions.selectedKeys = dataOptions.listsSelectedKeys?.[options.id];
+                listOptions.excludedKeys = dataOptions.listsExcludedKeys?.[options.id];
+            }
         } else {
             listOptions = options._dataOptionsValue;
         }
