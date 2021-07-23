@@ -62,7 +62,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
             classes.push(editorClass);
         }
 
-        if (!caption || this.getOwner().getCaptionPosition()) {
+        if (!caption || this.getOwner().getCaptionPosition() === 'top') {
             classes.push('controls-PropertyGrid__editor-withoutCaption');
         }
 
