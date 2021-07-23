@@ -551,6 +551,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 this._recountHasChildrenByRecordSet();
             }
         }
+        this.resetHasNode();
     }
 
     getIndexBySourceItem(item: any): number {

@@ -2296,6 +2296,26 @@ describe('Controls/_display/Tree', () => {
             tree.setRoot(0);
             assert.isTrue(tree.hasNode());
         });
+
+        it('recount when set new recordset', () => {
+            const rs = new RecordSet({
+                rawData: [
+                    {id: 1, hasChildren: false, node: null, pid: 0}
+                ],
+                keyProperty: 'id'
+            });
+            const tree = getTree(rs);
+            assert.isFalse(tree.hasNode());
+
+            const newRs = new RecordSet({
+                rawData: [
+                    {id: 1, hasChildren: false, node: true, pid: 0}
+                ],
+                keyProperty: 'id'
+            });
+            tree.setCollection(newRs);
+            assert.isTrue(tree.hasNode());
+        });
     });
 
     describe('node footers', () => {
