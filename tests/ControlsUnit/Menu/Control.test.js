@@ -480,6 +480,23 @@ define(
                assert.equal(menuControl._visibleIds.length, 11);
             });
 
+            it('expandButton hidden, visibleItems.length = 11, history menu with fixed item', () => {
+               const newMenuOptions = { allowPin: true, root: null };
+               const itemsData = [];
+               for (let i = 0; i < 11; i++) {
+                  itemsData.push({ key: String(i), doNotSaveToHistory: undefined });
+               }
+               itemsData.push({ key: 'doNotSaveToHistory', doNotSaveToHistory: true });
+               items = new collection.RecordSet({
+                  rawData: itemsData,
+                  keyProperty: 'key'
+               });
+
+               const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
+               assert.isFalse(result);
+               assert.equal(menuControl._visibleIds.length, 12);
+            });
+
             it('expandButton hidden, history menu', () => {
                const newMenuOptions = { allowPin: true, subMenuLevel: 1 };
 
