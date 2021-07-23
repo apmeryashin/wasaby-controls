@@ -1,42 +1,20 @@
-<ws:template name="tileView">
-   <Controls.treeTile:View
-      displayProperty="title"
-      parentProperty="parent"
-      nodeProperty="parent@"
-      multiSelectVisibility="visible"
-      bind:selectedKeys="_selectedKeys"
-      tileMode="static"
-      itemActions="{{_itemActions}}"
-      tileWidth="410"
-      imageProperty="image"
-      keyProperty="id"
-      menuIconSize="{{menuIconSize}}"
-      source="{{_viewSource}}">
-      <ws:itemTemplate>
-         <ws:partial
-            template="Controls/tile:RichTemplate"
-            border="{{false}}"
-            gradientColor="{{itemTemplate.item.contents.gradientColor}}"
-            titleLines="{{itemTemplate.item.contents.titleLines}}"
-            descriptionLines="{{itemTemplate.item.contents.titleLines}}"
-            imageSize="{{itemTemplate.item.contents.imageSize}}"
-            imageViewMode="{{itemTemplate.item.contents.imageViewMode}}"
-            imagePosition="{{itemTemplate.item.contents.imagePosition}}"
-            description="{{itemTemplate.item.contents.description}}"
-            imageCompressionCoefficient="{{itemTemplate.item.contents.imageCompressionCoefficient}}"
-            imageEffect="gradient"
-            scope="{{itemTemplate}}">
-         </ws:partial>
-      </ws:itemTemplate>
-   </Controls.treeTile:View>
-</ws:template>
-
 <div class="controlsDemo__wrapper">
-   <ws:for data="size in _menuIconSizes">
-   <div class="controlsDemo__cell" attr:key="{{size}}">
-      <div class="controls-text-label">Размер иконки меню '{{size}}'</div>
-      <ws:partial template="tileView" 
-                  menuIconSize="{{ size }}"></ws:partial>
-   </div>
-   </ws:for>
+
+    <div class="controlsDemo__cell controlsDemo__mr2">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/MenuIconSize/s/Index' }}">
+            <a href="{{content.href}}">Размер иконки меню s</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.MenuIconSize.s.Index />
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/MenuIconSize/m/Index' }}">
+            <a href="{{content.href}}">Размер иконки меню m</a>
+        </Router.router:Reference>
+        <Controls-demo.tileNew.DifferentItemTemplates.RichTemplate.MenuIconSize.m.Index />
+    </div>
 </div>
