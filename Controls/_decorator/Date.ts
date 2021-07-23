@@ -25,7 +25,7 @@ export interface IDateOptions extends IControlOptions, IFontColorStyleOptions, I
     /**
      * @name Controls/_decorator/IDate#format
      * @cfg {string} Формат для преобразования даты.
-     * Все доступные маски описаны {@link https://platform-git.sbis.ru/saby/types/-/blob/2eedb730647fadf517d65afa5f2588f9322e2858/Types/_formatter/date.ts#L445 здесь}
+     * Все доступные маски описаны {@link https://wi.sbis.ru/docs/js/Types/formatter/methods/date/ здесь}
      * @demo Controls-demo/Decorator/Date/Index
      */
     format: string;
