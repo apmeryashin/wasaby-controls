@@ -2493,7 +2493,8 @@ const _private = {
 
     createScrollController(self: BaseControl, options: any): void {
         // indicatorsController создается после scrollController, т.к. отображение ромашек зависит от скрыты ли элементы
-        // виртуальным скроллом
+        // виртуальным скроллом. resetOffset при создании не важен, т.к. при создании мы не знаем высоту вьюхи
+        // и оффсеты всен равно будут 0
         const resetTopTriggerOffset = self._indicatorsController
             ? self._indicatorsController.isResetTopTriggerOffset()
             : true;
@@ -3387,6 +3388,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.createScrollController(self, newOptions);
         self._createIndicatorsController(newOptions);
+        // обновляем флаги isResetTriggerOffset
+        self._updateScrollController(newOptions);
 
         if (receivedState.errorConfig) {
             _private.showError(self, receivedState.errorConfig);
@@ -6319,7 +6322,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _countGlobalIndicatorPosition(): number {
-        return this._scrollTop + this._viewportSize / 2 - INDICATOR_HEIGHT / 2;
+        return this._scrollTop + (this._viewportSize || this._viewSize) / 2 - INDICATOR_HEIGHT / 2;
     }
 
     private _displayGlobalIndicator(): void {
@@ -6336,7 +6339,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {
-        return !this._scrollController.isRangeOnEdge(direction);
+        return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
     }
 
     private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void): void {

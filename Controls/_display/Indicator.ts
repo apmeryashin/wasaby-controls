@@ -134,6 +134,10 @@ export default class Indicator extends CollectionItem<null> {
     getQAData(marker?: boolean): string {
         return this.key;
     }
+
+    isDisplayed() {
+        return this._$visible;
+    }
 }
 
 Object.assign(Indicator.prototype, {

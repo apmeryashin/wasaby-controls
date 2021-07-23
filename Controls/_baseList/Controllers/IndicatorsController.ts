@@ -22,7 +22,7 @@ export interface IIndicatorsControllerOptions {
     stopPortionedSearchCallback: () => void;
 }
 
-const INDICATOR_DELAY = 500;
+const INDICATOR_DELAY = 2000;
 export const INDICATOR_HEIGHT = 48;
 
 const SEARCH_MAX_DURATION = 30 * 1000;
@@ -204,7 +204,7 @@ export default class IndicatorsController {
         return !!(
             this._model.hasIndicator('top') ||
             this._model.hasIndicator('bottom') ||
-            this._model.hasIndicator('global')
+            this._model.getGlobalIndicator().isDisplayed()
         );
     }
 

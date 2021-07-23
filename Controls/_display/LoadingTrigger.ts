@@ -55,7 +55,7 @@ export default class LoadingTrigger extends CollectionItem<null> {
     }
 
     getClasses(): string {
-        return 'controls-BaseControl__loadingTrigger'
+        return 'controls-BaseControl__loadingTrigger';
     }
 
     isTopTrigger(): boolean {
