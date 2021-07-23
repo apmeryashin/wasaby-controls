@@ -43,6 +43,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', 'blue', 'master'),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', 'master'),
+                ['controls-background-default', 'controls-background-master', 'controls-background-red']);
         });
 
         // + backgroundStyle!=default
@@ -53,6 +55,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', 'blue', undefined),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', undefined),
+                ['controls-background-default', 'controls-background-red']);
         });
 
         // - backgroundStyle!=default
@@ -63,6 +67,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
             cell = new GridHeaderCell({ owner, column });
             cAssert.include(cell.getWrapperClasses('default', 'blue', 'master'),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', 'master'),
+                ['controls-background-default', 'controls-background-master']);
         });
 
         // + style=default
@@ -73,6 +79,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'default' });
             cAssert.include(cell.getWrapperClasses('default', 'blue', 'default'),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', 'default'),
+                ['controls-background-default']);
         });
     });
 
@@ -85,6 +93,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', undefined, 'master'),
                 'controls-background-red');
+            cAssert.notInclude(cell.getWrapperClasses('default', undefined, 'master'),
+                ['controls-background-default', 'controls-background-master']);
         });
 
         // + backgroundStyle!=default
@@ -95,6 +105,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', undefined, 'default'),
                 'controls-background-red');
+            cAssert.notInclude(cell.getWrapperClasses('default', undefined, 'default'),
+                ['controls-background-default']);
         });
     });
 
@@ -117,6 +129,8 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
             cell = new GridHeaderCell({ owner, column, backgroundStyle: 'default' });
             cAssert.include(cell.getWrapperClasses('default', undefined, 'master'),
                 'controls-background-master');
+            cAssert.notInclude(cell.getWrapperClasses('default', undefined, 'master'),
+                ['controls-background-default']);
         });
     });
 });
