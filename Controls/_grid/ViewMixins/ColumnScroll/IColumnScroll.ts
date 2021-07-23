@@ -43,7 +43,8 @@ interface IView extends Control<IViewOptions> {
     );
 
     _getStickyLadderCellsCount: (options: IViewOptions) => number;
-    _notify: (eventName: string, args?: unknown[], options?: {bubbling?: boolean}) => void
+    _hasItemActionsCell(options: IViewOptions): boolean;
+    _notify: (eventName: string, args?: unknown[], options?: {bubbling?: boolean}) => void;
     getListModel(): DestroyableMixin & {
         setStickyColumnsCount(stickyColumnsCount: number): void;
     };
@@ -79,7 +80,6 @@ interface IColumnScrollViewMixin {
     // Methods
     isColumnScrollVisible(): boolean;
     _resetColumnScroll(options: IViewOptions): void;
-    _columnScrollHasItemActionsCell(options: IViewOptions): boolean;
     _isDragScrollEnabledByOptions(options: IViewOptions): boolean;
     _getColumnScrollEmptyViewMaxWidth(): number;
     _getColumnScrollThumbStyles(options: IViewOptions): string;
