@@ -26,6 +26,7 @@ export default class PositionSourceMemory extends Memory {
         let limit = query.getLimit();
 
         const isSearch = query.getWhere().title !== undefined;
+        const filterFewItems = query.getWhere().filter === 'few-items';
         let isPrepend = typeof filter['key<='] !== 'undefined';
         const isPosition = typeof filter['key~'] !== 'undefined';
         let position = filter['key<='] || filter['key>='] || filter['key~'] || 0;
@@ -39,26 +40,36 @@ export default class PositionSourceMemory extends Memory {
             position -= limit;
         }
 
-        if (!isSearch) {
+        if (filterFewItems) {
+            const items = this._getItems(position, 3);
+            const result = this._prepareQueryResult({
+                items,
+                meta: {
+                    total: false,
+                    more: false
+                }
+            }, null);
+            return Promise.resolve(result);
+        } else if (isSearch) {
+            return this._getSearchItems(position)
+                .then((items) => this._prepareQueryResult({
+                        items,
+                        meta: {
+                            total: isPosition ? {before: true, after: true} : position > -100,
+                            more: position > -100,
+                            iterative: position > -100 // находим всего 100 записей
+                        }
+                    }, null)
+                );
+        } else {
             const items = this._getItems(position, limit);
             const result = this._prepareQueryResult({
                 items,
                 meta: {
-                    total: isPosition ? { before: true, after: true } : true
+                    total: isPosition ? {before: true, after: true} : true
                 }
             }, null);
             return Promise.resolve(result);
-        } else {
-            return this._getSearchItems(position)
-                .then((items) => this._prepareQueryResult({
-                    items,
-                    meta: {
-                        total: isPosition ? { before: true, after: true } : position > -100,
-                        more: position > -100,
-                        iterative: position > -100 // находим всего 100 записей
-                    }
-                }, null)
-            );
         }
     }
 

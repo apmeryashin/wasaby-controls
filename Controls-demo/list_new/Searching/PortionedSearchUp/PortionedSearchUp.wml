@@ -1,10 +1,20 @@
 <div class="controlsDemo__wrapper controlsDemo__width800px">
-    <Controls.browser:Browser source="{{_viewSource}}" keyProperty="key" bind:filter="_filter"
-                              searchParam="title" minSearchLength="{{3}}">
+    <Controls.browser:Browser source="{{_viewSource}}"
+                              keyProperty="key"
+                              bind:filter="_filter"
+                              searchParam="title"
+                              minSearchLength="{{3}}"
+                              filterButtonSource="{{_fastFilterData}}">
         <div class="ws-fragment">
             <Controls.search:InputContainer>
                 <Controls.search:Input/>
             </Controls.search:InputContainer>
+            <Controls.filter:ViewContainer>
+                <Controls.filter:View source="{{_fastFilterData}}"
+                                      alignment="right"
+                                      viewMode="frequent"
+                                      panelTemplateName="Controls/filterPopup:SimplePanel"/>
+            </Controls.filter:ViewContainer>
             <Controls.scroll:Container attr:class="controlsDemo__height300" initialScrollPosition="{{_initialScrollPosition}}">
                 <Controls.list:View name="list">
                     <ws:navigation source="position" view="infinity">
