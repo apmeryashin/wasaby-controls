@@ -14,28 +14,15 @@
  * @author Авраменко А.С.
  */
 
-/**
- * @typedef {String} Controls/_explorer/interface/IExplorer/TExplorerViewMode
- * @description Допустимые значения для опции {@link viewMode}.
- * @variant table Таблица.
- * @variant search Поиск.
- * @variant tile Плитка.
- * @variant list Плоский список.
- */
-
-/*
- * @typedef {String} TExplorerViewMode
- * @variant table Table.
- * @variant search Search.
- * @variant tile Tiles.
- * @variant list List.
- */
-
 export type TExplorerViewMode = 'table' | 'search' | 'tile' | 'list';
 
 /**
  * @name Controls/_explorer/interface/IExplorer#viewMode
- * @cfg {Controls/_explorer/interface/IExplorer/TExplorerViewMode.typedef} {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/view-mode/ Режим отображения} иерархического проводника.
+ * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/view-mode/ Режим отображения} иерархического проводника.
+ * @variant table Таблица.
+ * @variant search Поиск.
+ * @variant tile Плитка.
+ * @variant list Плоский список.
  * @demo Controls-demo/Explorer/Explorer
  */
 
@@ -58,8 +45,8 @@ export type TExplorerViewMode = 'table' | 'search' | 'tile' | 'list';
 /**
  * @event Происходит при изменении корня иерархии (например, при переходе пользователя по хлебным крошкам).
  * @name Controls/_explorer/interface/IExplorer#rootChanged
- * @param event {eventObject} Дескриптор события.
- * @param root {String|Number} Идентификатор корневой записи.
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String|Number} root Идентификатор корневой записи.
  */
 
 /**
@@ -93,26 +80,24 @@ export type TExplorerViewMode = 'table' | 'search' | 'tile' | 'list';
  */
 
 /**
- * @typedef {String} Controls/_explorer/interface/IExplorer/SearchStartingWith
- * @description Допустимые значения для опции {@link searchStartingWith}.
+ * @name Controls/_explorer/interface/IExplorer#searchStartingWith
+ * @cfg {String} Режим поиска в иерархическом проводнике.
  * @variant root Поиск происходит в {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/navigation/root/ корне}.
  * @variant current Поиск происходит в текущем резделе.
- */
-
-/**
- * @name Controls/_explorer/interface/IExplorer#searchStartingWith
- * @cfg {Controls/_explorer/interface/IExplorer/SearchStartingWith.typedef} Режим поиска в иерархическом проводнике.
  * @default root
  */
 
 /**
- * @typedef {String} Controls/_explorer/interface/IExplorer/SearchNavigationMode
- * @description Допустимые значения для опции {@link searchNavigationMode}.
+ * @name Controls/_explorer/interface/IExplorer#searchNavigationMode
+ * @cfg {String} Режим навигации при поиске в иерархическом проводнике.
  * @variant open В {@link Controls/_explorer/interface/IExplorer#viewMode режиме поиска} при клике на хлебную крошку происходит проваливание в данный узел.
  * @variant expand В режиме поиска при клике на хлебную крошку данные отображаются от корня, путь до узла разворачивается.
- */
-/**
- * @name Controls/_explorer/interface/IExplorer#searchNavigationMode
- * @cfg {Controls/_explorer/interface/IExplorer/SearchNavigationMode.typedef} Режим навигации при поиске в иерархическом проводнике.
  * @default open
+ */
+
+/**
+ * @name Controls/_explorer/interface/IExplorer#breadcrumbsVisibility
+ * @cfg {String} Видимость хлебных крошек и кнопки "Назад".
+ * @variant hidden Скрыто.
+ * @variant visible Отображается.
  */
