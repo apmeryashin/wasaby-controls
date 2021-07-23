@@ -37,6 +37,8 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
             cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', 'blue', 'master', false),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', 'master', false),
+                ['controls-background-default', 'controls-background-master', 'controls-background-red']);
         });
 
         // + backgroundStyle!=default
@@ -47,6 +49,8 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
             cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', 'blue', undefined, false),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', undefined, false),
+                ['controls-background-default', 'controls-background-red']);
         });
 
         // - backgroundStyle!=default
@@ -57,6 +61,8 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
             cell = new GridFooterCell({ owner, column: { width: ''} });
             cAssert.include(cell.getWrapperClasses('default', 'blue', 'master', false),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', 'master', false),
+                ['controls-background-default', 'controls-background-master']);
         });
 
         // + style=default
@@ -67,6 +73,8 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
             cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'default' });
             cAssert.include(cell.getWrapperClasses('default', 'blue', 'default', false),
                 'controls-background-blue');
+            cAssert.notInclude(cell.getWrapperClasses('default', 'blue', 'default', false),
+                ['controls-background-default']);
         });
     });
 
@@ -79,6 +87,8 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
             cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', undefined, 'master', false),
                 'controls-background-red');
+            cAssert.notInclude(cell.getWrapperClasses('default', undefined, 'master', false),
+                ['controls-background-default', 'controls-background-master']);
         });
 
         // + backgroundStyle!=default
@@ -89,6 +99,8 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
             cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'red' });
             cAssert.include(cell.getWrapperClasses('default', undefined, 'default', false),
                 'controls-background-red');
+            cAssert.notInclude(cell.getWrapperClasses('default', undefined, 'default', false),
+                ['controls-background-default']);
         });
     });
 
@@ -111,6 +123,8 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
             cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'default' });
             cAssert.include(cell.getWrapperClasses('default', undefined, 'master', false),
                 'controls-background-master');
+            cAssert.notInclude(cell.getWrapperClasses('default', undefined, 'master', false),
+                ['controls-background-default']);
         });
     });
 });

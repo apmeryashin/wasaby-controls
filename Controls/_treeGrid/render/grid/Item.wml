@@ -113,7 +113,7 @@
             <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition() }}"
                                           mode="{{ (item || itemData).getStickyHeaderMode() }}"
                                           shadowVisibility="{{column.shadowVisibility}}"
-                                          backgroundStyle="{{ backgroundStyle }}"
+                                         backgroundStyle="{{ column.getStickyBackgroundStyle(style) }}"
                                           fixedZIndex="{{ column.getZIndex()}}"
                                           attr:key="sticky_{{ column.getInstanceId() }}"
                                           attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"

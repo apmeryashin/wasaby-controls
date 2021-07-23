@@ -83,7 +83,7 @@
             <ws:for data="column in (item || itemData).getColumns()">
                 <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition(stickyCallback) }}"
                                               mode="{{ (item || itemData).getStickyHeaderMode(stickyCallback) }}"
-                                              backgroundStyle="{{backgroundStyle}}"
+                                              backgroundStyle="{{ column.getStickyBackgroundStyle(style) }}"
                                               shadowVisibility="{{column.shadowVisibility}}"
                                               fixedZIndex="{{ column.getZIndex()}}"
                                               attr:key="sticky_{{ column.getInstanceId() }}"

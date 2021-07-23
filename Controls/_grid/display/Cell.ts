@@ -302,14 +302,19 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         let wrapperClasses = '';
         if (backgroundColorStyle) {
             wrapperClasses += ` controls-background-${backgroundColorStyle}`;
-        }
-        if (this._$backgroundStyle === 'default' && style !== 'default') {
+
+        } else if (this._$backgroundStyle === 'default' && style !== 'default') {
             wrapperClasses += ` controls-background-${style}`;
 
         } else {
             wrapperClasses += ` controls-background-${this._$backgroundStyle || style}`;
         }
         return wrapperClasses;
+    }
+
+    // В StickyBlock надо передавать корректный backgroundStyle в зависимости от style
+    getStickyBackgroundStyle(style: string = 'default'): string {
+        return this._$backgroundStyle === 'default' && style !== 'default' ? style : this._$backgroundStyle || style;
     }
 
     // Only for partial grid support
