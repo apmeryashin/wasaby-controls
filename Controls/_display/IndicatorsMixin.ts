@@ -32,19 +32,24 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
     }
 
     getGlobalIndicator(): Indicator {
-        if (!this._globalIndicator) {
-            // сразу создаем глобальный индикатор, он отображается с помощью display: none
-            // это сделано только для того, чтобы можно было показывать индикатор при долгой отрисовке
-            this._createIndicator('global', EIndicatorState.Loading);
-        }
         return this._globalIndicator;
     }
 
     getTopIndicator(): Indicator {
+        if (!this._topIndicator) {
+            // сразу создаем верхний индикатор, он отображается с помощью display: none
+            // это сделано только для того, чтобы можно было показывать индикатор при долгой отрисовке
+            this._createIndicator('top', EIndicatorState.Loading);
+        }
         return this._topIndicator;
     }
 
     getBottomIndicator(): Indicator {
+        if (!this._bottomIndicator) {
+            // сразу создаем верхний индикатор, он отображается с помощью display: none
+            // это сделано только для того, чтобы можно было показывать индикатор при долгой отрисовке
+            this._createIndicator('bottom', EIndicatorState.Loading);
+        }
         return this._bottomIndicator;
     }
 
@@ -65,10 +70,10 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         const indicator = this._getIndicator(position);
         if (indicator) {
             if (position === 'global') {
-                indicator.hide();
-            } else {
                 const indicatorName = this._getIndicatorName(position);
                 this[indicatorName] = null;
+            } else {
+                indicator.hide();
             }
             this._nextVersion();
         }
@@ -88,8 +93,8 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
             itemModule: 'Controls/display:Indicator',
             position,
             state,
-            // только глобальный индикатор изначально скрыт, т.к. он показывается с помощью стиля display
-            visible: position !== 'global',
+            // только глобальный индикатор изначально показан, т.к. он при показе - создается, при скрытии - удаляется
+            visible: position === 'global',
             portionedSearchTemplate: this._$portionedSearchTemplate,
             continueSearchTemplate: this._$continueSearchTemplate
         });

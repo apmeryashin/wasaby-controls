@@ -3064,7 +3064,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * @private
      */
     private _handleLoadToDirection: boolean;
-    private _displayDrawingIndicator: boolean = false;
+    private _drawingIndicatorDirection: 'top'|'bottom';
 
     protected _listViewModel: Collection = null;
     _viewModelConstructor = null;
@@ -3664,7 +3664,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._indicatorsController.displayTopIndicator(true);
         }
         if (this._children.listView) {
-            this._indicatorsController.setGlobalIndicatorElement(this._children.listView.getGlobalIndicator());
+            this._indicatorsController.setIndicatorElements(
+                this._children.listView.getTopIndicator(),
+                this._children.listView.getBottomIndicator()
+            );
         }
 
         _private.tryLoadToDirectionAgain(this);
@@ -4350,9 +4353,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } });
             this._scrollController.setRendering(false);
 
-            if (this._displayDrawingIndicator) {
-                this._indicatorsController.hideDrawingIndicator();
-                this._displayDrawingIndicator = false;
+            if (this._drawingIndicatorDirection) {
+                this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
+                this._drawingIndicatorDirection = null;
             }
 
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
@@ -4472,8 +4475,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (result) {
                 _private.handleScrollControllerResult(this, result);
                 this._handleLoadToDirection = false;
-                this._displayDrawingIndicator = true;
-                this._indicatorsController.displayDrawingIndicator(this._countGlobalIndicatorPosition());
+                this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
+                this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
                 resolver();
             } else {
                 this._loadMore(direction).then(() => {

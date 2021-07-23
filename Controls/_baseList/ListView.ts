@@ -376,8 +376,12 @@ const ListView = Control.extend(
             return this._children.bottomLoadingTrigger;
         },
 
-        getGlobalIndicator(): HTMLElement {
-            return this._children.globalIndicator;
+        getTopIndicator(): HTMLElement {
+            return this._children.topIndicator;
+        },
+
+        getBottomIndicator(): HTMLElement {
+            return this._children.bottomIndicator;
         },
 
         _onIndicatorClick(event: SyntheticEvent): void {

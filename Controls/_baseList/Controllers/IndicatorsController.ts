@@ -57,7 +57,8 @@ export default class IndicatorsController {
     private _portionedSearchTimer: number = null;
     private _searchState: SEARCH_STATES = 0;
 
-    private _globalIndicatorElement: HTMLElement;
+    private _topIndicatorElement: HTMLElement;
+    private _bottomIndicatorElement: HTMLElement;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -157,20 +158,29 @@ export default class IndicatorsController {
     /**
      * Отображает индикатор, который обозначает долгую отрисовку элементов
      */
-    displayDrawingIndicator(topOffset: number): void {
+    displayDrawingIndicator(position: 'top'|'bottom'): void {
         this._startDisplayIndicatorTimer(() => {
+            const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
             // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
             // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
             // скорее всего не выполнится
-            this._globalIndicatorElement.style.display = '';
-            this._globalIndicatorElement.style.top = topOffset+'px';
+            indicatorElement.style.display = '';
+            indicatorElement.style.position = 'sticky';
+            indicatorElement.style[position] = '0';
         });
     }
 
-    hideDrawingIndicator(): void {
+    hideDrawingIndicator(position: 'top'|'bottom'): void {
         this._clearDisplayIndicatorTimer();
-        this._globalIndicatorElement.style.display = 'none';
-        this._globalIndicatorElement.style.top = '';
+        const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
+        indicatorElement.style.display = 'none';
+        indicatorElement.style.position = '';
+        indicatorElement.style[position] = '';
+    }
+
+    setIndicatorElements(topIndicator: HTMLElement, bottomIndicator: HTMLElement): void {
+        this._topIndicatorElement = topIndicator;
+        this._bottomIndicatorElement = bottomIndicator;
     }
 
     recountIndicators(direction: 'up'|'down'|'all', scrollToFirstItem: boolean = false): boolean {
@@ -202,14 +212,10 @@ export default class IndicatorsController {
 
     hasDisplayedIndicator(): boolean {
         return !!(
-            this._model.hasIndicator('top') ||
-            this._model.hasIndicator('bottom') ||
-            this._model.getGlobalIndicator().isDisplayed()
+            this._model.hasIndicator('global') ||
+            this._model.getTopIndicator().isDisplayed() ||
+            this._model.getBottomIndicator().isDisplayed()
         );
-    }
-
-    setGlobalIndicatorElement(globalIndicator: HTMLElement): void {
-        this._globalIndicatorElement = globalIndicator;
     }
 
     private _recountTopIndicator(scrollToFirstItem: boolean = false): void {
