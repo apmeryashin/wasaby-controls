@@ -74,11 +74,12 @@ export class ViewModel extends BaseViewModel {
         this._format = FormatBuilder.getFormat(this._options.mask, ViewModel._formatMaskChars, ViewModel._replacer);
 
         const clearResult = Formatter.clearData(this._format, preResult);
-        const result = Formatter.formatData(this._format, {
+        let result = Formatter.formatData(this._format, {
             value: clearResult.value,
             carriagePosition: 0
         }).value;
 
+        result = ViewModel._removeStartZeros(result);
         return result;
     }
 
@@ -229,5 +230,15 @@ export class ViewModel extends BaseViewModel {
             insert: '',
             delete: ''
         };
+    }
+
+    private static _removeStartZeros(str: string): string {
+        let result: string = str;
+        const zerosMatch = str.match(/^(0*)\d/);
+        if (zerosMatch) {
+            const count = zerosMatch[1].length
+            result = ViewModel._replacer.repeat(count) + str.slice(count);
+        }
+        return result
     }
 }

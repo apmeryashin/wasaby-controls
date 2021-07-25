@@ -45,7 +45,7 @@ define([
             assert.strictEqual(model._convertToDisplayValue(value), '20:10:20');
 
             value = new entity.TimeInterval({seconds: 20});
-            assert.strictEqual(model._convertToDisplayValue(value), '00:00:20');
+            assert.strictEqual(model._convertToDisplayValue(value), ' 0:00:20');
          });
       });
 
@@ -55,10 +55,10 @@ define([
                sandbox = sinon.createSandbox();
             model.value = model._convertToValue('1 :1 :1 ');
             model.autoComplete();
-            assert.strictEqual(model.displayValue, '01:01:01');
+            assert.strictEqual(model.displayValue, ' 1:01:01');
             model.value = model._convertToValue(' 1: 1: 1');
             model.autoComplete();
-            assert.strictEqual(model.displayValue, '01:01:01');
+            assert.strictEqual(model.displayValue, ' 1:01:01');
             sandbox.restore();
          });
       });
