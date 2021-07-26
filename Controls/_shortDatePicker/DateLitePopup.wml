@@ -110,7 +110,8 @@
                               controls-PeriodLiteDialog__text-align-center">
                         <div  class="controls-PeriodLiteDialog-item-yearList-years"
                               on:click="_onYearClick(yearTemplate.date.getFullYear())">
-<!--                           controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} - костыль из-за не работы реактивности в tabindex-->
+<!--                           controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} - если использовать переменную на шаблоне
+                               и использовать её в tabindex, то реактивности не будет, поэтому используем эту переменную в классе-->
                            <div class="controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} controls-PeriodLiteDialog__vLayoutItem-caption
                                  {{_getYearItemCssClasses(yearTemplate.date.getFullYear())}}
                                  controls-PeriodLiteDialog__yearList-year"

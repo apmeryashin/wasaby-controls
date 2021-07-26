@@ -41,7 +41,7 @@
                        on:touchmove="_onQuarterMouseLeave(quarter.number)"
                        on:blur="_onQuarterBlur()"
                        tabindex="{{_getTabindex()}}"
-                       name="q-{{quarter.number}}"
+                       name="quarter-{{quarter.number}}"
                   >
                      {{ quarter.name }}
                   </div>
@@ -59,7 +59,7 @@
                  on:blur="_onHalfYearBlur()"
                  title="{{ halfYear.tooltip }}"
                  tabindex="{{_getTabindex()}}"
-                 name="h-{{halfYear.number}}"
+                 name="halfYear-{{halfYear.number}}"
             >
                {{ halfYear.name }}
             </div>

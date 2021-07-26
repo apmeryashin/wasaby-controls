@@ -176,33 +176,20 @@ class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstruc
     }
 
     private _selectPeriodByPressEnter(): void {
-        if (this._halfYearHovered === null && this._quarterHovered === null) {
-            return;
-        }
-
-        let start;
-        let end;
         if (this._halfYearHovered !== null) {
-            start = new this._options.dateConstructor(this._options.currentYear,
-                this._halfYearHovered * MONTHS_IN_HALFYEAR, 1);
-            end = new this._options.dateConstructor(this._options.currentYear,
-                (this._halfYearHovered + 1) * MONTHS_IN_HALFYEAR, 0);
+            this._onHalfYearClick(null, this._halfYearHovered, this._options.currentYear);
         }
         if (this._quarterHovered !== null) {
-            start = new this._options.dateConstructor(this._options.currentYear,
-                this._quarterHovered * MONTHS_IN_QUARTER, 1);
-            end = new this._options.dateConstructor(this._options.currentYear,
-                (this._quarterHovered + 1) * MONTHS_IN_QUARTER, 0);
+            this._onQuarterClick(null, this._quarterHovered, this._options.currentYear);
         }
-        this._notifySendResult(start, end);
     }
 
     private _hoverPeriod(key: string): void {
         if (key) {
-            const period = parseInt(key[2], 10);
-            if (key[0] === 'q') {
+            const period = parseInt(key[key.length - 1], 10);
+            if (key.indexOf('quarter') !== -1) {
                 this._quarterHovered = period;
-            } else {
+            } else if (key.indexOf('halfYear') !== -1) {
                 this._halfYearHovered = period;
             }
         }
