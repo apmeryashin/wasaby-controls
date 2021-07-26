@@ -4,6 +4,7 @@ import {TColumns, TColumnSeparatorSize} from './interface/IColumn';
 
 import Collection from './Collection';
 import HeaderRow, {IOptions as IHeaderRowOptions} from './HeaderRow';
+import {ISortItem} from './mixins/Grid';
 
 export interface IOptions extends IHeaderRowOptions {
 }
@@ -76,7 +77,7 @@ export default class Header {
         });
     }
 
-    setSorting(sorting: Array<{ [p: string]: string }>): void {
+    setSorting(sorting: ISortItem[]): void {
         this._$rows.forEach((row) => {
             row.setSorting(sorting);
         });

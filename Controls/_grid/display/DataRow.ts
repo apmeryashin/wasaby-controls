@@ -19,7 +19,7 @@ export default class DataRow<T extends Model = Model> extends Row<T> implements
     ILadderSupport,
     ISelectableItem,
     IDisplaySearchValue {
-    protected _$columnItems: Array<DataCell<T, this>>;
+    protected _$columnItems: DataCell[];
     protected _$searchValue: string;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;

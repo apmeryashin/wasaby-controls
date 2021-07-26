@@ -22,7 +22,7 @@ const LADDER_RENDER = 'Controls/grid:TypesLadderWrapper';
 /**
  * Ячейка строки таблицы, которая отображает данные из RecordSet-а
  */
-export default class DataCell<T extends Model, TOwner extends DataRow<T>> extends mixin<
+export default class DataCell<T extends Model = Model, TOwner extends DataRow<T> = DataRow<T>> extends mixin<
     Cell<T, TOwner>,
     DataCellCompatibility<T>
 >(

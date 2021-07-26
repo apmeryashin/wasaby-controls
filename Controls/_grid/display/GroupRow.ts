@@ -48,7 +48,7 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
     readonly ItemActionsItem: boolean = false;
     readonly '[Controls/_display/grid/GroupRow]': true;
 
-    protected _$columnItems: Array<DataCell<TContents, GroupRow<TContents>>>;
+    protected _$columnItems: DataCell[];
     protected _groupTemplate: TemplateFunction | string;
     protected _$metaResults: EntityModel;
     protected _$colspanGroup: boolean;
