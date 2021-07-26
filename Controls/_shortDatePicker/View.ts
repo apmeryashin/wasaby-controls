@@ -243,13 +243,13 @@ class View extends Control<IDateLitePopupOptions> {
         }
     }
 
-    protected _keyupHandler(event: SyntheticEvent): void {
+    protected _keyUpHandler(event: SyntheticEvent): void {
         if (event.nativeEvent.keyCode === constants.key.tab) {
             this._tabPressed = true;
         }
     }
 
-    protected _keyupYearHandler(event: SyntheticEvent, year: Date): void {
+    protected _keyUpYearHandler(event: SyntheticEvent, year: Date): void {
         if (event.nativeEvent.keyCode === constants.key.tab) {
             this._tabPressed = true;
             this._yearHovered = year;
@@ -258,7 +258,7 @@ class View extends Control<IDateLitePopupOptions> {
         }
     }
 
-    protected _mouseEnter(): void {
+    protected _mouseEnterHandler(): void {
         this._children.shortDatePicker.focus();
     }
 

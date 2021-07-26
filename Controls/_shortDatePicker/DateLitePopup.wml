@@ -4,7 +4,7 @@
             {{_getSizeCssClass('width')}} {{_options.popupClassName}}
             {{!_isExpandedPopup ? _getSizeCssClass('height')}}"
             name="shortDatePicker"
-            on:mouseenter="_mouseEnter()">
+            on:mouseenter="_mouseEnterHandler()">
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__header">
          <div class="controls-PeriodLiteDialog__currentValue"
@@ -116,7 +116,7 @@
                                  {{_getYearItemCssClasses(yearTemplate.date.getFullYear())}}
                                  controls-PeriodLiteDialog__yearList-year"
                                 tabindex="{{_getTabindex(yearTemplate.date.getFullYear())}}"
-                                on:keyup="_keyupYearHandler(yearTemplate.date.getFullYear())">
+                                on:keyup="_keyUpYearHandler(yearTemplate.date.getFullYear())">
                               {{ yearTemplate.date.getFullYear() }}
                            </div>
                         </div>

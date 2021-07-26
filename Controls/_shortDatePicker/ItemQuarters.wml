@@ -12,7 +12,7 @@
             >
                 <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
                      tabindex="{{_getTabindex()}}"
-                     on:keyup="_keyupQuarterHandler(quarter.number,  _options.currentYear)"
+                     on:keyup="_keyUpQuarterHandler(quarter.number, _options.currentYear)"
                      title="{{ quarter.tooltip }}">
                     {{ quarter.fullName }}
                 </div>

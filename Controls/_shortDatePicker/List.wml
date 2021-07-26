@@ -5,7 +5,7 @@
         bind:position="_position"
         attr:class="controls-PeriodLiteDialog-MonthList{{ isExpandedPopup ? '_expanded' }}"
         source="{{_options.source}}"
-        on:keyup="_keyupHandler()">
+        on:keyup="_keyUpHandler()">
     <ws:yearHeaderTemplate>
         <div
                 on:mouseenter="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
@@ -13,7 +13,7 @@
                 on:mouseleave="_onYearMouseLeave()"
                 on:touchmove="_onYearMouseLeave()"
                 on:click="_onYearClick(yearHeaderTemplate.date.getFullYear())"
-                on:keyup="_keyupYearHandler(yearHeaderTemplate.date.getFullYear())"
+                on:keyup="_keyUpYearHandler(yearHeaderTemplate.date.getFullYear())"
                 class="controls-PeriodLiteDialog__fullYear-listElement
                        {{ _options.chooseYears && _yearHovered === yearHeaderTemplate.date.getFullYear() ?  'controls-PeriodLiteDialog__fullYear-listElement-hovered' +
                        ' controls-PeriodLiteDialog__fullYear-listElement-hovered controls-PeriodLiteDialog__yearHeader-background-hovered'}}

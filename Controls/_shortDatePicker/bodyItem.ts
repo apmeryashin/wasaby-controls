@@ -121,25 +121,33 @@ class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstruc
         const lastDay: number = 31;
         if (this._options.chooseYears) {
             const start = new this._options.dateConstructor(year, 0, 1);
-            const end = new WSDate(year, lastMonth, lastDay );
+            const end = new this._options.dateConstructor(year, lastMonth, lastDay);
             this._notifySendResult(start, end);
         }
     }
 
     protected _onHalfYearClick(event: Event, halfYear: number, year: number): void {
+        this._selectHalfYear(halfYear, year);
+    }
+
+    protected _onQuarterClick(event: Event, quarter: number, year: number): void {
+        this._selectQuarter(quarter, year);
+    }
+
+    protected _onMonthClick(event: Event, month: Date): void {
+        this._notifySendResult(month, dateUtils.getEndOfMonth(month));
+    }
+
+    private _selectHalfYear(halfYear: number, year: number): void {
         const start = new this._options.dateConstructor(year, halfYear * MONTHS_IN_HALFYEAR, 1);
         const end = new this._options.dateConstructor(year, (halfYear + 1) * MONTHS_IN_HALFYEAR, 0);
         this._notifySendResult(start, end);
     }
 
-    protected _onQuarterClick(event: Event, quarter: number, year: number): void {
+    private _selectQuarter(quarter: number, year: number): void {
         const start = new this._options.dateConstructor(year, quarter * MONTHS_IN_QUARTER, 1);
         const end = new this._options.dateConstructor(year, (quarter + 1) * MONTHS_IN_QUARTER, 0);
         this._notifySendResult(start, end);
-    }
-
-    protected _onMonthClick(event: Event, month: Date): void {
-        this._notifySendResult(month, dateUtils.getEndOfMonth(month));
     }
 
     private _notifySendResult(start: Date, end: Date): void {
@@ -154,7 +162,7 @@ class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstruc
         return tabindex;
     }
 
-    protected _keyupHandler(event: SyntheticEvent): void {
+    protected _keyUpHandler(event: SyntheticEvent): void {
         if (event.nativeEvent.keyCode === constants.key.tab) {
             const key = event.target.getAttribute('name');
             this._hoverPeriod(key);
@@ -163,13 +171,13 @@ class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstruc
         }
     }
 
-    protected _keyupMonthHandler(event: SyntheticEvent, month: Date): void {
+    protected _keyUpMonthHandler(event: SyntheticEvent, month: Date): void {
         if (event.nativeEvent.keyCode === constants.key.enter) {
             this._onMonthClick(event, month);
         }
     }
 
-    protected _keyupQuarterHandler(event: SyntheticEvent, quarter: number, year: number): void {
+    protected _keyUpQuarterHandler(event: SyntheticEvent, quarter: number, year: number): void {
         if (event.nativeEvent.keyCode === constants.key.enter) {
             this._onQuarterClick(event, quarter, year);
         }
@@ -177,10 +185,10 @@ class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstruc
 
     private _selectPeriodByPressEnter(): void {
         if (this._halfYearHovered !== null) {
-            this._onHalfYearClick(null, this._halfYearHovered, this._options.currentYear);
+            this._selectHalfYear(this._halfYearHovered, this._options.currentYear);
         }
         if (this._quarterHovered !== null) {
-            this._onQuarterClick(null, this._quarterHovered, this._options.currentYear);
+            this._selectQuarter(this._quarterHovered, this._options.currentYear);
         }
     }
 

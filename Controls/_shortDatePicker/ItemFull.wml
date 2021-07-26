@@ -1,5 +1,5 @@
 <ws:template name="itemTemplate">
-   <div on:keyup="_keyupHandler()">
+   <div on:keyup="_keyUpHandler()">
       <ws:if data="{{_options._yearHovered === _options.currentYear}}">
          <div class="controls-PeriodLiteDialog__item-background-hovered border-top-hidden"></div>
       </ws:if>
@@ -20,7 +20,7 @@
                            '-transparent'}}" tabindex="-1">
                      <ws:for data="month in quarter.months">
                         <ws:partial
-                                on:keyup="_keyupMonthHandler(month.date)"
+                                on:keyup="_keyUpMonthHandler(month.date)"
                                 on:click="_onMonthClick(month.date)"
                                 attr:class="controls-PeriodLiteDialog-item__month-caption"
                                 template="{{monthTemplate}}"
