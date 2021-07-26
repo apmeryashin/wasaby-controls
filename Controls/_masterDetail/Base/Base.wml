@@ -47,7 +47,7 @@
                                'controls-MasterDetail_details_bg-same'}}"
                  template="{{_options.detail}}"
                  shadowMode="js"
-                 currentWidth="{{_currentWidth}}"
+                 masterWidth="{{_currentWidth}}"
                  availableWidth="{{_detailWidth}}"
                  selectedMasterValue="{{_selected}}"/>
       </div>
