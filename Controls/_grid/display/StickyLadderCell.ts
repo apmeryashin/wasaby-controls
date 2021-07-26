@@ -28,14 +28,14 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
         OptionsToPropertyMixin.call(this, options);
     }
 
-    getWrapperClasses(theme: string, backgroundColorStyle?: string, style: string = 'default'): string {
+    getWrapperClasses(backgroundColorStyle?: string): string {
         let wrapperClasses = 'controls-Grid__row-ladder-cell';
         wrapperClasses += this._getWrapperSeparatorClasses();
         wrapperClasses += this._getColumnScrollWrapperClasses();
         return wrapperClasses;
     }
 
-    getStickyContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getStickyContentClasses(cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
         let contentClasses = 'controls-Grid__row-main_ladderWrapper';
         if (this._$isPointerEventsDisabled) {
             contentClasses += ' controls-Grid__ladder-cell__withoutPointerEvents';
@@ -43,13 +43,13 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
         return contentClasses;
     }
 
-    getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getContentClasses(cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
         return '';
     }
 
-    getOriginalContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getOriginalContentClasses(cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
         const topPadding = this._$owner.getTopPadding();
-        let contentClasses = super.getContentClasses(theme, cursor, false);
+        let contentClasses = super.getContentClasses(cursor, false);
         contentClasses += ' controls-Grid__row-ladder-cell__content';
         contentClasses += ` controls-Grid__row-ladder-cell__content_${topPadding}`;
         if (this._$isPointerEventsDisabled) {
@@ -74,7 +74,7 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
         return this._$stickyProperty;
     }
 
-    getStickyHeaderClasses(theme: string = 'default'): string {
+    getStickyHeaderClasses(): string {
         let classes = '';
         const stickyLadder = this._$owner.getStickyLadder();
         const stickyProperties = this._$owner.getStickyLadderProperties(this._$column);

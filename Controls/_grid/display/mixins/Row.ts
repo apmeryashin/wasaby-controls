@@ -1,7 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import {create} from 'Types/di';
 import {isEqual} from 'Types/object';
-import {Model as EntityModel} from 'Types/entity';
+import {Model as EntityModel, Model} from 'Types/entity';
 import {IColspanParams, IColumn, TColumns, TColumnSeparatorSize} from '../interface/IColumn';
 import {THeader} from '../interface/IHeaderCell';
 import {Collection, ICollectionItemOptions as IBaseOptions, ILadderConfig, IStickyLadderConfig, TLadderElement} from 'Controls/display';
@@ -17,9 +17,7 @@ const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/grid:ItemTemplate';
 
 export interface IItemTemplateParams {
     highlightOnHover?: boolean;
-    style?: string;
     cursor?: 'default' | 'pointer';
-    theme: string;
     showItemActionsOnHover?: boolean;
 
     // Deprecated, use cursor
@@ -50,7 +48,7 @@ export interface IOptions<T> extends IBaseOptions<T> {
     itemActionsPosition?: 'inside' | 'outside' | 'custom';
 }
 
-export default abstract class Row<T> {
+export default abstract class Row<T extends Model = Model> {
     readonly '[Controls/_display/grid/mixins/Row]': boolean;
 
     protected _$owner: Collection<T>;
@@ -125,10 +123,10 @@ export default abstract class Row<T> {
     }
 
     //region Аспект "Стилевое оформление. Классы и стили строки"
-    getItemClasses(params: IItemTemplateParams = {theme: 'default'}): string {
-        let itemClasses = `${this._getBaseItemClasses(params.style, params.theme)} `
+    getItemClasses(params: IItemTemplateParams): string {
+        let itemClasses = `${this._getBaseItemClasses()} `
             + `${this._getCursorClasses(params.cursor, params.clickable)} `
-            + `${this._getItemHighlightClasses(params.style, params.theme, params.highlightOnHover)}`;
+            + `${this._getItemHighlightClasses(params.highlightOnHover)}`;
 
         if (params.showItemActionsOnHover !== false) {
             itemClasses += ' controls-ListView__item_showActions';
@@ -137,19 +135,18 @@ export default abstract class Row<T> {
         return itemClasses;
     }
 
-    protected _getBaseItemClasses(style: string, theme: string): string {
-        return `controls-ListView__itemV controls-Grid__row controls-Grid__row_${style}`;
+    protected _getBaseItemClasses(): string {
+        return `controls-ListView__itemV controls-Grid__row controls-Grid__row_${this.getStyle()}`;
     }
 
-    protected _getItemHighlightClasses(style: string, theme: string, highlightOnHover?: boolean): string {
+    protected _getItemHighlightClasses(highlightOnHover?: boolean): string {
         if (highlightOnHover !== false && !this.isEditing()) {
-            return `controls-Grid__row_highlightOnHover_${style}`;
+            return `controls-Grid__row_highlightOnHover_${this.getStyle()}`;
         }
         return '';
     }
 
     getMultiSelectClasses(
-        theme: string,
         backgroundColorStyle: string,
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true
@@ -534,6 +531,8 @@ export default abstract class Row<T> {
     protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<ICellOptions<T>> {
         return {
             column,
+            theme: this.getTheme(),
+            style: this.getStyle(),
             rowSeparatorSize: this._$rowSeparatorSize,
             columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex),
             backgroundStyle: this._$backgroundStyle,
@@ -765,6 +764,10 @@ export default abstract class Row<T> {
     abstract getContents(): T;
 
     abstract getOwner(): Collection<T>;
+
+    abstract getTheme(): string;
+
+    abstract getStyle(): string;
 
     abstract getMultiSelectVisibility(): string;
 

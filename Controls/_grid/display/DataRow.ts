@@ -12,7 +12,7 @@ import { Model } from 'Types/entity';
 export interface IOptions<T> extends IRowOptions<T>, IDisplaySearchValueOptions {
 }
 
-export default class DataRow<T extends Model> extends Row<T> implements
+export default class DataRow<T extends Model = Model> extends Row<T> implements
     IMarkable,
     ILadderSupport,
     ISelectableItem,

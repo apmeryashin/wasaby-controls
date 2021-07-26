@@ -22,6 +22,10 @@ const DEFAULT_FOLDER_WIDTH = 250;
 export interface ITreeTileCollectionItemOptions<S extends Model = Model>
     extends ITreeItemOptions<S>, ITileCollectionItemOptions, ITreeTileAspectOptions {}
 
+/**
+ * Элемент коллекции, который отображается в виде иерархической плитки.
+ * @author Панихин К.А.
+ */
 export default class TreeTileCollectionItem<T extends Model = Model>
     extends mixin<TreeItem, TileItemMixin>(TreeItem, TileItemMixin) {
 

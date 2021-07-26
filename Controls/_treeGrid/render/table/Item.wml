@@ -12,14 +12,14 @@
         'showItemActionsOnHover': showItemActionsOnHover
     }) }}">
     <ws:for data="gridColumn in item.getColumns()">
-        <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"
+        <td attr:class="{{ gridColumn.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
             attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses() }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
-                     attr:class="{{ gridColumn.getMarkerClasses(theme, style) }}"></div>
+                     attr:class="{{ gridColumn.getMarkerClasses() }}"></div>
 
                 <ws:partial template="{{ gridColumn.getTemplate() }}"
                             scope="{{ gridColumn.config.templateOptions }}"

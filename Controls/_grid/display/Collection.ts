@@ -2,7 +2,6 @@ import { mixin } from 'Types/util';
 
 import {
     Collection as BaseCollection,
-    ICollectionOptions as IBaseOptions,
     ItemsFactory,
     IItemActionsTemplateConfig,
     GridLadderUtil, IHasMoreData
@@ -11,15 +10,14 @@ import {
 import GroupRow from './GroupRow';
 import GridMixin, { IOptions as IGridMixinOptions } from './mixins/Grid';
 import Row, {IOptions as IRowOptions} from './Row';
-import DataRow from './DataRow';
 import { TemplateFunction } from 'UI/Base';
-import {Model as EntityModel} from 'Types/entity';
+import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 
 export interface IOptions<
-    S,
+    S extends Model = Model,
     T extends Row<S> = Row<S>
-> extends IBaseOptions<S, T>, IGridMixinOptions { }
+> extends IGridMixinOptions { }
 
 /**
  * @public
@@ -27,7 +25,7 @@ export interface IOptions<
  * @author Авраменко А.С.
  */
 export default class Collection<
-    S,
+    S extends Model = Model,
     T extends Row<S> = Row<S>
 > extends mixin<BaseCollection<any>, GridMixin<any, any>>(BaseCollection, GridMixin) {
     protected _$hasStickyGroup: boolean = false;
@@ -169,7 +167,7 @@ export default class Collection<
         return groupPropertyChanged;
     }
 
-    protected setMetaResults(metaResults: EntityModel) {
+    protected setMetaResults(metaResults: Model) {
         super.setMetaResults(metaResults);
         this._$results?.setMetaResults(metaResults);
     }

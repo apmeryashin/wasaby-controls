@@ -4,7 +4,7 @@
 
 <ws:template name="COLUMN">
    <div if="{{ gridColumn.shouldDisplayMarker(marker) }}"
-        class="{{ gridColumn.getMarkerClasses(theme, style, markerClassName, itemPadding) }}"></div>
+        class="{{ gridColumn.getMarkerClasses(markerClassName, itemPadding) }}"></div>
 
    <ws:partial template="{{ gridColumn.getTemplate() }}"
                scope="{{ gridColumn.config.templateOptions }}"
@@ -113,7 +113,7 @@
             <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition() }}"
                                           mode="{{ (item || itemData).getStickyHeaderMode() }}"
                                           shadowVisibility="{{column.shadowVisibility}}"
-                                         backgroundStyle="{{ column.getStickyBackgroundStyle(style) }}"
+                                         backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
                                           fixedZIndex="{{ column.getZIndex()}}"
                                           attr:key="sticky_{{ column.getInstanceId() }}"
                                           attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"

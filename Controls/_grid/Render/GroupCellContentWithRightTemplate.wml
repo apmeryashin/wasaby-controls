@@ -3,7 +3,7 @@ TODO Нужно удалить этот шаблон, когда починим 
  Для прикладников мы должны экспортировать из библиотеки grid шаблон СТРОКИ-ГРУППЫ,
  т.е. GroupItemTemplate, который должен поддерживать API Controls/_list/interface/IBaseGroupTemplate.
 -->
-<div class="{{ (gridColumn || itemData).getContentClasses(theme) }}">
+<div class="{{ (gridColumn || itemData).getContentClasses() }}">
     <ws:if data="{{ (gridColumn || itemData).shouldDisplayLeftSeparator(separatorVisibility, textVisible, columnAlignGroup, textAlign) }}">
         <div class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
     </ws:if>

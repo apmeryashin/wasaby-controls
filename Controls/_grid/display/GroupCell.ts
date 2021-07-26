@@ -41,7 +41,7 @@ export default class GroupCell<T>
         return this.getColspanStyles();
     }
 
-    getContentClasses(theme: string): string {
+    getContentClasses(): string {
         let classes = '';
         // TODO необходимо разобраться с высотой групп.
         //  https://online.sbis.ru/opendoc.html?guid=6693d47c-515c-4751-949d-55be05fe124e

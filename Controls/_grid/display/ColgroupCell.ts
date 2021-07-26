@@ -20,7 +20,7 @@ export default class ColgroupCell<T> extends mixin<OptionsToPropertyMixin>(Optio
         return this._$owner.hasMultiSelectColumn() && this._$owner.getCellIndex(this) === 0;
     }
 
-    getBodyClasses(theme: string): string {
+    getBodyClasses(): string {
         let bodyClasses = 'controls-Grid__colgroup-column';
 
         if (this.isMultiSelectColumn()) {

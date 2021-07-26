@@ -3,21 +3,25 @@ import { IMarkable } from 'Controls/display';
 import Cell from './Cell';
 import DataRow from './DataRow';
 import {DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
+import {Model} from "Types/entity";
 
-export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, TOwner> implements IMarkable {
+export default class CheckboxCell<
+    T extends Model = Model,
+    TOwner extends DataRow<T> = DataRow<T>
+> extends Cell<T, TOwner> implements IMarkable {
     readonly Markable: boolean = true;
 
     isEditing(): boolean {
         return this._$owner.isEditing();
     }
 
-    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
+    getWrapperClasses(backgroundColorStyle: string, templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
         const hoverBackgroundStyle = templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
 
-        wrapperClasses += this._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
-        wrapperClasses += this._getWrapperSeparatorClasses(theme);
+        wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
+        wrapperClasses += this._getWrapperSeparatorClasses();
         wrapperClasses += ' js-controls-ListView__notEditable' +
             ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}` +
             ' controls-GridView__checkbox' +
@@ -32,17 +36,16 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
             wrapperClasses += this._getCheckboxCellPaddingClasses();
         }
 
-        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, style, backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle)}`;
+        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle)}`;
 
         if (this._$owner.hasColumnScroll()) {
-            wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+            wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
         }
 
         return wrapperClasses;
     }
 
     getContentClasses(
-       theme: string,
        backgroundColorStyle: string,
        cursor: string = 'pointer',
        templateHighlightOnHover: boolean = true

@@ -1,6 +1,6 @@
 import {isFullGridSupport} from 'Controls/display';
-import { default as View } from 'Controls/_grid/Grid';
-import { default as ItemsView } from 'Controls/_grid/ItemsGrid';
+import {default as View} from 'Controls/_grid/Grid';
+import {default as ItemsView} from 'Controls/_grid/ItemsGrid';
 import GridView from 'Controls/_grid/GridView';
 
 import * as GridItemTemplate from 'wml!Controls/_grid/Render/grid/Item';
@@ -14,7 +14,7 @@ import * as TableTemplate from 'wml!Controls/_grid/Render/table/GridView';
 //  но быстрее по времени.
 //  По словам Макса Крылова это ничего не сломает, если на функцию навесить флаги ядра.
 //  Найти нормальное решение по https://online.sbis.ru/opendoc.html?guid=41a8dbab-93bb-4bc0-8533-6b12c0ec6d8d
-const ItemTemplate = function() {
+const ItemTemplate = function () {
     return isFullGridSupport() ? GridItemTemplate.apply(this, arguments) : TableItemTemplate.apply(this, arguments);
 };
 ItemTemplate.stable = true;
@@ -103,10 +103,18 @@ import {
     default as GridCollection,
     IOptions as IGridCollectionOptions
 } from 'Controls/_grid/display/Collection';
-export { default as GridMixin, TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from 'Controls/_grid/display/mixins/Grid';
-export { default as GridRowMixin, IInitializeColumnsOptions } from 'Controls/_grid/display/mixins/Row';
-export { default as GridGroupCellMixin } from 'Controls/_grid/display/mixins/GroupCell';
-export { IItemTemplateParams } from 'Controls/_grid/display/mixins/Row';
+
+export {
+    default as GridMixin,
+    TColspanCallbackResult,
+    TColspanCallback,
+    TResultsColspanCallback,
+    IEmptyTemplateColumn,
+    IOptions as IGridOptions
+} from 'Controls/_grid/display/mixins/Grid';
+export {default as GridRowMixin, IInitializeColumnsOptions} from 'Controls/_grid/display/mixins/Row';
+export {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/GroupCell';
+export {IItemTemplateParams} from 'Controls/_grid/display/mixins/Row';
 
 export {
     TColumns,
@@ -126,10 +134,10 @@ export {
     IHeaderCell
 } from 'Controls/_grid/display/interface/IHeaderCell';
 
-export { IGridControl } from 'Controls/_grid/display/interface/IGridControl';
+export {IGridControl} from 'Controls/_grid/display/interface/IGridControl';
 
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_grid/display/Row';
-import { default as GridItemActionsCell } from 'Controls/_grid/display/ItemActionsCell';
+import {default as GridItemActionsCell} from 'Controls/_grid/display/ItemActionsCell';
 import GridCell, {IOptions as IGridCellOptions} from 'Controls/_grid/display/Cell';
 import GridHeader, {IOptions as IGridHeaderOptions} from 'Controls/_grid/display/Header';
 import GridHeaderRow, {IOptions as IGridHeaderRowOptions} from 'Controls/_grid/display/HeaderRow';
@@ -147,14 +155,17 @@ import GridDataRow, {IOptions as IGridDataRowOptions} from 'Controls/_grid/displ
 import GridDataCell, {IOptions as IGridDataCellOptions} from 'Controls/_grid/display/DataCell';
 
 import GridResultsRow, {IOptions as IGridResultsRowOptions} from 'Controls/_grid/display/ResultsRow';
-import GridResultsCell, { GRID_RESULTS_CELL_DEFAULT_TEMPLATE, IOptions as IGridResultsCellOptions } from 'Controls/_grid/display/ResultsCell';
+import GridResultsCell, {
+    GRID_RESULTS_CELL_DEFAULT_TEMPLATE,
+    IOptions as IGridResultsCellOptions
+} from 'Controls/_grid/display/ResultsCell';
 
 import GridFooterRow, {IOptions as IGridFooterRowOptions} from 'Controls/_grid/display/FooterRow';
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from 'Controls/_grid/display/FooterCell';
 import GridGroupRow, {IOptions as IGridGroupRowOptions} from 'Controls/_grid/display/GroupRow';
 import GridGroupCell, {IOptions as IGridGroupCellOptions} from 'Controls/_grid/display/GroupCell';
 
-import { IDisplaySearchValueOptions, IDisplaySearchValue } from 'Controls/_grid/display/interface/IDisplaySearchValue';
+import {IDisplaySearchValueOptions, IDisplaySearchValue} from 'Controls/_grid/display/interface/IDisplaySearchValue';
 import CheckboxCell from 'Controls/_grid/display/CheckboxCell';
 
 register('Controls/grid:GridCollection', GridCollection, {instantiate: false});

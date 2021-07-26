@@ -7,7 +7,7 @@
         'clickable': clickable
     })}}" attr:key="{{item.key}}">
         <ws:for data="index,column in item.getColumns(colspan)">
-            <td class="{{ column.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
+            <td class="{{ column.getContentClasses(backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
                  attr:key="{{item.key}}_column_{{index}}"
                  attr:colspan="{{ column.getColspan(colspan) }}">
                 <ws:if data="{{ item.shouldDisplayContent(column) }}">

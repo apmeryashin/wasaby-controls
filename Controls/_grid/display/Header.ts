@@ -12,8 +12,8 @@ export interface IHeaderBounds {
     column: {start: number, end: number};
 }
 
-export default class Header<T> {
-    protected _$owner: Collection<T>;
+export default class Header {
+    protected _$owner: Collection;
     protected _$rows: Array<HeaderRow<T>>;
     protected _$headerBounds: IHeaderBounds;
 

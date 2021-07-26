@@ -63,7 +63,7 @@ export default class GroupRow<T> extends mixin<
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }
 
-    getGroupPaddingClasses(theme: string, side: 'left' | 'right'): string {
+    getGroupPaddingClasses(side: 'left' | 'right'): string {
         if (side === 'left') {
             const spacing = this.getOwner().getLeftPadding().toLowerCase();
             const hasMultiSelect = this.hasMultiSelectColumn();
@@ -96,16 +96,16 @@ export default class GroupRow<T> extends mixin<
         return this._$owner.getStickyColumn();
     }
 
-    getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
-        return `${this._getBaseItemClasses(params.style, params.theme)} ` +
+    getItemClasses(params: IItemTemplateParams): string {
+        return `${this._getBaseItemClasses()} ` +
                `${this._getCursorClasses(params.cursor, params.clickable)} ` +
                `controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
     }
 
-    protected _getBaseItemClasses(style: string, theme: string): string {
+    protected _getBaseItemClasses(): string {
         let itemClasses = 'controls-ListView__itemV';
         if (!this.isHiddenGroup()) {
-            itemClasses += ` controls-Grid__row controls-Grid__row_${style}`;
+            itemClasses += ` controls-Grid__row controls-Grid__row_${this.getStyle()}`;
         }
         return itemClasses;
     }

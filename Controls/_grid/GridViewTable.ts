@@ -7,10 +7,10 @@ const GridViewTable = GridView.extend({
     _template: TableTemplate,
 
     _resolveItemTemplate(options): TemplateFunction {
-        return options.itemTemplate || this._resolveBaseItemTemplate(options);
+        return options.itemTemplate || this._resolveBaseItemTemplate();
     },
 
-    _resolveBaseItemTemplate(options): TemplateFunction {
+    _resolveBaseItemTemplate(): TemplateFunction {
         return TableItem;
     },
 

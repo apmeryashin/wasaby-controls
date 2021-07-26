@@ -20,7 +20,7 @@ import { IItemPadding } from 'Controls/display';
 import HeaderRow from './HeaderRow';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
-export interface IOptions<T> extends ICellOptions<T> {
+export interface IOptions extends ICellOptions<null> {
     shadowVisibility?: string;
     backgroundStyle?: string;
     sorting?: string;
@@ -194,12 +194,12 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         return zIndex;
     }
 
-    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default'): string {
-        let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${style}`
+    getWrapperClasses(backgroundColorStyle: string): string {
+        let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${this.getStyle()}`
                           + ` ${this._getHorizontalPaddingClasses(this._$cellPadding)}`
-                          + ` ${this._getColumnSeparatorClasses(theme)}`;
+                          + ` ${this._getColumnSeparatorClasses()}`;
 
-        wrapperClasses += this._getControlsBackgroundClass(style, backgroundColorStyle);
+        wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
 
         const isMultilineHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
@@ -226,15 +226,15 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         }
 
         if (this._$owner.hasColumnScroll()) {
-            wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+            wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
         }
         return wrapperClasses;
     }
 
-    getContentClasses(theme: string): string {
+    getContentClasses(): string {
         const isMultiLineHeader = this._$owner.isMultiline();
         let contentClasses = 'controls-Grid__header-cell__content';
-        contentClasses += this._getContentSeparatorClasses(theme);
+        contentClasses += this._getContentSeparatorClasses();
         if (isMultiLineHeader) {
             contentClasses += ` controls-Grid__row-multi-header__content_baseline`;
         } else {
@@ -246,7 +246,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         return contentClasses;
     }
 
-    protected _getContentSeparatorClasses(theme: string): string {
+    protected _getContentSeparatorClasses(): string {
         let headerEndRow = this._$owner.getBounds().row.end;
         const isMultiLineHeader = this._$owner.isMultiline();
         let classes = '';

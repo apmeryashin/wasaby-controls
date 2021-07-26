@@ -15,14 +15,14 @@ export default class ItemActionsCell<T> extends Cell<T, Row<T>> implements IItem
         return DEFAULT_CELL_CONTENT;
     }
 
-    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
+    getWrapperClasses(backgroundColorStyle: string, templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
         if (!this._$owner.DisplayItemActions) {
             return this._$owner.isFullGridSupport() ? 'controls-Grid__itemAction__emptyContainer' : '';
         }
         if (this._$owner.isFullGridSupport()) {
             return `controls-itemActionsV__container controls-Grid__itemAction ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
         } else {
-            return `${super.getWrapperClasses(theme, backgroundColorStyle, style, templateHighlightOnHover)} controls-Grid-table-layout__itemActions__container`;
+            return `${super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover)} controls-Grid-table-layout__itemActions__container`;
         }
     }
 

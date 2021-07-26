@@ -66,10 +66,7 @@ class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
     //endregion
 
     //region Аспект "Стилевое оформление"
-    getWrapperClasses(theme: string,
-                      backgroundColorStyle: string,
-                      style: string = 'default',
-                      templateHighlightOnHover: boolean): string {
+    getWrapperClasses(backgroundColorStyle: string, templateHighlightOnHover: boolean): string {
         const isMultiSelectColumn = this.isMultiSelectColumn();
 
         let wrapperClasses = '';
@@ -77,17 +74,17 @@ class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
             wrapperClasses += 'controls-Grid__results-cell-checkbox';
 
             if (this._$owner.hasColumnScroll()) {
-                wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+                wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
             }
             return wrapperClasses;
         }
 
         wrapperClasses += 'controls-Grid__results-cell'
-                            + ` controls-Grid__cell_${style}`
-                            + ` ${this._getWrapperPaddingClasses(theme)}`
-                            + ` ${this._getColumnSeparatorClasses(theme)}`;
+                            + ` controls-Grid__cell_${this.getStyle()}`
+                            + ` ${this._getWrapperPaddingClasses()}`
+                            + ` ${this._getColumnSeparatorClasses()}`;
 
-        wrapperClasses += this._getControlsBackgroundClass(style, backgroundColorStyle);
+        wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
 
         if (this._$column.align) {
             wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
@@ -100,13 +97,13 @@ class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
         // todo add resultsFormat to here
 
         if (this._$owner.hasColumnScroll()) {
-            wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+            wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
         }
 
         return wrapperClasses;
     }
 
-    _getWrapperPaddingClasses(theme: string): string {
+    _getWrapperPaddingClasses(): string {
         // Для ячейки, создаваемой в связи с множественной лесенкой не нужны отступы, иначе будут проблемы с наложением
         // тени: https://online.sbis.ru/opendoc.html?guid=758f38c7-f5e7-447e-ab79-d81546b9f76e
         if (this._$isLadderCell) {
@@ -135,7 +132,7 @@ class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
         return zIndex;
     }
 
-    getContentClasses(theme: string): string {
+    getContentClasses(): string {
         return 'controls-Grid__results-cell__content controls-Grid__results-cell__content';
     }
 

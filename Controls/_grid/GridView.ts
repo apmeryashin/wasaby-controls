@@ -186,7 +186,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         return options.itemTemplate || this._resolveBaseItemTemplate(options);
     },
 
-    _resolveBaseItemTemplate(options): TemplateFunction {
+    _resolveBaseItemTemplate(): TemplateFunction {
         return GridItem;
     },
 

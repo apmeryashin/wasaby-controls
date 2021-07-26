@@ -36,6 +36,10 @@ export interface ITreeTileAspectOptions {
     folderWidth: number;
 }
 
+/**
+ * Коллекция, которая отображает элементы в виде иерархической плитки.
+ * @author Панихин К.А.
+ */
 export default class TreeTileCollection<
     S extends Model = Model,
     T extends TreeTileCollectionItem = TreeTileCollectionItem

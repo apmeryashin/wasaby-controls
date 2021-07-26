@@ -9,10 +9,10 @@ class EmptyRow<T> extends Row<T> {
         return 'emptyRow';
     }
 
-    getItemClasses(params: IItemTemplateParams = {theme: 'default'}): string {
+    getItemClasses(params: IItemTemplateParams): string {
         return 'js-controls-GridView__emptyTemplate'
             + ' controls-GridView__emptyTemplate'
-            + ` ${this._getBaseItemClasses(params.style, params.theme)}`;
+            + ` ${this._getBaseItemClasses()}`;
     }
 
     //region Аспект "Колонки. Создание, колспан."

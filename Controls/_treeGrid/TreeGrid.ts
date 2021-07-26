@@ -47,6 +47,7 @@ import 'css!Controls/treeGrid';
 export default class TreeGrid extends Grid implements ITreeGrid {
     protected _viewName: TemplateFunction = null;
     protected _viewTemplate: TemplateFunction = TreeControl;
+    protected _children: {listControl: TreeControl};
 
     _beforeMount(options: ITreeGridOptions): Promise<void> {
 
@@ -69,7 +70,6 @@ export default class TreeGrid extends Grid implements ITreeGrid {
     }
 
     toggleExpanded(key: CrudEntityKey): Promise<void> {
-        // @ts-ignore
         return this._children.listControl.toggleExpanded(key);
     }
 
@@ -101,10 +101,12 @@ export default class TreeGrid extends Grid implements ITreeGrid {
 }
 
 /**
- * Загружает модель из {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}, объединяет изменения в текущих данных и отображает элемент.
+ * Загружает модель из {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных},
+ * объединяет изменения в текущих данных и отображает элемент.
  * @name Controls/_treeGrid/TreeGrid#reloadItem
  * @function
  * @param {String} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
  * @param {Object} readMeta Метаинформация, которая будет передана методу запроса/чтения.
- * @param {String} direction Если аргумент установлен в значение "depth", то перезагрузка происходит с сохранением загруженных записей, т.е. они остаются в списке на клиенте.
+ * @param {String} direction Если аргумент установлен в значение "depth", то перезагрузка происходит с сохранением загруженных записей,
+ * т.е. они остаются в списке на клиенте.
  */

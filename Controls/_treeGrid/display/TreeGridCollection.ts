@@ -1,4 +1,4 @@
-import { mixin } from 'Types/util';
+import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import TreeGridDataRow, {IOptions as ITreeGridRowOptions} from './TreeGridDataRow';
 import {
@@ -8,12 +8,13 @@ import {
     CollectionItem,
     ItemsFactory,
     itemsStrategy,
-    ITreeCollectionOptions, IItemActionsTemplateConfig, IHasMoreData, IGroupNode
+    IItemActionsTemplateConfig,
+    IHasMoreData,
+    ISessionItems
 } from 'Controls/display';
 import {
     GridGroupRow,
-    GridMixin,
-    IGridCollectionOptions
+    GridMixin
 } from 'Controls/grid';
 import TreeGridFooterRow from './TreeGridFooterRow';
 import {default as TreeGridGroupDataRow, IOptions as ITreeGridGroupDataRowOptions} from './TreeGridGroupDataRow';
@@ -21,20 +22,15 @@ import {Model as EntityModel, Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 import {CrudEntityKey} from 'Types/source';
 import {TGroupNodeVisibility} from '../interface/ITreeGrid';
-import TreeGridHeader from 'Controls/_treeGrid/display/TreeGridHeader';
-import TreeGridTableHeader from 'Controls/_treeGrid/display/TreeGridTableHeader';
-
-export interface IOptions<S extends Model, T extends TreeGridDataRow<S>>
-   extends IGridCollectionOptions<S, T>, ITreeCollectionOptions<S, T> {
-    groupNodeVisibility?: string;
-    nodeTypeProperty?: string;
-}
+import TreeGridHeader from './TreeGridHeader';
+import TreeGridTableHeader from './TreeGridTableHeader';
+import {ITreeGridOptions} from '../TreeGridView';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
  * @param {TreeItem<T>} item
  */
-function itemIsVisible<T extends Model>(item: TreeItem<T>): boolean  {
+function itemIsVisible<T extends Model>(item: TreeItem<T>): boolean {
     if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/BreadcrumbsItem]']) {
         return true;
     }
@@ -50,8 +46,11 @@ function itemIsVisible<T extends Model>(item: TreeItem<T>): boolean  {
     return itemIsVisible(parent);
 }
 
+/**
+ * Коллекция, которая отображает элементы иерархии в виде таблицы
+ */
 export default class TreeGridCollection<
-    S extends Model,
+    S extends Model = Model,
     T extends TreeGridDataRow<S> = TreeGridDataRow<S>
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
@@ -59,7 +58,7 @@ export default class TreeGridCollection<
     protected _$nodeTypeProperty: string;
     protected _$groupNodeVisibility: TGroupNodeVisibility;
 
-    constructor(options: IOptions<S, T>) {
+    constructor(options: ITreeGridOptions) {
         super(options);
         GridMixin.call(this, options);
 
@@ -74,7 +73,7 @@ export default class TreeGridCollection<
         // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую коллекцию TreeGrid.
         //  Если сразу в Tree положим, то все разломаем
         this.addFilter(
-            (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
+            (contents, sourceIndex, item) => itemIsVisible(item)
         );
     }
 
@@ -103,10 +102,10 @@ export default class TreeGridCollection<
     }
 
     private _updateGroupNodeVisibility(): void {
-        const groupNodes: Array<TreeGridGroupDataRow<S>> = [];
+        const groupNodes: TreeGridGroupDataRow[] = [];
         this.each((item) => {
             if (item && item.GroupNodeItem) {
-                groupNodes.push(item as TreeGridGroupDataRow<S>);
+                groupNodes.push(item as unknown as TreeGridGroupDataRow<S>);
             }
         });
         if (groupNodes.length === 0) {
@@ -144,7 +143,13 @@ export default class TreeGridCollection<
     setMultiSelectVisibility(visibility: string): void {
         super.setMultiSelectVisibility(visibility);
 
-        [this.getColgroup(), this.getHeader(), this.getResults(), this.getFooter(), this.getEmptyGridRow()].forEach((gridUnit) => {
+        [
+            this.getColgroup(),
+            this.getHeader(),
+            this.getResults(),
+            this.getFooter(),
+            this.getEmptyGridRow()
+        ].forEach((gridUnit) => {
             gridUnit?.setMultiSelectVisibility(visibility);
         });
 
@@ -200,7 +205,7 @@ export default class TreeGridCollection<
         return resultItemIndex === this.getIndex(item);
     }
 
-    protected _handleAfterCollectionChange(changedItems: TreeGridDataRow[], changeAction?: string): void {
+    protected _handleAfterCollectionChange(changedItems: ISessionItems<T>[], changeAction?: string): void {
         super._handleAfterCollectionChange(changedItems, changeAction);
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
@@ -332,7 +337,7 @@ export default class TreeGridCollection<
         return rootItems.length > (this._$resultsVisibility === 'visible' ? 0 : 1);
     }
 
-    protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {
+    protected _initializeFooter(options: ITreeGridOptions): TreeGridFooterRow {
         if (!options.footer && !options.footerTemplate) {
             return;
         }
@@ -349,11 +354,11 @@ export default class TreeGridCollection<
         });
     }
 
-    getHeaderConstructor(): typeof TreeGridHeader {
+    getHeaderConstructor(): TreeGridHeader {
         return this.isFullGridSupport() ? TreeGridHeader : TreeGridTableHeader;
     }
 
-    protected _initializeHeader(options: IOptions<S, T>): void {
+    protected _initializeHeader(options: ITreeGridOptions): void {
         options.expanderSize = this.getExpanderSize();
         super._initializeHeader(options);
     }

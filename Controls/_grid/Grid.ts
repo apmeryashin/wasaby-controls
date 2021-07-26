@@ -3,6 +3,7 @@ import * as GridView from 'Controls/_grid/GridView';
 import GridViewTable from 'Controls/_grid/GridViewTable';
 import { isFullGridSupport } from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
+import { IOptions as IGridOptions } from './display/mixins/Grid';
 
 /**
  * Контрол "Таблица" позволяет отображать данные из различных источников в виде таблицы.
@@ -66,11 +67,12 @@ import { TemplateFunction } from 'UI/Base';
  * @author Авраменко А.С.
  * @demo Controls-demo/gridNew/Base/Index
  */
+
 export default class Grid extends List {
     protected _viewName: TemplateFunction = null;
     protected _viewTemplate: TemplateFunction = viewTemplate;
 
-    _beforeMount(options): Promise<void> {
+    _beforeMount(options: IGridOptions): Promise<void>|void {
         const superResult = super._beforeMount(options);
         this._viewName = isFullGridSupport() ? GridView : GridViewTable;
         return superResult;

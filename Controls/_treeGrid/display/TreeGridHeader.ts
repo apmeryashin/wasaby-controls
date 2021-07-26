@@ -1,7 +1,10 @@
 import {GridHeader} from 'Controls/grid';
-import TreeGridHeaderRow from "Controls/_treeGrid/display/TreeGridHeaderRow";
+import TreeGridHeaderRow, {ITreeGridHeaderRowOptions} from './TreeGridHeaderRow';
 
-export default class TreeGridHeader extends GridHeader<null> {
+/**
+ * Заголовок иерархической таблицы
+ */
+export default class TreeGridHeader extends GridHeader {
     /**
      * Размер экспандера
      */
@@ -9,13 +12,13 @@ export default class TreeGridHeader extends GridHeader<null> {
 
     setDisplayExpanderPadding(displayExpanderPadding: boolean): void {
         this._$rows.forEach((row) => {
-            (row as TreeGridHeaderRow).setDisplayExpanderPadding(displayExpanderPadding);
+            (row as unknown as TreeGridHeaderRow).setDisplayExpanderPadding(displayExpanderPadding);
         });
     }
 
-    protected _getRowsFactory(): (options: any) => TreeGridHeaderRow {
+    protected _getRowsFactory(): (options: ITreeGridHeaderRowOptions) => TreeGridHeaderRow {
         const superFactory = super._getRowsFactory();
-        return (options: any) => {
+        return (options: ITreeGridHeaderRowOptions) => {
             options.expanderSize = this._$expanderSize;
             return superFactory.call(this, options);
         };

@@ -1,13 +1,14 @@
 import TreeGridDataRow, {IOptions as ITreeGridDataRowOptions} from 'Controls/_treeGrid/display/TreeGridDataRow';
-import {IColumn, GridCell, IGridDataCellOptions, IItemTemplateParams, IInitializeColumnsOptions} from 'Controls/grid';
+import {IColumn, GridCell, IItemTemplateParams, IInitializeColumnsOptions} from 'Controls/grid';
 import {Model} from 'Types/entity';
 import {IGroupNode} from 'Controls/display';
+import {ITreeGridGroupDataCell} from './TreeGridGroupDataCell';
 
 export interface IOptions<T extends Model> extends ITreeGridDataRowOptions<T> {
     isHiddenGroup: boolean;
 }
 
-export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataRow<T> implements IGroupNode {
+export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeGridDataRow<T> implements IGroupNode {
     '[Controls/treeGrid:TreeGridGroupDataRow]': boolean = true;
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
@@ -26,7 +27,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
 
     // region overrides
 
-    getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
+    getItemClasses(params: IItemTemplateParams): string {
         params.highlightOnHover = false;
         let classes = super.getItemClasses(params);
         classes += ` controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
@@ -75,7 +76,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
         return itemClasses;
     }
 
-    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGridDataCellOptions<T>> {
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<ITreeGridGroupDataCell> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             isExpanded: this.isExpanded()

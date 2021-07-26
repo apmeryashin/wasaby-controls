@@ -4,7 +4,14 @@ import { Model as EntityModel } from 'Types/entity';
 import { IColumn, TColumns, TColumnSeparatorSize } from '../interface/IColumn';
 import { THeader } from '../interface/IHeaderCell';
 
-import { IViewIterator, GridLadderUtil, ILadderObject, IBaseCollection, isFullGridSupport } from 'Controls/display';
+import {
+    IViewIterator,
+    GridLadderUtil,
+    ILadderObject,
+    IBaseCollection,
+    isFullGridSupport,
+    ICollectionOptions
+} from 'Controls/display';
 
 import Header from '../Header';
 import TableHeader from '../TableHeader';
@@ -37,7 +44,7 @@ export interface IEmptyTemplateColumn {
     endColumn?: number;
 }
 
-export interface IOptions {
+export interface IOptions extends ICollectionOptions {
     columns: TColumns;
     // TODO: Написать интерфейс и доку для TFooter
     footer?: TFooter;
@@ -58,9 +65,6 @@ export interface IOptions {
     sorting?: Array<{[p: string]: string}>;
     emptyTemplateColumns?: IEmptyTemplateColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
-    multiSelectVisibility?: string;
-    itemActionsPosition?: 'inside' | 'outside' | 'custom';
-    backgroundStyle: string;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -237,7 +241,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._isFullGridSupport;
     }
 
-    getEmptyTemplateClasses(theme?: string): string {
+    getEmptyTemplateClasses(): string {
         const rowSeparatorSize = this.getRowSeparatorSize();
         let emptyTemplateClasses = 'controls-GridView__emptyTemplate js-controls-GridView__emptyTemplate';
         emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}`;
@@ -425,7 +429,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._$headerModel = new headerConstructor(cOptions);
     }
 
-    getHeaderConstructor(): typeof Header {
+    getHeaderConstructor(): Header {
         return this.isFullGridSupport() ? Header : TableHeader;
     }
 

@@ -7,7 +7,7 @@
       <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
    </ws:if>
    <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
-      <div class="{{(item || itemData).getMarkerClasses(theme, style, markerClassName, itemPadding)}}"></div>
+      <div class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
    </ws:if>
    <div class="{{ (item || itemData).getTreeWrapperClasses() }}">
       <ws:if data="{{(item || itemData).shouldDisplayExpanderBlock()}}">
@@ -24,7 +24,7 @@
          </ws:else>
       </ws:if>
       <ws:if data="{{ contentTemplate }}">
-         <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
+         <div attr:class="{{ (item || itemData).getContentClasses() }}">
             <ws:partial
                     template="{{ contentTemplate }}"
                     item="{{ item }}"
@@ -41,7 +41,7 @@
          </div>
       </ws:if>
       <ws:else>
-         <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
+         <div attr:class="{{ (item || itemData).getContentClasses() }}">
             {{ (item || itemData).getContents()[displayProperty || 'title'] }}
          </div>
       </ws:else>
