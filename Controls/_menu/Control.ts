@@ -934,9 +934,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             const fixedIds = [];
             factory(items).each((item) => {
                 if (MenuControl._isItemCurrentRoot(item, options))  {
-                    this._visibleIds.push(item.getKey());
                     if (item.get('doNotSaveToHistory')) {
                         fixedIds.push(item.getKey());
+                    } else {
+                        this._visibleIds.push(item.getKey());
                     }
                 }
             });

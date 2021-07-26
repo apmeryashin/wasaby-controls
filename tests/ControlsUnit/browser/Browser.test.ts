@@ -415,6 +415,31 @@ describe('Controls/browser:Browser', () => {
                     await searchPromise;
                     assert.ok(sourceController.getRoot() === currentRoot);
                 });
+
+                it('reset search with listsOptions', async () => {
+                    const browserOptions = getBrowserOptions();
+                    const listsOptions = [
+                        {
+                            id: 'list',
+                            ...browserOptions
+                        },
+                        {
+                            id: 'list2',
+                            ...browserOptions,
+                            searchParam: ''
+                        }
+                    ];
+                    const options = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+                    await browser._search(null, 'testSearchValue');
+                    browser._resetSearch();
+                    assert.ok(!browser._searchValue);
+                });
             });
 
             describe('_searchReset', () => {
@@ -788,6 +813,33 @@ describe('Controls/browser:Browser', () => {
                     browser.saveOptions(options);
                     await browser._beforeUpdate(options);
                     assert.ok(browser._getSourceController().getState().source === source);
+                });
+
+                it('listsOptions are changed', async () => {
+                    const browserOptions = getBrowserOptions();
+                    let listsOptions = [
+                        {
+                            id: 'list',
+                            ...browserOptions
+                        }
+                    ];
+                    let options = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options, null, [{data: new RecordSet({rawData: browserData})}]);
+                    browser.saveOptions(options);
+
+                    const newSource = new Memory();
+                    listsOptions = [{...listsOptions[0]}];
+                    listsOptions[0].id = 'list2';
+                    listsOptions[0].source = newSource;
+                    options = {...options};
+                    options.listsOptions = listsOptions;
+
+                    await browser._beforeUpdate(options);
+                    assert.ok(browser._getSourceController().getState().source === newSource);
                 });
             });
         });

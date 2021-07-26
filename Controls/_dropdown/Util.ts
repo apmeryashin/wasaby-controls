@@ -28,12 +28,12 @@ export function loadItems(
       return controller.setItems(receivedState.items).then(() => {
          controller.setHistoryItems(receivedState.history);
       });
-   } else if (options.items) {
-      controller.setItems(options.items);
    } else if (source) {
       return controller.loadItems().catch((error) => {
          dataSourceError.process({error});
       });
+   } else if (options.items) {
+      controller.setItems(options.items);
    }
 }
 

@@ -66,7 +66,7 @@ define('Controls/interface/IGroupedList', [
 
    /**
     * @name Controls/interface/IGroupedList#hiddenGroupPosition
-    * @cfg {Controls/list/IHiddenGroupPosition.typedef} Позиция скрытой группы.
+    * @cfg {Controls/display/IHiddenGroupPosition.typedef} Позиция {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/hidden/ скрытой группы}.
     */
 
 });

@@ -154,6 +154,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         if (compatibility.touch || hasBottomHeaders() || this._shadows.hasVisibleShadow()) {
             this._initHeaderController();
         }
+
+        this._updateShadowsScrollState();
+        this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
     }
 
     protected _isPagingVisible(options: IContainerOptions): boolean {
@@ -261,13 +264,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                 this._updateShadowMode();
             }
 
-            // Если включены тени через стили, то нам все равно надо посчитать состояние теней
-            // для фиксированных заголовков если они есть.
-            if (!this._isOptimizeShadowEnabled ||
-                    this._stickyHeaderController.hasFixed(POSITION.TOP) ||
-                    this._stickyHeaderController.hasFixed(POSITION.BOTTOM)) {
-                this._shadows.updateScrollState(this._scrollModel);
-            }
+            this._updateShadowsScrollState();
 
             if (this._scrollModel && this._isInitializationDelayed()) {
                 this._scrollbars.updateScrollState(this._scrollModel, this._container);
@@ -283,6 +280,16 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._updateScrollContainerPaigingSccClass(this._options);
         }
         return isUpdated;
+    }
+
+    private _updateShadowsScrollState(): void {
+        // Если включены тени через стили, то нам все равно надо посчитать состояние теней
+        // для фиксированных заголовков если они есть.
+        if (!this._isOptimizeShadowEnabled ||
+            this._stickyHeaderController.hasFixed(POSITION.TOP) ||
+            this._stickyHeaderController.hasFixed(POSITION.BOTTOM)) {
+            this._shadows.updateScrollState(this._scrollModel);
+        }
     }
 
     protected _updateScrollContainerPaigingSccClass(options: IContainerOptions) {

@@ -759,6 +759,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     // чтобы футеры узлов правильно посчитать за один раз
                     viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(sourceController, expandedItems));
                     this._expandController.applyStateToModel();
+
+                    if (newOptions.markerMoveMode === 'leaves') {
+                        this._applyMarkedLeaf(newOptions.markedKey, viewModel, this.getMarkerController());
+                    }
                 }
             } else {
                 this._updateExpandedItemsAfterReload = true;

@@ -281,8 +281,8 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * @event Controls/interface/IPromisedSelectable#beforeSelectionChanged Происходит до изменения {@link selectedKeys списка выбранных элементов}.
     * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Controls/_multiselection/interface#ISelectionDifference} selectionDiff Изменение в списке выбранных элементов по сравнению с текущим выбором.
-    * @return {Controls/_interface/ISelectionObject} Список выбранных элементов
+    * @param {Controls/multiselection:ISelectionDifference} selectionDiff Изменение в списке выбранных элементов по сравнению с текущим выбором.
+    * @return {Controls/interface:ISelectionObject} Список выбранных элементов
     * @remark
     * Из обработчика события можно вернуть новый список выбранных элементов или промис с ними.
     * Если вы передаете selectedKeys в опции, то в опции вы должны положить те же ключи, что и вернули из обработчика события.

@@ -314,8 +314,16 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     protected _beforeUpdateInternal(newOptions: IBrowserOptions): void | Promise<RecordSet> {
         if (newOptions.listsOptions) {
+            const listsIdsAreEqual = newOptions.listsOptions.every(({id}) => {
+                return this._listsOptions.find((listOption) => {
+                    return listOption.id === id;
+                });
+            });
             if (!isEqual(newOptions.listsOptions, this._options.listsOptions)) {
                 this._listsOptions = Browser._getListsOptions(newOptions);
+            }
+            if (!listsIdsAreEqual) {
+                this._dataLoader = new DataLoader(this._getDataLoaderOptions(newOptions));
             }
             this._listsOptions.forEach((options, index) => {
                 this._update(
@@ -836,7 +844,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
         if (configsCount > 1) {
             this._dataLoader.each(({searchController}) => {
-                searchController.reset(Object.keys(this._dataLoader.getState()).length === 1);
+                searchController?.reset(Object.keys(this._dataLoader.getState()).length === 1);
             });
         } else {
             const filter = this._getSearchControllerSync().reset(true);
