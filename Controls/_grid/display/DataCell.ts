@@ -3,7 +3,7 @@ import {Record, Model} from 'Types/entity';
 
 import {IMarkable, ILadderConfig, TLadderElement} from 'Controls/display';
 
-import { IDisplaySearchValue, IDisplaySearchValueOptions } from './interface/IDisplaySearchValue';
+import {IDisplaySearchValue, IDisplaySearchValueOptions} from './interface/IDisplaySearchValue';
 
 import ITagCell from './interface/ITagCell';
 import ILadderContentCell from './interface/ILadderContentCell';
@@ -19,6 +19,9 @@ export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions
 
 const LADDER_RENDER = 'Controls/grid:TypesLadderWrapper';
 
+/**
+ * Ячейка строки таблицы, которая отображает данные из RecordSet-а
+ */
 export default class DataCell<T extends Model, TOwner extends DataRow<T>> extends mixin<
     Cell<T, TOwner>,
     DataCellCompatibility<T>
@@ -86,7 +89,11 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
         return classes;
     }
 
-    getWrapperClasses(backgroundColorStyle: string, templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
+    getWrapperClasses(
+        backgroundColorStyle: string,
+        templateHighlightOnHover?: boolean,
+        templateHoverBackgroundStyle?: string
+    ): string {
         let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
 
         // нужен shouldDisplayMarker именно для всего элемента, т.к. эти стили навешиваются на все ячейки для текста
@@ -97,7 +104,8 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
                 classes += ` controls-Grid__row-cell_selected__first-${this.getStyle()}`;
             }
             if (this.isLastColumn()) {
-                classes += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${this.getStyle()}`;
+                classes += ' controls-Grid__row-cell_selected__last';
+                classes += ` controls-Grid__row-cell_selected__last-${this.getStyle()}`;
             }
         }
 
@@ -143,6 +151,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             return itemModel[this.getTooltipProperty()];
         }
     }
+
     // endregion
 
     // region Аспект "Маркер"
@@ -159,6 +168,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             );
         }
     }
+
     // endregion
 
     // region Аспект "Тег"
@@ -197,7 +207,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
 
     isEditing(): boolean {
         if (this.getOwner().getEditingConfig()?.mode === 'cell') {
-            return this.getOwner().isEditing() && this.getOwner().getEditingColumnIndex() === this.getOwner().getColumnIndex(this);
+            return this.getOwner().isEditing() && this.getOwner().getEditingColumnIndex() === this.getColumnIndex();
         } else {
             return this.getOwner().isEditing();
         }
@@ -219,12 +229,13 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
     // region Аспект "Обрезка текста по многоточию"
 
     getTextOverflowClasses(): string {
-        let classes =  `controls-Grid__cell_${this.config.textOverflow || 'none'}`;
+        let classes = `controls-Grid__cell_${this.config.textOverflow || 'none'}`;
 
         // Для правильного отображения стрелки редактирования рядом с текстом, который
         // обрезается нужно повесить на контейнер с этим текстом специальные CSS классы
         if (this.config.textOverflow && this.shouldDisplayEditArrow(null)) {
-            classes += ` controls-Grid__editArrow-cellContent controls-Grid__editArrow-overflow-${this.config.textOverflow}`;
+            classes += ' controls-Grid__editArrow-cellContent';
+            classes += ` controls-Grid__editArrow-overflow-${this.config.textOverflow}`;
         }
         return classes;
     }
@@ -235,8 +246,8 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
 
     getTextOverflowTitle(): string | number {
         return this.config.textOverflow &&
-               !this.config.template &&
-               !this.config.tooltipProperty ? this.getDefaultDisplayValue() : '';
+           !this.config.template &&
+           !this.config.tooltipProperty ? this.getDefaultDisplayValue() : '';
     }
 
     // endregion

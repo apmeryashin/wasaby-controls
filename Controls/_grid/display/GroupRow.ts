@@ -1,6 +1,6 @@
-import { TemplateFunction } from 'UI/Base';
-import { mixin } from 'Types/util';
-import { Model as EntityModel } from 'Types/entity';
+import {TemplateFunction} from 'UI/Base';
+import {mixin} from 'Types/util';
+import {Model as EntityModel} from 'Types/entity';
 
 import {
     ExpandableMixin,
@@ -20,15 +20,18 @@ import ItemActionsCell from 'Controls/_grid/display/ItemActionsCell';
 
 const GROUP_Z_INDEX_DEFAULT = 2;
 const GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS = 3;
-export interface IOptions<T> extends IBaseCollectionItemOptions<T>, IExpandableMixinOptions {
+
+export interface IOptions<T extends EntityModel = EntityModel>
+    extends IBaseCollectionItemOptions<T>, IExpandableMixinOptions {
     owner: Collection<T>;
     metaResults: EntityModel;
 }
 
-export default class GroupRow<T> extends mixin<
-    DataRow<any>,
-    ExpandableMixin
-    >(
+/**
+ * Строка, отображающая название группы
+ */
+export default class GroupRow<TContents extends EntityModel = EntityModel> extends mixin<DataRow<TContents>,
+    ExpandableMixin>(
     DataRow,
     ExpandableMixin
 ) {
@@ -45,17 +48,17 @@ export default class GroupRow<T> extends mixin<
     readonly ItemActionsItem: boolean = false;
     readonly '[Controls/_display/grid/GroupRow]': true;
 
-    protected _$columnItems: Array<DataCell<T>>;
-    protected _groupTemplate: TemplateFunction|string;
+    protected _$columnItems: Array<DataCell<TContents, GroupRow<TContents>>>;
+    protected _groupTemplate: TemplateFunction | string;
     protected _$metaResults: EntityModel;
     protected _$colspanGroup: boolean;
 
-    constructor(options?: IOptions<T>) {
+    constructor(options?: IOptions<TContents>) {
         super(options);
         ExpandableMixin.call(this);
     }
 
-    get key(): T {
+    get key(): TContents {
         return this._$contents;
     }
 
@@ -77,9 +80,9 @@ export default class GroupRow<T> extends mixin<
     // FIXME: перебитие метода с другой сигнатурой + сайд эффект в виде установки шаблона при вызове метода getSmth
     getTemplate(
         itemTemplateProperty: string,
-        userItemTemplate: TemplateFunction|string,
-        userGroupTemplate?: TemplateFunction|string
-    ): TemplateFunction|string {
+        userItemTemplate: TemplateFunction | string,
+        userGroupTemplate?: TemplateFunction | string
+    ): TemplateFunction | string {
         if (userGroupTemplate) {
             this._groupTemplate = userGroupTemplate;
         } else {
@@ -98,8 +101,8 @@ export default class GroupRow<T> extends mixin<
 
     getItemClasses(params: IItemTemplateParams): string {
         return `${this._getBaseItemClasses()} ` +
-               `${this._getCursorClasses(params.cursor, params.clickable)} ` +
-               `controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
+            `${this._getCursorClasses(params.cursor, params.clickable)} ` +
+            `controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
     }
 
     protected _getBaseItemClasses(): string {
@@ -121,8 +124,11 @@ export default class GroupRow<T> extends mixin<
     }
 
     getStickyHeaderZIndex(): number {
-        return (this.hasHeader() || this.getResultsPosition()) ? GROUP_Z_INDEX_DEFAULT : GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS;
+        return (this.hasHeader() || this.getResultsPosition())
+            ? GROUP_Z_INDEX_DEFAULT
+            : GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS;
     }
+
     setExpanded(expanded: boolean, silent?: boolean): void {
         super.setExpanded(expanded, silent);
         this._nextVersion();
@@ -178,13 +184,13 @@ export default class GroupRow<T> extends mixin<
         }
     }
 
-    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGroupCellOptions<T>> {
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGroupCellOptions<TContents>> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             columnsLength: this._$columnsConfig.length,
             column: {},
             contents: this.getContents(),
-			zIndex: this.getStickyHeaderZIndex(),
+            zIndex: this.getStickyHeaderZIndex(),
             metaResults: this.getMetaResults(),
             groupTemplate: this._groupTemplate,
             colspanGroup: this._$colspanGroup

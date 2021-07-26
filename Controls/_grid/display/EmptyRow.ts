@@ -1,10 +1,12 @@
-import { IColumn } from './interface/IColumn';
+import {IColumn} from './interface/IColumn';
 import Row, {IOptions as IBaseRowOptions} from './Row';
 import {IItemTemplateParams} from './mixins/Row';
 import {TColspanCallbackResult} from './mixins/Grid';
 
-class EmptyRow<T> extends Row<T> {
-
+/**
+ * Строка пустого представления таблицы
+ */
+class EmptyRow extends Row<null> {
     getContents(): string {
         return 'emptyRow';
     }

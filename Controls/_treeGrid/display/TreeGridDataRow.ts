@@ -23,7 +23,7 @@ export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItem
  * Строка иерархической коллекции, в которой отображаются данные из RecordSet-а
  */
 export default class TreeGridDataRow<T extends Model = Model>
-    extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
+    extends mixin<TreeItem<T>, GridRowMixin<T>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 

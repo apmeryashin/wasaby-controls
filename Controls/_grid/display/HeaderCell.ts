@@ -15,8 +15,8 @@
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
 import {ICellPadding, IColspanParams} from './interface/IColumn';
-import { IHeaderCell } from './interface/IHeaderCell';
-import { IItemPadding } from 'Controls/display';
+import {IHeaderCell} from './interface/IHeaderCell';
+import {IItemPadding} from 'Controls/display';
 import HeaderRow from './HeaderRow';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
@@ -35,19 +35,23 @@ interface ICellContentOrientation {
 const FIXED_HEADER_Z_INDEX = 4;
 const STICKY_HEADER_Z_INDEX = 3;
 
-export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
+/**
+ * Ячейка строки заголовка в таблице
+ */
+export default class HeaderCell extends Cell<null, HeaderRow> {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:HeaderContent';
 
-    protected _$owner: HeaderRow<T>;
+    protected _$owner: HeaderRow;
     protected _$column: IHeaderCell;
     protected _$cellPadding: ICellPadding;
-    protected _$backgroundStyle?: string;
-    protected _$sorting?: string;
+    protected _$backgroundStyle: string;
+    protected _$sorting: string;
     protected _$contentOrientation?: ICellContentOrientation;
 
     get backgroundStyle(): string {
         return this._$backgroundStyle;
     }
+
     protected get contentOrientation(): ICellContentOrientation {
         if (!this._$contentOrientation) {
             this._calcContentOrientation();
@@ -56,7 +60,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
 
     private _calcContentOrientation(): void {
-        if (this.isCheckBoxCell()  || this._$isLadderCell) {
+        if (this.isCheckBoxCell() || this._$isLadderCell) {
             this._$contentOrientation = {
                 align: undefined,
                 valign: undefined
@@ -101,7 +105,9 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
 
     isCheckBoxCell(): boolean {
-        return !this._$isLadderCell && this._$owner.hasMultiSelectColumn() && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
+        return !this._$isLadderCell &&
+            this._$owner.hasMultiSelectColumn() &&
+            this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
     }
 
     // region Аспект "Объединение колонок"
@@ -119,11 +125,12 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         if (this._$column.startColumn && this._$column.endColumn) {
             const multiSelectOffset = this.isCheckBoxCell() ? 0 : +this._$owner.hasMultiSelectColumn();
             const stickyLadderCellsCount = this._$owner.getStickyLadderCellsCount();
-            const startLadderOffset = this._$column.startColumn > 1 ? stickyLadderCellsCount : +!!stickyLadderCellsCount;
-            const stopLadderOffset = stickyLadderCellsCount;
+            const startLadderOffset = this._$column.startColumn > 1
+                ? stickyLadderCellsCount
+                : +!!stickyLadderCellsCount;
             return {
                 startColumn: this._$column.startColumn + multiSelectOffset + startLadderOffset,
-                endColumn: this._$column.endColumn + multiSelectOffset + stopLadderOffset
+                endColumn: this._$column.endColumn + multiSelectOffset + stickyLadderCellsCount
             };
         }
         return super._getColspanParams();
@@ -143,7 +150,9 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         endRow: number,
         rowspan: number
     } {
-        const startRow = typeof this._$column.startRow === 'number' ? this._$column.startRow : (this._$owner.getIndex() + 1);
+        const startRow = typeof this._$column.startRow === 'number'
+            ? this._$column.startRow
+            : (this._$owner.getIndex() + 1);
         let endRow;
 
         if (typeof this._$column.endRow === 'number') {
@@ -172,6 +181,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         const {startRow, endRow} = this._getRowspanParams();
         return `grid-row: ${startRow} / ${endRow};`;
     }
+
     // endregion
 
     getWrapperStyles(): string {
@@ -196,8 +206,8 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
     getWrapperClasses(backgroundColorStyle: string): string {
         let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${this.getStyle()}`
-                          + ` ${this._getHorizontalPaddingClasses(this._$cellPadding)}`
-                          + ` ${this._getColumnSeparatorClasses()}`;
+            + ` ${this._getHorizontalPaddingClasses(this._$cellPadding)}`
+            + ` ${this._getColumnSeparatorClasses()}`;
 
         wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
 
@@ -292,6 +302,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     get column(): IHeaderCell {
         return this._$column;
     }
+
     // todo <<< END >>>
 
     isLastColumn(): boolean {

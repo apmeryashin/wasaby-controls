@@ -5,6 +5,9 @@ export interface IOptions extends ICellOptions<null> {
     shouldAddFooterPadding: boolean;
 }
 
+/**
+ * Ячейка футера в таблице
+ */
 class FooterCell<TOwner extends FooterRow> extends Cell<null, FooterRow> {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:FooterColumnTemplate';
     protected _$shouldAddFooterPadding: boolean;
@@ -46,6 +49,7 @@ class FooterCell<TOwner extends FooterRow> extends Cell<null, FooterRow> {
     getInnerContentWrapperClasses(): string {
         return 'controls-GridView__footer__cell__inner-content-wrapper';
     }
+
     //endregion
 }
 

@@ -1,8 +1,10 @@
 import Header, {IOptions as IHeaderOptions} from './Header';
 import TableHeaderRow from './TableHeaderRow';
 
-export default class TableHeader<T> extends Header<T> {
-
+/**
+ * Заголовок в таблице, которая не поддерживает css grid
+ */
+export default class TableHeader extends Header {
     getBodyClasses(): string {
         return `controls-Grid__header`;
     }
@@ -11,11 +13,11 @@ export default class TableHeader<T> extends Header<T> {
         throw Error('Method not implemented in TableHeader and shouldn\'t be used!');
     }
 
-    getRows(): Array<TableHeaderRow<T>> {
+    getRows(): TableHeaderRow[] {
         return this._$rows;
     }
 
-    protected _buildRows(options: IHeaderOptions<T>): Array<TableHeaderRow<T>> {
+    protected _buildRows(options: IHeaderOptions): TableHeaderRow[] {
         const factory = this._getRowsFactory();
         const rowsCount = this._$headerBounds.row.end - this._$headerBounds.row.start;
         if (rowsCount === 1) {

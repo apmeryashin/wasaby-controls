@@ -1,12 +1,12 @@
-import { IOptions as ICellOptions } from './Cell';
-import { OptionsToPropertyMixin }  from 'Types/entity';
-import { TemplateFunction } from 'UI/Base';
+import {IOptions as ICellOptions} from './Cell';
+import {Model, OptionsToPropertyMixin} from 'Types/entity';
+import {TemplateFunction} from 'UI/Base';
 import DataRow from './DataRow';
 import DataCell from './DataCell';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:StickyLadderColumnTemplate';
 
-export interface IOptions<T> extends ICellOptions<T> {
+export interface IOptions<TContents extends Model = Model> extends ICellOptions<TContents> {
     wrapperStyle: string;
     contentStyle?: string;
     stickyProperty: string;
@@ -14,7 +14,13 @@ export interface IOptions<T> extends ICellOptions<T> {
     isPointerEventsDisabled?: boolean;
 }
 
-export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends DataCell<T, TOwner> {
+/**
+ * Ячейка застиканной лесенки
+ */
+export default class StickyLadderCell<
+    TContents extends Model = Model,
+    TOwner extends DataRow<TContents> = DataRow<TContents>
+> extends DataCell<TContents, TOwner> {
     readonly Markable: boolean = false;
 
     protected _$wrapperStyle: string;
@@ -23,7 +29,7 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
     protected _$stickyHeaderZIndex: number;
     protected _$isPointerEventsDisabled: boolean;
 
-    constructor(options?: IOptions<T>) {
+    constructor(options?: IOptions<TContents>) {
         super();
         OptionsToPropertyMixin.call(this, options);
     }
@@ -43,13 +49,21 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
         return contentClasses;
     }
 
-    getContentClasses(cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getContentClasses(
+        backgroundColorStyle: string,
+        cursor: string = 'pointer',
+        templateHighlightOnHover: boolean = true
+    ): string {
         return '';
     }
 
-    getOriginalContentClasses(cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getOriginalContentClasses(
+        backgroundColorStyle: string,
+        cursor: string = 'pointer',
+        templateHighlightOnHover: boolean = true
+    ): string {
         const topPadding = this._$owner.getTopPadding();
-        let contentClasses = super.getContentClasses(cursor, false);
+        let contentClasses = super.getContentClasses(backgroundColorStyle, cursor, false);
         contentClasses += ' controls-Grid__row-ladder-cell__content';
         contentClasses += ` controls-Grid__row-ladder-cell__content_${topPadding}`;
         if (this._$isPointerEventsDisabled) {
@@ -83,7 +97,10 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
         const hasTopResults = this._$owner.getResultsPosition() === 'top';
         const hasGroup = this._$owner.hasStickyGroup();
         if (!hasMainCell) {
-            classes += ` controls-Grid__row-cell__ladder-spacing${hasHeader ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}${hasGroup ? '_withGroup' : ''}`;
+            const headerSuffix = hasHeader ? '_withHeader' : '';
+            const resultsSuffix = hasTopResults ? '_withResults' : '';
+            const groupSuffix = hasGroup ? '_withGroup' : '';
+            classes += ` controls-Grid__row-cell__ladder-spacing${headerSuffix}${resultsSuffix}${groupSuffix}`;
         } else if (hasGroup) {
             classes += ' controls-Grid__row-cell__ladder-main_spacing_withGroup';
         }
@@ -91,18 +108,18 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
     }
 
     getStickyHeaderStyles(): string {
-        return `z-index: ${ this.getZIndex()};`;
+        return `z-index: ${this.getZIndex()};`;
     }
 
     getZIndex(): number {
         return this._$stickyHeaderZIndex + (this._$isFixed ? 2 : 0);
     }
 
-    getTemplate(): TemplateFunction|string {
+    getTemplate(): TemplateFunction | string {
         return DEFAULT_CELL_TEMPLATE;
     }
 
-    getOriginalTemplate(): TemplateFunction|string {
+    getOriginalTemplate(): TemplateFunction | string {
         return super.getTemplate();
     }
 

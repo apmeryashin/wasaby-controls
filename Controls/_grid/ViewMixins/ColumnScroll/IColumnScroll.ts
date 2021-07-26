@@ -57,7 +57,7 @@ interface IColumnScrollViewMixin {
     _$dragScrollStylesContainer: HTMLStyleElement;
     _$columnScrollFreezeCount: number;
     _$columnScrollEmptyViewMaxWidth: number;
-    // Состояние, показывающее, что ожиданется завершение слудующей перерисовки для обновления состояний контроллеров.
+    // Состояние, показывающее, что ожидается завершение слудующей перерисовки для обновления состояний контроллеров.
     _$oldOptionsForPendingUpdate: IViewOptions;
 
     // Scrolled to end server-side render

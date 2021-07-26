@@ -1,4 +1,4 @@
-import { mixin } from 'Types/util';
+import {mixin} from 'Types/util';
 import {
     OptionsToPropertyMixin,
     DestroyableMixin,
@@ -8,12 +8,12 @@ import {
     IVersionable,
     Model
 } from 'Types/entity';
-import { TemplateFunction } from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 
 import {IColumn, IColspanParams, TColumnSeparatorSize, ICellPadding} from './interface/IColumn';
 
 import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
-import { COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS } from 'Controls/columnScroll';
+import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
 
@@ -23,7 +23,7 @@ const NUMBER_RENDER = 'Controls/grid:NumberTypeRender';
 const STRING_RENDER = 'Controls/grid:StringTypeRender';
 const STRING_SEARCH_RENDER = 'Controls/grid:StringSearchTypeRender';
 
-export interface IOptions<T> extends IColspanParams {
+export interface IOptions<T extends Model = Model> extends IColspanParams {
     owner: Row<T>;
     theme: string;
     style: string;
@@ -45,6 +45,9 @@ export interface IOptions<T> extends IColspanParams {
     isBottomSeparatorEnabled: boolean;
 }
 
+/**
+ * Ячейка строки в таблице
+ */
 export default class Cell<
     T extends Model = Model,
     TOwner extends Row<T> = Row<T>
@@ -116,9 +119,12 @@ export default class Cell<
         }
 
         switch (this._$column.displayType) {
-            case 'money': return MONEY_RENDER;
-            case 'number': return NUMBER_RENDER;
-            default: return STRING_RENDER;
+            case 'money':
+                return MONEY_RENDER;
+            case 'number':
+                return NUMBER_RENDER;
+            default:
+                return STRING_RENDER;
         }
     }
 
@@ -206,6 +212,7 @@ export default class Cell<
         }
         return `grid-column: ${colspanParams.startColumn} / ${colspanParams.endColumn};`;
     }
+
     // endregion
 
     getRowspan(): number {
@@ -220,6 +227,7 @@ export default class Cell<
     setHiddenForLadder(value: boolean): void {
         this._$isHiddenForLadder = value;
     }
+
     // endregion
 
     // region Аспект "Отображение данных"
@@ -242,6 +250,7 @@ export default class Cell<
     get contents(): T {
         return this._$owner.getContents();
     }
+
     // endregion
 
     // region Аспект "Стилевое оформление. Классы и стили"
@@ -268,7 +277,10 @@ export default class Cell<
             wrapperClasses += ' controls-Grid__row-cell-editing';
         }
 
-        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle)}`;
+        let backgroundColorWrapperClasses = this._getBackgroundColorWrapperClasses(
+            backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle
+        );
+        wrapperClasses += ` ${backgroundColorWrapperClasses}`;
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
@@ -280,9 +292,9 @@ export default class Cell<
     }
 
     protected _getBackgroundColorWrapperClasses(
-       backgroundColorStyle?: string,
-       templateHighlightOnHover?: boolean,
-       hoverBackgroundStyle?: string
+        backgroundColorStyle?: string,
+        templateHighlightOnHover?: boolean,
+        hoverBackgroundStyle?: string
     ): string {
         let wrapperClasses = '';
 
@@ -301,10 +313,9 @@ export default class Cell<
 
         // backgroundColorStyle имеет наивысший приоритет после isEditing
         if (backgroundColorStyle && backgroundColorStyle !== 'default') {
+            // Если на списке есть скролл колонок или ячейка застикана, то ей надо выставить backgroundStyle
+            // Сюда же попадаем, если backgroundColorStyle = default
             wrapperClasses += ` controls-Grid__row-cell_background_${backgroundColorStyle}`;
-
-        // Если на списке есть скролл колонок или ячейка застикана, то ей надо выставить backgroundStyle
-        // Сюда же попадаем, если backgroundColorStyle = default
         } else if (hasColumnScroll || this._$isSticked) {
             wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
         }
@@ -337,7 +348,8 @@ export default class Cell<
     getRelativeCellWrapperClasses(): string {
         const rowSeparatorSize = this._$rowSeparatorSize;
 
-        // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
+        // Единственная ячейка с данными сама формирует высоту строки
+        // и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
         // Подробнее искать по #grid_relativeCell_td.
         const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.hasMultiSelectColumn() ? 2 : 1);
 
@@ -506,7 +518,10 @@ export default class Cell<
 
     protected _getColumnScrollWrapperClasses(): string {
         if (this._$isFixed) {
-            return ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE} controls-GridView__cell_fixed`;
+            let classes = 'controls-GridView__cell_fixed';
+            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+            classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+            return classes;
         }
         return ` ${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`;
     }
@@ -563,6 +578,7 @@ export default class Cell<
         }
         return classes;
     }
+
     // endregion
 
     // region Аспект "Ячейка"
@@ -580,7 +596,7 @@ export default class Cell<
      * @param {Boolean} [takeIntoAccountColspans=false] - Учитывать ли колспаны ячеек, расположенных перед данной в строке.
      * @returns {Number} Индекс ячейки в строке.
      */
-    getColumnIndex(takeIntoAccountColspans?: boolean = false): number {
+    getColumnIndex(takeIntoAccountColspans: boolean = false): number {
         return this._$owner.getColumnIndex(this, takeIntoAccountColspans);
     }
 
@@ -606,6 +622,7 @@ export default class Cell<
     isMultiSelectColumn(): boolean {
         return this._$owner.hasMultiSelectColumn() && this.isFirstColumn();
     }
+
     // endregion
 
     // region Аспект "Маркер"
@@ -622,6 +639,7 @@ export default class Cell<
     getMarkerPosition(): 'left' | 'right' {
         return this._$markerPosition;
     }
+
     // endregion
 
     // region Аспект "Тег"

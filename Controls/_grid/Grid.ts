@@ -83,7 +83,7 @@ export default class Grid extends List {
     }
 }
 
-Grid.getDefaultOptions = function() {
+Grid.getDefaultOptions = function () {
    return {
        stickyHeader: true,
        stickyColumnsCount: 1,

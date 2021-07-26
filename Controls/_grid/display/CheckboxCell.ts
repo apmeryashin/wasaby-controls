@@ -1,10 +1,13 @@
-import { TemplateFunction } from 'UI/Base';
-import { IMarkable } from 'Controls/display';
+import {TemplateFunction} from 'UI/Base';
+import {IMarkable} from 'Controls/display';
 import Cell from './Cell';
 import DataRow from './DataRow';
 import {DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
 
+/**
+ * Ячейка строки в таблице, которая отображает чекбокс для множественного выбора
+ */
 export default class CheckboxCell<
     T extends Model = Model,
     TOwner extends DataRow<T> = DataRow<T>
@@ -15,7 +18,11 @@ export default class CheckboxCell<
         return this._$owner.isEditing();
     }
 
-    getWrapperClasses(backgroundColorStyle: string, templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
+    getWrapperClasses(
+        backgroundColorStyle: string,
+        templateHighlightOnHover?: boolean,
+        templateHoverBackgroundStyle?: string
+    ): string {
         const hoverBackgroundStyle = templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
@@ -36,7 +43,10 @@ export default class CheckboxCell<
             wrapperClasses += this._getCheckboxCellPaddingClasses();
         }
 
-        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle)}`;
+        let backgroundColorWrapperClasses = this._getBackgroundColorWrapperClasses(
+            backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle
+        );
+        wrapperClasses += ` ${backgroundColorWrapperClasses}`;
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
@@ -46,15 +56,15 @@ export default class CheckboxCell<
     }
 
     getContentClasses(
-       backgroundColorStyle: string,
-       cursor: string = 'pointer',
-       templateHighlightOnHover: boolean = true
+        backgroundColorStyle: string,
+        cursor: string = 'pointer',
+        templateHighlightOnHover: boolean = true
     ): string {
         // Навешиваем классы в Row::getMultiSelectClasses, т.к. если позиция custom, то мы не создадим CheckboxCell
         return '';
     }
 
-    getTemplate(): TemplateFunction|string {
+    getTemplate(): TemplateFunction | string {
         return this.getOwner().getMultiSelectTemplate();
     }
 
@@ -74,10 +84,8 @@ export default class CheckboxCell<
     private _getCheckboxCellPaddingClasses(): string {
         const topPadding = this.getOwner().getTopPadding();
         const bottomPadding = this.getOwner().getBottomPadding();
-        const paddingClasses =
-            ` controls-Grid__row-checkboxCell_rowSpacingTop_${topPadding}` +
+        return ` controls-Grid__row-checkboxCell_rowSpacingTop_${topPadding}` +
             ` controls-Grid__row-cell_rowSpacingBottom_${bottomPadding} `;
-        return paddingClasses;
     }
 }
 

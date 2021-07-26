@@ -52,7 +52,7 @@ function itemIsVisible<T extends Model>(item: TreeItem<T>): boolean {
 export default class TreeGridCollection<
     S extends Model = Model,
     T extends TreeGridDataRow<S> = TreeGridDataRow<S>
-> extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
+> extends mixin<Tree<S, T>, GridMixin<S, T>>(Tree, GridMixin) {
     readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
 
     protected _$nodeTypeProperty: string;
@@ -354,8 +354,8 @@ export default class TreeGridCollection<
         });
     }
 
-    getHeaderConstructor(): TreeGridHeader {
-        return this.isFullGridSupport() ? TreeGridHeader : TreeGridTableHeader;
+    getHeaderConstructor(): string {
+        return this.isFullGridSupport() ? 'Controls/treeGrid:TreeGridHeader' : 'Controls/treeGrid:TreeGridTableHeader';
     }
 
     protected _initializeHeader(options: ITreeGridOptions): void {

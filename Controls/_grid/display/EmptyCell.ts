@@ -3,7 +3,13 @@ import EmptyRow from './EmptyRow';
 import Cell, {IOptions as IBaseCellOptions} from './Cell';
 import CellCompatibility from './compatibility/DataCell';
 
-class EmptyCell<T> extends mixin<Cell<T, EmptyRow<T>>, CellCompatibility>(Cell, CellCompatibility) {
+/**
+ * Ячейка строки пустого представления таблицы
+ */
+class EmptyCell extends mixin<
+    Cell<null, EmptyRow>,
+    CellCompatibility<null>
+>(Cell, CellCompatibility) {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:EmptyColumnTemplate';
 
     //region Аспект "Стилевое оформление"

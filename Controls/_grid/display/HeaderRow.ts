@@ -12,16 +12,20 @@ import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
 import Cell from './Cell';
 import HeaderCell from './HeaderCell';
+import {ISortItem} from 'Controls/_grid/display/mixins/Grid';
 
-export interface IOptions<T> extends IRowOptions<T> {
-    headerModel: Header<T>;
+export interface IOptions extends IRowOptions<null> {
+    headerModel: Header;
 }
 
-export default class HeaderRow<T> extends Row<T> {
-    protected _$headerModel: Header<T>;
-    protected _$sorting: Array<{[p: string]: string}>;
+/**
+ * Строка заголовка в таблице
+ */
+export default class HeaderRow extends Row<null> {
+    protected _$headerModel: Header;
+    protected _$sorting: ISortItem[];
 
-    constructor(options?: IOptions<T>) {
+    constructor(options?: IOptions) {
         super(options);
 
         // Заголовок будет всегда застикан при отрисовке, когда есть данные вверх
@@ -40,17 +44,17 @@ export default class HeaderRow<T> extends Row<T> {
         return this._$headerModel.isMultiline();
     }
 
-    getContents(): T {
-        return 'header' as unknown as T;
+    getContents(): string {
+        return 'header';
     }
 
     getItemClasses(): string {
         return 'controls-Grid__header';
     }
 
-    getColumnIndex(cell: HeaderCell<T>, takeIntoAccountColspans: boolean = false): number {
+    getColumnIndex(cell: HeaderCell, takeIntoAccountColspans: boolean = false): number {
         const superIndex = super.getColumnIndex.apply(this, arguments);
-        const columnItems = this.getColumns() as HeaderCell<T>[];
+        const columnItems = this.getColumns() as HeaderCell[];
         let ladderCells = 0;
 
         // Ищем индекс ячейки, попутно считаем колспаны предыдущих.
@@ -88,9 +92,10 @@ export default class HeaderRow<T> extends Row<T> {
                     shadowVisibility: 'hidden',
                     backgroundStyle: 'transparent'
                 })
-            ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
+            ] as Cell[]).concat(this._$columnItems);
         }
     }
+
     getBounds(): IHeaderBounds {
         return this._$headerModel.getBounds();
     }
@@ -170,12 +175,15 @@ export default class HeaderRow<T> extends Row<T> {
 
             const prevColumnIndex = columnIndex - (
                 (columnIndex > 1 &&
-                this._$columnsConfig[columnIndex - 1].startColumn === column.startColumn &&
-                column.startColumn !== undefined) ? 2 : 1);
+                    this._$columnsConfig[columnIndex - 1].startColumn === column.startColumn &&
+                    column.startColumn !== undefined) ? 2 : 1);
 
+
+            const prevColumnConfig = this._$columnsConfig[prevColumnIndex];
+            const columnSeparatorSize = this._getHeaderColumnSeparatorSize(prevColumnConfig, prevColumnIndex);
             const previousColumn: IColumn = {
-                ...this._$columnsConfig[prevColumnIndex],
-                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$columnsConfig[prevColumnIndex], prevColumnIndex)
+                ...prevColumnConfig,
+                columnSeparatorSize
             } as IColumn;
 
             return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
@@ -201,7 +209,7 @@ export default class HeaderRow<T> extends Row<T> {
         return columnSeparatorSize;
     }
 
-    setSorting(sorting: Array<{[p: string]: string}>): void {
+    setSorting(sorting: ISortItem[]): void {
         this._$sorting = sorting;
         this._reinitializeColumns(true);
     }

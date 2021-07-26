@@ -14,8 +14,9 @@ export interface ITreeGridGroupDataCell extends ITreeGridDataCellOptions<Model> 
 /**
  * Ячейка строки с данными, которая отображается в виде группы
  */
-export default class TreeGridGroupDataCell<T extends Model = Model>
-    extends mixin<TreeGridDataCell<any>, GridGroupCellMixin<any>>(TreeGridDataCell, GridGroupCellMixin) {
+export default class TreeGridGroupDataCell<T extends Model = Model> extends mixin<
+    TreeGridDataCell<T>, GridGroupCellMixin<T>
+>(TreeGridDataCell, GridGroupCellMixin) {
     readonly '[Controls/treeGrid:TreeGridGroupDataCell]': boolean;
 
     protected readonly _$column: IGroupNodeColumn;

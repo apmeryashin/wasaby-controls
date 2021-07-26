@@ -1,17 +1,21 @@
-import { TemplateFunction } from 'UI/Base';
-import { mixin } from 'Types/util';
+import {TemplateFunction} from 'UI/Base';
+import {mixin} from 'Types/util';
 
-import { CollectionItem, TMarkerClassName, IItemPadding } from 'Controls/display';
+import {CollectionItem, TMarkerClassName, IItemPadding} from 'Controls/display';
 
 import Collection from './Collection';
-import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
+import GridRowMixin, {IOptions as IGridRowMixinOptions} from './mixins/Row';
+import {Model} from 'Types/entity';
 
-export interface IOptions<T> extends IGridRowMixinOptions<T> {
-    owner: Collection<T>;
+export interface IOptions<TContents extends Model = Model> extends IGridRowMixinOptions<TContents> {
+    owner: Collection<TContents>;
 }
 
-export default class Row<T>
-    extends mixin<CollectionItem<any>, GridRowMixin<any>>(CollectionItem, GridRowMixin) {
+/**
+ * Базовый класс строки в таблице
+ */
+export default class Row<TContents extends Model = Model>
+    extends mixin<CollectionItem<TContents>, GridRowMixin<TContents>>(CollectionItem, GridRowMixin) {
     readonly '[Controls/_display/grid/Row]': boolean;
 
     // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироваться.
@@ -29,7 +33,7 @@ export default class Row<T>
     readonly DraggableItem: boolean = false;
     readonly ItemActionsItem: boolean = false;
 
-    constructor(options?: IOptions<T>) {
+    constructor(options?: IOptions<TContents>) {
         super(options);
         GridRowMixin.call(this, options);
     }
@@ -75,7 +79,7 @@ export default class Row<T>
         return isChangedMultiSelectVisibility;
     }
 
-    setEditing(editing: boolean, editingContents?: T, silent?: boolean, columnIndex?: number): void {
+    setEditing(editing: boolean, editingContents?: TContents, silent?: boolean, columnIndex?: number): void {
         // TODO: Убрать columnIndex.
         //  Подробнее можно прочитать в коментарии базового метода CollectionItem.setEditing
         //  https://online.sbis.ru/opendoc.html?guid=b13d5312-a8f5-4cea-b88f-8c4c043e4a77
@@ -95,7 +99,7 @@ export default class Row<T>
         }
     }
 
-    setSelected(selected: boolean|null, silent?: boolean): void {
+    setSelected(selected: boolean | null, silent?: boolean): void {
         const changed = this._$selected !== selected;
         super.setSelected(selected, silent);
         if (changed) {
@@ -110,6 +114,7 @@ export default class Row<T>
             this._redrawColumns('all');
         }
     }
+
     // endregion
 }
 

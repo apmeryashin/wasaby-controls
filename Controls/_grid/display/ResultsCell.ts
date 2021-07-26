@@ -3,7 +3,7 @@ import {Model as EntityModel} from 'Types/entity';
 import ResultsRow from './ResultsRow';
 import Cell, {IOptions as IBaseCellOptions} from './Cell';
 
-interface IResultsCellOptions<T> extends IBaseCellOptions<T> {
+interface IResultsCellOptions extends IBaseCellOptions<null> {
     metaResults?: EntityModel;
 }
 
@@ -11,13 +11,16 @@ const FIXED_RESULTS_Z_INDEX = 4;
 const STICKY_RESULTS_Z_INDEX = 3;
 export const GRID_RESULTS_CELL_DEFAULT_TEMPLATE: string = 'Controls/grid:ResultColumnTemplate';
 
-class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
+/**
+ * Ячейка строки результатов в таблице
+ */
+class ResultsCell extends Cell<null, ResultsRow> {
     protected readonly _defaultCellTemplate: string = GRID_RESULTS_CELL_DEFAULT_TEMPLATE;
     protected _$metaResults: EntityModel;
     protected _data: string | number;
     protected _format: string;
 
-    constructor(options?: IResultsCellOptions<T>) {
+    constructor(options?: IResultsCellOptions) {
         super(options);
         this._prepareDataAndFormat();
     }
@@ -80,9 +83,9 @@ class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
         }
 
         wrapperClasses += 'controls-Grid__results-cell'
-                            + ` controls-Grid__cell_${this.getStyle()}`
-                            + ` ${this._getWrapperPaddingClasses()}`
-                            + ` ${this._getColumnSeparatorClasses()}`;
+            + ` controls-Grid__cell_${this.getStyle()}`
+            + ` ${this._getWrapperPaddingClasses()}`
+            + ` ${this._getColumnSeparatorClasses()}`;
 
         wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
 

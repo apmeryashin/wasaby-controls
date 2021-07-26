@@ -1,9 +1,9 @@
-import { TemplateFunction } from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 import {Model as EntityModel, OptionsToPropertyMixin} from 'Types/entity';
-import { mixin } from 'Types/util';
+import {mixin} from 'Types/util';
 
-import { IColumn } from './interface/IColumn';
-import { default as GridGroupCellMixin } from 'Controls/_grid/display/mixins/GroupCell';
+import {IColumn} from './interface/IColumn';
+import {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/GroupCell';
 
 import DataCell from './DataCell';
 import GroupRow from './GroupRow';
@@ -13,7 +13,7 @@ export interface IOptions<T> {
     column: IColumn;
     columnsLength: number;
     contents: string;
-    groupTemplate: TemplateFunction|string;
+    groupTemplate: TemplateFunction | string;
     zIndex?: number;
     metaResults: EntityModel;
     colspanGroup?: boolean;
@@ -21,16 +21,21 @@ export interface IOptions<T> {
 
 const FIXED_GROUP_CELL_Z_INDEX = 4;
 
-export default class GroupCell<T>
-    extends mixin<DataCell<any, GroupRow<any>>, GridGroupCellMixin<any>>(DataCell, GridGroupCellMixin) {
+/**
+ * Ячейка строки, отображающей название группы
+ */
+export default class GroupCell<TContents extends EntityModel = EntityModel> extends mixin<
+    DataCell<TContents, GroupRow<TContents>>,
+    GridGroupCellMixin<TContents>
+>(DataCell, GridGroupCellMixin) {
     protected _$columnsLength: number;
     protected _$contents: string;
     protected _$zIndex: number;
-    protected _$groupTemplate: TemplateFunction|string;
+    protected _$groupTemplate: TemplateFunction | string;
     protected _$metaResults: EntityModel;
     protected _$colspanGroup: EntityModel;
 
-    constructor(options?: IOptions<T>) {
+    constructor(options?: IOptions<TContents>) {
         super(options);
         OptionsToPropertyMixin.call(this, options);
     }
@@ -67,7 +72,7 @@ export default class GroupCell<T>
         return 'display: contents;';
     }
 
-    getTemplate(): TemplateFunction|string {
+    getTemplate(): TemplateFunction | string {
         return this._$groupTemplate;
     }
 
@@ -87,7 +92,7 @@ export default class GroupCell<T>
                             textVisible: boolean,
                             columnAlignGroup: number): string {
         let classes = `controls-ListView__groupContent-rightTemplate`;
-        const groupPaddingClasses = this._$owner.getGroupPaddingClasses(undefined, 'right');
+        const groupPaddingClasses = this._$owner.getGroupPaddingClasses('right');
 
         if (!this._shouldFixGroupOnColumn(columnAlignGroup, textVisible)) {
             classes += ' ' + groupPaddingClasses;

@@ -7,7 +7,10 @@ import FooterCell, {IOptions as IFooterCellOptions} from 'Controls/_grid/display
 import {TColspanCallbackResult} from 'Controls/_grid/display/mixins/Grid';
 import {mixin} from 'Types/util';
 
-export default class FooterRow extends mixin<Row<string>, Footer>(Row, Footer) {
+/**
+ * Подвал таблицы
+ */
+export default class FooterRow extends mixin<Row<null>, Footer>(Row, Footer) {
     private _hasMoreData: IHasMoreData;
     private _actionsTemplateConfig: IItemActionsTemplateConfig;
     protected _$shouldAddFooterPadding: boolean;

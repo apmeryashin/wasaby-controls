@@ -1,6 +1,7 @@
+/**
+ * Миксин, который содержт логику отображения ячейки группы
+ */
 export default abstract class GroupCell<T> {
-    readonly '[Controls/_display/grid/mixins/GroupCell]': boolean;
-
     getContentTextClasses(separatorVisibility: boolean,
                           textAlign: 'right' | 'left',
                           fontSize: string): string {
@@ -73,4 +74,6 @@ export default abstract class GroupCell<T> {
     }
 
     abstract isExpanded(): boolean;
+
+    abstract getStyle(): string;
 }

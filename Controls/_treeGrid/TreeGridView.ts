@@ -17,6 +17,9 @@ export interface ITreeGridOptions extends ITreeControlOptions, IGridOptions {
     groupNodeVisibility?: TGroupNodeVisibility;
 }
 
+/**
+ * Представление иерархической таблицы
+ */
 export default class TreeGridView extends GridView {
     protected _listModel: TreeGridCollection;
     protected _options: ITreeGridOptions;

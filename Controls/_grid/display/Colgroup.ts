@@ -1,19 +1,19 @@
-import { mixin } from 'Types/util';
-import { OptionsToPropertyMixin, VersionableMixin } from 'Types/entity';
+import {mixin} from 'Types/util';
+import {Model, OptionsToPropertyMixin, VersionableMixin} from 'Types/entity';
 
-import { TColumns } from './interface/IColumn';
+import {TColumns} from './interface/IColumn';
 
 import Collection from './Collection';
 import ColgroupCell from './ColgroupCell';
 
-type TColgroupCells<T> = Array<ColgroupCell<T>>;
+type TColgroupCells<T extends Model = Model> = ColgroupCell<T>[];
 
-export interface IOptions<T> {
+export interface IOptions<T extends Model = Model> {
     owner: Collection<T>;
     gridColumnsConfig: TColumns;
 }
 
-export default class Colgroup<T> extends mixin<
+export default class Colgroup<T extends Model = Model> extends mixin<
     OptionsToPropertyMixin,
     VersionableMixin
 >(

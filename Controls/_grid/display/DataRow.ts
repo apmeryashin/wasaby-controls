@@ -9,9 +9,11 @@ import { IDisplaySearchValue, IDisplaySearchValueOptions } from './interface/IDi
 import { IColumn, TColumns } from './interface/IColumn';
 import { Model } from 'Types/entity';
 
-export interface IOptions<T> extends IRowOptions<T>, IDisplaySearchValueOptions {
-}
+export interface IOptions<T extends Model = Model> extends IRowOptions<T>, IDisplaySearchValueOptions {}
 
+/**
+ * Строка таблицы, которая отображает данные из RecordSet-а
+ */
 export default class DataRow<T extends Model = Model> extends Row<T> implements
     IMarkable,
     ILadderSupport,
