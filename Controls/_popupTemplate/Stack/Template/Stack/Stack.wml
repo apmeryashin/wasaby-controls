@@ -9,6 +9,7 @@
                             stackOptions="{{_options}}"
                             _maximizeButtonTitle="{{_maximizeButtonTitle}}"
                             changeMaximizedState="{{changeMaximizedState}}"
+                            hasRightPanel="{{_hasRightPanel}}"
                             _maximizeButtonVisibility="{{_maximizeButtonVisibility}}" />
             </ws:if>
             <ws:else>
@@ -17,6 +18,14 @@
                         <div class="controls-StackTemplate__maximized_button"
                              on:click="changeMaximizedState()"
                              attr:title="{{_maximizeButtonTitle}}"></div>
+                    </ws:if>
+                    <ws:if data="{{_options.closeButtonVisibility && !_hasRightPanel}}">
+                        <Controls._popupTemplate.CloseButton
+                                attr:class="controls-StackTemplate__close_button"
+                                attr:data-qa="controls-stack-Button__close"
+                                viewMode="{{_options.closeButtonViewMode}}"
+                                transparent="{{_options.closeButtonTransparent}}"
+                                on:click="close()"/>
                     </ws:if>
                 </div>
             </ws:else>
@@ -43,9 +52,11 @@
             </ws:if>
         </div>
 
-        <ws:partial template="Controls/_popupTemplate/Stack/Template/RightPanel"
-                    closeButtonVisibility="{{_options.closeButtonVisibility}}"
-                    toolbarContentTemplate="{{_options.toolbarContentTemplate}}"
-                    rightPanelOptions="{{_options.rightPanelOptions}}"/>
+        <ws:if data="{{_hasRightPanel}}">
+            <ws:partial template="Controls/_popupTemplate/Stack/Template/RightPanel"
+                        closeButtonVisibility="{{_options.closeButtonVisibility}}"
+                        toolbarContentTemplate="{{_options.toolbarContentTemplate}}"
+                        rightPanelOptions="{{_options.rightPanelOptions}}"/>
+        </ws:if>
     </div>
 </div>

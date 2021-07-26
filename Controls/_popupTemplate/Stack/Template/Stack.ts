@@ -44,9 +44,11 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     protected _headerTheme: string;
     protected _maximizeButtonTitle: string;
     protected _maximizeButtonVisibility: boolean = false;
+    protected _hasRightPanel: boolean;
 
     protected _beforeMount(options: IStackTemplateOptions): void {
         this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть', 'окно')}`;
+        this._hasRightPanel = options.theme === 'default';
         this._updateMaximizeButton(options);
         this._prepareTheme();
     }
@@ -55,10 +57,15 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
         this._updateMaximizeButton(options);
         this._prepareTheme();
     }
+
     protected _afterUpdate(oldOptions: IStackTemplateOptions): void {
         if (this._options.maximized !== oldOptions.maximized) {
             this._notify('controlResize', [], {bubbling: true});
         }
+    }
+
+    protected close(): void {
+        this._notify('close', [], {bubbling: true});
     }
 
     private _updateMaximizeButton(options: IStackTemplateOptions): void {
