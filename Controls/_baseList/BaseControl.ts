@@ -3278,7 +3278,7 @@ export interface IBaseControlOptions extends IControlOptions, IItemActionsOption
 }
 
 export default class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions>
-    extends Control<TOptions>
+    extends Control<TOptions, {}>
     implements IMovableList {
 
     //#region States
