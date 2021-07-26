@@ -5,24 +5,11 @@ import * as Deferred from 'Core/Deferred';
 import { error as dataSourceError } from 'Controls/dataSource';
 import { IContainerConstructor } from 'Controls/_dataSource/error';
 import { Model } from 'Types/entity';
-import { Memory } from 'Types/source';
 import {CRUD_EVENTS, default as CrudController, ICrudConfig} from 'Controls/_form/CrudController';
 import { DialogOpener } from 'Controls/error';
 import { Mode } from 'Controls/error';
 import ControllerBase from 'Controls/_form/ControllerBase';
-import IControllerBase from 'Controls/_form/interface/IControllerBase';
-
-interface IFormController extends IControllerBase {
-    readMetaData?: object;
-    createMetaData?: object;
-    destroyMetaData?: object;
-    errorContainer?: IContainerConstructor;
-    isNewRecord?: boolean;
-    key?: string;
-    errorController?: dataSourceError.Controller;
-    source?: Memory;
-    initializingWay?: string;
-}
+import {default as IFormController} from 'Controls/_form/interface/IFormController';
 
 interface IReceivedState {
     data?: Model;
