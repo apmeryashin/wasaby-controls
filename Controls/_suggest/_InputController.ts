@@ -280,7 +280,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
             if (this._options.historyId) {
                return this._loadHistoryKeys().then(() => {
-                  if (this._destroyed) {
+                  if (!this._destroyed) {
                      this._performLoad(this._options);
                   }
                });
