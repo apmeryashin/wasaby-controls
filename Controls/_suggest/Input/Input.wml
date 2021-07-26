@@ -31,8 +31,7 @@
       fontWeight="{{_options.fontWeight}}"
       on:tagClick="_notifyHandler('tagClick')"
       on:tagHover="_notifyHandler('tagHover')"
-      on:valueChanged="_changeValueHandler()"
-      on:inputCompleted="_inputCompletedHandler()">
+      on:valueChanged="_changeValueHandler()">
       <ws:rightFieldTemplate>
          <ws:if data="{{!_options.readOnly && (_searchState || _options.value)}}">
             <div class="controls-SuggestV__rightFieldWrapper">
