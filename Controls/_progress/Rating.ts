@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_progress/Rating/Rating';
+import * as template from 'wml!Controls/progress:IRating/Rating';
 import {detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
@@ -15,13 +15,171 @@ const DEFAULT_EMPTY_ICON_STYLE = 'readonly';
 const HALF_OF_INTEGER = 50;
 const COUNT_STARS = 5;
 
+/**
+ * Интерфейс опция для {@link Controls/progress:Rating}.
+ * @interface Controls/progress:IRating
+ * @public
+ * @author Колесов В.А.
+ */
 interface IRatingOptions extends IControlOptions {
+    /**
+     * @name Controls/progress:IRating#value
+     * @cfg {Number} Количество заполненных звезд
+     * @remark
+     * Целое число от 1 до 5.
+     */
+    /*
+     * @name Controls/progress:IRating#value
+     * @cfg {Number} Number of highlighted stars
+     * @remark
+     * An integer from 1 to 5.
+     */
     value: number;
+    /**
+     * @name Controls/progress:IRating#precision
+     * @cfg {Number} Количество символов десятичной части, по умолчанию 0
+     * @remark
+     * Если десятичное значение precision больше половины целого значения, то показывается пол.звезды.
+     * 3,44 –3 звезды. 3,56 –3 с половиной здезды
+     */
+    /*
+     * @name Controls/progress:IRating#precision
+     * @cfg {Number} Number of decimal characters, default 0
+     * @remark
+     * If the precision decimal value is greater than half an integer value, then half a star is displayed.
+     * 3,44 – 3 highlighted stars. 3,56 –3 with half highlighted stars
+     */
     precision?: number;
+    /**
+     * @name Controls/progress:IRating#readOnly
+     * @cfg {Boolean} Определяет, может ли пользователь изменить значение контрола.
+     * @remark
+     * Если значение false, то при наведении на пустую звездуона и все предыдущие до нее заполняются, при уводе фокуса
+     * становятся обратно пустыми. При клике на какую-либо звезду устанавливается рейтинг слева на право.
+     */
+    /*
+     * @name Controls/progress:IRating#readOnly
+     * @cfg {Boolean} Determines if the user can change the value of the control.
+     * @remark
+     * If the value is false, then when you hover over an empty star, that and all the previous ones before it are filled,
+     * when the focus is removed, they become empty back. When you click on any star, the rating is set from left to right.
+     */
     readOnly?: boolean;
+    /**
+     * @name Controls/progress:IRating#iconSize
+     * @cfg {String} Размер иконки звезды.
+     * @variant default
+     * @variant 2xs
+     * @variant xs
+     * @variant s
+     * @variant m
+     * @variant l
+     * @see iconPadding
+     * @see iconStyle
+     * @see emptyIconStyle
+     */
+    /*
+     * @name Controls/progress:IRating#iconSize
+     * @cfg {String} Star size
+     * @remark
+     * Possible values:
+     * * default
+     * * 2xs
+     * * xs
+     * * s
+     * * m
+     * * l
+     */
     iconSize?: IconSize;
+    /**
+     * @name Controls/progress:IRating#iconStyle
+     * @cfg {String} Цвет заполненной звезды.
+     * @variant warning
+     * @variant info
+     * @variant success
+     * @variant danger
+     * @variant secondary
+     * @variant primary
+     * @variant default
+     * @variant contrast
+     * @see iconSize
+     * @see iconPadding
+     * @see emptyIconStyle
+     */
+    /*
+     * @name Controls/progress:IRating#iconStyle
+     * @cfg {String} Color of highlighted star
+     * @remark
+     * Possible values:
+     * * warning
+     * * info
+     * * success
+     * * danger
+     * * secondary
+     * * primary
+     * * default
+     * * contrast
+     */
     iconStyle?: IconStyle;
+    /**
+     * @name Controls/progress:IRating#iconPadding
+     * @cfg {String} Расстояние между звездами.
+     * @variant null
+     * @variant 2xs
+     * @variant xs
+     * @variant s
+     * @variant m
+     * @variant l
+     * @variant xl
+     * @see iconSize
+     * @see iconStyle
+     * @see emptyIconStyle
+     */
+    /*
+     * @name Controls/progress:IRating#iconPadding
+     * @cfg {Number} Distance between stars
+     * @remark
+     * Possible values:
+     * * null
+     * * 2xs
+     * * xs
+     * * s
+     * * m
+     * * l
+     * * xl
+     */
     iconPadding?: IconPadding;
+    /**
+     * @name Controls/progress:IRating#emptyIconStyle
+     * @cfg {String} Цвет пустой звезды.
+     * @variant warning
+     * @variant info
+     * @variant success
+     * @variant danger
+     * @variant secondary
+     * @variant primary
+     * @variant default
+     * @variant contrast
+     * @variant readonly
+     * @see iconPadding
+     * @see iconStyle
+     * @see iconSize
+     */
+    /*
+     * @name Controls/progress:IRating#emptyIconStyle
+     * @cfg {String} Color of empty star
+     * @remark
+     * Possible values:
+     * * warning
+     * * info
+     * * success
+     * * danger
+     * * secondary
+     * * primary
+     * * default
+     * * contrast
+     * * readonly
+     */
     emptyIconStyle?: IconStyle;
 }
 
@@ -77,25 +235,24 @@ const _private = {
 };
 
 /**
- * @description
  * Базовый компонент оценок
  * Отображает выделенные звезды в зависимости от оценки
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2Fprogress%2FRating%2FIndex демо-пример}
- * @class Controls/_progress/Rating
  * @extends UI/Base:Control
+ * @implements Controls/progress:IRating
  * @author Нигматуллина Л.Э.
  * @public
  *
  * @demo Controls-demo/progress/Rating/Index
  */
 
-/**
+/*
  * Control of rating
  * Render highlighted stars depending on the rating
- * @class Controls/_progress/Rating
  * @extends UI/Base:Control
+ * @implements Controls/progress:IRating
  * @author Nigmatullina L.E.
  * @public
  *
@@ -175,149 +332,5 @@ Object.defineProperty(Rating, 'defaultProps', {
         return Rating.getDefaultOptions();
     }
 });
-/**
- * @name Controls/_progress/Rating#value
- * @cfg {Number} Количество заполненных звезд
- * @remark
- * Целое число от 1 до 5.
- */
-/**
- * @name Controls/_progress/Rating#value
- * @cfg {Number} Number of highlighted stars
- * @remark
- * An integer from 1 to 5.
- */
-/**
- * @name Controls/_progress/Rating#precision
- * @cfg {Number} Количество символов десятичной части, по умолчанию 0
- * @remark
- * Если десятичное значение precision больше половины целого значения, то показывается пол.звезды.
- * 3,44 –3 звезды. 3,56 –3 с половиной здезды
- */
-/**
- * @name Controls/_progress/Rating#precision
- * @cfg {Number} Number of decimal characters, default 0
- * @remark
- * If the precision decimal value is greater than half an integer value, then half a star is displayed.
- * 3,44 – 3 highlighted stars. 3,56 –3 with half highlighted stars
- */
-/**
- * @name Controls/_progress/Rating#readOnly
- * @cfg {Boolean} Определяет, может ли пользователь изменить значение контрола.
- * @remark
- * Если значение false, то при наведении на пустую звездуона и все предыдущие до нее заполняются, при уводе фокуса
- * становятся обратно пустыми. При клике на какую-либо звезду устанавливается рейтинг слева на право.
- */
-/**
- * @name Controls/_progress/Rating#readOnly
- * @cfg {Boolean} Determines if the user can change the value of the control.
- * @remark
- * If the value is false, then when you hover over an empty star, that and all the previous ones before it are filled,
- * when the focus is removed, they become empty back. When you click on any star, the rating is set from left to right.
- */
-/**
- * @name Controls/_progress/Rating#iconSize
- * @cfg {String} Размер иконки звезды
- * Возможные значения:
- * * default
- * * 2xs
- * * xs
- * * s
- * * m
- * * l
- */
-/**
- * @name Controls/_progress/Rating#iconSize
- * @cfg {String} Star size
- * @remark
- * Possible values:
- * * default
- * * 2xs
- * * xs
- * * s
- * * m
- * * l
- */
-/**
- * @name Controls/_progress/Rating#iconStyle
- * @cfg {String} Цвет заполненной звезды
- * Возможные значения:
- * * warning
- * * info
- * * success
- * * danger
- * * secondary
- * * primary
- * * default
- * * contrast
- */
-/**
- * @name Controls/_progress/Rating#iconStyle
- * @cfg {String} Color of highlighted star
- * @remark
- * Possible values:
- * * warning
- * * info
- * * success
- * * danger
- * * secondary
- * * primary
- * * default
- * * contrast
- */
-/**
- * @name Controls/_progress/Rating#emptyIconStyle
- * @cfg {String} Цвет пустой звезды
- * Возможные значения:
- * * warning
- * * info
- * * success
- * * danger
- * * secondary
- * * primary
- * * default
- * * contrast
- * * readonly
- */
-/**
- * @name Controls/_progress/Rating#emptyIconStyle
- * @cfg {String} Color of empty star
- * @remark
- * Possible values:
- * * warning
- * * info
- * * success
- * * danger
- * * secondary
- * * primary
- * * default
- * * contrast
- * * readonly
- */
-/**
- * @name Controls/_progress/Rating#iconPadding
- * @cfg {String} Расстояние между звездами
- * Возможные значения:
- * * null
- * * 2xs
- * * xs
- * * s
- * * m
- * * l
- * * xl
- */
-/**
- * @name Controls/_progress/Rating#iconPadding
- * @cfg {Number} Distance between stars
- * @remark
- * Possible values:
- * * null
- * * 2xs
- * * xs
- * * s
- * * m
- * * l
- * * xl
- */
 
 export default Rating;
