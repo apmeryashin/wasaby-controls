@@ -418,6 +418,13 @@
             </div>
          </div>
 
+         <h1>Operations</h1>
+         <div>
+            <a href="Controls-demo%252Foperations%252FSelectionViewModePartial%252FIndex">
+               SelectionViewModePartial
+            </a>
+         </div>
+
          <h1>OperationsPanel</h1>
          <div>
             <a href="Controls-demo%252FOperationsPanel%252FPanel">
