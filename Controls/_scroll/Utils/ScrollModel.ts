@@ -8,7 +8,16 @@ export default class ScrollModel extends ScrollState {
             if (state.indexOf('_') === -1) {
                 protectedState = '_' + state;
             }
-            if (this[protectedState] !== newState[state]) {
+            const protectedStateIsObject = typeof this[protectedState] === 'object';
+            const newStateIsObject = typeof newState[state] === 'object';
+            let newScrollState = newState[state];
+            let oldScrollState = this[protectedState];
+            if (protectedStateIsObject && newStateIsObject) {
+                newScrollState = JSON.stringify(newState[state]);
+                oldScrollState = JSON.stringify(this[protectedState]);
+            }
+
+            if (newScrollState !== oldScrollState) {
                 this[protectedState] = newState[state];
                 isScrollStateUpdated = true;
             }
