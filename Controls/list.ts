@@ -12,7 +12,7 @@
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @includes IReloadableList Controls/_list/interface/IReloadableList
- * @includes IEditableList Controls/_baseList/interface/IEditableList
+ * @includes IEditableList Controls/_list/interface/IEditableList
  * @includes IItemsView Controls/_list/IItemsView
  * @includes DataContainer Controls/_list/Data
  * @includes editing Controls/list:editing
@@ -52,7 +52,7 @@
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @includes IReloadableList Controls/_list/interface/IReloadableList
- * @includes IEditableList Controls/_baseList/interface/IEditableList
+ * @includes IEditableList Controls/_list/interface/IEditableList
  * @includes IItemsView Controls/_list/IItemsView
  * @includes DataContainer Controls/_list/Data
  * @includes editing Controls/list:editing
