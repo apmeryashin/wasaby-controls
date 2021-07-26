@@ -246,7 +246,7 @@ define(
             const sourceController = new dataSourceLib.NewSourceController(options);
             options = {...options, sourceController};
             let data = getDataWithConfig(options);
-            await data._beforeMount({source: newSource, idProperty: 'id'}, {}, {errorConfig});
+            await data._beforeMount({source, idProperty: 'id'}, {}, {errorConfig});
             assert.ok(data._errorConfig === errorConfig);
          });
 
