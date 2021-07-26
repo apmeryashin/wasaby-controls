@@ -2,9 +2,9 @@
     <ws:bodyContentTemplate>
         <div class="ws-flexbox ws-flex-column">
             <div class="ControlDemo-PopupPage__stack-staticContent">
-                <div class="ControlDemo-PopupPage__stack-staticContent-line">Общее количество виджетов - {{ _options.prefetchResult.stackTemplate[0].count || 'Не загружено' }}</div>
-                <div class="ControlDemo-PopupPage__stack-staticContent-line">Дата - {{ _options.prefetchResult.stackTemplate[0].date || 'Не загружено' }}</div>
-                <div class="ControlDemo-PopupPage__stack-staticContent-line">Описание - {{ _options.prefetchResult.stackTemplate[0].info || 'Не загружено' }}</div>
+                <div class="ControlDemo-PopupPage__stack-staticContent-line">Общее количество виджетов - {{ _options.prefetchResult.stackTemplate.data.count || 'Не загружено' }}</div>
+                <div class="ControlDemo-PopupPage__stack-staticContent-line">Дата - {{ _options.prefetchResult.stackTemplate.data.date || 'Не загружено' }}</div>
+                <div class="ControlDemo-PopupPage__stack-staticContent-line">Описание - {{ _options.prefetchResult.stackTemplate.data.info || 'Не загружено' }}</div>
             </div>
             <Controls.scroll:Container
                 if="{{ _options.prefetchResult }}"

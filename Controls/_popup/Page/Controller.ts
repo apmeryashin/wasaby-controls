@@ -51,7 +51,7 @@ class PageController {
         pageData: IPageConfig,
         popupOptions: IBasePopupOptions
     ): IPageTemplateOptions {
-        const workspaceConfig = pageData?.contentConfig?.workspaceConfig;
+        const workspaceConfig = pageData?.templateOptions?.workspaceConfig;
         if (workspaceConfig?.templateName) {
             return {
                 pageTemplate: workspaceConfig.templateName,

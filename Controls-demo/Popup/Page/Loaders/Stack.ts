@@ -1,7 +1,6 @@
-export function getConfig(): object[] {
-    return [
-        {
-            id: 'data',
+export function getConfig(): object {
+    return {
+        data: {
             type: 'custom',
             loadDataMethod: () => {
                 return new Promise((resolve) => {
@@ -18,7 +17,7 @@ export function getConfig(): object[] {
             },
             dependentArea: ['workspace']
         },
-        {
+        widgets: {
             id: 'widgets',
             type: 'additionalDependencies',
             dependencies: ['data'],
@@ -31,5 +30,5 @@ export function getConfig(): object[] {
             },
             dependentArea: ['workspace']
         }
-    ];
+    };
 }

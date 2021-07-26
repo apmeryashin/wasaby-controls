@@ -1,7 +1,7 @@
 import {isLoaded, loadSync, loadAsync} from 'WasabyLoader/ModulesLoader';
 
 export interface IPageConfig {
-    contentConfig?: IPageContentConfig;
+    templateOptions?: IPageContentConfig;
 }
 
 interface IPageContentConfig {
@@ -74,7 +74,7 @@ class PageController {
         }
         return new Promise((resolve, reject) => {
             this._getModuleByModuleName(dataLoaderModule, (DataLoader) => {
-                const pagePrefetchConfig = pageConfig?.contentConfig?.prefetchConfig;
+                const pagePrefetchConfig = pageConfig?.templateOptions?.prefetchConfig;
                 const prefetchConfig = {
                     ...pagePrefetchConfig,
                     configLoaderArguments: {
@@ -87,9 +87,7 @@ class PageController {
                         ...additionalOptions
                     }
                 };
-                DataLoader.loadData(prefetchConfig).then((promises) => {
-                    Promise.all(promises).then(resolve);
-                }).catch(reject);
+                DataLoader.loadData(prefetchConfig).then(resolve, reject);
             });
         });
     }

@@ -100,11 +100,12 @@ export default class Template extends Control<IControlOptions> {
             [pageId]: prefetchResult
         };
 
-        prefetchResult.forEach((data) => {
+        Object.keys(prefetchResult).forEach((key) => {
+            const data = prefetchResult[key];
             if (data && data._isAdditionalDependencies) {
-                Object.keys(data).forEach((key) => {
-                    if (key !== '_isAdditionalDependencies') {
-                        result[key] = data[key] as TPrefetchResult;
+                Object.keys(data).forEach((pageKey) => {
+                    if (pageKey !== '_isAdditionalDependencies') {
+                        result[pageKey] = data[pageKey] as TPrefetchResult;
                     }
                 });
             }

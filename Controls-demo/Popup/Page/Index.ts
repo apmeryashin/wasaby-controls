@@ -14,7 +14,7 @@ PageController.setDataLoaderModule('Controls-demo/Popup/Page/Loaders/DataLoader'
 
 const PAGE_CONFIGS = {
     stackTemplate: {
-        contentConfig: {
+        templateOptions: {
             prefetchConfig: {
                 configLoader: 'Controls-demo/Popup/Page/Loaders/Stack',
                 configLoaderArguments: {},
@@ -30,7 +30,7 @@ const WIDGET_SOURCE = [];
 
 for (let i = 0; i < WIDGETS_COUNT; i++) {
     PAGE_CONFIGS['widget' + i] = {
-        contentConfig: {
+        templateOptions: {
             prefetchConfig: {
                 configLoader: 'Controls-demo/Popup/Page/Loaders/Widget',
                 configLoaderArguments: {
@@ -53,7 +53,6 @@ export default class extends Control {
     private _stackOpener: StackOpener = new StackOpener();
 
     _openStack(): void {
-
         this._stackOpener.open({
             pageId: 'stackTemplate',
             opener: this,
@@ -66,7 +65,6 @@ export default class extends Control {
                 })
             }
         });
-
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
