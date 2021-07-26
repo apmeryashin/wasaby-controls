@@ -3,14 +3,15 @@ import * as template from 'wml!Controls-demo/operations/SelectionViewMode/Select
 import Memory from 'Controls-demo/operations/SelectionViewMode/Memory';
 import {getListData} from 'Controls-demo/OperationsPanelNew/DemoHelpers/DataCatalog';
 import 'wml!Controls-demo/operations/SelectionViewMode/resources/PersonInfo';
+import 'css!Controls-demo/operations/Index';
 
 export default class extends Control {
-   _template = template;
-   _gridColumns = null;
-   _viewSource = null;
-   _selectionViewMode = 'partial';
+   protected _template: TemplateFunction = template;
+   protected _gridColumns: any = null;
+   protected _viewSource: any = null;
+   protected _selectionViewMode: string = 'partial';
 
-   _beforeMount() {
+   protected _beforeMount(): void {
       this._gridColumns = [{
          template: 'wml!Controls-demo/operations/SelectionViewMode/resources/PersonInfo'
       }];
@@ -19,6 +20,4 @@ export default class extends Control {
          data: getListData()
       });
    }
-
-   static _styles: string[] = ['Controls-demo/operations/Index'];
 }
