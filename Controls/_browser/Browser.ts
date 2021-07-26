@@ -768,7 +768,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 historyItems: receivedState?.[index]?.historyItems || listOptions.historyItems,
                 source: receivedState ? this._getOriginalSource(listOptions as IBrowserOptions) : listOptions.source,
                 searchStartCallback: this._searchStartCallback,
-                sourceController: Browser._getSourceControllerForDataLoader(options)
+                sourceController: Browser._getSourceControllerForDataLoader(options, listOptions)
             };
         });
 
@@ -1009,7 +1009,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private static _getSourceControllerForDataLoader(
-        {sourceController, sourceControllerId, _dataOptionsValue}: IBrowserOptions
+        {sourceController, sourceControllerId, _dataOptionsValue}: IBrowserOptions,
+        listOptions?: IListConfiguration
     ): SourceController|void {
         let browserSourceController;
 
@@ -1023,6 +1024,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             } else if (_dataOptionsValue?.sourceController) {
                 browserSourceController = _dataOptionsValue.sourceController;
             }
+        }
+
+        if (!browserSourceController && listOptions) {
+            browserSourceController = listOptions.sourceController;
         }
 
         return browserSourceController;
