@@ -65,9 +65,6 @@ class View extends Control<IDateLitePopupOptions> {
     protected _tabPressed: boolean = false;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
-        document.body.addEventListener('focus', function(e) {
-            //console.log(e.target);
-        }, true);
         this._displayedRanges = options.displayedRanges;
         if (!options.emptyCaption) {
             if (options.chooseMonths && (options.chooseQuarters || options.chooseHalfyears)) {
@@ -259,11 +256,6 @@ class View extends Control<IDateLitePopupOptions> {
         } else if (event.nativeEvent.keyCode === constants.key.enter) {
             this._selectYear(year);
         }
-    }
-
-    // Костыль из-за не работы реактивности в tabindex.
-    protected _forReactivity(): void {
-        return '';
     }
 
     protected _mouseEnter(): void {
