@@ -3,6 +3,7 @@ import {LIST_EDITING_CONSTANTS} from '../BaseControl';
 
 /**
  * Интерфейс для {@link /doc/platform/developmentapl/interface-development/controls/list/ списков} с возможностью {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
+ * @interface Controls/_list/interface/IEditableList
  * @public
  * @author Авраменко А.С.
  * @see Controls/editableArea:View
@@ -12,7 +13,7 @@ import {LIST_EDITING_CONSTANTS} from '../BaseControl';
 export interface IEditableList {
     _options: {
         /**
-         * @name Controls/_baseList/interface/IEditableList#editingConfig
+         * @name Controls/_list/interface/IEditableList#editingConfig
          * @cfg {Controls/list:IEditingConfig | undefined} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
          * @demo Controls-demo/list_new/EditInPlace/EmptyActionsWithToolBar/Index
          * @example
@@ -174,7 +175,7 @@ export interface IEditableList {
 
 /**
  * Интерфейс объекта-конфигурации {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
- * 
+ *
  * @interface Controls/_baseList/interface/IEditingConfig
  * @public
  * @autor Авраменко А.C.
@@ -232,7 +233,7 @@ export interface IEditingConfig {
     sequentialEditing?: boolean;
     /**
      * @name Controls/_baseList/interface/IEditingConfig#toolbarVisibility
-     * @cfg {Boolean} Видимость кнопок "Сохранить" и "Отмена", отображаемых на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} в режиме редактирования. 
+     * @cfg {Boolean} Видимость кнопок "Сохранить" и "Отмена", отображаемых на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} в режиме редактирования.
      * @variant true Кнопки видны.
      * @variant false Кнопки скрыты.
      * @default false
@@ -242,7 +243,7 @@ export interface IEditingConfig {
     toolbarVisibility?: boolean;
     /**
      * @name Controls/_baseList/interface/IEditingConfig#backgroundStyle
-     * @cfg {String} Предназначен для настройки фона редактируемого элемента. 
+     * @cfg {String} Предназначен для настройки фона редактируемого элемента.
      * @remark
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/template/#table-background Цвет фона элемента в режиме редактирования}.
      * @default backgroundStyle
@@ -250,7 +251,7 @@ export interface IEditingConfig {
     backgroundStyle?: string;
     /**
      * @name Controls/_baseList/interface/IEditingConfig#addPosition
-     * @cfg {Controls/_baseList/interface/IEditableList/TAddPosition.typedef} Позиция добавления по месту. 
+     * @cfg {Controls/_baseList/interface/IEditableList/TAddPosition.typedef} Позиция добавления по месту.
      * @remark
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/code/#add-position здесь}.
      * @default bottom
@@ -258,7 +259,7 @@ export interface IEditingConfig {
     addPosition?: TAddPosition;
     /**
      * @name Controls/_baseList/interface/IEditingConfig#item
-     * @cfg {Types/entity:Model} Автоматический запуск редактирования/добавления по месту при инициализации списка. 
+     * @cfg {Types/entity:Model} Автоматический запуск редактирования/добавления по месту при инициализации списка.
      * @remark
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/init/ здесь}.
      * @default undefined
@@ -294,7 +295,7 @@ type TAddPosition = 'top' | 'bottom';
 
 /**
  * Интерфейс объекта-конфигурации для запуска {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/add/ добавления по месту}.
- * 
+ *
  * @interface Controls/_baseList/interface/IItemAddOptions
  * @public
  * @autor Авраменко А.C.
@@ -326,7 +327,7 @@ interface IItemAddOptions {
 
 /**
  * Интерфейс объекта-конфигурации для запуска {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
- * 
+ *
  * @interface Controls/_baseList/interface/IItemEditOptions
  * @public
  * @autor Авраменко А.C.
@@ -382,7 +383,7 @@ type TBeforeEndEditEventSyncResult = LIST_EDITING_CONSTANTS.CANCEL | undefined;
 type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
 
 /**
- * @event Controls/_baseList/interface/IEditableList#beforeBeginEdit Происходит перед запуском {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
+ * @event Controls/_list/interface/IEditableList#beforeBeginEdit Происходит перед запуском {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/list:IItemEditOptions | Controls/list:IItemAddOptions} options Параметры редактирования.
  * @param {Boolean} isAdd Параметр принимает значение true, когда элемент добавляется по месту.
@@ -455,7 +456,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  */
 
 /**
- * @event Controls/_baseList/interface/IEditableList#afterBeginEdit Происходит после запуска {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
+ * @event Controls/_list/interface/IEditableList#afterBeginEdit Происходит после запуска {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Редактируемый элемент.
  * @param {Boolean} isAdd Параметр принимает значение true, когда элемент добавляется по месту.
@@ -489,7 +490,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  */
 
 /**
- * @event Controls/_baseList/interface/IEditableList#beforeEndEdit Происходит перед завершением {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
+ * @event Controls/_list/interface/IEditableList#beforeEndEdit Происходит перед завершением {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Редактируемый элемент.
  * @param {Boolean} willSave Параметр принимает значение true, когда отредактированный элемент сохраняется.
@@ -533,7 +534,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  */
 
 /**
- * @event Controls/_baseList/interface/IEditableList#afterEndEdit Происходит после завершения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
+ * @event Controls/_list/interface/IEditableList#afterEndEdit Происходит после завершения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Редактируемый элемент.
  * @param {Boolean} isAdd Параметр принимает значение true, когда элемент добавляется по месту.
