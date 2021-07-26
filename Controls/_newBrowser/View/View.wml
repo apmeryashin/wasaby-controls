@@ -141,11 +141,11 @@
     <ws:detail>
         <ws:if data="{{_options.wrapDetailInScroll}}">
             <Controls.scroll:Container attr:class="controls-newBrowser__scroll">
-                <ws:partial template="detailTemplate"/>
+                <ws:partial template="detailTemplate" masterWidth="{{_options.master ? _options.master.width}}"/>
             </Controls.scroll:Container>
         </ws:if>
         <ws:else>
-            <ws:partial template="detailTemplate"/>
+            <ws:partial template="detailTemplate" masterWidth="{{_options.master ? _options.master.width}}"/>
         </ws:else>
     </ws:detail>
 </Controls.masterDetail:Base>
