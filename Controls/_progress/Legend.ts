@@ -4,7 +4,7 @@ import {IIndicatorCategory} from './StateIndicator';
 import legendTemplate = require('wml!Controls/_progress/Legend/Legend');
 
 /**
- * Интерфейс опция для {@link Controls/progress:Legend}.
+ * Интерфейс опций для {@link Controls/progress:Legend}.
  * @interface Controls/progress:ILegend
  * @public
  * @author Колесов В.А.

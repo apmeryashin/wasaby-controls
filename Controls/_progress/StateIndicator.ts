@@ -14,7 +14,7 @@ const maxPercentValue = 100;
 
 
 /**
- * Интерфейс опция для конфигурации категорий.
+ * Интерфейс опций для конфигурации категорий.
  * @interface Controls/progress:IIndicatorCategory
  * @public
  * @author Колесов В.А.
@@ -44,7 +44,7 @@ export interface IIndicatorCategory {
 }
 
 /**
- * Интерфейс опция для {@link Controls/progress:StateIndicator}.
+ * Интерфейс опций для {@link Controls/progress:StateIndicator}.
  * @interface Controls/progress:IStateIndicator
  * @public
  * @author Колесов В.А.

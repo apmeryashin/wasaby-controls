@@ -4,7 +4,7 @@ import {Logger} from 'UI/Utils';
 import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 
 /**
- * Интерфейс опция для {@link Controls/progress:Bar}.
+ * Интерфейс опций для {@link Controls/progress:Bar}.
  * @interface Controls/progress:IBar
  * @public
  * @author Колесов В.А.

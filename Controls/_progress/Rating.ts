@@ -16,7 +16,7 @@ const HALF_OF_INTEGER = 50;
 const COUNT_STARS = 5;
 
 /**
- * Интерфейс опция для {@link Controls/progress:Rating}.
+ * Интерфейс опций для {@link Controls/progress:Rating}.
  * @interface Controls/progress:IRating
  * @public
  * @author Колесов В.А.
