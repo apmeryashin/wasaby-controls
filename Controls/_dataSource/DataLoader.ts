@@ -20,6 +20,7 @@ import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 import {TArrayGroupId} from 'Controls/list';
 import {constants} from 'Env/Constants';
 import {PrefetchProxy} from 'Types/source';
+import PageController from 'Controls/_dataSource/PageController';
 
 const QUERY_PARAMS_LOAD_TIMEOUT = 5000;
 const DEFAULT_LOAD_TIMEOUT = 10000;
@@ -71,9 +72,19 @@ export interface ILoadDataConfig extends
 }
 
 export interface ILoadDataCustomConfig extends IBaseLoadDataConfig {
+    id?: string;
     type: 'custom';
     loadDataMethod: Function;
     loadDataMethodArguments?: object;
+    dependencies?: string[];
+}
+
+export interface ILoadDataAdditionalDepsConfig extends IBaseLoadDataConfig {
+    id?: string;
+    type: 'additionalDependencies';
+    loadDataMethod: Function;
+    loadDataMethodArguments?: object;
+    dependencies?: string[];
 }
 
 export interface IDataLoaderOptions {
@@ -91,9 +102,12 @@ export interface ILoadDataResult extends ILoadDataConfig {
 }
 
 type TLoadedConfigs = Map<string, ILoadDataResult|ILoadDataConfig>;
-type TLoadConfig = ILoadDataConfig|ILoadDataCustomConfig;
+type TLoadConfig = ILoadDataConfig|ILoadDataCustomConfig|ILoadDataAdditionalDepsConfig;
 type TLoadResult = ILoadDataResult|ILoadDataCustomConfig|boolean;
 type TLoadPromiseResult = Promise<TLoadResult>;
+type TLoadersConfigsMap = Record<string, TLoadConfig>;
+type TLoadPromiseResultMap = Record<string, Promise<TLoadResult>>;
+type TLoadResultMap = Record<string, TLoadResult>;
 
 function isNeedPrepareFilter(loadDataConfig: ILoadDataConfig): boolean {
     return !!(loadDataConfig.filterButtonSource || loadDataConfig.fastFilterSource || loadDataConfig.searchValue);
@@ -247,70 +261,88 @@ function getLoadTimeout(loadConfig: ILoadDataConfig): Number {
 
 export default class DataLoader {
     private _loadedConfigStorage: TLoadedConfigs = new Map();
-    private _loadDataConfigs: ILoadDataConfig[];
+    private _loadDataConfigs: TLoadConfig[] | TLoadersConfigsMap;
+    private _originLoadDataConfigs: TLoadConfig[];
 
     constructor(options: IDataLoaderOptions = {}) {
-        this._loadDataConfigs = options.loadDataConfigs || [];
-        this._fillLoadedConfigStorage(this._loadDataConfigs);
+        if (options.loadDataConfigs instanceof Array) {
+            this._originLoadDataConfigs = options.loadDataConfigs || [];
+            this._loadDataConfigs = this._getConfigsWithKeys(this._originLoadDataConfigs);
+            this._loadDataConfigs.forEach((config, index) => {
+                // Сеттим оригинальные конфиги, чтобы в SourceController не попал id, если его не задавали
+                this._setDataToConfigStorage(this._originLoadDataConfigs[index], config.id);
+            });
+        } else {
+            this._loadDataConfigs = options.loadDataConfigs || {};
+            Object.keys(this._loadDataConfigs).forEach((key) => {
+                this._setDataToConfigStorage(this._loadDataConfigs[key], key);
+            });
+        }
     }
 
     load<T extends ILoadDataResult>(
         sourceConfigs?: TLoadConfig[]
-    ): Promise<TLoadResult[]> {
-        return Promise.all(this.loadEvery<T>(sourceConfigs));
+    ): Promise<TLoadResult[]> | Promise<TLoadResultMap> {
+        const loadResult = this.loadEvery<T>(sourceConfigs);
+        if (loadResult instanceof Array) {
+            return Promise.all(loadResult);
+        } else {
+            return new Promise((resolve, reject) => {
+                const result = {};
+                const promises = [];
+                Object.keys(loadResult).forEach((key) => {
+                    promises.push(
+                        loadResult[key].then((loaderResult) => {
+                            result[key] = loaderResult;
+                        })
+                    );
+                });
+                Promise.all(promises).then(() => {
+                    resolve(result);
+                }).catch(reject);
+            });
+        }
     }
 
     loadEvery<T extends ILoadDataConfig|ILoadDataCustomConfig>(
-        sourceConfigs?: TLoadConfig[],
+        sourceConfigs?: TLoadConfig[] | TLoadersConfigsMap,
         loadTimeout?: number
-    ): TLoadPromiseResult[] {
-        const loadDataPromises = [];
-        let loadPromise;
+    ): TLoadPromiseResult[] | TLoadPromiseResultMap {
         let configs;
-
         if (sourceConfigs) {
             this._loadedConfigStorage.clear();
             configs = sourceConfigs;
         } else {
             configs = this._loadDataConfigs;
         }
+        if (configs instanceof Array) {
+            const configsWithKeys = this._getConfigsWithKeys(configs);
+            const loadersMap = this._getLoadersMap(
+                configsWithKeys,
+                sourceConfigs ? sourceConfigs as TLoadConfig[] : this._originLoadDataConfigs
+            );
+            return this._loadLoadersArray(configsWithKeys, loadersMap, loadTimeout);
+        } else {
+            return this._loadLoadersMap(configs, loadTimeout);
+        }
+    }
 
-        configs.forEach((loadConfig) => {
-            if (loadConfig.type === 'custom') {
-                const customPromise = loadConfig.loadDataMethod(loadConfig.loadDataMethodArguments)
-                loadPromise = wrapTimeout(customPromise, loadTimeout || getLoadTimeout(loadConfig)).catch((error) => {
-                    return error;
-                });
-            } else {
-                loadPromise = loadDataByConfig(loadConfig, loadTimeout);
-            }
-            Promise.resolve(loadPromise).then((result) => {
-                if (loadConfig.type === 'list' && !result.source && result.historyItems) {
-                    result.sourceController.setFilter(result.filter);
-                }
-                return result;
-            });
-            if (loadConfig.afterLoadCallback) {
-                const afterReloadCallbackLoadPromise = loadAsync(loadConfig.afterLoadCallback);
-                loadPromise.then((result) => {
-                    if (isLoaded(loadConfig.afterLoadCallback)) {
-                        loadSync<Function>(loadConfig.afterLoadCallback)(result);
-                        return result;
-                    } else {
-                        return afterReloadCallbackLoadPromise.then((afterLoadCallback: Function) => {
-                            afterLoadCallback(result);
-                            return result;
-                        });
-                    }
-                });
-            }
-            loadDataPromises.push(loadPromise);
+    private _getConfigsWithKeys(configs: TLoadConfig[]): TLoadConfig[] {
+        return configs.map((config) => {
+            return {
+                id: config.id || Guid.create(),
+                ...config
+            };
         });
-        Promise.all(loadDataPromises).then((results) => {
-            this._fillLoadedConfigStorage(results);
-        });
+    }
 
-        return loadDataPromises;
+    private _getLoadersMap(configsWithKeys: TLoadConfig[], originConfigs: TLoadConfig[]): TLoadersConfigsMap {
+        const configsMap = {};
+        configsWithKeys.forEach((config, index) => {
+            // Сеттим оригинальные конфиги, чтобы в SourceController не попал id, если его не задавали
+            configsMap[config.id] = originConfigs[index];
+        });
+        return configsMap;
     }
 
     getSourceController(id?: string): NewSourceController {
@@ -393,13 +425,11 @@ export default class DataLoader {
         });
     }
 
-    private _fillLoadedConfigStorage(
-        data: ILoadDataConfig[]|ILoadDataResult[]
+    private _setDataToConfigStorage(
+        data: TLoadConfig|ILoadDataResult,
+        id?: string
     ): void {
-        this._loadedConfigStorage.clear();
-        data.forEach((result) => {
-            this._loadedConfigStorage.set(result?.id || Guid.create(), result);
-        });
+        this._loadedConfigStorage.set(id || Guid.create(), data);
     }
 
     private _getConfig(id?: string): ILoadDataResult {
@@ -414,5 +444,249 @@ export default class DataLoader {
         }
 
         return config;
+    }
+
+    /**
+     * Запускает лоадеры, конфиг которых задан в виде объекта
+     * @param sourceConfigs
+     * @param loadTimeout
+     * @private
+     */
+    private _loadLoadersMap(
+        sourceConfigs?: TLoadersConfigsMap,
+        loadTimeout?: number
+    ): TLoadPromiseResultMap {
+        const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
+        const loadResult = {};
+        Object.keys(sourceConfigs).forEach((loaderKey) => {
+            let loadPromise;
+            if (startedLoaders[loaderKey]) {
+                loadPromise = startedLoaders[loaderKey];
+            } else {
+                loadPromise =
+                    this._callLoaderWithDependencies(loaderKey, sourceConfigs, startedLoaders, loadTimeout);
+            }
+            loadResult[loaderKey] = loadPromise;
+        });
+        return loadResult;
+    }
+
+    /**
+     * Запускает лоадеры, конфиг которых задан массивом
+     * @param sourceConfigs
+     * @param loadersMap
+     * @param loadTimeout
+     * @private
+     */
+    private _loadLoadersArray(
+        sourceConfigs: TLoadConfig[],
+        loadersMap: TLoadersConfigsMap,
+        loadTimeout?: number
+    ): TLoadPromiseResult[] {
+        const loadDataPromises = [];
+        const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
+
+        sourceConfigs.forEach((loadConfig, index) => {
+            if (startedLoaders[loadConfig.id]) {
+                loadDataPromises.push(startedLoaders[loadConfig.id]);
+            } else {
+                loadDataPromises.push(
+                    this._callLoaderWithDependencies(loadConfig.id, loadersMap, startedLoaders, loadTimeout)
+                );
+            }
+        });
+
+        return loadDataPromises;
+    }
+
+    /**
+     * Запускает лоадер
+     * Если у него есть зависимости, то так же рекурсивно запускает их
+     * @param id
+     * @param loadersMap мапа лоадеров id -> конфиг
+     * @param startedLoaders мапа из промисов запущенных лоадеров
+     * @param loadTimeout
+     * @private
+     */
+    private _callLoaderWithDependencies(
+        id: string,
+        loadersMap: TLoadersConfigsMap,
+        startedLoaders: Record<string, TLoadPromiseResult>,
+        loadTimeout?: number
+    ): TLoadPromiseResult {
+        const loadConfig = loadersMap[id];
+        let loadPromise;
+        if ('dependencies' in loadConfig) {
+            const dependencies = loadConfig.dependencies;
+            const dependenciesErrors = this._getDependenciesValidationErrors(id, loadersMap);
+            if (dependenciesErrors.length) {
+                // Если dependencies заполнены некорректно кидаем ошибку и не запускаем лоадер
+                dependenciesErrors.forEach((errorText) => {
+                    Logger.error(errorText);
+                });
+                loadPromise = Promise.reject(new Error(dependenciesErrors.join(' ')));
+            } else {
+                loadPromise = Promise.all(
+                    this._loadDependencies(loadersMap, startedLoaders, dependencies, loadTimeout)
+                ).then((results) => {
+                    return this._callLoader(id, loadConfig, loadTimeout, results);
+                });
+            }
+        } else {
+            loadPromise = this._callLoader(id, loadConfig, loadTimeout);
+        }
+        startedLoaders[id] = loadPromise;
+        return loadPromise;
+    }
+
+    /**
+     * Вызывает лоадер по конфигу
+     * @param id
+     * @param loaderConfig
+     * @param loadTimeout
+     * @param dependencies
+     * @private
+     */
+    private _callLoader(
+        id: string,
+        loaderConfig: TLoadConfig,
+        loadTimeout?: number,
+        dependencies?: TLoadResult[]
+    ): TLoadPromiseResult {
+        let loadPromise;
+        if (loaderConfig.type === 'custom') {
+            const customPromise = loaderConfig.loadDataMethod(
+                loaderConfig.loadDataMethodArguments,
+                dependencies
+            );
+            loadPromise = wrapTimeout(
+                customPromise, loadTimeout || getLoadTimeout(loaderConfig)
+            ).catch((error) => error);
+        } else if (loaderConfig.type === 'additionalDependencies') {
+            loadPromise = this._loadAdditionalDependencies(loaderConfig, dependencies);
+        } else {
+            loadPromise = loadDataByConfig(loaderConfig, loadTimeout);
+        }
+        Promise.resolve(loadPromise).then((result) => {
+            if (loaderConfig.type === 'list' && !result.source && result.historyItems) {
+                result.sourceController.setFilter(result.filter);
+            }
+            return result;
+        });
+        if (loaderConfig.afterLoadCallback) {
+            const afterReloadCallbackLoadPromise = loadAsync(loaderConfig.afterLoadCallback);
+            loadPromise.then((result) => {
+                if (isLoaded(loaderConfig.afterLoadCallback)) {
+                    loadSync<Function>(loaderConfig.afterLoadCallback)(result);
+                    return result;
+                } else {
+                    return afterReloadCallbackLoadPromise.then((afterLoadCallback: Function) => {
+                        afterLoadCallback(result);
+                        return result;
+                    });
+                }
+            });
+        }
+        return loadPromise.then((result) => {
+            this._setDataToConfigStorage(result, id);
+            return result;
+        });
+    }
+
+    /**
+     * Возвращает список промисов для зависимостей лоадера
+     * @param loadersMap мапа лоадеров id -> конфиг
+     * @param startedLoaders мапа из промисов запущенных лоадеров
+     * @param dependencies
+     * @param loadTimeout
+     * @private
+     */
+    private _loadDependencies(
+        loadersMap: TLoadersConfigsMap,
+        startedLoaders: Record<string, TLoadPromiseResult>,
+        dependencies: string[],
+        loadTimeout?: number
+    ): TLoadPromiseResult[] {
+        return dependencies.map((loaderKey) => {
+            if (startedLoaders[loaderKey]) {
+                return startedLoaders[loaderKey];
+            } else {
+                return this._callLoaderWithDependencies(loaderKey, loadersMap, startedLoaders, loadTimeout);
+            }
+        });
+    }
+
+    private _getDependenciesValidationErrors(id: string, loadersMap: TLoadersConfigsMap): string[] {
+        const dependencies = loadersMap[id]?.dependencies || [];
+        const missedLoaders = dependencies.reduce((result, key) => {
+            if (!loadersMap[key]) {
+                result.push(key);
+            }
+            return result;
+        }, []);
+        const circularDependencies = dependencies.reduce((result, depKey) => {
+            const depConfig = loadersMap[depKey];
+            if (depConfig.dependencies?.includes(id)) {
+                result.push(depKey);
+            }
+            return result;
+        }, []);
+        const errors = [];
+        if (missedLoaders.length) {
+            errors.push(`Ошибка при запуске загрузчика с ключом ${id}.
+                В списке загрузчиков отсутствуют зависимости данного загрузчика с ключами ${missedLoaders.join(', ')}`);
+        }
+        if (circularDependencies.length) {
+            errors.push(`Ошибка при запуске загрузчика с ключом ${id}.
+                Обнаружены циклические зависимости с загрузчиками с ключами ${circularDependencies.join(', ')}`);
+        }
+        return errors;
+    }
+
+    /**
+     * Метод загрузки лоадера с типом 'additionalDependencies'
+     * Этот лоадер возвращает список идентификаторов страниц,
+     * данные для которых нужно дополнительно загрузить вместе с данными основной страницы.
+     * @param config
+     * @param dependencies
+     * @private
+     */
+    private _loadAdditionalDependencies(
+        config: ILoadDataAdditionalDepsConfig,
+        dependencies?: TLoadResult[]
+    ): Promise<Record<string, unknown>> {
+        return Promise.resolve(config.loadDataMethod(config.loadDataMethodArguments, dependencies))
+            .then(this._loadDepsData)
+            .catch((error) => error);
+    }
+
+    /**
+     * Загружает данные для списка страниц из additionalDependencies, по итогу возвращает объект с ключами -
+     * идентификаторами страниц и значениями - результатами загрузки
+     * @param pagesKeys
+     * @param loadDataMethodArguments
+     * @private
+     */
+    private _loadDepsData(
+        pagesKeys: string[],
+        loadDataMethodArguments: Record<string, unknown>
+    ): Promise<{[pageId: string]: unknown}> {
+        const result = {
+            /*
+               FIXME EXPERIMENT
+               Для того, чтобы пока это эксперимент можно было понять,
+               что это подгруженные данные страниц и обработать на уровне попапа
+             */
+            _isAdditionalDependencies: true
+        };
+        return new Promise((resolve) => {
+            Promise.all(pagesKeys.map((key) => {
+                return PageController.getPageConfig(key).then((pageConfig) => {
+                    return PageController.loadData(pageConfig, loadDataMethodArguments).then((pageLoadedData) => {
+                        result[key] = pageLoadedData;
+                    });
+                });
+            })).then(() => resolve(result)).catch((error) => resolve(error));
+        });
     }
 }
