@@ -244,7 +244,8 @@ interface IItemAddOptions {
     addPosition?: TAddPosition;
     /**
      * @name Controls/_grid/interface/IItemAddOptions#columnIndex
-     * @cfg {Number} Индекс редактируемой ячейки при старте редактирования. Доступно только при значении опции {@link Controls/grid:IGridEditingConfig#mode mode}="cell".
+     * @cfg {Number} Индекс редактируемой ячейки при запуске добавления по месту. Опция актуальна к использованию, когда опция {@link Controls/grid:IGridEditingConfig#mode mode} установлена в значение "cell".
+     * @remark Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/code/#begin-edit-cell здесь}.
      * @default undefined
      */
     columnIndex?: number;
@@ -271,7 +272,8 @@ interface IItemEditOptions {
     shouldActivateInput?: boolean;
     /**
      * @name Controls/_grid/interface/IItemEditOptions#columnIndex
-     * @cfg {Number} Индекс редактируемой ячейки при старте добавления. Доступно только при значении опции {@link Controls/grid:IGridEditingConfig#mode mode}="cell".
+     * @cfg {Number} Индекс редактируемой ячейки при запуске редактирования по месту. Опция актуальна к использованию, когда опция {@link Controls/grid:IGridEditingConfig#mode mode} установлена в значение "cell".
+     * @remark Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/code/#begin-add-cell здесь}.
      * @default undefined
      */
     columnIndex?: number;
