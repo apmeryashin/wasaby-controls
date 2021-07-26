@@ -74,9 +74,6 @@ const SHOW_SELECT_COUNT_SELECTED_ITEMS = [
    }
 ];
 
-const MAX_COUNT_OF_SELECTED_ITEMS = 1000;
-const MAX_SELECTED_ITEMS_CAPTION = '999+';
-
 interface IMultiSelectorChildren {
    countIndicator: LoadingIndicator;
 }
@@ -213,8 +210,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
 
       if (hasSelected) {
          if (count > 0) {
-            const countValue = count > MAX_COUNT_OF_SELECTED_ITEMS ? MAX_SELECTED_ITEMS_CAPTION : count;
-            caption = rk('Отмечено') + ': ' + countValue;
+            caption = rk('Отмечено') + ': ' + count;
          } else if (isAllSelected) {
             caption = rk('Отмечено все');
          } else if (count === null) {

@@ -415,6 +415,31 @@ describe('Controls/browser:Browser', () => {
                     await searchPromise;
                     assert.ok(sourceController.getRoot() === currentRoot);
                 });
+
+                it('reset search with listsOptions', async () => {
+                    const browserOptions = getBrowserOptions();
+                    const listsOptions = [
+                        {
+                            id: 'list',
+                            ...browserOptions
+                        },
+                        {
+                            id: 'list2',
+                            ...browserOptions,
+                            searchParam: ''
+                        }
+                    ];
+                    const options = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+                    await browser._search(null, 'testSearchValue');
+                    browser._resetSearch();
+                    assert.ok(!browser._searchValue);
+                });
             });
 
             describe('_searchReset', () => {

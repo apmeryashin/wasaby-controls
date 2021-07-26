@@ -102,6 +102,7 @@ define(
             const ddl = getDropdown(config);
             ddl._beforeMount({
                ...config,
+               source: null,
                items: itemsRecords
             });
             assert.equal(ddl._text, 'Запись 2');
