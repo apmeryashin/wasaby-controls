@@ -80,10 +80,12 @@
         </ws:if>
         <ws:if data="{{_shouldDrawMoreButton}}">
             <ws:partial template="wml!Controls/_baseList/BaseControl/MoreButton"
-                        moreFontColorStyle="{{_options.moreFontColorStyle}}"
+                        fontColorStyle="{{_options.moreFontColorStyle}}"
                         loadMoreCaption="{{_loadMoreCaption}}"
                         cutConfig="{{_options.navigation.viewConfig.cutConfig}}"
                         moreButtonView="{{_options.navigation.viewConfig.moreButtonView || 'default'}}"
+                        clickableAreaClass="js-controls-BaseControl__loadMore"
+                        buttonClass="controls-BaseControl__loadMore"
                         on:click="_onMoreButtonClick()"/>
         </ws:if>
         <ws:if data="{{_shouldDrawCut}}">

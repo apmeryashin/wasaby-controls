@@ -24,10 +24,12 @@
             <ws:partial template="{{content}}" item="{{item.getNode()}}" itemData="{{item.getNode()}}"/>
         </ws:if>
         <ws:else>
-            <ws:partial template="wml!Controls/_tree/render/MoreButton"
-                        item="{{item}}"
+            <ws:partial template="Controls/list:MoreButton"
                         moreButtonView="{{moreButtonView}}"
-                        cutConfig="{{cutConfig}}"/>
+                        cutConfig="{{cutConfig}}"
+                        fontColorStyle="{{ item.getMoreFontColorStyle() }}"
+                        clickableAreaClass="js-controls-TreeGrid__nodeFooter__LoadMoreButton"
+                        buttonClass="controls-TreeGrid__nodeFooterLoadMore"/>
         </ws:else>
     </div>
 </div>
