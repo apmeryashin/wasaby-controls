@@ -3,6 +3,8 @@ import EmptyRow from './EmptyRow';
 import Cell, {IOptions as IBaseCellOptions} from './Cell';
 import CellCompatibility from './compatibility/DataCell';
 
+type TContentAlign = 'center' | 'start' | 'end';
+
 /**
  * Ячейка строки пустого представления таблицы
  */
@@ -35,7 +37,7 @@ class EmptyCell extends mixin<
         return classes;
     }
 
-    getContentClasses(topSpacing: string = 'default', bottomSpacing: string = 'default'): string {
+    getContentClasses(topSpacing: string = 'default', bottomSpacing: string = 'default', align: TContentAlign = 'center'): string {
         let classes;
 
         // todo https://online.sbis.ru/opendoc.html?guid=024784a6-cc47-4d1a-9179-08c897edcf72
@@ -43,6 +45,7 @@ class EmptyCell extends mixin<
 
         if (this._$isSingleColspanedCell && hasRowTemplate) {
             classes = 'controls-ListView__empty'
+                + ` controls-ListView__empty-textAlign_${align}`
                 + ` controls-ListView__empty_topSpacing_${topSpacing}`
                 + ` controls-ListView__empty_bottomSpacing_${bottomSpacing}`;
         } else if (this.isMultiSelectColumn()) {

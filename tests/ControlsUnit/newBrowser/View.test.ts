@@ -6,6 +6,7 @@ import {RecordSet} from 'Types/collection';
 describe('Controls/_newBrowser:View', () => {
     let browserInstance;
     let items;
+    let context;
     let listConfiguration = getDefaultViewCfg();
     beforeEach(() => {
         items = new RecordSet({
@@ -16,6 +17,17 @@ describe('Controls/_newBrowser:View', () => {
             keyProperty: 'id'
         });
         browserInstance = new View();
+        browserInstance._detailDataSource = {
+            getRoot(): number {
+                return 2;
+            }
+        };
+        context = {
+            listsConfigs: {
+                detail: {},
+                master: {}
+            }
+        };
         browserInstance._detailExplorerOptions = {};
     });
     describe('_processItemsMetaData', () => {
@@ -35,6 +47,32 @@ describe('Controls/_newBrowser:View', () => {
                 }
             });
             assert.equal(browserInstance._tileCfg.tileSize, 'm');
+        });
+    });
+
+    describe('_beforeUpdate', () => {
+        it('detail options changed with columns', () => {
+            browserInstance._tableCfg = 'tableConfig';
+            browserInstance._dataContext = context;
+            browserInstance._options = {
+                detail: {
+                    columns: [{
+                        template: 'columnsTemplate'
+                    }]
+                }
+            };
+            const newOptions = {
+                detail: {
+                    columns: [{
+                        template: 'newColumnsTemplate'
+                    }]
+                }
+            };
+            browserInstance._beforeUpdate(newOptions, {
+                    dataContext: context
+                }
+            );
+            assert.equal(browserInstance._detailExplorerOptions.columns[0].templateOptions.tableCfg, 'tableConfig');
         });
     });
 

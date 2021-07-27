@@ -22,7 +22,8 @@
             source="{{_source}}"
             keyProperty="id"
             searchParam="title"
-            multiSelect="{{false}}">
+            multiSelect="{{false}}"
+            selectorTemplate="{{_selectorTemplate}}">
             <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
             <ws:itemTemplate>
                <ws:partial template="Controls/lookup:ItemTemplate" displayProperty="title"/>

@@ -300,7 +300,7 @@ type TAddPosition = 'top' | 'bottom';
  * @public
  * @autor Авраменко А.C.
  */
-interface IItemAddOptions {
+export interface IItemAddOptions {
     /**
      * @name Controls/_baseList/interface/IItemAddOptions#targetItem
      * @cfg {Types/entity:Model} Запись списка, рядом с которой будет запущено добавление по месту.
@@ -332,7 +332,7 @@ interface IItemAddOptions {
  * @public
  * @autor Авраменко А.C.
  */
-interface IItemEditOptions {
+export interface IItemEditOptions {
     /**
      * @name Controls/_baseList/interface/IItemEditOptions#item
      * @cfg {Types/entity:Model} Запись, которая будет запущена на редактирование.
@@ -366,7 +366,7 @@ type TBeforeBeginEditEventSyncResult = LIST_EDITING_CONSTANTS.CANCEL | IBeforeBe
  * @typedef {TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>} TBeforeBeginEditEventResult
  * @description Значения, которые можно возвращать из обработчика события {@link beforeBeginEdit}.
  */
-type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
+export type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
 
 /**
  * @typedef {String | undefined} TBeforeEndEditEventSyncResult

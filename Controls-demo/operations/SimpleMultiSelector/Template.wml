@@ -8,8 +8,8 @@
                 <Controls.treeGrid:View
                         keyProperty="id"
                         columns="{{_gridColumns}}"
-                        parentProperty="parent"
-                        nodeProperty="type"
+                        parentProperty="Раздел"
+                        nodeProperty="Раздел@"
                         multiSelectVisibility="visible"/>
             </Controls.list:Container>
         </div>

@@ -138,6 +138,7 @@ export interface IPropertyGridOptions extends IControlOptions {
      * @demo Controls-demo/PropertyGridNew/Source/Index
      */
     source: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
+    typeDescription?: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#groupTemplate
      * @cfg {String|TemplateFunction} Устанавливает шаблон отображения заголовка группы.

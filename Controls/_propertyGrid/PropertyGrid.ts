@@ -70,8 +70,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collapsedGroupsChanged: boolean = false;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
+        const sourceOption = options.source || options.typeDescription;
         this._collapsedGroups = this._getCollapsedGroups(options.collapsedGroups);
-        this._toggledEditors = this._getToggledEditors(options.source, options.keyProperty);
+        this._toggledEditors = this._getToggledEditors(sourceOption, options.keyProperty);
         this._listModel = this._getCollection(options);
         if (options.captionColumnOptions || options.editorColumnOptions) {
             this._render = gridRenderTemplate;
@@ -82,8 +83,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (newOptions.editingObject !== this._options.editingObject) {
             this._listModel.setEditingObject(newOptions.editingObject);
         }
-        if (newOptions.source !== this._options.source) {
-            this._toggledEditors = this._getToggledEditors(newOptions.source, newOptions.keyProperty);
+        const sourceOption = newOptions.source || newOptions.typeDescription;
+        if (sourceOption !== this._options.source) {
+            this._toggledEditors = this._getToggledEditors(sourceOption, newOptions.keyProperty);
             this._listModel = this._getCollection(newOptions);
         } else if (newOptions.itemPadding !== this._options.itemPadding) {
             this._listModel.setItemPadding(newOptions.itemPadding);
@@ -105,7 +107,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _getCollection(options: IPropertyGridOptions): TPropertyGridCollection {
-        const propertyGridItems = this._getPropertyGridItems(options.source, options.keyProperty);
+        const propertyGridItems = this._getPropertyGridItems(options.source || options.typeDescription, options.keyProperty);
         return new PropertyGridCollection({
             collection: propertyGridItems,
             editingObject: options.editingObject,

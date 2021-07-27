@@ -178,7 +178,7 @@ export default class TileView extends ListView {
      *  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
      *  Это нужно, чтобы в ListView не вызывался resize при изменении прогрессбара и не сбрасывался hovered в плитке
      */
-    isLoadingPercentsChanged(newItems: Array<TileCollectionItem<Model>>): boolean {
+    isLoadingPercentsChanged(newItems: TileCollectionItem[]): boolean {
         return newItems &&
             newItems[0] &&
             newItems[0].getContents() &&

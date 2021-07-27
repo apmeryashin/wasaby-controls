@@ -519,14 +519,6 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         }
     },
 
-    _columnScrollHasItemActionsCell(options: IAbstractViewOptions): boolean {
-        return Boolean(
-            options.isFullGridSupport &&
-            options.columnScroll &&
-            options.itemActionsPosition !== 'custom'
-        );
-    },
-
     _getColumnScrollEmptyViewMaxWidth(): number {
         return this._$columnScrollEmptyViewMaxWidth;
     },
@@ -534,7 +526,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     _getColumnScrollThumbStyles(options: IAbstractViewOptions): string {
         // TODO: Посмотреть на экшены, если не custom то добавить.
         const hasMultiSelectColumn = hasCheckboxColumn(options);
-        const hasItemActionsCell = this._columnScrollHasItemActionsCell(options);
+        const hasItemActionsCell = this._hasItemActionsCell(options);
         const stickyColumnsCount = this._getStickyLadderCellsCount(options);
 
         // Пока обновление горизонтального скролла замороженно, актуальные колонки, по которым рисуется таблица

@@ -40,6 +40,7 @@ export interface IItemsViewOptions extends IControlOptions {
  * @implements Controls/interface:IMultiSelectable
  * @implements Controls/marker:IMarkerList
  * @implements Controls/itemActions:IItemActions
+ * @implements Controls/list:IEditableList
  *
  * @public
  * @author Уфимцев Д.Ю.
