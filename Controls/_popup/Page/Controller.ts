@@ -1,7 +1,8 @@
-import {getModuleByName, loadModule} from 'Controls/_popup/utils/moduleHelper';
+import {loadModule} from 'Controls/_popup/utils/moduleHelper';
 import {Control} from 'UI/Base';
 import {IBasePopupOptions} from 'Controls/_popup/interface/IBasePopupOptions';
 import {PageController as DSPageController, IPageConfig} from 'Controls/dataSource';
+import Confirmation from 'Controls/_popup/Opener/Confirmation';
 
 interface IPageTemplateOptions {
     pageTemplate: string;
@@ -62,10 +63,16 @@ class PageController {
                 pageId: popupOptions.pageId
             };
         } else {
-            throw new Error(`
+            const message = `
                 Страница с указанным идентификатором имеет некорректное описание.
                 В описании должен быть workspaceConfig с заданным templateName.
-            `);
+            `;
+            Confirmation.openPopup({
+                type: 'ok',
+                style: 'danger',
+                message
+            });
+            throw new Error(message);
         }
     }
 }

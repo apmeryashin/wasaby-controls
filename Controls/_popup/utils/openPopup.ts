@@ -52,8 +52,8 @@ export default function openPopup(config: IBaseOpenerOptions, controller: string
             PageController.getPagePopupOptions(config.pageId, config).then((popupCfg) => {
                 PageController.loadModules(popupCfg).then(() => {
                     openByConfig(popupCfg, controller);
-                });
-            });
+                }).catch(reject);
+            }).catch(reject);
         } else {
             openByConfig(config, controller);
         }
