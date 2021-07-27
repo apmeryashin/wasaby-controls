@@ -21,14 +21,18 @@
 }
 
 .controls-ArrowButton_icon {
-   color: var(--icon-color_ArrowButton);
+   fill: var(--icon-color_ArrowButton);
+}
+
+.controls-ArrowButton_icon_direction-down, .controls-ArrowButton_icon_direction-left {
+   transform: rotate(180deg);
 }
 
 .controls-ArrowButton-readOnly {
    border-color: var(--readonly_border-color_ArrowButton);
 
    .controls-ArrowButton_icon {
-      color: var(--readonly_icon-color_ArrowButton);
+      fill: var(--readonly_icon-color_ArrowButton);
    }
 }
 
@@ -37,7 +41,7 @@
    background-color: var(--background-color_hover_ArrowButton);
 
    .controls-ArrowButton_icon {
-      color: var(--hover_icon-color_ArrowButton);
+      fill: var(--hover_icon-color_ArrowButton);
    }
 }
 
@@ -48,7 +52,7 @@
       background-color: var(--background-color_hover_ArrowButton);
 
       .controls-ArrowButton_icon {
-         color: var(--hover_icon-color_ArrowButton);
+         fill: var(--hover_icon-color_ArrowButton);
       }
    }
 }
