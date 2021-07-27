@@ -1,16 +1,16 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/treeGridNew/MoreButton/MoreButton';
 import {HierarchicalMemory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+
+import * as Template from 'wml!Controls-demo/treeGridNew/MoreButton/MoreButton';
+
 import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
     protected _columns: IColumn[] = Flat.getColumns().map((c) => ({...c, compatibleWidth: '150px'}));
-    protected _hoveredCellIndex: number = -1;
 
     protected _navigation: INavigationOptionValue<INavigationSourceConfig> = {
         source: 'page',
@@ -40,11 +40,6 @@ export default class extends Control {
 
     private _toggleNodes(tree): void {
         tree.toggleExpanded(1).then(() => tree.toggleExpanded(11)).then(() => tree.toggleExpanded(12));
-    }
-
-    // tslint:disable-next-line
-    protected _hoveredCellChanged(_: SyntheticEvent, item: any, itemContainer: any, cell: any): void {
-        this._hoveredCellIndex = cell === null ? -1 : cell;
     }
 
     static _styles: string[] = [
