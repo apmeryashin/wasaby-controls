@@ -728,6 +728,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _$compatibleReset: boolean;
 
+    protected _$stickyItemActions: boolean;
+
     protected _$itemActionsProperty: string;
 
     protected _$markerPosition: 'left' | 'right';
@@ -4162,6 +4164,7 @@ Object.assign(Collection.prototype, {
     _$compatibleReset: false,
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
+    _$stickyItemActions: false,
     _$markerPosition: 'left',
     _$multiSelectAccessibilityProperty: '',
     _$multiSelectTemplate: null,

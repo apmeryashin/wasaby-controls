@@ -555,7 +555,12 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     hasItemActionsSeparatedCell(): boolean {
-        return !!this.getGridColumnsConfig() && this.hasColumnScroll() && this._$itemActionsPosition !== 'custom';
+        return !!this.getGridColumnsConfig() && (
+            this._$stickyItemActions || (
+                this.hasColumnScroll() &&
+                this._$itemActionsPosition !== 'custom'
+            )
+        );
     }
 
     // FIXME: Временное решение - аналог RowEditor из старых таблиц(редактирование во всю строку).

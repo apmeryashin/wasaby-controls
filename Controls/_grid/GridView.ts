@@ -219,11 +219,22 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
 
         // Дополнительная колонка для отображения застиканных операций над записью при горизонтальном скролле.
-        if (this._columnScrollHasItemActionsCell(options)) {
+        if (this._hasItemActionsCell(options)) {
             columnsWidths.push('0px');
         }
 
         return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
+    },
+
+    _hasItemActionsCell(options): boolean {
+        return Boolean(
+            options.isFullGridSupport && (
+                options.stickyItemActions || (
+                    options.columnScroll &&
+                    options.itemActionsPosition !== 'custom'
+                )
+            )
+        );
     },
 
     _createGuid(): string {
