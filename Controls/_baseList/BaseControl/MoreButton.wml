@@ -1,0 +1,12 @@
+<ws:if data="{{moreButtonView === 'cut'}}">
+    <ws:partial template="wml!Controls/_baseList/BaseControl/Cut"
+                clickableAreaClass="js-controls-BaseControl__loadMore"
+                cutConfig="{{cutConfig}}"/>
+</ws:if>
+<ws:else>
+<Controls.buttons:Button attr:class="controls-BaseControl__loadMore js-controls-BaseControl__loadMore"
+                         viewMode="link"
+                         fontColorStyle="{{moreFontColorStyle}}"
+                         caption="{{rk('Еще') + ' ' + loadMoreCaption}}"
+                         readOnly="{{false}}"/>
+</ws:else>

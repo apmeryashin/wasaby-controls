@@ -231,6 +231,56 @@ type TNavigationPagingPadding = 'default' | 'null';
 type TNavigationPagingPosition= 'left' | 'right';
 
 /**
+ * @typedef {String} TMoreButtonView
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationViewConfig#moreButtonView moreButtonView}.
+ * @variant cut кнопка "Ещё" по шаблону ката.
+ * @variant default кнопка "Ещё" по умолчанию (Текст "Ещё").
+ */
+export type TMoreButtonView = 'cut' | 'default';
+
+/**
+ * @typedef {String} TCutSize
+ * @description Допустимые значения для параметра {@link Controls/interface:ICutConfig#size size}.
+ * @variant s малый
+ * @variant m средний
+ * @variant l большой
+ */
+export type TCutSize = 's' | 'm' | 'l';
+
+/**
+ * @typedef {String} TCutButtonPosition
+ * @description Допустимые значения для параметра {@link Controls/interface:ICutConfig#buttonPosition buttonPosition}.
+ * @variant start по левому краю контентной области
+ * @variant center по центру контентной области
+ */
+export type TCutButtonPosition = 'start' | 'center';
+
+/**
+ * @description Конфигурация кнопки развертывания (Cut) в списке.
+ * @author Аверкиев П.А.
+ * @public
+ */
+export interface ICutConfig {
+    /**
+     * Положение кнопки развертывания.
+     * @default center
+     */
+    buttonPosition?: TCutButtonPosition;
+
+    /**
+     * Размер кнопки развертывания.
+     * @default m
+     */
+    size?: TCutSize;
+
+    /**
+     * Флаг, определяющий контрастность фона.
+     * @default true
+     */
+    contrastBackground?: boolean;
+}
+
+/**
  * @description Параметры для конфигурации {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ визуального представления навигации}.
  * @public
  * @author Крайнов Д.О.
@@ -270,6 +320,16 @@ export interface INavigationViewConfig {
      * @default right
      */
     pagingPosition?: TNavigationPagingPosition;
+    /**
+     * Вид кнопки "Ещё" в случае навигации "demand".
+     * @default default
+     */
+    moreButtonView?: TMoreButtonView;
+    /**
+     * Настройки кнопки развёртывания в случае навигации "cut" или "demand"
+     * @see moreButtonView
+     */
+    cutConfig?: ICutConfig;
 }
 
 /**

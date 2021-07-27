@@ -1,0 +1,13 @@
+<ws:if data="{{moreButtonView === 'cut'}}">
+    <ws:partial template="wml!Controls/_baseList/BaseControl/Cut"
+                clickableAreaClass="js-controls-TreeGrid__nodeFooter__LoadMoreButton"
+                cutConfig="{{cutConfig}}"/>
+</ws:if>
+<ws:else>
+<Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore js-controls-TreeGrid__nodeFooter__LoadMoreButton"
+                         fontSize="xs"
+                         viewMode="link"
+                         fontColorStyle="{{ item.getMoreFontColorStyle() }}"
+                         caption="{{rk('Еще') + '...'}}"
+                         readOnly="{{false}}"/>
+</ws:else>

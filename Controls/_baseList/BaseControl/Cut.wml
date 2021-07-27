@@ -1,7 +1,11 @@
-<div class="controls-BaseControl__cut ws-flexbox ws-justify-content-center controls-BaseControl__cut-container_{{cutSize}}">
+<div class="controls-BaseControl__cut ws-flexbox
+            ws-justify-content-{{cutConfig && cutConfig.buttonPosition || 'center'}}
+            controls-BaseControl__cut-container_{{cutConfig && cutConfig.size || 'm'}}">
     <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
         <ws:partial template="{{content.resolvedTemplate}}"
-                    value="{{expanded}}"
-                    on:valueChanged="_onCutClick()"/>
+                    attr:class="{{clickableAreaClass}}"
+                    value="{{value}}"
+                    iconSize="{{cutConfig && cutConfig.size || 'm'}}"
+                    contrastBackground="{{!cutConfig || cutConfig.contrastBackground !== false}}"/>
     </Controls.Container.Async>
 </div>

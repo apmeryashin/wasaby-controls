@@ -29,12 +29,10 @@
                         <ws:partial template="{{column.getTemplate(content)}}" item="{{item.getNode()}}" itemData="{{item.getNode()}}" column="{{ column }}" gridColumn="{{ column }}"/>
                     </ws:if>
                     <ws:else>
-                        <Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore js-controls-TreeGrid__nodeFooter__LoadMoreButton"
-                                                 fontSize="xs"
-                                                 viewMode="link"
-                                                 fontColorStyle="{{ item.getMoreFontColorStyle() }}"
-                                                 caption="{{rk('Еще') + '...'}}"
-                                                 readOnly="{{false}}"/>
+                        <ws:partial template="wml!Controls/tree:MoreButtonTemplate"
+                                    item="{{item}}"
+                                    moreButtonView="{{moreButtonView}}"
+                                    cutConfig="{{cutConfig}}"/>
                     </ws:else>
                 </ws:if>
             </td>

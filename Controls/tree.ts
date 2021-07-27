@@ -6,10 +6,12 @@ import TreeCollection from 'Controls/_tree/display/TreeCollection';
 import TreeNodeFooterItem from 'Controls/_tree/display/TreeNodeFooterItem';
 import TreeItem from 'Controls/_tree/display/TreeItem';
 import { default as View } from 'Controls/_tree/Tree';
+import {INodeFooterTemplate} from 'Controls/_tree/interface/INodeFooterTemplate';
 import { register } from 'Types/di';
 
 import * as NodeFooterTemplate from 'wml!Controls/_tree/render/NodeFooterTemplate';
 import * as ItemTemplate from 'wml!Controls/_tree/render/Item';
+import * as MoreButtonTemplate from 'wml!Controls/_tree/render/MoreButton';
 
 /**
  * Библиотека контролов, позволяющая работать с иерархией.
@@ -29,7 +31,9 @@ export {
     View,
     TreeNodeFooterItem,
     NodeFooterTemplate,
-    ItemTemplate
+    ItemTemplate,
+    INodeFooterTemplate,
+    MoreButtonTemplate
 };
 
 register('Controls/tree:TreeCollection', TreeCollection, {instantiate: false});
