@@ -5,18 +5,18 @@
       on:intersect="_intersectHandler()"
    >
       <Controls.treeGrid:View
-         name="grid"
-         stickyGroup="{{false}}"
+         header="{{ _header }}"
+         columns="{{ _columns }}"
          source="{{ _viewSource }}"
+         colspanCallback="{{ _colspanCallback }}"
          expandByItemClick="{{true}}"
+         stickyGroup="{{false}}"
+         bind:expandedItems="_expandedItems"
 
          nodeProperty="type"
          parentProperty="parent"
          nodeTypeProperty="nodeType"
          rowSeparatorSize="s"
-         colspanCallback="{{ _colspanCallback }}"
-         header="{{ _header }}"
-         columns="{{ _columns }}"
       />
    </Controls.scroll:Container>
 </div>

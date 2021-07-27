@@ -266,7 +266,7 @@ export interface IColumn extends IColspanParams {
      * </Controls.grid:ColumnTemplate>
      * </pre>
      */
-    templateOptions?: object;
+    templateOptions?: {[key: string]: unknown};
     /**
      * @cfg Шаблон отображения ячейки в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/ строке итогов}.
      * @default undefined
@@ -449,7 +449,7 @@ export interface IColumn extends IColspanParams {
      *     },
      * ]
      * </pre>
-     * 
+     *
      * В следующем примере показано как отобразить поле записи типа "деньги" без группировки триад цифр.
      *
      * <pre class="brush: js">

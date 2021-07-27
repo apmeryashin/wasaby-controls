@@ -1,7 +1,7 @@
-// tslint:disable-next-line:ban-ts-ignore
-// @ts-ignore
+/* tslint:disable:no-magic-numbers */
 import * as template from 'wml!Controls-demo/treeGridNew/Forwarding/Index';
 import * as nodeTemplate from 'wml!Controls-demo/treeGridNew/Forwarding/NodeTemplate';
+import * as headerCell from 'wml!Controls-demo/treeGridNew/Forwarding/HeaderCellTemplate';
 import {data} from './Data';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -21,20 +21,51 @@ export default class extends Control {
     };
 
     protected _viewSource: HierarchicalMemory;
-    protected _expandedItems: CrudEntityKey[] = [];
-    protected _collapsedItems: CrudEntityKey[] = [];
     protected _header: IHeaderCell[] = [
         {
-            caption: 'Name'
+            startRow: 1,
+            endRow: 3,
+            startColumn: 1,
+            endColumn: 2,
+            template: headerCell,
+            templateOptions: {
+                field: 'name',
+                defaultCaption: 'Name',
+                pinnedRecord: null
+            }
         },
         {
-            caption: 'Price'
+            caption: 'Price',
+            startRow: 1,
+            endRow: 3,
+            startColumn: 2,
+            endColumn: 3
         },
         {
-            caption: 'Count'
+            caption: 'Count',
+            startRow: 1,
+            endRow: 3,
+            startColumn: 3,
+            endColumn: 4
         },
         {
-            caption: 'Total'
+            caption: 'Total',
+            startRow: 1,
+            endRow: 2,
+            startColumn: 4,
+            endColumn: 5
+        },
+        {
+            startRow: 2,
+            endRow: 3,
+            startColumn: 4,
+            endColumn: 5,
+            template: headerCell,
+            templateOptions: {
+                field: 'total',
+                defaultCaption: '',
+                pinnedRecord: null
+            }
         }
     ];
     protected _columns: IGroupNodeColumn[] = [
@@ -43,9 +74,14 @@ export default class extends Control {
             displayProperty: 'name',
             template: nodeTemplate,
             templateOptions: {
+                // значения пересечения при которых дергается _intersectHandler
+                // при такой конфигурации событие будет стрелять трижды:
+                //  1. при пересечении блок с верхней границей контейнера
+                //  2. при уходе блока за верхнюю границу контейнера
+                //  3. при полном выходе блока ниже верхней границы контейнера
                 threshold: [0, 1],
-                // 24px высота шапки
-                rootMargin: '-24px 0px 0px 0px'
+                // 40px высота шапки
+                rootMargin: '-40px 0px 0px 0px'
             }
         },
         {
@@ -67,12 +103,17 @@ export default class extends Control {
             displayProperty: 'total'
         }
     ];
+    protected _expandedItems: CrudEntityKey[] = [null];
+
+    // Стек записей узлов, которые ушли за верхнюю границу либо пересекаются с ней
+    private _pinnedStack: Model[] = [];
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
             data,
             keyProperty: 'id',
-            parentProperty: 'parent'
+            parentProperty: 'parent',
+            filter: (): boolean => true
         });
     }
 
@@ -81,63 +122,68 @@ export default class extends Control {
         entries: IntersectionObserverSyntheticEntry[]
     ): void {
 
-        const headerHeight = this._children.scrollContainer.getHeadersHeight('top', 'fixed');
+        // Оставляем только те записи где есть данные
         const groupsEntries = entries.filter((e) => {
-            if (!e.data) {
-                return false;
-            }
-
-            const name = (e.data as Model).get('name');
-            // getBoundingClientRect для ScrollContainer
-            const rootBounds = e.nativeEntry.rootBounds;
-            // getBoundingClientRect для элемента списка, который пересек границы ScrollContainer
-            const targetBounds = e.nativeEntry.boundingClientRect;
-
-            const intersect = e.nativeEntry.intersectionRatio > 0 && e.nativeEntry.intersectionRatio < 1;
-            const intersectTop = targetBounds.top < rootBounds.top && targetBounds.bottom > rootBounds.top;
-            const intersectBottom = targetBounds.bottom > rootBounds.bottom && targetBounds.top < rootBounds.bottom;
-            const below = targetBounds.top >= rootBounds.bottom;
-            const above = targetBounds.bottom <= rootBounds.top;
-            const inside = !below && !above && !intersect;
-
-            const result = {
-                name, intersect, intersectTop, intersectBottom, above, below, inside
-            };
-            Object.keys(result).forEach((k) => {
-                if (!result[k]) {
-                    delete result[k];
-                }
-            });
-
-            console.log(result);
-
-            return intersectTop || above;
+            return !!e.data;
         });
 
         if (!groupsEntries.length) {
             return;
         }
 
-        const newCaption = this._children.scrollContainer.getScrollTop() === 0 ? 'Name' : groupsEntries[0].data.get('name');
+        // Пробегаемся по всем записям и заполняем _pinnedStack.
+        // Записи приходят в том порядке в котором они расположены в DOM.
+        // Нас интересуют только те записи, которые находятся выше верхней границы либо пересекаются с ней.
+        // После инициализации контрола стрельнет обработчик и сюда придет информацию о всех контейнерах.
+        groupsEntries.forEach((e) => {
+            // getBoundingClientRect для ScrollContainer
+            const rootBounds = e.nativeEntry.rootBounds;
+            // getBoundingClientRect для элемента списка, который пересек границы ScrollContainer
+            const targetBounds = e.nativeEntry.boundingClientRect;
 
+            // true если дочерний контейнер пересекается с верхней границей
+            const intersectTop = targetBounds.top < rootBounds.top && targetBounds.bottom > rootBounds.top;
+            // true если дочерний контейнер находится полностью за верхней границей
+            const above = targetBounds.bottom <= rootBounds.top;
+
+            const model = e.data as Model;
+            const index = this._pinnedStack.indexOf(model);
+            const hasInStack = index >= 0;
+
+            // Если контейнер пересек или ушел за верхнюю границу, то добавляем его в стек закрепленных.
+            // В противном случае выкидываем его из стека тем самым делая последний элемент стека актуальным.
+            if (intersectTop || above) {
+                if (hasInStack) {
+                    return;
+                }
+
+                this._pinnedStack.push(model);
+            } else if (hasInStack) {
+                this._pinnedStack.splice(index, 1);
+            }
+        });
+
+        // Последняя запись стека является актуальной
+        const actualPinnedRecord = this._pinnedStack.length
+            ? this._pinnedStack[this._pinnedStack.length - 1]
+            : null;
+
+        // Если запись осталась той же, то смысла обновлять нет т.к. будет лишняя перерисовка
+        if (this._header[0].templateOptions.pinnedRecord === actualPinnedRecord) {
+            return;
+        }
+
+        this._header[0].templateOptions.pinnedRecord = actualPinnedRecord;
+        this._header[4].templateOptions.pinnedRecord = actualPinnedRecord;
         this._header = [...this._header];
-        this._header[0] = {
-            ...this._header[0],
-            caption: newCaption
-        };
-        console.log(`caption updated to ${newCaption}`);
     }
 
     protected _colspanCallback(
         item: Model,
         column: IGroupNodeColumn,
-        columnIndex: number,
-        isEditing: boolean
+        columnIndex: number
     ): TColspanCallbackResult {
-        if (item.get('nodeType') === 'group' && columnIndex === 0) {
-            return 3;
-        }
-        return 1;
+        return item.get('nodeType') === 'group' && columnIndex === 0 ? 3 : 1;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
