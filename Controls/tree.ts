@@ -11,7 +11,6 @@ import { register } from 'Types/di';
 
 import * as NodeFooterTemplate from 'wml!Controls/_tree/render/NodeFooterTemplate';
 import * as ItemTemplate from 'wml!Controls/_tree/render/Item';
-import * as MoreButtonTemplate from 'wml!Controls/_tree/render/MoreButton';
 
 /**
  * Библиотека контролов, позволяющая работать с иерархией.
@@ -32,8 +31,7 @@ export {
     TreeNodeFooterItem,
     NodeFooterTemplate,
     ItemTemplate,
-    INodeFooterTemplate,
-    MoreButtonTemplate
+    INodeFooterTemplate
 };
 
 register('Controls/tree:TreeCollection', TreeCollection, {instantiate: false});
