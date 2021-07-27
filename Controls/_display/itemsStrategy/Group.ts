@@ -322,8 +322,8 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
                     expanded: !isCollapsed,
                     hasMoreDataUp: display?.hasMoreDataUp(),
                     isFirstStickedItem: isFirstStickedGroup,
-                    style: display.getStyle(),
-                    theme: display.getTheme(),
+                    style: display?.getStyle(),
+                    theme: display?.getTheme(),
                     ...additionalParams
                 }) as GroupItem<IGroup>;
 
