@@ -176,7 +176,8 @@
   "--offset_block": "8px",
   "--page_background-image": "url('/cdn/OnlineCDN/themes/1.0.0/background.jpg')",
   "--page_background-color": "#dad9e0",
-
+  "--header_background-color": "var(--unaccented_background-color)",
+  "--header_min-height": "38px",
   "--icon-offset_button": "var(--offset_xs)",
   "--text-decoration_hover_button_link": "underline",
   "--padding-horizontal_xs_button": "var(--offset_m)",
