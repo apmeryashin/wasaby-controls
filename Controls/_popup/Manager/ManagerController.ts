@@ -169,7 +169,10 @@ export default {
         // задать отображение правой панели.
         // Временно завязываю отображение правой панели на дефолтную тему.
         // TODO: https://online.sbis.ru/opendoc.html?guid=b309f5ac-98fd-48f9-af3a-d33a744223d2
-        return this._theme === 'default';
+        if (typeof this._theme === 'string') {
+            return this._theme.includes('default');
+        }
+        return true;
     },
 
     setRightTemplate(): void {
