@@ -279,7 +279,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             !this._getSourceController().isLoading() && (!this._historyLoad || this._historyLoad.isReady())) {
 
             if (this._options.historyId) {
-               return this._loadHistoryKeys().then(() => this._performLoad(this._options));
+               return this._loadHistoryKeys().then(() => {
+                  if (!this._destroyed) {
+                     return this._performLoad(this._options);
+                  }
+               });
             }
 
             return this._performLoad(this._options).then();
@@ -738,6 +742,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return this._resolveSearch(value);
       }
       return Promise.resolve();
+   }
+
+   protected _inputCompletedHandler(event: SyntheticEvent, value: string): void {
+      this._notify('inputCompleted', [value]);
    }
 
    private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {

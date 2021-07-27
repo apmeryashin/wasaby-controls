@@ -89,6 +89,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             ? this._viewMode
             : (this._userViewMode || this._viewMode);
     }
+
     // Пользовательский режим отображения, задается опцией сверху
     private _userViewMode: DetailViewMode;
     // Текущий режим отображения, полученный их метаданных ответа,
@@ -184,7 +185,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     private _onDetailDataLoadCallback(event: SyntheticEvent, items: RecordSet, direction: string): void {
         // Не обрабатываем последующие загрузки страниц. Нас интересует только
         // загрузка первой страницы
-        const rootChanged = this._dataContext.listsConfigs.detail.root  !== this._detailDataSource.getRoot();
+        const rootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
         const imageProperty = this._detailExplorerOptions.imageProperty;
         if (!direction) {
             this._processItemsMetadata(items);
@@ -219,10 +220,29 @@ export default class View extends Control<IOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
+        const oldContext = this._dataContext;
         this._dataContext = contexts.dataContext;
+        const detailOptionsChanged = !isEqual(oldContext.listsConfigs.detail, this._dataContext.listsConfigs.detail) ||
+            !isEqual(newOptions.detail, this._options.detail);
+        const masterOptionsChanged = !isEqual(oldContext.listsConfigs.master, this._dataContext.listsConfigs.master) ||
+            !isEqual(newOptions.master, this._options.master);
         const isDetailRootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
-        this._detailExplorerOptions = this._getListOptions(this._dataContext.listsConfigs.detail, newOptions.detail);
-        this._masterExplorerOptions = this._getListOptions(this._dataContext.listsConfigs.master, newOptions.master);
+        if (detailOptionsChanged) {
+            this._detailExplorerOptions = this._getListOptions(
+                this._dataContext.listsConfigs.detail,
+                newOptions.detail
+            );
+            this._detailExplorerOptions = {
+                ...this._detailExplorerOptions,
+                columns: this._getPatchedColumns(this._detailExplorerOptions.columns)
+            };
+        }
+        if (masterOptionsChanged) {
+            this._masterExplorerOptions = this._getListOptions(
+                this._dataContext.listsConfigs.master,
+                newOptions.master
+            );
+        }
         this._viewMode = newOptions.viewMode;
 
         if (newOptions.listConfiguration && !isEqual(this._options.listConfiguration, newOptions.listConfiguration)) {
@@ -467,6 +487,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     private _updateContrastBackground(): void {
         this._contrastBackground = this.viewMode !== DetailViewMode.tile && this.viewMode !== DetailViewMode.list;
     }
+
     //endregion
 
     //region public methods

@@ -3,6 +3,7 @@
                attr:class="controls-listTemplates_tableCellTemplate-image"
                fallbackImage="{{_options.fallbackImage}}"
                viewMode="{{_options.viewMode}}"
+               imageFit="{{_options.imageFit}}"
                src="{{_options.item.contents[_options.imageProperty]}}"/>
 </ws:template>
 
@@ -50,6 +51,7 @@
               fallbackImage="{{_options.fallbackImage}}"
               imageProperty="{{_options.imageProperty}}"
               imageViewMode="{{_options.imageViewMode}}"
+              imageFit="{{_options.imageFit}}"
               scope="{{contentTemplate}}"/>
    </ws:contentTemplate>
 </ws:partial>

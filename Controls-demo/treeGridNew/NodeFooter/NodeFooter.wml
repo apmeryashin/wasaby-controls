@@ -16,4 +16,13 @@
         </Router.router:Reference>
         <Controls-demo.treeGridNew.NodeFooter.Configuration.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/treeGridNew/NodeFooter/MoreButton/Index' }}">
+            <a href="{{content.href}}">Настройка кнопки "Ещё" в подвалах узлов</a>
+        </Router.router:Reference>
+        <Controls-demo.treeGridNew.NodeFooter.MoreButton.Index/>
+    </div>
 </div>
