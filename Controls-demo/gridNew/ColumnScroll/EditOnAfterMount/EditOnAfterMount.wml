@@ -10,10 +10,11 @@
                 columns="{{_columns}}"
                 columnScroll="{{true}}"
                 header="{{_header}}"
+                headerVisibility="visible"
                 stickyColumnsCount="{{2}}"
                 editingConfig="{{_editingConfig}}">
             <ws:footerTemplate>
-                <Controls.list:AddButton if="{{ _hasItems && !_isEditing }}" caption="Запись" on:click="_beginAdd()" class="test_add_record_1"/>
+                <Controls.list:AddButton if="{{ _isMounted && !_isEditing }}" caption="Запись" on:click="_beginAdd()" class="test_add_record_1"/>
             </ws:footerTemplate>
         </Controls.grid:View>
     </Controls.scroll:Container>

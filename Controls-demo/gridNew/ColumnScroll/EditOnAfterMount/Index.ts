@@ -20,10 +20,11 @@ export default class extends Control {
         ...c,
         template: cellEditor
     }));
+    protected _hasItems: boolean = false;
+    protected _isEditing: boolean = false;
+    protected _isMounted: boolean = false;
 
     private _fakeId: number = 1000;
-    private _hasItems: boolean = false;
-    private _isEditing: boolean = false;
 
     protected _beforeMount(): void {
         this._columns[1].width = '100px';
@@ -41,6 +42,7 @@ export default class extends Control {
     }
 
     protected _afterMount(): void {
+        this._isMounted = true;
         this._beginAdd();
     }
 
@@ -64,9 +66,9 @@ export default class extends Control {
     protected _onAfterBeginEnd(): void {
         this._isEditing = true;
     }
-    protected _onBeforeEndEdit(e: SyntheticEvent, item, commit): void {
+    protected _onBeforeEndEdit(e: SyntheticEvent, item: Model, willSave: boolean): void {
         this._isEditing = false;
-        this._hasItems = this._hasItems || commit;
+        this._hasItems = this._hasItems || willSave;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
