@@ -327,10 +327,8 @@ export default class Cell<
         let wrapperClasses = '';
         if (backgroundColorStyle) {
             wrapperClasses += ` controls-background-${backgroundColorStyle}`;
-
         } else if (this._$backgroundStyle === 'default' && this.getStyle() !== 'default') {
             wrapperClasses += ` controls-background-${this.getStyle()}`;
-
         } else {
             wrapperClasses += ` controls-background-${this._$backgroundStyle || this.getStyle()}`;
         }
