@@ -1352,7 +1352,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
      *
      * @return {TKey} Ключ розительского узла для добавления по-умолчанию.
      */
-    getDefaultAddParentKey(): TKey {
+    getMarkedNodeKey(): TKey {
         const markedKey = this.getMarkerController().getMarkedKey();
 
         if (typeof markedKey !== 'undefined') {

@@ -74,8 +74,8 @@ export default class Tree extends List implements ITree {
         return this._children.listControl.getPrevItem(key);
     }
 
-    getDefaultAddParentKey(): CrudEntityKey | null {
-        return this._children.listControl.getDefaultAddParentKey();
+    getMarkedNodeKey(): CrudEntityKey | null {
+        return this._children.listControl.getMarkedNodeKey();
     }
 
     protected _getModelConstructor(): string {

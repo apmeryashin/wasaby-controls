@@ -387,7 +387,7 @@ export interface ITreeControlOptions extends IControlOptions {
  */
 
 /**
- * @name Controls/_tree/interface/ITreeControl#getDefaultAddParentKey
+ * @name Controls/_tree/interface/ITreeControl#getMarkedNodeKey
  * Возвращает ключ родителя, в котором по-умолчанию следует начинать добавление по месту.
  * @remark
  * Если в дереве маркер стоит на развернутом узле или на его дочерних записях/свёрнутых узлах,
