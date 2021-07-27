@@ -37,9 +37,9 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
     precision?: TPrecision;
 }
 
-export function calculateMainClass(underline: string, style: string): string {
+export function calculateMainClass(fontColorStyle: string, underline: string, style: string): string {
     return 'controls-DecoratorMoney' + `${underline === 'hovered' ? ' controls-DecoratorMoney__underline' : ''}
-            ${style ? ' controls-DecoratorMoney_style-' + style : ''}`;
+            ${style ? ' controls-DecoratorMoney_style-' + style : ''}` + `${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}`;
 }
 
 export function calculateCurrencyClass(currencySize: string, fontColorStyle: string, fontWeight: string): string {
