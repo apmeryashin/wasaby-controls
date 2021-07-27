@@ -48,6 +48,15 @@ describe('Controls/operations:ControllerClass', () => {
                 }
             );
         });
+
+        it('updateSelectedKeys', () => {
+            const oldKeys = controller.updateSelectedKeys(['testKey1'], ['testKey1'], [], 'testListId1');
+            const newKeys = controller.updateSelectedKeys(['testKey2'], ['testKey2'], [], 'testListId1');
+            deepStrictEqual(newKeys,
+                ['testKey1', 'testKey2']
+            );
+            ok(oldKeys !== newKeys);
+        });
     });
 
     describe('updateExcludedKeys', () => {
