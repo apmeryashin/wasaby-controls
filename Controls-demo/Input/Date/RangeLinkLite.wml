@@ -12,7 +12,7 @@
                nextArrowVisibility="{{true}}"
                bind:startValue="_startValueHalfYear"
                bind:endValue="_endValueHalfYear"
-			   attr:test_name="show_arrow_range"
+               attr:test_name="show_arrow_range"
             />
          </div>
          <div class="PageBlock__componentWrap">
@@ -22,7 +22,7 @@
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
                fontColorStyle="link" viewMode="link"
-			   attr:test_name="months_range"/>
+               attr:test_name="months_range"/>
          </div>
          <div class="PageBlock__componentWrap">
             <Controls.dateRange:RangeShortSelector
@@ -32,7 +32,7 @@
                chooseMonths="{{false}}"
                viewMode="link"
                fontColorStyle="unaccented"
-			   attr:test_name="quarters_range"
+               attr:test_name="quarters_range"
             />
 
          </div>
@@ -40,7 +40,7 @@
             <Controls.dateRange:RangeShortSelector
                viewMode="label"
                emptyCaption="не задан"
-			   attr:test_name="range_not_value"
+               attr:test_name="range_not_value"
             />
          </div>
          <div class="PageBlock__componentWrap">
@@ -50,18 +50,18 @@
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                chooseQuarters="{{false}}"
-			   attr:test_name="range_years_only"
+               attr:test_name="range_years_only"
             />
          </div>
       </div>
       <div class="PageBlock__componentWrap">
          <Controls.dateRange:RangeShortSelector
-                 bind:startValue="_startValueYear"
-                 bind:endValue="_endValueYear"
-                 prevArrowVisibility="{{true}}"
-                 nextArrowVisibility="{{true}}"
-                 readOnly="{{true}}"
-                 attr:test_name="readonly"
+            bind:startValue="_startValueYear"
+            bind:endValue="_endValueYear"
+            prevArrowVisibility="{{true}}"
+            nextArrowVisibility="{{true}}"
+            readOnly="{{true}}"
+            attr:test_name="readonly"
          />
       </div>
    </div>

@@ -1,6 +1,6 @@
 import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
-import {detection} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {Date as WSDate, descriptor} from 'Types/entity';
 import {default as IPeriodSimpleDialog, IDateLitePopupOptions} from './IDateLitePopup';
 import {Base as dateUtils} from 'Controls/dateUtils';
@@ -12,6 +12,7 @@ import monthTmpl = require('wml!Controls/_shortDatePicker/monthTemplate');
 import {Logger} from 'UI/Utils';
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 import 'css!Controls/shortDatePicker';
+import {SyntheticEvent} from "Vdom/Vdom";
 
 const enum POSITION {
     RIGHT = 'right',
@@ -61,6 +62,7 @@ class View extends Control<IDateLitePopupOptions> {
     protected _displayedRanges: Date[];
     protected _prevArrowButtonReadOnly: boolean = false;
     protected _nextArrowButtonReadOnly: boolean = false;
+    protected _tabPressed: boolean = false;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
         this._displayedRanges = options.displayedRanges;
@@ -241,6 +243,29 @@ class View extends Control<IDateLitePopupOptions> {
         }
     }
 
+    protected _keyUpHandler(event: SyntheticEvent): void {
+        if (event.nativeEvent.keyCode === constants.key.tab) {
+            this._tabPressed = true;
+        }
+    }
+
+    protected _keyUpYearHandler(event: SyntheticEvent, year: Date): void {
+        if (event.nativeEvent.keyCode === constants.key.tab) {
+            this._tabPressed = true;
+            this._yearHovered = year;
+        } else if (event.nativeEvent.keyCode === constants.key.enter) {
+            this._selectYear(year);
+        }
+    }
+
+    protected _mouseEnterHandler(): void {
+        this._children.shortDatePicker.focus();
+    }
+
+    protected _onBlurYear(): void {
+        this._yearHovered = null;
+    }
+
     protected _hitsDisplayedRange(year: number, index: number): boolean {
         const date = new Date(year, 0);
         // Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
@@ -392,6 +417,10 @@ class View extends Control<IDateLitePopupOptions> {
     }
 
     protected _onYearClick(event: Event, year: Date): void {
+        this._selectYear(year);
+    }
+
+    private _selectYear(year: Date): void {
         const lastMonth: number = 11;
         const lastDay: number = 31;
         if (this._options.chooseYears) {
@@ -399,6 +428,14 @@ class View extends Control<IDateLitePopupOptions> {
                 [new this._options.dateConstructor(year, 0, 1),
                     new this._options.dateConstructor(year, lastMonth, lastDay)], {bubbling: true});
         }
+    }
+
+    protected _getTabindex(year: number): number {
+        let tabindex = -1;
+        if (year <= this._position.getFullYear() || this._tabPressed) {
+            tabindex = 0;
+        }
+        return tabindex;
     }
 
     protected _getSizeCssClass(data: string): string {

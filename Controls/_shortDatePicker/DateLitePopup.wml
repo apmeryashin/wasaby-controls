@@ -2,7 +2,9 @@
             controls_popupTemplate_theme-{{_options.theme}}
             controls-PeriodLiteDialog
             {{_getSizeCssClass('width')}} {{_options.popupClassName}}
-            {{!_isExpandedPopup ? _getSizeCssClass('height')}}">
+            {{!_isExpandedPopup ? _getSizeCssClass('height')}}"
+            name="shortDatePicker"
+            on:mouseenter="_mouseEnterHandler()">
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__header">
          <div class="controls-PeriodLiteDialog__currentValue"
@@ -64,6 +66,7 @@
                  _position="{{_position}}"
                  monthTemplate="{{_options.monthTemplate}}"
                  _yearHovered="{{_yearHovered}}"
+                 _tabPressed="{{_tabPressed}}"
                  formatDate="{{_formatDate}}"
                  isExpandedPopup="{{ _isExpandedPopup }}"
          />
@@ -107,9 +110,13 @@
                               controls-PeriodLiteDialog__text-align-center">
                         <div  class="controls-PeriodLiteDialog-item-yearList-years"
                               on:click="_onYearClick(yearTemplate.date.getFullYear())">
-                           <div class="controls-PeriodLiteDialog__vLayoutItem-caption
+<!--                           controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} - если использовать переменную на шаблоне
+                               и использовать её в tabindex, то реактивности не будет, поэтому используем эту переменную в классе-->
+                           <div class="controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} controls-PeriodLiteDialog__vLayoutItem-caption
                                  {{_getYearItemCssClasses(yearTemplate.date.getFullYear())}}
-                                 controls-PeriodLiteDialog__yearList-year">
+                                 controls-PeriodLiteDialog__yearList-year"
+                                tabindex="{{_getTabindex(yearTemplate.date.getFullYear())}}"
+                                on:keyup="_keyUpYearHandler(yearTemplate.date.getFullYear())">
                               {{ yearTemplate.date.getFullYear() }}
                            </div>
                         </div>
