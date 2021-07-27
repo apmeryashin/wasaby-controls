@@ -4,7 +4,6 @@ import {ITileCollectionOptions, TileMixin} from 'Controls/tile';
 import TreeTileCollectionItem, {ITreeTileCollectionItemOptions} from './TreeTileCollectionItem';
 import {ItemsFactory, itemsStrategy, ITreeOptions, Tree, TreeItem} from 'Controls/display';
 import InvisibleStrategy from './strategy/Invisible';
-import TileCollectionItem from "Controls/_tile/display/TileCollectionItem";
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов

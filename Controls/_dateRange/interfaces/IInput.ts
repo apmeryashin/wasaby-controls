@@ -14,7 +14,7 @@
  */
 
 /**
- * @name Controls/_dateRange/interfaces/IInput#calendarInputVisible
+ * @name Controls/_dateRange/interfaces/IInput#calendarButtonVisible
  * @cfg {Boolean} Устанавливает видимость кнопки, открывающей календарь.
  * @default true
  * @demo Controls-demo/dateRange/Input/CalendarButtonVisible/Index

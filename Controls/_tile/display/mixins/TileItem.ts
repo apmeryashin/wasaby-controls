@@ -1250,7 +1250,6 @@ export default abstract class TileItem<T extends Model = Model> {
 
     }
 
-
     /**
      * Возвращает классы стилей для обертки элемента
      * @param {TTileItem} itemType Тип элемента
@@ -1674,7 +1673,6 @@ export default abstract class TileItem<T extends Model = Model> {
 
         return styles;
     }
-
 
     /**
      * Возвращает классы стилей для заголовка, которые многоточат текст

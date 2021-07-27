@@ -89,13 +89,17 @@
    line-height: calc(var(--item_height_shortDatePicker) - var(--item_border-thickness_shortDatePicker) * 2);
 }
 
+.controls-PeriodLiteDialog__vLayoutItem:focus-within,
+.controls-PeriodLiteDialog__item-background-hovered {
+   border: var(--item_border-thickness_shortDatePicker) solid var(--item_hover_border-color_shortDatePicker);
+}
+
 .controls-PeriodLiteDialog__item-background-hovered {
    position: absolute;
    top: 0;
    height: 100%;
    width: 100%;
    box-sizing: border-box;
-   border: var(--item_border-thickness_shortDatePicker) solid var(--item_hover_border-color_shortDatePicker);
    background-color: var(--background-color_shortDatePicker);
 }
 
@@ -412,6 +416,11 @@
    .controls-PeriodLiteDialog_calendarBody {
       transform: translate3d(0, 0, 0);
    }
+}
+
+.controls-PeriodLiteDialog__vLayoutItem-clickable:focus {
+   border-color: var(--item_hover_border-color_shortDatePicker);
+   background-color: var(--item_hover_background-color_shortDatePicker);
 }
 
 .ws-is-hover {

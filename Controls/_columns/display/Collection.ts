@@ -1,13 +1,15 @@
 import {Tree as BaseCollection, ItemsFactory, IDragPosition} from 'Controls/display';
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import ColumnsDragStrategy from './itemsStrategy/ColumnsDrag';
-import { Model } from 'Types/entity';
+import {Model} from 'Types/entity';
 import IColumnsStrategy from '../interface/IColumnsStrategy';
 import Auto from './columnsStrategy/Auto';
 import Fixed from './columnsStrategy/Fixed';
-import {DEFAULT_COLUMNS_COUNT, DEFAULT_MIN_WIDTH, SPACING} from '../Constants';
-import DragStrategy from 'Controls/_display/itemsStrategy/Drag';
+import {DEFAULT_COLUMNS_COUNT, SPACING} from '../Constants';
 
+/**
+ * Коллекция, которая распределяет элементы на несколько столбцов
+ */
 export default class Collection<
     S extends Model = Model,
     T extends CollectionItem<S> = CollectionItem<S>
@@ -136,14 +138,17 @@ export default class Collection<
         for (let i = 0; i < this._$columnsCount; i++) {
             this._columnsIndexes[i] = [];
         }
-        this.each( (item, index) => {
+        this.each((item, index) => {
             this._columnsIndexes[item.getColumn()].push(index as number);
         });
     }
 
     private setColumnOnItem(offset: number, item: T, index: number): void {
         if (!item.isDragged()) {
-            const column = this._columnsStrategy.calcColumn(this, this._dragColumn === null ? index + this._addingColumnsCounter + offset : this._dragColumn, this._$columnsCount);
+            let indexWithOffset = this._dragColumn === null
+                ? index + this._addingColumnsCounter + offset
+                : this._dragColumn;
+            const column = this._columnsStrategy.calcColumn(this, indexWithOffset, this._$columnsCount);
             item.setColumn(column);
         }
     }
@@ -163,7 +168,7 @@ export default class Collection<
         this.updateColumnIndexesByItems();
     }
 
-    processRemovingItem(item: any): boolean {
+    processRemovingItem(item: { column: number, columnIndex: number }): boolean {
         let done = true;
 
         this._addingColumnsCounter--;
@@ -227,6 +232,7 @@ export default class Collection<
         const column = this.at(index).getColumn();
         return this._columnsIndexes[column].indexOf(index);
     }
+
     //#region getItemToDirection
 
     private getItemToLeft(item: T): T {
@@ -241,8 +247,8 @@ export default class Collection<
             const curColumnIndex = this._columnsIndexes[curColumn].indexOf(curIndex);
             if (curColumn > 0) {
                 const prevColumn = this._columnsIndexes.slice().reverse().find(
-                    (col: number[], index: number) => index > this._$columnsCount - curColumn - 1 && col.length > 0);
-
+                    (col: number[], index: number) => index > this._$columnsCount - curColumn - 1 && col.length > 0
+                );
                 if (prevColumn instanceof Array) {
                     newIndex = prevColumn[Math.min(prevColumn.length - 1, curColumnIndex)];
                 }

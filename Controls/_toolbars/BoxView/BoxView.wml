@@ -9,7 +9,8 @@
                      buttonTemplate="{{_buttonTemplate}}"
                      buttonTemplateOptions="{{_getSimpleButtonTemplateOptionsByItem(item)}}"
                      theme="{{_options.theme}}"
-                     on:click="_itemClickHandler(item)"/>
+                     on:click="_itemClickHandler(item)"
+                     attr:data-qa="ToolbarBox__item"/>
          <ws:if data="{{ key < (_items.getCount() - 1) }}">
             <div class="controls-ToolbarBox__separator {{ _options.separatorVisible ? 'controls-ToolbarBox__separator__line'}}"></div>
          </ws:if>
