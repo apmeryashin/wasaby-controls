@@ -67,6 +67,10 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
         if (this._$owner.getEditingConfig()?.mode === 'cell') {
             classes += ' controls-Grid__row-cell_editing-mode-single-cell';
 
+            if (this.isFirstColumn()) {
+                classes += ' controls-Grid__row-cell_editing-mode-single-cell_first';
+            }
+
             if (this.isLastColumn()) {
                 classes += ' controls-Grid__row-cell_editing-mode-single-cell_last';
             }
