@@ -68,10 +68,10 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
         };
     }
 
-    protected _getBaseItemClasses(style: string, theme: string): string {
+    protected _getBaseItemClasses(): string {
         let itemClasses = 'controls-ListView__itemV';
         if (!this.isHiddenGroup()) {
-            itemClasses += ` controls-Grid__row controls-Grid__row_${style}`;
+            itemClasses += ` controls-Grid__row controls-Grid__row_${this.getStyle()}`;
         }
         return itemClasses;
     }
