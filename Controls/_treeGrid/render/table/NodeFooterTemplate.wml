@@ -33,6 +33,7 @@
                                     moreButtonView="{{moreButtonView}}"
                                     cutConfig="{{cutConfig}}"
                                     fontColorStyle="{{ item.getMoreFontColorStyle() }}"
+                                    fontSize="xs"
                                     clickableAreaClass="js-controls-TreeGrid__nodeFooter__LoadMoreButton"
                                     buttonClass="controls-TreeGrid__nodeFooterLoadMore"/>
                     </ws:else>
