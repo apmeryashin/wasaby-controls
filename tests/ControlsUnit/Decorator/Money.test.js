@@ -133,6 +133,20 @@ define(
                assert.isFalse(ctrl.isDisplayFractionPath('.10', true, 0));
             });
          });
+         describe('calculateMainClass', function() {
+            it('fontColorStyle: "default", underline: "hovered"', function() {
+               assert.equal(ctrl.calculateMainClass('default', 'hovered'), 'controls-DecoratorMoney controls-DecoratorMoney__underline\n             controls-text-default');
+            });
+            it('fontColorStyle: "primary", underline: "none"', function() {
+               assert.equal(ctrl.calculateMainClass('primary', 'none'), 'controls-DecoratorMoney\n             controls-text-primary');
+            });
+            it('fontColorStyle: "primary", underline: "none", style: "style"', function() {
+               assert.equal(ctrl.calculateMainClass('primary', 'none', 'style'), 'controls-DecoratorMoney\n             controls-DecoratorMoney_style-style controls-text-primary');
+            });
+            it('fontColorStyle: "primary", underline: "hovered", style: "style"', function() {
+               assert.equal(ctrl.calculateMainClass('primary', 'hovered', 'style'), 'controls-DecoratorMoney controls-DecoratorMoney__underline\n             controls-DecoratorMoney_style-style controls-text-primary');
+            });
+         });
       });
    }
 );
