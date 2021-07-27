@@ -22,7 +22,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
       var isDisplayFractionPath = Money.isDisplayFractionPath(formattedNumber.fraction, showEmptyDecimals, precision);
       var tooltip = Money.calculateTooltip(formattedNumber, data);
 
-      var mainClass = Money.calculateMainClass(underline, data.style);
+      var mainClass = Money.calculateMainClass(fontColorStyle, underline, data.style);
       var calculateCurrencyClass = Money.calculateCurrencyClass(currencySize, fontColorStyle, fontWeight);
       var strokedClass = Money.calculateStrokedClass(stroked);
       var integerClass = Money.calculateIntegerClass(fontSize, fontColorStyle, fontWeight, data.currency, currencyPosition, isDisplayFractionPath);
