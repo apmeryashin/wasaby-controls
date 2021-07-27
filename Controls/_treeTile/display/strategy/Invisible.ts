@@ -88,10 +88,10 @@ export default class InvisibleStrategy<
         );
 
         for (let i = 0; i < newInvisibleItems.length; i++) {
-            const items = newInvisibleItems[i];
-            options.invisibleItems.push(...items);
+            const newItems = newInvisibleItems[i];
+            options.invisibleItems.push(...newItems);
             const insertIndex = insertIndexForNewInvisibleItems[i];
-            for (let j = 0; j < items.length; j++) {
+            for (let j = 0; j < newItems.length; j++) {
                 const invisibleItemIndex = (COUNT_INVISIBLE_ITEMS * i + j);
                 itemsOrder.splice(insertIndex + invisibleItemIndex, 0, invisibleItemIndex);
             }

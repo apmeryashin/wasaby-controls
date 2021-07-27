@@ -3,7 +3,7 @@ import {Model} from 'Types/entity';
 import {Collection, CollectionItem, ICollectionOptions, ItemsFactory, itemsStrategy} from 'Controls/display';
 import Tile from 'Controls/_tile/display/mixins/Tile';
 import { mixin } from 'Types/util';
-import {IOptions} from 'Controls/_tile/display/mixins/TileItem';
+import {IOptions as ITileItemOptions} from './mixins/TileItem';
 import InvisibleStrategy from './strategies/Invisible';
 import {ITileAspectOptions} from '../TileView';
 
@@ -35,7 +35,7 @@ export default class TileCollection<
     protected _getItemsFactory(): ItemsFactory<T> {
         const parent = super._getItemsFactory();
 
-        return function TileItemsFactory(options: IOptions<S>): T {
+        return function TileItemsFactory(options: ITileItemOptions<S>): T {
             const params = this._getItemsFactoryParams(options);
             return parent.call(this, params);
         };

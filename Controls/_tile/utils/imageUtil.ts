@@ -29,7 +29,6 @@ export const IMAGE_FIT = {
     NONE: 'none'
 };
 
-
 /**
  * Возвращает URL изображения
  * @param imageWidth
