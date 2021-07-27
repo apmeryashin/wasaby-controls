@@ -767,7 +767,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             unique: true,
             topPadding: 'null',
             bottomPadding: 'menu-default',
-            leftPadding: this._getLeftPadding(options),
+            leftPadding: this._getLeftPadding(options, items),
             rightPadding: this._getRightPadding(options, items)
         };
         let listModel: Search<Model> | Collection<Model>;
@@ -839,30 +839,30 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return DiCreate(model, config);
     }
 
-    private _getLeftPadding(options: IMenuControlOptions): string {
+    private _getLeftPadding(options: IMenuControlOptions, items: RecordSet): string {
         let leftSpacing = 'm';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
+        } else if (options.itemAlign === 'left' && MenuControl._hasNodesAtLevel(items, options)) {
+            leftSpacing = 'menu-expander';
         }
         return leftSpacing;
     }
 
     private _getRightPadding(options: IMenuControlOptions, items: RecordSet): string {
         let rightSpacing = 'm';
-        if (!options.itemPadding.right) {
-            if (options.multiSelect) {
-                rightSpacing = 'menu-multiSelect';
+        if (options.itemAlign !== 'left') {
+            if (!options.itemPadding.right) {
+                if (options.multiSelect) {
+                    rightSpacing = 'menu-multiSelect';
+                } else if (MenuControl._hasNodesAtLevel(items, options)) {
+                    rightSpacing = 'menu-expander';
+                }
             } else {
-                factory(items).each((item) => {
-                    if (MenuControl._isItemCurrentRoot(item, options) && item.get(options.nodeProperty)) {
-                        rightSpacing = 'menu-expander';
-                    }
-                });
-            }
-        } else {
-            rightSpacing = options.itemPadding.right;
-            if (options.multiSelect) {
-                rightSpacing += '-multiSelect';
+                rightSpacing = options.itemPadding.right;
+                if (options.multiSelect) {
+                    rightSpacing += '-multiSelect';
+                }
             }
         }
         return rightSpacing;
@@ -960,7 +960,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         // just check _children to make sure, that the control isn't destroyed
         if (item && this._children.Sticky && this._subDropdownItem) {
             this._getPopupOptions(target, item).then((popupOptions) => {
-                this._notify('beforeSubMenuOpen', [popupOptions, this._options.subMenuDirection]);
+                this._notify('beforeSubMenuOpen', [popupOptions, this._options.subMenuDirection, this._options.itemAlign]);
                 this._children.Sticky.open(popupOptions);
             });
         }
@@ -979,7 +979,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             if (!!hasIcon) {
                 classes += ` controls-Menu__alignSubMenuDown_iconSize_${iconSize}_offset_${paddingSize}`;
             } else {
-                classes += ` controls-Menu__alignSubMenuDown_offset_${paddingSize}`
+                classes += ` controls-Menu__alignSubMenuDown_offset_${paddingSize}`;
             }
         }
 
@@ -990,11 +990,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const subMenuDirection = this._options.subMenuDirection;
         const direction = {
             vertical: 'bottom',
-            horizontal: 'right'
+            horizontal: this._options.itemAlign
         };
         const targetPoint = {
             vertical: subMenuDirection === 'bottom' ? 'bottom' : 'top',
-            horizontal: subMenuDirection === 'bottom' ? 'left' : 'right'
+            horizontal: subMenuDirection === 'bottom' ? 'left' : this._options.itemAlign
         };
         const className = 'controls-Menu__subMenu controls-Menu__subMenu_margin' +
             ` controls_popupTemplate_theme-${this._options.theme}` +
@@ -1172,6 +1172,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                                                    curPointY: number): number {
         return (firstSegmentPointX - curPointX) * (secondSegmentPointY - firstSegmentPointY) -
             (secondSegmentPointX - firstSegmentPointX) * (firstSegmentPointY - curPointY);
+    }
+
+    private static _hasNodesAtLevel(items: RecordSet, options: IMenuControlOptions): boolean {
+        const firstItemAtLevel = factory(items).filter((item) => {
+            return MenuControl._isItemCurrentRoot(item, options) && item.get(options.nodeProperty);
+        }).first();
+        return !!firstItemAtLevel;
     }
 
     private static _isHistoryItem(item: Model): boolean {

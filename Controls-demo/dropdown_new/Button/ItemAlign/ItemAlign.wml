@@ -1,0 +1,28 @@
+<div class="ws-flexbox ws-flex-column">
+    <Controls.dropdown:Button
+            keyProperty="id"
+            buttonStyle="secondary"
+            fontColorStyle="link"
+            viewMode="link"
+            caption="Document"
+            parentProperty="parent"
+            nodeProperty="@parent"
+            itemAlign="left"
+            source="{{_sourceWithIcons}}"
+            attr:class="ControlsDemo-ButtonsMenu__item ws-align-self-center"
+            tooltip="Document">
+    </Controls.dropdown:Button>
+    <Controls.dropdown:Button
+            keyProperty="id"
+            buttonStyle="secondary"
+            itemAlign="right"
+            fontColorStyle="link"
+            viewMode="link"
+            caption="Document"
+            parentProperty="parent"
+            nodeProperty="@parent"
+            source="{{_sourceWithIcons}}"
+            attr:class="ControlsDemo-ButtonsMenu__item ws-align-self-center"
+            tooltip="Document">
+    </Controls.dropdown:Button>
+</div>

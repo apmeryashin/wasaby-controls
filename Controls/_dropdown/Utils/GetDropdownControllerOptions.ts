@@ -25,6 +25,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         historyNew: options.historyNew,
         allowPin: options.allowPin,
         width: options.width,
+        itemAlign: options.itemAlign,
         popupClassName: options.popupClassName,
         dropdownClassName: options.dropdownClassName,
         markerVisibility: options.markerVisibility,
