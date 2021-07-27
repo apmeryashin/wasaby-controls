@@ -441,7 +441,9 @@ export default abstract class Row<T extends Model = Model> {
             return create(this._cellModule, {
                 owner: this,
                 ...(staticOptions || {}),
-                ...options
+                ...options,
+                theme: this.getTheme(),
+                style: this.getStyle()
             } as ICellOptions<T>);
         };
     }

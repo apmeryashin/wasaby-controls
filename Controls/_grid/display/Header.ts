@@ -21,6 +21,8 @@ export default class Header {
     protected _$owner: Collection;
     protected _$rows: HeaderRow[];
     protected _$headerBounds: IHeaderBounds;
+    protected _$theme: string;
+    protected _$style: string;
 
     constructor(options: IOptions) {
         this._$owner = options.owner;
@@ -33,6 +35,14 @@ export default class Header {
 
     getRow(): HeaderRow {
         return this._$rows[0];
+    }
+
+    getTheme(): string {
+        return this._$theme;
+    }
+
+    getStyle(): string {
+        return this._$style;
     }
 
     getRowIndex(row: HeaderRow): number {
@@ -125,6 +135,8 @@ export default class Header {
         return (options: IOptions) => {
             options.headerModel = this;
             options.hasMoreDataUp = !!options.hasMoreData?.up;
+            options.theme = this.getTheme();
+            options.style = this.getStyle();
             return create(this._rowModule, options as IHeaderRowOptions);
         };
     }
@@ -135,5 +147,7 @@ Object.assign(Header.prototype, {
     _moduleName: 'Controls/grid:GridHeader',
     _instancePrefix: 'grid-header-',
     _rowModule: 'Controls/grid:GridHeaderRow',
-    _cellModule: 'Controls/grid:GridHeaderCell'
+    _cellModule: 'Controls/grid:GridHeaderCell',
+    _$style: 'default',
+    _$theme: 'default'
 });

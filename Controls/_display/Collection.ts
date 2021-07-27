@@ -3297,7 +3297,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return new Footer({
             owner: this,
             sticky: options.stickyFooter,
-            contentTemplate: options.footerTemplate
+            contentTemplate: options.footerTemplate,
+            style: this.getStyle(),
+            theme: this.getTheme()
         });
     }
     //endregion

@@ -437,7 +437,9 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             ...options,
             owner: this,
             columnsConfig: options.header,
-            gridColumnsConfig: options.columns
+            gridColumnsConfig: options.columns,
+            style: this.getStyle(),
+            theme: this.getTheme()
         };
         const headerModule = this.getHeaderConstructor();
         this._$headerModel = create(headerModule, cOptions);
@@ -461,7 +463,9 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             rowTemplateOptions: {},
             backgroundStyle: options.backgroundStyle,
             columnSeparatorSize: options.columnSeparatorSize,
-            shouldAddFooterPadding: options.itemActionsPosition === 'outside'
+            shouldAddFooterPadding: options.itemActionsPosition === 'outside',
+            style: this.getStyle(),
+            theme: this.getTheme()
         });
     }
 
@@ -477,7 +481,9 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             metaResults: this.getMetaResults(),
             backgroundStyle: options.backgroundStyle,
             columnSeparatorSize: options.columnSeparatorSize,
-            colspanCallback: options.resultsColspanCallback
+            colspanCallback: options.resultsColspanCallback,
+            style: this.getStyle(),
+            theme: this.getTheme()
         });
     }
 
@@ -619,6 +625,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     abstract getNavigation(): INavigationOptionValue<INavigationSourceConfig>;
 
     abstract getCount(): number;
+
+    abstract getStyle(): string;
+
+    abstract getTheme(): string;
 
     abstract getItems(): T[];
 
