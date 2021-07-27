@@ -5,13 +5,16 @@ import {MultiColumnStrategy} from 'Controls/marker';
 import {default as Render} from 'Controls/_columns/render/Columns';
 import 'css!Controls/columns';
 
-export default class Columns extends View {/** @lends Controls/_list/List.prototype */
-    _viewName: TemplateFunction = Render;
-    _markerStrategy: MultiColumnStrategy = MultiColumnStrategy;
-    _itemContainerGetter: ItemContainerGetter = ItemContainerGetter;
-    _plainItemsContainer: boolean = false;
+/**
+ * Представление списка, которое позволяет расположить записи в нескольких столбцах
+ */
+export default class Columns extends View { /** @lends Controls/_list/List.prototype */
+    protected _viewName: TemplateFunction = Render;
+    protected _markerStrategy: new (options) => MultiColumnStrategy = MultiColumnStrategy;
+    protected _itemContainerGetter: ItemContainerGetter = ItemContainerGetter;
+    protected _plainItemsContainer: boolean = false;
 
-    _getModelConstructor(): string {
+    protected _getModelConstructor(): string {
         return 'Controls/columns:ColumnsCollection';
     }
 
