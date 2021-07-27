@@ -397,6 +397,8 @@ export class Controller {
     * @void
     */
    destroy(): void {
+      // перед уничтожением контроллера, сбрасываем состояние на модели
+      this._updateModel({selected: [], excluded: []});
       this._model = null;
       this._strategy = null;
       this._selectedKeys = null;
