@@ -8,6 +8,6 @@
                          viewMode="link"
                          fontSize="{{fontSize}}"
                          fontColorStyle="{{fontColorStyle}}"
-                         caption="{{rk('Еще') + ' ' + loadMoreCaption || '...'}}"
+                         caption="{{rk('Еще') + ' ' + (loadMoreCaption || '...')}}"
                          readOnly="{{false}}"/>
 </ws:else>
