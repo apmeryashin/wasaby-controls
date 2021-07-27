@@ -29,7 +29,7 @@
                         <ws:partial template="{{column.getTemplate(content)}}" item="{{item.getNode()}}" itemData="{{item.getNode()}}" column="{{ column }}" gridColumn="{{ column }}"/>
                     </ws:if>
                     <ws:else>
-                        <ws:partial template="Controls/list:MoreButton"
+                        <ws:partial template="Controls/list:MoreButtonTemplate"
                                     moreButtonView="{{moreButtonView}}"
                                     cutConfig="{{cutConfig}}"
                                     fontColorStyle="{{ item.getMoreFontColorStyle() }}"
