@@ -758,6 +758,23 @@ define([
                sinon.assert.called(updateStylesStub);
             });
          });
+
+         it('should called resizeHandler if size is changed', () => {
+            const component = createComponent(StickyHeader, {});
+            const resizeHandler = sinon.stub(component, '_resizeHandler');
+            const newScrollState = {
+               canVerticalScroll: true,
+               canHorizontalScroll: true,
+               clientHeight: 1,
+               hasUnrenderedContent: {
+                  top: false,
+                  bottom: false
+               },
+            };
+            component._onScrollStateChanged(newScrollState, {clientHeight: 2});
+            sinon.assert.called(resizeHandler);
+
+         });
       });
    });
 
