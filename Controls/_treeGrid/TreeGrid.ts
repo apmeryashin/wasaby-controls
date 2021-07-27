@@ -81,6 +81,10 @@ export default class TreeGrid extends Grid implements ITreeGrid {
         return this._children.listControl.goToNext();
     }
 
+    getMarkedNodeKey(): CrudEntityKey | null {
+        return this._children.listControl.getMarkedNodeKey();
+    }
+
     getNextItem(key: CrudEntityKey): Model {
         return this._children.listControl.getNextItem(key);
     }
