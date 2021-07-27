@@ -2,7 +2,7 @@
 /**
  * Библиотека компонентов для упрощения загрузки данных: формирования запросов, обработки ошибок.
  * @library
- * @includes error Controls/dataSource/error
+ * @includes error Controls/dataSource:error
  * @includes requestDataUtil Controls/_dataSource/requestDataUtil
  * @public
  * @author Северьянов А.А.
