@@ -38,19 +38,20 @@
 </ws:template>
 
 <ws:template name="detail">
-<Controls.event:Register name="resizeDetectDetail" register="controlResize" attr:fixCompatible="1">
-   <div class="controls-MasterDetail_details ws-flexbox ws-flex-grow-1">
-      <ws:partial
-              attr:class="controls-MasterDetail_detailsContent
-                         {{_options.contrastBackground ?
-                            ('controls-MasterDetail_details-bg-contrast ' + (_newDesign ? 'controls-MasterDetail_details-newDesign') + (_options.masterVisibility === 'visible' ? ' tlr' : ' tr')) :
-                            'controls-MasterDetail_details_bg-same'}}"
-              template="{{_options.detail}}"
-              shadowMode="js"
-              availableWidth="{{_detailWidth}}"
-              selectedMasterValue="{{_selected}}"/>
-   </div>
-</Controls.event:Register>
+   <Controls.event:Register name="resizeDetectDetail" register="controlResize" attr:fixCompatible="1">
+      <div class="controls-MasterDetail_details ws-flexbox ws-flex-grow-1">
+         <ws:partial
+                 attr:class="controls-MasterDetail_detailsContent
+                            {{_options.contrastBackground ?
+                               ('controls-MasterDetail_details-bg-contrast ' + (_newDesign ? 'controls-MasterDetail_details-newDesign') + (_options.masterVisibility === 'visible' ? ' tlr' : ' tr')) :
+                               'controls-MasterDetail_details_bg-same'}}"
+                 template="{{_options.detail}}"
+                 shadowMode="js"
+                 masterWidth="{{_currentWidth}}"
+                 availableWidth="{{_detailWidth}}"
+                 selectedMasterValue="{{_selected}}"/>
+      </div>
+   </Controls.event:Register>
 </ws:template>
 
 <div class="controls-MasterDetail ws-flexbox controls_list_theme-{{_options.theme}}">
