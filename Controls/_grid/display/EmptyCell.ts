@@ -3,7 +3,7 @@ import EmptyRow from './EmptyRow';
 import Cell, {IOptions as IBaseCellOptions} from './Cell';
 import CellCompatibility from './compatibility/DataCell';
 
-type TContentAlign = 'center' | 'left' | 'right';
+type TContentAlign = 'center' | 'start' | 'end';
 
 class EmptyCell<T> extends mixin<Cell<T, EmptyRow<T>>, CellCompatibility>(Cell, CellCompatibility) {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:EmptyColumnTemplate';

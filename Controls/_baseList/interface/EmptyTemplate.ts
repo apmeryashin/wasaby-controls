@@ -38,8 +38,8 @@ export default interface IEmptyTemplateOptions {
      * @typedef {String} Controls/_list/interface/EmptyTemplate/Align
      * @description Допустимые значения для опции {@link align}.
      * @variant center Выравнивание текста по центру.
-     * @variant left Выравнивание текста по левому краю.
-     * @variant right Выравнивание текста по правому краю.
+     * @variant start Выравнивание текста по левому краю.
+     * @variant end Выравнивание текста по правому краю.
      */
 
     /**
@@ -65,7 +65,7 @@ export default interface IEmptyTemplateOptions {
      * @cfg {Controls/_list/interface/EmptyTemplate/Align.typedef|null} Выравнивание текста в шаблоне пустого представления.
      * @default center
      */
-    align?: 'center' | 'left' | 'right';
+    align?: 'center' | 'start' | 'end';
     /**
      * @name Controls/_list/interface/EmptyTemplate#contentTemplate
      * @cfg {String|TemplateFunction|undefined} Шаблон, описывающий контент плоского списка без элементов.
