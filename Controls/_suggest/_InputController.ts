@@ -740,6 +740,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return Promise.resolve();
    }
 
+   protected _inputCompletedHandler(event: SyntheticEvent, value: string): void {
+      this._notify('inputCompleted', [value]);
+   }
+
    private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
       if (this._searchResolverController) {
          this._searchResolverController.resolve(value);
