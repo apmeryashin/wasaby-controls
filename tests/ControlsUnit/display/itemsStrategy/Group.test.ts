@@ -19,7 +19,9 @@ function getMockedDisplay(): Object {
             };
         },
         hasMoreDataUp: () => false,
-        isStickyHeader: () => false
+        isStickyHeader: () => false,
+        getTheme: () => '',
+        getStyle: () => ''
     }
 }
 
