@@ -78,7 +78,7 @@ define('Controls/_decorator/Number', ['UI/Executor', 'Controls/_decorator/resour
 
 /**
  * @name Controls/_decorator/INumber#value
- * @cfg {string|number|null} Декорируемое число.
+ * @cfg {String | Number | Null} Декорируемое число.
  * @demo Controls-demo/Decorator/Number/Value/Index
  */
 
