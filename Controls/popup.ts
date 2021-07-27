@@ -44,7 +44,9 @@ export {default as StickyOpener} from './_popup/PopupHelper/Sticky';
 export {default as DialogOpener} from './_popup/PopupHelper/Dialog';
 export {default as NotificationOpener} from './_popup/PopupHelper/Notification';
 export {default as SlidingPanelOpener} from './_popup/PopupHelper/SlidingPanel';
-export {default as PageController} from './_popup/Page/Controller';
+
+// TODO: на день, чтобы не сломать тесты
+export {PageController} from 'Controls/dataSource';
 
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition,
     IEventHandlers, IPopupItemInfo, IPopupController, IDragOffset} from './_popup/interface/IPopup';
