@@ -186,7 +186,7 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
 
     _notifyHandler = EventUtils.tmplNotify;
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): object {
         return {
             multiSelectVisibility: 'hidden',
             multiSelectPosition: 'default',
