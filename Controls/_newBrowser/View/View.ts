@@ -24,6 +24,7 @@ import {default as TileController} from 'Controls/_newBrowser/TemplateController
 import {default as ListController} from 'Controls/_newBrowser/TemplateControllers/List';
 import {default as TableController} from 'Controls/_newBrowser/TemplateControllers/Table';
 import {object} from 'Types/util';
+import 'css!Controls/newBrowser';
 
 //endregion
 
@@ -545,9 +546,6 @@ export default class View extends Control<IOptions, IReceivedState> {
     //endregion
 
     //region • static utils
-    static _theme: string[] = [
-        'Controls/newBrowser'
-    ];
 
     static calcMasterVisibility(options: Partial<IOptions>): MasterVisibilityEnum {
         if (options.master?.visibility) {
