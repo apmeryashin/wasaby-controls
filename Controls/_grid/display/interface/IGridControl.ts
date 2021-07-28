@@ -510,6 +510,7 @@ export interface IGridControl extends IList {
  * @description Допустимые значения для опции {@link resultsVisibility}.
  * @variant hasdata Отображается при наличии более 1 элемента в таблице.
  * @variant visible Отображается при наличии хотя бы 1 элемента в таблице.
+ * @variant hidden Строка итогов скрыта.
  */
 
 /**
