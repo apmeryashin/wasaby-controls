@@ -164,7 +164,7 @@ type TEditingMode = 'row' | 'cell';
 /**
  * Интерфейс объекта-конфигурации {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту} в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ таблицах}.
  * @interface Controls/_grid/interface/IGridEditingConfig
- * @mixes Controls/list:IEditingConfig
+ * @implements Controls/list:IEditingConfig
  * @public
  * @autor Авраменко А.C.
  */
@@ -564,7 +564,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
 //  *
 //  * @public
 //  * @author Авраменко А.С.
-//  * @mixes Controls/list:IEditableList
+//  * @implements Controls/list:IEditableList
 //  * @see Controls/editableArea:View
 //  * @remark
 //  * Разница между этим интерфейсом и {@link Controls/editableArea:View Controls/editableArea:View} заключается в том, что первый используется в списках, а второй — вне их (например, на вкладках).
