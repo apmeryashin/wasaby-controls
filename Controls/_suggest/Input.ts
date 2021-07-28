@@ -89,10 +89,6 @@ var Suggest = Control.extend({
       this._notify('valueChanged', [value]);
    },
 
-   _inputCompletedHandler: function(event, value) {
-      this._notify('inputCompleted', [value]);
-   },
-
    _choose: function(event, item) {
       /* move focus to input after select, because focus will be lost after closing popup  */
       this.activate({enableScreenKeyboard: true});
