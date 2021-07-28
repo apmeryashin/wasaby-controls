@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/progress:IRating/Rating';
+import * as template from 'wml!Controls/_progress/Rating/Rating';
 import {detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
