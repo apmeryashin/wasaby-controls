@@ -6215,8 +6215,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _resolveNavigationButtonView(): TNavigationButtonView {
-        const view = this._options.navigation?.view;
-        const buttonView = this._options.navigation.viewConfig.buttonView;
+        const navigation = this._options.navigation;
+        const view = navigation?.view;
+        const buttonView = navigation?.viewConfig?.buttonView;
         return buttonView || view === 'cut' ? 'separator' : 'link';
     }
 
