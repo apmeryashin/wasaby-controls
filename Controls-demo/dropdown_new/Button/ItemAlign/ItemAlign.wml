@@ -1,28 +1,10 @@
-<div class="ws-flexbox ws-flex-column">
-    <Controls.dropdown:Button
-            keyProperty="id"
-            buttonStyle="secondary"
-            fontColorStyle="link"
-            viewMode="link"
-            caption="Document"
-            parentProperty="parent"
-            nodeProperty="@parent"
-            itemAlign="left"
-            source="{{_sourceWithIcons}}"
-            attr:class="ControlsDemo-ButtonsMenu__item ws-align-self-center"
-            tooltip="Document">
-    </Controls.dropdown:Button>
-    <Controls.dropdown:Button
-            keyProperty="id"
-            buttonStyle="secondary"
-            itemAlign="right"
-            fontColorStyle="link"
-            viewMode="link"
-            caption="Document"
-            parentProperty="parent"
-            nodeProperty="@parent"
-            source="{{_sourceWithIcons}}"
-            attr:class="ControlsDemo-ButtonsMenu__item ws-align-self-center"
-            tooltip="Document">
-    </Controls.dropdown:Button>
+<div class="controlsDemo__wrapper controlsDemo__dropdown-button__openUpColumn">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/dropdown_new/Button/HeaderTemplate/IconSize/Index' }}">
+            <a href="{{content.href}}">Пункты с направлением влево</a>
+        </Router.router:Reference>
+        <Controls-demo.dropdown_new.Button.ItemAlign.Left.Index/>
+    </div>
 </div>
