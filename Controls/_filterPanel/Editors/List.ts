@@ -37,7 +37,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
  * @class Controls/_filterPanel/Editors/List
  * @extends Core/Control
  * @mixes Controls/grid:IGridControl
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:INavigation
  * @author Мельникова Е.А.
  * @public
  */

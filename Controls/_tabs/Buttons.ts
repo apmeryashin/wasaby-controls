@@ -78,9 +78,9 @@ const MARKER_ANIMATION_TIMEOUT: number = 100;
  *
  * @class Controls/_tabs/Buttons
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISingleSelectable
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IItems
+ * @implements Controls/interface:ISingleSelectable
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IItems
  * @mixes Controls/tabs:ITabsButtons
  * @mixes Controls/tabs:ITabsTemplate
  *
