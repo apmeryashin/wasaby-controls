@@ -1,10 +1,11 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import TumblerTemplate = require('wml!Controls/_filter/View/Tumbler');
 import {RecordSet} from 'Types/collection';
 import {ITumblerOptions} from 'Controls/toggle';
-import 'css!Controls/filter';
+import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {isEqual} from 'Types/object';
+import 'css!Controls/filter';
 
 /**
  * Контрол фильтр-переключатель.
@@ -19,12 +20,12 @@ import {isEqual} from 'Types/object';
  */
 
 interface IFilterTumblerOptions extends ITumblerOptions {
-    source: RecordSet;
+    source: IFilterItem[];
 }
 
 export default class FilterTumblerContainer extends Control<ITumblerOptions> {
     protected _template: TemplateFunction = TumblerTemplate;
-    protected _tumblerOptions: ITumblerOptions = null;
+    protected _tumblerSource: IFilterItem[] = null;
     protected _selectedKey: number|string = null;
 
     protected _beforeMount(options: IFilterTumblerOptions): void {
@@ -32,7 +33,8 @@ export default class FilterTumblerContainer extends Control<ITumblerOptions> {
     }
 
     protected _beforeUpdate(newOptions: IFilterTumblerOptions): void {
-        if (!isEqual(this._options, newOptions)) {
+        const sourceChanged = !isEqual(this._options.source, newOptions.source);
+        if (sourceChanged) {
             this._setTumblerStates(newOptions);
         }
     }
@@ -42,19 +44,18 @@ export default class FilterTumblerContainer extends Control<ITumblerOptions> {
     }
 
     private _setTumblerStates(options: IFilterTumblerOptions): void {
-        const tumblerSource = this._getumblerOptions(options.source);
-        this._tumblerOptions = tumblerSource.editorOptions;
-        this._selectedKey = tumblerSource.value;
+        this._tumblerSource = this._getTumblerOptions(options.source);
+        this._selectedKey = this._tumblerSource.value;
     }
 
-    private _getumblerOptions(items: RecordSet): RecordSet {
+    private _getTumblerOptions(items: RecordSet): IFilterItem[] {
         return items.find((item) => {
             return item.viewMode === 'tumbler';
         });
     }
 
-    private _getUpdatedSource(value: number|string): void {
-        const tumblerOptions = this._getumblerOptions(this._options.source);
+    private _getUpdatedSource(value: number|string): IFilterItem[] {
+        const tumblerOptions = this._getTumblerOptions(this._options.source);
         tumblerOptions.value = value;
         return {...this._options.source, ...tumblerOptions};
     }
