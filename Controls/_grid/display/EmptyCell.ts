@@ -5,11 +5,17 @@ import CellCompatibility from './compatibility/DataCell';
 
 type TContentAlign = 'center' | 'start' | 'end';
 
-class EmptyCell<T> extends mixin<Cell<T, EmptyRow<T>>, CellCompatibility>(Cell, CellCompatibility) {
+/**
+ * Ячейка строки пустого представления таблицы
+ */
+class EmptyCell extends mixin<
+    Cell<null, EmptyRow>,
+    CellCompatibility<null>
+>(Cell, CellCompatibility) {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:EmptyColumnTemplate';
 
     //region Аспект "Стилевое оформление"
-    getWrapperClasses(theme: string, backgroundColorStyle: string = 'default', style: string = 'default', highlightOnHover?: boolean): string {
+    getWrapperClasses(backgroundColorStyle: string = 'default', highlightOnHover?: boolean): string {
         let classes;
         const columnScrollClasses = this._$owner.hasColumnScroll() ? this._getColumnScrollWrapperClasses() : '';
 
@@ -24,14 +30,14 @@ class EmptyCell<T> extends mixin<Cell<T, EmptyRow<T>>, CellCompatibility>(Cell, 
                 + `controls-Grid__row-cell-background-editing_${backgroundColorStyle} `
                 + `${columnScrollClasses}`;
         } else {
-            classes = super.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover)
+            classes = super.getWrapperClasses(backgroundColorStyle, highlightOnHover)
                 + ' controls-Grid__row-cell-background-editing_default';
         }
 
         return classes;
     }
 
-    getContentClasses(theme: string, topSpacing: string = 'default', bottomSpacing: string = 'default', align: TContentAlign = 'center'): string {
+    getContentClasses(topSpacing: string = 'default', bottomSpacing: string = 'default', align: TContentAlign = 'center'): string {
         let classes;
 
         // todo https://online.sbis.ru/opendoc.html?guid=024784a6-cc47-4d1a-9179-08c897edcf72
@@ -46,7 +52,7 @@ class EmptyCell<T> extends mixin<Cell<T, EmptyRow<T>>, CellCompatibility>(Cell, 
             classes = '';
         } else {
             classes = this._getHorizontalPaddingClasses(this._$column.cellPadding)
-                + this._getVerticalPaddingClasses(theme)
+                + this._getVerticalPaddingClasses()
                 + ' controls-Grid__row-cell__content'
                 + ' controls-GridView__emptyTemplate__cell'
                 + ' controls-Grid__row-cell-editing'

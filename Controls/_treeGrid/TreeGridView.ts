@@ -1,19 +1,32 @@
 import * as Item from 'wml!Controls/_treeGrid/render/grid/Item';
 
-import { GridView } from 'Controls/grid';
+import {GridView, IGridOptions} from 'Controls/grid';
 import { TemplateFunction } from 'UI/Base';
-import { TreeItem } from 'Controls/display';
 import { SyntheticEvent } from 'UI/Vdom';
-import { Model } from 'Types/entity';
 import 'css!Controls/grid';
 import 'css!Controls/treeGrid';
 
+import TreeGridCollection from './display/TreeGridCollection';
+import TreeGridDataRow from './display/TreeGridDataRow';
+import TreeGridNodeFooterRow from './display/TreeGridNodeFooterRow';
+import { ITreeControlOptions } from 'Controls/tree';
+import {TGroupNodeVisibility} from './interface/ITreeGrid';
+
+export interface ITreeGridOptions extends ITreeControlOptions, IGridOptions {
+    nodeTypeProperty?: string;
+    groupNodeVisibility?: TGroupNodeVisibility;
+}
+
+/**
+ * Представление иерархической таблицы
+ */
 export default class TreeGridView extends GridView {
-    _beforeUpdate(newOptions: any): void {
+    protected _listModel: TreeGridCollection;
+    protected _options: ITreeGridOptions;
+
+    _beforeUpdate(newOptions: ITreeGridOptions): void {
         super._beforeUpdate(newOptions);
-        if (this._options.expanderSize !== newOptions.expanderSize) {
-            this._listModel.setExpanderSize(newOptions.expanderSize);
-        }
+
         if (this._options.nodeTypeProperty !== newOptions.nodeTypeProperty) {
             this._listModel.setNodeTypeProperty(newOptions.nodeTypeProperty);
         }
@@ -22,38 +35,38 @@ export default class TreeGridView extends GridView {
         }
     }
 
-    protected _resolveBaseItemTemplate(options: any): TemplateFunction {
+    protected _resolveBaseItemTemplate(): TemplateFunction {
         return Item;
     }
 
-    protected _onItemClick(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
-        if (dispItem['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+    protected _onItemClick(e: SyntheticEvent, item: TreeGridDataRow|TreeGridNodeFooterRow): void {
+        if (item instanceof TreeGridNodeFooterRow) {
             e.stopImmediatePropagation();
             if (e.target.closest('.js-controls-TreeGrid__nodeFooter__LoadMoreButton')) {
-                this._notify('loadMore', [dispItem.getNode()]);
+                this._notify('loadMore', [item.getNode()]);
             }
             return;
         }
 
-        super._onItemClick(e, dispItem);
+        super._onItemClick(e, item);
     }
 
-    protected _onItemMouseUp(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
-        if (dispItem['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+    protected _onItemMouseUp(e: SyntheticEvent, item: TreeGridDataRow|TreeGridNodeFooterRow): void {
+        if (item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
             e.stopImmediatePropagation();
             return;
         }
 
-        super._onItemMouseUp(e, dispItem);
+        super._onItemMouseUp(e, item);
     }
 
-    protected _onItemMouseDown(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
-        if (dispItem['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+    protected _onItemMouseDown(e: SyntheticEvent, item: TreeGridDataRow|TreeGridNodeFooterRow): void {
+        if (item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
             e.stopImmediatePropagation();
             return;
         }
 
-        super._onItemMouseDown(e, dispItem);
+        super._onItemMouseDown(e, item);
     }
 
 }

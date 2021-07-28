@@ -1,4 +1,4 @@
-<div class="{{ gridColumn.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}">
+<div class="{{ gridColumn.getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}">
     <Controls.Container.Async templateName="Controls/breadcrumbs:Path">
         <ws:partial template="{{ content.resolvedTemplate }}"
                     attr:class="controls-Grid__breadCrumbs"

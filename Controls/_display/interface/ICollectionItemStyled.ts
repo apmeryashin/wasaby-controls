@@ -13,9 +13,9 @@
  * @author Аверкиев П.А.
  */
 export interface ICollectionItemStyled {
-    getMultiSelectClasses(theme: string): string;
-    getWrapperClasses(templateHighlightOnHover?: boolean, theme?: string, marker?: boolean): string;
-    getContentClasses(theme: string, style?: string): string;
+    getMultiSelectClasses(): string;
+    getWrapperClasses(templateHighlightOnHover?: boolean, marker?: boolean): string;
+    getContentClasses(): string;
 
     /**
      * Классы CSS для отображения действий над записью
@@ -34,7 +34,6 @@ export interface ICollectionItemStyled {
      * @param itemActionsPosition
      * @param itemActionsClass
      * @param itemPadding
-     * @param theme
      */
-    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string): string;
+    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}): string;
 }

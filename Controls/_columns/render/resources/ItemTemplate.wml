@@ -6,7 +6,7 @@
       <ws:partial template="{{ item.getMultiSelectTemplate() }}" item="{{ item }}" />
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
-      <div attr:class="{{ item.getContentClasses(theme) }}">
+      <div attr:class="{{ item.getContentClasses() }}">
          <ws:partial
             template="{{ contentTemplate }}"
             item="{{ item }}"
@@ -16,7 +16,7 @@
       </div>
    </ws:if>
    <ws:else>
-      <div attr:class="{{ item.getContentClasses(theme) }}">
+      <div attr:class="{{ item.getContentClasses() }}">
          {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
       </div>
    </ws:else>

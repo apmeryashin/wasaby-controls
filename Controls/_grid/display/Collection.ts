@@ -1,35 +1,31 @@
-import { mixin } from 'Types/util';
+import {mixin} from 'Types/util';
 
 import {
     Collection as BaseCollection,
-    ICollectionOptions as IBaseOptions,
     ItemsFactory,
     IItemActionsTemplateConfig,
     GridLadderUtil, IHasMoreData
 } from 'Controls/display';
 
 import GroupRow from './GroupRow';
-import GridMixin, { IOptions as IGridMixinOptions } from './mixins/Grid';
+import GridMixin, {IOptions as IGridMixinOptions} from './mixins/Grid';
 import Row, {IOptions as IRowOptions} from './Row';
-import DataRow from './DataRow';
-import { TemplateFunction } from 'UI/Base';
-import {Model as EntityModel} from 'Types/entity';
+import {TemplateFunction} from 'UI/Base';
+import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 
-export interface IOptions<
-    S,
-    T extends Row<S> = Row<S>
-> extends IBaseOptions<S, T>, IGridMixinOptions { }
+export interface IOptions<S extends Model = Model,
+    T extends Row<S> = Row<S>> extends IGridMixinOptions {
+}
 
 /**
  * @public
  * @mixes Controls/grid:GridMixin
  * @author Авраменко А.С.
  */
-export default class Collection<
-    S,
-    T extends Row<S> = Row<S>
-> extends mixin<BaseCollection<any>, GridMixin<any, any>>(BaseCollection, GridMixin) {
+export default class Collection<S extends Model = Model, T extends Row<S> = Row<S>> extends mixin<
+    BaseCollection<S>, GridMixin<S, T>
+>(BaseCollection, GridMixin) {
     protected _$hasStickyGroup: boolean = false;
 
     constructor(options: IOptions<S, T>) {
@@ -68,7 +64,9 @@ export default class Collection<
     setMultiSelectVisibility(visibility: string): void {
         super.setMultiSelectVisibility(visibility);
 
-        [this.getColgroup(), this.getHeader(), this.getResults(), this.getFooter(), this.getEmptyGridRow()].forEach((gridUnit) => {
+        [
+            this.getColgroup(), this.getHeader(), this.getResults(), this.getFooter(), this.getEmptyGridRow()
+        ].forEach((gridUnit) => {
             gridUnit?.setMultiSelectVisibility(visibility);
         });
     }
@@ -169,7 +167,7 @@ export default class Collection<
         return groupPropertyChanged;
     }
 
-    protected setMetaResults(metaResults: EntityModel) {
+    protected setMetaResults(metaResults: Model) {
         super.setMetaResults(metaResults);
         this._$results?.setMetaResults(metaResults);
     }
@@ -189,7 +187,9 @@ export default class Collection<
         const hasStickyGroup = this._hasStickyGroup();
         if (this._$hasStickyGroup !== hasStickyGroup) {
             this._$hasStickyGroup = hasStickyGroup;
-            this._updateItemsProperty('setHasStickyGroup', this._$hasStickyGroup, 'LadderSupport');
+            this._updateItemsProperty(
+                'setHasStickyGroup', this._$hasStickyGroup, 'LadderSupport'
+            );
         }
     }
 

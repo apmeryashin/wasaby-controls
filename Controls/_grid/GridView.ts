@@ -1,22 +1,27 @@
-import { ListView } from 'Controls/baseList';
-import { TemplateFunction } from 'UI/Base';
-import { Logger} from 'UI/Utils';
-import { GridCollection, GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
+import {ListView} from 'Controls/baseList';
+import {TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
+import {GridLadderUtil, GridLayoutUtil} from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_grid/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_grid/Render/grid/Item';
 import * as GroupTemplate from 'wml!Controls/_grid/Render/GroupCellContentWithRightTemplate';
-import { Model } from 'Types/entity';
-import { SyntheticEvent } from 'Vdom/Vdom';
-import { validateGridParts } from './utils/ConfigValidation';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {validateGridParts} from './utils/ConfigValidation';
 
 import {ColumnScrollViewMixin} from './ViewMixins/ColumnScrollViewMixin';
 
-import { _Options } from 'UI/Vdom';
+import {_Options} from 'UI/Vdom';
 import {getDimensions} from 'Controls/sizeUtils';
 import {Guid} from 'Types/entity';
 import 'css!Controls/grid';
 import 'css!Controls/CommonClasses';
+import Collection from './display/Collection';
+import Row from './display/Row';
+import {IOptions as IGridOptions} from './display/mixins/Grid';
 
+/**
+ * Представление таблицы
+ */
 const GridView = ListView.extend([ColumnScrollViewMixin], {
     _template: GridTemplate,
     _hoveredCellIndex: null,
@@ -25,7 +30,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
     _ladderOffsetSelector: '',
 
-    _beforeMount(options): void {
+    _beforeMount(options: IGridOptions): void {
         const result = GridView.superclass._beforeMount.apply(this, arguments);
         this._columnScrollOnViewBeforeMount(options);
         this._ladderOffsetSelector = `controls-GridView__ladderOffset-${this._createGuid()}`;
@@ -39,14 +44,14 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         this._listModel.setColspanGroup(!this._options.columnScroll || !this.isColumnScrollVisible());
     },
 
-    _applyChangedOptionsToModel(listModel, options, changes): void {
+    _applyChangedOptionsToModel(listModel: Collection, options: IGridOptions, changes: string[]): void {
         let needOptionsValidation = false;
 
         if (changes.includes('columns')) {
             // Если колонки изменились, например, их кол-во, а данные остались те же, то
             // то без перерисовки мы не можем корректно отобразить данные в новых колонках.
             // правка конфликтует с https://online.sbis.ru/opendoc.html?guid=a8429971-3a3c-44d0-8cca-098887c9c717
-            listModel.setColumns(options.columns, false);
+            listModel.setColumns(options.columns);
             needOptionsValidation = true;
         }
 
@@ -94,7 +99,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
      * Перекрываем метод базового класса, который вызывается из _beforeUpdate.
      * Т.к. у нас своя модель и свои проверки.
      */
-    _applyNewOptionsAfterReload(oldOptions, newOptions): void {
+    _applyNewOptionsAfterReload(oldOptions: IGridOptions, newOptions: IGridOptions): void {
         const changes = [];
 
         const changedOptions = _Options.getChangedOptions(newOptions, this._options);
@@ -149,7 +154,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
     },
 
-    _beforeUpdate(newOptions): void {
+    _beforeUpdate(newOptions: IGridOptions): void {
         GridView.superclass._beforeUpdate.apply(this, arguments);
         this._columnScrollOnViewBeforeUpdate(newOptions);
 
@@ -168,7 +173,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         this._listModel.setColspanGroup(!newOptions.columnScroll || !this.isColumnScrollVisible());
     },
 
-    _componentDidUpdate(oldOptions): void {
+    _componentDidUpdate(oldOptions: IGridOptions): void {
         GridView.superclass._componentDidUpdate.apply(this, arguments);
         this._columnScrollOnViewDidUpdate(oldOptions);
     },
@@ -178,20 +183,21 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         this._columnScrollOnViewBeforeUnmount();
     },
 
-    getListModel(): GridCollection<any> {
+    getListModel(): Collection {
         return this._listModel;
     },
 
-    _resolveItemTemplate(options): TemplateFunction {
-        return options.itemTemplate || this._resolveBaseItemTemplate(options);
+    _resolveItemTemplate(options: IGridOptions): TemplateFunction {
+        return options.itemTemplate || this._resolveBaseItemTemplate();
     },
 
-    _resolveBaseItemTemplate(options): TemplateFunction {
+    _resolveBaseItemTemplate(): TemplateFunction {
         return GridItem;
     },
 
-    _getGridTemplateColumns(options): string {
-        // todo Вынести расчёт на viewModel: https://online.sbis.ru/opendoc.html?guid=09307163-7edb-4423-999d-525271e05586
+    _getGridTemplateColumns(options: IGridOptions): string {
+        // todo Вынести расчёт на viewModel:
+        //  https://online.sbis.ru/opendoc.html?guid=09307163-7edb-4423-999d-525271e05586
         // тогда метод можно покрыть нормально юнитом и проблемы с актуализацией колонок на самом grid-элементе не будет
         const columns = this._listModel ? this._listModel.getGridColumnsConfig() : options.columns;
         const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
@@ -256,19 +262,22 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         if (hasTopResults) {
             resultsHeight = getDimensions(results).height;
         }
-        const ladderClass = `controls-Grid__row-cell__ladder-spacing${header ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}`;
+
+        const topOffset = headerHeight + resultsHeight;
+        const postfixLadderClass = `${header ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}`;
+        const ladderClass = `controls-Grid__row-cell__ladder-spacing${postfixLadderClass}`;
         return `.${this._ladderOffsetSelector} .${ladderClass} {` +
-                  `top: calc(var(--item_line-height_l_grid) + ${headerHeight + resultsHeight}px) !important;}` +
-                `.${this._ladderOffsetSelector} .${ladderClass}_withGroup {` +
-                   `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${headerHeight + resultsHeight}px) !important;}`;
+            `top: calc(var(--item_line-height_l_grid) + ${topOffset}px) !important;}` +
+            `.${this._ladderOffsetSelector} .${ladderClass}_withGroup {` +
+            `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${topOffset}px) !important;}`;
 
     },
 
-    _getGridViewWrapperClasses(options): string {
+    _getGridViewWrapperClasses(options: IGridOptions): string {
         return `controls_list_theme-${options.theme} ${this._getColumnScrollWrapperClasses(options)}`;
     },
 
-    _getGridViewClasses(options, columnScrollPartName?: 'fixed' | 'scrollable'): string {
+    _getGridViewClasses(options: IGridOptions, columnScrollPartName?: 'fixed' | 'scrollable'): string {
         let classes = `controls-Grid controls-Grid_${options.style}`;
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ` controls-Grid_support-ladder ${this._ladderOffsetSelector}`;
@@ -287,11 +296,11 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         return classes;
     },
 
-    _getGridViewStyles(options): string {
+    _getGridViewStyles(options: IGridOptions): string {
         return this._getGridTemplateColumns(options);
     },
 
-    reset(params: {keepScroll?: boolean} = {}): void {
+    reset(params: { keepScroll?: boolean } = {}): void {
         GridView.superclass.reset.apply(this, arguments);
         if (!params.keepScroll) {
             this._resetColumnScroll(this._options);
@@ -314,20 +323,20 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         return this._options.needShowEmptyTemplate;
     },
 
-    _onItemClick(e, dispItem): boolean {
+    _onItemClick(e: SyntheticEvent, item: Row): boolean {
         // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
         // событий itemClick, itemMouseDown по нативному клику, но по какой-то причине
         // невозможно остановить всплытие события через stopPropagation
         // TODO: Убрать, preventItemEvent когда это больше не понадобится
         // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
         if (!e.preventItemEvent) {
-            const contents = dispItem.getContents();
-            if (dispItem['[Controls/_display/GroupItem]']) {
-                this._notify('groupClick', [contents, e, dispItem], {bubbling: true});
+            const contents = item.getContents();
+            if (item['[Controls/_display/GroupItem]']) {
+                this._notify('groupClick', [contents, e, item], {bubbling: true});
                 return;
             }
             if (e.target.closest('.js-controls-ListView__checkbox')) {
-                this._notify('checkBoxClick', [dispItem, e]);
+                this._notify('checkBoxClick', [item, e]);
                 e.stopPropagation();
                 return;
             }
@@ -367,19 +376,19 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
     },
 
-    _onEditingItemClick(e, dispItem, nativeEvent): void {
+    _onEditingItemClick(e: SyntheticEvent, item: Row, nativeEvent: Event): void {
         e.stopImmediatePropagation();
         if (this._listModel.getEditingConfig()?.mode === 'cell') {
             const columnIndex = this._getCellIndexByEventTarget(nativeEvent);
-            if (dispItem.getEditingColumnIndex() !== columnIndex) {
-                this._notify('itemClick', [dispItem.getContents(), nativeEvent, columnIndex]);
+            if (item.getEditingColumnIndex() !== columnIndex) {
+                this._notify('itemClick', [item.getContents(), nativeEvent, columnIndex]);
             }
         }
     },
 
-    _onItemMouseMove(event, collectionItem) {
+    _onItemMouseMove(event: SyntheticEvent, item: Row) {
         GridView.superclass._onItemMouseMove.apply(this, arguments);
-        this._setHoveredCell(collectionItem.item, event.nativeEvent);
+        this._setHoveredCell(item.getContents(), event.nativeEvent);
     },
 
     _onItemMouseLeave() {
@@ -387,12 +396,12 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         this._setHoveredCell(null, null);
     },
 
-    _onEditArrowClick(event: SyntheticEvent, row: GridRow<Model>): void {
+    _onEditArrowClick(event: SyntheticEvent, row: Row): void {
         this._notify('editArrowClick', [row.getContents()]);
         event.stopPropagation();
     },
 
-    _getCellIndexByEventTarget(event): number {
+    _getCellIndexByEventTarget(event: SyntheticEvent): number {
         if (!event) {
             return null;
         }
@@ -421,7 +430,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         return target.closest('.controls-Grid__row-cell') as HTMLElement;
     },
 
-    _setHoveredCell(item, nativeEvent): void {
+    _setHoveredCell(item: Row, nativeEvent: Event): void {
         const hoveredCellIndex = this._getCellIndexByEventTarget(nativeEvent);
         if (item !== this._hoveredCellItem || hoveredCellIndex !== this._hoveredCellIndex) {
             this._hoveredCellItem = item;
@@ -437,7 +446,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
     },
 
-    _getStickyLadderCellsCount(options): number {
+    _getStickyLadderCellsCount(options: IGridOptions): number {
         return GridLadderUtil.stickyLadderCellsCount(
             options.columns,
             options.stickyColumn,

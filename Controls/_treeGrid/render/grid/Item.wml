@@ -4,7 +4,7 @@
 
 <ws:template name="COLUMN">
    <div if="{{ gridColumn.shouldDisplayMarker(marker) }}"
-        class="{{ gridColumn.getMarkerClasses(theme, style, markerClassName, itemPadding) }}"></div>
+        class="{{ gridColumn.getMarkerClasses(markerClassName, itemPadding) }}"></div>
 
    <ws:partial template="{{ gridColumn.getTemplate() }}"
                scope="{{ gridColumn.config.templateOptions }}"
@@ -60,7 +60,7 @@
 
          <!-- Тэг -->
          <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(afterContentTemplate.tagStyle) }}"
-              class="{{ (gridColumn || itemData).getTagClasses(afterContentTemplate.theme) }}">
+              class="{{ (gridColumn || itemData).getTagClasses() }}">
             <ws:partial template="{{ afterContentTemplate.tagTemplate }}"
                         tagStyle="{{ (gridColumn || itemData).getTagStyle(afterContentTemplate.tagStyle) }}"
                         item="{{ (item || itemData) }}"
@@ -103,8 +103,6 @@
       <div attr:data-qa="{{(item || itemData).getQAData(marker)}}"
            attr:class="{{ (item || itemData).getItemClasses({
            'highlightOnHover': highlightOnHover,
-           'theme': theme,
-           'style': style,
            'cursor': cursor,
            'clickable': clickable,
            'showItemActionsOnHover': showItemActionsOnHover
@@ -113,10 +111,10 @@
             <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition() }}"
                                           mode="{{ (item || itemData).getStickyHeaderMode() }}"
                                           shadowVisibility="{{column.shadowVisibility}}"
-                                         backgroundStyle="{{ column.getStickyBackgroundStyle(style) }}"
+                                         backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
                                           fixedZIndex="{{ column.getZIndex()}}"
                                           attr:key="sticky_{{ column.getInstanceId() }}"
-                                          attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"
+                                          attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
                                           attr:style="{{ column.getWrapperStyles(containerSize) }}">
                <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
             </Controls.scroll:StickyBlock>
@@ -128,14 +126,12 @@
    <div attr:data-qa="{{(item || itemData).getQAData(marker)}}"
         attr:class="{{ (item || itemData).getItemClasses({
            'highlightOnHover': highlightOnHover,
-           'theme': theme,
-           'style': style,
            'cursor': cursor,
            'clickable': clickable,
            'showItemActionsOnHover': showItemActionsOnHover
        }) }}">
       <ws:for data="column in (item || itemData).getColumns()">
-         <div class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"
+         <div class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
               style="{{ column.getWrapperStyles(containerSize) }}">
             <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
          </div>

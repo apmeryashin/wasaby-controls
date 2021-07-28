@@ -1,25 +1,28 @@
 import FooterRow from './FooterRow';
 import Cell, {IOptions as ICellOptions, IOptions as IBaseCellOptions} from './Cell';
 
-export interface IOptions<T> extends ICellOptions<T> {
+export interface IOptions extends ICellOptions<null> {
     shouldAddFooterPadding: boolean;
 }
 
-class FooterCell<T> extends Cell<T, FooterRow<T>> {
+/**
+ * Ячейка футера в таблице
+ */
+class FooterCell<TOwner extends FooterRow> extends Cell<null, FooterRow> {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:FooterColumnTemplate';
     protected _$shouldAddFooterPadding: boolean;
 
     //region Аспект "Стилевое оформление"
-    getWrapperClasses(theme: string,
-                      backgroundColorStyle: string,
-                      style: string = 'default',
-                      templateHighlightOnHover: boolean): string {
+    getWrapperClasses(
+        backgroundColorStyle: string,
+        templateHighlightOnHover: boolean
+    ): string {
         let wrapperClasses = 'controls-ListView__footer controls-GridView__footer__cell';
 
-        wrapperClasses += this._getControlsBackgroundClass(style, backgroundColorStyle);
+        wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
 
         if (this._$owner.hasColumnScroll()) {
-            wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+            wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
         }
 
         if (this._$shouldAddFooterPadding) {
@@ -46,6 +49,7 @@ class FooterCell<T> extends Cell<T, FooterRow<T>> {
     getInnerContentWrapperClasses(): string {
         return 'controls-GridView__footer__cell__inner-content-wrapper';
     }
+
     //endregion
 }
 

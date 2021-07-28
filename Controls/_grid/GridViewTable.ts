@@ -1,25 +1,29 @@
 import GridView from './GridView';
-import { TemplateFunction } from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 import * as TableTemplate from 'wml!Controls/_grid/Render/table/GridView';
 import * as TableItem from 'wml!Controls/_grid/Render/table/Item';
+import { IGridOptions } from 'Controls/grid';
 
+/**
+ * Представление таблицы, которое не поддерживает css grid
+ */
 const GridViewTable = GridView.extend({
     _template: TableTemplate,
 
-    _resolveItemTemplate(options): TemplateFunction {
-        return options.itemTemplate || this._resolveBaseItemTemplate(options);
+    _resolveItemTemplate(options: IGridOptions): TemplateFunction {
+        return options.itemTemplate || this._resolveBaseItemTemplate();
     },
 
-    _resolveBaseItemTemplate(options): TemplateFunction {
+    _resolveBaseItemTemplate(): TemplateFunction {
         return TableItem;
     },
 
-    _getGridViewWrapperClasses(options): string {
+    _getGridViewWrapperClasses(options: IGridOptions): string {
         const classes = GridViewTable.superclass._getGridViewWrapperClasses.apply(this, arguments);
         return `${classes} controls-Grid__Wrapper_table-layout`;
     },
 
-    _getGridViewClasses(options): string {
+    _getGridViewClasses(options: IGridOptions): string {
         const classes = GridViewTable.superclass._getGridViewClasses.apply(this, arguments);
 
         // При горизонтальном скролле ЕДИНСТВЕННО ВЕРНОЕ значение свойства table-layout - это auto.
@@ -49,7 +53,8 @@ const GridViewTable = GridView.extend({
         // позиционирования абсолютных частей элементов(actions, marker).
         // Не поддерживается автовысота, она считается только когда действительно поменялась высота стилями.
         window.requestAnimationFrame(() => {
-            this._children.redrawWrapperStyles.innerHTML = '.controls-Grid_table-layout .controls-Grid__row-cell__content { flex-basis: 100% }';
+            this._children.redrawWrapperStyles.innerHTML
+                = '.controls-Grid_table-layout .controls-Grid__row-cell__content { flex-basis: 100% }';
             window.requestAnimationFrame(() => {
                 this._children.redrawWrapperStyles.innerHTML = '';
             });

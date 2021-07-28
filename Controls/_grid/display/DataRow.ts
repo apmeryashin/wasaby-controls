@@ -9,15 +9,17 @@ import { IDisplaySearchValue, IDisplaySearchValueOptions } from './interface/IDi
 import { IColumn, TColumns } from './interface/IColumn';
 import { Model } from 'Types/entity';
 
-export interface IOptions<T> extends IRowOptions<T>, IDisplaySearchValueOptions {
-}
+export interface IOptions<T extends Model = Model> extends IRowOptions<T>, IDisplaySearchValueOptions {}
 
-export default class DataRow<T extends Model> extends Row<T> implements
+/**
+ * Строка таблицы, которая отображает данные из RecordSet-а
+ */
+export default class DataRow<T extends Model = Model> extends Row<T> implements
     IMarkable,
     ILadderSupport,
     ISelectableItem,
     IDisplaySearchValue {
-    protected _$columnItems: Array<DataCell<T, this>>;
+    protected _$columnItems: DataCell[];
     protected _$searchValue: string;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;

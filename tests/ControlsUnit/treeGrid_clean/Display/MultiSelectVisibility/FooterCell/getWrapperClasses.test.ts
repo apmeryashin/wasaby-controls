@@ -29,7 +29,7 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
             column: {}
         });
         assert.match(
-            footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+            footerCell.getWrapperClasses('mockedBG', false),
             createRegExpForTestMatchClass('controls-TreeGridView__expanderPadding'));
     });
 
@@ -59,7 +59,7 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
         });
 
         assert.notMatch(
-            footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+            footerCell.getWrapperClasses('mockedBG',  false),
             createRegExpForTestMatchClass('controls-TreeGridView__expanderPadding'));
     });
 
@@ -89,7 +89,7 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
         });
 
         assert.match(
-            footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+            footerCell.getWrapperClasses('mockedBG',  false),
             createRegExpForTestMatchClass('controls-TreeGridView__expanderPadding'));
     });
 

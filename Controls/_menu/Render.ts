@@ -120,7 +120,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     protected _getClassList(treeItem: TreeItem<Model>): string {
         const item = treeItem.getContents();
-        let classes = treeItem.getContentClasses(this._options.theme);
+        let classes = treeItem.getContentClasses();
 
         if (item && item.get) {
             const readOnly = item.get('readOnly');

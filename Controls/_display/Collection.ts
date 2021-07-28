@@ -35,7 +35,7 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
-import {INavigationOptionValue} from 'Controls/interface';
+import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {TRoundBorder} from "Controls/_display/interface/ICollection";
 import {Footer} from 'Controls/_display/Footer';
 
@@ -115,8 +115,11 @@ export interface ISerializableState<S, T> extends IDefaultSerializableState {
     _composer: ItemsStrategyComposer<S, T>;
 }
 
-export interface IOptions<S, T> extends IAbstractOptions<S> {
-    filter?: FilterFunction<S> | Array<FilterFunction<S>>;
+export interface IOptions<
+    S extends Model = Model,
+    T extends CollectionItem = CollectionItem
+> extends IAbstractOptions<S> {
+    filter?: FilterFunction<S, T> | Array<FilterFunction<S, T>>;
     group?: GroupFunction<S, T>;
     sort?: SortFunction<S, T> | Array<SortFunction<S, T>>;
     keyProperty?: string;
@@ -142,7 +145,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     importantItemProperties?: string[];
     itemActionsProperty?: string;
     itemActionsPosition?: TItemActionsPosition;
-    navigation?: INavigationOptionValue;
+    navigation?: INavigationOptionValue<INavigationSourceConfig>;
     multiSelectAccessibilityProperty?: string;
     markerPosition?: string;
     hiddenGroupPosition?: IHiddenGroupPosition;
@@ -3296,7 +3299,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return new Footer({
             owner: this,
             sticky: options.stickyFooter,
-            contentTemplate: options.footerTemplate
+            contentTemplate: options.footerTemplate,
+            style: this.getStyle(),
+            theme: this.getTheme()
         });
     }
     //endregion
