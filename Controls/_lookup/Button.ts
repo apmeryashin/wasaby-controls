@@ -38,16 +38,16 @@ export interface ISelectorButtonOptions extends IControlOptions, IValidationStat
  *
  * @class Controls/_lookup/Button
  * @extends UI/Base:Control
- * @mixes Controls/interface:ILookup
- * @mixes Controls/interface:ICaption
- * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface:ISelectorDialog
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:IMultiSelectable
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:ITextValue
+ * @implements Controls/interface:ILookup
+ * @implements Controls/interface:ICaption
+ * @implements Controls/interface/ISelectedCollection
+ * @implements Controls/interface:ISelectorDialog
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IMultiSelectable
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:ITextValue
  *
  * @public
  * @author Герасимов А.М.
@@ -58,13 +58,13 @@ export interface ISelectorButtonOptions extends IControlOptions, IValidationStat
  *
  * @class Controls/_lookup/Button
  * @extends UI/Base:Control
- * @mixes Controls/interface:ICaption
- * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface:ITextValue
- * @mixes Controls/interface:ISelectorDialog
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:IMultiSelectable
- * @mixes Controls/interface:ISource
+ * @implements Controls/interface:ICaption
+ * @implements Controls/interface/ISelectedCollection
+ * @implements Controls/interface:ITextValue
+ * @implements Controls/interface:ISelectorDialog
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IMultiSelectable
+ * @implements Controls/interface:ISource
  *
  * @public
  * @author Герасимов А.М.

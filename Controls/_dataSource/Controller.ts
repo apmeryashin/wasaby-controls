@@ -160,10 +160,10 @@ const OPTIONS_FOR_UPDATE_AFTER_LOAD = [
  * Поддерживает работу с навигацией и фильтрацией
  * Подготавливает параметры для запроса
  * @class Controls/_dataSource/Controller
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:ISelectFields
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:ISelectFields
  * @example
  * <pre class="brush: js>
  *      import {NewSourceController} from 'Controls/dataSource';

@@ -18,8 +18,8 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * Контрол представляет собой набор из нескольких взаимосвязанных между собой кнопок. Используется, когда необходимо выбрать несколько параметров.
  * @class Controls/_toggle/Chips
  * @extends UI/Base:Control
- * @mixes Controls/interface:IMultiSelectable
- * @mixes Controls/interface:IItems
+ * @implements Controls/interface:IMultiSelectable
+ * @implements Controls/interface:IItems
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Chips/Index
