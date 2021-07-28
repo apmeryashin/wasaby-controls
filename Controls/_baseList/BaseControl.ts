@@ -5435,6 +5435,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             return;
         }
 
+        if (this._onLastMouseUpWasOpenUrl) {
+            // Если на mouseUp, предшествующий этому клику, сработало открытие ссылки, то события клика быть не должно.
+            this._onLastMouseUpWasOpenUrl = false;
+            e.stopPropagation();
+            return;
+        }
+
         const canEditByClick = !this._options.readOnly && this._getEditingConfig().editOnClick && (
             // В процессе перехода на новые коллекции был неспециально изменен способ навешивания классов
             // для разделителей строки и колонок. Классы должны вешаться в шаблоне колонки, т.к. на этом
@@ -6131,6 +6138,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             event.stopPropagation();
             return;
         }
+
+        // Если есть ссылка для открытия, то не должен срабоать авто-скролл по нажатию на колесико.
+        // Так же работают нативные сслыки.
+        if (domEvent.nativeEvent.button === 1) {
+            const url = itemData.item.get(this._options.urlProperty);
+            if (url) {
+                domEvent.preventDefault();
+            }
+        }
+
         let hasDragScrolling = false;
         const contents = _private.getPlainItemContents(itemData);
         this._mouseDownItemKey = contents.getKey();
@@ -6184,6 +6201,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 const url = itemData.item.get(this._options.urlProperty);
                 if (url) {
                     window.open(url);
+                    this._onLastMouseUpWasOpenUrl = true;
                 }
             }
 

@@ -7134,7 +7134,7 @@ define([
             });
 
             it('should not mark item. Marked key changes only on mouse up', function() {
-               const originalEvent = { target: { closest: () => null } };
+               const originalEvent = { target: { closest: () => null }, nativeEvent: {} };
                const event = { target: { closest: () => null }, stopPropagation: () => {} };
 
                baseControl._itemMouseDown(event, baseControl.getViewModel().at(2), originalEvent);
