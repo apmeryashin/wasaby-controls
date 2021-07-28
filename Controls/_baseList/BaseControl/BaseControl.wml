@@ -158,7 +158,7 @@
                 on:enableVirtualNavigation="_stopBubblingEvent()"
                 on:disableVirtualNavigation="_stopBubblingEvent()"
                 on:restoreScrollPosition="_stopBubblingEvent()"
-                on:loadMore="_onClickMoreButton()"
+                on:loadMore="_onloadMore()"
                 on:toggleHorizontalScroll="_onToggleHorizontalScroll()"
         >
             <ws:itemActionsTemplate>

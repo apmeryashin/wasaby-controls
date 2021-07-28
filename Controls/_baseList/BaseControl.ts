@@ -6209,6 +6209,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.startDragNDrop(this, this._savedItemMouseDownEventArgs.domEvent, this._savedItemMouseDownEventArgs.itemData);
     }
 
+    protected _onloadMore(): void {
+        _private.loadToDirectionIfNeed(this, 'down', this._options.filter);
+    }
+
     protected _onNavigationButtonClick(e: SyntheticEvent): void {
         if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
             const view = this._options.navigation?.view;
