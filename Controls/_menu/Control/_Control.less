@@ -243,7 +243,14 @@
 
    position: absolute;
    top: calc((var(--item_height_menu) - var(--hierarchy_icon-size_menu)) / 2);
+}
+
+.controls-Menu__arrow_right {
    right: var(--hierarchy_icon_offset-right_menu);
+}
+
+.controls-Menu__arrow_left {
+   left: var(--hierarchy_icon_offset-right_menu);
 }
 
 .controls-Menu__arrow_readOnly {
@@ -407,6 +414,15 @@
 
 .controls-ListView__item-rightPadding_menu-expander {
    padding-right: calc(var(--hierarchy_icon_offset-right_menu) + var(--hierarchy_icon-size_menu) + var(--hierarchy_icon_offset-left_menu));
+}
+
+.controls-ListView__item-leftPadding_menu-expander {
+   padding-left: calc(var(--hierarchy_icon_offset-right_menu) + var(--hierarchy_icon-size_menu) + var(--hierarchy_icon_offset-left_menu));
+}
+
+.controls-Menu__content_align_left {
+   width: 100%;
+   justify-content: space-between;
 }
 
 @padding-right_menu-close: calc(var(--close-button_offset-left_sticky) + var(--width_closeButton_link) + var(--close-button_offset-right_sticky));
