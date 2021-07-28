@@ -26,12 +26,12 @@ import 'css!Controls/treeGrid';
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface/ITreeGridItemTemplate
  * @implements Controls/interface:IDraggable
- * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/list:IList
- * @mixes Controls/list:IClickableView
- * @mixes Controls/grid:IPropStorage
+ * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IList
+ * @implements Controls/list:IClickableView
+ * @implements Controls/grid:IPropStorage
  * @implements Controls/tree:ITreeControl
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/itemActions:IItemActions
  *
  * @public
  * @author Авраменко А.С.
