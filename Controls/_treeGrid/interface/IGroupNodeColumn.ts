@@ -10,7 +10,7 @@ import {IBaseGroupTemplate} from 'Controls/baseList';
  */
 export interface IGroupNodeColumn extends IColumn {
     /**
-     * Конфигурация шаблона группы для текущей колонки
+     * @cfg {Controls/list:IBaseGroupTemplate} Конфигурация шаблона группы для текущей колонки
      * @description
      * Если конфигурация указана, то для узлов, у которых в {@link Controls/_treeGrid/interface/ITreeGrid#nodeTypeProperty nodeTypeProperty} содержится значение 'group',
      * содержимое колонки будет выведено с использованием шаблона группы.
@@ -54,4 +54,10 @@ export interface IGroupNodeColumn extends IColumn {
      * </pre>
      */
     groupNodeConfig?: IBaseGroupTemplate;
+
+    /**
+     * @cfg Шаблон отображения ячейки. Не влияет на отображение группы.
+     * @name {UI/Base:TemplateFunction|string} template
+     * @see Controls/grid:IColumn
+     */
 }
