@@ -6177,8 +6177,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._mouseDownItemKey === key) {
-            if (domEvent.nativeEvent.button === 1) {
-                const url = itemData.item.get('url');
+            if (domEvent.nativeEvent.button === 1 ||
+                domEvent.nativeEvent.button === 0 && (
+                    detection.isMac && domEvent.nativeEvent.metaKey || !detection.isMac && domEvent.nativeEvent.ctrlKey
+                )) {
+                const url = itemData.item.get(this._options.urlProperty);
                 if (url) {
                     window.open(url);
                 }
@@ -7305,6 +7308,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             itemActionsVisibility: 'onhover',
             searchValue: '',
             moreFontColorStyle: 'listMore',
+            urlProperty: 'url',
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=12b8b9b1-b9d2-4fda-85d6-f871ecc5474c
             stickyHeader: true,
