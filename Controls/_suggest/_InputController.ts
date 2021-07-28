@@ -87,11 +87,11 @@ type TSuggestDirection = 'up' | 'down';
  *
  * @class Controls/_suggest/_InputController
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/suggest:ISuggest
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:INavigation
  *
  * @private
  */
@@ -101,11 +101,11 @@ type TSuggestDirection = 'up' | 'down';
  *
  * @class Controls/_suggest/_InputController
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/suggest:ISuggest
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:INavigation
  *
  * @private
  */
@@ -279,7 +279,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             !this._getSourceController().isLoading() && (!this._historyLoad || this._historyLoad.isReady())) {
 
             if (this._options.historyId) {
-               return this._loadHistoryKeys().then(() => this._performLoad(this._options));
+               return this._loadHistoryKeys().then(() => {
+                  if (!this._destroyed) {
+                     return this._performLoad(this._options);
+                  }
+               });
             }
 
             return this._performLoad(this._options).then();
@@ -738,6 +742,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return this._resolveSearch(value);
       }
       return Promise.resolve();
+   }
+
+   protected _inputCompletedHandler(event: SyntheticEvent, value: string): void {
+      this._notify('inputCompleted', [value]);
    }
 
    private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {

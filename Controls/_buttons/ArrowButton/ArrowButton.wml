@@ -2,5 +2,18 @@
             controls-ArrowButton_inlineHeight-{{_options.inlineHeight}}
             controls-ArrowButton-{{_options.readOnly? 'readOnly' : 'active'}}"
      on:click="_clickHandler()">
-    <span class="{{_getIconClass()}}"></span>
+    <ws:if data="{{_options.direction === 'up' || _options.direction === 'down'}}">
+        <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg"
+             class="controls-ArrowButton_icon controls-icon_size-{{ _options.iconSize }}
+                    controls-ArrowButton_icon_direction-{{_options.direction}}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 3.5L15 9H13L8 5.3L3 9H1L8 3.5Z"/>
+        </svg>
+    </ws:if>
+    <ws:else>
+        <svg viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg"
+             class="controls-ArrowButton_icon controls-icon_size-{{ _options.iconSize }}
+                    controls-ArrowButton_icon_direction-{{_options.direction}}">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.75 7.75L5.25 0.75V2.75L8.95 7.75L5.25 12.75V14.75L10.75 7.75Z"/>
+        </svg>
+    </ws:else>
 </div>

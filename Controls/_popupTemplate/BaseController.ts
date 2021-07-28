@@ -9,7 +9,7 @@ import * as Deferred from 'Core/Deferred';
 import * as cMerge from 'Core/core-merge';
 import * as cInstance from 'Core/core-instance';
 
-export const RIGHT_PANEL_WIDTH = 54; // --width_stack-right_panel + borders
+export const RIGHT_PANEL_WIDTH = ManagerController.hasRightPanel() ? 54 : 0; // --width_stack-right_panel + borders
 
 let _fakeDiv: HTMLElement;
 /**

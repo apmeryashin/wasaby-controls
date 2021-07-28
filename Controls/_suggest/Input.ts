@@ -15,20 +15,20 @@ import 'css!Controls/suggest';
  * @class Controls/_suggest/Input
  * @extends UI/Base:Control
  * @mixes Controls/suggest:ISuggest
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface/IBorderStyle
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:IValidationStatus
- * @mixes Controls/interface:IContrastBackground
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface/IBorderStyle
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IValidationStatus
+ * @implements Controls/interface:IContrastBackground
  * @mixes Controls/input:ITag
  * @mixes Controls/input:IBase
- * @mixes Controls/interface:IInputPlaceholder
+ * @implements Controls/interface:IInputPlaceholder
  * @mixes Controls/input:IText
  * @mixes Controls/input:IValue
  * @mixes Controls/input:IFieldTemplate
@@ -46,10 +46,10 @@ import 'css!Controls/suggest';
  * @class Controls/_suggest/Input
  * @extends UI/Base:Control
  * @mixes Controls/suggest:ISuggest
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
  * @mixes Controls/input:IBase
  * @mixes Controls/input:IText
  *
@@ -87,10 +87,6 @@ var Suggest = Control.extend({
 
    _changeValueHandler: function(event, value) {
       this._notify('valueChanged', [value]);
-   },
-
-   _inputCompletedHandler: function(event, value) {
-      this._notify('inputCompleted', [value]);
    },
 
    _choose: function(event, item) {

@@ -42,17 +42,17 @@ const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
 /**
  * Контрол меню.
  * @public
- * @mixes Controls/interface:IIconSize
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/menu:IMenuControl
  * @mixes Controls/menu:IMenuBase
  * @mixes Controls/dropdown:IGrouped
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface:ISelectorDialog
- * @mixes Controls/interface:IBackgroundStyle
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface:ISelectorDialog
+ * @implements Controls/interface:IBackgroundStyle
  *
  * @demo Controls-demo/Menu/Control/Source/Index
  *

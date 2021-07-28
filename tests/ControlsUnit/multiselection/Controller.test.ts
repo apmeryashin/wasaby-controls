@@ -997,4 +997,13 @@ describe('Controls/_multiselection/Controller', () => {
          assert.isFalse(tree.getItemBySourceKey(2).isSelected());
       });
    });
+
+   describe('destroy', () => {
+      it('should clear state on model', () => {
+         controller.setSelection({selected: [1], excluded: []});
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         controller.destroy();
+         assert.isFalse(model.getItemBySourceKey(1).isSelected());
+      });
+   })
 });

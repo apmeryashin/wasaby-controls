@@ -31,7 +31,8 @@ import {
     INavigationSourceConfig,
     IBaseSourceConfig,
     Direction,
-    ISelectionObject
+    ISelectionObject,
+    TNavigationButtonView
 } from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 
@@ -96,7 +97,7 @@ import {
 } from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_baseList/BaseControl/BaseControl');
-import 'wml!Controls/_baseList/BaseControl/Footer';
+import 'wml!Controls/_baseList/BaseControl/NavigationButton';
 
 import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
@@ -743,7 +744,7 @@ const _private = {
         // Если подгрузка данных осуществляется кликом по кнопке "Еще..." и есть что загружать, то рисуем эту кнопку
         // всегда кроме случая когда задана группировка и все группы свернуты
         if (_private.isDemandNavigation(self._navigation) && self._hasMoreData(sourceController, 'down')) {
-            self._shouldDrawFooter = (options.groupingKeyCallback || options.groupProperty) ?
+            self._shouldDrawNavigationButton = (options.groupingKeyCallback || options.groupProperty) ?
                 !self._listViewModel.isAllGroupsCollapsed()
                 : true;
         } else if (
@@ -751,13 +752,12 @@ const _private = {
                                    self._items,
                                    self._hasMoreData(sourceController, 'down'))
         ) {
-            self._shouldDrawCut = true;
+            self._shouldDrawNavigationButton = true;
         } else {
-            self._shouldDrawFooter = false;
-            self._shouldDrawCut = false;
+            self._shouldDrawNavigationButton = false;
         }
 
-        if (self._shouldDrawFooter) {
+        if (self._shouldDrawNavigationButton && _private.isDemandNavigation(self._navigation)) {
             let loadedDataCount = 0;
 
             if (self._listViewModel) {
@@ -774,7 +774,7 @@ const _private = {
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
                 if (self._loadMoreCaption === 0) {
-                    self._shouldDrawFooter = false;
+                    self._shouldDrawNavigationButton = false;
                 }
             } else {
                 self._loadMoreCaption = '...';
@@ -1739,12 +1739,12 @@ const _private = {
                     if (itemsCount !== moreMetaCount) {
                         _private.prepareFooter(self, self._options, self._sourceController);
                     } else {
-                        self._shouldDrawFooter = false;
+                        self._shouldDrawNavigationButton = false;
                     }
                 } else if (moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
                 } else {
-                    self._shouldDrawFooter = false;
+                    self._shouldDrawNavigationButton = false;
                 }
             }
 
@@ -2299,7 +2299,7 @@ const _private = {
             options.itemActionsPosition === 'outside' &&
             !footer &&
             (!results || listViewModel?.getResultsPosition() !== 'bottom') &&
-            !self._shouldDrawFooter
+            !(self._shouldDrawNavigationButton && _private.isDemandNavigation(options.navigation))
         );
     },
 
@@ -3399,17 +3399,17 @@ const _private = {
  * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
  * @class Controls/_list/BaseControl
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IGroupedList
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/list:IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @mixes Controls/list:IList
  * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:ISorting
+ * @implements Controls/interface:ISorting
  * @mixes Controls/list:IMovableList
  * @mixes Controls/marker:IMarkerList
  * @mixes Controls/list:IMovableList
@@ -3463,11 +3463,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _items: RecordSet;
 
     _loadMoreCaption = null;
-    _shouldDrawFooter = false;
-    _shouldDrawCut = false;
+    _shouldDrawNavigationButton = false;
 
     _cutExpanded = false;
-    _cutSize = 'm';
 
     _loader = null;
     _loadingState = null;
@@ -6176,8 +6174,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._mouseDownItemKey === key) {
-            if (domEvent.nativeEvent.button === 1) {
-                const url = itemData.item.get('url');
+            if (domEvent.nativeEvent.button === 1 ||
+                domEvent.nativeEvent.button === 0 && (
+                    detection.isMac && domEvent.nativeEvent.metaKey || !detection.isMac && domEvent.nativeEvent.ctrlKey
+                )) {
+                const url = itemData.item.get(this._options.urlProperty);
                 if (url) {
                     window.open(url);
                 }
@@ -6208,13 +6209,31 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.startDragNDrop(this, this._savedItemMouseDownEventArgs.domEvent, this._savedItemMouseDownEventArgs.itemData);
     }
 
-    protected _onClickMoreButton(e): void {
-        _private.loadToDirectionIfNeed(this, 'down');
+    protected _onloadMore(e: SyntheticEvent, dispItem?: CollectionItem): void {
+        _private.loadToDirectionIfNeed(this, 'down', this._options.filter);
+    }
+
+    protected _resolveNavigationButtonView(): TNavigationButtonView {
+        const navigation = this._options.navigation;
+        const view = navigation?.view;
+        const buttonView = navigation?.viewConfig?.buttonView;
+        return buttonView || view === 'cut' ? 'separator' : 'link';
+    }
+
+    protected _onNavigationButtonClick(e: SyntheticEvent): void {
+        if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
+            const view = this._options.navigation?.view;
+            if (view === 'demand') {
+                _private.loadToDirectionIfNeed(this, 'down', this._options.filter);
+            } else if (view === 'cut') {
+                this._toggleCutClick();
+            }
+        }
     }
 
     // region Cut
 
-    protected _onCutClick() {
+    private _toggleCutClick() {
         const newExpanded = !this._cutExpanded;
         this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
     }
@@ -7311,6 +7330,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             itemActionsVisibility: 'onhover',
             searchValue: '',
             moreFontColorStyle: 'listMore',
+            urlProperty: 'url',
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=12b8b9b1-b9d2-4fda-85d6-f871ecc5474c
             stickyHeader: true,

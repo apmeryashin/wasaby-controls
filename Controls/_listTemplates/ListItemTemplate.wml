@@ -29,6 +29,7 @@
                      imagePosition="{{_options.imagePosition}}"
                      imageEffect="{{_options.imageEffect}}"
                      afterImageTemplate="{{_options.afterImageTemplate}}"
+                     imageFit="{{_options.imageFit}}"
                      imageGradientColor="{{_options.imageGradientColor}}"
                      fallbackImage="{{_options.fallbackImage}}"
                      imageViewMode="{{_options.imageViewMode}}"/>
@@ -88,6 +89,7 @@
                   isEditing="{{item.isEditing()}}"
                   imageProperty="{{_options.imageProperty}}"
                   imagePosition="{{_options.imagePosition}}"
+                  imageFit="{{_options.imageFit}}"
                   imageGradientColor="{{_options.imageGradientColor}}"
                   afterImageTemplate="{{_options.afterImageTemplate}}"
                   imageViewMode="{{_options.imageViewMode}}"/>

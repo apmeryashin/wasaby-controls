@@ -15,7 +15,7 @@ interface ITextInputOptions extends IBaseTextInputOptions, IFieldTemplateOptions
  * @extends Controls/input:Base
  *
  * @mixes Controls/input:IText
- * @mixes Controls/interface:IInputPlaceholder
+ * @implements Controls/interface:IInputPlaceholder
  * @mixes Controls/input:IFieldTemplate
  *
  * @public
@@ -70,6 +70,37 @@ Object.defineProperty(Text, 'defaultProps', {
  *         });
  *
  *         this._children.form.submit();
+ *     }
+ * }
+ * </pre>
+ */
+
+/**
+ * @name Controls/_input/Text#valueChanged
+ * @event
+ * @example
+ * Контрол ввода текста с информационной подсказкой. Подсказка содержит информацию о сложности логина.
+ * <pre class="brush: html">
+ * <Controls.input:Text name="login" on:valueChanged="_validateLogin()"/>
+ * </pre>
+ * <pre class="brush: js">
+ * export class InfoLogin extends Control<IControlOptions, void> {
+ *     private _validateLogin(event, value) {
+ *         let lengthLogin: number = value.length;
+ *         let cfg = {
+ *             target: this._children.login,
+ *             targetSide: 'top',
+ *             alignment: 'end',
+ *             message: null
+ *         }
+ *
+ *         if (lengthLogin < 6) {
+ *             cfg.message = 'Длина логина должна быть больше 5 символов';
+ *         }
+ *
+ *         this._notify('openInfoBox', [cfg], {
+ *             bubbling: true
+ *         });
  *     }
  * }
  * </pre>

@@ -46,8 +46,22 @@ interface IItemsContainerPadding {
 
 export type TCaptionPosition = 'left'|'top';
 
+/**
+ * Интерфейс для опций {@link Controls/propertyGrid:IPropertyGrid#editorColumnOptions editorColumnOptions} и {@link Controls/propertyGrid:IPropertyGrid#captionColumnOptions captionColumnOptions}.
+ * @interface Controls/property:IPropertyGridColumn
+ * @public
+ * @author Герасимов А.М.
+ */
 export interface IPropertyGridColumnOptions {
+    /**
+     * @name Controls/property:IPropertyGridColumn#width
+     * @cfg Ширина.
+     */
     width: string;
+    /**
+     * @name Controls/property:IPropertyGridColumn#compatibleWidth
+     * @cfg Ширина в браузерах, не поддерживающих {@link https://developer.mozilla.org/ru/docs/web/css/css_grid_layout CSS Grid Layout}.
+     */
     compatibleWidth: string;
 }
 export interface IPropertyGridOptions extends IControlOptions {
@@ -138,6 +152,7 @@ export interface IPropertyGridOptions extends IControlOptions {
      * @demo Controls-demo/PropertyGridNew/Source/Index
      */
     source: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
+    typeDescription?: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#groupTemplate
      * @cfg {String|TemplateFunction} Устанавливает шаблон отображения заголовка группы.
@@ -241,12 +256,12 @@ export interface IPropertyGridOptions extends IControlOptions {
      */
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     /**
-     * @cfg Конфигурации ширины колонки редактора.
+     * @cfg {Controls/propertyGrid:IPropertyGridColumn} Конфигурации ширины колонки редактора.
      * @demo Controls-demo/PropertyGridNew/EditorColumnOptions/Index
      */
     editorColumnOptions?: IPropertyGridColumnOptions;
     /**
-     * @cfg Конфигурации ширины колонки заголовка редактора.
+     * @cfg {Controls/propertyGrid:IPropertyGridColumn} Конфигурации ширины колонки заголовка редактора.
      * @demo Controls-demo/PropertyGridNew/CaptionColumnOptions/Index
      */
     captionColumnOptions?: IPropertyGridColumnOptions;

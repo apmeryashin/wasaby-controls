@@ -841,6 +841,29 @@ describe('Controls/browser:Browser', () => {
                     await browser._beforeUpdate(options);
                     assert.ok(browser._getSourceController().getState().source === newSource);
                 });
+
+                it('sourceController on listsOptions', async () => {
+                    const browserOptions = getBrowserOptions();
+                    const sourceController = new NewSourceController({
+                        source: browserOptions.source
+                    });
+                    let listsOptions = [
+                        {
+                            id: 'list',
+                            ...browserOptions,
+                            sourceController
+                        }
+                    ];
+                    let options = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+
+                    assert.ok(browser._getSourceController() === sourceController);
+                });
             });
         });
 

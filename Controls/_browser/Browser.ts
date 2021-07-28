@@ -84,14 +84,14 @@ type TErrbackConfig = dataSourceError.ViewConfig & { error: Error };
  * @author Герасимов А.М.
  * @mixes Controls/browser:IBrowser
  * @mixes Controls/filter:IPrefetch
- * @mixes Controls/interface:IFilter
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISelectFields
- * @mixes Controls/interface/IHierarchySearch
+ * @implements Controls/interface:IFilter
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISelectFields
+ * @implements Controls/interface/IHierarchySearch
  *
  * @demo Controls-demo/Search/FlatList/Index
  */
@@ -768,7 +768,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 historyItems: receivedState?.[index]?.historyItems || listOptions.historyItems,
                 source: receivedState ? this._getOriginalSource(listOptions as IBrowserOptions) : listOptions.source,
                 searchStartCallback: this._searchStartCallback,
-                sourceController: Browser._getSourceControllerForDataLoader(options)
+                sourceController: Browser._getSourceControllerForDataLoader(options, listOptions)
             };
         });
 
@@ -1009,7 +1009,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private static _getSourceControllerForDataLoader(
-        {sourceController, sourceControllerId, _dataOptionsValue}: IBrowserOptions
+        {sourceController, sourceControllerId, _dataOptionsValue}: IBrowserOptions,
+        listOptions?: IListConfiguration
     ): SourceController|void {
         let browserSourceController;
 
@@ -1023,6 +1024,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             } else if (_dataOptionsValue?.sourceController) {
                 browserSourceController = _dataOptionsValue.sourceController;
             }
+        }
+
+        if (!browserSourceController && listOptions) {
+            browserSourceController = listOptions.sourceController;
         }
 
         return browserSourceController;

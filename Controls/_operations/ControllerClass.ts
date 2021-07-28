@@ -45,8 +45,8 @@ export default class OperationsController {
 
     constructor(options) {
         this._selectionViewModeChangedCallback = options.selectionViewModeChangedCallback;
-        this._listSelectedKeys = options.selectedKeys || [];
-        this._listExcludedKeys = options.excludedKeys || [];
+        this._listSelectedKeys = options.selectedKeys?.slice() || [];
+        this._listExcludedKeys = options.excludedKeys?.slice() || [];
         this._options = options;
     }
 
@@ -117,8 +117,10 @@ export default class OperationsController {
                        deleted: TKey[],
                        listId: string): TKey[] {
         this._selectedKeysByList[listId] = values.slice();
+        const result = this._updateListKeys(this._listSelectedKeys, added, deleted);
+        this._listSelectedKeys = result;
 
-        return this._updateListKeys(this._listSelectedKeys, added, deleted);
+        return result;
     }
 
     updateExcludedKeys(values: TKey[],
@@ -126,8 +128,10 @@ export default class OperationsController {
                        deleted: TKey[],
                        listId: string): TKey[] {
         this._excludedKeysByList[listId] = values.slice();
+        const result = this._updateListKeys(this._listExcludedKeys, added, deleted);
+        this._listExcludedKeys = result;
 
-        return this._updateListKeys(this._listExcludedKeys, added, deleted);
+        return result;
     }
 
     updateSelectedKeysCount(count: number, allSelected: boolean, listId: string): {
@@ -166,7 +170,7 @@ export default class OperationsController {
     }
 
     private _updateListKeys(listKeys: TKey[], added: TKey[], deleted: TKey[]): TKey[] {
-        let result = listKeys;
+        let result = listKeys.slice();
 
         if (added.length && added[0] !== undefined) {
             this._updateKeys(result, added, true);
@@ -180,6 +184,7 @@ export default class OperationsController {
         if (deleted.length && deleted[0] === null) {
             result = [];
         }
+        this._listSelectedKeys = result;
         return result;
     }
 

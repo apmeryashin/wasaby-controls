@@ -13,6 +13,11 @@
    }
 }
 
+// У первой ячейки нет границы слева по стандарту, следовательно ничего не нужно перекрывать
+.controls-Grid__row-cell_editing-mode-single-cell_first::after {
+   left: 0;
+}
+
 // У последней ячейки нет границы справа по стандарту, следовательно ничего не нужно перекрывать
 .controls-Grid__row-cell_editing-mode-single-cell_last::after {
    right: 0;

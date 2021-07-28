@@ -124,7 +124,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * </pre>
  * @remark
  * Подробнее о настройка контрола без элементов читайте в соответствующих статьях для:
- * 
+ *
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/list/empty/ плоского списка}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty/ таблицы}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/empty/ дерева}
@@ -161,7 +161,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @demo Controls-demo/list_new/FooterTemplate/Index
  * @remark
  * Подробнее о настройка подвала читайте в соответствующих статьях для:
- * 
+ *
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ плоского списка}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/grid/footer/ таблицы}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/footer/ дерева}
@@ -749,6 +749,12 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @name Controls/_list/interface/IList#roundBorder
  * @cfg {Controls/_list/interface/IList/TRoundBorder.typedef} Cкругление углов элемента списка.
  * В настоящий момент поддерживается для плоского списка поддерживается только для шаблона Controls/listTemplates:ListItemTemplate
+ */
+
+/**
+ * @name Controls/_list/interface/IList#urlProperty
+ * @cfg {String} Имя поля записи, в котором содержится ссылка для открытия в новой вкладке.
+ * @default url
  */
 
 /**
