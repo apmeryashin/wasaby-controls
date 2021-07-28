@@ -1,13 +1,12 @@
 <ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}">
    <ws:contentTemplate>
       <ws:if data="{{item.contents.nodeType === 'group'}}">
-         <Controls.scroll:IntersectionObserverContainer
+         <Controls.stickyEnvironment:DataPinContainer
             data="{{item.contents}}"
-            threshold="{{threshold}}"
             rootMargin="{{rootMargin}}"
          >
             <b>{{ item.contents.name }}</b>
-         </Controls.scroll:IntersectionObserverContainer>
+         </Controls.stickyEnvironment:DataPinContainer>
       </ws:if>
       <ws:else>
          {{item.contents.name}}

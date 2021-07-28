@@ -1,5 +1,0 @@
-<ws:partial template="Controls/grid:HeaderContent" scope="{{_options}}">
-   <ws:contentTemplate>
-      {{(pinnedRecord ? pinnedRecord.get(field)) || defaultCaption}}
-   </ws:contentTemplate>
-</ws:partial>

@@ -205,6 +205,28 @@ describe('Controls/_display/Collection', () => {
 
             display.destroy();
         });
+
+        it('should use stickyHeader and stickyGroup from options', () => {
+            let collection: CollectionDisplay;
+
+            // Создаем коллекцию с зафиксированным заголовком и не указываем фиксировать или нет заголовки групп
+            // Заголовки групп должны так же стать зафиксированными
+            collection = new CollectionDisplay({
+                collection: new List({items: []}),
+                stickyHeader: true
+            });
+            assert.isTrue(collection.isStickyGroup());
+            assert.isTrue(collection.isStickyHeader());
+
+            // Создаем коллекцию с зафиксированным заголовком и говорим что фиксировать заголовки групп не надо
+            collection = new CollectionDisplay({
+                collection: new List({items: []}),
+                stickyHeader: true,
+                stickyGroup: false
+            });
+            assert.isFalse(collection.isStickyGroup());
+            assert.isTrue(collection.isStickyHeader());
+        });
     });
 
     describe('.getEnumerator()', () => {
