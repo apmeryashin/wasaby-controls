@@ -1,4 +1,3 @@
-import {afterEach, beforeEach, describe, it} from 'mocha';
 import {assert} from 'chai';
 import {restore, stub} from 'sinon';
 import Marker, {AUTO_ALIGN, IMarkerElement} from 'Controls/_tabs/Buttons/Marker';
