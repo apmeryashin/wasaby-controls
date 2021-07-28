@@ -1261,22 +1261,22 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @extends UI/Base:Control
  * @implements Controls/interface:IErrorController
  * @implements Controls/list:IReloadableList
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/ITreeGridItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
  * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface/IGroupedList
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/list:IList
  * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:IHierarchy
+ * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
  * @mixes Controls/explorer:IExplorer
- * @mixes Controls/interface:IDraggable
+ * @implements Controls/interface:IDraggable
  * @mixes Controls/tile:ITile
  * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/interface/IGroupedGrid
+ * @implements Controls/interface/IGroupedGrid
  * @mixes Controls/grid:IGridControl
  * @mixes Controls/list:IClickableView
  * @mixes Controls/list:IMovableList
@@ -1298,22 +1298,22 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @extends UI/Base:Control
  * @implements Controls/interface:IErrorController
  * @implements Controls/list:IReloadableList
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/ITreeGridItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
  * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface/IGroupedList
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/list:IList
  * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:IHierarchy
+ * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
  * @mixes Controls/explorer:IExplorer
- * @mixes Controls/interface:IDraggable
+ * @implements Controls/interface:IDraggable
  * @mixes Controls/tile:ITile
  * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/interface/IGroupedGrid
+ * @implements Controls/interface/IGroupedGrid
  * @mixes Controls/grid:IGridControl
  * @mixes Controls/list:IClickableView
  * @mixes Controls/list:IMovableList

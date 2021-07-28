@@ -68,7 +68,7 @@ var _private = {
  *
  * @class Controls/_list/Remover
  * @extends Controls/_list/BaseAction
- * @mixes Controls/interface/IRemovable
+ * @implements Controls/interface/IRemovable
  * @deprecated Класс устарел и будет удалён. Используйте методы интерфейса {@link Controls/list:IRemovableList}, который по умолчанию подключен в списки.
  *
  * @public
@@ -81,7 +81,7 @@ var _private = {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo examples</a>.
  * @class Controls/_list/Remover
  * @extends Controls/_list/BaseAction
- * @mixes Controls/interface/IRemovable
+ * @implements Controls/interface/IRemovable
  *
  * @public
  * @author Авраменко А.С.
