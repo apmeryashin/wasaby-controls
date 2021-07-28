@@ -24,13 +24,12 @@
             <ws:partial template="{{content}}" item="{{item.getNode()}}" itemData="{{item.getNode()}}"/>
         </ws:if>
         <ws:else>
-            <ws:partial template="Controls/list:MoreButtonTemplate"
+            <ws:partial template="Controls/list:NavigationButtonTemplate"
                         buttonView="{{navigationButtonView}}"
-                        navigationButtonConfig="{{navigationButtonConfig}}"
-                        fontColorStyle="{{ item.getMoreFontColorStyle() }}"
-                        fontSize="xs"
-                        clickableAreaClass="js-controls-TreeGrid__nodeFooter__LoadMoreButton"
-                        buttonClass="controls-TreeGrid__nodeFooterLoadMore"/>
+                        buttonConfig="{{navigationButtonConfig}}"
+                        linkFontColorStyle="{{ item.getMoreFontColorStyle() }}"
+                        linkFontSize="xs"
+                        linkClass="controls-TreeGrid__nodeFooterLoadMore"/>
         </ws:else>
     </div>
 </div>

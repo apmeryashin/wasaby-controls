@@ -29,13 +29,12 @@
                         <ws:partial template="{{column.getTemplate(content)}}" item="{{item.getNode()}}" itemData="{{item.getNode()}}" column="{{ column }}" gridColumn="{{ column }}"/>
                     </ws:if>
                     <ws:else>
-                        <ws:partial template="Controls/list:MoreButtonTemplate"
-                                    navigationButtonView="{{navigationButtonView}}"
-                                    navigationButtonConfig="{{navigationButtonConfig}}"
-                                    fontColorStyle="{{ item.getMoreFontColorStyle() }}"
-                                    fontSize="xs"
-                                    clickableAreaClass="js-controls-TreeGrid__nodeFooter__LoadMoreButton"
-                                    buttonClass="controls-TreeGrid__nodeFooterLoadMore"/>
+                        <ws:partial template="Controls/list:NavigationButtonTemplate"
+                                    buttonView="{{navigationButtonView}}"
+                                    buttonConfig="{{navigationButtonConfig}}"
+                                    linkFontColorStyle="{{ item.getMoreFontColorStyle() }}"
+                                    linkFontSize="xs"
+                                    linkClass="controls-TreeGrid__nodeFooterLoadMore"/>
                     </ws:else>
                 </ws:if>
             </div>
