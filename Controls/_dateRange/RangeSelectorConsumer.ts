@@ -7,19 +7,19 @@ import DateRangeSelectorConsumer from 'Controls/_dateRange/_DateRangeSelectorCon
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели большого выбора периода.
  * @class Controls/_dateRange/RangeSelectorConsumer
  * @extends UI/Base:Control
- * @mixes Controls/interface:IResetValues
+ * @implements Controls/interface:IResetValues
  * @mixes Controls/dateRange:ILinkView
  * @mixes Controls/dateRange:IDateRange
  * @mixes Controls/dateRange:IDatePickerSelectors
  * @mixes Controls/dateRange:IDayTemplate
  * @mixes Controls/dateRange:IDateRangeSelectable
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IUnderline
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IOpenPopup
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IUnderline
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IOpenPopup
  * @mixes Controls/dateRange:ICaptionFormatter
- * @mixes Controls/interface:IDateRangeValidators
+ * @implements Controls/interface:IDateRangeValidators
  * @remark
  * Контрол используется для работы с кнопками dateRange:ArrowButtonConsumer, которые двигают период.
  * Стоит использовать контрол только в связке с dateRange:DateRangeContextProvider.

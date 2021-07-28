@@ -24,15 +24,15 @@ import 'css!Controls/treeGrid';
  * * {@link https://github.com/saby/wasaby-controls/blob/69b02f939005820476d32a184ca50b72f9533076/Controls-default-theme/variables/_treeGrid.less переменные тем оформления treeGrid}
  * * {@link https://github.com/saby/wasaby-controls/blob/69b02f939005820476d32a184ca50b72f9533076/Controls-default-theme/variables/_list.less переменные тем оформления list}
  *
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/interface:IGridControl
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IGroupedGrid
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface/ITreeGridItemTemplate
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/interface:IGridControl
  * @mixes Controls/list:IVirtualScrollConfig
  * @mixes Controls/list:IList
  * @mixes Controls/list:IClickableView

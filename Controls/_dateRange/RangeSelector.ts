@@ -23,20 +23,20 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  *
  * @class Controls/_dateRange/RangeSelector
  * @extends UI/Base:Control
- * @mixes Controls/interface:IResetValues
+ * @implements Controls/interface:IResetValues
  * @mixes Controls/dateRange:ILinkView
  * @mixes Controls/dateRange:IDateRange
  * @mixes Controls/dateRange:IDatePickerSelectors
  * @mixes Controls/dateRange:IDayTemplate
  * @mixes Controls/dateRange:IDateRangeSelectable
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IUnderline
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IOpenPopup
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IUnderline
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IOpenPopup
  * @mixes Controls/dateRange:ICaptionFormatter
- * @mixes Controls/interface:IDateRangeValidators
- * @mixes Controls/interface:IMonthCaptionTemplate
+ * @implements Controls/interface:IDateRangeValidators
+ * @implements Controls/interface:IMonthCaptionTemplate
  *
  * @public
  * @author Красильников А.С.
@@ -49,7 +49,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @class Controls/_dateRange/RangeSelector
  * @extends UI/Base:Control
  * @mixes Controls/dateRange:ILinkView
- * @mixes Controls/interface:IFontSize
+ * @implements Controls/interface:IFontSize
  * @mixes Controls/dateRange:IDateRangeSelectable
  *
  * @public

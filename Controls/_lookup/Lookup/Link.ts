@@ -11,8 +11,8 @@ import 'css!Controls/lookup';
  * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_lookup.less переменные тем оформления}
  *
  * @extends UI/Base:Control
- * @mixes Controls/interface:ICaption
- * @mixes Controls/interface:IHeight
+ * @implements Controls/interface:ICaption
+ * @implements Controls/interface:IHeight
  * 
  * @demo Controls-demo/Lookup/MultipleInputNew/MultipleInputNew
  *

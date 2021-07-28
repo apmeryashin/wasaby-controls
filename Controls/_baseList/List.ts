@@ -23,15 +23,15 @@ import 'css!Controls/baseList';
  * @class Controls/_list/List
  * @extends UI/Base:Control
  * @implements Controls/interface:IErrorController
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/list:IEditableList
- * @mixes Controls/interface:ISorting
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/interface/IGroupedList
+ * @implements Controls/interface:ISorting
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/interface/IGroupedList
  * @mixes Controls/list:IVirtualScrollConfig
  * @mixes Controls/list:IList
  * @mixes Controls/list:IClickableView
@@ -52,19 +52,19 @@ import 'css!Controls/baseList';
  * @class Controls/_list/List
  * @extends UI/Base:Control
  * @implements Controls/interface:IErrorController
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:ISelectFields
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IGroupedList
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISelectFields
  * @mixes Controls/list:IList
  * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:ISorting
+ * @implements Controls/interface:ISorting
  * @mixes Controls/list:IEditableList
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/interface/IGroupedList
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/interface/IGroupedList
  * @mixes Controls/list:IClickableView
  * @mixes Controls/list:IReloadableList
  * @mixes Controls/marker:IMarkerList

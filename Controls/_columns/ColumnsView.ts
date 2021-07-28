@@ -10,17 +10,17 @@
  * @extends UI/Base:Control
  * @implements Controls/interface:IErrorController
  * @implements Controls/list:IListNavigation
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/list:IList
  * @mixes Controls/itemActions:IItemActions
  * @mixes Controls/list:IEditableList
- * @mixes Controls/interface:ISorting
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/interface/IGroupedList
+ * @implements Controls/interface:ISorting
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/interface/IGroupedList
  * @mixes Controls/list:IClickableView
  * @mixes Controls/list:IReloadableList
  * @mixes Controls/list:IMovableList

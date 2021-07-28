@@ -17,7 +17,7 @@ import { TSelectionType } from 'Controls/interface';
  *
  * @class Controls/_operations/Controller
  * @extends UI/Base:Control
- * @mixes Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IPromisedSelectable
  *
  * @author Авраменко А.С.
  * @public
@@ -30,7 +30,7 @@ import { TSelectionType } from 'Controls/interface';
  *
  * @class Controls/_operations/Controller
  * @extends UI/Base:Control
- * @mixes Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IPromisedSelectable
  *
  * @author Авраменко А.С.
  * @public

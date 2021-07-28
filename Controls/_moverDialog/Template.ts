@@ -52,14 +52,14 @@ interface IMoverColumnTemplateOptions {
  *
  * @class Controls/_moverDialog/Template
  * @extends UI/Base:Control
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:ISource
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISource
  * @mixes Controls/grid:IGridControl
  * @implements Controls/tree:ITreeControl
  * @mixes Controls/list:IList
  * @mixes Controls/explorer:IExplorer
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:INavigation
  *
  * @public
  * @author Авраменко А.С.
