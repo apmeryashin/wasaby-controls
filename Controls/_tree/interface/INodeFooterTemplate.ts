@@ -1,18 +1,19 @@
-import {ICutConfig, TMoreButtonView} from 'Controls/interface';
+import {INavigationButtonConfig, TNavigationButtonView} from 'Controls/interface';
 
 /**
+ * Шаблон подвала узлов
  * @public
  * @autor Аверкиев П.А.
  */
 export interface INodeFooterTemplate {
     /**
-     * Вид кнопки "Ещё" в узлах дерева
+     * Вид кнопки подгрузки данных
      * @default default
      */
-    moreButtonView?: TMoreButtonView;
+    navigationButtonView?: TNavigationButtonView;
     /**
-     * Настройки кнопки "Ещё" в виде cut
-     * @see moreButtonView
+     * Настройки кнопки подгрузки данных
+     * @see navigationButtonView
      */
-    cutConfig?: ICutConfig;
+    navigationButtonConfig?: INavigationButtonConfig;
 }

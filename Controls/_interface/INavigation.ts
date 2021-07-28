@@ -231,47 +231,47 @@ type TNavigationPagingPadding = 'default' | 'null';
 type TNavigationPagingPosition= 'left' | 'right';
 
 /**
- * @typedef {String} TMoreButtonView
- * @description Допустимые значения для параметра {@link Controls/interface:INavigationViewConfig#moreButtonView moreButtonView}.
- * @variant cut кнопка "Ещё" по шаблону ката.
- * @variant default кнопка "Ещё" по умолчанию (Текст "Ещё").
+ * @typedef {String} TNavigationButtonView
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationViewConfig#buttonView buttonView}.
+ * @variant separator кнопка подгрузки данных в виде {@link Controls/toggle:BigSeparator разделителя с тремя точками}
+ * @variant link кнопка подгрузки данных в виде текстовой ссылки
  */
-export type TMoreButtonView = 'cut' | 'default';
+export type TNavigationButtonView = 'separator' | 'link';
 
 /**
- * @typedef {String} TCutSize
- * @description Допустимые значения для параметра {@link Controls/interface:ICutConfig#size size}.
+ * @typedef {String} TNavigationButtonSize
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationButtonConfig#size size}.
  * @variant s малый
  * @variant m средний
  * @variant l большой
  */
-export type TCutSize = 's' | 'm' | 'l';
+export type TNavigationButtonSize = 's' | 'm' | 'l';
 
 /**
- * @typedef {String} TCutButtonPosition
- * @description Допустимые значения для параметра {@link Controls/interface:ICutConfig#buttonPosition buttonPosition}.
+ * @typedef {String} TNavigationButtonPosition
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationButtonConfig#buttonPosition buttonPosition}.
  * @variant start по левому краю контентной области
  * @variant center по центру контентной области
  */
-export type TCutButtonPosition = 'start' | 'center';
+export type TNavigationButtonPosition = 'start' | 'center';
 
 /**
- * @description Конфигурация кнопки развертывания (Cut) в списке.
+ * @description Конфигурация кнопки подгрузки данных.
  * @author Аверкиев П.А.
  * @public
  */
-export interface ICutConfig {
+export interface INavigationButtonConfig {
     /**
      * Положение кнопки развертывания.
      * @default center
      */
-    buttonPosition?: TCutButtonPosition;
+    buttonPosition?: TNavigationButtonPosition;
 
     /**
      * Размер кнопки развертывания.
      * @default m
      */
-    size?: TCutSize;
+    size?: TNavigationButtonSize;
 
     /**
      * Флаг, определяющий контрастность фона.
@@ -321,15 +321,15 @@ export interface INavigationViewConfig {
      */
     pagingPosition?: TNavigationPagingPosition;
     /**
-     * Вид кнопки "Ещё" в случае навигации "demand".
+     * Вид кнопки подгрузки данных
      * @default default
      */
-    moreButtonView?: TMoreButtonView;
+    buttonView?: TNavigationButtonView;
     /**
-     * Настройки кнопки развёртывания в случае навигации "cut" или "demand"
-     * @see moreButtonView
+     * Настройки кнопки подгрузки данных
+     * @see buttonView
      */
-    cutConfig?: ICutConfig;
+    buttonConfig?: INavigationButtonConfig;
 }
 
 /**

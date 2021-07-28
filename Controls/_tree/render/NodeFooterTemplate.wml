@@ -25,8 +25,8 @@
         </ws:if>
         <ws:else>
             <ws:partial template="Controls/list:MoreButtonTemplate"
-                        moreButtonView="{{moreButtonView}}"
-                        cutConfig="{{cutConfig}}"
+                        buttonView="{{navigationButtonView}}"
+                        navigationButtonConfig="{{navigationButtonConfig}}"
                         fontColorStyle="{{ item.getMoreFontColorStyle() }}"
                         fontSize="xs"
                         clickableAreaClass="js-controls-TreeGrid__nodeFooter__LoadMoreButton"

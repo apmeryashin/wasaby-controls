@@ -78,22 +78,15 @@
                 </ws:else>
             </div>
         </ws:if>
-        <ws:if data="{{_shouldDrawMoreButton}}">
-            <ws:partial template="wml!Controls/_baseList/BaseControl/MoreButton"
-                        fontColorStyle="{{_options.moreFontColorStyle}}"
-                        loadMoreCaption="{{_loadMoreCaption}}"
-                        cutConfig="{{_options.navigation.viewConfig.cutConfig}}"
-                        moreButtonView="{{_options.navigation.viewConfig.moreButtonView || 'default'}}"
-                        clickableAreaClass="js-controls-BaseControl__loadMore"
-                        buttonClass="controls-BaseControl__loadMore"
-                        on:click="_onMoreButtonClick()"/>
-        </ws:if>
-        <ws:if data="{{_shouldDrawCut}}">
-            <ws:partial template="wml!Controls/_baseList/BaseControl/Cut"
-                        clickableAreaClass="js-controls-BaseControl__cut"
+        <ws:if data="{{_shouldDrawNavigationButton}}">
+            <ws:partial template="wml!Controls/_baseList/BaseControl/NavigationButton"
                         value="{{_expanded}}"
-                        cutConfig="{{_options.navigation.viewConfig.cutConfig}}"
-                        on:click="_onCutClick()"/>
+                        buttonConfig="{{_options.navigation.viewConfig.buttonConfig}}"
+                        buttonView="{{_options.navigation.viewConfig.buttonView || 'default'}}"
+                        linkFontColorStyle="{{_options.moreFontColorStyle}}"
+                        linkClass="controls-BaseControl__loadMore"
+                        linkLabel="{{_loadMoreCaption}}"
+                        on:click="_onNavigationButtonClick()"/>
         </ws:if>
     </div>
 </ws:template>

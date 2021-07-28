@@ -1478,7 +1478,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 getResults: () => results,
                 getResultsPosition: () => resultsPosition
             },
-            _shouldDrawMoreButton: false
+            _shouldDrawNavigationButton: false
         } as unknown as BaseControl;
 
         assert.isFalse(
@@ -1491,12 +1491,12 @@ describe('Controls/list_clean/BaseControl', () => {
             'itemActionsPosition is outside, padding is needed'
         );
 
-        fakeInstance._shouldDrawMoreButton = true;
+        fakeInstance._shouldDrawNavigationButton = true;
         assert.isFalse(
             BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
             'itemActionsPosition is outside and "hasMore" button visible, no padding needed'
         );
-        fakeInstance._shouldDrawMoreButton = false;
+        fakeInstance._shouldDrawNavigationButton = false;
 
         footer = true;
         assert.isFalse(
