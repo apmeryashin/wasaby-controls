@@ -23,7 +23,7 @@ export default class Index extends Control {
                 page: 0
             },
             viewConfig: {
-                cutConfig: {
+                buttonConfig: {
                     contrastBackground: false
                 }
             }

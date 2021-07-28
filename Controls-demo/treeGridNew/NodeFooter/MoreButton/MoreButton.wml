@@ -10,8 +10,8 @@
         <ws:nodeFooterTemplate>
             <ws:partial template="Controls/treeGrid:NodeFooterTemplate"
                         colspan="{{ false }}"
-                        moreButtonView="cut">
-                <ws:cutConfig size="s"/>
+                        navigationButtonView="separator">
+                <ws:navigationButtonConfig size="s"/>
             </ws:partial>
         </ws:nodeFooterTemplate>
     </Controls.treeGrid:View>
