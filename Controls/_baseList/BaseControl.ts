@@ -6201,7 +6201,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 const url = itemData.item.get(this._options.urlProperty);
                 if (url) {
                     window.open(url);
-                    this._onLastMouseUpWasOpenUrl = true;
+                    this._onLastMouseUpWasOpenUrl = domEvent.nativeEvent.button === 0;
                 }
             }
 
