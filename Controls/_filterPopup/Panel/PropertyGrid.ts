@@ -19,9 +19,9 @@ interface IFilterPropertyGridOptions extends IControlOptions {
  *
  * @class Controls/_filterPopup/Panel/PropertyGrid
  * @extends UI/Base:Control
- * @mixes Controls/interface/IPropertyGrid
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
+ * @implements Controls/interface/IPropertyGrid
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
  *
  * @private
  * @author Михайлов С.Е.

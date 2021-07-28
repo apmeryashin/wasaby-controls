@@ -35,7 +35,7 @@ import 'css!Controls/CommonClasses';
  * @class Controls/Application
  * @extends UI/Base:Control
  *
- * @mixes Controls/interface:IApplication
+ * @implements Controls/interface:IApplication
  * @mixes UI/_base/interface/IHTML
  * @mixes Controls/_interface/IRUM
  *

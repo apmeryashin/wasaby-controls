@@ -3,9 +3,47 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 
+/**
+ * Интерфейс опций для {@link Controls/progress:Bar}.
+ * @interface Controls/progress:IBar
+ * @public
+ * @author Колесов В.А.
+ */
 export interface IBarOptions extends IControlOptions {
+   /**
+    * @name Controls/progress:IBar#value
+    * @cfg {Number} Значение прогресса в процентах.
+    * @remark
+    * Целое число от 0 до 100.
+    */
+
+   /*
+   * @name Controls/progress:IBar#value
+   * @cfg {Number} Progress in percents (ratio of the filled part)
+   * @remark
+   * An integer from 1 to 100.
+   */
    value?: number;
+   /**
+    * @name Controls/progress:IBar#barStyle
+    * @cfg {String} Стиль шкалы прогресс бара.
+    * @variant primary
+    * @variant success
+    * @variant warning
+    * @variant danger
+    * @variant secondary
+    * @default primary
+    * @demo Controls-demo/progress/Bar/BarStyle/Index
+    */
    barStyle: 'primary' | 'success' | 'danger' | 'warning' | 'secondary';
+   /**
+    * @name Controls/progress:IBar#blankAreaStyle
+    * @cfg {String} Стиль шкалы не заполненной области прогресс бара.
+    * @variant default
+    * @variant none
+    * @default default
+    * @demo Controls-demo/progress/Bar/BlankAreaStyle/Index
+    */
    blankAreaStyle?: 'default' | 'none';
 }
 /**
@@ -17,8 +55,8 @@ export interface IBarOptions extends IControlOptions {
  * * {@link /materials/Controls-demo/app/Controls-demo%2fprogress%2fBar%2fIndex демо-пример}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less переменные тем оформления}
  *
- * @class Controls/_progress/Bar
  * @extends UI/Base:Control
+ * @implements Controls/progress:IBar
  * @author Колесов В.А.
  *
  * @public
@@ -86,40 +124,5 @@ Object.defineProperty(Bar, 'defaultProps', {
       return Bar.getDefaultOptions();
    }
 });
-
-/**
- * @name Controls/_progress/Bar#value
- * @cfg {Number} Значение прогресса в процентах.
- * @remark
- * Целое число от 1 до 100.
- */
-
-/*
-* @name Controls/_progress/Bar#value
-* @cfg {Number} Progress in percents (ratio of the filled part)
-* @remark
-* An integer from 1 to 100.
-*/
-
-/**
- * @name Controls/_progress/Bar#barStyle
- * @cfg {Enum} Стиль шкалы прогресс бара.
- * @variant primary
- * @variant success
- * @variant warning
- * @variant danger
- * @variant secondary
- * @default primary
- * @demo Controls-demo/progress/Bar/BarStyle/Index
- */
-
-/**
- * @name Controls/_progress/Bar#blankAreaStyle
- * @cfg {Enum} Стиль шкалы не заполненной области прогресс бара.
- * @variant default
- * @variant none
- * @default default
- * @demo Controls-demo/progress/Bar/BlankAreaStyle/Index
- */
 
 export default Bar;
