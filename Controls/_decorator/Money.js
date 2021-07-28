@@ -139,7 +139,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
 
 /**
  * @name Controls/_decorator/IMoney#value
- * @cfg {Controls/_decorator/IMoney/TValue.typedef} Декорируемое число.
+ * @cfg {String | Number | Null} Декорируемое число.
  * @implements Controls/decorator:IOnlyPositive
  * @default null
  * @demo Controls-demo/Decorator/Money/Value/Index
