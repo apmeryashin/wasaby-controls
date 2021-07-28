@@ -29,7 +29,7 @@ export interface IConfirmationFooter {
 /**
  * @name Controls/_popup/interface/IConfirmationFooter#type
  * @cfg {String} Тип диалогового окна. Определяет с каким результатом будет закрыто окно диалога.
- * @variant ok (Результат: undefined)
+ * @variant ok (Результат: true)
  * @variant yesno (Результат: true/false)
  * @variant yesnocancel (Результат: true/false/undefined)
  * @default yesno
