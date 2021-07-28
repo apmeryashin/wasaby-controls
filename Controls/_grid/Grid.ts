@@ -20,16 +20,16 @@ import { TemplateFunction } from 'UI/Base';
  * @implements Controls/interface/IPromisedSelectable
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/grid:IGridControl
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
+ * @implements Controls/grid:IGridControl
  * @implements Controls/interface/IGridItemTemplate
  * @implements Controls/interface:IDraggable
  * @implements Controls/interface/IGroupedGrid
  * @implements Controls/interface/IGridItemTemplate
- * @mixes Controls/grid:IPropStorage
- * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/grid:IPropStorage
+ * @implements Controls/grid:IEditableGrid
+ * @implements Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.
@@ -51,15 +51,15 @@ import { TemplateFunction } from 'UI/Base';
  * @implements Controls/interface/IGroupedGrid
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
- * @mixes Controls/grid:IGridControl
+ * @implements Controls/grid:IGridControl
  * @implements Controls/interface/IGridItemTemplate
  * @implements Controls/interface:IDraggable
- * @mixes Controls/grid:IPropStorage
- * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/grid:IPropStorage
+ * @implements Controls/grid:IEditableGrid
+ * @implements Controls/marker:IMarkerList
  *
  *
  * @public
