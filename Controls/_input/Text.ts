@@ -95,13 +95,7 @@ Object.defineProperty(Text, 'defaultProps', {
  *         }
  *
  *         if (lengthLogin < 6) {
- *             cfg.message = 'Сложность логина низкая';
- *         }
- *         if (lengthLogin >= 6 && lengthPassword < 10) {
- *             cfg.message = 'Сложность логина средняя';
- *         }
- *         if (lengthLogin >= 10) {
- *             cfg.message = 'Сложность логина высокая';
+ *             cfg.message = 'Длина логина должна быть больше 5 символов';
  *         }
  *
  *         this._notify('openInfoBox', [cfg], {
