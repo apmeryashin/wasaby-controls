@@ -1,40 +1,36 @@
 .controls-JumpingLabel__value {
    .text-overflow();
 
-   font-size: @font-size_default_jumpingLabel;
+   font-size: var(--font-size_xs);
 }
 
-.controls-JumpingLabel__value_theme-@{themeName} {
-   font-size: @font-size_xs;
+.controls-JumpingLabel__value_valid {
+   color: var(--label_text-color);
 }
 
-.controls-JumpingLabel__value_valid_theme-@{themeName} {
-   color: @label_text-color;
+.controls-JumpingLabel__value_invalid-default {
+   color: var(--label_text-color);
 }
 
-.controls-JumpingLabel__value_invalid-default_theme-@{themeName} {
-   color: @label_text-color;
+.controls-JumpingLabel__value_invalid-accent {
+   color: var(--danger_color);
 }
 
-.controls-JumpingLabel__value_invalid-accent_theme-@{themeName} {
-   color: @danger_color;
-}
-
-.controls-JumpingLabel_padding-null_theme-@{themeName} {
+.controls-JumpingLabel_padding-null {
    padding: 0;
 }
 
-.controls-JumpingLabel_padding-xs_theme-@{themeName} {
-   padding: 0 @padding-horizontal_inputText;
+.controls-JumpingLabel_padding-xs {
+   padding: 0 var(--padding-horizontal_inputText);
 }
 
 .controls-JumpingLabel__content {
    width: 100%;
 }
 
-.controls-JumpingLabel__asterisk_theme-@{themeName} {
-   color: @asterisk_color_label;
-   font-size: @font-size_m;
+.controls-JumpingLabel__asterisk {
+   color: var(--danger_color);
+   font-size: var(--font-size_m);
 }
 
 .controls-JumpingLabel__wrapper {
