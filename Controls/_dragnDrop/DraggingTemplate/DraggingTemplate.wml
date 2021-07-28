@@ -1,4 +1,4 @@
-<div class="controls-DragNDrop__draggingTemplate">
+<div class="controls-DragNDrop__draggingTemplate controls_dragnDrop_theme-{{ _options.theme }}">
    <ws:if data="{{_options.imageTemplate}}">
       <ws:partial attr:class="controls-DragNDrop__draggingTemplate-image" template="{{_options.imageTemplate}}" scope="{{_options}}"/>
    </ws:if>

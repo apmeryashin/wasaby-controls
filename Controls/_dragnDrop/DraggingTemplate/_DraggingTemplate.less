@@ -1,21 +1,21 @@
 .controls-DragNDrop__draggingTemplate {
    display: flex;
-   width: @width_draggingTemplate;
-   background: @background-color_draggingTemplate;
-   border: @border-thickness_draggingTemplate solid @border-color_draggingTemplate;
-   border-radius: @border-radius_draggingTemplate;
-   box-shadow: @box-shadow_draggingTemplate;
+   width: var(--width_draggingTemplate);
+   background: var(--background-color);
+   border: var(--border-thickness) solid var(--border-color);
+   border-radius: var(--border-radius_draggingTemplate);
+   box-shadow: var(--box-shadow_draggingTemplate);
    pointer-events: none;
    position: relative; // Для позиционирования draggingTemplate-text::after
 }
 
 .controls-DragNDrop__draggingTemplate-icon {
-   color: @image_placeholder_icon-color_draggingTemplate;
-   width: @image_width_draggingTemplate;
-   height: @image_height_draggingTemplate;
-   border-radius: @image_border-radius_draggingTemplate;
-   margin: @image_padding_draggingTemplate;
-   opacity: @opacity_draggingTemplate;
+   color: var(--unaccented_icon-color);
+   width: var(--image_width_draggingTemplate);
+   height: var(--image_height_draggingTemplate);
+   border-radius: var(--image_border-radius_draggingTemplate);
+   margin: var(--offset_2xs) var(--offset_xs) var(--offset_2xs) var(--offset_2xs);
+   opacity: var(--opacity_draggingTemplate);
    display: flex;
    align-items: center;
    justify-content: center;
@@ -23,18 +23,18 @@
 }
 
 .controls-DragNDrop__draggingTemplate-icon-size {
-   .icon-size(@image_placeholder_icon-size_draggingTemplate);
+   .icon-size(var(--icon-size_l));
 }
 
 .controls-DragNDrop__draggingTemplate-image {
-   opacity: @opacity_draggingTemplate;
+   opacity: var(--opacity_draggingTemplate);
 }
 
 .controls-DragNDrop__draggingTemplate-text {
    flex-shrink: 1;
    width: 100%;
-   margin: @content_padding_draggingTemplate;
-   opacity: @opacity_draggingTemplate;
+   margin: var(--offset_xs) var(--offset_xs) var(--offset_xs) 0;
+   opacity: var(--opacity_draggingTemplate);
    overflow: hidden;
 }
 
@@ -42,39 +42,40 @@
    content: '';
    display: block;
    height: 100%;
-   width: @overflow_gradient_width_draggingTemplate;
+   width: var(--overflow_gradient_width_draggingTemplate);
    position: absolute;
    right: 0;
    top: 0;
-   border-radius: 0 @border-radius_draggingTemplate @border-radius_draggingTemplate 0;
-   .horizontal-gradient(fade(@background-color_draggingTemplate, 0%), @background-color_draggingTemplate, left);
+   border-radius: 0 var(--border-radius_draggingTemplate) var(--border-radius_draggingTemplate) 0;
+   .horizontal-gradient(fade(rgb(255, 255, 255), 0%), var(--background-color_draggingTemplate), left);
 }
 
-.controls-DragNDrop__draggingTemplate-mainText, .controls-DragNDrop__draggingTemplate-additionalText {
+.controls-DragNDrop__draggingTemplate-mainText,
+.controls-DragNDrop__draggingTemplate-additionalText {
    white-space: nowrap;
 }
 
 .controls-DragNDrop__draggingTemplate-mainText {
-   font-size: @heading_font-size_draggingTemplate;
+   font-size: var(--font-size_m);
    font-weight: bold;
-   color: @heading_text-color_draggingTemplate;
+   color: var(--secondary_text-color_heading);
 }
 
 .controls-DragNDrop__draggingTemplate-additionalText {
-   font-size: @font-size_draggingTemplate;
-   color: @text-color_draggingTemplate;
+   font-size: var(--font-size_s);
+   color: var(--unaccented_text-color);
 }
 
 .controls-DragNDrop__draggingTemplate-counter {
    position: absolute;
    display: flex;
    align-items: center;
-   right: -(@counter_height_draggingTemplate / 2);
-   top: -(@counter_height_draggingTemplate / 2);
-   height: @counter_height_draggingTemplate;
-   font-size: @counter_font-size_draggingTemplate;
-   color: @counter_text-color_draggingTemplate;
-   background-color: @counter_background-color_draggingTemplate;
-   border-radius: @counter_border-radius_draggingTemplate;
-   padding: 0 @counter_padding-horizontal_draggingTemplate;
+   right: calc(-1 * (var(--counter_height_draggingTemplate) / 2));
+   top: calc(-1 * (var(--counter_height_draggingTemplate) / 2));
+   height: var(--counter_height_draggingTemplate);
+   font-size: var(--font-size_m);
+   color: var(--counter_text-color_draggingTemplate);
+   background-color: var(--counter_background-color_draggingTemplate);
+   border-radius: calc(var(--counter_height_draggingTemplate) / 2);
+   padding: 0 var(--offset_xs);
 }

@@ -4,6 +4,7 @@ import {Container} from 'Controls/dragnDrop';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IResizingLine from 'Controls/_dragnDrop/interface/IResizingLine';
+import 'css!Controls/dragnDrop';
 
 /*TODO Kingo*/
 
@@ -31,7 +32,7 @@ const enum ORIENTATION {
  *
  * @class Controls/_dragnDrop/ResizingLine
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/ResizingLine/Index
@@ -146,8 +147,6 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     protected _isResizing(minOffset: number, maxOffset: number): boolean {
         return minOffset !== 0 || maxOffset !== 0;
     }
-
-    static _theme: string[] = ['Controls/dragnDrop'];
 
     static getDefaultTypes(): object {
         return {
