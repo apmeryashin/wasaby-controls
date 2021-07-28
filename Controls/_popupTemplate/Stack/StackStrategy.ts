@@ -44,6 +44,7 @@ export class StackStrategy {
             position.minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         }
         position.maxWidth = this._calculateMaxWidth(item.popupOptions, tCoords);
+        position.width = Math.min(position.maxWidth, position.width);
 
         return position;
     }
