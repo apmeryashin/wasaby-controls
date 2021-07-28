@@ -110,4 +110,4 @@ Object.defineProperty(Text, 'defaultProps', {
  *     }
  * }
  * </pre>
- * */
+ */
