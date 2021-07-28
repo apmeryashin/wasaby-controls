@@ -386,6 +386,16 @@ export interface ITreeControlOptions extends IControlOptions {
  * @demo Controls-demo/treeGridNew/ReverseType/SingleExpand/Index
  */
 
+/**
+ * @name Controls/_tree/interface/ITreeControl#getMarkedNodeKey
+ * Возвращает ключ родителя, в котором по-умолчанию следует начинать добавление по месту.
+ * @remark
+ * Если в дереве маркер стоит на развернутом узле или на его дочерних записях/свёрнутых узлах,
+ * то позиция по-умолчанию для добавляемой записи - этот раскрытый узел.
+ * Во всех остальных случаях позицией будет текущий корень дерева.
+ * @function
+ * @returns {null|string|number}
+ */
 
 /**
  * @event Происходит после развертывания узла.

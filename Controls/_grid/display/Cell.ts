@@ -1,4 +1,4 @@
-import { mixin } from 'Types/util';
+import {mixin} from 'Types/util';
 import {
     OptionsToPropertyMixin,
     DestroyableMixin,
@@ -8,12 +8,12 @@ import {
     IVersionable,
     Model
 } from 'Types/entity';
-import { TemplateFunction } from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 
 import {IColumn, IColspanParams, TColumnSeparatorSize, ICellPadding} from './interface/IColumn';
 
 import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
-import { COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS } from 'Controls/columnScroll';
+import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
 
@@ -23,8 +23,10 @@ const NUMBER_RENDER = 'Controls/grid:NumberTypeRender';
 const STRING_RENDER = 'Controls/grid:StringTypeRender';
 const STRING_SEARCH_RENDER = 'Controls/grid:StringSearchTypeRender';
 
-export interface IOptions<T> extends IColspanParams {
+export interface IOptions<T extends Model = Model> extends IColspanParams {
     owner: Row<T>;
+    theme: string;
+    style: string;
     column: IColumn;
     instanceId?: string;
     isHiddenForLadder?: boolean;
@@ -43,7 +45,13 @@ export interface IOptions<T> extends IColspanParams {
     isBottomSeparatorEnabled: boolean;
 }
 
-export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
+/**
+ * Ячейка строки в таблице
+ */
+export default class Cell<
+    T extends Model = Model,
+    TOwner extends Row<T> = Row<T>
+> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
@@ -55,9 +63,13 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     VersionableMixin
 ) implements IInstantiable, IVersionable {
     readonly '[Types/_entity/IInstantiable]': boolean;
+    readonly DisplaySearchValue: boolean = false;
+
     protected readonly _defaultCellTemplate: string = DEFAULT_CELL_TEMPLATE;
     protected readonly _$owner: TOwner;
     protected readonly _$column: IColumn;
+    protected _$theme: string;
+    protected _$style: string;
     protected _$isHiddenForLadder: boolean;
     protected _$instanceId: string;
     protected _$colspan: number;
@@ -107,9 +119,12 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         }
 
         switch (this._$column.displayType) {
-            case 'money': return MONEY_RENDER;
-            case 'number': return NUMBER_RENDER;
-            default: return STRING_RENDER;
+            case 'money':
+                return MONEY_RENDER;
+            case 'number':
+                return NUMBER_RENDER;
+            default:
+                return STRING_RENDER;
         }
     }
 
@@ -126,6 +141,14 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
     getOwner(): TOwner {
         return this._$owner;
+    }
+
+    getStyle(): string {
+        return this._$style;
+    }
+
+    getTheme(): string {
+        return this._$theme;
     }
 
     getSearchValue(): string {
@@ -189,6 +212,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         }
         return `grid-column: ${colspanParams.startColumn} / ${colspanParams.endColumn};`;
     }
+
     // endregion
 
     getRowspan(): number {
@@ -203,6 +227,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     setHiddenForLadder(value: boolean): void {
         this._$isHiddenForLadder = value;
     }
+
     // endregion
 
     // region Аспект "Отображение данных"
@@ -225,22 +250,23 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     get contents(): T {
         return this._$owner.getContents();
     }
+
     // endregion
 
     // region Аспект "Стилевое оформление. Классы и стили"
-    getWrapperClasses(theme: string,
-                      backgroundColorStyle: string,
-                      style: string = 'default',
-                      templateHighlightOnHover?: boolean,
-                      templateHoverBackgroundStyle?: string): string {
+    getWrapperClasses(
+        backgroundColorStyle?: string,
+        templateHighlightOnHover?: boolean,
+        templateHoverBackgroundStyle?: string
+    ): string {
         const hasColumnScroll = this._$owner.hasColumnScroll();
         const hoverBackgroundStyle = this._$column.hoverBackgroundStyle ||
             templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
 
-        wrapperClasses += this._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
-        wrapperClasses += this._getWrapperSeparatorClasses(theme);
+        wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
+        wrapperClasses += this._getWrapperSeparatorClasses();
 
         if (hasColumnScroll) {
         } else {
@@ -251,10 +277,13 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
             wrapperClasses += ' controls-Grid__row-cell-editing';
         }
 
-        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, style, backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle)}`;
+        let backgroundColorWrapperClasses = this._getBackgroundColorWrapperClasses(
+            backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle
+        );
+        wrapperClasses += ` ${backgroundColorWrapperClasses}`;
 
         if (this._$owner.hasColumnScroll()) {
-            wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+            wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
         }
 
         wrapperClasses += ' js-controls-ListView__measurableContainer';
@@ -263,11 +292,9 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getBackgroundColorWrapperClasses(
-       theme: string,
-       style: string = 'default',
-       backgroundColorStyle?: string,
-       templateHighlightOnHover?: boolean,
-       hoverBackgroundStyle?: string
+        backgroundColorStyle?: string,
+        templateHighlightOnHover?: boolean,
+        hoverBackgroundStyle?: string
     ): string {
         let wrapperClasses = '';
 
@@ -286,42 +313,41 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
         // backgroundColorStyle имеет наивысший приоритет после isEditing
         if (backgroundColorStyle && backgroundColorStyle !== 'default') {
+            // Если на списке есть скролл колонок или ячейка застикана, то ей надо выставить backgroundStyle
+            // Сюда же попадаем, если backgroundColorStyle = default
             wrapperClasses += ` controls-Grid__row-cell_background_${backgroundColorStyle}`;
-
-        // Если на списке есть скролл колонок или ячейка застикана, то ей надо выставить backgroundStyle
-        // Сюда же попадаем, если backgroundColorStyle = default
         } else if (hasColumnScroll || this._$isSticked) {
-            wrapperClasses += this._getControlsBackgroundClass(style, backgroundColorStyle);
+            wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
         }
         return wrapperClasses;
     }
 
     // Вынес в отдельный метод, чтобы не проверять editing для header/footer/results
-    protected _getControlsBackgroundClass(style: string = 'default',
-                                          backgroundColorStyle: string): string {
+    protected _getControlsBackgroundClass(backgroundColorStyle: string): string {
         let wrapperClasses = '';
         if (backgroundColorStyle) {
             wrapperClasses += ` controls-background-${backgroundColorStyle}`;
-
-        } else if (this._$backgroundStyle === 'default' && style !== 'default') {
-            wrapperClasses += ` controls-background-${style}`;
-
+        } else if (this._$backgroundStyle === 'default' && this.getStyle() !== 'default') {
+            wrapperClasses += ` controls-background-${this.getStyle()}`;
         } else {
-            wrapperClasses += ` controls-background-${this._$backgroundStyle || style}`;
+            wrapperClasses += ` controls-background-${this._$backgroundStyle || this.getStyle()}`;
         }
         return wrapperClasses;
     }
 
     // В StickyBlock надо передавать корректный backgroundStyle в зависимости от style
-    getStickyBackgroundStyle(style: string = 'default'): string {
-        return this._$backgroundStyle === 'default' && style !== 'default' ? style : this._$backgroundStyle || style;
+    getStickyBackgroundStyle(): string {
+        return this._$backgroundStyle === 'default' && this.getStyle() !== 'default'
+            ? this.getStyle()
+            : this._$backgroundStyle || this.getStyle();
     }
 
     // Only for partial grid support
     getRelativeCellWrapperClasses(): string {
         const rowSeparatorSize = this._$rowSeparatorSize;
 
-        // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
+        // Единственная ячейка с данными сама формирует высоту строки
+        // и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
         // Подробнее искать по #grid_relativeCell_td.
         const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.hasMultiSelectColumn() ? 2 : 1);
 
@@ -350,10 +376,11 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         return styles;
     }
 
-    getContentClasses(theme: string,
-                      backgroundColorStyle: string = this._$column.backgroundColorStyle,
-                      cursor: string = 'pointer',
-                      templateHighlightOnHover: boolean = true): string {
+    getContentClasses(
+        backgroundColorStyle: string = this._$column.backgroundColorStyle,
+        cursor: string = 'pointer',
+        templateHighlightOnHover: boolean = true
+    ): string {
         const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         // TODO: Убрать js-controls-ListView__editingTarget' по задаче
@@ -364,7 +391,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         contentClasses += ` controls-Grid__row-cell_cursor-${cursor}`;
 
         contentClasses += this._getHorizontalPaddingClasses(this._$column.cellPadding);
-        contentClasses += this._getVerticalPaddingClasses(theme);
+        contentClasses += this._getVerticalPaddingClasses();
 
         contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null';
 
@@ -417,7 +444,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         this._nextVersion();
     }
 
-    protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
+    protected _getWrapperBaseClasses(templateHighlightOnHover: boolean): string {
         let classes = '';
 
         const topPadding = this._$owner.getTopPadding();
@@ -425,11 +452,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         const isEditing = this.isEditing();
         const isSingleCellEditing = this._$owner.getEditingConfig()?.mode === 'cell';
         const isDragged = this._$owner.isDragged();
-        const preparedStyle = style;
         const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
 
-        classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
-        classes += ` controls-Grid__row-cell_${preparedStyle}`;
+        classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
+        classes += ` controls-Grid__row-cell_${this.getStyle()}`;
 
         if (isEditing && !isSingleCellEditing) {
             classes += ' controls-ListView__item_editing';
@@ -454,7 +480,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     }
 
     // @TODO https://online.sbis.ru/opendoc.html?guid=907731fd-b8a8-4b58-8958-61b5c8090188
-    protected _getWrapperSeparatorClasses(theme: string): string {
+    protected _getWrapperSeparatorClasses(): string {
         const rowSeparatorSize = this._$rowSeparatorSize;
         let classes = '';
 
@@ -474,11 +500,11 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
-        classes += this._getColumnSeparatorClasses(theme);
+        classes += this._getColumnSeparatorClasses();
         return classes;
     }
 
-    protected _getColumnSeparatorClasses(theme: string): string {
+    protected _getColumnSeparatorClasses(): string {
         if (this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
             const columnSeparatorSize = typeof this._$columnSeparatorSize === 'string' ?
                 this._$columnSeparatorSize.toLowerCase() :
@@ -490,7 +516,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
     protected _getColumnScrollWrapperClasses(): string {
         if (this._$isFixed) {
-            return ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE} controls-GridView__cell_fixed`;
+            let classes = 'controls-GridView__cell_fixed';
+            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+            classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+            return classes;
         }
         return ` ${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`;
     }
@@ -523,7 +552,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         return classes;
     }
 
-    protected _getVerticalPaddingClasses(theme: string): string {
+    protected _getVerticalPaddingClasses(): string {
         let classes = '';
 
         const topPadding = this._$owner.getTopPadding();
@@ -547,6 +576,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         }
         return classes;
     }
+
     // endregion
 
     // region Аспект "Ячейка"
@@ -564,7 +594,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
      * @param {Boolean} [takeIntoAccountColspans=false] - Учитывать ли колспаны ячеек, расположенных перед данной в строке.
      * @returns {Number} Индекс ячейки в строке.
      */
-    getColumnIndex(takeIntoAccountColspans?: boolean = false): number {
+    getColumnIndex(takeIntoAccountColspans: boolean = false): number {
         return this._$owner.getColumnIndex(this, takeIntoAccountColspans);
     }
 
@@ -590,6 +620,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     isMultiSelectColumn(): boolean {
         return this._$owner.hasMultiSelectColumn() && this.isFirstColumn();
     }
+
     // endregion
 
     // region Аспект "Маркер"
@@ -599,16 +630,14 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         return false;
     }
 
-    getMarkerClasses(theme: string,
-                     style: string = 'default',
-                     markerClassName: TMarkerClassName = 'default',
-                     itemPadding: IItemPadding = {}): string {
-        return this._$owner.getMarkerClasses(theme, style, markerClassName, itemPadding);
+    getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
+        return this._$owner.getMarkerClasses(markerClassName, itemPadding);
     }
 
     getMarkerPosition(): 'left' | 'right' {
         return this._$markerPosition;
     }
+
     // endregion
 
     // region Аспект "Тег"
@@ -642,6 +671,8 @@ Object.assign(Cell.prototype, {
     _instancePrefix: 'grid-cell-',
     _$owner: null,
     _$column: null,
+    _$theme: 'default',
+    _$style: 'default',
     _$colspan: null,
     _$rowspan: null,
     _$instanceId: null,

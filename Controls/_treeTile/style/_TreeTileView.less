@@ -2,7 +2,8 @@
    left: 0;
 }
 
-.ws-is-ie, .ws-is-chrome-xp {
+.ws-is-ie,
+.ws-is-chrome-xp {
    .controls-TileView__smallTemplate_item .controls-TreeTileView__checkbox,
    .controls-TreeTileView__itemActions_center {
       //IE and chrome on XP can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
@@ -24,7 +25,7 @@
    width: 100%;
 }
 
-.controls-TreeTileView__dragTargetNode:after {
+.controls-TreeTileView__dragTargetNode::after {
    content: '\200b';
    border: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
    position: absolute;

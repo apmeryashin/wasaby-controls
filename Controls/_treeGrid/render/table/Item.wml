@@ -5,21 +5,19 @@
 <tr attr:data-qa="{{item.getQAData(marker)}}"
     attr:class="{{ item.getItemClasses({
         'highlightOnHover': highlightOnHover,
-        'theme': theme,
-        'style': style,
         'cursor': cursor,
         'clickable': clickable,
         'showItemActionsOnHover': showItemActionsOnHover
     }) }}">
     <ws:for data="gridColumn in item.getColumns()">
-        <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"
+        <td attr:class="{{ gridColumn.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
             attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses() }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
-                     attr:class="{{ gridColumn.getMarkerClasses(theme, style) }}"></div>
+                     attr:class="{{ gridColumn.getMarkerClasses() }}"></div>
 
                 <ws:partial template="{{ gridColumn.getTemplate() }}"
                             scope="{{ gridColumn.config.templateOptions }}"
@@ -51,7 +49,7 @@
                         <ws:if data="{{item.shouldDisplayExpanderBlock(gridColumn)}}">
                             <ws:if data="{{ item.shouldDisplayLevelPadding(withoutLevelPadding) }}">
                                 <ws:for data="i in item.getLevel() - 1">
-                                    <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize, theme)}}"></div>
+                                    <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
                                 </ws:for>
                             </ws:if>
                             <ws:if data="{{ item.shouldDisplayExpander(expanderIcon, 'default') }}">
@@ -70,7 +68,7 @@
 
                         <!-- Тэг -->
                         <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(afterContentTemplate.tagStyle) }}"
-                             class="{{ (gridColumn || itemData).getTagClasses(afterContentTemplate.theme) }}">
+                             class="{{ (gridColumn || itemData).getTagClasses() }}">
                             <ws:partial template="{{ afterContentTemplate.tagTemplate }}"
                                         tagStyle="{{ (gridColumn || itemData).getTagStyle(afterContentTemplate.tagStyle) }}"
                                         item="{{ (item || itemData) }}"

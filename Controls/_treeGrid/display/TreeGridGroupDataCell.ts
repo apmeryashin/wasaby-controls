@@ -2,13 +2,21 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {mixin} from 'Types/util';
 import {GridGroupCellMixin, IGridRowOptions} from 'Controls/grid';
-import TreeGridDataCell from 'Controls/_treeGrid/display/TreeGridDataCell';
+import TreeGridDataCell, {ITreeGridDataCellOptions} from 'Controls/_treeGrid/display/TreeGridDataCell';
 import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
 
 const GROUP_CELL_TEMPLATE = 'Controls/treeGrid:GroupColumnTemplate';
 
-export default class TreeGridGroupDataCell<T extends Model>
-    extends mixin<TreeGridDataCell<T>, GridGroupCellMixin<any>>(TreeGridDataCell, GridGroupCellMixin) {
+export interface ITreeGridGroupDataCell extends ITreeGridDataCellOptions<Model> {
+    isExpanded: boolean;
+}
+
+/**
+ * Ячейка строки с данными, которая отображается в виде группы
+ */
+export default class TreeGridGroupDataCell<T extends Model = Model> extends mixin<
+    TreeGridDataCell<T>, GridGroupCellMixin<T>
+>(TreeGridDataCell, GridGroupCellMixin) {
     readonly '[Controls/treeGrid:TreeGridGroupDataCell]': boolean;
 
     protected readonly _$column: IGroupNodeColumn;
@@ -25,20 +33,24 @@ export default class TreeGridGroupDataCell<T extends Model>
         return this._$column.template || this._defaultCellTemplate;
     }
 
-    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
+    getWrapperClasses(
+        backgroundColorStyle: string,
+        templateHighlightOnHover?: boolean,
+        templateHoverBackgroundStyle?: string
+    ): string {
         let wrapperClasses = '';
 
-        wrapperClasses += this._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
-        wrapperClasses += this._getWrapperSeparatorClasses(theme);
+        wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
+        wrapperClasses += this._getWrapperSeparatorClasses();
 
         if (this._$owner.hasColumnScroll()) {
-            wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+            wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
         }
 
         return wrapperClasses;
     }
 
-    getContentClasses(theme: string): string {
+    getContentClasses(): string {
         let classes = '';
         // TODO необходимо разобраться с высотой групп.
         //  https://online.sbis.ru/opendoc.html?guid=6693d47c-515c-4751-949d-55be05fe124e

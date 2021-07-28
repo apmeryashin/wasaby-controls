@@ -1,16 +1,14 @@
 <div class="{{item.getItemClasses({
     'highlightOnHover': highlightOnHover,
-    'theme': theme,
-    'style': style,
     'cursor': cursor,
     'clickable': clickable
 })}}" attr:key="{{item.key}}">
-    <div class="{{ item.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}">
+    <div class="{{ item.getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}">
         <!-- Отступы для выравнивания с экспандером -->
         <ws:if data="{{item.shouldDisplayExpanderBlock()}}">
             <ws:if data="{{!withoutLevelPadding && item.getLevel() > 1}}">
                 <ws:for data="i in item.getLevel() - 1">
-                    <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize, theme)}}"></div>
+                    <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
                 </ws:for>
             </ws:if>
             <ws:if data="{{item.shouldDisplayExpanderPadding(expanderIcon)}}">

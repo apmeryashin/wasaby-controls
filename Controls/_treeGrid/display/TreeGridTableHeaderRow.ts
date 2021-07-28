@@ -1,6 +1,9 @@
-import TreeGridHeaderRow from "Controls/_treeGrid/display/TreeGridHeaderRow";
-import { GridHeaderRow } from "Controls/grid";
+import TreeGridHeaderRow from 'Controls/_treeGrid/display/TreeGridHeaderRow';
+import { GridHeaderRow } from 'Controls/grid';
 
+/**
+ * Строка заголовка в иерархической таблице, которая не поддерживает grid.
+ */
 export default class TreeGridTableHeaderRow extends TreeGridHeaderRow {
     getItemClasses(): string {
         return '';

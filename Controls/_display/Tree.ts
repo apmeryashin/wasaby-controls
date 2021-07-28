@@ -1,7 +1,6 @@
 import Collection, {
     IOptions as ICollectionOptions,
     ISerializableState as IDefaultSerializableState,
-    ISessionItems,
     ISessionItemState,
     ISplicedArray,
     ItemsFactory,
@@ -246,7 +245,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     /**
      * Размер экспандера
      */
-    protected _$expanderSize: string;
+    protected _$expanderSize: 's'|'m'|'l'|'xl';
 
     protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
@@ -416,7 +415,15 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         return this._$expanderIcon;
     }
 
-    getExpanderSize(): string {
+    setExpanderSize(newSize: 's'|'m'|'l'|'xl'): void {
+        if (this._$expanderSize !== newSize) {
+            this._$expanderSize = newSize;
+            this._nextVersion();
+        }
+    }
+
+
+    getExpanderSize(): 's'|'m'|'l'|'xl' {
         return this._$expanderSize;
     }
 

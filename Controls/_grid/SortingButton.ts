@@ -1,9 +1,11 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_grid/Render/SortingButton/SortingButton');
 import 'css!Controls/grid';
+
 export interface ISortingButtonOptions extends IControlOptions {
     property: string;
 }
+
 /**
  * Контрол, используемый для изменения сортировки внутри таблиц
  *
@@ -22,6 +24,7 @@ class SortingButton extends Control<ISortingButtonOptions> {
         this._notify('sortingChanged', [this._options.property], {bubbling: true});
     }
 }
+
 /**
  * @name Controls/_grid/SortingButton#property
  * @cfg {String} Поле для сортировки.

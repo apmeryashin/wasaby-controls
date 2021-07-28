@@ -1,33 +1,44 @@
-import { TemplateFunction } from 'UI/Base';
-import { Model as EntityModel } from 'Types/entity';
+import {TemplateFunction} from 'UI/Base';
+import {Model, Model as EntityModel} from 'Types/entity';
 
-import { IColumn, TColumns, TColumnSeparatorSize } from '../interface/IColumn';
-import { THeader } from '../interface/IHeaderCell';
+import {IColumn, TColumns, TColumnSeparatorSize} from '../interface/IColumn';
+import {THeader} from '../interface/IHeaderCell';
 
-import { IViewIterator, GridLadderUtil, ILadderObject, IBaseCollection, isFullGridSupport } from 'Controls/display';
+import {
+    IViewIterator,
+    GridLadderUtil,
+    ILadderObject,
+    IBaseCollection,
+    isFullGridSupport,
+    ICollectionOptions
+} from 'Controls/display';
 
 import Header from '../Header';
-import TableHeader from '../TableHeader';
 import TableHeaderRow from '../TableHeaderRow';
 import Colgroup from '../Colgroup';
 import GridRow from '../Row';
 import HeaderRow from '../HeaderRow';
 import DataRow from '../DataRow';
-import FooterRow, { TFooter } from '../FooterRow';
-import ResultsRow, { TResultsPosition } from '../ResultsRow';
+import FooterRow, {TFooter} from '../FooterRow';
+import ResultsRow, {TResultsPosition} from '../ResultsRow';
 import GridRowMixin from './Row';
 import EmptyRow from '../EmptyRow';
-import { EnumeratorCallback } from 'Types/collection';
+import {EnumeratorCallback, RecordSet} from 'Types/collection';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import {create} from 'Types/di';
+import {TItemActionsPosition} from 'Controls/_display/Collection';
 
 type THeaderVisibility = 'visible' | 'hasdata';
 type TResultsVisibility = 'visible' | 'hasdata';
+
+export type ISortItem = { [p: string]: string };
 
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
 
 export type TColspanCallbackResult = number | 'end';
 
-export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
+export type TColspanCallback
+    = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
 
 export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => TColspanCallbackResult;
 
@@ -37,7 +48,7 @@ export interface IEmptyTemplateColumn {
     endColumn?: number;
 }
 
-export interface IOptions {
+export interface IOptions extends ICollectionOptions {
     columns: TColumns;
     // TODO: Написать интерфейс и доку для TFooter
     footer?: TFooter;
@@ -55,25 +66,24 @@ export interface IOptions {
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
     stickyColumnsCount?: number;
-    sorting?: Array<{[p: string]: string}>;
+    sorting?: ISortItem[];
     emptyTemplateColumns?: IEmptyTemplateColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
-    multiSelectVisibility?: string;
-    itemActionsPosition?: 'inside' | 'outside' | 'custom';
-    backgroundStyle: string;
 }
 
-export default abstract class Grid<S, T extends GridRowMixin<S>> {
+/**
+ * Миксин, который содержит логику отображения таблицы
+ */
+export default abstract class Grid<S extends Model = Model, T extends GridRowMixin<S> = GridRowMixin<S>> {
     readonly '[Controls/_display/grid/mixins/Grid]': boolean;
 
     protected _$columns: TColumns;
     protected _$colgroup: Colgroup<S>;
     protected _$header: THeader;
-    protected _$headerModel: Header<S>;
+    protected _$headerModel: Header;
     protected _$headerVisibility: THeaderVisibility;
     protected _$multiSelectVisibility: string;
-    protected _$footer: FooterRow<S>;
-    protected _$results: ResultsRow<S>;
+    protected _$results: ResultsRow;
     protected _$ladder: ILadderObject;
     protected _$ladderProperties: string[];
     protected _$stickyColumn: {};
@@ -89,14 +99,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$stickyColumnsCount: number;
     protected _$emptyGridRow: EmptyRow<S>;
     protected _$emptyTemplate: TemplateFunction;
-    protected _$sorting: Array<{[p: string]: string}>;
+    protected _$sorting: ISortItem[];
     protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
     protected _$colspanGroup: boolean;
     protected _$backgroundStyle: string;
     protected _$newDesign: boolean;
 
     protected _isFullGridSupport: boolean = isFullGridSupport();
-    protected _footer: FooterRow<S>;
+    protected _footer: FooterRow;
 
     protected constructor(options: IOptions) {
         const supportLadder = GridLadderUtil.isSupportLadder(this._$ladderProperties);
@@ -136,7 +146,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._$colgroup;
     }
 
-    getHeader(): Header<S> {
+    getHeader(): Header {
         if (!this._$headerModel && this._headerIsVisible(this._$header)) {
             this._initializeHeader({
                 header: this._$header,
@@ -184,7 +194,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._nextVersion();
     }
 
-    getResults(): ResultsRow<S> {
+    getResults(): ResultsRow {
         if (!this._$results && this._resultsIsVisible()) {
             this._initializeResults({
                 columns: this._$columns,
@@ -204,7 +214,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     setColspanCallback(colspanCallback: TColspanCallback): void {
         this._$colspanCallback = colspanCallback;
-        this._updateItemsProperty('setColspanCallback', this._$colspanCallback, 'setColspanCallback');
+        this._updateItemsProperty(
+            'setColspanCallback', this._$colspanCallback, 'setColspanCallback'
+        );
         this._nextVersion();
     }
 
@@ -220,7 +232,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     setColspanGroup(colspanGroup: boolean): void {
         if (this._$colspanGroup !== colspanGroup) {
             this._$colspanGroup = colspanGroup;
-            this._updateItemsProperty('setColspanGroup', this._$colspanGroup, '[Controls/_display/grid/GroupRow]');
+            this._updateItemsProperty(
+                'setColspanGroup', colspanGroup, '[Controls/_display/grid/GroupRow]'
+            );
             this._nextVersion();
         }
     }
@@ -237,7 +251,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._isFullGridSupport;
     }
 
-    getEmptyTemplateClasses(theme?: string): string {
+    getEmptyTemplateClasses(): string {
         const rowSeparatorSize = this.getRowSeparatorSize();
         let emptyTemplateClasses = 'controls-GridView__emptyTemplate js-controls-GridView__emptyTemplate';
         emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}`;
@@ -283,7 +297,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             this._updateItemsLadder();
         }
 
-        [this.getColgroup(), this.getHeader(), this.getResults(), this.getFooter(), this.getEmptyGridRow()].forEach((gridUnit) => {
+        [
+            this.getColgroup(), this.getHeader(), this.getResults(), this.getFooter(), this.getEmptyGridRow()
+        ].forEach((gridUnit) => {
             gridUnit?.setGridColumnsConfig(newColumns);
         });
     }
@@ -304,7 +320,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
-    setSorting(sorting: Array<{[p: string]: string}>): void {
+    setSorting(sorting: ISortItem[]): void {
         this._$sorting = sorting;
         this._nextVersion();
         if (this.hasHeader()) {
@@ -327,7 +343,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         if (header) {
             header.setColumnSeparatorSize(columnSeparatorSize);
         }
-        this._updateItemsProperty('setColumnSeparatorSize', this._$columnSeparatorSize, 'setColumnSeparatorSize');
+        this._updateItemsProperty(
+            'setColumnSeparatorSize', this._$columnSeparatorSize, 'setColumnSeparatorSize'
+        );
     }
 
     // TODO удалить после https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
@@ -419,17 +437,19 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             ...options,
             owner: this,
             columnsConfig: options.header,
-            gridColumnsConfig: options.columns
+            gridColumnsConfig: options.columns,
+            style: this.getStyle(),
+            theme: this.getTheme()
         };
-        const headerConstructor = this.getHeaderConstructor();
-        this._$headerModel = new headerConstructor(cOptions);
+        const headerModule = this.getHeaderConstructor();
+        this._$headerModel = create(headerModule, cOptions);
     }
 
-    getHeaderConstructor(): typeof Header {
-        return this.isFullGridSupport() ? Header : TableHeader;
+    getHeaderConstructor(): string {
+        return this.isFullGridSupport() ? 'Controls/grid:GridHeader' : 'Controls/grid:GridTableHeader';
     }
 
-    protected _initializeFooter(options: IOptions): FooterRow<S> {
+    protected _initializeFooter(options: IOptions): FooterRow {
         if (!options.footerTemplate && !options.footer) {
             return;
         }
@@ -443,7 +463,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             rowTemplateOptions: {},
             backgroundStyle: options.backgroundStyle,
             columnSeparatorSize: options.columnSeparatorSize,
-            shouldAddFooterPadding: options.itemActionsPosition === 'outside'
+            shouldAddFooterPadding: options.itemActionsPosition === 'outside',
+            style: this.getStyle(),
+            theme: this.getTheme()
         });
     }
 
@@ -459,11 +481,13 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             metaResults: this.getMetaResults(),
             backgroundStyle: options.backgroundStyle,
             columnSeparatorSize: options.columnSeparatorSize,
-            colspanCallback: options.resultsColspanCallback
+            colspanCallback: options.resultsColspanCallback,
+            style: this.getStyle(),
+            theme: this.getTheme()
         });
     }
 
-    protected _initializeColgroup(options: IOptions): Colgroup<S> {
+    protected _initializeColgroup(options: IOptions): void {
         this._$colgroup = new Colgroup({
             owner: this,
             gridColumnsConfig: options.columns
@@ -490,7 +514,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return ResultsRow;
     }
 
-    getRowIndex(row: GridRow<T>): number {
+    getRowIndex(row: GridRow<S>): number {
         const getHeaderOffset = () => {
             if (this._$headerModel) {
                 const {start, end} = this._$headerModel.getBounds().row;
@@ -555,7 +579,12 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     hasItemActionsSeparatedCell(): boolean {
-        return !!this.getGridColumnsConfig() && this.hasColumnScroll() && this._$itemActionsPosition !== 'custom';
+        return !!this.getGridColumnsConfig() && (
+            this._$stickyItemActions || (
+                this.hasColumnScroll() &&
+                this._$itemActionsPosition !== 'custom'
+            )
+        );
     }
 
     // FIXME: Временное решение - аналог RowEditor из старых таблиц(редактирование во всю строку).
@@ -569,24 +598,53 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;
+
     abstract hasMoreData(): boolean;
+
     abstract hasMoreDataUp(): boolean;
+
     abstract getCollectionCount(): number;
+
     abstract getViewIterator(): IViewIterator;
+
     abstract getStartIndex(): number;
+
     abstract getStopIndex(): number;
+
     abstract getRowSeparatorSize(): string;
+
     abstract getMultiSelectVisibility(): string;
+
     abstract getMultiSelectPosition(): string;
+
     abstract getItemBySourceItem(item: S): T;
+
     abstract getItemBySourceKey(key: string | number): T;
-    abstract getCollection(): IBaseCollection<S, T>;
-    abstract getFooter(): FooterRow<S>;
+
+    abstract getCollection(): RecordSet;
+
+    abstract getFooter(): FooterRow;
+
     abstract each(callback: EnumeratorCallback<T>, context?: object): void;
+
     abstract getNavigation(): INavigationOptionValue<INavigationSourceConfig>;
 
+    abstract getCount(): number;
+
+    abstract getStyle(): string;
+
+    abstract getTheme(): string;
+
+    abstract getItems(): T[];
+
+    protected abstract _$emptyTemplateOptions: object;
+
+    protected abstract _$itemActionsPosition: TItemActionsPosition;
+
     protected abstract _nextVersion(): void;
+
     protected abstract _getItems(): T[];
+
     protected abstract _updateItemsProperty(updateMethodName: string,
                                             newPropertyValue: any,
                                             conditionProperty?: string,

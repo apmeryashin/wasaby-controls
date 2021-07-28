@@ -241,6 +241,14 @@ export const Flat = {
             photo: explorerImages[1]
         }
     ],
+    getDataWithLargeTitle: () => Flat.getData().map((item) => {
+        let title = '';
+        for (let i = 0; i < item.title.length; i++) {
+            title += ' ' + item.title;
+        }
+        item.title = title;
+        return item;
+    }),
     getHeader: () => [
         {
             title: 'Наименование'

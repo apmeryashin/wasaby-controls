@@ -87,7 +87,7 @@ const hasCheckboxColumn = (options: IAbstractViewOptions): boolean => {
 };
 
 const isSizeAffectsOptionsChanged = (newOptions: IAbstractViewOptions, oldOptions: IAbstractViewOptions): boolean => {
-    const changedOptions: Record<string, unknown> = _Options.getChangedOptions(newOptions, oldOptions);
+    const changedOptions = _Options.getChangedOptions(newOptions, oldOptions);
 
     return Boolean(
         changedOptions.hasOwnProperty('columns') ||
@@ -155,7 +155,8 @@ const createDragScroll = (self: TColumnScrollViewMixin, options: IAbstractViewOp
             self._$dragScrollStylesContainer.innerHTML = '';
         },
         onOverlayShown(): void {
-            self._$dragScrollStylesContainer.innerHTML = `.${self._$columnScrollSelector}>.${DRAG_SCROLL_JS_SELECTORS.OVERLAY}{display: block;}`;
+            self._$dragScrollStylesContainer.innerHTML
+                = `.${self._$columnScrollSelector}>.${DRAG_SCROLL_JS_SELECTORS.OVERLAY}{display: block;}`;
         }
     });
 };
@@ -295,7 +296,7 @@ const setScrollPosition = (self: TColumnScrollViewMixin, position: number, immed
         if (self._$dragScrollController) {
             self._$dragScrollController.setScrollPosition(newPosition);
         }
-        self._notify('columnScroll', [newPosition], { bubbling: true });
+        self._notify('columnScroll', [newPosition], {bubbling: true});
     }
 };
 //#endregion
@@ -370,7 +371,11 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     _columnScrollOnViewBeforeMount(options: IAbstractViewOptions): void {
         if (options.columnScroll) {
             this._$columnScrollSelector = ColumnScrollController.createUniqSelector();
-            if (options.isFullGridSupport && options.columnScrollStartPosition === 'end' && !options.preventServerSideColumnScroll) {
+            if (
+                options.isFullGridSupport &&
+                options.columnScrollStartPosition === 'end' &&
+                !options.preventServerSideColumnScroll
+            ) {
                 this._$columnScrollUseFakeRender = true;
             }
         }
@@ -389,7 +394,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         //  показывать 1 колонку(grid-template-columns: 1fr;)?
         if (!canShowColumnScroll(this, this._options)) {
             if (this._options.needShowEmptyTemplate) {
-                this._$columnScrollEmptyViewMaxWidth = ColumnScrollController.getEmptyViewMaxWidth(this._children, this._options);
+                this._$columnScrollEmptyViewMaxWidth
+                    = ColumnScrollController.getEmptyViewMaxWidth(this._children, this._options);
             }
             if (this._$columnScrollUseFakeRender) {
                 this._$columnScrollUseFakeRender = false;
@@ -513,14 +519,6 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         }
     },
 
-    _columnScrollHasItemActionsCell(options: IAbstractViewOptions): boolean {
-        return Boolean(
-            options.isFullGridSupport &&
-            options.columnScroll &&
-            options.itemActionsPosition !== 'custom'
-        );
-    },
-
     _getColumnScrollEmptyViewMaxWidth(): number {
         return this._$columnScrollEmptyViewMaxWidth;
     },
@@ -528,12 +526,13 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     _getColumnScrollThumbStyles(options: IAbstractViewOptions): string {
         // TODO: Посмотреть на экшены, если не custom то добавить.
         const hasMultiSelectColumn = hasCheckboxColumn(options);
-        const hasItemActionsCell = this._columnScrollHasItemActionsCell(options);
+        const hasItemActionsCell = this._hasItemActionsCell(options);
         const stickyColumnsCount = this._getStickyLadderCellsCount(options);
 
         // Пока обновление горизонтального скролла замороженно, актуальные колонки, по которым рисуется таблица
         // находятся в модели, а не в опциях.
-        const columnsLength = (this._isColumnScrollFrozen() ? this.getListModel().getGridColumnsConfig() : options.columns).length;
+        const columns = this._isColumnScrollFrozen() ? this.getListModel().getGridColumnsConfig() : options.columns;
+        const columnsLength = columns.length;
 
         const startColumn = +hasMultiSelectColumn + stickyColumnsCount + (options.stickyColumnsCount || 1) + 1;
         const endColumn = +hasMultiSelectColumn + +hasItemActionsCell + stickyColumnsCount + columnsLength + 1;
@@ -552,7 +551,10 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         return classes;
     },
 
-    _getColumnScrollContentClasses(options: IAbstractViewOptions, columnScrollPartName?: 'fixed' | 'scrollable'): string {
+    _getColumnScrollContentClasses(
+        options: IAbstractViewOptions,
+        columnScrollPartName?: 'fixed' | 'scrollable'
+    ): string {
         let classes = '';
         if (options.columnScroll) {
             classes += `${COLUMN_SCROLL_JS_SELECTORS.CONTENT}`;
@@ -675,7 +677,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     _onColumnScrollDragScrolling(e: SyntheticEvent<TouchEvent | MouseEvent>, startBy: 'mouse' | 'touch'): void {
         // TODO: Поправить пахины правки, здесь не работает скорее всего на IPAD.
         if (this._$dragScrollController && this._$dragScrollController.isStarted()) {
-            const isOverlay = e.target.className.indexOf && e.target.className.indexOf(DRAG_SCROLL_JS_SELECTORS.OVERLAY) !== -1;
+            const className = e.target.className;
+            const isOverlay = className.indexOf && className.indexOf(DRAG_SCROLL_JS_SELECTORS.OVERLAY) !== -1;
             const isTouch = startBy === 'touch';
             const action = `on${isOverlay ? 'Overlay' : 'View'}${isTouch ? 'Touch' : 'Mouse'}Move`;
             const newPosition = this._$dragScrollController[action](e);
@@ -691,7 +694,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     _onColumnScrollStopDragScrolling(e: SyntheticEvent<TouchEvent | MouseEvent>, startBy: 'mouse' | 'touch'): void {
         // TODO: Поправить пахины правки, здесь не работает скорее всего на IPAD.
         if (this._$dragScrollController && this._$dragScrollController.isStarted()) {
-            const isOverlay = e.target.className.indexOf && e.target.className.indexOf(DRAG_SCROLL_JS_SELECTORS.OVERLAY) !== -1;
+            const className = e.target.className;
+            const isOverlay = className.indexOf && className.indexOf(DRAG_SCROLL_JS_SELECTORS.OVERLAY) !== -1;
             const isTouch = startBy === 'touch';
             const action = `on${isOverlay ? 'Overlay' : 'View'}${isTouch ? 'Touch' : 'Mouse'}${isTouch ? 'End' : 'Up'}`;
             const isScrolled = this._$dragScrollController.isScrolled();

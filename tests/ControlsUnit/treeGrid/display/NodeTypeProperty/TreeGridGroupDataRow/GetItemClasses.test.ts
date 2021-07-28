@@ -32,10 +32,10 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetIte
     });
 
     it('getItemClasses() should return classes for group item', () => {
-        CssClassesAssert.isSame(groupRow.getItemClasses({ theme: 'default' }), [
+        CssClassesAssert.isSame(groupRow.getItemClasses({ }), [
             'controls-ListView__itemV',
             'controls-Grid__row',
-            'controls-Grid__row_undefined',
+            'controls-Grid__row_default',
             'controls-ListView__itemV_cursor-pointer',
             'controls-ListView__item_showActions',
             'controls-ListView__group'].join(' '));

@@ -1,6 +1,12 @@
-import { GridFooterCell } from 'Controls/grid';
+import { GridFooterCell, IGridFooterCellOptions } from 'Controls/grid';
+import TreeGridFooterRow, {ITreeGridFooterRowAspectOptions} from './TreeGridFooterRow';
 
-export default class TreeGridFooterCell extends GridFooterCell<any> {
+export interface ITreeGridFooterCellOptions extends IGridFooterCellOptions, ITreeGridFooterRowAspectOptions {}
+
+/**
+ * Ячейка футера иерархической коллекции
+ */
+export default class TreeGridFooterCell<TOwner extends TreeGridFooterRow> extends GridFooterCell<TOwner> {
    /**
     * Признак, означающий что нужно рисовать отступ вместо экспандеров
     * @protected
@@ -8,12 +14,10 @@ export default class TreeGridFooterCell extends GridFooterCell<any> {
    protected _$displayExpanderPadding: boolean;
 
    getWrapperClasses(
-      theme: string,
       backgroundColorStyle: string,
-      style: string = 'default',
       templateHighlightOnHover: boolean
    ): string {
-      const classes = super.getWrapperClasses(theme, backgroundColorStyle, style, templateHighlightOnHover);
+      const classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
       return `${classes} ${this._getExpanderPaddingClasses('cellWrapper')}`;
    }
 

@@ -1,13 +1,11 @@
 <ws:if data="{{ item.shouldDisplayVisibleFooter(content) }}">
     <tr class="{{item.getItemClasses({
         'highlightOnHover': highlightOnHover,
-        'theme': theme,
-        'style': style,
         'cursor': cursor,
         'clickable': clickable
     })}}" attr:key="{{item.key}}">
         <ws:for data="index,column in item.getColumns(colspan)">
-            <td class="{{ column.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
+            <td class="{{ column.getContentClasses(backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
                  attr:key="{{item.key}}_column_{{index}}"
                  attr:colspan="{{ column.getColspan(colspan) }}">
                 <ws:if data="{{ item.shouldDisplayContent(column) }}">
@@ -15,7 +13,7 @@
                     <ws:if data="{{item.shouldDisplayExpanderBlock(column)}}">
                         <ws:if data="{{!withoutLevelPadding && item.getLevel() > 1}}">
                             <ws:for data="i in item.getLevel() - 1">
-                                <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize, theme)}}"></div>
+                                <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
                             </ws:for>
                         </ws:if>
                         <ws:if data="{{item.shouldDisplayExpanderPadding(expanderIcon)}}">

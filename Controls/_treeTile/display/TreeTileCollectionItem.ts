@@ -8,8 +8,7 @@ import {
     TImagePosition,
     TImageViewMode,
     TShadowVisibility,
-    TTitleStyle,
-    ITileCollectionItemOptions
+    TTitleStyle
 } from 'Controls/tile';
 import {ITreeItemOptions, TreeItem} from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
@@ -20,8 +19,12 @@ import {ITreeTileAspectOptions} from './TreeTileCollection';
 const DEFAULT_FOLDER_WIDTH = 250;
 
 export interface ITreeTileCollectionItemOptions<S extends Model = Model>
-    extends ITreeItemOptions<S>, ITileCollectionItemOptions, ITreeTileAspectOptions {}
+    extends ITreeItemOptions<S>, ITreeTileAspectOptions {}
 
+/**
+ * Элемент коллекции, который отображается в виде иерархической плитки.
+ * @author Панихин К.А.
+ */
 export default class TreeTileCollectionItem<T extends Model = Model>
     extends mixin<TreeItem, TileItemMixin>(TreeItem, TileItemMixin) {
 

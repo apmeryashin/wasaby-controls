@@ -1,9 +1,17 @@
-import { mixin } from 'Types/util';
-import { ITreeItemOptions, TreeItem, IItemPadding, TMarkerClassName, IGroupNode } from 'Controls/display';
-import {IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, TColumns} from 'Controls/grid';
+import {mixin} from 'Types/util';
+import {ITreeItemOptions, TreeItem, IItemPadding, TMarkerClassName, IGroupNode} from 'Controls/display';
+import {
+    IGridRowOptions,
+    GridCell,
+    GridRowMixin,
+    IDisplaySearchValue,
+    IDisplaySearchValueOptions,
+    TColumns,
+    GridDataRow
+} from 'Controls/grid';
 import TreeGridCollection from './TreeGridCollection';
-import { IColumn, IInitializeColumnsOptions } from 'Controls/grid';
-import { Model } from 'Types/entity';
+import {IColumn, IInitializeColumnsOptions} from 'Controls/grid';
+import {Model} from 'Types/entity';
 import TreeCheckboxCell from './TreeCheckboxCell';
 import {ITreeGridDataCellOptions} from './TreeGridDataCell';
 
@@ -11,8 +19,11 @@ export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItem
     owner: TreeGridCollection<T>;
 }
 
+/**
+ * Строка иерархической коллекции, в которой отображаются данные из RecordSet-а
+ */
 export default class TreeGridDataRow<T extends Model = Model>
-   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
+    extends mixin<TreeItem<T>, GridRowMixin<T>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
@@ -79,15 +90,13 @@ export default class TreeGridDataRow<T extends Model = Model>
     }
 
     getMarkerClasses(
-       theme: string,
-       style: string = 'default',
-       markerClassName: TMarkerClassName = 'default',
-       itemPadding: IItemPadding = {}
+        markerClassName: TMarkerClassName = 'default',
+        itemPadding: IItemPadding = {}
     ): string {
         let classes = 'controls-GridView__itemV_marker ';
-        classes += `controls-GridView__itemV_marker-${style} `;
-        classes += `controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom} `;
-        classes += `controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top} `;
+        classes += `controls-GridView__itemV_marker-${this.getStyle()} `;
+        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingBottom-${itemPadding.bottom} `;
+        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingTop-${itemPadding.top} `;
         classes += 'controls-ListView__itemV_marker_';
         if (markerClassName === 'default') {
             classes += 'height ';
@@ -132,7 +141,7 @@ export default class TreeGridDataRow<T extends Model = Model>
         if (this._$columnItems) {
             this._$columnItems.forEach((cell, cellIndex) => {
                 if (cell.DisplaySearchValue) {
-                    cell.setSearchValue(searchValue);
+                    (cell as unknown as GridDataRow).setSearchValue(searchValue);
                 }
             });
         }
@@ -143,7 +152,7 @@ export default class TreeGridDataRow<T extends Model = Model>
         return this._$searchValue;
     }
 
-    setSelected(selected: boolean|null, silent?: boolean): void {
+    setSelected(selected: boolean | null, silent?: boolean): void {
         const changed = this._$selected !== selected;
         super.setSelected(selected, silent);
         if (changed) {
@@ -173,7 +182,7 @@ export default class TreeGridDataRow<T extends Model = Model>
     // Убираем ExpanderPadding для подуровней TreeGridGroupRow
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
         const should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
-        return should && (this._$parent.isRoot() || !(this._$parent as TreeGridDataRow<T>).GroupNodeItem);
+        return should && (this._$parent.isRoot() || !(this._$parent as unknown as TreeGridDataRow).GroupNodeItem);
     }
 
     // endregion overrides

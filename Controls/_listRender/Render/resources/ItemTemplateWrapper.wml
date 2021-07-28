@@ -3,10 +3,10 @@
       <Controls.list:MultiSelectTemplate item="{{ item }}" />
    </ws:if>
    <ws:if data="{{item.shouldDisplayMarker(marker) }}">
-      <div class="{{item.getMarkerClasses(theme, '', markerClassName, itemPadding, markerPosition)}}"></div>
+      <div class="{{item.getMarkerClasses(markerClassName, itemPadding, markerPosition)}}"></div>
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
-      <div attr:class="{{ item.getContentClasses(theme, style) }}">
+      <div attr:class="{{ item.getContentClasses() }}">
          <ws:partial
                  template="{{ contentTemplate }}"
                  item="{{ item }}"
@@ -16,7 +16,7 @@
       </div>
    </ws:if>
    <ws:else>
-      <div attr:class="{{ item.getContentClasses(theme, style) }}">
+      <div attr:class="{{ item.getContentClasses() }}">
          {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
       </div>
    </ws:else>

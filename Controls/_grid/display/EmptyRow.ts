@@ -1,18 +1,20 @@
-import { IColumn } from './interface/IColumn';
+import {IColumn} from './interface/IColumn';
 import Row, {IOptions as IBaseRowOptions} from './Row';
 import {IItemTemplateParams} from './mixins/Row';
 import {TColspanCallbackResult} from './mixins/Grid';
 
-class EmptyRow<T> extends Row<T> {
-
+/**
+ * Строка пустого представления таблицы
+ */
+class EmptyRow extends Row<null> {
     getContents(): string {
         return 'emptyRow';
     }
 
-    getItemClasses(params: IItemTemplateParams = {theme: 'default'}): string {
+    getItemClasses(params: IItemTemplateParams): string {
         return 'js-controls-GridView__emptyTemplate'
             + ' controls-GridView__emptyTemplate'
-            + ` ${this._getBaseItemClasses(params.style, params.theme)}`;
+            + ` ${this._getBaseItemClasses()}`;
     }
 
     //region Аспект "Колонки. Создание, колспан."

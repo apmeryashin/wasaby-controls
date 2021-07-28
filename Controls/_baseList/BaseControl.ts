@@ -5526,29 +5526,47 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 } else {
                     if (this._savedItemClickArgs && this._isMounted) {
                         // Запись становится активной по клику, если не началось редактирование.
-                        // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
+                        // Аргументы itemClick сохранены в состояние и используются для нотификации об активации
+                        // элемента.
                         this._notify('itemActivate', this._savedItemClickArgs.slice(1), {bubbling: true});
                     }
                     return result;
                 }
             }
 
-            const sourceController = this.getSourceController();
-            // Пока считаем что редактирование итемов без указания SourceController не поддерживается
-            if (!sourceController) {
-                return LIST_EDITING_CONSTANTS.CANCEL;
+            // Если запускается редактирование существующей записи,
+            // то сразу переходим к следующему блоку
+            if (!params.isAdd) {
+                return result;
             }
 
-            if (params.isAdd && !((params.options && params.options.item) instanceof Model) && !((result && result.item) instanceof Model)) {
-                return sourceController.create().then((item) => {
-                    if (item instanceof Model) {
-                        return {item};
-                    }
-                    throw Error('BaseControl::create before add error! Source returned non Model.');
-                }).catch((error: Error) => {
-                    return this._processEditInPlaceError(error);
-                });
+            //region Обработка добавления записи
+            const sourceController = this.getSourceController();
+            // Добавляемы итем берем либо из результата beforeBeginEdit
+            // либо из параметров запуска редактирования
+            const addedItem = result?.item || params.options?.item;
+
+            // Если нет источника и к нам не пришел новый добавляемый итем, то ругаемся
+            if (!sourceController && !addedItem) {
+                throw new Error('You use list without source. So you need to manually create new item when processing an event beforeBeginEdit');
             }
+
+            // Если есть источник и сверху не пришел добавляемый итем, то выполним запрос на создание новой записи
+            if (sourceController && !(addedItem instanceof Model)) {
+                return sourceController
+                    .create()
+                    .then((item) => {
+                        if (item instanceof Model) {
+                            return {item};
+                        }
+
+                        throw Error('BaseControl::create before add error! Source returned non Model.');
+                    })
+                    .catch((error: Error) => {
+                        return this._processEditInPlaceError(error);
+                    });
+            }
+            //endregion
 
             return result;
         }).then((result) => {
@@ -5559,9 +5577,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // TODO: Поддержать везде по задаче
             //  https://online.sbis.ru/opendoc.html?guid=000ff88b-f37e-4aa6-9bd3-3705bb721014
             if (editingConfig.task1181625554 && params.isAdd) {
-                return _private.scrollToEdge(this, editingConfig.addPosition === 'top' ? 'up' : 'down').then(() => {
-                    return result;
-                });
+                return _private
+                    .scrollToEdge(this, editingConfig.addPosition === 'top' ? 'up' : 'down')
+                    .then(() => {
+                        return result;
+                    });
             } else {
                 return result;
             }
@@ -5615,43 +5635,53 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    _beforeEndEditCallback(params: IBeforeEndEditCallbackParams) {
+    _beforeEndEditCallback(params: IBeforeEndEditCallbackParams): Promise<void> {
         if (params.force) {
             this._notify('beforeEndEdit', params.toArray());
             return;
         }
+
         return Promise.resolve().then(() => {
-            if (params.willSave) {
-                // Валидайция запускается не моментально, а после заказанного для нее цикла синхронизации.
-                // Такая логика необходима, если синхронно поменяли реактивное состояние, которое будет валидироваться и позвали валидацию.
-                // В таком случае, первый цикл применит все состояния и только после него произойдет валидация.
-                // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то реактивное состояние.
-                const submitPromise = this._validateController.deferSubmit();
-                this._isPendingDeferSubmit = true;
-                this._forceUpdate();
-                return submitPromise.then((validationResult) => {
-                    for (const key in validationResult) {
-                        if (validationResult.hasOwnProperty(key) && validationResult[key]) {
-                            return LIST_EDITING_CONSTANTS.CANCEL;
-                        }
-                    }
-                });
+            if (!params.willSave) {
+                return ;
             }
+
+            // Валидация запускается не моментально, а после заказанного для нее цикла синхронизации.
+            // Такая логика необходима, если синхронно поменяли реактивное состояние, которое будет валидироваться
+            // и позвали валидацию. В таком случае, первый цикл применит все состояния и только после него произойдет
+            // валидация.
+            // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то
+            // реактивное состояние.
+            const submitPromise = this._validateController.deferSubmit();
+            this._isPendingDeferSubmit = true;
+            this._forceUpdate();
+            return submitPromise.then((validationResult) => {
+                for (const key in validationResult) {
+                    if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+                        return LIST_EDITING_CONSTANTS.CANCEL;
+                    }
+                }
+            });
         }).then((result) => {
             if (result === LIST_EDITING_CONSTANTS.CANCEL) {
                 return result;
             }
+
             const eventResult = this._notify('beforeEndEdit', params.toArray());
 
             // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
             // Пользовательское сохранение потенциально может начаться только если вернули Promise
-            const shouldUseDefaultSaving = params.willSave && (params.isAdd || params.item.isChanged()) && (
-                !eventResult || (
-                    eventResult !== LIST_EDITING_CONSTANTS.CANCEL && !(eventResult instanceof Promise)
-                )
-            );
+            const shouldUseDefaultSaving =
+                params.willSave &&
+                (params.isAdd || params.item.isChanged()) &&
+                (
+                    !eventResult ||
+                    (eventResult !== LIST_EDITING_CONSTANTS.CANCEL && !(eventResult instanceof Promise))
+                );
 
-            return shouldUseDefaultSaving ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex) : eventResult;
+            return shouldUseDefaultSaving
+                ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex)
+                : eventResult;
         });
     }
 
@@ -5940,7 +5970,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _saveEditingInSource(item: Model, isAdd: boolean, sourceIndex?: number): Promise<void> {
-        return this.getSourceController().update(item).then(() => {
+        const updateResult = this._options.source ? this.getSourceController().update(item) : Promise.resolve();
+
+        return updateResult.then(() => {
             // После выделения слоя логики работы с источником данных в отдельный контроллер,
             // код ниже должен переехать в него.
             if (isAdd) {
@@ -5975,7 +6007,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         };
     }
 
-    _processEditInPlaceError(error) {
+    _processEditInPlaceError(error: Error): Promise<void> {
         /*
          * в detail сейчас в многих местах редактирования по месту приходит текст из запроса
          * Не будем его отображать

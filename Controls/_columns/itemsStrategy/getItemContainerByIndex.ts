@@ -1,4 +1,8 @@
 import {default as ColumnsCollection} from '../display/Collection';
+
+/**
+ * Стратегия получения dom элемента
+ */
 export default class ColumnsStrategy {
     static getItemContainerByIndex(index: number, itemsContainer: HTMLElement, model?: ColumnsCollection): HTMLElement {
         const item = model.getItemBySourceIndex(index);

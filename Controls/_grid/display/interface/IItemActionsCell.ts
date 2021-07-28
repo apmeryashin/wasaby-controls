@@ -1,3 +1,3 @@
 export default interface IItemActionsCell {
-    readonly ItemActionsCell: true;
+    readonly ItemActionsCell: boolean;
 }

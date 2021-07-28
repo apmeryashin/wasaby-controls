@@ -427,15 +427,14 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         );
     }
 
-    getMarkerClasses(theme: string, style: string = 'default',
-                     markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
+    getMarkerClasses(markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
         let markerClass = 'controls-ListView__itemV_marker controls-ListView__itemV_marker_';
         if (markerClassName === 'default') {
             markerClass += 'height';
         } else {
             markerClass += `padding-${(itemPadding.top || this.getTopPadding() || 'l')}_${markerClassName}`;
         }
-        markerClass += ` controls-ListView__itemV_marker_${style}`;
+        markerClass += ` controls-ListView__itemV_marker_${this.getStyle()}`;
         markerClass += ` controls-ListView__itemV_marker-${this.getMarkerPosition()}`;
         return markerClass;
     }
@@ -707,10 +706,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion Drag-n-drop
 
-    isSticked(style: string, stickyCallback: Function, item: CollectionItem): boolean {
+    isSticked(stickyCallback: Function, item: CollectionItem): boolean {
         return stickyCallback ?
             stickyCallback(item.getContents()) :
-            this.isMarked() && this._isSupportSticky(this.getOwner().getStyle());
+            this.isMarked() && this._isSupportSticky();
     }
 
     getStickyHeaderPosition(stickyCallback: Function): {} {
@@ -720,9 +719,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
     }
 
-    protected _isSupportSticky(style: string = 'default'): boolean {
+    protected _isSupportSticky(): boolean {
         return this.getOwner().isStickyMarkedItem() !== false &&
-            (style === 'master');
+            (this.getStyle() === 'master');
     }
 
     getShadowVisibility(): string {
@@ -749,23 +748,21 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * Метод должен уйти в render-модель при её разработке.
      */
     getWrapperClasses(templateHighlightOnHover: boolean = true,
-                      theme?: string,
                       cursor: string = 'pointer',
                       backgroundColorStyle?: string,
-                      style: string = 'default',
                       showItemActionsOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
+        const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 
         // TODO: Убрать js-controls-ListView__editingTarget' по задаче
         //  https://online.sbis.ru/opendoc.html?guid=deef0d24-dd6a-4e24-8782-5092e949a3d9
         let wrapperClasses = `controls-ListView__itemV js-controls-ListView__editingTarget ${this._getCursorClasses(cursor)}`;
-        wrapperClasses += ` controls-ListView__item_${style}`;
+        wrapperClasses += ` controls-ListView__item_${this.getStyle()}`;
         if (showItemActionsOnHover !== false) {
             wrapperClasses += ' controls-ListView__item_showActions';
         }
         wrapperClasses += ' js-controls-ListView__measurableContainer';
-        wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}`;
+        wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${this.getStyle()}`;
         if (templateHighlightOnHover && !this.isEditing()) {
             wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}`;
         }
@@ -907,16 +904,14 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
-     * @param theme - используемая тема
-     * @param style - режим отображения списка (master/default)
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
-    getContentClasses(theme: string, style: string = 'default'): string {
+    getContentClasses(): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
-        let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}`;
-        contentClasses += ` controls-ListView__itemContent_${style}`;
+        let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses()}`;
+        contentClasses += ` controls-ListView__itemContent_${this.getStyle()}`;
 
         if (rowSeparatorSize && this._$isTopSeparatorEnabled) {
             contentClasses += ` controls-ListView__rowSeparator_size-${rowSeparatorSize}`;
@@ -947,9 +942,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param itemActionsPosition
      * @param itemActionsClass
      * @param itemPadding @deprecated
-     * @param theme
      */
-    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
+    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}): string {
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
         const result: string[] = [];
         if (itemPadding === undefined) {
@@ -1049,16 +1043,15 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion ItemPadding
 
-    protected _getSpacingClasses(theme: string, style: string = 'default'): string {
+    protected _getSpacingClasses(): string {
         let classes = '';
 
-        const preparedStyle = style;
         const topSpacing = this.getOwner().getTopPadding().toLowerCase();
         const bottomSpacing = this.getOwner().getBottomPadding().toLowerCase();
         const rightSpacing = this.getOwner().getRightPadding().toLowerCase();
 
-        classes += ` controls-ListView__item_${preparedStyle}-topPadding_${topSpacing}`;
-        classes += ` controls-ListView__item_${preparedStyle}-bottomPadding_${bottomSpacing}`;
+        classes += ` controls-ListView__item_${this.getStyle()}-topPadding_${topSpacing}`;
+        classes += ` controls-ListView__item_${this.getStyle()}-bottomPadding_${bottomSpacing}`;
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}`;
 

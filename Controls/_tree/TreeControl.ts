@@ -92,7 +92,7 @@ const _private = {
         }
     },
 
-    toggleExpanded(self: TreeControl, dispItem: TreeItem): Promise<unknown> {
+    toggleExpanded(self: TreeControl, dispItem: TreeItem): Promise<void> {
         if (self._options.supportExpand === false || self.getViewModel().SupportExpand === false) {
             return Promise.resolve();
         }
@@ -652,6 +652,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             viewModel.setExpanderVisibility(newOptions.expanderVisibility);
         }
 
+        if (newOptions.expanderSize !== this._options.expanderSize) {
+            viewModel.setExpanderSize(newOptions.expanderSize);
+        }
+
         if (newOptions.nodeProperty !== this._options.nodeProperty) {
             viewModel.setNodeProperty(newOptions.nodeProperty);
         }
@@ -834,7 +838,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         _private.resetExpandedItems(this);
     }
 
-    toggleExpanded(key: TKey): unknown | Promise<unknown> {
+    toggleExpanded(key: TKey): Promise<void> {
         const item = this.getViewModel().getItemBySourceKey(key);
         return _private.toggleExpanded(this, item);
     }
@@ -1342,6 +1346,33 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 resolve();
             }
         });
+    }
+
+    /**
+     * Метод для определения позиции добавляемой записи по-умолчанию.
+     * Если в дереве маркер стоит на развернутом узле или на его дочерних записях/свёрнутых узлах,
+     * то позиция по-умолчанию для добавляемой записи - этот раскрытый узел.
+     * Во всех остальных случаях позицией будет текущий корень дерева.
+     *
+     * @return {TKey} Ключ розительского узла для добавления по-умолчанию.
+     */
+    getMarkedNodeKey(): TKey {
+        const markedKey = this.getMarkerController().getMarkedKey();
+
+        if (typeof markedKey !== 'undefined') {
+            const markedRecord = this.getViewModel().getItemBySourceKey(markedKey);
+
+            if (markedRecord.isExpanded()) {
+                // Узел раскрыт.
+                return markedRecord.contents.getKey();
+            } else if (!markedRecord.getParent().isRoot()) {
+                // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
+                return markedRecord.getParent().contents.getKey();
+            }
+        }
+
+        const currentRoot = this.getViewModel().getRoot();
+        return currentRoot.isRoot() ? currentRoot.contents : currentRoot.contents.getKey();
     }
 
     private _applyMarkedLeaf(key: CrudEntityKey, model, markerController): void {

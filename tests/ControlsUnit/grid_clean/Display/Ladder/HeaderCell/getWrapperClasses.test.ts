@@ -25,7 +25,7 @@ describe('Controls/grid_clean/Display/Ladder/HeaderCell/getWrapperClasses', () =
             column: headerColumn,
             isLadderCell: true
         });
-        const cellWrapperClasses = gridHeaderCell.getWrapperClasses('TestTheme', 'TestBGStyle', 'TestStyle');
+        const cellWrapperClasses = gridHeaderCell.getWrapperClasses('TestBGStyle');
         assert.notMatch(cellWrapperClasses, createRegExpForTestMatchClass('controls-Grid__cell_spacingLeft'));
         assert.notMatch(cellWrapperClasses, createRegExpForTestMatchClass('controls-Grid__cell_spacingRight'));
         assert.notMatch(cellWrapperClasses, createRegExpForTestMatchClass('controls-Grid__cell_spacingFirstCol'));

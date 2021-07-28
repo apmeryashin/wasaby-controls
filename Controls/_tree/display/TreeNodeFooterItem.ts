@@ -33,12 +33,12 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
         return 'controls-ListView__itemV controls-Tree__nodeFooter';
     }
 
-    getContentClasses(theme: string, style: string = 'default'): string {
-        return super.getContentClasses(theme, style) + ' controls-Tree__itemContentTreeWrapper';
+    getContentClasses(): string {
+        return super.getContentClasses() + ' controls-Tree__itemContentTreeWrapper';
     }
 
-    getExpanderPaddingClasses(tmplExpanderSize?: string, theme: string = 'default'): string {
-        let classes = super.getExpanderPaddingClasses(tmplExpanderSize, theme);
+    getExpanderPaddingClasses(tmplExpanderSize?: string): string {
+        let classes = super.getExpanderPaddingClasses(tmplExpanderSize);
 
         classes = classes.replace(
            'controls-TreeGrid__row-expanderPadding',
