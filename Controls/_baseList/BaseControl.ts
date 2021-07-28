@@ -96,7 +96,7 @@ import {
 } from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_baseList/BaseControl/BaseControl');
-import 'wml!Controls/_baseList/BaseControl/Footer';
+import 'wml!Controls/_baseList/BaseControl/NavigationButton';
 
 import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
@@ -743,7 +743,7 @@ const _private = {
         // Если подгрузка данных осуществляется кликом по кнопке "Еще..." и есть что загружать, то рисуем эту кнопку
         // всегда кроме случая когда задана группировка и все группы свернуты
         if (_private.isDemandNavigation(self._navigation) && self._hasMoreData(sourceController, 'down')) {
-            self._shouldDrawFooter = (options.groupingKeyCallback || options.groupProperty) ?
+            self._shouldDrawNavigationButton = (options.groupingKeyCallback || options.groupProperty) ?
                 !self._listViewModel.isAllGroupsCollapsed()
                 : true;
         } else if (
@@ -752,13 +752,12 @@ const _private = {
                                    self._hasMoreData(sourceController, 'down'),
                                    self._expanded)
         ) {
-            self._shouldDrawCut = true;
+            self._shouldDrawNavigationButton = true;
         } else {
-            self._shouldDrawFooter = false;
-            self._shouldDrawCut = false;
+            self._shouldDrawNavigationButton = false;
         }
 
-        if (self._shouldDrawFooter) {
+        if (self._shouldDrawNavigationButton && _private.isDemandNavigation(self._navigation)) {
             let loadedDataCount = 0;
 
             if (self._listViewModel) {
@@ -775,7 +774,7 @@ const _private = {
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
                 if (self._loadMoreCaption === 0) {
-                    self._shouldDrawFooter = false;
+                    self._shouldDrawNavigationButton = false;
                 }
             } else {
                 self._loadMoreCaption = '...';
@@ -1740,12 +1739,12 @@ const _private = {
                     if (itemsCount !== moreMetaCount) {
                         _private.prepareFooter(self, self._options, self._sourceController);
                     } else {
-                        self._shouldDrawFooter = false;
+                        self._shouldDrawNavigationButton = false;
                     }
                 } else if (moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
                 } else {
-                    self._shouldDrawFooter = false;
+                    self._shouldDrawNavigationButton = false;
                 }
             }
 
@@ -2300,7 +2299,7 @@ const _private = {
             options.itemActionsPosition === 'outside' &&
             !footer &&
             (!results || listViewModel?.getResultsPosition() !== 'bottom') &&
-            !self._shouldDrawFooter
+            !(self._shouldDrawNavigationButton && _private.isDemandNavigation(options.navigation))
         );
     },
 
@@ -3464,11 +3463,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _items: RecordSet;
 
     _loadMoreCaption = null;
-    _shouldDrawFooter = false;
-    _shouldDrawCut = false;
+    _shouldDrawNavigationButton = false;
 
     _expanded = false;
-    _cutSize = 'm';
 
     _loader = null;
     _loadingState = null;
@@ -6212,11 +6209,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.startDragNDrop(this, this._savedItemMouseDownEventArgs.domEvent, this._savedItemMouseDownEventArgs.itemData);
     }
 
-    protected _onClickMoreButton(e): void {
-        _private.loadToDirectionIfNeed(this, 'down');
+    protected _onNavigationButtonClick(e: SyntheticEvent): void {
+        if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
+            const view = this._options.navigation?.view;
+            if (view === 'demand') {
+                _private.loadToDirectionIfNeed(this, 'down', this._options.filter);
+            } else if (view === 'cut') {
+                this._toggleCutClick();
+            }
+        }
     }
 
-    _onCutClick() {
+    private _toggleCutClick() {
         if (!this._expanded) {
             this._sourceController.setNavigation(undefined);
             this._reload(this._options).then(() => {

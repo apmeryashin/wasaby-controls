@@ -231,6 +231,56 @@ type TNavigationPagingPadding = 'default' | 'null';
 type TNavigationPagingPosition= 'left' | 'right';
 
 /**
+ * @typedef {String} TNavigationButtonView
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationViewConfig#buttonView buttonView}.
+ * @variant separator кнопка подгрузки данных в виде {@link Controls/toggle:BigSeparator разделителя с тремя точками}
+ * @variant link кнопка подгрузки данных в виде текстовой ссылки
+ */
+export type TNavigationButtonView = 'separator' | 'link';
+
+/**
+ * @typedef {String} TNavigationButtonSize
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationButtonConfig#size size}.
+ * @variant s малый
+ * @variant m средний
+ * @variant l большой
+ */
+export type TNavigationButtonSize = 's' | 'm' | 'l';
+
+/**
+ * @typedef {String} TNavigationButtonPosition
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationButtonConfig#buttonPosition buttonPosition}.
+ * @variant start по левому краю контентной области
+ * @variant center по центру контентной области
+ */
+export type TNavigationButtonPosition = 'start' | 'center';
+
+/**
+ * @description Конфигурация кнопки подгрузки данных.
+ * @author Аверкиев П.А.
+ * @public
+ */
+export interface INavigationButtonConfig {
+    /**
+     * Положение кнопки развертывания.
+     * @default center
+     */
+    buttonPosition?: TNavigationButtonPosition;
+
+    /**
+     * Размер кнопки развертывания.
+     * @default m
+     */
+    size?: TNavigationButtonSize;
+
+    /**
+     * Флаг, определяющий контрастность фона.
+     * @default true
+     */
+    contrastBackground?: boolean;
+}
+
+/**
  * @description Параметры для конфигурации {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ визуального представления навигации}.
  * @public
  * @author Крайнов Д.О.
@@ -270,6 +320,16 @@ export interface INavigationViewConfig {
      * @default right
      */
     pagingPosition?: TNavigationPagingPosition;
+    /**
+     * Вид кнопки подгрузки данных
+     * @default default
+     */
+    buttonView?: TNavigationButtonView;
+    /**
+     * Настройки кнопки подгрузки данных
+     * @see buttonView
+     */
+    buttonConfig?: INavigationButtonConfig;
 }
 
 /**
