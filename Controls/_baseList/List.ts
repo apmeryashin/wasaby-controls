@@ -28,16 +28,16 @@ import 'css!Controls/baseList';
  * @implements Controls/interface/IPromisedSelectable
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IEditableList
+ * @implements Controls/list:IEditableList
  * @implements Controls/interface:ISorting
  * @implements Controls/interface:IDraggable
  * @implements Controls/interface/IGroupedList
- * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/list:IList
- * @mixes Controls/list:IClickableView
- * @mixes Controls/list:IReloadableList
- * @mixes Controls/marker:IMarkerList
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IList
+ * @implements Controls/list:IClickableView
+ * @implements Controls/list:IReloadableList
+ * @implements Controls/marker:IMarkerList
+ * @implements Controls/itemActions:IItemActions
  * @implements Controls/list:IListNavigation
  *
  * @author Авраменко А.С.
@@ -59,17 +59,17 @@ import 'css!Controls/baseList';
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/interface:ISelectFields
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
- * @mixes Controls/list:IEditableList
+ * @implements Controls/list:IEditableList
  * @implements Controls/interface:IDraggable
  * @implements Controls/interface/IGroupedList
- * @mixes Controls/list:IClickableView
- * @mixes Controls/list:IReloadableList
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/list:IClickableView
+ * @implements Controls/list:IReloadableList
+ * @implements Controls/marker:IMarkerList
  *
- * @mixes Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IVirtualScrollConfig
  *
  *
  * @author Авраменко А.С.
