@@ -74,3 +74,34 @@ Object.defineProperty(Text, 'defaultProps', {
  * }
  * </pre>
  */
+
+/**
+ * @name Controls/_input/Text#valueChanged
+ * @event
+ * @example
+ * Контрол ввода текста с информационной подсказкой. Подсказка содержит информацию о сложности логина.
+ * <pre class="brush: html">
+ * <Controls.input:Text name="login" on:valueChanged="_validateLogin()"/>
+ * </pre>
+ * <pre class="brush: js">
+ * export class InfoLogin extends Control<IControlOptions, void> {
+ *     private _validateLogin(event, value) {
+ *         let lengthLogin: number = value.length;
+ *         let cfg = {
+ *             target: this._children.login,
+ *             targetSide: 'top',
+ *             alignment: 'end',
+ *             message: null
+ *         }
+ *
+ *         if (lengthLogin < 6) {
+ *             cfg.message = 'Длина логина должна быть больше 5 символов';
+ *         }
+ *
+ *         this._notify('openInfoBox', [cfg], {
+ *             bubbling: true
+ *         });
+ *     }
+ * }
+ * </pre>
+ */
