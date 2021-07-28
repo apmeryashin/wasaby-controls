@@ -31,7 +31,8 @@ import {
     INavigationSourceConfig,
     IBaseSourceConfig,
     Direction,
-    ISelectionObject
+    ISelectionObject,
+    TNavigationButtonView
 } from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 
@@ -6209,8 +6210,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.startDragNDrop(this, this._savedItemMouseDownEventArgs.domEvent, this._savedItemMouseDownEventArgs.itemData);
     }
 
-    protected _onloadMore(): void {
+    protected _onloadMore(e: SyntheticEvent, dispItem?: CollectionItem): void {
         _private.loadToDirectionIfNeed(this, 'down', this._options.filter);
+    }
+
+    protected _resolveNavigationButtonView(): TNavigationButtonView {
+        const view = this._options.navigation?.view;
+        const buttonView = this._options.navigation.viewConfig.buttonView;
+        return buttonView || view === 'cut' ? 'separator' : 'link';
     }
 
     protected _onNavigationButtonClick(e: SyntheticEvent): void {

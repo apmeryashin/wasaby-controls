@@ -82,7 +82,7 @@
             <ws:partial template="wml!Controls/_baseList/BaseControl/NavigationButton"
                         value="{{_expanded}}"
                         buttonConfig="{{_options.navigation.viewConfig.buttonConfig}}"
-                        buttonView="{{_options.navigation.viewConfig.buttonView || 'default'}}"
+                        buttonView="{{_resolveNavigationButtonView()}}"
                         linkFontColorStyle="{{_options.moreFontColorStyle}}"
                         linkClass="controls-BaseControl__loadMore"
                         linkLabel="{{_loadMoreCaption}}"
