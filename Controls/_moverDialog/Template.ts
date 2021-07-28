@@ -55,10 +55,10 @@ interface IMoverColumnTemplateOptions {
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/interface:ISource
- * @mixes Controls/grid:IGridControl
+ * @implements Controls/grid:IGridControl
  * @implements Controls/tree:ITreeControl
- * @mixes Controls/list:IList
- * @mixes Controls/explorer:IExplorer
+ * @implements Controls/list:IList
+ * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:INavigation
  *
  * @public

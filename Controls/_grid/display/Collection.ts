@@ -23,7 +23,7 @@ export interface IOptions<
 
 /**
  * @public
- * @mixes Controls/grid:GridMixin
+ * @implements Controls/grid:GridMixin
  * @author Авраменко А.С.
  */
 export default class Collection<

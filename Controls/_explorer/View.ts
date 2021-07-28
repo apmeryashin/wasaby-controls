@@ -1264,25 +1264,25 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/interface:ISource
  * @implements Controls/interface/ITreeGridItemTemplate
  * @implements Controls/interface/IPromisedSelectable
- * @mixes Controls/grid:IEditableGrid
+ * @implements Controls/grid:IEditableGrid
  * @implements Controls/interface/IGroupedList
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
- * @mixes Controls/explorer:IExplorer
+ * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
- * @mixes Controls/tile:ITile
- * @mixes Controls/list:IVirtualScrollConfig
+ * @implements Controls/tile:ITile
+ * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/interface/IGroupedGrid
- * @mixes Controls/grid:IGridControl
- * @mixes Controls/list:IClickableView
- * @mixes Controls/list:IMovableList
- * @mixes Controls/list:IRemovableList
- * @mixes Controls/marker:IMarkerList
- * @mixes Controls/tile:ITreeTile
+ * @implements Controls/grid:IGridControl
+ * @implements Controls/list:IClickableView
+ * @implements Controls/list:IMovableList
+ * @implements Controls/list:IRemovableList
+ * @implements Controls/marker:IMarkerList
+ * @implements Controls/tile:ITreeTile
  *
  * @public
  * @author Авраменко А.С.
@@ -1301,24 +1301,24 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/interface:ISource
  * @implements Controls/interface/ITreeGridItemTemplate
  * @implements Controls/interface/IPromisedSelectable
- * @mixes Controls/grid:IEditableGrid
+ * @implements Controls/grid:IEditableGrid
  * @implements Controls/interface/IGroupedList
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
- * @mixes Controls/explorer:IExplorer
+ * @implements Controls/explorer:IExplorer
  * @implements Controls/interface:IDraggable
- * @mixes Controls/tile:ITile
- * @mixes Controls/list:IVirtualScrollConfig
+ * @implements Controls/tile:ITile
+ * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/interface/IGroupedGrid
- * @mixes Controls/grid:IGridControl
- * @mixes Controls/list:IClickableView
- * @mixes Controls/list:IMovableList
- * @mixes Controls/list:IRemovableList
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/grid:IGridControl
+ * @implements Controls/list:IClickableView
+ * @implements Controls/list:IMovableList
+ * @implements Controls/list:IRemovableList
+ * @implements Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.

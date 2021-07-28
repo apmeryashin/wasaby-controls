@@ -15,18 +15,18 @@
  * @implements Controls/interface/IPromisedSelectable
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/list:IEditableList
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
+ * @implements Controls/list:IEditableList
  * @implements Controls/interface:ISorting
  * @implements Controls/interface:IDraggable
  * @implements Controls/interface/IGroupedList
- * @mixes Controls/list:IClickableView
- * @mixes Controls/list:IReloadableList
- * @mixes Controls/list:IMovableList
- * @mixes Controls/list:IRemovableList
- * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/list:IClickableView
+ * @implements Controls/list:IReloadableList
+ * @implements Controls/list:IMovableList
+ * @implements Controls/list:IRemovableList
+ * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/marker:IMarkerList
  * @author Авраменко А.С.
  * @public
  * @example
