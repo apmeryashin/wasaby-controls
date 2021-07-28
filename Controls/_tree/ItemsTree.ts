@@ -16,7 +16,7 @@ export interface IItemsTreeOptions extends IItemsViewOptions, ITreeOptions {}
  * Контрол древовидной таблицы, который умеет работать без источника данных.
  * В качестве данных ожидает {@link Types/collection:RecordSet}, переданный в опцию {@link Controls/tree:ItemsView items}.
  * @class Controls/tree:ItemsView
- * @mixes Controls/list:IItemsView
+ * @implements Controls/list:IItemsView
  *
  * @public
  * @author Уфимцев Д.Ю.

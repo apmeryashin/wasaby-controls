@@ -2,7 +2,7 @@
  * Шаблон, который по умолчанию используется для отображения заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link Controls/list:View плоских списках} и {@link Controls/tile:View плитке}.
  *
  * @class Controls/_list/interface/GroupTemplate
- * @mixes Controls/list:IBaseGroupTemplate
+ * @implements Controls/list:IBaseGroupTemplate
  * @author Авраменко А.С.
  * @see Controls/interface/IGroupedList#groupTemplate
  * @example

@@ -17,15 +17,15 @@ import TreeTileView from './TreeTileView';
  * @implements Controls/interface/IGroupedList
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
  * @implements Controls/interface:IDraggable
- * @mixes Controls/tile:ITile
- * @mixes Controls/list:IClickableView
- * @mixes Controls/marker:IMarkerList
- * @mixes Controls/list:IVirtualScrollConfig
+ * @implements Controls/tile:ITile
+ * @implements Controls/list:IClickableView
+ * @implements Controls/marker:IMarkerList
+ * @implements Controls/list:IVirtualScrollConfig
  * @mixes Controls/treeTile:ITreeTile 
  *
  * @author Панихин К.А.
