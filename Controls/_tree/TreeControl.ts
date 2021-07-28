@@ -267,7 +267,6 @@ const _private = {
                 return list;
             })
             .catch((error) => {
-                self._onDataError({ error });
                 return error;
             })
             .finally(() => {
@@ -1473,7 +1472,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     return;
                 }
 
-                this._onDataError({ error });
                 this.hideIndicator();
 
                 throw error;
