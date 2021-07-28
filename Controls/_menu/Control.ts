@@ -1227,7 +1227,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         itemPadding: {},
         markerVisibility: 'onactivated',
         hoverBackgroundStyle: 'default',
-        subMenuDirection: 'right'
+        subMenuDirection: 'right',
+        itemAlign: 'right'
     };
 }
 /**
