@@ -9,7 +9,7 @@ import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _editingObject: Model;
-    protected _source: RecordSet;
+    protected _typeDescription: RecordSet;
     protected _itemActions: IItemAction[];
 
     protected _beforeMount(): void {
@@ -29,7 +29,7 @@ export default class Demo extends Control<IControlOptions> {
                 validate: ''
             }
         });
-        this._source = new RecordSet<IPropertyGridItem>({
+        this._typeDescription = new RecordSet<IPropertyGridItem>({
             rawData: [
                 {
                     name: 'description',
@@ -72,7 +72,7 @@ export default class Demo extends Control<IControlOptions> {
             ],
             keyProperty: 'name'
         });
-        const source = this._source;
+        const source = this._typeDescription;
         this._itemActions = [
             {
                 id: 2,
@@ -117,7 +117,7 @@ export default class Demo extends Control<IControlOptions> {
     }
 
     protected _itemActionVisibilityCallback(itemAction, item): boolean {
-        const index = this._getSourceItemIndex(this._source, item);
+        const index = this._getSourceItemIndex(this._typeDescription, item);
         if (index === 0 && itemAction.title === 'Переместить вверх' ||
             index === 4 && itemAction.title === 'Переместить вниз') {
             return false;

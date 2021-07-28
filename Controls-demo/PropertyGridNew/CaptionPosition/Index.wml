@@ -3,7 +3,7 @@
         <div class="controls-text-label">captionPosition = left</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}"
+                typeDescription="{{_typeDescription}}"
                 captionPosition="left">
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"
@@ -17,7 +17,7 @@
         <div class="controls-text-label">captionPosition = top</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}"
+                typeDescription="{{_typeDescription}}"
                 captionPosition="top">
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"

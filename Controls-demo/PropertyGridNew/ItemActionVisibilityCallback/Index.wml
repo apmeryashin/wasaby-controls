@@ -2,7 +2,7 @@
     <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
             itemActions="{{_itemActions}}"
-            source="{{_source}}"
+            typeDescription="{{_typeDescription}}"
             itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
     >
         <ws:itemTemplate>

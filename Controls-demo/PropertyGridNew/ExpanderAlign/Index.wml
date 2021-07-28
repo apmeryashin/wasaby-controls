@@ -3,7 +3,7 @@
         <div class="controls-text-label">expanderAlign = "left"</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}">
+                typeDescription="{{_typeDescription}}">
             <ws:groupTemplate>
                 <ws:partial template="Controls/propertyGrid:GroupTemplate" expanderVisible="{{true}}" expanderAlign="left"/>
             </ws:groupTemplate>

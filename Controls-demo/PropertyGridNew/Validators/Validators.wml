@@ -2,7 +2,7 @@
    <Controls.validate:Controller name="validateController">
       <Controls.propertyGrid:PropertyGrid
          bind:editingObject="_editingObject"
-         source="{{_source}}">
+         typeDescription="{{_typeDescription}}">
          <ws:captionColumnOptions
             width="50%"/>
          <ws:groupTemplate>

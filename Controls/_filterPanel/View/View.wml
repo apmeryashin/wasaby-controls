@@ -35,7 +35,7 @@
 
          <Controls.propertyGrid:PropertyGrid
                  editingObject="{{_viewModel.getEditingObject()}}"
-                 source="{{_viewModel.getBasicFilterItems()}}"
+                 typeDescription="{{_viewModel.getBasicFilterItems()}}"
                  collapsedGroups="{{_viewModel.getCollapsedGroups()}}"
                  itemPadding="{{_itemPadding}}"
                  on:editingObjectChanged="_editingObjectChanged()"

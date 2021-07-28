@@ -7,14 +7,14 @@ import {getEditingObject, getSource} from '../resources/Data';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: RecordSet<IPropertyGridItem> = null;
+    protected _typeDescription: RecordSet<IPropertyGridItem> = null;
     protected _editingObject: Model<IPropertyGridItem> = null;
 
     protected _beforeMount(): void {
         this._editingObject = new Model<IPropertyGridItem>({
             rawData: getEditingObject()
         });
-        this._source = new RecordSet<IPropertyGridItem>({
+        this._typeDescription = new RecordSet<IPropertyGridItem>({
             rawData: getSource(),
             keyProperty: 'name'
         });

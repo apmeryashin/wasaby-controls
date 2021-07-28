@@ -5,7 +5,7 @@ import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 
 export default class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: object[] = [
+    protected _typeDescription: object[] = [
         {
             name: 'selected',
             caption: 'CheckboxGroup',

@@ -25,7 +25,7 @@ export default interface IProperty {
      *       showBackgroundImage: true,
      *    };
      *
-     *    this._source = [
+     *    this._typeDescription = [
      *       {
      *          name: 'description',
      *          caption: 'Описание',
@@ -44,7 +44,7 @@ export default interface IProperty {
      * <!-- WML -->
      * <Controls.propertyGrid:PropertyGrid
      *     bind:editingObject="_editingObject"
-     *     source="{{_source}}"/>
+     *     typeDescription="{{_typeDescription}}"/>
      * </pre>
      */
     name: string;
@@ -59,7 +59,7 @@ export default interface IProperty {
      *       showBackgroundImage: true,
      *    };
      *
-     *    this._source = [
+     *    this._typeDescription = [
      *       {
      *          name: 'description',
      *          caption: 'Описание',
@@ -78,7 +78,7 @@ export default interface IProperty {
      * <!-- WML -->
      * <Controls.propertyGrid:PropertyGrid
      *     bind:editingObject="_editingObject"
-     *     source="{{_source}}"/>
+     *     typeDescription="{{_source}}"/>
      * </pre>
      * @see captionOptions
      * @see captionTemplate

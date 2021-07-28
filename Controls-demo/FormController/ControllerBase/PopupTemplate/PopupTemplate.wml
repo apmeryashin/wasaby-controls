@@ -17,7 +17,7 @@
             <Controls.propertyGrid:PropertyGrid
                     editingObject="{{ content.record }}"
                     on:editingObjectChanged="_editingObjectChanged()"
-                    source="{{_propertyGridSource}}">
+                    typeDescription="{{_propertyGridSource}}">
             </Controls.propertyGrid:PropertyGrid>
             <div class="demo-FormControllerBasePopup__fieldLine">
                 <div class="demo-FormControllerBasePopup__label">Ветка(с валидацией):</div>

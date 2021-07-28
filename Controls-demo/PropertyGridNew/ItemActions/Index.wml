@@ -2,7 +2,7 @@
     <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
             itemActions="{{_itemActions}}"
-            source="{{_source}}"
+            typeDescription="{{_typeDescription}}"
     >
         <ws:itemTemplate>
             <ws:partial template="Controls/propertyGrid:ItemTemplate"

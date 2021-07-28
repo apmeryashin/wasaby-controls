@@ -4,7 +4,7 @@ import {Enum} from 'Types/collection';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: object[] = [
+    protected _typeDescription: object[] = [
         {
             name: 'alignment',
             caption: 'FlatEnum',

@@ -30,7 +30,7 @@ define('Controls-demo/PropertyGridNew/PropertyGrid',
                count: 750
             };
 
-            this._source = [
+            this._typeDescription = [
                {
                   name: 'description',
                   caption: 'Описание',

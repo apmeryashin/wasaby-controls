@@ -4,7 +4,7 @@ import {IProperty} from 'Controls/propertyGrid';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: IProperty[] = [
+    protected _typeDescription: IProperty[] = [
         {
             name: 'number',
             caption: 'Number',

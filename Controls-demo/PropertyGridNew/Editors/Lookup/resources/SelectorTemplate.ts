@@ -4,12 +4,12 @@ import {Memory} from 'Types/source';
 
 export default class SelectorTemplate extends Control {
     protected _template: TemplateFunction = template;
-    protected _source: Memory = null;
+    protected _typeDescription: Memory = null;
     protected _keyProperty: string = 'id';
     protected _selectionChanged: boolean = false;
 
     protected _beforeMount(): void {
-        this._source = new Memory({
+        this._typeDescription = new Memory({
             keyProperty: 'id',
             data: [
                 {

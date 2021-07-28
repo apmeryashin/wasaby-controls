@@ -3,6 +3,6 @@
         <div class="controls-text-label">jumpingLabel</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}" />
+                typeDescription="{{_typeDescription}}" />
     </div>
 </div>

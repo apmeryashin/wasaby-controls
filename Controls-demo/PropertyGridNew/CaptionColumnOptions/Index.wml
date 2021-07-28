@@ -3,7 +3,7 @@
         <div class="controls-text-label">captionColumnOptions: width = 50%</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}"
+                typeDescription="{{_typeDescription}}"
                 parentProperty="parent"
                 nodeProperty="isNode">
             <ws:captionColumnOptions width="50%"/>
@@ -14,7 +14,7 @@
         <div class="controls-text-label">captionColumnOptions: width = 90%</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}"
+                typeDescription="{{_typeDescription}}"
                 parentProperty="parent"
                 nodeProperty="isNode">
             <ws:captionColumnOptions width="90%"/>
@@ -25,7 +25,7 @@
         <div class="controls-text-label">captionColumnOptions: width = 30%</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}"
+                typeDescription="{{_typeDescription}}"
                 parentProperty="parent"
                 nodeProperty="isNode">
             <ws:captionColumnOptions width="30%"/>
