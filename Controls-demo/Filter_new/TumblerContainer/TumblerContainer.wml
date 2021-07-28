@@ -1,0 +1,5 @@
+<div class="controlsDemo__wrapper">
+        <Controls.filter:TumblerContainer source="{{_source}}">
+            <Controls.filter:Tumbler/>
+        </Controls.filter:TumblerContainer>
+</div>
