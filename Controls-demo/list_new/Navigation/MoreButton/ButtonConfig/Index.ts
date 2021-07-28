@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import {INavigationOptionValue, INavigationPageSourceConfig} from 'Controls/interface';
-import * as Template from 'wml!Controls-demo/list_new/Navigation/MoreButton/CutConfig/MoreButton';
+import * as Template from 'wml!Controls-demo/list_new/Navigation/MoreButton/ButtonConfig/ButtonConfig';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
 export default class extends Control {
@@ -25,8 +25,8 @@ export default class extends Control {
             },
             viewConfig: {
                 pagingMode: 'basic',
-                moreButtonView: 'cut',
-                cutConfig: {
+                buttonView: 'separator',
+                buttonConfig: {
                     size: 's',
                     buttonPosition: 'start'
                 }
