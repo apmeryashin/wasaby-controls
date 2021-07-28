@@ -597,6 +597,19 @@ describe('Controls/browser:Browser', () => {
 
     describe('_beforeUpdate', () => {
 
+        it('selectionViewMode changed', async () => {
+            let options = getBrowserOptions();
+            options.selectedKeys = ['testKey'];
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+
+            options = {...options};
+            options.selectionViewMode = 'selected';
+            await browser._beforeUpdate(options);
+            assert.ok(browser._filter['SelectionWithPath']);
+        });
+
         describe('searchController', () => {
 
             it('filter in searchController updated', async () => {
