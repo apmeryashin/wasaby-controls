@@ -7,7 +7,6 @@
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
-                on:itemClick="_itemClick()"
         />
     </div>
     <div class="controlsDemo__cell">
@@ -19,7 +18,6 @@
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
-                on:itemClick="_itemClick()"
         />
     </div>
 </div>
