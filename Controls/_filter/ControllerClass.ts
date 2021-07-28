@@ -164,7 +164,7 @@ export default class FilterControllerClass {
         if (filterChanged || selectionViewModeChanged) {
             this._updateFilter(this._options);
         }
-        return filterChanged || filterButtonChanged || fastFilterChanged;
+        return filterChanged || filterButtonChanged || fastFilterChanged || selectionViewModeChanged;
     }
 
     resetPrefetch(): void {
