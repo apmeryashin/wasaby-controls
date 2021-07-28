@@ -10,6 +10,7 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
  */
 
 export interface IPopupItem {
+    contextIsTouch: boolean;
     targetCoords: any;
     id: string;
     modal: boolean;
@@ -68,16 +69,22 @@ export interface IEventHandlers {
     onResult?: Function;
 }
 
-export interface IPopupOptions extends IBasePopupOptions {
-    width?: number;
-    height?: number;
-    minWidth?: number;
-    maxWidth?: number;
-    minHeight?: number;
-    maxHeight?: number;
+export interface IPopupOptions extends IBasePopupOptions, IPopupWidthOptions, IPopupHeightOptions {
     hidden?: boolean;
     maximize?: boolean;
     autoClose?: boolean;
+}
+
+export interface IPopupWidthOptions {
+    width?: number;
+    minWidth?: number;
+    maxWidth?: number;
+}
+
+export interface IPopupHeightOptions {
+    height?: number;
+    minHeight?: number;
+    maxHeight?: number;
 }
 
 export interface IDragOffset {
