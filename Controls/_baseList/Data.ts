@@ -188,6 +188,8 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          this._setItemsAndUpdateContext();
       } else if (receivedState?.errorConfig) {
          this._showError(receivedState.errorConfig);
+      } else if (options.sourceController?.getLoadError() && options.processError) {
+         this._processAndShowError({error: options.sourceController?.getLoadError()});
       } else if (options.source) {
          return sourceController
              .reload(undefined, true)
