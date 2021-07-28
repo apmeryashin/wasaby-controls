@@ -25,11 +25,20 @@
                                                                     Чтобы опция не пролетала до выпадающего списка, который лежит в стеке -->
          </div>
       </ws:if>
-      <div class="controls-StackTemplate__command_buttons">
-         <ws:if data="{{_options.showMaximizedButton || _options._maximizeButtonVisibility}}">
-            <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()"
-                 attr:title="{{_options._maximizeButtonTitle}}"></div>
-         </ws:if>
-      </div>
+      <ws:if data="{{!_options.hasRightPanel}}">
+         <div class="controls-StackTemplate__command_buttons">
+            <ws:if data="{{_options.showMaximizedButton || _options._maximizeButtonVisibility}}">
+               <div class="controls-StackTemplate__maximized_button controls-StackTemplate__header_maximized_button" on:click="changeMaximizedState()"
+                    attr:title="{{_options._maximizeButtonTitle}}"></div>
+            </ws:if>
+            <ws:if data="{{_options.closeButtonVisibility}}">
+               <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button"
+                                                    attr:data-qa="controls-stack-Button__close"
+                                                    viewMode="{{_options.closeButtonViewMode}}"
+                                                    transparent="{{_options.closeButtonTransparent}}"
+                                                    on:click="close()"/>
+            </ws:if>
+         </div>
+      </ws:if>
    </div>
 </div>
