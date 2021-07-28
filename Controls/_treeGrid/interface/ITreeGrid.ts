@@ -16,7 +16,7 @@ export interface IOptions extends ITreeOptions {
 
 /**
  * Интерфейс дерева-таблицы
- * @mixes Controls/interface/IGroupedList
+ * @implements Controls/interface/IGroupedList
  *
  * @public
  * @author Аверкиев П.А.

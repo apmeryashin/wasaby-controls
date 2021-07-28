@@ -13,7 +13,7 @@ import {factory} from 'Types/chain';
  *
  * @class Controls/_filterPopup/Panel/HierarchyLookup
  * @extends UI/Base:Control
- * @mixes Controls/interface:IMultiSelectable
+ * @implements Controls/interface:IMultiSelectable
  * @public
  * @author Михайлов С.Е.
  *

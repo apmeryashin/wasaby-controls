@@ -324,8 +324,8 @@ var _private = {
  * @class Controls/_lookupPopup/Container
  * @extends UI/Base:Control
  *
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:ISelectionType
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:ISelectionType
  * @public
  * @author Герасимов Александр Максимович
  */
@@ -343,7 +343,7 @@ var _private = {
 * @class Controls/_lookupPopup/Container
 * @extends UI/Base:Control
 *
-* @mixes Controls/interface:ISource
+* @implements Controls/interface:ISource
 * @public
 * @author Герасимов Александр Максимович
 */

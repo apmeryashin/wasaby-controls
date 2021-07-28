@@ -49,15 +49,15 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/menu:IMenuControl
  * @mixes Controls/menu:IMenuBase
  * @mixes Controls/dropdown:IBaseDropdown
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IMultiSelectable
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:ISelectorDialog
- * @mixes Controls/interface:IIconSize
- * @mixes Controls/interface:ITextValue
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IMultiSelectable
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISelectorDialog
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:ITextValue
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:ISearch
  * 
  * @public
  * @author Золотова Э.Е.
@@ -70,17 +70,17 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  *
  * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
  * @mixes Controls/Input/interface/IValidation
- * @mixes Controls/interface:IMultiSelectable
+ * @implements Controls/interface:IMultiSelectable
  * @mixes Controls/dropdown:IFooterTemplate
  * @mixes Controls/dropdown:IHeaderTemplate
- * @mixes Controls/interface:ISelectorDialog
+ * @implements Controls/interface:ISelectorDialog
  * @mixes Controls/dropdown:IGrouped
- * @mixes Controls/interface:ITextValue
+ * @implements Controls/interface:ITextValue
  * 
  * @public
  * @author Золотова Э.Е.

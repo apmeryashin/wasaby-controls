@@ -106,16 +106,16 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
  * @mixes Controls/dropdown:IBaseDropdown
  * @mixes Controls/dropdown:IGrouped
  * @mixes Controls/dropdown:IButton
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:ICaption
- * @mixes Controls/interface:ITooltip
- * @mixes Controls/interface:IIcon
- * @mixes Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:ICaption
+ * @implements Controls/interface:ITooltip
+ * @implements Controls/interface:IIcon
+ * @implements Controls/interface:ISearch
  * @mixes Controls/buttons:IButton
  *
  *
@@ -139,16 +139,16 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
  * @mixes Controls/dropdown:IIconSize
  * @mixes Controls/dropdown:IBaseDropdown
  * @mixes Controls/dropdown:IGrouped
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:ICaption
- * @mixes Controls/interface:ITooltip
- * @mixes Controls/interface:IIcon
- * @mixes Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:ICaption
+ * @implements Controls/interface:ITooltip
+ * @implements Controls/interface:IIcon
+ * @implements Controls/interface:ISearch
  * @mixes Controls/buttons:IButton
  *
  * @public
