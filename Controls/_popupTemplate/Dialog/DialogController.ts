@@ -117,12 +117,12 @@ class DialogController extends BaseController {
         item.dragged = true;
         item.position[horizontalProperty] = item.startPosition[horizontalProperty] + horizontalOffset;
         item.position[verticalProperty] = item.startPosition[verticalProperty] + verticalOffset;
-        const itemSizes: IPopupSizes = {
-            width: sizes.width || item.sizes.width,
-            height: sizes.height || item.sizes.height
-        };
-        if (item.sizes.margins || sizes.margins) {
-            itemSizes.margins = sizes.margins || item.sizes.margins;
+        const itemSizes: IPopupSizes = item.sizes;
+        if (sizes.width) {
+            itemSizes.width = sizes.width;
+        }
+        if (sizes.height) {
+            itemSizes.height = sizes.height;
         }
         // Take the size from cache, because they don't change when you move
         this._prepareConfig(item, itemSizes);
