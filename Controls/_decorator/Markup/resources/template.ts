@@ -54,6 +54,7 @@ const lowerValidHtml = {
          'tel:',
          'viber:(//|\\\\)',
          'sbisplugin:(//|\\\\)',
+         'Notes:(//|\\\\)',
          '#',
          './',
          '/'
