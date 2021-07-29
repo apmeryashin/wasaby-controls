@@ -304,6 +304,7 @@ export default class TreeGridCollection<
         options.colspanCallback = this._$colspanCallback;
         options.columnSeparatorSize = this._$columnSeparatorSize;
         options.rowSeparatorSize = this._$rowSeparatorSize;
+        options.itemActionsPosition = this._$itemActionsPosition;
 
         // Строит обычную фабрику
         const CollectionItemsFactory = (factoryOptions?: ITreeGridRowOptions<S>): ItemsFactory<T> => {
