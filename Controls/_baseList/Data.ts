@@ -177,6 +177,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
             options.sourceController.setExpandedItems(options.expandedItems);
          }
          if (options.sourceController.getLoadError() && options.processError) {
+            this._updateContext(controllerState);
             return this._processAndShowError({error: options.sourceController?.getLoadError()});
          } else {
             if (!controllerState.dataLoadCallback && options.dataLoadCallback) {
@@ -229,7 +230,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       // После монтирования пошлем событие о изменении хлебных крошек для того,
       // что бы эксплорер заполнил свое состояние, которое завязано на хлебные крошки
       this._notifyAboutBreadcrumbsChanged();
-      RegisterUtil(this, 'dataError', this._onDataError.bind(this));
+      RegisterUtil(this, 'dataError', this._onDataError.bind(this, null));
    }
 
    protected _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
@@ -535,12 +536,14 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       }
    }
 
-   private _onDataError(errorConfig): void {
+   private _onDataError(event: SyntheticEvent, errorConfig: dataSourceError.ViewConfig): void {
       if (this._options.processError) {
          this._processAndShowError({
             error: errorConfig.error,
             mode: errorConfig.mode || dataSourceError.Mode.dialog
          });
+      } else {
+         this._processError(errorConfig);
       }
    }
 
