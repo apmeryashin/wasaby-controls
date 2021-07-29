@@ -50,7 +50,7 @@ export class StackStrategy {
 
     getWorkspaceWidth(position: IPopupPosition): number {
         let workspaceWidth = position.width;
-        if (position.maxWidth) {
+        if (position.maxWidth && position.width) {
            workspaceWidth = Math.min(position.width, position.maxWidth);
         }
         return workspaceWidth;
