@@ -1,14 +1,18 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {RecordSet} from 'Types/collection';
 import * as Template from 'wml!Controls-demo/Filter_new/TumblerContainer/TumblerContainer';
+import {Memory} from 'Types/source';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _items: RecordSet = null;
     protected _selectedKey: string = '1';
+    protected _filter: object = {};
+    protected _filterSource: object[] = null;
+    protected _source: Memory = null;
 
     protected _beforeMount(): void {
-        this._source = [
+        this._filterSource = [
             {
             name: 'date',
             resetValue: null,
@@ -49,6 +53,26 @@ export default class extends Control {
             },
             viewMode: 'tumbler'
         }];
+
+        this._source = new Memory({
+            keyProperty: 'id',
+            data: [
+                { id: '1', title: 'Первая запись' },
+                { id: '2', title: 'Вторая запись' },
+                { id: '3', title: 'Третья запись' }
+            ],
+            filter: (item, queryFilter) => {
+                let addToData = true;
+                for (const filterField in queryFilter) {
+                    const filterValue = queryFilter[filterField];
+                    if (filterValue) {
+                        const itemId = item.get('id');
+                        addToData = itemId === filterValue;
+                    }
+                }
+                return addToData;
+            }
+        });
     }
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Filter_new/Filter'];
 }

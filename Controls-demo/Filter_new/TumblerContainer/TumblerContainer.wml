@@ -1,5 +1,13 @@
-<div class="controlsDemo__wrapper">
-        <Controls.filter:TumblerContainer source="{{_source}}">
-            <Controls.toggle:Tumbler/>
-        </Controls.filter:TumblerContainer>
+<div class="controlsDemo__wrapper controls-demo-FilterView__itemsEllipsis">
+    <Controls.browser:Browser bind:filter="_filter" filterButtonSource="{{_filterSource}}"
+                              source="{{_source}}" keyProperty="id">
+        <div>
+            <Controls.filter:TumblerContainer>
+                <Controls.toggle:Tumbler/>
+            </Controls.filter:TumblerContainer>
+            <Controls.list:Container>
+                <Controls.list:View />
+            </Controls.list:Container>
+        </div>
+    </Controls.browser:Browser>
 </div>

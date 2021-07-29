@@ -1,7 +1,6 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ThumblerContainerTemplate = require('wml!Controls/_filter/View/TumblerContainer');
 import {default as Store} from 'Controls/Store';
-import {ISourceOptions} from 'Controls/interface';
 import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/filter';
@@ -18,8 +17,9 @@ import {RecordSet} from 'Types/collection';
  * @demo Controls-demo/Filter_new/TumblerContainer/TumblerContainer
  */
 
-interface IFilterTumblerOptions extends ISourceOptions {
+interface IFilterTumblerOptions extends IControlOptions {
     useStore?: boolean;
+    filterButtonItems?: IFilterItem[];
 }
 
 export default class FilterTumblerContainer extends Control<IFilterTumblerOptions> {
@@ -34,8 +34,8 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
 
     protected _afterMount(options: IFilterTumblerOptions): void {
         if (options.useStore) {
-            this._sourceChangedCallbackId = Store.onPropertyChanged('source', (source) => {
-                this._setTumblerStates(source);
+            this._sourceChangedCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+                this._setTumblerStates(filterSource);
             });
         }
     }
@@ -53,7 +53,7 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
     protected _handleSelectedKeyChanged(event: SyntheticEvent, value: number|string): void {
         const newSource = this._getUpdatedSource(value);
         if (this._options.useStore) {
-            Store.dispatch('source', newSource);
+            Store.dispatch('filterSource', newSource);
         } else {
             this._notify('filterItemsChanged', [newSource], {bubbling: true});
         }
@@ -68,9 +68,9 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
     private _initTumblerStates(options: IFilterTumblerOptions): void {
         let filterSource;
         if (options.useStore) {
-            filterSource = Store.getState().source;
+            filterSource = Store.getState().filterSource;
         } else {
-            filterSource = options.source;
+            filterSource = options.filterButtonItems;
         }
         this._setTumblerStates(filterSource);
 
@@ -83,8 +83,12 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
     }
 
     private _getUpdatedSource(value: number|string): IFilterItem[] {
-        const tumblerOptions = this._getTumblerOptions(this._options.source);
-        tumblerOptions.value = value;
-        return {...this._options.source, ...tumblerOptions};
+        const tumblerOptions = this._getTumblerOptions(this._options.filterButtonItems);
+        return this._options.filterButtonItems.map((item) => {
+            if (item.name === tumblerOptions.name) {
+                item.value = value;
+            }
+            return item;
+        });
     }
 }
