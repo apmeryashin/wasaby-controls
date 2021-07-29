@@ -4,6 +4,10 @@ import { ItemsEntity } from 'Controls/dragnDrop';
 import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
 import { isEqual } from 'Types/object';
+import {RecordSet} from 'Types/collection';
+import {error as errorLib, ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
+import {factory} from 'Types/chain';
+import { Model } from 'Types/entity';
 
 type StrategyConstructor<P> = new (model: IDraggableCollection<P>, draggableItem: IDraggableItem) => IDragStrategy<P>;
 
@@ -123,6 +127,38 @@ export default class Controller<P> {
           && !event.nativeEvent.button
           && !(event.target as Element).closest('.controls-List_DragNDrop__notDraggable')
           && !isTouch;
+   }
+
+   /**
+    * Возвращает ключи всех перетаскиваемых записей.
+    * @remark
+    * Если в selection лежат записи, которых нет в RecordSet, то за ними выполняется запрос на БЛ.
+    * @param selection
+    * @param items
+    * @param options
+    */
+   static getDraggedItemsKeys(
+       selection: ISelectionObject,
+       items: RecordSet,
+       options: ISourceControllerOptions
+   ): Promise<CrudEntityKey[]> {
+      let selectedItems = [];
+
+      selection.selected.forEach((key) => {
+         if (items.getRecordById(key)) {
+            selectedItems.push(key);
+         }
+      });
+
+      // Не выполянем запрос, если все выбранные записи уже есть в рекордсете
+      if (selectedItems.length === selection.selected.length && !selection.excluded.length) {
+         return Promise.resolve(selectedItems);
+      }
+
+      const controller = new NewSourceController(options);
+      return controller.reload()
+          .then((list) => factory(list).toArray().map((it: Model) => it.getKey()))
+          .catch((error) => errorLib.process({error}).then(() => []));
    }
 
    /**
