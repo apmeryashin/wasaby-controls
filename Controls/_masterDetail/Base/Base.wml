@@ -16,7 +16,7 @@
            on:touchend="_touchendHandler()">
          <Controls.event:Register name="resizeDetectMaster" register="controlResize" attr:fixCompatible="1">
             <ws:if data="{{_masterFixed}}">
-               <Controls.scroll:Container attr:style="{{_getMasterStyle(_options.scrollTop, _options.scrollOffsetTop, _options.masterOffsetTop)}}">
+               <Controls.scroll:Container backgroundStyle="master" attr:style="{{_getMasterStyle(_options.scrollTop, _options.scrollOffsetTop, _options.masterOffsetTop)}}">
                   <ws:partial template="masterContentTemplate" />
                </Controls.scroll:Container>
             </ws:if>

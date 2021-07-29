@@ -6,7 +6,7 @@ import IEditingTemplateOptions from './EditingTemplate'
  * В режиме чтения выводит значение с помощью {@link Controls/decorator:Money}.
  *
  * @class Controls/_list/interface/MoneyEditingTemplate
- * @mixes Controls/list:EditingTemplate
+ * @implements Controls/list:EditingTemplate
  * @mixes Controls/decorator:IMoney
  * @author Авраменко А.С.
  * @see Controls/list:View

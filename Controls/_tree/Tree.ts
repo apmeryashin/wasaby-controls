@@ -18,20 +18,20 @@ import 'css!Controls/treeGrid';
  * Дополнительно о контроле:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/ руководство разработчика}
  *
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/list:IList
- * @mixes Controls/list:IClickableView
- * @mixes Controls/grid:IPropStorage
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IGroupedGrid
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface/ITreeGridItemTemplate
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/list:IList
+ * @implements Controls/list:IClickableView
+ * @implements Controls/grid:IPropStorage
  * @implements Controls/tree:ITreeControl
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/itemActions:IItemActions
  *
  * @public
  * @author Авраменко А.С.

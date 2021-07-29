@@ -3,7 +3,7 @@ import IFilter from './IFilter';
 /**
  * Интерфейс для контролов, которые поддерживают фильтрацию данных.
  *
- * @mixes Controls/interface:IFilter
+ * @implements Controls/interface:IFilter
  * @public
  * @author Авраменко А.С.
  */

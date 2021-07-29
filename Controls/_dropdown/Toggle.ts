@@ -19,7 +19,7 @@ const items = [
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  *
  * @extends UI/Base:Control
- * @mixes Controls/interface:IMultiSelectable
+ * @implements Controls/interface:IMultiSelectable
  * @demo Controls-demo/dropdown_new/Toggle/Index
  *
  * @public

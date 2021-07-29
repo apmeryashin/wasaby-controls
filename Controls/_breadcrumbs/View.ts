@@ -22,8 +22,8 @@ const MIN_COUNT_OF_LETTER = 3;
  * @class Controls/_breadcrumbs/View
  * @extends UI/Base:Control
  * @mixes Controls/breadcrumbs:IBreadCrumbs
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
  *
  * @private
  * @author Авраменко А.С.

@@ -3,6 +3,7 @@
  * @library
  * @includes IItemsContainerPadding Controls/_propertyGrid/IItemsContainerPadding
  * @includes GroupTemplate Controls/propertyGrid:GroupTemplate
+ * @includes IPropertyGridColumn Controls/property:IPropertyGridColumn
  * @author Герасимов А.М.
  */
 
@@ -11,6 +12,7 @@
  * @library
  * @includes IItemsContainerPadding Controls/_propertyGrid/IItemsContainerPadding
  * @includes GroupTemplate Controls/propertyGrid:GroupTemplate
+ * @includes IPropertyGridColumn Controls/property:IPropertyGridColumn
  * @author Герасимов А.М.
  */
 

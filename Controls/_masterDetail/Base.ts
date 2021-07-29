@@ -34,7 +34,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/master-detail/ руководство разработчик}
  * @class Controls/_masterDetail/Base
  * @extends UI/Base:Control
- * @mixes Controls/interface:IPropStorage
+ * @implements Controls/interface:IPropStorage
  *
  * @author Авраменко А.С.
  * @public

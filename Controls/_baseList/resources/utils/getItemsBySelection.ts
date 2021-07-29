@@ -49,6 +49,9 @@ function selectionToRecord(selection: ISelectionObject, adapter: adapter.IAdapte
  * @author Герасимов А.М.
  */
 
+// TODO уже не актуально, для днд написан свой на основе SourceController-а. Используется в устаревших Mover, Remover
+//  и в RemoveController как временный костыль.
+//  удалить по задаче https://online.sbis.ru/opendoc.html?guid=1ca37674-e08a-4a57-8855-583d6d870ba2
 export function getItemsBySelection(
     selection: ISelectionObject,
     dataSource: ICrud,

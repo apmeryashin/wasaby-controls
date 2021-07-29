@@ -31,26 +31,26 @@ export interface ILookupOptions extends ILookupInputOptions {
  *
  * @class Controls/_lookup/Lookup
  * @extends UI/Base:Control
- * @mixes Controls/interface:ILookup
- * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface:ISelectorDialog
- * @mixes Controls/interface/ISuggest
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IMultiSelectable
- * @mixes Controls/interface:ITextValue
- * @mixes Controls/interface:ISorting
+ * @implements Controls/interface:ILookup
+ * @implements Controls/interface/ISelectedCollection
+ * @implements Controls/interface:ISelectorDialog
+ * @implements Controls/interface/ISuggest
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IMultiSelectable
+ * @implements Controls/interface:ITextValue
+ * @implements Controls/interface:ISorting
  * @mixes Controls/input:IBase
- * @mixes Controls/interface:IInputPlaceholder
+ * @implements Controls/interface:IInputPlaceholder
  * @mixes Controls/input:IText
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IInputTag
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IInputTag
  * @mixes Controls/input:IValue
- * @mixes Controls/interface:IValidationStatus
+ * @implements Controls/interface:IValidationStatus
  * @mixes Controls/input:IBorderVisibility
  *
  * @public
@@ -67,23 +67,23 @@ export interface ILookupOptions extends ILookupInputOptions {
  *
  * @class Controls/_lookup/Lookup
  * @extends UI/Base:Control
- * @mixes Controls/interface:ILookup
- * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface:ISelectorDialog
- * @mixes Controls/interface/ISuggest
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IMultiSelectable
- * @mixes Controls/interface:ITextValue
- * @mixes Controls/interface:ISorting
+ * @implements Controls/interface:ILookup
+ * @implements Controls/interface/ISelectedCollection
+ * @implements Controls/interface:ISelectorDialog
+ * @implements Controls/interface/ISuggest
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IMultiSelectable
+ * @implements Controls/interface:ITextValue
+ * @implements Controls/interface:ISorting
  * @mixes Controls/input:IBase
  * @mixes Controls/input:IText
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IInputTag
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IInputTag
  * @mixes Controls/input:IValue
  *
  * @public

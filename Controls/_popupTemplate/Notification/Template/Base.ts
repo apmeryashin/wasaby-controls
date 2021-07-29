@@ -1,12 +1,10 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_popupTemplate/Notification/Base/Base');
-import {default as INotification, INotificationOptions} from './interface/INotification';
-import {INotificationSimpleOptions} from "./Simple";
+import * as template from 'wml!Controls/_popupTemplate/Notification/Template/Base/Base';
+import {INotificationBase} from 'Controls/_popupTemplate/interface/INotification';
 import 'css!Controls/popupTemplate';
 
-export interface INotificationBaseOptions extends IControlOptions, INotificationOptions{
-    bodyContentTemplate?: String | Function;
-
+export interface INotificationBaseOptions extends INotificationBase, IControlOptions {
+    bodyContentTemplate?: Control<IControlOptions, void> | TemplateFunction;
 }
 
 /**
@@ -23,12 +21,28 @@ export interface INotificationBaseOptions extends IControlOptions, INotification
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/PopupTemplate/Notification/Index
+ * @demo Controls-demo/NotificationDemo/NotificationTemplate
  */
-class Notification extends Control<INotificationBaseOptions> implements INotification{
+
+class Notification extends Control<INotificationBaseOptions> {
     protected _template: TemplateFunction = template;
     protected _borderStyle: String;
-    private _prepareBorderStyle(popupOptions: INotificationBaseOptions): String {
+
+    protected _beforeMount(options: INotificationBaseOptions): void {
+        this._borderStyle = Notification._prepareBorderStyle(options);
+    }
+
+    protected _beforeUpdate(options: INotificationBaseOptions): void {
+        this._borderStyle = Notification._prepareBorderStyle(options);
+    }
+
+    protected _closeClick(ev: Event): void {
+        // Клик по крестику закрытия не должен всплывать выше и обрабатываться событием click на контейнере
+        ev.stopPropagation();
+        this._notify('close', []);
+    }
+
+    private static _prepareBorderStyle(popupOptions: INotificationBaseOptions): String {
         switch (popupOptions.style) {
             case 'warning':
                 return 'warning';
@@ -41,22 +55,7 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
         }
     }
 
-
-    protected _beforeMount(options: INotificationSimpleOptions): void {
-        this._borderStyle = this._prepareBorderStyle(options);
-    }
-
-    protected _beforeUpdate(options: INotificationSimpleOptions): void {
-        this._borderStyle = this._prepareBorderStyle(options);
-    }
-
-    protected _closeClick(ev: Event): void {
-        // Клик по крестику закрытия не должен всплывать выше и обрабатываться событием click на контейнере
-        ev.stopPropagation();
-        this._notify('close', []);
-    }
-
-    static getDefaultOptions(): INotificationOptions {
+    static getDefaultOptions(): INotificationBaseOptions {
         return {
             style: 'secondary',
             closeButtonVisibility: true
@@ -65,12 +64,12 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
 }
 
 Object.defineProperty(Notification, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return Notification.getDefaultOptions();
-   }
+    get(): object {
+        return Notification.getDefaultOptions();
+    }
 });
 
 /**

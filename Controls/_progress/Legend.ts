@@ -3,7 +3,24 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {IIndicatorCategory} from './StateIndicator';
 import legendTemplate = require('wml!Controls/_progress/Legend/Legend');
 
+/**
+ * Интерфейс опций для {@link Controls/progress:Legend}.
+ * @interface Controls/progress:ILegend
+ * @public
+ * @author Колесов В.А.
+ */
 export interface ILegendOptions extends IControlOptions {
+   /**
+    * @name Controls/progress:ILegend#data
+    * @cfg {Array.<Controls/progress:IndicatorCategory>} Конфигурация элементов легенды.
+    * @example
+    * <pre class="brush:html">
+    * <!-- WML -->
+    * <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]}}"/>
+    * </pre>
+    * @remark 
+    * Используется, если для диаграммы нужно установить несколько легенд. Количество элементов массива задает количество легенд диаграммы.
+    */
    data?: IIndicatorCategory[];
 }
 /**
@@ -14,8 +31,8 @@ export interface ILegendOptions extends IControlOptions {
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less переменные тем оформления}
  * 
- * @class Controls/_progress/Legend
  * @author Колесов В.А.
+ * @implements Controls/progress:ILegend
  * @public
  */
 
@@ -52,21 +69,3 @@ Object.defineProperty(Legend, 'defaultProps', {
 });
 
 export default Legend;
-/**
- * @cfg {Array.<IndicatorCategory>} Array of indicator categories
- * <pre class="brush:html">
- *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
- * </pre>
- */
-
-/**
- * @name Controls/_progress/Legend#data
- * @cfg {Array.<Controls/_progress/StateIndicator/IndicatorCategory.typedef>} Конфигурация элементов легенды.
- * @example
- * <pre class="brush:html">
- *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]}}"/>
- * </pre>
- * @remark 
- * Используется, если для диаграммы нужно установить несколько легенд. Количество элементов массива задает количество легенд диаграммы.
- */
-

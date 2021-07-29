@@ -29,10 +29,10 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions, IFontSi
  * @class Controls/_input/Label
  * @extends UI/Base:Control
  *
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IUnderline
- * @mixes Controls/interface:ICaption
- * @mixes Controls/interface:IHref
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IUnderline
+ * @implements Controls/interface:ICaption
+ * @implements Controls/interface:IHref
  *
  * @public
  * @demo Controls-demo/Input/Label/Index

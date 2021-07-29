@@ -22,6 +22,7 @@ const protocolNames = [
     'ftp:(?://|\\\\\\\\)',
     'file:(?://|\\\\\\\\)',
     'smb:(?://|\\\\\\\\)',
+    'Notes:(?://|\\\\\\\\)',
 ];
 const correctTopLevelDomainNames = [
     'ru',

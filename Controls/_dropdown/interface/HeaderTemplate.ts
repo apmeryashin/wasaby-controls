@@ -1,8 +1,8 @@
 /**
  * Шаблон отображения шапки меню.
  * @class Controls/dropdown:HeaderTemplate
- * @mixes Controls/interface:ICaption
- * @mixes Controls/interface:IIcon
+ * @implements Controls/interface:ICaption
+ * @implements Controls/interface:IIcon
  * @mixes Controls/dropdown:IIconSize
  * @public
  * @author Герасимов А.М.

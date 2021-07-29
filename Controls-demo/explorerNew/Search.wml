@@ -1,6 +1,6 @@
 <div>
    <div>Demo Controls/Explorer</div>
-   <Controls.scroll:Container>
+   <Controls.scroll:Container attr:class="controlsDemo_fixedWidth800">
       <Controls.browser:Browser source="{{_viewSource}}" keyProperty="id" bind:filter="_filter"
                                 searchParam="title" minSearchLength="{{3}}" startingWith="{{_searchStartingWith}}" parentProperty="parent"
                                 bind:root="_root">

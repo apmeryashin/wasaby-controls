@@ -2696,7 +2696,7 @@ describe('Controls/_display/Tree', () => {
     });
 
     describe('parent', () => {
-        it('recount hierarchy on change parent vakue in record', () => {
+        it('recount hierarchy on change parent value in record', () => {
             const rs = new RecordSet({
                 rawData: [
                     {id: 1, hasChildren: false, node: true, pid: 0},
@@ -2718,6 +2718,24 @@ describe('Controls/_display/Tree', () => {
             rs.getRecordById(22).set('pid', 0);
             assert.isTrue(tree.getItemBySourceKey(21).getParent().isRoot());
             assert.isTrue(tree.getItemBySourceKey(22).getParent().isRoot());
+        });
+
+        it('not throw error when changed parent value on root key', () => {
+            const rs = new RecordSet({
+                rawData: [
+                    {id: 1, hasChildren: false, node: true, pid: 0},
+                    {id: 11, hasChildren: false, node: true, pid: 1},
+                    {id: 2, hasChildren: false, node: true, pid: 0},
+                    {id: 21, hasChildren: false, node: true, pid: 2},
+                    {id: 22, hasChildren: false, node: true, pid: 2}
+                ],
+                keyProperty: 'id'
+            });
+            const tree = getTree(rs);
+
+            // переместили одну запись в корень
+            rs.getRecordById(21).set('pid', 0);
+            assert.deepEqual(tree.getItemBySourceKey(21).getParent().key, { id: 0, title: 'Root' });
         });
     });
 });

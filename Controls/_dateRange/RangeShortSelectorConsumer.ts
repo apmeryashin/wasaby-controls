@@ -7,16 +7,16 @@ import DateRangeSelectorConsumer from 'Controls/_dateRange/_DateRangeSelectorCon
  * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре. Выбор происходит с помощью панели быстрого выбора периода.
  * @class Controls/_dateRange/RangeShortSelectorConsumer
  * @extends UI/Base:Control
- * @mixes Controls/interface:IResetValues
+ * @implements Controls/interface:IResetValues
  * @mixes Controls/dateRange:ILinkView
  * @mixes Controls/dateRange:IPeriodLiteDialog
  * @mixes Controls/dateRange:IDateRange
- * @mixes Controls/interface:IDisplayedRanges
- * @mixes Controls/interface:IOpenPopup
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IUnderline
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IDisplayedRanges
+ * @implements Controls/interface:IOpenPopup
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IUnderline
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IFontColorStyle
  * @mixes Controls/dateRange:ICaptionFormatter
  * @remark
  * Контрол используется для работы с кнопками dateRange:ArrowButtonConsumer, которые двигают период.

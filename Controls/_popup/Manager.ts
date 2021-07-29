@@ -3,7 +3,14 @@ import Popup from 'Controls/_popup/Manager/Popup';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger} from 'UI/Utils';
-import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo, IDragOffset} from 'Controls/_popup/interface/IPopup';
+import {
+    IPopupItem,
+    IPopupOptions,
+    IPopupController,
+    IPopupItemInfo,
+    IDragOffset,
+    IPopupSizes
+} from 'Controls/_popup/interface/IPopup';
 import {goUpByControlTree} from 'UI/Focus';
 import { getClosestControl } from 'UI/NodeCollector';
 import {List} from 'Types/collection';
@@ -26,8 +33,9 @@ const ORIENTATION_CHANGE_DELAY = 50;
  */
 
 interface IManagerOptions extends IControlOptions {
-    popupHeaderTheme: string;
-    popupSettingsController: Control;
+    popupHeaderTheme?: string;
+    popupSettingsController?: Control;
+    dataLoaderModule?: string;
 }
 
 const RESIZE_DELAY = 10;
@@ -37,21 +45,19 @@ const SCROLL_DELAY = detection.isMobileIOS ? 100 : 10;
 class Manager {
     _contextIsTouch: boolean = false;
     _dataLoaderModule: string;
-    _popupPageConfigLoaderModule: string;
-    _popupPageTemplateModule: string;
     _popupItems: List<IPopupItem> = new List();
     private _pageScrolled: Function;
     private _popupResizeOuter: Function;
     private _dragTimer: number;
 
-    constructor(options = {}) {
+    constructor(options: IManagerOptions = {}) {
         this.initTheme(options);
         this._dataLoaderModule = options.dataLoaderModule;
         this._pageScrolled = debounce(this._pageScrolledBase, SCROLL_DELAY);
         this._popupResizeOuter = debounce(this._popupResizeOuterBase, RESIZE_DELAY);
     }
 
-    protected initTheme(options): void {
+    protected initTheme(options: IManagerOptions): void {
         ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
         ManagerController.setTheme(options.theme);
     }
@@ -98,7 +104,7 @@ class Manager {
         ManagerController.setPopupHeaderTheme(popupHeaderTheme);
     }
 
-    public destroy(): void {
+    destroy(): void {
         if (detection.isMobileIOS) {
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._controllerVisibilityChangeHandler);
@@ -548,10 +554,10 @@ class Manager {
         return goUpByControlTree(this._getActiveElement())[0];
     }
 
-    protected _popupDragStart(id: string, offset: IDragOffset): boolean {
+    protected _popupDragStart(id: string, offset: IDragOffset, sizes: IPopupSizes): boolean {
         const element = this.find(id);
         if (element) {
-            element.controller.popupDragStart(element, this._getItemContainer(id), offset);
+            element.controller.popupDragStart(element, this._getItemContainer(id), offset, sizes);
             return true;
         }
         return false;

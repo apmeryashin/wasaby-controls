@@ -25,12 +25,12 @@ export interface ILinkViewControlOptions extends IControlOptions, IFontColorStyl
  * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FLinkView">Demo examples.</a>.
  * @class Controls/_dateRange/LinkView
  * @extends UI/Base:Control
- * @mixes Controls/interface:IResetValues
- * @mixes Controls/interface:IFontSize
+ * @implements Controls/interface:IResetValues
+ * @implements Controls/interface:IFontSize
  *
- * @mixes Controls/interface:IUnderline
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IUnderline
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IFontColorStyle
  * @mixes Controls/dateRange:ICaptionFormatter
  *
  * @private

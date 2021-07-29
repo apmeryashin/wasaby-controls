@@ -34,7 +34,7 @@ const MAX_VISIBLE_YEARS = 14;
  * @extends UI/Base:Control
  * @mixes Controls/shortDatePicker/IDateLitePopup
  *
- * @mixes Controls/interface:IDisplayedRanges
+ * @implements Controls/interface:IDisplayedRanges
  * @mixes Controls/dateRange:ICaptionFormatter
  *
  * @public

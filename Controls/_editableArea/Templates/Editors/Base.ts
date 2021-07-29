@@ -22,10 +22,10 @@ interface IBaseOptions extends IFontSizeOptions, IFontWeightOptions, IFontColorS
  * Базовый шаблон редактирования полей ввода. Имитирует стили {@link Controls/input:Text}.
  * @class Controls/_editableArea/Templates/Editors/Base
  * @extends UI/Base:Control
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IHeight
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IHeight
  * @author Красильников А.С.
  * @public
  * @see Controls/_editableArea/Templates/Editors/DateTime

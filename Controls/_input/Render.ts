@@ -94,12 +94,12 @@ export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorder
  * @class Controls/_input/Render
  * @extends UICore/Base:Control
  *
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IBorderStyle
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IValidationStatus
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IBorderStyle
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IValidationStatus
  * @mixes Controls/input:ITag
  * @mixes Controls/input:IBorderVisibility
  * @implements Controls/interface:IContrastBackground
