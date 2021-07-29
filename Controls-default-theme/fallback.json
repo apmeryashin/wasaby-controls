@@ -1649,6 +1649,7 @@
   "--item_border-thickness_shortDatePicker": "var(--border-thickness)",
   "--item_hover_border-color_shortDatePicker": "#8991A9",
   "--item_hover_background-color_shortDatePicker": "var(--item_background-color_shortDatePicker)",
+  "--header_background-color_shortDatePicker": "var(--header_background-color_sticky);",
   "--yearselector_height_shortDatePicker": "40px",
   "--yearselector_text-color_shortDatePicker": "var(--primary_text-color)",
   "--yearselector_font-size_shortDatePicker": "var(--font-size_l)",
