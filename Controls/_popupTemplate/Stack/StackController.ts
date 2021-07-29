@@ -1,4 +1,4 @@
-import BaseController, {RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
+import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions} from 'Controls/popup';
 import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
@@ -523,6 +523,7 @@ class StackController extends BaseController {
 
     static calcStackParentCoords(item: IStackItem): IPopupPosition {
         let rootCoords;
+        const rightPanelWidth = getRightPanelWidth();
         // TODO: Ветка для старой страницы
         if (!isNewEnvironment()) {
             let stackRoot = document.querySelector('.ws-float-area-stack-root') as HTMLElement;
@@ -532,10 +533,10 @@ class StackController extends BaseController {
                 stackRoot = stackRoot.parentElement as HTMLElement;
             }
             rootCoords = getTargetCoords(stackRoot || document.body);
-            rootCoords.right -= RIGHT_PANEL_WIDTH;
+            rootCoords.right -= rightPanelWidth;
         } else {
             const selector = '.controls-Popup__stack-target-container';
-            rootCoords = BaseController.getRootContainerCoords(item, selector, RIGHT_PANEL_WIDTH);
+            rootCoords = BaseController.getRootContainerCoords(item, selector, rightPanelWidth);
         }
 
         // calc with scroll only on desktop devices, because stack popup has fixed position and can scroll with page

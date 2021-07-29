@@ -25,7 +25,12 @@ import {ControllerClass, Container as ValidateContainer} from 'Controls/validate
 import {Logger} from 'UI/Utils';
 
 import { TouchDetect } from 'Env/Touch';
-import {error as dataSourceError, NewSourceController as SourceController, isEqualItems} from 'Controls/dataSource';
+import {
+    error as dataSourceError,
+    NewSourceController as SourceController,
+    isEqualItems,
+    ISourceControllerOptions
+} from 'Controls/dataSource';
 import {
     INavigationOptionValue,
     INavigationSourceConfig,
@@ -3037,7 +3042,8 @@ const _private = {
 
     // region Drag-N-Drop
 
-    startDragNDrop(self, domEvent, item): void {
+    // возвращаем промис для юнитов
+    startDragNDrop(self, domEvent, item): Promise<void> {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
             && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, TouchDetect.getInstance().isTouch())
@@ -3051,45 +3057,42 @@ const _private = {
                 excluded: self._options.excludedKeys || []
             };
             selection = DndController.getSelectionForDragNDrop(self._listViewModel, selection, key);
-            const recordSet = self._listViewModel.getCollection();
 
-            // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
-            // количество записей будет отдавать selectionController
-            // https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
-            getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION)
-                .addCallback((items) => {
-                    let dragStartResult = self._notify('dragStart', [items, key]);
+            const options = self._getSourceControllerOptionsForGetDraggedItems();
+            return DndController.getDraggedItemsKeys(selection, self._items, options).then((items) => {
+                let dragStartResult = self._notify('dragStart', [items, key]);
 
-                    if (dragStartResult === undefined) {
-                        // Чтобы для работы dnd было достаточно опции itemsDragNDrop=true
-                        dragStartResult = new ItemsEntity({items});
+                if (dragStartResult instanceof ItemsEntity && !dragStartResult.getItems().includes(key)) {
+                    Logger.error('ItemsEntity должен содержать ключ записи, за которую начали перетаскивание.');
+                    // ничего не делаем, чтобы не блочилась страница.
+                    return;
+                }
+
+                if (dragStartResult === undefined) {
+                    // Чтобы для работы dnd было достаточно опции itemsDragNDrop=true
+                    dragStartResult = new ItemsEntity({items});
+                }
+
+                if (dragStartResult) {
+                    if (self._options.dragControlId) {
+                        dragStartResult.dragControlId = self._options.dragControlId;
                     }
 
-                    if (dragStartResult) {
-                        if (self._options.dragControlId) {
-                            dragStartResult.dragControlId = self._options.dragControlId;
-                        }
+                    self._dragEntity = dragStartResult;
+                    self._draggedKey = key;
+                    self._startEvent = domEvent.nativeEvent;
 
-                        self._dragEntity = dragStartResult;
-                        self._draggedKey = key;
-                        self._startEvent = domEvent.nativeEvent;
-
-                        if (!dragStartResult.getItems().includes(self._draggedKey)) {
-                            Logger.error(
-                                'ItemsEntity должен содержать ключ записи, за которую начали перетаскивание.'
-                            );
-                        }
-
-                        _private.clearSelectedText(self._startEvent);
-                        if (self._startEvent && self._startEvent.target) {
-                            self._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
-                        }
-
-                        self._registerMouseMove();
-                        self._registerMouseUp();
+                    _private.clearSelectedText(self._startEvent);
+                    if (self._startEvent && self._startEvent.target) {
+                        self._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
                     }
-                });
+
+                    self._registerMouseMove();
+                    self._registerMouseUp();
+                }
+            });
         }
+        return Promise.resolve();
     },
 
     // TODO dnd когда будет наследование TreeControl <- BaseControl, правильно указать тип параметров
@@ -6522,6 +6525,30 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     updateSourceController(options): void {
         this._sourceController?.updateOptions(options);
+    }
+
+    protected _getSourceControllerOptionsForGetDraggedItems(): ISourceControllerOptions {
+        const options: ISourceControllerOptions = {...this._options};
+        options.dataLoadCallback = null;
+        options.dataLoadErrback = null;
+        options.navigationParamsChangedCallback = null;
+        if (this._selectionController) {
+            options.selectedKeys = this._selectionController.getSelection().selected;
+            options.excludedKeys = this._selectionController.getSelection().excluded;
+        }
+
+        if (options.navigation) {
+            // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
+            // количество записей будет отдавать selectionController
+            // https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
+            if (options.navigation.source === 'position') {
+                options.navigation.sourceConfig.limit = LIMIT_DRAG_SELECTION;
+            } else if (options.navigation.source === 'page') {
+                options.navigation.sourceConfig.pageSize = LIMIT_DRAG_SELECTION;
+            }
+        }
+
+        return options;
     }
 
     /**

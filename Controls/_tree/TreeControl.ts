@@ -15,7 +15,7 @@ import {Direction, IBaseSourceConfig, IHierarchyOptions, TKey} from 'Controls/in
 import {BaseControl, IBaseControlOptions, ISiblingStrategy} from 'Controls/baseList';
 import {Collection, CollectionItem, Tree, TreeItem} from 'Controls/display';
 import { selectionToRecord } from 'Controls/operations';
-import { NewSourceController } from 'Controls/dataSource';
+import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
 import { MouseButtons, MouseUp } from 'Controls/popup';
 import 'css!Controls/list';
 import 'css!Controls/itemActions';
@@ -364,13 +364,6 @@ const _private = {
         items.setEventRaising(true, true);
     },
 
-    initListViewModelHandler(self: TreeControl, listModel): void {
-        if (listModel) {
-            listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
-            listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
-        }
-    },
-
     nodeChildsIterator(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
         var findChildNodesRecursive = function(key) {
             const item = viewModel.getItemBySourceKey(key);
@@ -551,7 +544,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     protected _afterMount() {
         super._afterMount(...arguments);
 
-        _private.initListViewModelHandler(this, this._listViewModel);
         if (this._expandedItemsToNotify) {
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
             this._expandedItemsToNotify = null;
@@ -807,9 +799,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
             this._expandedItemsToNotify = null;
         }
-        if (oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
-            _private.initListViewModelHandler(this, this._listViewModel);
-        }
     }
 
     protected _beforeUnmount(): void {
@@ -846,20 +835,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         } else {
             super._onClickMoreButton(e);
         }
-    }
-
-    private _onExpandedItemsChanged(e, expandedItems): void {
-        this._notify('expandedItemsChanged', [expandedItems]);
-        this.getSourceController().setExpandedItems(expandedItems);
-        // вызываем обновление, так как, если нет биндинга опции, то контрол не обновится.
-        // А обновление нужно, чтобы отдать в модель нужные expandedItems
-        this._forceUpdate();
-    }
-
-    private _onCollapsedItemsChanged(e, collapsedItems) {
-        this._notify('collapsedItemsChanged', [collapsedItems]);
-        //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные collapsedItems
-        this._forceUpdate();
     }
 
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
@@ -932,6 +907,16 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     private _expandNodeOnDrag(dispItem: TreeItem<Model>): void {
         _private.toggleExpanded(this, dispItem);
+    }
+
+    protected _getSourceControllerOptionsForGetDraggedItems(): ISourceControllerOptions {
+        const options = super._getSourceControllerOptionsForGetDraggedItems();
+
+        options.deepReload = true;
+        options.expandedItems = this._expandController.getExpandedItems();
+        options.root = this._root;
+
+        return options;
     }
 
     protected _notifyItemClick([e, item, originalEvent, columnIndex]: [SyntheticEvent, Model, SyntheticEvent, number?], returnExpandResult: boolean /* for tests */) {
