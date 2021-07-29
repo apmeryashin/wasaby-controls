@@ -24,7 +24,7 @@ export default class TabbedViewDemo extends Control {
         count: 750
     };
 
-    protected _typeDescription: unknown[] = [
+    protected _source: unknown[] = [
         {
             name: 'description',
             caption: 'Описание',
