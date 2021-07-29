@@ -7,6 +7,7 @@ import {ToSourceModel} from 'Controls/_lookup/resources/ToSourceModel';
 import {isEqual} from 'Types/object';
 import {object} from 'Types/util';
 import { constants } from 'Env/Constants';
+import {IData} from "Types/source";
 
 type Key = string|number|null;
 export type SelectedItems = RecordSet|List<Model>|List<void>;
@@ -91,11 +92,11 @@ export default class LookupBaseControllerClass {
     loadItems(): Promise<SelectedItems|Error> {
         const options = this._options;
         const filter = {...options.filter};
-        const keyProperty = options.keyProperty;
+        const keyProperty = this._getKeyProperty(options) as string;
 
         filter[keyProperty] = this._selectedKeys;
 
-        const sourceController = this._getSourceController();
+        const sourceController = this._getSourceController(this._options);
         sourceController.setFilter(filter);
         return sourceController.load().then(
             (items) => {
@@ -169,7 +170,7 @@ export default class LookupBaseControllerClass {
     }
 
     removeItem(item: Model): boolean {
-        const keyProperty = this._options.keyProperty;
+        const keyProperty = this._getKeyProperty(this._options) as string;
         const key = item.get(keyProperty);
         let isChanged = false;
         let selectedKeys = this.getSelectedKeys();
@@ -235,11 +236,11 @@ export default class LookupBaseControllerClass {
         return ToSourceModel(items, this._options.source, this._options.keyProperty);
     }
 
-    private _getSourceController(): SourceController {
+    private _getSourceController(options: ILookupBaseControllerOptions): SourceController {
         if (!this._sourceController) {
             this._sourceController =  new SourceController({
-                source: this._options.source,
-                keyProperty: this._options.keyProperty
+                source: options.source,
+                keyProperty: options.keyProperty
             });
         }
         return this._sourceController;
@@ -261,6 +262,16 @@ export default class LookupBaseControllerClass {
         return (items.getCount() !== selectedKeys.length) || this.getSelectedKeys().some((key) => {
             return items.getIndexByValue(this._options.keyProperty, key) === -1;
         });
+    }
+
+    private _getKeyProperty(options: ILookupBaseControllerOptions): string|void {
+        const keyProperty = this._getSourceController(options).getKeyProperty();
+
+        if (!keyProperty) {
+            Logger.error('Lookup: Option "keyProperty" is required.');
+        }
+
+        return keyProperty;
     }
 
     private _checkLoadedItems(
