@@ -594,8 +594,17 @@ define(
             }, item);
             assert.equal(position.maxWidth, 946); //В тесте getMaxPanelWidth === 1000 - 52 rightPanel
             assert.equal(position.width, 1000);
-            assert.equal(position.workspaceWidth, 946);
             assert.equal(position.right, 54);
+         });
+
+         it('stack getWorkspaceWidth', () => {
+            const position = {
+               width: 400,
+               maxWidth: 450
+            };
+            assert.equal(position.width, StackStrategy.getWorkspaceWidth(position));
+            position.maxWidth = 380;
+            assert.equal(position.maxWidth, StackStrategy.getWorkspaceWidth(position));
          });
 
          it('stack max width', () => {
