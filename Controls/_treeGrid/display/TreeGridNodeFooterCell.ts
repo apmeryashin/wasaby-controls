@@ -85,7 +85,7 @@ export default class TreeGridNodeFooterCell extends GridCell<null, TreeGridNodeF
     // TODO нужно удалить, когда перепишем колспан для футеров узлов на Tree::colspanCallback
     getColspan(colspan?: boolean): number {
         if (colspan !== false) {
-            return this.getOwner().getColumnsConfig().length;
+            return this.getOwner().getGridColumnsConfig().length;
         }
 
         return 1;

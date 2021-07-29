@@ -1,20 +1,22 @@
 /**
  * Библиотека контролов, визуально отображающих состояние процесса.
  * @library
- * @includes StateIndicator Controls/_progress/StateIndicator
- * @includes Legend Controls/_progress/Legend
- * @includes Bar Controls/_progress/Bar
- * @includes Rating Controls/_progress/Rating
+ * @includes IBar Controls/progress:IBar
+ * @includes ILegend Controls/progress:ILegend
+ * @includes IndicatorCategory Controls/progress:IndicatorCategory
+ * @includes IStateIndicator Controls/progress:IStateIndicator
+ * @includes IRating Controls/progress:IRating
  * @author Колесов В.А.
  */
 
 /*
  * Progress indicators library
  * @library
- * @includes StateIndicator Controls/_progress/StateIndicator
- * @includes Legend Controls/_progress/Legend
- * @includes Bar Controls/_progress/Bar
- * @includes Rating Controls/_progress/Rating
+ * @includes IBar Controls/_progress/IBar
+ * @includes ILegend Controls/progress:ILegend
+ * @includes IndicatorCategory Controls/progress:IndicatorCategory
+ * @includes IStateIndicator Controls/progress:IStateIndicator
+ * @includes IRating Controls/progress:IRating
  * @author Колесов В.А.
  */
 

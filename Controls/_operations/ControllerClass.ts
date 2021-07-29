@@ -117,7 +117,10 @@ export default class OperationsController {
                        deleted: TKey[],
                        listId: string): TKey[] {
         this._selectedKeysByList[listId] = values.slice();
-        const result = this._updateListKeys(this._listSelectedKeys, added, deleted);
+        let result = this._updateListKeys(this._listSelectedKeys, added, deleted);
+        if (added.length && added[0] === null) {
+            result = [null];
+        }
         this._listSelectedKeys = result;
 
         return result;
@@ -128,7 +131,10 @@ export default class OperationsController {
                        deleted: TKey[],
                        listId: string): TKey[] {
         this._excludedKeysByList[listId] = values.slice();
-        const result = this._updateListKeys(this._listExcludedKeys, added, deleted);
+        let result = this._updateListKeys(this._listExcludedKeys, added, deleted);
+        if (deleted.length && deleted[0] === null) {
+            result = [];
+        }
         this._listExcludedKeys = result;
 
         return result;
@@ -170,21 +176,14 @@ export default class OperationsController {
     }
 
     private _updateListKeys(listKeys: TKey[], added: TKey[], deleted: TKey[]): TKey[] {
-        let result = listKeys.slice();
+        const result = listKeys.slice();
 
-        if (added.length && added[0] !== undefined) {
+        if (added.length) {
             this._updateKeys(result, added, true);
         }
-        if (deleted.length && deleted[0] !== undefined) {
+        if (deleted.length) {
             this._updateKeys(result, deleted, false);
         }
-        if (added.length && added[0] === null) {
-            result = [null];
-        }
-        if (deleted.length && deleted[0] === null) {
-            result = [];
-        }
-        this._listSelectedKeys = result;
         return result;
     }
 

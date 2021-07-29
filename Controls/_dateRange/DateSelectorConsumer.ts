@@ -7,15 +7,15 @@ import DateRangeSelectorConsumer from 'Controls/_dateRange/_DateRangeSelectorCon
  * Контрол позволяющий пользователю выбирать дату из календаря.
  * @class Controls/_dateRange/DateSelectorConsumer
  * @extends UI/Base:Control
- * @mixes Controls/interface:IResetValues
- * @mixes Controls/interface/IDateRange
+ * @implements Controls/interface:IResetValues
+ * @implements Controls/interface/IDateRange
  * @mixes Controls/dateRange:ILinkView
- * @mixes Controls/interface:IOpenPopup
+ * @implements Controls/interface:IOpenPopup
  * @mixes Controls/dateRange:IDatePickerSelectors
  * @mixes Controls/dateRange:IDayTemplate
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IUnderline
- * @mixes Controls/interface:IFontWeight
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IUnderline
+ * @implements Controls/interface:IFontWeight
  * @mixes Controls/dateRange:ICaptionFormatter
  * @mixes Controls/dateRange:IDateSelector
  * @remark

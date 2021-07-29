@@ -73,4 +73,17 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
             assert.equal(cell.getColspanStyles(), 'grid-column: 2 / 3');
         });
     });
+
+    describe('getColspan', () => {
+        it('default', () => {
+            mockedOwner.getGridColumnsConfig = () => [1, 2, 3];
+            const cell = new TreeGridNodeFooterCell({owner: mockedOwner});
+            assert.equal(cell.getColspan(), 3);
+        });
+
+        it('not colspan', () => {
+            const cell = new TreeGridNodeFooterCell({owner: mockedOwner});
+            assert.equal(cell.getColspan(false), 1);
+        });
+    });
 });

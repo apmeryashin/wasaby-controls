@@ -53,7 +53,7 @@ interface IPropertyGridValidatorArguments {
  * You can use the standard editors that are provided with the PropertyGrid or you can use custom editors.
  * By default the propertyGrid will autogenerate all the properties for a given object
  * @extends UI/Base:Control
- * @mixes Controls/interface/IPropertyGrid
+ * @implements Controls/interface/IPropertyGrid
  * @mixes Controls/propertyGrid:IPropertyGrid
  *
  * @public

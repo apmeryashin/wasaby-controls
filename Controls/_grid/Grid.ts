@@ -16,20 +16,20 @@ import { TemplateFunction } from 'UI/Base';
  *
  * @class Controls/_grid/Grid
  * @extends Controls/list:View
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/grid:IGridControl
- * @mixes Controls/interface/IGridItemTemplate
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/interface/IGridItemTemplate
- * @mixes Controls/grid:IPropStorage
- * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
+ * @implements Controls/grid:IGridControl
+ * @implements Controls/interface/IGridItemTemplate
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/interface/IGroupedGrid
+ * @implements Controls/interface/IGridItemTemplate
+ * @implements Controls/grid:IPropStorage
+ * @implements Controls/grid:IEditableGrid
+ * @implements Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.
@@ -46,20 +46,20 @@ import { TemplateFunction } from 'UI/Base';
  *
  * @class Controls/_grid/Grid
  * @extends Controls/list:View
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:ISorting
- * @mixes Controls/grid:IGridControl
- * @mixes Controls/interface/IGridItemTemplate
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/grid:IPropStorage
- * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IGroupedGrid
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
+ * @implements Controls/interface:ISorting
+ * @implements Controls/grid:IGridControl
+ * @implements Controls/interface/IGridItemTemplate
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/grid:IPropStorage
+ * @implements Controls/grid:IEditableGrid
+ * @implements Controls/marker:IMarkerList
  *
  *
  * @public

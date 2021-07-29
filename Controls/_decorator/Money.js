@@ -117,11 +117,11 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
  * @class Controls/_decorator/Money
  * @extends UI/Base:Control
  *
- * @mixes Controls/interface:ITooltip
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontWeight
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:INumberFormat
+ * @implements Controls/interface:ITooltip
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontWeight
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:INumberFormat
  * @mixes Controls/decorator:IMoney
  *
  * @public
@@ -139,7 +139,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
 
 /**
  * @name Controls/_decorator/IMoney#value
- * @cfg {Controls/_decorator/IMoney/TValue.typedef} Декорируемое число.
+ * @cfg {String | Number | Null} Декорируемое число.
  * @implements Controls/decorator:IOnlyPositive
  * @default null
  * @demo Controls-demo/Decorator/Money/Value/Index

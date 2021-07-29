@@ -27,9 +27,9 @@
    box-sizing: border-box;
    width: var(--monthnav_width_datePicker);
    padding-left: var(--calendar-header_padding-left_datePicker);
-   color: var(--current-year_text-color_datePicker);
+   color: var(--primary_text-color);
    font-size: var(--current-year_font-size_datePicker);
-   font-weight: var(--current-year_font-weight_datePicker);
+   font-weight: bold;
 }
 
 .controls-PeriodDialog-DateRange-header-weekdays {
@@ -57,7 +57,7 @@
    min-height: 0;
    flex-shrink: 1;
    flex-grow: 1;
-   border-bottom-right-radius: var(--border-radius_datePicker);
+   border-bottom-right-radius: var(--border-radius_dialog);
    z-index: 1;
 }
 
@@ -75,7 +75,7 @@
       position: absolute;
       bottom: calc(var(--monthnav_year_height_datePicker) / 2);
       right: calc(var(--monthview_width_monthSlider) / 14);
-      border-top: var(--monthnav_year_separator_thickness_datePicker) solid var(--monthnav_year_separator_color_datePicker);
+      border-top: 1px solid var(--monthnav_year_separator_color_datePicker);
    }
 }
 
@@ -91,7 +91,7 @@
    flex-shrink: 1;
    position: sticky;
    top: 0;
-   border-bottom-left-radius: var(--border-radius_datePicker);
+   border-bottom-left-radius: var(--border-radius_dialog);
    z-index: 1;
 }
 
@@ -102,10 +102,10 @@
    box-sizing: border-box;
    color: var(--monthnav_item_text-color_datePicker);
    font-size: var(--monthnav_item_font-size_datePicker);
-   padding-left: calc(var(--monthnav_item_padding-left_datePicker) - var(--monthnav_item_border-thickness_datePicker));
+   padding-left: calc(var(--monthnav_item_padding-left_datePicker) - var(--border-thickness));
    width: var(--monthnav_width_datePicker);
    height: var(--monthnav_item_height_datePicker);
-   border: var(--monthnav_item_border-thickness_datePicker) solid transparent;
+   border: var(--border-thickness) solid transparent;
    border-right-color: var(--monthnav_item_border-color_datePicker);
    border-bottom-color: var(--monthnav_item_border-color_datePicker);
    background-color: var(--monthnav_item_background-color_datePicker);
@@ -123,10 +123,10 @@
    cursor: pointer;
    box-sizing: border-box;
    height: var(--monthnav_year_height_datePicker);
-   padding-left: calc(var(--monthnav_year_padding-left_datePicker) - var(--monthnav_item_border-thickness_datePicker));
-   color: var(--monthnav_year_text-color_datePicker);
+   padding-left: calc(var(--monthnav_item_padding-left_datePicker) - var(--border-thickness));
+   color: var(--primary_text-color);
    font-size: var(--monthnav_year_font-size_datePicker);
-   border: var(--monthnav_item_border-thickness_datePicker) solid transparent;
+   border: var(--border-thickness) solid transparent;
    border-right-color: var(--monthnav_year_border-color_datePicker);
    border-bottom-color: var(--monthnav_year_border-color_datePicker);
    background-color: var(--monthnav_year_background-color_datePicker);
@@ -150,7 +150,7 @@
    height: var(--monthlist_heading_height_datePicker);
    line-height: var(--monthlist_heading_height_datePicker);
    font-size: var(--monthlist_heading_font-size_datePicker);
-   font-weight: var(--monthlist_heading_font-weight_datePicker);
+   font-weight: bold;
    color: var(--monthlist_heading_text-color_datePicker);
    border: var(--border-thickness) solid var(--monthlist_heading_border-color_datePicker);
    background-color: var(--monthlist_heading_background-color_datePicker);
@@ -177,7 +177,7 @@
    // логика работы маркера. Устанавливаем минимальную высоту равную 5 неделям.
    min-height: calc(var(--monthlist_monthview_item_height_datePicker) * 5 + var(--monthlist_heading_height_datePicker));
    width: var(--monthlist_monthview_width_datePicker);
-   height: var(--monthlist_monthview_height_datePicker);
+   height: auto;
    margin-bottom: var(--border-thickness);
 }
 

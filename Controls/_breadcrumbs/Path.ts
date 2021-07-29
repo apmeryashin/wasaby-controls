@@ -19,8 +19,8 @@ interface IReceivedState {
  * @class Controls/_breadcrumbs/Path
  * @extends UI/Base:Control
  * @mixes Controls/breadcrumbs:IBreadCrumbs
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/breadCrumbs_new/ClickHandler/Index
@@ -34,8 +34,8 @@ interface IReceivedState {
  * @class Controls/_breadcrumbs/Path
  * @extends UI/Base:Control
  * @mixes Controls/breadcrumbs:IBreadCrumbs
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
  * @private
  * @author Красильников А.С.
  * @demo Controls-demo/breadCrumbs_new/ClickHandler/Index
