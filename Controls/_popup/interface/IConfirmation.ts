@@ -55,7 +55,7 @@ export interface IConfirmationOpener {
  * @name Controls/_popup/interface/IConfirmationOpener#open
  * @function
  * @param {Controls/popup:IConfirmationOpener} IConfirmationOptions Конфигурация диалога подтверждения.
- * @returns {Deferred} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
+ * @returns {Promise} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @remark
  * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, следует использовать статический метод {@link openPopup}
  * 2. Если вы хотите использовать собственный шаблон в диалоге подтверждения используйте шаблон, смотрите
@@ -98,7 +98,7 @@ export interface IConfirmationOpener {
  * @name Controls/_popup/interface/IConfirmationOpener#open
  * @function
  * @param {PopupOptions} templateOptions Confirmation options.
- * @returns {Deferred} The deferral will end with the result when the user closes the popup.
+ * @returns {Promise} The deferral will end with the result when the user closes the popup.
  * @remark
  * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
  */
