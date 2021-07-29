@@ -636,7 +636,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 // oldItem и newItem в событии приходят как один и тот же рекорд, поэтому мы не можем узнать
                 // так старое значение, но у нас есть CollectionItem, в котором хрантся старое значение
                 const oldCollectionItem = this.getItemBySourceItem(oldItems[i]);
-                const oldValue = oldCollectionItem.getParent().key;
+                const oldItemParent = oldCollectionItem.getParent();
+                const oldValue = oldItemParent.isRoot()
+                    ? oldItemParent.getContents()
+                    : oldItemParent.getContents().getKey();
                 const newValue = newItems[i].get(this.getParentProperty());
                 if (oldValue !== newValue) {
                     changed = true;

@@ -20,7 +20,7 @@ export interface IOptions<S extends Model = Model,
 
 /**
  * @public
- * @mixes Controls/grid:GridMixin
+ * @implements Controls/grid:GridMixin
  * @author Авраменко А.С.
  */
 export default class Collection<S extends Model = Model, T extends Row<S> = Row<S>> extends mixin<
