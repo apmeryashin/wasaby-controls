@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-   <Controls.scroll:Container attr:class="controlsDemo__maxWidth500" attr:style="max-height: 250px">
+   <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo_line-height18" attr:style="max-height: 250px">
       <Controls.list:ItemsView items="{{_items}}">
          <ws:virtualScrollConfig pageSize="{{20}}"/>
          <ws:navigation view="infinity" source="page"/>
