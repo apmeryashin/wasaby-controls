@@ -40,6 +40,19 @@ export default interface IApplication extends IHTML {
  * </pre>
  */
 
+/**
+ * @name Controls/_interface/IApplication#meta
+ * @cfg {Content} Позволяет описывать дополнительные метаданные страницы.
+ * @example
+ * <pre class="brush: html">
+ * <ws:meta>
+ *     <ws:Array>
+ *         <ws:Object name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
+ *     </ws:Array>
+ * </ws:meta>
+ * </pre>
+ */
+
 /** 
  * @name Controls/_interface/IApplication#headJson
  * @deprecated Используйте одну из опций: {@link scripts} или {@link links}.
