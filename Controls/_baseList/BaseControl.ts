@@ -7036,6 +7036,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _dragStart(dragObject, draggedKey): void {
+        if (_private.hasHoverFreezeController(this)) {
+            this._hoverFreezeController.unfreezeHover();
+        }
         if (!this._dndListController) {
             this._dndListController = _private.createDndListController(this._listViewModel, this._options);
         }
