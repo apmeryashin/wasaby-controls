@@ -9,8 +9,12 @@ import * as Deferred from 'Core/Deferred';
 import * as cMerge from 'Core/core-merge';
 import * as cInstance from 'Core/core-instance';
 
-export const RIGHT_PANEL_WIDTH = ManagerController.hasRightPanel() ? 54 : 0; // --width_stack-right_panel + borders
-
+export const getRightPanelWidth = () => {
+    // Вычисляем значение при вызове. Если делать при загрузке модуля,
+    // то тема в контроллеры проставиться не успеет и результат будет неверный
+    const rightPanelWidth = 54;
+    return ManagerController.hasRightPanel() ? rightPanelWidth : 0; // --width_stack-right_panel + borders
+};
 let _fakeDiv: HTMLElement;
 /**
  * Base Popup Controller
