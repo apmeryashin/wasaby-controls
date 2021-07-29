@@ -1,4 +1,4 @@
-import {default as BaseController, RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
+import {default as BaseController, getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IDialogPopupOptions, IPopupSizes, IPopupPosition, Controller as ManagerController, IDragOffset} from 'Controls/popup';
 import {detection} from 'Env/Env';
 import {List} from 'Types/collection';
@@ -287,7 +287,7 @@ class DialogController extends BaseController {
         const dialogTargetContainer = '.controls-Popup__dialog-target-container';
         const position = BaseController.getRootContainerCoords(item, dialogTargetContainer) as IPopupPosition;
         if (ManagerController.getRightTemplate()) {
-            position.width += RIGHT_PANEL_WIDTH;
+            position.width += getRightPanelWidth();
         }
         return position;
     }
