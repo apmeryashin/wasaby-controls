@@ -291,12 +291,12 @@
   --yearlist_monthview_item_selected_background-color_datePicker:                   var(--rangeSelection_item_background-color_datePicker);
 
   // Позиционирование попапа
-  --shift-top_PeriodDialog-picker:                                                  calc(-1 * ((var(--header_height_datePicker) - var(--inline_height_default)) / 2));
+  --shift-top_PeriodDialog-picker:                                                  calc(-1 * ((var(--header-min-height_dialog) - var(--inline_height_default)) / 2));
   --shift-left_PeriodDialog-picker:                                                 calc(-1 * (var(--header_padding-left_datePicker) + var(--switcher_icon-size_datePicker) + var(--offset_m)));
   --shift-left_PeriodDialog-picker-withoutModeBtn:                                  calc(-1 * var(--header_padding-left_datePicker));
   //TODO: Добавить в fallback;
-  --shift-top_PeriodDialog-selector:                                                calc((var(--height_dateRangeSelector) - var(--header_height_datePicker) + 1px) / 2);
-  --shift-top_fontSize-l_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header_height_datePicker) + 1px) / 2 + 1px);
-  --shift-top_fontSize-s_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header_height_datePicker) + 1px) / 2 - 1px);
+  --shift-top_PeriodDialog-selector:                                                calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2);
+  --shift-top_fontSize-l_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2 + 1px);
+  --shift-top_fontSize-s_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2 - 1px);
 
 }
