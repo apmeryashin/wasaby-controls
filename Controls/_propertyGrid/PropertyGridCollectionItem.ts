@@ -71,12 +71,15 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
 
     getItemPaddingClasses(theme: string, gridColumnIndex?: number): string {
         const owner = this.getOwner();
+        const itemContents = this.getContents();
+        const editorOptions = itemContents.get('editorOptions');
+
         let classes = `controls-PropertyGrid__editor_spacingTop_${owner.getTopPadding()}_theme-${theme}
                        controls-PropertyGrid__editor_spacingBottom_${owner.getBottomPadding()}_theme-${theme}`;
         if (gridColumnIndex !== 1) {
             classes += ` controls-PropertyGrid__editor_spacingRight_${owner.getRightPadding()}_theme-${theme}`;
         }
-        if (gridColumnIndex !== 2 || !this.getContents().get('caption')) {
+        if (gridColumnIndex !== 2 || !itemContents.get('caption') || editorOptions?.jumpingLabel) {
             classes += ` controls-PropertyGrid__editor_spacingLeft_${owner.getLeftPadding()}_theme-${theme}`;
         }
         return classes;
