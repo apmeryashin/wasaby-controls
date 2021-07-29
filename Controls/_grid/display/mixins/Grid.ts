@@ -29,7 +29,7 @@ import {create} from 'Types/di';
 import {TItemActionsPosition} from 'Controls/_display/Collection';
 
 type THeaderVisibility = 'visible' | 'hasdata';
-type TResultsVisibility = 'visible' | 'hasdata';
+type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
 
 export type ISortItem = { [p: string]: string };
 
@@ -418,10 +418,14 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     setResultsVisibility(resultsVisibility: TResultsVisibility): void {
-        if (this._$resultsVisibility !== resultsVisibility) {
-            this._$resultsVisibility = resultsVisibility;
-            this._nextVersion();
+        if (this._$resultsVisibility === resultsVisibility) {
+            return;
         }
+
+        this._$results = null;
+        this._$resultsVisibility = resultsVisibility;
+
+        this._nextVersion();
     }
 
     protected _hasItemsToCreateResults(): boolean {
@@ -429,7 +433,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     protected _resultsIsVisible(): boolean {
-        return !!this._$resultsPosition && this._hasItemsToCreateResults();
+        return !!this._$resultsPosition && this._$resultsVisibility !== 'hidden' && this._hasItemsToCreateResults();
     }
 
     protected _initializeHeader(options: IOptions): void {
