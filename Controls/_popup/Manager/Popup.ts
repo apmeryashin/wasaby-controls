@@ -206,9 +206,9 @@ class Popup extends Control<IPopupControlOptions> {
         ManagerController.notifyToManager('popupMaximized', [this._options.id, state]);
     }
 
-    protected _popupDragStart(event: SyntheticEvent<Event>, offset: number): void {
+    protected _popupDragStart(event: SyntheticEvent<Event>, offset: number, sizes): void {
         this._isDragStarted = true;
-        ManagerController.notifyToManager('popupDragStart', [this._options.id, offset]);
+        ManagerController.notifyToManager('popupDragStart', [this._options.id, offset, sizes]);
     }
 
     protected _popupDragEnd(): void {

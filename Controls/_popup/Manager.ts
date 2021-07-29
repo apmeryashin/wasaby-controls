@@ -3,7 +3,14 @@ import Popup from 'Controls/_popup/Manager/Popup';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger} from 'UI/Utils';
-import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo, IDragOffset} from 'Controls/_popup/interface/IPopup';
+import {
+    IPopupItem,
+    IPopupOptions,
+    IPopupController,
+    IPopupItemInfo,
+    IDragOffset,
+    IPopupSizes
+} from 'Controls/_popup/interface/IPopup';
 import {goUpByControlTree} from 'UI/Focus';
 import { getClosestControl } from 'UI/NodeCollector';
 import {List} from 'Types/collection';
@@ -547,10 +554,10 @@ class Manager {
         return goUpByControlTree(this._getActiveElement())[0];
     }
 
-    protected _popupDragStart(id: string, offset: IDragOffset): boolean {
+    protected _popupDragStart(id: string, offset: IDragOffset, sizes: IPopupSizes): boolean {
         const element = this.find(id);
         if (element) {
-            element.controller.popupDragStart(element, this._getItemContainer(id), offset);
+            element.controller.popupDragStart(element, this._getItemContainer(id), offset, sizes);
             return true;
         }
         return false;
