@@ -17,11 +17,11 @@ import 'Controls/search';
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/suggest:ISuggest
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:INavigation
  * @mixes Controls/input:IFieldTemplate
  * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
@@ -34,11 +34,11 @@ import 'Controls/search';
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
- * @mixes Controls/interface:ISearch
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
  * @mixes Controls/suggest:ISuggest
- * @mixes Controls/interface:INavigation
+ * @implements Controls/interface:INavigation
  * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
  */

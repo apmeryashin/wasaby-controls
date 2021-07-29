@@ -11,7 +11,7 @@
  * @mixes Controls/input:IValue
  * @mixes Controls/input:IInputDateTime
  * @mixes Controls/input:ITimeMask
- * @mixes Controls/interface/IValidation
+ * @implements Controls/interface/IValidation
  * @private
  * @author Красильников А.С.
  */

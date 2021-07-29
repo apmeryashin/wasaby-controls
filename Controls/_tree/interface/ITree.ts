@@ -10,7 +10,7 @@ export interface IOptions {
 
 /**
  * Интерфейс дерева
- * @mixes Controls/interface/IGroupedList
+ * @implements Controls/interface/IGroupedList
  *
  * @public
  * @author Авраменко А.А.

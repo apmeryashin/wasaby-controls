@@ -13,8 +13,8 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @class Controls/_operations/Panel
  * @extends UI/Base:Control
  * @mixes Controls/toolbars:IToolbarSource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface:IHierarchy
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface:IHierarchy
  * 
  * @public
  * @author Герасимов А.М.

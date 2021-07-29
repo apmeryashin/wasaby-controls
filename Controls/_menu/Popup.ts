@@ -29,12 +29,12 @@ type CancelableError = Error & { canceled?: boolean, isCanceled: boolean };
  * @mixes Controls/menu:IMenuPopup
  * @mixes Controls/menu:IMenuControl
  * @mixes Controls/menu:IMenuBase
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:IIconSize
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:ISource
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISource
  *
  * @public
  * @author Герасимов А.М.

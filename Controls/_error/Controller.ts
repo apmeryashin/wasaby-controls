@@ -23,7 +23,7 @@ export interface Config { // tslint:disable-line: interface-name
     handlers?: Handler[];
 
     /**
-     * Конфигурация для отображения ошибки по умолчанию.
+     * @cfg {Controls/error:ViewConfig} Конфигурация для отображения ошибки по умолчанию.
      * Эта конфигурация объединится с той, которую вернёт обработчик ошибки.
      */
     viewConfig?: Partial<ViewConfig>;

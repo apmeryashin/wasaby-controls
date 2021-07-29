@@ -22,9 +22,9 @@ import {DialogOpener} from 'Controls/popup';
  *
  * @class Controls/_operationsPanel/OperationsPanel
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface:IHierarchy
  *
  * @private
  * @author Авраменко А.С.
@@ -39,9 +39,9 @@ import {DialogOpener} from 'Controls/popup';
  *
  * @class Controls/_operations/OperationsPanel
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface:IHierarchy
  *
  * @private
  * @author Герасимов А.М.

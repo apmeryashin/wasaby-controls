@@ -353,7 +353,7 @@ define(
             };
             let basePrepareConfig = DialogController._prepareConfig;
             DialogController._prepareConfig = (item, sizes) => {
-               assert.equal(item.sizes, sizes);
+               assert.deepEqual(item.sizes, sizes);
             };
             DialogController.popupDragStart(item, {}, offset);
             assert.equal(item.startPosition.left, 100);

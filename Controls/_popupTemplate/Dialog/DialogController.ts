@@ -1,4 +1,4 @@
-import {default as BaseController, RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
+import {default as BaseController, getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IDialogPopupOptions, IPopupSizes, IPopupPosition, Controller as ManagerController, IDragOffset} from 'Controls/popup';
 import {detection} from 'Env/Env';
 import {List} from 'Types/collection';
@@ -101,7 +101,7 @@ class DialogController extends BaseController {
         }
     }
 
-    popupDragStart(item: IDialogItem, container: HTMLElement, offset: IDragOffset): void {
+    popupDragStart(item: IDialogItem, container: HTMLElement, offset: IDragOffset, sizes: IPopupSizes = {}): void {
         const {
             horizontal: horizontalProperty,
             vertical: verticalProperty
@@ -117,9 +117,9 @@ class DialogController extends BaseController {
         item.dragged = true;
         item.position[horizontalProperty] = item.startPosition[horizontalProperty] + horizontalOffset;
         item.position[verticalProperty] = item.startPosition[verticalProperty] + verticalOffset;
-
+        const itemSizes: IPopupSizes = {...item.sizes, ...sizes};
         // Take the size from cache, because they don't change when you move
-        this._prepareConfig(item, item.sizes);
+        this._prepareConfig(item, itemSizes);
     }
 
     popupDragEnd(item: IDialogItem, offset: number): void {
@@ -287,7 +287,7 @@ class DialogController extends BaseController {
         const dialogTargetContainer = '.controls-Popup__dialog-target-container';
         const position = BaseController.getRootContainerCoords(item, dialogTargetContainer) as IPopupPosition;
         if (ManagerController.getRightTemplate()) {
-            position.width += RIGHT_PANEL_WIDTH;
+            position.width += getRightPanelWidth();
         }
         return position;
     }

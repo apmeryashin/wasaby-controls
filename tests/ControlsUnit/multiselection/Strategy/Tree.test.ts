@@ -592,6 +592,39 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(toArrayKeys(res.get(null)), []);
       });
 
+      it('node has selected children deep in entry_path ', () => {
+         const items = new RecordSet({
+            rawData: [
+               {id: 1, parent: null, node: true}
+            ],
+            keyProperty: 'id'
+         });
+         const model = new Tree({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node'
+         });
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: [
+               {id: 11, parent: 1},
+               {id: 111, parent: 11}
+            ]
+         });
+
+         let res = strategy.getSelectionForModel({selected: [111], excluded: []});
+         assert.deepEqual(toArrayKeys(res.get(true)), []);
+         assert.deepEqual(toArrayKeys(res.get(false)), []);
+         assert.deepEqual(toArrayKeys(res.get(null)), [1]);
+      });
+
       it('select item in current root and get ENTRY_PATH for it, recordset not has parents', () => {
          const items = new RecordSet({
             rawData: [

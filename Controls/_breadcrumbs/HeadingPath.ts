@@ -33,8 +33,8 @@ const SIZES = {
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends UI/Base:Control
  * @mixes Controls/breadcrumbs:IBreadCrumbs
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/BreadCrumbs/ScenarioFirst/Index
@@ -47,8 +47,8 @@ const SIZES = {
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends UI/Base:Control
  * @mixes Controls/breadcrumbs:IBreadCrumbs
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
  * @public
  * @author Красильников А.С.
  *

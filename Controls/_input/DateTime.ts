@@ -56,10 +56,10 @@ const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
  * @mixes Controls/input:IInputDateTime
  *
  * @mixes Controls/input:IDateTimeMask
- * @mixes Controls/interface:IInputTag
+ * @implements Controls/interface:IInputTag
  * @mixes Controls/input:IBase
  * @mixes Controls/input:IBorderVisibility
- * @mixes Controls/interface:IInputPlaceholder
+ * @implements Controls/interface:IInputPlaceholder
  * @mixes Controls/input:IValueValidators
  * @mixes Controls/input:IInputDisplayValueValidators
  *

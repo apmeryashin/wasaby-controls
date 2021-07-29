@@ -27,15 +27,15 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * @class Controls/_dateRange/Input
  * @extends UI/Base:Control
  * @mixes Controls/input:IBase
- * @mixes Controls/interface:IInputPlaceholder
+ * @implements Controls/interface:IInputPlaceholder
  * @mixes Controls/dateRange:IInput
  * @mixes Controls/dateRange:IDateRange
  * @mixes Controls/dateRange:IRangeInputTag
  * @mixes Controls/dateRange:IDatePickerSelectors
  * @mixes Controls/dateRange:IDayTemplate
- * @mixes Controls/interface:IDateMask
- * @mixes Controls/interface:IOpenPopup
- * @mixes Controls/interface:IDateRangeValidators
+ * @implements Controls/interface:IDateMask
+ * @implements Controls/interface:IOpenPopup
+ * @implements Controls/interface:IDateRangeValidators
  * @mixes Controls/dateRange:IDateRangeSelectable
  *
  * @public
@@ -51,7 +51,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * @mixes Controls/dateRange:IInput
  * @mixes Controls/dateRange:IDateRange
  * @mixes Controls/dateRange:IRangeInputTag
- * @mixes Controls/interface:IDateMask
+ * @implements Controls/interface:IDateMask
  * @mixes Controls/dateRange:IDateRangeSelectable
  *
  *

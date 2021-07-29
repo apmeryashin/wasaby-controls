@@ -17,6 +17,11 @@ class Header extends Control<IStackTemplateOptions> {
         const maximized = Header._calculateMaximized(this._options);
         this._notify('maximized', [!maximized], {bubbling: true});
     }
+
+    protected close(): void {
+        this._notify('close', [], {bubbling: true});
+    }
+
     private static _calculateMaximized(options: IStackTemplateOptions): Boolean {
         if (!options.stackMinimizedWidth && options.stackMinWidth && options.stackMaxWidth) {
             const middle = (options.stackMinWidth + options.stackMaxWidth) / 2;

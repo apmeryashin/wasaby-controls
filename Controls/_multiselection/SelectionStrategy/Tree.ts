@@ -589,16 +589,32 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          stateNode = null;
       } else if (this._entryPath) {
          const nodeKey = this._getKey(node);
-         const childesFromEntryPath =  this._entryPath
-             .filter((item) => item.parent === nodeKey)
-             .map((item) => item.id);
-         const hasChildrenInKeys = listKeys.some((key) => childesFromEntryPath.includes(key));
-         if (hasChildrenInKeys) {
+         if (this._childFromEntryPathIsSelected(nodeKey, selection.selected)) {
             stateNode = null;
          }
       }
 
       return stateNode;
+   }
+
+   /**
+    * Возвращает true, если один из детей в ENTRY_PATH выбран, иначе false
+    * @param parentKey
+    * @param selectedKeys
+    * @private
+    */
+   private _childFromEntryPathIsSelected(parentKey: CrudEntityKey, selectedKeys: CrudEntityKey[]): boolean {
+      const entryPath = this._entryPath.find((it) => it.parent === parentKey);
+      if (entryPath) {
+         const childKey = entryPath.id;
+         if (selectedKeys.includes(childKey)) {
+            return true;
+         } else {
+            return this._childFromEntryPathIsSelected(childKey, selectedKeys);
+         }
+      }
+
+      return false;
    }
 
    /**

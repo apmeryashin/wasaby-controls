@@ -18,7 +18,7 @@ interface ICharacteristicsItem {
 /**
  * "Богатый" шаблон отображения элементов в {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/IRichTemplate
- * @mixes Controls/tile:ItemTemplate
+ * @implements Controls/tile:ItemTemplate
  * @author Михайлов С.Е
  * @see Controls/tile:View
  * @example
