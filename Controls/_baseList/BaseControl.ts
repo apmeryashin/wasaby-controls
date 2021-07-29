@@ -3406,14 +3406,14 @@ const _private = {
  * @implements Controls/interface/IGroupedList
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
- * @mixes Controls/list:IEditableList
+ * @implements Controls/list:IEditableList
  * @mixes Controls/_list/BaseControl/Styles
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
- * @mixes Controls/list:IMovableList
- * @mixes Controls/marker:IMarkerList
- * @mixes Controls/list:IMovableList
+ * @implements Controls/list:IMovableList
+ * @implements Controls/marker:IMarkerList
+ * @implements Controls/list:IMovableList
  * @implements Controls/list:IListNavigation
  * @implements Controls/interface:IErrorController
  *
