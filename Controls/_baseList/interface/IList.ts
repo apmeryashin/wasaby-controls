@@ -100,7 +100,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#continueSearchTemplate
- * @cfg {String|TemplateFunction} Шаблон отображения блока, который отображается при прерывании {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#batch-filtration-search итеративного поиска}.
+ * @cfg {String|TemplateFunction} Пользовательский шаблон, который отображается под кнопкой "{@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#batch-filtration-search Продолжить поиск}".
  * @default Controls/list:ContinueSearchTemplate
  * @demo Controls-demo/list_new/Searching/PortionedSearch/Index
  */
