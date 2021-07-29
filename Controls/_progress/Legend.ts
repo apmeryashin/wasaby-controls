@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {IIndicatorCategory} from './StateIndicator';
 import legendTemplate = require('wml!Controls/_progress/Legend/Legend');
+import 'css!Controls/progress';
 
 /**
  * Интерфейс опций для {@link Controls/progress:Legend}.
@@ -18,7 +19,7 @@ export interface ILegendOptions extends IControlOptions {
     * <!-- WML -->
     * <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]}}"/>
     * </pre>
-    * @remark 
+    * @remark
     * Используется, если для диаграммы нужно установить несколько легенд. Количество элементов массива задает количество легенд диаграммы.
     */
    data?: IIndicatorCategory[];
@@ -26,11 +27,11 @@ export interface ILegendOptions extends IControlOptions {
 /**
  * Контрол используют для создания легенды к диаграмме состояния процесса (см. {@link /docs/js/Controls/progress/StateIndicator/?v=20.2000 Controls/progress:StateIndicator}).
  * Отображение легенды можно настроить во всплывающем окне при наведении курсора мыши на диаграмму состояния процесса.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less переменные тем оформления}
- * 
+ *
  * @author Колесов В.А.
  * @implements Controls/progress:ILegend
  * @public
@@ -44,7 +45,6 @@ export interface ILegendOptions extends IControlOptions {
 class Legend extends Control<ILegendOptions> {
    protected _template: TemplateFunction = legendTemplate;
 
-   static _theme: string[] = ['Controls/progress'];
    static getOptionTypes(): object {
       return {
          data: EntityDescriptor(Array)

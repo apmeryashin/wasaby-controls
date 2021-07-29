@@ -1,11 +1,11 @@
-<div>
-	<span class="controls-StateIndicator_theme-{{_options.theme}}">
+<div class="controls_progress_theme-{{ _options.theme }}">
+	<span class="controls-StateIndicator">
 	   <ws:for data="i in _numSectors">
 	      <span
-            class="controls-StateIndicator__box_theme-{{_options.theme}}
-            	   {{ _colorState[i] ? _colors[_colorState[i]-1] : 'controls-StateIndicator__emptySector' }}_theme-{{_options.theme}}
+            class="controls-StateIndicator__box
             	   {{ _colorState[i] ? _colors[_colorState[i]-1] : 'controls-StateIndicator__emptySector' }}
-				   controls-StateIndicator__box_sectorSize-{{_options.sectorSize}}_theme-{{_options.theme}}"
+            	   {{ _colorState[i] ? _colors[_colorState[i]-1] : 'controls-StateIndicator__emptySector' }}
+				   controls-StateIndicator__box_sectorSize-{{_options.sectorSize}}"
 	         data-item="{{ _colorState[i] ? _colorState[i] : -1 }}"
 	         on:mouseenter="_mouseEnterIndicatorHandler()"
 	      ></span>

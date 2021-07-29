@@ -3,6 +3,7 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import stateIndicatorTemplate = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 import { SyntheticEvent } from 'Vdom/Vdom';
+import 'css!Controls/progress';
 
 const defaultColors = [
    'controls-StateIndicator__sector1',
@@ -259,7 +260,6 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       }
    }
 
-   static _theme: string[] = ['Controls/progress'];
 
    static getDefaultOptions(): object {
       return {

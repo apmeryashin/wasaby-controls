@@ -1661,5 +1661,17 @@
   "--quarterly_quarters_text-color_shortDatePicker": "var(--text-color)",
   "--quarterly_quarters_hover_text-color_shortDatePicker": "var(--quarterly_quarters_text-color_shortDatePicker)",
   "--quarterly_quarters_width_shortDatePicker": "36px",
-  "--header_background-color_stack_unaccented": "var(--unaccented_background-color)"
+  "--header_background-color_stack_unaccented": "var(--unaccented_background-color)",
+  "--primary_scale_color_progressBar": "#D94700",
+  "--unselected_scale_color_progressBar": "#ccc",
+  "--scale_thickness_progressBar": "3px",
+  "--padding-horizontal_progressStateIndicator": "var(--offset_xs)",
+  "--item_height_l_progressStateIndicator": "12px",
+  "--item_width_l_progressStateIndicator": "10px",
+  "--item_height_m_progressStateIndicator": "8px",
+  "--item_width_m_progressStateIndicator": "6px",
+  "--item_offset_m_progressStateIndicator": "var(--offset_3xs)",
+  "--item_height_s_progressStateIndicator": "8px",
+  "--item_width_s_progressStateIndicator": "3px",
+  "--unselected_item_color_progressStateIndicator": "#ccc"
 }
