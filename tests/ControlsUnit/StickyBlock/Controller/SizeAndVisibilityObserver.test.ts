@@ -1,5 +1,6 @@
 import SizeAndVisibilityObserver from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {getNextStickyId} from 'Controls/scroll';
+import * as sinon from 'sinon';
 
 function getContainer() {
     return {
@@ -25,12 +26,9 @@ function getHeader() {
         restoreSticky: sinon.fake(),
         updateShadowVisibility: sinon.fake(),
         offsetTop: 0,
-        getIndex: function () {
-            return this._id;
-        }
-    }
+        index: getNextStickyId()
+    };
 }
-
 
 describe('SizeAndVisibilityObserver', () => {
     let component, container;
@@ -87,7 +85,8 @@ describe('SizeAndVisibilityObserver', () => {
     describe('_resizeObserverCallback', () => {
         beforeEach(() => {
             component._initialized = true;
-        })
+        });
+
         it('should push new elements to array of heights', () => {
             const header = getHeader();
             const entries = [
@@ -102,6 +101,39 @@ describe('SizeAndVisibilityObserver', () => {
             component._resizeObserverCallback(entries);
 
             assert.equal(component._elementsHeight.length, entries.length);
+        });
+
+        it('should call _resizeHeadersCallback with correct operation', () => {
+            const header = {
+                index: 1,
+                getHeaderContainer: function() {
+                    return this._container;
+                }
+            };
+            const entries = [
+                {
+                    target: header.getHeaderContainer(),
+                    contentRect: {
+                        height: 200
+                    }
+                }
+            ];
+            const operation = 'add';
+            sinon.stub(component, '_getHeaderFromNode').returns(header);
+            sinon.stub(component, '_getElementHeightEntry').returns({value: 1});
+            sinon.stub(component, '_getOperationForHeadersStack').returns(operation);
+            const resizeHeadersCallbackStub = sinon.stub(component, '_resizeHeadersCallback');
+
+            const header = {};
+            component._headers = {1: header};
+            component._resizeObserverCallback(entries);
+            const result = {
+                1: {
+                    header,
+                    operation
+                }
+            };
+            sinon.assert.calledWith(resizeHeadersCallbackStub, result);
         });
 
         it('should set height to element (100 to 200) and called changeHeadersStackByHeader', () => {
