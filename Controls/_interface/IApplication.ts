@@ -90,13 +90,13 @@ export default interface IApplication extends IHTML {
 /**
  * @name Controls/_interface/IApplication#zoom
  * @cfg {string} Определяет скалирование размеров интерфейса приложения. https://developer.mozilla.org/en-US/docs/Web/CSS/zoom
- * @variant default zoom: 1;
- * @variant small zoom: 1.5;
- * @variant medium zoom: 2;
- * @variant large zoom: 2.5;
- * @variant huge zoom: 3;
+ * @variant zoom-0.75
+ * @variant zoom-0.85
+ * @variant zoom-1
+ * @variant zoom-1.15
+ * @variant zoom-1.3
  * @demo Controls-demo/Application/Zoom/Index
- * @default default
+ * @default zoom-1
  */
 
 export interface IAttributes {

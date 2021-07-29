@@ -71,14 +71,14 @@ const SCALABLE_DIMENSIONS_VALUES = ['height', 'width', 'top', 'bottom', 'right',
  * Модуль для измерения размеров элементов
  */
 class DimensionsMeasurer {
-    private _zoomValue: number = ZOOM_NUMBER_VALUES[ZoomSize.DEFAULT];
+    private _zoomValue: number = ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']];
 
     setZoomValue(zoom: ZoomSize): void {
         const zoomNumberValue = ZOOM_NUMBER_VALUES[zoom];
         if (zoomNumberValue) {
             this._zoomValue = ZOOM_NUMBER_VALUES[zoom];
         } else {
-            this._zoomValue = ZOOM_NUMBER_VALUES[ZoomSize.DEFAULT];
+            this._zoomValue = ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']];
         }
     }
 
@@ -106,7 +106,7 @@ class DimensionsMeasurer {
      * Размеры и оффсеты window с учетом zoom
      */
     getWindowDimensions(): IWindowDimensions {
-        if (this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize.DEFAULT]) {
+        if (this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']]) {
             return this._getScaledElementDimensions<IWindowDimensions>(window, WINDOW_DIMENSIONS_FIELDS);
         } else {
             return window;
@@ -144,7 +144,7 @@ class DimensionsMeasurer {
      */
     getVisualViewportDimensions(): IVisualViewportDimensions {
         const visualViewport = this._getVisualViewport();
-        if (this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize.DEFAULT]) {
+        if (this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']]) {
             return this._getScaledElementDimensions<IVisualViewportDimensions>(visualViewport, VISUAL_VIEWPORT_FIELDS);
         } else {
             return visualViewport;
@@ -190,7 +190,7 @@ class DimensionsMeasurer {
      * @private
      */
     protected _needScaleByZoom(element: HTMLElement): boolean {
-        return this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize.DEFAULT] &&
+        return this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']] &&
             (element === document.documentElement || !element.closest('body'));
     }
 }
