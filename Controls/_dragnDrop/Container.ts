@@ -8,6 +8,7 @@ import ControllerClass from 'Controls/_dragnDrop/ControllerClass';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as template from 'wml!Controls/_dragnDrop/Container/Container';
+import 'css!Controls/dragnDrop';
 
 /**
  * @interface Controls/_dragnDrop/Container/IContainerOptions
@@ -369,8 +370,6 @@ class Container extends Control<IContainerOptions> {
 
     private static SHIFT_LIMIT: number = 4;
     private static IE_MOUSEMOVE_FIX_DELAY: number = 50;
-
-    static _styles: string[] = ['Controls/dragnDrop'];
 
     private static _getPageXY(event: MouseEvent | TouchEvent): ICords {
         if (event.type === 'touchstart' || event.type === 'touchmove') {

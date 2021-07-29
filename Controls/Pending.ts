@@ -99,7 +99,7 @@ export default class Pending extends Control<IControlOptions> {
      * Если finishPendingOperations будет вызываться несколько раз, будет актуален только последний вызов, а другие возвращенные Promise'ы будут отменены.
      * Когда finishPendingOperations вызывается, каждый пендинг пытается завершится путем вызова метода onPendingFail.
      * @param forceFinishValue этот аргумент используется в качестве аргумента onPendingFail.
-     * @returns {Deferred} Завершение Promise'а, когда все пендинги будут завершены.
+     * @returns {Promise} Завершение Promise'а, когда все пендинги будут завершены.
      */
 
     finishPendingOperations(forceFinishValue?: boolean, root: string = null): Promise<unknown> {

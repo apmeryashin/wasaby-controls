@@ -8,8 +8,8 @@
    min-height: 1px;
    flex-direction: column;
    background-color: var(--background-color_datePicker);
-   box-shadow: var(--box-shadow-size_datePicker) var(--box-shadow-color_datePicker);
-   border-radius: var(--border-radius_datePicker);
+   box-shadow: var(--box-shadow_dialog);
+   border-radius: var(--border-radius_dialog);
    position: relative;
    z-index: 1;
 }
@@ -46,14 +46,14 @@
    align-items: center;
    background-color: var(--header_background-color_datePicker);
    padding-left: var(--header_padding-left_datePicker);
-   height: var(--header_height_datePicker);
-   border-radius: var(--border-radius_datePicker) var(--border-radius_datePicker) 0 0;
+   height: var(--header-min-height_dialog);
+   border-radius: var(--border-radius_dialog) var(--border-radius_dialog) 0 0;
 }
 
 .controls-PeriodDialog__stateButton {
-   padding-right: var(--switcher_offset_datePicker);
-   width: var(--switcher_size_datePicker);
-   height: var(--switcher_size_datePicker);
+   padding-right: var(--offset_m);
+   width: var(--switcher_icon-size_datePicker);
+   height: var(--switcher_icon-size_datePicker);
    cursor: pointer;
 }
 
@@ -131,7 +131,7 @@
 }
 
 .controls-PeriodDialog__closeButton {
-   margin-right: var(--close-button_offset_datePicker);
+   margin-right: var(--close-link-button_offset-right_dialog);
 }
 
 .controls-PeriodDialog__header_calendar {

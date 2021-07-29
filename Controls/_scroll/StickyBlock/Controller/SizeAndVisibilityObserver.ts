@@ -87,16 +87,16 @@ export default class SizeAndVisibilityObserver {
                 if (operation) {
                     if (header.isInGroup) {
                         const groupHeader = header.group;
-                        const groupInUpdateHeaders = Object.entries(updateHeaders).find(([, updateHeader]) => updateHeader.header.getIndex() === groupHeader.getIndex());
+                        const groupInUpdateHeaders = Object.entries(updateHeaders).find(([, updateHeader]) => updateHeader.header.index === groupHeader.index);
                         if (!groupInUpdateHeaders) {
-                            updateHeaders[groupHeader.getIndex()] = {
+                            updateHeaders[groupHeader.index] = {
                                 header: groupHeader,
                                 operation
                             };
                         }
                     } else {
-                        updateHeaders[header.getIndex()] = {
-                            header: this._headers[header.getIndex()],
+                        updateHeaders[header.index] = {
+                            header: this._headers[header.index],
                             operation
                         };
                     }
