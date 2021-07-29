@@ -20,7 +20,8 @@
                                                     on:arrowClick="_notifyHandler('arrowClick')"/>
         </ws:if>
         <ws:if data="{{_visibleItems || _options.rootVisible}}">
-            <div class="controls-BreadCrumbsPath__crumbsWrapper {{_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__twoRows'}}">
+            <div class="controls-BreadCrumbsPath__crumbsWrapper {{_visibleItems || !_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__crumbsWrapper_fullWidth'}}
+             {{_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__twoRows'}}">
                 <div class="controls-BreadCrumbsPath__homeContainer {{ _applyHighlighter(_options.highlighter, _options.items ? _options.items[0].get(_options.parentProperty) : _options.root) }}
             {{_options.withoutBackButton || _options.displayMode === 'multiline' ? ' controls-BreadCrumbsPath__homeContainer__withoutBackButton' : ' controls-BreadCrumbsPath__homeContainer__withBackButton'}}"
                      on:mouseEnter="_notifyHandler('hoveredItemChanged', _getRootModel(_options.items ? _options.items[0].get(_options.parentProperty) : _options.root, _options.keyProperty))"
