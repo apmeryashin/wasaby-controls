@@ -3877,64 +3877,6 @@ define([
          assert.isNull(ctrl._draggingItem);
       });
 
-      it('startDragNDrop', () => {
-         const self = {
-            _options: {
-               readOnly: false,
-               itemsDragNDrop: true,
-               source,
-               filter: {},
-               selectedKeys: [],
-               excludedKeys: [],
-            },
-            _listViewModel: new display.Collection({
-               collection: new collection.RecordSet({
-                  rawData: data,
-                  keyProperty: 'id'
-               }),
-               keyProperty: 'key'
-            }),
-            _registerMouseMove: () => null,
-            _registerMouseUp: () => null
-         },
-         domEvent = {
-            nativeEvent: {},
-            target: {
-               closest: function() {
-                  return false;
-               }
-            }
-         },
-         itemData = {
-            getContents() {
-               return {
-                  getKey() {
-                     return 2;
-                  }
-               };
-            }
-         };
-
-         let notifyCalled = false;
-
-         self._notify = function(eventName, args) {
-            notifyCalled = true;
-            assert.equal(eventName, 'dragStart');
-            assert.deepEqual(args[0], [2]);
-            assert.equal(args[1], 2);
-         };
-
-         const isTouchStub = sandbox.stub(EnvTouch.TouchDetect.getInstance(), 'isTouch').returns(true);
-
-         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
-         assert.isFalse(notifyCalled, 'On touch device can\'t drag');
-
-         isTouchStub.returns(false);
-
-         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
-         assert.isTrue(notifyCalled);
-      });
-
       it('_processItemMouseEnterWithDragNDrop', () => {
          const ctrl = new lists.BaseControl({});
          const dragEntity = { entity: 'entity' },
@@ -7450,16 +7392,8 @@ define([
          });
 
 
-         it('startDragNDrop', () => {
-            baseControl._notify = (name, args) => {
-               if (name === 'dragStart') {
-                  return new dragNDrop.ItemsEntity({
-                     items: args[0]
-                  });
-               }
-            };
-
-            const draggedItem = baseControl._listViewModel.getItemBySourceKey(1);
+         describe('startDragNDrop', () => {
+            let notifyCalled = false;
             const event = {
                nativeEvent: {
                   pageX: 500,
@@ -7470,16 +7404,41 @@ define([
                }
             };
 
-            const registerMouseMoveSpy = sinon.spy(baseControl, '_registerMouseMove');
-            const registerMouseUpSpy = sinon.spy(baseControl, '_registerMouseUp');
+            beforeEach(() => {
+               baseControl._notify = (name, args) => {
+                  if (name === 'dragStart') {
+                     notifyCalled = true;
+                     assert.deepEqual(args[0], [1]);
+                     assert.equal(args[1], 1);
+                     return new dragNDrop.ItemsEntity({
+                        items: args[0]
+                     });
+                  }
+               };
+            });
 
-            lists.BaseControl._private.startDragNDrop(baseControl, event, draggedItem);
+            it('not start dnd, touch device', async () => {
+               const draggedItem = baseControl._listViewModel.getItemBySourceKey(1);
+               sandbox.stub(EnvTouch.TouchDetect.getInstance(), 'isTouch').returns(true);
+               return lists.BaseControl._private.startDragNDrop(baseControl, event, draggedItem).then(() => {
+                  assert.isFalse(notifyCalled, 'On touch device can\'t drag');
+               });
+            });
 
-            assert.equal(baseControl._draggedKey, 1);
-            assert.isNotNull(baseControl._dragEntity);
-            assert.isNotNull(baseControl._startEvent);
-            assert.isTrue(registerMouseMoveSpy.called);
-            assert.isTrue(registerMouseUpSpy.called);
+            it('start dnd', () => {
+               const draggedItem = baseControl._listViewModel.getItemBySourceKey(1);
+               const registerMouseMoveSpy = sinon.spy(baseControl, '_registerMouseMove');
+               const registerMouseUpSpy = sinon.spy(baseControl, '_registerMouseUp');
+               sandbox.stub(EnvTouch.TouchDetect.getInstance(), 'isTouch').returns(false);
+               lists.BaseControl._private.startDragNDrop(baseControl, event, draggedItem).then(() => {
+                  assert.isTrue(notifyCalled);
+                  assert.equal(baseControl._draggedKey, 1);
+                  assert.isNotNull(baseControl._dragEntity);
+                  assert.isNotNull(baseControl._startEvent);
+                  assert.isTrue(registerMouseMoveSpy.called);
+                  assert.isTrue(registerMouseUpSpy.called);
+               })
+            })
          });
 
          describe('onMouseMove', () => {
