@@ -53,8 +53,8 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * @extends UI/Base:Control
  * @mixes Controls/tabs:ITabsButtons
  * @mixes Controls/tabs:ITabsAdaptiveButtons
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IItems
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IItems
  *
  * @public
  * @author Красильников А.С.

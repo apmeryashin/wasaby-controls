@@ -66,11 +66,11 @@ interface IReceivedState {
  * * {@link Controls/list:Container}
  *
  * @class Controls/_list/Data
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:ISelectFields
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:ISelectFields
  * @extends UI/Base:Control
  *
  * @public
@@ -104,10 +104,10 @@ interface IReceivedState {
  * Here you can see a <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">demo</a>.
  *
  * @class Controls/_list/Data
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:ISource
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
  * @extends UI/Base:Control
  *
  * @public

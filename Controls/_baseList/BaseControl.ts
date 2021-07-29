@@ -3400,20 +3400,20 @@ const _private = {
  * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
  * @class Controls/_list/BaseControl
  * @extends UI/Base:Control
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/list:IEditableList
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/interface/IGroupedList
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/list:IEditableList
  * @mixes Controls/_list/BaseControl/Styles
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:ISorting
- * @mixes Controls/list:IMovableList
- * @mixes Controls/marker:IMarkerList
- * @mixes Controls/list:IMovableList
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
+ * @implements Controls/interface:ISorting
+ * @implements Controls/list:IMovableList
+ * @implements Controls/marker:IMarkerList
+ * @implements Controls/list:IMovableList
  * @implements Controls/list:IListNavigation
  * @implements Controls/interface:IErrorController
  *

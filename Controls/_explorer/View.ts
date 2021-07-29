@@ -1261,28 +1261,28 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @extends UI/Base:Control
  * @implements Controls/interface:IErrorController
  * @implements Controls/list:IReloadableList
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/ITreeGridItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/grid:IEditableGrid
+ * @implements Controls/interface/IGroupedList
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
+ * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
- * @mixes Controls/explorer:IExplorer
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/tile:ITile
- * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/grid:IGridControl
- * @mixes Controls/list:IClickableView
- * @mixes Controls/list:IMovableList
- * @mixes Controls/list:IRemovableList
- * @mixes Controls/marker:IMarkerList
- * @mixes Controls/tile:ITreeTile
+ * @implements Controls/explorer:IExplorer
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/tile:ITile
+ * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/interface/IGroupedGrid
+ * @implements Controls/grid:IGridControl
+ * @implements Controls/list:IClickableView
+ * @implements Controls/list:IMovableList
+ * @implements Controls/list:IRemovableList
+ * @implements Controls/marker:IMarkerList
+ * @implements Controls/tile:ITreeTile
  *
  * @public
  * @author Авраменко А.С.
@@ -1298,27 +1298,27 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @extends UI/Base:Control
  * @implements Controls/interface:IErrorController
  * @implements Controls/list:IReloadableList
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/grid:IEditableGrid
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface:INavigation
- * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/list:IList
- * @mixes Controls/itemActions:IItemActions
- * @mixes Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface/ITreeGridItemTemplate
+ * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/grid:IEditableGrid
+ * @implements Controls/interface/IGroupedList
+ * @implements Controls/interface:INavigation
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/list:IList
+ * @implements Controls/itemActions:IItemActions
+ * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
- * @mixes Controls/explorer:IExplorer
- * @mixes Controls/interface:IDraggable
- * @mixes Controls/tile:ITile
- * @mixes Controls/list:IVirtualScrollConfig
- * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/grid:IGridControl
- * @mixes Controls/list:IClickableView
- * @mixes Controls/list:IMovableList
- * @mixes Controls/list:IRemovableList
- * @mixes Controls/marker:IMarkerList
+ * @implements Controls/explorer:IExplorer
+ * @implements Controls/interface:IDraggable
+ * @implements Controls/tile:ITile
+ * @implements Controls/list:IVirtualScrollConfig
+ * @implements Controls/interface/IGroupedGrid
+ * @implements Controls/grid:IGridControl
+ * @implements Controls/list:IClickableView
+ * @implements Controls/list:IMovableList
+ * @implements Controls/list:IRemovableList
+ * @implements Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.

@@ -26,8 +26,8 @@ interface IPrefetchData {  // TODO: Compatible предзагрузка
 /**
  * Control Popup
  * @class Controls/_popup/Manager/Popup
- * @mixes Controls/interface/IOpenerOwner
- * @mixes Controls/interface:ICanBeDefaultOpener
+ * @implements Controls/interface/IOpenerOwner
+ * @implements Controls/interface:ICanBeDefaultOpener
  * @extends UI/Base:Control
  *
  * @private
@@ -206,9 +206,9 @@ class Popup extends Control<IPopupControlOptions> {
         ManagerController.notifyToManager('popupMaximized', [this._options.id, state]);
     }
 
-    protected _popupDragStart(event: SyntheticEvent<Event>, offset: number): void {
+    protected _popupDragStart(event: SyntheticEvent<Event>, offset: number, sizes): void {
         this._isDragStarted = true;
-        ManagerController.notifyToManager('popupDragStart', [this._options.id, offset]);
+        ManagerController.notifyToManager('popupDragStart', [this._options.id, offset, sizes]);
     }
 
     protected _popupDragEnd(): void {

@@ -119,17 +119,17 @@ export function getDefaultOptions(): object {
  * * {@link https://github.com/saby/wasaby-controls/blob/6156a9009ee88d96bf73c8b1200e197f9db1c3c8/Controls-default-theme/variables/_buttons.less переменные тем оформления}
  *
  * @extends UI/Base:Control
- * @mixes Controls/interface:IHref
+ * @implements Controls/interface:IHref
  * @mixes Controls/buttons:IButton
- * @mixes Controls/interface:ICaption
+ * @implements Controls/interface:ICaption
  * @mixes Controls/buttons:IClick
- * @mixes Controls/interface:IIcon
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:IIconSize
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:ITooltip
+ * @implements Controls/interface:IIcon
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:ITooltip
  *
  * @public
  * @author Красильников А.С.
@@ -143,17 +143,17 @@ export function getDefaultOptions(): object {
  *
  * @class Controls/_buttons/Button
  * @extends UI/Base:Control
- * @mixes Controls/interface:IHref
+ * @implements Controls/interface:IHref
  * @mixes Controls/buttons:IButton
- * @mixes Controls/interface:ICaption
+ * @implements Controls/interface:ICaption
  * @mixes Controls/buttons:IClick
- * @mixes Controls/interface:IIcon
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:IIconSize
- * @mixes Controls/interface:IFontColorStyle
- * @mixes Controls/interface:IFontSize
- * @mixes Controls/interface:IHeight
- * @mixes Controls/interface:ITooltip
+ * @implements Controls/interface:IIcon
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:ITooltip
  *
  * @public
  * @author Красильников А.С.
@@ -330,7 +330,7 @@ Object.defineProperty(Button, 'defaultProps', {
 /**
  * @name Controls/_buttons/Button#contrastBackground
  * @cfg
- * @default false (Когда опция {@link Controls/buttons/Button#viewMode viewMode} установлена в значение functionalButton, то для опции contrastBackground значение по умолчанию - true.)
+ * @default false (Когда опция {@link Controls/buttons:Button#viewMode viewMode} установлена в значение functionalButton, то для опции contrastBackground значение по умолчанию - true.)
  * @remark
  * Опция используется для акцентирования внимания на кнопке, и ее визуального выделения относительно окружения.
  * @demo Controls-demo/Buttons/ContrastBackground/Index

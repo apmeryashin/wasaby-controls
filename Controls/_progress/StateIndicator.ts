@@ -12,14 +12,91 @@ const defaultColors = [
 const defaultScaleValue = 10;
 const maxPercentValue = 100;
 
+
+/**
+ * Интерфейс опций для конфигурации категорий.
+ * @interface Controls/progress:IIndicatorCategory
+ * @public
+ * @author Колесов В.А.
+ */
 export interface IIndicatorCategory {
+   /**
+    * @name Controls/progress:IIndicatorCategory#value
+    * @cfg {Number} Процент от соответствующей категории.
+    * @default 0
+    */
+   /* Percents of the corresponding category */
    value: number;
+   /**
+    * @name Controls/progress:IIndicatorCategory#className
+    * @cfg {String} Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
+    * @default ''
+    */
+   /*Name of css class, that will be applied to sectors of this category. If not specified, default color will be used */
    className: string;
+   /**
+    * @name Controls/progress:IIndicatorCategory#title
+    * @cfg {String} Название категории.
+    * @default ''
+    */
+   /* category note */
    title: string;
 }
 
+/**
+ * Интерфейс опций для {@link Controls/progress:StateIndicator}.
+ * @interface Controls/progress:IStateIndicator
+ * @public
+ * @author Колесов В.А.
+ */
 export interface IStateIndicatorOptions extends IControlOptions {
+   /**
+    * @name Controls/progress:IStateIndicator#scale
+    * @cfg {Number} Определяет размер (процентное значение) одного сектора диаграммы.
+    * @remark
+    * Положительное число до 100.
+    * @example
+    * Шкала из 5 установит индикатор с 20-ю секторами.
+    * <pre class="brush:html">
+    * <!-- WML -->
+    * <Controls.progress:StateIndicator scale="{{5}}"/>
+    * </pre>
+    */
+
+   /*
+   * @name Controls/progress:IStateIndicator#scale
+   * @cfg {Number} Defines percent count shown by each sector.
+   * @remark
+   * A positive number up to 100.
+   * @example
+   * Scale of 5 will set indicator with 20 sectors
+   * <pre class="brush:html">
+   * <!-- WML -->
+   * <Controls.progress:StateIndicator scale="{{5}}"/>
+   * </pre>
+   */
    scale?: number;
+   /**
+    * @name Controls/progress:IStateIndicator#data
+    * @cfg {Array.<Controls/progress:IIndicatorCategory>} Массив категорий диаграммы.
+    * @example
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
+    * </pre>
+    * @remark
+    * Используется, если для диаграммы нужно установить несколько категорий. Количество элементов массива задает количество категорий диаграммы.
+    */
+
+   /*
+   * @name Controls/progress:IStateIndicator#data
+   * @cfg {Array.<Controls/progress:IIndicatorCategory>} Array of indicator categories
+   * @example
+   * <pre class="brush:html">
+   * <!-- WML -->
+   * <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
+   * </pre>
+   */
    data?: IIndicatorCategory[];
 }
 /**
@@ -31,8 +108,8 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * * {@link /materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fIndex демо-пример}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less переменные тем оформления}
  *
- * @class Controls/_progress/StateIndicator
  * @extends UI/Base:Control
+ * @implements Controls/progress:IStateIndicator
  * @author Колесов В.А.
  *
  * @public
@@ -212,30 +289,6 @@ Object.defineProperty(StateIndicator, 'defaultProps', {
 });
 
 /**
- * @name Controls/_progress/StateIndicator#scale
- * @cfg {Number} Определяет размер (процентное значение) одного сектора диаграммы.
- * @remark
- * Положительное число до 100.
- * @example
- * Шкала из 5 установит индикатор с 20-ю секторами.
- * <pre class="brush:html">
- *   <Controls.progress:StateIndicator scale="{{5}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_progress/StateIndicator#scale
- * @cfg {Number} Defines percent count shown by each sector.
- * @remark
- * A positive number up to 100.
- * @example
- * Scale of 5 will set indicator with 20 sectors
- * <pre class="brush:html">
- *   <Controls.progress:StateIndicator scale="{{5}}"/>
- * </pre>
- */
-
-/**
  * @name Controls/_progress/StateIndicator#sectorSize
  * @cfg {String} Размер одного сектора диаграммы.
  * @variant s
@@ -243,40 +296,6 @@ Object.defineProperty(StateIndicator, 'defaultProps', {
  * @variant l
  * @default m
  * @demo Controls-demo/progress/StateIndicator/SectorSize/Index
- */
-
-/**
- * @typedef {Object} IndicatorCategory
- * @property {Number} [value=0] Процент от соответствующей категории.
- * @property {String} [className=''] Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
- * @property {String} [title=''] Название категории.
- */
-
-/*
- * @typedef {Object} IndicatorCategory
- * @property {Number} value=0 Percents of the corresponding category
- * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
- * @property {String} title='' category note
- */
-
-/**
- * @name Controls/_progress/StateIndicator#data
- * @cfg {Array.<IndicatorCategory>} Массив категорий диаграммы.
- * @example
- * <pre class="brush: html">
- *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
- * </pre>
- * @remark
- * Используется, если для диаграммы нужно установить несколько категорий. Количество элементов массива задает количество категорий диаграммы.
- */
-
-/*
- * @name Controls/_progress/StateIndicator#data
- * @cfg {Array.<IndicatorCategory>} Array of indicator categories
- * @example
- * <pre class="brush:html">
- *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
- * </pre>
  */
 
 /**

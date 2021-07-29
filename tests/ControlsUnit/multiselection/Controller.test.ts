@@ -168,6 +168,148 @@ describe('Controls/_multiselection/Controller', () => {
          controller.increaseLimitByCount(1);
          assert.isTrue(model.getItemBySourceKey(1).isSelected());
       });
+
+      it('not should unselect item, when it selected after pack', () => {
+         model = new Collection({
+            collection: new RecordSet({
+               rawData: [
+                  { id: 0 },
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 },
+                  { id: 7 },
+                  { id: 8 },
+                  { id: 9 }
+               ],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         strategy = new FlatSelectionStrategy({ model });
+
+         controller = new SelectionController({
+            model,
+            strategy,
+            filter: {},
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         controller.setSelection({selected: [7], excluded: []});
+         controller.increaseLimitByCount(5);
+         const result = controller.selectAll();
+         controller.setSelection(result);
+
+         assert.isTrue(model.getItemBySourceKey(0).isSelected());
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isTrue(model.getItemBySourceKey(4).isSelected());
+         assert.isTrue(model.getItemBySourceKey(7).isSelected());
+
+         assert.equal(controller.getCountOfSelected(), 6);
+      });
+
+      it('fill spaces and not includes separated selected items in pack', () => {
+         model = new Collection({
+            collection: new RecordSet({
+               rawData: [
+                  { id: 0 },
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 },
+                  { id: 7 },
+                  { id: 8 },
+                  { id: 9 }
+               ],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         strategy = new FlatSelectionStrategy({ model });
+
+         controller = new SelectionController({
+            model,
+            strategy,
+            filter: {},
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         controller.setSelection({selected: [0, 2, 4], excluded: []});
+         controller.increaseLimitByCount(5);
+         const result = controller.selectAll();
+         controller.setSelection(result);
+
+         assert.isTrue(model.getItemBySourceKey(0).isSelected());
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isTrue(model.getItemBySourceKey(4).isSelected());
+         assert.isTrue(model.getItemBySourceKey(5).isSelected());
+         assert.isTrue(model.getItemBySourceKey(6).isSelected());
+         assert.isTrue(model.getItemBySourceKey(7).isSelected());
+
+         assert.equal(controller.getCountOfSelected(), 8);
+      });
+
+      it('select separated item after pack and select second pack', () => {
+         model = new Collection({
+            collection: new RecordSet({
+               rawData: [
+                  { id: 0 },
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 },
+                  { id: 7 },
+                  { id: 8 },
+                  { id: 9 }
+               ],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         strategy = new FlatSelectionStrategy({ model });
+
+         controller = new SelectionController({
+            model,
+            strategy,
+            filter: {},
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         controller.increaseLimitByCount(2);
+         let result = controller.selectAll();
+         controller.setSelection(result);
+
+         result = controller.toggleItem(3);
+         controller.setSelection(result);
+
+         controller.increaseLimitByCount(2);
+         result = controller.selectAll();
+         controller.setSelection(result);
+
+         assert.isTrue(model.getItemBySourceKey(0).isSelected());
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isTrue(model.getItemBySourceKey(4).isSelected());
+
+         assert.equal(controller.getCountOfSelected(), 5);
+      });
    });
 
    it('selectAll', () => {
@@ -356,7 +498,7 @@ describe('Controls/_multiselection/Controller', () => {
       controller = new SelectionController({
          model,
          strategy,
-         selectedKeys: [1, 2, 3, 4],
+         selectedKeys: [null],
          excludedKeys: []
       });
 
