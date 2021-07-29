@@ -7838,6 +7838,61 @@ define([
          });
       });
 
+      // region HoverFreeze
+
+      describe('HoverFreeze', () => {
+         source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: [
+               {
+                  id: 1,
+                  title: 'Первый'
+               },
+               {
+                  id: 2,
+                  title: 'Второй'
+               }
+            ]
+         });
+
+         const
+             cfg = getCorrectBaseControlConfig({
+                viewName: 'Controls/List/ListView',
+                source,
+                keyProperty: 'id',
+                viewModelConstructor: 'Controls/display:Collection',
+                itemsDragNDrop: true,
+                multiSelectVisibility: 'visible',
+                selectedKeys: [1],
+                excludedKeys: [],
+                itemActions: [{id: 'add'}],
+                itemActionsPosition: 'outside'
+             });
+
+         let baseControl;
+         let sandBox;
+
+         beforeEach( async () => {
+            baseControl = new lists.BaseControl();
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+
+            sandBox = sinon.createSandbox();
+
+            baseControl._children.itemActionsOutsideStyle = {innerHTML: ''};
+            baseControl._container = {innerHTML: ''};
+            lists.BaseControl._private.initHoverFreezeController(baseControl);
+         });
+
+         it('should unfreeze on drag start', () => {
+            const spyHoverHontrollerUnfreeze = sandBox.spy(baseControl._hoverFreezeController, 'unfreezeHover');
+            baseControl._dragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) }, 1);
+            sinon.assert.called(spyHoverHontrollerUnfreeze);
+         });
+      });
+
+      // endregion HoverFreeze
+
       // region Move
 
       describe('MoveAction', () => {
