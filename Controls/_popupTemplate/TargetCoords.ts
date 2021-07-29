@@ -1,4 +1,4 @@
-import {getDimensions} from 'Controls/sizeUtils';
+import {DimensionsMeasurer, getDimensions} from 'Controls/sizeUtils';
 
 export interface ITargetCoords extends ClientRect {
     topScroll: number;
@@ -28,12 +28,15 @@ export default function getTargetCoords(target: HTMLElement): ITargetCoords {
     const left: number = box.left;
     const bottom: number = box.bottom;
     const right: number = box.right;
+    const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+    const documentDimensions = DimensionsMeasurer.getElementDimensions(document.documentElement);
+    const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
     const fullTopOffset: number =
-        window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0 -
-        document.documentElement.clientTop || document.body.clientTop || 0;
+        windowDimensions.pageYOffset || documentDimensions.scrollTop || bodyDimensions.scrollTop || 0 -
+        documentDimensions.clientTop || bodyDimensions.clientTop || 0;
     const fullLeftOffset: number =
-        window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0 -
-        document.documentElement.clientLeft || document.body.clientLeft || 0;
+        windowDimensions.pageXOffset || documentDimensions.scrollLeft || bodyDimensions.scrollLeft || 0 -
+        documentDimensions.clientLeft || bodyDimensions.clientLeft || 0;
 
     return {
         top: top + fullTopOffset,

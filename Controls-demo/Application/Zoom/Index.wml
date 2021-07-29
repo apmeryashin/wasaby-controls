@@ -1,0 +1,28 @@
+<Controls.Application zoom="{{ _zoom[0] }}">
+    <div attr:class="ApplicationDemo__zoom">
+        <div class="ApplicationDemo__zoom-line">
+            Выбор значения zoom:
+            <Controls.dropdown:Selector
+                bind:selectedKeys="_zoom"
+                keyProperty="key"
+                displayProperty="key"
+                source="{{_zoomDdlSource}}">
+            </Controls.dropdown:Selector>
+        </div>
+        <div class="ApplicationDemo__zoom-line">
+            <Controls.buttons:Button
+                caption="Открыть стековую панель"
+                on:click="_openStack()"/>
+        </div>
+        <div class="ApplicationDemo__zoom-line">
+            <Controls.buttons:Button
+                caption="Открыть диалог с перетаскиванием"
+                on:click="_openDialog()"/>
+        </div>
+        <div class="ApplicationDemo__zoom-line">
+            <Controls.slider:Base
+                maxValue="{{100}}"
+                minValue="{{0}}"/>
+        </div>
+    </div>
+</Controls.Application>

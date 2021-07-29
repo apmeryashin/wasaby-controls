@@ -1,5 +1,5 @@
 import cInstance = require('Core/core-instance');
-import {getDimensions} from 'Controls/sizeUtils';
+import {DimensionsMeasurer, getDimensions} from 'Controls/sizeUtils';
 import {getGapFixSize, POSITION, TYPE_FIXED_HEADERS} from 'Controls/_scroll/StickyBlock/Utils';
 import {goUpByControlTree} from 'UI/NodeCollector';
 import {IControl} from 'UICommon/interfaces';
@@ -36,18 +36,22 @@ function getScrollableParents(element: HTMLElement, stickyHeaderElement: Element
 
 function getOffset(element: HTMLElement): { top: number; bottom: number } {
    if (element === document.body || element === document.documentElement) {
+      const elementDimensions = DimensionsMeasurer.getElementDimensions(element);
+      const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
       return {
-         top: document.body.scrollTop,
-         bottom: element.clientHeight
+         top: bodyDimensions.scrollTop,
+         bottom: elementDimensions.clientHeight
       };
    } else {
       let { top, height } = getDimensions(element);
       // В IE, в отличие от Chrome, getBoundingClientRect возвращает нецелочисленные значения top
       top = Math.round(top);
 
+      const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+
       return {
-         top: top + window.pageYOffset,
-         bottom: top + height + window.pageYOffset
+         top: top + windowDimensions.pageYOffset,
+         bottom: top + height + windowDimensions.pageYOffset
       };
    }
 }

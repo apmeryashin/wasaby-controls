@@ -1,4 +1,5 @@
 import {IScrollState} from "./ScrollState";
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export const enum SCROLL_DIRECTION {
     VERTICAL = 'vertical',
@@ -100,15 +101,16 @@ export interface IContainerCoords {
  * Возвращает координаты элемента скролл контейнера на странице
  */
 export function getScrollContainerPageCoords(elem: HTMLElement): IContainerCoords {
-    const box = elem.getBoundingClientRect();
-    const body = document.body;
-    const docEl = document.documentElement;
+    const box = DimensionsMeasurer.getBoundingClientRect(elem);
+    const documentDimensions = DimensionsMeasurer.getElementDimensions(document.documentElement);
+    const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
+    const windowDimensions = DimensionsMeasurer.getWindowDimensions();
 
-    const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-    const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+    const scrollTop = windowDimensions.pageYOffset || documentDimensions.scrollTop || bodyDimensions.scrollTop;
+    const scrollLeft = windowDimensions.pageXOffset || documentDimensions.scrollLeft || bodyDimensions.scrollLeft;
 
-    const clientTop = docEl.clientTop || body.clientTop || 0;
-    const clientLeft = docEl.clientLeft || body.clientLeft || 0;
+    const clientTop = documentDimensions.clientTop || bodyDimensions.clientTop || 0;
+    const clientLeft = documentDimensions.clientLeft || bodyDimensions.clientLeft || 0;
 
     return {
         top: box.top + scrollTop - clientTop,

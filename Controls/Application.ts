@@ -1,25 +1,27 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import { AppData } from 'UI/State';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {AppData} from 'UI/State';
 import * as template from 'wml!Controls/Application/Page';
 import {Body as PageBody, Head as PageHead} from 'Application/Page';
 
 import * as cBodyClasses from 'Core/BodyClasses';
 import * as getResourceUrl from 'Core/helpers/getResourceUrl';
-import {detection, compatibility, constants, IoC} from 'Env/Env';
+import {compatibility, constants, detection, IoC} from 'Env/Env';
 import {TouchDetect} from 'Env/Touch';
 import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {dispatcherHandler} from 'UI/HotKeys';
 import {List} from 'Types/collection';
 
-import {setController as setSettingsController, IPopupSettingsController} from
-       'Controls/Application/SettingsController';
-import {ManagerClass as PopupManager, GlobalController as PopupGlobalController, IPopupItem} from
-       'Controls/popup';
-import {PendingClass, IPendingConfig} from 'Controls/Pending';
+import {
+   IPopupSettingsController,
+   setController as setSettingsController
+} from 'Controls/Application/SettingsController';
+import {GlobalController as PopupGlobalController, IPopupItem, ManagerClass as PopupManager} from 'Controls/popup';
+import {IPendingConfig, PendingClass} from 'Controls/Pending';
 import {RegisterClass} from 'Controls/event';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
-import { getConfig } from 'Application/Env';
+import {getConfig} from 'Application/Env';
+import {DimensionsMeasurer, ZoomSize} from 'Controls/sizeUtils';
 
 // Нужно чтобы oldCss прилетал первым на страницу. Есть контролы (например itemsActions), стили которыйх
 // Завязаны на порядок css.
@@ -49,6 +51,7 @@ interface IBodyClassesField {
    fromOptions: string;
    themeClass: string;
    bodyThemeClass: string;
+   zoomClass: string;
 }
 
 /**
@@ -81,7 +84,7 @@ interface IHeadLinkConfig {
    prefetch?: boolean;
 }
 
-interface IApplication extends IControlOptions{
+interface IApplication extends IControlOptions {
    bodyClass?: string;
    title?: string;
    RUMEnabled?: boolean;
@@ -95,6 +98,8 @@ interface IApplication extends IControlOptions{
 
    pagingVisible?: boolean;
    compat?: boolean;
+
+   zoom?: ZoomSize;
 }
 
 /** Динамические классы для body */
@@ -108,7 +113,8 @@ const BODY_CLASSES = {
    scrollingClass: detection.isMobileIOS ? 'controls-Scroll_webkitOverflowScrollingTouch' : '',
    fromOptions: '',
    themeClass: '',
-   bodyThemeClass: ''
+   bodyThemeClass: '',
+   zoomClass: ''
 };
 
 const BODY_CLASSES_STATE: IBodyClassesStateField = {
@@ -163,6 +169,7 @@ export default class Application extends Control<IApplication> {
       this._updateTouchClass();
       this._updateThemeClass(options);
       this._updateFromOptionsClass(options);
+      this._applyZoom(options.zoom);
 
       setSettingsController(options.settingsController);
 
@@ -209,6 +216,7 @@ export default class Application extends Control<IApplication> {
       this._updateTouchClass();
       this._updateThemeClass(options);
       this._updateFromOptionsClass(options);
+      this._applyZoom(options.zoom);
    }
    protected _afterUpdate(oldOptions: IApplication): void {
       /* eslint-disable */
@@ -456,6 +464,16 @@ export default class Application extends Control<IApplication> {
          bodyThemeClass: `controls_theme-${options.theme}`
       });
    }
+
+   private _applyZoom(zoomValue: ZoomSize = ZoomSize['zoom-1']): void {
+      if (zoomValue) {
+         this._updateBodyClasses({
+            zoomClass: `Application-body__${zoomValue}`
+         });
+         DimensionsMeasurer.setZoomValue(zoomValue);
+      }
+   }
+
    /** ************************************************** */
 
    private _checkDeprecatedOptions(opts: IApplication): void {

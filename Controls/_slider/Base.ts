@@ -10,6 +10,7 @@ import {constants} from 'Env/Env';
 import * as SliderTemplate from 'wml!Controls/_slider/sliderTemplate';
 import * as intervalTemplate from 'wml!Controls/_slider/BaseIntervalTemplate';
 import 'css!Controls/slider';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
    value: number;
@@ -154,7 +155,14 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
          const target = this._options.direction === 'vertical' ? dragObject.position.y : dragObject.position.x;
-         const ratio = this._getRatio(this._options.direction, target, box, window.pageXOffset, window.pageYOffset);
+         const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+         const ratio = this._getRatio(
+             this._options.direction,
+             target,
+             box,
+             windowDimensions.pageXOffset,
+             windowDimensions.pageYOffset
+         );
          const newValue = Utils.calcValue(
              this._options.minValue,
              this._options.maxValue,

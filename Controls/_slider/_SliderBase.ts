@@ -4,6 +4,7 @@ import {default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
 }
@@ -31,7 +32,8 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
         const target = this._options.direction === 'vertical' ? Utils.getNativeEventPageY(event) :
             Utils.getNativeEventPageX(event);
         const box = this._children.area.getBoundingClientRect();
-        const ratio = this._getRatio(this._options.direction, target, box, window.pageXOffset, window.pageYOffset);
+        const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+        const ratio = this._getRatio(this._options.direction, target, box, windowDimensions.pageXOffset, windowDimensions.pageYOffset);
         return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
     }
 

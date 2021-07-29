@@ -14,6 +14,7 @@ import {getItemSize} from './utils/imageUtil';
 import {TImageFit, TImageUrlResolver, TTileMode, TTileScalingMode, TTileSize} from './display/mixins/Tile';
 import { TActionMode } from './display/mixins/TileItem';
 import 'css!Controls/tile';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 const AVAILABLE_CONTAINER_VERTICAL_PADDINGS = ['null', 'default'];
 const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 'xs', 's', 'm', 'l', 'xl', '2xl'];
@@ -312,7 +313,7 @@ export default class TileView extends ListView {
         const viewContainer = tileScalingMode === 'inside'
             ? this.getItemsContainer()
             : constants.isBrowserPlatform && document.documentElement;
-        const viewContainerRect = viewContainer.getBoundingClientRect();
+        const viewContainerRect = DimensionsMeasurer.getBoundingClientRect(viewContainer);
 
         const targetItemSize = getItemSize(
             itemContainer, this._listModel.getZoomCoefficient(), this._listModel.getTileMode()
@@ -328,7 +329,8 @@ export default class TileView extends ListView {
             return;
         }
 
-        const documentRect = constants.isBrowserPlatform && document.documentElement.getBoundingClientRect();
+        const documentRect = constants.isBrowserPlatform &&
+            DimensionsMeasurer.getBoundingClientRect(document.documentElement);
         const targetItemPositionInDocument = this._listModel.getItemContainerPositionInDocument(
             targetItemPosition,
             viewContainerRect,

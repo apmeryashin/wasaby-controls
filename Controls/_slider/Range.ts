@@ -7,6 +7,7 @@ import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!Controls/slider';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export interface ISliderRangeOptions extends IControlOptions, ISliderOptions {
    startValue: number;
@@ -170,7 +171,8 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+         const ratio = Utils.getRatio(dragObject.position.x, box.left + windowDimensions.pageXOffset, box.width);
          this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          if (dragObject.entity === this._children.pointStart) {
             this._setStartValue(Math.min(this._value, this._endValue));

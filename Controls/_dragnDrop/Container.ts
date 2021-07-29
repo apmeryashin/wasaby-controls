@@ -8,6 +8,7 @@ import ControllerClass from 'Controls/_dragnDrop/ControllerClass';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as template from 'wml!Controls/_dragnDrop/Container/Container';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 import 'css!Controls/dragnDrop';
 
 /**
@@ -372,25 +373,7 @@ class Container extends Control<IContainerOptions> {
     private static IE_MOUSEMOVE_FIX_DELAY: number = 50;
 
     private static _getPageXY(event: MouseEvent | TouchEvent): ICords {
-        if (event.type === 'touchstart' || event.type === 'touchmove') {
-            const touchEvent = event as TouchEvent;
-            return {
-                x: touchEvent.touches[0].pageX,
-                y: touchEvent.touches[0].pageY
-            };
-        } else if (event.type === 'touchend') {
-            const touchEvent = event as TouchEvent;
-            return {
-                x: touchEvent.changedTouches[0].pageX,
-                y: touchEvent.changedTouches[0].pageY
-            };
-        } else {
-            const mouseEvent = event as MouseEvent;
-            return {
-                x: mouseEvent.pageX,
-                y: mouseEvent.pageY
-            };
-        }
+        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event);
     }
 
     private static _isDragStarted(startEvent: MouseEvent, moveEvent: MouseEvent, immediately: boolean): boolean {

@@ -14,6 +14,7 @@ export {getTextWidth} from './_utils/sizeUtils/getTextWidth';
 export {getWidth} from './_utils/sizeUtils/getWidth';
 export {default as ResizeObserverUtil, RESIZE_OBSERVER_BOX} from './_utils/sizeUtils/ResizeObserverUtil';
 export {default as IntersectionObserver} from './_utils/sizeUtils/IntersectionObserver';
+export {default as DimensionsMeasurer, ZoomSize} from './_utils/sizeUtils/DimensionsMeasurer';
 export {
     DOMUtil
 };

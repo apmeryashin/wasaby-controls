@@ -8,7 +8,7 @@ import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 import library = require('Core/library');
 import {Controller as ManagerController, isVDOMTemplate} from 'Controls/popup';
-import {getDimensions} from 'Controls/sizeUtils';
+import {DimensionsMeasurer, getDimensions} from 'Controls/sizeUtils';
 function loadTemplate(name: string) {
    const libraryInfo = library.parse(name);
    let template = require(libraryInfo.name);
@@ -36,12 +36,15 @@ const BaseOpener = {
       }
       const box = getDimensions(target);
       const right: number = box.right;
+      const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+      const documentDimensions = DimensionsMeasurer.getElementDimensions(document.documentElement);
+      const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
       const fullLeftOffset: number =
-          window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0 -
-          document.documentElement.clientLeft || document.body.clientLeft || 0;
+          windowDimensions.pageXOffset || documentDimensions.scrollLeft || bodyDimensions.scrollLeft || 0 -
+          documentDimensions.clientLeft || bodyDimensions.clientLeft || 0;
 
       const coords = {leftScroll: fullLeftOffset, right: right + fullLeftOffset};
-      return document?.documentElement.clientWidth - coords.right;
+      return documentDimensions.clientWidth - coords.right;
    },
    _prepareConfigForOldTemplate(cfg, templateClass): void {
       let rightOffset = cfg.isStack ? this._getTargetRightCoords() : 0;

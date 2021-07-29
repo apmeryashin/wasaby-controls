@@ -43,7 +43,7 @@ import { Sticky } from 'Controls/popup';
 // Utils imports
 import {getItemsBySelection} from 'Controls/_baseList/resources/utils/getItemsBySelection';
 import {EventUtils} from 'UI/Events';
-import {getDimensions as uDimension} from 'Controls/sizeUtils';
+import {DimensionsMeasurer, getDimensions as uDimension} from 'Controls/sizeUtils';
 import {getItemsHeightsData} from 'Controls/_baseList/ScrollContainer/GetHeights';
 import {
     Collection,
@@ -3106,22 +3106,7 @@ const _private = {
     },
 
     getPageXY(event): object {
-        let pageX, pageY;
-        if (event.type === 'touchstart' || event.type === 'touchmove') {
-            pageX = event.touches[0].pageX;
-            pageY = event.touches[0].pageY;
-        } else if (event.type === 'touchend') {
-            pageX = event.changedTouches[0].pageX;
-            pageY = event.changedTouches[0].pageY;
-        } else {
-            pageX = event.pageX;
-            pageY = event.pageY;
-        }
-
-        return {
-            x: pageX,
-            y: pageY
-        };
+        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent ? event.nativeEvent : event);
     },
     isDragStarted(startEvent, moveEvent): boolean {
         const offset = _private.getDragOffset(moveEvent, startEvent);

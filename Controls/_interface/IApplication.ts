@@ -1,4 +1,5 @@
 import {IHTMLOptions, IHTML} from 'UI/Base';
+import {ZoomSize} from 'Controls/sizeUtils';
 
 /**
  * Интерефейс для контролов, поддерживающих конфигурацию метатегов html-документа.
@@ -86,6 +87,18 @@ export default interface IApplication extends IHTML {
  * @default false
  */
 
+/**
+ * @name Controls/_interface/IApplication#zoom
+ * @cfg {string} Определяет скалирование размеров интерфейса приложения. https://developer.mozilla.org/en-US/docs/Web/CSS/zoom
+ * @variant default zoom: 1;
+ * @variant small zoom: 1.5;
+ * @variant medium zoom: 2;
+ * @variant large zoom: 2.5;
+ * @variant huge zoom: 3;
+ * @demo Controls-demo/Application/Zoom/Index
+ * @default default
+ */
+
 export interface IAttributes {
     [index: string]: string | undefined
 }
@@ -98,4 +111,5 @@ export interface IApplicationOptions extends IHTMLOptions {
     meta?: Array<IAttributes>;
     headJson?: HeadJson;
     title?: string;
+    zoom?: ZoomSize;
 }

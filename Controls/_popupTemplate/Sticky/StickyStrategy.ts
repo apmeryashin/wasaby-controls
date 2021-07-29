@@ -6,6 +6,7 @@ import {detection, constants} from 'Env/Env';
 import {IPopupPosition} from 'Controls/popup';
 import {IStickyPositionConfig} from 'Controls/_popupTemplate/Sticky/StickyController';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 let TouchKeyboardHelper = {};
 
@@ -445,17 +446,7 @@ export class StickyStrategy {
    }
 
    private _getVisualViewport(): IVisualViewport {
-      if (window?.visualViewport) {
-         return window.visualViewport;
-      }
-      return {
-         offsetLeft: 0,
-         offsetTop: 0,
-         pageLeft: constants.isBrowserPlatform && window.pageXOffset,
-         pageTop: constants.isBrowserPlatform && window.pageYOffset,
-         width: constants.isBrowserPlatform && document.body.clientWidth,
-         height: constants.isBrowserPlatform && document.body.clientHeight
-      };
+      return DimensionsMeasurer.getVisualViewportDimensions();
    }
 
    private _isIOS13(): boolean {

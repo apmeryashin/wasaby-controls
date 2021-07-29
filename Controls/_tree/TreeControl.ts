@@ -24,6 +24,7 @@ import 'css!Controls/treeGrid';
 import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -1169,13 +1170,15 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
             result = { top: null, bottom: null };
 
+            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
+
             // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
             if (this._listViewModel['[Controls/_tile/Tile]']) {
-                result.top = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
-                result.bottom = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
+                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
             } else {
-                result.top = (event.nativeEvent.pageY - dragTargetRect.top) / dragTargetRect.height;
-                result.bottom = (dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY) / dragTargetRect.height;
+                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
             }
         }
 

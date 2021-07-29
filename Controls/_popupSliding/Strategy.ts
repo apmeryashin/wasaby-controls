@@ -1,5 +1,6 @@
 import {IPopupItem, IPopupPosition, ISlidingPanelPopupOptions} from 'Controls/popup';
 import {constants} from 'Env/Env';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export enum AnimationState {
     initializing = 'initializing',
@@ -149,7 +150,7 @@ class Strategy {
      * @private
      */
     private _getWindowHeight(): number {
-        return constants.isBrowserPlatform && window.innerHeight;
+        return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions().innerHeight;
     }
 
     /**
@@ -158,7 +159,7 @@ class Strategy {
      * @private
      */
     private _getWindowWidth(): number {
-        return constants.isBrowserPlatform && window.innerWidth;
+        return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions().innerWidth;
     }
 
     /**

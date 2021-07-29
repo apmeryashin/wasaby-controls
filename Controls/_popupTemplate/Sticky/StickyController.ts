@@ -11,6 +11,7 @@ import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 import {constants, detection} from 'Env/Env';
 import {IPopupItem, IPopupSizes, IStickyPopupOptions, IStickyPosition} from 'Controls/popup';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -366,10 +367,10 @@ export class StickyController extends BaseController {
     }
 
     private _getWindowWidth(): number {
-        return constants.isBrowserPlatform && window.innerWidth;
+        return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions().innerWidth;
     }
     private _getWindowHeight(): number {
-        return constants.isBrowserPlatform && window.innerHeight;
+        return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions().innerHeight;
     }
     private _setStickyContent(item: IStickyItem): void {
         item.popupOptions.content = StickyContent;

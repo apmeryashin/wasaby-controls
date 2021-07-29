@@ -5,6 +5,7 @@
 import {detection, constants} from 'Env/Env';
 import {Bus as EventBus} from 'Env/Event';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 const ipadCoefficient = {
    portrait: 0.3,
@@ -50,6 +51,7 @@ const TouchKeyboardHelper = {
       if (this.isKeyboardVisible(notConsiderFocusPosition)) {
          if (detection.isMobileIOS) {
             const twiceCoef = 2;
+            const windowDimensions = DimensionsMeasurer.getWindowDimensions();
             // на новых версиях ios(12.1.3/12.1.4), в горизонтальной ориентации иногда(!!!) клавиатура при своем показе
             // уменьшает высоту экрана(как это и должно быть). в этом случае хэлпер должен вернуть высоту 0, чтобы
             // окна не вычитали высоту клавиатуры из высоты страницы. P.S. Если открыть клаву в вертикальной ориентации
@@ -57,7 +59,7 @@ const TouchKeyboardHelper = {
             if (!this.isPortrait() && window.screen.availHeight / window.innerHeight > twiceCoef) {
                return 0;
             }
-            return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
+            return windowDimensions.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
          }
       }
       return 0;
