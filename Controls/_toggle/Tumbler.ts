@@ -56,6 +56,8 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * - item {Types/entity:Record} — Отображаемый элемент;
  * - counterProperty {string} — Имя свойства элемента, содержимое которого будет отображаться в счетчике.
  *
+ * Чтобы поменять цвет счетчика, воспользуйтесь опцией mainCounterStyle у item
+ *
  * @example
  * Отображение записей со счетчиками
  * JS:
@@ -65,6 +67,28 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  *    data: [
  *       {key: 1, caption: 'Element 1', counter: 5},
  *       {key: 2, caption: 'Element 2', counter: 3},
+ *       {key: 3, caption: 'Element 3', counter: 7}
+ *    ]
+ * });
+ * </pre>
+ *
+ * WML
+ * <pre>
+ *    <Controls.toggle:Tumbler items="{{_items}}" >
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls/toggle:tumblerItemCounterTemplate" scope="{{itemTemplate}}" />
+ *       </ws:itemTemplate>
+ *    </Controls.toggle:Tumbler>
+ * </pre>
+ *
+ * Отображение записей со счетчиками разных цветов
+ * JS:
+ * <pre>
+ * this._items = new Memory({
+ *    keyProperty: 'key',
+ *    data: [
+ *       {key: 1, caption: 'Element 1', counter: 5, mainCounterStyle: 'secondary'},
+ *       {key: 2, caption: 'Element 2', counter: 3, mainCounterStyle: 'warning'},
  *       {key: 3, caption: 'Element 3', counter: 7}
  *    ]
  * });
