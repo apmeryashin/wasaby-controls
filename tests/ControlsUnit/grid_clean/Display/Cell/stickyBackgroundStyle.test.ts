@@ -11,19 +11,19 @@ describe('Controls/grid/Display/Cell/stickyBackgroundStyle', () => {
     });
 
     it('style=default, backgroundstyle=default', () => {
-        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'default' });
-        assert.equal(cell.getStickyBackgroundStyle('default'), 'default');
+        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'default', style: 'default' });
+        assert.equal(cell.getStickyBackgroundStyle(), 'default');
     });
     it('style=default, backgroundstyle!=default', () => {
-        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'red' });
-        assert.equal(cell.getStickyBackgroundStyle('default'), 'red');
+        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'red', style: 'default' });
+        assert.equal(cell.getStickyBackgroundStyle(), 'red');
     });
     it('style!=default, backgroundstyle!=default', () => {
-        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'red' });
-        assert.equal(cell.getStickyBackgroundStyle('blue'), 'red');
+        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'red', style: 'blue' });
+        assert.equal(cell.getStickyBackgroundStyle(), 'red');
     });
     it('style!=default, backgroundstyle=default', () => {
-        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'default' });
-        assert.equal(cell.getStickyBackgroundStyle('blue'), 'blue');
+        cell = new GridCell({ owner, column: { width: ''}, backgroundStyle: 'default', style: 'blue' });
+        assert.equal(cell.getStickyBackgroundStyle(), 'blue');
     });
 });

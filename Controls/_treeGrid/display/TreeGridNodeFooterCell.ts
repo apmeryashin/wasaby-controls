@@ -3,6 +3,9 @@ import { GridCell } from 'Controls/grid';
 import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
+/**
+ * Ячейка футера узла в иерархической таблице
+ */
 export default class TreeGridNodeFooterCell extends GridCell<null, TreeGridNodeFooterRow> {
     readonly '[Controls/treeGrid:TreeGridNodeFooterCell]': boolean;
 
@@ -17,7 +20,6 @@ export default class TreeGridNodeFooterCell extends GridCell<null, TreeGridNodeF
     }
 
     getContentClasses(
-        theme: string,
         backgroundColorStyle: string,
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
@@ -33,10 +35,6 @@ export default class TreeGridNodeFooterCell extends GridCell<null, TreeGridNodeF
         if (colspan !== false) {
             classes += ' controls-TreeGrid__nodeFooterContent_colspaned';
         }
-
-        /*if (!this.isFirstColumn()) {
-            classes += ` controls-TreeGrid__nodeFooterCell_columnSeparator-size_${current.getSeparatorForColumn(columns, index, current.columnSeparatorSize)}`;
-        }*/
 
         if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn(colspan)) {
             classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}`;
@@ -69,7 +67,8 @@ export default class TreeGridNodeFooterCell extends GridCell<null, TreeGridNodeF
             if (this.getOwner().isFullGridSupport() && this.getOwner().hasColumnScroll()) {
                 start += this.getOwner().getStickyColumnsCount();
             }
-            // В данный момент поддержан только один сценарий застиканной лесенки и футеров узлов: лесенка для первого столбца.
+            // В данный момент поддержан только один сценарий застиканной лесенки
+            // и футеров узлов: лесенка для первого столбца.
             // Чтобы поддержать все сценарии нужно переписать nodeFooterTemplate::colspan на Tree::colspanCallback
             if (this.getOwner().isSupportStickyLadder()) {
                 start += 1;

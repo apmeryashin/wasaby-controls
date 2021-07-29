@@ -1,7 +1,10 @@
-import {GridTableHeader} from "Controls/grid";
-import TreeGridHeaderRow from "Controls/_treeGrid/display/TreeGridHeaderRow";
+import {GridTableHeader} from 'Controls/grid';
+import TreeGridHeaderRow, {ITreeGridHeaderRowOptions} from './TreeGridHeaderRow';
 
-export default class TreeGridTableHeader extends GridTableHeader<null> {
+/**
+ * Заголовок в иерархической таблице, которая не поддерживает grid.
+ */
+export default class TreeGridTableHeader extends GridTableHeader {
     /**
      * Размер экспандера
      */
@@ -13,9 +16,9 @@ export default class TreeGridTableHeader extends GridTableHeader<null> {
         });
     }
 
-    protected _getRowsFactory(): (options: any) => TreeGridHeaderRow {
+    protected _getRowsFactory(): (options: ITreeGridHeaderRowOptions) => TreeGridHeaderRow {
         const superFactory = super._getRowsFactory();
-        return (options: any) => {
+        return (options: ITreeGridHeaderRowOptions) => {
             options.expanderSize = this._$expanderSize;
             return superFactory.call(this, options);
         };

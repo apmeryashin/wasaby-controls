@@ -6,7 +6,6 @@ import {ItemsFactory, itemsStrategy, TreeItem} from 'Controls/display';
 import BreadcrumbsItemRow from './BreadcrumbsItemRow';
 import {IOptions as ITreeGridOptions} from 'Controls/_treeGrid/display/TreeGridCollection';
 import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
-import {GridHeader, GridTableHeader} from 'Controls/grid';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -61,8 +60,8 @@ export default
       );
    }
 
-   getHeaderConstructor(): typeof GridHeader {
-      return this.isFullGridSupport() ? GridHeader : GridTableHeader;
+   getHeaderConstructor(): string {
+      return this.isFullGridSupport() ? 'Controls/grid:GridHeader' : 'Controls/grid:GridTableHeader';
    }
 
    getSearchBreadcrumbsItemTemplate(): TemplateFunction|string {

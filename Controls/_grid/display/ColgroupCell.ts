@@ -1,5 +1,5 @@
 import {mixin} from 'Types/util';
-import {OptionsToPropertyMixin} from 'Types/entity';
+import {Model, OptionsToPropertyMixin} from 'Types/entity';
 import Colgroup from './Colgroup';
 
 export interface IOptions<T> {
@@ -11,7 +11,8 @@ export interface IOptions<T> {
 const REG_EXP_PIXEL_WIDTH_VALUE = new RegExp('^[0-9]+px$');
 const REG_EXP_PERCENT_WIDTH_VALUE = new RegExp('^[0-9]+%$');
 
-export default class ColgroupCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
+export default class ColgroupCell<T extends Model = Model>
+    extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: Colgroup<T>;
     protected _$width?: string;
     protected _$compatibleWidth?: string;
@@ -20,7 +21,7 @@ export default class ColgroupCell<T> extends mixin<OptionsToPropertyMixin>(Optio
         return this._$owner.hasMultiSelectColumn() && this._$owner.getCellIndex(this) === 0;
     }
 
-    getBodyClasses(theme: string): string {
+    getBodyClasses(): string {
         let bodyClasses = 'controls-Grid__colgroup-column';
 
         if (this.isMultiSelectColumn()) {

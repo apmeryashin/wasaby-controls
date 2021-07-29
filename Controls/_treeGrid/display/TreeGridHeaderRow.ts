@@ -1,6 +1,14 @@
-import { GridHeaderRow } from "Controls/grid";
-import TreeGridHeaderCell from "Controls/_treeGrid/display/TreeGridHeaderCell";
+import {GridHeaderRow, IGridHeaderCellOptions} from 'Controls/grid';
+import TreeGridHeaderCell, {ITreeGridHeaderCellOptions} from './TreeGridHeaderCell';
 
+export interface ITreeGridHeaderRowOptions extends IGridHeaderCellOptions {
+    displayExpanderPadding?: boolean;
+    expanderSize?: string;
+}
+
+/**
+ * Строка заголовка иерархической таблицы
+ */
 export default class TreeGridHeaderRow extends GridHeaderRow<null> {
     /**
      * Признак, означающий что нужно рисовать отступ вместо экспандеров
@@ -28,8 +36,8 @@ export default class TreeGridHeaderRow extends GridHeaderRow<null> {
     protected _updateColumnsDisplayExpanderPadding(displayExpanderPadding: boolean): void {
         // После пересчета displayExpanderPadding _$columnItems могут быть не созданы, т.к. они создаются лениво
         if (this._$columnItems) {
-            this._$columnItems.forEach((cell: TreeGridHeaderCell) => {
-                if (cell['[Controls/treeGrid:TreeGridFooterCell]']) {
+            this._$columnItems.forEach((cell) => {
+                if (cell instanceof TreeGridHeaderCell) {
                     cell.setDisplayExpanderPadding(displayExpanderPadding);
                 }
             });
@@ -38,9 +46,9 @@ export default class TreeGridHeaderRow extends GridHeaderRow<null> {
 
     // endregion DisplayExpanderPadding
 
-    getColumnsFactory(staticOptions?: object): (options: any) => TreeGridHeaderCell {
+    getColumnsFactory(staticOptions?: object): (options: ITreeGridHeaderCellOptions) => TreeGridHeaderCell {
         const superFactory = super.getColumnsFactory();
-        return (options: any) => {
+        return (options: ITreeGridHeaderCellOptions) => {
             options.displayExpanderPadding = this._$displayExpanderPadding;
             options.expanderSize = this._$expanderSize;
             return superFactory.call(this, options);

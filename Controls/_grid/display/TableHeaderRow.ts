@@ -1,12 +1,17 @@
 import HeaderRow from './HeaderRow';
 
-export default class TableHeaderRow<T> extends HeaderRow<T> {
+/**
+ * Строка заголовка в таблице, которая не поддерживает css grid
+ */
+export default class TableHeaderRow extends HeaderRow {
     getItemClasses(): string {
         return '';
     }
+
     hasMultiSelectColumn(): boolean {
         return this._$owner.hasMultiSelectColumn() && this._$headerModel.getRowIndex(this) === 0;
     }
+
     protected _addCheckBoxColumnIfNeed(): void {
         const factory = this.getColumnsFactory();
         if (this.hasMultiSelectColumn()) {

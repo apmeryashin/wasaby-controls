@@ -6,8 +6,8 @@
  * @author Крайнов Д.О.
  */
 
-import { default as View } from 'Controls/_treeGrid/TreeGrid';
-import { default as ItemsView } from 'Controls/_treeGrid/ItemsTreeGrid';
+import {default as View} from 'Controls/_treeGrid/TreeGrid';
+import {default as ItemsView} from 'Controls/_treeGrid/ItemsTreeGrid';
 import TreeGridView from 'Controls/_treeGrid/TreeGridView';
 
 import * as GroupColumnTemplate from 'wml!Controls/_treeGrid/render/GroupCellContent';
@@ -23,13 +23,13 @@ import * as NodeFooterTemplateTable from 'wml!Controls/_treeGrid/render/table/No
 //  но быстрее по времени.
 //  По словам Макса Крылова это ничего не сломает, если на функцию навесить флаги ядра.
 //  Найти нормальное решение по https://online.sbis.ru/opendoc.html?guid=41a8dbab-93bb-4bc0-8533-6b12c0ec6d8d
-const ItemTemplate = function() {
+const ItemTemplate = function () {
     return isFullGridSupport() ? GridItemTemplate.apply(this, arguments) : TableItemTemplate.apply(this, arguments);
 };
 ItemTemplate.stable = true;
 ItemTemplate.isWasabyTemplate = true;
 
-const NodeFooterTemplate = function() {
+const NodeFooterTemplate = function () {
     return isFullGridSupport() ? NodeFooterTemplateGrid.apply(this, arguments) : NodeFooterTemplateTable.apply(this, arguments);
 };
 NodeFooterTemplate.stable = true;
@@ -46,7 +46,7 @@ export {
     TableItemTemplate
 };
 
-import { register } from 'Types/di';
+import {register} from 'Types/di';
 import TreeGridCollection from 'Controls/_treeGrid/display/TreeGridCollection';
 import TreeGridDataRow from 'Controls/_treeGrid/display/TreeGridDataRow';
 import TreeGridDataCell from 'Controls/_treeGrid/display/TreeGridDataCell';
@@ -54,15 +54,17 @@ import TreeGridNodeFooterRow from 'Controls/_treeGrid/display/TreeGridNodeFooter
 import TreeGridNodeFooterCell from 'Controls/_treeGrid/display/TreeGridNodeFooterCell';
 import TreeGridFooterRow from 'Controls/_treeGrid/display/TreeGridFooterRow';
 import TreeGridFooterCell from 'Controls/_treeGrid/display/TreeGridFooterCell';
-import { isFullGridSupport } from 'Controls/display';
+import {isFullGridSupport} from 'Controls/display';
 import TreeGridGroupDataRow from 'Controls/_treeGrid/display/TreeGridGroupDataRow';
 import TreeGridGroupDataCell from 'Controls/_treeGrid/display/TreeGridGroupDataCell';
 import TreeGridViewTable from './_treeGrid/TreeGridViewTable';
-import { IGroupNodeColumn } from 'Controls/_treeGrid/interface/IGroupNodeColumn';
-import { TGroupNodeVisibility } from 'Controls/_treeGrid/interface/ITreeGrid';
-import TreeGridHeaderRow from "Controls/_treeGrid/display/TreeGridHeaderRow";
-import TreeGridHeaderCell from "Controls/_treeGrid/display/TreeGridHeaderCell";
-import TreeGridTableHeaderRow from "Controls/_treeGrid/display/TreeGridTableHeaderRow";
+import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
+import {TGroupNodeVisibility} from 'Controls/_treeGrid/interface/ITreeGrid';
+import TreeGridHeaderRow from 'Controls/_treeGrid/display/TreeGridHeaderRow';
+import TreeGridHeaderCell from 'Controls/_treeGrid/display/TreeGridHeaderCell';
+import TreeGridTableHeaderRow from 'Controls/_treeGrid/display/TreeGridTableHeaderRow';
+import TreeGridHeader from 'Controls/_treeGrid/display/TreeGridHeader';
+import TreeGridTableHeader from 'Controls/_treeGrid/display/TreeGridTableHeader';
 
 export {
     TreeGridFooterCell,
@@ -89,3 +91,5 @@ register('Controls/treeGrid:TreeGridHeaderCell', TreeGridHeaderCell, {instantiat
 register('Controls/treeGrid:TreeGridTableHeaderRow', TreeGridTableHeaderRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridGroupDataRow', TreeGridGroupDataRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridGroupDataCell', TreeGridGroupDataCell, {instantiate: false});
+register('Controls/treeGrid:TreeGridHeader', TreeGridHeader, {instantiate: false});
+register('Controls/treeGrid:TreeGridTableHeader', TreeGridTableHeader, {instantiate: false});

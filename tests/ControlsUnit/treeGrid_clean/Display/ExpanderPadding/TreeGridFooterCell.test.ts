@@ -33,7 +33,7 @@ describe('Controls/treeGrid_clean/Display/ExpanderPadding/TreeGridFooterCell', (
         });
 
         CssClassesAssert.include(
-            footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+            footerCell.getWrapperClasses('mockedBG', false),
             'controls-TreeGridView__expanderPadding-default'
         );
     });
@@ -46,7 +46,7 @@ describe('Controls/treeGrid_clean/Display/ExpanderPadding/TreeGridFooterCell', (
         });
 
         CssClassesAssert.notInclude(
-            footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+            footerCell.getWrapperClasses('mockedBG', false),
             'controls-TreeGridView__expanderPadding-default'
         );
     });
@@ -59,13 +59,13 @@ describe('Controls/treeGrid_clean/Display/ExpanderPadding/TreeGridFooterCell', (
         });
 
         CssClassesAssert.notInclude(
-            footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+            footerCell.getWrapperClasses('mockedBG', false),
             'controls-TreeGridView__expanderPadding-default'
         );
 
         footerCell.setDisplayExpanderPadding(true);
         CssClassesAssert.include(
-            footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+            footerCell.getWrapperClasses('mockedBG', false),
             'controls-TreeGridView__expanderPadding-default'
         );
     });
@@ -84,7 +84,7 @@ describe('Controls/treeGrid_clean/Display/ExpanderPadding/TreeGridFooterCell', (
             });
 
             CssClassesAssert.notInclude(
-                footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
+                footerCell.getWrapperClasses('mockedBG', false),
                 'controls-TreeGridView__expanderPadding-default'
             );
         });

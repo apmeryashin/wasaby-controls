@@ -12,6 +12,9 @@ interface ISortOptions<
     invisibleItems: InvisibleTreeTileItem[];
 }
 
+/**
+ * Стратегия, которая создает невидимые элементы в иерархической плитке
+ */
 export default class InvisibleStrategy<
     S extends Model = Model,
     T extends TreeTileCollectionItem<S> = TreeTileCollectionItem<S>

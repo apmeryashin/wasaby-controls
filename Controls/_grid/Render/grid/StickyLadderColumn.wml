@@ -1,4 +1,4 @@
-<div class="{{ (gridColumn || itemData).getStickyContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
+<div class="{{ (gridColumn || itemData).getStickyContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}"
      style="{{ (gridColumn || itemData).getStickyContentStyles() }}">
    <Controls.scroll:StickyBlock position="{{ {'vertical' : 'topBottom'} }}"
                                  backgroundStyle="{{'transparent'}}"
@@ -8,7 +8,7 @@
                                  attr:class="{{ gridColumn.getStickyHeaderClasses() }}"
                                  attr:style="{{ gridColumn.getStickyHeaderStyles() }}">
          <ws:partial template="{{ gridColumn.getOriginalTemplate() }}"
-                     attr:class="{{ gridColumn.getOriginalContentClasses(theme, cursor, templateHighlightOnHover) }}"
+                     attr:class="{{ gridColumn.getOriginalContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover) }}"
                      scope="{{ _options }}"
                      stickyProperty="{{ gridColumn.getStickyProperty() }}"/>
    </Controls.scroll:StickyBlock>

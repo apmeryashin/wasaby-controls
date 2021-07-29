@@ -1,5 +1,13 @@
-import {GridHeaderCell} from "Controls/grid";
+import {GridHeaderCell, IGridHeaderCellOptions} from 'Controls/grid';
 
+export interface ITreeGridHeaderCellOptions extends IGridHeaderCellOptions {
+    displayExpanderPadding?: boolean;
+    expanderSize?: string;
+}
+
+/**
+ * Ячейка строки заголовка иерархической таблицы
+ */
 export default class TreeGridHeaderCell extends GridHeaderCell<null> {
     /**
      * Признак, означающий что нужно рисовать отступ вместо экспандеров
@@ -23,8 +31,8 @@ export default class TreeGridHeaderCell extends GridHeaderCell<null> {
 
     // endregion DisplayExpanderPadding
 
-    getContentClasses(theme: string): string {
-        let result = super.getContentClasses(theme);
+    getContentClasses(): string {
+        let result = super.getContentClasses();
 
         if (this.isFirstColumn() && !this.isMultiSelectColumn() && this._$displayExpanderPadding) {
             const expanderSize = this._$expanderSize;

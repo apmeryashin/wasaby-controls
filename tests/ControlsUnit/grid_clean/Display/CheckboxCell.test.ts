@@ -36,10 +36,12 @@ describe('Controls/grid_clean/Display/DataCell', () => {
                 owner: {
                     ...mockedOwner
                 },
-                column: {displayProperty: 'key'}
+                column: {displayProperty: 'key'},
+                theme: 'default',
+                style: 'default'
             });
             cAssert.include(
-                cell.getWrapperClasses('default', null, 'default', true),
+                cell.getWrapperClasses( null,  true),
                 [
                     'controls-background-default'
                 ]

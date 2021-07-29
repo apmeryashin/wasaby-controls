@@ -1,9 +1,18 @@
 import {CheckboxCell} from 'Controls/grid';
 import TreeGridDataRow from './TreeGridDataRow';
 
-export default class TreeCheckboxCell<TOwner extends TreeGridDataRow = TreeGridDataRow> extends CheckboxCell<null, TOwner> {
-    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
-        let classes = super.getWrapperClasses(theme, backgroundColorStyle, style, templateHighlightOnHover);
+/**
+ * Ячейка иерархической коллекции, в которой отображается чекбокс множественного выбора
+ */
+export default class TreeCheckboxCell<
+    TOwner extends TreeGridDataRow = TreeGridDataRow
+> extends CheckboxCell<null, TOwner> {
+    getWrapperClasses(
+        backgroundColorStyle: string,
+        templateHighlightOnHover?: boolean,
+        templateHoverBackgroundStyle?: string
+    ): string {
+        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
 
         if (this.getOwner().isDragTargetNode()) {
             classes += ' controls-TreeGridView__dragTargetNode controls-TreeGridView__dragTargetNode_first';

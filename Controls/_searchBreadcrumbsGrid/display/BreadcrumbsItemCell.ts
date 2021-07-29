@@ -49,7 +49,7 @@ export default class BreadcrumbsItemCell<S extends Model, TOwner extends Breadcr
          + ' controls-TreeGrid__row__searchBreadCrumbs js-controls-ListView__notEditable';
    }
 
-   getContentClasses(theme: string, style: string = 'default'): string {
+   getContentClasses(): string {
       // Только в первой ячейке выводятся хлебные крошки
       if (this.isFirstColumn() || this.getOwner().hasMultiSelectColumn() && this.getColumnIndex() === 1) {
          let classes = 'controls-Grid__row-cell__content controls-Grid__row-cell__content_colspaned ';
@@ -69,7 +69,7 @@ export default class BreadcrumbsItemCell<S extends Model, TOwner extends Breadcr
 
          return classes;
       } else {
-         return super.getContentClasses(theme, style);
+         return super.getContentClasses();
       }
    }
 

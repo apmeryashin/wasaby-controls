@@ -1,4 +1,4 @@
-<div class="{{ (gridColumn || colData).getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
+<div class="{{ (gridColumn || colData).getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}"
      style="{{ (gridColumn || colData).getContentStyles() }}">
     <ws:if data="{{ !!content || !!contentTemplate }}">
         <ws:partial template="{{ content || contentTemplate }}" colData="{{ gridColumn || colData }}" column="{{ gridColumn || colData }}"/>

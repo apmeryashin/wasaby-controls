@@ -1,12 +1,15 @@
-import {GridDataCell, ICellPadding, IGridDataCellOptions} from 'Controls/grid';
-import { isFullGridSupport } from 'Controls/display';
+import {GridDataCell, IGridDataCellOptions} from 'Controls/grid';
+import {isFullGridSupport, ITreeItemOptions} from 'Controls/display';
 import TreeGridDataRow from './TreeGridDataRow';
 import { Model } from 'Types/entity';
 
-export interface ITreeGridDataCellOptions<T extends Model> extends IGridDataCellOptions<T> {
+export interface ITreeGridDataCellOptions<T extends Model> extends IGridDataCellOptions<T>, ITreeItemOptions<T> {
     isDragTargetNode?: boolean;
 }
 
+/**
+ * Ячейка иерархической коллекции, в которой отображаются данные из RecordSet-а
+ */
 export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, TreeGridDataRow<T>> {
     readonly '[Controls/treeGrid:TreeGridDataCell]': boolean;
 
@@ -14,8 +17,12 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
 
     private _$isDragTargetNode: boolean;
 
-    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
-        let classes = super.getWrapperClasses(theme, backgroundColorStyle, style, templateHighlightOnHover);
+    getWrapperClasses(
+        backgroundColorStyle: string,
+        templateHighlightOnHover?: boolean,
+        templateHoverBackgroundStyle?: string
+    ): string {
+        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
 
         if (this._$owner.isDragTargetNode()) {
             classes += ' controls-TreeGridView__dragTargetNode';
@@ -34,8 +41,8 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         return classes;
     }
 
-    getRelativeCellWrapperClasses(theme: string): string {
-        let classes = super.getRelativeCellWrapperClasses(theme);
+    getRelativeCellWrapperClasses(): string {
+        let classes = super.getRelativeCellWrapperClasses();
 
         if (!isFullGridSupport()) {
             classes = 'controls-TreeGridView__row-cell_innerWrapper ' + classes;
@@ -44,8 +51,13 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         return classes;
     }
 
-    getContentClasses(theme: string, backgroundColorStyle: string = this._$column.backgroundColorStyle, cursor: string = 'pointer', templateHighlightOnHover: boolean = true, tmplIsEditable: boolean = true): string {
-        let classes = super.getContentClasses(theme, backgroundColorStyle, cursor, templateHighlightOnHover, tmplIsEditable);
+    getContentClasses(
+        backgroundColorStyle: string = this._$column.backgroundColorStyle,
+        cursor: string = 'pointer',
+        templateHighlightOnHover: boolean = true,
+        tmplIsEditable: boolean = true
+    ): string {
+        let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover, tmplIsEditable);
 
         if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn() && isFullGridSupport()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;
@@ -64,9 +76,9 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         }
     }
 
-    protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
-        let classes = super._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
-        classes += ` controls-TreeGrid__row-cell controls-TreeGrid__row-cell_${style || 'default'}`;
+    protected _getWrapperBaseClasses(templateHighlightOnHover: boolean): string {
+        let classes = super._getWrapperBaseClasses(templateHighlightOnHover);
+        classes += ` controls-TreeGrid__row-cell controls-TreeGrid__row-cell_${this.getStyle()}`;
 
         if (this._$owner.isNode()) {
             classes += ' controls-TreeGrid__row-cell__node';

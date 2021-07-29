@@ -2,6 +2,9 @@ import { InvisibleItem } from 'Controls/tile';
 import {mixin} from 'Types/util';
 import TreeTileCollectionItem from './TreeTileCollectionItem';
 
+/**
+ * Невидимый элемент в иерархической плитке
+ */
 export default class InvisibleTreeTileItem
     extends mixin<TreeTileCollectionItem, InvisibleItem>(TreeTileCollectionItem, InvisibleItem) {
     constructor(options: any) {

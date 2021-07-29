@@ -29,6 +29,6 @@ describe('Controls/treeGrid_clean/Display/Grid/getFooter', () => {
 
         // проверяем, что при вызове _initializeFooter модель футера создана с учётом itemActionsPosition.
         // В getWrapperClasses колонок должен быть класс, задающий высоту.
-        CssClassesAssert.include(column.getWrapperClasses('default', 'default'), 'controls-GridView__footer__itemActionsV_outside');
+        CssClassesAssert.include(column.getWrapperClasses('default'), 'controls-GridView__footer__itemActionsV_outside');
     });
 });

@@ -1,23 +1,30 @@
-import { create } from 'Types/di';
+import {create} from 'Types/di';
 
-import { TColumns, TColumnSeparatorSize } from './interface/IColumn';
+import {TColumns, TColumnSeparatorSize} from './interface/IColumn';
 
 import Collection from './Collection';
 import HeaderRow, {IOptions as IHeaderRowOptions} from './HeaderRow';
+import {ISortItem} from './mixins/Grid';
 
-export interface IOptions<T> extends IHeaderRowOptions<T> {}
-
-export interface IHeaderBounds {
-    row: {start: number, end: number};
-    column: {start: number, end: number};
+export interface IOptions extends IHeaderRowOptions {
 }
 
-export default class Header<T> {
-    protected _$owner: Collection<T>;
-    protected _$rows: Array<HeaderRow<T>>;
-    protected _$headerBounds: IHeaderBounds;
+export interface IHeaderBounds {
+    row: { start: number, end: number };
+    column: { start: number, end: number };
+}
 
-    constructor(options: IOptions<T>) {
+/**
+ * Заголовок таблицы
+ */
+export default class Header {
+    protected _$owner: Collection;
+    protected _$rows: HeaderRow[];
+    protected _$headerBounds: IHeaderBounds;
+    protected _$theme: string;
+    protected _$style: string;
+
+    constructor(options: IOptions) {
         this._$owner = options.owner;
         this._$rows = this._initializeRows(options);
     }
@@ -26,11 +33,19 @@ export default class Header<T> {
         return this._$headerBounds;
     }
 
-    getRow(): HeaderRow<T> {
+    getRow(): HeaderRow {
         return this._$rows[0];
     }
 
-    getRowIndex(row: HeaderRow<T>): number {
+    getTheme(): string {
+        return this._$theme;
+    }
+
+    getStyle(): string {
+        return this._$style;
+    }
+
+    getRowIndex(row: HeaderRow): number {
         return this._$rows.indexOf(row);
     }
 
@@ -72,23 +87,23 @@ export default class Header<T> {
         });
     }
 
-    setSorting(sorting: Array<{[p: string]: string}>): void {
+    setSorting(sorting: ISortItem[]): void {
         this._$rows.forEach((row) => {
             row.setSorting(sorting);
         });
     }
 
-    protected _initializeRows(options: IOptions<T>): Array<HeaderRow<T>> {
+    protected _initializeRows(options: IOptions): HeaderRow[] {
         this._$headerBounds = this._getGridHeaderBounds(options);
         return this._buildRows(options);
     }
 
-    protected _buildRows(options: IOptions<T>): Array<HeaderRow<T>> {
+    protected _buildRows(options: IOptions): HeaderRow[] {
         const factory = this._getRowsFactory();
         return [new factory(options)];
     }
 
-    protected _getGridHeaderBounds(options: IOptions<T>): IHeaderBounds {
+    protected _getGridHeaderBounds(options: IOptions): IHeaderBounds {
         const bounds: IHeaderBounds = {
             row: {start: Number.MAX_VALUE, end: Number.MIN_VALUE},
             column: {start: 1, end: options.gridColumnsConfig.length + 1}
@@ -116,11 +131,13 @@ export default class Header<T> {
         return bounds;
     }
 
-    protected _getRowsFactory(): new (options: IOptions<T>) => HeaderRow<T> {
-        return (options: IOptions<T>) => {
+    protected _getRowsFactory(): new (options: IOptions) => HeaderRow {
+        return (options: IOptions) => {
             options.headerModel = this;
             options.hasMoreDataUp = !!options.hasMoreData?.up;
-            return create(this._rowModule, options as IHeaderRowOptions<T>);
+            options.theme = this.getTheme();
+            options.style = this.getStyle();
+            return create(this._rowModule, options as IHeaderRowOptions);
         };
     }
 }
@@ -130,5 +147,7 @@ Object.assign(Header.prototype, {
     _moduleName: 'Controls/grid:GridHeader',
     _instancePrefix: 'grid-header-',
     _rowModule: 'Controls/grid:GridHeaderRow',
-    _cellModule: 'Controls/grid:GridHeaderCell'
+    _cellModule: 'Controls/grid:GridHeaderCell',
+    _$style: 'default',
+    _$theme: 'default'
 });

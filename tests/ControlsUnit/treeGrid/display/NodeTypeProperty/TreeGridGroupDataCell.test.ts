@@ -28,23 +28,25 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
         return new TreeGridGroupDataCell({
             column: {displayProperty: 'key'},
             ...options,
-            owner
+            owner,
+            theme: 'default',
+            style: 'default'
         });
     }
 
     it('getContentClasses should return group cell content classes', () => {
-        CssClassesAssert.include(getGroupCell().getContentClasses('default'), [
+        CssClassesAssert.include(getGroupCell().getContentClasses(), [
             'controls-ListView__groupContent_baseline_default',
             'controls-ListView__groupContent']);
     });
 
     it('getExpanderClasses should include expander js-class', () => {
-        CssClassesAssert.include(getGroupCell().getExpanderClasses(true, 'right', 'default'),
+        CssClassesAssert.include(getGroupCell().getExpanderClasses(true, 'right'),
             'js-controls-Tree__row-expander');
     });
 
     it('getWrapperClasses should return group cell wrapper classes', () => {
-        CssClassesAssert.include(getGroupCell().getWrapperClasses('default', 'default'), [
+        CssClassesAssert.include(getGroupCell().getWrapperClasses( 'default'), [
             'controls-Grid__row-cell',
             'controls-Grid__cell_default',
             'controls-Grid__row-cell_default',
@@ -55,7 +57,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
     });
 
     it('getWrapperClasses should not include spacingFirstCol class', () => {
-        CssClassesAssert.notInclude(getGroupCell().getWrapperClasses('default', 'default'),
+        CssClassesAssert.notInclude(getGroupCell().getWrapperClasses( 'default'),
             'controls-Grid__cell_spacingFirstCol_default');
     });
 

@@ -158,9 +158,9 @@ describe('Controls/_grid/display/DataCell', () => {
         });
 
         it('not should display marker', () => {
-            const cell = new DataCell({owner, column: { width: '' }});
+            const cell = new DataCell({owner, column: { width: '' }, theme: 'default', style: 'master'});
             CssClassesAssert.notInclude(
-                cell.getWrapperClasses('default', '', 'master', false),
+                cell.getWrapperClasses( '',  false),
                 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-master ' +
                 'controls-Grid__row-cell_selected__first-master ' +
                 'controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-master'
@@ -170,9 +170,9 @@ describe('Controls/_grid/display/DataCell', () => {
         it('should display marker and is last column', () => {
             shouldDisplayMarker = true;
 
-            const cell = new DataCell({owner, column: { width: '' }});
+            const cell = new DataCell({owner, column: { width: '' }, theme: 'default', style: 'master'});
             CssClassesAssert.include(
-                cell.getWrapperClasses('default', '', 'master', false),
+                cell.getWrapperClasses( '', false),
                 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-master ' +
                 'controls-Grid__row-cell_selected__first-master ' +
                 'controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-master'
@@ -183,9 +183,9 @@ describe('Controls/_grid/display/DataCell', () => {
             shouldDisplayMarker = true;
             columnsCount = 2;
 
-            const cell = new DataCell({owner, column: { width: '' }});
+            const cell = new DataCell({owner, column: { width: '' }, theme: 'default', style: 'master'});
             CssClassesAssert.include(
-                cell.getWrapperClasses('default', '', 'master', false),
+                cell.getWrapperClasses( '', false),
                 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-master ' +
                 'controls-Grid__row-cell_selected__first-master '
             );
@@ -196,9 +196,9 @@ describe('Controls/_grid/display/DataCell', () => {
             columnsCount = 2;
             columnIndex = 1;
 
-            const cell = new DataCell({owner, column: { width: '' }});
+            const cell = new DataCell({owner, column: { width: '' }, theme: 'default', style: 'master'});
             CssClassesAssert.include(
-                cell.getWrapperClasses('default', '', 'master', false),
+                cell.getWrapperClasses('', false),
                 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-master ' +
                 'controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-master'
             );

@@ -2,8 +2,11 @@ import { TemplateFunction } from 'UI/Base';
 import { TreeItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 import TreeGridDataRow from './TreeGridDataRow';
-import {GridRow as Row, GridCell as Cell, IColumn, TColspanCallbackResult} from 'Controls/grid';
+import {GridCell, GridCell as Cell, IColumn, TColspanCallbackResult} from 'Controls/grid';
 
+/**
+ * Футер узла в иерархической таблице
+ */
 export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
     readonly '[Controls/treeGrid:TreeGridNodeFooterRow]': boolean;
     readonly Markable: boolean = false;
@@ -15,7 +18,8 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     protected _$moreFontColorStyle: string;
 
-    // TODO нужно удалить, когда перепишем колспан для футеров узлов https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
+    // TODO нужно удалить, когда перепишем колспан для футеров узлов
+    //  https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
     // Храним колспан, чтобы правильно определять индекс столбца.
     // Он задается на темплейте, поэтмоу в моделе мы о нем не знаем
     private _colspan: boolean;
@@ -28,8 +32,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return this.getParent();
     }
 
-    // TODO нужно указывать тип TreeGridNodeFooterCell[], но тогда получается циклическая зависимость
-    getColumns(colspan?: boolean): any[] {
+    getColumns(colspan?: boolean): GridCell[] {
         this._colspan = colspan;
         let columns = super.getColumns();
         if (colspan !== false) {
@@ -38,7 +41,8 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
             // В данный момент поддержан только один сценарий лесенки и футеров узлов: лесенка для первого столбца.
             // Чтобы поддержать все сценарии нужно переписать nodeFooterTemplate::colspan на Tree::colspanCallback
-            //  TODO переписать когда перепишем колспан для футеров узлов https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
+            //  TODO переписать когда перепишем колспан для футеров узлов
+            //   https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
             if (this.isSupportStickyLadder() && columns[0]['[Controls/_display/StickyLadderCell]']) {
                 start++;
                 end++;
@@ -57,12 +61,14 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return columns;
     }
 
-    // TODO нужно удалить, когда перепишем колспан для футеров узлов https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
-    getColumnIndex(column: Cell<any, Row<any>>): number {
+    // TODO нужно удалить, когда перепишем колспан для футеров узлов
+    //  https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
+    getColumnIndex(column: Cell): number {
         return this.getColumns(this._colspan).indexOf(column);
     }
 
-    // TODO нужно удалить, когда перепишем колспан для футеров узлов https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
+    // TODO нужно удалить, когда перепишем колспан для футеров узлов
+    //  https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
     getColumnsCount(): number {
         return this.getColumns(this._colspan).length;
     }
@@ -79,8 +85,8 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return 'controls-ListView__itemV controls-Grid__row controls-TreeGrid__nodeFooter';
     }
 
-    getExpanderPaddingClasses(tmplExpanderSize?: string, theme: string = 'default'): string {
-        let classes = super.getExpanderPaddingClasses(tmplExpanderSize, theme);
+    getExpanderPaddingClasses(tmplExpanderSize?: string): string {
+        let classes = super.getExpanderPaddingClasses(tmplExpanderSize);
 
         classes = classes.replace(
            'controls-TreeGrid__row-expanderPadding',
@@ -90,7 +96,8 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return classes;
     }
 
-    // Возможна ситуация, когда nodeFooterTemplate адали только для настрйоки опций, а отображаться он будет при hasMoreStorage
+    // Возможна ситуация, когда nodeFooterTemplate адали только для настрйоки опций,
+    // а отображаться он будет при hasMoreStorage
     // То есть в этой случае мы не должны отображать футер, если нет данных еще, т.к. content не задан
     // При создании футера(в стратегии) это не определить
     shouldDisplayVisibleFooter(content: TemplateFunction): boolean {

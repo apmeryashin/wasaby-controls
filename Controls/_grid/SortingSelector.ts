@@ -10,7 +10,7 @@ import {IViewMode} from 'Controls/buttons';
 import 'css!Controls/grid';
 import 'css!Controls/CommonClasses';
 
-type Order = 'ASC'|'DESC'|'';
+type Order = 'ASC' | 'DESC' | '';
 
 /**
  * Интерфейс опций для конфигурации параметров сортировки.
@@ -39,7 +39,8 @@ export interface ISortingParam {
     value: 'ASC' | 'DESC';
     /**
      * @name Controls/grid:ISortingParam#icon
-     * @cfg {String} Имя иконки, которая отображается в меню рядом с подписью (см. свойство title), а также в заголовке выпадающего меню. Список иконок можно найти в демо-примере {@link Controls/grid:SortingSelector}.
+     * @cfg {String} Имя иконки, которая отображается в меню рядом с подписью (см. свойство title),
+     * а также в заголовке выпадающего меню. Список иконок можно найти в демо-примере {@link Controls/grid:SortingSelector}.
      * @default undefined
      * @see iconStyle
      * @see iconSize
@@ -128,7 +129,8 @@ export interface ISortingSelectorOptions extends IControlOptions, IFontColorStyl
      * }
      * </pre>
      *
-     * Чтобы отобразить иконки в выпадающем списке, нужно задать поля icon и iconSize. Выпадающий элемент так же отобразится в виде иконки
+     * Чтобы отобразить иконки в выпадающем списке, нужно задать поля icon и iconSize.
+     * Выпадающий элемент так же отобразится в виде иконки
      *
      *
      * <pre class="brush: js; highlight: [5]">
@@ -219,6 +221,7 @@ export interface ISortingSelectorOptions extends IControlOptions, IFontColorStyl
 const iconSizeMap = {
     s: 'm', m: 'l'
 };
+
 /**
  * Контрол в виде кнопки с выпадающим меню, используемый для изменения сортировки. Рекомендуется, если в реестре нет заголовков.
  *
@@ -235,7 +238,7 @@ const iconSizeMap = {
  */
 class SortingSelector extends Control<ISortingSelectorOptions> {
     protected _template: TemplateFunction = template;
-    private _selectedKeys: [number|string];
+    private _selectedKeys: [number | string];
     private _currentParamName: string = null;
     private _currentIcon: string = '';
     private _currentCaption: string = '';
@@ -247,7 +250,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     // когда выбран пункт с иконкой, в вызывающем элементе отображается только иконка. У нее другой отступ.
     private _nocaption: boolean = false;
     private _arrowIconStyle: string;
-    private _arrowIconHover: boolean;
     private _singleField: boolean;
 
     protected _beforeMount(options: ISortingSelectorOptions): void {
@@ -258,7 +260,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         this.updateConfig(options.sortingParams, options.value);
     }
 
-    protected  _beforeUpdate(newOptions: ISortingSelectorOptions): void {
+    protected _beforeUpdate(newOptions: ISortingSelectorOptions): void {
         if (newOptions.fontColorStyle !== this._options.fontColorStyle) {
             this._arrowIconStyle = SortingSelector._getIconStyleFromTextStyle(newOptions.fontColorStyle);
         }
@@ -281,7 +283,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         }
     }
 
-    private updateConfig(sortingParams: [ISortingParam], value: [object]|undefined): void {
+    private updateConfig(sortingParams: [ISortingParam], value: [object] | undefined): void {
         const data = [];
         this._singleField = sortingParams.length === 1;
         if (value && value.length) {
@@ -297,11 +299,12 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
                 dataElem.value = this._orders[key];
             }
             if (dataElem.paramName === this._currentParamName) {
-
                 this._selectedKeys = [this._currentParamName];
                 this._currentCaption = dataElem.title;
-                this._currentTitle = { ASC: dataElem.titleAsc,
-                                       DESC: dataElem.titleDesc }[this._orders[key]] || dataElem.title;
+                this._currentTitle = {
+                    ASC: dataElem.titleAsc,
+                    DESC: dataElem.titleDesc
+                }[this._orders[key]] || dataElem.title;
                 if (dataElem.icon) {
                     this._nocaption = true;
                     this._arrowIconStyle = dataElem.iconStyle || 'secondary';
@@ -348,7 +351,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         return this._nocaption ? (this._options.viewMode !== 'linkButton' ? 'xl' : this._options.iconSize) : 'm';
     }
 
-    protected _dropdownItemClick(e: SyntheticEvent<Event>, key: number|string): boolean | void {
+    protected _dropdownItemClick(e: SyntheticEvent<Event>, key: number | string): boolean | void {
         if (key === null) {
             this._resetValue();
         } else {
@@ -358,6 +361,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         this._children.dropdown.closeMenu();
         return false;
     }
+
     private _setValue(param: string | number, order: string): void {
         const newValue = [];
         newValue[0] = {};
@@ -393,20 +397,13 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         return iconStyle;
     }
 
-    protected static _isIconHover(iconStyle: string): boolean {
-        let iconHover = false;
-        if (iconStyle === 'secondary' || iconStyle === 'label') {
-            iconHover = true;
-        }
-        return iconHover;
-    }
-
     protected static _getOppositeOrder = (order: Order) => {
         if (order === 'DESC' || !order) {
             return 'ASC';
         }
         return 'DESC';
     }
+
     static getDefaultOptions(): Partial<ISortingSelectorOptions> {
         return {
             viewMode: 'linkButton',

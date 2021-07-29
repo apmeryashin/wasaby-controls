@@ -39,6 +39,8 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     CollectionItem,
     ExpandableMixin
 ) implements IGroupNode {
+    readonly GroupNodeItem: boolean = false;
+
     protected _$owner: Tree<T>;
 
     /**

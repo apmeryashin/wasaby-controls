@@ -6,7 +6,7 @@ import {TableItemTemplate} from 'Controls/treeGrid';
 export default class SearchViewTable extends SearchView {
     protected _template: TemplateFunction = TableTemplate;
 
-    protected _resolveBaseItemTemplate(options: any): TemplateFunction {
+    protected _resolveBaseItemTemplate(): TemplateFunction {
         return TableItemTemplate;
     }
 

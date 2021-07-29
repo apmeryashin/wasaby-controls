@@ -92,7 +92,7 @@ const _private = {
         }
     },
 
-    toggleExpanded(self: TreeControl, dispItem: TreeItem): Promise<unknown> {
+    toggleExpanded(self: TreeControl, dispItem: TreeItem): Promise<void> {
         if (self._options.supportExpand === false || self.getViewModel().SupportExpand === false) {
             return Promise.resolve();
         }
@@ -644,6 +644,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             viewModel.setExpanderVisibility(newOptions.expanderVisibility);
         }
 
+        if (newOptions.expanderSize !== this._options.expanderSize) {
+            viewModel.setExpanderSize(newOptions.expanderSize);
+        }
+
         if (newOptions.nodeProperty !== this._options.nodeProperty) {
             viewModel.setNodeProperty(newOptions.nodeProperty);
         }
@@ -823,7 +827,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         _private.resetExpandedItems(this);
     }
 
-    toggleExpanded(key: TKey): unknown | Promise<unknown> {
+    toggleExpanded(key: TKey): Promise<void> {
         const item = this.getViewModel().getItemBySourceKey(key);
         return _private.toggleExpanded(this, item);
     }

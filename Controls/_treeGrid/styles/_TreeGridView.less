@@ -4,26 +4,37 @@
    box-sizing: border-box;
    position: relative;
 }
+
 .controls-TreeGrid__row_expander_position_right {
    padding-left: var(--offset_s);
 }
-.controls-TreeGrid__row_default-expander_size_s, .controls-TreeGrid__row-expanderPadding_size_s {
+
+.controls-TreeGrid__row_default-expander_size_s,
+.controls-TreeGrid__row-expanderPadding_size_s {
    padding-left: var(--expander_s_padding-left_treeGrid);
    padding-right: var(--expander_s_padding-right_treeGrid);
 }
-.controls-TreeGrid__row_default-expander_size_m, .controls-TreeGrid__row-expanderPadding_size_m {
+
+.controls-TreeGrid__row_default-expander_size_m,
+.controls-TreeGrid__row-expanderPadding_size_m {
    padding-left: var(--expander_m_padding-left_treeGrid);
    padding-right: var(--expander_m_padding-right_treeGrid);
 }
-.controls-TreeGrid__row_default-expander_size_l, .controls-TreeGrid__row-expanderPadding_size_l {
+
+.controls-TreeGrid__row_default-expander_size_l,
+.controls-TreeGrid__row-expanderPadding_size_l {
    padding-left: var(--expander_l_padding-left_treeGrid);
    padding-right: var(--expander_l_padding-right_treeGrid);
 }
-.controls-TreeGrid__row_default-expander_size_xl, .controls-TreeGrid__row-expanderPadding_size_xl {
+
+.controls-TreeGrid__row_default-expander_size_xl,
+.controls-TreeGrid__row-expanderPadding_size_xl {
    padding-left: var(--expander_xl_padding-left_treeGrid);
    padding-right: var(--expander_xl_padding-right_treeGrid);
 }
-.controls-TreeGrid__row_default-expander_size_default, .controls-TreeGrid__row-expanderPadding_size_default {
+
+.controls-TreeGrid__row_default-expander_size_default,
+.controls-TreeGrid__row-expanderPadding_size_default {
    padding-left: var(--expander_s_padding-left_treeGrid);
    padding-right: var(--expander_s_padding-right_treeGrid);
 }
@@ -57,7 +68,8 @@
    cursor: pointer;
 }
 
-.controls-TreeGrid__row-expander, .controls-TreeGrid__row-expanderPadding {
+.controls-TreeGrid__row-expander,
+.controls-TreeGrid__row-expanderPadding {
    line-height: 1;
    display: inline-block;
    position: relative;
@@ -73,7 +85,7 @@
    min-width: var(--expander_width_treeGrid);
 }
 
-.controls-TreeGridView__dragTargetNode:after {
+.controls-TreeGridView__dragTargetNode::after {
    content: '\200b';
    border-top: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
    border-bottom: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
@@ -85,95 +97,103 @@
 
    // Уже не актуально задавать z-index. Левая и правая границы не вызывают ошибок без него.
 }
-.controls-TreeGridView__dragTargetNode_first:after {
+
+.controls-TreeGridView__dragTargetNode_first::after {
    content: '\200b';
    border-left: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
 }
-.controls-TreeGridView__dragTargetNode_last:after {
+
+.controls-TreeGridView__dragTargetNode_last::after {
    content: '\200b';
    border-right: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
 }
+
 .controls-TreeGrid__row-expanderPadding {
    visibility: hidden;
 }
 
-.controls-TreeGrid__row-expander_node_default:before,
-.controls-TreeGrid__row-expander_emptyNode_default:before {
+.controls-TreeGrid__row-expander_node_default::before,
+.controls-TreeGrid__row-expander_emptyNode_default::before {
    color: var(--node_expander_icon-color_treeGrid);
    font-family: var(--node_expander_icon_font-family_treeGrid);
    font-size: var(--node_expander_icon-size_treeGrid);
    padding-left: calc(var(--expander_width_treeGrid) - var(--node_expander_icon-size_treeGrid));
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_default:before {
+.controls-TreeGrid__row-expander_hiddenNode_default::before {
    color: var(--hidden-node_expander_icon-color_treeGrid);
    font-family: var(--hidden-node_expander_icon_font-family_treeGrid);
    font-size: var(--hidden-node_expander_icon-size_treeGrid);
    padding-left: calc(var(--expander_width_treeGrid) - var(--hidden-node_expander_icon-size_treeGrid));
 }
 
-.controls-TreeGrid__row-expander_node_default:before,
-.controls-TreeGrid__row-expander_emptyNode_default:before {
+.controls-TreeGrid__row-expander_node_default::before,
+.controls-TreeGrid__row-expander_emptyNode_default::before {
    position: relative;
    bottom: calc(-1 * var(--expander_padding_icon-treeGrid));
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_default:before {
+.controls-TreeGrid__row-expander_hiddenNode_default::before {
    position: relative;
    bottom: calc(-1 * var(--expander_padding_icon-hidden-node-treeGrid));
 }
 
-.controls-TreeGrid__row-expander_node_master:before {
+.controls-TreeGrid__row-expander_node_master::before {
    color: var(--master_node_expander_icon-color_treeGrid);
    font-family: var(--node_expander_icon_font-family_treeGrid);
    font-size: var(--master_node_expander_icon-size_treeGrid);
    padding-left: calc(var(--expander_width_treeGrid) - var(--master_node_expander_icon-size_treeGrid));
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_master:before {
+.controls-TreeGrid__row-expander_hiddenNode_master::before {
    color: var(--master_hidden-node_expander_icon-color_treeGrid);
    font-family: var(--hidden-node_expander_icon_font-family_treeGrid);
    font-size: var(--master_hidden-node_expander_icon-size_treeGrid);
    padding-left: calc(var(--expander_width_treeGrid) - var(--master_hidden-node_expander_icon-size_treeGrid));
 }
 
-.controls-TreeGrid__row-expander:before {
+.controls-TreeGrid__row-expander::before {
    user-select: none;
    flex-shrink: 0;
    overflow: hidden;
    text-align: center;
    font-weight: normal; // https://online.sbis.ru/opendoc.html?guid=c9f0873b-3b20-4b73-a084-f67cc2c3071f
 }
-.controls-TreeGrid__row-expander_node_default_collapsed:before,
-.controls-TreeGrid__row-expander_node_master_collapsed:before {
+
+.controls-TreeGrid__row-expander_node_default_collapsed::before,
+.controls-TreeGrid__row-expander_node_master_collapsed::before {
    content: '\e96e';
 }
-.controls-TreeGrid__row-expander_node_default_expanded:before,
-.controls-TreeGrid__row-expander_node_master_expanded:before {
+
+.controls-TreeGrid__row-expander_node_default_expanded::before,
+.controls-TreeGrid__row-expander_node_master_expanded::before {
    content: '\e96d';
 }
 
-.controls-TreeGrid__row-expander_emptyNode_default_collapsed:before,
-.controls-TreeGrid__row-expander_emptyNode_master_collapsed:before {
+.controls-TreeGrid__row-expander_emptyNode_default_collapsed::before,
+.controls-TreeGrid__row-expander_emptyNode_master_collapsed::before {
    content: '\e96c';
 }
 
-.controls-TreeGrid__row-expander_emptyNode_default_expanded:before,
-.controls-TreeGrid__row-expander_emptyNode_master_expanded:before {
+.controls-TreeGrid__row-expander_emptyNode_default_expanded::before,
+.controls-TreeGrid__row-expander_emptyNode_master_expanded::before {
    content: '\e96b';
 }
-.controls-TreeGrid__row-expander_hiddenNode_default_collapsed:before,
-.controls-TreeGrid__row-expander_hiddenNode_master_collapsed:before {
+
+.controls-TreeGrid__row-expander_hiddenNode_default_collapsed::before,
+.controls-TreeGrid__row-expander_hiddenNode_master_collapsed::before {
    content: '\e9c2';
 }
-.controls-TreeGrid__row-expander_hiddenNode_default_expanded:before,
-.controls-TreeGrid__row-expander_hiddenNode_master_expanded:before {
+
+.controls-TreeGrid__row-expander_hiddenNode_default_expanded::before,
+.controls-TreeGrid__row-expander_hiddenNode_master_expanded::before {
    content: '\e9c1';
 }
 
 .controls-TreeGrid__row {
    display: inline-flex;
 }
+
 .controls-TreeGrid__row-levelPadding {
    flex-shrink: 0;
    display: inline-block;
@@ -191,18 +211,22 @@
    box-sizing: border-box;
    border-top-style: solid;
 }
+
 .ws-is-ie .controls-TreeGrid__nodeFooterContent {
    // см _Table.less .controls-Grid__row-cell
    display: table-cell;
    vertical-align: top;
    height: 0;
 }
+
 .ws-is-ie .controls-TreeGrid__nodeFooterContent_colspaned {
    width: 100%;
 }
+
 .controls-TreeGrid__nodeFooterCell_columnSeparator-size_null {
    border-left-width: 0;
 }
+
 .controls-TreeGrid__nodeFooterCell_columnSeparator-size_s {
    border-left: var(--column_separator_s_thickness_grid) solid var(--column_separator_s_color_grid);
 }
@@ -212,32 +236,39 @@
    border-top-width: 0;
    padding-top: var(--node-footer_padding-top);
 }
+
 .controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s {
    border-top: var(--item-separator_s_thickness_list) solid var(--item_separator_s_color_list);
    padding-top: calc(var(--node-footer_padding-top) - var(--item-separator_s_thickness_list));
 }
+
 .controls-TreeGrid__nodeFooterContent_rowSeparatorSize-l {
    border-top: var(--item-separator_l_thickness_list) solid var(--item_separator_l_color_list);
    padding-top: calc(var(--node-footer_padding-top) - var(--item-separator_l_thickness_list));
 }
 
-.controls-TreeGrid__nodeFooterContent:before {
+.controls-TreeGrid__nodeFooterContent::before {
    content: '\200b';
    font-size: var(--font-size_m);
 }
+
 .controls-TreeGrid__row-levelPadding_size_default {
    width: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
+
 .controls-TreeGrid__row-levelPadding_size_s {
    width: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
+
 .controls-TreeGrid__row-levelPadding_size_m {
    width: calc(var(--expander_m_padding-left_treeGrid) + var(--expander_m_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
+
 .controls-TreeGrid__row-levelPadding_size_l {
    width: calc(var(--expander_l_padding-left_treeGrid) + var(--expander_l_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
-.controls-TreeGrid__row-levelPadding_size_xl{
+
+.controls-TreeGrid__row-levelPadding_size_xl {
    width: calc(var(--expander_xl_padding-left_treeGrid) + var(--expander_xl_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
 
@@ -246,19 +277,23 @@
    width: var(--search-hierarchy_offset_treeGrid);
 }
 
-.controls-TreeGridView__expanderPadding-default{
+.controls-TreeGridView__expanderPadding-default {
    margin-left: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
-.controls-TreeGridView__expanderPadding-s{
+
+.controls-TreeGridView__expanderPadding-s {
    margin-left: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
-.controls-TreeGridView__expanderPadding-m{
+
+.controls-TreeGridView__expanderPadding-m {
    margin-left: calc(var(--expander_m_padding-left_treeGrid) + var(--expander_m_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
-.controls-TreeGridView__expanderPadding-l{
+
+.controls-TreeGridView__expanderPadding-l {
    margin-left: calc(var(--expander_l_padding-left_treeGrid) + var(--expander_l_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
-.controls-TreeGridView__expanderPadding-xl{
+
+.controls-TreeGridView__expanderPadding-xl {
    margin-left: calc(var(--expander_xl_padding-left_treeGrid) + var(--expander_xl_padding-right_treeGrid) + var(--expander_width_treeGrid));
 }
 
@@ -370,6 +405,7 @@
 .controls-TreeGrid__row__searchBreadCrumbs_colspaned .controls-Grid__row-cell__content_colspaned {
    position: relative;
 }
+
 .controls-TreeGrid__breadCrumbs_colspaned {
    position: absolute;
    left: 0;
@@ -383,8 +419,6 @@
    // https://online.sbis.ru/opendoc.html?guid=7ec6ad1a-6c9d-412d-b477-7935d81c82cc
    z-index: 3;
 }
-.controls-TreeGrid__row__searchSeparator {
-}
 
 .controls-TreeGrid__row__searchSeparator_line_horizontal {
    margin-top: var(--search-separator_padding-top_treeGrid);
@@ -396,17 +430,20 @@
 }
 
 .ws-is-hover {
-   .controls-TreeGrid__row-expander_node_default:hover:before,
-   .controls-TreeGrid__row-expander_emptyNode_default:hover:before {
+   .controls-TreeGrid__row-expander_node_default:hover::before,
+   .controls-TreeGrid__row-expander_emptyNode_default:hover::before {
       color: var(--node_expander_hover_icon-color_treeGrid);
    }
-   .controls-TreeGrid__row-expander_hiddenNode_default:hover:before {
+
+   .controls-TreeGrid__row-expander_hiddenNode_default:hover::before {
       color: var(--hidden-node_expander_hover_icon-color_treeGrid);
    }
-   .controls-TreeGrid__row-expander_node_master:hover:before {
+
+   .controls-TreeGrid__row-expander_node_master:hover::before {
       color: var(--master_node_expander_hover_icon-color_treeGrid);
    }
-   .controls-TreeGrid__row-expander_hiddenNode_master:hover:before {
+
+   .controls-TreeGrid__row-expander_hiddenNode_master:hover::before {
       color: var(--master_hidden-node_expander_hover_icon-color_treeGrid);
    }
 

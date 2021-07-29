@@ -48,10 +48,11 @@ import {
     IItemActionsTemplateConfig,
     ISwipeConfig,
     ItemsFactory,
-    IViewIterator
+    IViewIterator,
+    ISessionItems
 } from './_display/Collection';
 export {
-    Collection, ICollectionOptions, IEditingConfig,
+    Collection, ICollectionOptions, IEditingConfig, ISessionItems,
     IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory, IViewIterator
 };
 export {default as CollectionItem, IOptions as ICollectionItemOptions} from './_display/CollectionItem';

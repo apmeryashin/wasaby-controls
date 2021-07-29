@@ -113,7 +113,7 @@ describe('Controls/display/GridDataCell', () => {
             const row = getGridRow();
             row.setColumnSeparatorSize('s');
             cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
-            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            const wrapperClasses = cell.getWrapperClasses('default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
         });
 
@@ -121,7 +121,7 @@ describe('Controls/display/GridDataCell', () => {
             columns[1].columnSeparatorSize = {left: 's', right: null};
             const row = getGridRow();
             cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
-            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            const wrapperClasses = cell.getWrapperClasses( 'default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
         });
 
@@ -130,11 +130,11 @@ describe('Controls/display/GridDataCell', () => {
             const row = getGridRow();
             let wrapperClasses: string;
             cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;
-            wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            wrapperClasses = cell.getWrapperClasses('default', true);
             assert.notInclude(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
 
             cell = row.getColumns()[2] as GridDataCell<Model, GridDataRow<Model>>;
-            wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            wrapperClasses = cell.getWrapperClasses('default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
         });
 
@@ -143,7 +143,7 @@ describe('Controls/display/GridDataCell', () => {
             const row = getGridRow();
             row.setColumnSeparatorSize('s');
             cell = row.getColumns()[2] as GridDataCell<Model, GridDataRow<Model>>;
-            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            const wrapperClasses = cell.getWrapperClasses('default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
         });
 
@@ -152,7 +152,7 @@ describe('Controls/display/GridDataCell', () => {
             columns[1].columnSeparatorSize = {left: 's', right: null};
             const row = getGridRow();
             cell = row.getColumns()[2] as GridDataCell<Model, GridDataRow<Model>>;
-            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            const wrapperClasses = cell.getWrapperClasses('default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
         });
 

@@ -2,8 +2,8 @@
    <div attr:class="controls-ListView__itemV {{ (item || itemData).isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
       <div attr:class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
                        controls-ListView__groupContent_align-{{textAlign || 'left'}}
-                       {{(item || itemData).getGroupPaddingClasses(theme, 'left')}}
-                       {{ !rightTemplate ? (item || itemData).getGroupPaddingClasses(theme, 'right') }}">
+                       {{(item || itemData).getGroupPaddingClasses('left')}}
+                       {{ !rightTemplate ? (item || itemData).getGroupPaddingClasses('right') }}">
          <ws:if data="{{ separator !== false && textVisible !== false && separatorVisibility !== false && textAlign !== 'left' }}">
             <div attr:class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
          </ws:if>
@@ -28,7 +28,7 @@
             <div attr:class="controls-ListView__groupSeparator {{textVisible !== false ? 'controls-ListView__groupSeparator-right'}}">&nbsp;</div>
          </ws:if>
          <ws:if data="{{ !!rightTemplate }}">
-            <div class="controls-ListView__groupContent-rightTemplate {{ (item || itemData).getGroupPaddingClasses(theme, 'right') }}">
+            <div class="controls-ListView__groupContent-rightTemplate {{ (item || itemData).getGroupPaddingClasses('right') }}">
                <ws:partial template="{{ rightTemplate }}" item="{{ item || itemData }}" itemData="{{ itemData }}" />
             </div>
          </ws:if>

@@ -56,7 +56,7 @@ export default class GroupItem<T> extends mixin<
         return false;
     }
 
-    getGroupPaddingClasses(theme: string, side: 'left' | 'right'): string {
+    getGroupPaddingClasses(side: 'left' | 'right'): string {
         if (side === 'left') {
             const spacing = this.getOwner().getLeftPadding().toLowerCase();
             const hasMultiSelect = this.getOwner().getMultiSelectVisibility() !== 'hidden';

@@ -6,7 +6,7 @@ import ResultsCell from './ResultsCell';
 
 type TResultsPosition = 'top' | 'bottom';
 
-interface IResultsRowOptions<T> extends IBaseRowOptions<T> {
+interface IResultsRowOptions extends IBaseRowOptions<null> {
     metaResults: EntityModel;
 
     //TODO: Здась другой тип, нужно внутри библиотеки переписать тип, добавить какой то абстрактный
@@ -14,10 +14,13 @@ interface IResultsRowOptions<T> extends IBaseRowOptions<T> {
     colspanCallback: TResultsColspanCallback;
 }
 
-class ResultsRow<T> extends Row<T> {
+/**
+ * Строка результатов в таблице
+ */
+class ResultsRow extends Row<null> {
     protected _$metaResults: EntityModel;
 
-    constructor(options?: IResultsRowOptions<T>) {
+    constructor(options?: IResultsRowOptions) {
         super({
             ...options,
             colspanCallback: ResultsRow._convertColspanCallback(options.colspanCallback)
@@ -29,8 +32,8 @@ class ResultsRow<T> extends Row<T> {
     }
 
     //region Overrides
-    getContents(): T {
-        return 'results' as unknown as T;
+    getContents(): string {
+        return 'results';
     }
 
     isSticked(): boolean {
@@ -54,8 +57,8 @@ class ResultsRow<T> extends Row<T> {
     setMetaResults(metaResults: EntityModel): void {
         this._$metaResults = metaResults;
         this._$columnItems?.forEach((c) => {
-            if (c['[Controls/_display/grid/ResultsCell]']) {
-                (c as unknown as ResultsCell<T>).setMetaResults(metaResults);
+            if (c instanceof ResultsCell) {
+                c.setMetaResults(metaResults);
             }
         });
         this._nextVersion();
@@ -86,7 +89,7 @@ class ResultsRow<T> extends Row<T> {
         } : undefined;
     }
 
-    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IResultsRowOptions<T>> {
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IResultsRowOptions> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             metaResults: this.getMetaResults()

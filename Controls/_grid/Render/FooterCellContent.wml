@@ -1,5 +1,5 @@
 <div if="{{ !!content || !!contentTemplate }}"
-     class="{{ column.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
+     class="{{ column.getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}"
      style="{{ column.getContentStyles() }}">
     <div class="{{ column.getInnerContentWrapperClasses() }}">
         <ws:partial template="{{ content || contentTemplate }}" scope="{{ _options }}"/>

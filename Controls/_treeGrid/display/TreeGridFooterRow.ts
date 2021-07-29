@@ -1,7 +1,16 @@
-import { GridFooterRow } from 'Controls/grid';
-import TreeGridFooterCell from './TreeGridFooterCell';
+import { GridFooterRow, IGridFooterRowOptions } from 'Controls/grid';
+import TreeGridFooterCell, {ITreeGridFooterCellOptions} from './TreeGridFooterCell';
 
-export default class TreeGridFooterRow extends GridFooterRow<any> {
+export interface ITreeGridFooterRowOptions extends IGridFooterRowOptions, ITreeGridFooterRowAspectOptions { }
+
+export interface ITreeGridFooterRowAspectOptions {
+   displayExpanderPadding: boolean;
+}
+
+/**
+ * Строка футера иерархической коллекции
+ */
+export default class TreeGridFooterRow extends GridFooterRow {
    /**
     * Признак, означающий что нужно рисовать отступ вместо экспандеров
     */
@@ -38,7 +47,7 @@ export default class TreeGridFooterRow extends GridFooterRow<any> {
    protected _updateColumnsDisplayExpanderPadding(displayExpanderPadding: boolean): void {
       // После пересчета displayExpanderPadding _$columnItems могут быть не созданы, т.к. они создаются лениво
       if (this._$columnItems) {
-         this._$columnItems.forEach((cell: TreeGridFooterCell) => {
+         this._$columnItems.forEach((cell: TreeGridFooterCell<TreeGridFooterRow>) => {
             if (cell['[Controls/treeGrid:TreeGridFooterCell]']) {
                cell.setDisplayExpanderPadding(displayExpanderPadding);
             }
@@ -48,9 +57,9 @@ export default class TreeGridFooterRow extends GridFooterRow<any> {
 
    // endregion DisplayExpanderPadding
 
-   getColumnsFactory(): (options: any) => TreeGridFooterCell {
+   getColumnsFactory(): (options: ITreeGridFooterCellOptions) => TreeGridFooterCell<TreeGridFooterRow> {
       const superFactory = super.getColumnsFactory();
-      return (options: any) => {
+      return (options: ITreeGridFooterCellOptions) => {
          options.displayExpanderPadding = this._$displayExpanderPadding;
          return superFactory.call(this, options);
       };
