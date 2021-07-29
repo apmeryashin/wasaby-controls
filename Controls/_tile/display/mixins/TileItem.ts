@@ -23,6 +23,7 @@ import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 const DEFAULT_WIDTH_PROPORTION = 1;
 
 export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
+export type TTitlePosition = 'underImage'|'onImage';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
 export type TImagePosition = 'top'|'left'|'right';
 export type TShadowVisibility = 'visible'|'hidden'|'onhover';
@@ -1482,14 +1483,14 @@ export default abstract class TileItem<T extends Model = Model> {
      * Должен ли отрисоваться заголовок
      * @param {TTileItem} itemType Тип элемента
      */
-    shouldDisplayTitle(itemType: TTileItem = 'default'): boolean {
+    shouldDisplayTitle(itemType: TTileItem = 'default', titlePosition: TTitlePosition = 'underImage', imageViewMode: TImageViewMode = 'rectangle'): boolean {
         switch (itemType) {
             case 'default':
                 return !!this.getDisplayValue() || this.hasVisibleActions() || this.isEditing();
             case 'small':
             case 'medium':
             case 'rich':
-                return true;
+                return titlePosition === 'underImage' || imageViewMode === 'none';
             case 'preview':
                 return !!this.getDisplayValue() && (this.isUnscaleable() || !this.canShowActions());
         }
@@ -1573,13 +1574,17 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {boolean} hasTitle Признак, означающий что нужно отображать заголовок
      * @param {number} titleLines Кол-во строк в заголовке
      * @param {string} titleColorStyle Стиль цвета заголовка
+     * @param {TTitlePosition} titlePosition Положение заголовка
+     * @param {TImageViewMode} imageViewMode Режим отображения изображения
      */
     getTitleClasses(
         itemType: TTileItem = 'default',
         titleStyle?: TTitleStyle,
         hasTitle?: boolean,
         titleLines: number = 1,
-        titleColorStyle: string = 'default'
+        titleColorStyle: string = 'default',
+        titlePosition: TTitlePosition = 'underImage',
+        imageViewMode: TImageViewMode = 'rectangle'
     ): string {
         let classes = '';
         switch (itemType) {
@@ -1605,6 +1610,9 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ' controls-TileView__richTemplate_title controls-fontweight-bold';
                 classes += ' controls-fontsize-xl';
                 classes += ` controls-text-${titleColorStyle}`;
+                if (titlePosition === 'onImage' && imageViewMode !== 'none') {
+                    classes += ' controls-TileView__richTemplate_title-onImage';
+                }
                 break;
             case 'preview':
                 classes += ' controls-TileView__previewTemplate_title_text';
@@ -1619,8 +1627,14 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      * @param {number} titleLines Кол-во строк в заголовке
      * @param {string} textColor Цвет текста заголовка
+     * @param {TTitlePosition} titlePosition Положение заголовка
+     * @param {TImageViewMode} imageViewMode Режим отображения изображения
      */
-    getTitleStyles(itemType: TTileItem = 'default', titleLines: number = 1, textColor: string = 'inherit'): string {
+    getTitleStyles(itemType: TTileItem = 'default',
+                   titleLines: number = 1,
+                   textColor: string = 'inherit',
+                   titlePosition: TTitlePosition = 'underImage',
+                   imageViewMode: TImageViewMode = 'rectangle'): string {
         let styles = '';
         switch (itemType) {
             case 'default':
@@ -1630,6 +1644,10 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'medium':
                 break;
             case 'rich':
+                const color = imageViewMode !== 'none' && titlePosition === 'onImage' ? '#fff' : textColor;
+                styles = `-webkit-line-clamp: ${titleLines};`;
+                styles += `color: ${color};`;
+                break;
             case 'preview':
                 styles = `-webkit-line-clamp: ${titleLines};`;
                 styles += `color: ${textColor};`;

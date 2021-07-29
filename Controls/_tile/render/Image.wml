@@ -37,6 +37,8 @@
 
         <ws:partial template="imageTpl"/>
 
+        <div if="{{titlePosition === 'onImage'}}" class="controls-TileView__richTemplate_image_topGradient" style="{{(item || itemData).getBigGradientStyles(itemType, 'rgba(0,0,0,0.75)', 'rgba(0,0,0,0)')}}"></div>
+
         <ws:if data="{{ (item || itemData).shouldDisplayGradient(itemType, imageEffect, imageViewMode, imagePosition, 'image') }}">
             <div
                 class="{{ (item || itemData).getGradientClasses(itemType, gradientType) }}"
