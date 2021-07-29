@@ -8,7 +8,7 @@
                 scope="{{_operationPanelConfig}}"
                 fontColorStyle="default"
                 viewMode="link"/>
-        <div class="controls-operationsPanelNew__closeButton controls-icon icon-Close controls-icon_size-m controls-icon_style-unaccented"
+        <div class="controls-operationsPanelNew__closeButton controls-icon icon-Close controls-icon_size-m"
              on:click="_closePanel()"></div>
     </div>
 </Controls.dragnDrop:Container>

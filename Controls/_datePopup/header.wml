@@ -90,8 +90,7 @@
             </ws:if>
             <ws:if data="{{ resetButtonVisible }}">
                 <span tabindex="0" class="controls-DateLinkView__resetButton
-                        controls-icon controls-icon_style-unaccented
-                        controls-icon_size-s icon-Close"
+                        controls-icon icon-Close"
                       on:click="_resetButtonClickHandler()"
                       on:keyDown="_resetButtonKeyDownHandler()" ></span>
             </ws:if>

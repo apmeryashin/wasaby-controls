@@ -718,8 +718,6 @@
   "--toolbar_vertical-padding_lookupInput": "0",
   "--min-height_lookupSelector": "var(--inline_height_default)",
   "--item_height_lookupSelectedCollection": "var(--inline_height_default)",
-  "--item_reset-button_icon-size_lookupCollection": "var(--icon-size_s)",
-  "--item_reset-button_icon-color_lookupCollection": "var(--unaccented_icon-color)",
   "--counter_height_lookupSelectedCollection": "calc(var(--inline_height_default) - 2 * var(--border-thickness_inputText))",
   "--counter_background-color_lookupSelectedCollection": "var(--background-color)",
   "--counter_shadow-blur_lookupSelectedCollection": "20px",
@@ -765,7 +763,6 @@
   "--trigger_icon-color_searchInput": "var(--secondary_icon-color)",
   "--trigger_icon-color_hover_searchInput": "var(--secondary_hover_icon-color)",
   "--readonly_trigger_icon-color_searchInput": "var(--readonly_color)",
-  "--reset-button_icon-size_searchInput": "var(--icon-size_s)",
   "--reset-button_icon-color_searchInput": "var(--label_text-color)",
   "--caret-color_empty_searchInput": "var(--placeholder-color_inputText)",
 
@@ -806,9 +803,6 @@
   "--icon-color_filterButton_filterView": "var(--secondary_icon-color)",
   "--hover_icon-color_filterButton_filterView": "var(--secondary_hover_icon-color)",
   "--readonly_icon-color_filterButton_filterView": "var(--label_text-color)",
-  "--reset-button_icon-size_filterView": "var(--icon-size_s)",
-  "--reset-button_icon-color_filterView": "#CCC",
-  "--reset-button_hover_icon-color_filterView": "var(--reset-button_icon-color_filterView)",
   "--item_text_min-width_filterView": "15px",
   "--item_font-size_filterView": "var(--font-size_m)",
   "--item_color_filterView": "var(--secondary_text-color)",
@@ -847,8 +841,6 @@
   "--basic_content_padding-right_filterPanel": "var(--offset_m)",
   "--basic_offset_filterPanel": "0",
   "--basic_item_padding-bottom_filterPanel": "var(--offset_2xs)",
-  "--basic_item_reset-button_icon-size_filterPanel": "var(--icon-size_s)",
-  "--basic_item_reset-button_icon-color_filterPanel": "#CCC",
   "--extended_content_padding-left_filterPanel": "var(--basic_content_padding-left_filterPanel)",
   "--extended_group_height_filterPanel": "40px",
   "--extended_heading_text-color_filterPanel": "var(--secondary_text-color_heading)",
@@ -909,7 +901,7 @@
   "--showall_text-color_suggest": "var(--link_text-color)",
   "--showall_hover_text-color_suggest": "var(--link_hover_text-color)",
   "--reset-button_icon-size_suggest": "var(--icon-size_s)",
-  "--reset-button_icon-color_suggest": "#CCC",
+  "--reset-button_icon-color_suggest": "var(--reset-button_color)",
 
 
   "--tabs_offset-top_suggest": "var(--offset_s)",
@@ -1604,7 +1596,6 @@
   "--font-weight_dateRangeSelector": "bold",
   "--arrow_icon-size_dateRangeSelector": "var(--icon-size_s)",
 
-  "--reset-button_icon-color_dateRangeSelector": "#CCC",
   "--reset-button_margin-left_dateRangeSelector": "4px",
   "--height_dateRangeSelector": "19px",
   "--height_rangeShortSelectorLink": "24px",
