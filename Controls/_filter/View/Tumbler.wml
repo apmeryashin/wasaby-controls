@@ -1,3 +1,0 @@
-<Controls.toggle:Tumbler scope="{{_tumblerSource.editorOptions}}"
-                         bind:selectedKey="_selectedKey"
-                         on:selectedKeyChanged="_handleSelectedKeyChanged()"/>

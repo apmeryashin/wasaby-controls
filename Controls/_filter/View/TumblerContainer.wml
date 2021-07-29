@@ -1,4 +1,5 @@
 <ws:partial template="{{_options.content}}"
             scope="{{_options}}"
-            source="{{_source}}"
-            on:sourceChanged="_handleSourceChanged()"/>
+            items="{{_items}}"
+            bind:selectedKey="_selectedKey"
+            on:selectedKeyChanged="_handleSelectedKeyChanged()"/>

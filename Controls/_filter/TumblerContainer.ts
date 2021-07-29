@@ -5,6 +5,7 @@ import {ISourceOptions} from 'Controls/interface';
 import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/filter';
+import {RecordSet} from 'Types/collection';
 
 /**
  * Контрол используют в качестве контейнера для {@link Controls.filter:Tumbler}.
@@ -23,8 +24,9 @@ interface IFilterTumblerOptions extends ISourceOptions {
 
 export default class FilterTumblerContainer extends Control<IFilterTumblerOptions> {
     protected _template: TemplateFunction = ThumblerContainerTemplate;
-    protected _source: IFilterItem[] = null;
+    protected _items: IFilterItem[] = null;
     protected _sourceChangedCallbackId: string = null;
+    protected _selectedKey: number|string = null;
 
     protected _beforeMount(options: IFilterTumblerOptions): void {
         this._initTumblerStates(options);
@@ -33,7 +35,7 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
     protected _afterMount(options: IFilterTumblerOptions): void {
         if (options.useStore) {
             this._sourceChangedCallbackId = Store.onPropertyChanged('source', (source) => {
-                this._source = source;
+                this._setTumblerStates(source);
             });
         }
     }
@@ -48,7 +50,8 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
         }
     }
 
-    protected _handleSourceChanged(event: SyntheticEvent, newSource: IFilterItem[]): void {
+    protected _handleSelectedKeyChanged(event: SyntheticEvent, value: number|string): void {
+        const newSource = this._getUpdatedSource(value);
         if (this._options.useStore) {
             Store.dispatch('source', newSource);
         } else {
@@ -56,11 +59,32 @@ export default class FilterTumblerContainer extends Control<IFilterTumblerOption
         }
     }
 
+    private _getTumblerOptions(items: RecordSet): IFilterItem[] {
+        return items.find((item) => {
+            return item.viewMode === 'tumbler';
+        });
+    }
+
     private _initTumblerStates(options: IFilterTumblerOptions): void {
+        let filterSource;
         if (options.useStore) {
-            this._source = Store.getState().source;
+            filterSource = Store.getState().source;
         } else {
-            this._source = options.source;
+            filterSource = options.source;
         }
+        this._setTumblerStates(filterSource);
+
+    }
+
+    private _setTumblerStates(source: IFilterItem[]): void {
+        const tumblerOptions = this._getTumblerOptions(source);
+        this._items = tumblerOptions.editorOptions.items;
+        this._selectedKey = tumblerOptions.value;
+    }
+
+    private _getUpdatedSource(value: number|string): IFilterItem[] {
+        const tumblerOptions = this._getTumblerOptions(this._options.source);
+        tumblerOptions.value = value;
+        return {...this._options.source, ...tumblerOptions};
     }
 }
