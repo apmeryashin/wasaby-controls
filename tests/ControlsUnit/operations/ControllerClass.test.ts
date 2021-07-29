@@ -56,6 +56,9 @@ describe('Controls/operations:ControllerClass', () => {
                 ['testKey1', 'testKey2']
             );
             ok(oldKeys !== newKeys);
+
+            const isAllSelected = controller.updateSelectedKeys([null, 123, 1234], [null, 123], [], 'testListId1');
+            deepStrictEqual(isAllSelected, [null]);
         });
     });
 
