@@ -70,7 +70,8 @@ const source = new RecordSet<IPropertyGridItem>({
             editorClass: 'controls-demo-pg-text-editor',
             editorOptions: {
                 placeholder: 'Условие видимости поля',
-                minLines: 3
+                minLines: 3,
+                jumpingLabel: true
             }
         },
         {
@@ -185,6 +186,13 @@ describe('Controls/propertyGrid:CollectionItem', () => {
         it('returns editorClasses from item and without caption class', () => {
             const classes = collection.getItemBySourceKey('function').getEditorClasses();
             assert.ok(classes ===  (source.at(0).get('editorClass') + ' controls-PropertyGrid__editor-withoutCaption'));
+        });
+    });
+
+    describe('getItemPaddingClasses', () => {
+        it('returns padding classes for editor with jumpingLabel', () => {
+            const classes = collection.getItemBySourceKey('function').getItemPaddingClasses('default', 2);
+            assert.ok(classes.indexOf('controls-PropertyGrid__editor_spacingLeft_default_theme-default') !== -1);
         });
     });
 });
