@@ -1720,8 +1720,13 @@ export default abstract class TileItem<T extends Model = Model> {
      * Возвращает классы стилей для описания
      * @param {TTileItem} itemType Тип элемента
      * @param {number} descriptionLines Кол-во строк в описании
+     * @param {TTitlePosition} titlePosition Положение заголовка
+     * @param {TImageViewMode} imageViewMode Режим отображения изображения
      */
-    getDescriptionClasses(itemType: TTileItem = 'default', descriptionLines: number): string {
+    getDescriptionClasses(itemType: TTileItem = 'default',
+                          descriptionLines: number,
+                          titlePosition: TTitlePosition = 'underImage',
+                          imageViewMode: TImageViewMode = 'rectangle'): string {
         let classes = '';
         switch (itemType) {
             case 'default':
@@ -1737,6 +1742,9 @@ export default abstract class TileItem<T extends Model = Model> {
                     classes += ' ws-ellipsis';
                 }
                 classes += ' controls-TileView__richTemplate_description';
+                if (titlePosition !== 'onImage' || imageViewMode === 'none') {
+                    classes += ' controls-TileView__richTemplate_description_spacing';
+                }
                 break;
         }
 
@@ -1847,8 +1855,35 @@ export default abstract class TileItem<T extends Model = Model> {
         return itemType === 'small' && place === 'wrapper' || itemType === 'preview' && place === 'content';
     }
 
-    getFooterClasses(): string {
-        return 'controls-TileView__item_footer';
+    /**
+     * Возвращает классы стилей для прикладного футера
+     * @param {TTileItem} itemType Тип элемента
+     * @param {string} description Описание
+     * @param {number} descriptionLines Кол-во строк в описании
+     * @param {TTitlePosition} titlePosition Положение заголовка
+     * @param {TImageViewMode} imageViewMode Режим отображения изображения
+     */
+    getFooterClasses(itemType: TTileItem = 'default',
+                     description: string = '',
+                     descriptionLines: number = 0,
+                     titlePosition: TTitlePosition = 'underImage',
+                     imageViewMode: TImageViewMode = 'rectangle'): string {
+        let classes = '';
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'medium':
+            case 'preview':
+                classes += 'controls-TileView__item_footer';
+                break;
+            case 'rich':
+                if (descriptionLines > 0 && description || titlePosition !== 'onImage' || imageViewMode === 'none') {
+                    classes += ' controls-TileView__richTemplate_footer_spacing';
+                }
+                break;
+        }
+
+        return classes;
     }
 
     // endregion Footer

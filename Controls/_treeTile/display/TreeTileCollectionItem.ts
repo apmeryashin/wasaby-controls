@@ -166,7 +166,8 @@ export default class TreeTileCollectionItem<T extends Model = Model>
     }
 
     getTitleClasses(itemType: TTileItem = 'default',
-                    titleStyle?: string, hasTitle?: boolean,
+                    titleStyle?: string,
+                    hasTitle?: boolean,
                     titleLines: number = 1,
                     titleColorStyle: string = 'default',
                     titlePosition: TTitlePosition = 'underImage',

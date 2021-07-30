@@ -14,7 +14,6 @@
         <ws:footerTpl>
             <ws:partial if="{{footerTemplate}}"
                         template="{{footerTemplate}}"
-                        attr:class="controls-TileView__richTemplate_footerTemplate"
                         itemData="{{(item || itemData)}}"
                         item="{{(item || itemData)}}"/>
         </ws:footerTpl>
