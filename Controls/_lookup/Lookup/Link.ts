@@ -13,6 +13,7 @@ import 'css!Controls/lookup';
  * @extends UI/Base:Control
  * @implements Controls/interface:ICaption
  * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IUnderlineOptions
  * 
  * @demo Controls-demo/Lookup/MultipleInputNew/MultipleInputNew
  *
@@ -45,18 +46,8 @@ export default class Link extends Control<IControlOptions> {
       }
    }
 
-   static getDefaultOptions(): object {
-      return {
-         fontSize: 'm'
-      };
-   }
+   static defaultProps: object = {
+      fontSize: 'm',
+      underline: true
+   };
 }
-
-Object.defineProperty(Link, 'defaultProps', {
-   configurable: true,
-   enumerable: true,
-
-   get(): object {
-      return Link.getDefaultOptions();
-   }
-});
