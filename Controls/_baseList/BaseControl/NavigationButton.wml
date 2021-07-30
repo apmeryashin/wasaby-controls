@@ -1,0 +1,22 @@
+<ws:if data="{{buttonView === 'separator'}}">
+    <div class="controls-BaseControl__cut ws-flexbox
+            ws-justify-content-{{buttonConfig && buttonConfig.buttonPosition || 'center'}}
+            controls-BaseControl__cut-container_{{navigationButtonConfig && navigationButtonConfig.size || 'm'}}">
+        <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
+            <ws:partial template="{{content.resolvedTemplate}}"
+                        attr:class="js-controls-BaseControl__NavigationButton"
+                        value="{{value}}"
+                        iconSize="{{buttonConfig && buttonConfig.size || 'm'}}"
+                        contrastBackground="{{!buttonConfig || buttonConfig.contrastBackground !== false}}"/>
+        </Controls.Container.Async>
+    </div>
+</ws:if>
+<ws:else>
+    <Controls.buttons:Button
+            attr:class="js-controls-BaseControl__NavigationButton {{linkClass || ''}}"
+            viewMode="link"
+            fontSize="{{linkFontSize}}"
+            fontColorStyle="{{linkFontColorStyle}}"
+            caption="{{rk('Еще') + ' ' + (linkLabel || '...')}}"
+            readOnly="{{false}}"/>
+</ws:else>

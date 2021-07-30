@@ -6,11 +6,11 @@ import {IProperty} from 'Controls/propertyGrid';
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _editingObject: object;
-    protected _source: IProperty[];
+    protected _typeDescription: IProperty[];
 
     protected _beforeMount(): void {
         this._editingObject = getEditingObject();
-        this._source = [
+        this._typeDescription = [
             {
                 name: 'description',
                 caption: 'Описание',

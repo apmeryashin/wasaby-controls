@@ -14,7 +14,7 @@
             <Controls._propertyGrid.PropertyGrid
                 attr:class="controls-PropertyGrid-TabbedView__editor"
                 scope="{{_options}}"
-                source="{{itemTemplate.templateOptions.source}}"
+                typeDescription="{{itemTemplate.templateOptions.source}}"
                 editingObject="{{_options.editingObject}}"
                 on:editingObjectChanged="_handleObjectChange()"/>
         </ws:itemTemplate>

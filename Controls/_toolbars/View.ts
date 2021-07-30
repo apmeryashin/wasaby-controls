@@ -339,7 +339,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _getMenuOptions(): IMenuOptions {
-        const isVertical = this._options.direction === 'vertical';
         return {
             direction: {
                 horizontal: 'left',
