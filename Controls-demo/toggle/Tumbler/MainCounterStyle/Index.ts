@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from "wml!Controls-demo/toggle/Tumbler/CounterStyle/CounterStyle";
+import * as Template from "wml!Controls-demo/toggle/Tumbler/MainCounterStyle/MainCounterStyle";
 import {RecordSet} from 'Types/collection';
 
 interface CounterStyleItem {
@@ -23,8 +23,8 @@ export default class extends Control {
                         id: '1',
                         caption: 'Название 1',
                         count: 10,
-                        counter: 15,
-                        counterStyle: style
+                        mainCounter: 15,
+                        mainCounterStyle: style
                     },
                     {
                         id: '2',

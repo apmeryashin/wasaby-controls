@@ -6,12 +6,5 @@
                 <ws:partial template="Controls/toggle:tumblerItemCounterTemplate" scope="{{itemTemplate}}"/>
             </ws:itemTemplate>
         </Controls.toggle:Tumbler>
-
-        <div class="controls-text-label controlsDemo_widthFit controls-text-label">CounterProperty</div>
-        <Controls.toggle:Tumbler items="{{_items}}" bind:selectedKey="_selectedKey">
-            <ws:itemTemplate>
-                <ws:partial template="Controls/toggle:tumblerItemCounterTemplate" scope="{{itemTemplate}}" counterProperty="count"/>
-            </ws:itemTemplate>
-        </Controls.toggle:Tumbler>
     </div>
 </div>

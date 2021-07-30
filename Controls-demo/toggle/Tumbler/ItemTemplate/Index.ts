@@ -13,8 +13,7 @@ export default class extends Control {
                 {
                     id: '1',
                     caption: 'Название 1',
-                    count: 10,
-                    counter: 15
+                    mainCounter: 15
                 },
                 {
                     id: '2',

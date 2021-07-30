@@ -55,7 +55,8 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  *
  * Шаблон tumblerItemCounterTemplate поддерживает следующие параметры:
  * - item {Types/entity:Record} — Отображаемый элемент;
- * - counterProperty {string} — Имя свойства элемента, содержимое которого будет отображаться в счетчике.
+ *    - item.mainCounter {Number} Значение счетчика
+ *    - item.mainCounterStyle {String} Стиль отображения счетчика
  *
  *
  * @example
@@ -65,9 +66,9 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * this._items = new Memory({
  *    keyProperty: 'key',
  *    data: [
- *       {key: 1, caption: 'Element 1', counter: 5},
- *       {key: 2, caption: 'Element 2', counter: 3},
- *       {key: 3, caption: 'Element 3', counter: 7}
+ *       {key: 1, caption: 'Element 1', mainCounter: 5},
+ *       {key: 2, caption: 'Element 2', mainCounter: 3},
+ *       {key: 3, caption: 'Element 3', mainCounter: 7}
  *    ]
  * });
  * </pre>
@@ -87,8 +88,8 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * this._items = new Memory({
  *    keyProperty: 'key',
  *    data: [
- *       {key: 1, caption: 'Element 1', counter: 5, counterStyle: 'secondary'},
- *       {key: 2, caption: 'Element 2', counter: 3, counterStyle: 'warning'},
+ *       {key: 1, caption: 'Element 1', mainCounter: 5, mainCounterStyle: 'secondary'},
+ *       {key: 2, caption: 'Element 2', mainCounter: 3, mainCounterStyle: 'warning'},
  *       {key: 3, caption: 'Element 3', counter: 7}
  *    ]
  * });
