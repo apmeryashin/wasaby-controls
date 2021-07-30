@@ -1478,29 +1478,37 @@ describe('Controls/list_clean/BaseControl', () => {
                 getResults: () => results,
                 getResultsPosition: () => resultsPosition
             },
-            _shouldDrawFooter: false
+            _shouldDrawNavigationButton: false
         } as unknown as BaseControl;
 
         assert.isFalse(
-            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'inside'}),
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'inside', navigation: {
+                    view: 'demand'
+                }}),
             'itemActionsPosition is inside, padding is not needed'
         );
 
         assert.isTrue(
-            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside', navigation: {
+                    view: 'demand'
+                }}),
             'itemActionsPosition is outside, padding is needed'
         );
 
-        fakeInstance._shouldDrawFooter = true;
+        fakeInstance._shouldDrawNavigationButton = true;
         assert.isFalse(
-            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside', navigation: {
+                    view: 'demand'
+                }}),
             'itemActionsPosition is outside and "hasMore" button visible, no padding needed'
         );
-        fakeInstance._shouldDrawFooter = false;
+        fakeInstance._shouldDrawNavigationButton = false;
 
         footer = true;
         assert.isFalse(
-            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside', navigation: {
+                    view: 'demand'
+                }}),
             'itemActionsPosition is outside, footer exists, padding is not needed'
         );
         footer = false;

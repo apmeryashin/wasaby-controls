@@ -21,7 +21,7 @@ export default class TreeView extends ListView {
     protected _onItemClick(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
         if (dispItem['[Controls/tree:TreeNodeFooterItem]']) {
             e.stopImmediatePropagation();
-            if (e.target.closest('.js-controls-TreeGrid__nodeFooter__LoadMoreButton')) {
+            if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
                 this._notify('loadMore', [dispItem.getNode()]);
             }
             return;

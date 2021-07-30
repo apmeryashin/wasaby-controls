@@ -52,7 +52,7 @@ export interface INotificationOpener extends IOpener {
  *          templateOptions: {
  *             style: "done",
  *             text: "Message was send",
- *             icon: "Admin"
+ *             icon: "icon-Admin"
  *          }
  *       }
  *       this._children.notificationOpener.open(popupOptions)
