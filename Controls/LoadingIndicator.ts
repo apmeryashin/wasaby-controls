@@ -516,12 +516,13 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         const messageDiv = this._messageDiv;
         const isMessageDivVisible = this._messageDiv?.parentElement;
         if (this.isGlobal && isMessageDivVisible) {
-            const dialogTargetContainer = document.querySelector('.controls-Popup__dialog-target-container');
-            if (dialogTargetContainer) {
-                const left = (dialogTargetContainer.clientWidth - messageDiv.clientWidth) / 2 +
-                    (dialogTargetContainer.offsetLeft || 0);
-                const top = (dialogTargetContainer.clientHeight - messageDiv.clientHeight) / 2 +
-                    (dialogTargetContainer.offsetTop || 0);
+            const rootContainer = document.querySelector('.controls-Popup__dialog-target-container');
+            const contentData = ManagerController.getContentData();
+            const rootWidth = (contentData?.width + (contentData?.left || 0)) || rootContainer?.clientWidth;
+            const rootHeight = contentData?.height || rootContainer?.clientHeight || document.body.clientHeight;
+            if (rootWidth && rootHeight) {
+                const left = (rootWidth - messageDiv.clientWidth) / 2 +  (rootContainer?.offsetLeft || 0);
+                const top = (rootHeight - messageDiv.clientHeight) / 2 + (rootContainer?.offsetTop || 0);
                 messageDiv.style.left = `${left}px`;
                 messageDiv.style.top = `${top}px`;
                 messageDiv.style.position = 'absolute';
