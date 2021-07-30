@@ -168,6 +168,8 @@
   "--invalid_padding-horizontal": "var(--offset_2xs)",
   "--fractional_color": "var(--readonly_color)",
   "--tag-size": "8px",
+  "--reset-button_icon-size": "var(--icon-size_s)",
+  "--reset-button_color": "var(--unaccented_icon-color)",
   "--border-radius_s_image": "4px",
   "--border-radius_m_image": "8px",
   "--size_xs_image": "16px",
