@@ -3,7 +3,7 @@
         <div class="controls-text-label">itemsContainerPadding = {top: null, bottom: null, left: null, right: null}</div>
         <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
-            source="{{_source}}">
+            typeDescription="{{_typeDescription}}">
             <ws:itemsContainerPadding top="null" bottom="null" left="null" right="null"/>
         </Controls.propertyGrid:PropertyGrid>
     </div>
@@ -12,7 +12,7 @@
         <div class="controls-text-label">itemPadding = {top: m, bottom: m, left: m, right: m}</div>
         <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
-            source="{{_source}}">
+            typeDescription="{{_typeDescription}}">
             <ws:itemsContainerPadding top="m" bottom="m" left="m" right="m"/>
         </Controls.propertyGrid:PropertyGrid>
     </div>

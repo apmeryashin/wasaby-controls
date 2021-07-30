@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
     <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
-            source="{{_source}}">
+            typeDescription="{{_typeDescription}}">
         <ws:groupTemplate>
             <ws:partial template="Controls/propertyGrid:GroupTemplate">
                 <ws:contentTemplate>

@@ -2,6 +2,6 @@
     <div class="controls-text-label">Source</div>
     <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
-            source="{{_source}}">
+            typeDescription="{{_typeDescription}}">
     </Controls.propertyGrid:PropertyGrid>
 </div>

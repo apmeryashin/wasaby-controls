@@ -3,7 +3,7 @@ import * as template from 'wml!Controls-demo/PropertyGridNew/Editors/Logic/Index
 
 export default class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: object[] = [
+    protected _typeDescription: object[] = [
         {
             name: 'selected',
             caption: 'Logic editor',
