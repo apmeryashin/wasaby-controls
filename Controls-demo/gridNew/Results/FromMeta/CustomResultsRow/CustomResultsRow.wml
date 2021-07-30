@@ -21,9 +21,7 @@
             <ws:resultsTemplate>
                 <ws:partial template="Controls/grid:ResultsTemplate">
                     <ws:contentTemplate>
-                        <div style="color: #313E78; font-weight: bold;">
-                            Результаты из метаданных. Среднее население - {{contentTemplate.results.population}}. Средняя плотность населения - {{ contentTemplate.results.populationDensity }}
-                        </div>
+                        Результаты из метаданных. Среднее население - {{contentTemplate.results.population}}. Средняя плотность населения - {{ contentTemplate.results.populationDensity }}
                     </ws:contentTemplate>
                 </ws:partial>
             </ws:resultsTemplate>
