@@ -1486,7 +1486,7 @@
   "--shadow_start-color_datePicker": "rgba(204, 204, 204, 0.3)",
   "--shadow_end-color_datePicker": "rgba(255, 255, 255, 0)",
   "--background-color_datePicker": "var(--background-color)",
-  "--header_background-color_datePicker": "var(--header_background-color_sticky)",
+  "--header_background-color_datePicker": "var(--unaccented_background-color)",
   "--header_padding-left_datePicker": "10px",
   "--switcher_icon-size_datePicker": "var(--icon-size_s)",
 
