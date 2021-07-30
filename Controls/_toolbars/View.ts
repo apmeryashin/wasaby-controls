@@ -649,7 +649,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             direction: 'horizontal',
             itemTemplate: defaultItemTemplate,
             iconStyle: 'secondary',
-            menuButtonViewMode: 'link',
             translucent: false
         };
     }
