@@ -124,7 +124,7 @@ export interface ITreeControlOptions extends IControlOptions {
 
 /**
  * @name Controls/_tree/interface/ITreeControl#nodeFooterTemplate
- * @cfg {TemplateFunction|String} Пользовательский шаблон подвала развернутого узла в {@link Controls/treeGrid:View дереве с колонками}.
+ * @cfg {TemplateFunction|String|Controls/tree:INodeFooterTemplate} Пользовательский шаблон подвала развернутого узла в {@link Controls/treeGrid:View дереве с колонками}.
  * @default undefined
  * @remark
  * В области видимости шаблона доступна переменная **item**, из которой можно получить доступ к:

@@ -64,7 +64,11 @@ export {
     TNavigationPagingMode,
     TNavigationSource,
     TNavigationDirection,
-    INavigationViewConfig
+    INavigationViewConfig,
+    INavigationButtonConfig,
+    TNavigationButtonPosition,
+    TNavigationButtonSize,
+    TNavigationButtonView
 } from './_interface/INavigation';
 export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';
