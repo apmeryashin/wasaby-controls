@@ -23,7 +23,7 @@ export default class Wrapper <TWrapperOptions extends IWrapperOptions> extends C
     }
 
     protected _beforeUpdate(options: TWrapperOptions): void {
-        if (JSON.stringify(options.variables) !== JSON.stringify(this._options.variables)) {
+        if (options.variables !== this._options.variables) {
             this._themeVariables =
                 Wrapper.prepareStyleValue(this.computeStylesLogic(options), options.prefix);
         }
