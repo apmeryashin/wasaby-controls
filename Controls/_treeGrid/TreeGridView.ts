@@ -29,7 +29,7 @@ export default class TreeGridView extends GridView {
     protected _onItemClick(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
         if (dispItem['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
             e.stopImmediatePropagation();
-            if (e.target.closest('.js-controls-TreeGrid__nodeFooter__LoadMoreButton')) {
+            if (e.target.closest('.js-controls-BaseControl__NavigationButton')) {
                 this._notify('loadMore', [dispItem.getNode()]);
             }
             return;

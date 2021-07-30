@@ -22,7 +22,7 @@ export default class extends Control {
         },
         viewConfig: {
             pagingMode: 'basic',
-            moreButtonView: 'cut'
+            buttonView: 'separator'
         }
     };
 
