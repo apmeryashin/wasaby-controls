@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
     <div class="controlsDemo__cell controlsDemo__flexColumn" style="align-items: flex-start">
         <span>separatorVisible="true"</span>
         <Controls.toolbars:BoxView
