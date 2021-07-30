@@ -1,10 +1,13 @@
 <div class="controlsDemo__wrapper {{_options.theme.indexOf('default') < 0 ? 'controlsDemo_fixedWidth500' : 'controlsDemo_fixedWidth300'}}">
-    <div class="controlsDemo__cell">
-        <div class="controls-text-label controlsDemo_widthFit controls-text-label">MainCounterStyle</div>
-        <Controls.toggle:Tumbler items="{{_items}}" bind:selectedKey="_selectedKey">
+    <ws:for data="item in _items">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">MainCounterStyle={{item.style}}</div>
+        <Controls.toggle:Tumbler items="{{item.items}}" bind:selectedKey="_selectedKey">
             <ws:itemTemplate>
                 <ws:partial template="Controls/toggle:tumblerItemCounterTemplate" scope="{{itemTemplate}}"/>
             </ws:itemTemplate>
         </Controls.toggle:Tumbler>
+    </ws:for>
+    <div class="controlsDemo__cell">
+
     </div>
 </div>
