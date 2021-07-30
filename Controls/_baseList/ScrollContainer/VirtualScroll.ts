@@ -247,7 +247,9 @@ export default class VirtualScroll {
                 - this._getItemsHeightsSum(this._oldRange.stop, this._range.stop, itemsHeights) :
                 this._getItemsHeightsSum(this._range.stop, this._oldRange.stop, itemsHeights);
         } else {
-            heightDifference = this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights);
+            heightDifference = this._range.start < this._oldRange.start ?
+               - this._getItemsHeightsSum(this._range.start, this._oldRange.start, itemsHeights) :
+               this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights);
         }
 
         const paramsForRestore = {
