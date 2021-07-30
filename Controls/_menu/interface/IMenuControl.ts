@@ -152,3 +152,17 @@ export default interface IMenuControl {
  * @see sourceProperty
  * @see additionalProperty
  */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#itemAlign
+ * @cfg {String} Вид отображения элемента
+ * @variant left Меню раскрывается влево, элемент отображается от левого края.
+ * @variant right Меню раскрывается вправо, элемент отображается от правого края
+ * @default right
+ * @demo Controls-demo/dropdown_new/Button/ItemAlign/Index
+ * @see nodeProperty
+ * @see parentProperty
+ * @see sourceProperty
+ * @see additionalProperty
+ */
+
