@@ -244,6 +244,8 @@
   "--success_border-color_button_functionalButton": "var(--success_contrast_background-color)",
   "--success_hover_border-color_button_functionalButton": "var(--success_hover_contrast_background-color)",
 
+  "--booleanEditor_offset_propertyGrid": "8px",
+
   "--text-shadow_button": "none",
   "--box-shadow_button": "none",
   "--box-shadow_contrast-button": "0 1px 5px 0 rgba(0, 0, 0, .12)",

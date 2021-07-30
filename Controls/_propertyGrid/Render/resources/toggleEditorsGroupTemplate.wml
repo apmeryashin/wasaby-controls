@@ -12,7 +12,7 @@
                                 iconSize="s"
                                 value="{{toggledEditors[toggleableItem.getId()]}}"
                                 on:valueChanged="_toggleEditor(toggleableItem)"
-                                attr:class="{{(index > 0 ? 'controls-PropertyGrid_toggleEditorButton_offset_theme-' + _options.theme)}}"/>
+                                attr:class="{{(index > 0 ? 'controls-PropertyGrid_toggleEditorButton_offset')}}"/>
                 </Controls.Container.Async>
             </ws:for>
         </div>

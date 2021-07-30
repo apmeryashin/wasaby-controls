@@ -9,7 +9,7 @@
 <ws:template name="label">
   <ws:partial template="levelPadding"/>
   <ws:if data="{{collectionItem.isNode()}}">
-    <div class="controls-PropertyGrid__editor_nodeCaption_wrapper_theme-{{theme}}">
+    <div class="controls-PropertyGrid__editor_nodeCaption_wrapper">
       <Controls.heading:Title scope="{{_options}}"
                               readOnly="{{true}}"
                               fontSize="m"
@@ -24,7 +24,7 @@
 
 <ws:if data="{{_options.colspan || _options.colspanTemplate}}">
    <ws:partial template="{{_options.colspanTemplate}}"
-               attr:class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}"
+               attr:class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}"
                attr:style="{{getItemStyles(collectionItem, 2, true)}}"
                item="{{_options.item}}"
                collectionItem="{{_options.collectionItem}}"/>
@@ -32,15 +32,15 @@
 <ws:else>
     <ws:if data="{{!item.editorOptions.jumpingLabel && item.caption}}">
         <div class="controls-PropertyGrid__gridLayout_editor-caption
-                       controls-PropertyGrid__gridLayout_editor-caption_theme-{{theme}}
-                       {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}
-                       {{collectionItem.getItemPaddingClasses(theme, 1)}}"
+                       controls-PropertyGrid__gridLayout_editor-caption
+                       {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                       {{collectionItem.getItemPaddingClasses(1)}}"
                  style="{{getItemStyles(collectionItem, 1, !collectionItem.getEditorTemplateName())}}">
 
             <ws:partial template="label"
                         caption="{{item.caption}}"
                         scope="{{item.captionOptions}}"
-                        attr:class="controls-PropertyGrid__editor-caption_theme-{{theme}}
+                        attr:class="controls-PropertyGrid__editor-caption
                                     controls-PropertyGrid__gridLayout_editor-caption-baseline"
                         attr:tabindex="-1"
             />
@@ -55,10 +55,10 @@
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
        <div class="controls-PropertyGrid__gridLayout_editor
-                   controls-PropertyGrid__gridLayout_editor_theme-{{theme}}
+                   controls-PropertyGrid__gridLayout_editor
                    {{(!item.caption || _options.captionPosition === 'top') ? 'controls-PropertyGrid__gridLayout_editor-withoutCaption'}}
-                   {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}
-                   {{collectionItem.getItemPaddingClasses(theme, _options.captionPosition === 'top' ? 1 : 2)}}"
+                   {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                   {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}"
              style="{{getItemStyles(collectionItem, 2, !item.caption)}}">
            <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
                <ws:partial template="levelPadding"/>
