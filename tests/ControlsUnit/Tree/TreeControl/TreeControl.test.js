@@ -1564,6 +1564,7 @@ define([
                getKeyProperty: () => 'id',
                hasMoreData: () => false,
                isLoading: () => false,
+               getLoadError: () => null,
                isDeepReload: () => false,
                wasResetExpandedItems: () => false,
                setNodeDataMoreLoadCallback: () => false

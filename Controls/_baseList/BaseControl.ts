@@ -209,35 +209,6 @@ interface IAnimationEvent extends Event {
     animationName: string;
 }
 
-/**
- * Object with state from server side rendering
- * @typedef {Object}
- * @name IReceivedState
- * @property {*} [data]
- * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
- */
-interface IReceivedState {
-    data?: any;
-    errorConfig?: dataSourceError.ViewConfig;
-}
-
-/**
- * @typedef {Object}
- * @name ICrudResult
- * @property {*} [data]
- * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
- * @property {Error} [error]
- */
-interface ICrudResult extends IReceivedState {
-    error: Error;
-}
-
-interface IErrbackConfig {
-    mode?: dataSourceError.Mode;
-    templateOptions?: object;
-    error: CancelableError;
-}
-
 type CancelableError = Error & { canceled?: boolean, isCanceled?: boolean };
 type TMarkerMoveDirection = 'Bottom' | 'Up' | 'Left' | 'Right' | 'Forward' | 'Backward';
 
@@ -254,32 +225,6 @@ interface IBeginAddOptions {
 }
 
 //#endregion
-
-/**
- * Удаляет оригинал ошибки из ICrudResult перед вызовом сриализатора состояния,
- * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
- * @param {ICrudResult} crudResult
- * @return {IReceivedState}
- */
-const getState = (crudResult: ICrudResult): IReceivedState => {
-    delete crudResult.error;
-    return crudResult;
-};
-
-/**
- * getting result from <CrudResult> wrapper
- * @param {ICrudResult} [crudResult]
- * @return {Promise}
- */
-const getData = (crudResult: ICrudResult): Promise<any> => {
-    if (!crudResult) {
-        return Promise.resolve();
-    }
-    if (crudResult.hasOwnProperty('data')) {
-        return Promise.resolve(crudResult.data);
-    }
-    return Promise.reject(crudResult.error);
-};
 
 const _private = {
     getItemActionsMenuConfig(self, item, event, action, isContextMenu): Record<string, any> {
@@ -303,7 +248,7 @@ const _private = {
         }
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
-        if (self.__error || !self._listViewModel) {
+        if (self._sourceController?.getLoadError() || !self._listViewModel) {
             return;
         }
         const editingConfig = self._listViewModel.getEditingConfig();
@@ -731,9 +676,6 @@ const _private = {
                 // и событие add не сработает
                 self._recountIndicators(direction);
 
-                // Скрываем ошибку после успешной загрузки данных
-                _private.hideError(self);
-
                 return addedItems;
             }).addErrback((error: CancelableError) => {
                 if (self._destroyed) {
@@ -754,33 +696,6 @@ const _private = {
                 if (!error.canceled && !error.isCanceled) {
                     _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 }
-                return _private.crudErrback(self, {
-                    error,
-                    mode: dataSourceError.Mode.inlist,
-                    templateOptions: {
-                        /**
-                         * Действие при нажатии на кнопку повтора в шаблоне ошибки.
-                         * Вернет промис с коллбэком, скрывающим ошибку.
-                         * Контрол ошибки сам выполнит этот коллбэк для того,
-                         * чтобы подгрузка данных произошла без скачка положения скролла
-                         * из-за исчезновения шаблона ошибки.
-                         */
-                        action: () => {
-                            const afterActionCallback = () => _private.hideError(self);
-                            const errorConfig = self.__error;
-                            return _private.loadToDirection(self, direction, receivedFilter).then(() => {
-                                _private.showError(self, errorConfig);
-                                return Promise.resolve(afterActionCallback);
-                            });
-                        },
-                        isPagingVisible: self._pagingVisible,
-                        /**
-                         * Позиция шаблона ошибки относительно списка.
-                         * Зависит от направления подгрузки данных.
-                         */
-                        showInDirection: direction
-                    }
-                }) as Deferred<any>;
             });
         }
         Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
@@ -979,7 +894,7 @@ const _private = {
                  * иногда ошибка показывается раньше скролла, тогда ошибка во весь список.
                  * https://online.sbis.ru/opendoc.html?guid=ab2c30cd-895d-4b1f-8f71-cd0063e581d2
                  */
-                if (!self.__error) {
+                if (!self._sourceController?.getLoadError()) {
                     if (direction === 'up') {
                         self._finishScrollToEdgeOnDrawItems = function () {
                             self._currentPage = 1;
@@ -1026,7 +941,7 @@ const _private = {
              * (не происходит подгрузки данных), а флаг снимается только после него
              * или при ручном скролле - из-за этого пэйджинг перестает работать
              */
-            self._scrollPageLocked = !self.__error;
+            self._scrollPageLocked = !self._sourceController?.getLoadError();
             _private.setMarkerAfterScroll(self);
             self._notify('doScroll', ['page' + direction], { bubbling: true });
         }
@@ -1848,69 +1763,6 @@ const _private = {
         }
 
         return sorting;
-    },
-
-    /**
-     * @param {Controls/_list/BaseControl} self
-     * @param {IErrbackConfig} config
-     * @return {Promise}
-     * @private
-     */
-    crudErrback(self: BaseControl, config: IErrbackConfig): Promise<any> {
-        return _private.processError(self, config).then(getData);
-    },
-
-    /**
-     * @param {Controls/_list/BaseControl} self
-     * @param {IErrbackConfig} config
-     * @return {Promise.<ICrudResult>}
-     * @private
-     */
-    processError(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult> {
-        if (!config.error.canceled && !config.error.isCanceled && self._listViewModel) {
-            self._indicatorsController.hideGlobalIndicator();
-        }
-        return self.__errorController.process({
-            error: config.error,
-            theme: self._options.theme,
-            mode: config.mode || dataSourceError.Mode.include
-        }).then((errorConfig) => {
-            if (errorConfig && config.templateOptions) {
-                errorConfig.options.action = config.templateOptions.action;
-                errorConfig.options.showInDirection = config.templateOptions.showInDirection;
-                errorConfig.options.isPagingVisible = config.templateOptions.isPagingVisible;
-            }
-            if (errorConfig) {
-                _private.showError(self, errorConfig);
-            }
-            return {
-                error: config.error,
-                errorConfig
-            };
-        });
-    },
-
-    /**
-     * @param {Controls/_list/BaseControl} self
-     * @param {Controls/dataSource:error.ViewConfig} errorConfig
-     * @private
-     */
-    showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
-        self.__error = errorConfig;
-        if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
-            if (self._scrollController) {
-                self._scrollController.destroy();
-                self._scrollController = null;
-            }
-            self._observerRegistered = false;
-            self._viewReady = false;
-        }
-    },
-
-    hideError(self: BaseControl): void {
-        if (self.__error) {
-            self.__error = null;
-        }
     },
 
     calcPaging(self, hasMore: number | boolean, pageSize: number): number {
@@ -2931,7 +2783,7 @@ const _private = {
      * @param self
      */
     needHoverFreezeController(self): boolean {
-        return !self.__error && self._listViewModel && self._options.itemActionsPosition === 'outside' &&
+        return !self._sourceController?.getLoadError() && self._listViewModel && self._options.itemActionsPosition === 'outside' &&
             ((self._options.itemActions && self._options.itemActions.length > 0) || self._options.itemActionsProperty) &&
             _private.isAllowedHoverFreeze(self);
     },
@@ -3036,7 +2888,7 @@ export interface IBaseControlOptions extends IControlOptions, IItemActionsOption
 }
 
 export default class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions>
-    extends Control<TOptions, IReceivedState>
+    extends Control<TOptions, {}>
     implements IMovableList {
 
     //#region States
@@ -3178,8 +3030,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _editInPlaceController = null;
     _editInPlaceInputHelper = null;
 
-    __errorController = null;
-
     _editingItem: IEditableCollectionItem;
 
     _continuationEditingDirection: Exclude<EDIT_IN_PLACE_CONSTANTS, EDIT_IN_PLACE_CONSTANTS.CANCEL>;
@@ -3192,7 +3042,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         super(options || {}, context);
         options = options || {};
         this._validateController = new ControllerClass();
-        this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
         this._resetValidation = this._resetValidation.bind(this);
         this._onWindowResize = this._onWindowResize.bind(this);
@@ -3203,11 +3052,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     /**
      * @param {Object} newOptions
      * @param {Object} context
-     * @param {IReceivedState} receivedState
      * @return {Promise}
      * @protected
      */
-    protected _beforeMount(newOptions: TOptions, context?, receivedState?: IReceivedState = {}): void | Promise<unknown> {
+    protected _beforeMount(newOptions: TOptions, context?): void | Promise<unknown> {
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         this._dataLoadCallback = _private.dataLoadCallback.bind(this);
         this._uniqueId = Guid.create();
@@ -3234,10 +3082,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.addShowActionsClass(this);
 
-        return this._doBeforeMount(newOptions, receivedState);
+        return this._doBeforeMount(newOptions);
     }
 
-    _doBeforeMount(newOptions, receivedState): Promise<unknown> | void {
+    _doBeforeMount(newOptions): Promise<unknown> | void {
         let result = null;
         let state: 'sync' | 'async' = 'sync';
 
@@ -3251,7 +3099,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         };
 
         // Prepare items on mount
-        addOperation(() => this._prepareItemsOnMount(this, newOptions, receivedState));
+        addOperation(() => this._prepareItemsOnMount(this, newOptions));
 
         // Try to start initial editing
         addOperation(() => {
@@ -3335,7 +3183,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
         // для переопределения
     }
-    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}): Promise<unknown> | void {
+    _prepareItemsOnMount(self, newOptions): Promise<unknown> | void {
         let items;
         let collapsedGroups;
 
@@ -3390,14 +3238,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         self._createIndicatorsController(newOptions);
         // обновляем флаги isResetTriggerOffset
         self._updateScrollController(newOptions);
-
-        if (receivedState.errorConfig) {
-            _private.showError(self, receivedState.errorConfig);
-        } else if (self._sourceController && self._sourceController.getLoadError()) {
-            return _private.processError(self, {error: self._sourceController.getLoadError()}).then((errorConfig) => {
-                return getState(errorConfig);
-            });
-        }
     }
 
     _initKeyProperty(options: TOptions): void {
@@ -3594,7 +3434,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
 
-        if (!this.__error) {
+        if (!this._sourceController?.getLoadError()) {
             this._registerObserver();
             if (this._shouldRegisterIntersectionObserver()) {
                 this._registerIntersectionObserver();
@@ -3643,7 +3483,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
-        this._notify('register', ['dataError', this, this._onDataError], {bubbling: true});
+        RegisterUtil(this, 'loadToDirection', _private.loadToDirection.bind(this, this));
 
         // TODO удалить после того как избавимся от onactivated
         if (_private.hasMarkerController(this)) {
@@ -3930,25 +3770,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.executeAfterReloadCallbacks(this, this._items, newOptions);
                 }
 
-                if (this._loadedBySourceController) {
-                    if (!this._sourceController.getLoadError()) {
-                        if (this._listViewModel) {
-                            this._listViewModel.setHasMoreData(_private.getHasMoreData(this));
-                        }
-                        if (this.__error) {
-                            _private.hideError(this);
-                        }
-                        _private.resetScrollAfterLoad(this);
-                        _private.tryLoadToDirectionAgain(this, null, newOptions);
-                        _private.prepareFooter(this, newOptions, this._sourceController);
-                    } else if (!this.__error) {
-                        updateResult = _private.processError(this, {error: this._sourceController.getLoadError()});
+                if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
+                    if (this._listViewModel) {
+                        this._listViewModel.setHasMoreData(_private.getHasMoreData(this));
                     }
+                    _private.resetScrollAfterLoad(this);
+                    _private.tryLoadToDirectionAgain(this, null, newOptions);
+                    _private.prepareFooter(this, newOptions, this._sourceController);
                 }
             }
         }
 
-        if (!this.__error && !this._scrollController) {
+        if (!this._sourceController?.getLoadError() && !this._scrollController) {
             // Создаем заново sourceController после выхода из состояния ошибки
             _private.createScrollController(this, newOptions);
         }
@@ -4157,10 +3990,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         return reloadItemDeferred.addErrback((error) => {
-            return _private.crudErrback(this, {
-                error,
-                mode: dataSourceError.Mode.dialog
-            });
+            return dataSourceError.process({error});
         });
     }
 
@@ -4248,7 +4078,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
-        this._notify('unregister', ['dataError', this], {bubbling: true});
+        UnregisterUtil(this, 'loadToDirection');
 
         this._unregisterMouseMove();
         this._unregisterMouseUp();
@@ -4294,7 +4124,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _afterRender(): void {
-        let positionRestored = false
+        let positionRestored = false;
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (this._container) {
@@ -4320,7 +4150,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
         // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
-        if (this._shouldRestoreScrollPosition && !this.__error) {
+        if (this._shouldRestoreScrollPosition && !this._sourceController?.getLoadError()) {
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -4443,7 +4273,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // Проверяем видимость триггеров после перерисовки.
     // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
-        if (this._destroyed || this.__error) {
+        if (this._destroyed || this._sourceController?.getLoadError()) {
             return;
         }
         const triggerDown = this._loadTriggerVisibility.down;
@@ -4509,7 +4339,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
-        if (!this.__error) {
+        if (!this._sourceController?.getLoadError()) {
             if (!this._observerRegistered) {
                 this._registerObserver();
             }
@@ -4697,7 +4527,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         return cancelEditPromise.then(() => {
             if (!this._destroyed) {
-                return this._reload(this._options, sourceConfig).then(getData);
+                return this._reload(this._options, sourceConfig);
             }
         });
     }
@@ -4730,7 +4560,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     return;
                 }
                 _private.doAfterUpdate(self, () => {
-                    _private.hideError(self);
                     _private.setReloadingState(self, false);
 
                     if (list.getCount()) {
@@ -4779,22 +4608,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.resetScrollAfterLoad(self);
                     _private.tryLoadToDirectionAgain(self, list);
                 });
-            }).addErrback(function(error: Error) {
-                if (self._destroyed) {
-                    return;
-                }
-                self._indicatorsController.hideGlobalIndicator();
-                return _private.processError(self, {
-                    error
-                }).then(function(result: ICrudResult) {
-                    if (!self._destroyed) {
-                        self._afterReloadCallback(cfg);
-                    }
-                    resDeferred.callback({
-                        data: null,
-                        ...result
-                    });
-                }) as Deferred<Error>;
             });
         } else {
             self._afterReloadCallback(cfg);
@@ -5055,7 +4868,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         throw Error('BaseControl::create before add error! Source returned non Model.');
                     })
                     .catch((error: Error) => {
-                        return this._processEditInPlaceError(error);
+                        return dataSourceError.process({error});
                     });
             }
             //endregion
@@ -5481,7 +5294,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
             }
         }).catch((error: Error) => {
-            return this._processEditInPlaceError(error);
+            dataSourceError.process({error});
         });
     }
 
@@ -5503,26 +5316,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             task1181625554: !!editingConfig.task1181625554
         };
-    }
-
-    _processEditInPlaceError(error: Error): Promise<void> {
-        /*
-         * в detail сейчас в многих местах редактирования по месту приходит текст из запроса
-         * Не будем его отображать
-         * TODO Убрать после закрытия задачи по написанию документа по правильному формированию текстов ошибок
-         *  https://online.sbis.ru/doc/c8ff58ac-e6f7-4f0e-877a-e9cbbe661139
-         */
-        delete error.details;
-
-        return this.__errorController.process({
-            error,
-            theme: this._options.theme,
-            mode: dataSourceError.Mode.dialog
-        }).then((errorConfig: dataSourceError.ViewConfig) => {
-            this._children.errorContainer.show(errorConfig);
-            error.errorProcessed = true;
-            return Promise.reject(error);
-        });
     }
 
     // endregion
@@ -5783,13 +5576,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     // endregion Cut
-
-    _onDataError(errorConfig: IErrbackConfig): void {
-        _private.processError(this, {
-            error: errorConfig.error,
-            mode: errorConfig.mode || dataSourceError.Mode.dialog
-        });
-    }
 
     _nativeDragStart(event) {
         // preventDefault нужно делать именно на нативный dragStart:

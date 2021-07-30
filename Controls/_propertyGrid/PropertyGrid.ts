@@ -20,6 +20,7 @@ import PropertyGridCollectionItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {StickyOpener} from 'Controls/popup';
 import 'css!Controls/itemActions';
+import 'css!Controls/propertyGrid';
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -70,9 +71,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _collapsedGroupsChanged: boolean = false;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
-        const sourceOption = options.source || options.typeDescription;
         this._collapsedGroups = this._getCollapsedGroups(options.collapsedGroups);
-        this._toggledEditors = this._getToggledEditors(sourceOption, options.keyProperty);
+        this._toggledEditors = this._getToggledEditors(options.typeDescription, options.keyProperty);
         this._listModel = this._getCollection(options);
         if (options.captionColumnOptions || options.editorColumnOptions) {
             this._render = gridRenderTemplate;
@@ -83,9 +83,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (newOptions.editingObject !== this._options.editingObject) {
             this._listModel.setEditingObject(newOptions.editingObject);
         }
-        const sourceOption = newOptions.source || newOptions.typeDescription;
-        if (sourceOption !== this._options.source) {
-            this._toggledEditors = this._getToggledEditors(sourceOption, newOptions.keyProperty);
+        if (newOptions.typeDescription !== this._options.typeDescription) {
+            this._toggledEditors = this._getToggledEditors(newOptions.typeDescription, newOptions.keyProperty);
             this._listModel = this._getCollection(newOptions);
         } else if (newOptions.itemPadding !== this._options.itemPadding) {
             this._listModel.setItemPadding(newOptions.itemPadding);
@@ -107,7 +106,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _getCollection(options: IPropertyGridOptions): TPropertyGridCollection {
-        const propertyGridItems = this._getPropertyGridItems(options.source || options.typeDescription, options.keyProperty);
+        const propertyGridItems = this._getPropertyGridItems(options.typeDescription, options.keyProperty);
         return new PropertyGridCollection({
             collection: propertyGridItems,
             editingObject: options.editingObject,
@@ -328,8 +327,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
         return validatorResult;
     }
-
-    static _theme: string[] = ['Controls/propertyGrid'];
 
     static defaultProps: Partial<IPropertyGridOptions> = {
         keyProperty: 'name',

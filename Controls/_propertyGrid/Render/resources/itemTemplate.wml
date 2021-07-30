@@ -1,6 +1,6 @@
 <ws:template name="label">
     <ws:if data="{{collectionItem.isNode()}}">
-        <div class="controls-PropertyGrid__editor_nodeCaption_wrapper_theme-{{theme}}">
+        <div class="controls-PropertyGrid__editor_nodeCaption_wrapper">
             <Controls.heading:Title scope="{{_options}}"
                                     readOnly="{{true}}"
                                     fontSize="m"
@@ -19,7 +19,7 @@
     </ws:if>
     <ws:else data="{{item.caption !== '' && !item.editorOptions.jumpingLabel}}">
         <ws:partial template="label"
-                    attr:class="controls-PropertyGrid__editor-caption_theme-{{theme}}
+                    attr:class="controls-PropertyGrid__editor-caption
                              {{'controls-PropertyGrid__editor-caption_' + (collectionItem.getEditorTemplateName() ? 'withEditor' : 'withoutEditor')}}"
                     attr:tabindex="-1"
                     caption="{{item.caption || item.name}}"
@@ -37,7 +37,7 @@
 
 <ws:if data="{{isGridLayout}}">
     <ws:if data="{{captionPosition === 'top'}}">
-        <div class="controls-PropertyGrid__flex-editor_theme-{{theme}}" style="{{getItemStyles(collectionItem, 1, true)}}">
+        <div class="controls-PropertyGrid__flex-editor" style="{{getItemStyles(collectionItem, 1, true)}}">
             <ws:partial scope="{{_options}}" template="wml!Controls/_propertyGrid/GridRender/resources/itemTemplate"/>
         </div>
     </ws:if>
@@ -46,10 +46,10 @@
     </ws:else>
 </ws:if>
 <ws:else>
-    <div class="controls-PropertyGrid__editor_theme-{{theme}}
-                {{highlightOnHover ? 'controls-PropertyGrid__row_highlightOnHover_theme-' + theme}}
+    <div class="controls-PropertyGrid__editor
+                {{highlightOnHover ? 'controls-PropertyGrid__row_highlightOnHover'}}
                 {{!!captionPosition  ? ('controls-PropertyGrid__flex-row controls-PropertyGrid__row_captionPosition-' + captionPosition)}}
-                {{collectionItem.getItemPaddingClasses(theme)}}">
+                {{collectionItem.getItemPaddingClasses()}}">
         <ws:partial template="itemTemplate" />
         <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
             <ws:if data="{{ !collectionItem.isSwiped() }}">

@@ -4,6 +4,7 @@ import {
     IValidationStatus, IValidationStatusOptions, ValidationStatus,
     TBorderVisibility, ICaption, ICaptionOptions
 } from 'Controls/interface';
+import 'css!Controls/jumpingLabel';
 
 type TValidationStatus = 'valid' | 'invalid';
 type TValidationFontColorStyle = 'default' | 'accent';
@@ -85,8 +86,6 @@ abstract class Base<T extends IBaseOptions = IBaseOptions>
     }
 
     protected abstract _setShowFromAbove(options: T): void;
-
-    static _theme: string[] = ['Controls/jumpingLabel'];
 
     private static _detectToHorizontalPadding(contrastBackground: boolean): string {
         return contrastBackground ? 'xs' : 'null';

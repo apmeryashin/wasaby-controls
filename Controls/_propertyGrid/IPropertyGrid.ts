@@ -86,7 +86,7 @@ export interface IPropertyGridOptions extends IControlOptions {
      *       }
      *    })
      *
-     *    this._source = [
+     *    this._typeDescription = [
      *       {
      *          name: 'description',
      *          caption: 'Описание',
@@ -105,7 +105,7 @@ export interface IPropertyGridOptions extends IControlOptions {
      * <!-- WML -->
      * <Controls.propertyGrid:PropertyGrid
      *     bind:editingObject="_editingObject"
-     *     source="{{_source}}"/>
+     *     typeDescription="{{_typeDescription}}"/>
      * </pre>
      * @demo Controls-demo/PropertyGridNew/Editors/CustomEditor/Index
      */
@@ -115,7 +115,7 @@ export interface IPropertyGridOptions extends IControlOptions {
      */
     editingObject: Model | Record<string, any>;
     /**
-     * @name Controls/_propertyGrid/IPropertyGrid#source
+     * @name Controls/_propertyGrid/IPropertyGrid#typeDescription
      * @cfg {Controls/_propertyGrid/IProperty[]} Конфигурация свойств в PropertyGrid.
      * Например, можно установить текст метки, которая будет отображаться рядом с редактором или сгруппировать свойства по определённому признаку.
      * @remark Если конфигурация для свойства не передана, она будет сформирована автоматически.
@@ -129,7 +129,7 @@ export interface IPropertyGridOptions extends IControlOptions {
      *       showBackgroundImage: true,
      *    };
      *
-     *    this._source = [
+     *    this._typeDescription = [
      *       {
      *          name: 'description',
      *          caption: 'Описание',
@@ -147,11 +147,10 @@ export interface IPropertyGridOptions extends IControlOptions {
      * <!-- WML -->
      * <Controls.propertyGrid:PropertyGrid
      *    bind:editingObject="_editingObject"
-     *    source="{{_source}}"/>
+     *    typeDescription="{{_typeDescription}}"/>
      * </pre>
      * @demo Controls-demo/PropertyGridNew/Source/Index
      */
-    source: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
     typeDescription?: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#groupTemplate
