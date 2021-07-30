@@ -4,7 +4,7 @@ import {Memory} from 'Types/source';
 
 export default class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: object[] = [
+    protected _typeDescription: object[] = [
         {
             name: 'selected',
             caption: 'Lookup',

@@ -1,4 +1,4 @@
 <Controls.propertyGrid:PropertyGrid
     bind:editingObject="_editingObject"
-    source="{{_source}}">
+    typeDescription="{{_typeDescription}}">
 </Controls.propertyGrid:PropertyGrid>

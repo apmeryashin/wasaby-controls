@@ -20,7 +20,7 @@
                 <Controls.propertyGrid:PropertyGrid
                     editingObject="{{ item }}"
                     on:editingObjectChanged="_itemSettingsChanged(index)"
-                    source="{{_propertyGridSource}}"/>
+                    typeDescription="{{_propertyGridSource}}"/>
             </div>
         </ws:for>
     </div>
