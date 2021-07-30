@@ -6071,26 +6071,7 @@ define([
             baseControl._dndListController = {isDragging: () => true};
 
             lists.BaseControl._private.loadToDirectionIfNeed(baseControl);
-            assert.isFalse(isLoadStarted);
-
-            baseControl._dndListController = {
-               endDrag: () => undefined,
-               getDragPosition: () => {
-                  return {
-                     dispItem: {
-                        getContents: () => {}
-                     }
-                  };
-               },
-               getDraggableItem: () => undefined,
-               isDragging: () => true
-            };
-
-            const spy = sinon.spy(baseControl, 'checkTriggerVisibilityAfterRedraw');
-            baseControl._documentDragEnd({ entity: {} });
-            assert.isTrue(spy.called);
-
-            sandbox.restore();
+            assert.isTrue(isLoadStarted);
          });
 
          it('mouseEnter', () => {
