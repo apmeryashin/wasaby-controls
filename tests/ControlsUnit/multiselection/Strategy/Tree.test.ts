@@ -888,6 +888,12 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.equal(count, 5);
       });
 
+      it('limit is more items count', () => {
+         const selection = { selected: [null], excluded: [null] };
+         assert.equal(strategy.getCount(selection, false, 10), 7);
+         assert.equal(strategy.getCount(selection, true, 10), 10);
+      });
+
       it('selected not loaded item', () => {
          const selection = { selected: [20], excluded: [] };
          const count = strategyWithDescendantsAndAncestors.getCount(selection, false);
