@@ -294,6 +294,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuTemplateOptions(): IStickyPopupOptions {
         const options = this._options;
+        const isVertical = options.direction === 'vertical';
         return {
             groupTemplate: options.groupTemplate,
             groupProperty: options.groupProperty,
@@ -303,7 +304,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             nodeProperty: options.nodeProperty,
             iconSize: options.iconSize,
             iconStyle: options.iconStyle,
-            itemTemplateProperty: options.itemTemplateProperty
+            itemTemplateProperty: options.itemTemplateProperty,
+            itemAlign: isVertical ? 'left' : 'right',
         };
     }
 
