@@ -7,7 +7,7 @@ import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _editingObject: Model;
-    protected _source: RecordSet;
+    protected _typeDescription: RecordSet;
 
     protected _defaultValidator({value, item, items}: any): boolean | string {
         return !!value || 'Значение обязательно для заполнения';
@@ -28,7 +28,7 @@ export default class Demo extends Control<IControlOptions> {
                 validate: ''
             }
         });
-        this._source = new RecordSet<IPropertyGridItem>({
+        this._typeDescription = new RecordSet<IPropertyGridItem>({
             rawData: [
                 {
                     name: 'description',

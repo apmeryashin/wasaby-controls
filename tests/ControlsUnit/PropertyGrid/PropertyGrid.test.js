@@ -15,9 +15,9 @@ define([
 ) {
     describe('Controls/_propertyGrid/PropertyGrid', () => {
         let ViewInstance = new propertyGridLib.PropertyGrid();
-        let source, editingObject, editors;
+        let typeDescription, editingObject, editors;
         beforeEach(() => {
-            source = [
+            typeDescription = [
                 {name: 'stringField', group: 'text'},
                 {name: 'booleanField', editorOptions: {icon: 'testIcon'}},
                 {name: 'stringField1'}];
@@ -32,9 +32,9 @@ define([
                 stringField1: Constants.DEFAULT_EDITORS.string
             };
             ViewInstance = new propertyGridLib.PropertyGrid();
-            ViewInstance._beforeMount({source, editingObject});
+            ViewInstance._beforeMount({typeDescription, editingObject});
             ViewInstance._itemActionsController = new itemActions.Controller();
-            ViewInstance.saveOptions({source, editingObject});
+            ViewInstance.saveOptions({typeDescription, editingObject});
         });
 
         describe('_getCollapsedGroups', () => {
@@ -88,7 +88,7 @@ define([
                    nodeProperty: 'node',
                    parentProperty: 'parent',
                    editingObject,
-                   source,
+                   typeDescription,
                    keyProperty: 'name'
                 };
                 const collection = ViewInstance._getCollection(options);
@@ -104,7 +104,7 @@ define([
                   nodeProperty: 'node',
                   parentProperty: 'parent',
                   editingObject,
-                  source,
+                  typeDescription,
                   keyProperty: 'name'
                };
                 const collection = ViewInstance._getCollection(options);
@@ -119,7 +119,7 @@ define([
                   nodeProperty: 'node',
                   parentProperty: 'parent',
                   editingObject,
-                  source,
+                  typeDescription,
                   keyProperty: 'name'
                };
                 const collection = ViewInstance._getCollection(options);
@@ -148,9 +148,9 @@ define([
        describe('toggledEditors', () => {
 
            it('collection filtered by toggled editors', () => {
-               source[0].toggleEditorButtonIcon = 'testIcon';
+               typeDescription[0].toggleEditorButtonIcon = 'testIcon';
                ViewInstance._beforeMount({
-                   source,
+                   typeDescription,
                    editingObject,
                    keyProperty: 'name'
                });
@@ -158,12 +158,12 @@ define([
            });
 
            it('toggled editors in collection after mount', () => {
-               const propertyGridSource = [...source];
+               const propertyGridSource = [...typeDescription];
                const propertyGridEditingObject = {...editingObject};
-               source[0].toggleEditorButtonIcon = 'testIcon';
+               typeDescription[0].toggleEditorButtonIcon = 'testIcon';
                const pg = new propertyGridLib.PropertyGrid();
                const options = {
-                   source: propertyGridSource,
+                   typeDescription: propertyGridSource,
                    editingObject: propertyGridEditingObject,
                    keyProperty: 'name'
                };
@@ -180,7 +180,7 @@ define([
                nodeProperty: '',
                parentProperty: '',
                editingObject,
-               source,
+               typeDescription,
                keyProperty: 'name'
             };
             const collection = ViewInstance._getCollection(options);

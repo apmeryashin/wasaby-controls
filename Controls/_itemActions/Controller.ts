@@ -180,7 +180,7 @@ export class Controller {
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
-     *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
+     *  необходимо будет вычистить return методов update() и _updateActionsOnItems(). Эти методы будут void
      * @param options
      */
     update(options: IControllerOptions): Array<number | string> {
@@ -209,7 +209,7 @@ export class Controller {
                 ((action: IItemAction, item: Model, isEditing: boolean) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
-            result = this._updateItemActions(options.editingItem);
+            result = this._updateActionsOnItems(options.editingItem);
         }
         return result;
     }
@@ -260,6 +260,7 @@ export class Controller {
             }
             this._collection.setSwipeConfig(null);
             this._collection.nextVersion();
+            this._updateActionsOnParticularItem(currentSwipedItem);
         }
     }
 
@@ -452,30 +453,20 @@ export class Controller {
     /**
      * Вычисляет операции над записью для каждого элемента коллекции
      * Для старой модели listViewModel возвращает массив id изменённых значений
-     * TODO Когда мы перестанем использовать старую listViewModel,
-     *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @private
      */
-    private _updateItemActions(editingItem?: IItemActionsItem): Array<number | string> {
+    private _updateActionsOnItems(editingItem?: IItemActionsItem): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-        const assignActionsOnItem = (item): void => {
-            if (item.ItemActionsItem) {
-                const contents = Controller._getItemContents(item);
-                const actionsObject = this._fixActionsDisplayOptions(this._getActionsObject(item));
-                const itemChanged = Controller._setItemActions(item, actionsObject, this._actionMode);
-                hasChanges = hasChanges || itemChanged;
-                if (itemChanged) {
-                    changedItemsIds.push(contents.getKey());
-                }
-            }
-        };
         if (this._collection.isEventRaising()) {
             this._collection.setEventRaising(false, true);
         }
-        this._collection.each(assignActionsOnItem);
+        this._collection.each((item) => {
+            const itemChanged = this._updateActionsOnParticularItem(item);
+            hasChanges = hasChanges || itemChanged
+        });
         if (editingItem) {
-            assignActionsOnItem(editingItem);
+            this._updateActionsOnParticularItem(editingItem);
         }
         if (!this._collection.isEventRaising()) {
             this._collection.setEventRaising(true, true);
@@ -491,6 +482,14 @@ export class Controller {
         }
 
         return changedItemsIds;
+    }
+
+    private _updateActionsOnParticularItem(item: IItemActionsItem): boolean {
+        if (!item.ItemActionsItem) {
+            return false;
+        }
+        const actionsObject = this._fixActionsDisplayOptions(this._getActionsObject(item));
+        return Controller._setItemActions(item, actionsObject, this._actionMode);
     }
 
     /**
