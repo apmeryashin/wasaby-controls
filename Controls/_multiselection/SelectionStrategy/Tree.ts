@@ -320,7 +320,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
       if (limit) {
-         return limit;
+         const countItems = this._model.getCount();
+         return !hasMoreData && limit > countItems ? countItems : limit;
       }
 
       let countItemsSelected: number|null = 0;
