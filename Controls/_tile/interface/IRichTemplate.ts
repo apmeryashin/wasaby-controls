@@ -76,6 +76,17 @@ export default interface IRichTemplateOptions {
     imagePosition?: 'top' | 'left' | 'right';
 
     /**
+     * @typedef {String} TitlePosition
+     * @variant underImage Заголовок отображается под изображением.
+     * @variant onImage Заголовок отображается в верхней части поверх изображения изображением.
+     */
+    /**
+     * @cfg {TitlePosition} Положение изображения.
+     * @default underImage
+     */
+    titlePosition?: 'top' | 'left' | 'right';
+
+    /**
      * @typedef {String} ImageViewMode
      * @variant rectangle Изображение отображается в виде прямоугольника.
      * @variant circle Изображение отображается в виде круга.
