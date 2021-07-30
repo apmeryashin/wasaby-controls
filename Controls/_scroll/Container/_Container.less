@@ -35,6 +35,13 @@
    background-image: @shadow_thickness_background_scroll;
 }
 
+.controls-Scroll__background-Shadow_style-unaccented_theme-@{themeName} {
+   background-image: linear-gradient(var(--unaccented_background-color) 25%, transparent),
+                     linear-gradient(transparent, var(--unaccented_background-color) 75%),
+                     linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
+                     linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll);
+}
+
 .controls-Scroll__background-Shadow_top-hidden_bottom-visible_style-default_theme-@{themeName} {
    background-size: 100% @shadow_thickness-hider_height_scroll, 100% 0, 100% 0, 100% @shadow_thickness_scroll;
 }
@@ -121,13 +128,6 @@
                         linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
                         linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll);
    }
-}
-
-.controls-Scroll__background-Shadow_style-unaccented_theme-@{themeName} {
-  background-image: linear-gradient(var(--unaccented_background-color) 25%, transparent),
-                    linear-gradient(transparent, var(--unaccented_background-color) 75%),
-                    linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
-                    linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll);
 }
 
 //https://online.sbis.ru/opendoc.html?guid=4e08bd9f-b3e7-4ab5-88ba-7a58127abdb5
