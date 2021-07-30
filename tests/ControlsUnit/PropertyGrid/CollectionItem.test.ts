@@ -191,8 +191,8 @@ describe('Controls/propertyGrid:CollectionItem', () => {
 
     describe('getItemPaddingClasses', () => {
         it('returns padding classes for editor with jumpingLabel', () => {
-            const classes = collection.getItemBySourceKey('function').getItemPaddingClasses('default', 2);
-            assert.ok(classes.indexOf('controls-PropertyGrid__editor_spacingLeft_default_theme-default') !== -1);
+            const classes = collection.getItemBySourceKey('function').getItemPaddingClasses(2);
+            assert.ok(classes.indexOf('controls-PropertyGrid__editor_spacingLeft_default') !== -1);
         });
     });
 });
