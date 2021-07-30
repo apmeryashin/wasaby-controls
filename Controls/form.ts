@@ -1,8 +1,6 @@
 /**
  * Библиотека контролов для работы с формами.
  * @library
- * @includes IFormController Controls/form:IFormController
- * @includes IControllerBase Controls/form:IControllerBase
  * @public
  * @author Крайнов Д.О.
  */
@@ -10,8 +8,6 @@
 /*
  * form library
  * @library
- * @includes IFormController Controls/form:IFormController
- * @includes IControllerBase Controls/form:IControllerBase
  * @public
  * @author Крайнов Д.О.
  */
