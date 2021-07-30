@@ -35,7 +35,9 @@
         </div>
     </ws:if>
     <ws:if data="{{characteristics && characteristics.length}}">
-        <ws:partial template="Controls/list:CharacteristicsTemplate" items="{{characteristics}}"></ws:partial>
+        <ws:partial template="Controls/list:CharacteristicsTemplate"
+                    items="{{characteristics}}"
+                    attr:class="controls-TileView__richTemplate_characteristics_spacing"></ws:partial>
     </ws:if>
     <ws:if data="{{isEditing && descriptionEditor}}">
         <ws:partial template="{{descriptionEditor}}"/>
