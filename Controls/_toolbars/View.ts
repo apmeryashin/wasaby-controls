@@ -152,7 +152,6 @@ export interface IMenuOptions {
  * @implements Controls/toolbars:IToolbarSource
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IIconStyle
- * @implements Controls/interface:IFilterChanged
  */
 
 /**
@@ -675,7 +674,7 @@ Object.defineProperty(Toolbar, 'defaultProps', {
 
 /**
  * @event Происходит при клике по элементу.
- * @name Controls/_toolbars/View#itemClick
+ * @name Controls/toolbars:View#itemClick
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому производим клик.
  * @example
