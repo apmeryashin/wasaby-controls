@@ -3,12 +3,9 @@
    min-width: 0;
    max-width: 100%;
    position: relative;
-}
-
-.controls-PropertyGrid__gridLayout_editor-caption_theme-@{themeName} {
-   font-size: @font-size_m;
-   padding-right: @offset_m;
-   color: @label_text-color;
+   font-size: var(--font-size_m);
+   padding-right: var(--offset_m);
+   color: var(--label_text-color);
    box-sizing: border-box;
 }
 
@@ -36,13 +33,13 @@
 .controls-PropertyGrid__gridLayout_editor-caption-baseline {
    align-items: center;
    display: flex;
-   height: @inline_height_m;
-   line-height: @inline_height_m;
+   height: var(--inline_height_m);
+   line-height: var(--inline_height_m);
    min-width: 1px;
 }
 
-.controls-PropertyGrid__cell_highlightOnHover_theme-@{themeName} {
-   background-color: @hover_background-color;
+.controls-PropertyGrid__cell_highlightOnHover {
+   background-color: var(--hover_background-color);
 }
 
 .ws-is-hover {

@@ -5,7 +5,6 @@
                     listModel="{{_options.listModel}}"
                     getItemStyles="{{_getItemStyles}}"
                     isGridLayout="{{true}}"
-                    theme="{{_options.theme}}"
                     groupTemplate="{{_options.groupTemplate}}"
                     collapsedGroups="{{_options.collapsedGroups}}"
                     itemTemplate="{{_options.itemTemplate}}"
