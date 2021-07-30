@@ -29,6 +29,7 @@ import ViewItemTemplate = require('wml!Controls/_filter/View/ItemTemplate');
 import HistoryUtils = require('Controls/_filter/HistoryUtils');
 import FilterUtils = require('Controls/_filter/resetFilterUtils');
 
+export {default as TumblerContainer} from 'Controls/_filter/TumblerContainer';
 export {default as View} from 'Controls/_filter/View';
 export {default as ControllerClass, IFilterControllerOptions} from './_filter/ControllerClass';
 export {default as ViewContainer} from './_filter/View/Container';
