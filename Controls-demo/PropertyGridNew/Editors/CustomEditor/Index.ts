@@ -4,7 +4,7 @@ import {TimeInterval} from 'Types/entity';
 
 export default class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: object[] = [
+    protected _typeDescription: object[] = [
         {
             name: 'time',
             group: 'customEditors',

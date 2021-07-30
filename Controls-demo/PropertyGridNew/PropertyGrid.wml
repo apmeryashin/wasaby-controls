@@ -1,7 +1,7 @@
 <div class="controls-Demo__propertyGrid">
     <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
-            source="{{_source}}"
+            typeDescription="{{_typeDescription}}"
             on:editingObjectChanged="_editingObjectChanged()"
             attr:class="controls-Demo__propertyGrid-control"/>
     <div>
