@@ -3,7 +3,7 @@ import * as template from 'wml!Controls-demo/PropertyGridNew/Editors/HighlightOn
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: object[] = [
+    protected _typeDescription: object[] = [
         {
             name: 'number',
             caption: 'Number',

@@ -1,7 +1,7 @@
 <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}">
     <ws:bodyContentTemplate>
         <Controls.lookupPopup:Controller selectedItems="{{_options.selectedItems}}">
-            <Controls.browser:Browser source="{{_source}}" keyProperty="{{_keyProperty}}">
+            <Controls.browser:Browser typeDescription="{{_typeDescription}}" keyProperty="{{_keyProperty}}">
                 <Controls.lookupPopup:Container>
                     <Controls.operations:Controller selectedKeys="{{_options.selectedKeys}}"
                                                     excludedKeys="{{_options.excludedKeys}}">
