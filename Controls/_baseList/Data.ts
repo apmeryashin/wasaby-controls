@@ -537,14 +537,11 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    }
 
    private _onDataError(event: SyntheticEvent, errorConfig: dataSourceError.ViewConfig): void {
-      if (this._options.processError) {
-         this._processAndShowError({
-            error: errorConfig.error,
-            mode: errorConfig.mode || dataSourceError.Mode.dialog
-         });
-      } else {
-         this._processError(errorConfig);
-      }
+      event?.stopPropagation();
+      this._processAndShowError({
+         error: errorConfig.error,
+         mode: errorConfig.mode || dataSourceError.Mode.dialog
+      });
    }
 
    private _showError(errorConfig: dataSourceError.ViewConfig): void {
