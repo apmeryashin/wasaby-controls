@@ -44,16 +44,11 @@ export class StackStrategy {
             position.minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         }
         position.maxWidth = this._calculateMaxWidth(item.popupOptions, tCoords);
+        if (position.width && position.maxWidth < position.width) {
+            position.width = position.maxWidth;
+        }
 
         return position;
-    }
-
-    getWorkspaceWidth(position: IPopupPosition): number {
-        let workspaceWidth = position.width;
-        if (position.maxWidth && position.width) {
-           workspaceWidth = Math.min(position.width, position.maxWidth);
-        }
-        return workspaceWidth;
     }
 
     isMaximizedPanel(item: IPopupItem): boolean {
