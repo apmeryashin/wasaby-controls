@@ -3292,14 +3292,14 @@ const _private = {
 
     addShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!self._destroyed && !detection.isMobilePlatform) {
+        if (!self._destroyed && !(this._context?.isTouch?.isTouch)) {
             self._addShowActionsClass = true;
         }
     },
 
     removeShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!self._destroyed && !detection.isMobilePlatform && self._options.itemActionsVisibility !== 'visible') {
+        if (!self._destroyed && !(this._context?.isTouch?.isTouch) && self._options.itemActionsVisibility !== 'visible') {
             self._addShowActionsClass = false;
         }
     },

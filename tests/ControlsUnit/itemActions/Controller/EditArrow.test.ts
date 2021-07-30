@@ -1,5 +1,4 @@
 import {assert} from 'chai';
-import {stub, SinonStub, spy, assert as sinonAssert} from 'sinon';
 
 import {
     Controller as ItemActionsController,
