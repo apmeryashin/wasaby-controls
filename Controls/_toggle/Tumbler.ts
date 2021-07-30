@@ -48,6 +48,7 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * @name Controls/_toggle/Tumbler#itemTemplate
  * @cfg {TemplateFunction|String} Шаблон элемента кнопочного переключателя.
  * @demo Controls-demo/toggle/Tumbler/ItemTemplate/Index
+ * @demo Controls-demo/toggle/Tumbler/CounterStyle/Index
  *
  * По умолчанию используется шаблон "Controls/toogle:tumblerItemTemplate".
  * Также есть базовый шаблон для отображения записей со счетчиком Controls/toggle:tumblerItemCounterTemplate
@@ -56,7 +57,6 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * - item {Types/entity:Record} — Отображаемый элемент;
  * - counterProperty {string} — Имя свойства элемента, содержимое которого будет отображаться в счетчике.
  *
- * Чтобы поменять цвет счетчика, воспользуйтесь опцией mainCounterStyle у item
  *
  * @example
  * Отображение записей со счетчиками
@@ -87,8 +87,8 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * this._items = new Memory({
  *    keyProperty: 'key',
  *    data: [
- *       {key: 1, caption: 'Element 1', counter: 5, mainCounterStyle: 'secondary'},
- *       {key: 2, caption: 'Element 2', counter: 3, mainCounterStyle: 'warning'},
+ *       {key: 1, caption: 'Element 1', counter: 5, counterStyle: 'secondary'},
+ *       {key: 2, caption: 'Element 2', counter: 3, counterStyle: 'warning'},
  *       {key: 3, caption: 'Element 3', counter: 7}
  *    ]
  * });

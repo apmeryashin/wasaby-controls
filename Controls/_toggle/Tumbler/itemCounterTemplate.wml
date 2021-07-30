@@ -5,7 +5,7 @@
             <Controls.heading:Counter class="controls-fontweight-default controls-Tumbler__button-counter"
                                       caption="{{item.get(counterProperty || 'counter')}}"
                                       fontSize="default"
-                                      fontColorStyle="{{_options.readOnly ? 'readonly' : item.get('mainCounterStyle') || 'primary'}}"/>
+                                      fontColorStyle="{{item.get('counterStyle') || 'primary'}}"/>
         </ws:if>
     </ws:contentTemplate>
 </ws:partial>
