@@ -27,10 +27,13 @@
    white-space: nowrap;
    display: flex;
    max-width: 100%;
-   width: 100%;
    // добавляем минимальную ширину, чтобы обводка не обрезалась.
    // min-width = ширина домика + левый отступ + обводка справа.
    min-width: calc(var(--home_icon-size_breadcrumbsPath) + var(--back_offset_breadcrumbsHeadingPath) + var(--offset_2xs));
+}
+
+.controls-BreadCrumbsPath__crumbsWrapper_fullWidth {
+   width: 100%;
 }
 
 .controls-BreadCrumbsPath__backButton {
@@ -63,6 +66,8 @@
 .controls-BreadCrumbsPath__backButton__wrapper__only {
    max-width: 100%;
    box-sizing: border-box;
+   flex-shrink: 1;
+   min-width: 1px;
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper_inHeader {
