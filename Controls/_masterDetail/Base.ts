@@ -19,7 +19,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
     contrastBackground: boolean;
-    masterVisibility: string;
+    masterVisibility: 'visible' | 'hidden';
     scrollTop?: number;
     scrollOffsetTop?: number;
     masterOffsetTop?: number;
