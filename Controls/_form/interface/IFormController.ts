@@ -109,7 +109,7 @@ export default interface IFormController extends IControllerBase {
  * Обновляет запись в источнике данных. Подробнее {@link Types/source:ICrud#update}.
  * @function Controls/form:IFormController#update
  * @param {UpdateConfig} config Параметр сохранения.
- * @return Promise<undefined | Model>
+ * @return {Promise<undefined | Model>}
  */
 
 /**
