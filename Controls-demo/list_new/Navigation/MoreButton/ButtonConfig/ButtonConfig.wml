@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo_fixedWidth800 Controls-list__navigation_MoreButton_cutConfig">
+<div class="controlsDemo__wrapper controlsDemo_maxWidth800 Controls-list__navigation_MoreButton_buttonConfig">
     <Controls.scroll:Container attr:class="controlsDemo__height400">
         <Controls.list:View
                 keyProperty="key"
