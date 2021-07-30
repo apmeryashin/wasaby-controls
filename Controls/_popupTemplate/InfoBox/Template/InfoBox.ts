@@ -96,7 +96,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
 
 /**
  * @name Controls/_popupTemplate/InfoBox#closeButtonVisibility
- * @cfg {Boolean} Устанавливает видимость кнопки для всплывающей подсказки.
+ * @cfg {Boolean} Устанавливает видимость кнопки закрытия всплывающей подсказки.
  * @default true
  */
 /**
