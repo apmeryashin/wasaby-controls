@@ -48,13 +48,16 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * @name Controls/_toggle/Tumbler#itemTemplate
  * @cfg {TemplateFunction|String} Шаблон элемента кнопочного переключателя.
  * @demo Controls-demo/toggle/Tumbler/ItemTemplate/Index
+ * @demo Controls-demo/toggle/Tumbler/CounterStyle/Index
  *
  * По умолчанию используется шаблон "Controls/toogle:tumblerItemTemplate".
  * Также есть базовый шаблон для отображения записей со счетчиком Controls/toggle:tumblerItemCounterTemplate
  *
  * Шаблон tumblerItemCounterTemplate поддерживает следующие параметры:
  * - item {Types/entity:Record} — Отображаемый элемент;
- * - counterProperty {string} — Имя свойства элемента, содержимое которого будет отображаться в счетчике.
+ *    - item.mainCounter {Number} Значение счетчика
+ *    - item.mainCounterStyle {String} Стиль отображения счетчика
+ *
  *
  * @example
  * Отображение записей со счетчиками
@@ -63,8 +66,30 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * this._items = new Memory({
  *    keyProperty: 'key',
  *    data: [
- *       {key: 1, caption: 'Element 1', counter: 5},
- *       {key: 2, caption: 'Element 2', counter: 3},
+ *       {key: 1, caption: 'Element 1', mainCounter: 5},
+ *       {key: 2, caption: 'Element 2', mainCounter: 3},
+ *       {key: 3, caption: 'Element 3', mainCounter: 7}
+ *    ]
+ * });
+ * </pre>
+ *
+ * WML
+ * <pre>
+ *    <Controls.toggle:Tumbler items="{{_items}}" >
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls/toggle:tumblerItemCounterTemplate" scope="{{itemTemplate}}" />
+ *       </ws:itemTemplate>
+ *    </Controls.toggle:Tumbler>
+ * </pre>
+ *
+ * Отображение записей со счетчиками разных цветов
+ * JS:
+ * <pre>
+ * this._items = new Memory({
+ *    keyProperty: 'key',
+ *    data: [
+ *       {key: 1, caption: 'Element 1', mainCounter: 5, mainCounterStyle: 'secondary'},
+ *       {key: 2, caption: 'Element 2', mainCounter: 3, mainCounterStyle: 'warning'},
  *       {key: 3, caption: 'Element 3', counter: 7}
  *    ]
  * });
