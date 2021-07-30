@@ -1,3 +1,5 @@
+import {IControlOptions} from 'UI/Base';
+
 /**
  * Интерфейс для окна уведомления.
  *
@@ -16,8 +18,6 @@
  * @variant danger
  * @default secondary
  */
-
-import {IControlOptions} from "UICommon/_base/Control";
 
 /**
  * @name Controls/_popupTemplate/interface/INotification#closeButtonVisibility
