@@ -21,3 +21,4 @@ export {
     Base
 };
 export {default as List} from 'Controls/_masterDetail/List';
+export {MasterVisibilityEnum} from 'Controls/_masterDetail/Base';

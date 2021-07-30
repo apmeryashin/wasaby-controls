@@ -12,6 +12,16 @@ import { Logger} from 'UI/Utils';
 
 const RESIZE_DELAY = 50;
 
+/**
+ * @typedef {String} MasterVisibilityEnum
+ * @variant visible Мастер отображается.
+ * @variant hidden Мастер скрыт.
+ */
+export enum MasterVisibilityEnum {
+    visible = 'visible',
+    hidden = 'hidden'
+}
+
 interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     master: TemplateFunction;
     detail: TemplateFunction;
@@ -19,7 +29,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
     contrastBackground: boolean;
-    masterVisibility: string;
+    masterVisibility: MasterVisibilityEnum;
     scrollTop?: number;
     scrollOffsetTop?: number;
     masterOffsetTop?: number;
@@ -52,11 +62,6 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
  * @demo Controls-demo/MasterDetail/Demo
  */
 class Base extends Control<IMasterDetail, string> {
-    /**
-     * @typedef {String} MasterVisibility
-     * @variant visible Мастер отображается.
-     * @variant hidden Мастер скрыт.
-     */
 
     /**
      * @name Controls/_masterDetail/Base#master
@@ -98,7 +103,7 @@ class Base extends Control<IMasterDetail, string> {
 
     /**
      * @name Controls/_masterDetail/Base#masterVisibility
-     * @cfg {MasterVisibility} Определяет видимость контента мастера.
+     * @cfg {MasterVisibilityEnum} Определяет видимость контента мастера.
      * @default visible
      * @demo Controls-demo/MasterDetail/MasterVisibility/Index
      */
