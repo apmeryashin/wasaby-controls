@@ -1,5 +1,5 @@
 import {IHTMLOptions, IHTML} from 'UI/Base';
-import {ZoomSize} from 'Controls/sizeUtils';
+import {TZoomSize} from 'Controls/sizeUtils';
 
 /**
  * Интерефейс для контролов, поддерживающих конфигурацию метатегов html-документа.
@@ -111,5 +111,5 @@ export interface IApplicationOptions extends IHTMLOptions {
     meta?: Array<IAttributes>;
     headJson?: HeadJson;
     title?: string;
-    zoom?: ZoomSize;
+    zoom?: TZoomSize;
 }

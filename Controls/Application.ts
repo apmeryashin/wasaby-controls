@@ -21,7 +21,7 @@ import {IPendingConfig, PendingClass} from 'Controls/Pending';
 import {RegisterClass} from 'Controls/event';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 import {getConfig} from 'Application/Env';
-import {DimensionsMeasurer, ZoomSize} from 'Controls/sizeUtils';
+import {DimensionsMeasurer, TZoomSize} from 'Controls/sizeUtils';
 
 // Нужно чтобы oldCss прилетал первым на страницу. Есть контролы (например itemsActions), стили которыйх
 // Завязаны на порядок css.
@@ -99,7 +99,7 @@ interface IApplication extends IControlOptions {
    pagingVisible?: boolean;
    compat?: boolean;
 
-   zoom?: ZoomSize;
+   zoom?: TZoomSize;
 }
 
 /** Динамические классы для body */
@@ -465,10 +465,10 @@ export default class Application extends Control<IApplication> {
       });
    }
 
-   private _applyZoom(zoomValue: ZoomSize = ZoomSize['zoom-1']): void {
+   private _applyZoom(zoomValue: TZoomSize = 1): void {
       if (zoomValue) {
          this._updateBodyClasses({
-            zoomClass: `Application-body__${zoomValue}`
+            zoomClass: `Application-body__zoom-${zoomValue}`
          });
          DimensionsMeasurer.setZoomValue(zoomValue);
       }

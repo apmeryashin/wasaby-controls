@@ -1,21 +1,26 @@
 import {Logger} from 'UI/Utils';
 import {constants} from 'Env/Env';
 
-export enum ZoomSize {
-    'zoom-0.75' = 'zoom-0.75',
-    'zoom-0.85' = 'zoom-0.85',
-    'zoom-1' = 'zoom-1',
-    'zoom-1.15' = 'zoom-1.15',
-    'zoom-1.3' = 'zoom-1.3'
-}
+const DEFAULT_ZOOM_VALUE = 1;
 
-const ZOOM_NUMBER_VALUES = {
-    'zoom-0.75': 0.75,
-    'zoom-0.85': 0.85,
-    'zoom-1': 1,
-    'zoom-1.15': 1.15,
-    'zoom-1.3': 1.3
-};
+const ELEMENT_DIMENSIONS = [
+    'clientHeight',
+    'clientLeft',
+    'clientTop',
+    'clientWidth',
+    'scrollLeft',
+    'scrollTop',
+    'offsetHeight',
+    'offsetLeft',
+    'offsetTop',
+    'offsetWidth',
+    'scrollWidth',
+    'scrollHeight'
+];
+const VISUAL_VIEWPORT_FIELDS = ['offsetLeft', 'offsetTop', 'pageLeft', 'pageTop', 'width', 'height'];
+const WINDOW_DIMENSIONS_FIELDS = ['innerHeight', 'innerWidth', 'scrollX', 'scrollY', 'pageXOffset', 'pageYOffset'];
+const SCALABLE_DIMENSIONS_VALUES = ['height', 'width', 'top', 'bottom', 'right', 'left', 'x', 'y'];
+const AVAILABLE_ZOOM_VALUES = [0.75, 0.85, 1, 1.15, 1.3];
 
 interface IWindowDimensions {
     innerHeight: number;
@@ -49,36 +54,20 @@ interface IElementDimensions {
     scrollWidth: number;
     scrollHeight: number;
 }
-const ELEMENT_DIMENSIONS = [
-    'clientHeight',
-    'clientLeft',
-    'clientTop',
-    'clientWidth',
-    'scrollLeft',
-    'scrollTop',
-    'offsetHeight',
-    'offsetLeft',
-    'offsetTop',
-    'offsetWidth',
-    'scrollWidth',
-    'scrollHeight'
-];
-const VISUAL_VIEWPORT_FIELDS = ['offsetLeft', 'offsetTop', 'pageLeft', 'pageTop', 'width', 'height'];
-const WINDOW_DIMENSIONS_FIELDS = ['innerHeight', 'innerWidth', 'scrollX', 'scrollY', 'pageXOffset', 'pageYOffset'];
-const SCALABLE_DIMENSIONS_VALUES = ['height', 'width', 'top', 'bottom', 'right', 'left', 'x', 'y'];
 
+export type TZoomSize = 0.75 | 0.85 | 1 | 1.15 | 1.3;
 /**
  * Модуль для измерения размеров элементов
  */
 class DimensionsMeasurer {
-    private _zoomValue: number = ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']];
+    private _zoomValue: number = DEFAULT_ZOOM_VALUE;
 
-    setZoomValue(zoom: ZoomSize): void {
-        const zoomNumberValue = ZOOM_NUMBER_VALUES[zoom];
-        if (zoomNumberValue) {
-            this._zoomValue = ZOOM_NUMBER_VALUES[zoom];
+    setZoomValue(zoom: TZoomSize): void {
+        if (AVAILABLE_ZOOM_VALUES.includes(zoom)) {
+            this._zoomValue = zoom;
         } else {
-            this._zoomValue = ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']];
+            this._zoomValue = DEFAULT_ZOOM_VALUE;
+            Logger.error('DimensionsMeasurer: value of zoom option doesn\'t supported.');
         }
     }
 
@@ -106,7 +95,7 @@ class DimensionsMeasurer {
      * Размеры и оффсеты window с учетом zoom
      */
     getWindowDimensions(): IWindowDimensions {
-        if (this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']]) {
+        if (this._zoomValue !== DEFAULT_ZOOM_VALUE) {
             return this._getScaledElementDimensions<IWindowDimensions>(window, WINDOW_DIMENSIONS_FIELDS);
         } else {
             return window;
@@ -144,7 +133,7 @@ class DimensionsMeasurer {
      */
     getVisualViewportDimensions(): IVisualViewportDimensions {
         const visualViewport = this._getVisualViewport();
-        if (this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']]) {
+        if (this._zoomValue !== DEFAULT_ZOOM_VALUE) {
             return this._getScaledElementDimensions<IVisualViewportDimensions>(visualViewport, VISUAL_VIEWPORT_FIELDS);
         } else {
             return visualViewport;
@@ -190,7 +179,7 @@ class DimensionsMeasurer {
      * @private
      */
     protected _needScaleByZoom(element: HTMLElement): boolean {
-        return this._zoomValue !== ZOOM_NUMBER_VALUES[ZoomSize['zoom-1']] &&
+        return this._zoomValue !== DEFAULT_ZOOM_VALUE &&
             (element === document.documentElement || !element.closest('body'));
     }
 }

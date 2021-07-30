@@ -24,5 +24,19 @@
                 maxValue="{{100}}"
                 minValue="{{0}}"/>
         </div>
+
+        <div class="ApplicationDemo__zoom-line">
+            <Controls.scroll:Container
+                scrollOrientation="verticalHorizontal"
+                attr:style="height: 200px; width: 200px;">
+                <div attr:style="height: 1000px; width: 1000px;">
+
+                </div>
+            </Controls.scroll:Container>
+        </div>
+
+        <div class="ApplicationDemo__zoom-line">
+            <Controls.progress:Bar value="{{50}}"/>
+        </div>
     </div>
 </Controls.Application>

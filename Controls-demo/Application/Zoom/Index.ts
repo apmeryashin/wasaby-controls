@@ -3,15 +3,14 @@ import controlTemplate = require('wml!Controls-demo/Application/Zoom/Index');
 import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/Application/Zoom/Index';
 import {Memory} from 'Types/source';
-import {ZoomSize} from 'Controls/sizeUtils';
 import {DialogOpener, StackOpener} from 'Controls/popup';
-const ZOOM_SIZES = Object.keys(ZoomSize).map((key) => {
+const ZOOM_SIZES = [0.75, 0.85, 1, 1.15, 1.3].map((key) => {
     return {key};
 });
 
 export default class Stack extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
-    protected _zoom: string[] = [ZoomSize['zoom-1']];
+    protected _zoom: number[] = [1];
     protected _zoomDdlSource: Memory = new Memory({
         keyProperty: 'key',
         data: ZOOM_SIZES
