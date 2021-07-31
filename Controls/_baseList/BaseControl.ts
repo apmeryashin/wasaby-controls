@@ -2848,7 +2848,7 @@ const _private = {
     isAllowedHoverFreeze(self): boolean {
         return (!self._dndListController || !self._dndListController.isDragging()) &&
             (!self._editInPlaceController || !self._editInPlaceController.isEditing()) &&
-            !(this._context?.isTouch?.isTouch);
+            !(self._context?.isTouch?.isTouch);
     }
 };
 
