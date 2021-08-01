@@ -363,7 +363,6 @@ describe('Controls/treeGrid/Display/RowSeparator/CollectionItem', () => {
         ];
         const recordSet = getItems(data);
         const collection = getTreeGrid(recordSet, {
-            groupProperty: 'group',
             expandedItems: [1, 3]
         });
 
@@ -382,7 +381,7 @@ describe('Controls/treeGrid/Display/RowSeparator/CollectionItem', () => {
             addPosition: 'bottom'
         });
 
-        const initialLastItem = collection.at(4);
+        const initialLastItem = collection.at(3);
 
         assert.isTrue(initialLastItem.isBottomSeparatorEnabled());
 
