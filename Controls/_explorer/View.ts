@@ -7,7 +7,7 @@ import {EventUtils} from 'UI/Events';
 import * as randomId from 'Core/helpers/Number/randomId';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
-import {Model} from 'Types/entity';
+import {descriptor, Model} from 'Types/entity';
 import {IItemPadding, IList, ListView} from 'Controls/list';
 import {SingleColumnStrategy, MultiColumnStrategy} from 'Controls/marker';
 import {isEqual} from 'Types/object';
@@ -1213,6 +1213,17 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     static _constants: object = EXPLORER_CONSTANTS;
+
+    static getOptionTypes(): object {
+        return {
+            viewMode: descriptor(String).oneOf([
+                'table',
+                'search',
+                'tile',
+                'list'
+            ])
+        };
+    }
 
     static getDefaultOptions(): object {
         return {
