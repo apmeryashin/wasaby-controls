@@ -32,14 +32,14 @@ export default class Items extends Entity {
 }
 /**
  * @name Controls/_dragnDrop/Entity/Items#items
- * @cfg {Array.<String>} Список перемещаемых элементов.
+ * @cfg {Array.<String|Number>} Список ключей перемещаемых элементов.
  * @remark В процессе перемещения рядом с курсором отображается миниатюра перемещаемой сущности.
  * @see Controls/_interface/IDraggable#dragStart
  */
 
 /*
  * @name Controls/_dragnDrop/Entity/Items#items
- * @cfg {Array.<String>} The list of items to move.
+ * @cfg {Array.<String|Number>} The list of items keys to move.
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
  * @see Controls/_interface/IDraggable#dragStart
  */
