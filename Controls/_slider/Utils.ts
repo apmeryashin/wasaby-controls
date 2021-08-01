@@ -66,12 +66,12 @@ export default {
         }
         return scaleData;
     },
-    getNativeEventPageX(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent).x;
+    getNativeEventPageX(event: MouseEvent | TouchEvent): number {
+        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event).x;
     },
 
-    getNativeEventPageY(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent).y;
+    getNativeEventPageY(event: MouseEvent | TouchEvent): number {
+        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event).y;
     },
 
     convertIntervals(intervals: IInterval[] = [], startValue: number, endValue: number): IPositionedInterval[] {

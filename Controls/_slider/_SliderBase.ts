@@ -28,9 +28,9 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
         this._viewMode = this._getViewMode(newOptions.viewMode);
     }
 
-    _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-        const target = this._options.direction === 'vertical' ? Utils.getNativeEventPageY(event) :
-            Utils.getNativeEventPageX(event);
+    _getValue({nativeEvent}: SyntheticEvent<MouseEvent | TouchEvent>): number {
+        const target = this._options.direction === 'vertical' ? Utils.getNativeEventPageY(nativeEvent) :
+            Utils.getNativeEventPageX(nativeEvent);
         const box = this._children.area.getBoundingClientRect();
         const windowDimensions = DimensionsMeasurer.getWindowDimensions();
         const ratio = this._getRatio(this._options.direction, target, box, windowDimensions.pageXOffset, windowDimensions.pageYOffset);

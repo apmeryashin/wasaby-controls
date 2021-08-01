@@ -7445,6 +7445,7 @@ define([
             it('start drag', () => {
                const event = {
                   nativeEvent: {
+                     type: 'mousemove',
                      buttons: {},
                      pageX: 501,
                      pageY: 501
@@ -7455,6 +7456,7 @@ define([
                };
 
                baseControl._startEvent = {
+                  type: 'mousemove',
                   pageX: 500,
                   pageY: 500
                };
@@ -7755,6 +7757,7 @@ define([
                isDragging: () => true
             };
             baseControl._startEvent = {
+               type: 'mousemove',
                pageX: 500,
                pageY: 500
             };
@@ -7766,7 +7769,7 @@ define([
 
             const event = {
                nativeEvent: {
-                  buttons: {},
+                  type: 'mousemove',
                   pageX: 501,
                   pageY: 501,
                   buttons: {}

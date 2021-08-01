@@ -56,6 +56,21 @@ interface IElementDimensions {
 }
 
 export type TZoomSize = 0.75 | 0.85 | 1 | 1.15 | 1.3;
+
+const MOUSE_EVENTS = [
+    'mousedown',
+    'mouseup',
+    'mouseover',
+    'mouseout',
+    'mousemove',
+    'mouseenter',
+    'mouseleave',
+    'contextmenu',
+    'click',
+    'dblclick'
+];
+const TOUCH_EVENTS = ['touchstart', 'touchend', 'touchmove'];
+
 /**
  * Модуль для измерения размеров элементов
  */
@@ -108,15 +123,16 @@ class DimensionsMeasurer {
      * @param event
      */
     getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent): {x: number, y: number} {
+        const eventType = event.type;
         const zoom = this._zoomValue;
-        if (event instanceof MouseEvent) {
+        if (MOUSE_EVENTS.includes(eventType)) {
             return {
                 x: event.pageX / zoom,
                 y: event.pageY / zoom
             };
-        } else if (event instanceof TouchEvent) {
+        } else if (TOUCH_EVENTS.includes(eventType)) {
             let touches = event.touches;
-            if (event.type === 'touchend') {
+            if (eventType === 'touchend') {
                 touches = event.changedTouches;
             }
             return {
