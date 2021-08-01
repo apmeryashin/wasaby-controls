@@ -2495,6 +2495,20 @@ const _private = {
 
     // region Drag-N-Drop
 
+    isValidDNDItemsEntity(dragStartResult: ItemsEntity, dragItemKey: CrudEntityKey): boolean {
+        let isValid = true;
+        if (!dragStartResult.getItems()
+            .every((item) => typeof item === 'string' || typeof item === 'number')) {
+            Logger.error('ItemsEntity в поле items должен содержать только ключи записей.', this);
+            isValid = false;
+        }
+        if (!dragStartResult.getItems().includes(dragItemKey)) {
+            Logger.error('ItemsEntity должен содержать ключ записи, за которую начали перетаскивание.', this);
+            isValid = false;
+        }
+        return isValid;
+    },
+
     // возвращаем промис для юнитов
     startDragNDrop(self, domEvent, item): Promise<void> {
         if (
@@ -2515,8 +2529,7 @@ const _private = {
             return DndController.getDraggedItemsKeys(selection, self._items, options).then((items) => {
                 let dragStartResult = self._notify('dragStart', [items, key]);
 
-                if (dragStartResult instanceof ItemsEntity && !dragStartResult.getItems().includes(key)) {
-                    Logger.error('ItemsEntity должен содержать ключ записи, за которую начали перетаскивание.');
+                if (dragStartResult instanceof ItemsEntity && !_private.isValidDNDItemsEntity(dragStartResult, key)) {
                     // ничего не делаем, чтобы не блочилась страница.
                     return;
                 }
