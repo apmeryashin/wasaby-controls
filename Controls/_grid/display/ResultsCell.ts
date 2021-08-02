@@ -135,13 +135,8 @@ class ResultsCell extends Cell<null, ResultsRow> {
         return zIndex;
     }
 
-    getContentClasses(backgroundColorStyle?: string,
-                      cursor?: string,
-                      templateHighlightOnHover?: boolean = true,
-                      ): string {
-        let contentClasses =  'controls-Grid__results-cell__content';
-
-        return contentClasses;
+    getContentClasses(): string {
+        return 'controls-Grid__results-cell__content';
     }
 
     //endregion
