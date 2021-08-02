@@ -32,6 +32,7 @@ import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase'
 import {descriptor} from 'Types/entity';
 import {setSettings} from 'Controls/Application/SettingsController';
 import WheelEventSettings from 'Controls/_scroll/Utils/getWheelEventSettings';
+import 'css!Controls/scroll';
 
 /**
  * @typeof {String} TPagingPosition
@@ -311,7 +312,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _getContentWrapperCssClass(): string {
         let cssClass = super._getContentWrapperCssClass();
         if (this._paging?.isVisible) {
-            cssClass += ' controls-Scroll__content_paging';
+            cssClass += ` controls-Scroll__content_paging controls_paging_theme-${ this._options.theme }`;
         }
         return cssClass;
     }
@@ -572,8 +573,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         let style: string = '';
         if (this._isOptimizeShadowEnabled) {
             style += 'controls-Scroll__backgroundShadow ' +
-                `controls-Scroll__background-Shadow_style-${opts.backgroundStyle}_theme-${opts.theme} ` +
-                `controls-Scroll__background-Shadow_top-${this._shadows.top?.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom?.isVisibleShadowOnCSS}_style-${opts.shadowStyle}_theme-${opts.theme}`;
+                `controls-Scroll__background-Shadow_style-${opts.backgroundStyle} ` +
+                `controls-Scroll__background-Shadow_top-${this._shadows.top?.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom?.isVisibleShadowOnCSS}_style-${opts.shadowStyle}`;
         }
         return style;
     }
@@ -653,8 +654,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     getScrollTop(): number {
         return this._children.content.scrollTop;
     }
-
-    static _theme: string[] = ['Controls/scroll'];
 
     static _isCssShadowsSupported(): boolean {
         // Ie и Edge неправильно позиционируют фон со стилями

@@ -48,17 +48,17 @@
 }
 
 .controls-StickyHeader__shadow-bottom {
-   bottom: -@shadow_thickness_scroll;
+   bottom: calc(-1 * var(--shadow_thickness_scroll));
    background: linear-gradient(
       to bottom,
-      @shadow_start-color_scroll, @shadow_end-color_scroll
+      var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)
    );
 }
 
 .controls-StickyHeader__shadow-top {
-   top: -@shadow_thickness_scroll;
+   top: calc(-1 * var(--shadow_thickness_scroll));
    background: linear-gradient(
       to top,
-      @shadow_start-color_scroll, @shadow_end-color_scroll
+      var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)
    );
 }

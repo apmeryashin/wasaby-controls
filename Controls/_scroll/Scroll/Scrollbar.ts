@@ -4,6 +4,7 @@ import * as ScrollBarTemplate from 'wml!Controls/_scroll/Scroll/Scrollbar/Scroll
 import 'Controls/event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
+import 'css!Controls/scroll';
 
 type TDirection = 'vertical' | 'horizontal';
 
@@ -477,8 +478,6 @@ Object.defineProperty(Scrollbar, 'defaultProps', {
       return Scrollbar.getDefaultOptions();
    }
 });
-
-Scrollbar._theme = ['Controls/scroll'];
 /**
  * @event Начала перемещения ползунка мышью.
  * @name scrollbarBeginDrag
