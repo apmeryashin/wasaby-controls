@@ -1,5 +1,5 @@
 <div name="scrollbar"
-     class="controls-VScrollbar{{_dragging ? ' controls-VScrollbar_' + _options.direction + '_dragging controls-VScrollbar_' +
+     class="controls_scroll_theme-{{ _options.theme }} controls-VScrollbar{{_dragging ? ' controls-VScrollbar_' + _options.direction + '_dragging controls-VScrollbar_' +
       _options.direction + '_dragging_size-' + _thumbThickness }}
          {{!_thumbSize ? ' ws-invisible'}}
          controls-VScrollbar_{{_options.direction}}
