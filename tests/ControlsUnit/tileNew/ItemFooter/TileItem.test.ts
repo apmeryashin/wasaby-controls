@@ -38,5 +38,13 @@ describe('Controls/_tile/display/mixins/TileItem/Footer', () => {
             const item = new TileCollectionItem();
             CssClassesAssert.include(item.getFooterClasses(), 'controls-TileView__item_footer');
         });
+        it('rich', () => {
+            const item = new TileCollectionItem();
+            CssClassesAssert.include(item.getFooterClasses('rich'), '');
+        });
+        it('rich with description', () => {
+            const item = new TileCollectionItem();
+            CssClassesAssert.include(item.getFooterClasses('rich', 'description', 1), 'controls-TileView__richTemplate_footer_spacing');
+        });
     });
 });
