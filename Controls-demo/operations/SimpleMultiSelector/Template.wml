@@ -6,7 +6,7 @@
             <Controls.operations:SimpleMultiSelector attr:class="controlsDemo__inline-block"/>
             <Controls.list:Container>
                 <Controls.treeGrid:View
-                        keyProperty="id"
+                        keyProperty="key"
                         columns="{{_gridColumns}}"
                         parentProperty="Раздел"
                         nodeProperty="Раздел@"
