@@ -1,6 +1,6 @@
 import {Model} from 'Types/entity';
 import { mixin } from 'Types/util';
-import {TileItemMixin, TTileItem} from 'Controls/tile';
+import {TileItemMixin, TTileItem, TTitlePosition, TImageViewMode, TImagePosition} from 'Controls/tile';
 import { TreeItem } from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
 import * as FolderIcon from 'wml!Controls/_treeTile/render/FolderIcon';
@@ -138,7 +138,7 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         return classes;
     }
 
-    getItemStyles(itemType: TTileItem = 'default', templateWidth?: number, staticHeight?: boolean, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): string {
+    getItemStyles(itemType: TTileItem = 'default', templateWidth?: number, staticHeight?: boolean, imagePosition: TImagePosition = 'top', imageViewMode: TImageViewMode = 'rectangle'): string {
         if (this.isNode() && (itemType === 'default' || itemType === 'small')) {
             const width = this.getTileWidth(templateWidth, imagePosition, imageViewMode);
             let styles = `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
@@ -165,8 +165,14 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         }
     }
 
-    getTitleClasses(itemType: TTileItem = 'default', titleStyle?: string, hasTitle?: boolean, titleLines: number = 1, titleColorStyle: string = 'default'): string {
-        let classes = super.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle);
+    getTitleClasses(itemType: TTileItem = 'default',
+                    titleStyle?: string,
+                    hasTitle?: boolean,
+                    titleLines: number = 1,
+                    titleColorStyle: string = 'default',
+                    titlePosition: TTitlePosition = 'underImage',
+                    imageViewMode: TImageViewMode = 'rectangle'): string {
+        let classes = super.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle, titlePosition, imageViewMode);
 
         switch (itemType) {
             case 'default':
