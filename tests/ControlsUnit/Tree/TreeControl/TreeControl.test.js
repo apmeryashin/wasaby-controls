@@ -1229,53 +1229,29 @@ define([
 
 
       it('don\'t toggle node by click if handler returns false', async function() {
-         const savedMethod = tree.TreeControl._private.createSourceController;
-         const data = [
-            {id: 0, 'Раздел@': true, Раздел: null},
-            {id: 1, 'Раздел@': false, Раздел: null},
-            {id: 2, 'Раздел@': null, Раздел: null}
-         ];
-         const source = new sourceLib.Memory({
-            idProperty: 'id',
-            rawData: data,
-         });
-         const cfg = {
-            source: source,
-            columns: [{}],
-            keyProperty: 'id',
-            parentProperty: 'Раздел',
-            nodeProperty: 'Раздел@',
-            filter: {},
-            expandByItemClick: true
-         };
-
-         const treeGridViewModel = new treeGrid.TreeGridCollection(cMerge(cfg, {
-            collection: new collection.RecordSet({
-               rawData: data,
-               idProperty: 'id'
+         const treeControlConfig = {
+            source: new sourceLib.Memory({
+               data: [
+                  { id: 1, type: true, parent: null },
+                  { id: 2, type: true, parent: null }
+               ],
+               keyProperty: 'id'
             }),
-            root: null
-         }));
-         let treeControl;
-
-         treeControl = new tree.TreeControl(cfg);
-         treeControl._beforeMount(cfg);
-         treeControl.saveOptions(cfg);
-         treeControl._listViewModel = treeGridViewModel;
-         treeControl.getSourceController = () => {
-            return new dataSource.NewSourceController({
-               source: new sourceLib.Memory()
-            });
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'type'
          };
-
-         treeGrid._notify = (eName) => {
+         const treeControl = await correctCreateTreeControlAsync(treeControlConfig);
+         const model = treeControl.getViewModel();
+         treeControl._notify = (eName) => {
             if (eName === 'itemClick') {
                return false;
             }
          };
 
          // Initial
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+         assert.deepEqual(model.getExpandedItems(), []);
 
          const fakeEvent = {
             stopPropagation: () => {},
@@ -1287,13 +1263,11 @@ define([
             }
          };
 
-         treeControl._notifyItemClick([fakeEvent, treeGridViewModel.at(0).getContents(), origin]);
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+         treeControl._notifyItemClick([fakeEvent, model.at(0).getContents(), origin]);
+         assert.deepEqual(model.getExpandedItems(), []);
 
-         treeControl._notifyItemClick([fakeEvent, treeGridViewModel.at(1).getContents(), origin]);
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
-
-         tree.TreeControl._private.createSourceController = savedMethod;
+         treeControl._notifyItemClick([fakeEvent, model.at(1).getContents(), origin]);
+         assert.deepEqual(model.getExpandedItems(), []);
       });
 
       it('don\'t toggle node by click on breadcrumbs', async function() {
@@ -1492,35 +1466,6 @@ define([
             const item = treeControl._listViewModel.getItemBySourceKey(0);
             treeControl._onItemClick({isStopped: () => false, isBubbling: () => false, stopImmediatePropagation: () => null}, item, event);
             assert.isFalse(spyNotify.withArgs('itemActivate').called);
-         });
-      });
-
-      describe('resetExpandedItems', async () => {
-         const source = new sourceLib.Memory({
-            rawData: getHierarchyData(),
-            keyProperty: 'id',
-            filter: () => true
-         });
-
-         // 0
-         // |-1
-         // | |-3
-         // |-2
-         // 4
-         const cfg = {
-            source: source,
-            columns: [],
-            keyProperty: 'id',
-            parentProperty: 'Раздел',
-            nodeProperty: 'Раздел@',
-            expandedItems: [null]
-         };
-         const treeControl = await correctCreateTreeControlAsync(cfg);
-
-         it('call when model is not created', () => {
-            const treeControl = new tree.TreeControl({keyProperty: 'id'});
-            treeControl._beforeMount({keyProperty: 'id'});
-            assert.doesNotThrow(treeControl.resetExpandedItems.bind(treeControl));
          });
       });
 

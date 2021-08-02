@@ -6782,7 +6782,7 @@ define([
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
-
+`/*
             it('set marked key after load items', async () => {
                const cfg = {
                   viewModelConstructor: 'Controls/display:Collection',
@@ -6812,7 +6812,7 @@ define([
 
                assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [1]).called);
                assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
-            });
+            });*/`
          });
       });
 
