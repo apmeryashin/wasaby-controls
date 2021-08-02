@@ -12,7 +12,7 @@
             <ws:resultsTemplate>
                 <ws:partial template="Controls/grid:ResultsTemplate" scope="{{resultsTemplate}}" >
                     <ws:contentTemplate>
-                        <div class="controls-Grid__results-cell__content-text-unaccented">
+                        <div class="controls-text-unaccented controls-fontsize-m">
                             Итого: 2 страны с населением более миллиарда человек
                         </div>
                     </ws:contentTemplate>

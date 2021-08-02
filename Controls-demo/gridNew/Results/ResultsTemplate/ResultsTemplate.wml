@@ -3,7 +3,7 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/Results/ResultsTemplate/Default/Index' }}">
-            <a href="{{content.href}}">Платформенный стиль текста итогов</a>
+            <a href="{{content.href}}">Стиль текста итогов</a>
         </Router.router:Reference>
         <Controls-demo.gridNew.Results.ResultsTemplate.Default.Index/>
     </div>
@@ -11,7 +11,7 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/Results/ResultsTemplate/Unaccented/Index' }}">
-            <a href="{{content.href}}">Платформенный неакцентный стиль текста итогов</a>
+            <a href="{{content.href}}">Неакцентный стиль текста итогов</a>
         </Router.router:Reference>
         <Controls-demo.gridNew.Results.ResultsTemplate.Unaccented.Index/>
     </div>
@@ -19,7 +19,7 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/gridNew/Results/ResultsTemplate/Additional/Index' }}">
-            <a href="{{content.href}}">Платформенный стиль дополнительного текста итогов</a>
+            <a href="{{content.href}}">Стиль дополнительного текста итогов</a>
         </Router.router:Reference>
         <Controls-demo.gridNew.Results.ResultsTemplate.Additional.Index/>
     </div>
