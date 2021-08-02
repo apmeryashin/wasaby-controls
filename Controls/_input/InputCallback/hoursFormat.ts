@@ -12,13 +12,20 @@ const hoursFormat: ICallback<TimeInterval> = (data: ICallbackData<TimeInterval>)
     const hours = Math.min(data.value.getTotalHours(), 24);
     const minutes = hours === 24 ? 0 : data.value.getMinutes();
     return {
-        displayValue: `${toFormat(hours)}:${toFormat(minutes)}`,
+        displayValue: `${toFormat(hours, 'hours')}:${toFormat(minutes, 'minutes')}`,
         position: data.position
     };
 };
 
-function toFormat(original: number): string {
-    return original < 10 ? `0${original}` : original.toString();
+function toFormat(original: number, type: string): string {
+    const formatTime = () => {
+        if (type === 'hours') {
+            return ` ${original}`;
+        } else {
+            return `0${original}`;
+        }
+    };
+    return original < 10 ? formatTime() : original.toString();
 }
 
 export default hoursFormat;
