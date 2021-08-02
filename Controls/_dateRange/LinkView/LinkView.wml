@@ -22,8 +22,7 @@
             />
             <ws:if data="{{ _resetButtonVisible || _clearButtonVisible }}">
                 <span class="controls-DateLinkView__resetButton
-                        controls-icon controls-icon_style-unaccented
-                        controls-icon_size-s icon-Close"
+                        controls-icon icon-Close"
                       on:click="_resetButtonClickHandler()"></span>
             </ws:if>
         </span>
