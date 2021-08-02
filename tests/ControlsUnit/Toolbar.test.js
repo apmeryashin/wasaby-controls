@@ -293,6 +293,7 @@ define(
                         nodeProperty: '@parent',
                         iconSize: 'm',
                         itemTemplateProperty: 'myTemplate',
+                        itemAlign: "right",
                         showHeader: true,
                         closeButtonVisibility: false,
                         headConfig: {
@@ -423,6 +424,7 @@ define(
                      groupProperty: undefined,
                      footerContentTemplate: undefined,
                      itemActions: undefined,
+                     itemAlign: "right",
                      itemActionVisibilityCallback: undefined,
                      closeButtonVisibility: true
                   };
