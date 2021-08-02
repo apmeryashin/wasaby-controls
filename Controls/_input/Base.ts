@@ -9,7 +9,6 @@ import * as unEscapeASCII from 'Core/helpers/String/unEscapeASCII';
 import {hasHorizontalScroll} from 'Controls/scroll';
 import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import {IBaseOptions} from 'Controls/_input/interface/IBase';
-import {PLACEHOLDER_VISIBILITY} from 'Controls/interface';
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
@@ -34,6 +33,13 @@ interface IFieldTemplate {
         options?: any;
         autoWidth?: boolean;
     };
+}
+
+const enum PLACEHOLDER_VISIBILITY {
+    EMPTY = 'empty',
+    EDITABLE = 'editable',
+    // Подробности установки данного значения в _beforeMount.
+    HIDDEN = 'hidden'
 }
 
 export interface IBaseInputOptions extends IBaseOptions, IControlOptions {}
