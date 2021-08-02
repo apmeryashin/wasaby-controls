@@ -211,7 +211,7 @@ export default class IndicatorsController {
     }
 
     hasDisplayedIndicator(): boolean {
-        return this._model && !!(
+        return !!(
             this._model.hasIndicator('global') ||
             this._model.getTopIndicator().isDisplayed() ||
             this._model.getBottomIndicator().isDisplayed()
