@@ -18,7 +18,7 @@ export default class MultiSelectorCheckboxDemo extends Control {
         this._filter = {};
         this._gridColumns = Flat.getColumns();
         this._viewSource = new Memory({
-            keyProperty: 'id',
+            keyProperty: 'key',
             data: Gadgets.getData()
         });
     }
