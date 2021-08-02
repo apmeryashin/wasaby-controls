@@ -10,11 +10,11 @@
 
     <ws:if data="{{ item.shouldDisplayTitle(itemType) }}">
         <div
-            class="{{ item.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle) }}"
+            class="{{ item.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle, titlePosition, imageViewMode) }}"
             title="{{ item.getDisplayValue() }}"
             data-qa="controls-TileView__title"
         >
-            <div attr:itemprop="name" class="{{ item.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle) }}" style="{{ item.getTitleStyles(itemType, titleLines, textColor) }}">
+            <div attr:itemprop="name" class="{{ item.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle) }}" style="{{ item.getTitleStyles(itemType, titleLines, textColor, titlePosition, imageViewMode) }}">
                 <ws:if data="{{ item.getSearchValue() }}">
                     <Controls.decorator:Highlight highlightedValue="{{ item.getSearchValue() }}" className="{{highlightClassName}}">
                         <ws:value>
@@ -35,14 +35,16 @@
         </div>
     </ws:if>
     <ws:if data="{{characteristics && characteristics.length}}">
-        <ws:partial template="Controls/list:CharacteristicsTemplate" items="{{characteristics}}"></ws:partial>
+        <ws:partial template="Controls/list:CharacteristicsTemplate"
+                    items="{{characteristics}}"
+                    attr:class="controls-TileView__richTemplate_characteristics_spacing"></ws:partial>
     </ws:if>
     <ws:if data="{{isEditing && descriptionEditor}}">
         <ws:partial template="{{descriptionEditor}}"/>
     </ws:if>
     <ws:else>
         <ws:if data="{{ item.shouldDisplayDescription(itemType, description, descriptionLines) }}">
-            <div class="{{ item.getDescriptionClasses(itemType, descriptionLines) }}"
+            <div class="{{ item.getDescriptionClasses(itemType, descriptionLines, titlePosition, imageViewMode) }}"
                  style="{{ item.getDescriptionStyles(itemType, descriptionLines, textColor) }}"
                  attr:itemprop="description"
                  title="{{description}}">
@@ -55,10 +57,14 @@
 
     <ws:if data="{{isEditing && footerEditor}}">
         <ws:partial template="{{footerEditor}}"
+                    attr:class="{{ item.getFooterClasses(itemType, description, descriptionLines, titlePosition, imageViewMode) }}"
                     itemData="{{(item || itemData)}}"
                     item="{{(item || itemData)}}"/>
     </ws:if>
     <ws:else>
-        <ws:partial if="{{footerTpl}}" template="{{footerTpl}}" scope="{{_options}}"/>
+        <ws:partial if="{{footerTpl}}"
+                    template="{{footerTpl}}"
+                    scope="{{_options}}"
+                    attr:class="{{ item.getFooterClasses(itemType, description, descriptionLines, titlePosition, imageViewMode) }}"/>
     </ws:else>
 </div>

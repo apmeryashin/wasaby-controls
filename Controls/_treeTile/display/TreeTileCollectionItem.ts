@@ -7,6 +7,7 @@ import {
     TGradientType,
     TImagePosition,
     TImageViewMode,
+    TTitlePosition,
     TShadowVisibility,
     TTitleStyle
 } from 'Controls/tile';
@@ -210,9 +211,11 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         titleStyle?: TTitleStyle,
         hasTitle?: boolean,
         titleLines: number = 1,
-        titleColorStyle: string = 'default'
+        titleColorStyle: string = 'default',
+        titlePosition: TTitlePosition = 'underImage',
+        imageViewMode: TImageViewMode = 'rectangle'
     ): string {
-        let classes = super.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle);
+        let classes = super.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle, titlePosition, imageViewMode);
 
         switch (itemType) {
             case 'default':
