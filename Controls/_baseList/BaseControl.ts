@@ -3902,7 +3902,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
-                if (!this._listViewModel.getCount()) {
+                if (!this._listViewModel || !this._listViewModel.getCount()) {
                     _private.initializeModel(this, newOptions, items);
                     if (_private.hasMarkerController(this)) {
                         _private.getMarkerController(this).updateOptions({
@@ -3968,7 +3968,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // Если будет выполнена перезагрузка, то мы на событие reset применим новый ключ
         // Возможен сценарий, когда до загрузки элементов нажимают развернуть ПМО и мы пытаемся посчитать маркер, но модели еще нет
-        if (shouldProcessMarker && !loadStarted && !isSourceControllerLoadingNow && this._listViewModel) {
+        if (shouldProcessMarker && !loadStarted && !isSourceControllerLoadingNow && this._listViewModel && this._listViewModel.getCount()) {
             let needCalculateMarkedKey = false;
             if (!_private.hasMarkerController(this) && newOptions.markerVisibility === 'visible') {
                 // В этом случае маркер пытался проставиться, когда еще не было элементов. Проставляем сейчас, когда уже точно есть
