@@ -11,7 +11,7 @@
     <div class="controlsDemo__cell">
         <div class="controls-text-label">direction=vertical</div>
         <Controls.toolbars:View
-                attr:style="margin-left: 12px"
+                attr:style="margin-left: 250px"
                 direction="vertical"
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
