@@ -178,13 +178,18 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         }
     }
 
-    protected _prepareSubMenuConfig(event: SyntheticEvent<MouseEvent>, popupOptions: IStickyPopupOptions, subMenuDirection: TSubMenuDirection): void {
+    protected _prepareSubMenuConfig(
+        event: SyntheticEvent<MouseEvent>,
+        popupOptions: IStickyPopupOptions,
+        subMenuDirection: TSubMenuDirection,
+        itemAlign: string
+    ): void {
         // The first level of the popup is always positioned on the right by standard
         if (this._options.root && subMenuDirection === 'right') {
             popupOptions.direction.horizontal = this._horizontalDirection;
             popupOptions.targetPoint.horizontal = this._horizontalDirection;
         }
-        if (this._horizontalDirection === 'right') {
+        if (this._horizontalDirection === 'right' && itemAlign === 'right') {
             popupOptions.className += ' controls-Menu__subMenu_marginLeft';
         } else {
             popupOptions.className += ' controls-Menu__subMenu_marginLeft-revert';

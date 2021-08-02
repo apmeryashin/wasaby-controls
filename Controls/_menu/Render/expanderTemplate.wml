@@ -1,3 +1,4 @@
 <div class="controls-Menu__arrow
+            controls-Menu__arrow_{{itemAlign}}
             controls-Menu__arrow_{{treeItem.getContents().get('readOnly') ? 'readOnly' : 'default'}}
-            icon-MarkCRightLight"></div>
+            {{itemAlign === 'left' ? 'icon-MarkCLeftLight' : 'icon-MarkCRightLight'}}"></div>
