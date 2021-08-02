@@ -281,12 +281,6 @@ export interface IPropertyGridOptions extends IControlOptions {
      */
     itemsContainerPadding?: IItemsContainerPadding;
     captionPosition?: TCaptionPosition;
-    /**
-     * @name Controls/_propertyGrid/IPropertyGrid#separatorVisible
-     * @cfg {Controls/propertyGrid:separatorVisible} Определяет видимость вертикальных разделителей вкладок.
-     * @default true
-     */
-    separatorVisible?: boolean;
 }
 
 /**
