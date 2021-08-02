@@ -211,7 +211,9 @@ export default class IndicatorsController {
     }
 
     hasDisplayedIndicator(): boolean {
-        return !!(
+        // todo убрать проверку на this._model по
+        // https://online.sbis.ru/opendoc.html?guid=7082ebfc-3600-4d2d-adaa-41a31f0c75a5
+        return this._model && !!(
             this._model.hasIndicator('global') ||
             this._model.getTopIndicator().isDisplayed() ||
             this._model.getBottomIndicator().isDisplayed()
