@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import barTemplate = require('wml!Controls/_progress/Bar/Bar');
+import 'css!Controls/progress';
 
 /**
  * Интерфейс опций для {@link Controls/progress:Bar}.
@@ -96,8 +97,6 @@ class Bar extends Control<IBarOptions> {
    protected _beforeUpdate(opts: IBarOptions): void {
       this._width = this._getWidth(opts.value);
    }
-
-   static _theme: string[] = ['Controls/progress'];
 
    static getDefaultOptions(): object {
       return {

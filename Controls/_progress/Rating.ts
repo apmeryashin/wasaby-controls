@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_progress/Rating/Rating';
 import {detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import 'css!Controls/progress';
 
 type IconSize = 'default'|'2xs'|'xs'|'s'|'m'|'l';
 type IconStyle = 'warning'|'info'|'success'|'danger'|'secondary'|'primary'|'default'|'contrast'|'readonly';
@@ -311,7 +312,6 @@ class Rating extends Control<IRatingOptions> {
             this._notify('precisionChanged', [0]);
         }
     }
-    static _theme: string[] = ['Controls/progress'];
     static getDefaultOptions(): object {
         return {
             readOnly: false,
