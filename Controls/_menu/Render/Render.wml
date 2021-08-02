@@ -14,6 +14,7 @@
                iconPadding="{{_options.iconPadding}}"
                multiLine="{{_options.multiLine}}"
                allowPin="{{_options.allowPin}}"
+               itemAlign="{{_options.itemAlign}}"
                historyRoot="{{_options.historyRoot}}"
                width="{{_options.width}}"
                scope="{{item.contents['itemTemplateOptions']}}"
