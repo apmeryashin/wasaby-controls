@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemplate';
+import 'css!Controls/dragnDrop';
 
 /**
  * Стандартный шаблон перемещения для списка.
@@ -34,8 +35,6 @@ export default class DraggingTemplate extends Control<IControlOptions> {
       }
       return result;
    }
-
-   static _theme: string[] = ['Controls/dragnDrop'];
 }
 
 /**

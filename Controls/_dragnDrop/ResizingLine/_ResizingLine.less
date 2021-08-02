@@ -20,29 +20,24 @@
 }
 
 .controls-ResizingLine__area {
+   background: var(--drag-area_background-color_dragnDropResizingLine);
    // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/zindex/
    z-index: 41;
 }
 
 .controls-ResizingLine__areaWrapper_vertical {
+   height: var(--thickness_dragnDropResizingLine);
    position: relative;
    width: 100%;
-}
-
-.controls-ResizingLine__areaWrapper_horizontal {
-   position: relative;
-   height: 100%;
-}
-
-.controls-ResizingLine__areaWrapper_vertical_theme-@{themeName} {
-   height: @thickness_dragnDropResizingLine;
 }
 
 /**
  * Перед изменением класса поправьте файл Controls/_popupTemplate/Stack/Opener/_Stack.less, он там используется.
  */
-.controls-ResizingLine__areaWrapper_horizontal_theme-@{themeName} {
-   width: @thickness_dragnDropResizingLine;
+.controls-ResizingLine__areaWrapper_horizontal {
+   width: var(--thickness_dragnDropResizingLine);
+   position: relative;
+   height: 100%;
 }
 
 .controls-ResizingLine__areaWrapper_vertical_direction-direct {
@@ -71,10 +66,6 @@
    position: absolute;
    top: 0;
    bottom: 0;
-}
-
-.controls-ResizingLine__area_theme_@{themeName} {
-   background: @drag-area_background-color_dragnDropResizingLine;
 }
 
 .controls-ResizingLine__border {
