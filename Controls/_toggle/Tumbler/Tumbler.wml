@@ -6,6 +6,7 @@
                         controls-Tumbler__button-{{itemData[_options.keyProperty] === _options.selectedKey ? 'selected' : 'unselected'}}
                         controls-Tumbler__button-{{_options.readOnly? 'disabled' : 'enabled'}}
                         {{itemData[_options.keyProperty] === _options.selectedKey && _backgroundPosition.isEmpty ? 'controls-Tumbler__button-selected_background'}}"
+                 data-qa="controls-Tumbler__button"
                  on:click="_onItemClick(itemData)"
                  name="TumblerButton{{index}}">
                 <ws:partial
