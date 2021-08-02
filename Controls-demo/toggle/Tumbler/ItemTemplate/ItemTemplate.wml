@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper {{_options.theme.indexOf('default') < 0 ? 'controlsDemo_fixedWidth500' : 'controlsDemo_fixedWidth300'}}">
     <div class="controlsDemo__cell">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">CounterProperty is null</div>
-        <Controls.toggle:Tumbler items="{{_items}}" bind:selectedKey="_selectedKey">
+        <Controls.toggle:Tumbler attr:data-qa="controlsDemo-Tumbler__counterPropertyNull" items="{{_items}}" bind:selectedKey="_selectedKey">
             <ws:itemTemplate>
                 <ws:partial template="Controls/toggle:tumblerItemCounterTemplate" scope="{{itemTemplate}}"/>
             </ws:itemTemplate>
