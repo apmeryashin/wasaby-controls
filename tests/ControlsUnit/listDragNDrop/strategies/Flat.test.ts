@@ -6,7 +6,7 @@ import { assert } from 'chai';
 describe('Controls/_listDragNDrop/strategies/FlatStrategy', () => {
     const items = new RecordSet({
         rawData: [
-            { id: 1 },
+            { id: 1, group: 0 },
             { id: 2, group: 1 },
             { id: 3, group: 1 }
         ],

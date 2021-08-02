@@ -39,6 +39,7 @@ import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interfac
 import {TRoundBorder} from "Controls/_display/interface/ICollection";
 import {Footer} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
+import {Logger} from 'UI/Utils';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -1719,7 +1720,14 @@ export default class Collection<
 
     private _createGroupFunctor(): GroupFunction<S, T> {
         return functor.Compute.create(
-            (item) => item.get(this._$groupProperty),
+            (item) => {
+                const group = item.get(this._$groupProperty);
+                if (group === undefined) {
+                    Logger.error(`Значение поля ${this._$groupProperty} не может быть undefined. ` +
+                        `Проверьте запись с ключом ${item.get(this._$keyProperty)}`, this);
+                }
+                return group;
+            },
             [this._$groupProperty]
         );
     }

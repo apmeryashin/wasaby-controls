@@ -1,4 +1,7 @@
 import { assert } from 'chai';
+import * as sinon from 'sinon';
+
+import {Logger} from 'UI/Utils';
 
 import Group from 'Controls/_display/itemsStrategy/Group';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';

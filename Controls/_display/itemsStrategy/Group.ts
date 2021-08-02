@@ -9,6 +9,7 @@ import {
 } from 'Types/entity';
 import {mixin} from 'Types/util';
 import {CrudEntityKey} from 'Types/source';
+import {Logger} from "UI/Utils";
 /**
  * Набор констант, используемых при работе с {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировкой элементов}.
  * @class Controls/list:groupConstants
@@ -306,9 +307,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         // Check group ID and group instance for every item and join them all together
         for (let position = 0; position < items.length; position++) {
             const item = items[position];
-            const groupId = handler
-                ? handler((item as any as CollectionItem<S>).getContents(), position, item)
-                : undefined;
+            const groupId = handler((item as any as CollectionItem<S>).getContents(), position, item);
             let groupIndex = groupsId.indexOf(groupId);
 
             // Create group with this groupId if necessary
