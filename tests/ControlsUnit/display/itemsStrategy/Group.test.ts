@@ -450,39 +450,6 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             assert.deepEqual(given, expected);
         });
 
-        it('should throw an error and return original items order if any group is undefined', () => {
-            const stubLoggerError = sinon.stub(Logger, 'error').callsFake((message, errorPoint, errorInfo) => ({}));
-            const createItem = (id: number, group?: string) => {
-                return {
-                    contents: {
-                        group: undefined,
-                        id
-                    },
-                    multiSelectVisibility: 'hidden'
-                };
-            };
-            const items = [
-                new CollectionItem(createItem(1)),
-                new CollectionItem(createItem(2)),
-                new CollectionItem(createItem(3, 'one')),
-                new CollectionItem(createItem(4, 'one'))
-            ];
-            const groups = [new GroupItem()];
-            const options: any = {
-                display: getMockedDisplay(),
-                groups,
-                groupConstructor: GroupItem,
-                handler: (item) => item.group
-            };
-
-            const expected = [0, 1, 2, 3];
-            const given = Group.sortItems(items, options);
-
-            sinon.assert.calledOnce(stubLoggerError);
-            assert.deepEqual(given, expected);
-            stubLoggerError.restore();
-        });
-
         it('should create single group', () => {
             const items = [
                 new CollectionItem({contents: 'one'}),

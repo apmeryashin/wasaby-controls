@@ -308,13 +308,6 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         for (let position = 0; position < items.length; position++) {
             const item = items[position];
             const groupId = handler((item as any as CollectionItem<S>).getContents(), position, item);
-
-            if (groupId === undefined) {
-                Logger.error('Значение поля группировки не может быть undefined. Проверьте записи в RecordSet.', this);
-                groups.length = 0;
-                return items.map((item, index) => index);
-            }
-
             let groupIndex = groupsId.indexOf(groupId);
 
             // Create group with this groupId if necessary
