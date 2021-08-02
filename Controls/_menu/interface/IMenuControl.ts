@@ -17,6 +17,8 @@ export type TKey = string|number|null;
 
 export type TSubMenuDirection = 'bottom' | 'right';
 
+export type TItemAlign = 'left' | 'right';
+
 export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, IBackgroundStyle,
     IBackgroundStyleOptions, INavigationOptions<INavigationSourceConfig>, IFilterOptions, ISelectorDialogOptions {
     items?: RecordSet;
@@ -33,6 +35,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     calmTimer?: CalmTimer;
     historyRoot?: string;
     subMenuDirection?: TSubMenuDirection;
+    itemAlign?: TItemAlign;
 }
 
 /**
@@ -65,7 +68,7 @@ export default interface IMenuControl {
  * @name Controls/_menu/interface/IMenuControl#nodeFooterTemplate
  * @cfg {TemplateFunction | String} Шаблон подвала, отображающийся для всех подменю.
  * В шаблон передается объект itemData со следующими полями:
- * 
+ *
  * * key — ключ родительского элемента;
  * * item — родительский элемент.
  * @example
@@ -149,3 +152,17 @@ export default interface IMenuControl {
  * @see sourceProperty
  * @see additionalProperty
  */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#itemAlign
+ * @cfg {String} Вид отображения элемента
+ * @variant left Меню раскрывается влево, элемент отображается от левого края.
+ * @variant right Меню раскрывается вправо, элемент отображается от правого края
+ * @default right
+ * @demo Controls-demo/dropdown_new/Button/ItemAlign/Index
+ * @see nodeProperty
+ * @see parentProperty
+ * @see sourceProperty
+ * @see additionalProperty
+ */
+

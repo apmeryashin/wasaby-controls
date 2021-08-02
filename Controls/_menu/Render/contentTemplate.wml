@@ -6,10 +6,11 @@
 
 <div class="controls-Menu__content {{item.get('readOnly') ? 'controls-Menu__content-readOnly'}}
                      controls-Menu__content_{{multiLine ? 'multiLine' : 'singleLine'}}
+                     controls-Menu__content_align_{{itemAlign}}
                      {{additionalTextTemplate ? 'controls-Menu__content_padding'}}
                      {{treeItem.getLevel && treeItem.getLevel() > 1 ? 'controls-Menu__content_levelPadding'}}"
      title="{{item.get('tooltip') || item.get(displayProperty || 'title')}}">
-   <ws:if data="{{iconAlign !== 'right'}}">
+   <ws:if data="{{iconAlign !== 'right' && itemAlign !== 'left'}}">
       <ws:partial template="iconTemplate" iconAlign="left"/>
    </ws:if>
    <div class="controls-Menu__content-wrapper">
@@ -22,7 +23,7 @@
       <ws:else>
          {{item.get(displayProperty || 'title')}}
       </ws:else>
-      <ws:if data="{{iconAlign === 'right'}}">
+      <ws:if data="{{iconAlign === 'right' && itemAlign !== 'left'}}">
          <ws:partial template="iconTemplate" iconAlign="right" />
       </ws:if>
       <ws:if data="{{additionalTextTemplate}}">
@@ -30,4 +31,7 @@
                      class="controls-Menu__row-additionalText"/>
       </ws:if>
    </div>
+   <ws:if data="{{iconAlign !== 'right' && itemAlign === 'left'}}">
+      <ws:partial template="iconTemplate" iconAlign="right" />
+   </ws:if>
 </div>

@@ -21,7 +21,7 @@ export interface INotificationBaseOptions extends INotificationBase, IControlOpt
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/NotificationDemo/NotificationTemplate
+ * @demo Controls-demo/PopupTemplate/Notification/Index
  */
 
 class Notification extends Control<INotificationBaseOptions> {

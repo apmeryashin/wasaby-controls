@@ -36,7 +36,7 @@ export interface IBaseActionOptions {
     parent?: string | number;
 }
 
-const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent'];
+const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@'];
 
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
@@ -44,12 +44,12 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     readonly id: string;
     readonly order: number;
     readonly parent: string | number;
+    readonly 'parent@': boolean;
     readonly onExecuteHandler: Function;
     commandName: string;
     commandOptions: Record<string, any>;
     viewCommandName: string;
     viewCommandOptions: Record<string, any>;
-    viewMode: string = 'toolButton';
     private _iconStyle: string;
     private _icon: string;
     private _title: string;
@@ -112,6 +112,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         this.viewCommandOptions = options.viewCommandOptions || this.viewCommandOptions;
         this.parent = options.parent;
         this.id = options.id || this.id;
+        this['parent@'] = options['parent@'] || this['parent@'];
 
         EventRaisingMixin.call(this, options);
     }
@@ -183,5 +184,6 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
 }
 
 Object.assign(BaseAction.prototype, {
-    visible: true
+    visible: true,
+    'parent@': false
 });
