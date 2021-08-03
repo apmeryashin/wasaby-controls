@@ -81,4 +81,16 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
  * @default false
  */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#headingFontColorStyle
+ * @cfg {String}
+ * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Template
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#headingFontSize
+ * @cfg {String}
+ * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Template
+ */
 export default StickyTemplate;

@@ -5,9 +5,12 @@
    <div class="controls-StickyTemplate__top-area-content">
       <ws:if data="{{_options.headingCaption && !_options.headerContentTemplate}}">
          <div class="controls-StickyTemplate__caption">
-            <div class="controls-StickyTemplate__caption_text"
-                 title="{{_options.headingCaption}}">{{_options.headingCaption}}</div>
-          </div>
+            <Controls.heading:Title caption="{{_options.headingCaption}}"
+                                    fontColorStyle="{{_options.headingFontColorStyle}}"
+                                    fontSize="{{_options.headingFontSize}}"
+                                    readOnly="{{true}}"
+                                    tooltip="{{_options.headingCaption}}"/>
+         </div>
       </ws:if>
       <ws:if data="{{_options.headerContentTemplate}}">
          <ws:partial template="{{_options.headerContentTemplate}}" scope="{{_options.stickyOptions}}" theme="{{_options.theme}}"/>
