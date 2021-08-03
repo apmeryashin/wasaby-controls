@@ -1208,7 +1208,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 continue;
             }
             // Когда _getNearbyItem используется для обычных групп, у них нет getParent
-            isTreeItem = nearbyItem && nearbyItem['[Controls/_display/TreeItem]'] || nearbyItem['[Controls/_display/BreadcrumbsItem]'];
+            isTreeItem = nearbyItem && (nearbyItem['[Controls/_display/TreeItem]'] || nearbyItem['[Controls/_display/BreadcrumbsItem]']);
             sameParent = nearbyItem && isTreeItem ? nearbyItem.getParent() === parent : false;
             current = (hasItem && (!isTreeItem || sameParent)) ? nearbyItem : undefined;
         }
