@@ -1,23 +1,26 @@
-<div class="controlsDemo__flex">
-    <!-- Необязательно оборачивать список в скролл контейнер. -->
-    <!-- Здесь это сделано для месного решения этих ошибок со stickyHeader. -->
-    <!-- https://online.sbis.ru/opendoc.html?guid=64a425b7-4a53-4bb1-932e-2899ffe5fd98 -->
-    <!-- https://online.sbis.ru/opendoc.html?guid=138c14b7-d571-4e61-8177-cb0322763bff -->
-    <Controls.scroll:Container>
-        <Controls.grid:View
-                keyProperty="key"
-                source="{{_viewSource}}"
-                columns="{{_columns}}"
-                resultsPosition="bottom">
-            <ws:resultsTemplate>
-                <ws:partial template="Controls/grid:ResultsTemplate" scope="{{resultsTemplate}}">
-                    <ws:contentTemplate>
-                        <div style="color: #313E78; background-color: #F5F5F5; padding: 5px 2px; font-size: 13px; font-weight: 600">
-                            Итого: 2 страны с населением более миллиарда человек
-                        </div>
-                    </ws:contentTemplate>
-                </ws:partial>
-            </ws:resultsTemplate>
-        </Controls.grid:View>
-    </Controls.scroll:Container>
+<div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__childMinWidth400">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/gridNew/Results/ResultsTemplate/Default/Index' }}">
+            <a href="{{content.href}}">Стиль текста итогов</a>
+        </Router.router:Reference>
+        <Controls-demo.gridNew.Results.ResultsTemplate.Default.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/gridNew/Results/ResultsTemplate/Unaccented/Index' }}">
+            <a href="{{content.href}}">Неакцентный стиль текста итогов</a>
+        </Router.router:Reference>
+        <Controls-demo.gridNew.Results.ResultsTemplate.Unaccented.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/gridNew/Results/ResultsTemplate/Additional/Index' }}">
+            <a href="{{content.href}}">Стиль дополнительного текста итогов</a>
+        </Router.router:Reference>
+        <Controls-demo.gridNew.Results.ResultsTemplate.Additional.Index/>
+    </div>
 </div>

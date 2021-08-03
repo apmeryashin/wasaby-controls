@@ -5,9 +5,9 @@ import {RecordSet} from 'Types/collection';
 import { IColumn } from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
 
-import {Data} from 'Controls-demo/gridNew/Results/FontColorStyle/Data';
+import {Data} from 'Controls-demo/gridNew/Results/FontSize/Data';
 
-import * as Template from 'wml!Controls-demo/gridNew/Results/FontColorStyle/FontColorStyle';
+import * as Template from 'wml!Controls-demo/gridNew/Results/FontSize/FontSize';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -34,26 +34,24 @@ export default class extends Control {
 
             // Устанавливаем тип полей строки итогов.
             format: [
-                { name: 'success', type: 'real' },
-                { name: 'link', type: 'real' },
-                { name: 'primary', type: 'real' },
-                { name: 'secondary', type: 'real' },
-                { name: 'readonly', type: 'real' },
-                { name: 'unaccented', type: 'real' },
-                { name: 'warning', type: 'real' },
-                { name: 'danger', type: 'real' }
+                { name: 'M', type: 'real' },
+                { name: 'L', type: 'real' },
+                { name: 'XL', type: 'real' },
+                { name: '$2XL', type: 'real' },
+                { name: '$3XL', type: 'real' },
+                { name: '$4XL', type: 'real' },
+                { name: '$5XL', type: 'real' }
             ],
 
             // Устанавливаем значения полей
             rawData: {
-                success: '30.6',
-                link: '30.1',
-                primary: '30.6',
-                secondary: '30.5',
-                readonly: '30',
-                unaccented: '30.1',
-                warning: '300000',
-                danger: '3000000'
+                M: '30.6',
+                L: '30.1',
+                XL: '30.6',
+                $2XL: '30.5',
+                $3XL: '30',
+                $4XL: '30.1',
+                $5XL: '300000'
             }
         });
 

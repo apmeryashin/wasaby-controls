@@ -136,7 +136,7 @@ class ResultsCell extends Cell<null, ResultsRow> {
     }
 
     getContentClasses(): string {
-        return 'controls-Grid__results-cell__content controls-Grid__results-cell__content';
+        return 'controls-Grid__results-cell__content';
     }
 
     //endregion

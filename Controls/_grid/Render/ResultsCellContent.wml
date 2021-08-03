@@ -1,6 +1,5 @@
-<div class="{{ (gridColumn || colData).getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}"
+<div class="{{ (gridColumn || colData).getContentClasses(backgroundColorStyle, cursor, highlightOnHover ) }}"
      style="{{ (gridColumn || colData).getContentStyles() }}">
-
     <ws:if data="{{ !!content || !!contentTemplate }}">
         <ws:partial template="{{ content || contentTemplate }}"
                     column="{{ (gridColumn || colData) }}"
@@ -11,7 +10,8 @@
         <ws:if data="{{ (gridColumn || colData).format === 'money' }}">
             <Controls.decorator:Money value="{{ (gridColumn || colData).data }}" useGrouping="{{ true }}"
                                       fontWeight="{{fontWeight || 'bold'}}"
-                                      fontColorStyle="{{ fontColorStyle || 'secondary'}}"/>
+                                      fontColorStyle="{{ fontColorStyle || 'secondary'}}"
+                                      fontSize="{{ fontSize || 'm'}}"/>
         </ws:if>
         <ws:else data="{{ (gridColumn || colData).format === 'integer' || (gridColumn || colData).format === 'real' }}">
             <Controls.decorator:Number value="{{ (gridColumn || colData).data }}"
@@ -19,7 +19,7 @@
                                        fractionSize="{{ 2 }}"
                                        fontWeight="{{fontWeight || 'bold'}}"
                                        fontColorStyle="{{ fontColorStyle || 'secondary'}}"
-            />
+                                       fontSize="{{ fontSize || 'm'}}"/>
         </ws:else>
         <ws:else>
             {{ (gridColumn || colData).data }}
