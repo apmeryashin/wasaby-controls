@@ -38,7 +38,7 @@ const getFontWidthWithFonts = (font, value: string, size: number) => {
     }
     let textWidth = 0;
     for (let i = 0; i < text.length; i++) {
-        const charWidth = font[size][text[i]] || 0; // 0 на случай если считаем символ, которого нет в словаре
+        const charWidth = font[size][text[i]] || font[size]['default']; // default усредненное значение символа, которого нет в словаре
         textWidth += charWidth;
     }
     return textWidth;
