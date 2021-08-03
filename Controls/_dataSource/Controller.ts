@@ -871,9 +871,10 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             return this._loadPromise.promise
                 .then((result: RecordSet) => {
                     if (result instanceof RecordSet) {
-                        this._processQueryResult(result, key, navigationSourceConfig, direction);
+                        return this._processQueryResult(result, key, navigationSourceConfig, direction);
                     } else {
                         Logger.error('source/Controller: query returns incorrect result', this);
+                        return result;
                     }
                 })
                 .catch((error) => {
