@@ -436,7 +436,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  * 2. после окончания редактирования:
  *     * последнего (уже существующего) элемента списка (см. свойство {@link Controls/grid:IGridEditingConfig#autoAdd autoAdd});
  *     * только что добавленного элемента списка (см. свойство {@link Controls/grid:IGridEditingConfig#autoAddByApplyButton autoAddByApplyButton}).
- * @returns {TBeforeEndEditEventResult}
+ * @returns {Controls/_grid/interface/IEditableGrid/TBeforeEndEditEventResult.typedef}
  * @remark
  * Используйте событие, если необходимо проверить данные и отменить изменения. По умолчанию для сохранения изменений вызывается метод обновления списка.
  * Не обновляйте пользовательский интерфейс в обработчике этого события, потому что если во время подготовки данных произойдет ошибка, вам придется откатить изменения.

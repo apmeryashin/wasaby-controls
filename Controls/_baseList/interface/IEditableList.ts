@@ -505,7 +505,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  * 2. после окончания редактирования:
  *     * последнего (уже существующего) элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAdd autoAdd});
  *     * только что добавленного элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAddByApplyButton autoAddByApplyButton}).
- * @returns {TBeforeEndEditEventResult}
+ * @returns {Controls/_baseList/interface/IEditableList/TBeforeEndEditEventResult.typedef}
  * @demo Controls-demo/list_new/EditInPlace/EndEdit/Index
  * @remark
  * Используйте событие, если необходимо проверить данные и отменить изменения. По умолчанию для сохранения изменений вызывается метод обновления списка.
