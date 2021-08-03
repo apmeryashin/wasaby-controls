@@ -40,9 +40,9 @@
 .controls-TileView__richTemplate_image_effect_gradient {
    position: absolute;
    pointer-events: none;
-   height: var(--gradient_height_rich_tile);
+   height: calc(var(--gradient_height_rich_tile) + 1px);
    width: 100%;
-   bottom: 0;
+   bottom: -1px;
    left: 0;
 }
 // FIXME: Костыль, до выполнения задачи https://online.sbis.ru/opendoc.html?guid=7251d305-2779-4142-8683-cdadec29d917
@@ -64,7 +64,6 @@
 }
 
 .controls-TileView__richTemplate_imageWrapper {
-   overflow: hidden;
    display: flex;
    flex-shrink: 0;
    max-width: 100%;
