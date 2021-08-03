@@ -170,8 +170,11 @@ function toString(value: TValue, precision: number): string {
 
 function splitValueIntoParts(value: string): string[] {
     let [integer, fraction] = value.split('.');
-    fraction = '.' + fraction;
-
+    if (fraction) {
+        fraction = '.' + fraction;
+    } else {
+        fraction = '';
+    }
     return [integer, fraction];
 }
 
