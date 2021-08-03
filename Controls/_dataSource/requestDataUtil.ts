@@ -17,7 +17,7 @@
  *
  * @class Controls/_dataSource/requestDataUtil
  * @public
- * @author Сухоручкин А.С.
+ * @author Кудрявцев И.С.
  * @public
  */
 import {default as DataLoader, ILoadDataConfig, ILoadDataResult} from 'Controls/_dataSource/DataLoader';
