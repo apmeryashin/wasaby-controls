@@ -155,7 +155,7 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
          const target = this._options.direction === 'vertical' ? dragObject.position.y : dragObject.position.x;
-         const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+         const windowDimensions = DimensionsMeasurer.getWindowDimensions(e.target);
          const ratio = this._getRatio(
              this._options.direction,
              target,

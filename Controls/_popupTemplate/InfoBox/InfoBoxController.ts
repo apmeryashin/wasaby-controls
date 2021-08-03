@@ -158,7 +158,11 @@ class InfoBoxController extends StickyController {
                 cMerge(item.popupOptions, config);
                 const sizes: IPopupSizes = {width: themeConstants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
                 const popupConfig = this._getPopupConfig(item, sizes);
-                const position: IPopupPosition = StickyStrategy.getPosition(popupConfig, this._getTargetCoords(item));
+                const position: IPopupPosition = StickyStrategy.getPosition(
+                    popupConfig,
+                    this._getTargetCoords(item),
+                    item.popupOptions.target
+                );
                 this.prepareConfig(item);
                 item.position.maxWidth = position.width;
             }

@@ -47,7 +47,7 @@ function getOffset(element: HTMLElement): { top: number; bottom: number } {
       // В IE, в отличие от Chrome, getBoundingClientRect возвращает нецелочисленные значения top
       top = Math.round(top);
 
-      const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+      const windowDimensions = DimensionsMeasurer.getWindowDimensions(element);
 
       return {
          top: top + windowDimensions.pageYOffset,

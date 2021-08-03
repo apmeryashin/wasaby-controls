@@ -171,7 +171,7 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+         const windowDimensions = DimensionsMeasurer.getWindowDimensions(e.target);
          const ratio = Utils.getRatio(dragObject.position.x, box.left + windowDimensions.pageXOffset, box.width);
          this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          if (dragObject.entity === this._children.pointStart) {

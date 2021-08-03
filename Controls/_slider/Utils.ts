@@ -67,11 +67,11 @@ export default {
         return scaleData;
     },
     getNativeEventPageX(event: MouseEvent | TouchEvent): number {
-        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event).x;
+        return DimensionsMeasurer.getRelativeMouseCoordsByMouseEvent(event).x;
     },
 
     getNativeEventPageY(event: MouseEvent | TouchEvent): number {
-        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event).y;
+        return DimensionsMeasurer.getRelativeMouseCoordsByMouseEvent(event).y;
     },
 
     convertIntervals(intervals: IInterval[] = [], startValue: number, endValue: number): IPositionedInterval[] {

@@ -54,7 +54,7 @@ class StackController extends BaseController {
 
         if (!isNewEnvironment()) {
             if (isSinglePopup) {
-                this._updateSideBarVisibility();
+                this._updateSideBarVisibility(container);
             }
         }
 
@@ -298,7 +298,7 @@ class StackController extends BaseController {
             item.position = {
                 top: -10000,
                 left: -10000,
-                height: this._getWindowSize().height,
+                height: this._getWindowSize(document.body).height,
                 width: position.width || undefined
             };
         } else {
@@ -426,8 +426,8 @@ class StackController extends BaseController {
         item.popupOptions.templateOptions.maximized = state;
     }
 
-    private _getWindowSize(): IPopupSizes {
-        const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+    private _getWindowSize(container: HTMLElement): IPopupSizes {
+        const windowDimensions = DimensionsMeasurer.getWindowDimensions(container);
         return {
             width: windowDimensions.innerWidth,
             height: windowDimensions.innerHeight
@@ -507,7 +507,7 @@ class StackController extends BaseController {
         return sideBar && sideBar.clientWidth || 0;
     }
 
-    private _updateSideBarVisibility(): void {
+    private _updateSideBarVisibility(container: HTMLElement): void {
         let maxStackWidth = 0;
         this._stack.each((item) => {
             if (item.popupOptions.width > maxStackWidth) {
@@ -515,7 +515,7 @@ class StackController extends BaseController {
             }
         });
 
-        const isVisible = this._getWindowSize().width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
+        const isVisible = this._getWindowSize(container).width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
 
         if (isVisible !== this._sideBarVisible) {
             this._sideBarVisible = isVisible;

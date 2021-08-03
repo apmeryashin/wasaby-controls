@@ -28,7 +28,7 @@ export default function getTargetCoords(target: HTMLElement): ITargetCoords {
     const left: number = box.left;
     const bottom: number = box.bottom;
     const right: number = box.right;
-    const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+    const windowDimensions = DimensionsMeasurer.getWindowDimensions(target);
     const documentDimensions = DimensionsMeasurer.getElementDimensions(document.documentElement);
     const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
     const fullTopOffset: number =

@@ -32,7 +32,7 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
         const target = this._options.direction === 'vertical' ? Utils.getNativeEventPageY(nativeEvent) :
             Utils.getNativeEventPageX(nativeEvent);
         const box = this._children.area.getBoundingClientRect();
-        const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+        const windowDimensions = DimensionsMeasurer.getWindowDimensions(this._children.area);
         const ratio = this._getRatio(this._options.direction, target, box, windowDimensions.pageXOffset, windowDimensions.pageYOffset);
         return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
     }

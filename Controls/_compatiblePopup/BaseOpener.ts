@@ -36,7 +36,7 @@ const BaseOpener = {
       }
       const box = getDimensions(target);
       const right: number = box.right;
-      const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+      const windowDimensions = DimensionsMeasurer.getWindowDimensions(target);
       const documentDimensions = DimensionsMeasurer.getElementDimensions(document.documentElement);
       const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
       const fullLeftOffset: number =

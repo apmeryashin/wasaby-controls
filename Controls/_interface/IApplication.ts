@@ -1,5 +1,4 @@
 import {IHTMLOptions, IHTML} from 'UI/Base';
-import {TZoomSize} from 'Controls/sizeUtils';
 
 /**
  * Интерефейс для контролов, поддерживающих конфигурацию метатегов html-документа.
@@ -85,18 +84,6 @@ export default interface IApplication extends IHTML {
  * @name Controls/_interface/IApplication#isAdaptive
  * @cfg {boolean} Определяет режим отображения сайта. Если опция включена, то используется адаптивный дизайн, шрифты на мобильных устройствах используются системные.
  * @default false
- */
-
-/**
- * @name Controls/_interface/IApplication#zoom
- * @cfg {string} Определяет скалирование размеров интерфейса приложения. https://developer.mozilla.org/en-US/docs/Web/CSS/zoom
- * @variant zoom-0.75
- * @variant zoom-0.85
- * @variant zoom-1
- * @variant zoom-1.15
- * @variant zoom-1.3
- * @demo Controls-demo/Application/Zoom/Index
- * @default zoom-1
  */
 
 export interface IAttributes {

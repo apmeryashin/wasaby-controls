@@ -104,7 +104,7 @@ export function getScrollContainerPageCoords(elem: HTMLElement): IContainerCoord
     const box = DimensionsMeasurer.getBoundingClientRect(elem);
     const documentDimensions = DimensionsMeasurer.getElementDimensions(document.documentElement);
     const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
-    const windowDimensions = DimensionsMeasurer.getWindowDimensions();
+    const windowDimensions = DimensionsMeasurer.getWindowDimensions(elem);
 
     const scrollTop = windowDimensions.pageYOffset || documentDimensions.scrollTop || bodyDimensions.scrollTop;
     const scrollLeft = windowDimensions.pageXOffset || documentDimensions.scrollLeft || bodyDimensions.scrollLeft;

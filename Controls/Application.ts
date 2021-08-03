@@ -21,7 +21,6 @@ import {IPendingConfig, PendingClass} from 'Controls/Pending';
 import {RegisterClass} from 'Controls/event';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 import {getConfig} from 'Application/Env';
-import {DimensionsMeasurer, TZoomSize} from 'Controls/sizeUtils';
 
 // Нужно чтобы oldCss прилетал первым на страницу. Есть контролы (например itemsActions), стили которыйх
 // Завязаны на порядок css.
@@ -51,7 +50,6 @@ interface IBodyClassesField {
    fromOptions: string;
    themeClass: string;
    bodyThemeClass: string;
-   zoomClass: string;
 }
 
 /**
@@ -98,8 +96,6 @@ interface IApplication extends IControlOptions {
 
    pagingVisible?: boolean;
    compat?: boolean;
-
-   zoom?: TZoomSize;
 }
 
 /** Динамические классы для body */
@@ -113,8 +109,7 @@ const BODY_CLASSES = {
    scrollingClass: detection.isMobileIOS ? 'controls-Scroll_webkitOverflowScrollingTouch' : '',
    fromOptions: '',
    themeClass: '',
-   bodyThemeClass: '',
-   zoomClass: ''
+   bodyThemeClass: ''
 };
 
 const BODY_CLASSES_STATE: IBodyClassesStateField = {
@@ -169,7 +164,6 @@ export default class Application extends Control<IApplication> {
       this._updateTouchClass();
       this._updateThemeClass(options);
       this._updateFromOptionsClass(options);
-      this._applyZoom(options.zoom);
 
       setSettingsController(options.settingsController);
 
@@ -216,7 +210,6 @@ export default class Application extends Control<IApplication> {
       this._updateTouchClass();
       this._updateThemeClass(options);
       this._updateFromOptionsClass(options);
-      this._applyZoom(options.zoom);
    }
    protected _afterUpdate(oldOptions: IApplication): void {
       /* eslint-disable */
@@ -463,15 +456,6 @@ export default class Application extends Control<IApplication> {
          themeClass: 'Application-body',
          bodyThemeClass: `controls_theme-${options.theme}`
       });
-   }
-
-   private _applyZoom(zoomValue: TZoomSize = 1): void {
-      if (zoomValue) {
-         this._updateBodyClasses({
-            zoomClass: `Application-body__zoom-${zoomValue}`
-         });
-         DimensionsMeasurer.setZoomValue(zoomValue);
-      }
    }
 
    /** ************************************************** */

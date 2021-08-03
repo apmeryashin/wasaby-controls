@@ -373,7 +373,7 @@ class Container extends Control<IContainerOptions> {
     private static IE_MOUSEMOVE_FIX_DELAY: number = 50;
 
     private static _getPageXY(event: MouseEvent | TouchEvent): ICords {
-        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event);
+        return DimensionsMeasurer.getRelativeMouseCoordsByMouseEvent(event);
     }
 
     private static _isDragStarted(startEvent: MouseEvent, moveEvent: MouseEvent, immediately: boolean): boolean {
