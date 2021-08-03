@@ -155,6 +155,9 @@ define([
          global.window = {
             requestAnimationFrame: (callback) => {
                callback();
+            },
+            getComputedStyle: () => {
+               return {};
             }
          };
       });
@@ -7780,7 +7783,8 @@ define([
             };
 
             baseControl._container = {
-               contains: () => false
+               contains: () => false,
+               closest: function() {}
             };
 
             baseControl._onMouseMove(event);

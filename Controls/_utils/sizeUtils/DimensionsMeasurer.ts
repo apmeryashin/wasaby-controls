@@ -316,7 +316,7 @@ class DimensionsMeasurer {
      * @private
      */
     private _getMainZoom(): number {
-        const zoomValue = window?.getComputedStyle(document.body)?.zoom || '1';
+        const zoomValue = window?.getComputedStyle(document?.body)?.zoom || '1';
         return  parseFloat(zoomValue);
     }
 }

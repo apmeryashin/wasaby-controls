@@ -298,7 +298,7 @@ class StackController extends BaseController {
             item.position = {
                 top: -10000,
                 left: -10000,
-                height: this._getWindowSize(document.body).height,
+                height: this._getWindowSize(document?.body).height,
                 width: position.width || undefined
             };
         } else {

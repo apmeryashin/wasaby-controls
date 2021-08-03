@@ -140,7 +140,10 @@ define([
          let getNativeEventPageX = utils.default.getNativeEventPageX;
          let mouseEvent = {
             type: 'mousedown',
-            pageX: 100
+            pageX: 100,
+            target: {
+               closest: function() {}
+            }
          };
          let touchEvent = {
             type: 'touchstart',
@@ -148,7 +151,10 @@ define([
                {
                   pageX: 200
                }
-            ]
+            ],
+            target: {
+               closest: function() {}
+            }
          };
          assert.equal(getNativeEventPageX(mouseEvent), 100, 'wrong x for mousedown event');
          assert.equal(getNativeEventPageX(touchEvent), 200, 'wrong x for touchstart event');
