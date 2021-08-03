@@ -54,13 +54,20 @@ export = simpleExtend.extend({
    constructor: function(config) {
       this._intersection = {};
       this._topTarget = config.topTarget;
-      this._bottomTarget = config.bottomTarget;
+      this._bottomLeftTarget = config.bottomLeftTarget;
+      this._bottomRightTarget = config.bottomRightTarget;
       this._position = config.position;
       this._updateStateIntersection = this._updateStateIntersection.bind(this);
    },
 
    update: function(entries) {
-      entries.forEach(this._updateStateIntersection);
+      let countBottomIntersection = 0;
+      entries.forEach((entry) => {
+         if (entry.target === this._bottomLeftTarget || entry.target === this._bottomRightTarget) {
+            countBottomIntersection++;
+         }
+         this._updateStateIntersection(entry, countBottomIntersection);
+      });
 
       this._fixedPosition = this._getFixedPosition();
    },
@@ -73,8 +80,14 @@ export = simpleExtend.extend({
     * @param {IntersectionObserverEntry} entry
     * @private
     */
-   _updateStateIntersection: function(entry) {
+   _updateStateIntersection: function(entry: IntersectionObserverEntry, countBottomIntersection: number): void {
       const position = this._getTarget(entry);
+      // Будем обновлять состояние зафиксированности для observerBottom только в том случае,
+      // когда два нижних обсёрвера будут пересечены одновременно. Таким образом, исключим состояние
+      // зафиксированности сверху/снизу при горизонтальном скролле.
+      if (position === 'bottom' && countBottomIntersection !== 2) {
+         return;
+      }
       this._intersection[position] =  entry.isIntersecting;
    },
 
@@ -88,7 +101,8 @@ export = simpleExtend.extend({
       switch (entry.target) {
          case this._topTarget:
             return 'top';
-         case this._bottomTarget:
+         case this._bottomLeftTarget:
+         case this._bottomRightTarget:
             return 'bottom';
          default:
              Logger.error('Controls/_scroll/StickyBlock/Model: Unexpected target');
