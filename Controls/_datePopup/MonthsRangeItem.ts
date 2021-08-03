@@ -189,6 +189,7 @@ export default class MonthsRangeItem extends Control<IMonthsRangeItemOptions> {
         const itemClass = '.controls-PeriodDialog-MonthsRange__item';
         const mode = 'months';
         this._notify('itemKeyDown', [item, event.nativeEvent.keyCode, itemClass, mode]);
+        event.preventDefault();
     }
 
     protected _dateToDataString(date: Date): string {

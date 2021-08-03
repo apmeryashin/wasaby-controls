@@ -101,6 +101,7 @@ export default class MonthView extends Control<IControlOptions> {
       const itemClass = '.controls-MonthViewVDOM__item';
       const mode = 'days';
       this._notify('itemKeyDown', [item, event.nativeEvent.keyCode, itemClass, mode]);
+      event.preventDefault();
     }
 
    private _updateView(options): void {
