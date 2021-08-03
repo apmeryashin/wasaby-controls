@@ -104,6 +104,13 @@ define(
                   fraction: '.00'
                });
             });
+            it('value: 1290, precision: 0', function() {
+               assert.deepEqual(ctrl.calculateFormattedNumber(1290, true, 'none', 0), {
+                  number: '1 290',
+                  integer: '1 290',
+                  fraction: ''
+               });
+            });
          });
          describe('tooltip', function() {
             it('value: "0.00"', function() {
