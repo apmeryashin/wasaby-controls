@@ -212,7 +212,7 @@ export interface IFilterView {
  *    ];
  * </pre>
  * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
- * @see Controls.filterPopup:DetailPanel
+ * @see Controls/filterPopup:DetailPanel
  */
 
 /**
