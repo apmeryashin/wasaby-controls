@@ -24,7 +24,7 @@ interface IErrorContainerOptions extends IControlOptions {
  * @implements Controls/interface:IErrorController
  * 
  * @public
- * @author Сухоручкин А.С.
+ * @author Северьянов А.А.
  */
 
 export default class DataLoader extends Control<IErrorContainerOptions, IErrorContainerReceivedState> {

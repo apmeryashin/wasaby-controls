@@ -5,13 +5,13 @@ export interface IExpandableOptions {
 /**
  * Интерфейс для контролов с возможностью переключения состояния развернутости.
  * @public
- * @author Сухоручкин А.С.
+ * @author Авраменко А.С.
  */
 
 /*
  * Interface for components with switchable state of extensibility.
  * @public
- * @author Сухоручкин А.С.
+ * @author Авраменко А.С.
  */ 
 export default interface IExpandable {
    readonly '[Controls/_toggle/interface/IExpandable]': boolean;
