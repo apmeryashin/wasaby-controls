@@ -114,13 +114,10 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
 
     _updateRangeModel(options: IRangeSelector): void {
         const opts: IDateRangeOptions = {};
-        if (!(options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single &&
-            this._startValue === null && this._endValue === null)) {
-            opts.endValue = this._endValue;
-            opts.startValue = this._startValue;
-            if (options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
-                opts.endValue = this._startValue;
-            }
+        opts.endValue = this._endValue;
+        opts.startValue = this._startValue;
+        if (options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
+            opts.endValue = this._startValue;
         }
         opts.rangeSelectedCallback = options.rangeSelectedCallback;
         opts.selectionType = options.selectionType;
@@ -141,6 +138,17 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         } else {
             className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
         }
+        let startValue = this._rangeModel.startValue || this._startValue;
+        let endValue = this._rangeModel.endValue || this._endValue;
+        if (this._options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
+            // Если передать null в datePopup в качестве начала и конца периода, то он выделит
+            // период от -бесконечности до +бесконечности.
+            // В режиме выбора одного дня мы не должны выбирать ни один день.
+            if (this._options.startValue === null) {
+                startValue = undefined;
+                endValue = undefined;
+            }
+        }
         return {
             ...PopupUtil.getCommonOptions(this),
             target: container,
@@ -148,6 +156,8 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
+                endValue,
+                startValue,
                 headerType: 'link',
                 _date: this._options._date,
                 resetStartValue: this._options.resetStartValue,
