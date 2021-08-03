@@ -18,7 +18,7 @@ import {isHidden} from './StickyBlock/Utils';
 import {getHeadersHeight} from './StickyBlock/Utils/getHeadersHeight';
 import {location} from 'Application/Env';
 import {Entity} from 'Controls/dragnDrop';
-
+import 'css!Controls/scroll';
 
 
 interface IInitialScrollPosition {
@@ -1146,7 +1146,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         }
     }
 
-    static _theme: string[] = ['Controls/scroll'];
 
     static getOptionTypes(): object {
         return {

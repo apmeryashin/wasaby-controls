@@ -151,7 +151,7 @@ describe('Controls/scroll:Container', () => {
     });
 
     describe('shadowMode', () => {
-        const optimizeShadowClass: string = 'controls-Scroll__backgroundShadow controls-Scroll__background-Shadow_style-default_theme-default controls-Scroll__background-Shadow_top-auto_bottom-auto_style-default_theme-default';
+        const optimizeShadowClass: string = 'controls-Scroll__backgroundShadow controls-Scroll__background-Shadow_style-default controls-Scroll__background-Shadow_top-auto_bottom-auto_style-default';
         [{
             shadowMode: SHADOW_MODE.JS,
             canScroll: true,

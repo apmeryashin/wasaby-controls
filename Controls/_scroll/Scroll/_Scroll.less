@@ -69,13 +69,13 @@
 .controls-Scroll__shadow_horizontal {
    left: 0;
    right: 0;
-   height: @shadow_thickness_scroll;
+   height: var(--shadow_thickness_scroll);
 }
 
 .controls-Scroll__shadow_vertical {
    top: 0;
    bottom: 0;
-   width: @shadow_thickness_scroll;
+   width: var(--shadow_thickness_scroll);
 }
 
 .controls-Scroll__shadow_top {
@@ -83,10 +83,7 @@
 }
 
 .controls-Scroll__shadow_top_style-default {
-   background: linear-gradient(
-      to bottom,
-      @shadow_start-color_scroll, @shadow_end-color_scroll
-   );
+   background: linear-gradient(to bottom, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
 }
 
 .controls-Scroll__shadow_bottom {
@@ -94,26 +91,17 @@
 }
 
 .controls-Scroll__shadow_bottom_style-default {
-   background: linear-gradient(
-      to top,
-      @shadow_start-color_scroll, @shadow_end-color_scroll
-   );
+   background: linear-gradient(to top, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
 }
 
 .controls-Scroll__shadow_left {
    left: 0;
-   background: linear-gradient(
-           to right,
-           @shadow_start-color_scroll, @shadow_end-color_scroll
-   );
+   background: linear-gradient(to right, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
 }
 
 .controls-Scroll__shadow_right {
    right: 0;
-   background: linear-gradient(
-           to left,
-           @shadow_start-color_scroll, @shadow_end-color_scroll
-   );
+   background: linear-gradient(to left, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
 }
 
 .controls-Scroll__content_hideNativeScrollbar::-webkit-scrollbar {
@@ -148,26 +136,26 @@
 .controls-Scroll__paging {
    position: absolute;
    z-index: @z-index_Scroll-contentEnvironment;
-   bottom: @scrollpaging_offset-vertical_list;
+   bottom: var(--scrollpaging_offset-vertical_list);
 
    &_position-right {
-      right: @scrollpaging_offset-horizontal_list;
+      right: var(--scrollpaging_offset-horizontal_list);
    }
    &_position-left {
-      left: @scrollpaging_offset-horizontal_list;
+      left: var(--scrollpaging_offset-horizontal_list);
    }
 }
 
 .controls-Scroll__content_paging {
-   padding-bottom: @item_height_paging + @padding-vertical_paging * 2;
+   padding-bottom: calc(var(--item_height_paging) + var(--padding-vertical_paging) * 2);
 }
 
 // Класс для css теней скролл контейнера в мастере
-.controls-Scroll__background-Shadow_style-master_theme-@{themeName} {
-   background-image: linear-gradient(@master_item_background-color_list 25%, rgba(@master_item_background-color_list, 0)),
-   linear-gradient(rgba(@master_item_background-color_list, 0), @master_item_background-color_list 75%),
-   linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
-   linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll);
+.controls-Scroll__background-Shadow_style-master {
+   background-image: linear-gradient(var(--master_item_background-color_list) 25%, rgba(255, 255, 255, 0)),
+   linear-gradient(rgba(255, 255, 255, 0), var(--master_item_background-color_list) 75%),
+   linear-gradient(to bottom, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)),
+   linear-gradient(to top, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
    background-position: top, bottom, top, bottom;
    background-repeat: no-repeat;
    background-attachment: local, local, scroll, scroll;

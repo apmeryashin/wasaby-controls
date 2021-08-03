@@ -2,12 +2,13 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {IEdgeIntersectionObserverOptions} from './Types';
 import EdgeIntersectionObserver from './EdgeIntersectionObserver';
 import template = require('wml!Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer');
+import 'css!Controls/scroll';
 
 /**
  * Контейнер, позволяющий отслеживать пересечение своих границ с границами скроллируемой области.
  *
  * @class Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer
- * 
+ *
  * @author Миронов А.Ю.
  * @see Controls/_scroll/Container
  * @public
@@ -31,7 +32,6 @@ class EdgeIntersectionObserverContainer extends Control<IEdgeIntersectionObserve
         this._observer = null;
     }
 
-    static _theme: string[] = ['Controls/scroll'];
 }
 
 export default EdgeIntersectionObserverContainer;

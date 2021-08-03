@@ -26,6 +26,7 @@ import {EventUtils} from 'UI/Events';
 import Model = require('Controls/_scroll/StickyBlock/Model');
 import template = require('wml!Controls/_scroll/StickyBlock/StickyHeader');
 import Group from 'Controls/_scroll/StickyBlock/Group';
+import 'css!Controls/scroll';
 
 export enum BACKGROUND_STYLE {
     TRANSPARENT = 'transparent',
@@ -969,8 +970,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._canShadowVisible = { top, bottom };
         }
     }
-
-    static _theme: string[] = ['Controls/scroll'];
 
     static _isIOSChrome(): boolean {
         return detection.isMobileIOS && detection.chrome;
