@@ -5,8 +5,8 @@ import {
     EIndicatorState,
     ITriggerOffset
 } from 'Controls/display';
-import {RecordSet} from 'Types/collection';
-import {TIndicatorState} from "Controls/_display/Indicator";
+import {RecordSet, IObservable} from 'Types/collection';
+import {TIndicatorState} from 'Controls/_display/Indicator';
 
 export interface IIndicatorsControllerOptions {
     model: Collection;
@@ -20,6 +20,11 @@ export interface IIndicatorsControllerOptions {
     attachLoadTopTriggerToNull: boolean; // TODO LI переименовать
     attachLoadDownTriggerToNull: boolean; // TODO LI переименовать
     stopPortionedSearchCallback: () => void;
+}
+
+export interface ICollectionChangeParams {
+    action: string;
+    hasSearchValue: boolean;
 }
 
 const INDICATOR_DELAY = 2000;
@@ -347,6 +352,27 @@ export default class IndicatorsController {
 
         const newOffset = this._correctTriggerOffset(offset);
         this._model.setLoadingTriggerOffset(newOffset);
+    }
+
+    onCollectionChange(params: ICollectionChangeParams): void {
+        if (params.action === IObservable.ACTION_RESET) {
+            if (params.hasSearchValue) {
+                // Событие reset коллекции приводит к остановке активного порционного поиска.
+                // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
+                this.endPortionedSearch();
+            }
+            // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
+            // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
+            // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
+            // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
+            const hasItems = this._model && !!this._model.getCount();
+            if (!hasItems) {
+                this.setLoadingTriggerOffset({
+                    top: 0,
+                    bottom: 0
+                });
+            }
+        }
     }
 
     /**
