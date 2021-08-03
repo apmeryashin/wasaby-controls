@@ -11,7 +11,7 @@ import 'css!Controls/operationsPopup';
     * @class Controls/_operationsPopup/ReportDialog
     * @extends UI/Base:Control
     *
-    * @author Сухоручкин А.С.
+    * @author Герасимов А.М.
     * @public
     *
     */
@@ -21,7 +21,7 @@ import 'css!Controls/operationsPopup';
     * @class Controls/_operationsPopup/ReportDialog
     * @extends UI/Base:Control
     *
-    * @author Сухоручкин А.С.
+    * @author Герасимов А.М.
     * @public
     *
     */
