@@ -9,7 +9,7 @@ export default class extends Control {
     protected _viewSource: HierarchicalMemory;
     protected _header = Gadgets.getSearchHeader();
     protected _columns =  Gadgets.getSearchColumns().map((c, i) => i === 2 ? {...c, template: CellTemplate} : c);
-    private _searchValue: string = 'sata';
+    protected _searchValue: string = 'sata';
 
     protected _beforeMount(): void {
         this._columns[0].width = '400px';
@@ -17,7 +17,8 @@ export default class extends Control {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             parentProperty: 'parent',
-            data: Gadgets.getSmallSearchData()
+            data: Gadgets.getSmallSearchData(),
+            filter: () => true
         });
     }
 
