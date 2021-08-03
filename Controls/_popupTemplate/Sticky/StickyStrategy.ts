@@ -6,6 +6,7 @@ import {detection, constants} from 'Env/Env';
 import {IPopupPosition} from 'Controls/popup';
 import {IStickyPositionConfig} from 'Controls/_popupTemplate/Sticky/StickyController';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 let TouchKeyboardHelper = {};
 
@@ -34,24 +35,32 @@ const INVERTING_CONST = {
 };
 
 export class StickyStrategy {
-   getPosition(popupCfg: IStickyPositionConfig, targetCoords: ITargetCoords): IPopupPosition {
+   getPosition(
+       popupCfg: IStickyPositionConfig,
+       targetCoords: ITargetCoords,
+       targetElement: HTMLElement
+   ): IPopupPosition {
       const position = {
          // position: 'fixed'
       };
       this._prepareRestrictiveCoords(popupCfg, targetCoords);
-      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'horizontal'));
-      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'vertical'));
-      this._setMaxSizes(popupCfg, position);
+      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'horizontal', targetElement));
+      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'vertical', targetElement));
+      this._setMaxSizes(popupCfg, position, targetElement);
       this._resetMargins(position);
       return position;
    }
 
-   private _calculatePosition(popupCfg: IStickyPositionConfig, targetCoords: ITargetCoords,
-                              direction: TDirection): IPopupPosition {
+   private _calculatePosition(
+       popupCfg: IStickyPositionConfig,
+       targetCoords: ITargetCoords,
+       direction: TDirection,
+       targetElement: HTMLElement
+   ): IPopupPosition {
       const property = direction === 'horizontal' ? 'width' : 'height';
-      const position = this._getPosition(popupCfg, targetCoords, direction);
+      const position = this._getPosition(popupCfg, targetCoords, direction, targetElement);
       let resultPosition = position;
-      let positionOverflow = this._checkOverflow(popupCfg, targetCoords, position, direction);
+      let positionOverflow = this._checkOverflow(popupCfg, targetCoords, position, direction, targetElement);
 
       /*
          При масштабировании иногда браузер криво считает размеры контейнера,
@@ -67,13 +76,13 @@ export class StickyStrategy {
                                                                  position, positionOverflow, direction);
          } else {
             this._invertPosition(popupCfg, direction);
-            const revertPosition = this._getPosition(popupCfg, targetCoords, direction);
-            let revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+            const revertPosition = this._getPosition(popupCfg, targetCoords, direction, targetElement);
+            let revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition, direction, targetElement);
             if (revertPositionOverflow > 0) {
                if ((positionOverflow <= revertPositionOverflow)) {
                   this._invertPosition(popupCfg, direction);
                   this._fixPosition(position, targetCoords);
-                  positionOverflow = this._checkOverflow(popupCfg, targetCoords, position, direction);
+                  positionOverflow = this._checkOverflow(popupCfg, targetCoords, position, direction, targetElement);
                   if (positionOverflow > 0 ) {
                      this._restrictContainer(position, property, popupCfg, positionOverflow);
                   }
@@ -82,7 +91,7 @@ export class StickyStrategy {
                   // Fix position and overflow, if the revert position is outside of the window,
                   // but it can be position in the visible area
                   this._fixPosition(revertPosition, targetCoords);
-                  revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+                  revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition, direction, targetElement);
                   if (revertPositionOverflow > 0 ) {
                      this._restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
                   }
@@ -98,7 +107,12 @@ export class StickyStrategy {
       return resultPosition;
    }
 
-   private _getPosition(popupCfg: IStickyPositionConfig, targetCoords: ITargetCoords, direction: TDirection): IPopupPosition {
+   private _getPosition(
+       popupCfg: IStickyPositionConfig,
+       targetCoords: ITargetCoords,
+       direction: TDirection,
+       targetElement: HTMLElement
+   ): IPopupPosition {
       const position = {};
       const isHorizontal = direction === 'horizontal';
       if (popupCfg.direction[direction] === 'center') {
@@ -113,9 +127,9 @@ export class StickyStrategy {
          let coord: string = isHorizontal ? 'left' : 'top';
          if (popupCfg.direction[direction] === coord) {
             coord = isHorizontal ? 'right' : 'bottom';
-            const viewportOffset: number = this._getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
-            const viewportPage: number = this._getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
-            const viewportSize: number = this._getVisualViewport()[isHorizontal ? 'width' : 'height'];
+            const viewportOffset: number = this._getVisualViewport(targetElement)[isHorizontal ? 'offsetLeft' : 'offsetTop'];
+            const viewportPage: number = this._getVisualViewport(targetElement)[isHorizontal ? 'pageLeft' : 'pageTop'];
+            const viewportSize: number = this._getVisualViewport(targetElement)[isHorizontal ? 'width' : 'height'];
             const topSpacing: number = viewportSize + viewportPage + viewportOffset;
             const bottomSpacing: number = this._getBody()[isHorizontal ? 'width' : 'height'] - topSpacing;
             const targetCoord: number = this._getTargetCoords(popupCfg, targetCoords, coord, direction);
@@ -134,7 +148,13 @@ export class StickyStrategy {
       return position;
    }
 
-   private _checkOverflow(popupCfg: IStickyPositionConfig, targetCoords: ITargetCoords, position: IPopupPosition, direction: TDirection): number {
+   private _checkOverflow(
+       popupCfg: IStickyPositionConfig,
+       targetCoords: ITargetCoords,
+       position: IPopupPosition,
+       direction: TDirection,
+       targetElement: HTMLElement
+   ): number {
       const isHorizontal = direction === 'horizontal';
       const popupDirection = popupCfg.direction[direction];
       const restrictiveContainerPosition = popupCfg.restrictiveContainerCoords;
@@ -175,12 +195,13 @@ export class StickyStrategy {
       // Только в этом случае viewPortOffset находится вне windowSize, его нужно учитывать при подсчете размеров окна
       // Если контент страницы больше, чем боди, появляется нативный скролл,
       // В этом случае нужно учитывать viewPortPageTop
+      const visualViewport = this._getVisualViewport(targetElement);
       const viewportOffset: number = isHorizontal ?
-          0 : this._getVisualViewport().offsetTop || this._getVisualViewport().pageTop;
+          0 : visualViewport.offsetTop || visualViewport.pageTop;
 
       const positionValue: number = position[isHorizontal ? 'left' : 'top'];
       const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
-      const windowSize = this._getWindowSizes()[isHorizontal ? 'width' : 'height'];
+      const windowSize = this._getWindowSizes(targetElement)[isHorizontal ? 'width' : 'height'];
       // Размер restrictiveContainer не больше размера экрана
       const containerSize: number = restrictiveContainerPosition ?
           Math.min(restrictiveContainerCoord, windowSize) : windowSize;
@@ -315,8 +336,8 @@ export class StickyStrategy {
       }
    }
 
-   private _setMaxSizes(popupCfg: IStickyPositionConfig, position: IPopupPosition): void {
-      const windowSizes = this._getWindowSizes();
+   private _setMaxSizes(popupCfg: IStickyPositionConfig, position: IPopupPosition, targetElement: HTMLElement): void {
+      const windowSizes = this._getWindowSizes(targetElement);
 
       if (popupCfg.config.maxWidth) {
          position.maxWidth = Math.min(popupCfg.config.maxWidth, windowSizes.width);
@@ -342,16 +363,16 @@ export class StickyStrategy {
          let verticalScroll;
          // Учитываем, какая часть страницы проскроллена снизу или сверху, в зависимости от точки позиционирования
          if (position.top) {
-            verticalScroll = this._getVisualViewport().pageTop;
+            verticalScroll = this._getVisualViewport(targetElement).pageTop;
          } else {
-            verticalScroll = this._getBody().height - this._getViewportHeight() -
-                this._getVisualViewport().pageTop;
+            verticalScroll = this._getBody().height - this._getViewportHeight(targetElement) -
+                this._getVisualViewport(targetElement).pageTop;
          }
 
          if (popupCfg.fittingMode.vertical !== 'overflow') {
             verticalPadding = position.top || position.bottom || 0;
          }
-         position.maxHeight = this._getViewportHeight() - verticalPadding + verticalScroll;
+         position.maxHeight = this._getViewportHeight(targetElement) - verticalPadding + verticalScroll;
       }
       if (popupCfg.restrictiveContainerCoords) {
          position.maxHeight -= popupCfg.restrictiveContainerCoords.top;
@@ -416,46 +437,29 @@ export class StickyStrategy {
           (window.screen.availHeight > window.innerHeight);
    }
 
-   private _getWindowSizes(): {width: number; height: number} {
+   private _getWindowSizes(targetElement: HTMLElement): {width: number; height: number} {
       // Ширина берется по body специально. В случае, когда уменьшили окно браузера и появился горизонтальный скролл
       // надо правильно вычислить координату right. Для высоты аналогично.
-      let height = this._getViewportHeight();
+      let height = this._getViewportHeight(targetElement);
       if (this._isIOS12()) {
          height -= TouchKeyboardHelper.getKeyboardHeight(true);
       }
       return {
-         width: document.body.clientWidth,
+         width: DimensionsMeasurer.getElementDimensions(document.body).clientWidth,
          height
       };
    }
 
    private _getBody(): object {
-      return {
-         height: document.body.clientHeight,
-         scrollHeight: document.body.scrollHeight,
-         width: document.body.clientWidth
-      };
+      return DimensionsMeasurer.getElementDimensions(document.body);
    }
 
-   private _getViewportHeight(): number {
-      if (window?.visualViewport) {
-         return this._getVisualViewport().height;
-      }
-      return document.body.clientHeight;
+   private _getViewportHeight(element: HTMLElement): number {
+      return this._getVisualViewport(element).height;
    }
 
-   private _getVisualViewport(): IVisualViewport {
-      if (window?.visualViewport) {
-         return window.visualViewport;
-      }
-      return {
-         offsetLeft: 0,
-         offsetTop: 0,
-         pageLeft: constants.isBrowserPlatform && window.pageXOffset,
-         pageTop: constants.isBrowserPlatform && window.pageYOffset,
-         width: constants.isBrowserPlatform && document.body.clientWidth,
-         height: constants.isBrowserPlatform && document.body.clientHeight
-      };
+   private _getVisualViewport(element: HTMLElement): IVisualViewport {
+      return DimensionsMeasurer.getVisualViewportDimensions(element);
    }
 
    private _isIOS13(): boolean {

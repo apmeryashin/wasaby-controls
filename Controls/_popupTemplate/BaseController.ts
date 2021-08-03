@@ -8,6 +8,7 @@ import oldWindowManager from 'Controls/_popupTemplate/_oldWindowManager';
 import * as Deferred from 'Core/Deferred';
 import * as cMerge from 'Core/core-merge';
 import * as cInstance from 'Core/core-instance';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export const getRightPanelWidth = () => {
     // Вычисляем значение при вызове. Если делать при загрузке модуля,
@@ -285,8 +286,7 @@ abstract class BaseController implements IPopupController {
 
     protected _getTargetCoords(item: IPopupItem, sizes: IPopupSizes = {}) {
         if (item.popupOptions.nativeEvent) {
-            const top = item.popupOptions.nativeEvent.clientY;
-            const left = item.popupOptions.nativeEvent.clientX;
+            const {x, y} = DimensionsMeasurer.getMouseCoordsByMouseEvent(item.popupOptions.nativeEvent);
             const size = 1;
             const positionCfg = {
                 direction: {
@@ -299,10 +299,10 @@ abstract class BaseController implements IPopupController {
             return {
                 width: size,
                 height: size,
-                top,
-                left,
-                bottom: top + size,
-                right: left + size,
+                top: y,
+                left: x,
+                bottom: y + size,
+                right: x + size,
                 topScroll: 0,
                 leftScroll: 0
             };
