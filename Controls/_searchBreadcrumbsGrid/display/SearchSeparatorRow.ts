@@ -1,4 +1,4 @@
-import { GridRow, TColspanCallbackResult, IColumn } from 'Controls/grid';
+import {GridRow, TColspanCallbackResult, IColumn, TColumns} from 'Controls/grid';
 import SearchGridCollection from './SearchGridCollection';
 
 export default class SearchSeparatorRow extends GridRow<string> {
@@ -47,6 +47,10 @@ export default class SearchSeparatorRow extends GridRow<string> {
 
     isLastItem(): boolean {
         return false;
+    }
+
+    setGridColumnsConfig(columns: TColumns): void {
+        this.setColumnsConfig(columns);
     }
 
     protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
