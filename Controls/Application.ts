@@ -30,15 +30,11 @@ import 'css!Controls/CommonClasses';
 
 /**
  * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
- * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
+ * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/sbis-env-ui/ здесь}.
  *
  * @class Controls/Application
  * @extends UI/Base:Control
- *
  * @implements Controls/interface:IApplication
- * @mixes UI/_base/interface/IHTML
- * @mixes Controls/_interface/IRUM
- *
  *
  * @public
  * @author Санников К.А.
