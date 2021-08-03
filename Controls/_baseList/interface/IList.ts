@@ -201,18 +201,13 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * @typedef {String} Controls/_list/interface/IList/MultiSelectVisibility
- * @description Допустимые значения для опции {@link multiSelectVisibility}.
+ * @name Controls/_list/interface/IList#multiSelectVisibility
+ * @cfg {String} Видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбоксов}.
  * @variant visible Показать.
  * @variant hidden Скрыть.
  * @variant onhover Показывать при наведении.
- */
-
-/**
- * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {Controls/_list/interface/IList/MultiSelectVisibility.typedef} Видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбоксов}.
- * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
+ * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @see multiSelectAccessibilityProperty
  * @see multiSelectPosition
  */
@@ -226,21 +221,16 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /*ENG
  * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {Controls/_list/interface/IList/MultiSelectVisibility.typedef} Whether multiple selection is enabled.
+ * @cfg {String} Whether multiple selection is enabled.
  * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
  */
 
 /**
- * @typedef {String} Controls/_list/interface/IList/MultiSelectPosition
- * @description Допустимые значения для опции {@link multiSelectPosition}.
+ * @name Controls/_list/interface/IList#multiSelectPosition
+ * @cfg {String} Позиционирование {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбокса}.
  * @variant custom Позиционирование чекбокса в произвольном месте пользовательского шаблона. Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/position/ здесь}.
  * @variant default Стандартная позиция чекбоксов множественного выбора в начале строки.
- */
-
-/**
- * @name Controls/_list/interface/IList#multiSelectPosition
- * @cfg {Controls/_list/interface/IList/MultiSelectPosition.typedef} Позиционирование {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбокса}.
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
  * @default default
  * @see multiSelectAccessibilityProperty
@@ -248,16 +238,12 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /*ENG
- * @typedef {String} Controls/_list/interface/IList/MultiSelectPosition
- * @variant custom A custom position for the multiple selection checkboxes. With this option value, the multiple selection template is passed to the item template and can be displayed anywhere in it
- * @variant default The standard position of the multiple selection checkboxes (at the beginning of the line)
- */
-
-/*ENG
  * @name Controls/_list/interface/IList#multiSelectPosition
- * @cfg {Controls/_list/interface/IList/MultiSelectPosition.typedef} Position of multiple selection checkboxes
+ * @cfg {String} Position of multiple selection checkboxes
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
  * @default default
+ * @variant custom A custom position for the multiple selection checkboxes. With this option value, the multiple selection template is passed to the item template and can be displayed anywhere in it
+ * @variant default The standard position of the multiple selection checkboxes (at the beginning of the line)
  */
 
 /**
@@ -279,54 +265,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @default true
  * @see multiSelectVisibility
  * @see multiSelectPosition
- */
-
-/**
- * @event Происходит в момент, когда курсор оказывается над элементом списка.
- * @name Controls/_list/interface/IList#itemMouseEnter
- * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Экземпляр записи, на которую был наведен курсор.
- * @param {UICommon/Events:SyntheticEvent} nativeEvent Дескриптор события мыши.
- */
-
-/*ENG
- * @event Occurs when the cursor is over the list item.
- * @name Controls/_list/interface/IList#itemMouseEnter
- * @param {UICommon/Events:SyntheticEvent} eventObject Descriptor of the event.
- * @param {Types/entity:Model} item Instance of the item that the cursor was over.
- * @param {UICommon/Events:SyntheticEvent} nativeEvent Descriptor of the mouse event
- */
-
-/**
- * @event Происходит в момент, когда курсор уходит за пределы элемента списка.
- * @name Controls/_list/interface/IList#itemMouseLeave
- * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Экземпляр записи, за пределы которой ушел курсор.
- * @param {UICommon/Events:SyntheticEvent} nativeEvent Дескриптор события мыши.
- */
-
-/*ENG
- * @event Occurs when the cursor leaves the list item.
- * @name Controls/_list/interface/IList#itemMouseLeave
- * @param {UICommon/Events:SyntheticEvent} eventObject Descriptor of the event.
- * @param {Types/entity:Model} item Instance of the item that the cursor was over.
- * @param {UICommon/Events:SyntheticEvent} nativeEvent Descriptor of the mouse event
- */
-
-/**
- * @event Происходит в момент, когда курсор двигается по элементам списка.
- * @name Controls/_list/interface/IList#itemMouseMove
- * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Экземпляр записи, по которой двигается курсор.
- * @param {UICommon/Events:SyntheticEvent} nativeEvent Дескриптор события мыши.
- */
-
-/*ENG
- * @event Occurs when the cursor moves over list items.
- * @name Controls/_list/interface/IList#itemMouseMove
- * @param {UICommon/Events:SyntheticEvent} eventObject Descriptor of the event.
- * @param {Types/entity:Model} item Instance of the item that the cursor is moving along.
- * @param {UICommon/Events:SyntheticEvent} nativeEvent Descriptor of the mouse event
  */
 
 /**
@@ -407,27 +345,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * @typedef {String} Controls/_list/interface/IList/Style
- * @description Допустмиые значения для опции {@link style}.
+ * @name Controls/_list/interface/IList#style
+ * @cfg {String} Режим отображения списка.
  * @variant master Двухколоночный реестр.
  * @variant default Плоский список.
- */
-
-/**
- * @name Controls/_list/interface/IList#style
- * @cfg {Controls/_list/interface/IList/Style.typedef} Режим отображения списка.
  * @default default
  */
 
 /*ENG
- * @typedef {String} Controls/_list/interface/IList/Style
+ * @name Controls/_list/interface/IList#style
+ * @cfg {String} Control styling
  * @variant master Stylizes control as MasterDetail
  * @variant default Simple list
- */
-
-/*ENG
- * @name Controls/_list/interface/IList#style
- * @cfg {Controls/_list/interface/IList/Style.typedef} Control styling
  * @default default
  */
 
@@ -507,6 +436,256 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  *    list.scrollToItem(this._firstItemKey);
  * }
  * </pre>
+ */
+
+/**
+ * @typedef {String} Controls/_list/interface/IList/VerticalItemPaddingEnum
+ * @description Допустимые значения для свойств {@link Controls/list:IList/ItemPadding.typedef ItemPadding}.
+ * @variant null Нулевой отступ. Значение передается строкой.
+ * @variant s Маленький отступ.
+ * @variant l Большой отступ.
+ */
+
+/*ENG
+ * @typedef {String} Controls/_list/interface/IList/VerticalItemPaddingEnum
+ * @variant null Without padding.
+ * @variant s Small padding.
+ * @variant l Large padding.
+ */
+
+/**
+ * @typedef {String} Controls/_list/interface/IList/HorizontalItemPaddingEnum
+ * @description Допустимые значения для свойств {@link Controls/list:IList/ItemPadding.typedef ItemPadding}.
+ * @variant null Нулевой отступ. Значение передается строкой.
+ * @variant xs Минимальный отступ.
+ * @variant s Маленький отступ.
+ * @variant m Средний отступ.
+ * @variant l Большой отступ.
+ * @variant xl Очень большой оступ.
+ * @variant xxl Максимальный отступ.
+ */
+
+/*ENG
+ * @typedef {Object} Controls/_list/interface/IList/HorizontalItemPaddingEnum
+ * @variant null Without padding.
+ * @variant xs Extra small padding.
+ * @variant s Small padding.
+ * @variant m Medium padding.
+ * @variant l Large padding.
+ * @variant xl Extra large padding.
+ * @variant xxl Extra extra large padding.
+ */
+
+/**
+ * @typedef {Object} Controls/_list/interface/IList/ItemPadding
+ * @description Свойства для конфигурации опции {@link Controls/list:IList#itemPadding itemPadding}.
+ * @property {Controls/_list/interface/IList/VerticalItemPaddingEnum.typedef} [top=s] Отступ от содержимого до верхней границы элемента. Если свойство принимает значение null, то отступ отсутствует.
+ * @property {Controls/_list/interface/IList/VerticalItemPaddingEnum.typedef} [bottom=s] Отступ от содержимого до нижней границы элемента. Если свойство принимает значение null, то отступ отсутствует.
+ * @property {Controls/_list/interface/IList/HorizontalItemPaddingEnum.typedef} [left=m] Отступ от содержимого до левой границы элемента. Если свойство принимает значение null, то отступ отсутствует.
+ * @property {Controls/_list/interface/IList/HorizontalItemPaddingEnum.typedef} [right=m] Отступ от содержимого до правой границы элемента. Если свойство принимает значение null, то отступ отсутствует.
+ */
+
+/*ENG
+ * @typedef {Object} Controls/_list/interface/IList/ItemPadding
+ * @property {VerticalItemPaddingEnum} [top=s] Padding from item content to top item border.
+ * @property {VerticalItemPaddingEnum} [bottom=s] Padding from item content to bottom item border.
+ * @property {HorizontalItemPaddingEnum} [left=m] Padding from item content to left item border.
+ * @property {HorizontalItemPaddingEnum} [right=m] Padding from item content to right item border.
+ */
+
+/**
+ * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Конфигурация отступов внутри элементов списка.
+ * @name Controls/_list/interface/IList#itemPadding
+ * @demo Controls-demo/gridNew/ItemPaddingNull/Index
+ */
+
+/*ENG
+ * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Configuration inner paddings in the item.
+ * @name Controls/_list/interface/IList#itemPadding
+ */
+
+
+/**
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/ Префикс стиля для настройки фона} внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @variant master Предназначен для настройки фона masterDetail (Берётся из свойства style)
+ * @variant infoBox Предназначен для настройки фона infoBox.
+ * @variant stack Предназначен для настройки фона стековой панели.
+ * @variant detailContrast
+ * @variant listItem
+ * @variant stackHeader
+ * @variant default фон списка по умолчанию
+ * @default default
+ * @remark
+ * Согласно {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/ документации} поддерживаются любые произвольные значения опции.
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {String} Style prefix to configure background for inner list control components with static or absolute positioning.
+ * @default default (theme background)
+ */
+
+/**
+ * @name Controls/_list/interface/IList#rowSeparatorSize
+ * @cfg {String} Высота {@link /doc/platform/developmentapl/interface-development/controls/list/grid/separator/#row линии-разделителя строк}.
+ * @variant s Размер тонкой линии-разделителя.
+ * @variant l Размер толстой линии-разделителя.
+ * @variant null Без линии-разделителя. Значение передается строкой.
+ * @default null
+ */
+
+/*
+ * @name Controls/_list/interface/IList#rowSeparatorSize
+ * @cfg {String} set row separator height.
+ * @variant s Thin row separator line.
+ * @variant l Wide row separator line.
+ * @variant null Without row separator line
+ * @default null
+ */
+
+/**
+ * @name Controls/_list/interface/IList#hoverBackgroundStyle
+ * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#hover Стиль подсветки строки} при наведении курсора мыши.
+ * @default default
+ * @remark
+ * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.
+ * @example
+ * <pre class="brush: html; highlight: [4]">
+ * <!-- WML -->
+ * <Controls.list:View
+ *    source="{{_viewSource}}"
+ *    hoverBackgroundStyle="primary" />
+ * </pre>
+ */
+
+/**
+ * @typedef {String} Controls/_list/interface/IList/TRoundBorderSize
+ * @variant null Без скругления. Значение передается строкой.
+ * @variant XS Минимальный радиус скругления.
+ * @variant S Малый радиус скругления.
+ * @variant M Средний радиус скругления.
+ * @variant L Большой радиус скругления.
+ * @variant XL Максимальный радиус скругления.
+ */
+
+/**
+ * @typedef {Object} Controls/_list/interface/IList/TRoundBorder
+ * @description Допустимые значения для опции {@link roundBorder}.
+ * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} tr Правый верхний угол.
+ * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} tl Левый верхний угол.
+ * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} br Правый нижний угол.
+ * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} bl Левый нижний угол.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#roundBorder
+ * @cfg {Controls/_list/interface/IList/TRoundBorder.typedef} Cкругление углов элемента списка.
+ * В настоящий момент поддерживается для плоского списка поддерживается только для шаблона Controls/listTemplates:ListItemTemplate
+ */
+
+/**
+ * @name Controls/_list/interface/IList#urlProperty
+ * @cfg {String} Имя поля записи, в котором содержится ссылка для открытия в новой вкладке.
+ * @default url
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyCallback
+ * @cfg {String} Функция обратного вызова для определения залипания элемента списка. Поддерживается только для шаблона Controls/list:ItemTemplate
+ * @demo Controls-demo/list_new/StickyCallback/Index
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyFooter
+ * @cfg {String} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ подвал} списка.
+ * @default false
+ */
+
+/**
+ * @typedef {String} Controls/_list/interface/IList/ButtonName
+ * @description Допустимые значения для аргумента события {@link Controls/list:IList#pagingArrowClick pagingArrowClick}.
+ * @variant Begin Кнопка "В начало".
+ * @variant End Кнопка "В конец".
+ */
+
+/**
+ * @event Происходит при клике по кнопкам перехода к первой и последней странице.
+ * @name Controls/_list/interface/IList#pagingArrowClick
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Controls/_list/interface/IList/ButtonName.typedef} buttonName Кнопка, по которой кликнули.
+ */
+
+/**
+ * @event Происходит при изменении лимита при выборе записей пачками в ПМО.
+ * @name Controls/_list/interface/IList#selectedLimitChanged
+ * @param {UICommon/Events:SyntheticEvent<Event>} event Дескриптор события.
+ * @param {Number} limit Лимит на количество записей.
+ * @example
+ * В следующем примере показано, как подписаться на событие изменения лимита и обработать его.
+ * Требуется для того, чтобы в дальнейшем передать лимит на БЛ, т.к. выбрано записей может быть больше, чем загружено.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.list:View on:selectedLimitChanged="selectedLimitChanged()"/>
+ * </pre>
+ * <pre class="brush: js">
+ * // TypeScript
+ * class MyClass {
+ *    private _limit: number;
+ *
+ *    protected selectedLimitChanged(e: Event, limit: number) {
+ *       this._limit = limit;
+ *    }
+ * }
+ * </pre>
+ */
+
+/**
+ * @event Происходит в момент, когда курсор оказывается над элементом списка.
+ * @name Controls/_list/interface/IList#itemMouseEnter
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр записи, на которую был наведен курсор.
+ * @param {UICommon/Events:SyntheticEvent} nativeEvent Дескриптор события мыши.
+ */
+
+/*ENG
+ * @event Occurs when the cursor is over the list item.
+ * @name Controls/_list/interface/IList#itemMouseEnter
+ * @param {UICommon/Events:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Types/entity:Model} item Instance of the item that the cursor was over.
+ * @param {UICommon/Events:SyntheticEvent} nativeEvent Descriptor of the mouse event
+ */
+
+/**
+ * @event Происходит в момент, когда курсор уходит за пределы элемента списка.
+ * @name Controls/_list/interface/IList#itemMouseLeave
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр записи, за пределы которой ушел курсор.
+ * @param {UICommon/Events:SyntheticEvent} nativeEvent Дескриптор события мыши.
+ */
+
+/*ENG
+ * @event Occurs when the cursor leaves the list item.
+ * @name Controls/_list/interface/IList#itemMouseLeave
+ * @param {UICommon/Events:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Types/entity:Model} item Instance of the item that the cursor was over.
+ * @param {UICommon/Events:SyntheticEvent} nativeEvent Descriptor of the mouse event
+ */
+
+/**
+ * @event Происходит в момент, когда курсор двигается по элементам списка.
+ * @name Controls/_list/interface/IList#itemMouseMove
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр записи, по которой двигается курсор.
+ * @param {UICommon/Events:SyntheticEvent} nativeEvent Дескриптор события мыши.
+ */
+
+/*ENG
+ * @event Occurs when the cursor moves over list items.
+ * @name Controls/_list/interface/IList#itemMouseMove
+ * @param {UICommon/Events:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Types/entity:Model} item Instance of the item that the cursor is moving along.
+ * @param {UICommon/Events:SyntheticEvent} nativeEvent Descriptor of the mouse event
  */
 
 /**
@@ -593,217 +772,4 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  *
  * * элемент нельзя отметить {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркером}.
  * * при клике начинается {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту}.
- */
-
-/**
- * @typedef {String} Controls/_list/interface/IList/VerticalItemPaddingEnum
- * @description Допустимые значения для свойств {@link Controls/list:IList/ItemPadding.typedef ItemPadding}.
- * @variant null Нулевой отступ. Значение передается строкой.
- * @variant s Маленький отступ.
- * @variant l Большой отступ.
- */
-
-/*ENG
- * @typedef {String} Controls/_list/interface/IList/VerticalItemPaddingEnum
- * @variant null Without padding.
- * @variant s Small padding.
- * @variant l Large padding.
- */
-
-/**
- * @typedef {String} Controls/_list/interface/IList/HorizontalItemPaddingEnum
- * @description Допустимые значения для свойств {@link Controls/list:IList/ItemPadding.typedef ItemPadding}.
- * @variant null Нулевой отступ. Значение передается строкой.
- * @variant xs Минимальный отступ.
- * @variant s Маленький отступ.
- * @variant m Средний отступ.
- * @variant l Большой отступ.
- * @variant xl Очень большой оступ.
- * @variant xxl Максимальный отступ.
- */
-
-/*ENG
- * @typedef {Object} Controls/_list/interface/IList/HorizontalItemPaddingEnum
- * @variant null Without padding.
- * @variant xs Extra small padding.
- * @variant s Small padding.
- * @variant m Medium padding.
- * @variant l Large padding.
- * @variant xl Extra large padding.
- * @variant xxl Extra extra large padding.
- */
-
-/**
- * @typedef {Object} Controls/_list/interface/IList/ItemPadding
- * @description Свойства для конфигурации опции {@link Controls/list:IList#itemPadding itemPadding}.
- * @property {Controls/_list/interface/IList/VerticalItemPaddingEnum.typedef} [top=s] Отступ от содержимого до верхней границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- * @property {Controls/_list/interface/IList/VerticalItemPaddingEnum.typedef} [bottom=s] Отступ от содержимого до нижней границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- * @property {Controls/_list/interface/IList/HorizontalItemPaddingEnum.typedef} [left=m] Отступ от содержимого до левой границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- * @property {Controls/_list/interface/IList/HorizontalItemPaddingEnum.typedef} [right=m] Отступ от содержимого до правой границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- */
-
-/*ENG
- * @typedef {Object} Controls/_list/interface/IList/ItemPadding
- * @property {VerticalItemPaddingEnum} [top=s] Padding from item content to top item border.
- * @property {VerticalItemPaddingEnum} [bottom=s] Padding from item content to bottom item border.
- * @property {HorizontalItemPaddingEnum} [left=m] Padding from item content to left item border.
- * @property {HorizontalItemPaddingEnum} [right=m] Padding from item content to right item border.
- */
-
-/**
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Конфигурация отступов внутри элементов списка.
- * @name Controls/_list/interface/IList#itemPadding
- * @demo Controls-demo/gridNew/ItemPaddingNull/Index
- */
-
-/*ENG
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Configuration inner paddings in the item.
- * @name Controls/_list/interface/IList#itemPadding
- */
-
-
-/**
- * @typedef {String} Controls/_list/interface/IList/BackgroundStyle
- * @description Допустимые значения для опции {@link Controls/list:IList#backgroundStyle backgroundStyle}.
- * @variant master Предназначен для настройки фона masterDetail (Берётся из свойства style)
- * @variant infoBox Предназначен для настройки фона infoBox.
- * @variant stack Предназначен для настройки фона стековой панели.
- * @variant detailContrast
- * @variant listItem
- * @variant stackHeader
- * @variant default фон списка по умолчанию
- * @default default
- */
-
-/**
- * @name Controls/_list/interface/IList#backgroundStyle
- * @cfg {Controls/_list/interface/IList/BackgroundStyle.typedef} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/ Префикс стиля для настройки фона} внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
- * @default default
- * @remark
- * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
- */
-
-/*ENG
- * @name Controls/_list/interface/IList#backgroundStyle
- * @cfg {Controls/_list/interface/IList/BackgroundStyle.typedef} Style prefix to configure background for inner list control components with static or absolute positioning.
- * @default default (theme background)
- */
-/**
- * @typedef {String} Controls/_list/interface/IList/RowSeparatorSize
- * @description Допустимые значения для опции {@link Controls/list:IList#rowSeparatorSize rowSeparatorSize}.
- * @variant s Размер тонкой линии-разделителя.
- * @variant l Размер толстой линии-разделителя.
- * @variant null Без линии-разделителя. Значение передается строкой.
- */
-
-/**
- * @name Controls/_list/interface/IList#rowSeparatorSize
- * @cfg {Controls/_list/interface/IList/RowSeparatorSize.typedef} Высота {@link /doc/platform/developmentapl/interface-development/controls/list/grid/separator/#row линии-разделителя строк}.
- * @default null
- */
-
-/*
- * @name Controls/_list/interface/IList#rowSeparatorSize
- * @cfg {Controls/_list/interface/IList/RowSeparatorSize.typedef} set row separator height.
- * @variant s Thin row separator line.
- * @variant l Wide row separator line.
- * @variant null Without row separator line
- * @default null
- */
-
-/**
- * @name Controls/_list/interface/IList#hoverBackgroundStyle
- * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#hover Стиль подсветки строки} при наведении курсора мыши.
- * @default default
- * @remark
- * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.
- * @example
- * <pre class="brush: html; highlight: [4]">
- * <!-- WML -->
- * <Controls.list:View
- *    source="{{_viewSource}}"
- *    hoverBackgroundStyle="primary" />
- * </pre>
- */
-
-/**
- * @typedef {String} Controls/_list/interface/IList/TRoundBorderSize
- * @variant null Без скругления. Значение передается строкой.
- * @variant XS Минимальный радиус скругления.
- * @variant S Малый радиус скругления.
- * @variant M Средний радиус скругления.
- * @variant L Большой радиус скругления.
- * @variant XL Максимальный радиус скругления.
- */
-
-/**
- * @typedef {Object} Controls/_list/interface/IList/TRoundBorder
- * @description Допустимые значения для опции {@link roundBorder}.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} tr Правый верхний угол.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} tl Левый верхний угол.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} br Правый нижний угол.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} bl Левый нижний угол.
- */
-
-/**
- * @name Controls/_list/interface/IList#roundBorder
- * @cfg {Controls/_list/interface/IList/TRoundBorder.typedef} Cкругление углов элемента списка.
- * В настоящий момент поддерживается для плоского списка поддерживается только для шаблона Controls/listTemplates:ListItemTemplate
- */
-
-/**
- * @name Controls/_list/interface/IList#urlProperty
- * @cfg {String} Имя поля записи, в котором содержится ссылка для открытия в новой вкладке.
- * @default url
- */
-
-/**
- * @name Controls/_list/interface/IList#stickyCallback
- * @description
- * Функция обратного вызова для определения залипания элемента списка. Поддерживается только для шаблона Controls/list:ItemTemplate
- * @demo Controls-demo/list_new/StickyCallback/Index
- */
-
-/**
- * @name Controls/_list/interface/IList#stickyFooter
- * @description
- * Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ подвал} списка.
- * @default false
- */
-
-/**
- * @typedef {String} Controls/_list/interface/IList/ButtonName
- * @description Допустимые значения для аргумента события {@link Controls/list:IList#pagingArrowClick pagingArrowClick}.
- * @variant Begin Кнопка "В начало".
- * @variant End Кнопка "В конец".
- */
-
-/**
- * @event Происходит при клике по кнопкам перехода к первой и последней странице.
- * @name Controls/_list/interface/IList#pagingArrowClick
- * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Controls/_list/interface/IList/ButtonName.typedef} buttonName Кнопка, по которой кликнули.
- */
-
-/**
- * @event Происходит при изменении лимита при выборе записей пачками в ПМО.
- * @name Controls/_list/interface/IList#selectedLimitChanged
- * @param {UICommon/Events:SyntheticEvent<Event>} event Дескриптор события.
- * @param {number} limit Лимит на количество записей.
- * @example
- * В следующем примере показано, как подписаться на событие изменения лимита и обработать его.
- * Требуется для того, чтобы в дальнейшем передать лимит на БЛ, т.к. выбрано записей может быть больше, чем загружено.
- * <pre class="brush: html">
- * <Controls.list:View on:selectedLimitChanged="selectedLimitChanged()"/>
- * </pre>
- * <pre class="brush: js">
- * // TypeScript
- * class MyClass {
- *    private _limit: number;
- *
- *    protected selectedLimitChanged(e: Event, limit: number) {
- *       this._limit = limit;
- *    }
- * }
- * </pre>
  */
