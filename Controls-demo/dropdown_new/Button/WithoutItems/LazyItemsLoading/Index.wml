@@ -1,4 +1,4 @@
-<div class="controlsDemo__flexRow controlsDemo_fixedWidth300">
+<div class="controlsDemo__flexRow controlsDemo_fixedWidth300" attr:data-qa="controlsDemo_flexRow__lazyItemsLoading">
    <div class="controlsDemo__wrapper demo-dropdownNew__lazyItemsLoading">
       <div class="controls-text-label">lazyItemsLoading = true</div>
       <Controls.dropdown:Button
@@ -7,7 +7,7 @@
               viewMode="link"
                caption="{[Кнопка]}"
               lazyItemsLoading="{{true}}"
-              source="{{_source}}">
+              source="{{_source}}"  attr:data-qa="controlsDemo_button__lazyItemsLoading">
       </Controls.dropdown:Button>
    </div>
 </div>
