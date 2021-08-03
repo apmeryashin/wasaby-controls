@@ -147,7 +147,7 @@
  *       </ws:lineSpaceTemplate>
  *    </Controls.filter:Selector>
  * </pre>
- * @see Controls.dateRange:RangeShortSelector
+ * @see Controls/dateRange:RangeShortSelector
  */
 
 /**
@@ -224,7 +224,7 @@
  *    ];
  * </pre>
  * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
- * @see Controls.filter:Selector/Panel
+ * @see Controls/filter:Selector/Panel
  */
 
 /**

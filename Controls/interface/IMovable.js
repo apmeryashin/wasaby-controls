@@ -112,7 +112,7 @@ define('Controls/interface/IMovable', [
     * </Controls.list:Mover>
     * </pre>
     * @see moveItemsWithDialog
-    * @see Controls.list:View/Mover/MoveDialog
+    * @see Controls/list:View/Mover/MoveDialog
     */
 
    /**

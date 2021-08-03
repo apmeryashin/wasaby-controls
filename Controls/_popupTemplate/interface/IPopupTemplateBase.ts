@@ -44,14 +44,14 @@ export default interface IPopupTemplateBase {
  * @name Controls/_popupTemplate/interface/IPopupTemplateBase#headingFontColorStyle
  * @cfg {String} Стиль отображения заголовка. Подробнее: {@link Controls/_interface/IFontColorStyle#fontColorStyle}
  * @default secondary
- * @see Controls.heading:Title#fontColorStyle
+ * @see Controls/heading:Title#fontColorStyle
  */
 
 /**
  * @name Controls/_popupTemplate/interface/IPopupTemplateBase#headingFontSize
- * @cfg {String} Размер заголовка
+ * @cfg {String} Размер заголовка.
  * @default 3xl
- * @see Controls.heading:Title#fontSize
+ * @see Controls/heading:Title#fontSize
  */
 
 /**
