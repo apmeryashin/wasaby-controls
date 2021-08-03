@@ -2,12 +2,13 @@ define([
    'UI/Utils',
    'Controls/_list/Mover',
    'Types/source',
+   'Types/entity',
    'Types/collection',
    'Core/Deferred',
    'Core/core-clone',
    'Controls/_operations/MultiSelector/selectionToRecord',
    'Controls/popup'
-], function(ui, Mover, source, collection, Deferred, cClone, selectionToRecord, popup) {
+], function(ui, Mover, source, entity, collection, Deferred, cClone, selectionToRecord, popup) {
    describe('Controls.List.Mover', function() {
       let recordSet;
       let mover;
@@ -689,6 +690,16 @@ define([
             siblingItem = Mover._private.getTargetItem(mover, recordSet.getRecordById(4), 'after');
             assert.equal(siblingItem.getId(), 5);
 
+         });
+
+         it('getSiblingItem with unexisting item', function() {
+            const unexisting = new entity.Model({
+               id: 111,
+               folder: null,
+               'folder@': true
+            });
+            const siblingItem = Mover._private.getTargetItem(mover, unexisting, 'before');
+            assert.equal(siblingItem, undefined);
          });
 
       });
