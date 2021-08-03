@@ -42,7 +42,9 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
     if (parentProperty) {
         display = getDisplay(items, parentProperty, nodeProperty, root);
         itemFromProjection = display.getItemBySourceItem(items.getRecordById(item.getId()));
-        siblingItem = display[direction === MOVE_DIRECTION.UP ? 'getPrevious' : 'getNext'](itemFromProjection);
+        if (itemFromProjection) {
+            siblingItem = display[direction === MOVE_DIRECTION.UP ? 'getPrevious' : 'getNext'](itemFromProjection);
+        }
         result = siblingItem ? siblingItem.getContents() : null;
     } else {
         itemIndex = items.getIndex(item);

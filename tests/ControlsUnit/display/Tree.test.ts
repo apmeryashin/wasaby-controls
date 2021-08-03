@@ -773,6 +773,17 @@ describe('Controls/_display/Tree', () => {
             item = display.at(2); // id = 11
             assert.strictEqual(display.getNext(item).getContents().id, 12);
         });
+
+        it('should not fail when collection is empty', () => {
+            const list = new List();
+            const display = new Tree({
+                collection: list,
+                root: 0,
+                keyProperty: 'id',
+                parentProperty: 'pid'
+            });
+            assert.strictEqual(display.getNext(display.at(0)), undefined);
+        })
     });
 
     describe('.getPrevious()', () => {
