@@ -12,6 +12,7 @@
 
                scope="{{_options}}"
                header="{{_header}}"
+               viewMode="{{_viewMode}}"
                rootVisible="{{_dragOnBreadCrumbs}}"
                highlighter="{{[_breadCrumbsDragHighlighter]}}"
                root="{{content._options.root}}"
