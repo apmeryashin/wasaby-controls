@@ -29,30 +29,26 @@
 
 export default interface IItemTemplateOptions {
    /**
-    * @cfg {String} Видимость заголовка плитки.
+    * @cfg {Boolean} Видимость заголовка плитки.
     * @see titleStyle
     */
-   hasTitle?: string;
+   hasTitle?: boolean;
    /**
     * @cfg {Boolean} Динамическое изменение высоты плитки, когда плитка отображается со статической шириной,
     * т.е. опция {@link Controls/tile:ITile#tileMode tileMode} установлена в значение static.
     */
    staticHeight?: boolean;
    /**
-    * @typedef {String} ShadowVisibility
-    * @description Допустимые значения для опции {@link shadowVisibility}.
+    * @cfg {String} Отображение тени для плитки.
     * @variant visible Отображается.
     * @variant hidden Не отображается.
     * @variant onhover Отображается только при наведении курсора на плитку.
-    */
-   /**
-    * @cfg {ShadowVisibility} Нужно ли отображать тень для плитки.
     * @default visible
     * @demo Controls-demo/tileNew/Shadows/Index
     */
    shadowVisibility?: string;
    /**
-    * @cfg {Boolean} Отображение рамки вокруг элемента плитки.
+    * @cfg {Boolean} Видимость рамки вокруг элемента плитки.
     * @default true
     * @example
     * В следующем примере отображение рамки вокруг элемента плитки отключено.
