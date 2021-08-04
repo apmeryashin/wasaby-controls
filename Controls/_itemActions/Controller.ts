@@ -678,7 +678,7 @@ export class Controller {
         let showed;
         const contents = Controller._getItemContents(item);
         const all: IItemAction[] = this._itemActionsProperty
-            ? (contents.get(this._itemActionsProperty) || this._commonItemActions || [])
+            ? (contents.get(this._itemActionsProperty) || [])
             : this._commonItemActions;
 
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
