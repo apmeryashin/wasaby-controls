@@ -1,6 +1,7 @@
 .controls-StickyTemplate {
    display: flex;
    flex-direction: column;
+   position: relative;
    width: 100%;
    box-sizing: border-box;
    min-height: 0;
@@ -75,7 +76,7 @@
 }
 
 .controls-StickyTemplate__close_button-functionalButton-without-header {
-   top: calc(var(--close-button_offset-top_sticky) + var(--offset_3xs));
+   top: calc(var(--content_padding-top_sticky) + var(--offset_3xs));
 }
 
 .controls-StickyTemplate__close_button-with-header {
