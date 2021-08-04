@@ -306,6 +306,27 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(actionsOf2.showed[0].title, 'valar morghulis');
         });
 
+        // Случай, когда указан itemActionsProperty, но Record.get(itemActionsProperty) === undefined
+        it('should return empty itemActions when Record.get(itemActionsProperty) === undefined', () => {
+            const newData = [
+                {id: 1, name: 'Doctor John Zoidberg', gender: 'M', itemActions: undefined},
+                {id: 2, name: 'Zapp Brannigan', gender: 'M', itemActions: undefined}
+            ];
+            collection = makeCollection(newData);
+            // @ts-ignore
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default',
+                itemActionsProperty: 'itemActions'
+            }));
+            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+            const actionsOf2 = collection.getItemBySourceKey(2).getActions();
+
+            assert.isEmpty(actionsOf1.showed, 'ItemActions array should be empty');
+            assert.isEmpty(actionsOf2.showed, 'ItemActions array should be empty');
+        });
+
         // T1.6. После установки набора операций у коллекции устанавливается параметр actionsAssigned
         it('should set actionsAssigned value as true', () => {
             assert.isTrue(collection.isActionsAssigned());

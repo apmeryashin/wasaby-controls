@@ -1,5 +1,6 @@
 import * as clone from 'Core/core-clone';
 import {Control} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -679,6 +680,10 @@ export class Controller {
         const all = this._itemActionsProperty
             ? contents.get(this._itemActionsProperty)
             : this._commonItemActions;
+        if (!Array.isArray(all)) {
+            Logger.warn(`ItemActions: Некорректно задан массив операций записи ${item.getContents().getKey()}.`, this);
+            return { all: [], showed: []}
+        }
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
             showed = visibleActions.filter((action) =>
