@@ -36,6 +36,8 @@ export interface IBaseActionOptions {
     showType?: number;
     onExecuteHandler?: Function;
     parent?: string | number;
+    permissions?: string[];
+    requiredLevel: string[];
 }
 
 const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType'];
