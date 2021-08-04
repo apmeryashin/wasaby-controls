@@ -10,6 +10,7 @@ import { DialogOpener } from 'Controls/error';
 import { Mode } from 'Controls/error';
 import ControllerBase from 'Controls/_form/ControllerBase';
 import {default as IFormController} from 'Controls/_form/interface/IFormController';
+import * as rk from 'i18n!Controls';
 
 interface IReceivedState {
     data?: Model;
@@ -502,11 +503,8 @@ class FormController extends ControllerBase<IFormController> {
                 // если были ошибки валидации, уведомим о них
                 const validationErrors = this._validateController.getValidationResult();
                 this._notify('validationFailed', [validationErrors]);
-                updateDef.callback({
-                    data: {
-                        validationErrors
-                    }
-                });
+                const error = new Error(rk('Некорректно заполнены обязательные поля'));
+                updateDef.errback(error);
             }
         }, (e) => {
             updateDef.errback(e);
