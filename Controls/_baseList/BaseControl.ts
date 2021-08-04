@@ -1410,6 +1410,8 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET) {
+                self._indicatorsController.onCollectionReset(!!self._options.searchValue);
+
                 // перезагрузили список, нужно пересчитать hasMore
 
                 self._updateIndicatorsController();
