@@ -451,7 +451,12 @@ export class StickyStrategy {
    }
 
    private _getBody(): object {
-      return DimensionsMeasurer.getElementDimensions(document.body);
+      const bodyDimensions = DimensionsMeasurer.getElementDimensions(document.body);
+      return {
+         height: bodyDimensions.clientHeight,
+         scrollHeight: bodyDimensions.scrollHeight,
+         width: bodyDimensions.clientWidth
+      };
    }
 
    private _getViewportHeight(element: HTMLElement): number {
