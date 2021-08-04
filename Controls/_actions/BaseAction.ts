@@ -184,7 +184,6 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         TOOLBAR_PROPS.forEach((prop) => {
             config[prop] = this[prop];
         });
-        config.viewMode = 'toolButton';
         return config;
     }
 
