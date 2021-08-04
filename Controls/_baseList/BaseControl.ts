@@ -707,7 +707,7 @@ const _private = {
                     self._indicatorsController.resetShowPortionedSearchTimer();
                 }
 
-                _private.tryLoadToDirectionAgain(self);
+                _private.tryLoadToDirectionAgain(self, addedItems);
                 if (self._isMounted && self._scrollController) {
                     self.stopBatchAdding();
                 }
@@ -819,7 +819,7 @@ const _private = {
         if (navigation) {
             switch (navigation.view) {
                 case 'infinity':
-                    result = !loadedList || _private.isPortionedLoad(this, loadedList);
+                    result = !loadedList || loadedList.getCount() === 0 || _private.isPortionedLoad(this, loadedList);
                     break;
                 case 'maxCount':
                     result = _private.needLoadByMaxCountNavigation(listViewModel, navigation);
