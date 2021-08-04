@@ -21,6 +21,7 @@
               headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
+              closeButtonPosition="{{_options.closeButtonPosition}}"
               backgroundStyle="transparent"
               on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"

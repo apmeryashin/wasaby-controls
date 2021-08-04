@@ -5,8 +5,11 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from 'Controls
 import IBackgroundStyle, {IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
 import 'css!Controls/popupTemplate';
 
+type TCloseButtonPosition = 'left' | 'default' | 'right';
+
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
+    closeButtonPosition?: TCloseButtonPosition;
 }
 
 /**
@@ -62,7 +65,8 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             headingFontColorStyle: 'secondary',
             closeButtonVisibility: true,
             shadowVisible: false,
-            backgroundStyle: 'default'
+            backgroundStyle: 'default',
+            closeButtonPosition: 'default'
         };
     }
 }
@@ -80,6 +84,12 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#shadowVisible
  * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
  * @default false
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#closeButtonPosition
+ * @cfg {TCloseButtonPosition} Определяет, расположение кнопки закрытия
+ * @default default
  */
 
 /**

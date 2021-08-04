@@ -56,8 +56,19 @@
 
 .controls-StickyTemplate__close_button {
    position: absolute;
-   right: var(--close-button_offset-right_sticky);
    z-index: 2;
+}
+
+.controls-StickyTemplate__close_button_position-default {
+   right: var(--close-button_offset-right_sticky);
+}
+
+.controls-StickyTemplate__close_button_position-left {
+   left: calc((var(--offset_xs) + var(--width_closeButton_functionalButton) - var(--border-thickness)) / -1);
+}
+
+.controls-StickyTemplate__close_button_position-right {
+   right: calc((var(--offset_xs) + var(--offset_2xs) + var(--width_closeButton_functionalButton)) / -1);
 }
 
 .controls-StickyTemplate__close_button-without-header {
