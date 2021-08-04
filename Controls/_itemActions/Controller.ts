@@ -677,13 +677,18 @@ export class Controller {
     private _getActionsObject(item: IItemActionsItem): IItemActionsObject {
         let showed;
         const contents = Controller._getItemContents(item);
-        const all = this._itemActionsProperty
-            ? contents.get(this._itemActionsProperty)
-            : this._commonItemActions;
-        if (!Array.isArray(all)) {
-            Logger.warn(`ItemActions: Некорректно задан массив операций записи ${item.getContents().getKey()}.`, this);
-            return { all: [], showed: []}
+        let all: IItemAction[];
+        if (this._itemActionsProperty) {
+            all = contents.get(this._itemActionsProperty);
+            if (!Array.isArray(all)) {
+                Logger.warn(`ItemActions: Некорректно задано свойство ${this._itemActionsProperty} у записи ` +
+                 `с ключом ${item.getContents().getKey()}. Должен быть массив Controls/itemActions:IItemAction.`, this);
+                return { all: [], showed: []}
+            }
+        } else {
+            all = this._commonItemActions;
         }
+
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
             showed = visibleActions.filter((action) =>
