@@ -10,6 +10,7 @@ import {detection} from 'Env/Env';
 import {Bus} from 'Env/Event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import * as Deferred from 'Core/Deferred';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 /**
  * Stack Popup Controller
@@ -53,7 +54,7 @@ class StackController extends BaseController {
 
         if (!isNewEnvironment()) {
             if (isSinglePopup) {
-                this._updateSideBarVisibility();
+                this._updateSideBarVisibility(container);
             }
         }
 
@@ -297,7 +298,7 @@ class StackController extends BaseController {
             item.position = {
                 top: -10000,
                 left: -10000,
-                height: this._getWindowSize().height,
+                height: this._getWindowSize(document?.body).height,
                 width: position.width || undefined
             };
         } else {
@@ -425,10 +426,11 @@ class StackController extends BaseController {
         item.popupOptions.templateOptions.maximized = state;
     }
 
-    private _getWindowSize(): IPopupSizes {
+    private _getWindowSize(container: HTMLElement): IPopupSizes {
+        const windowDimensions = DimensionsMeasurer.getWindowDimensions(container);
         return {
-            width: window.innerWidth,
-            height: window.innerHeight
+            width: windowDimensions.innerWidth,
+            height: windowDimensions.innerHeight
         };
     }
 
@@ -505,7 +507,7 @@ class StackController extends BaseController {
         return sideBar && sideBar.clientWidth || 0;
     }
 
-    private _updateSideBarVisibility(): void {
+    private _updateSideBarVisibility(container: HTMLElement): void {
         let maxStackWidth = 0;
         this._stack.each((item) => {
             if (item.popupOptions.width > maxStackWidth) {
@@ -513,7 +515,7 @@ class StackController extends BaseController {
             }
         });
 
-        const isVisible = this._getWindowSize().width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
+        const isVisible = this._getWindowSize(container).width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
 
         if (isVisible !== this._sideBarVisible) {
             this._sideBarVisible = isVisible;
@@ -543,10 +545,11 @@ class StackController extends BaseController {
         // except for safari, because windowSizes doesn't change at zoom, but there is information about leftScroll.
 
         const leftPageScroll = detection.isMobilePlatform || detection.safari ? 0 : rootCoords.leftScroll;
+        const documentDimensions = DimensionsMeasurer.getElementDimensions(document.documentElement);
         return {
             top: Math.max(rootCoords.top, 0),
             height: rootCoords.height,
-            right: document.documentElement.clientWidth - rootCoords.right + leftPageScroll
+            right: documentDimensions.clientWidth - rootCoords.right + leftPageScroll
         };
     }
 }

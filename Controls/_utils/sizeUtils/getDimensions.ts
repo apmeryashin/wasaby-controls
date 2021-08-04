@@ -1,3 +1,5 @@
+import DimensionsMeasurer from 'Controls/_utils/sizeUtils/DimensionsMeasurer';
+
 function getVisibleChildren(element: HTMLElement): Array<HTMLElement> {
     return Array.prototype.filter.call(element.children, (child: HTMLElement) => {
         // https://drafts.csswg.org/cssom-view/#dom-htmlelement-offsetparent
@@ -25,7 +27,8 @@ function getBoundingClientRect(element: HTMLElement, clear?: boolean, canUseGetD
         position = element.style.position;
         element.style.position = 'static';
     }
-    const clientRect: ClientRect = canUseGetDimensions && getComputedStyle(element).display === 'contents' ? getDimensions(element, clear) : element.getBoundingClientRect();
+    const clientRect: ClientRect = canUseGetDimensions && getComputedStyle(element).display === 'contents' ?
+        getDimensions(element, clear) : DimensionsMeasurer.getBoundingClientRect(element);
     if (clear && position !== undefined) {
         element.style.position = position;
     }

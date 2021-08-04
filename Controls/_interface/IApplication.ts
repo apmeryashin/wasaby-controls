@@ -111,4 +111,5 @@ export interface IApplicationOptions extends IHTMLOptions {
     meta?: Array<IAttributes>;
     headJson?: HeadJson;
     title?: string;
+    zoom?: TZoomSize;
 }

@@ -167,7 +167,8 @@ describe('Controls/_tile/TileView', () => {
                         },
                         style: {}
                     };
-                }
+                },
+                closest: () => undefined
             };
 
             model.setTileScalingMode('inside');

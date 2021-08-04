@@ -163,12 +163,13 @@ describe('Controls/grid_clean/GridView', () => {
             gridView._container = {
                 getElementsByClassName: (className) => {
                     if (className === 'controls-Grid__header') {
-                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 100}) }];
+                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 100}), closest: () => undefined }];
                     }
                     if (className === 'controls-Grid__results') {
-                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 50}) }];
+                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 50}), closest: () => undefined }];
                     }
-                }
+                },
+                closest: () => undefined
             };
             gridView.saveOptions(options);
             gridView._beforeMount(options)

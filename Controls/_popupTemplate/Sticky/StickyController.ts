@@ -11,6 +11,7 @@ import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 import {constants, detection} from 'Env/Env';
 import {IPopupItem, IPopupSizes, IStickyPopupOptions, IStickyPosition} from 'Controls/popup';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -101,7 +102,7 @@ export class StickyController extends BaseController {
             this._updateSizes(item.positionConfig, item.popupOptions);
             const targetCoords = this._getTargetCoords(item, item.positionConfig.sizes);
 
-            item.position = StickyStrategy.getPosition(item.positionConfig, targetCoords);
+            item.position = StickyStrategy.getPosition(item.positionConfig, targetCoords, this._getTargetNode(item));
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
             // Open Windows are not placed in the workspace and chrome scrollit body.
@@ -212,6 +213,7 @@ export class StickyController extends BaseController {
     }
 
     getDefaultConfig(item: IStickyItem): void {
+        const target = this._getTargetNode(item);
         this._setStickyContent(item);
         item.popupOptions = this._prepareOriginPoint(item.popupOptions);
         const popupCfg = this._getPopupConfig(item);
@@ -224,9 +226,9 @@ export class StickyController extends BaseController {
             top: -10000,
             left: -10000,
             minWidth: item.popupOptions.minWidth,
-            maxWidth: item.popupOptions.maxWidth || this._getWindowWidth(),
+            maxWidth: item.popupOptions.maxWidth || this._getWindowWidth(target),
             minHeight: item.popupOptions.minHeight,
-            maxHeight: item.popupOptions.maxHeight || this._getWindowHeight(),
+            maxHeight: item.popupOptions.maxHeight || this._getWindowHeight(target),
             width: item.popupOptions.width,
             height: item.popupOptions.height,
 
@@ -312,7 +314,7 @@ export class StickyController extends BaseController {
         const popupCfg = this._getPopupConfig(item, sizes);
 
         const targetCoords = this._getTargetCoords(item, sizes);
-        item.position = StickyStrategy.getPosition(popupCfg, targetCoords);
+        item.position = StickyStrategy.getPosition(popupCfg, targetCoords, this._getTargetNode(item));
         this._updateStickyPosition(item, popupCfg, targetCoords);
 
         item.positionConfig = popupCfg;
@@ -365,11 +367,11 @@ export class StickyController extends BaseController {
         }
     }
 
-    private _getWindowWidth(): number {
-        return constants.isBrowserPlatform && window.innerWidth;
+    private _getWindowWidth(element: HTMLElement): number {
+        return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions(element).innerWidth;
     }
-    private _getWindowHeight(): number {
-        return constants.isBrowserPlatform && window.innerHeight;
+    private _getWindowHeight(element: HTMLElement): number {
+        return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions(element).innerHeight;
     }
     private _setStickyContent(item: IStickyItem): void {
         item.popupOptions.content = StickyContent;
