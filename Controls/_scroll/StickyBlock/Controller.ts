@@ -72,7 +72,7 @@ class StickyHeaderController {
         this._options.resizeCallback = options.resizeCallback;
         this._headers = {};
         this._resizeHandlerDebounced = debounce(this.resizeHandler.bind(this), 50);
-        this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this));
+        this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers);
     }
 
     init(container: HTMLElement): void {
