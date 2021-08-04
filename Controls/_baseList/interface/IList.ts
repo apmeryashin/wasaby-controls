@@ -46,14 +46,23 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
     pagingContentTemplate?: TemplateFunction | string;
     moreFontColorStyle?: IFontColorStyle;
     stickyHeader?: boolean;
+    stickyGroup?: boolean;
 }
 
 /**
  * @name Controls/_list/interface/IList#stickyHeader
  * @cfg {Boolean} Прилипание {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ шапки} при прокрутке {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ таблицы}. При включенной {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировка элементов} опция задает прилипание {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ заголовков групп} при прокрутке {@link /doc/platform/developmentapl/interface-development/controls/list/ списка}.
+ * Если для шапки списка и заголовков групп нужно разное поведение при прокрутке, то с помощью опции {@link Controls/_list/interface/IList#stickyGroup stickyGroup} можно отдельно регулировать прилипание заголовков групп.
  * @demo Controls-demo/list_new/Grouped/NoSticky/Index В демо-примере для {@link /doc/platform/developmentapl/interface-development/controls/list/list/ плоского списка} опция stickyHeader установлена в значение false. Заголовок группы не прилипает при прокрутке списка.
  * @demo Controls-demo/list_new/Grouped/Sticky/Index В демо-примере для плоского списка опция stickyHeader установлена в значение true. Заголовок группы прилипает при прокрутке списка.
  * @default true
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyGroup
+ * @cfg {Boolean} При включенной {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировке элементов} опция задает прилипание {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ заголовков групп} при прокрутке {@link /doc/platform/developmentapl/interface-development/controls/list/ списка}.
+ * При этом если опция явно не задана, то её значение приравнивается в значению опции {@link Controls/_list/interface/IList#stickyHeader stickyHeader}.
+ * @default undefined
  */
 
 /**

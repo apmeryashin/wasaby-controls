@@ -11,7 +11,8 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/SetExp
         hasItemActionsSeparatedCell: () => false,
         isFullGridSupport: () => true,
         hasColumnScroll: () => false,
-        isStickyHeader: () => false
+        isStickyHeader: () => false,
+        isStickyGroup: () => false
     } as undefined as TreeGridCollection<any>;
 
     const columns = [

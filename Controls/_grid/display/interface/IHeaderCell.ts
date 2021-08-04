@@ -195,5 +195,5 @@ export interface IHeaderCell extends IControlOptions, IRowspanParams, IColspanPa
      * @cfg Опции, передаваемые в шаблон отображения ячейки заголовка.
      * @see template
      */
-    templateOptions?: object;
+    templateOptions?: {[key: string]: unknown};
 }

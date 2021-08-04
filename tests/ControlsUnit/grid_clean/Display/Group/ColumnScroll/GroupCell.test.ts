@@ -16,6 +16,7 @@ describe('Controls/grid_clean/Display/Group/ColumnScroll/GroupCell', () => {
         hasColumnScroll: () => hasColumnsScroll,
         hasItemActionsSeparatedCell: () => true,
         isStickyHeader: () => false,
+        isStickyGroup: () => false,
         hasHeader: () => false,
         getResultsPosition: () => undefined,
         getHoverBackgroundStyle: () => 'default',

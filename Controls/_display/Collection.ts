@@ -153,6 +153,7 @@ export interface IOptions<
     hiddenGroupPosition?: IHiddenGroupPosition;
     footerTemplate?: TemplateFunction | string;
     stickyFooter?: boolean;
+    stickyGroup?: boolean;
 }
 
 export interface ICollectionCounters {
@@ -722,6 +723,8 @@ export default class Collection<
 
     protected _$stickyHeader: boolean;
 
+    protected _$stickyGroup: boolean;
+
     protected _$editingConfig: IEditingConfig;
 
     protected _$virtualScrolling: boolean;
@@ -932,6 +935,11 @@ export default class Collection<
         if (options.stickyHeader !== undefined) {
             this._$stickyHeader = options.stickyHeader;
         }
+
+        // Если опция stickyGroup задана, то запоминаем её значение.
+        // В противном случае синхронизируем её со значением stickyHeader дабы сохранить старую логику, т.к.
+        // раньше прилипание заголовков групп в прямую зависело от того прилипает ли шапка.
+        this._$stickyGroup = options.stickyGroup !== undefined ? options.stickyGroup : this._$stickyHeader;
 
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
@@ -2357,6 +2365,10 @@ export default class Collection<
 
     isStickyHeader(): boolean {
         return this._$stickyHeader;
+    }
+
+    isStickyGroup(): boolean {
+        return this._$stickyGroup;
     }
 
     isStickyFooter(): boolean {

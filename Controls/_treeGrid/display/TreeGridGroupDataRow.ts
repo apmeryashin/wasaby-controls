@@ -55,7 +55,7 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
     }
 
     isSticked(): boolean {
-        return this.getOwner().isStickyHeader() && !this.isHiddenGroup();
+        return this.getOwner().isStickyGroup() && !this.isHiddenGroup();
     }
 
     getStickyHeaderMode(): string {
