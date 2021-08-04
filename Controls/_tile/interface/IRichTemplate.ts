@@ -81,7 +81,7 @@ export default interface IRichTemplateOptions {
      * @variant onImage Заголовок отображается в верхней части поверх изображения изображением.
      */
     /**
-     * @cfg {TitlePosition} Положение изображения.
+     * @cfg {TitlePosition} Положение заголовка.
      * @default underImage
      */
     titlePosition?: 'top' | 'left' | 'right';
@@ -174,6 +174,11 @@ export default interface IRichTemplateOptions {
      * @cfg {TemplateFunction | String} Шаблон подвала элемента.
      */
     footerTemplate?: TemplateFunction | string;
+
+    /**
+     * @cfg {TemplateFunction | String} Шаблон для размещения в конце строки заголовка.
+     */
+    afterTitleTEmplate?: TemplateFunction | string;
 
     /**
      * @cfg {Array<ICharacteristicsItem>} Конфигурация характеристик для вывода под заголовком плитки.
