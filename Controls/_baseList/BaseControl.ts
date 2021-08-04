@@ -2894,14 +2894,14 @@ const _private = {
 
     addShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!self._destroyed && !detection.isMobilePlatform) {
+        if (!self._destroyed && !TouchDetect.getInstance().isTouch()) {
             self._addShowActionsClass = true;
         }
     },
 
     removeShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!self._destroyed && !detection.isMobilePlatform && self._options.itemActionsVisibility !== 'visible') {
+        if (!self._destroyed && !TouchDetect.getInstance().isTouch() && self._options.itemActionsVisibility !== 'visible') {
             self._addShowActionsClass = false;
         }
     },
@@ -6528,6 +6528,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // Использовать itemMouseMove тут нельзя, т.к. отслеживать перемещение мышки надо вне itemsContainer
         if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
             this._hoverFreezeController.restartUnfreezeHoverTimeout(event);
+        }
+        // Для случая, когда на ZinFrame посвайпали а потом взяли мышь
+        const itemActionsController = _private.getItemActionsController(this, this._options);
+        if (itemActionsController) {
+            itemActionsController.deactivateSwipe();
         }
     }
 
