@@ -560,6 +560,9 @@ export class Controller {
             children: [],
             getBoundingClientRect(): ClientRect {
                 return rect;
+            },
+            closest(): void {
+                return undefined;
             }
         };
     }

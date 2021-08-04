@@ -78,8 +78,6 @@ const ZOOM_CLASS = 'controls-Zoom';
  * Модуль для измерения размеров элементов
  */
 class DimensionsMeasurer {
-    private _mainZoom: number;
-
     /**
      * Расчет getBoundingClientRect с учетом зума
      * Значения приводятся к координатной сетке body
