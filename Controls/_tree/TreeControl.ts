@@ -155,11 +155,6 @@ const _private = {
                     expandController.applyStateToModel();
                     //endregion
 
-                    // Если задан callback на загрузку данных узла и загрузка была, то вызовем его
-                    if (self._options.nodeLoadCallback && results?.length) {
-                        self._options.nodeLoadCallback(results[0], nodeKey);
-                    }
-
                     //region Уведомим об изменении expandedItems
                     const expandedItems = expandController.getExpandedItems();
                     // Актуализируем информацию по раскрытым узлам в sourceController, иначе на beforeUpdate
