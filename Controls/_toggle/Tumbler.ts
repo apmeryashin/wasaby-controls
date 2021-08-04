@@ -48,7 +48,7 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  * @name Controls/_toggle/Tumbler#itemTemplate
  * @cfg {TemplateFunction|String} Шаблон элемента кнопочного переключателя.
  * @demo Controls-demo/toggle/Tumbler/ItemTemplate/Index
- * @demo Controls-demo/toggle/Tumbler/CounterStyle/Index
+ * @demo Controls-demo/toggle/Tumbler/MainCounterStyle/Index
  *
  * По умолчанию используется шаблон "Controls/toogle:tumblerItemTemplate".
  * Также есть базовый шаблон для отображения записей со счетчиком Controls/toggle:tumblerItemCounterTemplate
