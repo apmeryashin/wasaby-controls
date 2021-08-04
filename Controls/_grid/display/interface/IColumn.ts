@@ -488,5 +488,10 @@ export interface IColumn extends IColspanParams {
      * @cfg Поле с текстом подсказки при наведении на ячейку
      */
     tooltipProperty?: string;
+    /**
+     * @name Controls/_grid/display/interface/IColumn
+     * @cfg
+     * @default "l". Для контрола {@link Controls/treeGrid:View}: "m" (для листа), "xl" (для скрытого узла) и "2xl" (для узла).https://online.sbis.ru/opendoc.html?guid=7e414190-5da1-4180-bcd8-d49dfc4c48ff
+     */
     fontSize?: TFontSize;
 }
