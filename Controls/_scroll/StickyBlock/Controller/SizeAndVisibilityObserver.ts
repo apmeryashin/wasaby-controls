@@ -22,8 +22,11 @@ export default class SizeAndVisibilityObserver {
     protected _resizeHeadersCallback: Function;
     protected _resizeCallback: Function;
 
-    constructor(resizeHeadersCallback: Function, resizeCallback: Function) {
+    private _headers: object;
+
+    constructor(resizeHeadersCallback: Function, resizeCallback: Function, headers: object) {
         this._resizeHeadersCallback = resizeHeadersCallback;
+        this._headers = headers;
         this._resizeCallback = resizeCallback;
         this._resizeObserver = new ResizeObserverUtil(
             undefined, this._resizeObserverCallback.bind(this), this._resizeHandler.bind(this));
