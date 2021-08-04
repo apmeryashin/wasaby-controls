@@ -636,44 +636,15 @@ Object.defineProperty(TabsButtons, 'defaultProps', {
 
 /**
  * @name Controls/_tabs/ITabsTemplate#itemTemplate
- * @cfg {Function} Шаблон для рендеринга.
+ * @cfg {TemplateFuncion | String} Пользовательский шаблон отображения вкладки.
  * @default Controls/tabs:buttonsItemTemplate
  * @demo Controls-demo/Tabs/Buttons/ItemTemplate/Index
- * @demo Controls-demo/Tabs/Buttons/NewTemplate/Index
- *
- * По умолчанию используется шаблон "Controls/tabs:buttonsItemTemplate".
- * Также вкладки поддерживают разную  реализацию отображения и поддерживают несколько шаблонов.
- *
- * Для отображения шаблона типа иконка, иконка-счетчик, иконка-текст или картинка-текст используется шаблон
- * IconCounterTabTemplate поддерживающий следующие параметры:
- * - icon {String} —  Название иконки.
- * - iconStyle {String} — Стиль отображения иконки.
- * - iconSize {String} - Размер иконки(Доступны значения s и m).
- * - mainCounter {Number} — Значение счетчика.
- * - mainCounterStyle {String} — Стиль отображения счетчика.
- * - caption {String} — Подпись вкладки.
- * - imageSize {String} - Размер изображения(Доступны значения s и m).
- * - image {Object} — Конфигурация для отображения картинки.
- *      - src {String} — Url картинки.
- *      - srcSet {String} — Значение для аттрибута srcset.
- *      - tooltip {String} — Значение для тултипа.
- *
- * Для отображения шаблона типа текст-счетчик, текст-иконка или текст-иконка-счетчик используется шаблон
- * TextCounterTabTemplate поддерживающий следующие параметры:
- * - icon {String} —  Название иконки.
- * - iconStyle {String} — Стиль отображения иконки.
- * - iconSize {String} - Размер иконки(Доступны значения s и m).
- * - mainCounter {Number} — Значение счетчика.
- * - mainCounterStyle {String} — Стиль отображения счетчика.
- * - caption {String} — Подпись вкладки.
- *
  * @remark
  * Чтобы определить шаблон, следует вызвать базовый шаблон 'Controls/tabs:buttonsItemTemplate'.
  * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
- * По умолчанию в шаблоне 'Controls/tabs:buttonsItemTemplate' будет отображаться только поле 'title'. Можно изменить формат отображения записей, задав следующие параметры:
- * <ul>
- *    <li>displayProperty - определяет поле отображения записи.</li>
- * <ul>
+ * По умолчанию в шаблоне 'Controls/tabs:buttonsItemTemplate' будет отображаться только поле 'title'. Можно изменить
+ * формат отображения записей, задав следующие параметры:
+ *      * displayProperty - определяет поле отображения записи.
  * @example
  * Вкладки со стандартным шаблоном элемента (шаблоном по умолчанию).
  * <pre class="brush: html">
@@ -699,58 +670,6 @@ Object.defineProperty(TabsButtons, 'defaultProps', {
  *     </ws:itemTemplate>
  * </Controls.tabs:Buttons>
  * </pre>
- * @example
- * Вкладки с использованием шаблона TextCounterTabTemplate.
- * <pre>
- *     <Controls.tabs:Buttons
- *                      bind:selectedKey='SelectedKey'
- *                      itemTemplate="Controls/tabs:TextCounterTabTemplate"
- *                      items="{{_items}}"
- *                      keyProperty="id"/>
- * </pre>
- * <pre>
- *     {
- *        id: '1',
- *        caption: 'Вкладка',
- *        mainCounter: 12
- *     },
- *     {
- *        id: '2',
- *        caption: 'Вкладка',
- *        mainCounter: 12
- *     },
- *     {
- *        id: '3',
- *        caption: 'Вкладка',
- *        mainCounter: 12
- *     }
- * </pre>
- * Вкладки с использованием шаблона IconCounterTabTemplate.
- * <pre>
- *     <Controls.tabs:Buttons
- *                      bind:selectedKey='SelectedKey'
- *                      itemTemplate="Controls/tabs:IconCounterTabTemplate"
- *                      items="{{_items}}"
- *                      keyProperty="id"/>
- * </pre>
- * <pre>
- *     {
- *        id: '1',
- *        icon: 'Show',
- *        caption: 'Вкладка'
- *     },
- *     {
- *        id: '2',
- *        icon: 'Show',
- *        caption: 'Вкладка'
- *     },
- *     {
- *        id: '3',
- *        icon: 'Show',
- *        caption: 'Вкладка'
- *     }
- * </pre>
- * @see itemTemplateProperty
  */
 
 /**
