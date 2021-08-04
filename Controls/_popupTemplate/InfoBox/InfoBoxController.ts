@@ -161,7 +161,7 @@ class InfoBoxController extends StickyController {
                 const position: IPopupPosition = StickyStrategy.getPosition(
                     popupConfig,
                     this._getTargetCoords(item),
-                    item.popupOptions.target
+                    this._getTargetNode(item.popupOptions.target)
                 );
                 this.prepareConfig(item);
                 item.position.maxWidth = position.width;
