@@ -16,6 +16,11 @@
          controls-Back_size-{{_options.iconSize}}">
          </div>
       </ws:else>
+
+      <ws:if data="{{_options.beforeCaptionTemplate}}">
+         <ws:partial template="{{_options.beforeCaptionTemplate}}"/>
+      </ws:if>
+
       <ws:if data="{{_isOldIe}}">
          <div class="controls-Back__caption__wrapper controls-Back__caption_style-{{_options.fontColorStyle}}">
             <ws:partial template="caption"/>

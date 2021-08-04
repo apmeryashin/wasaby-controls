@@ -7,6 +7,7 @@
                   displayMode="{{_options.breadcrumbsDisplayMode}}"
                   withoutBackButton="{{_withoutBackButton}}"
                   backButtonNewIcon="{{_options.backButtonNewIcon}}"
+                  backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
                   attr:class="controls-Explorer__Path"
                   on:backButtonClick="_notifyHandler('backButtonClick')"
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"

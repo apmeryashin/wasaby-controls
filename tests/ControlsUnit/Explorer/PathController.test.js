@@ -106,6 +106,7 @@ define([
                   backButtonNewIcon: undefined,
                   backButtonIconStyle: undefined,
                   backButtonFontColorStyle: undefined,
+                  backButtonBeforeCaptionTemplate: undefined,
                   showArrowOutsideOfBackButton: false,
                   showActionButton: false
                },
@@ -233,6 +234,7 @@ define([
                   backButtonNewIcon: undefined,
                   backButtonIconStyle: undefined,
                   backButtonFontColorStyle: undefined,
+                  backButtonBeforeCaptionTemplate: undefined,
                   showArrowOutsideOfBackButton: false,
                   showActionButton: false
                },
@@ -305,6 +307,7 @@ define([
                   backButtonNewIcon: undefined,
                   backButtonIconStyle: undefined,
                   backButtonFontColorStyle: undefined,
+                  backButtonBeforeCaptionTemplate: undefined,
                   showArrowOutsideOfBackButton: false,
                   showActionButton: false,
                   displayProperty: 'title',
@@ -356,6 +359,7 @@ define([
                      backButtonNewIcon: undefined,
                      backButtonIconStyle: undefined,
                      backButtonFontColorStyle: undefined,
+                     backButtonBeforeCaptionTemplate: undefined,
                      showArrowOutsideOfBackButton: false,
                      showActionButton: false,
                      items: items.slice(0, 1),
