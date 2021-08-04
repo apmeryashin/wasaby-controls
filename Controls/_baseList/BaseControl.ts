@@ -5151,7 +5151,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 )
             );
 
-            return shouldUseDefaultSaving ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex) : eventResult;
+            return shouldUseDefaultSaving ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex) : Promise.resolve(eventResult);
+        }).catch((error: Error) => {
+            return this._processEditInPlaceError(error).then(() => {
+                return LIST_EDITING_CONSTANTS.CANCEL;
+            });
         });
     }
 
