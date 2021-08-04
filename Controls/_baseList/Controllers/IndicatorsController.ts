@@ -192,15 +192,21 @@ export default class IndicatorsController {
         }
 
         switch (direction) {
-            case "up":
+            case 'up':
                 this._recountTopIndicator(scrollToFirstItem);
+                this._recountTopTrigger(scrollToFirstItem);
                 break;
-            case "down":
+            case 'down':
                 this._recountBottomIndicator();
+                // Вместе с пересчетом нижнего индикатора нужно пересчитать верхний триггер, т.к. мог отработать
+                // виртуальный скролл и скрытый триггер нужно будет показать, пример:
+                // https://online.sbis.ru/opendoc.html?guid=947f8f71-f261-474f-9efd-74b1db1bc5b5
+                this._recountTopTrigger(scrollToFirstItem);
                 break;
             case 'all':
                 changedResetTrigger = this.recountResetTriggerOffsets();
                 this._recountTopIndicator(scrollToFirstItem);
+                this._recountTopTrigger(scrollToFirstItem);
                 this._recountBottomIndicator();
                 // после перезагрузки скрываем глобальный индикатор
                 this.hideGlobalIndicator();
@@ -220,6 +226,20 @@ export default class IndicatorsController {
         );
     }
 
+    private _recountTopTrigger(scrollToFirstItem: boolean = false): void {
+        // attachLoadTopTriggerToNull поддерживается для календаря, пример:
+        // https://online.sbis.ru/opendoc.html?guid=b0a44d7f-4db7-41f4-8b42-6909704a6503
+        if (this._options.attachLoadTopTriggerToNull) {
+            // если нужно будет скроллить к первой записи, то значит что сверху записей нет
+            // и не нужно будет их сразу подгружать, поэтому скрываем триггер
+            if (scrollToFirstItem) {
+                this._model.hideLoadingTopTrigger();
+            } else if (this._options.hasHiddenItemsByVirtualScroll('up')) {
+                this._model.displayLoadingTopTrigger();
+            }
+        }
+    }
+
     private _recountTopIndicator(scrollToFirstItem: boolean = false): void {
         // если сейчас порционный поиск и у нас еще не кончился таймер показа индикатора, то не нужно пересчитывать,
         // т.к. при порционном поиске индикатор покажется с задержкой в 2с, дожидаемся её
@@ -227,14 +247,10 @@ export default class IndicatorsController {
             return;
         }
 
-        // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
-        // и так был показан, подскроллить к нему.
-        this._model.hideIndicator('top');
-
-        // если нужно будет скроллить к первой записи, то значит что сверху записей нет
-        // и не нужно будет их сразу подгружать, поэтому скрываем триггер
-        if (scrollToFirstItem) {
-            this._model.hideLoadingTopTrigger();
+        if (this._options.attachLoadTopTriggerToNull) {
+            // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
+            // и так был показан, подскроллить к нему.
+            this._model.hideIndicator('top');
         }
 
         if (this.shouldDisplayTopIndicator()) {
