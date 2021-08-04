@@ -680,10 +680,10 @@ export class Controller {
         let all: IItemAction[];
         if (this._itemActionsProperty) {
             all = contents.get(this._itemActionsProperty);
-            if (!Array.isArray(all)) {
-                Logger.warn(`ItemActions: Некорректно задано свойство ${this._itemActionsProperty} у записи ` +
-                 `с ключом ${item.getContents().getKey()}. Должен быть массив Controls/itemActions:IItemAction.`, this);
-                return { all: [], showed: []}
+            if (all === undefined) {
+                Logger.warn(`ItemActions: Property ${this._itemActionsProperty} has incorrect value for record ` +
+                 `with key ${item.getContents().getKey()}. Array was expected.`, this);
+                all = [];
             }
         } else {
             all = this._commonItemActions;
