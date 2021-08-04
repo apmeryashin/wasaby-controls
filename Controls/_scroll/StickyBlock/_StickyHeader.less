@@ -21,7 +21,8 @@
 }
 
 .controls-StickyHeader__observationTargetTop,
-.controls-StickyHeader__observationTargetBottom {
+.controls-StickyHeader__observationTargetBottomLeft,
+.controls-StickyHeader__observationTargetBottomRight {
    // Если сверстано так, что положение скрол контейнера выражается дробными числами(например ширины элементов страницы
    // заданы через проценты), IntersectionObserver всегда считает что триггеры невидимы. В обработчике приходит
    // правильное положение но, isIntersecting равен false. При последующем скрытии триггера событие не стреляет.
@@ -39,11 +40,16 @@
    position: absolute;
 }
 
+.controls-StickyHeader__observationTargetBottomRight {
+   left: unset;
+}
+
 .controls-StickyHeader__observationTargetTop {
    top: -2px;
 }
 
-.controls-StickyHeader__observationTargetBottom {
+.controls-StickyHeader__observationTargetBottomLeft,
+.controls-StickyHeader__observationTargetBottomRight {
    bottom: -2px;
 }
 

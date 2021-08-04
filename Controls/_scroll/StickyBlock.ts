@@ -298,7 +298,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         const children = this._children;
         this._model = new Model({
             topTarget: children.observationTargetTop,
-            bottomTarget: children.observationTargetBottom,
+            bottomLeftTarget: children.observationTargetBottomLeft,
+            bottomRightTarget: children.observationTargetBottomRight,
             position: this._options.position
         });
 
@@ -577,7 +578,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             }
         );
         this._observer.observe(children.observationTargetTop);
-        this._observer.observe(children.observationTargetBottom);
+        this._observer.observe(children.observationTargetBottomLeft);
+        this._observer.observe(children.observationTargetBottomRight);
     }
 
     /**

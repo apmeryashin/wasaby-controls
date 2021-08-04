@@ -20,7 +20,8 @@
                   isHeaderFixed="{{_isFixed}}"
                   on:arrowClick="_notifyHandler('arrowClick')"
                   on:controlResize="_selfResizeHandler()"/>
-      <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
+      <div name="observationTargetBottomLeft" class="controls-StickyHeader__observationTargetBottomLeft" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
+      <div name="observationTargetBottomRight" class="controls-StickyHeader__observationTargetBottomRight" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
 
       <ws:if data="{{_canShadowVisible.bottom}}">
          <!--We use visibility style insted of "display: none;" statement to prevent jumps when scrolling on iPad -->

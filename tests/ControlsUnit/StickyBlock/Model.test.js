@@ -8,14 +8,15 @@ define(
 
       describe('Controls/_scroll/StickyBlock/Model', function() {
          var topTarget = {};
-         var bottomTarget = {};
+         var bottomLeftTarget = {};
+         var bottomRightTarget = {};
          var result, model;
 
          describe('constructor', function() {
             beforeEach(function() {
                model = new Model({
                   topTarget: topTarget,
-                  bottomTarget: bottomTarget
+                  bottomLeftTarget: bottomLeftTarget
                });
             });
 
@@ -30,7 +31,8 @@ define(
                beforeEach(function() {
                   model = new Model({
                      topTarget: topTarget,
-                     bottomTarget: bottomTarget,
+                     bottomLeftTarget: bottomLeftTarget,
+                     bottomRightTarget: bottomRightTarget,
                      position: {
                         vertical: 'top'
                      }
@@ -44,7 +46,7 @@ define(
                         isIntersecting: false
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
                         isIntersecting: false
                      }
                   ]);
@@ -60,7 +62,11 @@ define(
                         isIntersecting: false
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
+                        isIntersecting: true
+                     },
+                     {
+                        target: bottomRightTarget,
                         isIntersecting: true
                      }
                   ]);
@@ -76,7 +82,7 @@ define(
                         isIntersecting: true
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
                         isIntersecting: false
                      }
                   ]);
@@ -92,7 +98,7 @@ define(
                         isIntersecting: true
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
                         isIntersecting: true
                      }
                   ]);
@@ -106,12 +112,56 @@ define(
                beforeEach(function() {
                   model = new Model({
                      topTarget: topTarget,
-                     bottomTarget: bottomTarget,
+                     bottomLeftTarget: bottomLeftTarget,
+                     bottomRightTarget: bottomRightTarget,
                      position: {
                         vertical: 'bottom'
                      }
                   });
                });
+
+               it('The bottom left target intersection and the bottom right target not intersection', function () {
+                  model.update([
+                     {
+                        target: topTarget,
+                        isIntersecting: false
+                     },
+                     {
+                        target: bottomLeftTarget,
+                        isIntersecting: true
+                     },
+                     {
+                        target: bottomLeftTarget,
+                        isIntersecting: false
+                     }
+                  ]);
+
+                  result = model.fixedPosition;
+
+                  assert.equal(result, '');
+               });
+
+               it('The top target intersection and the bottom left target intersection and the bottom right target not intersection', function () {
+                  model.update([
+                     {
+                        target: topTarget,
+                        isIntersecting: true
+                     },
+                     {
+                        target: bottomLeftTarget,
+                        isIntersecting: false
+                     },
+                     {
+                        target: bottomRightTarget,
+                        isIntersecting: false
+                     }
+                  ]);
+
+                  result = model.fixedPosition;
+
+                  assert.equal(result, 'bottom');
+               });
+
                it('Both targets not intersection', function () {
                   model.update([
                      {
@@ -119,7 +169,7 @@ define(
                         isIntersecting: false
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
                         isIntersecting: false
                      }
                   ]);
@@ -135,7 +185,7 @@ define(
                         isIntersecting: false
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
                         isIntersecting: true
                      }
                   ]);
@@ -151,7 +201,7 @@ define(
                         isIntersecting: true
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
                         isIntersecting: false
                      }
                   ]);
@@ -167,7 +217,11 @@ define(
                         isIntersecting: true
                      },
                      {
-                        target: bottomTarget,
+                        target: bottomLeftTarget,
+                        isIntersecting: true
+                     },
+                     {
+                        target: bottomRightTarget,
                         isIntersecting: true
                      }
                   ]);

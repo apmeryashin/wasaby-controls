@@ -54,13 +54,26 @@ export = simpleExtend.extend({
    constructor: function(config) {
       this._intersection = {};
       this._topTarget = config.topTarget;
-      this._bottomTarget = config.bottomTarget;
+      // Необходимость двух нижних обсёрверов описана в методе _updateStateIntersection.
+      this._bottomLeftTarget = config.bottomLeftTarget;
+      this._bottomRightTarget = config.bottomRightTarget;
       this._position = config.position;
       this._updateStateIntersection = this._updateStateIntersection.bind(this);
    },
 
    update: function(entries) {
-      entries.forEach(this._updateStateIntersection);
+      let countBottomIntersection = 0;
+      let isIntersectingFirstBottomObserver;
+
+      entries.forEach((entry) => {
+         if (entry.target === this._bottomLeftTarget || entry.target === this._bottomRightTarget) {
+            countBottomIntersection++;
+            if (countBottomIntersection === 1) {
+               isIntersectingFirstBottomObserver = entry.isIntersecting;
+            }
+         }
+         this._updateStateIntersection(entry, {countBottomIntersection, isIntersectingFirstBottomObserver});
+      });
 
       this._fixedPosition = this._getFixedPosition();
    },
@@ -73,9 +86,19 @@ export = simpleExtend.extend({
     * @param {IntersectionObserverEntry} entry
     * @private
     */
-   _updateStateIntersection: function(entry) {
+   _updateStateIntersection: function(entry: IntersectionObserverEntry, stateBottomObservers: object): void {
       const position = this._getTarget(entry);
-      this._intersection[position] =  entry.isIntersecting;
+      let isIntersecting = entry.isIntersecting;
+      // Будем обновлять состояние зафиксированности для observerBottom только в том случае,
+      // когда два нижних обсёрвера будут пересечены одновременно. Таким образом, исключим состояние
+      // зафиксированности сверху/снизу при горизонтальном скролле.
+      if (position === 'bottom' && stateBottomObservers.countBottomIntersection !== 2) {
+         return;
+      }
+      if (position === 'bottom') {
+         isIntersecting = entry.isIntersecting || stateBottomObservers.isIntersectingFirstBottomObserver;
+      }
+      this._intersection[position] =  isIntersecting;
    },
 
    /**
@@ -88,7 +111,8 @@ export = simpleExtend.extend({
       switch (entry.target) {
          case this._topTarget:
             return 'top';
-         case this._bottomTarget:
+         case this._bottomLeftTarget:
+         case this._bottomRightTarget:
             return 'bottom';
          default:
              Logger.error('Controls/_scroll/StickyBlock/Model: Unexpected target');
