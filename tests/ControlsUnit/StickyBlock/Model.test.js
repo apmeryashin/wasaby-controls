@@ -149,10 +149,10 @@ define(
                      },
                      {
                         target: bottomLeftTarget,
-                        isIntersecting: true
+                        isIntersecting: false
                      },
                      {
-                        target: bottomLeftTarget,
+                        target: bottomRightTarget,
                         isIntersecting: false
                      }
                   ]);
