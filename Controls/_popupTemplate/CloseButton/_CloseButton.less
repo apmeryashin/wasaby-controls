@@ -69,6 +69,16 @@
    box-sizing: border-box;
 }
 
+.controls-Button_style-light-translucent > .controls-Button__close_functionalButton {
+   background-color: var(--translucent_light_background-color_closeButton);
+
+   .controls-Button__close__icon_functionalButton {
+      fill: var(--unaccented_icon-color);
+   }
+   &:active {
+      background-color: var(--translucent_light_hover_background-color_closeButton);
+   }
+}
 .controls-Button_functionalButton_style-translucent > .controls-Button__close_functionalButton {
    background-color: var(--translucent_background-color_button);
    &:active {
@@ -101,6 +111,14 @@
       background-color: var(--pale_hover_contrast_background-color);
       .controls-Button__close__icon_functionalButton {
          fill: var(--icon-color_hovered_closeButton_toolButton);
+      }
+   }
+
+   .controls-Button_style-light-translucent > .controls-Button__close_functionalButton:hover {
+      background-color: var(--translucent_light_hover_background-color_closeButton);
+
+      .controls-Button__close__icon_functionalButton {
+         fill: var(--unaccented_hover_icon-color);
       }
    }
 
