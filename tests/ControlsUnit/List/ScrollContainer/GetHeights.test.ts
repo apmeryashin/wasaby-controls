@@ -12,7 +12,8 @@ describe('getItemsHeightsData', () => {
                 return {
                     height: 100
                 }
-            }
+            },
+            closest: function (){}
         }
     }
     before(() => {
@@ -35,9 +36,10 @@ describe('getItemsHeightsData', () => {
         let container = {
             children: [],
             querySelectorAll: () => {
-                return [true, true, false, false, false].map(createElement)
-            }
-        }
+                return [true, true, false, false, false].map(createElement);
+            },
+            closest: () => undefined
+        };
         assert.deepEqual(getItemsHeightsData(container as any as HTMLElement, true).itemsHeights, [100, 100, 100]);
         assert.deepEqual(getItemsHeightsData(container as any as HTMLElement, true).itemsOffsets, [0, 100, 200]);
     });
