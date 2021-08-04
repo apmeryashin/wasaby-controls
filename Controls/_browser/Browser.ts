@@ -986,7 +986,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     _misspellCaptionClick(): void {
-        this._search(null, this._misspellValue);
+        if (this._options.useStore) {
+            Store.dispatch('searchValue', this._misspellValue);
+        } else {
+            this._search(null, this._misspellValue);
+        }
         this._misspellValue = '';
     }
 
