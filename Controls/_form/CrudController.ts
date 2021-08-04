@@ -1,7 +1,7 @@
 import rk = require('i18n!Controls');
 import {readWithAdditionalFields} from './crudProgression';
 import {Model} from 'Types/entity';
-import {Memory} from 'Types/source';
+import {Memory, SbisService} from 'Types/source';
 
 export const enum CRUD_EVENTS {
     CREATE_STARTED = 'createstarted',
@@ -36,16 +36,16 @@ export default class CrudController {
     private readonly _crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void = null;
     private readonly _notifyRegisterPending: (args: [Promise<Model>, object]) => void = null;
 
-    private _dataSource: Memory = null;
+    private _dataSource: Memory | SbisService = null;
 
-    constructor(dataSource: Memory, crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void,
+    constructor(dataSource: Memory | SbisService, crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void,
                 notifyRegisterPending: (args: [Promise<Model>, object]) => void = null) {
         this._dataSource = dataSource;
         this._crudOperationFinished = crudOperationFinished;
         this._notifyRegisterPending = notifyRegisterPending;
     }
 
-    setDataSource(newDataSource: Memory): void {
+    setDataSource(newDataSource: Memory | SbisService): void {
         this._dataSource = newDataSource;
     }
 

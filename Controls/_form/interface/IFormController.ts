@@ -1,7 +1,7 @@
 import { IContainerConstructor } from 'Controls/_dataSource/error';
 import IControllerBase from 'Controls/_form/interface/IControllerBase';
 import { error as dataSourceError } from 'Controls/dataSource';
-import {Memory} from 'Types/source';
+import {Memory, SbisService} from 'Types/source';
 
 /**
  * Интерфейс для контроллера редактирования записи.
@@ -15,9 +15,9 @@ import {Memory} from 'Types/source';
 export default interface IFormController extends IControllerBase {
     /**
      * @name Controls/form:IFormController#source
-     * @cfg {Memory} Источник данных.
+     * @cfg {Memory | SbisService} Источник данных.
      */
-    source?: Memory;
+    source?: Memory | SbisService;
     /**
      * @name Controls/form:IFormController#key
      * @cfg {String} Ключ, с помощью которого будет получена запись.
