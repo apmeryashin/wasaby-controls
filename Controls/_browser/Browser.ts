@@ -341,7 +341,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _update(options: IBrowserOptions, newOptions: IBrowserOptions, id?: string): void | Promise<RecordSet> {
         const sourceChanged = options.source !== newOptions.source;
         const hasSearchValueInOptions = newOptions.searchValue !== undefined;
-        const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue && this._inputSearchValue.length >= this._options.minSearchLength;
+        const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue?.length >= options.minSearchLength;
         const searchValueOptionsChanged = options.searchValue !== newOptions.searchValue;
         const searchValueChanged = this._searchValue !== newOptions.searchValue;
         let methodResult;
@@ -350,11 +350,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
-
-        if (this._dataLoader.getFilterController(id)?.update(this._getFilterControllerOptions(newOptions)) ||
-            !isEqual(options.filter, newOptions.filter)) {
-            this._updateFilterAndFilterItems(newOptions, id);
-        }
+        this._updateFilterController(options, newOptions);
 
         if (sourceChanged) {
             this._source = newOptions.source;
@@ -429,6 +425,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
 
         return methodResult;
+    }
+
+    private _updateFilterController(options: IBrowserOptions, newOptions: IBrowserOptions, id?: string): void {
+        const filterController = this._dataLoader.getFilterController(id);
+        const filterControllerOptions = this._getFilterControllerOptions(newOptions);
+        const filterChanged = !isEqual(options.filter, newOptions.filter);
+
+        if (filterController?.update(filterControllerOptions) || filterChanged) {
+            this._updateFilterAndFilterItems(newOptions);
+
+            if (!isEqual(options.filterButtonSource, newOptions.filterButtonSource) && !filterChanged) {
+                this._notify('filterChanged', [this._filter]);
+            }
+        }
     }
 
     private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {

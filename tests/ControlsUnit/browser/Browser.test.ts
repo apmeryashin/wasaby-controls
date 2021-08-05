@@ -880,6 +880,35 @@ describe('Controls/browser:Browser', () => {
             });
         });
 
+        describe('filterController', () => {
+            it('filterButtonSource changed', async () => {
+                const browserOptions = getBrowserOptions();
+                browserOptions.filterButtonSource = [
+                    {
+                        name: 'filterField',
+                        value: '',
+                        textValue: ''
+                    }
+                ];
+                const browser = getBrowser(browserOptions);
+                await browser._beforeMount(browserOptions);
+                browser.saveOptions(browserOptions);
+
+                const notifyStub = sinon.stub(browser, '_notify');
+                browserOptions = {...browserOptions};
+                browserOptions.filterButtonSource = [
+                    {
+                        name: 'filterField',
+                        value: 'test',
+                        textValue: ''
+                    }
+                ];
+                await browser._beforeUpdate(browserOptions);
+                assert.isTrue(notifyStub.withArgs('filterChanged', [{filterField: 'test'}]).called);
+                assert.deepStrictEqual(browser._filter, {filterField: 'test'});
+            });
+        });
+
         it('update source', async () => {
             let options = getBrowserOptions();
             const browser = getBrowser();
