@@ -78,3 +78,19 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
 }
 
 export default Stack;
+
+/**
+ * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать {@link Controls/popup:Stack} в верстке.
+ * @function
+ * @static
+ * @name Controls/_popup/Opener/Stack#openPopup
+ * @deprecated Используйте методы класса {@link Controls/popup:StackOpener}.
+ */
+
+/**
+ * Статический метод для закрытия всплывающего окна.
+ * @function
+ * @static
+ * @name Controls/_popup/Opener/Stack#closePopup
+ * @deprecated Используйте методы класса {@link Controls/popup:StackOpener}.
+ */
