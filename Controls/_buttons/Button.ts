@@ -39,6 +39,7 @@ export interface IButtonControlOptions extends IControlOptions, IHrefOptions, IC
     viewMode?: IViewMode;
     captionPosition: 'left' | 'right';
     textAlign?: TextAlign;
+    translucent?: boolean;
 }
 
 export function defaultHeight(viewMode: string): string {
@@ -104,7 +105,8 @@ export function getDefaultOptions(): object {
         captionPosition: 'right',
         fontSize: 'm',
         buttonStyle: 'secondary',
-        textAlign: 'center'
+        textAlign: 'center',
+        translucent: false
     };
 }
 
