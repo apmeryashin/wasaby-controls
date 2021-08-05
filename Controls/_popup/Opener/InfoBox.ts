@@ -75,7 +75,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
     close(delay?: number): void {
         InfoBox._close(() => {
             super.close();
-        }, delay, this);
+        }, delay, this._openId);
     }
 
     private static _getInfoBoxConfig(cfg: IInfoBoxPopupOptions): IInfoBoxOpenerOptions {
@@ -164,7 +164,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
     }
 
-    private static _close(callback: Function, delay: number = INFOBOX_HIDE_DELAY, openerInstance: InfoBox): void {
+    private static _close(callback: Function, delay: number = INFOBOX_HIDE_DELAY, openerOpenId?: number): void {
         if (closeId) {
             clearTimeout(closeId);
         }
@@ -178,7 +178,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
          */
         if (
             openId &&
-            (!openerInstance || openerInstance._openId === openId)
+            (!openerOpenId || openerOpenId === openId)
         ) {
             clearTimeout(openId);
         }
