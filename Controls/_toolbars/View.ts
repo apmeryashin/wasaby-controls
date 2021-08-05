@@ -305,7 +305,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             iconSize: options.iconSize,
             iconStyle: options.iconStyle,
             itemTemplateProperty: options.itemTemplateProperty,
-            closeButtonPosition: isVertical ? 'left' : 'default',
+            closeButtonPosition: isVertical ? 'outside' : 'default',
             itemAlign: isVertical ? 'left' : 'right',
         };
     }

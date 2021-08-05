@@ -7,14 +7,18 @@ import 'css!Controls/popupTemplate';
 
 const enum POSITION {
     RIGHT = 'right',
-    LEFT = 'left'
+    LEFT = 'left',
+    DEFAULT = 'default'
 }
 
 const MIN_RIGHT_OFFSET = 30;
 
+type TCloseButtonPosition = 'default' | 'outside'
+
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
     stickyPosition?: object;
+    closeButtonPosition?: TCloseButtonPosition;
 }
 
 /**
@@ -43,7 +47,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
 
     protected _template: TemplateFunction = template;
     protected _headerTheme: string;
-    protected _closeBtnPosition: POSITION = POSITION.RIGHT;
+    protected _closeBtnPosition: POSITION = POSITION.DEFAULT;
 
     protected _beforeMount(options: IPopupTemplateBaseOptions): void {
         this._headerTheme = StickyTemplate._getTheme();
@@ -55,7 +59,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
     }
 
     protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
-        if (options.stickyPosition) {
+        if (options.stickyPosition && options.closeButtonPosition !== 'default') {
             // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
             if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
                 this._closeBtnPosition =  POSITION.RIGHT;
@@ -120,6 +124,12 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#headingFontColorStyle
  * @cfg {String}
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Template
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#closeButtonPosition
+ * @cfg {TCloseButtonPosition} Определяет, расположение кнопки закрытия
+ * @default default
  */
 
 /**

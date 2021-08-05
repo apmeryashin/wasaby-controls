@@ -17,8 +17,8 @@
         <ws:if data="{{_options.closeButtonVisibility}}">
             <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
             controls-StickyTemplate__close_button_position-{{_closeBtnPosition}}
-            controls-StickyTemplate__close_button-without-header"
-                                                 viewMode="translucent"
+            controls-StickyTemplate__close_button-{{_options.closeButtonPosition !== 'default' ? 'translucent' : 'default'}}-without-header"
+                                                 viewMode="{{_options.closeButtonPosition !== 'default' ? 'translucent' : 'link'}}"
                                                  on:click="close()"/>
         </ws:if>
     </ws:else>

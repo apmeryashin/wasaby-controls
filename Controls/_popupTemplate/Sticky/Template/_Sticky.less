@@ -59,6 +59,10 @@
    z-index: 2;
 }
 
+.controls-StickyTemplate__close_button_position-default {
+   right: var(--close-button_offset-right_sticky);
+}
+
 .controls-StickyTemplate__close_button_position-left {
    left: calc((var(--offset_xs) + var(--width_closeButton_functionalButton) - var(--border-thickness)) / -1);
 }
@@ -67,7 +71,11 @@
    right: calc((var(--offset_xs) + var(--offset_2xs) + var(--width_closeButton_functionalButton)) / -1);
 }
 
-.controls-StickyTemplate__close_button-without-header {
+.controls-StickyTemplate__close_button-default-without-header {
+   top: calc(var(--close-button_offset-top_sticky) + var(--content_padding-top_sticky));
+}
+
+.controls-StickyTemplate__close_button-translucent-without-header {
    top: calc(var(--content_padding-top_sticky) + var(--offset_3xs));
 }
 
