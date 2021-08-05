@@ -6699,6 +6699,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._isColumnScrollVisible;
     }
 
+    setColumnScrollPosition(position: 'start' | 'end'): void {
+        if (this._children.listView.setColumnScrollPosition) {
+            this._children.listView.setColumnScrollPosition(position);
+        }
+    }
+
     static _private: typeof _private = _private;
 
     static getDefaultOptions(): Partial<IBaseControlOptions> {

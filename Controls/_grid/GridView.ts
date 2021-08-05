@@ -303,7 +303,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     reset(params: { keepScroll?: boolean } = {}): void {
         GridView.superclass.reset.apply(this, arguments);
         if (!params.keepScroll) {
-            this._resetColumnScroll(this._options);
+            this._resetColumnScroll(this._options.columnScrollStartPosition);
         }
     },
 

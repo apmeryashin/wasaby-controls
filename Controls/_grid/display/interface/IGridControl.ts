@@ -640,7 +640,21 @@ export interface IGridControl extends IList {
  * При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ItemEditorTemplate}.
  * Если опция определена, то в таблице будет использоваться {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/template/#string расширенное редактирование строк}.
  * Подробнее об настройке шаблона читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/template/#item-editor-template здесь}.
+ */
 
+/**
+ * @typedef {String} Controls/_grid/display/interface/IGridControl/ColumnScrollPosition
+ * @description Допустимые значения для параметра, переданного в метод {@link setColumnScrollPosition}.
+ * @variant start Позиция горизонтального скрола, при котором колонки таблицы проскролены в начало.
+ * @variant end Позиция горизонтального скрола, при котором колонки таблицы проскролены в конец.
+ */
+
+/**
+ * Сбрасывает положение горизонтального скролла.
+ * @function
+ * @name Controls/_grid/display/interface/IGridControl#setColumnScrollPosition
+ * @param {Controls/_grid/display/interface/IGridControl/ColumnScrollPosition.typedef} [position=start] Позиция к которой сбрасывается горизонтальный скролл.
+ * @returns {void}
  */
 
 /**
