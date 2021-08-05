@@ -140,7 +140,7 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
 
 /**
  * @name Controls/_popupTemplate/Dialog#maximize
- * @cfg {Boolean} Режим отображения окна во всех экран. Влияет на видимость границы и тени диалогового окна.
+ * @cfg {Boolean} Режим отображения окна во всесь экран. Влияет на видимость границы и тени диалогового окна.
  * @see headerBorderVisible
  */
 
