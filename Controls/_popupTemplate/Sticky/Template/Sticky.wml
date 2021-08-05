@@ -8,6 +8,7 @@
                     scope="{{_options}}"
                     close="{{close}}"
                     theme="{{_headerTheme}}"
+                    closeBtnPosition="{{_closeBtnPosition}}"
                     stickyOptions="{{_options}}"
                     on:click="_proxyEvent('headerClick')"
         />
@@ -15,9 +16,9 @@
     <ws:else>
         <ws:if data="{{_options.closeButtonVisibility}}">
             <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
-            controls-StickyTemplate__close_button_position-{{_options.closeButtonPosition}}
-            controls-StickyTemplate__close_button-{{_options.closeButtonPosition !== 'default' ? 'translucent' : 'default'}}-without-header"
-                                                 viewMode="{{_options.closeButtonPosition !== 'default' ? 'translucent' : 'link'}}"
+            controls-StickyTemplate__close_button_position-{{_closeBtnPosition}}
+            controls-StickyTemplate__close_button-without-header"
+                                                 viewMode="translucent"
                                                  on:click="close()"/>
         </ws:if>
     </ws:else>

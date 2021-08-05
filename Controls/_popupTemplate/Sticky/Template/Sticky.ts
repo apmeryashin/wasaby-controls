@@ -5,11 +5,16 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from 'Controls
 import IBackgroundStyle, {IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
 import 'css!Controls/popupTemplate';
 
-type TCloseButtonPosition = 'left' | 'default' | 'right';
+const enum POSITION {
+    RIGHT = 'right',
+    LEFT = 'left'
+}
+
+const MIN_RIGHT_OFFSET = 30;
 
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
-    closeButtonPosition?: TCloseButtonPosition;
+    stickyPosition?: object;
 }
 
 /**
@@ -38,6 +43,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
 
     protected _template: TemplateFunction = template;
     protected _headerTheme: string;
+    protected _closeBtnPosition: POSITION = POSITION.RIGHT;
 
     protected _beforeMount(options: IPopupTemplateBaseOptions): void {
         this._headerTheme = StickyTemplate._getTheme();
@@ -45,6 +51,30 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
 
     protected _beforeUpdate(options: IPopupTemplateBaseOptions): void {
         this._headerTheme = StickyTemplate._getTheme();
+        this._updateCloseBtnPosition(options);
+    }
+
+    protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
+        if (options.stickyPosition) {
+            // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
+            if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
+                this._closeBtnPosition =  POSITION.RIGHT;
+            } else {
+                const openerLeft = options.stickyPosition.targetPosition.left;
+                const popupLeft = options.stickyPosition.position.left;
+                // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
+                const popupOffset = (options.stickyPosition.sizes.width -
+                    options.stickyPosition.targetPosition.width) / 2;
+                const isReverted = (popupLeft + popupOffset) !== openerLeft;
+                const isOutside = popupLeft + options.stickyPosition.sizes.width >
+                    window?.innerWidth - MIN_RIGHT_OFFSET;
+                this._closeBtnPosition = isReverted || isOutside ? POSITION.LEFT : POSITION.RIGHT;
+            }
+        }
+    }
+
+    private getWindowInnerWidth(): number {
+        return window?.innerWidth;
     }
 
     protected close(): void {
@@ -84,12 +114,6 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#shadowVisible
  * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
  * @default false
- */
-
-/**
- * @name Controls/_popupTemplate/Sticky#closeButtonPosition
- * @cfg {TCloseButtonPosition} Определяет, расположение кнопки закрытия
- * @default default
  */
 
 /**
