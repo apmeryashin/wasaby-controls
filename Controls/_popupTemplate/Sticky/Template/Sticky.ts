@@ -1,7 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Sticky/Template/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
-import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
+import {default as IPopupTemplateBase} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
+import { IPopupTemplateOptions } from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import IBackgroundStyle, {IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
 import 'css!Controls/popupTemplate';
 
@@ -13,12 +14,9 @@ const enum POSITION {
 
 const MIN_RIGHT_OFFSET = 30;
 
-type TCloseButtonPosition = 'default' | 'outside'
-
-interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions, IBackgroundStyleOptions {
+interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
     stickyPosition?: object;
-    closeButtonPosition?: TCloseButtonPosition;
 }
 
 /**
@@ -49,17 +47,17 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
     protected _headerTheme: string;
     protected _closeBtnPosition: POSITION = POSITION.DEFAULT;
 
-    protected _beforeMount(options: IPopupTemplateBaseOptions): void {
+    protected _beforeMount(options: IPopupTemplateOptions): void {
         this._headerTheme = StickyTemplate._getTheme();
     }
 
-    protected _beforeUpdate(options: IPopupTemplateBaseOptions): void {
+    protected _beforeUpdate(options: IPopupTemplateOptions): void {
         this._headerTheme = StickyTemplate._getTheme();
         this._updateCloseBtnPosition(options);
     }
 
     protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
-        if (options.stickyPosition && options.closeButtonPosition !== 'default') {
+        if (options.stickyPosition && options.closeButtonViewMode === 'translucent') {
             // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
             if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
                 this._closeBtnPosition =  POSITION.RIGHT;
@@ -100,7 +98,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             closeButtonVisibility: true,
             shadowVisible: false,
             backgroundStyle: 'default',
-            closeButtonPosition: 'default'
+            closeButtonViewMode: 'link'
         };
     }
 }
@@ -124,12 +122,6 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#headingFontColorStyle
  * @cfg {String}
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Template
- */
-
-/**
- * @name Controls/_popupTemplate/Sticky#closeButtonPosition
- * @cfg {TCloseButtonPosition} Определяет, расположение кнопки закрытия
- * @default default
  */
 
 /**
