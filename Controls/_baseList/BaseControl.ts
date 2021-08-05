@@ -5002,7 +5002,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex)
                 : Promise.resolve(eventResult);
         }).catch((error: Error) => {
-            return this._processEditInPlaceError(error).then(() => {
+            return dataSourceError.process({error}).then(() => {
                 return LIST_EDITING_CONSTANTS.CANCEL;
             });
         });
@@ -5311,8 +5311,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._items.append([item]);
                 }
             }
-        }).catch((error: Error) => {
-            dataSourceError.process({error});
         });
     }
 
