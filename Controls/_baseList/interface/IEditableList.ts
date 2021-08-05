@@ -348,30 +348,20 @@ export interface IItemEditOptions {
 }
 
 /**
- * @typedef {Object} IBeforeBeginEditEventResultOptions
+ * @typedef {Object} Controls/_list/interface/IBeforeBeginEditEventResultOptions
  * @description Тип объекта, который можно вернуть из обработчика события {@link beforeBeginEdit}.
  * @property {Types/entity:Model} [item=undefined] Запись, которая будет запущена на редактирование/добавление.
  */
 interface IBeforeBeginEditEventResultOptions { item?: Model; }
 
-/**
- * @typedef {String | IBeforeBeginEditEventResultOptions} TBeforeBeginEditEventSyncResult
- * @description Синхронные значения, которые можно возвращать из обработчика события {@link beforeBeginEdit}.
- * @variant Сancel Отменить редактирование/добавление по месту.
- * @variant {IBeforeBeginEditEventResultOptions} options Параметры редактирования/добавления по месту.
- */
 type TBeforeBeginEditEventSyncResult = LIST_EDITING_CONSTANTS.CANCEL | IBeforeBeginEditEventResultOptions;
 
-/**
- * @typedef {TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>} TBeforeBeginEditEventResult
- * @description Значения, которые можно возвращать из обработчика события {@link beforeBeginEdit}.
- */
-export type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
+type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
 
 /**
  * @typedef {String | undefined} TBeforeEndEditEventSyncResult
  * @description Синхронные значения, которые можно возвращать из обработчика события {@link beforeEndEdit}.
- * @variant {String} Сancel Отмена окончания редактирования/добавления по месту.
+ * @variant {String} 
  * @variant undefined Использовать базовую логику редактирования/добавления по месту.
  */
 type TBeforeEndEditEventSyncResult = LIST_EDITING_CONSTANTS.CANCEL | undefined;
@@ -392,7 +382,8 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  * 2. после окончания редактирования:
  *     * последнего (уже существующего) элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAdd autoAdd});
  *     * только что добавленного элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAddByApplyButton autoAddByApplyButton}).
- * @returns {TBeforeBeginEditEventResult}
+ * @returns {String | Controls/_list/interface/IBeforeBeginEditEventResultOptions.typedef | Promise<TBeforeBeginEditEventSyncResult>}
+ * Сancel Отмена окончания редактирования/добавления по месту.
  * @demo Controls-demo/list_new/EditInPlace/BeginEdit/Index
  * @example
  * В следующем примере показано, как запретить редактирование элемента, если он соответствует условию:
