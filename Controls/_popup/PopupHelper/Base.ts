@@ -5,6 +5,7 @@ import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 import {IndicatorOpener} from 'Controls/LoadingIndicator';
 import {Logger} from 'UI/Utils';
+import {isNewEnvironment} from 'UI/Utils';
 
 interface IOpenerStaticMethods {
     _openPopup: (popupOptions: IBasePopupOptions) => Promise<string>;
@@ -57,9 +58,16 @@ export default class Base {
                 }
             };
             if (config.dataLoaders) {
-                config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
+                if (isNewEnvironment()) {
+                    config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
+                    return this._openPopup(config);
+                } else {
+                    return BaseOpenerUtil.getManagerWithCallback(() => {
+                        config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
+                        this._openPopup(config);
+                    });
+                }
             }
-
             this._openPopup(config);
         });
     }
