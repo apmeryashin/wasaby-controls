@@ -1067,7 +1067,7 @@ describe('Controls/browser:Browser', () => {
            options.searchParam = 'param';
            await browser._updateSearchController(options);
 
-           assert.isTrue(notifyStub.withArgs('filterChanged', [{payload: 'something'}]).called);
+           assert.isTrue(notifyStub.withArgs('filterChanged', [{payload: 'something'}, undefined]).called);
            assert.equal(browser._searchValue, '');
 
            notifyStub.restore();
