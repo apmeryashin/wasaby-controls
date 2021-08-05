@@ -39,7 +39,15 @@ export interface IMoverDialogTemplateOptions extends IControlOptions, IHierarchy
 interface IMoverColumnTemplateOptions {
     rootLabelVisible?: boolean;
     defaultColumnTemplate?: TemplateFunction | string;
+    rootKey: number;
 }
+
+/**
+ * Ключ рутовой записи. Должен быть числовым, т.к. при добавлении в рекордсет
+ * всегда происходит попытка привести значение к типу.
+ * При неправильном приведении типов в рекордсет добавится Null
+ */
+const ROOT_KEY = 3141592653589793;
 
 /**
  * Шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки.
@@ -113,7 +121,7 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
     }
 
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
-        this._applyMove(item.getKey() === 999999 ? this._options.root : item);
+        this._applyMove(item.getKey() === ROOT_KEY ? this._options.root : item);
     }
 
     protected _onMarkedKeyChanged(event: SyntheticEvent<null>, newKey: string | number | null): void {
@@ -144,7 +152,7 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
 
         record.addField({ name: this._options.parentProperty, type: 'string', defaultValue: this._root });
         record.addField( { name: this._options.nodeProperty, type: 'boolean', defaultValue: null });
-        record.addField({ name: this._options.keyProperty, type: 'string', defaultValue: 999999 });
+        record.addField({ name: this._options.keyProperty, type: 'string', defaultValue: ROOT_KEY });
         record.addField({
             name: this._columns[0].displayProperty,
             type: 'string',
@@ -168,7 +176,8 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
             }
             const templateOptions: IMoverColumnTemplateOptions = {
                 ...column.templateOptions,
-                rootLabelVisible: options.rootLabelVisible !== false && !!options.rootTitle
+                rootLabelVisible: options.rootLabelVisible !== false && !!options.rootTitle,
+                rootKey: ROOT_KEY
             };
 
             if (!templateOptions.defaultColumnTemplate) {
