@@ -211,7 +211,6 @@
 }
 
 .controls-TileView__afterTitleTemplate-overlay {
-   content: ' ';
    display: inline-block;
    width: 0;
    position: relative;
@@ -224,8 +223,8 @@
    position: absolute;
 
    // элемент должен перекрывать строку с небольшим запасом, чтобы не просвечивали части символов
-   height: 1.2em;
-   bottom: -0.1em;
+   height: 1em;
+   bottom: 0;
    left: 0;
    z-index: 1;
 }
@@ -239,8 +238,7 @@
 }
 
 .controls-TileView__afterTitleTemplate-overflow::before {
-   content: ' ';
-   height: 1em;
+   content: '\200b';
    width: var(--offset_s);
 }
 
