@@ -554,11 +554,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._viewMode === 'search';
     }
 
-    protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>): void {
+    protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
         this._dataLoader.getFilterController()?.setFilter(filter);
         this._filter = filter;
-        this._notify('filterChanged', [this._filter]);
+        this._notify('filterChanged', [this._filter, id]);
     }
 
     protected _breadCrumbsItemClick(event: SyntheticEvent, root: Key): void {
@@ -843,8 +843,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const configsCount = Object.keys(this._dataLoader.getState()).length;
 
         if (configsCount > 1) {
-            this._dataLoader.each(({searchController}) => {
-                searchController?.reset(Object.keys(this._dataLoader.getState()).length === 1);
+            this._dataLoader.each(({searchController, filter, id}) => {
+                const newFilter = searchController?.reset(true);
+                if (searchController && !isEqual(filter, newFilter)) {
+                    this._filterChanged(null, newFilter, id);
+                }
             });
         } else {
             const filter = this._getSearchControllerSync().reset(true);
