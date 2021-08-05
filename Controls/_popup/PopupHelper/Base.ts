@@ -58,15 +58,10 @@ export default class Base {
                 }
             };
             if (config.dataLoaders) {
-                if (isNewEnvironment()) {
+                return BaseOpenerUtil.getManagerWithCallback(() => {
                     config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
-                    return this._openPopup(config);
-                } else {
-                    return BaseOpenerUtil.getManagerWithCallback(() => {
-                        config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
-                        this._openPopup(config);
-                    });
-                }
+                    this._openPopup(config);
+                });
             }
             this._openPopup(config);
         });
