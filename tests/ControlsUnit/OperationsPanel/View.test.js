@@ -491,6 +491,7 @@ define([
             return {
                _hoverIcon: true,
                _buttonStyle: 'secondary',
+               _translucent: false,
                _contrastBackground: undefined,
                _fontSize: 'm',
                _hasIcon: true,

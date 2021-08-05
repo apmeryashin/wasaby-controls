@@ -52,7 +52,7 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
 
     cfg._hoverIcon = true;
     cfg._buttonStyle = readOnly ? 'readonly' : buttonStyle;
-    cfg._translucent = toolbarOptions.translucent;
+    cfg._translucent = toolbarOptions.translucent || false;
     cfg._contrastBackground = item.get('contrastBackground');
     cfg._viewMode = viewMode;
     cfg._height = inlineHeight;

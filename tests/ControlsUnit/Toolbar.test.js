@@ -333,6 +333,7 @@ define(
                );
                let modifyItem = {
                   _buttonStyle: 'readonly',
+                  _translucent: false,
                   _caption: '',
                   _captionPosition: 'right',
                   _contrastBackground: true,
