@@ -156,7 +156,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         }
     }
 
-    private _getCommandOptions(commandParams: IExecuteCommandParams): object {
+    private _getCommandOptions(commandParams: Partial<IExecuteCommandParams> = {}): object {
         const commandOptions = object.clone(this.commandOptions) || {};
         merge(commandOptions, {
             source: commandParams.source,
