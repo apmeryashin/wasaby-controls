@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {stub, SinonStub, spy, assert as sinonAssert} from 'sinon';
+import * as sinon from 'sinon';
 import {Model, Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -19,7 +19,6 @@ import {
 import {IItemActionsItem} from 'Controls/_itemActions/interface/IItemActionsItem';
 import {IItemActionsCollection} from 'Controls/_itemActions/interface/IItemActionsCollection';
 import {DOMUtil} from 'Controls/sizeUtils';
-import * as sinon from 'sinon';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -175,6 +174,7 @@ describe('Controls/_itemActions/Controller', () => {
     let itemActionsController: ItemActionsController;
     let collection: IItemActionsCollection;
     let initialVersion: number;
+    let sandbox: sinon.SinonSandbox;
 
     function makeCollection(rawData: Array<{
         id: number,
@@ -223,6 +223,8 @@ describe('Controls/_itemActions/Controller', () => {
     }
 
     beforeEach(() => {
+        sandbox = sinon.createSandbox();
+
         collection = makeCollection(data);
         // @ts-ignore
         initialVersion = collection.getVersion();
@@ -233,6 +235,10 @@ describe('Controls/_itemActions/Controller', () => {
             itemActions,
             theme: 'default'
         }));
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 
     describe('Controller initialization is correct', () => {
@@ -314,7 +320,7 @@ describe('Controls/_itemActions/Controller', () => {
                 {id: 1, name: 'Doctor John Zoidberg', gender: 'M', itemActions: undefined},
                 {id: 2, name: 'Zapp Brannigan', gender: 'M', itemActions: undefined}
             ];
-            const loggerErrorStub = sinon.stub(Logger, 'error');
+            const loggerErrorStub = sandbox.stub(Logger, 'error');
             collection = makeCollection(newData);
             // @ts-ignore
             itemActionsController.update(initializeControllerOptions({
@@ -326,8 +332,7 @@ describe('Controls/_itemActions/Controller', () => {
             const actionsOf2 = collection.getItemBySourceKey(2).getActions();
 
             assert.isEmpty(actionsOf2.showed, 'ItemActions array should be empty');
-            assert.ok(loggerErrorStub.calledOnce);
-            loggerErrorStub.restore();
+            sinon.assert.calledTwice(loggerErrorStub);
         });
 
         // T1.6. После установки набора операций у коллекции устанавливается параметр actionsAssigned
@@ -497,7 +502,6 @@ describe('Controls/_itemActions/Controller', () => {
                 itemActions,
                 theme: 'default'
             }));
-            const actionsOf2 = collection.getItemBySourceKey(2).getActions();
             assert.equal(editingItem.getActions().showed.length, 4,
                 'item 4 is editing and should contain 4 itemActions');
         });
@@ -524,35 +528,29 @@ describe('Controls/_itemActions/Controller', () => {
                 return itemActionClone;
             });
             const item3 = collection.getItemBySourceKey(3);
-            const spySetActions = spy(item3, 'setActions');
+            const spySetActions = sandbox.spy(item3, 'setActions');
             // @ts-ignore
             itemActionsController.update(initializeControllerOptions({
                 collection,
                 itemActions: newItemActions,
                 theme: 'default'
             }));
-            sinonAssert.called(spySetActions);
-            spySetActions.restore();
+            sandbox.assert.called(spySetActions);
         });
     });
 
     // T2. Активация и деактивация Swipe происходит корректно
     describe('activateSwipe(), deactivateSwipe() and getSwipeItem() ', () => {
-        let stubGetElementsWidth: SinonStub;
-        let stubGetWidthForCssClass: SinonStub;
+        let stubGetElementsWidth: sinon.SinonStub;
+        let stubGetWidthForCssClass: sinon.SinonStub;
 
         beforeEach(() => {
-            stubGetElementsWidth = stub(DOMUtil, 'getElementsWidth');
+            stubGetElementsWidth = sandbox.stub(DOMUtil, 'getElementsWidth');
             stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
                 itemsHtml.map((item) => 25)
             ));
-            stubGetWidthForCssClass = stub(DOMUtil, 'getWidthForCssClass');
+            stubGetWidthForCssClass = sandbox.stub(DOMUtil, 'getWidthForCssClass');
             stubGetWidthForCssClass.callsFake((content: string, blockClass: string, considerMargins?: boolean) => 0);
-        });
-
-        afterEach(() => {
-            stubGetElementsWidth.restore();
-            stubGetWidthForCssClass.restore();
         });
 
         // T2.1. В коллекции происходит набор конфигурации для Swipe, если позиция itemActions не outside.
