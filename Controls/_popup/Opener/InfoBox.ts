@@ -48,6 +48,7 @@ interface IInfoBoxOpenerOptions extends IInfoBoxPopupOptions, IBaseOpenerOptions
 class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpener {
     readonly '[Controls/_popup/interface/IInfoBoxOpener]': boolean;
     _style: number = null;
+    _openId: number;
 
     _beforeUnmount(): void {
         this.close(0);
@@ -60,7 +61,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
         InfoBox._open((newCfg: object) => {
             super.open(newCfg, POPUP_CONTROLLER);
-        }, cfg);
+        }, cfg, this);
     }
 
     _getIndicatorConfig(): void {
@@ -74,7 +75,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
     close(delay?: number): void {
         InfoBox._close(() => {
             super.close();
-        }, delay);
+        }, delay, this);
     }
 
     private static _getInfoBoxConfig(cfg: IInfoBoxPopupOptions): IInfoBoxOpenerOptions {
@@ -163,8 +164,24 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
     }
 
-    private static _close(callback: Function, delay: number = INFOBOX_HIDE_DELAY): void {
-        InfoBox._clearTimeout();
+    private static _close(callback: Function, delay: number = INFOBOX_HIDE_DELAY, openerInstance: InfoBox): void {
+        if (closeId) {
+            clearTimeout(closeId);
+        }
+
+        /*
+            Если имеем инстанс и закрываем инфоблок,
+            то отменяем открытие только в том случае, если окно открывается тем же инстансом
+            Кейс: инфоблок закрывается с бОльшим таймаутом, чем открывается,
+            т.е. закрытие предыдущего инфоблока вызовется позже чем открытие текущего
+            и текущий инфоблок вообще не откроется
+         */
+        if (
+            openId &&
+            (!openerInstance || openerInstance._openId === openId)
+        ) {
+            clearTimeout(openId);
+        }
         if (delay > 0) {
             closeId = setTimeout(callback, delay);
         } else {
@@ -172,7 +189,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
     }
 
-    private static _open(callback: Function, cfg: IInfoBoxPopupOptions): void {
+    private static _open(callback: Function, cfg: IInfoBoxPopupOptions, openerInstance?: InfoBox): void {
         InfoBox._clearTimeout();
 
         const newCfg: IInfoBoxOpenerOptions = InfoBox._getInfoBoxConfig(cfg);
@@ -180,6 +197,9 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
             openId = setTimeout(() => {
                 callback(newCfg);
             }, newCfg.showDelay);
+            if (openerInstance) {
+                openerInstance._openId = openId;
+            }
         } else {
             callback(newCfg);
         }
