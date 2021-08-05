@@ -122,12 +122,26 @@ export class InputActivationHelper {
         // https://online.sbis.ru/opendoc.html?guid=02f1dead-d957-4346-b6c1-306606b6fb9c
         const container = currentTarget.closest('.controls-GridViewV__itemsContainer');
         const currentRow = currentTarget.closest('.controls-Grid__row');
-        let nextRowIndex = 1 + Array.prototype.indexOf.call(currentRow.parentElement.children, currentRow);
+        const rows = Array.from(currentRow.parentElement.children);
+        let nextRowIndex;
 
-        if (direction === CONSTANTS.GOTONEXT) {
-            nextRowIndex += 1;
+        // Поиск следующей строки с данными в вёрстке
+        for (
+            let i = rows.indexOf(currentRow) + (direction === CONSTANTS.GOTONEXT ? 1 : -1);
+            direction === CONSTANTS.GOTONEXT ? (i < rows.length) : (i >= 0);
+            direction === CONSTANTS.GOTONEXT ? (i++) : (i--)
+        ) {
+            if (rows[i].className.indexOf('js-controls-Grid__data-row') !== -1) {
+                nextRowIndex = i;
+                break;
+            }
+        }
+
+        if (typeof nextRowIndex === 'undefined') {
+            this._paramsForFastEdit = null;
+            return;
         } else {
-            nextRowIndex -= 1;
+            nextRowIndex++;
         }
 
         // Получение индекса колонки в которой продолжится редактирование
