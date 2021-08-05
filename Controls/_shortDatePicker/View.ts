@@ -61,8 +61,10 @@ class View extends Control<IDateLitePopupOptions> {
     protected _displayedRanges: Date[];
     protected _prevArrowButtonReadOnly: boolean = false;
     protected _nextArrowButtonReadOnly: boolean = false;
+    protected _isHeaderContentTemplateString: boolean;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
+        this._isHeaderContentTemplateString = typeof options.headerContentTemplate === 'string';
         this._displayedRanges = options.displayedRanges;
         if (!options.emptyCaption) {
             if (options.chooseMonths && (options.chooseQuarters || options.chooseHalfyears)) {
@@ -95,6 +97,7 @@ class View extends Control<IDateLitePopupOptions> {
     }
 
     protected _beforeUpdate(options: IDateLitePopupOptions): void {
+        this._isHeaderContentTemplateString = typeof options.headerContentTemplate === 'string';
         this._isExpandButtonVisible = this._getExpandButtonVisibility(options);
         this._updateCloseBtnPosition(options);
         if (options.displayedRanges) {
