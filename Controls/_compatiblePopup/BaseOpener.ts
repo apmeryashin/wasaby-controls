@@ -194,7 +194,9 @@ const BaseOpener = {
       cfg.templateOptions.width = cfg.width;
       cfg.templateOptions.height = cfg.height;
       // если не хватает места, не показываем кнопку расширения/сужения панели
-      if (cfg.canMaximize && cfg.templateOptions.type === 'stack' && ((cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) > document?.body.clientWidth)) {
+      const contentData = ManagerController.getContentData();
+      const availableWithForMaximize = (contentData?.width + contentData?.left) || document?.body.clientWidth;
+      if (cfg.canMaximize && cfg.templateOptions.type === 'stack' && ((cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) > availableWithForMaximize)) {
          cfg.canMaximize = false;
       }
       if (cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth > cfg.minWidth) {
