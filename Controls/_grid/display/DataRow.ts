@@ -44,6 +44,10 @@ export default class DataRow<T extends Model = Model> extends Row<T> implements
         return templateFromProperty || userTemplate || this.getDefaultTemplate();
     }
 
+    protected _getBaseItemClasses(): string {
+        return super._getBaseItemClasses() + ' js-controls-Grid__data-row';
+    }
+
     setGridColumnsConfig(columns: TColumns): void {
         this.setColumnsConfig(columns);
     }
