@@ -9,7 +9,7 @@ import 'css!Controls/search';
  interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
  IRenderOptions, IPaddingOptions, ITagOptions {
    /**
-    * @name Controls/_search/Input/ExpandableInput/Search#inlineWidth
+    * @name Controls/_search/Input/ExpandableInput/Search/ExpandableInput#inlineWidth
     * @cfg {String} Ширина строки поиска.
     * @variant m Строка поиска средней ширины.
     * @variant l Строка поиска большой ширины.
@@ -17,7 +17,7 @@ import 'css!Controls/search';
     */
    inlineWidth?: string;
    /**
-    * @name Controls/_search/Input/ExpandableInput/Search#expanded
+    * @name Controls/_search/Input/ExpandableInput/Search/ExpandableInput#expanded
     * @cfg {Boolean} Состояние развернутости строки поиска.
     * @variant false Строка поиска свернута.
     * @variant true Строка поиска развернута.
