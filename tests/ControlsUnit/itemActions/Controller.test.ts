@@ -5,6 +5,7 @@ import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ANIMATION_STATE, Collection, CollectionItem, ISwipeConfig} from 'Controls/display';
 import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
+import {Logger} from 'UI/Utils';
 
 import {
     Controller as ItemActionsController,
@@ -18,6 +19,7 @@ import {
 import {IItemActionsItem} from 'Controls/_itemActions/interface/IItemActionsItem';
 import {IItemActionsCollection} from 'Controls/_itemActions/interface/IItemActionsCollection';
 import {DOMUtil} from 'Controls/sizeUtils';
+import * as sinon from 'sinon';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -312,6 +314,7 @@ describe('Controls/_itemActions/Controller', () => {
                 {id: 1, name: 'Doctor John Zoidberg', gender: 'M', itemActions: undefined},
                 {id: 2, name: 'Zapp Brannigan', gender: 'M', itemActions: undefined}
             ];
+            const loggerErrorStub = sinon.stub(Logger, 'error');
             collection = makeCollection(newData);
             // @ts-ignore
             itemActionsController.update(initializeControllerOptions({
@@ -320,11 +323,11 @@ describe('Controls/_itemActions/Controller', () => {
                 theme: 'default',
                 itemActionsProperty: 'itemActions'
             }));
-            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
             const actionsOf2 = collection.getItemBySourceKey(2).getActions();
 
-            assert.isEmpty(actionsOf1.showed, 'ItemActions array should be empty');
             assert.isEmpty(actionsOf2.showed, 'ItemActions array should be empty');
+            assert.ok(loggerErrorStub.calledOnce);
+            loggerErrorStub.restore();
         });
 
         // T1.6. После установки набора операций у коллекции устанавливается параметр actionsAssigned
