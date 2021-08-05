@@ -1,0 +1,6 @@
+<div class="controlsDemo__wrapper">
+    <Controls.dateRange:RangeShortSelector
+            bind:startValue="_startValue"
+            bind:endValue="_endValue"
+            headerContentTemplate="wml!Controls-demo/ShortDatePicker/HeaderContentTemplate/resources/HeaderContentTemplate"/>
+</div>

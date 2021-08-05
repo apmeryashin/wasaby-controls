@@ -1,25 +1,29 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/MasterDetail/Grouped/Grouped';
-import {Gadgets} from 'Controls-demo/explorerNew/DataHelpers/DataCatalog';
-import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
+import {HierarchicalMemory, Memory} from 'Types/source';
+import {Master} from '../DataHelpers/Master';
 import { IColumn } from 'Controls/grid';
 import { TRoot } from 'Controls-demo/types';
 import { IHeaderCell } from 'Controls/grid';
-import 'css!Controls/masterDetail';
-import 'css!Controls/CommonClasses';
+
+import * as DemoSource from 'Controls-demo/MasterDetail/DemoSource';
+
+import * as Template from 'wml!Controls-demo/MasterDetail/Grouped/Grouped';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   protected _viewSource: MemorySource;
-   protected _columns: IColumn[] = Gadgets.getGridColumns();
+   protected _masterSource: HierarchicalMemory;
+   protected _detailSource: Memory = null;
+   protected _columns: IColumn[] = Master.getColumns();
    protected _root: TRoot = null;
-   protected _header: IHeaderCell[] = Gadgets.getHeader();
+   protected _header: IHeaderCell[] = Master.getHeader();
 
    protected _beforeMount(): void {
-      this._viewSource = new MemorySource({
+      this._masterSource = new HierarchicalMemory({
+         parentProperty: 'Раздел',
          keyProperty: 'id',
-         data: Gadgets.getData()
+         data: Master.getData()
       });
+      this._detailSource = new DemoSource({keyProperty: 'id'});
    }
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
+   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/MasterDetail/Demo'];
 }

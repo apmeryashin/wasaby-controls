@@ -53,6 +53,14 @@ describe('SizeAndVisibilityObserver', () => {
         sinon.restore();
         global.document = undefined;
     });
+
+    describe('constructor', function () {
+        it('should set _headers', function () {
+            component = new SizeAndVisibilityObserver(() => undefined, () => undefined, {1: 'test'});
+            assert.equal(component._headers[1], 'test');
+        });
+    });
+
     describe('_getStickyHeaderElements', function () {
 
         it('should returns [header.container]', function () {

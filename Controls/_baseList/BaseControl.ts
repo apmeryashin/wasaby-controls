@@ -707,7 +707,7 @@ const _private = {
                     self._indicatorsController.resetShowPortionedSearchTimer();
                 }
 
-                _private.tryLoadToDirectionAgain(self);
+                _private.tryLoadToDirectionAgain(self, addedItems);
                 if (self._isMounted && self._scrollController) {
                     self.stopBatchAdding();
                 }
@@ -819,7 +819,7 @@ const _private = {
         if (navigation) {
             switch (navigation.view) {
                 case 'infinity':
-                    result = !loadedList || _private.isPortionedLoad(this, loadedList);
+                    result = !loadedList || loadedList.getCount() === 0 || _private.isPortionedLoad(this, loadedList);
                     break;
                 case 'maxCount':
                     result = _private.needLoadByMaxCountNavigation(listViewModel, navigation);
@@ -1410,6 +1410,8 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET) {
+                self._indicatorsController.onCollectionReset(!!self._options.searchValue);
+
                 // перезагрузили список, нужно пересчитать hasMore
 
                 self._updateIndicatorsController();
@@ -1897,18 +1899,35 @@ const _private = {
      */
     showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
         self.__error = errorConfig;
-        if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
-            if (self._scrollController) {
-                self._scrollController.destroy();
-                self._scrollController = null;
+        if (errorConfig) {
+            if (errorConfig.mode === dataSourceError.Mode.include) {
+                if (self._scrollController) {
+                    self._scrollController.destroy();
+                    self._scrollController = null;
+                }
+                self._observerRegistered = false;
+                self._intersectionObserver = null;
+                self._viewReady = false;
             }
-            self._observerRegistered = false;
-            self._viewReady = false;
+            if (errorConfig.mode === dataSourceError.Mode.inlist) {
+                self._observerRegistered = false;
+                self._intersectionObserver = null;
+            }
         }
     },
 
     hideError(self: BaseControl): void {
         if (self.__error) {
+
+            // https://online.sbis.ru/opendoc.html?guid=073d8f5a-7ca4-449d-8683-5e3c5da309f3
+            // Когда ошибка показана вместе со списком (при неудачной подгрузке вверх/вниз),
+            // и когда такая ошибка скрывается, то пересоздаются элементы шаблона (в частности, триггеры).
+            // Это приводит к необходимости заново их инициализировать.
+            // Но триггеры будут пересоздны не в ближайший после смены состояния _afterUpdate, а в следующий.
+            // Поэтому, откладываем инициализацию.
+            if (self.__error.mode === dataSourceError.Mode.inlist) {
+                self._delayObserverInitialization = true;
+            }
             self.__error = null;
         }
     },
@@ -4511,13 +4530,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
         if (!this.__error) {
-            if (!this._observerRegistered) {
+            if (!this._observerRegistered && !this._delayObserverInitialization) {
                 this._registerObserver();
             }
             if (this._shouldRegisterIntersectionObserver()) {
                 this._registerIntersectionObserver();
             }
         }
+        this._delayObserverInitialization = false;
 
         // Запустить валидацию, которая была заказана методом commit у редактирования по месту, после
         // применения всех обновлений реактивных состояний.
@@ -5151,7 +5171,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 )
             );
 
-            return shouldUseDefaultSaving ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex) : eventResult;
+            return shouldUseDefaultSaving ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex) : Promise.resolve(eventResult);
+        }).catch((error: Error) => {
+            return this._processEditInPlaceError(error).then(() => {
+                return LIST_EDITING_CONSTANTS.CANCEL;
+            });
         });
     }
 

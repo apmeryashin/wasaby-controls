@@ -412,6 +412,24 @@ describe('Controls/dataSource:SourceController', () => {
             await reloadPromise;
         });
 
+        it('load with nodeLoadCallback in options',  async () => {
+            let nodeLoadCallbackCalled = false;
+            const controller = getController({
+                nodeLoadCallback: () => {
+                    nodeLoadCallbackCalled = true;
+                }
+            });
+            await controller.load();
+            ok(!nodeLoadCallbackCalled);
+
+            await controller.load(void 0, 'testRoot');
+            ok(nodeLoadCallbackCalled);
+
+            nodeLoadCallbackCalled = false;
+            await controller.load('down', 'testRoot');
+            ok(nodeLoadCallbackCalled);
+        });
+
         it('load with direction returns error',  () => {
             const navigation = getPagingNavigation();
             let options = {...getControllerOptions(), navigation};
