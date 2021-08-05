@@ -26,8 +26,7 @@ export interface IStackOpener extends IOpener {
  * @function Controls/_popup/interface/IStackOpener#open
  * @param {Controls/_popup/interface/IStackOpener/PopupOptions.typedef} popupOptions Конфигурация стекового окна.
  * @remark
- * Если требуется открыть окно, без создания {@link Controls/popup:Stack} в верстке, следует использовать статический метод {@link openPopup}.
- * Повторный вызов этого метода вызовет переририсовку контрола.
+ * Для открытия окна без создания {@link Controls/popup:Stack} в верстке используйте методы класса {@link Controls/popup:StackOpener}.
  * @return Promise<void>
  * @example
  * В этом примере показано, как открыть и закрыть стековое окно.
