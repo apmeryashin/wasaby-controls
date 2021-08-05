@@ -5480,8 +5480,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     this._items.append([item]);
                 }
             }
-        }).catch((error: Error) => {
-            return this._processEditInPlaceError(error);
         });
     }
 
