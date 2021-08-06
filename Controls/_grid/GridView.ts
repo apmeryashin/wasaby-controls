@@ -264,12 +264,13 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
 
         const topOffset = headerHeight + resultsHeight;
+        const offsetFromOptions = this._options.ladderOffset || 0;
         const postfixLadderClass = `${header ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}`;
         const ladderClass = `controls-Grid__row-cell__ladder-spacing${postfixLadderClass}`;
         return `.${this._ladderOffsetSelector} .${ladderClass} {` +
-            `top: calc(var(--item_line-height_l_grid) + ${this._options.ladderOffset} + ${topOffset}px) !important;}` +
+            `top: calc(var(--item_line-height_l_grid) + ${offsetFromOptions} + ${topOffset}px) !important;}` +
             `.${this._ladderOffsetSelector} .${ladderClass}_withGroup {` +
-            `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${this._options.ladderOffset}` +
+            `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${offsetFromOptions}` +
             `+ ${topOffset}px) !important;}`;
 
     },
