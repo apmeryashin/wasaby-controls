@@ -835,7 +835,7 @@ const _private = {
 
                 // при порционном поиске индикатор скроется в searchStopCallback или searchAbortCallback
                 if (!self._portionedSearchInProgress) {
-                          rivate.hideIndicator(self);
+                    _private.hideIndicator(self);
                 }
 
                 const itemsCountAfterLoad = self._listViewModel.getCount();
