@@ -647,9 +647,8 @@ const _private = {
                     return;
                 }
 
-                // при порционном поиске индикатор скроется в searchStopCallback или searchAbortCallback
-                if (!self._portionedSearchInProgress) {
-                    _private.hideIndicator(self);
+                if (self._indicatorsController.shouldResetShowPortionedSearchTimer()) {
+                    self._indicatorsController.resetShowPortionedSearchTimer();
                 }
 
                 _private.tryLoadToDirectionAgain(self, addedItems);
