@@ -48,7 +48,7 @@ interface IInfoBoxOpenerOptions extends IInfoBoxPopupOptions, IBaseOpenerOptions
 class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpener {
     readonly '[Controls/_popup/interface/IInfoBoxOpener]': boolean;
     _style: number = null;
-    _openId: number;
+    _openId: number | void;
 
     _beforeUnmount(): void {
         this.close(0);
@@ -59,9 +59,9 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         if (this.isOpened()) {
             this.close(0);
         }
-        InfoBox._open((newCfg: object) => {
+        this._openId = InfoBox._open((newCfg: object) => {
             super.open(newCfg, POPUP_CONTROLLER);
-        }, cfg, this);
+        }, cfg);
     }
 
     _getIndicatorConfig(): void {
@@ -189,7 +189,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
     }
 
-    private static _open(callback: Function, cfg: IInfoBoxPopupOptions, openerInstance?: InfoBox): void {
+    private static _open(callback: Function, cfg: IInfoBoxPopupOptions): void | number {
         InfoBox._clearTimeout();
 
         const newCfg: IInfoBoxOpenerOptions = InfoBox._getInfoBoxConfig(cfg);
@@ -197,9 +197,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
             openId = setTimeout(() => {
                 callback(newCfg);
             }, newCfg.showDelay);
-            if (openerInstance) {
-                openerInstance._openId = openId;
-            }
+            return openId;
         } else {
             callback(newCfg);
         }
