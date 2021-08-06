@@ -237,7 +237,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         return `.${this._ladderOffsetSelector} .${ladderClass} {` +
                   `top: calc(var(--item_line-height_l_grid) + ${this._options.ladderOffset} + ${headerHeight + resultsHeight}px) !important;}` +
                 `.${this._ladderOffsetSelector} .${ladderClass}_withGroup {` +
-                   `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list)  + ${this._options.ladderOffset} + ${headerHeight + resultsHeight}px) !important;}`;
+                   `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${this._options.ladderOffset} + ${headerHeight + resultsHeight}px) !important;}`;
 
     },
 

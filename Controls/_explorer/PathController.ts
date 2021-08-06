@@ -75,7 +75,7 @@ export default class PathController extends Control<IOptions> {
             this._needShadow = PathController._isNeedShadow(this._header, newOptions.viewMode);
         }
 
-        this._crumbsVisible = this._children.Path.isCrumbsVisible(newOptions);
+        this._crumbsVisible = this._children.Path?.isCrumbsVisible(newOptions);
     }
 
     /**
