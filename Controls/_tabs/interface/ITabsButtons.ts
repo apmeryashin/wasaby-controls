@@ -2,6 +2,8 @@ import {IControlOptions} from 'UI/Base';
 import {SbisService} from 'Types/source';
 import {ISingleSelectableOptions, IItemsOptions} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
+import {IIconCounterTabTemplate} from 'Controls/_tabs/interface/IIconCounterTabTemplate';
+
 /**
  * @typedef {String} Controls/_tabs/interface/ITabsButtons/Align Опция определяющая положение вкладки
  * @default 'right'
@@ -33,19 +35,13 @@ import {RecordSet} from 'Types/collection';
  * @property {String} [image.tooltip] Значение тултипа.
  */
 
-export interface ITabButtonItem {
+export interface ITabButtonItem extends IIconCounterTabTemplate {
     isMainTab?: boolean;
     align?: 'left' | 'right';
     title?: 'string';
     minWidth?: string | number;
     width?: string | number;
     maxWidth?: string | number;
-    icon?: string;
-    iconStyle?: string;
-    mainCounter?: string;
-    mainCounterStyle?: string;
-    caption?: string;
-    image?: object;
     [key: string]: any;
 }
 /**
