@@ -260,7 +260,6 @@ export class Controller {
             }
             this._collection.setSwipeConfig(null);
             this._collection.nextVersion();
-            this._updateActionsOnParticularItem(currentSwipedItem);
         }
     }
 
@@ -541,6 +540,7 @@ export class Controller {
 
         if (oldSwipeItem) {
             oldSwipeItem.setSwiped(false, silent);
+            this._updateActionsOnParticularItem(oldSwipeItem);
         }
         if (newSwipeItem) {
             newSwipeItem.setSwiped(true, silent);
