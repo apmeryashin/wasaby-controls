@@ -1,5 +1,6 @@
 import * as clone from 'Core/core-clone';
 import {Control} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -676,9 +677,18 @@ export class Controller {
     private _getActionsObject(item: IItemActionsItem): IItemActionsObject {
         let showed;
         const contents = Controller._getItemContents(item);
-        const all = this._itemActionsProperty
-            ? contents.get(this._itemActionsProperty)
-            : this._commonItemActions;
+        let all: IItemAction[];
+        if (this._itemActionsProperty) {
+            all = contents.get(this._itemActionsProperty);
+            if (all === undefined) {
+                Logger.error(`ItemActions: Property ${this._itemActionsProperty} has incorrect value for record ` +
+                    `with key ${item.getContents().getKey()}. Array was expected.`, this);
+                all = [];
+            }
+        } else {
+            all = this._commonItemActions;
+        }
+
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
             showed = visibleActions.filter((action) =>
