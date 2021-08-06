@@ -25,7 +25,7 @@
  * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList
  * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes ItemsView Controls/list:ItemsView
- * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
+ * @includes IVirtualScrollConfig Controls/_baseList/interface/IVirtualScrollConfig
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes MultiSelectAccessibility Controls/_display/Collection
  * @includes RemoveController Controls/_baseList/Controllers/RemoveController
@@ -65,7 +65,7 @@
  * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList
  * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes ItemsView Controls/list:ItemsView
- * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
+ * @includes IVirtualScrollConfig Controls/_baseList/interface/IVirtualScrollConfig
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes MultiSelectAccessibility Controls/_display/Collection
  * @includes RemoveController Controls/_baseList/Controllers/RemoveController
