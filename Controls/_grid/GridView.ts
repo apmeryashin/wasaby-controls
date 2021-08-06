@@ -264,7 +264,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
 
         const topOffset = headerHeight + resultsHeight;
-        const offsetFromOptions = this._options.ladderOffset || 0;
+        const offsetFromOptions = this._options.ladderOffset || '0px';
         const postfixLadderClass = `${header ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}`;
         const ladderClass = `controls-Grid__row-cell__ladder-spacing${postfixLadderClass}`;
         return `.${this._ladderOffsetSelector} .${ladderClass} {` +
