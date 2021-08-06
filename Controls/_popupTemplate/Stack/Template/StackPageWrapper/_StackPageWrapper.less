@@ -1,0 +1,29 @@
+.controls-PageTemplate {
+   position: relative;
+}
+
+.controls-PageTemplate__resizingLine {
+   position: absolute;
+   height: 100%;
+   top: 0;
+   z-index: 40; // https://docs.google.com/document/d/1jKYv2go53aYc-zjOhUERS0CzvfihVJ5ZdRrbN-WL9WA/edit
+}
+
+.controls-PageTemplate__resizingLine-left {
+   left: 0;
+}
+
+.controls-PageTemplate__resizingLine-right {
+   right: calc((var(--width_stack-right_panel) + var(--border_width_stack-right_panel)) / (-1));
+}
+
+.controls-PageTemplate__shadow {
+   position: absolute;
+   height: 100%;
+   overflow: hidden;
+   width: var(--shadow-blur_stack);
+   top: 0;
+   right: calc((var(--shadow-blur_stack) + var(--border-thickness_stack) + var(--width_stack-right_panel) + var(--border_width_stack-right_panel)) / (-1));
+   background: linear-gradient(to left, transparent, var(--shadow-color_stack));
+   border-left: var(--border-thickness_stack) solid var(--border-color_stack);
+}
