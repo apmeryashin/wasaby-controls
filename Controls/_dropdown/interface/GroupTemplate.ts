@@ -31,12 +31,6 @@
  */
 
 /**
- * @typedef {String} TextAlign
- * @variant left Текст выравнивается по левой стороне.
- * @variant right Текст выравнивается по правой стороне.
- */
-
-/**
  * @name Controls/dropdown:GroupTemplate#showText
  * @cfg {Boolean} Определяет, отображается ли название группы.
  * @default false
@@ -45,6 +39,8 @@
 /**
  * @name Controls/dropdown:GroupTemplate#textAlign
  * @cfg {TextAlign} Выравнивание заголовка группы по горизонтали.
+ * @variant left Текст выравнивается по левой стороне.
+ * @variant right Текст выравнивается по правой стороне.
  * @default undefined
  */
 
