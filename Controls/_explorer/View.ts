@@ -304,8 +304,8 @@ export default class Explorer extends Control<IExplorerOptions> {
         // Но если отменили проваливание, то нужно поставить маркер.
         if (this._potentialMarkedKey !== undefined && !isRootChanged) {
             this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
+            this._potentialMarkedKey = undefined;
         }
-        this._potentialMarkedKey = undefined;
 
         const isSourceControllerLoading = cfg.sourceController && cfg.sourceController.isLoading();
         this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
