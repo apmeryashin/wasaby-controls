@@ -14,7 +14,7 @@ class EmptyRow extends Row<null> {
     getItemClasses(params: IItemTemplateParams): string {
         return 'js-controls-GridView__emptyTemplate'
             + ' controls-GridView__emptyTemplate'
-            + ` ${this._getBaseItemClasses()}`;
+            + ` ${this._getBaseItemClasses(params.style)}`;
     }
 
     //region Аспект "Колонки. Создание, колспан."

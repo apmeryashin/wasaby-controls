@@ -64,8 +64,8 @@ export default class TreeGridDataRow<T extends Model = Model>
     //  Проблема в том, что mixin не умеет объединять одинаковые методы, а логику Grid мы добавляем через mixin
     // region overrides
 
-    protected _getBaseItemClasses(): string {
-        return super._getBaseItemClasses() + ' js-controls-Grid__data-row';
+    protected _getBaseItemClasses(style: string): string {
+        return super._getBaseItemClasses(style) + ' js-controls-Grid__data-row';
     }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {
