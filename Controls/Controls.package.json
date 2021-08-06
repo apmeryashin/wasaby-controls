@@ -1,12 +1,9 @@
 [{
   "include": [
     "Controls/Application",
-    "Controls/Application/*"
-  ],
-  "exclude": [
-    "Controls/Application/Compatible",
-    "Controls/Application/HeadDataContext",
-    "Controls/Application/AppData"
+    "Controls/Application/*",
+    "css!Controls/application",
+    "css!Controls/CommonClasses"
   ],
   "output": "controls-application.package.js"
 }, {
