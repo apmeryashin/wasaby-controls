@@ -25,8 +25,10 @@ define('Controls-demo/RootRouter', [
          },
          reloadDemo: function() {
             this.reload();
-            // При обновлении демки сбрасываем все что лежит в settingsController (задается на application);
-            window.localStorage.setItem('controlSettingsStorage', '{}');
+            if (window.clearSettinngStorage !== false) {
+                // При обновлении демки сбрасываем все что лежит в settingsController (задается на application);
+                window.localStorage.setItem('controlSettingsStorage', '{}');
+            }
          },
          _beforeMount: function(options, context, receivedState) {
             var _state = {
