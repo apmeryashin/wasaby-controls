@@ -919,7 +919,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
     private _notifyChanges(items: IFilterItem[]): void {
         this._notify('filterChanged', [this._getFilter(items)]);
-        this._notify('itemsChanged', [items, this._options.items]);
+        this._notify('itemsChanged', [items]);
     }
 
     private _getFilter(items: IFilterItem[]): QueryWhereExpression<unknown> {
