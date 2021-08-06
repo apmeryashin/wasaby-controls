@@ -62,6 +62,10 @@ export default class PathWrapper extends Control<IOptions> {
         }
     }
 
+    isCrumbsVisible(options: IOptions): boolean {
+        return PathWrapper._isNeedCrumbs(options);
+    }
+
     private static _isNeedCrumbs(options: IOptions): boolean {
         if (options.breadcrumbsVisibility === 'hidden') {
             return false;
