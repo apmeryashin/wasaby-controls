@@ -128,6 +128,7 @@ class StackController extends BaseController {
         item.popupOptions.width = state ? item.popupOptions.maxWidth : minWidth;
         this._prepareSizes(item, container);
         this._update();
+        this._savePopupWidth(item);
         return true;
     }
 
