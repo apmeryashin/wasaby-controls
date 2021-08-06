@@ -23,7 +23,7 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * @implements Controls/interface:IDateMask
  * @implements Controls/interface:IInputTag
  * @mixes Controls/input:IBorderVisibility
- * 
+ *
  * @mixes Controls/dateRange:IDatePickerSelectors
  * @mixes Controls/dateRange:IDateRangeSelectable
  * @mixes Controls/input:IBase
@@ -47,15 +47,7 @@ class Picker extends Control<IControlOptions> {
     }
 
     openPopup(event: SyntheticEvent<MouseEvent>): void {
-        let value;
-        // Если передать null в datePopup в качестве начала и конца периода, то он выделит
-        // период от -бесконечности до +бесконечности.
-        // В режиме выбора одного дня мы не должны выбирать ни один день.
-        if (this._options.value === null) {
-            value = undefined;
-        } else {
-            value = this._options.value;
-        }
+        const value = PopupUtil.getFormattedSingleSelectionValue(this._options.value);
         const cfg = {
             ...PopupUtil.getCommonOptions(this),
             target: this._container,
@@ -63,8 +55,7 @@ class Picker extends Control<IControlOptions> {
             className: `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme}`,
             templateOptions: {
                 ...PopupUtil.getTemplateOptions(this),
-                startValue: value,
-                endValue: value,
+                ...value,
                 selectionType: 'single',
                 calendarSource: this._options.calendarSource,
                 dayTemplate: this._options.dayTemplate,

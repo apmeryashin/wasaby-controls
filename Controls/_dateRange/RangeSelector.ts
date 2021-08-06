@@ -138,16 +138,9 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         } else {
             className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
         }
-        let startValue = this._rangeModel.startValue || this._startValue;
-        let endValue = this._rangeModel.endValue || this._endValue;
+        let value = {};
         if (this._options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
-            // Если передать null в datePopup в качестве начала и конца периода, то он выделит
-            // период от -бесконечности до +бесконечности.
-            // В режиме выбора одного дня мы не должны выбирать ни один день.
-            if (this._options.startValue === null) {
-                startValue = undefined;
-                endValue = undefined;
-            }
+            value = PopupUtil.getFormattedSingleSelectionValue(this._rangeModel.startValue || this._startValue);
         }
         return {
             ...PopupUtil.getCommonOptions(this),
@@ -156,8 +149,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
-                endValue,
-                startValue,
+                ...value,
                 headerType: 'link',
                 _date: this._options._date,
                 resetStartValue: this._options.resetStartValue,
