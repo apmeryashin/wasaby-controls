@@ -1,7 +1,7 @@
 import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions} from 'Controls/popup';
 import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
-import {setSettings, getSettings} from 'Controls/Application/SettingsController';
+import {getPopupWidth, savePopupWidth} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {List} from 'Types/collection';
 import getTargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import {parse as parserLib} from 'Core/library';
@@ -468,27 +468,17 @@ class StackController extends BaseController {
         }
     }
 
-    private _getPopupWidth(item: IStackItem): Promise<undefined> {
-        return new Promise((resolve) => {
-            const propStorageId = item.popupOptions.propStorageId;
-            if (propStorageId) {
-                getSettings([propStorageId]).then((storage) => {
-                    if (storage && storage[propStorageId]) {
-                        item.popupOptions.width = storage[propStorageId];
-                    }
-                    resolve();
-                });
-            } else {
-                resolve();
+    private _getPopupWidth(item: IStackItem): Promise<number | void> {
+        return getPopupWidth(item.popupOptions.propStorageId).then((width?: number) => {
+            if (width) {
+                item.popupOptions.width = width;
             }
+            return width;
         });
     }
 
     private _savePopupWidth(item: IStackItem): void {
-        const propStorageId = item.popupOptions.propStorageId;
-        if (propStorageId && item.position.width) {
-            setSettings({[propStorageId]: item.position.width});
-        }
+        savePopupWidth(item.popupOptions.propStorageId, item.position.width);
     }
 
     private _addLastStackClass(item: IStackItem): void {
