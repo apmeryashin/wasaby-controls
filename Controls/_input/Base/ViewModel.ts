@@ -1,14 +1,14 @@
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import simpleExtend = require('Core/core-simpleExtend');
-import { VersionableMixin } from "Types/entity";
+import { VersionableMixin } from 'Types/entity';
 import {isEqual} from 'Types/object';
 
 
-      var _private = {
-         setValue: function(self, value) {
+      const _private = {
+         setValue(self, value) {
             if (self._value !== value) {
-               var oldValue = self._value;
+               const oldValue = self._value;
                self._value = value;
 
                // если ничего не поменялось - не надо изменять версию
@@ -19,9 +19,9 @@ import {isEqual} from 'Types/object';
                self._shouldBeChanged = true;
             }
          },
-         setDisplayValue: function(self, displayValue) {
+         setDisplayValue(self, displayValue) {
             if (self._displayValue !== displayValue) {
-               var oldValue = self._displayValue;
+               const oldValue = self._displayValue;
                self._displayValue = displayValue;
                self.selection = self._getStartingPosition();
 
@@ -35,16 +35,16 @@ import {isEqual} from 'Types/object';
          }
       };
 
-      var ViewModel = simpleExtend.extend([VersionableMixin], {
-         _convertToValue: function(displayValue) {
+      const ViewModel = simpleExtend.extend([VersionableMixin], {
+         _convertToValue(displayValue) {
             return displayValue;
          },
 
-         _convertToDisplayValue: function(value) {
+         _convertToDisplayValue(value) {
             return value === null ? '' : value;
          },
 
-         _getStartingPosition: function () {
+         _getStartingPosition () {
             return this.displayValue.length;
          },
 
@@ -94,7 +94,7 @@ import {isEqual} from 'Types/object';
           * @param {Controls/_input/Base/Types/Selection.typedef|Number} value
           */
          set selection(value) {
-            var newSelection = typeof value === 'number' ? {
+            const newSelection = typeof value === 'number' ? {
                start: value,
                end: value
             } : value;
@@ -115,7 +115,7 @@ import {isEqual} from 'Types/object';
             _private.setDisplayValue(this, this._convertToDisplayValue(this._value));
          },
 
-         constructor: function(options, value) {
+         constructor(options, value) {
             this._selection = {};
             this._oldSelection = {};
             this._options = clone(options);
@@ -125,15 +125,17 @@ import {isEqual} from 'Types/object';
             this.changesHaveBeenApplied();
          },
 
-         handleInput: function(splitValue) {
-            var position = splitValue.before.length + splitValue.insert.length;
-            var displayValue = splitValue.before + splitValue.insert + splitValue.after;
-            var hasChangedDisplayValue = this._displayValue !== displayValue;
+         handleInput(splitValue) {
+            const position = splitValue.before.length + splitValue.insert.length;
+            const displayValue = splitValue.before + splitValue.insert + splitValue.after;
+            const hasChangedDisplayValue = this._displayValue !== displayValue;
 
             this._value = this._convertToValue(displayValue);
             this._displayValue = displayValue;
 
-            // здесь нельзя добавлять проверку, иначе нельзя будет поставить точку в тексте. например Number.js пишем 123.456, вот когда будем писать точку, число при этом не изменилось, но _nextVersion звать надо..
+            // здесь нельзя добавлять проверку, иначе нельзя будет поставить точку в тексте.
+            // Например Number.js пишем 123.456, вот когда будем писать точку,
+            // число при этом не изменилось, но _nextVersion звать надо.
             this._nextVersion();
 
             this._selection.start = position;
@@ -144,7 +146,7 @@ import {isEqual} from 'Types/object';
             return hasChangedDisplayValue;
          },
 
-         changesHaveBeenApplied: function() {
+         changesHaveBeenApplied() {
             this._oldValue = this._value;
             this._oldDisplayValue = this._displayValue;
             this._oldSelection = clone(this._selection);
@@ -152,7 +154,7 @@ import {isEqual} from 'Types/object';
             this._shouldBeChanged = false;
          },
 
-         select: function() {
+         select() {
             this.selection = {
                start: 0,
                end: this.displayValue.length
@@ -162,7 +164,7 @@ import {isEqual} from 'Types/object';
             this._shouldBeChanged = true;
          },
 
-         isValueChanged: function(oldDisplayValue: string, oldValue?: string) {
+         isValueChanged(oldDisplayValue: string, oldValue?: string) {
             return oldDisplayValue !== this._displayValue;
          }
       });

@@ -35,6 +35,7 @@
    width: 100%;
    max-height: 100%;
    .text-overflow();
+
    white-space: pre;
 }
 
@@ -62,7 +63,8 @@
  * 3. Custom placeholder is placed after the modifier element.
  */
 .controls-InputBase__nativeField_hideCustomPlaceholder {
-   &:-webkit-autofill, &:not(:placeholder-shown) {
+   &:-webkit-autofill,
+   &:not(:placeholder-shown) {
       & + .controls-InputBase__placeholder {
          display: none;
       }
@@ -83,6 +85,7 @@
    user-select: none;
    position: absolute;
    visibility: hidden;
+
    /**
     * Элемент с этим классом используется для вычисления ширины текста.
     * Запрещаем перенос, чтобы текст был в одну строку.
@@ -118,9 +121,11 @@
       .controls-InputBase__field_autoWidth.controls-InputBase__field_margin-xs {
          margin: 0 calc(var(--padding-horizontal_inputText) - @value) 0 var(--padding-horizontal_inputText);
       }
+
       .controls-InputBase__stretcher-block_margin-xs {
          padding-right: @value;
       }
+
       .controls-InputBase__stretcher-block_margin-null {
          padding-right: @value - 2;
       }

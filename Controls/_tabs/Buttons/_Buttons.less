@@ -1,5 +1,5 @@
 .tabs-baseline() {
-   &:before {
+   &::before {
       content: '\200b'; //zero width space
       width: 0;
       display: inline-block;
@@ -17,24 +17,6 @@
    .tabs-baseline();
 }
 
-// в ie есть проблема с flex-shrink, и она заметна когда внутри одного flex-shrink со значением 1, находится другой
-// в этом случае текст троеточится когда есть свободное место,
-// но если у внутреннего установить значение 0, все работает как надо
-// https://online.sbis.ru/opendoc.html?guid=2b5eb65e-8646-4068-a1ba-4b147e7671e2
-.ws-is-ie {
-   .controls-Tabs__itemClickableArea {
-      flex-shrink: 0;
-   }
-   // Уменьшаем значение до пяти знаков,так как при большем значении выталкивается крайняя справа вкладка.
-   .controls-Tabs__space {
-      flex-shrink: 99999;
-   }
-   // В ie из-за стиля выше некорректно обрезается контент.
-   .controls-Tabs__item {
-      overflow: hidden;
-   }
-}
-
 .controls-Tabs__itemClickableArea_type-default {
    align-items: baseline;
 }
@@ -44,21 +26,21 @@
 }
 
 .controls-Tabs__itemClickableArea_inlineHeight-s {
-   &:before {
+   &::before {
       line-height: var(--item_height_tabs);
       font-size: var(--unselected_item_font-size_tabs);
    }
 }
 
 .controls-Tabs__itemClickableArea_inlineHeight-l {
-   &:before {
+   &::before {
       line-height: var(--item_height_l_tabs);
       font-size: var(--unselected_item_font-size_tabs);
    }
 }
 
 .controls-Tabs__itemClickableArea_marker {
-   &:after {
+   &::after {
       content: '';
       position: absolute;
       bottom: 0;
@@ -70,7 +52,7 @@
 }
 
 .controls-Tabs__itemClickableArea_markerThickness {
-   &:after {
+   &::after {
       height: var(--marker_thickness_tabs);
    }
 }
@@ -78,7 +60,7 @@
 .controls-Tabs {
    position: relative;
 
-   &:after {
+   &::after {
       content: '';
       position: absolute;
       bottom: 0;
@@ -97,7 +79,7 @@
 }
 
 .controls-Tabs_border {
-   &:after {
+   &::after {
       height: var(--border-thickness_tabs);
    }
 }
@@ -126,6 +108,7 @@
    box-sizing: border-box;
    align-items: baseline;
    .tabs-baseline();
+
    position: relative;
    width: 100%;
    min-width: 0;
@@ -134,14 +117,14 @@
 }
 
 .controls-Tabs__space_inlineHeight-s {
-   &:before {
+   &::before {
       line-height: var(--item_height_tabs);
       font-size: var(--unselected_item_font-size_tabs);
    }
 }
 
 .controls-Tabs__space_inlineHeight-l {
-   &:before {
+   &::before {
       line-height: var(--item_height_l_tabs);
       font-size: var(--unselected_item_font-size_tabs);
    }
@@ -157,6 +140,7 @@
    align-items: baseline;
    box-sizing: border-box;
    .tabs-baseline();
+
    height: 100%;
    position: relative;
    font-size: var(--unselected_item_font-size_tabs);
@@ -166,14 +150,14 @@
 }
 
 .controls-Tabs__item_inlineHeight-s {
-   &:before {
+   &::before {
       line-height: var(--item_height_tabs);
       font-size: var(--unselected_item_font-size_tabs);
    }
 }
 
 .controls-Tabs__item_inlineHeight-l {
-   &:before {
+   &::before {
       line-height: var(--item_height_l_tabs);
       font-size: var(--unselected_item_font-size_tabs);
    }
@@ -208,28 +192,8 @@
 
 .controls-Tabs__item_state_default {
    .user-select();
+
    color: var(--unselected_item_text-color_tabs);
-}
-
-.ws-is-hover {
-   .controls-Tabs__item-marker_state_default:hover {
-      &:after {
-         background: var(--marker_hover_color_tabs);
-      }
-   }
-
-   .controls-Tabs__itemClickableArea_markerThickness:hover {
-      &:after {
-         height: var(--marker_thickness_tabs);
-      }
-   }
-
-   .controls-Tabs__marker_thickness {
-      height: var(--marker_thickness_tabs);
-   }
-   .controls-Tabs__item_state_default:hover {
-      color: var(--unselected_item_text-color_tabs);
-   }
 }
 
 .controls-Tabs__item_view_main {
@@ -297,19 +261,19 @@
 }
 
 .controls-Tabs_style_primary__item-marker_state_selected {
-   &:after {
+   &::after {
       background: var(--primary_marker_color_tabs);
    }
 }
 
 .controls-Tabs_style_unaccented__item-marker_state_selected {
-   &:after {
+   &::after {
       background: var(--unaccented_marker_color_tabs);
    }
 }
 
 .controls-Tabs_style_secondary__item-marker_state_selected {
-   &:after {
+   &::after {
       background: var(--secondary_marker_color_tabs);
    }
 }
@@ -341,7 +305,7 @@
 }
 
 .controls-Tabs__main-marker {
-   &:after {
+   &::after {
       content: '';
       pointer-events: none;
       position: absolute;
@@ -350,9 +314,7 @@
       width: var(--main-tab-marker_thickness_tabs);
       background: var(--primary_marker_color_tabs);
       border-radius: 0 var(--main-tab-marker_border-radius_tabs) var(--main-tab-marker_border-radius_tabs) 0;
-   }
-   &:after {
-      top: calc(50%~'-'(var(--main-tab-marker_length_tabs) / 2) ~'-'var(--marker_thickness_tabs));
+      top: calc(50% ~'-'(var(--main-tab-marker_length_tabs) / 2) ~'-'var(--marker_thickness_tabs));
    }
 }
 
@@ -370,7 +332,7 @@
    padding: 0;
    .align-items(flex-end);
 
-   &:before {
+   &::before {
       content: '';
    }
 }
@@ -417,9 +379,49 @@
    flex-shrink: 0;
 }
 
-.controls-AdaptiveButtons__more:hover {
-   color: var(--link_hover_text-color);
-   text-decoration: underline;
+// в ie есть проблема с flex-shrink, и она заметна когда внутри одного flex-shrink со значением 1, находится другой
+// в этом случае текст троеточится когда есть свободное место,
+// но если у внутреннего установить значение 0, все работает как надо
+// https://online.sbis.ru/opendoc.html?guid=2b5eb65e-8646-4068-a1ba-4b147e7671e2
+.ws-is-ie {
+   .controls-Tabs__itemClickableArea {
+      flex-shrink: 0;
+   }
+   // Уменьшаем значение до пяти знаков,так как при большем значении выталкивается крайняя справа вкладка.
+   .controls-Tabs__space {
+      flex-shrink: 99999;
+   }
+   // В ie из-за стиля выше некорректно обрезается контент.
+   .controls-Tabs__item {
+      overflow: hidden;
+   }
+}
+
+.ws-is-hover {
+   .controls-Tabs__item-marker_state_default:hover {
+      &::after {
+         background: var(--marker_hover_color_tabs);
+      }
+   }
+
+   .controls-Tabs__itemClickableArea_markerThickness:hover {
+      &::after {
+         height: var(--marker_thickness_tabs);
+      }
+   }
+
+   .controls-Tabs__marker_thickness {
+      height: var(--marker_thickness_tabs);
+   }
+
+   .controls-AdaptiveButtons__more:hover {
+      color: var(--link_hover_text-color);
+      text-decoration: underline;
+   }
+
+   .controls-Tabs__item_state_default:hover {
+      color: var(--unselected_item_text-color_tabs);
+   }
 }
 
 .controls-AdaptiveButtons__item {
@@ -444,7 +446,7 @@
    }
 }
 
-.tempFix_1180388539.controls-Tabs:after {
+.tempFix_1180388539.controls-Tabs::after {
    height: 3px;
 }
 
