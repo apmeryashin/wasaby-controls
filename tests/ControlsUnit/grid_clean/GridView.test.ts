@@ -153,7 +153,8 @@ describe('Controls/grid_clean/GridView', () => {
     describe('ladder offset style', () => {
         it('_getLadderTopOffsetStyles', () => {
             const options = {
-                columns: [{}]
+                columns: [{}],
+                ladderOffset: 'offset'
             };
             const gridView = new GridView(options);
             gridView._listModel = {
@@ -172,12 +173,12 @@ describe('Controls/grid_clean/GridView', () => {
                 closest: () => undefined
             };
             gridView.saveOptions(options);
-            gridView._beforeMount(options)
+            gridView._beforeMount(options);
             const expectedStyle = '.controls-GridView__ladderOffset-guid .controls-Grid__row-cell__ladder-spacing_withHeader_withResults {' +
-                                    'top: calc(var(--item_line-height_l_grid) + 150px) !important;' +
+                                    'top: calc(var(--item_line-height_l_grid) + offset + 150px) !important;' +
                                     '}' +
                                     '.controls-GridView__ladderOffset-guid .controls-Grid__row-cell__ladder-spacing_withHeader_withResults_withGroup {' +
-                                    'top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + 150px) !important;' +
+                                    'top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + offset + 150px) !important;' +
                                     '}';
             assert.equal(gridView._getLadderTopOffsetStyles(), expectedStyle);
         });
