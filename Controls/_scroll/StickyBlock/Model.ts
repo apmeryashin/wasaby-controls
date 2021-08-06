@@ -33,8 +33,8 @@ export = simpleExtend.extend({
     */
    _fixedPosition: '',
 
-   _observationLeft: null,
-   _observationRight: null,
+   _intersectingBottomLeft: null,
+   _intersectingBottomRight: null,
 
    get fixedPosition() {
       return this._fixedPosition;
@@ -67,10 +67,10 @@ export = simpleExtend.extend({
    update: function(entries: IntersectionObserverEntry[]) {
       entries.forEach((entry) => {
          if (entry.target === this._bottomLeftTarget) {
-            this._observationLeft = entry.isIntersecting;
+            this._intersectingBottomLeft = entry.isIntersecting;
          }
          if (entry.target === this._bottomRightTarget) {
-            this._observationRight = entry.isIntersecting;
+            this._intersectingBottomRight = entry.isIntersecting;
          }
       });
 
@@ -95,7 +95,7 @@ export = simpleExtend.extend({
       // Будем обновлять состояние зафиксированности для observerBottom по левому и правому обсёрверу.
       // Таким образом, исключим состояние зафиксированности сверху/снизу при горизонтальном скролле.
       if (position === 'bottom') {
-         isIntersecting = this._observationLeft || this._observationRight;
+         isIntersecting = this._intersectingBottomLeft || this._intersectingBottomRight;
       }
       this._intersection[position] =  isIntersecting;
    },
