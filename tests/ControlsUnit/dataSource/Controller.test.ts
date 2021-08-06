@@ -436,7 +436,7 @@ describe('Controls/dataSource:SourceController', () => {
             const controller = getController(options);
             return controller.reload().then(() => {
                 ok(controller.getItems().getCount() === 1);
-                //mock error
+                // mock error
                 const originSource = controller._options.source;
                 options = {...options};
                 options.source = sourceWithError;
@@ -445,7 +445,7 @@ describe('Controls/dataSource:SourceController', () => {
                 return controller.load('down').catch(() => {
                     ok(controller.getItems().getCount() === 1);
 
-                    //return originSource
+                    // return originSource
                     options = {...options};
                     options.source = originSource;
                     controller.updateOptions(options);
@@ -914,6 +914,30 @@ describe('Controls/dataSource:SourceController', () => {
             await controller.updateOptions({...options, groupHistoryId: 'newGroupHistoryId'});
             ok(controller.getCollapsedGroups(), storedCollapsedGroups);
             sinonSandbox.restore();
+        });
+    });
+
+    describe('setRoot', () => {
+        it('root is changed after setRoot', () => {
+            const controller = getController();
+            controller.setRoot('testRoot');
+            ok(controller.getRoot() === 'testRoot');
+        });
+
+        it('rootChanged event fired on setRoot', () => {
+            let rootChangedEventFired = false;
+            const controller = getController();
+            controller.subscribe('rootChanged', () => {
+                rootChangedEventFired = true;
+            });
+
+            controller.setRoot('testRoot');
+            ok(rootChangedEventFired);
+
+            // same root
+            rootChangedEventFired = false;
+            controller.setRoot('testRoot');
+            ok(!rootChangedEventFired);
         });
     });
 });
