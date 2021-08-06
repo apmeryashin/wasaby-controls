@@ -43,7 +43,7 @@
  */
 
 /**
- * @name Controls/dropdown:GroupTemplate#showText
+ * @name Controls/dropdown:GroupTemplate#textAlign
  * @cfg {TextAlign} Выравнивание заголовка группы по горизонтали.
  * @default undefined
  */
