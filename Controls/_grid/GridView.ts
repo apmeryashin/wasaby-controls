@@ -235,9 +235,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
         const ladderClass = `controls-Grid__row-cell__ladder-spacing${header ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}`;
         return `.${this._ladderOffsetSelector} .${ladderClass} {` +
-                  `top: calc(var(--item_line-height_l_grid) + ${this._options.ladderOffset} + ${headerHeight + resultsHeight}px) !important;}` +
+                  `top: calc(var(--item_line-height_l_grid) + ${this._options.ladderOffset || 0} + ${headerHeight + resultsHeight}px) !important;}` +
                 `.${this._ladderOffsetSelector} .${ladderClass}_withGroup {` +
-                   `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${this._options.ladderOffset} + ${headerHeight + resultsHeight}px) !important;}`;
+                   `top: calc(var(--item_line-height_l_grid) + var(--grouping_height_list) + ${this._options.ladderOffset || 0} + ${headerHeight + resultsHeight}px) !important;}`;
 
     },
 
