@@ -6071,14 +6071,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (options.navigation) {
+            const newNavigation = cClone(options.navigation);
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController
             // https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
-            if (options.navigation.source === 'position') {
-                options.navigation.sourceConfig.limit = LIMIT_DRAG_SELECTION;
-            } else if (options.navigation.source === 'page') {
-                options.navigation.sourceConfig.pageSize = LIMIT_DRAG_SELECTION;
+            if (newNavigation.source === 'position') {
+                newNavigation.sourceConfig.limit = LIMIT_DRAG_SELECTION;
+            } else if (newNavigation.source === 'page') {
+                newNavigation.sourceConfig.pageSize = LIMIT_DRAG_SELECTION;
             }
+            options.navigation = newNavigation;
         }
 
         return options;
