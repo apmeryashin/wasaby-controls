@@ -2,7 +2,9 @@
             {{hasDetails ? 'controls-ConfirmationDialog__message_withDetails'}}">
   <div class="controls-ConfirmationDialog__message-centered">
     <ws:if data="{{hasMarkup}}">
-      <Controls.decorator:Markup value="{{ content }}" />
+      <Controls.Container.Async templateName="Controls/decorator:Markup">
+        <ws:partial template="{{ content.resolvedTemplate }}" value="{{_options.content}}"/>
+      </Controls.Container.Async>
     </ws:if>
     <ws:else>
       <ws:partial template="{{content}}"/>
