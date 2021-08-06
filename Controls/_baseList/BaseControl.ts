@@ -4385,9 +4385,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
             }
-            const scrollToItemContinued = this._scrollController.continueScrollToItemIfNeed();
-            const virtualScrollCompleted = this._scrollController.completeVirtualScrollIfNeed();
-            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || paramsToRestoreScroll;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4396,6 +4393,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notifyPlaceholdersChanged();
                 this._notifyPlaceholdersChanged = null;
             }
+
+            const scrollToItemContinued = this._scrollController.continueScrollToItemIfNeed();
+            const virtualScrollCompleted = this._scrollController.completeVirtualScrollIfNeed();
+            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || paramsToRestoreScroll;
+
             if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
             }
