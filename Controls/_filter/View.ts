@@ -239,7 +239,8 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 (!oldItem || !oldItemIsFrequent || optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false)
                     || (valueChanged && configs && !configs[newItem.name]) || needHistoryReload)
             ) {
-                if (valueChanged && !isEqual(newItem.value, newItem.resetValue)) {
+                const hasTextValue = oldItem.textValue || newItem.textValue;
+                if (!hasTextValue || valueChanged && !isEqual(newItem.value, newItem.resetValue)) {
                     result.push(newItem);
                 } else if (configs && configs[newItem.name]) {
                     // Загрузим перед открытием
@@ -749,6 +750,9 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
                         // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
                         const flatSelectedKeys = nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
+                        if (detailPanelHandler) {
+                            item.displayTextValue = null;
+                        }
                         const displayText = this._getFastText(configs[item.name], flatSelectedKeys, item);
                         this._displayText[item.name] = displayText;
                         if (!displayText.text && detailPanelHandler) {
@@ -915,7 +919,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
     private _notifyChanges(items: IFilterItem[]): void {
         this._notify('filterChanged', [this._getFilter(items)]);
-        this._notify('itemsChanged', [items]);
+        this._notify('itemsChanged', [items, this._options.items]);
     }
 
     private _getFilter(items: IFilterItem[]): QueryWhereExpression<unknown> {
