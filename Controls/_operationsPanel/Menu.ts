@@ -4,9 +4,10 @@ import {Memory} from 'Types/source';
 import Store from 'Controls/Store';
 import {Button} from 'Controls/dropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import 'css!Controls/operationsPanel';
+import * as rk from 'i18n!Controls';
 
 interface IOperation {
     id: string;
@@ -20,7 +21,7 @@ interface IOperation {
 
 const DEFAULT_OPERATIONS: IOperation[] = [{
     id: 'toggleAll',
-    title: 'Инвертировать',
+    title: rk('Инвертировать'),
     icon: 'icon-Check2',
     iconSize: 'm',
     iconStyle: '',
