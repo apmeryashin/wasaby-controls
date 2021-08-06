@@ -87,11 +87,13 @@ export default {
                 document.body.insertBefore(managerContainer, document.body.firstChild);
 
                 ManagerWrapperCreatingPromise = new Promise((resolve, reject) => {
-                    const compatibleDeps = [import('UI/Base'), import('Controls/compatiblePopup'), import('Controls/Popup/Compatible/ManagerWrapper/Controller')];
+                    const compatibleDeps = [import('UI/Base'), import('Controls/compatiblePopup'), import('Controls/Popup/Compatible/ManagerWrapper/Controller'), import('Page/base')];
 
                     Promise.all(compatibleDeps).then(([base, compatiblePopup, compatibleController]) => {
                         const theme = compatibleController.default.getTheme();
-                        const managerCfg = {};
+                        const managerCfg = {
+                            dataLoaderModule: 'Page/base:DataLoader'
+                        };
                         if (theme) {
                             managerCfg.theme = theme;
                         }
