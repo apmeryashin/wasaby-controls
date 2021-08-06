@@ -31,7 +31,7 @@ export {default as NotificationController} from 'Controls/_popupTemplate/Notific
 export {INotification, INotificationOptions} from 'Controls/_popupTemplate/interface/INotification';
 
 export {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
-export {default as IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
+export {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 
 export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton';
 export {default as BaseController} from 'Controls/_popupTemplate/BaseController';
