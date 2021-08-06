@@ -6,7 +6,12 @@ import { generateData } from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: [] = [{ displayProperty: 'title' }];
+    protected _columns: [] = [
+        {
+            displayProperty: 'title',
+            width: 'max-content'
+        }
+    ];
     private _dataArray: unknown = generateData({count: 10, entityTemplate: {title: 'lorem'}});
 
     protected _beforeMount(): void {

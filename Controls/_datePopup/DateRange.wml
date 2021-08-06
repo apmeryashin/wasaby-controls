@@ -15,7 +15,6 @@
       <Controls.calendar:MonthList shadowStyle="datePopup"
                                    bottomShadowVisibility="hidden"
                                    attachLoadTopTriggerToNull="{{ false }}"
-                                   attachLoadDownTriggerToNull="{{ false }}"
                                    bind:markedKey="_markedKey"
                                    markerVisibility="visible"
                                    bind:position="_monthsPosition"
@@ -47,7 +46,6 @@
       <!-- virtualPageSize="{{4}}" - with a value of 4, scrolling the mouse wheel over the years panel works faster. -->
          <Controls.calendar:MonthList
                  attachLoadTopTriggerToNull="{{ false }}"
-                 attachLoadDownTriggerToNull="{{ false }}"
                  name="monthList"
                  shadowStyle="datePopup"
                  bottomShadowVisibility="hidden"
