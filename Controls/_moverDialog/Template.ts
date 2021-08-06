@@ -6,7 +6,7 @@ import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import rk = require('i18n!Controls');
 
-import {TColumns, ColumnTemplate} from 'Controls/grid';
+import {TColumns, ColumnTemplate, IColumn} from 'Controls/grid';
 import {IHierarchyOptions, TKeysSelection} from 'Controls/interface';
 
 import Template = require('wml!Controls/_moverDialog/Template/Template');
@@ -39,7 +39,15 @@ export interface IMoverDialogTemplateOptions extends IControlOptions, IHierarchy
 interface IMoverColumnTemplateOptions {
     rootLabelVisible?: boolean;
     defaultColumnTemplate?: TemplateFunction | string;
+    rootKey: number;
 }
+
+/**
+ * Ключ рутовой записи. Должен быть числовым, т.к. при добавлении в рекордсет
+ * всегда происходит попытка привести значение к типу.
+ * При неправильном приведении типов в рекордсет добавится Null
+ */
+const ROOT_KEY = 3141592653589793;
 
 /**
  * Шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки.
@@ -78,34 +86,12 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
         this._filter = options.filter;
         this._expandedItems = options.expandedItems;
 
-        // TODO: сейчас прикладной программист передает в MoveDialog опцию columns, что плохо, он может повлиять на
-        // отображение колонки, а диалог во всех реестрах должен выглядеть одинаково. Нужно убрать возможно передавать
-        // конфигурации колонки и дать возможность настривать имя поля, из которого необходимо брать название папок.
-        // Выписана задача: https://online.sbis.ru/opendoc.html?guid=aeaff20a-ee07-4d1b-8a9d-2528a269bc91
-        this._columns = options.columns.slice();
-        this._columns[0].textOverflow = 'ellipsis';
-
         // Пока поддерживаем обе опции
         if (options.showRoot) {
             Logger.error('MoverDialog: Опция showRoot устарела и будет удалена в 5100. Необходимо использовать опцию rootVisible', this);
         }
 
-        if (options.rootVisible || options.showRoot) {
-            if (!options.rootTitle) {
-                Logger.warn('MoverDialog: Для диалога перемещения необходимо указать опцию rootTitle', this);
-            }
-            const templateOptions: IMoverColumnTemplateOptions = {
-                ...this._columns[0].templateOptions,
-                rootLabelVisible: options.rootLabelVisible !== false && !!options.rootTitle
-            };
-
-            if (!templateOptions.defaultColumnTemplate) {
-                templateOptions.defaultColumnTemplate = this._columns[0].template || ColumnTemplate;
-            }
-
-            this._columns[0].templateOptions = templateOptions;
-            this._columns[0].template = MoverColumnTemplate;
-        }
+        this._columns = this._initColumns(options);
 
         this._onItemClick = this._onItemClick.bind(this);
         this._itemsFilterMethod = this._itemsFilterMethod.bind(this);
@@ -135,7 +121,7 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
     }
 
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
-        this._applyMove(item.getKey() === 'root' ? this._options.root : item);
+        this._applyMove(item.getKey() === ROOT_KEY ? this._options.root : item);
     }
 
     protected _onMarkedKeyChanged(event: SyntheticEvent<null>, newKey: string | number | null): void {
@@ -166,13 +152,47 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
 
         record.addField({ name: this._options.parentProperty, type: 'string', defaultValue: this._root });
         record.addField( { name: this._options.nodeProperty, type: 'boolean', defaultValue: null });
-        record.addField({ name: this._options.keyProperty, type: 'string', defaultValue: 'root' });
+        record.addField({ name: this._options.keyProperty, type: 'string', defaultValue: ROOT_KEY });
         record.addField({
             name: this._columns[0].displayProperty,
             type: 'string',
             defaultValue: this._options.rootTitle || rk('В корень')
         });
         return record;
+    }
+
+    // TODO: сейчас прикладной программист передает в MoveDialog опцию columns, что плохо, он может повлиять на
+    // отображение колонки, а диалог во всех реестрах должен выглядеть одинаково. Нужно убрать возможно передавать
+    // конфигурации колонки и дать возможность настривать имя поля, из которого необходимо брать название папок.
+    // Выписана задача: https://online.sbis.ru/opendoc.html?guid=aeaff20a-ee07-4d1b-8a9d-2528a269bc91
+    private _initColumns(options: IMoverDialogTemplateOptions): IColumn[] {
+        const columns = options.columns.slice();
+        const column = columns[0];
+        column.textOverflow = 'ellipsis';
+
+        if (options.rootVisible || options.showRoot) {
+            if (!options.rootTitle) {
+                Logger.warn('MoverDialog: Для диалога перемещения необходимо указать опцию rootTitle', this);
+            }
+            const templateOptions: IMoverColumnTemplateOptions = {
+                ...column.templateOptions,
+                rootLabelVisible: options.rootLabelVisible !== false && !!options.rootTitle,
+                rootKey: ROOT_KEY
+            };
+
+            if (!templateOptions.defaultColumnTemplate) {
+                templateOptions.defaultColumnTemplate = column.template || ColumnTemplate;
+            }
+
+            if (!column.displayProperty) {
+                Logger.warn('MoverDialog: В колонках диалога перемещения необходимо указать displayProperty', this);
+                column.displayProperty = options.displayProperty;
+            }
+
+            column.templateOptions = templateOptions;
+            column.template = MoverColumnTemplate;
+        }
+        return columns;
     }
 
     static getDefaultOptions = (): object => {
