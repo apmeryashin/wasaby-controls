@@ -356,13 +356,15 @@ define(
             assert.equal(StackStrategy.isMaximizedPanel(itemConfig), true);
 
             itemConfig.popupOptions.template = TestMaximizedStack;
-            popupTemplate.StackController.getDefaultConfig(itemConfig)
+            popupTemplate.StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.popupOptions.maximized, false); // default value
             assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('showMaximizedButton'), true);
 
+            const stubSavePopupWidth = sinon.stub(popupTemplate.StackController, '_savePopupWidth');
             popupTemplate.StackController.elementMaximized(itemConfig, {}, false);
             assert.equal(itemConfig.popupOptions.maximized, false);
             assert.equal(itemConfig.popupOptions.templateOptions.maximized, false);
+            sinon.assert.calledOnce(stubSavePopupWidth);
             let position = StackStrategy.getPosition({
                top: 0,
                right: 0
