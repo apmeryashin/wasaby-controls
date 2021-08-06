@@ -57,6 +57,7 @@ const SIZES = {
 class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected _template: TemplateFunction = template;
     protected _backButtonCaption: string = '';
+    protected _backButtonItem: Record = null;
     protected _visibleItems: Record[] = null;
     protected _breadCrumbsItems: Record[] = null;
     protected _backButtonClass: string = '';
@@ -185,7 +186,10 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
 
         if (options.items && options.items.length > 0) {
             const lastItem = options.items[options.items.length - 1];
+
+            this._backButtonItem = lastItem;
             this._backButtonCaption = lastItem.get(options.displayProperty);
+
             // containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
             if (options.items.length > 1) {
                 this._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
@@ -195,7 +199,9 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
                 clearCrumbsView();
             }
         } else {
+            this._backButtonItem = null;
             this._backButtonCaption = '';
+
             clearCrumbsView();
         }
     }

@@ -12,6 +12,7 @@
 .controls-BreadCrumbsPath__wrapper {
    display: flex;
    white-space: nowrap;
+   align-items: baseline;
 
    //TODO KINGO есть темы, в которых выравнивание ХК идет по базовой линии шрифта, размер которого отличается от размера шрифта кнопки назад
    .controls-Back__wrapper:before {
@@ -46,6 +47,24 @@
    .controls-Back__caption {
       font-weight: var(--font-weight_headingPathBack_headingBack);
    }
+}
+
+.controls-BreadCrumbsPath__backButton__before-caption-wrapper {
+   position: relative;
+   display: inline-flex;
+   width: var(--size_s_image);
+
+   .baseline-fix();
+   &::before {
+      line-height: 1;
+   }
+}
+
+.controls-BreadCrumbsPath__backButton__before-caption-content {
+   width: var(--size_s_image);
+   height: var(--size_s_image);
+   position: absolute;
+   bottom: 0;
 }
 
 .controls-BreadCrumbsPath__home {

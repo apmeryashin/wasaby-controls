@@ -125,6 +125,11 @@ interface IExplorerOptions
      */
     breadCrumbsMode?: 'row' | 'cell';
     useColumns?: boolean;
+    /**
+     * Кастомный шаблон, который выводится перед зоголовком кнопки назад в хлебных крошках.
+     * В шаблон передается опция item в которой содержится запись хлебной крошки.
+     */
+    backButtonBeforeCaptionTemplate?: string | TemplateFunction;
 }
 
 interface IMarkedKeysStore {

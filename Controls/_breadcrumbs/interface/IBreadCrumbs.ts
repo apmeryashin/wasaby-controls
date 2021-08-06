@@ -1,5 +1,5 @@
 import {Record} from 'Types/entity';
-import {IControlOptions} from 'UI/Base';
+import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFontSizeOptions} from 'Controls/interface';
 
 export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
@@ -8,6 +8,7 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
     parentProperty: string;
     displayProperty: string;
     containerWidth: number;
+    backButtonBeforeCaptionTemplate: string | TemplateFunction;
 }
 
 /**
@@ -71,6 +72,12 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
  * @name Controls/_breadcrumbs/interface/IBreadCrumbs#displayProperty
  * @cfg {String} Name of the item property which content will be displayed.
  * @default title
+ */
+
+/**
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#backButtonBeforeCaptionTemplate
+ * @cfg {String|UI/Base:TemplateFunction} Кастомный шаблон, который выводится перед зоголовком кнопки назад в хлебных крошках.
+ * В шаблон передается опция item в которой содержится запись хлебной крошки.
  */
 
 /**

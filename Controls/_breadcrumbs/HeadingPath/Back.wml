@@ -10,6 +10,7 @@
                                newIcon="{{_options.backButtonNewIcon}}"
                                fontSize="{{_options.backButtonFontSize || 'headingPathBack'}}"
                                theme="{{ _options.theme}}"
+                               beforeCaptionTemplate="{{_options.beforeCaptionTemplate}}"
                                on:click="_onBackButtonClick()"/>
         <ws:if data="{{ _options.afterBackButtonTemplate }}">
             <ws:partial template="{{ _options.afterBackButtonTemplate }}"/>

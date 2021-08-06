@@ -17,7 +17,23 @@
                                                     theme="{{_options.theme}}"
                                                     attr:class="{{!_visibleItems || _options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__backButton__wrapper__only'}} "
                                                     on:backButtonClick="_onBackButtonClick()"
-                                                    on:arrowClick="_notifyHandler('arrowClick')"/>
+                                                    on:arrowClick="_notifyHandler('arrowClick')"
+            >
+               <ws:beforeCaptionTemplate>
+                  <ws:if data="{{_options.backButtonBeforeCaptionTemplate}}">
+                     <div class="controls-BreadCrumbsPath__backButton__before-caption-wrapper">
+                        <ws:partial
+                           template="{{_options.backButtonBeforeCaptionTemplate}}"
+                           item="{{_backButtonItem}}"
+                           attr:class="controls-BreadCrumbsPath__backButton__before-caption-content"
+                        />
+                     </div>
+                  </ws:if>
+                  <ws:else>
+                     <invisible-node/>
+                  </ws:else>
+               </ws:beforeCaptionTemplate>
+            </Controls._breadcrumbs.HeadingPath.Back>
         </ws:if>
         <ws:if data="{{_visibleItems || _options.rootVisible}}">
             <div class="controls-BreadCrumbsPath__crumbsWrapper {{_visibleItems || !_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__crumbsWrapper_fullWidth'}}
