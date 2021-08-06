@@ -3,7 +3,7 @@
       <ws:if data="{{item.contents.nodeType === 'group'}}">
          <Controls.stickyEnvironment:DataPinContainer
             data="{{item.contents}}"
-            rootMargin="{{rootMargin}}"
+            topMargin="{{topMargin}}"
          >
             <b>{{ item.contents.name }}</b>
          </Controls.stickyEnvironment:DataPinContainer>
