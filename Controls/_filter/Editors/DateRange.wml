@@ -6,6 +6,8 @@
                emptyCaption="{{_emptyCaption}}"
                fontColorStyle="{{_options.fontColorStyle}}"
                clearButtonVisibility="{{!_reseted && _options.clearButtonVisibility}}"
+               resetStartValue="{{ _options.resetStartValue }}"
+               resetEndValue="{{ _options.resetEndValue }}"
                attr:class="controls_filter_theme-{{_options.theme}} controls-FilterEditor-DateRange"
                on:rangeChanged="_rangeChanged()" />
 </Controls.Container.Async>
