@@ -297,12 +297,28 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                     this._searchResetHandler();
                 }
            });
-
+        const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent}) => {
+            this._getOperationsController().executeAction({
+                action,
+                source: this._source,
+                target: clickEvent,
+                selection: {
+                    selected: this._options.selectedKeys,
+                    excluded: this._options.excludedKeys
+                },
+                filter: this._filter,
+                keyProperty: this._getSourceController().getKeyProperty(),
+                parentProperty: this._getSourceController().getParentProperty(),
+                nodeProperty: this._options.nodeProperty,
+                sourceController: this._getSourceController()
+            });
+        });
         return [
             sourceCallbackId,
             filterSourceCallbackId,
             searchValueCallbackId,
-            selectedTypeChangedCallbackId
+            selectedTypeChangedCallbackId,
+            executeOperation
         ];
     }
 

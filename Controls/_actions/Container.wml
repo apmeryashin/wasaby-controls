@@ -1,5 +1,5 @@
 <ws:partial template="{{_options.content}}"
             scope="{{_options}}"
-            items="{{_operations}}"
+            items="{{_toolbarItems}}"
             on:itemClick="_toolbarItemClick()"
 />
