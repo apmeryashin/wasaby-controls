@@ -1,4 +1,5 @@
 import {loadAsync} from 'WasabyLoader/ModulesLoader';
+import {showType} from 'Controls/toolbars';
 import {mixin, object} from 'Types/util';
 import {
     EventRaisingMixin,
@@ -26,17 +27,20 @@ export interface IBaseActionOptions {
     iconStyle: string;
     icon: string;
     commandName?: string;
-    commandOptions: ICommandOptions;
-    viewCommandOptions: IViewCommandOptions;
+    commandOptions?: ICommandOptions;
+    viewCommandOptions?: IViewCommandOptions;
     viewCommandName?: string;
     order?: number;
     title?: string;
     tooltip?: string;
+    showType?: number;
     onExecuteHandler?: Function;
     parent?: string | number;
+    permissions?: string[];
+    requiredLevel: string[];
 }
 
-const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@'];
+const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType'];
 
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
@@ -44,6 +48,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     readonly id: string;
     readonly order: number;
     readonly parent: string | number;
+    readonly showType: number;
     readonly 'parent@': boolean;
     readonly onExecuteHandler: Function;
     commandName: string;
@@ -105,12 +110,13 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         this.visible = options.hasOwnProperty('visible') ? options.visible as boolean : this.visible;
         this.iconStyle = options.iconStyle || this.iconStyle;
         this.order = options.order || this.order;
-        this.onExecuteHandler = options.onExecuteHandler || this._executeCommand;
+        this.onExecuteHandler = options.onExecuteHandler;
         this.commandName = options.commandName || this.commandName;
         this.commandOptions = options.commandOptions || this.commandOptions;
         this.viewCommandName = options.viewCommandName || this.viewCommandName;
         this.viewCommandOptions = options.viewCommandOptions || this.viewCommandOptions;
-        this.parent = options.parent;
+        this.showType = options.showType || this.showType;
+        this.parent = options.parent || this.parent;
         this.id = options.id || this.id;
         this['parent@'] = options['parent@'] || this['parent@'];
 
@@ -118,7 +124,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     }
 
     execute(options): Promise<unknown> {
-        return this.onExecuteHandler(options);
+        return this._executeCommand(options)
     }
 
     private _executeCommand(options): Promise<unknown> {
@@ -139,10 +145,18 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
                     return this._actionExecute(commandOptions, commandClass);
                 }
             });
+        } else if (this.onExecuteHandler) {
+            if (typeof this.onExecuteHandler === 'string') {
+                return loadAsync(this.onExecuteHandler).then((handler: Function) => {
+                    handler(this._getCommandOptions(options));
+                });
+            } else {
+                return this.onExecuteHandler(this._getCommandOptions(options));
+            }
         }
     }
 
-    private _getCommandOptions(commandParams: IExecuteCommandParams): object {
+    private _getCommandOptions(commandParams: Partial<IExecuteCommandParams> = {}): object {
         const commandOptions = object.clone(this.commandOptions) || {};
         merge(commandOptions, {
             source: commandParams.source,
@@ -185,5 +199,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
 
 Object.assign(BaseAction.prototype, {
     visible: true,
-    'parent@': false
+    'parent@': false,
+    showType: showType.MENU_TOOLBAR,
+    parent: null
 });

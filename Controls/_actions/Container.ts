@@ -8,12 +8,14 @@ import {RecordSet} from 'Types/collection';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {Object as EventObject} from 'Env/Event';
 import {TKeySelection} from 'Controls/interface';
+import Store from 'Controls/Store';
 
 interface IContainerOptions extends IControlOptions {
     _dataOptionsValue: {
         sourceController?: SourceController
     };
-    items: IAction[];
+    listActions?: IAction[];
+    actions: IAction[];
     selectedKeys: TKeySelection;
     excludedKeys: TKeySelection;
 }
@@ -21,20 +23,26 @@ interface IContainerOptions extends IControlOptions {
 export default class ActionsContainer extends Control<IContainerOptions> {
     protected _template: TemplateFunction = template;
     protected _actionsCollection: ActionsCollection;
-    protected _operations: RecordSet;
+    protected _toolbarItems: RecordSet;
     private _sourceController: SourceController;
 
     protected _beforeMount(options: IContainerOptions): void {
         this._updateActions = this._updateActions.bind(this);
         this._subscribeCollectionChange(options._dataOptionsValue);
         this._actionsCollection = new ActionsCollection({
-            items: options.items
+            actions: options.actions,
+            listActions: options.listActions
         });
+        this._toolbarItems = this._getToolbarItems(this._actionsCollection.getToolbarItems());
         this._actionsCollection.subscribe('toolbarConfigChanged', (event, items) => {
-            this._operations = new RecordSet({
-                keyProperty: 'id',
-                rawData: items
-            });
+            this._toolbarItems = this._getToolbarItems(items);
+        });
+    }
+
+    protected _getToolbarItems(items: IAction[]): RecordSet {
+        return new RecordSet({
+            keyProperty: 'id',
+            rawData: items
         });
     }
 
@@ -46,8 +54,11 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 excluded: newOptions.excludedKeys
             });
         }
-        if (newOptions.items !== this._options.items) {
-            this._actionsCollection.update(newOptions);
+        if (newOptions.actions !== this._options.actions) {
+            this._actionsCollection.update({
+                listActions: newOptions.listActions,
+                actions: newOptions.actions
+            });
         }
     }
 
@@ -58,6 +69,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     ): void {
         event.stopPropagation();
         const action = this._actionsCollection.getAction(item);
+        Store.dispatch('executeOperation', {
+            action,
+            clickEvent
+        });
         this._notify('operationPanelItemClick', [action, clickEvent], {bubbling: true});
     }
 
@@ -77,4 +92,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             this._sourceController.unsubscribe('itemsChanged', this._updateActions);
         }
     }
+
+    static defaultProps: Partial<IContainerOptions> = {
+        listActions: [],
+        actions: []
+    };
 }
