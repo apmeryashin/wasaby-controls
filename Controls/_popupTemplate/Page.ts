@@ -4,10 +4,10 @@ import * as template from 'wml!Controls/_popupTemplate/Page/Page';
 import {PageController} from 'Controls/dataSource';
 import {CancelablePromise} from 'Types/entity';
 
-type TPrefetchResult = Array<Record<string, unknown>>;
+type TPrefetchResult = Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
 
 interface IPageTemplateOptions extends IControlOptions {
-    prefetchResult: Promise<TPrefetchResult>;
+    prefetchResult: Promise<TPrefetchResult> | TPrefetchResult;
     pageTemplate: string;
     pageTemplateOptions: object;
     pageId: string;
@@ -80,10 +80,14 @@ export default class Template extends Control<IControlOptions> {
         }
     }
 
-    private _processPreloadResult(pageId: string, dataLoaderResult: Promise<unknown>): void {
-        dataLoaderResult.then((result) => {
-            this._prefetchData = this._getPrefetchData(pageId, result as TPrefetchResult);
-        });
+    private _processPreloadResult(pageId: string, dataLoaderResult: Promise<TPrefetchResult> | TPrefetchResult): void {
+        if (dataLoaderResult instanceof Promise) {
+            dataLoaderResult.then((result) => {
+                this._prefetchData = this._getPrefetchData(pageId, result);
+            });
+        } else {
+            this._prefetchData = this._getPrefetchData(pageId, dataLoaderResult);
+        }
     }
 
     /**
