@@ -33,6 +33,9 @@ export = simpleExtend.extend({
     */
    _fixedPosition: '',
 
+   _intersectingBottomLeft: null,
+   _intersectingBottomRight: null,
+
    get fixedPosition() {
       return this._fixedPosition;
    },
@@ -61,18 +64,18 @@ export = simpleExtend.extend({
       this._updateStateIntersection = this._updateStateIntersection.bind(this);
    },
 
-   update: function(entries) {
-      let countBottomIntersection = 0;
-      let isIntersectingFirstBottomObserver;
+   update: function(entries: IntersectionObserverEntry[]) {
+      entries.forEach((entry) => {
+         if (entry.target === this._bottomLeftTarget) {
+            this._intersectingBottomLeft = entry.isIntersecting;
+         }
+         if (entry.target === this._bottomRightTarget) {
+            this._intersectingBottomRight = entry.isIntersecting;
+         }
+      });
 
       entries.forEach((entry) => {
-         if (entry.target === this._bottomLeftTarget || entry.target === this._bottomRightTarget) {
-            countBottomIntersection++;
-            if (countBottomIntersection === 1) {
-               isIntersectingFirstBottomObserver = entry.isIntersecting;
-            }
-         }
-         this._updateStateIntersection(entry, {countBottomIntersection, isIntersectingFirstBottomObserver});
+         this._updateStateIntersection(entry);
       });
 
       this._fixedPosition = this._getFixedPosition();
@@ -86,17 +89,13 @@ export = simpleExtend.extend({
     * @param {IntersectionObserverEntry} entry
     * @private
     */
-   _updateStateIntersection: function(entry: IntersectionObserverEntry, stateBottomObservers: object): void {
+   _updateStateIntersection: function(entry: IntersectionObserverEntry): void {
       const position = this._getTarget(entry);
       let isIntersecting = entry.isIntersecting;
-      // Будем обновлять состояние зафиксированности для observerBottom только в том случае,
-      // когда два нижних обсёрвера будут пересечены одновременно. Таким образом, исключим состояние
-      // зафиксированности сверху/снизу при горизонтальном скролле.
-      if (position === 'bottom' && stateBottomObservers.countBottomIntersection !== 2) {
-         return;
-      }
+      // Будем обновлять состояние зафиксированности для observerBottom по левому и правому обсёрверу.
+      // Таким образом, исключим состояние зафиксированности сверху/снизу при горизонтальном скролле.
       if (position === 'bottom') {
-         isIntersecting = entry.isIntersecting || stateBottomObservers.isIntersectingFirstBottomObserver;
+         isIntersecting = this._intersectingBottomLeft || this._intersectingBottomRight;
       }
       this._intersection[position] =  isIntersecting;
    },
