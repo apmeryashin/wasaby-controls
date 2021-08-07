@@ -39,13 +39,13 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
         return super._beforeMount(options, contexts, receivedState);
     }
 
-    protected _beforeUpdate(options?: ICutOptions, contexts?: any): void {
+    protected _beforeUpdate(options?: ICutOptions): void {
         if (options.hasOwnProperty('expanded') && this._options.expanded !== options.expanded) {
             this._expanded = options.expanded;
         }
         this._lines = Cut._calcLines(options.lines, this._expanded);
 
-        super._beforeUpdate(options, contexts);
+        super._beforeUpdate(options);
     }
 
     protected _onExpandedChangedHandler(event: Event, expanded: boolean): void {
