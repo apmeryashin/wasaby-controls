@@ -1,10 +1,10 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">value = 10, underline = 'hovered'</div>
-        <Controls.decorator:Money attr:data-qa="controlsDemo-DecoratorMoneyUnderline__hovered" value="{{10}}" underline="hovered"/>
+        <Controls.decorator:Money attr:data-qa="controlsDemo-DecoratorUnderline__hovered" value="{{10}}" underline="hovered"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">value = 10, underline = 'none'</div>
-        <Controls.decorator:Money attr:data-qa="controlsDemo-DecoratorMoneyUnderline__none" value="{{10}}" underline="none"/>
+        <Controls.decorator:Money attr:data-qa="controlsDemo-DecoratorUnderline__none" value="{{10}}" underline="none"/>
     </div>
 </div>
