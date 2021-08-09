@@ -97,12 +97,12 @@ export default class GroupRow<T> extends mixin<
     }
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
-        return `${this._getBaseItemClasses(params.style, params.theme)} ` +
+        return `${this._getBaseItemClasses(params.style)} ` +
                `${this._getCursorClasses(params.cursor, params.clickable)} ` +
                `controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
     }
 
-    protected _getBaseItemClasses(style: string, theme: string): string {
+    protected _getBaseItemClasses(style: string): string {
         let itemClasses = 'controls-ListView__itemV';
         if (!this.isHiddenGroup()) {
             itemClasses += ` controls-Grid__row controls-Grid__row_${style}`;
