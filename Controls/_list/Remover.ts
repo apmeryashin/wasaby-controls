@@ -50,10 +50,21 @@ var _private = {
         return Promise.resolve(afterItemsRemoveResult);
     },
 
-    updateDataOptions(self, newOptions: IOptions, contextDataOptions?: IOptions): void {
-        self._items = newOptions?.items ? newOptions.items : contextDataOptions?.items;
-        self._source = newOptions?.source ? newOptions.source : contextDataOptions?.source;
-        self._filter = newOptions?.filter ? newOptions.filter : contextDataOptions?.filter;
+    updateDataOptions(self, newOptions?: IOptions, contextDataOptions?: IOptions): void {
+        if (contextDataOptions) {
+            self._items = contextDataOptions.items;
+            self._source = contextDataOptions.source;
+            self._filter = contextDataOptions.filter;
+        }
+        if (newOptions?.items) {
+            self._items = newOptions.items;
+        }
+        if (newOptions?.source) {
+            self._source = newOptions.source;
+        }
+        if (newOptions?.filter) {
+            self._filter = newOptions.filter;
+        }
     },
 
     getItemsBySelection(self, items): Promise<CrudEntityKey[]> {
