@@ -124,5 +124,6 @@ export default Sticky;
  * @function
  * @static
  * @name Controls/_popup/Opener/Sticky#closePopup
+ * @param {String} popupId Идентификатор окна. Такой идентификатор можно получить при открытии окна методом {@link openPopup}.
  * @deprecated Используйте методы класса {@link Controls/popup:StickyOpener}.
  */
