@@ -5,7 +5,7 @@
             <ws:if data="{{item.contents[column.config.imageProperty]}}">
                 <img class="controls-ListEditor__column-img" src="{{item.contents[column.config.imageProperty]}}"/>
             </ws:if>
-            <div class="controls-ListEditor__column-text">
+            <div class="controls-ListEditor__column-text ws-ellipsis">
                 {{item.contents[column.config.displayProperty]}}
             </div>
         </div>
