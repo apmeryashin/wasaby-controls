@@ -250,6 +250,7 @@
 .controls-TileView__richTemplate_title-one_line {
    display: inline-flex;
    align-items: center;
+   height: var(--inline_height_s);
 }
 
 .controls-TileView__afterTitleTemplate-overlay,
@@ -281,4 +282,7 @@
    display: inline;
    height: var(--icon-size_m);
    margin-right: var(--offset_xs);
+   &:empty {
+      margin-right: 0;
+   }
 }
