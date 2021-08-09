@@ -310,7 +310,9 @@ export default class Explorer extends Control<IExplorerOptions> {
         if (this._potentialMarkedKey !== undefined && !isRootChanged) {
             this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
         }
-        this._potentialMarkedKey = undefined;
+        if (!this._isGoingBack) {
+            this._potentialMarkedKey = undefined;
+        }
 
         const isSourceControllerLoading = cfg.sourceController && cfg.sourceController.isLoading();
         this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
