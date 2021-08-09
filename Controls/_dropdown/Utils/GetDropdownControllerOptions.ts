@@ -2,8 +2,8 @@ import {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdown
 
 export default function getDropdownControllerOptions(options: IDropdownControllerOptions): IDropdownControllerOptions {
     const dropdownOptions: IDropdownControllerOptions = {
-        backgroundStyle: options.backgroundStyle,
-        hoverBackgroundStyle: options.hoverBackgroundStyle,
+        backgroundStyle: options.menuBackgroundStyle,
+        hoverBackgroundStyle: options.menuHoverBackgroundStyle,
         source: options.source,
         items: options.items,
         filter: options.filter,
