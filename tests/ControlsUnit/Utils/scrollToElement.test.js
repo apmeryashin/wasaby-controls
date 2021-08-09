@@ -1,7 +1,11 @@
 define([
-   'Controls/scroll'
+   'Controls/scroll',
+   'UI/NodeCollector',
+   'Core/core-instance',
 ], function(
-   scroll
+   scroll,
+   NodeCollector,
+   cInstance
 ) {
    describe('Controls/scroll:scrollToElement', function() {
 
@@ -34,6 +38,7 @@ define([
       afterEach(function() {
          document = undefined;
          window = undefined;
+         sinon.restore();
       });
 
       describe('scroll down', function() {
@@ -256,6 +261,44 @@ define([
             scroll.scrollToElement(element, true);
             assert.equal(element.parentElement.scrollTop, 54);
          });
+
+         it('with sticky header', () => {
+            mockDOM();
+            sinon.stub(NodeCollector, 'goUpByControlTree').returns([{ getHeadersHeight: () => 10 }]);
+            sinon.stub(cInstance, 'instanceOfModule').returns(true);
+            var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 110,
+                  clientHeight: 100,
+                  top: 10.6,
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 0,
+                  className: '',
+                  closest: () => {
+                     return { };
+                  }
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 15,
+                     height: 150
+                  };
+               },
+               closest: () => {}
+            };
+            scroll.scrollToElement(element, true);
+            assert.equal(element.parentElement.scrollTop, 64);
+         })
 
          describe('scroll body', function() {
             it('to top', function() {
