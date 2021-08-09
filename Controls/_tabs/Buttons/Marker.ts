@@ -1,5 +1,5 @@
-import {mixin} from "Types/util";
-import {IVersionable, VersionableMixin} from "Types/entity";
+import {mixin} from 'Types/util';
+import {IVersionable, VersionableMixin} from 'Types/entity';
 
 enum ALIGN {
     left = 'left',
@@ -57,7 +57,7 @@ export default class Marker extends mixin<VersionableMixin>(VersionableMixin) im
 
         if (!this._position.length) {
             const baseClientRect: DOMRect = baseElement.getBoundingClientRect();
-            const computedStyle: CSSStyleDeclaration = Marker.getComputedStyle(baseElement)
+            const computedStyle: CSSStyleDeclaration = Marker.getComputedStyle(baseElement);
             const borderLeftWidth: number = Math.round(parseFloat(computedStyle.borderLeftWidth));
             const borderRightWidth: number = Math.round(parseFloat(computedStyle.borderRightWidth));
             for (const element of elements) {
