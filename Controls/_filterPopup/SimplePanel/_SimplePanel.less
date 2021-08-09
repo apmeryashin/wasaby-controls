@@ -38,8 +38,8 @@
    top: calc(var(--close-button_offset-top_sticky) + var(--content_padding-top_sticky) + var(--border-thickness_sticky));
    z-index: 2;
 }
-
-.controls-SimplePanel-dropdown__emptyItem {
+// Шаблон пустого элемента могут юзать не через emptyText/emptyKey, поэтому мы не знаем, когда элемент "пустой" и через модель классы не поменять
+.controls-SimplePanel-dropdown__emptyItem.controls-Menu__defaultItem {
    border-radius: var(--item_border-radius_menu);
    color: var(--primary_text-color);
    font-size: var(--empty-item_font-size_filterSimplePanel);
