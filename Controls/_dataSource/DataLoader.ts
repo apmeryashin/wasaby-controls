@@ -100,12 +100,11 @@ export interface ILoadDataResult extends ILoadDataConfig {
     collapsedGroups?: TArrayGroupId;
     source: PrefetchProxy;
 }
-
+export type TLoadersConfigsMap = Record<string, TLoadConfig>;
 type TLoadedConfigs = Map<string, ILoadDataResult|ILoadDataConfig>;
 type TLoadConfig = ILoadDataConfig|ILoadDataCustomConfig|ILoadDataAdditionalDepsConfig;
 type TLoadResult = ILoadDataResult|ILoadDataCustomConfig|boolean;
 type TLoadPromiseResult = Promise<TLoadResult>;
-type TLoadersConfigsMap = Record<string, TLoadConfig>;
 type TLoadPromiseResultMap = Record<string, Promise<TLoadResult>>;
 type TLoadResultMap = Record<string, TLoadResult>;
 
