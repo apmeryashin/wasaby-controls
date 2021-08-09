@@ -57,7 +57,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
     }
 
     protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
-        if (options.stickyPosition && options.closeButtonViewMode === 'translucent') {
+        if (options.stickyPosition && options.closeButtonViewMode === 'external') {
             // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
             if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
                 this._closeBtnPosition =  POSITION.RIGHT;
