@@ -10,6 +10,7 @@ export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOp
     maximizeButtonVisibility?: boolean;
     workspaceWidth?: number;
     headerBorderVisible?: boolean;
+    rightBorderVisible?: boolean;
     maximized?: boolean;
     stackMaxWidth?: number;
     stackMinWidth?: number;
@@ -115,7 +116,8 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
             closeButtonVisibility: true,
             closeButtonViewMode: 'toolButton',
             closeButtonTransparent: true,
-            headerBorderVisible: true
+            headerBorderVisible: true,
+            rightBorderVisible: true
         };
     }
 }
@@ -175,6 +177,14 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
  * controls-StackTemplate__top-area-border
  * </pre>
  * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Stack#rightBorderVisible
+ * @cfg {Boolean} Определяет, будет ли отображаться полоса разделяющая правую панель и контент.
+ * @default true
+ * @remark
+ * Позволяет скрыть отображение правой границы.
  */
 
 /**
