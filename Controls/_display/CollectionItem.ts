@@ -77,13 +77,12 @@ const ITEMACTIONS_POSITION_CLASSES = {
 
 /**
  * Элемент коллекции
- * @class Controls/_display/CollectionItem
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/OptionsMixin
- * @mixes Types/_entity/InstantiableMixin
- * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:OptionsMixin
+ * @mixes Types/entity:InstantiableMixin
+ * @mixes Types/entity:SerializableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class CollectionItem<T extends Model = Model> extends mixin<
     DestroyableMixin,

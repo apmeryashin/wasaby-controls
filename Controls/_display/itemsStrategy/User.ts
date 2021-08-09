@@ -18,10 +18,10 @@ interface ISerializableState extends IDefaultSerializableState {
 /**
  * Стратегия-декоратор для пользовательского порядка элементов
  * @class Controls/_display/ItemsStrategy/User
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:SerializableMixin
  * 
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  * @private
  */
 export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<

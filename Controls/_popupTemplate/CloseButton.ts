@@ -44,6 +44,7 @@ Object.defineProperty(CloseButton, 'defaultProps', {
  * @variant toolButton Отображение как кнопки панели инструментов.
  * @variant linkButton Отображение кнопки в виде ссылки.
  * @variant functionalButton Отображение функциональной кнопки закрытия
+ * @variation external Отображение полупрозрачной кнопки.
  * @default toolButton
  * @example
  * Отображение в виде ссылки:
@@ -58,6 +59,11 @@ Object.defineProperty(CloseButton, 'defaultProps', {
  * Отображение функциональной кнопки закрытия:
  * <pre>
  *    <Controls.popupTemplate:CloseButton viewMode="functionalButton"/>
+ * </pre>
+ *
+ * Отображение полупрозрачной кнопки закрытия:
+ * <pre>
+ *    <Controls.popupTemplate:CloseButton viewMode="external"/>
  * </pre>
  */
 export default CloseButton;
