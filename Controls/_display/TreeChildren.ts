@@ -7,10 +7,9 @@ export interface IOptions<T> extends IListOptions<T> {
 
 /**
  * Список дочерних элементов узла дерева.
- * @class Controls/_display/TreeChildren
  * @extends Types/_collection/List
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class TreeChildren<S, T = TreeItem<S>> extends List<T> {
     /**

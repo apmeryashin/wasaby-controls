@@ -5,12 +5,12 @@ import {mixin} from 'Types/util';
 /**
  * Энумератор для проекции коллекции
  * @class Controls/_display/CollectionEnumerator
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/OptionsMixin
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:OptionsMixin
  * @implements Types/_collection/IEnumerator
- * @mixes Types/_collection/IndexedEnumeratorMixin
+ * @mixes Types/collection:IndexedEnumeratorMixin
  * @private
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class CollectionEnumerator<T> extends mixin<
     DestroyableMixin,

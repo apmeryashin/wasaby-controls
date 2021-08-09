@@ -19,9 +19,9 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
  * Абстрактная стратегия получения элементов проекции
  * @class Controls/_display/ItemsStrategy/Abstract
  * 
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:SerializableMixin
+ * @author Авраменко А.С.
  * @private
  */
 export default abstract class Abstract<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
