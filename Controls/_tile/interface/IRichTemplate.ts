@@ -176,6 +176,11 @@ export default interface IRichTemplateOptions {
     footerTemplate?: TemplateFunction | string;
 
     /**
+     * @cfg {TemplateFunction | String} Шаблон для размещения иконки в начале строки заголовка.
+     */
+    beforeTitleTemplate?: TemplateFunction | string;
+
+    /**
      * @cfg {TemplateFunction | String} Шаблон для размещения в конце строки заголовка.
      */
     afterTitleTEmplate?: TemplateFunction | string;
