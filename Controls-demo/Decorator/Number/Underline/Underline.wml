@@ -9,6 +9,6 @@
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">value = 10.11, underline = 'hovered'</div>
-        <Controls.decorator:Number attr:data-qa="controlsDemo-DecoratorUnderline__hovered2" value="{{10.11}}" underline="hovered"/>
+        <Controls.decorator:Number attr:data-qa="controlsDemo-DecoratorUnderline__hoveredFloat" value="{{10.11}}" underline="hovered"/>
     </div>
 </div>
