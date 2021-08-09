@@ -178,6 +178,29 @@ export default interface IBaseDropdown {
  */
 
 /**
+ * @typedef {String} backgroundStyle
+ * @variant primary.
+ * @variant secondary.
+ * @variant danger.
+ * @variant warning.
+ * @variant info.
+ * @variant unaccented.
+ */
+
+/**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuBackgroundStyle
+ * @cfg {backgroundStyle} Цвет фона меню.
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
+ * @default default
+ */
+
+/**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuHoverBackgroundStyle
+ * @cfg {backgroundStyle} Цвет фона пункта меню при наведении.
+ * @default default
+ */
+
+/**
  * @event Происходит при открытии выпадающего списка.
  * @name Controls/_dropdown/interface/IBaseDropdown#dropDownOpen
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
