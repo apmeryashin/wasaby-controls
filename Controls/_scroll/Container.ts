@@ -762,6 +762,22 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @variant verticalHorizontal Скроллирование по вертикали и по горизонтали
  */
 
+/**
+ * @event Происходит при скролле.
+ * @name Controls/_scroll/Container#scroll
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Number} scrollPosition Новая позиция скролла.
+ * @param {Number} oldScrollPosition Предыдущая позиция скролла.
+ */
+
+/**
+ * @event Происходит при скролле/изменениях размерах контента/изменениях размерах скроллируемой области.
+ * @name Controls/_scroll/Container#scrollStateChanged
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Controls/scroll:IScrollState} scrollState Новое состояние скролл контейнера.
+ * @param {Controls/scroll:IScrollState} oldScrollState Предыдущие состояние скролл контейнера.
+ */
+
 Object.defineProperty(Container, 'defaultProps', {
    enumerable: true,
    configurable: true,
