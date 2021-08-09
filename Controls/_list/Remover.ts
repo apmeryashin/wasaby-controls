@@ -51,20 +51,10 @@ var _private = {
     },
 
     updateDataOptions(self, newOptions?: IOptions, contextDataOptions?: IOptions): void {
-        if (contextDataOptions) {
-            self._items = contextDataOptions.items;
-            self._source = contextDataOptions.source;
-            self._filter = contextDataOptions.filter;
-        }
-        if (newOptions?.items) {
-            self._items = newOptions.items;
-        }
-        if (newOptions?.source) {
-            self._source = newOptions.source;
-        }
-        if (newOptions?.filter) {
-            self._filter = newOptions.filter;
-        }
+        self._source = newOptions?.source ? newOptions.source : contextDataOptions.source;
+        // items и filter могут быть не заданы в опциях. При этом contextDataOptions может быть тоже не задан
+        self._filter = newOptions?.filter ? newOptions.filter : contextDataOptions?.filter;
+        self._items = newOptions?.items ? newOptions.items : contextDataOptions?.items;
     },
 
     getItemsBySelection(self, items): Promise<CrudEntityKey[]> {
