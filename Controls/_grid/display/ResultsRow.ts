@@ -8,6 +8,7 @@ type TResultsPosition = 'top' | 'bottom';
 
 interface IResultsRowOptions extends IBaseRowOptions<null> {
     metaResults: EntityModel;
+    resultsPosition?: TResultsPosition;
 
     //TODO: Здась другой тип, нужно внутри библиотеки переписать тип, добавить какой то абстрактный
     // колбек или поиграться с типом входных параметров.
@@ -19,6 +20,7 @@ interface IResultsRowOptions extends IBaseRowOptions<null> {
  */
 class ResultsRow extends Row<null> {
     protected _$metaResults: EntityModel;
+    protected _$resultsPosition: TResultsPosition;
 
     constructor(options?: IResultsRowOptions) {
         super({
@@ -38,6 +40,12 @@ class ResultsRow extends Row<null> {
 
     isSticked(): boolean {
         return this.isStickyHeader();
+    }
+
+    getStickyHeaderPosition(stickyCallback: Function): {} {
+        return {
+            vertical: this._$resultsPosition
+        };
     }
 
     //endregion
@@ -103,7 +111,8 @@ Object.assign(ResultsRow.prototype, {
     '[Controls/_display/grid/ResultsRow]': true,
     _moduleName: 'Controls/grid:GridResults',
     _cellModule: 'Controls/grid:GridResultsCell',
-    _$metaResults: null
+    _$metaResults: null,
+    _$resultsPosition: 'top'
 });
 
 export default ResultsRow;
