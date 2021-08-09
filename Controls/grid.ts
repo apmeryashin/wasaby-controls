@@ -127,6 +127,7 @@ export {
 } from 'Controls/_grid/display/interface/IHeaderCell';
 
 export { IGridControl } from 'Controls/_grid/display/interface/IGridControl';
+export * from 'Controls/_grid/interface/IEditableGrid';
 
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_grid/display/Row';
 import { default as GridItemActionsCell } from 'Controls/_grid/display/ItemActionsCell';
