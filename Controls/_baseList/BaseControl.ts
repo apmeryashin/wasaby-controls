@@ -642,7 +642,7 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
 
-            return self._sourceController.load(direction, self._options.root).addCallback((addedItems) => {
+            return self._sourceController.load(direction, self._options.task1182244668 ? void 0 : self._options.root).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
