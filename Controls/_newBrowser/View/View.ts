@@ -128,6 +128,7 @@ export default class View extends Control<IOptions, IReceivedState> {
      * Опции для Controls/explorer:View в master-колонке
      */
     protected _masterExplorerOptions: IExplorerOptions;
+    protected _contextVersion: number = 0;
 
     /**
      * Опции для Controls/explorer:View в detail-колонке
@@ -162,6 +163,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     ): Promise<IReceivedState> | void {
         this._dataContext = contexts.dataContext;
         if (this._dataContext.listsConfigs) {
+            this._contextVersion = this._dataContext.getVersion?.();
             this._initState(options);
             this._processItems(this._detailDataSource.getItems());
             this._processItemsMetadata(this._detailDataSource.getItems(), options);
@@ -217,15 +219,20 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._processItemsMetadata(items);
     }
 
+    protected _updateContextVersion(context: typeof dataContext): boolean {
+        const currentVersion = this._contextVersion;
+        const contextVersion = context.getVersion();
+        this._contextVersion = contextVersion;
+        return currentVersion !== contextVersion;
+    }
+
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
-        const oldContext = this._dataContext;
         this._dataContext = contexts.dataContext;
-        const detailOptionsChanged = !isEqual(oldContext.listsConfigs.detail, this._dataContext.listsConfigs.detail) ||
-            !isEqual(newOptions.detail, this._options.detail);
-        const masterOptionsChanged = !isEqual(oldContext.listsConfigs.master, this._dataContext.listsConfigs.master) ||
-            !isEqual(newOptions.master, this._options.master);
+        const contextVersionChanged = this._updateContextVersion(this._dataContext);
+        const detailOptionsChanged = !isEqual(newOptions.detail, this._options.detail);
+        const masterOptionsChanged = !isEqual(newOptions.master, this._options.master);
         const isDetailRootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
-        if (detailOptionsChanged) {
+        if (detailOptionsChanged || contextVersionChanged) {
             this._detailExplorerOptions = this._getListOptions(
                 this._dataContext.listsConfigs.detail,
                 newOptions.detail
@@ -235,7 +242,7 @@ export default class View extends Control<IOptions, IReceivedState> {
                 columns: this._getPatchedColumns(this._detailExplorerOptions.columns)
             };
         }
-        if (masterOptionsChanged) {
+        if (masterOptionsChanged || contextVersionChanged) {
             this._masterExplorerOptions = this._getListOptions(
                 this._dataContext.listsConfigs.master,
                 newOptions.master
@@ -571,7 +578,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     //endregion
     static contextTypes(): object {
         return {
-            dataContext: dataContext
+            dataContext
         };
     }
 }
