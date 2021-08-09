@@ -31,7 +31,7 @@ class ArrowButton extends Control<IArrowButtonOptions>  {
 
     static getDefaultOptions(): object {
         return {
-            inlineHeight: 's',
+            inlineHeight: 'm',
             iconSize: 's',
             direction: 'right'
         };
@@ -69,7 +69,9 @@ Object.defineProperty(ArrowButton, 'defaultProps', {
  * @name Controls/_buttons/ArrowButton#inlineHeight
  * @cfg {Enum} Высота контрола.
  * @variant s
+ * @variant m
  * @variant l
+ * @default m
  * @demo Controls-demo/Buttons/ArrowButton/InlineHeight/Index
  * @example
  * Кнопка большого размера (l).
