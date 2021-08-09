@@ -126,7 +126,7 @@ export default class VirtualScroll {
                 start = Math.max(start - missingCount, 0);
             }
         }
-
+        this._oldRange = {start, stop};
         return this._setRange({start, stop});
     }
 
