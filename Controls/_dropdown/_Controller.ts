@@ -155,7 +155,7 @@ export default class _Controller implements IDropdownController {
          if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._preloadedItems = null;
-            this._setItems(null);
+            this._setItemsAndMenuSource(null);
          } else if (selectedKeysChanged && newKeys.length && !isHistorySource(newOptions.source)) {
             return this._reloadSelectedItems(newOptions);
          } else {
