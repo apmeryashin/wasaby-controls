@@ -15,8 +15,8 @@ interface IOptions<S extends Model, T extends CollectionItem<S>> {
 /**
  * Стратегия-декоратор для отображения добавляемой записи
  * @class Controls/_display/ItemsStrategy/Add
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:SerializableMixin
  *
  * @author Родионов Е.А.
  * @private
