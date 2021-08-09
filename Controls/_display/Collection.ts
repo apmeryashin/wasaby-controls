@@ -38,7 +38,6 @@ import { IDragPosition } from './interface/IDragPosition';
 import {INavigationOptionValue} from 'Controls/interface';
 import {TRoundBorder} from "Controls/_display/interface/ICollection";
 import {Footer} from 'Controls/_display/Footer';
-import IndicatorsMixin from './IndicatorsMixin';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -483,21 +482,16 @@ function groupingFilter(item: EntityModel,
  * @public
  * @author Мальцев А.А.
  */
-export default class Collection<
-    S extends EntityModel = EntityModel,
-    T extends CollectionItem<S> = CollectionItem<S>
-> extends mixin<
+export default class Collection<S extends EntityModel = EntityModel, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     Abstract<any, any>,
     SerializableMixin,
     VersionableMixin,
-    EventRaisingMixin,
-    IndicatorsMixin
+    EventRaisingMixin
 >(
     Abstract,
     SerializableMixin,
     VersionableMixin,
-    EventRaisingMixin,
-    IndicatorsMixin
+    EventRaisingMixin
 ) implements ICollection<S, T>, IEnumerable<T>, IList<T> {
     /**
      * Возвращать локализованные значения
