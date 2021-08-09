@@ -12,7 +12,6 @@
             <Controls.dateRange:RangeSelector
                prevArrowVisibility="{{true}}"
                nextArrowVisibility="{{true}}"
-               showClearButton="{{true}}"
                bind:startValue="_startValueHalfYear"
                bind:endValue="_endValueHalfYear"
 			   attr:test_name="show_arrow_range"

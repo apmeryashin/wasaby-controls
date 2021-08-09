@@ -80,7 +80,6 @@ const hierarchyFilters: Array<Record<string, any>> = [{
 
 const defaultItems = [{
         name: 'date',
-        resetValue: null,
         value: null,
         type: 'dateRange',
         itemTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/DateRange',
@@ -89,7 +88,8 @@ const defaultItems = [{
             editorMode: 'Selector',
             chooseHalfyears: true,
             chooseYears: true,
-            clearButtonVisibility: true
+            resetStartValue: null,
+            resetEndValue: null
         },
         viewMode: 'basic'
     },
@@ -381,7 +381,6 @@ export function getItems(): unknown[] {
 export function getItemsWithGroup(): any[] {
     return [{
             name: 'date',
-            resetValue: null,
             group: 'firstGroup',
             value: null,
             type: 'dateRange',
@@ -391,7 +390,8 @@ export function getItemsWithGroup(): any[] {
                 editorMode: 'Selector',
                 chooseHalfyears: true,
                 chooseYears: true,
-                clearButtonVisibility: true
+                resetStartValue: null,
+                resetEndValue: null
             },
             viewMode: 'basic'
         },

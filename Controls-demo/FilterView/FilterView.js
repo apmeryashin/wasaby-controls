@@ -557,7 +557,8 @@ define('Controls-demo/FilterView/FilterView',
             });
 
             this._fastButtonItems3 = Clone(this._fastButtonItems);
-            this._fastButtonItems3[0].editorOptions.clearButtonVisibility = true;
+            this._fastButtonItems3[0].editorOptions.resetStartValue = null;
+            this._fastButtonItems3[0].editorOptions.resetEndValue = null;
 
             this._oneFastItems = [
                { name: 'acting',
