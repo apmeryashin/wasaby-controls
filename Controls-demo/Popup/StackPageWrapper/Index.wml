@@ -1,0 +1,5 @@
+<div class="ws-flexbox ws-flex-row ws-justify-content-center" style="width: 100%;">
+    <Controls.popupTemplate:StackPageWrapper propStorageId="new_tab_panel" minWidth="{{600}}" maxWidth="{{1400}}" workspaceWidth="{{1000}}">
+        <Controls-demo.Popup.TestStack />
+    </Controls.popupTemplate:StackPageWrapper>
+</div>

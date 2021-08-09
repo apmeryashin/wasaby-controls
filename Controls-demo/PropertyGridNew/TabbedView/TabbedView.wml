@@ -2,6 +2,5 @@
     bind:editingObject="_editingObject"
     source="{{_source}}"
     groupProperty="group"
-    tabProperty="tab"
-    separatorVisibility="{{false}}">
+    tabProperty="tab">
 </Controls.propertyGrid:TabbedView>

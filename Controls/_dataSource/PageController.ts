@@ -19,6 +19,11 @@ interface IWorkspaceConfig {
     templateOptions?: Record<string, unknown>;
 }
 
+type TLoadResult = Record<string, unknown>;
+interface ILoaderResult {
+    prefetchResult: unknown;
+}
+
 /**
  * Модуль для загрузки конфигурации страницы и предзагрузки данных для неё
  */
@@ -87,9 +92,19 @@ class PageController {
                         ...additionalOptions
                     }
                 };
-                DataLoader.loadData(prefetchConfig).then(resolve, reject);
+                DataLoader.loadData(prefetchConfig).then((result) => {
+                    resolve(result.configError || this._getPreparedLoadResult(result.data));
+                }, reject);
             });
         });
+    }
+
+    private _getPreparedLoadResult(prefetchResult: Record<string, ILoaderResult>): TLoadResult {
+        const result = {};
+        Object.keys(prefetchResult).forEach((key) => {
+            result[key] = prefetchResult[key].prefetchResult;
+        });
+        return result;
     }
 
     /**

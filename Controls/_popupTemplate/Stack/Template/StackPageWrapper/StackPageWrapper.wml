@@ -1,0 +1,17 @@
+<div class="controls-PageTemplate controls_popupTemplate_theme-{{_options.theme}}" attr:style="width: {{_workspaceWidth}}px;">
+    <ws:if data="{{_canResize(_options.propStorageId, _options.workspaceWidth, _options.minWidth, _options.maxWidth)}}">
+        <Controls.dragnDrop:ResizingLine attr:class="controls-PageTemplate__resizingLine controls-PageTemplate__resizingLine-left"
+                                         direction="reverse"
+                                         minOffset="{{_minOffset}}"
+                                         maxOffset="{{_maxOffset}}"
+                                         on:offset="_offsetHandler()"/>
+    </ws:if>
+    <ws:partial template="{{_options.content}}" scope="{{_options}}" stackWidth="{{_workspaceWidth}}" workspaceWidth="{{_workspaceWidth}}" />
+    <div class="controls-PageTemplate__shadow"></div>
+    <ws:if data="{{_canResize(_options.propStorageId, _options.workspaceWidth, _options.minWidth, _options.maxWidth)}}">
+        <Controls.dragnDrop:ResizingLine attr:class="controls-PageTemplate__resizingLine controls-PageTemplate__resizingLine-right"
+                                         minOffset="{{_minOffset}}"
+                                         maxOffset="{{_maxOffset}}"
+                                         on:offset="_offsetHandler()"/>
+    </ws:if>
+</div>
