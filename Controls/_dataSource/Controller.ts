@@ -413,8 +413,12 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
      * @param {string|number} key
      */
     setRoot(key: TKey): void {
-        this._setRoot(key);
-        this._notify('rootChanged', key, this._options.id);
+        const currentRoot = this.getRoot();
+
+        if (key !== currentRoot) {
+            this._setRoot(key);
+            this._notify('rootChanged', key, this._options.id);
+        }
     }
 
     /**
