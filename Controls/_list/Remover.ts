@@ -3,6 +3,14 @@ import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
 import {getItemsBySelection} from 'Controls/baseList';
 import {ContextOptions as dataOptions} from 'Controls/context';
+import {RecordSet} from 'Types/collection';
+import {SbisService} from 'Types/source';
+
+interface IOptions {
+    source: SbisService;
+    filter?: object;
+    items?: RecordSet;
+}
 
 var _private = {
     removeFromSource(self, items): Promise<void> {
@@ -42,10 +50,11 @@ var _private = {
         return Promise.resolve(afterItemsRemoveResult);
     },
 
-    updateDataOptions: function (self, newOptions, contextDataOptions) {
-        self._items = newOptions?.items ? newOptions.items : contextDataOptions.items;
+    updateDataOptions(self, newOptions?: IOptions, contextDataOptions?: IOptions): void {
         self._source = newOptions?.source ? newOptions.source : contextDataOptions.source;
-        self._filter = newOptions?.filter ? newOptions.filter : contextDataOptions.filter;
+        // items и filter могут быть не заданы в опциях. При этом contextDataOptions может быть тоже не задан
+        self._filter = newOptions?.filter ? newOptions.filter : contextDataOptions?.filter;
+        self._items = newOptions?.items ? newOptions.items : contextDataOptions?.items;
     },
 
     getItemsBySelection(self, items): Promise<CrudEntityKey[]> {
