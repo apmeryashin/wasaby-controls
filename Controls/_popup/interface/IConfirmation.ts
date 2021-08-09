@@ -57,9 +57,9 @@ export interface IConfirmationOpener {
  * @param {Controls/popup:IConfirmationOpener} IConfirmationOptions Конфигурация диалога подтверждения.
  * @returns {Promise} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @remark
- * Для открытия окна без создания {@link Controls/popup:Confirmation} в верстке используйте методы класса {@link Controls/popup:ConfirmationOpener}.
- *
- * Использование собственного шаблона в диалоге подтверждения подробно описано {@link /doc/platform/developmentapl/interface-development/controls/openers/confirmation/#config-template здесь}.
+ * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, следует использовать статический метод {@link openPopup}
+ * 2. Если вы хотите использовать собственный шаблон в диалоге подтверждения используйте шаблон, смотрите
+ * {@link /doc/platform/developmentapl/interface-development/controls/openers/confirmation/#config-template инструкцию}
  * @see openPopup
  * @example
  * <pre class="brush: html">
@@ -104,13 +104,13 @@ export interface IConfirmationOpener {
  */
 
 /**
- * Статический метод для открытия окна подтверждения.
+ * Статический метод для открытия окна подтверждения. При использовании метода не требуется создавать popup:Confirmation в верстке.
+ * {@link /doc/platform/developmentapl/interface-development/controls/openers/confirmation/#open-popup Подробнее}.
  * @name Controls/_popup/interface/IConfirmationOpener#openPopup
  * @function
  * @param {Controls/popup:IConfirmationOpener} IConfirmationOptions Конфигурация окна подтверждения
  * @return {Promise<boolean>} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @static
- * @deprecated Используйте методы класса {@link Controls/popup:ConfirmationOpener}.
  * @see open
  * @example
  * <pre class="brush: js">
