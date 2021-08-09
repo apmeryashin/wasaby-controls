@@ -25,14 +25,14 @@
  * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList
  * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes ItemsView Controls/list:ItemsView
- * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
+ * @includes IVirtualScrollConfig Controls/_baseList/interface/IVirtualScrollConfig
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes MultiSelectAccessibility Controls/_display/Collection
  * @includes RemoveController Controls/_baseList/Controllers/RemoveController
  * @includes View Controls/_list/List
- * @includes IEditingConfig Controls/_baseList/interface/IEditingConfig
- * @includes IItemAddOptions Controls/_baseList/interface/IItemAddOptions
- * @includes IItemEditOptions Controls/_baseList/interface/IItemEditOptions
+ * @includes IEditingConfig Controls/_list/interface/IEditingConfig
+ * @includes IItemAddOptions Controls/_list/interface/IItemAddOptions
+ * @includes IItemEditOptions Controls/_list/interface/IItemEditOptions
  * @includes FooterTemplate Controls/_list/interface/FooterTemplate
  * @public
  * @author Крайнов Д.О.
@@ -65,7 +65,7 @@
  * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList
  * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes ItemsView Controls/list:ItemsView
- * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
+ * @includes IVirtualScrollConfig Controls/_baseList/interface/IVirtualScrollConfig
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes MultiSelectAccessibility Controls/_display/Collection
  * @includes RemoveController Controls/_baseList/Controllers/RemoveController
@@ -79,6 +79,7 @@
  */
 
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
+import LoadingIndicatorTemplate = require('wml!Controls/_list/PortionedSearchTemplate');
 import GroupContentResultsTemplate = require('wml!Controls/_list/GroupContentResultsTemplate');
 import * as CharacteristicsTemplate from 'wml!Controls/_list/CharacteristicsTemplate/CharacteristicsTemplate';
 import BaseAction from 'Controls/_list/BaseAction';
@@ -103,6 +104,7 @@ export {
 
     ItemActionsHelpers,
     GroupContentResultsTemplate,
+    LoadingIndicatorTemplate,
     HotKeysContainer
 };
 export {default as AddButton} from 'Controls/_list/AddButton';

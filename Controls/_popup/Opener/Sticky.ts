@@ -110,3 +110,19 @@ Object.defineProperty(Sticky, 'defaultProps', {
 });
 
 export default Sticky;
+
+/**
+ * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать {@link Controls/popup:Sticky} в верстке.
+ * @function
+ * @static
+ * @name Controls/_popup/Opener/Sticky#openPopup
+ * @deprecated Используйте методы класса {@link Controls/popup:StickyOpener}.
+ */
+
+/**
+ * Статический метод для закрытия всплывающего окна.
+ * @function
+ * @static
+ * @name Controls/_popup/Opener/Sticky#closePopup
+ * @deprecated Используйте методы класса {@link Controls/popup:StickyOpener}.
+ */

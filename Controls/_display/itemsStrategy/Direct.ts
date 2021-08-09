@@ -24,7 +24,7 @@ interface ISerializableState<T> extends IDefaultSerializableState<T> {
  * Стратегия получения элементов проекции напрямую по коллекции
  * @class Controls/_display/ItemsStrategy/Direct
  * @extends Controls/_display/ItemsStrategy/Abstract
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  * @private
  */
 export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> extends AbstractStrategy<S, T> {

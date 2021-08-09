@@ -208,6 +208,7 @@ Object.defineProperty(Money, 'defaultProps', {
 /**
  * @name Controls/_input/Money#valueChanged
  * @event Происходит при изменении отображаемого значения контрола ввода.
+ * @param {UICommon/Events:SyntheticEvent} event Дескриптор события.
  * @param {String | Number} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark

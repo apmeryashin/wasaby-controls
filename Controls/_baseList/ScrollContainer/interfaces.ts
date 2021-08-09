@@ -1,4 +1,3 @@
-import { ITriggerOffset } from 'Controls/display';
 import { TItemKey } from 'Controls/_display/interface';
 
 export interface IRange {
@@ -11,6 +10,11 @@ export interface IRange {
 export interface IRangeShiftResult {
     range: IRange;
     placeholders: IPlaceholders;
+}
+
+export interface ITriggerOffset {
+    top: number;
+    bottom: number;
 }
 
 export interface IScrollControllerResult {

@@ -297,12 +297,28 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                     this._searchResetHandler();
                 }
            });
-
+        const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent}) => {
+            this._getOperationsController().executeAction({
+                action,
+                source: this._source,
+                target: clickEvent,
+                selection: {
+                    selected: this._options.selectedKeys,
+                    excluded: this._options.excludedKeys
+                },
+                filter: this._filter,
+                keyProperty: this._getSourceController().getKeyProperty(),
+                parentProperty: this._getSourceController().getParentProperty(),
+                nodeProperty: this._options.nodeProperty,
+                sourceController: this._getSourceController()
+            });
+        });
         return [
             sourceCallbackId,
             filterSourceCallbackId,
             searchValueCallbackId,
-            selectedTypeChangedCallbackId
+            selectedTypeChangedCallbackId,
+            executeOperation
         ];
     }
 
@@ -341,7 +357,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _update(options: IBrowserOptions, newOptions: IBrowserOptions, id?: string): void | Promise<RecordSet> {
         const sourceChanged = options.source !== newOptions.source;
         const hasSearchValueInOptions = newOptions.searchValue !== undefined;
-        const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue && this._inputSearchValue.length >= this._options.minSearchLength;
+        const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue?.length >= options.minSearchLength;
         const searchValueOptionsChanged = options.searchValue !== newOptions.searchValue;
         const searchValueChanged = this._searchValue !== newOptions.searchValue;
         let methodResult;
@@ -350,11 +366,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
-
-        if (this._dataLoader.getFilterController(id)?.update(this._getFilterControllerOptions(newOptions)) ||
-            !isEqual(options.filter, newOptions.filter)) {
-            this._updateFilterAndFilterItems(newOptions, id);
-        }
+        this._updateFilterController(options, newOptions);
 
         if (sourceChanged) {
             this._source = newOptions.source;
@@ -429,6 +441,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
 
         return methodResult;
+    }
+
+    private _updateFilterController(options: IBrowserOptions, newOptions: IBrowserOptions, id?: string): void {
+        const filterController = this._dataLoader.getFilterController(id);
+        const filterControllerOptions = this._getFilterControllerOptions(newOptions);
+        const filterChanged = !isEqual(options.filter, newOptions.filter);
+
+        if (filterController?.update(filterControllerOptions) || filterChanged) {
+            this._updateFilterAndFilterItems(newOptions);
+
+            if (!isEqual(options.filterButtonSource, newOptions.filterButtonSource) && !filterChanged) {
+                this._notify('filterChanged', [this._filter]);
+            }
+        }
     }
 
     private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {
@@ -554,11 +580,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._viewMode === 'search';
     }
 
-    protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>): void {
+    protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
         this._dataLoader.getFilterController()?.setFilter(filter);
         this._filter = filter;
-        this._notify('filterChanged', [this._filter]);
+        this._notify('filterChanged', [this._filter, id]);
     }
 
     protected _breadCrumbsItemClick(event: SyntheticEvent, root: Key): void {
@@ -843,8 +869,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const configsCount = Object.keys(this._dataLoader.getState()).length;
 
         if (configsCount > 1) {
-            this._dataLoader.each(({searchController}) => {
-                searchController?.reset(Object.keys(this._dataLoader.getState()).length === 1);
+            this._dataLoader.each(({searchController, filter, id}) => {
+                const newFilter = searchController?.reset(true);
+                if (searchController && !isEqual(filter, newFilter)) {
+                    this._filterChanged(null, newFilter, id);
+                }
             });
         } else {
             const filter = this._getSearchControllerSync().reset(true);

@@ -8,7 +8,7 @@ export interface IOptions<S, T> {
  * Интерфейс стратегии получения элементов проекции.
  * @interface Controls/_display/IItemsStrategy
  * @private
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default interface IItemsStrategy<S, T> {
     readonly '[Controls/_display/IItemsStrategy]': boolean;

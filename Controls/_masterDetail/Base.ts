@@ -32,10 +32,8 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/master-detail/ руководство разработчик}
- * @class Controls/_masterDetail/Base
  * @extends UI/Base:Control
  * @implements Controls/interface:IPropStorage
- *
  * @author Авраменко А.С.
  * @public
  * @demo Controls-demo/MasterDetail/Demo
@@ -52,12 +50,6 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
  * @demo Controls-demo/MasterDetail/Demo
  */
 class Base extends Control<IMasterDetail, string> {
-    /**
-     * @typedef {String} MasterVisibility
-     * @variant visible Мастер отображается.
-     * @variant hidden Мастер скрыт.
-     */
-
     /**
      * @name Controls/_masterDetail/Base#master
      * @cfg {Function} Задает шаблон контента master.
@@ -81,24 +73,33 @@ class Base extends Control<IMasterDetail, string> {
     /**
      * @name Controls/_masterDetail/Base#masterWidth
      * @cfg {Number|String} Ширина контентной области {@link master} при построении контрола.
+     * @remark
      * Значение можно задавать как в пикселях, так и в процентах.
      */
 
     /**
      * @name Controls/_masterDetail/Base#masterMinWidth
      * @cfg {Number|String} Минимальная ширина контентной области до которой может быть уменьшена ширина {@link master}.
+     * @remark
      * Значение можно задавать как в пикселях, так и в процентах.
+     * @see masterMaxWidth
+     * @see masterWidth
      */
 
     /**
      * @name Controls/_masterDetail/Base#masterMaxWidth
      * @cfg {Number|String} Максимальная ширина контентной области до которой может быть увеличена ширина {@link master}
+     * @remark
      * Значение можно задавать как в пикселях, так и в процентах.
+     * @see masterMinWidth
+     * @see masterWidth
      */
 
     /**
      * @name Controls/_masterDetail/Base#masterVisibility
-     * @cfg {MasterVisibility} Определяет видимость контента мастера.
+     * @cfg {String} Определяет видимость контента мастера.
+     * @variant visible Мастер отображается.
+     * @variant hidden Мастер скрыт.
      * @default visible
      * @demo Controls-demo/MasterDetail/MasterVisibility/Index
      */
@@ -106,6 +107,7 @@ class Base extends Control<IMasterDetail, string> {
     /**
      * @name Controls/_interface/IPropStorage#propStorageId
      * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
+     * @remark
      * С помощью этой опции включается функционал движения границ.
      * Помимо propStorageId необходимо задать опции {@link masterWidth}, {@link masterMinWidth}, {@link masterMaxWidth}.
      */
@@ -113,35 +115,38 @@ class Base extends Control<IMasterDetail, string> {
     /**
      * @name Controls/_masterDetail/Base#contrastBackground
      * @cfg {Boolean} Определяет контрастность фона контента detail по отношению к контенту master.
+     * @variant true Контрастный фон.
+     * @variant false Фыон, гармонично сочетающийся с окружением.
      * @default true
-     * @remark
-     * * true - контрастный фон.
-     * * false - фон, гармонично сочетающийся с окружением.
      */
 
     /**
      * @name Controls/_masterDetail/Base#scrollTop
      * @cfg {Number} Количество пикселей, прокрученных от верха скроллируемой области, в которой лежит контрол.
+     * @see scrollOffsetTop
      */
 
     /**
      * @name Controls/_masterDetail/Base#scrollOffsetTop
      * @cfg {Number} Определяет смещение позиции прилипания внутри скроллируемой области.
+     * @remark
      * Подробнее {@link Controls/_scroll/StickyBlock#offsetTop}
+     * @see scrollTop
      */
 
     /**
      * @name Controls/_masterDetail/Base#masterOffsetTop
      * @cfg {Number} Определяет отступ от верхней части скроллируемой области, при котором колонка с мастером будет зафиксирована.
+     * @see masterPosition
      */
 
     /**
      * @name Controls/_masterDetail/Base#masterPosition
-     * @cfg {Boolean} Определяет положение колонки {@link master} относительно колонки {@link detail}.
+     * @cfg {String} Определяет положение колонки {@link master} относительно колонки {@link detail}.
+     * @variant left Мастер располагается слева от детейла.
+     * @variant right Мастер располагается справа от детейла.
      * @default left
-     * @remark
-     * * left - Мастер располагается слева от детейла.
-     * * right - Мастер располагается справа от детейла.
+     * @see masterOffsetTop
      */
 
     /**
@@ -150,7 +155,7 @@ class Base extends Control<IMasterDetail, string> {
      * @demo Controls-demo/MasterDetail/NewDesign/Index
      */
 
-    /*
+    /**
      * @event Происходит при изменении ширины мастера.
      * @name Controls/_masterDetail/Base#masterWidthChanged
      * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.

@@ -115,14 +115,14 @@ const _private = {
 
         const eventResult = self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [item]);
         if (eventResult instanceof Promise) {
-            self._displayGlobalIndicator();
+            self.showIndicator('all');
             return eventResult.then(
                 () => {
-                    self._indicatorsController.hideGlobalIndicator();
+                    self.hideIndicator();
                     return _private.doExpand(self, dispItem).then(expandToFirstLeafIfNeed).catch((e) => e);
                 },
                 () => {
-                    self._indicatorsController.hideGlobalIndicator();
+                    self.hideIndicator();
                 }
             );
         } else {
@@ -154,11 +154,6 @@ const _private = {
                     );
                     expandController.applyStateToModel();
                     //endregion
-
-                    // Если задан callback на загрузку данных узла и загрузка была, то вызовем его
-                    if (self._options.nodeLoadCallback && results?.length) {
-                        self._options.nodeLoadCallback(results[0], nodeKey);
-                    }
 
                     //region Уведомим об изменении expandedItems
                     const expandedItems = expandController.getExpandedItems();
@@ -261,7 +256,7 @@ const _private = {
     loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<object> {
         const sourceController = self.getSourceController();
 
-        self._displayGlobalIndicator();
+        self.showIndicator();
         return sourceController.load('down', nodeKey).then((list) => {
                 self.stopBatchAdding();
                 return list;
@@ -271,7 +266,7 @@ const _private = {
                 return error;
             })
             .finally(() => {
-                self._indicatorsController.hideGlobalIndicator();
+                self.hideIndicator();
             });
     },
 
@@ -1415,11 +1410,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             return;
         }
 
-        this._displayGlobalIndicator();
+        this.showIndicator();
         return baseSourceController
             .load(undefined, nodeKey)
             .then((list) => {
-                this._indicatorsController.hideGlobalIndicator();
+                this.hideIndicator();
                 return list as RecordSet;
             })
             .catch((error: Error) => {
@@ -1428,7 +1423,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 }
 
                 this._onDataError({ error });
-                this._indicatorsController.hideGlobalIndicator();
+                this.hideIndicator();
 
                 throw error;
             });

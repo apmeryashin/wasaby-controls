@@ -10,10 +10,10 @@ interface IOptions<S, T> {
 /**
  * Стратегия-декоратор для формирования корня дерева
  * @class Controls/_display/ItemsStrategy/Root
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:SerializableMixin
  * 
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  * @private
  */
 export default class Root<S, T> extends mixin<

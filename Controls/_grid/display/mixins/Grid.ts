@@ -104,8 +104,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             this._prepareLadder(this._$ladderProperties, this._$columns);
         }
 
-        this._$resultsPosition = options.resultsPosition;
-
         if (this._headerIsVisible(options.header)) {
             this._initializeHeader(options);
         }
@@ -190,6 +188,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
                 columns: this._$columns,
                 multiSelectVisibility: this._$multiSelectVisibility,
                 resultsTemplate: this._$resultsTemplate,
+                resultsPosition: this._$resultsPosition,
                 backgroundStyle: this._$backgroundStyle,
                 columnSeparatorSize: this._$columnSeparatorSize,
                 resultsColspanCallback: this._$resultsColspanCallback
@@ -454,6 +453,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             multiSelectVisibility: options.multiSelectVisibility,
             columnsConfig: options.columns,
             gridColumnsConfig: options.columns,
+            resultsPosition: options.resultsPosition,
             rowTemplate: options.resultsTemplate,
             rowTemplateOptions: {},
             metaResults: this.getMetaResults(),

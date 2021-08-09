@@ -18,7 +18,7 @@ export interface IOptions<T extends Model = Model> extends ICollectionItemOption
  * @class Controls/_display/BreadcrumbsItem
  * @extends Controls/_display/CollectionItem
  * @private
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class BreadcrumbsItem<T extends Model = Model> extends CollectionItem<T> implements IGroupNode {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;

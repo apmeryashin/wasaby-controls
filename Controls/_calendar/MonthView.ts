@@ -101,6 +101,8 @@ export default class MonthView extends Control<IControlOptions> {
       const itemClass = '.controls-MonthViewVDOM__item';
       const mode = 'days';
       this._notify('itemKeyDown', [item, event.nativeEvent.keyCode, itemClass, mode]);
+      // Останавливаем нативный скролл, когда управляем выбором через стрелочки клавиатуры
+      event.preventDefault();
     }
 
    private _updateView(options): void {

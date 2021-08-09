@@ -223,10 +223,10 @@ function buildTreeIndex<T>(options: ITreeIndexOptions<T>, parentIndex?: number):
 /**
  * A decorating strategy which orders elements by adjacency list algorithm.
  * @class Controls/_display/ItemsStrategy/AdjacencyList
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:SerializableMixin
  *
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  * @private
  */
 export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<

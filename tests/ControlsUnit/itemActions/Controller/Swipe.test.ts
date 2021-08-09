@@ -189,4 +189,13 @@ describe('Controls/itemActions/Controller/Swipe', () => {
        sinon.assert.called(spySetActions);
        spySetActions.restore();
    });
+
+    it('should reset ItemActions on swipe another record', () => {
+        itemActionsController.activateSwipe(1, 100, 50);
+        const item = collection.at(0);
+        const spySetActions = sinon.spy(item, 'setActions');
+        itemActionsController.activateSwipe(2, 100, 50);
+        sinon.assert.called(spySetActions);
+        spySetActions.restore();
+    });
 });

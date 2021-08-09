@@ -17,7 +17,7 @@
       template="{{_options.content}}"
       scope="{{_options}}"
       header="{{_header}}"
-
+      ladderOffset="{{_crumbsVisible ? 'var(--inline-height_headingBack)' : 0}}"
       on:backButtonClick="goBack()"
       on:arrowClick="_notifyHandler('arrowClick')"
    />

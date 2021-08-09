@@ -72,6 +72,7 @@ export interface IControllerOptions extends
     ISelectFieldsOptions{
     dataLoadErrback?: Function;
     dataLoadCallback?: Function;
+    nodeLoadCallback?: Function;
     root?: TKey;
     expandedItems?: TKey[];
     deepReload?: boolean;
@@ -412,8 +413,12 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
      * @param {string|number} key
      */
     setRoot(key: TKey): void {
-        this._setRoot(key);
-        this._notify('rootChanged', key, this._options.id);
+        const currentRoot = this.getRoot();
+
+        if (key !== currentRoot) {
+            this._setRoot(key);
+            this._notify('rootChanged', key, this._options.id);
+        }
     }
 
     /**
@@ -1033,10 +1038,12 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
 
         if (loadedInCurrentRoot || direction) {
             this._notify('dataLoad', result, direction);
+        }
 
-            if (this._dataLoadCallbackFromOptions) {
-                this._dataLoadCallbackFromOptions(result, direction);
-            }
+        if (loadedInCurrentRoot) {
+            this._dataLoadCallbackFromOptions?.call(void 0, result, direction);
+        } else if (this._options.nodeLoadCallback) {
+            this._options.nodeLoadCallback(result, key, direction);
         }
 
         if (dataLoadCallbackResult instanceof Promise) {

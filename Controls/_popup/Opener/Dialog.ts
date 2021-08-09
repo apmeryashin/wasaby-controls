@@ -62,3 +62,19 @@ class Dialog extends BaseOpener<IDialogOpenerOptions> implements IDialogOpener, 
 }
 
 export default Dialog;
+
+/**
+ * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать {@link Controls/popup:Dialog} в верстке.
+ * @function
+ * @static
+ * @name Controls/_popup/Opener/Dialog#openPopup
+ * @deprecated Используйте методы класса {@link Controls/popup:DialogOpener}.
+ */
+
+/**
+ * Статический метод для закрытия всплывающего окна.
+ * @function
+ * @static
+ * @name Controls/_popup/Opener/Dialog#closePopup
+ * @deprecated Используйте методы класса {@link Controls/popup:DialogOpener}.
+ */

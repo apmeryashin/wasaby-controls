@@ -11,9 +11,9 @@ interface IState<S, T> extends ISerializableState {
 /**
  * Компоновщик стратегий; оборачивает стратегии одну в другую в заданном порядке
  * @class Controls/_display/ItemsStrategy/Composer
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:SerializableMixin
+ * @author Авраменко А.С.
  * @private
  */
 export default class Composer<S, T> extends mixin<

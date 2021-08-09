@@ -72,7 +72,7 @@ class StickyHeaderController {
         this._options.resizeCallback = options.resizeCallback;
         this._headers = {};
         this._resizeHandlerDebounced = debounce(this.resizeHandler.bind(this), 50);
-        this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this));
+        this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers);
     }
 
     init(container: HTMLElement): void {
@@ -297,7 +297,7 @@ class StickyHeaderController {
                 // во время обсчета оффсетов запишет себе height = 0, а после, когда он покажется, по ресайз обсёрверу будет опять добавление
                 // в headersStack, т.к предыдущая высота была равна 0.
                 if (!inHeadersStack) {
-                    this._addToHeadersStack(header.id, position, true);
+                    this._addToHeadersStack(header.id, headerPosition, true);
                 }
             });
         }
@@ -539,9 +539,9 @@ class StickyHeaderController {
         }
     }
 
-    private _addToHeadersStack(id: number, headerPosition: POSITION, needUpdateOffset: boolean = false): void {
+    private _addToHeadersStack(id: number, headerPosition: IPositionOrientation, needUpdateOffset: boolean = false): void {
         const positions = this._getDecomposedPosition(headerPosition);
-        positions.forEach(position => {
+        positions.forEach((position) => {
             const headersStack = this._headersStack[position];
             const newHeaderOffset = this._getHeaderOffset(id, position, needUpdateOffset);
             const headerContainerSizes = this._headers[id].inst.getHeaderContainer().getBoundingClientRect();
@@ -562,11 +562,11 @@ class StickyHeaderController {
             });
             index = index === -1 ? headersStack.length : index;
             headersStack.splice(index, 0, id);
-        })
+        });
     }
 
     private _getDecomposedPosition(headerPosition: IPositionOrientation): POSITION[] {
-        let positions = [];
+        const positions = [];
         switch (headerPosition.vertical) {
             case 'top':
             case 'bottom':

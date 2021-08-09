@@ -1,30 +1,46 @@
-import {loadAsync} from 'WasabyLoader/ModulesLoader';
+import {loadSync, isLoaded} from 'WasabyLoader/ModulesLoader';
 import {EventRaisingMixin, ObservableMixin, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {mixin} from 'Types/util';
 import {IBaseAction} from './BaseAction';
 import {IAction} from './IAction';
 import {ISelectionObject} from 'Controls/interface';
+import {isEqual} from 'Types/object';
+import { Logger } from 'UI/Utils';
 
 /**
  * @public
  * @author Золотова Э.Е.
  */
 
-export default class ActionToolbar extends mixin<ObservableMixin>(
+interface IActionsCollectionOptions {
+    listActions: IAction[];
+    actions: IAction[];
+}
+
+const BASE_ACTION_MODULE = 'Controls/actions:BaseAction';
+
+export default class ActionsCollection extends mixin<ObservableMixin>(
     ObservableMixin
 ) {
     protected _actions: IBaseAction[];
     protected _toolbarItems: IAction[] = [];
+    protected _options: IActionsCollectionOptions;
 
-    constructor(options) {
+    constructor(options: IActionsCollectionOptions) {
         super();
         EventRaisingMixin.call(this, options);
-        this._setActions(options.items);
+        this._options = options;
+        this._actions = this._createActions(options.actions, options.listActions);
+        this._toolbarItems = this._getToolbarItemsByActions(this._actions);
     }
 
-    update(options): void {
-        this._setActions(options.items);
+    update(options: IActionsCollectionOptions): void {
+        if (!isEqual(this._options, options)) {
+            this._actions = this._createActions(options.actions, options.listActions);
+            this._toolbarItems = this._getToolbarItemsByActions(this._actions);
+            this._notify('toolbarConfigChanged', this._toolbarItems);
+        }
     }
 
     getAction(item: Model<IAction>): IBaseAction {
@@ -47,34 +63,39 @@ export default class ActionToolbar extends mixin<ObservableMixin>(
         });
     }
 
-    private _setActions(items: IAction[]): void {
-        this._createActions(items).then((operations) => {
-            this._actions = operations;
-            this._notify('toolbarConfigChanged', this._toolbarItems);
+    getToolbarItems(): IAction[] {
+        return this._toolbarItems;
+    }
+
+    protected _getToolbarItemsByActions(actions: IBaseAction[]): IAction[] {
+        const result = [];
+        actions.forEach((action) => {
+            if (action.visible) {
+                result.push(action.getState());
+            }
+        });
+        return result.sort((operationFirst, operationSecond) => {
+            return operationFirst.order === operationSecond.order ? 0 :
+                operationFirst.order > operationSecond.order ? -1 : 1;
         });
     }
 
-    private _createActions(items: IAction[]): Promise<IBaseAction[]> {
-        this._toolbarItems = [];
-        const operationsPromises = items.map((item) => {
-            const actionName = (item.actionName || 'Controls/actions:BaseAction') as string;
-            return loadAsync(actionName).then((action: IAction): void => {
+    private _createActions(actions: IAction[] = [], listActions: IAction[] = []): IBaseAction[] {
+        const items = actions.concat(listActions);
+        const result = [];
+        items.forEach((item) => {
+            const actionName = item.actionName || BASE_ACTION_MODULE;
+            if (!isLoaded(actionName)) {
+                Logger.error(`ActionsCollection::Во время создания коллекции произошла ошибка.
+                                   Action ${actionName} не был загружен до создания коллекции`);
+            } else {
+                const action = loadSync(actionName);
                 const actionClass = new action(item);
-                if (actionClass.visible) {
-                    this._toolbarItems.push(actionClass.getState());
-                }
                 actionClass.subscribe('itemChanged', this._notifyChanges.bind(this));
-                return actionClass;
-            });
+                result.push(actionClass);
+            }
         });
-        return Promise.all(operationsPromises).then((operations) => {
-            return operations.filter((item) => {
-                return !!item;
-            }).sort((operationFirst, operationSecond) => {
-                return operationFirst.order === operationSecond.order ? 0 :
-                    operationFirst.order > operationSecond.order ? -1 : 1;
-            });
-        });
+        return result;
     }
 
     private _notifyChanges(event, item): void {

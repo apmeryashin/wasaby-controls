@@ -38,7 +38,6 @@ import { IDragPosition } from './interface/IDragPosition';
 import {INavigationOptionValue} from 'Controls/interface';
 import {TRoundBorder} from "Controls/_display/interface/ICollection";
 import {Footer} from 'Controls/_display/Footer';
-import IndicatorsMixin from './IndicatorsMixin';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -472,32 +471,27 @@ function groupingFilter(item: EntityModel,
 /**
  * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
  * не меняя при этом оригинальную коллекцию.
- * @class Controls/_display/Collection
+ * 
  * @extends Controls/_display/Abstract
- * @implements Types/_collection/IEnumerable
- * @implements Types/_collection/IList
- * @mixes Types/_entity/SerializableMixin
- * @mixes Types/_entity/VersionableMixin
- * @mixes Types/_collection/EventRaisingMixin
+ * @implements Types/collection:IEnumerable
+ * @implements Types/collection:IList
+ * @mixes Types/entity:SerializableMixin
+ * @mixes Types/entity:VersionableMixin
+ * @mixes Types/collection:EventRaisingMixin
  * @ignoremethods notifyItemChange
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
-export default class Collection<
-    S extends EntityModel = EntityModel,
-    T extends CollectionItem<S> = CollectionItem<S>
-> extends mixin<
+export default class Collection<S extends EntityModel = EntityModel, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     Abstract<any, any>,
     SerializableMixin,
     VersionableMixin,
-    EventRaisingMixin,
-    IndicatorsMixin
+    EventRaisingMixin
 >(
     Abstract,
     SerializableMixin,
     VersionableMixin,
-    EventRaisingMixin,
-    IndicatorsMixin
+    EventRaisingMixin
 ) implements ICollection<S, T>, IEnumerable<T>, IList<T> {
     /**
      * Возвращать локализованные значения

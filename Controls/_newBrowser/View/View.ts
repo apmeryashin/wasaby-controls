@@ -16,8 +16,6 @@ import {View as ExplorerView} from 'Controls/explorer';
 import {getListConfiguration} from 'Controls/_newBrowser/utils';
 import * as ViewTemplate from 'wml!Controls/_newBrowser/View/View';
 import {TColumns} from 'Controls/grid';
-import * as DefaultListItemTemplate from 'wml!Controls/_newBrowser/templates/ListItemTemplate';
-import * as DefaultTileItemTemplate from 'wml!Controls/_newBrowser/templates/TileItemTemplate';
 import 'css!Controls/listTemplates';
 import {ContextOptions as dataContext} from 'Controls/context';
 import {default as TileController} from 'Controls/_newBrowser/TemplateControllers/Tile';
@@ -55,8 +53,8 @@ export default class View extends Control<IOptions, IReceivedState> {
      */
     protected _template: TemplateFunction = ViewTemplate;
     protected _notifyHandler: Function = EventUtils.tmplNotify;
-    protected _defaultTileItemTemplate: TemplateFunction = DefaultTileItemTemplate;
-    protected _defaultListItemTemplate: TemplateFunction = DefaultListItemTemplate;
+    protected _defaultTileItemTemplate: TemplateFunction = 'Controls/tile:RichTemplate';
+    protected _defaultListItemTemplate: TemplateFunction = 'Controls/listTemplates:ListItemTemplate';
     protected _detailDataSource: SourceController = null;
     protected _tableCfg: TableController = null;
 
@@ -290,7 +288,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _beforeUnmount(): void {
         this._detailDataSource.unsubscribe('dataLoad', this._onDetailDataLoadCallback);
         this._detailDataSource.destroy();
-        this._masterDataSource.destroy();
+        this._masterDataSource?.destroy();
     }
 
     private _setViewMode(value: DetailViewMode): void {

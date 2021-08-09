@@ -172,18 +172,6 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
          this._notify('controlResize', [], {bubbling: true});
       });
       this._notify('operationsPanelOpened');
-      this._storeCallbackId = Store.onPropertyChanged('executeOperation', ({toolbarItem, event}) => {
-         if (toolbarItem.get('id') === 'toggleAll') {
-            this._notify('selectedTypeChanged', ['toggleAll'], {
-               bubbling: true
-            });
-         } else {
-            this._notify('itemClick', [toolbarItem, event, {
-               selected: this._options.selectedKeys,
-               excluded: this._options.excludedKeys
-            }]);
-         }
-      });
       if (this._options.newDesign) {
          this._openOperationPanel();
       }

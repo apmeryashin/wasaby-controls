@@ -1,3 +1,10 @@
+<ws:template name="headerContentTemplate">
+   <ws:partial template="{{ contentTemplate }}"
+               caption="{{ _caption }}"
+               startValue="{{ _options.startValue }}"
+               endValue="{{ _options.endValue }}"/>
+</ws:template>
+
 <div class="controls_shortDatePicker_theme-{{_options.theme}}
             controls_popupTemplate_theme-{{_options.theme}}
             controls-PeriodLiteDialog
@@ -9,12 +16,18 @@
               title="{[Текущий период]}"
               on:click="_onHeaderClick()">
             <ws:if data="{{ _options.headerContentTemplate }}">
-               <ws:partial
-                       template="{{ _options.headerContentTemplate }}"
-                       caption="{{ _caption }}"
-                       startValue="{{ _options.startValue }}"
-                       endValue="{{ _options.endValue }}"
-               />
+               <ws:if data="{{ _isHeaderContentTemplateString }}">
+                  <Controls.Container.Async templateName="{{ _options.headerContentTemplate }}">
+                     <ws:partial template="headerContentTemplate"
+                                 contentTemplate="{{ content.resolvedTemplate }}"
+                     />
+                  </Controls.Container.Async>
+               </ws:if>
+               <ws:else>
+                  <ws:partial template="headerContentTemplate"
+                              contentTemplate="{{ _options.headerContentTemplate }}"
+                  />
+               </ws:else>
             </ws:if>
             <ws:else>
                {{_caption}}
@@ -98,7 +111,6 @@
               displayedRanges="{{_displayedRanges}}"
               bind:position="_position"
               attachLoadTopTriggerToNull="{{ false }}"
-              attachLoadDownTriggerToNull="{{ false }}"
               _limit="{{_limit}}"
          class="controls-PeriodLiteDialog__year-list">
          <ws:yearTemplate>
