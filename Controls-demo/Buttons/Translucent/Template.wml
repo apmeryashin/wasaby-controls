@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">translucent=true</div>
+            <Controls.buttons:Button caption="primary" buttonStyle="primary" translucent="{{true}}" contrastBackground="{{true}}"/>{{' '}}
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">translucent=false</div>
+            <Controls.buttons:Button caption="primary" buttonStyle="primary" translucent="{{false}}" contrastBackground="{{true}}"/>{{' '}}
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">viewMode=functionalButton translucent=true</div>
+            <Controls.buttons:Button viewMode="functionalButton" translucent="{{true}}" buttonStyle="primary" icon="icon-Yes" iconStyle="contrast" contrastBackground="{{true}}"/>{{' '}}
+    </div>
+</div>
