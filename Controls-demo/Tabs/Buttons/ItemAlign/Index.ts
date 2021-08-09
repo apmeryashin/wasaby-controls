@@ -62,7 +62,8 @@ export default class TabButtonsDemo extends Control {
                     id: '1',
                     title: 'Задача в разработку №1263182638123681268716831726837182368172631239999',
                     align: 'left',
-                    itemTemplate: 'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate'
+                    itemTemplate: 'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
+                    isMainTab: true
                 },
                 {
                     id: '2',
@@ -93,7 +94,8 @@ export default class TabButtonsDemo extends Control {
                     id: '1',
                     title: 'Meetings',
                     align: 'left',
-                    itemTemplate: 'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate'
+                    itemTemplate: 'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
+                    isMainTab: true
                 },
                 {
                     id: '2',
