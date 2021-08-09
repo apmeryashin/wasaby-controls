@@ -150,52 +150,6 @@ define([
 
       });
 
-      describe('_clearButtonVisible', function() {
-         [{
-            fontColorStyle: 'link',
-            clearButtonVisible: true,
-            startValue: true,
-            endValue: true,
-            result: true
-         }, {
-            fontColorStyle: 'link',
-            clearButtonVisible: true,
-            startValue: false,
-            endValue: true,
-            result: true
-         }, {
-            fontColorStyle: 'link',
-            clearButtonVisible: true,
-            startValue: true,
-            endValue: false,
-            result: true
-         }, {
-            fontColorStyle: 'link',
-            clearButtonVisible: true,
-            startValue: false,
-            endValue: false,
-            result: false
-         }, {
-            fontColorStyle: 'link',
-            clearButtonVisible: false,
-            startValue: true,
-            endValue: true,
-            result: false
-         }].forEach(function(test, testNumber) {
-            it(`should update correct _clearButtonVisible ${testNumber}.`, function () {
-               const component = calendarTestUtils.createComponent(dateRange.LinkView, {});
-               component._beforeUpdate({
-                  clearButtonVisible: test.clearButtonVisible,
-                  startValue: test.startValue,
-                  endValue: test.endValue,
-                  fontColorStyle: test.fontColorStyle,
-                  captionFormatter: function() {}
-               });
-               assert.strictEqual(component._clearButtonVisible, test.result);
-            });
-         });
-      });
-
       describe('shiftBack', function() {
          it('should update model', function() {
             const sandbox = sinon.sandbox.create(),
