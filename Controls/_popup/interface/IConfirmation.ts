@@ -62,15 +62,15 @@ export interface IConfirmationOpener {
  * {@link /doc/platform/developmentapl/interface-development/controls/openers/confirmation/#config-template инструкцию}
  * @see openPopup
  * @example
- * wml
- * <pre>
- *    <Controls.popup:Confirmation name="confirmationOpener">
- *    </Controls.popup:Confirmation>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.popup:Confirmation name="confirmationOpener">
+ * </Controls.popup:Confirmation>
  *
- *    <Controls.buttons:Button caption="open confirmation" on:click="_open()"/>
+ * <Controls.buttons:Button caption="open confirmation" on:click="_open()"/>
  * </pre>
- * js
- * <pre>
+ * <pre class="brush: js">
+ * // TypeScript
  *    class MyControl extends Control<IControlOptions>{
  *       ...
  *
@@ -113,7 +113,8 @@ export interface IConfirmationOpener {
  * @static
  * @see open
  * @example
- * <pre>
+ * <pre class="brush: js">
+ *    // TypeScript
  *    import {Confirmation} from 'Controls/popup';
  *    ...
  *    openConfirmation() {

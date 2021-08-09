@@ -29,12 +29,12 @@ export interface INotificationOpener extends IOpener {
 
 /**
  * Метод открытия окна уведомления.
- * Повторный вызов этого метода вызовет переририсовку контрола.
  * @function
  * @name Controls/_popup/interface/INotificationOpener#open
  * @param {Controls/_popup/interface/INotificationOpener/PopupOptions.typedef} popupOptions Конфигурация окна.
  * @remark
- * Чтобы открыть окно без создания в верстке {@link Controls/popup:Notification}, используйте статический метод {@link Controls/popup:Notification#openPopup openPopup}.
+ * Для открытия окна без создания {@link Controls/popup:Notification} в верстке используйте методы класса {@link Controls/popup:NotificationOpener}.
+ * Повторный вызов этого метода вызовет переририсовку контрола.
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
@@ -81,11 +81,8 @@ export interface INotificationOpener extends IOpener {
  * Статический метод для закрытия окна уведомления по идентификатору.
  * @function
  * @name Controls/_popup/interface/INotificationOpener#closePopup
- * @param {String} popupId Идентификатор окна.
- * Такой идентификатор можно получить при открытии окна методом {@link Controls/popup:Notification#openPopup openPopup}.
+ * @param {String} popupId Идентификатор окна. Такой идентификатор можно получить при открытии окна методом {@link openPopup}.
  * @static
- * @remark
- * Дополнительный пример работы со статическим методом доступен {@link /doc/platform/developmentapl/interface-development/controls/openers/notification/#open-popup здесь}.
  * @example
  * <pre class="brush: js">
  * // TypeScript

@@ -92,5 +92,6 @@ export default Stack;
  * @function
  * @static
  * @name Controls/_popup/Opener/Stack#closePopup
+ * @param {String} popupId Идентификатор окна. Такой идентификатор можно получить при открытии окна методом {@link openPopup}.
  * @deprecated Используйте методы класса {@link Controls/popup:StackOpener}.
  */
