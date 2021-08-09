@@ -126,7 +126,7 @@ export default abstract class Row<T> {
 
     //region Аспект "Стилевое оформление. Классы и стили строки"
     getItemClasses(params: IItemTemplateParams = {theme: 'default'}): string {
-        let itemClasses = `${this._getBaseItemClasses(params.style, params.theme)} `
+        let itemClasses = `${this._getBaseItemClasses(params.style)} `
             + `${this._getCursorClasses(params.cursor, params.clickable)} `
             + `${this._getItemHighlightClasses(params.style, params.theme, params.highlightOnHover)}`;
 
@@ -137,7 +137,7 @@ export default abstract class Row<T> {
         return itemClasses;
     }
 
-    protected _getBaseItemClasses(style: string, theme: string): string {
+    protected _getBaseItemClasses(style: string): string {
         return `controls-ListView__itemV controls-Grid__row controls-Grid__row_${style}`;
     }
 
