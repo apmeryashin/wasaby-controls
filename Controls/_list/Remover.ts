@@ -5,6 +5,14 @@ import {Remove as RemoveAction} from 'Controls/listActions';
 import {getItemsBySelection} from 'Controls/baseList';
 import {Logger} from 'UI/Utils';
 import {ISelectionObject} from "Controls/_interface/ISelectionType";
+import {RecordSet} from 'Types/collection';
+import {SbisService} from 'Types/source';
+
+interface IOptions {
+    source: SbisService;
+    filter?: object;
+    items?: RecordSet;
+}
 
 var _private = {
     removeFromItems: function (self, keys) {
@@ -40,10 +48,12 @@ var _private = {
         return Promise.resolve(afterItemsRemoveResult);
     },
 
-    updateDataOptions: function (self, newOptions, contextDataOptions) {
+    updateDataOptions(self, newOptions?: IOptions, contextDataOptions?: IOptions): void {
         self._source = newOptions?.source ? newOptions.source : contextDataOptions.source;
-        self._filter = newOptions?.filter ? newOptions.filter : contextDataOptions.filter;
-        self._items = newOptions?.items ? newOptions.items : contextDataOptions.items;
+        // items и filter могут быть не заданы в опциях. При этом contextDataOptions может быть тоже не задан
+        self._filter = newOptions?.filter ? newOptions.filter : contextDataOptions?.filter;
+        self._items = newOptions?.items ? newOptions.items : contextDataOptions?.items;
+
     },
 
     getItemsBySelection(self, keys): Promise<ISelectionObject> {
