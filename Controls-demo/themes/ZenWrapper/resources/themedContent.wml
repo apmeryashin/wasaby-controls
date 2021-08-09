@@ -1,0 +1,28 @@
+<div>
+
+    <div class="controls-text-default">controls-text-default</div>
+    <div class="controls-text-primary">controls-text-primary</div>
+    <div class="controls-text-secondary">controls-text-secondary</div>
+    <div class="controls-text-label">controls-text-secondary</div>
+    <div class="controls-text-unaccented">controls-text-unaccented</div>
+    <div class="controls-text-readonly">controls-text-readonly</div>
+
+    <div>
+        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="default" caption="Button" fontColorStyle="default"></Controls.buttons:Button>
+    </div>
+    <div>
+        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="primary" caption="Button" fontColorStyle="primary"></Controls.buttons:Button>
+    </div>
+    <div>
+        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="secondary" caption="Button" fontColorStyle="secondary"></Controls.buttons:Button>
+    </div>
+    <div>
+        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="unaccented" caption="Button" fontColorStyle="unaccented"></Controls.buttons:Button>
+    </div>
+    <div>
+        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="label" caption="Button" fontColorStyle="label"></Controls.buttons:Button>
+    </div>
+    <div>
+        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="secondary"  caption="Button" fontColorStyle="secondary" readOnly="{{true}}"></Controls.buttons:Button>
+    </div>
+</div>
