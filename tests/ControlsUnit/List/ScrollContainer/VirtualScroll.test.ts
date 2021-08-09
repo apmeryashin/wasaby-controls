@@ -98,6 +98,9 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             assert.deepEqual({range: {start: 3, stop: 8}, placeholders: {top: 60, bottom: 0}},
                 // tslint:disable-next-line:no-magic-numbers
                 instance.shiftRangeToScrollPosition(160));
+            // tslint:disable-next-line:ban-ts-ignore
+            // @ts-ignore
+            assert.deepEqual(instance._oldRange, instance.getRange());
         });
         it('without pageSize', () => {
             instance = new controller({}, {topTrigger: 10, bottomTrigger: 10});
