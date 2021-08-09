@@ -2,7 +2,7 @@
  * Интерфейс привязки к проекции коллекции
  * @interface Controls/_display/IBind
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 const IBind = {
     '[Controls/_display/IBind]': true

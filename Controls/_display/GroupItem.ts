@@ -8,11 +8,10 @@ interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions
 
 /**
  * Элемент коллекции "Группа"
- * @class Controls/_display/GroupItem
  * @extends Controls/_display/CollectionItem
- * @mixes Controls/_display/ExpandableMixin
+ * @mixes Controls/display:ExpandableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class GroupItem<T> extends mixin<
     CollectionItem<any>,

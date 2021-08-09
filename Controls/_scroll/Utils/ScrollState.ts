@@ -10,18 +10,71 @@ export interface IHasUnrenderedContent {
     bottom: boolean;
 }
 
+/**
+ * Интерфейс для события scrollStateChanged, которое генерируется скролл контейнером.
+ * @interface Controls/_scroll/interface/IScrollState
+ * @public
+ * @author Миронов А.Ю.
+ */
 export interface IScrollState {
+    /**
+     * Количество пикселей, прокрученных от верха элемента
+     */
     scrollTop?: number;
+
+    /**
+     * Количество пикселей, прокрученных от левого края элемента
+     */
     scrollLeft?: number;
+
+    /**
+     * Высота элемента внутри границ вместе с padding
+     */
     clientHeight?: number;
+
+    /**
+     * Высота контента в элементе, включая содержимое, невидимое из-за прокрутки
+     */
     scrollHeight?: number;
+
+    /**
+     * Ширина элемента внутри границ вместе с padding
+     */
     clientWidth?: number;
+
+    /**
+     * Ширина контента в элементе, включая содержимое, невидимое из-за прокрутки
+     */
     scrollWidth?: number;
+
+    /**
+     * Позиция вертикального скролла
+     */
     verticalPosition?: SCROLL_POSITION;
+
+    /**
+     * Позиция горизонтального скролла
+     */
     horizontalPosition?: SCROLL_POSITION;
+
+    /**
+     * Есть ли вертикальный скролл
+     */
     canVerticalScroll?: boolean;
+
+    /**
+     * Есть ли горизонтальный скролл
+     */
     canHorizontalScroll?: boolean;
+
+    /**
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/DOMRect Размеры и положение} скролл контейнера.
+     */
     viewPortRect?: ClientRect;
+
+    /**
+     * Есть ли неотрендеренный контент сверху/снизу.
+     */
     hasUnrenderedContent?: IHasUnrenderedContent;
 }
 
