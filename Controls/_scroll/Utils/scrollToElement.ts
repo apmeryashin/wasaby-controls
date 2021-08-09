@@ -56,14 +56,15 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
    const scrollControlNode: HTMLElement = scrollableElement.closest(SCROLL_CONTAINERS_SELECTOR);
    if (scrollControlNode) {
       const controls = goUpByControlTree(scrollControlNode);
-      controls.find((control: IControl) => {
-         if (cInstance.instanceOfModule(control, 'Controls/scroll:Container')) {
-            return {
-               top: control.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.fixed),
-               bottom: control.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.fixed)
-            };
-         }
-      });
+      const scrollContainer =
+          controls.find((control: IControl) => cInstance.instanceOfModule(control, 'Controls/scroll:Container'));
+
+      if (scrollContainer) {
+         return {
+            top: scrollContainer.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.fixed),
+            bottom: scrollContainer.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.fixed)
+         };
+      }
    }
    return { top: 0, bottom: 0 };
 }
