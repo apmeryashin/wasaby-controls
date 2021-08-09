@@ -30,7 +30,7 @@ interface IFieldTemplate {
         isFieldFocused?: () => boolean;
 
         value?: string;
-        options?: any;
+        options?: Object;
         autoWidth?: boolean;
     };
 }
@@ -48,6 +48,8 @@ export interface IBaseInputOptions extends IBaseOptions, IControlOptions {}
  * @private
  */
 const WIDTH_CURSOR: number = 1;
+
+const MIN_IE_VERSION: number = 12;
 
 /**
  * Базовый класс для текстовых полей ввода.
@@ -360,7 +362,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
          * Therefore, we ourselves will activate the field on click.
          * https://caniuse.com/#search=pointer-events
          */
-        if (this._ieVersion && this._ieVersion < 12) {
+        if (this._ieVersion && this._ieVersion < MIN_IE_VERSION) {
             this._getField().focus();
         }
     }
@@ -485,7 +487,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
          * TODO: Remove after execution:
          * https://online.sbis.ru/opendoc.html?guid=6c755b9b-bbb8-4a7d-9b50-406ef7f087c3
          */
-        let emptySymbol = unEscapeASCII('&#65279;');
+        const emptySymbol = unEscapeASCII('&#65279;');
         this._field.scope.emptySymbol = emptySymbol;
         this._readOnlyField.scope.emptySymbol = emptySymbol;
     }
