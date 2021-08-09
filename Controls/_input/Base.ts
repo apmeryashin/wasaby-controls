@@ -25,7 +25,7 @@ interface IFieldTemplate {
     scope: {
         emptySymbol?: string;
         controlName?: string;
-        autoComplete?: boolean|string;
+        autoComplete?: boolean | string;
         ieVersion?: number | null;
         isFieldFocused?: () => boolean;
 
