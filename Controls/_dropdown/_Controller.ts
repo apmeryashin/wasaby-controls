@@ -155,11 +155,17 @@ export default class _Controller implements IDropdownController {
          if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._preloadedItems = null;
-            this._setItemsAndMenuSource(null);
-         } else if (selectedKeysChanged && newKeys.length) {
+            this._setItems(null);
+         } else if (selectedKeysChanged && newKeys.length && !isHistorySource(newOptions.source)) {
             return this._reloadSelectedItems(newOptions);
          } else {
-            return this.reload();
+            if (this._updateHistoryPromise) {
+               this._updateHistoryPromise.then(() => {
+                  return this.reload();
+               })
+            } else {
+               return this.reload();
+            }
          }
       } else if (selectedKeysChanged && this._items && this._items.getCount()) {
          if (newKeys.length) {
@@ -616,7 +622,8 @@ export default class _Controller implements IDropdownController {
                this._items.remove(item);
             }
          }
-         this._source.update(items, getMetaHistory()).then(() => {
+         this._updateHistoryPromise = this._source.update(items, getMetaHistory()).then(() => {
+            this._updateHistoryPromise = null;
             if (this._sourceController && this._source.getItems) {
                this._setItemsAndMenuSource(this._source.getItems());
             }
