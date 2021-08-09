@@ -531,15 +531,6 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         }, false);
     }
 
-    // Используется для подскролла табов в graphic:Layout.
-    getOffsetTab(key: string): number {
-        if (this._children.wrapper.scrollWidth <= this._children.wrapper.clientWidth) {
-            return;
-        }
-
-        return this._children[`tab${key}`].offsetLeft;
-    }
-
     static _prepareStyle(style: string): string {
         if (style === 'default') {
             // 'Tabs/Buttons: Используются устаревшие стили. Используйте style = primary вместо style = default'
