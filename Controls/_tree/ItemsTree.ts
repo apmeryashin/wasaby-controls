@@ -18,7 +18,7 @@ export interface IItemsTreeOptions extends IItemsViewOptions, ITreeOptions {}
  * @class Controls/tree:ItemsView
  * @implements Controls/list:IItemsView
  *
- * @public
+ * @private
  * @author Уфимцев Д.Ю.
  */
 export default class ItemsTree extends ItemsView<IItemsTreeOptions> implements ITree {
