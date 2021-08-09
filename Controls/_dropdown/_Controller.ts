@@ -387,7 +387,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _createMenuSource(items: RecordSet|Error): void {
-      if (this._options.items) {
+      if (this._options.items && !this._options.source) {
          this._menuSource = new Memory({
             data: items,
             adapter: 'Types/entity:adapter.RecordSet',
