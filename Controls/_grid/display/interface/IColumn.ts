@@ -414,8 +414,13 @@ export interface IColumn extends IColspanParams {
      */
     tagStyleProperty?: string;
     /**
-     * @cfg Тип отображаемых данных.
+     * @cfg Тип данных, отображаемых колонкой.
+     * @variant money Деньги. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Money}.
+     * @variant number Число. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Number}.
+     * @variant string Строка.
+     * @default string
      * @remark
+     * Конфигурация декоратора задается в опции {@link displayTypeOptions}.
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/visual/type/ здесь}.
      * @example
      * В следующем примере показано как отобразить поле записи типа "число"
@@ -430,10 +435,11 @@ export interface IColumn extends IColspanParams {
      *     }
      * ]
      * </pre>
+     * @see displayTypeOptions
      */
     displayType?: string;
     /**
-     * @cfg Настройки для типа отображаемых данных.
+     * @cfg Конфигурация декоратора (см. {@link displayType}), который используется для отображения данных в колонке.
      * @example
      * В следующем примере показано как отключить подсветку данных при поиске.
      *
@@ -465,6 +471,7 @@ export interface IColumn extends IColspanParams {
      *     ...
      * ]
      * </pre>
+     * @see displayType
      */
     displayTypeOptions?: IDisplayTypeOptions;
     fontColorStyle?: TFontColorStyle;
