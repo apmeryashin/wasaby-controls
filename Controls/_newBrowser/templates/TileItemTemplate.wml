@@ -1,4 +1,4 @@
-<ws:partial
-   template="Controls/tile:RichTemplate"
-   scope="{{_options}}"
-/>
+<Controls.Container.Async templateName="Controls/tile:RichTemplate">
+    <ws:partial template="{{content.resolvedTemplate}}"
+                scope="{{_options}}"/>
+</Controls.Container.Async>
