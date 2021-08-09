@@ -109,10 +109,10 @@ function getBreadCrumbsReference<S extends Model, T extends TreeItem<S>>(
 /**
  * Strategy-decorator which supposed to join expanded nodes into one element.
  * @class Controls/_display/ItemsStrategy/Search
- * @mixes Types/_entity/DestroyableMixin
+ * @mixes Types/entity:DestroyableMixin
  *
- * @mixes Types/_entity/SerializableMixin
- * @author Мальцев А.А.
+ * @mixes Types/entity:SerializableMixin
+ * @author Авраменко А.С.
  * @private
  */
 export default class SearchStrategy<S extends Model, T extends TreeItem<S> = TreeItem<S>> extends mixin<

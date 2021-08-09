@@ -176,10 +176,9 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * {@link https://en.wikipedia.org/wiki/Adjacency_list Adjacency List} или
  * {@link https://docs.mongodb.com/v3.2/tutorial/model-tree-structures-with-materialized-paths/ Materialized Path}.
  * Выбор алгоритма выполняется в зависимости от настроек.
- * @class Controls/_display/Tree
  * @extends Controls/_display/Collection
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> extends Collection<S, T> {
     /**
