@@ -30,7 +30,6 @@ interface IFieldTemplate {
         isFieldFocused?: () => boolean;
 
         value?: string;
-        options?: Object;
         autoWidth?: boolean;
     };
 }
