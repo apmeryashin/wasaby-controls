@@ -828,7 +828,7 @@ const _private = {
 
             self._loadToDirectionInProgress = true;
 
-            return self._sourceController.load(direction, self._options.root).addCallback((addedItems) => {
+            return self._sourceController.load(direction, self._options.task1182244668 ? void 0 : self._options.root).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
