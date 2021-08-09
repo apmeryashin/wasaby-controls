@@ -627,13 +627,17 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 this
             );
         }
-        this._dataLoader.getFilterController().updateFilterItems(items);
-        this._updateFilterAndFilterItems(this._options);
-        this._contextState = {
-            ...this._contextState,
-            filter: this._filter
-        };
-        this._notify('filterChanged', [this._filter]);
+        this._listsOptions.forEach(({id, filterButtonSource}) => {
+            if (filterButtonSource) {
+                this._dataLoader.getFilterController(id).updateFilterItems(items);
+                this._updateFilterAndFilterItems(this._options);
+                this._contextState = {
+                    ...this._contextState,
+                    filter: this._filter
+                };
+                this._notify('filterChanged', [this._filter, id]);
+            }
+        });
     }
 
     private _updateContext(): void {
@@ -911,9 +915,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         });
     }
 
-    private _afterSearch(recordSet: RecordSet): void {
+    private _afterSearch(recordSet: RecordSet, id?: string): void {
         this._updateParams();
-        this._filterChanged(null, this._getSearchControllerSync().getFilter());
+        this._filterChanged(null, this._getSearchControllerSync().getFilter(), id);
         this._returnedOnlyByMisspellValue =
             this._getSearchControllerSync().needChangeSearchValueToSwitchedString(recordSet) &&
             !!this._misspellValue;
@@ -946,22 +950,22 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._viewMode = newViewMode;
     }
 
-    private _handleDataLoad(data: RecordSet): void {
-        const searchController = this._getSearchControllerSync();
+    private _handleDataLoad(data: RecordSet, direction?: Direction, id?: string): void {
+        const searchController = this._getSearchControllerSync(id);
 
         if (this._deepReload) {
             this._deepReload = undefined;
         }
 
         if (this._loading) {
-            this._afterSourceLoad(this._getSourceController(), this._options);
+            this._afterSourceLoad(this._getSourceController(id), this._options);
             this._loading = false;
         }
 
         if (searchController) {
             this._misspellValue = searchController.getMisspellValue();
             if (searchController.isSearchInProcess() || searchController.getSearchValue() !== this._searchValue) {
-                this._afterSearch(data);
+                this._afterSearch(data, id);
             }
         }
 
@@ -972,12 +976,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._updateContext();
     }
 
-    private _dataLoadCallback(data: RecordSet, direction?: Direction): void {
+    private _dataLoadCallback(data: RecordSet, direction?: Direction, id?: string): void {
         this._dataLoader.getFilterController()?.handleDataLoad(data);
-        this._handleDataLoad(data);
+        this._handleDataLoad(data, direction, id);
 
         if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(data, direction);
+            this._options.dataLoadCallback(data, direction, id);
         }
     }
 
