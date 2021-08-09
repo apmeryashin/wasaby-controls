@@ -19,6 +19,8 @@ export interface IBaseDropdownOptions extends IControlOptions, ISourceOptions,
     emptyText?: string;
     displayProperty: string;
     closeMenuOnOutsideClick: boolean;
+    menuBackgroundStyle: string;
+    menuHoverBackgroundStyle: string;
 }
 
 /**
