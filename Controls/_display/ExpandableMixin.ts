@@ -6,7 +6,7 @@ export interface IOptions {
  * Mixin that defines expandable aspect in collection item behaviour.
  * @mixin Controls/_display/ExpandableMixin
  * @private
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default abstract class ExpandableMixin {
     '[Controls/_display/ExpandableMixin]': boolean;

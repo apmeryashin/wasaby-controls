@@ -12,10 +12,9 @@ export interface IOptions<S, T> {
 
 /**
  * Проекция для режима поиска. Объединяет развернутые узлы в один элемент с "хлебной крошкой" внутри.
- * @class Controls/_display/Search
  * @extends Controls/_display/Tree
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class Search<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> extends Tree<S, T> {
     /**

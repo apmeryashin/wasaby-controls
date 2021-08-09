@@ -32,12 +32,12 @@ export interface IOptions<S> {
  * Абстрактная проекция данных.
  * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Controls/_display/Abstract
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/OptionsMixin
- * @mixes Types/_entity/ObservableMixin
+ * 
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:OptionsMixin
+ * @mixes Types/entity:ObservableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default abstract class Abstract<S, T> extends mixin<
     DestroyableMixin,

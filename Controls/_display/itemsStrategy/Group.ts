@@ -67,10 +67,10 @@ interface ISerializableState extends IDefaultSerializableState {
 /**
  * Стратегия-декоратор для формирования групп элементов
  * @class Controls/_display/ItemsStrategy/Group
- * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/entity:DestroyableMixin
+ * @mixes Types/entity:SerializableMixin
  *
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  * @private
  */
 export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<

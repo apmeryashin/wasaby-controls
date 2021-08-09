@@ -477,16 +477,16 @@ function groupingFilter(item: EntityModel,
 /**
  * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
  * не меняя при этом оригинальную коллекцию.
- * @class Controls/_display/Collection
+ * 
  * @extends Controls/_display/Abstract
- * @implements Types/_collection/IEnumerable
- * @implements Types/_collection/IList
- * @mixes Types/_entity/SerializableMixin
- * @mixes Types/_entity/VersionableMixin
- * @mixes Types/_collection/EventRaisingMixin
+ * @implements Types/collection:IEnumerable
+ * @implements Types/collection:IList
+ * @mixes Types/entity:SerializableMixin
+ * @mixes Types/entity:VersionableMixin
+ * @mixes Types/collection:EventRaisingMixin
  * @ignoremethods notifyItemChange
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class Collection<
     S extends EntityModel = EntityModel,

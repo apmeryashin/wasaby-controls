@@ -11,7 +11,7 @@
  * @includes Search Controls/_display/itemsStrategy/Search
  * @includes User Controls/_display/itemsStrategy/User
  * @private
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 
 export {default as AbstractStrategy} from './itemsStrategy/AbstractStrategy';

@@ -26,11 +26,10 @@ interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
 
 /**
  * Элемент древовидной коллеции
- * @class Controls/_display/TreeItem
  * @extends Controls/_display/CollectionItem
- * @mixes Controls/_display/ExpandableMixin
+ * @mixes Controls/display:ExpandableMixin
  * @public
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  */
 export default class TreeItem<T extends Model = Model> extends mixin<
     CollectionItem<any>,
