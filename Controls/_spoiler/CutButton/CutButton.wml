@@ -1,4 +1,4 @@
-<div class="controls_spoiler_theme-{{_options.theme}} controls-background-{{_options.backgroundStyle}}
+<div class="controls_spoiler_theme-{{_options.theme}} controls_toggle_theme-{{_options.theme}} controls-background-{{_options.backgroundStyle}}
             controls-CutButton__container_background-{{ _options.backgroundStyle }}
             controls-CutButton__container controls-CutButton__container_{{ _options.expanded ? 'extended' : 'notExtended'}}_size-{{ _options.iconSize }}
             controls-CutButton__container_{{ _options.expanded ? 'extended' : 'notExtended'}} controls-CutButton__container_lineHeight-{{ _options.lineHeight }}
