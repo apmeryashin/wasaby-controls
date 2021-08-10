@@ -31,6 +31,7 @@ export interface IContextOptionsValue extends ISortingOptions {
    contrastBackground?: boolean;
    newDesign?: boolean;
    groupProperty?: string;
+   parentProperty?: string;
 }
 
 const Context = DataContext.extend({
