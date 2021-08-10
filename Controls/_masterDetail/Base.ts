@@ -32,6 +32,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/master-detail/ руководство разработчик}
+ * @class Controls/_masterDetail/Base
  * @extends UI/Base:Control
  * @implements Controls/interface:IPropStorage
  * @author Авраменко А.С.
@@ -116,7 +117,7 @@ class Base extends Control<IMasterDetail, string> {
      * @name Controls/_masterDetail/Base#contrastBackground
      * @cfg {Boolean} Определяет контрастность фона контента detail по отношению к контенту master.
      * @variant true Контрастный фон.
-     * @variant false Фыон, гармонично сочетающийся с окружением.
+     * @variant false Фон, гармонично сочетающийся с окружением.
      * @default true
      */
 
