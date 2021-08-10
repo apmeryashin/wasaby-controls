@@ -991,7 +991,7 @@ describe('Controls/browser:Browser', () => {
             browser.saveOptions(options);
 
             options = {...options};
-            delete options.source;
+            options.source = null;
             options.filter = {newFilterField: 'newFilterValue'};
 
             await browser._beforeUpdate(options);
