@@ -1193,6 +1193,39 @@ describe('Controls/browser:Browser', () => {
             await browser._reload(options);
             assert.ok(browser._getSearchControllerSync()._path === path);
         });
+
+        it('dataLoadCallback in listsOptions', async() => {
+            const browserOptions = getBrowserOptions();
+            let listDataLoadCallbackCalled = false;
+            let list2DataLoadCallbackCalled = false;
+            const listsOptions = [
+                {
+                    id: 'list',
+                    ...browserOptions
+                },
+                {
+                    id: 'list2',
+                    ...browserOptions
+                }
+            ];
+            const options = {
+                ...browserOptions,
+                listsOptions,
+                dataLoadCallback: (items, direction, id) => {
+                    if (id === 'list') {
+                        listDataLoadCallbackCalled = true;
+                    }
+                    if (id === 'list2') {
+                        list2DataLoadCallbackCalled = true;
+                    }
+                }
+            };
+            const browser = new Browser();
+            browser.saveOptions(options);
+            await browser._beforeMount(options);
+            assert.ok(listDataLoadCallbackCalled);
+            assert.ok(list2DataLoadCallbackCalled);
+        });
     });
 
     describe('_handleItemOpen', () => {
