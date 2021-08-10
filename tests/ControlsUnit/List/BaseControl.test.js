@@ -3261,6 +3261,7 @@ define([
                const event = {
                   stopPropagation() {},
                   isStopped() { return true },
+                  isBubbling() {},
                   original: {
                       target: {
                           closest(name) {
