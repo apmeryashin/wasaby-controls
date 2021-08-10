@@ -123,8 +123,9 @@ class StackController extends BaseController {
 
     elementMaximized(item: IStackItem, container: HTMLElement, state: boolean): boolean {
         this._setMaximizedState(item, state);
-        const minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
-        item.popupOptions.width = state ? item.popupOptions.maxWidth : minWidth;
+        const minWidth = item.popupOptions.minWidthByBtn || item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+        const maxWidth = item.popupOptions.maxWidthByBtn || item.popupOptions.maxWidth;
+        item.popupOptions.width = state ? maxWidth : minWidth;
         this._prepareSizes(item, container);
         this._update();
         this._savePopupWidth(item);
@@ -145,10 +146,26 @@ class StackController extends BaseController {
         // оставляю еще проверну на popupOptions.stackWidth.
         // popupOptions.width брать нельзя, т.к. в нем может содержаться значение, которое недопустимо в
         // текущих условиях ( например на ipad ширина стекового окна не больше 1024)
+        const minDiffBetweenMinMaxWidth = 100;
         const currentWidth = (item.position.width || item.popupOptions.stackWidth);
         const newValue = currentWidth + offset;
+        const isMoreThanViewSwitchingWidth = newValue >= item.popupOptions.templateOptions.viewSwitchingWidth;
+        let minWidthByBtn = !isMoreThanViewSwitchingWidth ? newValue : item.popupOptions.minWidthByBtn;
+        let maxWidthByBtn = isMoreThanViewSwitchingWidth ? newValue : item.popupOptions.maxWidthByBtn;
+
+        if (maxWidthByBtn - minWidthByBtn < minDiffBetweenMinMaxWidth) {
+            if (isMoreThanViewSwitchingWidth) {
+                const minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+                minWidthByBtn = minWidth;
+            } else {
+                maxWidthByBtn = item.popupOptions.maxWidth;
+            }
+        }
+
         item.popupOptions.stackWidth = newValue;
         item.popupOptions.width = newValue;
+        item.popupOptions.minWidthByBtn = minWidthByBtn;
+        item.popupOptions.maxWidthByBtn = maxWidthByBtn;
         item.popupOptions.workspaceWidth = newValue;
         this._update();
         this._savePopupWidth(item);
@@ -471,14 +488,31 @@ class StackController extends BaseController {
     private _getPopupWidth(item: IStackItem): Promise<number | void> {
         return getPopupWidth(item.popupOptions.propStorageId).then((width?: number) => {
             if (width) {
-                item.popupOptions.width = width;
+                this._writeCompatiblePopupWidth(item, width);
             }
             return width;
         });
     }
 
+    private _writeCompatiblePopupWidth(item: IStackItem, widthState: number | object): void {
+        // Обратная совместимость со старым режимом работы максимизации окна.
+        // Раньше сохранялась только текущая ширина окна.
+        if (typeof widthState === 'number') {
+            item.popupOptions.width = widthState;
+        } else {
+            item.popupOptions.width = widthState.width;
+            item.popupOptions.maxWidthByBtn = widthState.maxWidthByBtn;
+            item.popupOptions.minWidthByBtn = widthState.minWidthByBtn;
+        }
+    }
+
     private _savePopupWidth(item: IStackItem): void {
-        savePopupWidth(item.popupOptions.propStorageId, item.position.width);
+        const widthState = {
+            width: item.position.width,
+            minWidthByBtn: item.popupOptions.minWidthByBtn,
+            maxWidthByBtn: item.popupOptions.maxWidthByBtn
+        }
+        savePopupWidth(item.popupOptions.propStorageId, widthState);
     }
 
     private _addLastStackClass(item: IStackItem): void {

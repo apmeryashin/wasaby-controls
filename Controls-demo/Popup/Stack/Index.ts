@@ -20,10 +20,12 @@ class PopupStack extends Control<IControlOptions> {
             minimizedWidth: 600,
             minWidth: 600,
             width: 600,
+            propStorageId: 'myDialog',
             maxWidth: 800,
             template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
             templateOptions: {
                 maximized: true,
+                viewSwitchingWidth: 700,
                 maximizedButtonVisibility: true
             }
         });
