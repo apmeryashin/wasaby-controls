@@ -15,7 +15,7 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/Date/DateSelector', function() {
+   describe('Controls/dateRange/DateSelector', function() {
 
       describe('openPopup', function() {
          it('should open opener', function() {
@@ -71,5 +71,22 @@ define([
          });
       });
 
+      describe('_getPopupOptions', () => {
+         it('should set undefined instead of null', () => {
+            const component = calendarTestUtils.createComponent(dateRange.DateSelector, options);
+            component._children = {
+               opener: {
+                  open: sinon.fake()
+               },
+               linkView: {
+                  getPopupTarget: sinon.stub().returns()
+               }
+            };
+            component._startValue = null;
+            const popupOptions = component._getPopupOptions();
+            assert.isUndefined(popupOptions.startValue);
+            assert.isUndefined(popupOptions.endValue);
+         });
+      });
    });
 });
