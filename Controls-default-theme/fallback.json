@@ -234,8 +234,8 @@
   "--success_active_background-color_button_functionalButton": "var(--success_active_contrast_background-color)",
 
   "--border-thickness_button": "var(--border-thickness)",
-  "--primary_border-color_button": "var(--primary_color)",
-  "--secondary_border-color_button": "var(--secondary_color)",
+  "--primary_border-color_button": "var(--primary_border-color)",
+  "--secondary_border-color_button": "var(--secondary_border-color)",
   "--readonly_border-color_button": "var(--readonly_color)",
   "--border-color_button_toolButton": "var(--background-color_button_toolButton)",
   "--border-color_hover_button_toolButton": "#f2f2f2",
