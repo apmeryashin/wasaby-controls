@@ -1041,7 +1041,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         }
 
         if (loadedInCurrentRoot) {
-            this._dataLoadCallbackFromOptions?.call(void 0, result, direction);
+            this._dataLoadCallbackFromOptions?.call(void 0, result, direction, this._options.id);
         } else if (this._options.nodeLoadCallback) {
             this._options.nodeLoadCallback(result, key, direction);
         }
