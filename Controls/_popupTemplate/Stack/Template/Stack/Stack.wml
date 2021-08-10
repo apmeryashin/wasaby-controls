@@ -55,6 +55,7 @@
         <ws:if data="{{_hasRightPanel}}">
             <ws:partial template="Controls/_popupTemplate/Stack/Template/RightPanel"
                         closeButtonVisibility="{{_options.closeButtonVisibility}}"
+                        rightBorderVisible="{{_options.rightBorderVisible}}"
                         toolbarContentTemplate="{{_options.toolbarContentTemplate}}"
                         maximizeButtonVisibility="{{_options.showMaximizedButton || _maximizeButtonVisibility}}"
                         maximizeButtonTitle="{{_maximizeButtonTitle}}"
