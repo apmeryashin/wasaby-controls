@@ -14,6 +14,11 @@
             title="{{ item.getDisplayValue() }}"
             data-qa="controls-TileView__title"
         >
+            <ws:if data="{{beforeTitleTemplate && titleLines < 2}}">
+                <div attr:class="controls-TileView__beforeTitleTemplate">
+                    <ws:partial template="{{beforeTitleTemplate}}"/>
+                </div>
+            </ws:if>
             <div attr:itemprop="name" class="{{ item.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle) }}" style="{{ item.getTitleStyles(itemType, titleLines, textColor, titlePosition, imageViewMode) }}">
                 <ws:if data="{{ item.getSearchValue() }}">
                     <Controls.decorator:Highlight highlightedValue="{{ item.getSearchValue() }}" className="{{highlightClassName}}">

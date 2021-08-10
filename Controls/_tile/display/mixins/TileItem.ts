@@ -1648,6 +1648,9 @@ export default abstract class TileItem<T extends Model = Model> {
                 if (titlePosition === 'onImage' && imageViewMode !== 'none') {
                     classes += ' controls-TileView__richTemplate_title-onImage';
                 }
+                if (titleLines === 1) {
+                    classes += ' controls-TileView__richTemplate_title-one_line'
+                }
                 break;
             case 'preview':
                 classes += ' controls-TileView__previewTemplate_title_text';
