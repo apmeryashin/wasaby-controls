@@ -232,7 +232,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    ): Promise<TCount>|TCount {
       let countResult;
       this._cancelCountPromise();
-      if (!this._options.selectedCountConfig || this._isCorrectCount(count)) {
+      if (!selectionCountConfig || this._isCorrectCount(count)) {
          countResult = count === undefined ? selection.selected.length : count;
       } else {
          countResult = this._getCountBySourceCall(selection, selectionCountConfig);
