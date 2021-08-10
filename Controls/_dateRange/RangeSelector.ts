@@ -162,7 +162,6 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
                 selectionType: this._options.selectionType,
                 ranges: this._options.ranges,
                 minRange: this._options.minRange,
-                clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
                 _displayDate: this._options._displayDate,
                 rangeSelectedCallback: this._options.rangeSelectedCallback,
                 state: this._state,

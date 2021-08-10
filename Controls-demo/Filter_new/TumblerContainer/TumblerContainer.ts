@@ -15,7 +15,6 @@ export default class extends Control {
         this._filterSource = [
             {
             name: 'date',
-            resetValue: null,
             value: null,
             type: 'dateRange',
             itemTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/DateRange',
@@ -24,7 +23,8 @@ export default class extends Control {
                 editorMode: 'Selector',
                 chooseHalfyears: true,
                 chooseYears: true,
-                clearButtonVisibility: true
+                resetStartValue: null,
+                resetEndValue: null
             },
             viewMode: 'basic'
         }, {

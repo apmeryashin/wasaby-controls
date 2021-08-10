@@ -56,8 +56,6 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    protected _fontSize: string = null;
    protected _fontWeight: string = null;
 
-   protected _clearButtonVisible = null;
-
    private _defaultFontColorStyle: string;
    private _defaultFontSize: string;
    private _defaultFontWeight: string;
@@ -78,10 +76,9 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
       this._rangeModel.update(options);
       this._updateCaption(options);
       this._updateStyles({}, options);
-      this._updateClearButton(options);
 
       if (options.clearButtonVisibility) {
-         Logger.warn('LinkView: Используется устаревшая опция clearButtonVisibility, используйте' +
+         Logger.error('LinkView: Используется устаревшая опция clearButtonVisibility, используйте' +
              'resetStartValue и resetEndValue');
       }
       if (options.prevArrowVisibility) {
@@ -101,7 +98,6 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
       }
       this._setDefaultFontSettings(options.viewMode);
       this._updateStyles(this._options, options);
-      this._updateClearButton(options);
    }
 
    private _setDefaultFontSettings(viewMode: string): void {
@@ -134,11 +130,6 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
 
    _resetButtonClickHandler(): void {
       this._notify('resetButtonClick');
-      // TODO: удалить по https://online.sbis.ru/opendoc.html?guid=0c2d0902-6bdc-432e-8081-06a01898f99e
-      if (this._clearButtonVisible) {
-         this._rangeModel.setRange(null, null);
-         this._updateCaption();
-      }
    }
 
    _updateResetButtonVisible(options): void {
@@ -200,11 +191,6 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
          }
       }
       this._caption = captionPrefix + this._getCaption(opts, startValue, endValue, captionFormatter);
-   }
-
-   _updateClearButton(options): void {
-      this._clearButtonVisible = (options.clearButtonVisibility || options.clearButtonVisible) &&
-          (this._rangeModel.startValue || this._rangeModel.endValue);
    }
 
    _updateStyles(options, newOption): void {

@@ -24,11 +24,9 @@ class DateRangeEditor extends Control<IControlOptions> {
     protected _templateName: string;
     protected _dateRangeModule: Record<string, any> = null;
     protected _emptyCaption: string;
-    protected _reseted: boolean = false;
 
     protected _beforeMount(options: IControlOptions): Promise<void>|void {
         this._templateName = 'Controls/dateRange:' + (options.editorMode === 'Selector' ? 'RangeSelector' : 'RangeShortSelector');
-        this._reseted = isEqual(options.value, options.resetValue);
         return import('Controls/dateRange').then((dateRange) => {
             this._dateRangeModule = dateRange;
             if (options.emptyCaption) {
@@ -40,9 +38,6 @@ class DateRangeEditor extends Control<IControlOptions> {
     }
 
     protected _beforeUpdate(newOptions: IControlOptions): Promise<void>|void {
-        if (this._options.value !== newOptions.value) {
-            this._reseted = isEqual(newOptions.value, newOptions.resetValue);
-        }
         if (this._options.emptyCaption !== newOptions.emptyCaption) {
             this._emptyCaption = newOptions.emptyCaption;
         } else if (newOptions.resetValue !== this._options.resetValue && newOptions.resetValue) {
@@ -56,10 +51,8 @@ class DateRangeEditor extends Control<IControlOptions> {
         this._notify('textValueChanged', [caption]);
         if (!startValue && !endValue && this._options.resetValue || isEqual([startValue, endValue], this._options.resetValue)) {
             this._notify('rangeChanged', [this._options.resetValue[0], this._options.resetValue[1]]);
-            this._reseted = true;
         } else {
             this._notify('rangeChanged', [startValue, endValue]);
-            this._reseted = false;
         }
     }
 
@@ -105,10 +98,4 @@ export default DateRangeEditor;
  * @name Controls/_filter/Editors/DateRange#value
  * @cfg {Array<Date>} Массив из двух значений - дата "от" и дата "до".
  * @see resetValue
- */
-
-/**
- * @name Controls/_filter/Editors/DateRange#resetValue
- * @cfg {Array<Date>} Массив из двух значений - дата "от" и дата "до", которые применятся при сбросе.
- * @see value
  */

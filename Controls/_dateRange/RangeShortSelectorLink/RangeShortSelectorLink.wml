@@ -13,7 +13,7 @@
                         on:mousedown="_onClick()"
             />
         </span>
-        <ws:if data="{{ _resetButtonVisible || _clearButtonVisible }}">
+        <ws:if data="{{ _resetButtonVisible }}">
             <span class="controls-DateLinkView__resetButton
                         controls-icon icon-Close"
                   on:click="_resetButtonClickHandler()"></span>

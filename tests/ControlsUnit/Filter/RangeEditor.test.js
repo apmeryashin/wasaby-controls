@@ -30,19 +30,6 @@ define(['Controls/filter', 'Controls/dateRange'],
                   resetValue
                }).then(() => {
                   assert.equal(rangeEditor._emptyCaption, 'testCaption');
-                  assert.isFalse(rangeEditor._reseted);
-                  done();
-               });
-            });
-
-            it('option emptyCaption and value === resetValue', (done) => {
-               rangeEditor._beforeMount({
-                  emptyCaption: 'testCaption',
-                  value: resetValue,
-                  resetValue
-               }).then(() => {
-                  assert.equal(rangeEditor._emptyCaption, 'testCaption');
-                  assert.isTrue(rangeEditor._reseted);
                   done();
                });
             });
@@ -52,17 +39,6 @@ define(['Controls/filter', 'Controls/dateRange'],
                   resetValue
                }).then(() => {
                   assert.equal(rangeEditor._emptyCaption, "Апрель'95");
-                  assert.isFalse(rangeEditor._reseted);
-               });
-            });
-
-            it('value === resetValue', () => {
-               return rangeEditor._beforeMount({
-                  value: resetValue,
-                  resetValue
-               }).then(() => {
-                  assert.equal(rangeEditor._emptyCaption, "Апрель'95");
-                  assert.isTrue(rangeEditor._reseted);
                });
             });
          });
@@ -74,10 +50,8 @@ define(['Controls/filter', 'Controls/dateRange'],
                editorMode: 'Selector'
             }).then(() => {
                rangeEditor._beforeUpdate({value: resetValue, resetValue});
-               assert.isTrue(rangeEditor._reseted);
 
                rangeEditor._beforeUpdate({value: [new Date('April 17, 1998'), new Date('May 17, 1998')], resetValue});
-               assert.isFalse(rangeEditor._reseted);
             });
          });
 
@@ -101,30 +75,7 @@ define(['Controls/filter', 'Controls/dateRange'],
 
             rangeEditor._rangeChanged(event, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00'));
             assert.equal(textValue, '17.04.95 - 17.05.95');
-            assert.isFalse(rangeEditor._reseted);
             assert.isTrue(isStopped);
-         });
-
-         it('_rangeChanged resetValue', () => {
-            let rangeEditor = new filter.DateRangeEditor();
-            let date;
-            const resetValue = [new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00')];
-
-            rangeEditor.saveOptions({
-               value: resetValue,
-               resetValue
-            });
-            rangeEditor._dateRangeModule = dateRange;
-
-            rangeEditor._notify = (event, eventValue) => {
-               if (event === 'rangeChanged') {
-                  date = eventValue;
-               }
-            };
-
-            return rangeEditor._rangeChanged({stopPropagation: () => {}}, null, null);
-            assert.deepEqual(date, resetValue);
-            assert.isTrue(rangeEditor._reseted);
          });
 
          it('textValueChanged with captionFormatter', () => {
