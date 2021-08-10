@@ -201,7 +201,9 @@ export default class View extends Control<IOptions, IReceivedState> {
                     Если видимость меняется при проваливании в папку, то скролл всегда будет в шапке списка.
                 */
                 if (imageVisibility === 'visible' && !rootChanged && direction) {
-                    this._itemToScroll = this._children.detailList.getLastVisibleItemKey();
+                    if (this._children.hasOwnProperty('detailList')) {
+                        this._itemToScroll = this._children.detailList.getLastVisibleItemKey();
+                    }
                 }
             }
         } else if (!this._hasImageInItems) {
