@@ -98,7 +98,7 @@
 </ws:template>
 
 
-<ws:if data="{{ isSticked !== false && (item || itemData).isSticked() }}">
+<ws:if data="{{ isSticked !== false && (item || itemData).isSticked(stickyCallback, item) }}">
    <Controls.scroll:Group>
       <div attr:data-qa="{{(item || itemData).getQAData(marker)}}"
            attr:class="{{ (item || itemData).getItemClasses({
@@ -109,7 +109,7 @@
        }) }}">
          <ws:for data="column in (item || itemData).getColumns()">
             <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition() }}"
-                                          mode="{{ (item || itemData).getStickyHeaderMode() }}"
+                                          mode="{{ (item || itemData).getStickyHeaderMode(stickyCallback) }}"
                                           shadowVisibility="{{column.shadowVisibility}}"
                                          backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
                                           fixedZIndex="{{ column.getZIndex()}}"
