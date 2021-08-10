@@ -3,7 +3,7 @@
     <div class="controls-text-default">controls-text-default</div>
     <div class="controls-text-primary">controls-text-primary</div>
     <div class="controls-text-secondary">controls-text-secondary</div>
-    <div class="controls-text-label">controls-text-secondary</div>
+    <div class="controls-text-label">controls-text-label</div>
     <div class="controls-text-unaccented">controls-text-unaccented</div>
     <div class="controls-text-readonly">controls-text-readonly</div>
 
