@@ -627,8 +627,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 this
             );
         }
-        this._listsOptions.forEach(({id, filterButtonSource}) => {
-            if (filterButtonSource) {
+        this._listsOptions.forEach(({id, filterButtonSource, fastFilterSource}) => {
+            if (filterButtonSource || fastFilterSource) {
                 this._dataLoader.getFilterController(id).updateFilterItems(items);
                 this._updateFilterAndFilterItems(this._options);
                 this._contextState = {
