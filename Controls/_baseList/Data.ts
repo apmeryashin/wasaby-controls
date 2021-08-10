@@ -303,7 +303,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
       const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
 
-      if (isChanged) {
+      if (isChanged && this._source) {
          return this._reload(newOptions);
       } else if (filterChanged) {
          this._filter = this._sourceController.getFilter();
