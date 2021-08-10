@@ -212,7 +212,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             this._newMasterVisibility = null;
         }
         if (this._detailExplorerOptions.dataLoadCallback) {
-            this._detailExplorerOptions.dataLoadCallback(items, direction);
+            this._detailExplorerOptions.dataLoadCallback(items, direction, 'detail');
         }
         this._processItemsMetadata(items);
     }
