@@ -277,7 +277,7 @@ describe('Controls/list_clean/RemoveController', () => {
         });
     });
 
-    it('removeWithConfirmation() should call query for [null] selection', () => {
+    it('removeItems() should call query for [null] selection', () => {
         const correctSelection = {
             selected: [null],
             excluded: []
