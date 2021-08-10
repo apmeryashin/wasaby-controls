@@ -26,14 +26,18 @@ enum ITEM_ALIGN {
 }
 
 enum ANIMATION_MODE {
-    none= 'none',
-    immediate = 'immediate',
+    none = 'none',
+    immediate = 'immediate'
 }
 
-const DEFAULT_ITEM_ALIGN: ITEM_ALIGN = ITEM_ALIGN.right
+const DEFAULT_ITEM_ALIGN: ITEM_ALIGN = ITEM_ALIGN.right;
 
 export interface ITabsTemplate {
     readonly '[Controls/_tabs/ITabsTemplate]': boolean;
+}
+
+interface ITabsTemplateFunction extends TemplateFunction {
+    func?: Function;
 }
 
 export interface ITabsTemplateOptions extends IItemTemplateOptions {
@@ -55,15 +59,15 @@ interface IReceivedState {
     itemsArray: ITabButtonItem[];
 }
 
-const isTemplate = (tmpl: any): boolean => {
+const isTemplate = (tmpl: ITabsTemplateFunction): boolean => {
     return !!(tmpl && typeof tmpl.func === 'function' && tmpl.hasOwnProperty('internal'));
 };
 
-const isTemplateArray = (templateArray: any): boolean => {
+const isTemplateArray = (templateArray: ITabsTemplateFunction[] | ITabsTemplateFunction): boolean => {
     return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl));
 };
 
-const isTemplateObject = (tmpl: any): boolean => {
+const isTemplateObject = (tmpl: ITabsTemplateFunction): boolean => {
     return isTemplate(tmpl);
 };
 
@@ -290,8 +294,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
 
     protected _updateMarkerCssClass(options: ITabsButtonsOptions): void {
         const style = TabsButtons._prepareStyle(options.style);
-        this._markerCssClass = `controls-Tabs__marker_style-${style} ` +
-            `controls-Tabs__marker_thickness`;
+        this._markerCssClass = `controls-Tabs__marker_style-${style} controls-Tabs__marker_thickness`;
     }
 
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {
@@ -435,9 +438,10 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
             }
         } else {
             classes.push('controls-Tabs__itemClickableArea_marker');
-            classes.push(`controls-Tabs__itemClickableArea_markerThickness`);
+            classes.push('controls-Tabs__itemClickableArea_markerThickness');
 
-            if (!(this._marker.isInitialized() && this._isAnimatedMakerVisible) && item[options.keyProperty] === options.selectedKey ) {
+            if (!(this._marker.isInitialized() && this._isAnimatedMakerVisible)
+                && item[options.keyProperty] === options.selectedKey ) {
                 // Если маркеры которые рисуются с абсолютной позицией не инициализированы, то нарисуем маркер
                 // внутри вкладки. Это можно сделать быстрее. Но невозможно анимировано передвигать его между вкладками.
                 // Инициализируем и переключимся на другой механизм маркеров после ховера.
@@ -558,9 +562,8 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
                      */
                     if (
                         item.hasOwnProperty(key) && (
-                            isTemplate(item[key]) ||
-                            isTemplateArray(item[key]) ||
-                            isTemplateObject(item[key])
+                            isTemplateObject(item[key]) ||
+                            isTemplateArray(item[key])
                         )
                     ) {
                         return true;
