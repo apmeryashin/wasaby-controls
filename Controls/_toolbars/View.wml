@@ -8,7 +8,6 @@
                         itemsSpacing="{{_options.itemsSpacing}}"
                         buttonTemplate="{{_buttonTemplate}}"
                         buttonTemplateOptions="{{ _getSimpleButtonTemplateOptionsByItem(item) }}"
-                        buttonClass="{{_options.translucent ? 'controls-Button_functionalButton_style-translucent'}}"
                         theme="{{_options.theme}}"
                         isFirstItem="{{_firstItem === item}}"
                         attr:data-qa="{{item[_options.keyProperty]}}"
@@ -18,9 +17,9 @@
       <ws:if data="{{_needShowMenu}}">
          <Controls.buttons:Button
                  attr:class="controls-Toolbar__menu
-                             controls-Toolbar__menu_{{_options.direction}}-spacing-{{_options.contrastBackground ? _options.itemsSpacing : 'small'}}
-                             {{_options.translucent ? 'controls-Button_functionalButton_style-translucent'}}"
+                             controls-Toolbar__menu_{{_options.direction}}-spacing-{{_options.contrastBackground ? _options.itemsSpacing : 'small'}}"
                  name="menuTarget"
+                 translucent="{{_options.translucent}}"
                  viewMode="{{_options.translucent ? 'functionalButton' : 'toolButton'}}"
                  buttonStyle="{{_options.translucent ? 'pale'}}"
                  iconStyle="{{_options.translucent ? 'contrast' : 'secondary'}}"
