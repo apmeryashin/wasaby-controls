@@ -118,10 +118,10 @@ var Remover = BaseAction.extend({
                     source: this._source,
                     filter: this._filter,
                     providerName: 'Controls/listActions:RemoveProvider',
-                    selection: keys instanceof Array ? {
-                        selected: keys,
+                    selection: selection instanceof Array ? {
+                        selected: selection,
                         excluded: []
-                    } : keys
+                    } : selection
                 });
                 return this._removeAction.execute().then((result) => {
                     _private.removeFromItems(this, selection);
