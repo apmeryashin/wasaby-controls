@@ -1,7 +1,7 @@
 <ws:partial template="wml!Controls/_buttons/ButtonBase"
             _viewMode="{{_viewMode}}"
             _options="{{_options}}"
-            _buttonStyle="{{_buttonStyle}}"
+            _buttonStyle="{{_options.translucent ? 'translucent' : _buttonStyle}}"
             _contrastBackground="{{_contrastBackground}}"
             _height="{{_height}}"
             _fontSize="{{_fontSize}}"
@@ -16,5 +16,6 @@
             _captionPosition="{{_captionPosition}}"
             _isSVGIcon="{{_isSVGIcon}}"
             _textAlign="{{_textAlign}}"
+            _translucent="{{_options.translucent}}"
             on:click="_clickHandler()"
             on:keypress="_keyUpHandler()"/>
