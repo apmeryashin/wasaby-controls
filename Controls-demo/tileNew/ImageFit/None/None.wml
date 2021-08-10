@@ -8,7 +8,8 @@
       parentProperty="parent"
       nodeProperty="parent@"
       keyProperty="id"
-      source="{{_viewSource}}">
+      source="{{_viewSource}}"
+      attr:data-qa="controlsDemo-tileNew_ImageFit__none_wrapper">
       <ws:itemTemplate>
          <ws:partial
             template="Controls/tile:ItemTemplate"
