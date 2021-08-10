@@ -10,7 +10,7 @@ const MAX_YEAR_VALUE =  new Date().getFullYear() + additionalYears;
 /**
  * Функция, позволяющая проверить период на валидность.
  * @class Controls/_validate/Validators/IsValidDateRange
- * @public
+ * @private
  * @author Красильников А.С.
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
