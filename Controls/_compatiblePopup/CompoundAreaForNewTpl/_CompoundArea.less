@@ -40,6 +40,16 @@
    }
 }
 
+.controls-compoundAreaNew__floatArea_with-right-panel {
+   .ws-float-area-stack-panel-shadow {
+      overflow: visible;
+   }
+
+   .ws-float-area-stack-panel-overflow {
+      padding-right: calc(var(--width_stack-right_panel) + var(--border_width_stack-right_panel));
+   }
+}
+
 /**
  * В панелях с возможностью изменения размеров с помощью контрола ResizingLine
  * нужно, чтобы свойство overflow быдо в значении visible. Так регламентирует сам контрол.

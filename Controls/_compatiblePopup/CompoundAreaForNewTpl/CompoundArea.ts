@@ -10,10 +10,11 @@ import ComponentWrapper from './ComponentWrapper';
 import {Control as control} from 'UI/Base';
 import clone = require('Core/core-clone');
 import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
-import { Synchronizer } from 'UI/Vdom'
+import { Synchronizer } from 'UI/Vdom';
 import Deferred = require('Core/Deferred');
 import {constants} from 'Env/Env';
 import {StackStrategy} from 'Controls/popupTemplate';
+import {Controller as ManagerController, BaseOpener} from 'Controls/popup';
 import {load} from 'Core/library';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/compatiblePopup';
@@ -68,10 +69,15 @@ const moduleClass = CompoundControl.extend({
       // фокус уходит, нужно попробовать закрыть ненужные панели
       this.subscribe('onFocusOut', this._onFocusOutHandler.bind(this));
 
-      // Здесь заранее можно построить ManagerWrapper, т.к. либа popupTemplate уже точно загружена и новые зависимости не прилетят
-      import('Controls/popup').then((PopupLib) => {
-         PopupLib.BaseOpener.getManager();
-      });
+      // Здесь заранее можно построить ManagerWrapper,
+      // т.к. либа popupTemplate уже точно загружена и новые зависимости не прилетят
+      BaseOpener.getManager();
+
+      const panel = this._panel;
+      const isStack = panel && panel._moduleName === 'Lib/Control/FloatArea/FloatArea' && panel._options.isStack === true;
+      if (isStack && ManagerController.hasRightPanel()) {
+         this.getContainer().closest('.controls-compoundAreaNew__floatArea').addClass('controls-compoundAreaNew__floatArea_with-right-panel controls_popupTemplate_theme-default');
+      }
 
       this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
          const def = new Deferred();
