@@ -1,2 +1,2 @@
 <ws:partial template="{{_options.content}}"
-            attr:style="{{_themeVariables}}"></ws:partial>
+            attr:style="{{_themeVariables}}" attr:class="controls_theme-default"></ws:partial>

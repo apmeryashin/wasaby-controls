@@ -58,7 +58,15 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--primary_text-color': `rgb(${red},${green},${blue})`,
             '--primary_icon-color': `rgb(${red},${green},${blue})`,
             '--secondary_text-color': brightness === 'dark' ? '#fff' : '#000',
-            '--secondary_icon-color': brightness === 'dark' ? '#fff' : '#000'
+            '--secondary_icon-color': brightness === 'dark' ? '#fff' : '#000',
+            '--text-color_button': brightness === 'dark' ? '#fff' : '#000',
+            '--text-contrast-color_button': brightness === 'dark' ? '#000' : '#fff',
+
+            '--primary_background-color_button': 'transparent',
+            '--primary_border-color_button': `rgb(${red},${green},${blue})`,                // TODO убрать после задачи
+            '--primary_hover_same_background-color': `rgba(${red},${green},${blue}, 0.3)`,
+            '--primary_contrast_background-color': `rgb(${red},${green},${blue})`,
+            '--primary_hover_contrast_background-color': `rgba(${red},${green},${blue}, 0.8)`
         };
     }
 

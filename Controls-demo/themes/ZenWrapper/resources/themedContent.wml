@@ -1,28 +1,47 @@
 <div>
+    <div class="ws-flexbox">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <span class="controls-text-default">controls-text-default</span>
+            <span class="controls-text-primary">controls-text-primary</span>
+            <span class="controls-text-secondary">controls-text-secondary</span>
+            <span class="controls-text-label">controls-text-label</span>
+            <span class="controls-text-unaccented">controls-text-unaccented</span>
+            <span class="controls-text-readonly">controls-text-readonly</span>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="default" caption="link" fontColorStyle="default"></Controls.buttons:Button>
+            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="primary" caption="link" fontColorStyle="primary"></Controls.buttons:Button>
+            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="secondary" caption="link" fontColorStyle="secondary"></Controls.buttons:Button>
+            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="unaccented" caption="link" fontColorStyle="unaccented"></Controls.buttons:Button>
+            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="label" caption="link" fontColorStyle="label"></Controls.buttons:Button>
+            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="secondary"  caption="link" fontColorStyle="secondary" readOnly="{{true}}"></Controls.buttons:Button>
+        </div>
+    </div>
+    <div class="ws-flexbox">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.heading:Title caption="Default heading" fontColorStyle="default"></Controls.heading:Title>
+            <Controls.heading:Title caption="Primary heading" fontColorStyle="primary"></Controls.heading:Title>
+            <Controls.heading:Title caption="Secondary heading" fontColorStyle="secondary"></Controls.heading:Title>
+            <Controls.heading:Title caption="Unaccented heading" fontColorStyle="unaccented"></Controls.heading:Title>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+            <Controls.decorator:Money value="123.45" fontColorStyle="default"/>
+            <Controls.decorator:Money value="123.45" fontColorStyle="primary"/>
+            <Controls.decorator:Money value="123.45" fontColorStyle="secondary"/>
+            <Controls.decorator:Money value="123.45" fontColorStyle="unaccented" />
+            <Controls.decorator:Money value="123.45" fontColorStyle="label" />
+            <Controls.decorator:Money value="123.45" fontColorStyle="readonly" />
+        </div>
+    </div>
 
-    <div class="controls-text-default">controls-text-default</div>
-    <div class="controls-text-primary">controls-text-primary</div>
-    <div class="controls-text-secondary">controls-text-secondary</div>
-    <div class="controls-text-label">controls-text-label</div>
-    <div class="controls-text-unaccented">controls-text-unaccented</div>
-    <div class="controls-text-readonly">controls-text-readonly</div>
-
-    <div>
-        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="default" caption="Button" fontColorStyle="default"></Controls.buttons:Button>
-    </div>
-    <div>
-        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="primary" caption="Button" fontColorStyle="primary"></Controls.buttons:Button>
-    </div>
-    <div>
-        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="secondary" caption="Button" fontColorStyle="secondary"></Controls.buttons:Button>
-    </div>
-    <div>
-        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="unaccented" caption="Button" fontColorStyle="unaccented"></Controls.buttons:Button>
-    </div>
-    <div>
-        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="label" caption="Button" fontColorStyle="label"></Controls.buttons:Button>
-    </div>
-    <div>
-        <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconStyle="secondary"  caption="Button" fontColorStyle="secondary" readOnly="{{true}}"></Controls.buttons:Button>
+    <div class="ws-flexbox">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.buttons:Button contrastBackground="{{false}}" buttonStyle="primary" caption="Button"></Controls.buttons:Button>
+            <Controls.buttons:Button contrastBackground="{{false}}" buttonStyle="primary" caption="Button" readOnly="{{true}}"></Controls.buttons:Button>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+            <Controls.buttons:Button contrastBackground="{{true}}" buttonStyle="primary" caption="Button"></Controls.buttons:Button>
+            <Controls.buttons:Button contrastBackground="{{false}}" buttonStyle="primary" caption="Button" readOnly="{{true}}"></Controls.buttons:Button>
+        </div>
     </div>
 </div>

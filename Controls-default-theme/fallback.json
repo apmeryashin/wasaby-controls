@@ -278,7 +278,7 @@
   "--pale_border-color": "#EBEDF0",
   "--pale_hover_contrast_background-color": "#EBEDF0",
   "--pale_active_contrast_background-color": "#E3E5E8",
-  "--text-contrast-color_button": "#fff",
+  "--text-contrast-color_button": "var(--contrast_text-color)",
   "--unaccented_contrast_background-color": "#9cb3c9",
   "--unaccented_hover_contrast_background-color": "#8099b2",
   "--unaccented_active_contrast_background-color": "#87a6c5",
