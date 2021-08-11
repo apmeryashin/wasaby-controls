@@ -289,6 +289,10 @@ export default class ControllerClass {
       return this._misspellValue;
    }
 
+   resetSavedRootBeforeSearch(): void {
+      this._rootBeforeSearch = null;
+   }
+
    private _dataLoadCallback(event: unknown, items: RecordSet): void {
       const filter = this._getFilter();
       const sourceController = this._sourceController;
