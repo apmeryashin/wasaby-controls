@@ -5,6 +5,7 @@ import Util from './Util';
 import {ICutOptions} from './interface/ICut';
 import {detection} from 'Env/Env';
 import {IECompatibleLineHeights} from 'Controls/input';
+import {RESIZE_OBSERVER_BOX, ResizeObserverUtil} from 'Controls/sizeUtils';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as template from 'wml!Controls/_spoiler/Cut/Cut';
@@ -30,13 +31,26 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
     protected _isIE: boolean = detection.isIE11;
     protected _lineHeightForIE: Record<string, number> = IECompatibleLineHeights;
 
+    private _resizeObserver: ResizeObserverUtil;
+
     readonly '[Controls/_interface/IBackgroundStyle]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
     protected _beforeMount(options?: ICutOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+        this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback);
         this._expanded = Util._getExpanded(options, this._expanded);
         this._lines = Cut._calcLines(options.lines, this._expanded);
         return super._beforeMount(options, contexts, receivedState);
+    }
+
+    protected _afterMount(options: ICutOptions): void {
+        this._resizeObserver.observe(this._children.content, { box: RESIZE_OBSERVER_BOX.borderBox });
+    }
+
+    private _resizeObserverCallback(): void {
+        if (this._expanded) {
+            this._expanded = false;
+        }
     }
 
     protected _beforeUpdate(options?: ICutOptions, contexts?: any): void {

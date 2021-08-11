@@ -36,13 +36,16 @@ class AreaCut extends Cut {
         super._beforeMount(options);
     }
 
+    protected _afterMount(options: ICutOptions): void {
+        // Заглушка, чтобы не стрелял afterMount у родителя
+    }
+
     protected _beforeUpdate(options: IAreaCutOptions): void {
         if (!options.readOnly && !this._firstEditPassed) {
             this._expanded = true;
         }
         if (!this._options.readOnly && options.readOnly) {
             this._expanded = false;
-            this._cutButtonVisibility = true;
             this._shouldUpdateCutButtonVisibility = true;
             if (options.readOnly && this._value) {
                 this._firstEditPassed = true;
@@ -55,10 +58,16 @@ class AreaCut extends Cut {
         super._beforeUpdate(options);
     }
 
+    protected _afterRender(): void {
+        if (this._shouldUpdateCutButtonVisibility) {
+            this._shouldUpdateCutButtonVisibility = false;
+            this._countCutButtonVisibility();
+        }
+    }
+
     protected _valueChangedHandler(event: Event, value: string): void {
         this._value = value;
         this._expanded = true;
-        this._countCutButtonVisibility();
         this._notify('valueChanged', [value]);
     }
 
@@ -77,7 +86,7 @@ class AreaCut extends Cut {
         // все равно будет занимать эту область. Пользователь не будет видеть состояние кнопки и будет казаться, что он
         // делает лишний клик просто так. Посчитаем, достаточно ли контента для показа ката во время того, как навели
         // мышкой на контрол, если нет - скроем кнопку.
-        if (this._shouldUpdateCutButtonVisibility) {
+        if (this._shouldUpdateCutButtonVisibility && !this._expanded) {
             this._shouldUpdateCutButtonVisibility = false;
             this._countCutButtonVisibility();
         }
