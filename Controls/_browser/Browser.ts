@@ -65,6 +65,7 @@ interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOpt
 export interface IBrowserOptions extends IListConfiguration {
     listsOptions: IListConfiguration[];
     sourceControllerId?: string;
+    operationsController?: OperationsController;
     _dataOptionsValue?: IContextOptionsValue;
 }
 
@@ -143,10 +144,15 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                            receivedState?: TReceivedState): void | Promise<TReceivedState | Error | void> {
         this._initStates(options, receivedState);
         this._dataLoader = new DataLoader(this._getDataLoaderOptions(options, receivedState));
+        this._selectionViewModeChanged = this._selectionViewModeChanged.bind(this);
 
         return this._loadDependencies(options, () => {
             return this._beforeMountInternal(options, undefined, receivedState);
         });
+    }
+
+    private _selectionViewModeChanged(event: SyntheticEvent, type: string): void {
+        this._notify('selectionViewModeChanged', [type]);
     }
 
     private _beforeMountInternal(options: IBrowserOptions,
@@ -172,7 +178,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                     return result.map(({data, historyItems}) => {
                         return {
                             historyItems,
-                            data
+                            data,
+                            operationsController: this._operationsController
                         };
                     });
                 } else {
@@ -488,6 +495,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _beforeUnmount(): void {
         if (this._operationsController) {
             this._operationsController.destroy();
+            this._operationsController.unsubscribe('selectionViewModeChanged', this._selectionViewModeChanged);
             this._operationsController = null;
         }
 
@@ -724,6 +732,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _itemOpenHandler(newCurrentRoot: Key, items: RecordSet, dataRoot: Key = null): void {
         this._getOperationsController().itemOpenHandler(newCurrentRoot, items, dataRoot);
         this._handleItemOpen(newCurrentRoot, items, dataRoot);
+        if (this._options.itemOpenHandler instanceof Function) {
+            return this._options.itemOpenHandler(newCurrentRoot, items, dataRoot);
+        }
     }
 
     protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: Key): unknown {
@@ -744,13 +755,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private _createOperationsController(options: IBrowserOptions): OperationsController {
-        const controllerOptions = {
-            ...options,
-            selectionViewModeChangedCallback: (type) => {
-                this._notify('selectionViewModeChanged', [type]);
-            }
-        };
-        return new OperationsController(controllerOptions);
+        const controller = options.operationsController || new OperationsController({...options});
+        controller.subscribe('selectionViewModeChanged', this._selectionViewModeChanged);
+        return controller;
     }
 
     private _getOperationsController(): OperationsController {

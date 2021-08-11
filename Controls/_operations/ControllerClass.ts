@@ -1,11 +1,12 @@
 import {RegisterClass} from 'Controls/event';
-import {Model} from 'Types/entity';
+import {Control} from 'UI/Base';
+import {Model, OptionsToPropertyMixin, SerializableMixin, ObservableMixin} from 'Types/entity';
 import {ISelectionObject, TKey, ISourceOptions, INavigationSourceConfig} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
-import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
-import {object} from 'Types/util';
-import {merge} from 'Types/object';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {mixin} from 'Types/util';
+import HistorySource from 'Controls/_history/Source';
+import {RecordSet} from 'Types/collection';
 
 interface IKeysByList {
     [key: string]: TKey[];
@@ -20,6 +21,13 @@ interface ISelectedKeysCountByList {
     [key: string]: ISelectedKeyCountByList;
 }
 
+interface IOperationsControllerOptions {
+    selectedKeys: TKey[];
+    excludedKeys: TKey[];
+    root: TKey;
+    selectionViewMode: string;
+}
+
 export interface IExecuteCommandParams extends ISourceOptions {
     target: SyntheticEvent;
     selection: ISelectionObject;
@@ -31,23 +39,32 @@ export interface IExecuteCommandParams extends ISourceOptions {
     sourceController?: SourceController;
 }
 
-export default class OperationsController {
+export default class OperationsController extends mixin<SerializableMixin, OptionsToPropertyMixin, ObservableMixin>(
+    SerializableMixin,
+    OptionsToPropertyMixin,
+    ObservableMixin
+) {
+    protected _$selectedKeys: TKey[] = null;
+    protected _$excludedKeys: TKey[] = null;
+    protected _$root: TKey = null;
+    protected _$selectionViewMode: string = '';
     private _listMarkedKey: TKey = null;
     private _savedListMarkedKey: TKey = null;
     private _isOperationsPanelVisible: boolean = false;
     private _selectedTypeRegister: RegisterClass = null;
-    private _selectionViewModeChangedCallback: Function = null;
     private _selectedKeysByList: IKeysByList = {};
     private _excludedKeysByList: IKeysByList = {};
-    private _listSelectedKeys: TKey[];
-    private _listExcludedKeys: TKey[];
     private _selectedKeysCountByList: ISelectedKeysCountByList = {};
+    protected _options: IOperationsControllerOptions;
 
-    constructor(options) {
-        this._selectionViewModeChangedCallback = options.selectionViewModeChangedCallback;
-        this._listSelectedKeys = options.selectedKeys?.slice() || [];
-        this._listExcludedKeys = options.excludedKeys?.slice() || [];
-        this._options = options;
+    constructor(options: Partial<IOperationsControllerOptions>) {
+        super();
+        OptionsToPropertyMixin.call(this, options);
+        SerializableMixin.call(this);
+        ObservableMixin.call(this);
+        this._$selectedKeys = options.selectedKeys?.slice() || [];
+        this._$excludedKeys = options.excludedKeys?.slice() || [];
+        this._$root = OperationsController._getRoot(options);
     }
 
     destroy(): void {
@@ -57,8 +74,11 @@ export default class OperationsController {
         }
     }
 
-    update(options): void {
-        this._options = options;
+    update(options: IOperationsControllerOptions): void {
+        this._$root = OperationsController._getRoot(options);
+        this._$selectedKeys = options.selectedKeys;
+        this._$excludedKeys = options.excludedKeys;
+        this._$selectionViewMode = options.selectionViewMode;
     }
 
     setListMarkedKey(key: TKey): TKey {
@@ -78,31 +98,37 @@ export default class OperationsController {
         return markedKey;
     }
 
-    registerHandler(event, registerType, component, callback, config): void {
+    registerHandler(
+        event: SyntheticEvent,
+        registerType: string,
+        component: Control,
+        callback: Function,
+        config: object
+    ): void {
         this._getRegister().register(event, registerType, component, callback, config);
     }
 
-    unregisterHandler(event, registerType, component, config): void {
+    unregisterHandler(
+        event: SyntheticEvent,
+        registerType: string,
+        component: Control,
+        callback: Function,
+        config: object
+    ): void {
         this._getRegister().unregister(event, registerType, component, config);
     }
 
     selectionTypeChanged(type: string, limit: number): void {
         if (type === 'all' || type === 'selected') {
-            this._selectionViewModeChangedCallback(type);
+            this._notify('selectionViewModeChanged', type);
         } else {
             this._getRegister().start(type, limit);
         }
     }
 
-    itemOpenHandler(newCurrentRoot: TKey, items, dataRoot: TKey = null): void {
-        const root = 'root' in this._options ? this._options.root : null;
-
-        if (newCurrentRoot !== root && this._options.selectionViewMode === 'selected') {
-            this._selectionViewModeChangedCallback('all');
-        }
-
-        if (this._options.itemOpenHandler instanceof Function) {
-            return this._options.itemOpenHandler(newCurrentRoot, items, dataRoot);
+    itemOpenHandler(newCurrentRoot: TKey): void {
+        if (newCurrentRoot !== this._$root && this._$selectionViewMode === 'selected') {
+            this._notify('selectionViewModeChanged', 'all');
         }
     }
 
@@ -117,11 +143,11 @@ export default class OperationsController {
                        deleted: TKey[],
                        listId: string): TKey[] {
         this._selectedKeysByList[listId] = values.slice();
-        let result = this._updateListKeys(this._listSelectedKeys, added, deleted);
+        let result = this._updateListKeys(this._$selectedKeys, added, deleted);
         if (added.length && added[0] === null) {
             result = [null];
         }
-        this._listSelectedKeys = result;
+        this._$selectedKeys = result;
 
         return result;
     }
@@ -131,11 +157,11 @@ export default class OperationsController {
                        deleted: TKey[],
                        listId: string): TKey[] {
         this._excludedKeysByList[listId] = values.slice();
-        let result = this._updateListKeys(this._listExcludedKeys, added, deleted);
+        let result = this._updateListKeys(this._$excludedKeys, added, deleted);
         if (deleted.length && deleted[0] === null) {
             result = [];
         }
-        this._listExcludedKeys = result;
+        this._$excludedKeys = result;
 
         return result;
     }
@@ -144,7 +170,7 @@ export default class OperationsController {
         count: number,
         isAllSelected: boolean
     } {
-        this._selectedKeysCountByList[listId] = { count, allSelected };
+        this._selectedKeysCountByList[listId] = {count, allSelected};
 
         let isAllSelected = true;
         let selectedCount = 0;
@@ -217,4 +243,12 @@ export default class OperationsController {
 
         return this._listMarkedKey;
     }
+
+    private static _getRoot(options: Partial<IOperationsControllerOptions>): TKey {
+        return 'root' in options ? options.root : null;
+    }
 }
+
+Object.assign(HistorySource.prototype, {
+    _moduleName: 'Controls/operations:ControllerClass'
+});
