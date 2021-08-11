@@ -255,7 +255,7 @@ const manageControllersOnDidUpdate = (self: TColumnScrollViewMixin, oldOptions: 
         recalculateSizes(self, self._options, calcResult.sizes);
 
         if (shouldResetColumnScroll) {
-            self._resetColumnScroll(self._options);
+            self._resetColumnScroll(self._options.columnScrollStartPosition);
         }
 
         if (self._$pendingMouseEnterForActivate) {
@@ -500,14 +500,22 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         return !!this._$columnScrollController;
     },
 
-    _resetColumnScroll(options: IAbstractViewOptions = this._options): void {
+    setColumnScrollPosition(position: 'start' | IAbstractViewOptions['columnScrollStartPosition']): void {
+        this._doAfterReload(() => {
+            this._doOnComponentDidUpdate(() => {
+                this._resetColumnScroll(position);
+            });
+        });
+    },
+
+    _resetColumnScroll(position?: IAbstractViewOptions['columnScrollStartPosition']): void {
         if (!this._$columnScrollController) {
             return;
         }
-        if (options.columnScrollStartPosition === 'end') {
+        if (position === 'end') {
             scrollToEnd(this);
         } else if (this._$columnScrollController.getScrollPosition() !== 0) {
-            setScrollPosition(this, 0);
+            setScrollPosition(this, 0, true);
         }
     },
 
@@ -654,7 +662,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
             recalculateSizes(this, this._options, shouldDrawResult.sizes);
 
             if (shouldResetColumnScroll) {
-                this._resetColumnScroll(this._options);
+                this._resetColumnScroll(this._options.columnScrollStartPosition);
             }
 
             if (this._$pendingMouseEnterForActivate) {

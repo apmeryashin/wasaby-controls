@@ -79,7 +79,8 @@ interface IColumnScrollViewMixin {
 
     // Methods
     isColumnScrollVisible(): boolean;
-    _resetColumnScroll(options: IViewOptions): void;
+    setColumnScrollPosition(position: 'start' | IViewOptions['columnScrollStartPosition']): void;
+    _resetColumnScroll(position: IViewOptions['columnScrollStartPosition']): void;
     _isDragScrollEnabledByOptions(options: IViewOptions): boolean;
     _getColumnScrollEmptyViewMaxWidth(): number;
     _getColumnScrollThumbStyles(options: IViewOptions): string;

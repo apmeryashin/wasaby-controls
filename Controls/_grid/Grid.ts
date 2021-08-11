@@ -81,6 +81,10 @@ export default class Grid extends List {
     protected _getModelConstructor(): string {
         return 'Controls/grid:GridCollection';
     }
+
+    setColumnScrollPosition(position: 'start' | 'end'): void {
+        return this._children.listControl.setColumnScrollPosition(position);
+    }
 }
 
 Grid.getDefaultOptions = function () {
