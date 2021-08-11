@@ -26,7 +26,8 @@ describe('Controls/_newBrowser:View', () => {
             listsConfigs: {
                 detail: {},
                 master: {}
-            }
+            },
+            getVersion: () => 10
         };
         browserInstance._detailExplorerOptions = {};
     });
@@ -67,6 +68,9 @@ describe('Controls/_newBrowser:View', () => {
                         template: 'newColumnsTemplate'
                     }]
                 }
+            };
+            browserInstance._dataContext = {
+                dataContext: context
             };
             browserInstance._beforeUpdate(newOptions, {
                     dataContext: context

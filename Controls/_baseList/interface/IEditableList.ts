@@ -348,7 +348,7 @@ interface IItemEditOptions {
 }
 
 /**
- * @typedef {Object} Controls/_list/interface/IBeforeBeginEditEventResultOptions
+ * @typedef {Object} Controls/_list/interface/IEditableList/IBeforeBeginEditEventResultOptions
  * @description Тип объекта, который можно вернуть из обработчика события {@link beforeBeginEdit}.
  * @property {Types/entity:Model} [item=undefined] Запись, которая будет запущена на редактирование/добавление.
  */
@@ -359,7 +359,7 @@ type TBeforeBeginEditEventSyncResult = LIST_EDITING_CONSTANTS.CANCEL | IBeforeBe
 type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
 
 /**
- * @typedef {String | undefined} TBeforeEndEditEventSyncResult
+ * @typedef {String | undefined} Controls/_list/interface/IEditableList/TBeforeEndEditEventSyncResult
  * @description Синхронные значения, которые можно возвращать из обработчика события {@link beforeEndEdit}.
  * @variant {String} 
  * @variant undefined Использовать базовую логику редактирования/добавления по месту.
@@ -367,7 +367,7 @@ type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBe
 type TBeforeEndEditEventSyncResult = LIST_EDITING_CONSTANTS.CANCEL | undefined;
 
 /**
- * @typedef {TBeforeEndEditEventSyncResult | Promise<TBeforeEndEditEventSyncResult>} TBeforeEndEditEventResult
+ * @typedef {TBeforeEndEditEventSyncResult | Promise<TBeforeEndEditEventSyncResult>} Controls/_list/interface/IEditableList/TBeforeEndEditEventResult
  * @description Значения, которые можно возвращать из обработчика события {@link beforeEndEdit}.
  */
 type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBeforeBeginEditEventSyncResult>;
@@ -382,8 +382,8 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  * 2. после окончания редактирования:
  *     * последнего (уже существующего) элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAdd autoAdd});
  *     * только что добавленного элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAddByApplyButton autoAddByApplyButton}).
- * @returns {String | Controls/_list/interface/IBeforeBeginEditEventResultOptions.typedef | Promise<TBeforeBeginEditEventSyncResult>}
- * Сancel Отмена окончания редактирования/добавления по месту.
+ * @returns {Promise<String | Controls/_list/interface/IEditableList/IBeforeBeginEditEventResultOptions.typedef>}
+ * Если передана строка "Сancel", тогда происходит отмена окончания редактирования/добавления по месту.
  * @demo Controls-demo/list_new/EditInPlace/BeginEdit/Index
  * @example
  * В следующем примере показано, как запретить редактирование элемента, если он соответствует условию:
@@ -457,7 +457,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  *     * последнего (уже существующего) элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAdd autoAdd}).
  *     * только что добавленного элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAddByApplyButton autoAddByApplyButton}).
  * @remark
- * Подпишитесь на событие, если необходимо что-либо сделать после начала редактирования (например, скрыть кнопку "Добавить").
+ * Подпишитесь на событие, если необходимо что-либо сделать после начала редактирования (например, скрыть кнопку "Добавить запись").
  * Событие запускается, когда подготовка данных успешно завершена и возможно безопасно обновить пользовательский интерфейс.
  * @example
  * В следующем примере показано, как скрыть кнопку "Добавить" после начала редактирования или добавления.
@@ -496,7 +496,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  * 2. после окончания редактирования:
  *     * последнего (уже существующего) элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAdd autoAdd});
  *     * только что добавленного элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAddByApplyButton autoAddByApplyButton}).
- * @returns {Controls/_baseList/interface/IEditableList/TBeforeEndEditEventResult.typedef}
+ * @returns {Controls/_list/interface/IEditableList/TBeforeEndEditEventResult.typedef}
  * @demo Controls-demo/list_new/EditInPlace/EndEdit/Index
  * @remark
  * Используйте событие, если необходимо проверить данные и отменить изменения. По умолчанию для сохранения изменений вызывается метод обновления списка.
@@ -535,7 +535,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  *     * последнего (уже существующего) элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAdd autoAdd});
  *     * после окончания редактирования только что добавленного элемента списка (см. опцию {@link Controls/list:IEditingConfig#autoAddByApplyButton autoAddByApplyButton}).
  * @remark
- * Подпишитесь на событие, если необходимо что-либо сделать после завершения редактирования (например, показать кнопку "Добавить").
+ * Подпишитесь на событие, если необходимо что-либо сделать после завершения редактирования (например, показать кнопку "Добавить запись").
  * Событие запускается, когда редактирование успешно завершено и возможно безопасно обновить пользовательский интерфейс.
  * @demo Controls-demo/list_new/EditInPlace/SlowAdding/Index
  * @example

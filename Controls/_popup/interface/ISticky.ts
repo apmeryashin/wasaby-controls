@@ -280,7 +280,7 @@ export interface IStickyOpener extends IOpener {
  * @param {Controls/_popup/interface/IStickyOpener/PopupOptions.typedef} popupOptions Конфигурация прилипающего блока.
  * @return Promise<void>
  * @remark
- * При повторном вызове метода происходит перерисовка прилипающего блока с новыми опциями, которые переданы в аргументе popupOptions.
+ * Для открытия окна без создания {@link Controls/popup:Sticky} в верстке используйте методы класса {@link Controls/popup:StickyOpener}.
  * @example
  * <pre class="brush: html">
  * <!-- WML -->

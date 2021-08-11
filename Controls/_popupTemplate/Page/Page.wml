@@ -4,6 +4,8 @@
         on:preloadItemsByKeys="_preloadItemsByKeysHandler()"
         template="{{ content.resolvedTemplate }}"
         prefetchResult="{{ _prefetchData }}"
+        pageId="{{ _options.pageId }}"
+        isPrefetchDataMode="{{true}}"
         scope="{{ _options.pageTemplateOptions }}"
         />
 </Controls.Container.Async>

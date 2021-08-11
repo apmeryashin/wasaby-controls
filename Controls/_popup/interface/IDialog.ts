@@ -93,14 +93,10 @@ export interface IResizeDirection {
  */
 
 /**
- * @typedef {Object} Controls/_popup/interface/IDialogOpener/Offset
- * @description Свойства объекта, который передается в опцию {@link offset}.
+ * @name Controls/_popup/interface/IDialogOpener#offset
+ * @cfg {String} Конфигурация отступов от точки позиционирования {@link target} до диалогового окна
  * @property {Number} vertical Отступ по вертикали. Значение задается в px.
  * @property {Number} horizontal Отступ по горизонтали. Значение задается в px.
- */
-/**
- * @name Controls/_popup/interface/IDialogOpener#offset
- * @cfg {Controls/_popup/interface/IDialogOpener/Offset.typedef} Конфигурация отступов от точки позиционирования {@link target} до диалогового окна
  */
 /*
  * @name Controls/_popup/interface/IDialogOpener#top
@@ -235,8 +231,7 @@ export interface IResizeDirection {
  * @param {Controls/_popup/interface/IDialogOpener/PopupOptions.typedef} popupOptions Конфигурация диалогового окна.
  * @return Promise<void>
  * @remark
- * Если требуется открыть окно без создания {@link Controls/popup:Dialog} в верстке, следует использовать статический метод {@link Controls/interface:IOpenPopup#openPopup openPopup}.
- * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
+ * Для открытия окна без создания {@link Controls/popup:Dialog} в верстке используйте методы класса {@link Controls/popup:DialogOpener}.
  * @example
  * <pre class="brush: html">
  * <!-- WML -->

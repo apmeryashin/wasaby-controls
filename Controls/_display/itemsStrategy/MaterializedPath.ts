@@ -23,7 +23,7 @@ interface ISorter {
  * Стратегия получения элементов проекции по материализованному пути из порядковых номеров элементов в коллекции
  * @class Controls/_display/ItemsStrategy/MaterializedPath
  * @extends Controls/_display/ItemsStrategy/Abstract
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  * @private
  */
 export default class MaterializedPath<S, T extends CollectionItem<S> = CollectionItem<S>>

@@ -1,4 +1,5 @@
-<div class="controls-StackTemplate__rightPanel">
+<div class="controls-StackTemplate__rightPanel
+            controls-StackTemplate__rightBorder{{_options.rightBorderVisible ? '_visible' : '_hided'}}">
    <div class="ws-flexbox ws-flex-column ws-justify-content-between ws-flex-grow-0 ws-flex-shrink-0 controls-StackTemplate__rightPanel-wrapper">
       <div class="ws-flexbox ws-flex-column ws-flex-shrink-0 ws-align-items-center">
          <Controls.buttons:Button

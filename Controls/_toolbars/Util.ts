@@ -32,7 +32,6 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const isSVG = isSVGIcon(item.get('icon'));
     const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
     const isVerticalDirection = toolbarOptions.direction === 'vertical';
-    const buttonStyle = (isVerticalDirection ? 'default' : (item.get('buttonStyle') || defaultOptions.buttonStyle));
     const iconStyle = item.get('iconStyle') || toolbarOptions.iconStyle || defaultOptions.iconStyle;
 
     let viewMode = isVerticalDirection ? 'toolButton' : item.get('viewMode');
@@ -44,6 +43,8 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
         caption = item.get('title');
     }
 
+    const buttonStyle = (viewMode === 'toolButton' ? 'default' : (item.get('buttonStyle') || defaultOptions.buttonStyle));
+
     // todo: https://online.sbis.ru/opendoc.html?guid=244a5058-47c1-4896-a494-318ba2422497
     const inlineHeight = isVerticalDirection ? 'xl' :
         (item.get('inlineHeight') || (viewMode === 'functionalButton' ? 'default' : defaultHeight(viewMode)));
@@ -52,6 +53,7 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
 
     cfg._hoverIcon = true;
     cfg._buttonStyle = readOnly ? 'readonly' : buttonStyle;
+    cfg._translucent = toolbarOptions.translucent || false;
     cfg._contrastBackground = item.get('contrastBackground');
     cfg._viewMode = viewMode;
     cfg._height = inlineHeight;

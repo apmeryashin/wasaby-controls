@@ -16,8 +16,6 @@ import {View as ExplorerView} from 'Controls/explorer';
 import {getListConfiguration} from 'Controls/_newBrowser/utils';
 import * as ViewTemplate from 'wml!Controls/_newBrowser/View/View';
 import {TColumns} from 'Controls/grid';
-import * as DefaultListItemTemplate from 'wml!Controls/_newBrowser/templates/ListItemTemplate';
-import * as DefaultTileItemTemplate from 'wml!Controls/_newBrowser/templates/TileItemTemplate';
 import 'css!Controls/listTemplates';
 import {ContextOptions as dataContext} from 'Controls/context';
 import {default as TileController} from 'Controls/_newBrowser/TemplateControllers/Tile';
@@ -55,8 +53,8 @@ export default class View extends Control<IOptions, IReceivedState> {
      */
     protected _template: TemplateFunction = ViewTemplate;
     protected _notifyHandler: Function = EventUtils.tmplNotify;
-    protected _defaultTileItemTemplate: TemplateFunction = DefaultTileItemTemplate;
-    protected _defaultListItemTemplate: TemplateFunction = DefaultListItemTemplate;
+    protected _defaultTileItemTemplate: TemplateFunction = 'Controls/tile:RichTemplate';
+    protected _defaultListItemTemplate: TemplateFunction = 'Controls/listTemplates:ListItemTemplate';
     protected _detailDataSource: SourceController = null;
     protected _tableCfg: TableController = null;
 
@@ -130,6 +128,7 @@ export default class View extends Control<IOptions, IReceivedState> {
      * Опции для Controls/explorer:View в master-колонке
      */
     protected _masterExplorerOptions: IExplorerOptions;
+    protected _contextVersion: number = 0;
 
     /**
      * Опции для Controls/explorer:View в detail-колонке
@@ -164,6 +163,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     ): Promise<IReceivedState> | void {
         this._dataContext = contexts.dataContext;
         if (this._dataContext.listsConfigs) {
+            this._contextVersion = this._dataContext.getVersion?.();
             this._initState(options);
             this._processItems(this._detailDataSource.getItems());
             this._processItemsMetadata(this._detailDataSource.getItems(), options);
@@ -202,7 +202,9 @@ export default class View extends Control<IOptions, IReceivedState> {
                     Если видимость меняется при проваливании в папку, то скролл всегда будет в шапке списка.
                 */
                 if (imageVisibility === 'visible' && !rootChanged && direction) {
-                    this._itemToScroll = this._children.detailList.getLastVisibleItemKey();
+                    if (this._children.hasOwnProperty('detailList')) {
+                        this._itemToScroll = this._children.detailList.getLastVisibleItemKey();
+                    }
                 }
             }
         } else if (!this._hasImageInItems) {
@@ -214,20 +216,25 @@ export default class View extends Control<IOptions, IReceivedState> {
             this._newMasterVisibility = null;
         }
         if (this._detailExplorerOptions.dataLoadCallback) {
-            this._detailExplorerOptions.dataLoadCallback(items, direction);
+            this._detailExplorerOptions.dataLoadCallback(items, direction, 'detail');
         }
         this._processItemsMetadata(items);
     }
 
+    protected _updateContextVersion(context: typeof dataContext): boolean {
+        const currentVersion = this._contextVersion;
+        const contextVersion = context.getVersion();
+        this._contextVersion = contextVersion;
+        return currentVersion !== contextVersion;
+    }
+
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
-        const oldContext = this._dataContext;
         this._dataContext = contexts.dataContext;
-        const detailOptionsChanged = !isEqual(oldContext.listsConfigs.detail, this._dataContext.listsConfigs.detail) ||
-            !isEqual(newOptions.detail, this._options.detail);
-        const masterOptionsChanged = !isEqual(oldContext.listsConfigs.master, this._dataContext.listsConfigs.master) ||
-            !isEqual(newOptions.master, this._options.master);
+        const contextVersionChanged = this._updateContextVersion(this._dataContext);
+        const detailOptionsChanged = !isEqual(newOptions.detail, this._options.detail);
+        const masterOptionsChanged = !isEqual(newOptions.master, this._options.master);
         const isDetailRootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
-        if (detailOptionsChanged) {
+        if (detailOptionsChanged || contextVersionChanged) {
             this._detailExplorerOptions = this._getListOptions(
                 this._dataContext.listsConfigs.detail,
                 newOptions.detail
@@ -237,7 +244,7 @@ export default class View extends Control<IOptions, IReceivedState> {
                 columns: this._getPatchedColumns(this._detailExplorerOptions.columns)
             };
         }
-        if (masterOptionsChanged) {
+        if (masterOptionsChanged || contextVersionChanged) {
             this._masterExplorerOptions = this._getListOptions(
                 this._dataContext.listsConfigs.master,
                 newOptions.master
@@ -290,7 +297,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _beforeUnmount(): void {
         this._detailDataSource.unsubscribe('dataLoad', this._onDetailDataLoadCallback);
         this._detailDataSource.destroy();
-        this._masterDataSource.destroy();
+        this._masterDataSource?.destroy();
     }
 
     private _setViewMode(value: DetailViewMode): void {
@@ -573,7 +580,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     //endregion
     static contextTypes(): object {
         return {
-            dataContext: dataContext
+            dataContext
         };
     }
 }

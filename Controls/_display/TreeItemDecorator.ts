@@ -14,7 +14,7 @@ export interface IOptions<T> {
  * Tree item which is just a decorator for another one
  * @class Controls/_display/TreeItemDecorator
  * @extends Controls/_display/TreeItem
- * @author Мальцев А.А.
+ * @author Авраменко А.С.
  * @private
  */
 export default class TreeItemDecorator<T> extends TreeItem<T> implements IGroupNode {

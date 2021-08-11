@@ -85,7 +85,7 @@ export default class extends Control {
         },
         {
             displayProperty: 'capital',
-            width: '700px',
+            width: 'max-content',
             compatibleWidth: '98px'
         },
         {
@@ -93,17 +93,17 @@ export default class extends Control {
         },
         {
             displayProperty: 'population',
-            width: '700px',
+            width: 'max-content',
             compatibleWidth: '100px'
         },
         {
             displayProperty: 'square',
-            width: '700px',
+            width: 'max-content',
             compatibleWidth: '83px'
         },
         {
             displayProperty: 'populationDensity',
-            width: '700px',
+            width: 'max-content',
             compatibleWidth: '175px'
         }
     ];

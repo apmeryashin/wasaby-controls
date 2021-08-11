@@ -199,6 +199,7 @@ export default class ControllerClass {
       let sourceControllerChanged = false;
 
       if (this._options.root !== options.root) {
+         this._rootBeforeSearch = null;
          this.setRoot(options.root);
       }
 

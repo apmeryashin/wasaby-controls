@@ -162,6 +162,10 @@
    box-shadow: var(--box-shadow_button);
 }
 
+.controls-Button_button_shadow-pale {
+   box-shadow: var(--box-shadow_pale-button);
+}
+
 .controls-Button_button_shadow-small {
    box-shadow: var(--box-shadow_contrast-button);
 }
@@ -252,19 +256,19 @@
 }
 
 .controls-Button_button_style-danger {
-   border-color: var(--danger_contrast_background-color);
+   border-color: var(--danger_border-color);
 }
 
 .controls-Button_button_style-success {
-   border-color: var(--success_contrast_background-color);
+   border-color: var(--success_border-color);
 }
 
 .controls-Button_button_style-warning {
-   border-color: var(--warning_contrast_background-color);
+   border-color: var(--warning_border-color);
 }
 
 .controls-Button_button_style-info {
-   border-color: var(--info_contrast_background-color);
+   border-color: var(--info_border-color);
 }
 
 .controls-Button_button_style-unaccented {
@@ -349,8 +353,7 @@
    background-color: var(--pale_contrast_background-color);
 }
 
-.controls-Button_functionalButton_style-translucent > .controls-Button_functionalButton_style-pale,
-.controls-Button_functionalButton_style-translucent.controls-Button_functionalButton_style-pale {
+.controls-Button_style-translucent {
    border-width: 0;
    background-color: var(--translucent_background-color_button);
 }
@@ -398,8 +401,7 @@
       background-color: var(--pale_hover_contrast_background-color);
    }
 
-   .controls-Button_functionalButton_style-translucent > .controls-Button_functionalButton_style-pale:hover,
-   .controls-Button_functionalButton_style-translucent.controls-Button_functionalButton_style-pale:hover {
+   .controls-Button_style-translucent:hover {
       background-color: var(--translucent_hover_background-color_button);
    }
 
@@ -447,8 +449,7 @@
       background-color: var(--pale_active_contrast_background-color);
    }
 
-   .controls-Button_functionalButton_style-translucent > .controls-Button_functionalButton_style-pale:active,
-   .controls-Button_functionalButton_style-translucent.controls-Button_functionalButton_style-pale:active {
+   .controls-Button_style-translucent:active {
       background-color: var(--translucent_active_background-color_button);
    }
 
@@ -487,7 +488,7 @@
 }
 
 .controls-Button_button_style-readonly.controls-Button_bg-contrast {
-   background-color: var(--background-color);
+   background-color: var(--readonly_background-color_button);
 }
 
 .controls-Button_button_style-default.controls-Button_bg-contrast {

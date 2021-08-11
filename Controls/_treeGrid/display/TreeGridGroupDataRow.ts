@@ -67,7 +67,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
         };
     }
 
-    protected _getBaseItemClasses(style: string, theme: string): string {
+    protected _getBaseItemClasses(style: string): string {
         let itemClasses = 'controls-ListView__itemV';
         if (!this.isHiddenGroup()) {
             itemClasses += ` controls-Grid__row controls-Grid__row_${style}`;

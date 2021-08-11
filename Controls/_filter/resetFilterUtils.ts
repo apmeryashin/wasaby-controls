@@ -22,6 +22,9 @@ export function resetFilterItem(item) {
    if (getPropValue(item, 'visibility') !== undefined) {
       setPropValue(item, 'visibility', false);
    }
+   if (getPropValue(item, 'displayTextValue')) {
+      setPropValue(item, 'displayTextValue', null);
+   }
    if (resetValue !== undefined) {
       setPropValue(item, 'value', resetValue);
    }

@@ -189,10 +189,11 @@ describe('Controls/search:ControllerClass', () => {
          };
 
          const sourceController = getSourceController(hierarchyOptions);
-         const searchController = getSearchController({
+         let searchControllerOptions = {
             sourceController,
             ...hierarchyOptions
-         });
+         };
+         const searchController = getSearchController(searchControllerOptions);
          const path = new RecordSet({
             rawData: [
                {
@@ -214,6 +215,14 @@ describe('Controls/search:ControllerClass', () => {
 
          searchController.reset(true);
          assert.ok(searchController.getRoot() === 'testRoot');
+
+         searchController.setPath(path);
+         await searchController.search('testSearchValue');
+         searchControllerOptions = {...searchControllerOptions};
+         searchControllerOptions.root = 'myRoot';
+         searchController.update(searchControllerOptions);
+         searchController.reset(true);
+         assert.ok(searchController.getRoot() === 'myRoot');
       });
 
       it('without parent property', () => {
