@@ -611,6 +611,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
+    protected _shouldLoadOnScroll(direction: string): boolean {
+        const lastRootItem = this._getLastItem(this._listViewModel.getRoot());
+        return super._shouldLoadOnScroll() || this._shouldLoadLastExpandedNodeData(direction, lastRootItem, this._options.root);
+    }
+
     private _updateTreeControlModel(newOptions): void {
         const viewModel = this.getViewModel();
 
