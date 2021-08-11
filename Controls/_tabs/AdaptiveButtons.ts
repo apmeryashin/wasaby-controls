@@ -141,6 +141,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
     protected _selectedKeyHandler(event: SyntheticEvent<Event>, key: string): void {
         this._notify('selectedKeyChanged', [key]);
+        this._updateFilter(this._options);
     }
 
     private _loadItems(source: SbisService): Promise<void> {
@@ -161,7 +162,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         this._visibleItems.replace(item, this._position);
         // для вызова перерисовки Controls.tabs:Buttons необходимо передать новые items
         this._visibleItems = this._visibleItems.clone();
-        this._updateFilter(this._options);
     }
 
     // при нажатии на кнопку еще останавливаем событие для того, чтобы вкладка не выбралась.

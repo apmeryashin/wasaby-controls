@@ -110,7 +110,6 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
     private _crudWrapper: CrudWrapper;
     private _isUnmounted: boolean = false;
     private _isUpdatedItems: boolean = false;
-    private _hasMainTab: boolean;
 
     protected _beforeMount(options: ITabsOptions,
                            context: object,
@@ -320,7 +319,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         if (item.width !== undefined || !this._options.canShrink) {
             return false;
         } else {
-            return !this._hasMainTab || item.isMainTab || item.minWidth !== undefined || item.maxWidth !== undefined;
+            return item.isMainTab || item.minWidth !== undefined || item.maxWidth !== undefined;
         }
     }
 
@@ -527,9 +526,6 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         this._itemsArray = data.itemsArray;
         this._itemsOrder = data.itemsOrder;
         this._lastRightOrder = data.lastRightOrder;
-        this._hasMainTab = this._itemsArray.reduce((accummulator, item) => {
-            return accummulator || item.isMainTab;
-        }, false);
     }
 
     static _prepareStyle(style: string): string {
