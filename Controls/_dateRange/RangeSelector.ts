@@ -114,13 +114,10 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
 
     _updateRangeModel(options: IRangeSelector): void {
         const opts: IDateRangeOptions = {};
-        if (!(options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single &&
-            this._startValue === null && this._endValue === null)) {
-            opts.endValue = this._endValue;
-            opts.startValue = this._startValue;
-            if (options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
-                opts.endValue = this._startValue;
-            }
+        opts.endValue = this._endValue;
+        opts.startValue = this._startValue;
+        if (options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
+            opts.endValue = this._startValue;
         }
         opts.rangeSelectedCallback = options.rangeSelectedCallback;
         opts.selectionType = options.selectionType;
@@ -141,6 +138,10 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         } else {
             className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
         }
+        let value = {};
+        if (this._options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
+            value = PopupUtil.getFormattedSingleSelectionValue(this._rangeModel.startValue || this._startValue);
+        }
         return {
             ...PopupUtil.getCommonOptions(this),
             target: container,
@@ -148,6 +149,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
+                ...value,
                 headerType: 'link',
                 _date: this._options._date,
                 resetStartValue: this._options.resetStartValue,
