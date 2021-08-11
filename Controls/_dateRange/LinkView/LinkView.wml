@@ -1,5 +1,5 @@
 <div class="controls-DateLinkView">
-    <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
+    <ws:if data="{{ _options.prevArrowVisibility && !_options.readOnly}}">
         <span
                 class="controls-DateLinkView__prev
               {{_fontColorStyle? 'controls-text-' + _fontColorStyle}} {{ _styleClass }}"
@@ -21,7 +21,7 @@
                         controls-icon icon-Close"
               on:click="_resetButtonClickHandler()"></span>
     </ws:if>
-    <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
+    <ws:if data="{{ _options.nextArrowVisibility && !_options.readOnly}}">
         <span
                 class="controls-DateLinkView__next
               {{_fontColorStyle? 'controls-text-' + _fontColorStyle}} {{ _styleClass }}"
