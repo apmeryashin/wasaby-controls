@@ -579,6 +579,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
         this._dataLoader.getFilterController()?.setFilter(filter);
+        if (this._listsOptions && id) {
+            this._getListOptionsById(id).filter = this._getListOptionsById(id).filter || filter;
+        }
         this._filter = filter;
         this._notify('filterChanged', [this._filter, id]);
     }
