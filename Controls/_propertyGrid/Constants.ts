@@ -11,5 +11,8 @@ export const DEFAULT_EDITORS = {
     enum: 'Controls/propertyGrid:EnumEditor'
 };
 export const DEFAULT_VALIDATORS_BY_TYPE = {
-    enum: 'Controls/validate:SelectionContainer'
+    enum: 'Controls/validate:SelectionContainer',
+    string: 'Controls/validate:InputContainer',
+    text: 'Controls/validate:InputContainer',
+    number: 'Controls/validate:InputContainer'
 };
