@@ -82,16 +82,9 @@ type TErrbackConfig = dataSourceError.ViewConfig & { error: Error };
  * @class Controls/browser:Browser
  * @public
  * @author Герасимов А.М.
- * @mixes Controls/browser:IBrowser
- * @mixes Controls/filter:IPrefetch
- * @implements Controls/interface:IFilter
- * @implements Controls/interface:IFilterChanged
+ * @implements Controls/browser:IBrowser
+ * @implements Controls/filter:IPrefetch
  * @implements Controls/interface:INavigation
- * @implements Controls/interface:IHierarchy
- * @implements Controls/interface:ISource
- * @implements Controls/interface:ISearch
- * @implements Controls/interface:ISelectFields
- * @implements Controls/interface/IHierarchySearch
  *
  * @demo Controls-demo/Search/FlatList/Index
  */
