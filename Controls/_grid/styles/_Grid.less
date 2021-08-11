@@ -858,9 +858,21 @@
    background-color: var(--master_item_background-color_list);
 }
 
+.controls-master-template-default {
+   .controls-Grid__cell_spacingFirstCol_default {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+   }
+   .controls-Grid__cell_spacingFirstCol_s {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
+   }
+   .controls-Grid__cell_spacingFirstCol_m {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
+   }
+}
+
 //Классы совместимости для перехода со старого дизайна masterDetail на новый
 .controls-master-template-newDesign .controls-Grid__cell_spacingFirstCol_default {
-   padding-left: var(--item_padding-left_s_list);
+   padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
 }
 
 .controls-master-template-newDesign .controls-Grid__row-cell_master {
@@ -873,12 +885,32 @@
 
 .controls-GridView__itemV_marker-master {
    position: absolute;
+   top: 0;
+   bottom: 0;
+   display: inline-flex;
+   align-items: baseline;
    box-sizing: border-box;
+}
+
+.controls-GridView__itemV_marker-master::before {
+   content: '\200b';
+   font-size: var(--font-size_2xl);
+}
+
+.controls-GridView__itemV_marker-master::after {
+   content: '';
+   background-color: var(--master-marker_color_list);
    width: var(--master-marker_thickness_list);
    height: var(--master-marker_height_list);
-   background-color: var(--master-marker_color_list);
-   top: 0;
-   left: 0;
+   border-radius: var(--marker_border-radius_list);
+}
+
+.controls-GridView__itemV_marker-master.controls-ListView__itemV_marker-left {
+   left: var(--offset_xs);
+}
+
+.controls-GridView__itemV_marker-master.controls-ListView__itemV_marker-right {
+   right: var(--offset_xs);
 }
 
 .ws-is-hover .controls-BaseControl_hover_enabled {
