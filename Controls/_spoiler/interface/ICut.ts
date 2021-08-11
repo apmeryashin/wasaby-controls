@@ -6,21 +6,66 @@ type TLineHeight = 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'
 type TIconSize = 's' | 'm' | 'l';
 
 export interface ICutOptions extends ICutButton, IBackgroundStyleOptions, IExpandableOptions {
+    /**
+     * @name Controls/_spoiler/interface/ICut#lineHeight
+     * @cfg {String} Высота строки
+     * @variant xs
+     * @variant s
+     * @variant m
+     * @variant l
+     * @variant xl
+     * @variant 2xl
+     * @variant 3xl
+     * @variant 4xl
+     * @variant 5xl
+     * @default m
+     * @demo Controls-demo/Spoiler/Cut/LineHeight/Index
+     * @remark
+     * Высота строки задается константой из стандартного набора размеров, который определен для текущей {@link /doc/platform/developmentapl/interface-development/themes/ темы оформления}.
+     */
     lineHeight: TLineHeight;
+    /**
+     * @name Controls/_spoiler/interface/ICut#lines
+     * @cfg {Number|null} Количество строк.
+     * @remark
+     * Указав значение null, контент не будет иметь ограничение.
+     * @demo Controls-demo/Spoiler/Cut/Lines/Index
+     */
     lines: number | null;
+    /**
+     * @name Controls/_spoiler/interface/ICut#content
+     * @cfg {TemplateFunction|String} Контент контрола.
+     * @demo Controls-demo/Spoiler/Cut/Content/Index
+     */
     content: TemplateFunction | string;
+    /**
+     * @name Controls/_spoiler/interface/ICut#iconSize
+     * @cfg
+     * @demo Controls-demo/Spoiler/Cut/IconSize/Index
+     * @example
+     * Кнопка с размером иконки "s".
+     * <pre class="brush: html">
+     * <!-- WML -->
+     * <Controls.spoiler:Cut lines="{{3}}" iconSize="s">
+     * </pre>
+     */
     iconSize?: TIconSize;
+    /**
+     * @name Controls/_spoiler/interface/ICut#contrastBackground
+     * @cfg
+     * @demo Controls-demo/Spoiler/Cut/ContrastBackground/Index
+     */
     contrastBackground: boolean;
 }
 
 /**
  * Интерфейс для контролов, ограничивающих контент заданным числом строк.
  * @interface Controls/_spoiler/interface/ICut
- * @mixes Control/interface:IBackgroundStyle
- * @mixes Control/interface:IExpandable
+ * @implements Control/interface:IBackgroundStyle
+ * @implements Control/interface:IExpandable
  * @implements Controls/interface:IIconSize
- * @implements Controls/_interface:IHeight
- * @mixes Control/interface:IContrastBackground
+ * @implements Controls/interface:IHeight
+ * @implements Control/interface:IContrastBackground
  * @public
  * @author Красильников А.С.
  */
@@ -31,65 +76,8 @@ export default interface ICut {
 /**
  * @name Controls/_spoiler/interface/ICut#buttonPosition
  * @cfg {String} Положение кнопки развертывания.
- * @variant start по левому краю контентной области
- * @variant center по центру контентной области
+ * @variant start По левому краю контентной области.
+ * @variant center По центру контентной области.
  * @default center
  * @demo Controls-demo/Spoiler/Cut/ButtonPosition/Index
- */
-
-/**
- * @name Controls/_spoiler/interface/ICut#iconSize
- * @cfg {String} Размер иконки.
- * @variant s малый
- * @variant m средний
- * @variant l большой
- * @default default
- * @demo Controls-demo/Spoiler/Cut/IconSize/Index
- * @remark
- * Размер иконки задается константой из стандартного набора размеров, который определен для текущей темы оформления.
- * @example
- * Кнопка с размером иконки "s".
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.spoiler:Cut lines="{{3}}" iconSize="s">
- * </pre>
- */
-
-/**
- * @name Controls/_spoiler/interface/ICut#contrastBackground
- * @cfg {Boolean} Определяет контрастность фона.
- * @demo Controls-demo/Spoiler/Cut/ContrastBackground/Index
- */
-
-/**
- * @name Controls/_spoiler/interface/ICut#inlineHeight
- * @cfg {String} Высота контрола.
- * Высота строки
- * @variant xs
- * @variant s
- * @variant m
- * @variant l
- * @variant xl
- * @variant 2xl
- * @variant 3xl
- * @variant 4xl
- * @variant 5xl
- * @default m
- * @demo Controls-demo/Spoiler/Cut/LineHeight/Index
- * @remark
- * Высота строки задается константой из стандартного набора размеров, который определен для текущей темы оформления.
- */
-
-/**
- * @name Controls/_spoiler/interface/ICut#lines
- * @cfg {Number|null} Количество строк.
- * @remark
- * Указав значение null, контент не будет иметь ограничение.
- * @demo Controls-demo/Spoiler/Cut/Lines/Index
- */
-
-/**
- * @name Controls/_spoiler/interface/ICut#content
- * @cfg {TemplateFunction|String} Контент контрола.
- * @demo Controls-demo/Spoiler/Cut/Content/Index
  */
