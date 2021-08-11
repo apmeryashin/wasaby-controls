@@ -4966,7 +4966,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _shouldLoadOnScroll(direction: string): boolean {
-        return _private.isInfinityNavigation();
+        return _private.isInfinityNavigation(this._options.navigation);
     }
 
     protected _shiftToDirection(direction): Promise {
