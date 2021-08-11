@@ -872,7 +872,9 @@ class Manager {
             item.controller.beforeUpdateOptions(item);
             this._redrawItems().then(() => {
                 item.controller.afterUpdateOptions(item);
-                ManagerController.getContainer().activatePopup(id);
+                if (item.popupOptions.autofocus !== false) {
+                    ManagerController.getContainer().activatePopup(id);
+                }
             });
         } else {
             item.popupOptions = oldOptions;
