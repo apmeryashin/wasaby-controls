@@ -1388,6 +1388,7 @@
   "--border_radius_xs_tile": "6px",
   "--border_radius_s_tile": "8px",
   "--border_radius_m_tile": "12px",
+  "--width_Tile_afterTitleTemplate-blur": "calc(var(--offset_m) + var(--offset_xs))",
   "--expander_padding_icon-treeGrid": "1px",
   "--expander_padding_icon-hidden-node-treeGrid": "2px",
   "--expander_s_padding-right_treeGrid": "var(--offset_2xs)",
