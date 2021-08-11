@@ -877,6 +877,46 @@ describe('Controls/browser:Browser', () => {
 
                     assert.ok(browser._getSourceController() === sourceController);
                 });
+                it('filterButtonSource in listsOptions', async () => {
+                    const browserOptions = getBrowserOptions();
+                    let filterButtonSource = [
+                        {
+                            name: 'filterField',
+                            value: '',
+                            textValue: ''
+                        }
+                    ];
+                    const listsOptions = [
+                        {
+                            id: 'list',
+                            ...browserOptions,
+                            filterButtonSource,
+                            filter: {
+                                testField: 'testValue'
+                            }
+                        },
+                        {
+                            id: 'list1',
+                            ...browserOptions,
+                            filterButtonSource,
+                            filter: {
+                                testField1: 'testValue'
+                            }
+                        }
+                    ];
+                    const options = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+                    await browser._beforeUpdate(options);
+                    assert.deepStrictEqual(browser._dataLoader.getFilterController('list').getFilter(), {
+                        testField: 'testValue',
+                        filterField: ''
+                    });
+                });
             });
         });
 
