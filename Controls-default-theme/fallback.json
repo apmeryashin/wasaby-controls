@@ -1626,18 +1626,14 @@
   "--shift-top_fontSize-l_PeriodDialog-selector": "calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2 + 1px)",
   "--shift-top_fontSize-s_PeriodDialog-selector": "calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2 - 1px)",
   "--dash_length_dateRangeInput": "5px",
-  "--dash_padding-horizontal_dateRangeInput": "var(--offset_2xs)",
   "--dash_thickness_dateRangeInput": "1px",
   "--min-width_dateRangeSelector": "150px",
   "--arrow_width_dateRangeSelector": "24px",
   "--font-weight_dateRangeSelector": "bold",
-  "--arrow_icon-size_dateRangeSelector": "var(--icon-size_s)",
 
   "--reset-button_margin-left_dateRangeSelector": "4px",
   "--height_dateRangeSelector": "19px",
   "--height_rangeShortSelectorLink": "24px",
-  "--line-height_rangeShortSelectorLink": "18px",
-  "--clear_line-height_rangeShortSelectorLink": "24px",
 
   "--shift-top_fontSize-s_expression_PeriodLiteDialog-selector":  "(-1 * (var(--annually_header_height_shortDatePicker) + var(--item_layout_line-height_expression_shortDatePicker) / 2 - (var(--height_rangeShortSelectorLink) - var(--item_font-size_shortDatePicker))))",
   "--shift-top_fontSize-s_PeriodLiteDialog-selector": "calc(var(--shift-top_fontSize-s_expression_PeriodLiteDialog-selector))",

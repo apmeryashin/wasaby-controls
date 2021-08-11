@@ -1,37 +1,31 @@
 <div class="controls-DateLinkView">
-    <div class="controls-DateLinkView-wrapper">
-        <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
-           <span
-              class="controls-DateLinkView__prev
+    <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
+        <span
+                class="controls-DateLinkView__prev
               {{_fontColorStyle? 'controls-text-' + _fontColorStyle}} {{ _styleClass }}"
-              on:click="shiftBack()">
-           </span>
-        </ws:if>
-        <span   data-qa="controls-DateLinkView__value-wrapper"
-                class="controls-DateLinkView__value-wrapper
-                        {{_isMinWidth ? 'controls-DateLinkView__value-wrapper-minWidth'}}">
-            <ws:partial template="{{ _itemTemplate}}"
-                        fontSize="{{ _fontSize }}"
-                        fontWeight="{{ _fontWeight }}"
-                        fontColorStyle="{{ _fontColorStyle }}"
-                        readOnly="{{ _options.readOnly }}"
-                        tooltip="{{ _options.tooltip }}"
-                        styleClass="{{ _styleClass }}"
-                        caption="{{ _caption }}"
-                        on:mousedown="_onClick()"
-            />
-            <ws:if data="{{ _resetButtonVisible }}">
-                <span class="controls-DateLinkView__resetButton
-                        controls-icon icon-Close"
-                      on:click="_resetButtonClickHandler()"></span>
-            </ws:if>
+                on:click="shiftBack()">
         </span>
-        <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
-           <span
-              class="controls-DateLinkView__next
+    </ws:if>
+    <ws:partial template="{{ _itemTemplate}}"
+                fontSize="{{ _fontSize }}"
+                fontWeight="{{ _fontWeight }}"
+                fontColorStyle="{{ _fontColorStyle }}"
+                readOnly="{{ _options.readOnly }}"
+                tooltip="{{ _options.tooltip }}"
+                styleClass="{{ _styleClass }}"
+                caption="{{ _caption }}"
+                on:mousedown="_onClick()"
+    />
+    <ws:if data="{{ _resetButtonVisible }}">
+        <span class="controls-DateLinkView__resetButton
+                        controls-icon icon-Close"
+              on:click="_resetButtonClickHandler()"></span>
+    </ws:if>
+    <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
+        <span
+                class="controls-DateLinkView__next
               {{_fontColorStyle? 'controls-text-' + _fontColorStyle}} {{ _styleClass }}"
-              on:click="shiftForward()">
-           </span>
-        </ws:if>
-    </div>
+                on:click="shiftForward()">
+        </span>
+    </ws:if>
 </div>

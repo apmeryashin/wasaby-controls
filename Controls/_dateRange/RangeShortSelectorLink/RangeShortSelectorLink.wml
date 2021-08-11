@@ -1,32 +1,28 @@
 <div class="controls-RangeShortSelectorLink">
-    <div class="controls-RangeShortSelectorLink-wrapper">
-        <span class="controls-RangeShortSelectorLink__value-wrapper
-                        {{_isMinWidth ? 'controls-RangeShortSelectorLink__value-wrapper-minWidth'}}">
-            <ws:partial template="{{ _itemTemplate}}"
-                        fontSize="{{ _fontSize }}"
-                        fontWeight="{{ _fontWeight }}"
-                        fontColorStyle="{{ _fontColorStyle }}"
-                        readOnly="{{ _options.readOnly }}"
-                        tooltip="{{ _options.tooltip }}"
-                        styleClass="{{ _styleClass }}"
-                        caption="{{ _caption }}"
-                        on:mousedown="_onClick()"
-            />
-        </span>
-        <ws:if data="{{ _resetButtonVisible }}">
-            <span class="controls-DateLinkView__resetButton
+    <ws:partial template="{{ _itemTemplate}}"
+                fontSize="{{ _fontSize }}"
+                fontWeight="{{ _fontWeight }}"
+                fontColorStyle="{{ _fontColorStyle }}"
+                readOnly="{{ _options.readOnly }}"
+                tooltip="{{ _options.tooltip }}"
+                styleClass="{{ _styleClass }}"
+                caption="{{ _caption }}"
+                attr:class="{{_isMinWidth ? 'controls-RangeShortSelectorLink__value-wrapper-minWidth'}}"
+                on:mousedown="_onClick()"
+    />
+    <ws:if data="{{ _resetButtonVisible }}">
+        <span class="controls-DateLinkView__resetButton
                         controls-icon icon-Close"
-                  on:click="_resetButtonClickHandler()"></span>
-        </ws:if>
-        <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
-            <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-prev"
-                                          direction="left"
-                                          on:click="shiftBack()"/>
-        </ws:if>
-        <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
-            <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-next"
-                                          direction="right"
-                                          on:click="shiftForward()"/>
-        </ws:if>
-    </div>
+              on:click="_resetButtonClickHandler()"></span>
+    </ws:if>
+    <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
+        <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-prev"
+                                      direction="left"
+                                      on:click="shiftBack()"/>
+    </ws:if>
+    <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
+        <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-next"
+                                      direction="right"
+                                      on:click="shiftForward()"/>
+    </ws:if>
 </div>
