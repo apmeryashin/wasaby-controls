@@ -38,7 +38,7 @@
 
 /**
  * @name Controls/dropdown:GroupTemplate#textAlign
- * @cfg {TextAlign} Выравнивание заголовка группы по горизонтали.
+ * @cfg {String} Выравнивание заголовка группы по горизонтали.
  * @variant left Текст выравнивается по левой стороне.
  * @variant right Текст выравнивается по правой стороне.
  * @default undefined
