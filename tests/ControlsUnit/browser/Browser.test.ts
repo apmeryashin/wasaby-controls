@@ -1260,6 +1260,21 @@ describe('Controls/browser:Browser', () => {
            assert.deepStrictEqual(browser._filter, {parentProperty: null});
        });
 
+        it('root changed, saved root in searchController is reseted', async () => {
+            let options = getBrowserOptions();
+            options.parentProperty = 'parentProperty';
+            options.root = 'rootBeforeSearch';
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+            await browser._search(null, 'testSearchValue');
+            browser._handleItemOpen('testRoot', undefined);
+            options = {...options};
+            options.root = 'testRoot';
+            await browser._beforeUpdate(options);
+            assert.equal(browser._root, 'testRoot');
+        });
+
        it ('root is changed, shearchController is not created', async () => {
             const options = getBrowserOptions();
             const browser = getBrowser(options);

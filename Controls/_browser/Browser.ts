@@ -554,6 +554,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     protected _handleItemOpen(root: Key, items: RecordSet): void {
         const currentRoot = this._root;
+        const searchController = this._getSearchControllerSync();
+
         if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
             this._notify('expandedItemsChanged', [this._getSearchControllerSync().getExpandedItemsForOpenRoot(root, items)]);
 
@@ -561,13 +563,14 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 this._deepReload = true;
             }
         } else if (!this._options.hasOwnProperty('root')) {
-            this._getSearchControllerSync()?.setRoot(root);
+            searchController?.setRoot(root);
             this._root = root;
         }
-        if (root !== currentRoot && this._getSearchControllerSync()) {
+        if (root !== currentRoot && searchController) {
             this._inputSearchValue = '';
 
             if (this._searchValue) {
+                searchController.resetSavedRootBeforeSearch();
                 this._resetSearch();
                 if (this._options.useStore) {
                     Store.sendCommand('resetSearch');
