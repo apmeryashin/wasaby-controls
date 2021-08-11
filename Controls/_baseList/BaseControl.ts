@@ -4964,6 +4964,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shiftToDirection(direction);
         }
     }
+
+    protected _shouldLoadOnScroll(direction: string): boolean {
+        return _private.isInfinityNavigation(this._options.navigation);
+    }
+
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
@@ -4978,16 +4983,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._handleLoadToDirection = false;
                 resolver();
             } else {
-                this._loadMore(direction).then(() => {
-                    if (this._destroyed) {
-                        return;
-                    }
-                    this._handleLoadToDirection = false;
-                    resolver();
-                }).catch((error) => {
-                    _private.hideIndicator(this);
-                    return error;
-                });
+                if (this._shouldLoadOnScroll(direction)) {
+                    this._loadMore(direction).then(() => {
+                        if (this._destroyed) {
+                            return;
+                        }
+                        this._handleLoadToDirection = false;
+                        resolver();
+                    }).catch((error) => {
+                        _private.hideIndicator(this);
+                        return error;
+                    });
+                }
             }
         });
         return shiftPromise;
