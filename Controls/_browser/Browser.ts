@@ -872,9 +872,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const configsCount = Object.keys(this._dataLoader.getState()).length;
 
         if (configsCount > 1) {
-            this._dataLoader.each(({searchController, filter, id}) => {
+            this._dataLoader.each(({searchController, sourceController, id}) => {
                 const newFilter = searchController?.reset(true);
-                if (searchController && !isEqual(filter, newFilter)) {
+                if (searchController && !isEqual(sourceController?.getFilter(), newFilter)) {
                     this._filterChanged(null, newFilter, id);
                 }
             });
