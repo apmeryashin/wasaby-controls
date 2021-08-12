@@ -63,7 +63,7 @@ export default interface IHierarchy {
 
 /**
  * @name Controls/_interface/IHierarchy#parentProperty
- * @cfg {String} Имя поля записи, в котором хранится информация о родительском узле элемента.
+ * @cfg {Number} Имя поля записи, в котором хранится информация о родительском узле элемента.
  * @example
  * В данном примере элемент с id: 4 является родителем для элементов с id: 5, 6, 7.
  * <pre class="brush: html; highlight: [5]">
