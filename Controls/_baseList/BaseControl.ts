@@ -6253,7 +6253,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
     }
 
-    private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void): void {
+    private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void, onDrawItems: boolean = false): void {
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то корректируем scrollTop на высоту уромашки, чтобы не было прыжков
@@ -6263,10 +6263,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 const scrollResult = this._scrollToFirstItem();
                 scrollResult.then(showTriggerCallback);
             }
-        }
+        };
 
         // Скроллить нужно после того как ромашка отрисуется, то есть на _afterRender
-        _private.doAfterRender(this, scrollAndShowTrigger);
+        if (onDrawItems) {
+            this._doAfterDrawItems = scrollAndShowTrigger;
+        } else {
+            _private.doAfterRender(this, scrollAndShowTrigger);
+        }
     }
 
     private _scrollToFirstItem(): Promise<void> {
