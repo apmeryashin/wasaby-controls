@@ -44,9 +44,13 @@ export default class MultiSelector extends Control {
    protected _listMarkedKey: TKey = null;
    protected _notifyHandler: Function = EventUtils.tmplNotify;
    private _operationsController: OperationsController = null;
+   constructor() {
+      super();
+      this._itemOpenHandler = this._itemOpenHandler.bind(this);
+      this._selectionViewModeChanged = this._selectionViewModeChanged.bind(this);
+   }
 
    protected _beforeMount(options): void {
-      this._itemOpenHandler = this._itemOpenHandler.bind(this);
       this._operationsController = this._createOperationsController(options);
    }
 
@@ -60,6 +64,7 @@ export default class MultiSelector extends Control {
    protected _beforeUnmount(): void {
       if (this._operationsController) {
          this._operationsController.destroy();
+         this._operationsController.unsubscribe('selectionViewModeChanged', this._selectionViewModeChanged);
          this._operationsController = null;
       }
    }
@@ -83,10 +88,13 @@ export default class MultiSelector extends Control {
    }
 
    protected _itemOpenHandler(newCurrentRoot, items, dataRoot = null): void {
-      return this._getOperationsController().itemOpenHandler(newCurrentRoot, items, dataRoot);
+      this._getOperationsController().itemOpenHandler(newCurrentRoot, items, dataRoot);
+      if (this._options.itemOpenHandler instanceof Function) {
+         return this._options.itemOpenHandler(newCurrentRoot, items, dataRoot);
+      }
    }
 
-   protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: Key): void {
+   protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: TKey): void {
       this._listMarkedKey = this._getOperationsController(this._options).setListMarkedKey(markedKey);
       return this._notify('markedKeyChanged', [markedKey]);
    }
@@ -108,16 +116,14 @@ export default class MultiSelector extends Control {
       this._getOperationsController(this._options).setOperationsPanelVisible(false);
    }
 
-   private _createOperationsController(options) {
-      const controllerOptions = {
-         ...options,
-         ...{
-            selectionViewModeChangedCallback: (type) => {
-               this._notify('selectionViewModeChanged', [type]);
-            }
-         }
-      };
-      return new OperationsController(controllerOptions);
+   private _selectionViewModeChanged(event: SyntheticEvent, type: string): void {
+      this._notify('selectionViewModeChanged', [type]);
+   }
+
+   private _createOperationsController(options): OperationsController {
+      const controller = new OperationsController({...options});
+      controller.subscribe('selectionViewModeChanged', this._selectionViewModeChanged);
+      return controller;
    }
 
    private _getOperationsController(): OperationsController {
