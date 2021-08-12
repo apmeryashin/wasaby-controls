@@ -637,7 +637,7 @@ describe('Controls/_source/NavigationController', () => {
                     rawData: [
                         {
                             id: 1,
-                            nav_result: 'testId'
+                            nav_result: ['testId']
                         },
                         {
                             id: 2,
@@ -653,7 +653,8 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 const params = nc.updateQueryProperties(rs);
-                assert.deepEqual([null], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual(['testId'], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([6], params[1].forwardPosition, 'Wrong query properties');
             });
 
             it('updateQueryProperties bothways + meta.NextPosition root', () => {
