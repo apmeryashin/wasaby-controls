@@ -26,20 +26,24 @@ describe('Controls/operations:Controller', () => {
     });
 
     describe('selectionViewModeChanged', () => {
-       it('selectionViewModeChanged on itemOpenHandler', () => {
-           const notifyStub = stub(controller, '_notify');
-           controller._options.selectionViewMode = 'selected';
-           controller._itemOpenHandler('root');
+        let notifyStub;
+        beforeEach(() => {
+            notifyStub = stub(controller, '_notify');
+        });
 
-           assert.isTrue(notifyStub.withArgs('selectionViewModeChanged').calledOnce);
-           notifyStub.restore();
-       });
+        afterEach(() => {
+            notifyStub.restore();
+        });
+
+        it('selectionViewModeChanged on itemOpenHandler', () => {
+            controller._options.selectionViewMode = 'selected';
+            controller._itemOpenHandler('root');
+            assert.isTrue(notifyStub.withArgs('selectionViewModeChanged').calledOnce);
+        });
 
         it('selectionViewModeChanged on selectionType changed', () => {
-            const notifyStub = stub(controller, '_notify');
             controller._selectedTypeChangedHandler({}, 'selected');
             assert.isTrue(notifyStub.withArgs('selectionViewModeChanged').calledOnce);
-            notifyStub.restore();
         });
     });
 });
