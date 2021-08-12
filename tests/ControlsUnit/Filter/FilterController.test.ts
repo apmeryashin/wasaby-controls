@@ -426,11 +426,6 @@ describe('Controls/filter:ControllerClass', () => {
                 id: 'testId4',
                 value: 'testValue4',
                 textValue: 'textValue',
-                displayTextValue: {
-                    title: 'Удалить',
-                    hasMoreText: 'Еще 10',
-                    text: 'Текст'
-                },
                 resetValue: '',
                 visibility: true
             };
@@ -438,10 +433,6 @@ describe('Controls/filter:ControllerClass', () => {
                 id: 'testId4',
                 value: 'testValue4',
                 textValue: 'textValue',
-                displayTextValue: {
-                    hasMoreText: 'Еще 10',
-                    text: 'Текст'
-                },
                 visibility: true
             };
 
