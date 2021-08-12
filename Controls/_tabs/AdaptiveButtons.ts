@@ -155,7 +155,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
     private _menuItemClickHandler(event: SyntheticEvent<Event>, keys: number[]|string[]): void {
         const item: Model<object> = this._items.getRecordById(keys[0]);
-        item.set('minWidth', 0);
         item.set('canShrink', true);
         /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
         Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
@@ -230,7 +229,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             item.canShrink = false;
         });
         // чтобы ужималась
-        rawData[this._lastIndex].minWidth = 0;
         rawData[this._lastIndex].canShrink = true;
         if (options.align === 'right') {
             rawData.reverse();

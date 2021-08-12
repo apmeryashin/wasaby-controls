@@ -84,7 +84,6 @@ define([
             }, {
                 canShrink: true,
                 id: 2,
-                minWidth: 0,
                 title: 'Второй'
             }
             ]);
@@ -98,7 +97,6 @@ define([
             }, {
                 canShrink: true,
                 id: 3,
-                minWidth: 0,
                 title: 'Третий'
             }
             ]);
