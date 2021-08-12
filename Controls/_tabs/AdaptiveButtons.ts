@@ -9,7 +9,6 @@ import {CrudWrapper} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
-import {TSelectedKey} from 'Controls/interface';
 import rk = require('i18n!Controls');
 
 const MARGIN = 13;
@@ -73,7 +72,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _menuSource: Memory;
     protected _filter: object;
     protected _position: number;
-    protected _selectedKey: TSelectedKey[] = [];
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
                            contexts?: object,
@@ -95,7 +93,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             }
             this._menuSource = this._createMemoryForMenu(options.keyProperty);
             this._updateFilter(options);
-            this._selectedKey = [options.selectedKey];
         } else {
             return new Promise((resolve) => {
                 loadFontWidthConstants().then((getTextWidth: Function) => {
@@ -132,9 +129,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
 
-        if (this._options.selectedKey !== newOptions.selectedKey) {
-            this._selectedKey = [newOptions.selectedKey]
-        }
         if (isItemsChanged) {
             this._items = newOptions.items;
         }

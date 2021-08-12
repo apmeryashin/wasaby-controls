@@ -11,7 +11,7 @@
                             source="{{_menuSource}}"
                             displayProperty="{{_options.displayProperty}}"
                             filter="{{_filter}}"
-                            selectedKeys="{{_selectedKey}}"
+                            selectedKey="{{_options.selectedKey}}"
                             on:selectedKeysChanged="_menuItemClickHandler()"
                             on:mousedown="_onMouseDownHandler()">
                         <ws:contentTemplate>
