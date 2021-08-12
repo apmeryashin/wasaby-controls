@@ -2753,6 +2753,12 @@ const _private = {
     // endregion
 
     notifyVirtualNavigation(self, scrollController: ScrollController, sourceController: SourceController): void {
+
+        // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
+        if (self._container.closest('.ws-hidden')) {
+            return;
+        }
+
         let topEnabled = false;
         let bottomEnabled = false;
 
