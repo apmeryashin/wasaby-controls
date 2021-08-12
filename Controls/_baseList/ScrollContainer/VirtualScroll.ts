@@ -8,6 +8,8 @@ import {
 } from './interfaces';
 
 const RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT = 4;
+const MIN_RATIO_INDEX_LINE = 0.15;
+const MAX_RATIO_INDEX_LINE = 0.85;
 
 /**
  * Контроллер, управляющий виртуальным скроллом.
@@ -329,11 +331,15 @@ export default class VirtualScroll {
             return this._range.stop - 1;
         } else {
             let itemIndex;
-            const {itemsOffsets} = this._itemsHeightData;
-            const viewportCenter = fixedScrollTop + viewport / 2;
+            const { itemsOffsets } = this._itemsHeightData;
+            const placeholders = this._getPlaceholders();
+            const scrollTopWithPlaceholder = fixedScrollTop + placeholders.top;
+            const knownContentHeight = scroll + placeholders.bottom + placeholders.top;
+            const indexLineRatio = scrollTopWithPlaceholder / (knownContentHeight - viewport);
+            const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
             for (let i = this._range.start ; i < this._range.stop; i++) {
-                if (itemsOffsets[i] < viewportCenter) {
+                if (itemsOffsets[i] < (fixedScrollTop + viewport * indexLine)) {
                     itemIndex = i;
                 } else {
                     break;
