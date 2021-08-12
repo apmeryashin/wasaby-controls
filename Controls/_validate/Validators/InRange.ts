@@ -3,14 +3,14 @@ import {date as formatDate} from 'Types/formatter';
 import {Logger} from 'UI/Utils';
 
 interface IArgs {
-    value: Date;
-    minValue?: Date;
-    maxValue?: Date;
+    value: Number;
+    minValue: Number;
+    maxValue: Number;
 }
 
 /**
- * Функция проверяет, попадает ли дата в заданные диапазон.
- * @class Controls/_validate/Validators/inRange
+ * Функция проверяет, попадает ли число в заданный диапазон.
+ * @class Controls/_validate/Validators/InRange
  * @public
  * @author Красильников А.С.
  * @remark
@@ -29,39 +29,40 @@ interface IArgs {
  *
  * @example
  * <pre>
- * <Controls.dateRange:Input>
- *     <ws:startValueValidators>
- *         <ws:Array>
- *             <ws:Function value="{{ _startValue }} minValue="{{ _minValue }}" maxValue="{{ _maxValue }}">Controls/validate:inRange</ws:Function>
- *         </ws:Array>
- *     </ws:startValueValidators>
- *     <ws:endValueValidators>
- *         <ws:Array>
- *             <ws:Function value="{{ _endValue }} minValue="{{ _minValue }}" maxValue="{{ _maxValue }}">Controls/validate:inRange</ws:Function>
- *         </ws:Array>
- *     </ws:endValueValidators>
- * </Controls.dateRange:Input>
- * </pre>
- * </pre>
- *  this._minValue = new Date(2015, 0);
- *  this._maxValue = new Date(2030, 0);
+ *  <Controls.validate:InputContainer name="InputValidate">
+ *      <ws:validators>
+ *          <ws:Function value="{{ _value }}" minValue="10" maxValue="15">Controls/validate:inRange</ws:Function>
+ *      </ws:validators>
+ *      <ws:content>
+ *          <Controls.input:Number bind:value="_value"/>
+ *      </ws:content>
+ *  </Controls.validate:InputContainer>
  * </pre>
  */
 
 export default function(args: IArgs): boolean | string {
-    if (args.minValue && args.maxValue && args.maxValue < args.minValue) {
+    const min = Number(args.minValue);
+    const max = Number(args.maxValue);
+    const value = Number(args.value);
+    const createTypeError = (propertyName) => {
+        Logger.error(`Controls.validate:inRange: ${propertyName} не является числом`);
+    };
+
+    if (isNaN(min)) {
+        createTypeError('minValue');
+    }
+    if (isNaN(max)) {
+        createTypeError('maxValue');
+    }
+    if (isNaN(value)) {
+        createTypeError('value');
+    }
+    if (max < min) {
         Logger.error('Controls.validate:inRange: maxValue не может быть меньше чем minValue');
     }
 
-    if (!args.value || !(args.minValue || args.maxValue) ||
-        (args.value >= args.minValue && args.value <= args.maxValue)) {
+    if (value >= min && value <= max) {
         return true;
     }
-    const errorText = rk('Значение должно попадать в диапазон');
-    if (!args.maxValue) {
-        return `${errorText} ${rk('с')} ${formatDate(args.minValue, formatDate.FULL_DATE)}`;
-    } else if (!args.minValue) {
-        return `${errorText} ${rk('по', 'Period')} ${formatDate(args.maxValue, formatDate.FULL_DATE)}`;
-    }
-    return `${errorText}: ${formatDate(args.minValue, formatDate.FULL_DATE)} - ${formatDate(args.maxValue, formatDate.FULL_DATE)}`;
+    return `${rk('Значение должно попадать в диапазон')} [${min}; ${max}]`;
 }
