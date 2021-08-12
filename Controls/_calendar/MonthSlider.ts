@@ -21,8 +21,8 @@ import 'css!Controls/calendar';
  * @extends UI/Base:Control
  * @mixes Controls/calendar:IMonth
  * @mixes Controls/dateRange:IRangeSelectable
- * @mixes Controls/dateRange:IDateRangeSelectable
- * @mixes Controls/dateRange:IDayTemplate
+ * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDayTemplate
  *
  * @public
  * @author Красильников А.С.
