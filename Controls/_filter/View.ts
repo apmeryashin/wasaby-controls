@@ -392,9 +392,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         }
         const newValue = object.getPropertyValue(item, 'resetValue');
         object.setPropertyValue(item, 'value', newValue);
-        if (object.getPropertyValue(item, 'displayTextValue')) {
-            object.setPropertyValue(item, 'displayTextValue', null);
-        }
         this._notifyChanges(this._source);
         this._updateText(this._source, this._configs);
     }
@@ -477,29 +474,9 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         return this._dialogOpener;
     }
 
-    private _updateTextValue(newItems: IFilterItem[], oldItems: IFilterItem[]): IFilterItem[] {
-        newItems.forEach((newItem) => {
-            if (this._isFrequentItem(newItem)) {
-                const oldItem = this._getItemByName(oldItems,  newItem.name);
-                if (newItem.displayTextValue && !isEqual(oldItem.value, newItem.value)) {
-                    if (newItem.textValue) {
-                        newItem.displayTextValue = {
-                            text: newItem.textValue,
-                            hasMoreText: '',
-                            title: newItem.textValue
-                        };
-                    } else {
-                        newItem.displayTextValue = null;
-                    }
-                }
-            }
-        });
-    }
-
     private _resultHandler(result: IResultPopup): void {
         if (!result.action) {
             const filterSource = converterFilterItems.convertToFilterSource(result.items);
-            this._updateTextValue(filterSource, this._source);
             this._resolveItems(mergeSource(this._source, filterSource));
             this._updateText(this._source, this._configs, true);
         } else {
@@ -722,7 +699,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
     private _getFastText(config: IFilterItemConfig, selectedKeys: string[], item?: IFilterItem): IDisplayText {
         const textArr = [];
-        const displayTextValue = item?.displayTextValue;
         if (selectedKeys[0] === config.emptyKey && config.emptyText) {
             textArr.push(config.emptyText);
         } else if (config.items) {
@@ -732,11 +708,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                     textArr.push(object.getPropertyValue(selectedItem, config.displayProperty));
                 }
             });
-        } else if (displayTextValue) {
-            return {
-                ...displayTextValue,
-                title: item?.textValue ? item.textValue : ''
-            };
         } else if (item?.textValue) {
             textArr.push(item.textValue);
         }
@@ -783,7 +754,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                         }
                         if (item.textValue !== undefined && !detailPanelHandler) {
                             item.textValue = displayText.title;
-                            item.displayTextValue = displayText;
                         }
                     } else if (item.textValue) {
                         /* Сюда мы попадем только в случае, когда фильтр выбрали с панели фильтров,
