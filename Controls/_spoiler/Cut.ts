@@ -32,6 +32,7 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
     protected _lineHeightForIE: Record<string, number> = IECompatibleLineHeights;
 
     private _resizeObserver: ResizeObserverUtil;
+    private _firstResizePassed: boolean = false;
 
     readonly '[Controls/_interface/IBackgroundStyle]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
@@ -48,13 +49,22 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
     }
 
     private _resizeObserverCallback(): void {
+        // ResizeObserver выстрелит в первый раз после инициализации. Если кат изначально был открыт - его скроет.
+        // Игнорируем первый вызов.
+        if (!this._firstResizePassed) {
+            this._firstResizePassed = true;
+            return;
+        }
         if (this._expanded) {
+            // Скрываем кат, если контент поменял размер
             this._expanded = false;
+            this._notify('expandedChanged', [this._expanded]);
         }
     }
 
     protected _beforeUpdate(options?: ICutOptions, contexts?: any): void {
-        if (options.hasOwnProperty('expanded') && this._options.expanded !== options.expanded) {
+        if (options.hasOwnProperty('expanded') && (this._options.expanded !== options.expanded ||
+            this._expanded !== options.expanded)) {
             this._expanded = options.expanded;
         }
         this._lines = Cut._calcLines(options.lines, this._expanded);
