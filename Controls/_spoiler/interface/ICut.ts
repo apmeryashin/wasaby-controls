@@ -61,11 +61,11 @@ export interface ICutOptions extends ICutButton, IBackgroundStyleOptions, IExpan
 /**
  * Интерфейс для контролов, ограничивающих контент заданным числом строк.
  * @interface Controls/_spoiler/interface/ICut
- * @implements Control/interface:IBackgroundStyle
- * @implements Control/interface:IExpandable
+ * @implements Controls/interface:IBackgroundStyle
+ * @implements Controls/interface:IExpandable
  * @implements Controls/interface:IIconSize
  * @implements Controls/interface:IHeight
- * @implements Control/interface:IContrastBackground
+ * @implements Controls/interface:IContrastBackground
  * @public
  * @author Красильников А.С.
  */
