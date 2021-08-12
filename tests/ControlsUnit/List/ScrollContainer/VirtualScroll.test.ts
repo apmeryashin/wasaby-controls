@@ -1,6 +1,12 @@
 import controller from 'Controls/_baseList/ScrollContainer/VirtualScroll';
 import {assert} from 'chai';
 
+const itemSizes = {
+    small: 30,
+    medium: 60,
+    big: 120
+};
+
 function getItemsHeightsData(itemsHeights: number[]): { itemsHeights: number[], itemsOffsets: number[] } {
     let sum = 0;
     const itemHeightsData = {itemsHeights: [], itemsOffsets: []};
@@ -361,52 +367,241 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         });
     });
     describe('.getActiveElementIndex()', () => {
-        it('no items', () => {
-            const instance = new controller({}, {});
+        const itemsHeights = [
+            itemSizes.small,
+            itemSizes.small,
+            itemSizes.medium,
+            itemSizes.small,
+            itemSizes.big,
+            itemSizes.big,
+            itemSizes.medium,
+            itemSizes.medium,
+            itemSizes.big,
+            itemSizes.small,
+            itemSizes.small
+        ];
 
-            assert.isUndefined(instance.getActiveElementIndex(0));
+        let instance;
+
+        beforeEach(() => {
+            instance = new controller({
+                pageSize: itemsHeights.length, segmentSize: 1
+            }, {
+                viewport: 90, topTrigger: 30, bottomTrigger: 30, scroll: 690
+            });
+            instance.resetRange(0, itemsHeights.length);
+            instance.updateItemsHeights(getItemsHeightsData(itemsHeights));
         });
-        it('scrolled to bottom', () => {
-            // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 600});
-            // tslint:disable-next-line:no-magic-numbers
-            instance.resetRange(0, 5);
-            // tslint:disable-next-line:ban-ts-ignore
-            // @ts-ignore
-            // tslint:disable-next-line:no-magic-numbers
-            instance.updateItemsHeights(getItemsHeightsData([60, 60, 60, 60, 60]));
 
-            // tslint:disable-next-line:no-magic-numbers
-            assert.equal(4, instance.getActiveElementIndex(400));
-            // tslint:disable-next-line:no-magic-numbers
-            assert.equal(4, instance.getActiveElementIndex(500));
+        afterEach(() => {
+            instance = undefined;
         });
-        it('scrolled to top', () => {
-            // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 600});
-            // tslint:disable-next-line:no-magic-numbers
-            instance.resetRange(0, 5);
-            // tslint:disable-next-line:ban-ts-ignore
-            // @ts-ignore
-            // tslint:disable-next-line:no-magic-numbers
-            instance.updateItemsHeights(getItemsHeightsData([60, 60, 60, 60, 60]));
 
-            assert.equal(0, instance.getActiveElementIndex(0));
-            // tslint:disable-next-line:no-magic-numbers
-            assert.equal(0, instance.getActiveElementIndex(-20));
+        // visualized test-cases: https://drive.google.com/file/d/1woIdGy-5Hsn4FfQyFGlDrLelJCBEEECs/view?usp=sharing
+        it('scroll = 0', () => {
+            const scrollTop = 0;
+            const expectedIndex = 0;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
         });
-        it('middle case', () => {
-            // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 600});
-            // tslint:disable-next-line:no-magic-numbers
-            instance.resetRange(0, 5);
-            // tslint:disable-next-line:ban-ts-ignore
-            // @ts-ignore
-            // tslint:disable-next-line:no-magic-numbers
-            instance.updateItemsHeights(getItemsHeightsData([60, 60, 60, 60, 60]));
-
-            // tslint:disable-next-line:no-magic-numbers
-            assert.equal(1, instance.getActiveElementIndex(2));
+        it('scroll = 15', () => {
+            const scrollTop = 15;
+            const expectedIndex = 0;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 30', () => {
+            const scrollTop = 30;
+            const expectedIndex = 1;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 45', () => {
+            const scrollTop = 45;
+            const expectedIndex = 1;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 60', () => {
+            const scrollTop = 60;
+            const expectedIndex = 2;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 75', () => {
+            const scrollTop = 75;
+            const expectedIndex = 2;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 90', () => {
+            const scrollTop = 90;
+            const expectedIndex = 2;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 105', () => {
+            const scrollTop = 105;
+            const expectedIndex = 3;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 120', () => {
+            const scrollTop = 120;
+            const expectedIndex = 3;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 135', () => {
+            const scrollTop = 135;
+            const expectedIndex = 4;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 150', () => {
+            const scrollTop = 150;
+            const expectedIndex = 4;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 165', () => {
+            const scrollTop = 165;
+            const expectedIndex = 4;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 180', () => {
+            const scrollTop = 180;
+            const expectedIndex = 4;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 195', () => {
+            const scrollTop = 195;
+            const expectedIndex = 4;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 210', () => {
+            const scrollTop = 210;
+            const expectedIndex = 4;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 225', () => {
+            const scrollTop = 225;
+            const expectedIndex = 4;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 240', () => {
+            const scrollTop = 240;
+            const expectedIndex = 5;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 255', () => {
+            const scrollTop = 255;
+            const expectedIndex = 5;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 270', () => {
+            const scrollTop = 270;
+            const expectedIndex = 5;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 285', () => {
+            const scrollTop = 285;
+            const expectedIndex = 5;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 300', () => {
+            const scrollTop = 300;
+            const expectedIndex = 5;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 315', () => {
+            const scrollTop = 315;
+            const expectedIndex = 5;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 330', () => {
+            const scrollTop = 330;
+            const expectedIndex = 5;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 345', () => {
+            const scrollTop = 345;
+            const expectedIndex = 6;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 360', () => {
+            const scrollTop = 360;
+            const expectedIndex = 6;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 375', () => {
+            const scrollTop = 375;
+            const expectedIndex = 6;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 390', () => {
+            const scrollTop = 390;
+            const expectedIndex = 6;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 405', () => {
+            const scrollTop = 405;
+            const expectedIndex = 7;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 420', () => {
+            const scrollTop = 420;
+            const expectedIndex = 7;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 435', () => {
+            const scrollTop = 435;
+            const expectedIndex = 7;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 450', () => {
+            const scrollTop = 450;
+            const expectedIndex = 8;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 465', () => {
+            const scrollTop = 465;
+            const expectedIndex = 8;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 480', () => {
+            const scrollTop = 480;
+            const expectedIndex = 8;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 495', () => {
+            const scrollTop = 495;
+            const expectedIndex = 8;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 510', () => {
+            const scrollTop = 510;
+            const expectedIndex = 8;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 525', () => {
+            const scrollTop = 525;
+            const expectedIndex = 8;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 540', () => {
+            const scrollTop = 540;
+            const expectedIndex = 8;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 555', () => {
+            const scrollTop = 555;
+            const expectedIndex = 9;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 570', () => {
+            const scrollTop = 570;
+            const expectedIndex = 9;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 585', () => {
+            const scrollTop = 585;
+            const expectedIndex = 10;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
+        });
+        it('scroll = 600', () => {
+            const scrollTop = 600;
+            const expectedIndex = 10;
+            assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
         });
     });
     describe('.getParamsToRestoreScroll()', () => {
