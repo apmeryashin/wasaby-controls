@@ -1,5 +1,5 @@
 <div class="{{ item.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle) }}"
-    style="{{ item.getTitleWrapperStyles(itemType, imageViewMode, imagePosition, gradientColor) }}">
+    style="{{ item.getTitleWrapperStyles(itemType, imageViewMode, imagePosition, gradientColor, gradientStartColor, gradientStopColor, gradientDirection) }}">
     <ws:if data="{{ (item || itemData).shouldDisplayGradient(itemType, imageEffect, imageViewMode, imagePosition, 'title') }}">
         <div
             class="{{ (item || itemData).getGradientClasses(itemType, gradientType) }}"
