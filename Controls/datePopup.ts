@@ -62,13 +62,13 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  * @class Controls/datePopup
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
- * @mixes Controls/dateRange:IDateRangeSelectable
- * @mixes Controls/dateRange:IDayTemplate
+ * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDayTemplate
  *
  * @implements Controls/interface:IDateMask
- * @mixes Controls/dateRange:IDateRange
+ * @implements Controls/dateRange:IDateRange
  * @implements Controls/interface:IDateRangeValidators
- * @mixes Controls/dateRange:ICaptionFormatter
+ * @implements Controls/dateRange:ICaptionFormatter
  *
  * @public
  * @author Красильников А.С.
@@ -81,10 +81,10 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  *
  * @class Controls/datePopup
  * @extends UI/Base:Control
- * @mixes Controls/dateRange:IDateRangeSelectable
- * @mixes Controls/dateRange:IDayTemplate
+ * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/interface:IDateMask
- * @mixes Controls/dateRange:IDateRange
+ * @implements Controls/dateRange:IDateRange
  * @implements Controls/interface:IDateRangeValidators
  *
  * @public
