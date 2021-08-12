@@ -5,8 +5,6 @@ import {ISelectionObject, TKey, ISourceOptions, INavigationSourceConfig} from 'C
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {mixin} from 'Types/util';
-import HistorySource from 'Controls/_history/Source';
-import {RecordSet} from 'Types/collection';
 
 interface IKeysByList {
     [key: string]: TKey[];
@@ -249,6 +247,6 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     }
 }
 
-Object.assign(HistorySource.prototype, {
+Object.assign(OperationsController.prototype, {
     _moduleName: 'Controls/operations:ControllerClass'
 });

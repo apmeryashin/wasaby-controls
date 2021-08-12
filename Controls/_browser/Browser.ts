@@ -178,8 +178,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                     return result.map(({data, historyItems}) => {
                         return {
                             historyItems,
-                            data,
-                            operationsController: this._operationsController
+                            data
                         };
                     });
                 } else {
