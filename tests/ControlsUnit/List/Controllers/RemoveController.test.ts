@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {spy, stub, assert as sinonAssert} from 'sinon';
+import * as sinon from 'sinon';
 
 import {Logger} from 'UI/Utils';
 import {Control} from 'UI/Base';
@@ -62,6 +62,7 @@ describe('Controls/list_clean/RemoveController', () => {
     let source: Memory;
     let stubLoggerError: any;
     let selectionObject: ISelectionObject;
+    let sandBox: sinon.SinonSandbox;
 
     beforeEach(() => {
         const _data = clone(data);
@@ -79,12 +80,14 @@ describe('Controls/list_clean/RemoveController', () => {
             data: _data
         });
 
+        sandBox = sinon.createSandbox();
+
         // to prevent throwing console error
-        stubLoggerError = stub(Logger, 'error').callsFake((message, errorPoint, errorInfo) => ({}));
+        stubLoggerError = sandBox.stub(Logger, 'error').callsFake((message, errorPoint, errorInfo) => ({}));
     });
 
     afterEach(() => {
-        stubLoggerError.restore();
+        sandBox.restore();
     })
 
     it('remove() should not remove without source', () => {
@@ -98,15 +101,14 @@ describe('Controls/list_clean/RemoveController', () => {
 
     it('removeWithConfirmation() should not remove without source', () => {
         controller = new RemoveController({source: undefined});
-        const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
+        const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, selectionObject).then((result: boolean) => {
 
             // Ожидаем, что пользователь увидит окно подтверждения
-            sinonAssert.called(stubConfirmation);
+            sandBox.assert.called(stubConfirmation);
 
             // Ожидаем, что упадёт из-за ошибки, брошенной в контроллере
             assert.isFalse(result);
-            stubConfirmation.restore();
         });
     });
 
@@ -123,15 +125,14 @@ describe('Controls/list_clean/RemoveController', () => {
     it('removeWithConfirmation() should remove when correct source set via update', () => {
         controller = new RemoveController({source: undefined});
         controller.updateOptions({source: source});
-        const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
+        const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, selectionObject).then((result: boolean) => {
 
             // Ожидаем, что пользователь увидит окно подтверждения
-            sinonAssert.called(stubConfirmation);
+            sandBox.assert.called(stubConfirmation);
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
-            stubConfirmation.restore()
         });
     });
 
@@ -148,17 +149,16 @@ describe('Controls/list_clean/RemoveController', () => {
 
     it('removeWithConfirmation() should not remove with incorrect selection', () => {
         controller = new RemoveController({source});
-        const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
+        const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
 
         // @ts-ignore
         return resolveRemoveWithConfirmation(controller, [0, 1, 2]).then((result: boolean) => {
 
             // Ожидаем, что пользователь увидит окно подтверждения
-            sinonAssert.called(stubConfirmation);
+            sandBox.assert.called(stubConfirmation);
 
             // Ожидаем, что упадёт из-за ошибки, брошенной в контроллере
             assert.isFalse(result);
-            stubConfirmation.restore()
         });
     });
 
@@ -175,17 +175,16 @@ describe('Controls/list_clean/RemoveController', () => {
 
     it('removeWithConfirmation() should not remove with undefined selection', () => {
         controller = new RemoveController({source});
-        const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
+        const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
 
         // @ts-ignore
         return resolveRemoveWithConfirmation(controller, undefined).then((result: boolean) => {
 
             // Ожидаем, что пользователь увидит окно подтверждения
-            sinonAssert.called(stubConfirmation);
+            sandBox.assert.called(stubConfirmation);
 
             // Ожидаем, что упадёт из-за ошибки, брошенной в контроллере
             assert.isFalse(result);
-            stubConfirmation.restore()
         });
     });
 
@@ -195,11 +194,11 @@ describe('Controls/list_clean/RemoveController', () => {
             excluded: [3]
         };
         controller = new RemoveController({source});
-        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({
+        const stubQuery = sandBox.stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({
             keyProperty: 'id',
             rawData: [{id: 1}, {id: 5}]
         })));
-        const stubDestroy = stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
+        const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 5);
             return Promise.resolve();
         })
@@ -208,10 +207,8 @@ describe('Controls/list_clean/RemoveController', () => {
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
-            sinonAssert.called(stubQuery);
-            sinonAssert.called(stubDestroy);
-            stubQuery.restore();
-            stubDestroy.restore();
+            sandBox.assert.called(stubQuery);
+            sandBox.assert.called(stubDestroy);
         });
     });
 
@@ -221,21 +218,18 @@ describe('Controls/list_clean/RemoveController', () => {
             excluded: [3]
         };
         controller = new RemoveController({source});
-        const spyQuery = spy(source, 'query');
-        const spyDestroy = spy(source, 'destroy')
-        const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
+        const spyQuery = sandBox.spy(source, 'query');
+        const spyDestroy = sandBox.spy(source, 'destroy')
+        const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 
             // Ожидаем, что пользователь увидит окно подтверждения
-            sinonAssert.called(stubConfirmation);
+            sandBox.assert.called(stubConfirmation);
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
-            sinonAssert.called(spyQuery);
-            sinonAssert.called(spyDestroy);
-            spyQuery.restore();
-            spyDestroy.restore();
-            stubConfirmation.restore()
+            sandBox.assert.called(spyQuery);
+            sandBox.assert.called(spyDestroy);
         });
     });
 
@@ -244,11 +238,11 @@ describe('Controls/list_clean/RemoveController', () => {
             selected: [],
             excluded: [3]
         };
-        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({
+        const stubQuery = sandBox.stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({
             keyProperty: 'id',
             rawData: [{id: 1}, {id: 2}, {id: 5}]
         })));
-        const stubDestroy = stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
+        const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 2);
             return Promise.resolve();
         })
@@ -257,10 +251,8 @@ describe('Controls/list_clean/RemoveController', () => {
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
-            sinonAssert.called(stubQuery);
-            sinonAssert.called(stubDestroy);
-            stubQuery.restore();
-            stubDestroy.restore();
+            sandBox.assert.called(stubQuery);
+            sandBox.assert.called(stubDestroy);
         });
     });
 
@@ -270,21 +262,41 @@ describe('Controls/list_clean/RemoveController', () => {
             excluded: [3]
         };
         controller = new RemoveController({source});
-        const spyQuery = spy(source, 'query');
-        const spyDestroy = spy(source, 'destroy')
-        const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
+        const spyQuery = sandBox.spy(source, 'query');
+        const spyDestroy = sandBox.spy(source, 'destroy')
+        const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 
             // Ожидаем, что пользователь увидит окно подтверждения
-            sinonAssert.called(stubConfirmation);
+            sandBox.assert.called(stubConfirmation);
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
-            sinonAssert.called(spyQuery);
-            sinonAssert.called(spyDestroy);
-            spyQuery.restore();
-            spyDestroy.restore();
-            stubConfirmation.restore()
+            sandBox.assert.called(spyQuery);
+            sandBox.assert.called(spyDestroy);
+        });
+    });
+
+    it('removeItems() should call query for [null] selection', () => {
+        const correctSelection = {
+            selected: [null],
+            excluded: []
+        };
+        const stubQuery = sandBox.stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({
+            keyProperty: 'id',
+            rawData: [{id: 1}, {id: 2}, {id: 5}]
+        })));
+        const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
+            assert.equal(keys[1], 2);
+            return Promise.resolve();
+        })
+        controller = new RemoveController({source});
+        return resolveRemove(controller, correctSelection).then((result: boolean) => {
+
+            // Ожидаем, что удаление пройдёт успешно
+            assert.isTrue(result);
+            sandBox.assert.called(stubQuery);
+            sandBox.assert.called(stubDestroy);
         });
     });
 });
