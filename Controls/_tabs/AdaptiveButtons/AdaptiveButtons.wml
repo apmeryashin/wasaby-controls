@@ -3,21 +3,22 @@
         <div class="controls-AdaptiveButtons__more controls-AdaptiveButtons__more_align_{{_options.align}}" >
             <div class="controls-AdaptiveButtons__more__text controls-AdaptiveButtons__more__text_align_{{_options.align}}">
                 <Controls.Container.Async templateName="Controls/dropdown:Selector">
-                    <ws:partial template="{{content.resolvedTemplate}}"
-                            name="menuButton"
-                            keyProperty="{{_options.keyProperty}}"
-                            parentProperty="parent"
-                            nodeProperty="@parent"
-                            source="{{_menuSource}}"
-                            displayProperty="{{_options.displayProperty}}"
-                            filter="{{_filter}}"
-                            selectedKey="{{_options.selectedKey}}"
-                            on:selectedKeysChanged="_menuItemClickHandler()"
-                            on:mousedown="_onMouseDownHandler()">
-                        <ws:contentTemplate>
-                            <ws:partial template="Controls/dropdown:inputDefaultContentTemplate" text="{[Еще]}..."/>
-                        </ws:contentTemplate>
-                    </ws:partial>
+                    <Controls.source:SelectedKey selectedKey="{{_options.selectedKey}}">
+                        <ws:partial template="{{content.resolvedTemplate}}"
+                                name="menuButton"
+                                keyProperty="{{_options.keyProperty}}"
+                                parentProperty="parent"
+                                nodeProperty="@parent"
+                                source="{{_menuSource}}"
+                                displayProperty="{{_options.displayProperty}}"
+                                filter="{{_filter}}"
+                                on:selectedKeysChanged="_menuItemClickHandler()"
+                                on:mousedown="_onMouseDownHandler()">
+                            <ws:contentTemplate>
+                                <ws:partial template="Controls/dropdown:inputDefaultContentTemplate" text="{[Еще]}..."/>
+                            </ws:contentTemplate>
+                        </ws:partial>
+                    </Controls.source:SelectedKey>
                 </Controls.Container.Async>
             </div>
         </div>
