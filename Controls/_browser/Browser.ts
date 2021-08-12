@@ -359,7 +359,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
-        this._updateFilterController(options, newOptions);
+        this._updateFilterController(options, newOptions, id);
 
         if (sourceChanged) {
             this._source = newOptions.source;
