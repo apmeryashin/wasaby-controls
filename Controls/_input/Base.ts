@@ -296,7 +296,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
 
     private _updatePlaceholderDisplay(options: IBaseInputOptions): void {
         if (this._options.placeholder !== options.placeholder) {
-            this._placeholderDisplay = (typeof options.placeholder !== "string" ? 'under' : 'above');
+            this._placeholderDisplay = (typeof options.placeholder === "string" ? 'under' : 'above');
         }
     }
 
