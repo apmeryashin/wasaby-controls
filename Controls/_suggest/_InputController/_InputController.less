@@ -1,4 +1,4 @@
-@import "../../_scroll/Scroll/_contentEnvironmentZIndex";
+@import 'Controls/_scroll/Scroll/_contentEnvironmentZIndex';
 
 .controls-SuggestV {
 	max-width: 100%;
@@ -18,11 +18,11 @@
 	border-radius: var(--border-radius_suggest);
 	padding: var(--offset_xs) 0;
 	// Строка поиска с автодополнением должна перекрывать тени скрола, скроллбар, стики заголовки внутри скрола
-	z-index: var(--popup_z-index_suggest);
+	z-index: @z-index_Scroll-contentEnvironment + 1;
 }
 
 .controls-Suggest-Text_style_overInput {
-	z-index: var(--input_z-index_suggest);
+	z-index:  @z-index_Scroll-contentEnvironment + 2;
 }
 
 .controls-Suggest__footer {
