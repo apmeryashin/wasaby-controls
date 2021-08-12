@@ -68,13 +68,6 @@ define(
                   resetValue: 'resetValue5',
                   textValue: null,
                   visibility: false
-               },
-               {
-                  id: 'frequent',
-                  value: 2,
-                  resetValue: 1,
-                  textValue: 'frequent',
-                  displayTextValue: {}
                }
             ];
 
@@ -110,13 +103,6 @@ define(
                   resetValue: 'resetValue5',
                   textValue: null,
                   visibility: false
-               },
-               {
-                  id: 'frequent',
-                  value: 1,
-                  resetValue: 1,
-                  textValue: '',
-                  displayTextValue: null
                }
             ];
 
