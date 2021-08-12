@@ -451,7 +451,7 @@ export default abstract class Row<T> {
             if (this.hasMultiSelectColumn() && shouldColspanWithMultiselect) {
                 colspan++;
             }
-            if (shouldColspanWithStickyLadderCells && this.isFullGridSupport()) {
+            if ((shouldColspanWithStickyLadderCells || colspan > 1 && columnIndex === 0)  && this.isFullGridSupport()) {
                 const stickyLadderProperties = this.getStickyLadderProperties(this.getGridColumnsConfig()[0]);
                 const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
                 colspan += stickyLadderCellsCount;
@@ -558,7 +558,7 @@ export default abstract class Row<T> {
 
             // Заполняем ячейки для лесенки.
             // TODO: Не работает с колспаннутыми узлами. Нужно чтобы лесенка работала до колспана или сквозь него.
-            if (options.shouldAddStickyLadderCells !== false && this.isFullGridSupport()) {
+            if (options.shouldAddStickyLadderCells !== false && this.isFullGridSupport() && this._$columnItems[0].getColspan() === 1) {
                 this._processStickyLadderCells(options.addEmptyCellsForStickyLadder, options.extensionCellsConstructors?.stickyLadderCell);
             }
 
