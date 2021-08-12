@@ -2,7 +2,6 @@
                               maximizeButtonVisibility="{{_options.maximizedButtonVisibility}}"
                               stackWidth="{{_options.workspaceWidth}}"
                               stackMinWidth="{{_options.stackMinWidth}}"
-                              viewSwitchingWidth="{{_options.viewSwitchingWidth}}"
                               stackMaxWidth="{{_options.stackMaxWidth}}">
     <ws:headerContentTemplate>
             <Controls.buttons:Button attr:class="demo-Header__closeButton" attr:ws-no-focus="true"
@@ -13,7 +12,7 @@
             <div class="demo-Header__column">
                 <ws:partial template="Controls-demo/Popup/BaseTemplate"/>
             </div>
-            <ws:if data="{{_options.workspaceWidth >= _options.viewSwitchingWidth}}">
+            <ws:if data="{{_options.workspaceWidth >= 700}}">
                 <div class="demo-Header__column">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
                 </div>

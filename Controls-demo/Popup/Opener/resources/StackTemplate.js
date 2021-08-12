@@ -14,5 +14,20 @@ define('Controls-demo/Popup/Opener/resources/StackTemplate',
 
       });
 
+      PopupPage.getDefaultOptions = function() {
+         return {
+            dividingWidth: 700
+         };
+      };
+
+      Object.defineProperty(PopupPage, 'defaultProps', {
+         enumerable: true,
+         configurable: true,
+
+         get: function() {
+            return PopupPage.getDefaultOptions();
+         }
+      });
+
       return PopupPage;
    });
