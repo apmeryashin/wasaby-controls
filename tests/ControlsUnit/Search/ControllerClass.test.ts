@@ -430,8 +430,7 @@ describe('Controls/search:ControllerClass', () => {
          const hierarchyOptions = {
             parentProperty: 'parentProperty',
             root: 'testRoot',
-            startingWith: 'root',
-            saveRootOnSearch: true
+            startingWith: 'root'
          };
          const sourceController = getSourceController({
             source: new Memory(),
@@ -441,6 +440,14 @@ describe('Controls/search:ControllerClass', () => {
             sourceController,
             ...hierarchyOptions
          });
+         searchController.setPath(new RecordSet({
+            rawData: [
+               {
+                  id: 'testId',
+                  parentProperty: 'testParent'
+               }
+            ]
+         }));
          await searchController.search('testSearchValue');
          assert.ok(sourceController.getFilter().searchStartedFromRoot === 'testRoot');
       });
