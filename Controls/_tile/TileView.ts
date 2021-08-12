@@ -239,7 +239,8 @@ export default class TileView extends ListView {
                     horizontal: 'left'
                 },
                 fittingMode: {
-                    vertical: 'overflow'
+                    vertical: 'overflow',
+                    horizontal: 'overflow'
                 },
                 opener: menuConfig.opener,
                 template: 'Controls/tile:ActionsMenu',
