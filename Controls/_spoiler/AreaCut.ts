@@ -36,10 +36,6 @@ class AreaCut extends Cut {
         super._beforeMount(options);
     }
 
-    protected _afterMount(options: ICutOptions): void {
-        // Заглушка, чтобы не стрелял afterMount у родителя
-    }
-
     protected _beforeUpdate(options: IAreaCutOptions): void {
         if (!options.readOnly && !this._firstEditPassed) {
             this._expanded = true;
@@ -63,6 +59,10 @@ class AreaCut extends Cut {
             this._shouldUpdateCutButtonVisibility = false;
             this._countCutButtonVisibility();
         }
+    }
+
+    protected _initResizeObserver(): void {
+        // Заглушка, для того чтобы не инициализировать ResizeObserver
     }
 
     protected _valueChangedHandler(event: Event, value: string): void {
