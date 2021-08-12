@@ -8,16 +8,16 @@ import DateRangeSelectorConsumer from 'Controls/_dateRange/_DateRangeSelectorCon
  * @class Controls/_dateRange/RangeShortSelectorConsumer
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
- * @mixes Controls/dateRange:ILinkView
+ * @implements Controls/dateRange:ILinkView
  * @mixes Controls/dateRange:IPeriodLiteDialog
- * @mixes Controls/dateRange:IDateRange
+ * @implements Controls/dateRange:IDateRange
  * @implements Controls/interface:IDisplayedRanges
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:IFontColorStyle
- * @mixes Controls/dateRange:ICaptionFormatter
+ * @implements Controls/dateRange:ICaptionFormatter
  * @remark
  * Контрол используется для работы с кнопками dateRange:ArrowButtonConsumer, которые двигают период.
  * Стоит использовать контрол только в связке с dateRange:DateRangeContextProvider.
