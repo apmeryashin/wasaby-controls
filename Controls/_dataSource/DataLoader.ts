@@ -364,6 +364,10 @@ export default class DataLoader {
         return sourceController;
     }
 
+    setSourceController(id: string, sourceController: NewSourceController): void {
+        this._getConfig(id).sourceController = sourceController;
+    }
+
     getFilterController(id?: string): FilterController {
         const config = this._getConfig(id);
         let {filterController} = config;

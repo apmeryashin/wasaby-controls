@@ -798,6 +798,20 @@ describe('Controls/browser:Browser', () => {
                 assert.deepEqual(browser._getSourceController().getExpandedItems(), [1]);
             });
 
+            it('sourceController is changed', async () => {
+                let options = getBrowserOptions();
+                options.sourceController = new NewSourceController({...options});
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                const sourceController = new NewSourceController({...options});
+                options = {...options};
+                options.sourceController = sourceController;
+                await browser._beforeUpdate(options);
+                assert.ok(browser._getSourceController() === sourceController);
+            });
+
             describe('listsOptions', () => {
                 it('prefetchProxy source in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();

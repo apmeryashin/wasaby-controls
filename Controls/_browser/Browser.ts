@@ -361,6 +361,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
         this._updateFilterController(options, newOptions);
 
+        if (options.sourceController !== newOptions.sourceController) {
+            this._dataLoader.setSourceController(id, newOptions.sourceController);
+        }
+
         if (sourceChanged) {
             this._source = newOptions.source;
         }
