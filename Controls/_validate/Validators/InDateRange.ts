@@ -54,14 +54,15 @@ export default function(args: IArgs): boolean | string {
     }
 
     if (!args.value || !(args.minValue || args.maxValue) ||
-        (args.value >= args.minValue && args.value <= args.maxValue)) {
+        !(args.value < args.minValue || args.value > args.maxValue)) {
         return true;
     }
-    const errorText = rk('Значение должно попадать в диапазон');
-    if (!args.maxValue) {
-        return `${errorText} ${rk('с')} ${formatDate(args.minValue, formatDate.FULL_DATE)}`;
-    } else if (!args.minValue) {
-        return `${errorText} ${rk('по', 'Period')} ${formatDate(args.maxValue, formatDate.FULL_DATE)}`;
+    let errorText = rk('Значение должно попадать в диапазон');
+    if (args.minValue) {
+        errorText += ` ${rk('от')} ${formatDate(args.minValue, formatDate.FULL_DATE)}`;
     }
-    return `${errorText}: ${formatDate(args.minValue, formatDate.FULL_DATE)} - ${formatDate(args.maxValue, formatDate.FULL_DATE)}`;
+    if (args.maxValue) {
+        errorText += ` ${rk('до')} ${formatDate(args.maxValue, formatDate.FULL_DATE)}`;
+    }
+    return errorText;
 }

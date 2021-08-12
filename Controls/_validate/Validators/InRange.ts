@@ -48,21 +48,28 @@ export default function(args: IArgs): boolean | string {
         Logger.error(`Controls.validate:inRange: ${propertyName} не является числом`);
     };
 
-    if (isNaN(min)) {
+    if (args.minValue && isNaN(min)) {
         createTypeError('minValue');
     }
-    if (isNaN(max)) {
+    if (args.maxValue && isNaN(max)) {
         createTypeError('maxValue');
     }
-    if (isNaN(value)) {
+    if (args.value && isNaN(value)) {
         createTypeError('value');
     }
     if (max < min) {
         Logger.error('Controls.validate:inRange: maxValue не может быть меньше чем minValue');
     }
 
-    if (value >= min && value <= max) {
+    if (!(value < min || value > max)) {
         return true;
     }
-    return `${rk('Значение должно попадать в диапазон')} [${min}; ${max}]`;
+    let errorText = rk('Значение должно попадать в диапазон');
+    if (min) {
+        errorText += ` ${rk('от')} ${min}`;
+    }
+    if (max) {
+        errorText += ` ${rk('до')} ${max}`;
+    }
+    return errorText;
 }
