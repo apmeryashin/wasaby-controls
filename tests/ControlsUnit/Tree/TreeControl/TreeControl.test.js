@@ -1575,6 +1575,9 @@ define([
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'last');
+
+         // Если не нашли элемент, значит, еще рано менять состояние.
+         assert.equal(treeControl._getMarkedLeaf(-1, treeControl.getViewModel()), 'last');
       });
 
       describe('_notifyItemClick', async () => {
