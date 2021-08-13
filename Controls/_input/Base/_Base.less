@@ -31,6 +31,10 @@
    pointer-events: none;
 }
 
+/**
+ * Для того, чтобы подсказка отображалась под кареткой, необходимо задать z-index меньше чем у render_field
+ * https://online.sbis.ru/opendoc.html?guid=5acafc3c-0b90-4d14-9dab-600d636a8772
+ */
 .controls-InputBase__placeholder_displayed-under-caret {
    z-index: -1;
 }

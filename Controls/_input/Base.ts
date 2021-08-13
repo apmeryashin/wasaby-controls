@@ -296,7 +296,11 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
 
     private _updatePlaceholderDisplay(options: IBaseInputOptions): void {
         if (this._options.placeholder !== options.placeholder) {
-            this._placeholderDisplay = (typeof options.placeholder === "string" ? 'under' : 'above');
+            /**
+             * Если в качестве placeholder передается строка, то отображаем подсказку под кареткой.
+             * Иначе оставляем старое поведение, когда подсказка отображается над кареткой
+             */
+            this._placeholderDisplay = (typeof options.placeholder === 'string' ? 'under' : 'above');
         }
     }
 
