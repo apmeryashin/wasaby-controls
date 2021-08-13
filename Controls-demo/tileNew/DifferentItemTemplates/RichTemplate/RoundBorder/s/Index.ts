@@ -11,7 +11,7 @@ export default class extends Control {
     protected _viewSource: HierarchicalMemory = null;
     protected _selectedKeys: string[] = [];
     protected _itemActions: IItemAction[];
-    protected _roundBorder: {'tl': 's', 'tr': 's', 'br': 's', 'bl': 's'};
+    protected _roundBorder = {'tl': 's', 'tr': 's', 'br': 's', 'bl': 's'};
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
