@@ -1,4 +1,4 @@
-@import '../../_scroll/Scroll/_contentEnvironmentZIndex';
+@import 'Controls/_scroll/Scroll/_contentEnvironmentZIndex';
 
 // НА ОБЁРТКЕ ГОРИЗОНТАЛЬНОГО СКРОЛЛА  НЕ ДОЛЖНО быть стилей, которые формируют
 // новый контекст z-index'ов. В противном случае оверлей скроллирования колонок
@@ -10,13 +10,13 @@
    top: 0;
    left: 0;
    right: 0;
-   z-index: var(--z-index_Scroll-contentEnvironment_horizontal);
+   z-index: @z-index_Scroll-contentEnvironment_horizontal;
    width: inherit;
 }
 
 .controls-ColumnScroll__shadow {
    top: 0;
-   z-index: var(--z-index_Scroll-shadow);
+   z-index: @z-index_Scroll-shadow;
    position: absolute;
    pointer-events: none;
    width: var(--columnscroll_shadow-blur_grid);
