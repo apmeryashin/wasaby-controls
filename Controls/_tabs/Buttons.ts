@@ -320,7 +320,9 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
      * @private
      */
     private _tabCanShrink(item: ITabButtonItem): boolean {
-        if (item.width !== undefined || !this._options.canShrink) {
+        if(typeof item.canShrink !== 'undefined'){
+            return item.canShrink;
+        } else if (item.width !== undefined || !this._options.canShrink) {
             return false;
         } else {
             return !this._hasMainTab || item.isMainTab || item.minWidth !== undefined || item.maxWidth !== undefined;
