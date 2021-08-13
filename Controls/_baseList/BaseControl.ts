@@ -1006,7 +1006,9 @@ const _private = {
         if (navigation) {
             switch (navigation.view) {
                 case 'infinity':
-                    result = !loadedList || _private.isPortionedLoad(this, loadedList);
+                    // todo remove loadedList.getCount() === 0 by task
+                    // https://online.sbis.ru/opendoc.html?guid=909926f2-f62a-4de8-a44b-3c10006f530f
+                    result = !loadedList || loadedList.getCount() === 0 || _private.isPortionedLoad(this, loadedList);
                     break;
                 case 'maxCount':
                     result = _private.needLoadByMaxCountNavigation(listViewModel, navigation);
