@@ -1217,6 +1217,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     private _getMarkedLeaf(key: CrudEntityKey, model): 'first' | 'last' | 'middle' | 'single' {
         const index = model.getIndexByKey(key);
+
+        // Если не нашли элемент, значит, еще рано менять состояние.
+        if (index === -1) {
+            return this._markedLeaf;
+        }
         const hasNextLeaf = (model.getLast('Markable') !== model.getItemBySourceKey(key)) || model.hasMoreData();
         let hasPrevLeaf = false;
         for (let i = index - 1; i >= 0; i--) {
