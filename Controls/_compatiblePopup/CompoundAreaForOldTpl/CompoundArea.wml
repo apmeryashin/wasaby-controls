@@ -15,7 +15,7 @@
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:bodyContentTemplate>
          <ws:toolbarContentTemplate>
-            <div name="toolbarBlock" attr:class="controls-Toolbar__container"></div>
+            <div name="toolbarBlock" attr:class="controls-CompoundArea_toolbar"></div>
          </ws:toolbarContentTemplate>
          <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
       </Controls.popupTemplate:Stack>

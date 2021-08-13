@@ -316,8 +316,7 @@ var CompoundArea = CompoundContainer.extend([
          this._waitClose = false;
          this.close();
       } else {
-          self._setCustomHeaderAsync();
-          self._setCustomToolbarAsync();
+          self._setCustomContentAsync();
           self._registerLinkedView();
           runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
@@ -338,20 +337,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _setCustomToolbarAsync() {
-      if (this._destroyed) {
-         return;
-      }
-      if (!this._childControl) {
-         runDelayed(() => {
-            this._setCustomToolbarAsync();
-         });
-      } else {
-         this._setCustomToolbar();
-      }
-   },
-
-   _setCustomHeaderAsync() {
+   _setCustomContentAsync() {
       // Каким-то чудом на медленных машинах не успевает построиться childControl.
       // Сам повторить не смог, ставлю защиту
       if (this._destroyed) {
@@ -359,10 +345,11 @@ var CompoundArea = CompoundContainer.extend([
       }
       if (!this._childControl) {
          runDelayed(() => {
-            this._setCustomHeaderAsync();
+            this._setCustomContentAsync();
          });
       } else {
          this._setCustomHeader();
+         this._setCustomToolbar();
       }
    },
 
@@ -549,7 +536,7 @@ var CompoundArea = CompoundContainer.extend([
       if (Controller.hasRightPanel()) {
          const toolbarContent = $('.controls-ToolBar', this._childControl.getContainer());
          if (toolbarContent.length) {
-            const toolbarContainer = $('.controls-Toolbar__container', this._childControl.getParent()?.getContainer());
+            const toolbarContainer = $('.controls-CompoundArea_toolbar', this.getContainer());
             if (toolbarContainer.length) {
                toolbarContainer.prepend(toolbarContent);
             }
