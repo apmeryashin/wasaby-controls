@@ -748,8 +748,12 @@
    content: '';
    background-color: var(--master-marker_color_list);
    width: var(--master-marker_thickness_list);
-   height: var(--master-marker_height_list);
    border-radius: var(--marker_border-radius_list);
+   height: 100%;
+}
+
+.controls-ListView__itemV_marker_master.controls-ListView__itemV_marker_height::after {
+   height: var(--master-marker_height_list);
 }
 
 .controls-ListView__itemV_marker_master.controls-ListView__itemV_marker-left {
