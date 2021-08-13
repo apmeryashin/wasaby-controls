@@ -317,6 +317,7 @@ var CompoundArea = CompoundContainer.extend([
          this.close();
       } else {
           self._setCustomHeaderAsync();
+          self._setCustomToolbarAsync();
           self._registerLinkedView();
           runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
@@ -334,6 +335,19 @@ var CompoundArea = CompoundContainer.extend([
                doAutofocus(self.getContainer());
             }
          });
+      }
+   },
+
+   _setCustomToolbarAsync() {
+      if (this._destroyed) {
+         return;
+      }
+      if (!this._childControl) {
+         runDelayed(() => {
+            this._setCustomToolbarAsync();
+         });
+      } else {
+         this._setCustomToolbar();
       }
    },
 
@@ -529,6 +543,18 @@ var CompoundArea = CompoundContainer.extend([
          this._isKeyboardVisible = true;
       }
       return isVisible;
+   },
+
+   _setCustomToolbar: function() {
+      if (Controller.hasRightPanel()) {
+         const toolbarContent = $('.controls-ToolBar', this._childControl.getContainer());
+         if (toolbarContent.length) {
+            const toolbarContainer = $('.controls-Toolbar__container', this._childControl.getParent()?.getContainer());
+            if (toolbarContainer.length) {
+               toolbarContainer.prepend(toolbarContent);
+            }
+         }
+      }
    },
 
    _setCustomHeader: function() {
