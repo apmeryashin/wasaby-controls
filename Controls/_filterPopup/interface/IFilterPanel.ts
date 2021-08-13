@@ -23,7 +23,6 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
 
 /**
  * Интерфейс {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter/filter-view/panel/ панели фильтров}.
- *
  * @interface Controls/_filterPopup/interface/IFilterPanel
  * @public
  * @author Герасимов А.М.
@@ -31,15 +30,6 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
 
 /*
  * Interface for filter panel
- *
- * @interface Controls/_filterPopup/interface/IFilterPanel
- * @public
- * @author Герасимов А.М.
- */
-
-/*
- * Interface for filter panel
- *
  * @interface Controls/_filterPopup/interface/IFilterPanel
  * @public
  * @author Герасимов А.М.
@@ -67,14 +57,15 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * Если указано значение "horizontal", но на панели нет истории фильтрации, контрол будет отображаться в одном столбце.
  * @example
  * В данном примере панель будет отображаться в две колонки.
- * <pre>
- *    <Controls.filterPopup:Panel
- *          source="{{_source}}"
- *          orientation="horizontal"
- *          historyId="myHistoryId">
- *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [4]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel
+ *    source="{{_source}}"
+ *    orientation="horizontal"
+ *    historyId="myHistoryId">
+ *    <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
+ *    <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
+ * </Controls.filterPopup:Panel>
  * </pre>
  */
 
@@ -85,33 +76,24 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @variant horizontal Horizontal orientation of the panel. History block is displayed on the right.
  * @default vertical
  * @remark
- * If a “horizontal” value is specified, but there is no history in the panel, the component will be displayed in one column.
- * @example
- * In this example panel will be displayed in two column.
- * <pre>
- *    <Controls.filterPopup:Panel
- *          source="{{_source}}"
- *          orientation="horizontal"
- *          historyId="myHistoryId">
- *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
+ * If a “horizontal” value is specified, but there is no history in the panel, the component will be displayed in one column..filterPopup:Panel>
  * </pre>
  */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#headingCaption
  * @cfg {String} Текст заголовка.
- * @default "Selected"
+ * @default Selected
  * @example
  * В этом примере панель имеет заголовок "Sales"
- * <pre>
- *    <Controls.filterPopup:Panel
- *          items="{{_items}}"
- *          headingCaption="Sales">
- *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [4]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel
+ *    items="{{_items}}"
+ *    headingCaption="Sales">
+ *    <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
+ *    <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
+ * </Controls.filterPopup:Panel>
  * </pre>
  * @see Controls/heading:Title#caption
  */
@@ -120,16 +102,6 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @name Controls/_filterPopup/interface/IFilterPanel#headingCaption
  * @cfg {String} Text heading.
  * @default "Selected"
- * @example
- * In this example, the panel has the caption "Sales"
- * <pre>
- *    <Controls.filterPopup:Panel
- *          items={{_items}}
- *          headingCaption="Sales">
- *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
- * </pre>
  * @see Controls/heading:Title#caption
  */
 
@@ -141,13 +113,14 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @default secondary
  * @example
  * В этом примере панель имеет стиль заголовка - primary.
- * <pre>
- *    <Controls.filterPopup:Panel
- *          items={{_items}}
- *          headingStyle="primary">
- *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [4]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel
+ *     items={{_items}}
+ *     headingStyle="primary">
+ *     <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
+ *     <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
+ * </Controls.filterPopup:Panel>
  * </pre>
  * @see Controls/heading:Title#style
  */
@@ -158,78 +131,73 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @variant primary Primary heading style.
  * @variant secondary Secondary heading style.
  * @default secondary
- * @example
- * In this example, the panel has a primary heading style.
- * <pre>
- *    <Controls.filterPopup:Panel
- *          items={{_items}}
- *          headingStyle="primary">
- *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
- * </pre>
  * @see Controls/heading:Title#style
  */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#itemTemplate
- * @cfg {itemTpl} Шаблон отображения элементов.
+ * @cfg {TemplateFunction|String} Шаблон отображения элементов.
+ * @default indefined
  * @remark
  * Чтобы отобразить строку, которая формируется значениями элементов, необходимо выполнить bind:textValue="item.textValue".
  * Для правильного отображения необходимо описать шаблоны для всех элементов.
  * @example
  * Пример настройки параметров itemTemplate.
- * <pre>
- *    <Controls.filterPopup:Panel items="{{_items}}">
- *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [3]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel items="{{_items}}">
+ *    <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
+ * </Controls.filterPopup:Panel>
  * </pre>
  *
  * <pre class="brush: html">
  * <!-- Module/itemTemplate.wml -->
  * <ws:template name="type">
  *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
+ *       bind:selectedKeys="item.value"
+ *       bind:textValue="item.textValue"
+ *       keyProperty="key"
+ *       displayProperty="title"
+ *       source="{{item.source}}" />
  * </ws:template>
  *
  * <ws:template name="deleted">
  *    <Controls.filterPopup:Text
- *          bind:value="item.value"
- *          caption="{{item.textValue}}"/>/>
+ *       bind:value="item.value"
+ *       caption="{{item.textValue}}"/>/>
  * </ws:template>
  *
  * <ws:partial template="{{item.id}}" item="{{item}}"/>
  * </pre>
  *
  * <pre class="brush: js">
- *    import {Memory} from 'Types/source';
+ * // TypeScript
+ * import {Memory} from 'Types/source';
  *
- *    protected _items: array;
- *    protected _beforeMount():void {
- *       this._items = [
- *          {
- *            id: 'type',
- *            value: ['1'],
- *            resetValue: ['1'],
- *            source: new Memory({
- *               data: [{ id: '1', title: 'All types' },
- *                      { id: '2', title: 'Meeting' },
- *                      { id: 3, title: 'VideoConference' }],
- *               keyProperty: 'id'
+ * protected _items: array;
+ * protected _beforeMount():void {
+ *     this._items = [
+ *         {
+ *             id: 'type',
+ *             value: ['1'],
+ *             resetValue: ['1'],
+ *             source: new Memory({
+ *                 data: [
+ *                     { id: '1', title: 'All types' },
+ *                     { id: '2', title: 'Meeting' },
+ *                     { id: 3, title: 'VideoConference' }
+ *                 ],
+ *                 keyProperty: 'id'
  *             })
- *          },
- *          {
+ *         },
+ *         {
  *             id: 'deleted',
  *             value: true,
  *             resetValue: false,
  *             textValue: 'Deleted'
- *          }
- *       ];
- *    }
+ *         }
+ *     ];
+ * }
  * </pre>
  * @see itemTemplateProperty
  */
@@ -240,112 +208,61 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @remark
  * To display in a string, that is formed by the values from items, you must make a bind:textValue="item.textValue".
  * For proper display, templates for all items should be described.
- * @example
- * Example of setting options itemTemplate
- * <pre>
- *    <Controls.filterPopup:Panel items="{{_items}}">
- *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
- *    </Controls.filterPopup:Panel>
- * </pre>
- *
- * Module/itemTemplate.wml
- * <pre>
- * <ws:template name="type">
- *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
- * </ws:template>
- *
- * <ws:template name="deleted">
- *    <Controls.filterPopup:Text
- *          bind:value="item.value"
- *          caption="{{item.textValue}}"/>/>
- * </ws:template>
- *
- * <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * JS:
- * <pre>
- *    this._items = [
- *       { id: 'type', value: ['1'], resetValue: ['1'], source: new MemorySource({
- *         data: [{ id: '1', title: 'All types' },
- *         { id: '2', title: 'Meeting' },
- *         { id: 3, title: 'Videoconference' }],
- *         keyProperty: 'id'
- *       })},
- *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted' }
- *    ];
- * </pre>
  * @see itemTemplateProperty
  */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#additionalTemplate
- * @cfg {additionalTpl} Шаблон отображения элемента в блоке "Еще можно отобрать".
+ * @cfg {TemplateFunction|String} Шаблон отображения элемента в блоке "Еще можно отобрать".
+ * @default undefined
  * @remark
- * Для отображения фильтра в дополнительном блоке необходимо указать visibility: false.
+ * Для отображения фильтра в дополнительном блоке необходимо для поции visibility задать значение false.
  * При указании visibility = true фильтр будет отображаться в основном блоке, но при сбросе фильтра он будет отображаться в дополнительном блоке.
  * @example
  * Пример настройки параметров additionalTemplate
- * <pre>
- *    <Controls.filterPopup:Panel items={{_items}}>
- *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [3]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel items="{{_items}}"">
+ *    <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
+ * </Controls.filterPopup:Panel>
  * </pre>
  *
- * Module/itemTemplate.wml
- * <pre>
+ * <pre class="brush: html;">
+ * <!-- MyModule/additionalTemplate.wml -->
  * <ws:template name="type">
  *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
+ *       bind:selectedKeys="item.value"
+ *       keyProperty="key"
+ *       displayProperty="title"
+ *       source="{{item.source}}">
  * </ws:template>
  *
  * <ws:template name="deleted">
- *    <Controls.filterPopup:Text
- *          bind:value="item.value"
- *          caption="{{item.textValue}}"/>/>
+ *    <Controls.filterPopup:Link caption="item.textValue"/>
  * </ws:template>
  *
  * <ws:partial template="{{item.id}}" item="{{item}}"/>
  * </pre>
  *
- * MyModule/additionalTemplate.wml
- * <pre>
- *    <ws:template name="type">
- *       <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}">
- *    </ws:template>
- *
- *    <ws:template name="deleted">
- *       <Controls.filterPopup:Link caption="item.textValue"/>
- *    </ws:template>
- *
- *    <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * JS:
- * <pre>
- *    this._items = [
- *       { id: 'type', value: ['1'], resetValue: ['1'], visibility: true, source: new MemorySource({
- *         data: [{ id: '1', title: 'All types' },
- *         { id: '2', title: 'Meeting' },
- *         { id: 3, title: 'Videoconference' }],
- *         keyProperty: 'id'
- *       })},
- *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
- *    ];
+ * <pre class="brush: js;">
+ * // JavaScript
+ * this._items = [
+ *    {
+ *       id: 'type',
+ *       value: ['1'],
+ *       resetValue: ['1'],
+ *       visibility: true,
+ *       source: new MemorySource({
+ *          data: [
+ *             { id: '1', title: 'All types' },
+ *             { id: '2', title: 'Meeting' },
+ *             { id: 3, title: 'Videoconference' }
+ *          ],
+ *          keyProperty: 'id'
+ *       })
+ *    },
+ *    { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
+ * ];
  * </pre>
  * @see additionalTemplateProperty
  */
@@ -356,108 +273,45 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @remark
  * To display the filter in the additional block, you need to specify in the settings item visibility: false.
  * When specifying visibility = true, the filter will be displayed in the main block, but when the filter is reset, it will be displayed in the additional block.
- * @example
- * Example of setting options additionalTemplate
- * <pre>
- *    <Controls.filterPopup:Panel items={{_items}}>
- *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
- *    </Controls.filterPopup:Panel>
- * </pre>
- *
- * Module/itemTemplate.wml
- * <pre>
- * <ws:template name="type">
- *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
- * </ws:template>
- *
- * <ws:template name="deleted">
- *    <Controls.filterPopup:Text
- *          bind:value="item.value"
- *          caption="{{item.textValue}}"/>/>
- * </ws:template>
- *
- * <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * MyModule/additionalTemplate.wml
- * <pre>
- *    <ws:template name="type">
- *       <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}">
- *    </ws:template>
- *
- *    <ws:template name="deleted">
- *       <Controls.filterPopup:Link caption="item.textValue"/>
- *    </ws:template>
- *
- *    <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * JS:
- * <pre>
- *    this._items = [
- *       { id: 'type', value: ['1'], resetValue: ['1'], visibility: true, source: new MemorySource({
- *         data: [{ id: '1', title: 'All types' },
- *         { id: '2', title: 'Meeting' },
- *         { id: 3, title: 'Videoconference' }],
- *         keyProperty: 'id'
- *       })},
- *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
- *    ];
- * </pre>
  * @see additionalTemplateProperty
  */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#footerTemplate
- * @cfg {Function|String}  Шаблон отображения подвала в панели фильтра.
+ * @cfg {TemplateFunction|String} Шаблон отображения подвала в панели фильтра.
+ * @default undefined
  * @example
  * Пример настройки параметра footerTemplate
- * <pre>
- *    <Controls.filterPopup:Panel>
- *       <ws:footerTemplate>
- *           <ws:partial template="MyModule/control:footerTemplate" />
- *       </ws:footerTemplate>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [3-5]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel>
+ *    <ws:footerTemplate>
+ *       <ws:partial template="MyModule/control:footerTemplate" />
+ *    </ws:footerTemplate>
+ * </Controls.filterPopup:Panel>
  * </pre>
  */
 
 /*
  * @name Controls/_filterPopup/interface/IFilterPanel#footerTemplate
  * @cfg {Function|String} Template that will be rendered below the filter panel
- * @example
- * Example of setting options footerTemplate
- * <pre>
- *    <Controls.filterPopup:Panel>
- *       <ws:footerTemplate>
- *           <ws:partial template="MyModule/control:footerTemplate" />
- *       </ws:footerTemplate>
- *    </Controls.filterPopup:Panel>
- * </pre>
  */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#emptyHistoryTemplate
- * @cfg {Function|String} Шаблон, который отображаеться в блоке с историей фильтров,
+ * @cfg {TemplateFunction|String} Шаблон, который отображаеться в блоке с историей фильтров,
  * если фильтров, сохранённых в историю, ещё нет.
+ * @default undefined
  * @demo Controls-demo/Filter_new/DetailPanel/EmptyHistoryTemplate/Index
  * @example
  * Пример настройки опции emptyHistoryTemplate
- * <pre>
- *    <Controls.filterPopup:Panel>
- *       <ws:emptyHistoryTemplate>
- *           <ws:partial template="MyModule/control:emptyHistoryTemplate" />
- *       </ws:emptyHistoryTemplate>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [3-5]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel>
+ *    <ws:emptyHistoryTemplate>
+ *       <ws:partial template="MyModule/control:emptyHistoryTemplate" />
+ *    </ws:emptyHistoryTemplate>
+ * </Controls.filterPopup:Panel>
  * </pre>
  */
 
@@ -465,70 +319,53 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @name Controls/_filterPopup/interface/IFilterPanel#additionalTemplateProperty
  * @demo Controls-demo/Filter_new/FilterView/Source/AdditionalTemplateProperty/Index
  * @cfg {String} Имя свойства элемента, содержащего шаблон отображения элемента в блоке "Еще можно отобрать". Если параметр не задан, вместо него используется additionalTemplate.
+ * @default undefined
  * @remark
- * Для отображения фильтра в дополнительном блоке необходимо указать visibility: false.
- * При указании visibility = true фильтр будет отображаться в основном блоке, но при сбросе фильтра он будет отображаться в дополнительном блоке.
+ * Для отображения фильтра в дополнительном блоке необходимо в свойстве visibility задать значение false.
+ * Если в свойстве visibility задано значение true, тогда фильтр будет отображаться в основном блоке, но при сбросе фильтра он будет отображаться в дополнительном блоке.
  * @example
  * В этом примере шаблон отображения фильтра по "Удаленным" в дополнительном блоке будет загружен из файла MyModule/addTemplateDeleted.wml
- * <pre>
- *    <Controls.filterPopup:Panel
- *       items={{_items}}
- *       additionalTemplateProperty="myAddTpl">
- *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
- *    </Controls.filterPopup:Panel>
+ * <pre class="brush: html; highlight: [4]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel
+ *    items="{{_items}}"
+ *    additionalTemplateProperty="myAddTpl">
+ *    <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
+ *    <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
+ * </Controls.filterPopup:Panel>
  * </pre>
  *
- * Module/itemTemplate.wml
- * <pre>
- * <ws:template name="type">
- *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
- * </ws:template>
- *
- * <ws:template name="deleted">
- *    <Controls.filterPopup:Text
- *          bind:value="item.value"
- *          caption="{{item.textValue}}"/>/>
- * </ws:template>
- *
- * <ws:partial template="{{item.id}}" item="{{item}}"/>
+ * <pre class="brush: html">
+ * <!-- MyModule/addTemplateDeleted.wml -->
+ * <Controls.filterPopup:Link caption="item.textValue"/>
  * </pre>
- *
- * MyModule/additionalTemplate.wml
- * <pre>
- *    <ws:template name="type">
- *       <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}">
- *    </ws:template>
- *
- *    <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * MyModule/addTemplateDeleted.wml
- * <pre>
- *     <Controls.filterPopup:Link caption="item.textValue"/>
- * </pre>
- *
- * JS:
- * <pre>
- *    this._items = [
- *       { id: 'type', value: ['1'], resetValue: ['1'], visibility: true, source: new MemorySource({
- *         data: [{ id: '1', title: 'All types' },
- *         { id: '2', title: 'Meeting' },
- *         { id: 3, title: 'Videoconference' }],
- *         keyProperty: 'id'
- *       })},
- *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false,
- *       myAddTpl="wml!MyModule/addTemplateDeleted"}
- *    ];
+ * 
+ * <pre class="brush: js; highlight: [23]">
+ * // JavaScript
+ * this._items = [
+ *    {
+ *       id: 'type',
+ *       value: ['1'],
+ *       resetValue: ['1'],
+ *       visibility: true,
+ *       source: new MemorySource({
+ *          data: [
+ *             { id: '1', title: 'All types' },
+ *             { id: '2', title: 'Meeting' },
+ *             { id: 3, title: 'Videoconference' }
+ *          ],
+ *          keyProperty: 'id'
+ *       })
+ *    },
+ *    {
+ *       id: 'deleted',
+ *       value: true,
+ *       resetValue: false,
+ *       textValue: 'Deleted',
+ *       visibility: false,
+ *       myAddTpl="wml!MyModule/addTemplateDeleted"
+ *     }
+ * ];
  * </pre>
  * @see additionalTemplate
  */
@@ -539,126 +376,58 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @remark
  * To display the filter in the additional block, you need to specify in the settings item visibility: false.
  * When specifying visibility = true, the filter will be displayed in the main block, but when the filter is reset, it will be displayed in the additional block.
- * @example
- * In this example, the template for the "deleted" filter in the additional block, will be loaded from the file MyModule/addTemplateDeleted.wml
- * <pre>
- *    <Controls.filterPopup:Panel
- *       items={{_items}}
- *       additionalTemplateProperty="myAddTpl">
- *       <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
- *       <ws:additionalTemplate templateName="wml!MyModule/additionalTemplate"/>
- *    </Controls.filterPopup:Panel>
- * </pre>
- *
- * Module/itemTemplate.wml
- * <pre>
- * <ws:template name="type">
- *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
- * </ws:template>
- *
- * <ws:template name="deleted">
- *    <Controls.filterPopup:Text
- *          bind:value="item.value"
- *          caption="{{item.textValue}}"/>/>
- * </ws:template>
- *
- * <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * MyModule/additionalTemplate.wml
- * <pre>
- *    <ws:template name="type">
- *       <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}">
- *    </ws:template>
- *
- *    <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * MyModule/addTemplateDeleted.wml
- * <pre>
- *     <Controls.filterPopup:Link caption="item.textValue"/>
- * </pre>
- *
- * JS:
- * <pre>
- *    this._items = [
- *       { id: 'type', value: ['1'], resetValue: ['1'], visibility: true, source: new MemorySource({
- *         data: [{ id: '1', title: 'All types' },
- *         { id: '2', title: 'Meeting' },
- *         { id: 3, title: 'Videoconference' }],
- *         keyProperty: 'id'
- *       })},
- *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false,
- *       myAddTpl="wml!MyModule/addTemplateDeleted"}
- *    ];
- * </pre>
  * @see additionalTemplate
  */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#applyButtonCaption
+ * @default Отобрать
  * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
  * @cfg {String} Текст на кнопке применения фильтрации.
  */
 
  /**
  * @name Controls/_filterPopup/interface/IFilterPanel#groupProperty
+ * @cfg {String} Имя параметра, содержащего название группы элемента. Поддерживается группировка только в блоке "Еще можно отобрать".
  * @demo Controls-demo/Filter_new/DetailPanel/GroupProperty/Index
- * @cfg {String} Имя параметра, содержащего название группы элемента. Поддерживается группировка только в "Еще можно отобрать".
+ * @default undefined
+ */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#itemTemplateProperty
- * @demo Controls-demo/Filter_new/FilterView/Source/ItemTemplateProperty/Index
  * @cfg {String} Имя параметра, содержащего шаблон отображения элемента. Если не установлен, вместо него используется "itemTemplate".
+ * @default undefined
  * @remark
  * Для отображения в строке, которая формируется значениями элементов, необходимо выполнить bind:textValue="item.textValue".
  * Для правильного отображения необходимо описать шаблоны для всех элементов.
+ * @demo Controls-demo/Filter_new/FilterView/Source/ItemTemplateProperty/Index
  * @example
  * В этом примере шаблон отображения фильтра по "Типу" в главном блоке будет загружен из файлового модуля Module/myTemplateForType.wml
- * TMPL:
- * <pre>
- *    <Controls.filterPopup:Panel
- *    items={{_items}}
- *    itemTemplateProperty="myTpl"/>
+ * <pre class="brush: html; highlight: [4]">
+ * <!-- WML -->
+ * <Controls.filterPopup:Panel
+ *    items="{{_items}}"
+ *    itemTemplateProperty="myTpl">
  *    <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
+ * </Controls.filterPopup:Panel>
  * </pre>
  *
- * Module/itemTemplate.wml
- * <pre>
- *    <ws:template name="deleted">
- *       <Controls.filterPopup:Text
- *             bind:value="item.value"
- *             caption="{{item.textValue}}"/>/>
- *    </ws:template>
- *
- *    <ws:partial template="{{item.id}}" item="{{item}}"/>
+ * <pre class="brush: html;">
+ * <!-- Module/myTemplateForType.wml -->
+ * <Controls.filterPopup:Dropdown
+ *    bind:selectedKeys="item.value"
+ *    bind:textValue="item.textValue"
+ *    keyProperty="key"
+ *    displayProperty="title"
+ *    source="{{item.source}}" />
  * </pre>
  *
- * Module/myTemplateForType.wml
- * <pre>
- *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
- * </pre>
- *
- * JS:
- * <pre>
- *    this._items = [
- *       { id: 'type', value: ['0'], resetValue: ['0'], myTpl: 'wml!Module/myTemplateForType' },
- *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted' }
- *    ];
+ * <pre class="brush: js; highlight: [3]">
+ * // JavaScript
+ * this._items = [
+ *    { id: 'type', value: ['0'], resetValue: ['0'], myTpl: 'wml!Module/myTemplateForType' },
+ *    { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted' }
+ * ];
  * </pre>
  * @see itemTemplate
  */
@@ -669,50 +438,13 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @remark
  * To display in a string, that is formed by the values from items, you must make a bind:textValue="item.textValue".
  * For proper display, templates for all items should be described.
- * @example
- * In this example, the template for the "type" filter in the main block, will be loaded from the file Module/myTemplateForType.wml
- * TMPL:
- * <pre>
- *    <Controls.filterPopup:Panel
- *    items={{_items}}
- *    itemTemplateProperty="myTpl"/>
- *    <ws:itemTemplate templateName="wml!Module/itemTemplate"/>
- * </pre>
- *
- * Module/itemTemplate.wml
- * <pre>
- *    <ws:template name="deleted">
- *       <Controls.filterPopup:Text
- *             bind:value="item.value"
- *             caption="{{item.textValue}}"/>/>
- *    </ws:template>
- *
- *    <ws:partial template="{{item.id}}" item="{{item}}"/>
- * </pre>
- *
- * Module/myTemplateForType.wml
- * <pre>
- *    <Controls.filterPopup:Dropdown
- *          bind:selectedKeys="item.value"
- *          bind:textValue="item.textValue"
- *          keyProperty="key"
- *          displayProperty="title"
- *          source="{{item.source}}" />
- * </pre>
- *
- * JS:
- * <pre>
- *    this._items = [
- *       { id: 'type', value: ['0'], resetValue: ['0'], myTpl: 'wml!Module/myTemplateForType' },
- *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted' }
- *    ];
- * </pre>
  * @see itemTemplate
  */
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#historyId
  * @cfg {String} Уникальный идентификатор для сохранения истории.
+ * @default undefined
  * @demo Controls-demo/Filter_new/DetailPanel/HistoryId/Index
  * @remark Для корректной работы необходимо настроить параметр items в контроле с помощью {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter/filter-view/base-settings/ инструкции}.
  */
@@ -725,42 +457,19 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
 
 /**
  * @name Controls/_filterPopup/interface/IFilterPanel#items
- * @cfg {Array.<FilterItem>} Специальная структура для визуального представления фильтра. Подробнее см. {@link Controls/_filter/View/interface/IFilterView#source}
+ * @cfg {Array.<Controls/filter:IFilterItem>} Структура для визуального представления фильтра.
  */
 
 /**
- * @event Происходит при изменении опции items.
+ * @event Происходит при изменении опции стукрутуры фильтра.
  * @name Controls/_filterPopup/interface/IFilterPanel#itemsChanged
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
- * @param {Controls/_filter/interface/IFilterView#source} items Конфигурация свойств фильтра.
- * @example
- * WML:
- * <pre>
- *    <Controls.filterPopup:Panel on:itemsChanged="_panelItemsChanged()"/>
- * </pre>
- *
- * JS:
- * <pre>
- * _panelItemsChanged(event, items) {
- *    ....
- * }
- * </pre>
+ * @param {Array.<Controls/filter:IFilterItem>} items Конфигурация свойств фильтра.
  */
 
 /*
  * @event Occurs when items options was changed.
  * @name Controls/_filterPopup/interface/IFilterPanel#itemsChanged
  * @param {Event}
- * @param {Controls/_filter/interface/IFilterView#source} items Filter items configuration,
- * @example
- * WML:
- * <pre>
- *    <Controls.filterPopup:Panel on:itemsChanged="_panelItemsChanged()"/>
- * </pre>
- *
- * JS:
- * <pre>
- * _panelItemsChanged(event, items) {
- *    ....
- * }
+ * @param {Array.<Controls/filter:IFilterItem>} items Filter items configuration.
  */
