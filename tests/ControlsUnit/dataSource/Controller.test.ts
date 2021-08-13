@@ -3,7 +3,7 @@ import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 import {adapter} from 'Types/entity';
-import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
+import {INavigationPageSourceConfig, INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {createSandbox, stub, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 
@@ -332,6 +332,11 @@ describe('Controls/dataSource:SourceController', () => {
 
             await controller.reload();
             ok(controller.getItems().getCount() === allItemsCount);
+
+            await controller.reload({
+                multiNavigation: true
+            } as INavigationSourceConfig);
+            ok(controller.getItems().getCount() === pageSize);
 
             await controller.reload({
                 page: 0,
