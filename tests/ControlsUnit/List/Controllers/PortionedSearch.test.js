@@ -95,11 +95,11 @@ define(['Controls/_baseList/Controllers/PortionedSearch'], function(PortionedSea
          searchStopped = false;
          searchStarted = false;
          portionedSearchController.startSearch();
-         clock.tick(31000);
+         clock.tick(16000);
          assert.isFalse(searchStopped);
          assert.isFalse(searchStarted);
 
-         clock.tick(120000);
+         clock.tick(31000);
          assert.isTrue(searchStopped);
          assert.isFalse(searchStarted);
       });
