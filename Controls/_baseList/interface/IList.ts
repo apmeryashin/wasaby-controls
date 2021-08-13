@@ -315,45 +315,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * @name Controls/_list/interface/IList#dataLoadCallback
- * @cfg {Function} Функция, которая вызывается каждый раз непосредственно после загрузки данных из источника контрола.
- * Функцию можно использовать для изменения данных еще до того, как они будут отображены в контроле.
- * @markdown
- * @remark
- * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
- * @example
- * <pre class="brush: html; highlight: [4]">
- * <!-- WML -->
- * <Controls.list:View
- *    source="{{_viewSource}}"
- *    dataLoadCallback="{{_myDataLoadCallback}}" />
- * </pre>
- * <pre class="brush:js">
- * // TypeScript
- * _myDataLoadCallback = function(items) {
- *    items.each(function(item) {
- *       item.set(field, value);
- *    });
- * }
- * </pre>
- * @see itemsReadyCallback
- * @see dataLoadErrback
- */
-
-/**
- * @name Controls/_list/interface/IList#dataLoadErrback
- * @cfg {Function} Функция обратного вызова для определения сбоя загрузки данных из источника.
- * @remark Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/source/#data-load-callback здесь}.
- * @see itemsReadyCallback
- * @see dataLoadCallback
- */
-
-/*ENG
- * @name Controls/_list/interface/IList#dataLoadErrback
- * @cfg {Function} Callback function that will be called when data loading fail
- */
-
-/**
  * @name Controls/_list/interface/IList#style
  * @cfg {String} Режим отображения списка.
  * @variant master Двухколоночный реестр.
