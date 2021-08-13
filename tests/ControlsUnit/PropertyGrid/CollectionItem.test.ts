@@ -1,7 +1,8 @@
 import {PropertyGridCollection} from 'Controls/propertyGrid';
 import {PROPERTY_NAME_FIELD,
         DEFAULT_VALIDATOR_TEMPLATE,
-        DEFAULT_EDITORS
+        DEFAULT_EDITORS,
+        DEFAULT_VALIDATORS_BY_TYPE
 } from 'Controls/_propertyGrid/Constants';
 import {assert} from 'chai';
 import {Model} from 'Types/entity';
@@ -54,6 +55,7 @@ const source = new RecordSet<IPropertyGridItem>({
         {
             caption: 'Источник видео',
             name: 'videoSource',
+            validators: [() => true],
             group: 'string'
         },
         {
@@ -139,9 +141,14 @@ describe('Controls/propertyGrid:CollectionItem', () => {
     });
 
     describe('getValidateTemplateName', () => {
+        it('returns default validator', () => {
+            const template = collection.getItemBySourceKey('videoSource').getValidateTemplateName();
+            assert.equal(template, DEFAULT_VALIDATOR_TEMPLATE);
+        });
+
         it('returns default validator by property type', () => {
             const template = collection.getItemBySourceKey('validate').getValidateTemplateName();
-            assert.equal(template, DEFAULT_VALIDATOR_TEMPLATE);
+            assert.equal(template, DEFAULT_VALIDATORS_BY_TYPE.text);
         });
 
         it('returns validator from validateTemplateName property', () => {
