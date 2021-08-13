@@ -5,7 +5,7 @@ import { detection } from 'Env/Env';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {adapter} from 'Types/entity';
-import {NewSourceController} from 'Controls/dataSource';
+import {NewSourceController, getControllerState} from 'Controls/dataSource';
 
 const browserData = [
     {
@@ -1128,6 +1128,29 @@ describe('Controls/browser:Browser', () => {
             browser._beforeUpdate(options);
             assert.ok(browser._items === items);
         });
+
+        it('update with stateStorageId in options', async () => {
+            let options = getBrowserOptions();
+            options.stateStorageId = 'testStorageId';
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+
+            options = {...options};
+            options.selectedKeys = ['testId'];
+            options.excludedKeys = ['testId'];
+            options.searchValue = 'testSearchValue';
+            const updatePromise = browser._beforeUpdate(options);
+            browser.saveOptions(options);
+            await updatePromise;
+
+            assert.deepStrictEqual(getControllerState('testStorageId'), {
+                selectedKeys: ['testId'],
+                excludedKeys: ['testId'],
+                searchValue: 'testSearchValue',
+                expandedItems: []
+            });
+        });
     });
 
     describe('_updateSearchController', () => {
@@ -1145,17 +1168,19 @@ describe('Controls/browser:Browser', () => {
            await browser._beforeMount(options);
            browser.saveOptions(options);
 
-           const notifyStub = sinon.stub(browser, '_notify');
+           let filter;
+           browser._notify = (event, args) => {
+               filter = args[0];
+           };
 
            options = {...options};
            options.searchValue = '';
            options.searchParam = 'param';
            await browser._updateSearchController(options);
 
-           assert.isTrue(notifyStub.withArgs('filterChanged', [{payload: 'something'}, undefined]).called);
+           assert.deepStrictEqual(filter, {payload: 'something'});
            assert.equal(browser._searchValue, '');
 
-           notifyStub.restore();
        });
     });
 
