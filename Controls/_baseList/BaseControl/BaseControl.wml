@@ -193,14 +193,15 @@ controls-BaseControl__pagingContainer_position-{{_options.navigation.viewConfig.
                 <ws:partial template="{{_options.pagingLeftTemplate}}"/>
             </ws:if>
             <Controls.Container.Async templateName="Controls/paging:Paging">
-                    <ws:partial template="{{ content.resolvedTemplate }}"
-                    attr:class="controls-BaseControl__scrollPaging"
-                    contrastBackground="{{true}}"
-                    pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
-                    scope="{{_pagingCfg}}"
-                    contentTemplate="{{_options.pagingContentTemplate}}"
-                    on:onArrowClick="__onPagingArrowClick()"
-                    on:selectedPageChanged="__selectedPageChanged()"/></Controls.Container.Async>
+                <ws:partial template="{{ content.resolvedTemplate }}"
+                            attr:class="controls-BaseControl__scrollPaging"
+                            contrastBackground="{{true}}"
+                            pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
+                            scope="{{_pagingCfg}}"
+                            contentTemplate="{{_options.pagingContentTemplate}}"
+                            on:onArrowClick="__onPagingArrowClick()"
+                            on:selectedPageChanged="__selectedPageChanged()"/>
+            </Controls.Container.Async>
             <ws:if data="{{_options.pagingRightTemplate}}">
                 <ws:partial template="{{_options.pagingRightTemplate}}"/>
             </ws:if>
