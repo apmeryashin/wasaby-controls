@@ -707,26 +707,20 @@ define(
          it('stack resizing', () => {
             let item = {
                popupOptions: {
-                  template: {
-                     getDefaultOptions: () => {
-                        return {
-                           dividingWidth: 700
-                        };
-                     }
-                  },
+                  template: {},
                   stackMinWidth: 500,
                   stackMaxWidth: 1200,
                   stackWidth: 700,
                   minSavedWidth: 655,
                   maxSavedWidth: 760,
-                  minWidth: 500
+                  minWidth: 500,
+                  maxWidth: 900
                },
                position: {
                   width: 0
                }
             };
             let offset1 = 100, offset2 = -300, offset3 = 190, offset4 = 30;
-            popupTemplate.StackController._prepareDividingWidth(item);
             popupTemplate.StackController.popupResizingLine(item, offset1);
             assert.equal(item.popupOptions.stackWidth, 800);
             assert.equal(item.maxSavedWidth, 800);

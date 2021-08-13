@@ -16,7 +16,6 @@ export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOp
     stackMinimizedWidth?: number;
     stackWidth?: number;
     rightPanelOptions?: object;
-    dividingWidth?: number;
 }
 
 const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;

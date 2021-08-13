@@ -169,27 +169,6 @@ export interface IStackOpener extends IOpener {
 */
 
 /**
- * @name Controls/_popup/interface/IStackOpener#dividingWidth
- * @cfg {Number} Ширина окна в px, при которой подразумевается смена внешнего вида окна, например,
- * переход в одноколоночный-двухколоночный режим.
- * @remark
- * Задавая данную опцию, по кнопке разворота ширина будет переключаться между сохраненными пользователем размерами, т.е между
- * выставленным размером до и после указанной величины. Например, dividingWidth = 600px, пользователь установил ширину 500px,
- * после чего расширил окно до 700px, теперь по кнопке разворота ширина окна будет меняться между 500 и 700px.
- * @example
- * В этом примере установим опцию dividingWidth.
- * <pre class="brush: js">
- * // TypeScript
- * static getDefaultOptions(): object {
- *     return {
- *         dividingWidth: 600
- *     };
- * }
- * </pre>
- * @demo Controls-demo/Popup/Stack/Index
- */
-
-/**
  * @name Controls/_popup/interface/IStackOpener#propStorageId
  * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
  * С помощью этой опции включается функционал движения границ.

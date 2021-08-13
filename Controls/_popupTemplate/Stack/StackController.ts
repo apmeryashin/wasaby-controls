@@ -111,7 +111,6 @@ class StackController extends BaseController {
     }
 
     getDefaultConfig(item: IStackItem): void|Promise<void> {
-        this._prepareDividingWidth(item);
         this._preparePropStorageId(item);
         if (item.popupOptions.propStorageId) {
             return this._getPopupWidth(item).then(() => {
@@ -149,13 +148,16 @@ class StackController extends BaseController {
         // текущих условиях ( например на ipad ширина стекового окна не больше 1024)
         const currentWidth = (item.position.width || item.popupOptions.stackWidth);
         const newValue = currentWidth + offset;
-        const isMoreThanDividingWidth = newValue >= item.dividingWidth;
-        let minSavedWidth = !isMoreThanDividingWidth ? newValue : item.minSavedWidth;
-        let maxSavedWidth = isMoreThanDividingWidth ? newValue : item.maxSavedWidth;
+        const minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+        const midOfMinMax = (item.popupOptions.maxWidth + minWidth) / 2;
+        const isMoreThanMidOfMinMax = newValue >= midOfMinMax;
+        let minSavedWidth = !isMoreThanMidOfMinMax ? newValue : item.minSavedWidth;
+        let maxSavedWidth = isMoreThanMidOfMinMax ? newValue : item.maxSavedWidth;
 
+        // Если расстояние между сохраненными ширинами меньше MIN_DISTANCE, то одну из ширин сбрасываем
+        // в минимальное положение, чтобы разворот по кнопке был более заметным.
         if (maxSavedWidth - minSavedWidth < MIN_DISTANCE) {
-            if (isMoreThanDividingWidth) {
-                const minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+            if (isMoreThanMidOfMinMax) {
                 minSavedWidth = minWidth;
             } else {
                 maxSavedWidth = item.popupOptions.maxWidth;
@@ -476,11 +478,6 @@ class StackController extends BaseController {
         }
 
         return templateClass && templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
-    }
-
-    private _prepareDividingWidth(item: IStackItem): void {
-        const defaultOptions = this._getDefaultOptions(item);
-        item.dividingWidth = defaultOptions.dividingWidth;
     }
 
     private _preparePropStorageId(item: IStackItem): void {

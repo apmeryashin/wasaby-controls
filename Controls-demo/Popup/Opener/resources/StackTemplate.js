@@ -7,26 +7,16 @@ define('Controls-demo/Popup/Opener/resources/StackTemplate',
 
       var PopupPage = Base.Control.extend({
          _template: template,
+         _midOfMinMax: null,
+
+         _beforeMount: function(options) {
+            this._midOfMinMax = (options.stackMinWidth + options.stackMaxWidth) / 2;
+         },
 
          _close: function() {
             this._notify('close', [], { bubbling: true });
          },
 
-      });
-
-      PopupPage.getDefaultOptions = function() {
-         return {
-            dividingWidth: 700
-         };
-      };
-
-      Object.defineProperty(PopupPage, 'defaultProps', {
-         enumerable: true,
-         configurable: true,
-
-         get: function() {
-            return PopupPage.getDefaultOptions();
-         }
       });
 
       return PopupPage;
