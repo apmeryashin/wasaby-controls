@@ -176,7 +176,7 @@ export default class SizeAndVisibilityObserver {
     }
 
     private _getStickyHeaderElements(header: StickyBlock): NodeListOf<HTMLElement> {
-        if (this._isGroup(header)) {
+        if (header.getChildrenHeaders) {
             return header.getChildrenHeaders().map(h => h.inst.getHeaderContainer());
         } else {
             return [header.getHeaderContainer()];
