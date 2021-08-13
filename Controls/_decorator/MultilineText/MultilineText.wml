@@ -3,6 +3,8 @@
         <ws:if data="{{ index > 0 }}">
             <br/>
         </ws:if>
-        {{text}}
+        <ws:if data="{{text !== ''}}">
+            <Controls._decorator.WrapURLs attr:class="controls-MultilineText-display_wrapper" value="{{text}}"/>
+        </ws:if>
     </ws:for>
 </span>

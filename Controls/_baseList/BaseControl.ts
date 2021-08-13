@@ -409,7 +409,7 @@ const _private = {
         return sourceController && self._hasMoreData(sourceController, direction);
     },
 
-    attachLoadTopTriggerToNullIfNeed(self, options): boolean {
+    attachLoadTopTriggerToNullIfNeed(self, options, onDrawItems): boolean {
         const supportAttachLoadTopTriggerToNull = _private.supportAttachLoadTriggerToNull(options, 'up');
         if (!supportAttachLoadTopTriggerToNull) {
             self._attachLoadTopTriggerToNull = false;
@@ -418,6 +418,9 @@ const _private = {
         const needAttachLoadTopTriggerToNull = _private.needAttachLoadTriggerToNull(self, 'up');
         if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
+            if (onDrawItems) {
+                self._needScrollToFirstItemOnDrawItems = true;
+            }
             self._needScrollToFirstItem = true;
             self._scrollTop = 1;
         } else {
@@ -441,7 +444,7 @@ const _private = {
     },
 
     recountAttachIndicatorsAfterReload(self): void {
-        if (_private.attachLoadTopTriggerToNullIfNeed(self, self._options)) {
+        if (_private.attachLoadTopTriggerToNullIfNeed(self, self._options, true)) {
             // Не нужно показывать ромашку сразу после релоада, т.к. элементов может быть недостаточно на всю страницу
             // и тогда загрузка должна будет пойти только в одну сторону.
             // Ромашку покажем на _afterRender, когда точно будем знать достаточно ли элементов загружено
@@ -2753,6 +2756,12 @@ const _private = {
     // endregion
 
     notifyVirtualNavigation(self, scrollController: ScrollController, sourceController: SourceController): void {
+
+        // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
+        if (self._container && self._container.closest && self._container.closest('.ws-hidden')) {
+            return;
+        }
+
         let topEnabled = false;
         let bottomEnabled = false;
 
@@ -4866,7 +4875,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._actualPagingVisible = this._pagingVisible;
 
-        if (this._needScrollToFirstItem) {
+        if (this._needScrollToFirstItem && (this._shouldNotifyOnDrawItems || !this._needScrollToFirstItemOnDrawItems)) {
             // Скроллить нужно только если достаточно элементов(занимают весь вьюПорт)
             if (this._viewSize > this._viewportSize && _private.attachLoadTopTriggerToNullIfNeed(this, this._options)) {
                 // Ромашку нужно показать непосредственно перед скроллом к первому элементу
@@ -4964,6 +4973,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shiftToDirection(direction);
         }
     }
+
+    protected _shouldLoadOnScroll(direction: string): boolean {
+        return _private.isInfinityNavigation(this._options.navigation);
+    }
+
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
@@ -4976,18 +4990,27 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.handleScrollControllerResult(this, result);
                 this._syncLoadingIndicatorState = direction;
                 this._handleLoadToDirection = false;
+                if (direction === 'down' && this._resetTopTriggerOffset) {
+                    // После сдвига вниз, верхняя ромашка спрячется и, из-за top: -1px, вернхий триггер не будет виден.
+                    // Поэтому показываем триггер после сдвига вниз.
+                    // https://online.sbis.ru/opendoc.html?guid=0e32253d-b29e-4d98-b3a9-cbd88d7d8b76
+                    this._resetTopTriggerOffset = false;
+                    this._updateScrollController(this._options);
+                }
                 resolver();
             } else {
-                this._loadMore(direction).then(() => {
-                    if (this._destroyed) {
-                        return;
-                    }
-                    this._handleLoadToDirection = false;
-                    resolver();
-                }).catch((error) => {
-                    _private.hideIndicator(this);
-                    return error;
-                });
+                if (this._shouldLoadOnScroll(direction)) {
+                    this._loadMore(direction).then(() => {
+                        if (this._destroyed) {
+                            return;
+                        }
+                        this._handleLoadToDirection = false;
+                        resolver();
+                    }).catch((error) => {
+                        _private.hideIndicator(this);
+                        return error;
+                    });
+                }
             }
         });
         return shiftPromise;
@@ -4996,7 +5019,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _scrollToFirstItemIfNeed(): Promise<void> {
         if (this._needScrollToFirstItem) {
             this._needScrollToFirstItem = false;
-
+            this._needScrollToFirstItemOnDrawItems = false;
             if (!this._finishScrollToEdgeOnDrawItems) {
                 const firstItem = this.getViewModel().at(0);
                 const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;

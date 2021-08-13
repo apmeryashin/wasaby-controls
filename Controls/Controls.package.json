@@ -34,7 +34,8 @@
     "Controls/buttons",
     "Controls/sizeUtils",
     "Controls/Store",
-    "Controls/dataSource"
+    "Controls/dataSource",
+    "Controls/themes"
   ],
   "includePackages": [
     "Controls/controls-application.package.js",

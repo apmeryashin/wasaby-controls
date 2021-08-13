@@ -5,7 +5,7 @@ import { detection } from 'Env/Env';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {adapter} from 'Types/entity';
-import {NewSourceController} from 'Controls/dataSource';
+import {NewSourceController, getControllerState} from 'Controls/dataSource';
 
 const browserData = [
     {
@@ -798,6 +798,22 @@ describe('Controls/browser:Browser', () => {
                 assert.deepEqual(browser._getSourceController().getExpandedItems(), [1]);
             });
 
+            it('sourceController is changed', async () => {
+                let options = getBrowserOptions();
+                options.parentProperty = 'testParentProperty';
+                options.sourceController = new NewSourceController({...options});
+                const browser = await getBrowserWithMountCall(options);
+
+                const sourceController = new NewSourceController({...options});
+                options = {...options};
+                options.sourceController = sourceController;
+                await browser._beforeUpdate(options);
+                assert.ok(browser._getSourceController() === sourceController);
+
+                sourceController.setRoot('newRoot');
+                assert.ok(browser._root === 'newRoot');
+            });
+
             describe('listsOptions', () => {
                 it('prefetchProxy source in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
@@ -876,6 +892,46 @@ describe('Controls/browser:Browser', () => {
                     browser.saveOptions(options);
 
                     assert.ok(browser._getSourceController() === sourceController);
+                });
+                it('filterButtonSource in listsOptions', async () => {
+                    const browserOptions = getBrowserOptions();
+                    let filterButtonSource = [
+                        {
+                            name: 'filterField',
+                            value: '',
+                            textValue: ''
+                        }
+                    ];
+                    const listsOptions = [
+                        {
+                            id: 'list',
+                            ...browserOptions,
+                            filterButtonSource,
+                            filter: {
+                                testField: 'testValue'
+                            }
+                        },
+                        {
+                            id: 'list1',
+                            ...browserOptions,
+                            filterButtonSource,
+                            filter: {
+                                testField1: 'testValue'
+                            }
+                        }
+                    ];
+                    const options = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+                    await browser._beforeUpdate(options);
+                    assert.deepStrictEqual(browser._dataLoader.getFilterController('list').getFilter(), {
+                        testField: 'testValue',
+                        filterField: ''
+                    });
                 });
             });
         });
@@ -991,7 +1047,7 @@ describe('Controls/browser:Browser', () => {
             browser.saveOptions(options);
 
             options = {...options};
-            delete options.source;
+            options.source = null;
             options.filter = {newFilterField: 'newFilterValue'};
 
             await browser._beforeUpdate(options);
@@ -1072,6 +1128,29 @@ describe('Controls/browser:Browser', () => {
             browser._beforeUpdate(options);
             assert.ok(browser._items === items);
         });
+
+        it('update with stateStorageId in options', async () => {
+            let options = getBrowserOptions();
+            options.stateStorageId = 'testStorageId';
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+
+            options = {...options};
+            options.selectedKeys = ['testId'];
+            options.excludedKeys = ['testId'];
+            options.searchValue = 'testSearchValue';
+            const updatePromise = browser._beforeUpdate(options);
+            browser.saveOptions(options);
+            await updatePromise;
+
+            assert.deepStrictEqual(getControllerState('testStorageId'), {
+                selectedKeys: ['testId'],
+                excludedKeys: ['testId'],
+                searchValue: 'testSearchValue',
+                expandedItems: []
+            });
+        });
     });
 
     describe('_updateSearchController', () => {
@@ -1089,17 +1168,19 @@ describe('Controls/browser:Browser', () => {
            await browser._beforeMount(options);
            browser.saveOptions(options);
 
-           const notifyStub = sinon.stub(browser, '_notify');
+           let filter;
+           browser._notify = (event, args) => {
+               filter = args[0];
+           };
 
            options = {...options};
            options.searchValue = '';
            options.searchParam = 'param';
            await browser._updateSearchController(options);
 
-           assert.isTrue(notifyStub.withArgs('filterChanged', [{payload: 'something'}, undefined]).called);
+           assert.deepStrictEqual(filter, {payload: 'something'});
            assert.equal(browser._searchValue, '');
 
-           notifyStub.restore();
        });
     });
 
@@ -1193,6 +1274,39 @@ describe('Controls/browser:Browser', () => {
             await browser._reload(options);
             assert.ok(browser._getSearchControllerSync()._path === path);
         });
+
+        it('dataLoadCallback in listsOptions', async() => {
+            const browserOptions = getBrowserOptions();
+            let listDataLoadCallbackCalled = false;
+            let list2DataLoadCallbackCalled = false;
+            const listsOptions = [
+                {
+                    id: 'list',
+                    ...browserOptions
+                },
+                {
+                    id: 'list2',
+                    ...browserOptions
+                }
+            ];
+            const options = {
+                ...browserOptions,
+                listsOptions,
+                dataLoadCallback: (items, direction, id) => {
+                    if (id === 'list') {
+                        listDataLoadCallbackCalled = true;
+                    }
+                    if (id === 'list2') {
+                        list2DataLoadCallbackCalled = true;
+                    }
+                }
+            };
+            const browser = new Browser();
+            browser.saveOptions(options);
+            await browser._beforeMount(options);
+            assert.ok(listDataLoadCallbackCalled);
+            assert.ok(list2DataLoadCallbackCalled);
+        });
     });
 
     describe('_handleItemOpen', () => {
@@ -1226,6 +1340,21 @@ describe('Controls/browser:Browser', () => {
            assert.equal(browser._root, 'testRoot');
            assert.deepStrictEqual(browser._filter, {parentProperty: null});
        });
+
+        it('root changed, saved root in searchController is reseted', async () => {
+            let options = getBrowserOptions();
+            options.parentProperty = 'parentProperty';
+            options.root = 'rootBeforeSearch';
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+            await browser._search(null, 'testSearchValue');
+            browser._handleItemOpen('testRoot', undefined);
+            options = {...options};
+            options.root = 'testRoot';
+            await browser._beforeUpdate(options);
+            assert.equal(browser._root, 'testRoot');
+        });
 
        it ('root is changed, shearchController is not created', async () => {
             const options = getBrowserOptions();

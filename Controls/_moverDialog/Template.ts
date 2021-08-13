@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
-import {Model, adapter} from 'Types/entity';
+import {Model, adapter, descriptor} from 'Types/entity';
 import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -200,6 +200,13 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
             root: null,
             displayProperty: 'title',
             filter: {}
+        };
+    }
+
+    static getOptionTypes(): object {
+        return {
+            parentProperty: descriptor(String).required(),
+            nodeProperty: descriptor(String).required()
         };
     }
 }

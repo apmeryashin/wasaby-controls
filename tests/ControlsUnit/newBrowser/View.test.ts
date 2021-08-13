@@ -26,7 +26,8 @@ describe('Controls/_newBrowser:View', () => {
             listsConfigs: {
                 detail: {},
                 master: {}
-            }
+            },
+            getVersion: () => 10
         };
         browserInstance._detailExplorerOptions = {};
     });
@@ -68,11 +69,14 @@ describe('Controls/_newBrowser:View', () => {
                     }]
                 }
             };
+            browserInstance._dataContext = {
+                dataContext: context
+            };
             browserInstance._beforeUpdate(newOptions, {
                     dataContext: context
                 }
             );
-            assert.equal(browserInstance._detailExplorerOptions.columns[0].templateOptions.tableCfg, 'tableConfig');
+            assert.equal(browserInstance._columns[0].templateOptions.tableCfg, 'tableConfig');
         });
     });
 

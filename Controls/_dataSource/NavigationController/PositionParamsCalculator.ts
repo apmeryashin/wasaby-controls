@@ -115,7 +115,9 @@ class PositionParamsCalculator implements IParamsCalculator {
         }
 
         const metaData = list.getMetaData();
-        const metaNextPosition = additionalMeta.nextPosition || metaData.nextPosition;
+        const metaNextPosition = additionalMeta.nextPosition !== undefined ?
+            additionalMeta.nextPosition :
+            metaData.nextPosition;
         const metaIterative = metaData.iterative;
 
         store.setIterative(metaIterative);

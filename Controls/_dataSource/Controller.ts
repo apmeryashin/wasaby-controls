@@ -948,6 +948,8 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
                     // Добавляет отсутствующие expandedItems в фильтр expanded узлов
                     resultFilter[parentProperty] = resultFilter[parentProperty]
                         .concat(expandedItems.filter((key) => resultFilter[parentProperty].indexOf(key) === -1));
+                } else if (expandedItems?.[0] === null) {
+                    resultFilter[parentProperty] = expandedItems;
                 } else if (root !== undefined) {
                     resultFilter[parentProperty] = root;
                 }
@@ -1041,7 +1043,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         }
 
         if (loadedInCurrentRoot) {
-            this._dataLoadCallbackFromOptions?.call(void 0, result, direction);
+            this._dataLoadCallbackFromOptions?.call(void 0, result, direction, this._options.id);
         } else if (this._options.nodeLoadCallback) {
             this._options.nodeLoadCallback(result, key, direction);
         }
