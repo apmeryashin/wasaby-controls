@@ -34,11 +34,11 @@ import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
 import {isEqual} from 'Types/object';
-import {DataLoader, IDataLoaderOptions, ILoadDataResult} from 'Controls/dataSource';
+import {DataLoader, IDataLoaderOptions, ILoadDataResult, saveControllerState} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
 import {loadAsync, isLoaded} from 'WasabyLoader/ModulesLoader';
-import {IBaseAction} from "Controls/_actions/BaseAction";
+import {IBaseAction} from 'Controls/_actions/BaseAction';
 
 type Key = string|number|null;
 
@@ -67,6 +67,7 @@ export interface IBrowserOptions extends IListConfiguration {
     sourceControllerId?: string;
     operationsController?: OperationsController;
     _dataOptionsValue?: IContextOptionsValue;
+    stateStorageId?: string;
 }
 
 interface IReceivedState {
@@ -139,7 +140,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._dataLoader = new DataLoader(this._getDataLoaderOptions(options, receivedState));
         this._selectionViewModeChanged = this._selectionViewModeChanged.bind(this);
 
-        return this._loadDependencies(options, () => {
+        return this._loadDependencies<TReceivedState | Error | void>(options, () => {
             return this._beforeMountInternal(options, undefined, receivedState);
         });
     }
@@ -244,7 +245,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
                 this._storeCallbackIds = this._createNewStoreObservers();
                 if (!options.hasOwnProperty('searchValue') && this._searchValue) {
-                    this._setSearchValue('');
+                    this._setSearchValueAndNotify('');
                     this._getSearchControllerSync()?.reset(true);
                 }
             }, true);
@@ -424,8 +425,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const selectedKeysChanged = !isEqual(options.selectedKeys, newOptions.selectedKeys);
         const excludedKeysChanged = !isEqual(options.excludedKeys, newOptions.excludedKeys);
         const expandedItemsChanged = !isEqual(options.expandedItems, newOptions.expandedItems);
-        if (!isChanged && (selectedKeysChanged || excludedKeysChanged || expandedItemsChanged)) {
-            this._updateContext();
+        if (selectedKeysChanged || excludedKeysChanged || expandedItemsChanged) {
+            this._saveState(newOptions);
+
+            if (!isChanged) {
+                this._updateContext();
+            }
         }
         if (expandedItemsChanged) {
             sourceController.setExpandedItems(newOptions.expandedItems);
@@ -939,6 +944,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private _setSearchValue(value: string): void {
+        this._setSearchValueAndNotify(value);
+        this._saveState();
+    }
+
+    private _setSearchValueAndNotify(value: string): void {
         this._searchValue = value;
         this._notify('searchValueChanged', [value]);
     }
@@ -1039,6 +1049,17 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._search(null, this._misspellValue);
         }
         this._misspellValue = '';
+    }
+
+    _saveState(options: IBrowserOptions = this._options): void {
+        if (options.stateStorageId) {
+            saveControllerState(options.stateStorageId, {
+                searchValue: this._getSearchValue(options),
+                selectedKeys: options.selectedKeys,
+                excludedKeys: options.excludedKeys,
+                expandedItems: this._getSourceController().getExpandedItems()
+            });
+        }
     }
 
     resetPrefetch(): void {
