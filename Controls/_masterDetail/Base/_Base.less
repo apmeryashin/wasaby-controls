@@ -87,8 +87,15 @@
 }
 
 .controls-MasterDetail_resizing-line-newDesign {
-   .controls-ResizingLine__area {
-      border-radius: var(--border-radius_default_block) 0 0 0;
+   &.controls-MasterDetail_resizing-line-left {
+      .controls-ResizingLine__area {
+         border-radius: var(--border-radius_default_block) 0 0 0;
+      }
+   }
+   &.controls-MasterDetail_resizing-line-right {
+      .controls-ResizingLine__area {
+         border-radius: 0 var(--border-radius_default_block) 0 0;
+      }
    }
 }
 
