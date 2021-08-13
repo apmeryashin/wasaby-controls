@@ -800,16 +800,18 @@ describe('Controls/browser:Browser', () => {
 
             it('sourceController is changed', async () => {
                 let options = getBrowserOptions();
+                options.parentProperty = 'testParentProperty';
                 options.sourceController = new NewSourceController({...options});
-                const browser = getBrowser(options);
-                await browser._beforeMount(options);
-                browser.saveOptions(options);
+                const browser = await getBrowserWithMountCall(options);
 
                 const sourceController = new NewSourceController({...options});
                 options = {...options};
                 options.sourceController = sourceController;
                 await browser._beforeUpdate(options);
                 assert.ok(browser._getSourceController() === sourceController);
+
+                sourceController.setRoot('newRoot');
+                assert.ok(browser._root === 'newRoot');
             });
 
             describe('listsOptions', () => {
