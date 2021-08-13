@@ -369,6 +369,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
         if (options.sourceController !== newOptions.sourceController) {
             this._dataLoader.setSourceController(id, newOptions.sourceController);
+            this._subscribeOnRootChanged();
         }
 
         if (sourceChanged) {
@@ -526,8 +527,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _setItemsAndUpdateContext(): void {
         this._updateItemsOnState();
-        this._getSourceController().subscribe('rootChanged', this._rootChanged.bind(this));
+        this._subscribeOnRootChanged();
         this._updateContext();
+    }
+
+    private _subscribeOnRootChanged(): void {
+        this._getSourceController().subscribe('rootChanged', this._rootChanged.bind(this));
     }
 
     private _updateItemsOnState(): void {
