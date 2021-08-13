@@ -121,12 +121,12 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
 /**
  * @name Controls/_popupTemplate/Sticky#headingFontColorStyle
  * @cfg {String}
- * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Template
+ * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Index
  */
 
 /**
  * @name Controls/_popupTemplate/Sticky#headingFontSize
  * @cfg {String}
- * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Template
+ * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Index
  */
 export default StickyTemplate;
