@@ -49,7 +49,7 @@ class Paging extends Control<IPagingOptions> {
     protected _template: TemplateFunction = pagingTemplate;
     protected _stateBackward: TButtonState = 'normal';
     protected _stateForward: TButtonState = 'normal';
-    protected _stateReset: TButtonState = 'normal';
+    protected _stateReset: TButtonState = 'disabled';
     protected _stateTop: TButtonState = 'normal';
     protected _stateBottom: TButtonState = 'normal';
 
@@ -72,7 +72,8 @@ class Paging extends Control<IPagingOptions> {
                 this._stateBackward = this._getState(config.arrowState.prev || 'readonly');
                 this._stateForward = this._getState(config.arrowState.next || 'readonly');
                 this._stateBottom = this._getState(config.arrowState.end || 'readonly');
-                this._stateReset = config.arrowState.reset !== 'hidden' ? 'normal' : 'disabled';
+                this._stateReset = config.arrowState.reset === 'day' ||
+                                   config.arrowState.reset === 'home' ? 'normal' : 'disabled';
             }
         }
     }

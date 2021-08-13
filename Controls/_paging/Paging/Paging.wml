@@ -1,5 +1,5 @@
 <div class="controls_paging_theme-{{_options.theme}} controls-PagingV" >
-    <ws:if data="{{_options.arrowState.reset !== 'hidden'}}">
+    <ws:if data="{{_stateReset !== 'disabled'}}">
         <div class="controls_Paging_separate {{_options.contrastBackground ? 'controls-Paging__contrast' : ''}}">
             <div class="controls-Paging__wrapper">
                 <span class="controls-Paging__btn controls-Paging__btn-Reset
