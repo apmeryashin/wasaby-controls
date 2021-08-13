@@ -39,13 +39,12 @@ export interface ISearchInputContainerOptions extends IControlOptions {
  *     ...
  * }
  * </pre>
- * @class Controls/_search/Input/Container
  * @extends UI/Base:Control
  * @demo Controls-demo/Search/Explorer/Index
  * @demo Controls-demo/Search/FlatList/Index
  * @demo Controls-demo/Search/TreeView/Index
  * @public
- * @author Крюков Н.Ю.
+ * @author Золотова Э.Е.
  */
 export default class Container extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
@@ -144,7 +143,10 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
 /**
  * @name Controls/_search/Input/Container#searchDelay
- * @cfg {number|null} Время задержки перед поиском
+ * @cfg {number|null} Время задержки перед поиском.
+ * @default 500
+ * @remark
+ * Значение задается в мс.
  * @demo Controls-demo/Search/Explorer/Index
  * @demo Controls-demo/Search/FlatList/Index
  * @demo Controls-demo/Search/TreeView/Index
@@ -152,7 +154,8 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
 /**
  * @name Controls/_search/Input/Container#minSearchLength
- * @cfg {number} Минимальная длина значения для начала поиска
+ * @cfg {number} Минимальная длина значения для начала поиска.
+ * @default 3
  * @demo Controls-demo/Search/Explorer/Index
  * @demo Controls-demo/Search/FlatList/Index
  * @demo Controls-demo/Search/TreeView/Index
@@ -167,14 +170,14 @@ export default class Container extends Control<ISearchInputContainerOptions> {
  */
 
 /**
- * @event Происходит при начале поиска
+ * @event Происходит при начале поиска.
  * @name Controls/_search/Input/Container#search
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {value} string Значение по которому производится поиск.
  */
 
 /**
- * @event Происходит при сбросе поиска
+ * @event Происходит при сбросе поиска.
  * @name Controls/_search/Input/Container#searchReset
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  */
