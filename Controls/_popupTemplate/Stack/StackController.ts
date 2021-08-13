@@ -24,6 +24,8 @@ const MIN_DISTANCE = 100;
 interface IStackItem extends IPopupItem {
     containerWidth: number;
     popupOptions: IStackPopupOptions;
+    minSavedWidth: number;
+    maxSavedWidth: number;
 }
 
 class StackController extends BaseController {
@@ -149,15 +151,15 @@ class StackController extends BaseController {
         const currentWidth = (item.position.width || item.popupOptions.stackWidth);
         const newValue = currentWidth + offset;
         const minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
-        const midOfMinMax = (item.popupOptions.maxWidth + minWidth) / 2;
-        const isMoreThanMidOfMinMax = newValue >= midOfMinMax;
-        let minSavedWidth = !isMoreThanMidOfMinMax ? newValue : item.minSavedWidth;
-        let maxSavedWidth = isMoreThanMidOfMinMax ? newValue : item.maxSavedWidth;
+        const midWidth = (item.popupOptions.maxWidth + minWidth) / 2;
+        const isMoreThanMid = newValue >= midWidth;
+        let minSavedWidth = !isMoreThanMid ? newValue : item.minSavedWidth;
+        let maxSavedWidth = isMoreThanMid ? newValue : item.maxSavedWidth;
 
-        // Если расстояние между сохраненными ширинами меньше MIN_DISTANCE, то одну из ширин сбрасываем
-        // в минимальное положение, чтобы разворот по кнопке был более заметным.
+        // Если расстояние между сохраненными ширинами меньше MIN_DISTANCE, то одну из сохраненных ширин сбрасываем, чтобы
+        // разворот по кнопке был более заметным.
         if (maxSavedWidth - minSavedWidth < MIN_DISTANCE) {
-            if (isMoreThanMidOfMinMax) {
+            if (isMoreThanMid) {
                 minSavedWidth = minWidth;
             } else {
                 maxSavedWidth = item.popupOptions.maxWidth;
