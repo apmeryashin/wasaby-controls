@@ -90,9 +90,9 @@
    <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/Menu/Control/ItemActions/HoverBackgroundStyle/Index' }}">
-            <a href="{{content.href}}">ItemActions, hoverBackgroundStyle = danger</a>
+                                 app="{{ 'Controls-demo/Menu/Control/HoverBackgroundStyle/Index' }}">
+            <a href="{{content.href}}">hoverBackgroundStyle = danger</a>
         </Router.router:Reference>
-        <Controls-demo.Menu.Control.ItemActions.HoverBackgroundStyle.Index/>
+        <Controls-demo.Menu.Control.HoverBackgroundStyle.Index/>
     </div>
 </div>
