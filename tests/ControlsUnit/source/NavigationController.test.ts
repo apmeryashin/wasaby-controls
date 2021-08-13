@@ -606,6 +606,57 @@ describe('Controls/_source/NavigationController', () => {
                 assert.deepEqual([1], params[1].backwardPosition, 'Wrong query properties');
             });
 
+            it('updateQueryProperties + meta.NextPosition recordSet, direction: forward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        field: 'id',
+                        direction: 'forward'
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                const metaMoreRs = new RecordSet({
+                    rawData: [
+                        {
+                            id: 1,
+                            nav_result: 'testId'
+                        },
+                        {
+                            id: 2,
+                            nav_result: null
+                        }
+                    ],
+                    keyProperty: 'id'
+                });
+                let nextPositionRs = new RecordSet({
+                    rawData: [
+                        {
+                            id: 1,
+                            nav_result: ['testId']
+                        },
+                        {
+                            id: 2,
+                            nav_result: null
+                        }
+                    ],
+                    keyProperty: 'anyKeyProperty'
+                });
+
+                rs.setMetaData({
+                    more: metaMoreRs,
+                    nextPosition: nextPositionRs
+                });
+
+                const params = nc.updateQueryProperties(rs);
+                assert.deepEqual(['testId'], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([6], params[1].forwardPosition, 'Wrong query properties');
+            });
+
             it('updateQueryProperties bothways + meta.NextPosition root', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',

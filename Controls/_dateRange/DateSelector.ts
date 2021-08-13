@@ -16,14 +16,14 @@ import 'css!Controls/dateRange';
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
  * @implements Controls/interface/IDateRange
- * @mixes Controls/dateRange:ILinkView
+ * @implements Controls/dateRange:ILinkView
  * @implements Controls/interface:IOpenPopup
- * @mixes Controls/dateRange:IDatePickerSelectors
- * @mixes Controls/dateRange:IDayTemplate
+ * @implements Controls/dateRange:IDatePickerSelectors
+ * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
- * @mixes Controls/dateRange:ICaptionFormatter
+ * @implements Controls/dateRange:ICaptionFormatter
  * @mixes Controls/dateRange:IDateSelector
  * @mixes Controls/dateRange:IMonthCaptionTemplate
  *
@@ -45,10 +45,10 @@ import 'css!Controls/dateRange';
  * @class Controls/_dateRange/DateSelector
  * @extends UI/Base:Control
  * @implements Controls/interface/IDateRange
- * @mixes Controls/dateRange:ILinkView
+ * @implements Controls/dateRange:ILinkView
  * @implements Controls/interface:IOpenPopup
- * @mixes Controls/dateRange:IDatePickerSelectors
- * @mixes Controls/dateRange:IDayTemplate
+ * @implements Controls/dateRange:IDatePickerSelectors
+ * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/interface:IFontColorStyle
  * @mixes Controls/dateRange:IDateSelector
  *
@@ -75,12 +75,13 @@ export default class DateSelector extends BaseSelector<IDateSelectorOptions> {
    }
 
    _updateValues(options: IDateSelectorOptions): void {
-      this._startValue = options.value || this._rangeModel?.startValue;
-      this._endValue = options.value || this._rangeModel?.endValue;
+      this._startValue = options.value === undefined ? this._rangeModel?.startValue : options.value;
+      this._endValue = options.value === undefined ? this._rangeModel?.endValue : options.value;
    }
 
    protected _getPopupOptions(): IStickyPopupOptions {
       const container = this._children.linkView.getPopupTarget();
+      const value = PopupUtil.getFormattedSingleSelectionValue(this._startValue);
       return {
          ...PopupUtil.getCommonOptions(this),
          target: container,
@@ -88,6 +89,7 @@ export default class DateSelector extends BaseSelector<IDateSelectorOptions> {
          className: `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme} controls_popupTemplate_theme-${this._options.theme}`,
          templateOptions: {
             ...PopupUtil.getTemplateOptions(this),
+            ...value,
             headerType: 'link',
             rightFieldTemplate: this._options.rightFieldTemplate,
             calendarSource: this._options.calendarSource,

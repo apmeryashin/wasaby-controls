@@ -699,7 +699,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
     private _getFastText(config: IFilterItemConfig, selectedKeys: string[], item?: IFilterItem): IDisplayText {
         const textArr = [];
-        const displayTextValue = item?.displayTextValue;
         if (selectedKeys[0] === config.emptyKey && config.emptyText) {
             textArr.push(config.emptyText);
         } else if (config.items) {
@@ -709,11 +708,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                     textArr.push(object.getPropertyValue(selectedItem, config.displayProperty));
                 }
             });
-        } else if (displayTextValue) {
-            return {
-                ...displayTextValue,
-                title: item?.textValue ? item.textValue : ''
-            };
         } else if (item?.textValue) {
             textArr.push(item.textValue);
         }
@@ -750,9 +744,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
                         // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
                         const flatSelectedKeys = nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
-                        if (detailPanelHandler) {
-                            item.displayTextValue = null;
-                        }
                         const displayText = this._getFastText(configs[item.name], flatSelectedKeys, item);
                         this._displayText[item.name] = displayText;
                         if (!displayText.text && detailPanelHandler) {
@@ -763,7 +754,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                         }
                         if (item.textValue !== undefined && !detailPanelHandler) {
                             item.textValue = displayText.title;
-                            item.displayTextValue = displayText;
                         }
                     } else if (item.textValue) {
                         /* Сюда мы попадем только в случае, когда фильтр выбрали с панели фильтров,

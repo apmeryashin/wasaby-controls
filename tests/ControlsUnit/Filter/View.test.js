@@ -728,41 +728,6 @@ define(
                display = view._getFastText(config, ['empty']);
                assert.strictEqual(display.text, 'empty text');
             });
-
-            it('with displayText', () => {
-               let view = getView(defaultConfig);
-               const item = {
-                  name: 'org',
-                  value: [],
-                  resetValue: null,
-                  textValue: '',
-                  displayTextValue: {
-                     title: 'Очень длинный title который надо удалить',
-                     hasMoreText: 'Еще 10',
-                     text: 'Организация'
-                  }
-               };
-               let config = {
-                  displayProperty: 'title',
-                  keyProperty: 'id',
-                  emptyText: 'empty text',
-                  emptyKey: 'empty'
-               };
-               let display = view._getFastText(config, [], item);
-               assert.deepEqual(display, {
-                  title: '',
-                  hasMoreText: 'Еще 10',
-                  text: 'Организация'
-               });
-
-               item.textValue = 'А вот это title';
-               display = view._getFastText(config, [], item);
-               assert.deepEqual(display, {
-                  title: 'А вот это title',
-                  hasMoreText: 'Еще 10',
-                  text: 'Организация'
-               });
-            });
          });
 
          it('_getKeysUnloadedItems', function() {

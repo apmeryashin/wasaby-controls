@@ -72,7 +72,7 @@ export function getItemsBySelection(
                 selectedItems.push(item.getId());
             }
         });
-    } else {
+    } else if (selection.selected.length && selection.selected[0] !== null) {
         selectedItems = selection.selected;
     }
 

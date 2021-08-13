@@ -657,6 +657,22 @@ define([
          it('should return true', () => {
             const tabs = new tabsMod.Buttons();
             tabs._options = { canShrink: true };
+            const item = { canShrink: false };
+            tabs._hasMainTab = false;
+            const result = tabs._tabCanShrink(item);
+            assert.isFalse(result);
+         });
+         it('should return true', () => {
+            const tabs = new tabsMod.Buttons();
+            tabs._options = { canShrink: true };
+            const item = { canShrink: true };
+            tabs._hasMainTab = true;
+            const result = tabs._tabCanShrink(item);
+            assert.isTrue(result);
+         });
+         it('should return true', () => {
+            const tabs = new tabsMod.Buttons();
+            tabs._options = { canShrink: true };
             const item = {};
             tabs._hasMainTab = false;
             const result = tabs._tabCanShrink(item);

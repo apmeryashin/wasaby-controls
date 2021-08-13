@@ -798,6 +798,20 @@ describe('Controls/browser:Browser', () => {
                 assert.deepEqual(browser._getSourceController().getExpandedItems(), [1]);
             });
 
+            it('sourceController is changed', async () => {
+                let options = getBrowserOptions();
+                options.sourceController = new NewSourceController({...options});
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                const sourceController = new NewSourceController({...options});
+                options = {...options};
+                options.sourceController = sourceController;
+                await browser._beforeUpdate(options);
+                assert.ok(browser._getSourceController() === sourceController);
+            });
+
             describe('listsOptions', () => {
                 it('prefetchProxy source in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
@@ -876,6 +890,46 @@ describe('Controls/browser:Browser', () => {
                     browser.saveOptions(options);
 
                     assert.ok(browser._getSourceController() === sourceController);
+                });
+                it('filterButtonSource in listsOptions', async () => {
+                    const browserOptions = getBrowserOptions();
+                    let filterButtonSource = [
+                        {
+                            name: 'filterField',
+                            value: '',
+                            textValue: ''
+                        }
+                    ];
+                    const listsOptions = [
+                        {
+                            id: 'list',
+                            ...browserOptions,
+                            filterButtonSource,
+                            filter: {
+                                testField: 'testValue'
+                            }
+                        },
+                        {
+                            id: 'list1',
+                            ...browserOptions,
+                            filterButtonSource,
+                            filter: {
+                                testField1: 'testValue'
+                            }
+                        }
+                    ];
+                    const options = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+                    await browser._beforeUpdate(options);
+                    assert.deepStrictEqual(browser._dataLoader.getFilterController('list').getFilter(), {
+                        testField: 'testValue',
+                        filterField: ''
+                    });
                 });
             });
         });
@@ -991,7 +1045,7 @@ describe('Controls/browser:Browser', () => {
             browser.saveOptions(options);
 
             options = {...options};
-            delete options.source;
+            options.source = null;
             options.filter = {newFilterField: 'newFilterValue'};
 
             await browser._beforeUpdate(options);
@@ -1259,6 +1313,21 @@ describe('Controls/browser:Browser', () => {
            assert.equal(browser._root, 'testRoot');
            assert.deepStrictEqual(browser._filter, {parentProperty: null});
        });
+
+        it('root changed, saved root in searchController is reseted', async () => {
+            let options = getBrowserOptions();
+            options.parentProperty = 'parentProperty';
+            options.root = 'rootBeforeSearch';
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+            await browser._search(null, 'testSearchValue');
+            browser._handleItemOpen('testRoot', undefined);
+            options = {...options};
+            options.root = 'testRoot';
+            await browser._beforeUpdate(options);
+            assert.equal(browser._root, 'testRoot');
+        });
 
        it ('root is changed, shearchController is not created', async () => {
             const options = getBrowserOptions();
