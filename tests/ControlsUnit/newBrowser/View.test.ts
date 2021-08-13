@@ -76,7 +76,7 @@ describe('Controls/_newBrowser:View', () => {
                     dataContext: context
                 }
             );
-            assert.equal(browserInstance._detailExplorerOptions.columns[0].templateOptions.tableCfg, 'tableConfig');
+            assert.equal(browserInstance._columns[0].templateOptions.tableCfg, 'tableConfig');
         });
     });
 
