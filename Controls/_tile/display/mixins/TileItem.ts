@@ -1694,6 +1694,35 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
+    /**
+     * Возвращает стили для размытия в afterTitleTemplate
+     * @param {TTileItem} itemType Тип элемента
+     * @param {TImageViewMode} imageViewMode Режим отображения изображения
+     * @param {string} gradientColor Цвет градиента
+     */
+    getBlurStyles(
+        itemType: TTileItem = 'default',
+        imageViewMode: TImageViewMode,
+        gradientColor: string = '#FFF'
+    ): string {
+        let styles = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'preview':
+            case 'medium':
+                break;
+            case 'rich':
+                const rgbColor = toRgb(gradientColor);
+                if ((!imageViewMode || imageViewMode === 'rectangle')) {
+                    styles += ` background: linear-gradient(to right, ${rgbaToString(rgbToRgba(rgbColor, 0))} 0%, ${rgbaToString(rgbColor)} 12px, ${rgbaToString(rgbColor)} 100%);`;
+                }
+                break;
+        }
+
+        return styles;
+    }
     // endregion Title
 
     // region Description
