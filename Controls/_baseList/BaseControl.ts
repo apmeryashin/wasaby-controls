@@ -5499,23 +5499,23 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         );
         if (canEditByClick) {
             e.stopPropagation();
+            this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
             this._beginEdit({ item }, { columnIndex }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
                 return result;
             });
-        } else if (this._editInPlaceController) {
-            this._commitEdit();
-        }
-        // При клике по элементу может случиться 2 события: itemClick и itemActivate.
-        // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
-        // порядок событий будет beforeBeginEdit -> itemClick
-        // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
-        // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
-        if (e.isStopped()) {
-            this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
         } else {
+            if (this._editInPlaceController) {
+                this._commitEdit();
+            }
+
+            // При клике по элементу может случиться 2 события: itemClick и itemActivate.
+            // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
+            // порядок событий будет beforeBeginEdit -> itemClick
+            // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
+            // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
             if (e.isBubbling()) {
                 e.stopPropagation();
             }
