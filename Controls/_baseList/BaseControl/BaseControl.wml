@@ -49,13 +49,15 @@
             <div class="controls-BaseControl_paging-label">{{rk('Всего')}} {{_pagingLabelData.totalItemsCount}}</div>
         </ws:else>
     </ws:if>
-    <Controls.paging:Paging
-        attr:class="controls-BaseControl__footerPaging"
-        showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
-        pagesCount = "{{_knownPagesCount}}"
-        selectedPage = "{{_currentPage}}"
-        arrowState="{{_pagingCfg.arrowState}}"
-        on:selectedPageChanged="__pagingChangePage()" />
+    <Controls.Container.Async templateName="Controls/paging:Paging">
+        <ws:partial template="{{ content.resolvedTemplate }}"
+                    attr:class="controls-BaseControl__footerPaging"
+                    showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
+                    pagesCount = "{{_knownPagesCount}}"
+                    selectedPage = "{{_currentPage}}"
+                    arrowState="{{_pagingCfg.arrowState}}"
+                    on:selectedPageChanged="__pagingChangePage()" />
+    </Controls.Container.Async>
 </ws:template>
 
 <!--
