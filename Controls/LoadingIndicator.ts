@@ -515,7 +515,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     _recalcMessagePosition(): void {
         const messageDiv = this._messageDiv;
         const isMessageDivVisible = this._messageDiv?.parentElement;
-        if (this.isGlobal && isMessageDivVisible) {
+        if (this.isGlobal && isMessageDivVisible && ManagerController) {
             const rootContainer = document.querySelector('.controls-Popup__dialog-target-container');
             const contentData = ManagerController.getContentData();
             const rootWidth = (contentData?.width + (contentData?.left || 0)) || rootContainer?.clientWidth;
