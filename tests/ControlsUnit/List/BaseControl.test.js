@@ -3261,6 +3261,7 @@ define([
                const event = {
                   stopPropagation() {},
                   isStopped() { return true },
+                  isBubbling() {},
                   original: {
                       target: {
                           closest(name) {
@@ -7156,7 +7157,7 @@ define([
          });
 
          describe('_onItemClick', () => {
-            it('in list wit EIP itemClick should fire after beforeBeginEdit', () => {
+            it('in list wit EIP itemClick should fire after beforeBeginEdit', (done) => {
                let isItemClickStopped = false;
                let firedEvents = [];
 

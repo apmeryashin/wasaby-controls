@@ -1169,6 +1169,34 @@ describe('Controls/list_clean/BaseControl', () => {
             });
         });
 
+        it('should remember click event args before begin edit', (done) => {
+            const cfg = {
+                ...baseControlCfg,
+                editingConfig: {
+                    editOnClick: true
+                }
+            };
+            baseControl = new BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            const e = {
+                stopPropagation: () => {}
+            };
+            const item = {};
+            const originalEvent = {
+                target: {
+                    closest: (eName) => eName === '.js-controls-ListView__editingTarget' ? {} : undefined
+                }
+            };
+
+            baseControl._editInPlaceController = {
+                edit() {
+                    assert.deepEqual(baseControl._savedItemClickArgs, [e, item, originalEvent, null]);
+                    done();
+                }
+            };
+            baseControl._onItemClick(e, item, originalEvent, undefined);
+        });
+
         describe('readOnly mode', () => {
             beforeEach(() => {
                 baseControl.saveOptions({...baseControlCfg, readOnly: true});
