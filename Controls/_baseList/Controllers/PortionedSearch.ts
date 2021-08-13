@@ -1,7 +1,7 @@
 import {IDirection} from '../interface/IVirtualScroll';
 
 const SEARCH_MAX_DURATION = 30 * 1000;
-const SEARCH_CONTINUED_MAX_DURATION = 2 * 60 * 1000;
+const SEARCH_CONTINUED_MAX_DURATION = 30 * 1000;
 enum SEARCH_STATES {
   NOT_STARTED = 0,
   STARTED = 'started',
