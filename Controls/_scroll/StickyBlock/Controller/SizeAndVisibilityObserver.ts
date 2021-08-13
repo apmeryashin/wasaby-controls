@@ -1,7 +1,8 @@
-import {ResizeObserverUtil} from "Controls/sizeUtils";
-import {isHidden} from "Controls/_scroll/StickyBlock/Utils";
-import {getClosestControl} from "UI/NodeCollector";
-import StickyBlock from "Controls/_scroll/StickyBlock";
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
+import {isHidden} from 'Controls/_scroll/StickyBlock/Utils';
+import {getClosestControl} from 'UI/NodeCollector';
+import StickyBlock from 'Controls/_scroll/StickyBlock';
+import Group from 'Controls/_scroll/StickyBlock/Group';
 
 interface IHeightEntry {
     key: HTMLElement;
@@ -73,7 +74,7 @@ export default class SizeAndVisibilityObserver {
     }
 
     private _isGroup(id: string): boolean {
-        return !!this._headers[id].inst.getChildrenHeaders;
+        return this._headers[id].inst instanceof Group;
     }
 
     private _getGroupByHeader(header: StickyBlock) {
@@ -175,7 +176,7 @@ export default class SizeAndVisibilityObserver {
     }
 
     private _getStickyHeaderElements(header: StickyBlock): NodeListOf<HTMLElement> {
-        if (header.getChildrenHeaders) {
+        if (this._isGroup(header)) {
             return header.getChildrenHeaders().map(h => h.inst.getHeaderContainer());
         } else {
             return [header.getHeaderContainer()];
