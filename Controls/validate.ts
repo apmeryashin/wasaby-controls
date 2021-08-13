@@ -23,6 +23,8 @@ import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
 import Highlighter = require('wml!Controls/_validate/Highlighter');
 
 export {default as isEmail} from 'Controls/_validate/Validators/IsEmail';
+export {default as inDateRange} from 'Controls/_validate/Validators/InDateRange';
+export {default as inRange} from 'Controls/_validate/Validators/InRange';
 export {default as Controller} from 'Controls/_validate/Controller';
 export {default as ControllerClass} from 'Controls/_validate/ControllerClass';
 export {default as Container} from 'Controls/_validate/Container';
