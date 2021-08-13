@@ -2,7 +2,7 @@
    <div class="controls-InputBase__stretcher">
       <ws:partial attr:class="controls-InputBase__stretcher-content" template="{{content}}" value="{{value}}"/>
       <div class="controls-InputBase__stretcher-block controls-InputBase__stretcher-block_margin-{{horizontalPadding}}">
-          {{value || emptySymbol}}
+          {{ stretcherValue || emptySymbol }}
       </div>
    </div>
 </ws:if>

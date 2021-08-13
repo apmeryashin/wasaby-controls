@@ -1166,7 +1166,7 @@ describe('Controls/list_clean/BaseControl', () => {
             });
         });
 
-        it('should remember click event args before begin edit', (done) => {
+        it('should remember click event args before begin edit', async () => {
             const cfg = {
                 ...baseControlCfg,
                 editingConfig: {
@@ -1175,6 +1175,7 @@ describe('Controls/list_clean/BaseControl', () => {
             };
             baseControl = new BaseControl(cfg);
             baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
             const e = {
                 stopPropagation: () => {}
             };
@@ -1185,13 +1186,16 @@ describe('Controls/list_clean/BaseControl', () => {
                 }
             };
 
-            baseControl._editInPlaceController = {
-                edit() {
-                    assert.deepEqual(baseControl._savedItemClickArgs, [e, item, originalEvent, null]);
-                    done();
-                }
-            };
-            baseControl._onItemClick(e, item, originalEvent, undefined);
+            return new Promise((resolve) => {
+                baseControl._editInPlaceController = {
+                    edit() {
+                        assert.deepEqual(baseControl._savedItemClickArgs, [e, item, originalEvent, null]);
+                        resolve();
+                    }
+                };
+
+                baseControl._onItemClick(e, item, originalEvent, undefined);
+            });
         });
 
         describe('readOnly mode', () => {
