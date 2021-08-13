@@ -186,6 +186,7 @@ export default class TileView extends ListView {
             menuOptions.imageClasses = item.getImageClasses();
             menuOptions.previewHeight = this._targetItemRect && item.isScaled() ? this._targetItemRect.height : targetItemSize.height;
             menuOptions.previewWidth = this._targetItemRect && item.isScaled() ? this._targetItemRect.width : targetItemSize.width;
+            menuOptions.roundBorder = !!this._options.roundBorder;
 
             return {
                 templateOptions: menuOptions,
