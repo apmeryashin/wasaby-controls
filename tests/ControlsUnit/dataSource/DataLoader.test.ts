@@ -201,24 +201,6 @@ describe('Controls/dataSource:loadData', () => {
         ok(loadResults.length === 2);
     });
 
-    it('loadEvery with different parameters', async () => {
-        const dataLoader = getDataLoader();
-        let loadDataConfigs = [{source: getSource()}, {source: getSource()}];
-        let loadDataPromises = dataLoader.loadEvery(loadDataConfigs);
-        let loadResults = await Promise.all(dataLoader.loadEvery(loadDataConfigs));
-        const sourceController = dataLoader.getSourceController();
-
-        ok(loadDataPromises.length === 2);
-        ok(loadResults.length === 2);
-
-        loadDataConfigs = [{source: getSource()}];
-        loadDataPromises = dataLoader.loadEvery(loadDataConfigs);
-        loadResults = await Promise.all(dataLoader.loadEvery(loadDataConfigs));
-        ok(loadDataPromises.length === 1);
-        ok(loadResults.length === 1);
-        ok(sourceController !== dataLoader.getSourceController());
-    });
-
     it('load data with sourceController in config', async () => {
         const source = getSource();
         const sourceController = new NewSourceController({source});

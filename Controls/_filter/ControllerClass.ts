@@ -64,6 +64,7 @@ const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
 const ACTIVE_HISTORY_FILTER_INDEX = 0;
 const SELECTION_PATH_FILTER_FIELD = 'SelectionWithPath';
+const MIN_SEARCH_LENGTH = 3;
 
 export default class FilterControllerClass {
     private _options: Partial<IFilterControllerOptions> = null;
@@ -689,7 +690,7 @@ export default class FilterControllerClass {
                                  {
                                      searchValue,
                                      searchParam,
-                                     minSearchLength,
+                                     minSearchLength = MIN_SEARCH_LENGTH,
                                      parentProperty
                                  }: Partial<IFilterControllerOptions>): void {
         const preparedFilter = {...filter} || {};
