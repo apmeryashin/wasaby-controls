@@ -76,6 +76,7 @@
                         tileSize="{{_tileCfg.tileSize}}"
                         on:changeDragTarget="_notifyHandler('detailChangeDragTarget')"
                         viewMode="{{viewMode}}"
+                        columns="{{_columns}}"
                         scope="{{_detailExplorerOptions}}"
                         breadcrumbsVisibility="{{_getDetailBreadCrumbsVisibility(_options.detail)}}"
                         on:itemClick="_onExplorerItemClick(false)"
