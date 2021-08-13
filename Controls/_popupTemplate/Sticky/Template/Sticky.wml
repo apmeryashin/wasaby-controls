@@ -1,5 +1,6 @@
 <div class="controls_popupTemplate_theme-{{_options.theme}}
             controls-StickyTemplate
+            {{_options.roundBorder !== false ? 'controls-StickyTemplate_roundBorder'}}
             controls-StickyTemplate-background-{{_options.backgroundStyle}}
              {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}"
      ws-tab-cycling="true">
