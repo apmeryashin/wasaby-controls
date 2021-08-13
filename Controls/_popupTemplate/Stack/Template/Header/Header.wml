@@ -27,7 +27,7 @@
       </ws:if>
       <ws:if data="{{!_options.hasRightPanel}}">
          <div class="controls-StackTemplate__command_buttons">
-            <ws:if data="{{_options.showMaximizedButton || _options._maximizeButtonVisibility}}">
+            <ws:if data="{{_options._maximizeButtonVisibility}}">
                <div class="controls-StackTemplate__maximized_button controls-StackTemplate__header_maximized_button" on:click="changeMaximizedState()"
                     attr:title="{{_options._maximizeButtonTitle}}"></div>
             </ws:if>

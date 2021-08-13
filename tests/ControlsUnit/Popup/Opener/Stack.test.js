@@ -358,7 +358,7 @@ define(
             itemConfig.popupOptions.template = TestMaximizedStack;
             popupTemplate.StackController.getDefaultConfig(itemConfig);
             assert.equal(itemConfig.popupOptions.maximized, false); // default value
-            assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('showMaximizedButton'), true);
+            assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('maximizeButtonVisibility'), true);
 
             const stubSavePopupWidth = sinon.stub(popupTemplate.StackController, '_savePopupWidth');
             popupTemplate.StackController.elementMaximized(itemConfig, {}, false);
@@ -381,10 +381,10 @@ define(
             assert.equal(position.maxWidth, popupOptions.maxWidth);
 
             popupTemplate.StackController._prepareMaximizedState(1600, itemConfig);
-            assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, true);
+            assert.equal(itemConfig.popupOptions.templateOptions.maximizeButtonVisibility, true);
 
             popupTemplate.StackController._prepareMaximizedState(800, itemConfig);
-            assert.equal(itemConfig.popupOptions.templateOptions.showMaximizedButton, false);
+            assert.equal(itemConfig.popupOptions.templateOptions.maximizeButtonVisibility, false);
             delete itemConfig.popupOptions.width;
          });
 
