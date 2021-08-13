@@ -20,7 +20,7 @@ export default interface ISource {
 }
 /**
  * @name Controls/_interface/ISource#source
- * @cfg {Types/source:ICrud} Объект реализующий интерфейс {@link Types/source:ICrud}, необходимый для работы с источником данных.
+ * @cfg {Types/source:ICrud|Types/source:ICrudPlus} Объект реализующий интерфейс {@link Types/source:ICrud}, необходимый для работы с источником данных.
  * @remark
  * Более подробно об источниках данных вы можете почитать {@link /doc/platform/developmentapl/interface-development/data-sources/ здесь}.
  * @example
@@ -74,58 +74,15 @@ export default interface ISource {
  *     })
  * }
  * </pre>
- * @see Types/source:ICrudPlus
+ * @see 
  * @see Types/source:ICrud
- * @see /doc/platform/developmentapl/interface-development/data-sources/
  */
 /*
  * @name Controls/_interface/ISource#source
  * @cfg {Types/source:ICrud} Object that implements {@link Types/source:ICrud} interface for working with data.
  * More information about sources you can read <a href='doc/platform/developmentapl/interface-development/data-sources/'>here</a>.
- * @example
- * The list will be rendered data from _source
- *
- * WML:
- * <pre>
- *    <Controls.list:View source="{{_source}}" keyProperty="key">
- *        <ws:itemTemplate>
- *            <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
- *                <ws:contentTemplate>
- *                    <span>{{contentTemplate.item.contents.title}}</span>
- *                </ws:contentTemplate>
- *            </ws:partial>
- *        </ws:itemTemplate>
- *    </Controls.list:View>
- * </pre>
- *
- * JS:
- * <pre>
- *     import {HierarchicalMemory} from "Types/source";
- *
- *     _source: null,
- *     _beforeMount: function() {
- *         this._source = new source.HierarchicalMemory({
- *             keyProperty: 'key',
- *             data: [
- *                {
- *                   key: '1',
- *                   title: 'Yaroslavl'
- *                },
- *                {
- *                   key: '2',
- *                   title: 'Moscow'
- *                },
- *                {
- *                   key: '3',
- *                   title: 'St-Petersburg'
- *                }
- *             ]
- *          })
- *     }
- * </pre>
  * @see Types/source:ICrudPlus
  * @see Types/source:ICrud
- * @see /doc/platform/developmentapl/interface-development/data-sources/
  */
 
 /**
@@ -170,31 +127,27 @@ export default interface ISource {
  * @name Controls/_interface/ISource#keyProperty
  * @cfg {String} Name of the item property that uniquely identifies collection item.
  * @remark For example, the identifier may be the primary key of the record in the database.
- * @example
- * <pre>
- *    <Controls.list:View
- *       source = "{{_source}}"
- *       keyProperty="key">
- *    </Controls.list:View>
- * </pre>
- * <pre>
- *    _source: new Memory({
- *       keyProperty: 'key',
- *       data: [
- *       {
- *          key: '1',
- *          title: 'Yaroslavl'
- *       },
- *       {
- *          key: '2',
- *          title: 'Moscow'
- *       },
- *       {
- *          key: '3',
- *          title: 'St-Petersburg'
- *       }
- *       ]
- *    })
- * </pre>
- *
+ */
+
+/**
+ * @name Controls/_interface/ISource#dataLoadCallback
+ * @cfg {Function} Функция, которая вызывается каждый раз непосредственно после загрузки данных из источника контрола.
+ * Функцию можно использовать для изменения данных еще до того, как они будут отображены в контроле.
+ * @markdown
+ * @remark
+ * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
+ * @see itemsReadyCallback
+ * @see dataLoadErrback
+ */
+
+/**
+ * @name Controls/_interface/ISource#dataLoadErrback
+ * @cfg {Function} Функция обратного вызова для определения сбоя загрузки данных из источника.
+ * @see itemsReadyCallback
+ * @see dataLoadCallback
+ */
+
+/*ENG
+ * @name Controls/_interface/ISource#dataLoadErrback
+ * @cfg {Function} Callback function that will be called when data loading fail
  */
