@@ -476,6 +476,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
                 inputMode: this._inputMode,
                 inputCallback: options.inputCallback,
                 calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
+                getStretcherValue: this._getStretcherValue.bind(this),
                 recalculateLocationVisibleArea: this._recalculateLocationVisibleArea.bind(this),
                 isFieldFocused: this._isFieldFocused.bind(this)
             }
@@ -571,6 +572,16 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
 
     private _calculateValueForTemplate(): string {
         return this._viewModel.displayValue;
+    }
+
+    private _getStretcherValue(): string {
+        // Заменяем все цифры и пробел на 0. На шрифте Tensor-font все цифры и пробел одинаковой ширины, так что нам не
+        // важно какой символ стоит для растягивания поля ввода до нужного размера. У шрифта, который используется
+        // в SabyGet немоноширинный шрифт, из-за этого поле ввода прыгает. Возьмем самый широкий символ, чтобы по по
+        // максимуму растянуть инпут https://online.sbis.ru/opendoc.html?guid=9d278ed9-792c-4287-ad37-0f288fbf63e7
+        let result = this._viewModel.displayValue.replace(/[0-9]/g, '0');
+        result = result.replace(/ /g, '0');
+        return result;
     }
 
     /**
