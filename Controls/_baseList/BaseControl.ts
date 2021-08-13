@@ -4990,6 +4990,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.handleScrollControllerResult(this, result);
                 this._syncLoadingIndicatorState = direction;
                 this._handleLoadToDirection = false;
+                if (direction === 'down' && this._resetTopTriggerOffset) {
+                    // После сдвига вниз, верхняя ромашка спрячется и, из-за top: -1px, вернхий триггер не будет виден.
+                    // Поэтому показываем триггер после сдвига вниз.
+                    // https://online.sbis.ru/opendoc.html?guid=0e32253d-b29e-4d98-b3a9-cbd88d7d8b76
+                    this._resetTopTriggerOffset = false;
+                    this._updateScrollController(this._options);
+                }
                 resolver();
             } else {
                 if (this._shouldLoadOnScroll(direction)) {
