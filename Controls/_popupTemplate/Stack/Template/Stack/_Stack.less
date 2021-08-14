@@ -108,11 +108,18 @@
 .controls-StackTemplate__maximized_button {
    position: relative;
    background-image: url(../images/resize.svg);
-   width: 24px;
-   height: 24px;
+   width: var(--inline_height_xl);
+   height: var(--inline_height_xl);
    z-index: 3;
    cursor: pointer;
    margin-top: var(--maximized-button_offset-top_stack);
+}
+
+.ws-is-hover {
+   .controls-StackTemplate__maximized_button:hover {
+      background-color: var(--background-color_hover_button_toolButton);
+      border-radius: var(--border-radius_button_toolButton);
+   }
 }
 
 .controls-StackTemplate__header_maximized_button {
