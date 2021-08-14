@@ -99,7 +99,9 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
             minValue: undefined,
             maxValue: undefined,
             scaleStep: undefined,
-            precision: 0
+            precision: 0,
+            scaleFontSize: 'm',
+            tooltipFontSize: 'l'
         };
 
     }

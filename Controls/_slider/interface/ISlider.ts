@@ -1,3 +1,5 @@
+import {TFontSize} from 'Controls/interface';
+
 export interface ISliderOptions {
     borderVisible?: boolean;
     tooltipVisible?: boolean;
@@ -11,6 +13,8 @@ export interface ISliderOptions {
     maxValue: number;
     scaleLabelFormatter?: Function;
     viewMode?: string;
+    tooltipFontSize?: TFontSize;
+    scaleFontSize?: TFontSize;
 }
 /**
  * Интерфейс для контрола Слайдер.
@@ -176,4 +180,18 @@ export interface ISlider {
  * <ul>
  *    <li>value - текущее положение слайдера</li>
  * </ul>
+ */
+
+/**
+ * @name Controls/_slider/interface/ISlider#tooltipFontSize
+ * @cfg {TFontSize} Задает размер шрифта подсказки.
+ * @demo Controls-demo/Slider/Base/FontSize/Index
+ * @default l
+ */
+
+/**
+ * @name Controls/_slider/interface/ISlider#scaleFontSize
+ * @cfg {TFontSize} Задает размер шрифта шкалы.
+ * @demo Controls-demo/Slider/Base/FontSize/Index
+ * @default m
  */
