@@ -13,8 +13,7 @@ import StringEditor = require('Controls/_propertyGrid/defaultEditors/String');
  * @implements Controls/input:IText
  * @implements Controls/interface:IInputPlaceholder
  * @implements Controls/input:IFieldTemplate
-
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
