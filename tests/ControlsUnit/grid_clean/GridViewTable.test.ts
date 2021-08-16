@@ -40,7 +40,7 @@ describe('Controls/grid_clean/GridViewTable', () => {
 
         assert.deepEqual(
             gridView._getGridTemplateColumnsWidth(options),
-            ['max-content', '20px', 'auto', '0px']
+            ['max-content', '20px', 'auto']
         );
     });
 });
