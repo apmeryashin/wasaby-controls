@@ -327,18 +327,20 @@ export interface IFilterView {
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#detailPanelTemplateOptions
- * @cfg {Object} Опции для контрола, который передан в {@link detailPanelTemplateName}
+ * @cfg {Object} Опции для шаблона всплывающей панели, которая задана в {@link detailPanelTemplateName}.
+ * @remark
+ * В качестве шаблона всплывающей панели рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}.
  * @example
- * <pre class="brush: html">
+ * <pre class="brush: html; highlight: [5]">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    items="{{_items}}"
  *    detailPanelTemplateName="wml!MyModule/panelTemplate">
- *       <ws:detailPanelTemplateOptions historyId="demo_history_id"/>
+ *    <ws:detailPanelTemplateOptions historyId="demo_history_id"/>
  * </Controls.filter:View>
  * </pre>
  *
- * <pre class="brush: html">
+ * <pre class="brush: html; highlight: [2]">
  * <!-- MyModule/panelTemplate.wml -->
  * <Controls.filterPopup:DetailPanel items="{{items}}" historyId="{{historyId}}">
  *    <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
