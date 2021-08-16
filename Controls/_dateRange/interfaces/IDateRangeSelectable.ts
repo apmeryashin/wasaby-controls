@@ -32,7 +32,7 @@ export = {
       var options = IRangeSelectable.getDefaultOptions();
 
       /**
-       * @typedef {Object} Ranges
+       * @typedef {Object} Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges
        * @description Диапазоны периодов, которые доступны для выбора в контроле.
        * @property {Array.<number>} days Дни.
        * @property {Array.<number>} weeks Недели.
@@ -44,9 +44,9 @@ export = {
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
-       * @cfg {Ranges.typedef} Конфигурация периодов для выбора дат.
+       * @cfg {Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges.typedef} Конфигурация периодов для выбора дат.
        * @remark
-       * Если заданы значение в этой опции, то нельзя выделить произвольный период, а можно только выделить только заданные периоды.
+       * Если задано значение в этой опции, то нельзя выделить произвольный период, а можно выделить только доступные периоды.
        * @default {}
        * @example
        * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц.
