@@ -1,3 +1,6 @@
+@_expander_width_treeGrid: var(--icon-size_s);
+@_expander_height_treeGrid: var(--icon-size_s);
+
 .controls-Tree__itemContentTreeWrapper {
    display: flex;
    align-items: baseline;
@@ -73,8 +76,8 @@
    line-height: 1;
    display: inline-block;
    position: relative;
-   min-height: var(--expander_height_treeGrid);
-   min-width: var(--expander_width_treeGrid);
+   min-height: @_expander_height_treeGrid;
+   min-width: @_expander_width_treeGrid;
 }
 
 .controls-TreeGrid__node-footer-expanderPadding {
@@ -82,13 +85,13 @@
    display: inline-block;
    position: relative;
    min-height: 0;
-   min-width: var(--expander_width_treeGrid);
+   min-width: @_expander_width_treeGrid;
 }
 
 .controls-TreeGridView__dragTargetNode::after {
    content: '\200b';
-   border-top: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
-   border-bottom: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
+   border-top: 1px solid var(--item_droppable_border_color_treeGrid);
+   border-bottom: 1px solid var(--item_droppable_border_color_treeGrid);
    position: absolute;
    top: 0;
    left: 0;
@@ -100,12 +103,12 @@
 
 .controls-TreeGridView__dragTargetNode_first::after {
    content: '\200b';
-   border-left: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
+   border-left: 1px solid var(--item_droppable_border_color_treeGrid);
 }
 
 .controls-TreeGridView__dragTargetNode_last::after {
    content: '\200b';
-   border-right: var(--item_droppable_border_thickness_treeGrid) solid var(--item_droppable_border_color_treeGrid);
+   border-right: 1px solid var(--item_droppable_border_color_treeGrid);
 }
 
 .controls-TreeGrid__row-expanderPadding {
@@ -115,16 +118,14 @@
 .controls-TreeGrid__row-expander_node_default::before,
 .controls-TreeGrid__row-expander_emptyNode_default::before {
    color: var(--node_expander_icon-color_treeGrid);
-   font-family: var(--node_expander_icon_font-family_treeGrid);
-   font-size: var(--node_expander_icon-size_treeGrid);
-   padding-left: calc(var(--expander_width_treeGrid) - var(--node_expander_icon-size_treeGrid));
+   font-family: var(--icon_font-family_s);
+   font-size: @_expander_height_treeGrid;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_default::before {
    color: var(--hidden-node_expander_icon-color_treeGrid);
-   font-family: var(--hidden-node_expander_icon_font-family_treeGrid);
-   font-size: var(--hidden-node_expander_icon-size_treeGrid);
-   padding-left: calc(var(--expander_width_treeGrid) - var(--hidden-node_expander_icon-size_treeGrid));
+   font-family: var(--icon_font-family_s);
+   font-size: @_expander_height_treeGrid;
 }
 
 .controls-TreeGrid__row-expander_node_default::before,
@@ -140,16 +141,16 @@
 
 .controls-TreeGrid__row-expander_node_master::before {
    color: var(--master_node_expander_icon-color_treeGrid);
-   font-family: var(--node_expander_icon_font-family_treeGrid);
+   font-family: var(--icon_font-family_s);
    font-size: var(--master_node_expander_icon-size_treeGrid);
-   padding-left: calc(var(--expander_width_treeGrid) - var(--master_node_expander_icon-size_treeGrid));
+   padding-left: calc(@_expander_width_treeGrid - var(--master_node_expander_icon-size_treeGrid));
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_master::before {
    color: var(--master_hidden-node_expander_icon-color_treeGrid);
-   font-family: var(--hidden-node_expander_icon_font-family_treeGrid);
+   font-family: var(--icon_font-family_s);
    font-size: var(--master_hidden-node_expander_icon-size_treeGrid);
-   padding-left: calc(var(--expander_width_treeGrid) - var(--master_hidden-node_expander_icon-size_treeGrid));
+   padding-left: calc(@_expander_width_treeGrid - var(--master_hidden-node_expander_icon-size_treeGrid));
 }
 
 .controls-TreeGrid__row-expander::before {
@@ -253,48 +254,48 @@
 }
 
 .controls-TreeGrid__row-levelPadding_size_default {
-   width: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   width: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGrid__row-levelPadding_size_s {
-   width: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   width: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGrid__row-levelPadding_size_m {
-   width: calc(var(--expander_m_padding-left_treeGrid) + var(--expander_m_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   width: calc(var(--expander_m_padding-left_treeGrid) + var(--expander_m_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGrid__row-levelPadding_size_l {
-   width: calc(var(--expander_l_padding-left_treeGrid) + var(--expander_l_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   width: calc(var(--expander_l_padding-left_treeGrid) + var(--expander_l_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGrid__row-levelPadding_size_xl {
-   width: calc(var(--expander_xl_padding-left_treeGrid) + var(--expander_xl_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   width: calc(var(--expander_xl_padding-left_treeGrid) + var(--expander_xl_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 // при поиске иерархический отступ по стандарту 20px
 .controls-TreeGrid__row-levelPadding_size_search {
-   width: var(--search-hierarchy_offset_treeGrid);
+   width: var(--offset_xl);
 }
 
 .controls-TreeGridView__expanderPadding-default {
-   margin-left: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   margin-left: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGridView__expanderPadding-s {
-   margin-left: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   margin-left: calc(var(--expander_s_padding-left_treeGrid) + var(--expander_s_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGridView__expanderPadding-m {
-   margin-left: calc(var(--expander_m_padding-left_treeGrid) + var(--expander_m_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   margin-left: calc(var(--expander_m_padding-left_treeGrid) + var(--expander_m_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGridView__expanderPadding-l {
-   margin-left: calc(var(--expander_l_padding-left_treeGrid) + var(--expander_l_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   margin-left: calc(var(--expander_l_padding-left_treeGrid) + var(--expander_l_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGridView__expanderPadding-xl {
-   margin-left: calc(var(--expander_xl_padding-left_treeGrid) + var(--expander_xl_padding-right_treeGrid) + var(--expander_width_treeGrid));
+   margin-left: calc(var(--expander_xl_padding-left_treeGrid) + var(--expander_xl_padding-right_treeGrid) + @_expander_width_treeGrid);
 }
 
 .controls-TreeGrid__row-cell {
@@ -422,9 +423,8 @@
 
 .controls-TreeGrid__row__searchSeparator_line_horizontal {
    margin-top: var(--search-separator_padding-top_treeGrid);
-   margin-bottom: var(--search-separator_padding-bottom_treeGrid);
-   width: var(--search-separator_length_treeGrid);
-   height: var(--search-separator_thickness_treeGrid);
+   width: 100px;
+   height: 1px;
    background-color: var(--search-separator_color_treeGrid);
    display: block;
 }
