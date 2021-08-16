@@ -48,6 +48,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             ManagerController.remove(this._popupId);
         }
     }
+
     open(popupOptions: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             const cfg: TBaseOpenerOptions = this._getConfig(popupOptions);
