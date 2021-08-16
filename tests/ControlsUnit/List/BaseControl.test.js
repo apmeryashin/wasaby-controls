@@ -4821,6 +4821,18 @@ define([
             spyShowActions.restore();
          });
 
+         // после закрытия меню ItemActions не должны появиться снова, если включен режим редактирования
+         it('should not restore showActionsClass on menu close event, when editing', () => {
+            instance._itemActionsMenuId = 'popupId_1';
+            const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
+            instance._editInPlaceController = {
+               isEditing: () => true
+            };
+            instance._onItemActionsMenuClose({id: 'popupId_1'});
+            sinon.assert.notCalled(spyShowActions);
+            spyShowActions.restore();
+         });
+
          // Скрытие Swipe ItemActions должно происходить после открытия меню (событие menuOpened)
          it('should hide Swipe ItemActions on menuOpened event', () => {
             const fakeEvent = initFakeEvent();
