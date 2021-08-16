@@ -251,7 +251,11 @@ export default class View extends Control<IOptions, IReceivedState> {
                 newOptions.master
             );
         }
-        this._viewMode = newOptions.viewMode;
+        // Пока viewMode не распространяется по контексту
+        // FIXME: https://online.sbis.ru/opendoc.html?guid=577201e1-e388-4ed0-bcb7-cda0b026c03e
+        if (!this._detailDataSource?.isLoading()) {
+            this._viewMode = newOptions.viewMode;
+        }
 
         if (newOptions.listConfiguration && !isEqual(this._options.listConfiguration, newOptions.listConfiguration)) {
             this._createTemplateControllers(newOptions.listConfiguration, newOptions);
