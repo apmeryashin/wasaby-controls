@@ -558,7 +558,10 @@ export default abstract class Row<T> {
 
             // Заполняем ячейки для лесенки.
             // TODO: Не работает с колспаннутыми узлами. Нужно чтобы лесенка работала до колспана или сквозь него.
-            if (options.shouldAddStickyLadderCells !== false && this.isFullGridSupport() && this._$columnItems[0].getColspan() === 1) {
+            if (options.shouldAddStickyLadderCells !== false &&
+                this.isFullGridSupport() &&
+                this._$columnItems.length &&
+                this._$columnItems[0].getColspan() === 1) {
                 this._processStickyLadderCells(options.addEmptyCellsForStickyLadder, options.extensionCellsConstructors?.stickyLadderCell);
             }
 
