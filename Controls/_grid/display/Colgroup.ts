@@ -82,6 +82,13 @@ export default class Colgroup<T> extends mixin<
             }));
         });
 
+        if (this._$owner.hasItemActionsSeparatedCell()) {
+            cells.push(new ColgroupCell({
+                owner: this,
+                width: '0px'
+            }));
+        }
+
         return cells;
     }
 }

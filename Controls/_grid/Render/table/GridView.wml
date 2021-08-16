@@ -5,6 +5,20 @@
         <!-- Colgroup. Describes columns widths -->
         <ws:partial template="wml!Controls/_grid/Render/table/Colgroup" colgroup="{{ _listModel.getColgroup() }}"/>
 
+        <!-- Оптимизация ширин в таблице при table-layout: fixed -->
+        <!-- В определенных случаях в таблице первая строка может иметь колспан кячеек. -->
+        <!-- При table-layout: fixed ширины колонок расчитываются по первой строке. -->
+        <!-- В таком случае, ширины расчитаются по ячейке с колспаном, что неверно. -->
+        <thead>
+            <tr>
+                <ws:for data="index, width in _getGridTemplateColumnsWidth(_options)">
+                    <td attr:key="fake_width_{{index}}">
+                        <div style="min-width: {{ width }}; max-width: {{ width }};"></div>
+                    </td>
+                </ws:for>
+            </tr>
+        </thead>
+
         <!-- Header -->
         <Controls.scroll:VirtualScrollContainer if="{{ _listModel.getHeader() }}" position="top">
             <thead attr:name="header" class="{{ _listModel.getHeader().getBodyClasses() }}">
