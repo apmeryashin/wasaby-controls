@@ -4822,12 +4822,14 @@ define([
          });
 
          // после закрытия меню ItemActions не должны появиться снова, если включен режим редактирования
-         it('should not restore HoverItemActions on menu close event', () => {
+         it('should not restore showActionsClass on menu close event, when editing', () => {
             instance._itemActionsMenuId = 'popupId_1';
             const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
-            instance.
+            instance._editInPlaceController = {
+               isEditing: () => true
+            };
             instance._onItemActionsMenuClose({id: 'popupId_1'});
-            sinon.assert.called(spyShowActions);
+            sinon.assert.notCalled(spyShowActions);
             spyShowActions.restore();
          });
 
