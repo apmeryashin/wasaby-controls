@@ -8,7 +8,7 @@
         'showItemActionsOnHover': showItemActionsOnHover
     }) }}">
     <ws:for data="gridColumn in item.getColumns()">
-        <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"
+        <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle, markerClassName) }}"
             attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}">
