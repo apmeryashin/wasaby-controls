@@ -135,6 +135,7 @@
 .controls-ListView__itemV_marker-left {
    left: 0;
 }
+
 .controls-ListView__itemV_marker-right {
    right: 0;
 }
@@ -223,7 +224,8 @@
    }
 }
 
-.controls-ListView__item_master-topPadding_default {
+.controls-ListView__item_master-topPadding_default,
+.controls-ListView__itemV_marker_master_topPadding-default {
    padding-top: var(--master_item_padding-top_list);
 }
 
@@ -685,7 +687,31 @@
    padding-right: var(--master_item_horizontal-offset_list);
 }
 
+// TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
+.controls-ListView__item_withMarkerSize {
+   .controls-ListView__item-leftPadding_default {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+   }
+
+   .controls-ListView__item-leftPadding_s {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
+   }
+
+   .controls-ListView__item-leftPadding_m {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
+   }
+}
+
 //Классы совместимости для перехода со старого дизайна masterDetail на новый
+.controls-master-template-newDesign .controls-ListView__item-leftPadding_default {
+   // TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
+   padding-left: var(--item_padding-left_s_list);
+
+   .controls-ListView__item_withMarkerSize .controls-ListView__item-leftPadding_default {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+   }
+}
+
 .controls-master-template-newDesign .controls-ListView_master {
    border-radius: var(--master_item_border-radius_list);
 }
@@ -693,10 +719,6 @@
 .controls-master-template-newDesign .controls-ListView__item_master {
    border-radius: var(--master_item_border-radius_list);
    overflow: hidden;
-}
-
-.controls-master-template-newDesign .controls-ListView__item-leftPadding_default {
-   padding-left: var(--item_padding-left_s_list);
 }
 
 .controls-ListView__item__marked_master {
@@ -725,12 +747,36 @@
 
 .controls-ListView__itemV_marker_master {
    position: absolute;
-   box-sizing: border-box;
-   width: var(--master-marker_thickness_list);
-   height: var(--master-marker_height_list);
-   background-color: var(--master-marker_color_list);
    top: 0;
-   left: 0;
+   bottom: 0;
+   display: inline-flex;
+   align-items: baseline;
+   box-sizing: border-box;
+}
+
+.controls-ListView__itemV_marker_master::before {
+   content: '\200b';
+   font-size: var(--font-size_2xl);
+}
+
+.controls-ListView__itemV_marker_master::after {
+   content: '';
+   background-color: var(--master-marker_color_list);
+   width: var(--master-marker_thickness_list);
+   border-radius: var(--marker_border-radius_list);
+   height: 100%;
+}
+
+.controls-ListView__itemV_marker_master.controls-ListView__itemV_marker_height::after {
+   height: var(--master-marker_height_list);
+}
+
+.controls-ListView__itemV_marker_master.controls-ListView__itemV_marker-left {
+   left: var(--offset_xs);
+}
+
+.controls-ListView__itemV_marker_master.controls-ListView__itemV_marker-right {
+   right: var(--offset_xs);
 }
 
 .controls-ListView__groupContent_cursor-default {
