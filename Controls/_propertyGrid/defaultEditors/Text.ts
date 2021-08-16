@@ -10,6 +10,8 @@ import StringEditor = require('Controls/_propertyGrid/defaultEditors/String');
  * 
  * @extends UI/Base:Control
  * @implements Controls/propertyGrid:IEditor
+ * @implements Controls/propertyGrid:IProperty
+ * @implements Controls/propertyGrid:IPropertyGrid
  * 
  * @public
  * @author Герасимов А.М.
