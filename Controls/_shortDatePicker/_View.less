@@ -115,6 +115,11 @@
    box-shadow: var(--closeButton_box-shadow_shortDatePicker);
    cursor: pointer;
 
+   &:active {
+      background-color: var(--closeButton_hover_background-color_shortDatePicker);
+      color: var(--icon-color_hovered_closeButton_external);
+   }
+
    &::before {
       content: '\e66c';
    }
