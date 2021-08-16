@@ -116,6 +116,8 @@ export interface IPopupController {
 
     elementUpdateOptions(item: IPopupItem, container: HTMLElement): boolean | Promise<boolean>;
 
+    updatePosition(item: IPopupItem, container: HTMLElement): boolean;
+
     orientationChanged(item: IPopupItem, container: HTMLElement): boolean;
 
     closePopupByOutsideClick(item: IPopupItem): void;

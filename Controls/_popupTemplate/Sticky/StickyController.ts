@@ -9,7 +9,7 @@ import {Logger} from 'UI/Utils';
 import {getScrollbarWidthByMeasuredBlock} from 'Controls/scroll';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 import {constants, detection} from 'Env/Env';
-import {IPopupItem, IPopupSizes, IStickyPopupOptions, IStickyPosition} from 'Controls/popup';
+import {IPopupItem, IPopupSizes, IStickyPopupOptions, IStickyPosition, Controller} from 'Controls/popup';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
 
 export type TVertical = 'top' | 'bottom' | 'center';
@@ -158,7 +158,7 @@ export class StickyController extends BaseController {
         }
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
-
+        const prevItemPosition = item.position;
         this.prepareConfig(item, container);
 
         // Для ситуаций, когда скролл на боди: После сброса высоты для замеров содержимого (style.height = 'auto'),
@@ -194,7 +194,26 @@ export class StickyController extends BaseController {
         scroll?.scrollTop = scrollTop;
         /* end: Return all values to the node. Need for vdom synchronizer */
 
+        if (item.childs.length) {
+            //  Если изменилась позиция стики окна - пересчитаем все дочерние стики окна, т.к.
+            // их позиция завязана на позицию родителя
+            if (JSON.stringify(item.position) !== JSON.stringify(prevItemPosition)) {
+                for (const child of item.childs) {
+                    if (child.controller.TYPE === this.TYPE) {
+                        // Для того чтобы гарантировано попасть в след. тик, где позиция родителя успела обновиться.
+                        const delay = 50;
+                        setTimeout(() => {
+                            Controller.updatePosition(child.id);
+                        }, delay);
+                    }
+                }
+            }
+        }
         return true;
+    }
+
+    updatePosition(item: IStickyItem, container: HTMLElement): boolean {
+        return this.elementAfterUpdated(item, container);
     }
 
     resizeInner(item: IStickyItem, container: HTMLElement): boolean {

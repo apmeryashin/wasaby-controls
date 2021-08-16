@@ -709,6 +709,7 @@ define(
             let isTargetVisible = StickyController._isTargetVisible;
             StickyController.prepareConfig = (itemConfig, containerConfig) => newContainer = cClone(containerConfig);
             StickyController._isTargetVisible = () => true;
+            item.childs = [];
             StickyController.elementAfterUpdated(item, container);
 
             // сбрасываем размеры с контейнера

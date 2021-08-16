@@ -148,6 +148,17 @@ class Manager {
         return item.id;
     }
 
+    updatePosition(id: string): void {
+        const item = this.find(id);
+        let needUpdate = false;
+        if (item) {
+            needUpdate = item.controller.updatePosition(item, this._getItemContainer(item.id));
+        }
+        if (needUpdate) {
+            this._redrawItems();
+        }
+    }
+
     updateOptionsAfterInitializing(id: string, options: IPopupOptions): void {
         const item = this.find(id);
         if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
