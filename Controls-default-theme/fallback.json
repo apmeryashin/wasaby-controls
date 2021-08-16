@@ -661,10 +661,7 @@
   "--background-color_ToolbarBox": "#f8f8f8",
   "--box-shadow_ToolbarBox": "0 1px 6px rgba(0, 0, 0, 0.156863)",
   "--border-radius_ToolbarBox": "13px",
-  "--item_width_ToolbarBox": "32px",
-  "--item_height_ToolbarBox": "28px",
   "--separator_thickness_ToolbarBox": "1px",
-  "--separator_length_ToolbarBox": "16px",
   "--separator_color_ToolbarBox": "#e4e4e4",
 
   "--box-shadow_slidingPanel": "0 0 5px 0 rgba(0, 0, 0, 0.2)",
@@ -1040,15 +1037,9 @@
   "--item_height_tabs": "32px",
 
   "--item_height_l_tabs": "36px",
-  "--item_max-width_tabs": "630px",
   "--padding-horizontal_tabs": "var(--offset_m)",
   "--item_offset_tabs": "0",
-  "--secondary_item_font-size_tabs": "var(--font-size_l)",
-
-  "--unselected_item_font-size_tabs": "var(--font-size_l)",
-  "--item_selected_font-weight_tabs": "bold",
-
-
+  "--item_font-size_tabs": "var(--font-size_l)",
   "--secondary_item_text-color_tabs": "var(--link_text-color)",
   "--primary_item_text-color_tabs": "var(--primary_text-color)",
 
@@ -1056,7 +1047,6 @@
 
   "--border-thickness_tabs": "var(--border-thickness)",
 
-  "--border-thickness_l_tabs": "3px",
   "--border-color_tabs": "#f0f0f0",
   "--separator_thickness_tabs": "1px",
   "--separator_length_tabs": "12px",
