@@ -316,7 +316,7 @@ var CompoundArea = CompoundContainer.extend([
          this._waitClose = false;
          this.close();
       } else {
-          self._setCustomContentAsync();
+          self._setCustomHeaderAsync();
           self._registerLinkedView();
           runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
@@ -337,7 +337,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _setCustomContentAsync() {
+   _setCustomHeaderAsync() {
       // Каким-то чудом на медленных машинах не успевает построиться childControl.
       // Сам повторить не смог, ставлю защиту
       if (this._destroyed) {
@@ -345,11 +345,10 @@ var CompoundArea = CompoundContainer.extend([
       }
       if (!this._childControl) {
          runDelayed(() => {
-            this._setCustomContentAsync();
+            this._setCustomHeaderAsync();
          });
       } else {
          this._setCustomHeader();
-         this._setCustomToolbar();
       }
    },
 
@@ -530,18 +529,6 @@ var CompoundArea = CompoundContainer.extend([
          this._isKeyboardVisible = true;
       }
       return isVisible;
-   },
-
-   _setCustomToolbar: function() {
-      if (Controller.hasRightPanel()) {
-         const toolbarContent = $('.controls-ToolBar', this._childControl.getContainer());
-         if (toolbarContent.length) {
-            const toolbarContainer = $('.controls-CompoundArea_toolbar', this.getContainer());
-            if (toolbarContainer.length) {
-               toolbarContainer.prepend(toolbarContent);
-            }
-         }
-      }
    },
 
    _setCustomHeader: function() {
