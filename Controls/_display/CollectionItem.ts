@@ -274,12 +274,24 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     /**
-     * Возвращает содержимое элемента коллекции
+     * Возвращает содержимое элемента коллекции. При этом если элемент коллекции находится в режиме редактирования,
+     * то вернется редактируемый инстанс элемента коллекции, а не оригинальный.
+     * Что бы получить оригинальный воспользуйтесь методом {@link getOriginalContents}.
      */
     getContents(): T {
         if (this.isEditing() && this._$editingContents) {
             return this._$editingContents;
         }
+
+        return this.getOriginalContents();
+    }
+
+    /**
+     * Возвращает оригинальное содержимое элемента коллекции.
+     * Отличие от {@link getContents} в том, что здесь не проверяем находится ли итем в режиме редактирования.
+     * Просто возвращаем то, что передали в опции contents.
+     */
+    getOriginalContents(): T {
         if (this._contentsIndex !== undefined) {
             // Ленивое восстановление _$contents по _contentsIndex после десериализации
             const collection = this.getOwner().getCollection();
@@ -288,6 +300,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                 this._contentsIndex = undefined;
             }
         }
+
         return this._$contents;
     }
 
