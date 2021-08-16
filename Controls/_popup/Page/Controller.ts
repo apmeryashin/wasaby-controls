@@ -30,6 +30,8 @@ class PageController {
             resultPopupOptions.template = 'Controls/popupTemplate:Page';
             resultPopupOptions.templateOptions = templateOptions;
             return resultPopupOptions;
+        }).catch(() => {
+            return popupOptions;
         });
     }
 
@@ -37,9 +39,8 @@ class PageController {
      * Предзагрузка статики необходимая для открытия страницы на панели
      * @param popupOptions
      */
-    loadModules(popupOptions: IBasePopupOptions): Promise<Control> {
-        const templateOptions = popupOptions.templateOptions as IPageTemplateOptions;
-        return loadModule(templateOptions.pageTemplate);
+    loadModules(template: string): Promise<Control> {
+        return loadModule(template);
     }
 
     /**

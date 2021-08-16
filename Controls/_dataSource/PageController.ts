@@ -54,9 +54,8 @@ class PageController {
     getPageConfig(pageId: string): Promise<unknown> {
         const configLoaderModule = this._pageConfigLoaderModule;
         if (!configLoaderModule) {
-            const message = 'При попытке открыть страницу в окне произошла ошибка. ' +
-                'На приложении не задан модуль для получения конфигурации страницы.';
-            throw new Error(message);
+            // Если нет загрузчика - обрабатываем ошибку и открываемся по старой схеме.
+            return Promise.reject();
         }
         return new Promise((resolve, reject) => {
             this._getModuleByModuleName(configLoaderModule, (ConfigLoader) => {
