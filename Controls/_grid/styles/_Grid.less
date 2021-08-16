@@ -383,12 +383,16 @@
    .controls-BaseControl_showActions_visible .controls-ListView__item_showActions,
    .controls-BaseControl_showActions_delayed .controls-ListView__item_showActions:hover,
    .controls-BaseControl_showActions_onhover .controls-ListView__item_showActions:hover {
-      .controls-Grid__editArrow-wrapper {
-         visibility: visible;
-      }
+      > .controls-Grid__row-cell,
+      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
+         .controls-Grid__editArrow-wrapper {
+            visibility: visible;
+         }
 
-      .controls-Grid__editArrow:hover {
-         fill: var(--secondary_hover_icon-color);
+         .controls-Grid__editArrow:hover {
+            fill: var(--secondary_hover_icon-color);
+         }
       }
    }
 }
@@ -955,10 +959,6 @@
 }
 
 .controls-Grid__editArrow-wrapper {
-   visibility: hidden;
-}
-
-.controls-Grid__editArrow-wrapper {
    position: relative;
    flex-shrink: 1;
    min-width: 0;
@@ -966,6 +966,7 @@
    justify-content: flex-end;
    align-items: baseline;
    align-self: baseline;
+   visibility: hidden;
 }
 .controls-Grid__editArrow-cellContent {
    flex-shrink:0;
