@@ -745,13 +745,15 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param backgroundColorStyle - стиль background
      * @param style - режим отображения списка (master/default)
      * @param showItemActionsOnHover - показывать или нет операции над записью по ховеру
+     * @param markerClassName - класс с размером маркера.
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
     getWrapperClasses(templateHighlightOnHover: boolean = true,
                       cursor: string = 'pointer',
                       backgroundColorStyle?: string,
-                      showItemActionsOnHover: boolean = true): string {
+                      showItemActionsOnHover: boolean = true,
+                      markerClassName?: string = 'default'): string {
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getStyle();
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 
@@ -778,6 +780,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (templateHighlightOnHover && this.isActive()) {
             wrapperClasses += ' controls-ListView__item_active';
+        }
+        if (markerClassName !== 'default') {
+            wrapperClasses += ' controls-ListView__item_withMarkerSize';
         }
         return wrapperClasses;
     }

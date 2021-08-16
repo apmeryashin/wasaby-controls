@@ -257,9 +257,9 @@ export default class Cell<
     getWrapperClasses(
         backgroundColorStyle?: string,
         templateHighlightOnHover?: boolean,
-        templateHoverBackgroundStyle?: string
-    ): string {
-        const hasColumnScroll = this._$owner.hasColumnScroll();
+        templateHoverBackgroundStyle?: string,
+        markerClassName?: string = 'default'): string {
+    const hasColumnScroll = this._$owner.hasColumnScroll();
         const hoverBackgroundStyle = this._$column.hoverBackgroundStyle ||
             templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
@@ -287,6 +287,10 @@ export default class Cell<
         }
 
         wrapperClasses += ' js-controls-ListView__measurableContainer';
+
+        if (markerClassName !== 'default') {
+            wrapperClasses += ' controls-Grid__row-cell__withMarkerSize';
+        }
 
         return wrapperClasses;
     }

@@ -681,13 +681,15 @@
    padding-right: var(--master_item_horizontal-offset_list);
 }
 
-.controls-master-template-default {
+.controls-ListView__item_withMarkerSize {
    .controls-ListView__item-leftPadding_default {
       padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
    }
+
    .controls-ListView__item-leftPadding_s {
       padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
    }
+
    .controls-ListView__item-leftPadding_m {
       padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
    }
@@ -695,7 +697,11 @@
 
 //Классы совместимости для перехода со старого дизайна masterDetail на новый
 .controls-master-template-newDesign .controls-ListView__item-leftPadding_default {
-   padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+   padding-left: var(--item_padding-left_s_list);
+
+   .controls-ListView__item_withMarkerSize .controls-ListView__item-leftPadding_default {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+   }
 }
 
 .controls-master-template-newDesign .controls-ListView_master {
