@@ -181,12 +181,12 @@ export default class NavigationController {
         const mainQueryParams = NavigationController._getMainQueryParams(userQueryParams);
 
         const addQueryParamsArray = [];
-        this._navigationStores.each((storesItem) => {
-            const store = storesItem.store;
+        const processStoreItem = (storeItem: INavigationStoresListItem) => {
+            const store = storeItem.store;
 
-            if (!ids || !ids.length || ids.includes(storesItem.id)) {
+            if (!ids || !ids.length || ids.includes(storeItem.id)) {
                 addQueryParamsArray.push({
-                    id: storesItem.id,
+                    id: storeItem.id,
                     addParams: calculator.getQueryParams(
                         store,
                         navigationQueryConfig,
@@ -195,7 +195,20 @@ export default class NavigationController {
                         reset)
                 });
             }
+        };
+        this._navigationStores.each((storeItem) => {
+            processStoreItem(storeItem);
         });
+        if (ids && ids.length) {
+            ids.forEach((id) => {
+                if (!this.hasLoaded(id)) {
+                    processStoreItem({
+                        store: this._getStore(id),
+                        id
+                    });
+                }
+            });
+        }
         return NavigationController._mergeParamsHierarchical(mainQueryParams, addQueryParamsArray);
     }
 
