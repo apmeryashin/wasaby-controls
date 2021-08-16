@@ -623,7 +623,7 @@ describe('Controls/_source/NavigationController', () => {
                 const metaMoreRs = new RecordSet({
                     rawData: [
                         {
-                            id: 1,
+                            id: 0,
                             nav_result: 'testId'
                         },
                         {
@@ -636,7 +636,7 @@ describe('Controls/_source/NavigationController', () => {
                 let nextPositionRs = new RecordSet({
                     rawData: [
                         {
-                            id: 1,
+                            id: 0,
                             nav_result: ['testId']
                         },
                         {
