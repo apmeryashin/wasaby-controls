@@ -1042,7 +1042,7 @@
   "--item_height_l_tabs": "36px",
   "--padding-horizontal_tabs": "var(--offset_m)",
   "--item_offset_tabs": "0",
-
+  "--item_font-size_tabs": "var(--font-size_l)",
   "--secondary_item_text-color_tabs": "var(--link_text-color)",
   "--primary_item_text-color_tabs": "var(--primary_text-color)",
 
