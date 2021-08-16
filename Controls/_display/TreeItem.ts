@@ -349,9 +349,11 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         const sizes = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'];
         let resultLevelIndentSize;
         const expanderSize = this.getExpanderSize(expanderSizeTmpl);
+        const expanderPosition = this._$owner.getExpanderPosition();
 
         if (expanderSize && levelIndentSize) {
-            if (sizes.indexOf(expanderSize) >= sizes.indexOf(levelIndentSize)) {
+            // Если позиция экспандера не дефолтная, то нужно смотреть в первую очередь на levelIndentSize
+            if (sizes.indexOf(expanderSize) >= sizes.indexOf(levelIndentSize) && expanderPosition === 'default') {
                 resultLevelIndentSize = expanderSize;
             } else {
                 resultLevelIndentSize = levelIndentSize;
