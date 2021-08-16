@@ -471,7 +471,7 @@ function groupingFilter(item: EntityModel,
 /**
  * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
  * не меняя при этом оригинальную коллекцию.
- * 
+ *
  * @extends Controls/_display/Abstract
  * @implements Types/collection:IEnumerable
  * @implements Types/collection:IList
@@ -2549,7 +2549,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                     return this.getItemBySourceItem(record as unknown as S);
                 } else {
                     const items = this._getItems();
-                    return items.find((it) => it.getContents() === record);
+                    // Ищем по getOriginalContents, т.к. в режиме редактирования getContents, вернет нам
+                    // инстанс редактируемой записи, а не исходной
+                    return items.find((it) => it.getOriginalContents() === record);
                 }
             } else {
                 return null;
