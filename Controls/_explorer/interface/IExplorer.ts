@@ -16,6 +16,8 @@
 
 export type TExplorerViewMode = 'table' | 'search' | 'tile' | 'list';
 
+export type TBreadcrumbsVisibility = 'hidden' | 'visible';
+
 /**
  * @name Controls/_explorer/interface/IExplorer#viewMode
  * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/view-mode/ Режим отображения} иерархического проводника.
