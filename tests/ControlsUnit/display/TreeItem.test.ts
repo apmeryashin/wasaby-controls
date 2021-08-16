@@ -291,7 +291,8 @@ describe('Controls/_display/TreeItem', () => {
 
         it('.getLevelIndentClasses()', () => {
             const owner = {
-                getExpanderSize: () => undefined
+                getExpanderSize: () => undefined,
+                getExpanderPosition: () => 'default'
             };
             let item = new TreeItem({ owner });
 
@@ -308,8 +309,11 @@ describe('Controls/_display/TreeItem', () => {
 
             CssClassesAssert.isSame(item.getLevelIndentClasses('s', 'm'), 'controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_m');
 
+            owner.getExpanderPosition = () => 'right';
+            CssClassesAssert.isSame(item.getLevelIndentClasses('xl', 'm'), 'controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_m');
+
             item = new TreeItem({ owner, theme: 'custom' });
-            CssClassesAssert.isSame(item.getLevelIndentClasses('xl', 'm', 'custom'), 'controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_xl');
+            CssClassesAssert.isSame(item.getLevelIndentClasses('xl', 'm'), 'controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_m');
         });
 
         describe('.getExpanderClasses()', () => {
