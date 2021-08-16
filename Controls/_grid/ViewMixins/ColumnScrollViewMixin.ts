@@ -515,7 +515,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
 
     _columnScrollHasItemActionsCell(options: IAbstractViewOptions): boolean {
         return Boolean(
-            options.isFullGridSupport &&
+            options.columns &&
             options.columnScroll &&
             options.itemActionsPosition !== 'custom'
         );
