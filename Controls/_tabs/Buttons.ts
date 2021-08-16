@@ -429,16 +429,14 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         return `controls-Tabs__itemClickableArea_type-${itemType}`;
     }
 
-
     protected _prepareItemMinWidthClass(item: ITabButtonItem): string {
-        if (detection.isIE &&
-            (!this._getTemplate(this._options.itemLeftTemplate, item, this._options.leftTemplateProperty) &&
-                !this._getTemplate(this._options.itemLeftTemplate, item, this._options.rightTemplateProperty))) {
+        const isLeftTemplate = this._getTemplate(this._options.itemLeftTemplate, item, this._options.leftTemplateProperty);
+        const isRightTemplate = this._getTemplate(this._options.itemLeftTemplate, item, this._options.rightTemplateProperty);
+        if (detection.isIE && (!isLeftTemplate && !isRightTemplate)) {
             return 'controls-Tabs__itemClickableArea_minWidth';
         }
         return '';
     }
-
 
     protected _prepareItemMarkerClass(item: ITabButtonItem): string {
         const classes = [];
