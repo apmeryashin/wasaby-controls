@@ -856,19 +856,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         }
     }
 
-    private _updateShadowStyles(mode: MODE, shadowVisibility: SHADOW_VISIBILITY, position: IPositionOrientation): void {
-        this._isTopShadowVisible = this._isShadowVisible(POSITION.top, mode, shadowVisibility, position);
-        this._isBottomShadowVisible = this._isShadowVisible(POSITION.bottom, mode, shadowVisibility, position);
-        this._restoreBottomShadowHiddenClass();
-    }
-
-    protected updateShadowVisibility(visibility: SHADOW_VISIBILITY_BY_CONTROLLER, position: POSITION): void {
-        if (this._isShadowVisibleByController[position] !== visibility) {
-            this._isShadowVisibleByController[position] = visibility;
-            this._updateStylesIfCanScroll();
-        }
-    }
-
     private _restoreBottomShadowHiddenClass(): void {
         // При создании нового заголовка в группе проставляем ему видимость тени в обход циклов синхронизации, чтобы не было скачков.
         // Может произойти такой случай, когда группа в этот момент открепляется (тень нужно скрыть), а мы убрали ws-hidden с тени руками,
@@ -879,6 +866,19 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                 const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
                 this._container.classList.add(hiddenClass);
             }
+        }
+    }
+
+    private _updateShadowStyles(mode: MODE, shadowVisibility: SHADOW_VISIBILITY, position: IPositionOrientation): void {
+        this._isTopShadowVisible = this._isShadowVisible(POSITION.top, mode, shadowVisibility, position);
+        this._isBottomShadowVisible = this._isShadowVisible(POSITION.bottom, mode, shadowVisibility, position);
+        this._restoreBottomShadowHiddenClass();
+    }
+
+    protected updateShadowVisibility(visibility: SHADOW_VISIBILITY_BY_CONTROLLER, position: POSITION): void {
+        if (this._isShadowVisibleByController[position] !== visibility) {
+            this._isShadowVisibleByController[position] = visibility;
+            this._updateStylesIfCanScroll();
         }
     }
 
