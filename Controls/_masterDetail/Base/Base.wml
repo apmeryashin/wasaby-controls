@@ -26,16 +26,20 @@
                <ws:partial template="masterContentTemplate" />
             </ws:else>
          </Controls.event:Register>
-         <ws:if data="{{_canResizing}}">
-            <Controls.dragnDrop:ResizingLine name="resizingLine"
-                                             attr:class="controls-MasterDetail_resizing-line {{_newDesign ? 'controls-MasterDetail_resizing-line-newDesign'}} controls-MasterDetail_resizing-line-{{_options.masterPosition}}"
-                                             minOffset="{{_minOffset}}"
-                                             maxOffset="{{_maxOffset}}"
-                                             direction="{{ _options.masterPosition === 'left' ? 'direct' : 'reverse' }}"
-                                             on:dragStart="_dragStartHandler()"
-                                             on:offset="_offsetHandler()"/>
-         </ws:if>
       </div>
+   </ws:if>
+</ws:template>
+
+<ws:template name="resizingLineTemplate">
+   <ws:if data="{{_canResizing}}">
+      <Controls.dragnDrop:ResizingLine name="resizingLine"
+                                       attr:class="controls-MasterDetail_resizing-line {{_newDesign ? 'controls-MasterDetail_resizing-line-newDesign'}}"
+                                       attr:style="{{_options.masterPosition}}: calc({{_currentWidth}} - 5px);"
+                                       minOffset="{{_minOffset}}"
+                                       maxOffset="{{_maxOffset}}"
+                                       direction="{{ _options.masterPosition === 'left' ? 'direct' : 'reverse' }}"
+                                       on:dragStart="_dragStartHandler()"
+                                       on:offset="_offsetHandler()"/>
    </ws:if>
 </ws:template>
 
@@ -57,6 +61,7 @@
 </ws:template>
 
 <div class="controls-MasterDetail ws-flexbox controls_list_theme-{{_options.theme}}">
+   <ws:partial template="resizingLineTemplate" />
    <ws:if data="{{_options.masterPosition === 'right'}}">
       <ws:partial template="detail" />
       <ws:partial template="master" />
