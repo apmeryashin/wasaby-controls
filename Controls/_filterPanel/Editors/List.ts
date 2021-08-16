@@ -186,13 +186,17 @@ class ListEditor extends BaseEditor {
         };
     }
 
-    protected _setColumns(options: IListEditorOptions, propertyValue: string[]|number[]): void {
+    protected _setColumns(options: IListEditorOptions, selectedItems: string[]|number[]): void {
+        const isSelected = () => {
+            return selectedItems.includes(this);
+        };
         this._columns = [{
             template: ColumnTemplate,
-            selected: propertyValue,
+            selectedItems,
             displayProperty: options.displayProperty,
             keyProperty: options.keyProperty,
-            imageProperty: options.imageProperty
+            imageProperty: options.imageProperty,
+            isSelected
         }];
         if (options.additionalTextProperty) {
             this._columns.push({
