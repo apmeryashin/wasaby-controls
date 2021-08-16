@@ -2081,7 +2081,10 @@ const _private = {
                 const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
-                _private.addShowActionsClass(self);
+                // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
+                if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
+                    _private.addShowActionsClass(self);
+                }
             }
         }
     },
