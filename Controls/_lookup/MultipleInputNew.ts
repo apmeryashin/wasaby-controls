@@ -98,13 +98,13 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
     }
 
     protected _cloneAndSetStateByOptionValue(value: unknown, optionName: string, lookupName: string): void {
-        const state = '_' + optionName;
+        const state = this._getStateNameByOptionName(optionName);
         this[state] = this._cloneObject(this[state]);
         this[state][lookupName] = value;
     }
 
     protected _getValueFromStateByOptionName(optionName: string, lookupName: string): unknown {
-        return this['_' + optionName][lookupName];
+        return this[this._getStateNameByOptionName(optionName)][lookupName];
     }
 
     protected _getStateNameByOptionName(optionName: string): string {
