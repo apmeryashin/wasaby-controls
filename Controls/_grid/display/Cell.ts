@@ -232,7 +232,8 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
                       backgroundColorStyle: string,
                       style: string = 'default',
                       templateHighlightOnHover?: boolean,
-                      templateHoverBackgroundStyle?: string): string {
+                      templateHoverBackgroundStyle?: string,
+                      markerClassName?: string = 'default'): string {
         const hasColumnScroll = this._$owner.hasColumnScroll();
         const hoverBackgroundStyle = this._$column.hoverBackgroundStyle ||
             templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
@@ -258,6 +259,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         }
 
         wrapperClasses += ' js-controls-ListView__measurableContainer';
+
+        if (markerClassName !== 'default') {
+            wrapperClasses += ' controls-Grid__row-cell__withMarkerSize';
+        }
 
         return wrapperClasses;
     }
