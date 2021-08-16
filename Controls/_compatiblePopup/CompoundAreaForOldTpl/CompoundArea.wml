@@ -8,7 +8,7 @@
       <div class="controls-StackTemplate-shadow"></div>
       <Controls.popupTemplate:Stack
          closeButtonVisibility="{{!_options.hideCross}}"
-         showMaximizedButton="{{_options.canMaximize}}"
+         maximizeButtonVisibility="{{_options.canMaximize}}"
          closeButtonViewMode="{{_options.closeButtonStyle}}"
          on:maximized="_changeMaximizedMode()">
          <ws:bodyContentTemplate>
