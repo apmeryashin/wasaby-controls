@@ -170,6 +170,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _offsetTopChanged: boolean = false;
 
     private _syncDomOptimization: boolean = true;
+    private _bottomShadowHiddenClassRemovedAsync: boolean = null;
 
     private _isHidden: boolean = false;
 
@@ -840,6 +841,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                         const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
                         this._children.shadowBottom.classList.remove(hiddenClass);
                         this._isBottomShadowVisible = true;
+                        this._bottomShadowHiddenClassRemovedAsync = true;
                     }
                 });
             } else if (this._model.fixedPosition) {
@@ -857,12 +859,26 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     private _updateShadowStyles(mode: MODE, shadowVisibility: SHADOW_VISIBILITY, position: IPositionOrientation): void {
         this._isTopShadowVisible = this._isShadowVisible(POSITION.top, mode, shadowVisibility, position);
         this._isBottomShadowVisible = this._isShadowVisible(POSITION.bottom, mode, shadowVisibility, position);
+        this._restoreBottomShadowHiddenClass();
     }
 
     protected updateShadowVisibility(visibility: SHADOW_VISIBILITY_BY_CONTROLLER, position: POSITION): void {
         if (this._isShadowVisibleByController[position] !== visibility) {
             this._isShadowVisibleByController[position] = visibility;
             this._updateStylesIfCanScroll();
+        }
+    }
+
+    private _restoreBottomShadowHiddenClass(): void {
+        // При создании нового заголовка в группе проставляем ему видимость тени в обход циклов синхронизации, чтобы не было скачков.
+        // Может произойти такой случай, когда группа в этот момент открепляется (тень нужно скрыть), а мы убрали ws-hidden с тени руками,
+        // поэтому vdom думает, что данный класс на ноде весит и не проставляет его при синхронизации - восстановим ws-hidden сами.
+        if (this._bottomShadowHiddenClassRemovedAsync) {
+            this._bottomShadowHiddenClassRemovedAsync = null;
+            if (!this._isBottomShadowVisible) {
+                const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
+                this._container.classList.add(hiddenClass);
+            }
         }
     }
 
