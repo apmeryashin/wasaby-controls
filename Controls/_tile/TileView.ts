@@ -115,7 +115,9 @@ export default class TileView extends ListView {
             this._setHoveredItem(this, null, null);
         }
         const hoveredItem = this._listModel.getHoveredItem();
+        const tileScalingMode = this._listModel.getTileScalingMode();
         this._shouldPerformAnimation = hoveredItem && !hoveredItem.destroyed
+            && tileScalingMode !== 'overlap' && tileScalingMode !== 'none'
             && hoveredItem['[Controls/_tile/mixins/TileItem]'] && hoveredItem.isFixed();
     }
 

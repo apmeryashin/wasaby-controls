@@ -261,7 +261,7 @@ define([
          emptyList.setMetaData(metaMore);
          list.setMetaData(metaMore);
 
-         assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, infinityNavigation));
+         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, infinityNavigation));
          assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, maxCountNaviation));
 
          assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, infinityNavigation));
@@ -4818,6 +4818,18 @@ define([
             const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
             instance._onItemActionsMenuClose({id: 'popupId_1'});
             sinon.assert.called(spyShowActions);
+            spyShowActions.restore();
+         });
+
+         // после закрытия меню ItemActions не должны появиться снова, если включен режим редактирования
+         it('should not restore showActionsClass on menu close event, when editing', () => {
+            instance._itemActionsMenuId = 'popupId_1';
+            const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
+            instance._editInPlaceController = {
+               isEditing: () => true
+            };
+            instance._onItemActionsMenuClose({id: 'popupId_1'});
+            sinon.assert.notCalled(spyShowActions);
             spyShowActions.restore();
          });
 

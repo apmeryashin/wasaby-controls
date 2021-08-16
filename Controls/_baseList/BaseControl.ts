@@ -1006,7 +1006,9 @@ const _private = {
         if (navigation) {
             switch (navigation.view) {
                 case 'infinity':
-                    result = !loadedList || _private.isPortionedLoad(this, loadedList);
+                    // todo remove loadedList.getCount() === 0 by task
+                    // https://online.sbis.ru/opendoc.html?guid=909926f2-f62a-4de8-a44b-3c10006f530f
+                    result = !loadedList || loadedList.getCount() === 0 || _private.isPortionedLoad(this, loadedList);
                     break;
                 case 'maxCount':
                     result = _private.needLoadByMaxCountNavigation(listViewModel, navigation);
@@ -2079,7 +2081,10 @@ const _private = {
                 const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
-                _private.addShowActionsClass(self);
+                // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
+                if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
+                    _private.addShowActionsClass(self);
+                }
             }
         }
     },
@@ -2244,11 +2249,13 @@ const _private = {
                 }
                 self._observerRegistered = false;
                 self._intersectionObserver = null;
-                self._intersectionObserverRegistered = false;self._viewReady = false;
+                self._intersectionObserverRegistered = false;
+                self._viewReady = false;
             }
             if (errorConfig.mode === dataSourceError.Mode.inlist) {
                 self._observerRegistered = false;
                 self._intersectionObserver = null;
+                self._intersectionObserverRegistered = false;
             }
         }
     },
@@ -5049,8 +5056,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
-        if (!this.__error) {
-            if (!this._observerRegistered && !this._delayObserverInitialization) {
+        if (!this.__error && !this._delayObserverInitialization) {
+            if (!this._observerRegistered) {
                 this._registerObserver();
             }
             if (this._needScrollCalculation && !this._intersectionObserverRegistered && this._listViewModel) {

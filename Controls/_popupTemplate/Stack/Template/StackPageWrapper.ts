@@ -82,6 +82,9 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._savedWorkspaceWidth = this._workspaceWidth;
         savePopupWidth(this._options.propStorageId, this._workspaceWidth);
         this._updateOffset();
+
+        // Так же как в реестрах, сообщаем про смену размеров рабочей области.
+        this._notify('workspaceResize', [this._workspaceWidth], {bubbling: true});
     }
 
     private _updateProperties(options: IPageTemplate): void {

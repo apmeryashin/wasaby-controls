@@ -544,6 +544,12 @@
    cursor: pointer;
 }
 
+// @TODO Пока не сделают новую иконку https://online.sbis.ru/opendoc.html?guid=916a90f1-97e9-4d38-a37b-b265a4aa5416
+.controls-ListView__groupExpander::before,
+.controls-ListView__groupExpander::after {
+   font-family: TensorFont;
+}
+
 .controls-ListView__groupExpander_left::before {
    padding-right: var(--grouping_expander_icon_offset_list);
    content: '\e000';
@@ -685,6 +691,7 @@
 
 .controls-master-template-newDesign .controls-ListView__item_master {
    border-radius: var(--master_item_border-radius_list);
+   overflow: hidden;
 }
 
 .controls-master-template-newDesign .controls-ListView__item-leftPadding_default {
