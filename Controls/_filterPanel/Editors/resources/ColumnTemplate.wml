@@ -6,7 +6,7 @@
                 <img class="controls-ListEditor__column-img" src="{{item.contents[column.config.imageProperty]}}"/>
             </ws:if>
             <div class="controls-ListEditor__column-text ws-ellipsis
-                        {{column.config.selected && column.config.selected.length && !item.isSelected() ?
+                        {{column.config.selected.length && !item.isSelected() ?
                         'controls-ListEditor__column_unselected-title'}}">
                 {{item.contents[column.config.displayProperty]}}
             </div>
