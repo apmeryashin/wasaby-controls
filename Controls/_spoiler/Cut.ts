@@ -38,18 +38,20 @@ class Cut extends Control<ICutOptions> implements IBackgroundStyle, IExpandable 
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
     protected _beforeMount(options?: ICutOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._initResizeObserver();
         this._expanded = Util._getExpanded(options, this._expanded);
         this._lines = Cut._calcLines(options.lines, this._expanded);
         return super._beforeMount(options, contexts, receivedState);
     }
 
     protected _afterMount(options: ICutOptions): void {
-        this._resizeObserver?.observe(this._children.content, { box: RESIZE_OBSERVER_BOX.borderBox });
+        if (this._hasResizeObserver()) {
+            this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback);
+            this._resizeObserver.observe(this._children.content as HTMLElement, { box: RESIZE_OBSERVER_BOX.borderBox });
+        }
     }
 
-    private _initResizeObserver(): void {
-        this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback);
+    protected _hasResizeObserver(): boolean {
+        return true;
     }
 
     private _resizeObserverCallback(): void {

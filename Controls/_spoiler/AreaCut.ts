@@ -61,8 +61,10 @@ class AreaCut extends Cut {
         }
     }
 
-    protected _initResizeObserver(): void {
-        // Заглушка, для того чтобы не инициализировать ResizeObserver
+    protected _hasResizeObserver(): boolean {
+        // В AreCut нет нужды в ResizeObserver, т.к. размер контента меняется после того как пользователь вводит текст
+        // в поле ввода. Таким образом кат будет сворчаиваться каждый раз, когда текст переведется на следующиую строку.
+        return false;
     }
 
     protected _valueChangedHandler(event: Event, value: string): void {
