@@ -288,6 +288,7 @@ export default class Cell<
 
         wrapperClasses += ' js-controls-ListView__measurableContainer';
 
+        // TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
         if (markerClassName !== 'default') {
             wrapperClasses += ' controls-Grid__row-cell__withMarkerSize';
         }
