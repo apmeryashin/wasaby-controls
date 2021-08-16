@@ -227,8 +227,10 @@ export class StickyController extends BaseController {
         if (needClose) {
             return true;
         }
-        // Если не закрылись, то зовем пересчет позиции, после драга таргет мог поменять позицию
-        this.prepareConfig(item, container);
+        // Если не закрылись, то зовем пересчет позиции, при драге вне окна таргет мог поменять позицию
+        if (!isInsideDrag) {
+            this.prepareConfig(item, container);
+        }
     }
 
     getDefaultConfig(item: IStickyItem): void {
