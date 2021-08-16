@@ -55,8 +55,10 @@ class StackController extends BaseController {
             positionUpdate = this._updateItemPosition(item);
         }
 
-        if (!isNewEnvironment() && isSinglePopup) {
-            this._updateSideBarVisibility();
+        if (!isNewEnvironment()) {
+            if (isSinglePopup) {
+                this._updateSideBarVisibility();
+            }
         }
 
         if (item.popupOptions.isCompoundTemplate) {
