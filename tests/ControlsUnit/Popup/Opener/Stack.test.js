@@ -710,17 +710,28 @@ define(
                   template: {},
                   stackMinWidth: 500,
                   stackMaxWidth: 1200,
-                  stackWidth: 700
+                  stackWidth: 700,
+                  minSavedWidth: 655,
+                  maxSavedWidth: 760,
+                  minWidth: 500,
+                  maxWidth: 900
                },
                position: {
                   width: 0
                }
             };
-            let offset1 = 100, offset2 = -300;
+            let offset1 = 100, offset2 = -300, offset3 = 190, offset4 = 30;
             popupTemplate.StackController.popupResizingLine(item, offset1);
             assert.equal(item.popupOptions.stackWidth, 800);
+            assert.equal(item.maxSavedWidth, 800);
             popupTemplate.StackController.popupResizingLine(item, offset2);
             assert.equal(item.popupOptions.stackWidth, 500);
+            assert.equal(item.minSavedWidth, 500);
+
+            // min = 690, max = 720 => min должен сброситься в минимальное положение
+            popupTemplate.StackController.popupResizingLine(item, offset3);
+            popupTemplate.StackController.popupResizingLine(item, offset4);
+            assert.equal(item.minSavedWidth, 500);
          });
          it('stack resizing', () => {
             let stackContentInstance = new StackContent({});
