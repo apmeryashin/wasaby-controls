@@ -184,6 +184,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         subMenuDirection: TSubMenuDirection,
         itemAlign: string
     ): void {
+        event.stopPropagation();
         // The first level of the popup is always positioned on the right by standard
         if (this._options.root && subMenuDirection === 'right') {
             popupOptions.direction.horizontal = this._horizontalDirection;
