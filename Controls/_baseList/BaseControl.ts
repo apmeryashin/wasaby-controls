@@ -2246,11 +2246,13 @@ const _private = {
                 }
                 self._observerRegistered = false;
                 self._intersectionObserver = null;
-                self._intersectionObserverRegistered = false;self._viewReady = false;
+                self._intersectionObserverRegistered = false;
+                self._viewReady = false;
             }
             if (errorConfig.mode === dataSourceError.Mode.inlist) {
                 self._observerRegistered = false;
                 self._intersectionObserver = null;
+                self._intersectionObserverRegistered = false;
             }
         }
     },
@@ -5051,8 +5053,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
-        if (!this.__error) {
-            if (!this._observerRegistered && !this._delayObserverInitialization) {
+        if (!this.__error && !this._delayObserverInitialization) {
+            if (!this._observerRegistered) {
                 this._registerObserver();
             }
             if (this._needScrollCalculation && !this._intersectionObserverRegistered && this._listViewModel) {
