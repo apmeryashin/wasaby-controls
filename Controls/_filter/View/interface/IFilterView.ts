@@ -330,7 +330,6 @@ export interface IFilterView {
  * @cfg {Object} Опции для шаблона всплывающей панели, которая задана в {@link detailPanelTemplateName}.
  * @remark
  * В качестве шаблона всплывающей панели рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}.
- * Поэтому во многих задачах опции именно этого контрола следует передавать через detailPanelTemplateOptions.
  * @example
  * <pre class="brush: html; highlight: [5]">
  * <!-- MyModule.wml -->
