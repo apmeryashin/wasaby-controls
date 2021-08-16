@@ -406,7 +406,7 @@ export default class DataLoader {
     }
 
     getSearchControllerSync(id?: string): SearchController {
-        return this._getConfig(id).searchController;
+        return this._getConfig(id)?.searchController;
     }
 
     getState(): Record<string, IControllerState> {
