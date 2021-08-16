@@ -167,6 +167,7 @@ export interface IStackOpener extends IOpener {
 * @name Controls/_popup/interface/IStackOpener#maxWidth
 * @cfg {Number} The maximum width of popup.
 */
+
 /**
  * @name Controls/_popup/interface/IStackOpener#propStorageId
  * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
