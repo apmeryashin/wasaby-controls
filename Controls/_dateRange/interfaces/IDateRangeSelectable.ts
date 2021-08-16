@@ -32,21 +32,21 @@ export = {
       var options = IRangeSelectable.getDefaultOptions();
 
       /**
-       * @typedef {Object} Ranges
-       * @description Диапазоны периодов, которые доступны для выбора в контроле.
-       * @property {Array.<number>} days Дни.
-       * @property {Array.<number>} weeks Недели.
-       * @property {Array.<number>} months Месяца.
-       * @property {Array.<number>} quarters Кварталы.
-       * @property {Array.<number>} halfyears Полугодия
+       * @typedef {Object} Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges
+       * @description Конфигурация диапазонов дат, которые доступны для выбора в контроле.
+       * @property {Array.<number>} days Дни. Доступные значение: от 1 до 31.
+       * @property {Array.<number>} weeks Недели. Доступные значение: от 1 до 4.
+       * @property {Array.<number>} months Месяцы. Доступные значение: от 1 до 12.
+       * @property {Array.<number>} quarters Кварталы. Доступные значение: от 1 до 4.
+       * @property {Array.<number>} halfyears Полугодия. Доступные значение: от 1 до 2.
        * @property {Array.<number>} years Годы.
        */
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
-       * @cfg {Ranges.typedef} Конфигурация периодов для выбора дат.
+       * @cfg {Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges.typedef} Диапазон дат, который доступен для выбора.
        * @remark
-       * Если заданы значение в этой опции, то нельзя выделить произвольный период, а можно только выделить только заданные периоды.
+       * Использование опции актуально, когда опция {@link selectionType} установлена в значение "quantum".
        * @default {}
        * @example
        * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц.
@@ -65,20 +65,20 @@ export = {
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#selectionType
-       * @cfg {SelectionType} Режим выделения диапазона.
-       * @variant range Выделение произвольного диапазона.
-       * @variant single Выделение одного элемента.
-       * @variant quantum Выделение квантами. Кванты задаются через опцию {@link range}
-       * @variant disable Выбор отключен.
+       * @cfg {String} Режим выделения диапазона дат.
+       * @variant range Выделение произвольного диапазона дат.
+       * @variant single Выделение только одной даты.
+       * @variant quantum Выделение ограниченного диапазона дат. Конфигурация такого диапазона задается в опции {@link ranges}.
+       * @variant disable Выбор диапазона дат отключен.
        * @demo Controls-demo/datePopup/SelectionType/Index
        * @default quantum
        */
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#minRange
-       * @cfg {MinRange} Режим выбора диапазона дат.
-       * @variant day Выбора периода из нескольких дней.
-       * @variant month Выбора периода из нескольких месяцев.
+       * @cfg {String} Режим выбора диапазона дат.
+       * @variant day Выбор периода из нескольких дней.
+       * @variant month Выбор периода из нескольких месяцев.
        * @default day
        */
 
