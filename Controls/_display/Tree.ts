@@ -629,6 +629,12 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 // oldItem и newItem в событии приходят как один и тот же рекорд, поэтому мы не можем узнать
                 // так старое значение, но у нас есть CollectionItem, в котором хрантся старое значение
                 const oldCollectionItem = this.getItemBySourceItem(oldItems[i]);
+                // элемента может не быть, например если у нового элемента задали parent и он не отобразился
+                // и сразу же в нем что-то изменили. И сюда может прийти, например, группа -> проверяем на TreeItem
+                if (!oldCollectionItem || !oldCollectionItem['[Controls/_display/TreeItem]']) {
+                    continue;
+                }
+
                 const oldItemParent = oldCollectionItem.getParent();
                 const oldValue = oldItemParent.isRoot()
                     ? oldItemParent.getContents()
