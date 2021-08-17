@@ -311,7 +311,7 @@ class StackController extends BaseController {
         this._setStackContent(item);
         if (StackStrategy.isMaximizedPanel(item)) {
             // set default values
-            item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
+            item.popupOptions.templateOptions.maximizeButtonVisibility = undefined; // for vdom dirtyChecking
             const maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
             this._setMaximizedState(item, maximizedState);
         }
@@ -435,10 +435,10 @@ class StackController extends BaseController {
         const canMaximized = maxPanelWidth > item.popupOptions.minWidth;
         if (!canMaximized) {
             // If we can't turn around, we hide the turn button and change the state
-            item.popupOptions.templateOptions.showMaximizedButton = false;
+            item.popupOptions.templateOptions.maximizeButtonVisibility = false;
             item.popupOptions.templateOptions.maximized = false;
         } else {
-            item.popupOptions.templateOptions.showMaximizedButton = true;
+            item.popupOptions.templateOptions.maximizeButtonVisibility = true;
 
             // Restore the state after resize
             item.popupOptions.templateOptions.maximized = item.popupOptions.maximized;
