@@ -1017,6 +1017,13 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         // dataLoadCallback не надо вызывать если загружают узел,
         // определяем это по тому, что переданный ключ в метод load не соответствует текущему корню
         const loadedInCurrentRoot = key === this._root;
+        const processLoadCallbacks = () => {
+            if (loadedInCurrentRoot) {
+                this._dataLoadCallbackFromOptions?.call(void 0, result, direction, this._options.id);
+            } else if (this._options.nodeLoadCallback) {
+                this._options.nodeLoadCallback(result, key, direction);
+            }
+        };
 
         let methodResult;
         let dataLoadCallbackResult;
@@ -1033,25 +1040,22 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         }
 
         if (loadedInCurrentRoot || direction) {
-            this._notify('dataLoad', result, direction);
-        }
-
-        if (loadedInCurrentRoot) {
-            this._dataLoadCallbackFromOptions?.call(void 0, result, direction, this._options.id);
-        } else if (this._options.nodeLoadCallback) {
-            this._options.nodeLoadCallback(result, key, direction);
+            dataLoadCallbackResult = this._notify('dataLoad', result, direction);
         }
 
         if (dataLoadCallbackResult instanceof Promise) {
             methodResult = dataLoadCallbackResult.then(() => {
+                processLoadCallbacks();
                 return this._addItems(result, key, direction);
             });
         } else {
+            processLoadCallbacks();
             methodResult = this._addItems(result, key, direction);
         }
 
         return methodResult;
     }
+
 
     private _processQueryError(
         queryError: Error,
