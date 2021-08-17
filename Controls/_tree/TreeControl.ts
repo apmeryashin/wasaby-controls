@@ -13,7 +13,7 @@ import {Model} from 'Types/entity';
 
 import {Direction, IBaseSourceConfig, IHierarchyOptions, TKey} from 'Controls/interface';
 import {BaseControl, IBaseControlOptions, ISiblingStrategy} from 'Controls/baseList';
-import {Collection, CollectionItem, Tree, TreeItem} from 'Controls/display';
+import {Collection, CollectionItem, shouldDisplayNodeFooterTemplate, Tree, TreeItem} from 'Controls/display';
 import { selectionToRecord } from 'Controls/operations';
 import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
 import { MouseButtons, MouseUp } from 'Controls/popup';
@@ -569,7 +569,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             return false;
         }
         const hasMoreParentData = !!this._sourceController && this._sourceController.hasMoreData('down', parentKey);
-        const hasNodeFooterTemplate: boolean = !!this._options.nodeFooterTemplate;
+        const hasNodeFooterTemplate: boolean = shouldDisplayNodeFooterTemplate(
+            item, this._options.nodeFooterTemplate, this._options.nodeFooterVisibilityCallback
+        );
         return !hasMoreParentData && !hasNodeFooterTemplate && item.isNode() && item.isExpanded();
     }
 
