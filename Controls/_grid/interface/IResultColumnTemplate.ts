@@ -2,7 +2,7 @@ import {TFontWeight} from 'Controls/_interface/IFontWeight';
 
 /**
  * Шаблон, который по умолчанию используется для отображения ячеек {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/template/#columns итогов} в {@link Controls/grid:View таблице}.
- * 
+ *
  * @class Controls/_grid/interface/ResultColumnTemplate
  * @author Авраменко А.С.
  * @example
@@ -81,7 +81,7 @@ export default interface IResultColumnTemplateOptions {
      *     </div>
      * </ws:partial>
      * </pre>
-     * 
+     *
      * **Пример 3.** Переопределение стандартных параметров отображения результатов.
      * <pre class="brush: html; highlight: [6-8]">
      * <!-- WML -->
@@ -97,7 +97,7 @@ export default interface IResultColumnTemplateOptions {
      *    </ws:columns>
      * </Controls.grid:View>
      * </pre>
-     * 
+     *
      * **Пример 4.** Конфигурация ячейки для выравнивания контента по копейкам. На шаблон добавлен CSS-класс "controls-Grid&#95;&#95;cell&#95;spacing&#95;money".
      * <pre class="brush: html; highlight: [6-8]">
      * <!-- WML -->
@@ -129,6 +129,21 @@ export default interface IResultColumnTemplateOptions {
      */
     fontWeight?: TFontWeight;
 
+    /**
+     * @typedef {String} Controls/_grid/interface/ResultColumnTemplate/BackgroundColorStyle
+     * @description Допустимые значения для опции {@link backgroundColorStyle}.
+     * @variant danger
+     * @variant success
+     * @variant warning
+     * @variant primary
+     * @variant secondary
+     * @variant unaccented
+     * @variant readonly
+     */
+    /**
+     * @cfg {Controls/_grid/interface/ResultColumnTemplate/BackgroundColorStyle.typedef} Стиль фона ячейки.
+     */
+    backgroundColorStyle?: string;
 
     /**
      * @description Допустимые значения для опции {@link fontColorStyle}.
