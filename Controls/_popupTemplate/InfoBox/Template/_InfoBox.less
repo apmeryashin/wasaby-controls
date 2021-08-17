@@ -19,6 +19,9 @@
 .controls-InfoBoxTemplate__content-area {
    position: relative;
    z-index: 1;
+   // Дополнительный border-radius необходим для сценария где прикладная верстка имеет отступы,
+   // которые ломают скругления.
+   border-radius: var(--border-radius_infobox);
 }
 
 .controls-InfoBoxTemplate__arrow-side-position-left {
