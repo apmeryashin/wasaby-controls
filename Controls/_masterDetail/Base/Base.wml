@@ -61,13 +61,14 @@
 </ws:template>
 
 <div class="controls-MasterDetail ws-flexbox controls_list_theme-{{_options.theme}}">
-   <ws:partial template="resizingLineTemplate" />
    <ws:if data="{{_options.masterPosition === 'right'}}">
       <ws:partial template="detail" />
+      <ws:partial template="resizingLineTemplate" />
       <ws:partial template="master" />
    </ws:if>
    <ws:else>
       <ws:partial template="master" />
+      <ws:partial template="resizingLineTemplate" />
       <ws:partial template="detail" />
    </ws:else>
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
