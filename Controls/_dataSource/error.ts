@@ -17,7 +17,6 @@
  */
 
 export {
-    Config,
     Controller,
     Handler,
     HandlerConfig,

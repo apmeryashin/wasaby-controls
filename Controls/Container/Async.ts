@@ -2,9 +2,8 @@
 import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 import { Async as BaseAsync, IAsyncOptions, TAsyncStateReceived } from 'UICore/Async';
 import rk = require('i18n!Controls');
-import {ViewConfig} from "../_error/Handler";
-import {IoC} from "Env/Env";
-import {Controller, ParkingController} from "Controls/error";
+import { IoC } from 'Env/Env';
+import { Controller, ViewConfig } from 'Controls/error';
 import { IControlOptions } from 'UICommon/Base';
 
 export interface IOptions extends IAsyncOptions {
@@ -37,9 +36,7 @@ export default class Async extends BaseAsync {
       return ModulesLoader.loadAsync<T>(name).catch((error) => {
          IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, error);
 
-         return new ParkingController(
-             {configField: Controller.CONFIG_FIELD}
-         ).process({error, mode: 'include'}).then((viewConfig: ViewConfig<{message: string}>) => {
+         return new Controller().process({error, mode: 'include'}).then((viewConfig: ViewConfig<{message: string}>) => {
             if (this.errorCallback && typeof this.errorCallback === 'function') {
                this.errorCallback(viewConfig, error);
             }

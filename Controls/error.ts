@@ -8,39 +8,26 @@
  */
 
 import {
-    Handler as ParkingHandler,
-    ViewConfig as ParkingViewConfig
-} from './_error/_parking/Handler';
-import ParkingController, {
-    loadHandlers,
-    IParkingControllerOptions
-} from './_error/_parking/Controller';
-
-import {
     Handler,
     ViewConfig,
-    HandlerConfig
-} from './_error/Handler';
-import Controller, { Config } from './_error/Controller';
-import Mode from './_error/Mode';
+    HandlerConfig,
+    AppHandlerTypes,
+    Mode
+} from './_error/interface';
+import Controller from './_error/Controller';
 import process, { IProcessOptions } from './_error/process';
 import Popup, { IPopupHelper } from './_error/Popup';
 import DialogOpener from './_error/DialogOpener';
 
 export {
-    Config,
+    AppHandlerTypes,
     Controller,
     DialogOpener,
     Handler,
     HandlerConfig,
-    IParkingControllerOptions,
     IPopupHelper,
     IProcessOptions,
-    loadHandlers,
     Mode,
-    ParkingHandler,
-    ParkingViewConfig,
-    ParkingController,
     Popup,
     process,
     ViewConfig

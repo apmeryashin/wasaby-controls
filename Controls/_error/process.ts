@@ -2,7 +2,7 @@ import { Control } from 'UI/Base';
 import { logger } from 'Application/Env';
 import { constants } from 'Env/Env';
 import { IBasePopupOptions } from 'Controls/popup';
-import { Handler, ViewConfig } from './Handler';
+import { Handler, ViewConfig } from './interface';
 import ErrorController, { getPopupHelper } from './Controller';
 import { IPopupHelper, PopupId } from './Popup';
 

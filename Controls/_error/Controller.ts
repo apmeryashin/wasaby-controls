@@ -1,22 +1,24 @@
 import { Logger } from 'UI/Utils';
-import { IVersionable, PromiseCanceledError } from 'Types/entity';
+import { PromiseCanceledError } from 'Types/entity';
 import { constants } from 'Env/Env';
+import { loadAsync } from 'WasabyLoader/ModulesLoader';
 import { fetch } from 'Browser/Transport';
-import ParkingController, { loadHandlers } from './_parking/Controller';
 import {
+    AppHandlerTypes,
     Handler,
     HandlerConfig,
     ProcessedError,
-    ViewConfig
-} from './Handler';
-import Mode from './Mode';
+    ViewConfig,
+    Mode,
+    CanceledError
+} from './interface';
 import Popup, { IPopupHelper } from './Popup';
 
 /**
  * Параметры конструктора контроллера ошибок.
  * @public
  */
-export interface Config { // tslint:disable-line: interface-name
+export interface IControllerOptions {
     /**
      * Пользовательские обработчики ошибок.
      */
@@ -27,9 +29,11 @@ export interface Config { // tslint:disable-line: interface-name
      * Эта конфигурация объединится с той, которую вернёт обработчик ошибки.
      */
     viewConfig?: Partial<ViewConfig>;
+
+    standardViewConfigs?: Partial<Record<AppHandlerTypes, Partial<ViewConfig>>>;
 }
 
-type CanceledError = Error & { canceled?: boolean; };
+type RawHandler = Handler | string;
 
 let popupHelper: IPopupHelper;
 
@@ -45,7 +49,68 @@ export function getPopupHelper(): IPopupHelper {
     return popupHelper;
 }
 
-/// endregion helpers
+class HandlerIterator {
+    lastHandler: Handler;
+
+    // Загружает обработчик
+    private get(handler: RawHandler): Promise<Handler> {
+        return typeof handler === 'string'
+            ? loadAsync(handler)
+            : typeof handler === 'function'
+                ? Promise.resolve(handler)
+                : Promise.reject(new Error('handler must be string|function'));
+    }
+
+    // Выполнить функцию и вернуть Promise со значением, которое вернула функция.
+    private call(fn: Handler, arg: HandlerConfig): Promise<ReturnType<Handler>> {
+        return new Promise((resolve, reject) => {
+            try {
+                resolve(fn(arg));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // Выполнять по очереди обработчики ошибок, пока какой-нибудь из них не вернёт результат.
+    getViewConfig([handler, ...restHandlers]: RawHandler[], config: HandlerConfig): Promise<ViewConfig | void> {
+        if (!handler) {
+            return Promise.resolve();
+        }
+
+        return this.get(handler)
+            .catch((error: Error) => {
+                // Не удалось получить функцию-обработчик.
+                // Логируем ошибку и продолжаем выполнение обработчиков.
+                Logger.error('Invalid error handler', null, error);
+            })
+            .then((handlerFn: Handler) => {
+                this.lastHandler = handlerFn;
+                return this.call(handlerFn, config);
+            })
+            .catch((error: PromiseCanceledError) => {
+                if (error.isCanceled) {
+                    // Выкидываем ошибку отмены наверх, чтоб прервать всю цепочку обработчиков.
+                    throw error;
+                }
+
+                // Если это не отмена, то логируем ошибку и продолжаем выполнение обработчиков.
+                Logger.error('Handler error', null, error);
+            })
+            .then((viewConfig: ViewConfig | void) => viewConfig || this.getViewConfig(restHandlers, config));
+    }
+}
+
+const getApplicationHandlers = (): RawHandler[] => {
+    // Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
+    const CONFIG_PROP = 'errorHandlers';
+    const handlers = constants.ApplicationConfig?.[CONFIG_PROP];
+    if (!Array.isArray(handlers)) {
+        Logger.info(`ApplicationConfig:${CONFIG_PROP} must be Array<Function>`);
+        return [];
+    }
+    return handlers;
+};
 
 /**
  * Класс для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
@@ -81,23 +146,22 @@ export function getPopupHelper(): IPopupHelper {
  * </pre>
  */
 export default class ErrorController {
-    private _controller: ParkingController<ViewConfig>;
-    private _mode?: Mode;
+    private postHandlers: Handler[] = [];
+    private handlerIterator: HandlerIterator = new HandlerIterator();
+    private options: IControllerOptions;
 
     /**
      * @param options Параметры контроллера.
      */
-    constructor(options: Config, private _popupHelper: IPopupHelper = getPopupHelper()) {
-        this._mode = options?.viewConfig?.mode;
-        this._controller = new ParkingController<ViewConfig>({
-            configField: ErrorController.CONFIG_FIELD,
-            ...options
-        });
+    constructor(
+        options?: IControllerOptions,
+        private _popupHelper: IPopupHelper = getPopupHelper()
+    ) {
+        this.options = { ...ErrorController.defaultOptions, ...options };
     }
 
     destroy(): void {
-        this._controller.destroy();
-        delete this._controller;
+        delete this.handlerIterator;
         delete this._popupHelper;
     }
 
@@ -107,7 +171,11 @@ export default class ErrorController {
      * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
      */
     addHandler(handler: Handler, isPostHandler?: boolean): void {
-        this._controller.addHandler(handler, isPostHandler);
+        const handlers = isPostHandler ? this.postHandlers : this.options.handlers;
+        if (handlers.indexOf(handler) >= 0) {
+            return;
+        }
+        handlers.push(handler);
     }
 
     /**
@@ -116,7 +184,8 @@ export default class ErrorController {
      * @param isPostHandler Был ли обработчик добавлен для выполнения после обработчиков уровня приложения.
      */
     removeHandler(handler: Handler, isPostHandler?: boolean): void {
-        this._controller.removeHandler(handler, isPostHandler);
+        const handlers = isPostHandler ? '_postHandlers' : '_handlers';
+        this[handlers] = this[handlers].filter((_handler) => handler !== _handler);
     }
 
     /**
@@ -130,24 +199,26 @@ export default class ErrorController {
     process<TError extends ProcessedError = ProcessedError>(
         config: HandlerConfig<TError> | TError
     ): Promise<ViewConfig | void> {
-        const _config = this._prepareConfig<TError>(config);
+        const handlerConfig = this.getHandlerConfig<TError>(config);
 
-        if (!ErrorController._isNeedHandle(_config.error)) {
+        if (!ErrorController._isNeedHandle(handlerConfig.error)) {
             return Promise.resolve();
         }
 
-        return this._controller.process(_config).then((handlerResult: ViewConfig | void) => {
+        const handlers = [...this.options.handlers, ...getApplicationHandlers(), ...this.postHandlers];
+
+        return this.handlerIterator.getViewConfig(handlers, handlerConfig).then((viewConfig: ViewConfig | void) => {
             /**
              * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
              * Проверяем, обработана ли ошибка каким-то из контроллеров.
              */
-            if (!ErrorController._isNeedHandle(_config.error)) {
+            if (!ErrorController._isNeedHandle(handlerConfig.error)) {
                 return;
             }
 
-            if (!handlerResult) {
-                _config.error.processed = true;
-                return this._getDefault(_config);
+            if (!viewConfig) {
+                handlerConfig.error.processed = true;
+                return this.getDefault(handlerConfig);
             }
 
             /**
@@ -155,14 +226,8 @@ export default class ErrorController {
              * когда он точно знает, что его ошибку нужно обработать всегда,
              * даже если она была обработана ранее
              */
-            _config.error.processed = handlerResult.processed !== false;
-            return {
-                status: handlerResult.status,
-                mode: handlerResult.mode || _config.mode,
-                template: handlerResult.template,
-                options: handlerResult.options,
-                ...ErrorController._getIVersion()
-            };
+            handlerConfig.error.processed = viewConfig.processed !== false;
+            return this.composeViewConfig(viewConfig, handlerConfig.mode);
         }).catch((error: PromiseCanceledError) => {
             if (!error.isCanceled) {
                 Logger.error('Handler error', null, error);
@@ -170,7 +235,33 @@ export default class ErrorController {
         });
     }
 
-    private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
+    /**
+     * Составить конфиг ошибки из предустановленных данных и результата из обработчика.
+     * @param viewConfig Результат обработчика
+     * @param mode Предпочтительный режим отображения
+     */
+    private composeViewConfig(viewConfig: ViewConfig, mode?: Mode): ViewConfig {
+        let customStandardConfig: Partial<ViewConfig> = { options: {} };
+
+        if (this.handlerIterator.lastHandler && this.options.standardViewConfigs) {
+            customStandardConfig =
+                this.options.standardViewConfigs[this.handlerIterator.lastHandler.handlerType] || customStandardConfig;
+        }
+
+        return {
+            ...viewConfig,
+            ...customStandardConfig,
+            ...this.options.viewConfig,
+            mode,
+            options: {
+                ...viewConfig.options,
+                ...customStandardConfig.options,
+                ...this.options.viewConfig.options
+            }
+        };
+    }
+
+    private getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
         this._popupHelper.openConfirmation({
             type: 'ok',
             style: 'danger',
@@ -179,8 +270,8 @@ export default class ErrorController {
         });
     }
 
-    private _prepareConfig<T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> {
-        const mode = this._mode || Mode.dialog;
+    private getHandlerConfig<T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> {
+        const mode = this.options.viewConfig.mode || Mode.dialog;
 
         if (config instanceof Error) {
             return {
@@ -189,53 +280,23 @@ export default class ErrorController {
             };
         }
 
-        const result = {
+        return {
             mode,
             ...config
         };
-
-        if (this._mode) {
-            result.mode = this._mode;
-        }
-
-        return result;
     }
 
-    /**
-     * Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
-     */
-    static readonly CONFIG_FIELD: string = 'errorHandlers';
-
-    private static _getIVersion(): Partial<IVersionable> {
-        if (constants.isServerSide) {
-            // При построении контролов на сервере мы не будем добавлять в конфиг
-            // функцию getVersion(), иначе конфиг не сможет нормально десериализоваться.
-            return {};
-        }
-
-        const id: number = Math.random();
-        /*
-         * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
-         * для дальнейшего его отображения через прокидывание параметра в Container
-         * в случа, когда два раза пришла одна и та же ошибка, а между ними стейт не менялся
-         */
-        return {
-            '[Types/_entity/IVersionable]': true,
-            getVersion(): number {
-                return id;
-            }
-        };
-    }
+    private static defaultOptions: Partial<IControllerOptions> = {
+        viewConfig: {},
+        handlers: []
+    };
 
     private static _isNeedHandle(error: ProcessedError & CanceledError): boolean {
         return !(
             (error instanceof fetch.Errors.Abort) ||
             error.processed ||
             error.canceled ||
-            error.isCanceled // PromiseCanceledError
+            error.isCanceled // from PromiseCanceledError
         );
     }
 }
-
-// Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения.
-loadHandlers(ErrorController.CONFIG_FIELD);

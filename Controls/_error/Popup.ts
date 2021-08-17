@@ -1,6 +1,6 @@
 import { constants } from 'Env/Env';
 import { Confirmation, Dialog, IConfirmationOptions, IBasePopupOptions } from 'Controls/popup';
-import { ViewConfig } from './Handler';
+import { ViewConfig } from './interface';
 import { load } from 'WasabyLoader/Library';
 
 interface IPopupModule {

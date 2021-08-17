@@ -1,5 +1,5 @@
 import { IBasePopupOptions } from 'Controls/popup';
-import { ViewConfig } from './Handler';
+import { ViewConfig } from './interface';
 import Popup, { IPopupHelper,  PopupId } from './Popup';
 
 /**
