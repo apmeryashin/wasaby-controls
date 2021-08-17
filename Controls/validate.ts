@@ -10,6 +10,8 @@
  * @includes isRequired Controls/_validate/Validators/IsRequired
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes inRange Controls/_validate/Validators/inRange
+ * @includes inDateRange Controls/_validate/Validators/inDateRange
  * @includes DateRangeContainer Controls/_validate/DateRange
  * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @includes IValidateResult Controls/_validate/interfaces/IValidateResult
