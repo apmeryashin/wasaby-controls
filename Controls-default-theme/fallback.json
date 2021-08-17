@@ -908,7 +908,7 @@
   "--icon_background-image_closeButton_editableArea": "var(--icon_background-image_closeButton_toolButton)",
   "--icon-size_closeButton_editableArea": "var(--icon-size_closeButton_toolButton)",
   "--icon_hovered_background-image_closeButton_editableArea": "var(--icon_hovered_background-image_closeButton_toolButton)",
-  
+
   "--popup_border-color_suggest": "var(--border-color)",
   "--box-shadow-color_suggest": "rgba(0, 0, 0, 0.12)",
   "--box-shadow-blur_suggest": "12px",
@@ -1413,6 +1413,7 @@
   "--success_text-color_decorator_fraction": "#9fcca7",
   "--warning_text-color_decorator_fraction": "#ccc1a9",
   "--danger_text-color_decorator_fraction": "#ceb1b1",
+  "--label_text-color_decorator_fraction": "#b5becc",
   "--stroked_line-color_decorator": "#999",
 
   "--padding_scrollbar": "var(--offset_3xs)",
