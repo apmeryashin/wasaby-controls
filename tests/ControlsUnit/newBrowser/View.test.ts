@@ -20,6 +20,9 @@ describe('Controls/_newBrowser:View', () => {
         browserInstance._detailDataSource = {
             getRoot(): number {
                 return 2;
+            },
+            isLoading(): boolean {
+                return false;
             }
         };
         context = {

@@ -155,7 +155,10 @@ class PositionParamsCalculator implements IParamsCalculator {
 
         } else {
             let edgeElem;
-            if (list.getCount() && !(metaIterative && metaIterative !== storeParams.iterative)) {
+            const isIterativeChanged = storeParams.iterative !== undefined &&
+                                       metaIterative &&
+                                       metaIterative !== storeParams.iterative;
+            if (list.getCount() && !isIterativeChanged) {
                 if (queryDirection !== 'forward') {
                     edgeElem = listForCurrentStore.shift() || list.at(0);
                     store.setBackwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
@@ -252,7 +255,7 @@ class PositionParamsCalculator implements IParamsCalculator {
         const metaNextPosition = metaData.nextPosition;
         let nextPosition;
 
-        if (metaNextPosition instanceof RecordSet && id) {
+        if (metaNextPosition instanceof RecordSet && id !== undefined) {
             nextPosition = metaNextPosition.at(metaNextPosition.getIndexByValue('id', id)).get('nav_result');
         } else {
             nextPosition = metaNextPosition;

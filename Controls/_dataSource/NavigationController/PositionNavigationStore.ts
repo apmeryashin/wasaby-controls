@@ -45,7 +45,7 @@ class PositionNavigationStore implements INavigationStore {
     private _position: TPositionValue;
     private _direction: TNavigationDirection;
     private _limit: number;
-    private _iterative: boolean = false;
+    private _iterative: boolean = undefined;
 
     protected _backwardPosition: TPositionValue = [null];
     protected _forwardPosition: TPositionValue = [null];

@@ -72,6 +72,10 @@ export default class View extends Control<IViewPanelOptions> {
         });
     }
 
+    protected _beforeUnmount(): void {
+        this._applyButtonSticky.close();
+    }
+
     protected _handleHistoryItemClick(event: SyntheticEvent, filterValue: object): void {
         this._viewModel.setEditingObjectValue(filterValue.name, filterValue.editorValue);
         if (this._options.viewMode === 'default') {

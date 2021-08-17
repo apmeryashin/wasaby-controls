@@ -623,7 +623,7 @@ describe('Controls/_source/NavigationController', () => {
                 const metaMoreRs = new RecordSet({
                     rawData: [
                         {
-                            id: 1,
+                            id: 0,
                             nav_result: 'testId'
                         },
                         {
@@ -636,7 +636,7 @@ describe('Controls/_source/NavigationController', () => {
                 let nextPositionRs = new RecordSet({
                     rawData: [
                         {
-                            id: 1,
+                            id: 0,
                             nav_result: ['testId']
                         },
                         {
@@ -719,13 +719,16 @@ describe('Controls/_source/NavigationController', () => {
             });
 
             it('updateQueryProperties forward + meta.iterative changed', () => {
-                const nc = new NavigationController({
-                    navigationType: 'position',
-                    navigationConfig: {
-                        field: 'id',
-                        direction: 'forward'
-                    }
-                });
+                function getNavController() {
+                    return  new NavigationController({
+                        navigationType: 'position',
+                        navigationConfig: {
+                            field: 'id',
+                            direction: 'forward'
+                        }
+                    });
+                }
+                let nc = getNavController();
 
                 const rs = new RecordSet({
                     rawData: data,
@@ -739,6 +742,11 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({nextPosition : null, iterative: true});
                 params = nc.updateQueryProperties(rs, null, null, 'forward');
                 assert.deepEqual([null], params[0].forwardPosition, 'Wrong query properties');
+
+                nc = getNavController();
+                rs.setMetaData({iterative: true});
+                params = nc.updateQueryProperties(rs, null, null, 'forward');
+                assert.deepEqual([6], params[0].forwardPosition, 'Wrong query properties');
             });
 
             it('updateQueryProperties + multiNavigaion', () => {

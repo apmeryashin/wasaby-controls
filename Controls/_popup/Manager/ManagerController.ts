@@ -101,6 +101,10 @@ export default {
         return this._callManager('update', arguments);
     },
 
+    updatePosition(id: string): string {
+        return this._callManager('updatePosition', arguments);
+    },
+
     updateOptionsAfterInitializing(id: string, options: IPopupOptions): string {
         return this._callManager('updateOptionsAfterInitializing', arguments);
     },

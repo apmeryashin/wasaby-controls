@@ -960,7 +960,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         // just check _children to make sure, that the control isn't destroyed
         if (item && this._children.Sticky && this._subDropdownItem) {
             this._getPopupOptions(target, item).then((popupOptions) => {
-                this._notify('beforeSubMenuOpen', [popupOptions, this._options.subMenuDirection, this._options.itemAlign]);
+                this._notify('beforeSubMenuOpen',
+                    [popupOptions, this._options.subMenuDirection, this._options.itemAlign],
+                    // menu:Control могут положить в пункт меню, чтобы событие долетело до menu:Popup
+                    {bubbling: true}
+                );
                 this._children.Sticky.open(popupOptions);
             });
         }

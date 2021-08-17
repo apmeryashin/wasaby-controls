@@ -97,16 +97,18 @@ export default class TreeGridDataRow<T extends Model = Model>
         markerClassName: TMarkerClassName = 'default',
         itemPadding: IItemPadding = {}
     ): string {
+        const topPadding = itemPadding.top || this.getTopPadding() || 'l';
         let classes = 'controls-GridView__itemV_marker ';
         classes += `controls-GridView__itemV_marker-${this.getStyle()} `;
         classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingBottom-${itemPadding.bottom} `;
-        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingTop-${itemPadding.top} `;
+        classes += `controls-GridView__itemV_marker-${this.getStyle()}_rowSpacingTop-${topPadding} `;
         classes += 'controls-ListView__itemV_marker_';
+
         if (markerClassName === 'default') {
             classes += 'height ';
             classes += 'controls-GridView__itemV_marker_vertical-position-top ';
         } else {
-            classes += `${'padding-' + (itemPadding.top || this.getTopPadding() || 'l') + '_' + markerClassName} `;
+            classes += `${'padding-' + topPadding + '_' + markerClassName} `;
         }
         classes += `controls-ListView__itemV_marker-${this.getMarkerPosition()} `;
         return classes;

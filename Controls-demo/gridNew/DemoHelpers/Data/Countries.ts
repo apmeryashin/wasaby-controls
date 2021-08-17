@@ -1,5 +1,6 @@
 // @ts-ignore
 import * as numberResultTpl from 'wml!Controls-demo/gridNew/resources/ResultCellTemplates/Number';
+import * as coloredNumberResultTpl from 'wml!Controls-demo/gridNew/resources/ResultCellTemplates/ColoredNumber';
 
 import {IColumnRes, IData} from "Controls-demo/gridNew/DemoHelpers/DataCatalog";
 import {IColumn, IHeaderCell} from "Controls/grid";
@@ -294,6 +295,45 @@ export const Countries = {
             width: 'max-content',
             result: 5.8,
             resultTemplate: numberResultTpl,
+            compatibleWidth: setCompatibleWidths ? '60px' : undefined
+        }
+    ],
+    getColumnsWithColoredResults: (setCompatibleWidths: boolean = true): IColumnRes[] => [
+        {
+            displayProperty: 'number',
+            width: '40px'
+        },
+        {
+            displayProperty: 'country',
+            width: '300px'
+        },
+        {
+            displayProperty: 'capital',
+            width: 'max-content',
+            compatibleWidth: setCompatibleWidths ? '98px' : undefined
+        },
+        {
+            displayProperty: 'population',
+            width: 'max-content',
+            result: 3956986345,
+            resultTemplate: coloredNumberResultTpl,
+            backgroundColorStyle: 'primary',
+            compatibleWidth: setCompatibleWidths ? '118px' : undefined
+        },
+        {
+            displayProperty: 'square',
+            width: 'max-content',
+            result: 12423523,
+            resultTemplate: coloredNumberResultTpl,
+            resultsBackgroundColorStyle: 'warning',
+            compatibleWidth: setCompatibleWidths ? '156px' : undefined
+        },
+        {
+            displayProperty: 'populationDensity',
+            width: 'max-content',
+            result: 5.8,
+            resultTemplate: coloredNumberResultTpl,
+            resultsBackgroundColorStyle: 'customBgc',
             compatibleWidth: setCompatibleWidths ? '60px' : undefined
         }
     ],
