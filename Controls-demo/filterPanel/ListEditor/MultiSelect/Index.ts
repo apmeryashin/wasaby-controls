@@ -40,7 +40,7 @@ export default class extends Control {
                 name: 'owners',
                 resetValue: [],
                 caption: '',
-                value: [],
+                value: ['Новиков Д.В.', 'Чеперегин А.С.'],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {

@@ -89,6 +89,13 @@ class ListEditor extends BaseEditor {
         this._navigation = options.navigation;
     }
 
+    protected _afterMount(): void {
+        // В 5000 поправится при переходе на новый стандарт по задаче: https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
+        if (this._selectedKeys.length) {
+            this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
+        }
+    }
+
     protected _beforeUpdate(options: IListEditorOptions): void {
         const valueChanged =
             !isEqual(options.propertyValue, this._options.propertyValue) &&
