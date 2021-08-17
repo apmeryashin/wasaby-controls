@@ -116,4 +116,17 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
             assert.deepEqual(value, [1, 4]);
         });
     });
+
+    describe('_getExtendedValue', () => {
+        const numberRangeEditor = new NumberRangeEditor({});
+        it('minValue and maxValue replaced', () => {
+            numberRangeEditor._minValue = 5;
+            numberRangeEditor._maxValue = 1;
+            const extendedValue = numberRangeEditor._getExtendedValue();
+            assert.equal(numberRangeEditor._minValue, 1);
+            assert.equal(numberRangeEditor._maxValue, 5);
+            assert.deepEqual(extendedValue.value, [1, 5]);
+        });
+    });
+
 });
