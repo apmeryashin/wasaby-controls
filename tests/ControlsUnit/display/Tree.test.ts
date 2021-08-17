@@ -2765,7 +2765,8 @@ describe('Controls/_display/Tree', () => {
             })
             assert.doesNotThrow(rs.add.bind(rs,newItem));
             newItem = rs.getRecordById(3);
-            assert.doesNotThrow(newItem.set.bind(newItem, 'node', true));
+            assert.doesNotThrow(newItem.set.bind(newItem, 'pid', 0));
+            assert.isOk(tree.getItemBySourceKey(3));
         });
     });
 });
