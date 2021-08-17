@@ -89,6 +89,12 @@ class ListEditor extends BaseEditor {
         this._navigation = options.navigation;
     }
 
+    protected _afterMount(): void {
+        if (this._selectedKeys.length) {
+            this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
+        }
+    }
+
     protected _beforeUpdate(options: IListEditorOptions): void {
         const valueChanged =
             !isEqual(options.propertyValue, this._options.propertyValue) &&
