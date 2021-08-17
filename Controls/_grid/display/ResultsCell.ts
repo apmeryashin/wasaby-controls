@@ -84,7 +84,6 @@ class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
 
         wrapperClasses += 'controls-Grid__results-cell'
                             + ` controls-Grid__cell_${style}`
-                            + ` ${this._getWrapperPaddingClasses(theme)}`
                             + ` ${this._getColumnSeparatorClasses(theme)}`;
 
         wrapperClasses += this._getControlsBackgroundClass(style, backgroundColorStyle);
@@ -135,8 +134,14 @@ class ResultsCell<T extends EntityModel<any>> extends Cell<T, ResultsRow<T>> {
         return zIndex;
     }
 
-    getContentClasses(theme: string): string {
-        return 'controls-Grid__results-cell__content controls-Grid__results-cell__content';
+    getContentClasses(theme: string, backgroundColorStyle: string = this._$column.backgroundColorStyle): string {
+        let classes = this._getWrapperPaddingClasses() + ' controls-Grid__results-cell__content';
+        if (backgroundColorStyle && backgroundColorStyle !== 'default') {
+            // Если на списке есть скролл колонок или ячейка застикана, то ей надо выставить backgroundStyle
+            // Сюда же попадаем, если backgroundColorStyle = default
+            classes += ` controls-Grid__row-cell_background_${backgroundColorStyle}`;
+        }
+        return classes;
     }
 
     //endregion

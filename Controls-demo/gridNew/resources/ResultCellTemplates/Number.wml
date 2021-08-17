@@ -1,1 +1,5 @@
-<Controls.decorator:Number value="{{ column.config.result }}" attr:style="color: #313E78; font-size: 14px; font-weight: 800" useGrouping="{{true}}"/>
+<ws:partial template="Controls/grid:ResultColumnTemplate" scope="{{ _options }}">
+    <ws:contentTemplate>
+        <Controls.decorator:Number value="{{ column.config.result }}" attr:style="color: #313E78; font-size: 14px; font-weight: 800" useGrouping="{{true}}"/>
+    </ws:contentTemplate>
+</ws:partial>
