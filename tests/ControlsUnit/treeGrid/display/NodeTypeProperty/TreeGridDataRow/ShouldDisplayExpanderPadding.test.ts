@@ -79,7 +79,8 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridDataRow/ShouldDispl
             }),
             columns: [],
             parent,
-            owner
+            owner,
+            displayExpanderPadding: true
         });
         assert.isTrue(child.shouldDisplayExpanderPadding(null, null));
     });
