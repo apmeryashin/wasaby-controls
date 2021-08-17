@@ -630,10 +630,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _headersResizeHandler(): void {
-        const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP,
-            TYPE_FIXED_HEADERS.initialFixed);
-        const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM,
-            TYPE_FIXED_HEADERS.initialFixed);
+        const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(
+            POSITION.TOP,
+            TYPE_FIXED_HEADERS.initialFixed,
+            true);
+        const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(
+            POSITION.BOTTOM,
+            TYPE_FIXED_HEADERS.initialFixed,
+            true);
         // Обновляем скролбары только после наведения мышкой.
         this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
             this._isInitializationDelayed());
@@ -647,8 +651,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.resizeHandler();
     }
 
-    getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
-        return this._stickyHeaderController.getHeadersHeight(position, type);
+    getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed,
+                     considerOffsetTop: boolean = true): number {
+        return this._stickyHeaderController.getHeadersHeight(position, type, considerOffsetTop);
     }
     // FIXME: костыль для input:Area, чтобы она напрямую в детей не лазала
     getScrollTop(): number {
