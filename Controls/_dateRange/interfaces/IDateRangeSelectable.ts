@@ -33,12 +33,22 @@ export = {
 
       /**
        * @typedef {Object} Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges
-       * @description Конфигурация диапазонов дат, которые доступны для выбора в контроле.
-       * @property {Array.<number>} days Дни. Доступные значение: от 1 до 31.
-       * @property {Array.<number>} weeks Недели. Доступные значение: от 1 до 4.
-       * @property {Array.<number>} months Месяцы. Доступные значение: от 1 до 12.
-       * @property {Array.<number>} quarters Кварталы. Доступные значение: от 1 до 4.
-       * @property {Array.<number>} halfyears Полугодия. Доступные значение: от 1 до 2.
+       * @description Конфигурация диапазонов дат. Используется в опции {@link Controls/_dateRange/interfaces/IDateRangeSelectable#ranges ranges}.
+       * @property {Array.<number>} days Диапазоны дней.
+       * Доступные значения: от 1 до 31.
+       * Например, "days: [2, 10]" означает, что в контроле можно выбрать диапазон либо из 2 дней, либо из 10 дней.
+       * Чтобы включить выбор конкретного дня, в массив необходимо передать элемент со значением 1. Например, "days: [2, 10, 1]".
+       * @property {Array.<number>} weeks Диапазоны недель.
+       * Доступные значения: от 1 до 4.
+       * Например, "weeks: [2]" означает, что в контроле можно выбрать диапазон из 2 недель.
+       * @property {Array.<number>} months Диапазоны месяцев.
+       * Доступные значения: от 1 до 12.
+       * Например, "months: [2]" означает, что в контроле можно выбрать диапазон из 2 месяцев.
+       * @property {Array.<number>} quarters Диапазоны кварталов.
+       * Доступные значения: от 1 до 4.
+       * Например, "quarters: [2]" означает, что в контроле можно выбрать диапазон из 2 кварталов.
+       * @property {Array.<number>} halfyears Диапазоны полугодий.
+       * Доступные значения: от 1 до 2.
        * @property {Array.<number>} years Годы.
        */
 
