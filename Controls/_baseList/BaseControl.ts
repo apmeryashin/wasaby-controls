@@ -4052,7 +4052,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (!this.__error) {
             this._registerObserver();
-            if (this._needScrollCalculation && this._listViewModel) {
+            if (this._listViewModel) {
                 this._registerIntersectionObserver();
             }
         }
@@ -4988,12 +4988,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
-        this._handleLoadToDirection = !!this._sourceController && this._sourceController.hasMoreData(direction);
+        this._handleLoadToDirection = this._needScrollCalculation && !!this._sourceController && this._sourceController.hasMoreData(direction);
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
             }
-            if (result) {
+            if (result && this._needScrollCalculation) {
                 _private.handleScrollControllerResult(this, result);
                 this._syncLoadingIndicatorState = direction;
                 this._handleLoadToDirection = false;
