@@ -42,7 +42,6 @@ class AreaCut extends Cut {
         }
         if (!this._options.readOnly && options.readOnly) {
             this._expanded = false;
-            this._cutButtonVisibility = true;
             this._shouldUpdateCutButtonVisibility = true;
             if (options.readOnly && this._value) {
                 this._firstEditPassed = true;
@@ -55,10 +54,22 @@ class AreaCut extends Cut {
         super._beforeUpdate(options);
     }
 
+    protected _afterRender(): void {
+        if (this._shouldUpdateCutButtonVisibility) {
+            this._shouldUpdateCutButtonVisibility = false;
+            this._countCutButtonVisibility();
+        }
+    }
+
+    protected _hasResizeObserver(): boolean {
+        // В AreCut нет нужды в ResizeObserver, т.к. размер контента меняется после того как пользователь вводит текст
+        // в поле ввода. Таким образом кат будет сворчаиваться каждый раз, когда текст переведется на следующиую строку.
+        return false;
+    }
+
     protected _valueChangedHandler(event: Event, value: string): void {
         this._value = value;
         this._expanded = true;
-        this._countCutButtonVisibility();
         this._notify('valueChanged', [value]);
     }
 
@@ -77,7 +88,7 @@ class AreaCut extends Cut {
         // все равно будет занимать эту область. Пользователь не будет видеть состояние кнопки и будет казаться, что он
         // делает лишний клик просто так. Посчитаем, достаточно ли контента для показа ката во время того, как навели
         // мышкой на контрол, если нет - скроем кнопку.
-        if (this._shouldUpdateCutButtonVisibility) {
+        if (this._shouldUpdateCutButtonVisibility && !this._expanded) {
             this._shouldUpdateCutButtonVisibility = false;
             this._countCutButtonVisibility();
         }
