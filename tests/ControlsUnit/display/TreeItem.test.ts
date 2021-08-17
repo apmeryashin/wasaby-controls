@@ -243,12 +243,33 @@ describe('Controls/_display/TreeItem', () => {
         });
 
         it('.shouldDisplayExpanderPadding()', () => {
-            let item = new TreeItem({ });
-            assert.isFalse(item.shouldDisplayExpanderPadding());
+            const owner = {
+                getExpanderVisibility: () => 'visible',
+                getExpanderIcon: () => undefined,
+                getExpanderPosition: () => 'default',
+                getExpanderSize: () => undefined,
+                getHasChildrenProperty: () => 'hasChildren'
+            };
+            const contents = {hasChildren: false};
+            const item = new TreeItem({ owner, contents, hasChildrenProperty: 'hasChildren' });
 
-            item = new TreeItem({ displayExpanderPadding: true });
             assert.isTrue(item.shouldDisplayExpanderPadding());
             assert.isFalse(item.shouldDisplayExpanderPadding('none'));
+            assert.isFalse(item.shouldDisplayExpanderPadding(undefined, 'xl'));
+            owner.getExpanderPosition = () => 'custom';
+            assert.isFalse(item.shouldDisplayExpanderPadding());
+
+            owner.getExpanderVisibility = () => 'hasChildren';
+            owner.getExpanderPosition = () => 'default';
+            assert.isTrue(item.shouldDisplayExpanderPadding());
+            assert.isFalse(item.shouldDisplayExpanderPadding('none'));
+            assert.isTrue(item.shouldDisplayExpanderPadding(undefined, 'xl'));
+            owner.getExpanderPosition = () => 'custom';
+            assert.isFalse(item.shouldDisplayExpanderPadding());
+
+            contents.hasChildren = true;
+            owner.getExpanderPosition = () => 'default';
+            assert.isFalse(item.shouldDisplayExpanderPadding());
         });
 
         it('.getExpanderPaddingClasses()', () => {

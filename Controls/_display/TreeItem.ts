@@ -329,7 +329,17 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     }
 
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
-        return this._$displayExpanderPadding && tmplExpanderIcon !== 'none';
+        const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
+        const expanderPosition = this._$owner.getExpanderPosition();
+        const expanderSize = this.getExpanderSize(tmplExpanderSize);
+
+        // нельзя заюзать _$displayExpanderPadding, т.к. экспандер могут скрыть для определенной записи
+        if (this._$owner.getExpanderVisibility() === 'hasChildren') {
+            const hasChildren = this.getHasChildrenProperty() ? this.hasChildren() : this.hasChildrenByRecordSet();
+            return !hasChildren && expanderIcon !== 'none' && expanderPosition === 'default';
+        } else {
+            return !expanderSize && expanderIcon !== 'none' && expanderPosition === 'default';
+        }
     }
 
     shouldDisplayLevelPadding(withoutLevelPadding?: boolean): boolean {
