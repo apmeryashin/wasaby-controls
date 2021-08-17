@@ -18,6 +18,7 @@ export {default as IBind} from './_display/IBind';
 import {default as TreeChildren} from './_display/TreeChildren';
 export {TreeChildren};
 export {IOptions as ITreeCollectionOptions} from './_display/Tree';
+export {shouldDisplayNodeFooterTemplate} from './_display/itemsStrategy/NodeFooter';
 export {default as Abstract} from './_display/Abstract';
 import {
     default as Collection,
