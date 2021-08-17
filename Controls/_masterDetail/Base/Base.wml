@@ -34,7 +34,6 @@
    <ws:if data="{{_canResizing}}">
       <Controls.dragnDrop:ResizingLine name="resizingLine"
                                        attr:class="controls-MasterDetail_resizing-line {{_newDesign ? 'controls-MasterDetail_resizing-line-newDesign'}}"
-                                       attr:style="{{_options.masterPosition}}: calc({{_currentWidth}} - 5px);"
                                        minOffset="{{_minOffset}}"
                                        maxOffset="{{_maxOffset}}"
                                        direction="{{ _options.masterPosition === 'left' ? 'direct' : 'reverse' }}"
