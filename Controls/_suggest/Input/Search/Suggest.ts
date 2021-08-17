@@ -14,7 +14,8 @@ import 'Controls/search';
  * @remark
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/69b02f939005820476d32a184ca50b72f9533076/Controls-default-theme/variables/_suggest.less переменные тем оформления}
- *
+ * * {@link http://axure.tensor.ru/StandardsV8/автодополнение.html Спецификация Axure}
+ * 
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
  * @implements Controls/interface:ISearch
