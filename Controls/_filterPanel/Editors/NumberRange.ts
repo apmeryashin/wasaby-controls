@@ -94,9 +94,6 @@ class NumberRangeEditor extends BaseEditor implements INumberRange {
     }
 
     protected _getExtendedValue(): object {
-        if (this._needReplaceMinMaxValues()) {
-            this._replaceMinMaxValues(this._minValue, this._maxValue);
-        }
         const value = [this._minValue, this._maxValue];
         return {
             value,
