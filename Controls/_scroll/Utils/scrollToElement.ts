@@ -76,22 +76,26 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
 }
 
 /**
+ * Модуль с функциями без классов.
+ * @module
+ */
+
+/**
  * Позволяет проскроллить содержимое, находящееся внутри родительского скролл-контейнера, к выбранному элементу, сделав его видимым.
  * @param {HTMLElement} element DOM-элемент, к которому нужно проскроллить содержимое.
- * @param {boolean} toBottomOrPosition Определяет, должен ли быть виден нижний край контейнера. Допустимые значения: top, bottom, center.
+ * @param {boolean|String} toBottomOrPosition Определяет, должен ли быть виден нижний край контейнера. Допустимые значения: top, bottom, center.
  * @param {boolean} force
- * * true - позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
- * * false - элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
+ * * true — позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
+ * * false — элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
  *
  * @example
  * <pre class="brush: js">
- * require(['Controls/Utils/scrollToElement'], function(scrollToElement) {
- *    class Component extends Control {
- *       _onClick() {
- *          scrollToElement(this._children.child, true);
- *       }
- *    }
- * });
+ * // TypeScript
+ * import {scrollToElement} from 'Controls/scroll';
+ * 
+ * _onClick(): void {
+ *    scrollToElement(this._children.child, true);
+ * }
  * </pre>
  */
 
