@@ -483,6 +483,42 @@ define([
             assert.equal(element.parentElement.scrollTop, -5);
          });
 
+         it('to top force and sticky block with offsetTop', function() {
+            mockDOM();
+            sinon.stub(NodeCollector, 'goUpByControlTree').returns([{ getHeadersHeight: () => 10 }]);
+            sinon.stub(cInstance, 'instanceOfModule').returns(true);
+            var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 160,
+                  clientHeight: 150,
+                  top: 10,
+                  className: '',
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 15,
+                  closest: () => []
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 20,
+                     height: 100
+                  };
+               },
+               closest: () => {}
+            };
+            scroll.scrollToElement(element, false, true);
+            assert.equal(element.parentElement.scrollTop, 15);
+         });
+
          it('to bottom', function() {
             mockDOM();
             var element = {
