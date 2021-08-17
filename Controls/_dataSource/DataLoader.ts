@@ -314,7 +314,8 @@ export default class DataLoader {
     loadEvery<T extends ILoadDataConfig|ILoadDataCustomConfig>(
         sourceConfigs: TLoadConfig[] | TLoadersConfigsMap = this._loadDataConfigs,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        listConfigStoreId?: string,
+        listConfigArguments?: object
     ): TLoadPromiseResult[] | TLoadPromiseResultMap {
         if (sourceConfigs instanceof Array) {
             const configsWithKeys = this._getConfigsWithKeys(sourceConfigs);
@@ -322,9 +323,9 @@ export default class DataLoader {
                 configsWithKeys,
                 sourceConfigs ? sourceConfigs as TLoadConfig[] : this._originLoadDataConfigs
             );
-            return this._loadLoadersArray(configsWithKeys, loadersMap, loadTimeout, listConfigStoreId);
+            return this._loadLoadersArray(configsWithKeys, loadersMap, loadTimeout, listConfigStoreId, listConfigArguments);
         } else {
-            return this._loadLoadersMap(sourceConfigs, loadTimeout, listConfigStoreId);
+            return this._loadLoadersMap(sourceConfigs, loadTimeout, listConfigStoreId, listConfigArguments);
         }
     }
 
@@ -460,7 +461,8 @@ export default class DataLoader {
     private _loadLoadersMap(
         sourceConfigs?: TLoadersConfigsMap,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        listConfigStoreId?: string,
+        listConfigArguments?: object
     ): TLoadPromiseResultMap {
         const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
         const loadResult = {};
@@ -470,7 +472,8 @@ export default class DataLoader {
                 loadPromise = startedLoaders[loaderKey];
             } else {
                 loadPromise =
-                    this._callLoaderWithDependencies(loaderKey, sourceConfigs, startedLoaders, loadTimeout, listConfigStoreId);
+                    this._callLoaderWithDependencies(loaderKey, sourceConfigs, startedLoaders,
+                        loadTimeout, listConfigStoreId, listConfigArguments);
             }
             loadResult[loaderKey] = loadPromise;
         });
@@ -488,7 +491,8 @@ export default class DataLoader {
         sourceConfigs: TLoadConfig[],
         loadersMap: TLoadersConfigsMap,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        listConfigStoreId?: string,
+        listConfigArguments?: object
     ): TLoadPromiseResult[] {
         const loadDataPromises = [];
         const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
@@ -498,7 +502,7 @@ export default class DataLoader {
                 loadDataPromises.push(startedLoaders[loadConfig.id]);
             } else {
                 loadDataPromises.push(
-                    this._callLoaderWithDependencies(loadConfig.id, loadersMap, startedLoaders, loadTimeout, listConfigStoreId)
+                    this._callLoaderWithDependencies(loadConfig.id, loadersMap, startedLoaders, loadTimeout, listConfigStoreId, listConfigArguments)
                 );
             }
         });
@@ -520,7 +524,8 @@ export default class DataLoader {
         loadersMap: TLoadersConfigsMap,
         startedLoaders: Record<string, TLoadPromiseResult>,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        listConfigStoreId?: string,
+        listConfigArguments?: object
     ): TLoadPromiseResult {
         const loadConfig = loadersMap[id];
         let loadPromise;
@@ -537,11 +542,11 @@ export default class DataLoader {
                 loadPromise = Promise.all(
                     this._loadDependencies(loadersMap, startedLoaders, dependencies, loadTimeout)
                 ).then((results) => {
-                    return this._callLoader(id, loadConfig, loadTimeout, results, listConfigStoreId);
+                    return this._callLoader(id, loadConfig, loadTimeout, results, listConfigStoreId, listConfigArguments);
                 });
             }
         } else {
-            loadPromise = this._callLoader(id, loadConfig, loadTimeout, void 0, listConfigStoreId);
+            loadPromise = this._callLoader(id, loadConfig, loadTimeout, void 0, listConfigStoreId, listConfigArguments);
         }
         startedLoaders[id] = loadPromise;
         return loadPromise;
@@ -560,7 +565,8 @@ export default class DataLoader {
         loaderConfig: TLoadConfig,
         loadTimeout?: number,
         dependencies?: TLoadResult[],
-        listConfigStoreId?: string
+        listConfigStoreId?: string,
+        listConfigArguments?: object
     ): TLoadPromiseResult {
         let loadPromise;
         if (loaderConfig.type === 'custom') {
@@ -572,7 +578,7 @@ export default class DataLoader {
                 customPromise, loadTimeout || getLoadTimeout(loaderConfig)
             ).catch((error) => error);
         } else if (loaderConfig.type === 'additionalDependencies') {
-            loadPromise = this._loadAdditionalDependencies(loaderConfig, dependencies);
+            loadPromise = this._loadAdditionalDependencies(loaderConfig, dependencies, listConfigArguments);
         } else {
             loadPromise = loadDataByConfig(loaderConfig, loadTimeout, listConfigStoreId);
         }
@@ -662,10 +668,14 @@ export default class DataLoader {
      */
     private _loadAdditionalDependencies(
         config: ILoadDataAdditionalDepsConfig,
-        dependencies?: TLoadResult[]
+        dependencies?: TLoadResult[],
+        listConfigArguments?: object
     ): Promise<Record<string, unknown>> {
         return Promise.resolve(config.loadDataMethod(config.loadDataMethodArguments, dependencies))
-            .then(this._loadDepsData)
+            .then((pageKeys: string[], loadDataMethodArguments: Record<string, unknown> = {}) => {
+                const args = {...loadDataMethodArguments, ...listConfigArguments};
+                this._loadDepsData(pageKeys, args);
+            })
             .catch((error) => error);
     }
 
