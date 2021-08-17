@@ -4052,7 +4052,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (!this.__error) {
             this._registerObserver();
-            if (this._needScrollCalculation && this._listViewModel) {
+            if (this._listViewModel) {
                 this._registerIntersectionObserver();
             }
         }
@@ -4993,7 +4993,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._destroyed) {
                 return;
             }
-            if (result) {
+            if (result && this._needScrollCalculation) {
                 _private.handleScrollControllerResult(this, result);
                 this._syncLoadingIndicatorState = direction;
                 this._handleLoadToDirection = false;
