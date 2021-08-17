@@ -1039,21 +1039,24 @@ define([
                sticky1: {
                   mode: 'stackable',
                   inst: {
-                     height: 10
+                     height: 10,
+                     offsetTop: 0
                   }
                },
                sticky2: {
                   mode: 'stackable',
                   inst: {
                      height: 10,
-                     setFixedPosition: setFixedPosition
+                     setFixedPosition: setFixedPosition,
+                     offsetTop: 0
                   },
                   offset: { top: 5 }
                },
                sticky3: {
                   mode: 'stackable',
                   inst: {
-                     height: 10
+                     height: 10,
+                     offsetTop: 0
                   }
                }
             };
@@ -1063,6 +1066,33 @@ define([
             component._updateHeadersFixedPositions(['sticky2']);
 
             sinon.assert.calledWith(setFixedPosition, 'top');
+         });
+
+         it('Second header should be unfixed (first header have offsetTop)', function() {
+            const setFixedPosition = sinon.fake();
+            component._headers = {
+               sticky1: {
+                  mode: 'stackable',
+                  inst: {
+                     height: 10,
+                     offsetTop: -5
+                  }
+               },
+               sticky2: {
+                  mode: 'replaceable',
+                  inst: {
+                     height: 10,
+                     setFixedPosition: setFixedPosition
+                  },
+                  offset: { top: 5 }
+               }
+            };
+            component._headersStack = {
+               top: ['sticky1', 'sticky2']
+            };
+            component._updateHeadersFixedPositions(['sticky2']);
+
+            sinon.assert.notCalled(setFixedPosition);
          });
 
          it('Header with id equal to "sticky2" should not be unfixed', function() {
