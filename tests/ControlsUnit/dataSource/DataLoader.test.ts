@@ -257,6 +257,7 @@ describe('Controls/dataSource:loadData', () => {
         const loadDataResult = await dataLoader.load([loadDataConfigWithFilter]);
         ok((loadDataResult[0] as ILoadDataResult).data.getCount() === 1);
         ok(!dataLoader.getSearchControllerSync('randomId'));
+        ok(dataLoader.getSearchControllerSync());
     });
 
     it('load with default load timeout', async () => {
