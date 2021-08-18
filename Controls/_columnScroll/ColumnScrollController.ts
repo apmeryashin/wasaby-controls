@@ -182,7 +182,7 @@ export default class ColumnScrollController {
         ), {} as DOMRect);
 
         if (currentColumnRect) {
-            return this._getScrollPositionToColumnRectEdge(currentColumnRect);
+            return this.getScrollPositionToColumnRectEdge(currentColumnRect);
         } else {
             return this._scrollPosition;
         }
@@ -544,22 +544,12 @@ export default class ColumnScrollController {
     }
 
     /**
-     * TODO: Переписать, чтобы проскроливалось вначало или вконец без зазора, либо к элементу по центру.
-     *  #rea_columnnScroll
-     * TODO: Отрефаткторить решение по доброске https://online.sbis.ru/opendoc.html?guid=bd2636ac-969f-4fda-be59-1b948deee523
-     * @param element
-     */
-    scrollToElementIfHidden(columnRect: DOMRect, immediate?: boolean): boolean {
-        return this._scrollToColumnRect(columnRect, immediate);
-    }
-
-    /**
      * Скроллит к краю элемента, если он частично находится за границей скроллируемой области
      * @param columnRect
      * @private
      */
     private _scrollToColumnRect(columnRect: DOMRect, immediate?: boolean): boolean {
-        const newScrollPosition = this._getScrollPositionToColumnRectEdge(columnRect);
+        const newScrollPosition = this.getScrollPositionToColumnRectEdge(columnRect);
 
         if (this._scrollPosition !== newScrollPosition) {
             this._setScrollPosition(newScrollPosition, immediate);
@@ -569,7 +559,7 @@ export default class ColumnScrollController {
         return false;
     }
 
-    private _getScrollPositionToColumnRectEdge(columnRect: DOMRect): number {
+    private getScrollPositionToColumnRectEdge(columnRect: DOMRect): number {
         const scrollableRect = this._getScrollContainerRect();
 
         // Граница ячейки за пределами видимой скроллируемой области.
