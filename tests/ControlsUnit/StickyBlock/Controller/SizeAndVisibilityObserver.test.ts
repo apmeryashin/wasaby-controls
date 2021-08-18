@@ -111,6 +111,33 @@ describe('SizeAndVisibilityObserver', () => {
             assert.equal(component._elementsHeight.length, entries.length);
         });
 
+        it('should call _getGroupByHeader if header is groud', function () {
+            const header = {
+                id: 1,
+                getHeaderContainer: function() {
+                    return this._container;
+                }
+            };
+            const entries = [
+                {
+                    target: header.getHeaderContainer(),
+                    contentRect: {
+                        height: 200
+                    }
+                }
+            ];
+            const operation = 'add';
+            sinon.stub(component, '_getHeaderFromNode').returns(header);
+            sinon.stub(component, '_getElementHeightEntry').returns({value: 1});
+            sinon.stub(component, '_getOperationForHeadersStack').returns(operation);
+            sinon.stub(component, '_resizeHeadersCallback');
+            const getGroupByHeaderStub = sinon.stub(component, '_getGroupByHeader').returns({id: 1});
+
+            component._headers = {1: header};
+            component._resizeObserverCallback(entries);
+            sinon.assert.calledOnce(getGroupByHeaderStub);
+        })
+
         it('should call _resizeHeadersCallback with correct operation', () => {
             const header = {
                 index: 1,

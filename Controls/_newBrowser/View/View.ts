@@ -57,6 +57,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _defaultListItemTemplate: TemplateFunction = 'Controls/listTemplates:ListItemTemplate';
     protected _detailDataSource: SourceController = null;
     protected _tableCfg: TableController = null;
+    protected _columns: TColumns;
 
     /**
      * Enum со списком доступных вариантов отображения контента в detail-колонке.
@@ -235,14 +236,14 @@ export default class View extends Control<IOptions, IReceivedState> {
         const masterOptionsChanged = !isEqual(newOptions.master, this._options.master);
         const isDetailRootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
         if (detailOptionsChanged || contextVersionChanged) {
+            const oldColumns = this._detailExplorerOptions.columns;
             this._detailExplorerOptions = this._getListOptions(
                 this._dataContext.listsConfigs.detail,
                 newOptions.detail
             );
-            this._detailExplorerOptions = {
-                ...this._detailExplorerOptions,
-                columns: this._getPatchedColumns(this._detailExplorerOptions.columns)
-            };
+            if (!isEqual(oldColumns, this._detailExplorerOptions.columns)) {
+                this._columns = this._getPatchedColumns(this._detailExplorerOptions.columns);
+            }
         }
         if (masterOptionsChanged || contextVersionChanged) {
             this._masterExplorerOptions = this._getListOptions(
@@ -250,7 +251,11 @@ export default class View extends Control<IOptions, IReceivedState> {
                 newOptions.master
             );
         }
-        this._viewMode = newOptions.viewMode;
+        // Пока viewMode не распространяется по контексту
+        // FIXME: https://online.sbis.ru/opendoc.html?guid=577201e1-e388-4ed0-bcb7-cda0b026c03e
+        if (!this._detailDataSource?.isLoading()) {
+            this._viewMode = newOptions.viewMode;
+        }
 
         if (newOptions.listConfiguration && !isEqual(this._options.listConfiguration, newOptions.listConfiguration)) {
             this._createTemplateControllers(newOptions.listConfiguration, newOptions);
@@ -400,10 +405,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             imageVisibility,
             browserOptions: options
         });
-        this._detailExplorerOptions = {
-            ...this._detailExplorerOptions,
-            columns: this._getPatchedColumns(this._detailExplorerOptions.columns)
-        };
+        this._columns = this._getPatchedColumns(this._columns);
     }
 
     protected _getPatchedColumns(columns: TColumns): TColumns {
@@ -438,6 +440,7 @@ export default class View extends Control<IOptions, IReceivedState> {
         const listsConfigs = this._dataContext.listsConfigs;
         this._detailExplorerOptions = this._getListOptions(listsConfigs.detail, options.detail);
         this._masterExplorerOptions = this._getListOptions(listsConfigs.master, options.master);
+        this._columns = this._detailExplorerOptions.columns;
         this._detailDataSource = listsConfigs.detail.sourceController;
         this._detailDataSource.subscribe('dataLoad', this._onDetailDataLoadCallback);
         this._masterDataSource = listsConfigs.master?.sourceController;

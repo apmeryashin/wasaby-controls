@@ -19,6 +19,7 @@
                 buttonStyle="{{_options.buttonStyle}}"
                 contrastBackground="{{_options.contrastBackground}}"
                 viewMode="{{_options.viewMode}}"
+                translucent="{{_options.translucent}}"
                 tooltip="{{_options.tooltip}}"
                 on:click="_handleClick()"
                 on:mousedown="_handleMouseDown()"

@@ -101,6 +101,10 @@ export default {
         return this._callManager('update', arguments);
     },
 
+    updatePosition(id: string): string {
+        return this._callManager('updatePosition', arguments);
+    },
+
     updateOptionsAfterInitializing(id: string, options: IPopupOptions): string {
         return this._callManager('updateOptionsAfterInitializing', arguments);
     },
@@ -170,7 +174,7 @@ export default {
         // Временно завязываю отображение правой панели на дефолтную тему.
         // TODO: https://online.sbis.ru/opendoc.html?guid=b309f5ac-98fd-48f9-af3a-d33a744223d2
         if (typeof this._theme === 'string') {
-            return this._theme.includes('default');
+            return this._theme.includes('default') && !this._theme.includes('default__pink');
         }
         return true;
     },

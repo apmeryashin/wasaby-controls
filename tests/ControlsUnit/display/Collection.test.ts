@@ -4083,6 +4083,7 @@ describe('Controls/_display/Collection', () => {
             const item = collection.getItemBySourceKey(1);
             assert.strictEqual(item.getContents().getId(), 1);
         });
+
         it('.getItemBySourceKey() for group', () => {
             const list = new RecordSet({
                 items: [
@@ -4099,6 +4100,25 @@ describe('Controls/_display/Collection', () => {
             });
             const item = collection.getItemBySourceKey('#1');
             assert.strictEqual(item.getContents(), '#1');
+        });
+
+        it('.getItemBySourceKey() without filter for editing item', () => {
+            const list = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            const collection = new CollectionDisplay({
+                collection: list,
+                keyProperty: 'id'
+            });
+
+            // Переводим итем с id 1 в режим редактирования
+            const item = collection.getItemBySourceKey(1, false);
+            item.setEditing(true, item.getContents().clone());
+
+            // Еще раз получаем итем по id
+            const item1 = collection.getItemBySourceKey(1, false);
+            assert.isTrue(!!item1, 'Item should be');
         });
     });
 

@@ -72,7 +72,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _menuSource: Memory;
     protected _filter: object;
     protected _position: number;
-    protected _selectedKey: number[] = [];
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
                            contexts?: object,
@@ -154,7 +153,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
     private _menuItemClickHandler(event: SyntheticEvent<Event>, keys: number[]|string[]): void {
         const item: Model<object> = this._items.getRecordById(keys[0]);
-        item.set('minWidth', 0);
+        item.set('canShrink', true);
         /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
         Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
         this._selectedKeyHandler(event, item.get(this._options.keyProperty));
@@ -200,7 +199,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         });
         filter[options.keyProperty] = arrIdOfInvisibleItems;
         this._filter = filter;
-        this._selectedKey[0] = keyPropertyOfLastItem;
     }
 
     private _calcVisibleItems(items: RecordSet<object>, options: ITabsAdaptiveButtonsOptions): void {
@@ -225,8 +223,11 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
                 rawData[rawData.length - 1] = items.getRecordById(options.selectedKey).getRawData();
             }
         }
+        rawData.forEach(item => {
+            item.canShrink = false;
+        });
         // чтобы ужималась
-        rawData[this._lastIndex].minWidth = 0;
+        rawData[this._lastIndex].canShrink = true;
         if (options.align === 'right') {
             rawData.reverse();
         }

@@ -110,7 +110,7 @@
 .controls-PeriodLiteDialog__close {
    position: absolute;
    top: calc(-1 * var(--item_border-thickness_shortDatePicker));
-   color: var(--background-color);
+   color: var(--unaccented_icon-color);
    background-color: var(--closeButton_background-color_shortDatePicker);
    box-shadow: var(--closeButton_box-shadow_shortDatePicker);
    cursor: pointer;
@@ -422,6 +422,7 @@
 
    .controls-PeriodLiteDialog__close:hover {
       background-color: var(--closeButton_hover_background-color_shortDatePicker);
+      color: var(--icon-color_hovered_closeButton_external);
    }
 
    .controls-PeriodLiteDialog__year-clickable:hover {
@@ -449,6 +450,11 @@
 
    .controls-PeriodLiteDialog-item__quarter-caption:active {
       color: var(--quarterly_quarters_hover_text-color_shortDatePicker);
+   }
+
+   .controls-PeriodLiteDialog__close:active {
+      background-color: var(--closeButton_hover_background-color_shortDatePicker);
+      color: var(--icon-color_hovered_closeButton_external);
    }
 }
 

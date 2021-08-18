@@ -289,6 +289,10 @@ export default class ControllerClass {
       return this._misspellValue;
    }
 
+   resetSavedRootBeforeSearch(): void {
+      this._rootBeforeSearch = null;
+   }
+
    private _dataLoadCallback(event: unknown, items: RecordSet): void {
       const filter = this._getFilter();
       const sourceController = this._sourceController;
@@ -342,19 +346,21 @@ export default class ControllerClass {
 
    private _getFilterWithSearchValue(): QueryWhereExpression<unknown> {
       const filter = {...this._sourceController.getFilter()};
-      filter[this._options.searchParam] = this._searchValue;
+      const {parentProperty, searchParam, startingWith} = this._options;
+      let root;
+      filter[searchParam] = this._searchValue;
 
-      if (this._options.parentProperty) {
+      if (parentProperty) {
          if (this._root !== undefined) {
-            const root = this._getRoot();
+            root = this._getRoot();
 
             if (root !== undefined) {
-               filter[this._options.parentProperty] = root;
+               filter[parentProperty] = root;
             } else {
-               delete filter[this._options.parentProperty];
+               delete filter[parentProperty];
             }
          }
-         if (this._options.startingWith === 'root' && this._rootBeforeSearch !== undefined) {
+         if (startingWith === 'root' && this._rootBeforeSearch !== undefined && this._rootBeforeSearch !== root) {
             filter[SEARCH_STARTED_ROOT_FIELD] = this._rootBeforeSearch;
          }
          Object.assign(filter, SERVICE_FILTERS.HIERARCHY);

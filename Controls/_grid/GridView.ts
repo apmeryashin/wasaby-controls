@@ -178,7 +178,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         return GridItem;
     },
 
-    _getGridTemplateColumns(options): string {
+    _getGridTemplateColumnsWidth(options): string[] {
         // todo Вынести расчёт на viewModel: https://online.sbis.ru/opendoc.html?guid=09307163-7edb-4423-999d-525271e05586
         // тогда метод можно покрыть нормально юнитом и проблемы с актуализацией колонок на самом grid-элементе не будет
         const columns = this._listModel ? this._listModel.getGridColumnsConfig() : options.columns;
@@ -191,16 +191,19 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
         let columnsWidths: string[] = [];
         columnsWidths = initialWidths;
-        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
-            columns
-        });
 
-        // Во время днд отключаем лесенку, а контент отображаем принудительно с помощью visibility: visible
-        if (ladderStickyColumn && !this._listModel.isDragging()) {
-            if (ladderStickyColumn.property.length === 2) {
-                columnsWidths.splice(1, 0, '0px');
+        if (options.isFullGridSupport) {
+            const ladderStickyColumn = GridLadderUtil.getStickyColumn({
+                columns
+            });
+
+            // Во время днд отключаем лесенку, а контент отображаем принудительно с помощью visibility: visible
+            if (ladderStickyColumn && !this._listModel.isDragging()) {
+                if (ladderStickyColumn.property.length === 2) {
+                    columnsWidths.splice(1, 0, '0px');
+                }
+                columnsWidths = ['0px'].concat(columnsWidths);
             }
-            columnsWidths = ['0px'].concat(columnsWidths);
         }
         if (hasMultiSelect) {
             columnsWidths = ['max-content'].concat(columnsWidths);
@@ -210,8 +213,13 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         if (this._columnScrollHasItemActionsCell(options)) {
             columnsWidths.push('0px');
         }
+        return columnsWidths;
+    },
 
-        return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
+    _getGridTemplateColumns(options): string {
+        return GridLayoutUtil.getTemplateColumnsStyle(
+            this._getGridTemplateColumnsWidth(options)
+        );
     },
 
     _createGuid(): string {

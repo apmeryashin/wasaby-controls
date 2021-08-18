@@ -2748,5 +2748,25 @@ describe('Controls/_display/Tree', () => {
             rs.getRecordById(21).set('pid', 0);
             assert.deepEqual(tree.getItemBySourceKey(21).getParent().key, { id: 0, title: 'Root' });
         });
+
+        it('not throw error when has group or when add item with not exists parent', () => {
+            const rs = new RecordSet({
+                rawData: [
+                    {id: 1, hasChildren: false, node: true, pid: 0, group: 1},
+                    {id: 2, hasChildren: false, node: true, pid: 0, group: 1}
+                ],
+                keyProperty: 'id'
+            });
+            const tree = getTree(rs, {groupProperty: 'group'});
+
+            let newItem = new Model({
+                rawData: {id: 3, hasChildren: false, node:  false, pid: null, group: 1},
+                keyProperty: 'id'
+            })
+            assert.doesNotThrow(rs.add.bind(rs,newItem));
+            newItem = rs.getRecordById(3);
+            assert.doesNotThrow(newItem.set.bind(newItem, 'pid', 0));
+            assert.isOk(tree.getItemBySourceKey(3));
+        });
     });
 });

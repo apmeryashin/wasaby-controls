@@ -1,11 +1,13 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controls-text-label">default slider</div>
     <Controls.slider:Range
+            attr:data-qa="controlsDemo-Slider__default"
             maxValue="{{100}}"
             minValue="{{0}}"
     />
     <div class="controls-text-label">slider</div>
     <Controls.slider:Range
+            attr:data-qa="controlsDemo-Slider__bind"
             maxValue="{{100}}"
             minValue="{{0}}"
             bind:startValue="_startValue"
@@ -13,6 +15,7 @@
     />
     <div class="controls-text-label">readOnly=true</div>
     <Controls.slider:Range
+            attr:data-qa="controlsDemo-Slider__readOnly"
             maxValue="{{100}}"
             minValue="{{0}}"
             bind:startValue="_startValue"

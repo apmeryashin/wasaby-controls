@@ -110,13 +110,13 @@
            'showItemActionsOnHover': showItemActionsOnHover
        }) }}">
          <ws:for data="column in (item || itemData).getColumns()">
-            <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition() }}"
+            <Controls.scroll:StickyBlock position="{{ (item || itemData).getStickyHeaderPosition(stickyCallback) }}"
                                           mode="{{ (item || itemData).getStickyHeaderMode(stickyCallback) }}"
                                           shadowVisibility="{{column.shadowVisibility}}"
                                           backgroundStyle="{{ backgroundStyle }}"
                                           fixedZIndex="{{ column.getZIndex()}}"
                                           attr:key="sticky_{{ column.getInstanceId() }}"
-                                          attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"
+                                          attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle, markerClassName) }}"
                                           attr:style="{{ column.getWrapperStyles(containerSize) }}">
                <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
             </Controls.scroll:StickyBlock>
@@ -135,7 +135,7 @@
            'showItemActionsOnHover': showItemActionsOnHover
        }) }}">
       <ws:for data="column in (item || itemData).getColumns()">
-         <div class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle) }}"
+         <div class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover, hoverBackgroundStyle, markerClassName) }}"
               style="{{ column.getWrapperStyles(containerSize) }}">
             <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
          </div>

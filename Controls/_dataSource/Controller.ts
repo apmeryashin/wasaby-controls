@@ -773,12 +773,8 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         return resultQueryParams;
     }
 
-    private _isMultiNavigation(
-        navigationSourceConfig: INavigationSourceConfig,
-        list?: RecordSet
-    ): boolean {
-        return (navigationSourceConfig || this._options.navigation.sourceConfig)?.multiNavigation ||
-                list?.getMetaData().more instanceof RecordSet;
+    private _isMultiNavigation(navigationSourceConfig: INavigationSourceConfig): boolean {
+        return navigationSourceConfig?.multiNavigation || this._options.navigation?.sourceConfig?.multiNavigation;
     }
 
     private _addItems(items: RecordSet, key: TKey, direction: Direction): RecordSet {

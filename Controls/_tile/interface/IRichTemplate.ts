@@ -134,7 +134,7 @@ export default interface IRichTemplateOptions {
     imageEffect?: 'none' | 'gradient';
 
     /**
-     * @cfg {String} Цвет градиента. Можно указывать в любом формате, который поддерживается в CSS.
+     * @cfg {String} Цвет градиента в месте перехода от изображения к контенту. Можно указывать в любом формате, который поддерживается в CSS.
      * @default #FFF
      * @see imageSize
      * @see imagePosition
@@ -142,6 +142,43 @@ export default interface IRichTemplateOptions {
      * @see imageEffect
      */
     gradientColor?: string;
+
+    /**
+     * @typedef {String} TGradientDirection
+     * @variant toBottom Направление градиента сверху вниз.
+     * @variant toBottomRight Направление градиента из верхнего левого в правый нижний угол.
+     */
+    /**
+     * @cfg {TGradientDirection} Направление градиента.
+     * @default toBottom
+     * @see gradientStartColor
+     * @see gradientStopColor
+     */
+    gradientDirection?: string;
+
+    /**
+     * @cfg {String} Начальный цвет высокого градиента. Можно указывать в любом формате, который поддерживается в CSS.
+     * @default #FFF
+     * @see imageSize
+     * @see imagePosition
+     * @see imageViewMode
+     * @see imageEffect
+     * @see gradientDirection
+     * @see gradientStopColor
+     */
+    gradientStartColor?: string;
+
+    /**
+     * @cfg {String} Конечный цвет высокого градиента. Можно указывать в любом формате, который поддерживается в CSS.
+     * @default #FFF
+     * @see imageSize
+     * @see imagePosition
+     * @see imageViewMode
+     * @see imageEffect
+     * @see gradientDirection
+     * @see gradientStartColor
+     */
+    gradientStopColor?: string;
 
     /**
      * @cfg {Number} Количество строк в заголовке.

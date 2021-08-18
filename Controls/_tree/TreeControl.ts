@@ -13,7 +13,7 @@ import {Model} from 'Types/entity';
 
 import {Direction, IBaseSourceConfig, IHierarchyOptions, TKey} from 'Controls/interface';
 import {BaseControl, IBaseControlOptions, ISiblingStrategy} from 'Controls/baseList';
-import {Collection, CollectionItem, Tree, TreeItem} from 'Controls/display';
+import {Collection, CollectionItem, shouldDisplayNodeFooterTemplate, Tree, TreeItem} from 'Controls/display';
 import { selectionToRecord } from 'Controls/operations';
 import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
 import { MouseButtons, MouseUp } from 'Controls/popup';
@@ -569,7 +569,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             return false;
         }
         const hasMoreParentData = !!this._sourceController && this._sourceController.hasMoreData('down', parentKey);
-        const hasNodeFooterTemplate: boolean = !!this._options.nodeFooterTemplate;
+        const hasNodeFooterTemplate: boolean = shouldDisplayNodeFooterTemplate(
+            item, this._options.nodeFooterTemplate, this._options.nodeFooterVisibilityCallback
+        );
         return !hasMoreParentData && !hasNodeFooterTemplate && item.isNode() && item.isExpanded();
     }
 
@@ -609,6 +611,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             // Вызов метода подгрузки данных по умолчанию (по сути - loadToDirectionIfNeed).
             return super._loadMore(direction);
         }
+    }
+
+    protected _shouldLoadOnScroll(direction: string): boolean {
+        const lastRootItem = this._getLastItem(this._listViewModel.getRoot());
+        return super._shouldLoadOnScroll() || this._shouldLoadLastExpandedNodeData(direction, lastRootItem, this._options.root);
     }
 
     private _updateTreeControlModel(newOptions): void {
@@ -1206,6 +1213,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     private _getMarkedLeaf(key: CrudEntityKey, model): 'first' | 'last' | 'middle' | 'single' {
         const index = model.getIndexByKey(key);
+
+        // Если не нашли элемент, значит, еще рано менять состояние.
+        if (index === -1) {
+            return this._markedLeaf;
+        }
         const hasNextLeaf = (model.getLast('Markable') !== model.getItemBySourceKey(key)) || model.hasMoreData();
         let hasPrevLeaf = false;
         for (let i = index - 1; i >= 0; i--) {

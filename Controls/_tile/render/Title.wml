@@ -1,5 +1,5 @@
 <div class="{{ item.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle) }}"
-    style="{{ item.getTitleWrapperStyles(itemType, imageViewMode, imagePosition, gradientColor) }}">
+    style="{{ item.getTitleWrapperStyles(itemType, imageViewMode, imagePosition, gradientColor, gradientStartColor, gradientStopColor, gradientDirection) }}">
     <ws:if data="{{ (item || itemData).shouldDisplayGradient(itemType, imageEffect, imageViewMode, imagePosition, 'title') }}">
         <div
             class="{{ (item || itemData).getGradientClasses(itemType, gradientType) }}"
@@ -28,23 +28,12 @@
                     </ws:if>
                     <ws:else>
                         {{ item.getDisplayValue() }}
-                        <ws:if data="{{afterTitleTemplate}}">
-                            <div attr:class="controls-TileView__afterTitleTemplate-inline">
-
-                                <span style="background: inherit">
-                                <ws:partial template="{{afterTitleTemplate}}"/>
-                                </span>
-                                <div class="controls-TileView__afterTitleTemplate-overlay"></div>
-                            </div>
-                        </ws:if>
                     </ws:else>
                 </ws:else>
             </div>
             <ws:if data="{{afterTitleTemplate}}">
-                <div class="controls-TileView__afterTitleTemplate-overflow">
-                    <span style="background: inherit">
-                        <ws:partial template="{{afterTitleTemplate}}"/>
-                    </span>
+                <div class="controls-TileView__afterTitleTemplate-wrapper" style="{{item.getBlurStyles(itemType, imageViewMode, gradientColor)}}">
+                    <ws:partial template="{{afterTitleTemplate}}"/>
                 </div>
             </ws:if>
             <ws:partial if="{{bottomRightTpl}}" template="{{bottomRightTpl}}" scope="{{_options}}"/>

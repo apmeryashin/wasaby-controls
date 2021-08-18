@@ -223,5 +223,29 @@ define([
             sandbox.restore();
          });
       });
+      describe('_getPopupOptions', () => {
+         it('should set undefined instead of null if selectionType="single"', () => {
+            const component = calendarTestUtils.createComponent(
+               dateRange.RangeSelector,
+               {
+                  ...options,
+                  selectionType: 'single'
+               }
+            );
+
+            component._startValue = null;
+            component._children = {
+               opener: {
+                  open: sinon.fake()
+               },
+               linkView: {
+                  getPopupTarget: sinon.stub().returns()
+               }
+            };
+            const popupOptions = component._getPopupOptions();
+            assert.isUndefined(popupOptions.startValue);
+            assert.isUndefined(popupOptions.endValue);
+         });
+      });
    });
 });

@@ -1,8 +1,21 @@
 <div class="controlsDemo__wrapper">
-<ws:for data="fontSize in _fontSizes">
-    <div class="controlsDemo__cell">
-        <div class="controls-text-label">fontSize={{fontSize}}</div>
-        <Controls.input:Label caption="Label" fontSize="{{fontSize}}"/>
+    <div class="controlsDemo__flexRow">
+        <div class="controlsDemo__flexColumn">
+            <ws:for data="fontSize in _fontSizes">
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label">fontSize={{fontSize}}</div>
+                    <Controls.input:Label caption="Label" fontSize="{{fontSize}}"/>
+                </div>
+            </ws:for>
+        </div>
+
+        <div class="controlsDemo__flexColumn controlsDemo__ml4">
+            <ws:for data="fontSize in _fontSizesXL">
+                <div class="controlsDemo__cell">
+                    <div class="controls-text-label">fontSize={{fontSize}}</div>
+                    <Controls.input:Label caption="Label" fontSize="{{fontSize}}"/>
+                </div>
+            </ws:for>
+        </div>
     </div>
-</ws:for>
 </div>

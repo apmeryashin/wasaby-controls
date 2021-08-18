@@ -180,6 +180,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     protected _isMobileIOS: boolean = null;
 
     protected _placeholderVisibility: PLACEHOLDER_VISIBILITY = null;
+    protected _placeholderDisplay: string = null;
     /**
      * @type {Boolean|null} Determined whether to hide the placeholder using css.
      * @private
@@ -268,6 +269,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         this._placeholderVisibility = (this._autoComplete === 'off' || this._hidePlaceholderUsingCSS) ?
             options.placeholderVisibility :
             PLACEHOLDER_VISIBILITY.HIDDEN;
+        this._updatePlaceholderDisplay(options);
     }
 
     protected _afterMount(options: IBaseInputOptions): void {
@@ -281,6 +283,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         this._updateSelectionByOptions(newOptions);
         this._updateHorizontalPadding(newOptions);
         this._updatePlaceholderVisibility(newOptions);
+        this._updatePlaceholderDisplay(newOptions);
     }
 
     /**
@@ -289,6 +292,16 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      */
     protected _renderStyle(): string {
         return '';
+    }
+
+    private _updatePlaceholderDisplay(options: IBaseInputOptions): void {
+        if (this._options.placeholder !== options.placeholder) {
+            /**
+             * Если в качестве placeholder передается строка, то отображаем подсказку под кареткой.
+             * Иначе оставляем старое поведение, когда подсказка отображается над кареткой
+             */
+            this._placeholderDisplay = (typeof options.placeholder === 'string' ? 'under' : 'above');
+        }
     }
 
     private _updatePlaceholderVisibility(options: IBaseInputOptions): void {
@@ -468,6 +481,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
                 inputMode: this._inputMode,
                 inputCallback: options.inputCallback,
                 calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
+                getStretcherValue: this._getStretcherValue.bind(this),
                 recalculateLocationVisibleArea: this._recalculateLocationVisibleArea.bind(this),
                 isFieldFocused: this._isFieldFocused.bind(this)
             }
@@ -563,6 +577,16 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
 
     private _calculateValueForTemplate(): string {
         return this._viewModel.displayValue;
+    }
+
+    private _getStretcherValue(): string {
+        // Заменяем все цифры и пробел на 0. На шрифте Tensor-font все цифры и пробел одинаковой ширины, так что нам не
+        // важно какой символ стоит для растягивания поля ввода до нужного размера. У шрифта, который используется
+        // в SabyGet немоноширинный шрифт, из-за этого поле ввода прыгает. Возьмем самый широкий символ, чтобы по по
+        // максимуму растянуть инпут https://online.sbis.ru/opendoc.html?guid=9d278ed9-792c-4287-ad37-0f288fbf63e7
+        let result = this._viewModel.displayValue.replace(/[0-9]/g, '0');
+        result = result.replace(/ /g, '0');
+        return result;
     }
 
     /**

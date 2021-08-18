@@ -346,14 +346,10 @@ export default FilterPanel;
  */
 
 /**
- * @typedef {String} HistorySaveMode
+ * @name Controls/_filterPopup/DetailPanel#historySaveMode
+ * @cfg {String} Режим работы с историей фильтров.
  * @variant pinned По ховеру на элемент появляется команда закрепления записи.
  * @variant favorite По ховеру на элемент появляется команда добавления записи в избранное.
- */
-
-/**
- * @name Controls/_filterPopup/DetailPanel#historySaveMode
- * @cfg {HistorySaveMode} Режим работы с историей фильтров.
  */
 
 /**

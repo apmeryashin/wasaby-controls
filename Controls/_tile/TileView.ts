@@ -115,7 +115,9 @@ export default class TileView extends ListView {
             this._setHoveredItem(this, null, null);
         }
         const hoveredItem = this._listModel.getHoveredItem();
+        const tileScalingMode = this._listModel.getTileScalingMode();
         this._shouldPerformAnimation = hoveredItem && !hoveredItem.destroyed
+            && tileScalingMode !== 'overlap' && tileScalingMode !== 'none'
             && hoveredItem['[Controls/_tile/mixins/TileItem]'] && hoveredItem.isFixed();
     }
 
@@ -186,6 +188,7 @@ export default class TileView extends ListView {
             menuOptions.imageClasses = item.getImageClasses();
             menuOptions.previewHeight = this._targetItemRect && item.isScaled() ? this._targetItemRect.height : targetItemSize.height;
             menuOptions.previewWidth = this._targetItemRect && item.isScaled() ? this._targetItemRect.width : targetItemSize.width;
+            menuOptions.roundBorder = !!this._options.roundBorder;
 
             return {
                 templateOptions: menuOptions,
@@ -200,7 +203,8 @@ export default class TileView extends ListView {
                     horizontal: 'left'
                 },
                 fittingMode: {
-                    vertical: 'overflow'
+                    vertical: 'overflow',
+                    horizontal: 'overflow'
                 },
                 opener: menuConfig.opener,
                 template: 'Controls/tile:ActionsMenu',

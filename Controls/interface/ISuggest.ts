@@ -343,12 +343,6 @@ interface ISuggest {
        * </pre>
        */
       suggestPopupOptions: object;
-
-      /**
-       * @name Controls/interface/ISuggest#dataLoadCallback
-       * @cfg {Function} Callback вызывающийся после того, как загружены данные.
-       * @param {RecordSet} Загруженные данные.
-       */
       dataLoadCallback: Function;
    };
 }

@@ -1005,6 +1005,48 @@ describe('Controls/list_clean/BaseControl', () => {
         });
     });
 
+    describe('handleScrollControllerResult', () => {
+        const baseControlCfg = getCorrectBaseControlConfig({
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'key',
+            viewModelConstructor: 'Controls/display:Collection',
+            items: new RecordSet({
+                keyProperty: 'key',
+                rawData: []
+            })
+        });
+        let baseControl;
+        let isHidden = false;
+        let notify;
+        const handleScrollControllerResult = BaseControl._private.handleScrollControllerResult;
+
+        beforeEach(() => {
+            baseControl = new BaseControl(baseControlCfg);
+            baseControl._beforeMount(baseControlCfg);
+            baseControl.saveOptions(baseControlCfg);
+            baseControl._afterMount();
+            baseControl._container = {
+                closest: () => isHidden
+            };
+            notify = sinon.stub(baseControl, '_notify').callsFake(() => Promise.resolve());
+        });
+        afterEach(() => {
+            baseControl.destroy();
+            baseControl = undefined;
+            notify.restore();
+        });
+
+        it('virtualNavigation event should be fired', () => {
+            handleScrollControllerResult(baseControl, {placeholders: {top: 0, bottom: 0}});
+            assert.isTrue(notify.called);
+        });
+
+        it('virtualNavigation event should not be fired in hidden list', () => {
+            isHidden = true;
+            handleScrollControllerResult(baseControl, {placeholders: {top: 0, bottom: 0}});
+            assert.isFalse(notify.called);
+        });
+    });
     describe('shiftToDirection by moving marker', () => {
         const baseControlCfg = getCorrectBaseControlConfig({
             viewName: 'Controls/List/ListView',
@@ -1125,6 +1167,34 @@ describe('Controls/list_clean/BaseControl', () => {
             return baseControl.commitEdit().then(() => {
                 assert.isFalse(isCommitCalled);
             });
+        });
+
+        it('should remember click event args before begin edit', (done) => {
+            const cfg = {
+                ...baseControlCfg,
+                editingConfig: {
+                    editOnClick: true
+                }
+            };
+            baseControl = new BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            const e = {
+                stopPropagation: () => {}
+            };
+            const item = {};
+            const originalEvent = {
+                target: {
+                    closest: (eName) => eName === '.js-controls-ListView__editingTarget' ? {} : undefined
+                }
+            };
+
+            baseControl._editInPlaceController = {
+                edit() {
+                    assert.deepEqual(baseControl._savedItemClickArgs, [e, item, originalEvent, null]);
+                    done();
+                }
+            };
+            baseControl._onItemClick(e, item, originalEvent, undefined);
         });
 
         describe('readOnly mode', () => {

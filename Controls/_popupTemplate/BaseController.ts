@@ -72,6 +72,11 @@ abstract class BaseController implements IPopupController {
         return false;
     }
 
+    protected updatePosition(item: IPopupItem, container: HTMLElement): boolean {
+        // method can be implemented
+        return false;
+    }
+
     elementAfterUpdatedWrapper(item: IPopupItem, container: HTMLElement): boolean {
         if (this._checkContainer(item, container, 'elementAfterUpdated')) {
             // We react only after the update phase from the controller

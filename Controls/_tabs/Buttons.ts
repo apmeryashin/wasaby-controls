@@ -9,7 +9,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {isLeftMouseButton} from 'Controls/popup';
 import {IItems, IItemTemplateOptions} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions, ITabButtonItem} from './interface/ITabsButtons';
-import {constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {adapter} from 'Types/entity';
 import {factory} from 'Types/chain';
 import Marker from './Buttons/Marker';
@@ -317,7 +317,9 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
      * @private
      */
     private _tabCanShrink(item: ITabButtonItem): boolean {
-        if (item.width !== undefined || !this._options.canShrink) {
+        if(typeof item.canShrink !== 'undefined'){
+            return item.canShrink;
+        } else if (item.width !== undefined || !this._options.canShrink) {
             return false;
         } else {
             return !this._hasMainTab || item.isMainTab || item.minWidth !== undefined || item.maxWidth !== undefined;
@@ -422,6 +424,15 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
     protected _prepareItemTypeClass(item: ITabButtonItem): string {
         const itemType: string = item.type || 'default';
         return `controls-Tabs__itemClickableArea_type-${itemType}`;
+    }
+
+    protected _prepareItemMinWidthClass(item: ITabButtonItem): string {
+        const isLeftTemplate = this._getTemplate(this._options.itemLeftTemplate, item, this._options.leftTemplateProperty);
+        const isRightTemplate = this._getTemplate(this._options.itemLeftTemplate, item, this._options.rightTemplateProperty);
+        if (detection.isIE && (!isLeftTemplate && !isRightTemplate)) {
+            return 'controls-Tabs__itemClickableArea_minWidth';
+        }
+        return '';
     }
 
     protected _prepareItemMarkerClass(item: ITabButtonItem): string {

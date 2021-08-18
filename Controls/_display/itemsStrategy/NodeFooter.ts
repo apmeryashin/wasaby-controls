@@ -8,14 +8,29 @@ interface IOptions<S, T extends TreeItem<S>> {
     source: IItemsStrategy<S, T>;
     display: Tree<S, T>;
     itemModule?: string;
-    nodeFooterVisibilityCallback?: (nodeItem: S) => boolean;
+    nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
 }
 
 interface ISortOptions<S, T extends TreeItem<S>> {
     display: Tree<S, T>;
     itemModule?: string;
     nodeFooters: Array<T>;
-    nodeFooterVisibilityCallback?: (nodeItem: S) => boolean;
+    nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
+}
+
+export function shouldDisplayNodeFooterTemplate(
+    item: TreeItem,
+    nodeFooterTemplate: TemplateFunction,
+    nodeFooterVisibilityCallback: TNodeFooterVisibilityCallback
+): boolean {
+    // если темплейт не задан, то мы точно его не будем отображать. А если есть данные еще,
+    // то в первую очередь отображается кнопка Еще
+    if (!nodeFooterTemplate || item.hasMoreStorage()) {
+        return false;
+    }
+
+    // если колбэк не задан, то всегда отображаем темплейт
+    return !nodeFooterVisibilityCallback || nodeFooterVisibilityCallback(item.getContents());
 }
 
 export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> implements IItemsStrategy<S, T> {
@@ -266,12 +281,9 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             // Проверяем что в узле есть еще записи или определен футер темплейт и прикладники разрешили его показывать
             // nodeFooterVisibilityCallback вызываем только когда будем отображать прикладной темплейт,
             // если отображаем Еще, то всегда показываем nodeFooter
-            if (!item.hasMoreStorage() && (!nodeFooterTemplate || nodeFooterVisibilityCallback instanceof Function && !nodeFooterVisibilityCallback(item.getContents()))
-            ) {
-                continue;
+            if (item.hasMoreStorage() || shouldDisplayNodeFooterTemplate(item, nodeFooterTemplate, nodeFooterVisibilityCallback)) {
+                nodesWithFooter.push(item);
             }
-
-            nodesWithFooter.push(item);
         }
 
         return nodesWithFooter;

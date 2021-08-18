@@ -20,7 +20,7 @@ const items = [
  *
  * @extends UI/Base:Control
  * @implements Controls/interface:IMultiSelectable
- * @demo Controls-demo/dropdown_new/Toggle/Index
+ * @demo Controls-demo/dropdown_new/Toggle/Simple/Index
  *
  * @public
  * @author Золотова Э.Е.
@@ -38,3 +38,15 @@ export default class Toggle extends Control<IToggleOptions> {
         });
     }
 }
+
+/**
+ * @name Controls/dropdown:Toggle#selectedKeys
+ * @cfg {Array.<Boolean|null>} Массив с единственным элементом, который указывает на выбранный элемент.
+ * @remark
+ * Соответствие значений элемента массива:
+ * * true — пункт "Да".
+ * * false — пункт "Нет".
+ * * null — пункт "Не выбрано".
+ * @default [null]
+ * @demo Controls-demo/dropdown_new/Toggle/SelectedKeys/Index
+ */
