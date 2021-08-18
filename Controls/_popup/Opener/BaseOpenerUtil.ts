@@ -87,17 +87,21 @@ export default {
                 document.body.insertBefore(managerContainer, document.body.firstChild);
 
                 ManagerWrapperCreatingPromise = new Promise((resolve, reject) => {
-                    const compatibleDeps = [import('UI/Base'), import('Controls/compatiblePopup'), import('Controls/Popup/Compatible/ManagerWrapper/Controller'), import('Page/base')];
+                    const compatibleDeps = [import('UI/Base'), import('Controls/compatiblePopup'), import('Controls/Popup/Compatible/ManagerWrapper/Controller')];
 
                     Promise.all(compatibleDeps).then(([base, compatiblePopup, compatibleController]) => {
+                        const managerCfg = {};
                         const theme = compatibleController.default.getTheme();
-                        const managerCfg = {
-                            dataLoaderModule: 'Page/base:DataLoader'
-                        };
                         if (theme) {
                             managerCfg.theme = theme;
                         }
-                        base.AsyncCreator(compatiblePopup.ManagerWrapper, managerCfg, managerContainer).then(resolve);
+                        requirejs(['optional!Page/base'], (PageBaseLib) => {
+                            if (PageBaseLib) {
+                                managerCfg.dataLoaderModule = 'Page/base:DataLoader';
+                            }
+                            base.AsyncCreator(compatiblePopup.ManagerWrapper, managerCfg,
+                                managerContainer).then(resolve);
+                        });
                     }).catch(reject);
                 });
             } else {
