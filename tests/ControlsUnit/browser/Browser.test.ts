@@ -440,6 +440,16 @@ describe('Controls/browser:Browser', () => {
                     browser._resetSearch();
                     assert.ok(!browser._searchValue);
                 });
+
+                it('reset search, option does not change', async () => {
+                    let browserOptions = getBrowserOptions();
+                    browserOptions.searchValue = 'test';
+                    const browser = await getBrowserWithMountCall(browserOptions);
+
+                    await browser._resetSearch();
+                    await browser._beforeUpdate(browserOptions);
+                    assert.ok(browser._searchValue === 'test');
+                });
             });
 
             describe('_searchReset', () => {
