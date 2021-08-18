@@ -86,7 +86,7 @@ class ListEditor extends BaseEditor {
         this._setColumns(options, options.propertyValue);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
         this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
-        this._navigation = options.navigation;
+        this._navigation = this._getNavigation(options);
     }
 
     protected _afterMount(): void {
@@ -229,7 +229,7 @@ class ListEditor extends BaseEditor {
 
     private _getNavigation(options: IListEditorOptions, selectedKeys?: string[]): INavigationOptionValue<unknown> {
         const selectedKeysArray = selectedKeys || this._selectedKeys;
-        return selectedKeysArray.length ? null : options.navigation;
+        return selectedKeysArray?.length ? null : options.navigation;
     }
 
     private _getSelectedItems(): List<Model> {
