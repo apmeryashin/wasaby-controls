@@ -866,15 +866,19 @@
 }
 
 // TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
-.controls-Grid__row-cell__withMarkerSize {
-   .controls-Grid__cell_spacingFirstCol_default {
-      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
-   }
-   .controls-Grid__cell_spacingFirstCol_s {
-      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
-   }
-   .controls-Grid__cell_spacingFirstCol_m {
-      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
+.controls-master-template-default {
+   .controls-Grid__row-cell__withMarkerSize {
+      .controls-Grid__cell_spacingFirstCol_default {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+      }
+
+      .controls-Grid__cell_spacingFirstCol_s {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
+      }
+
+      .controls-Grid__cell_spacingFirstCol_m {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
+      }
    }
 }
 
