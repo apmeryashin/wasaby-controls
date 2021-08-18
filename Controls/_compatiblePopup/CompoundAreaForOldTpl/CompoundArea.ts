@@ -532,9 +532,9 @@ var CompoundArea = CompoundContainer.extend([
       return isVisible;
    },
 
-   _setCustomToolbar: function() {
-      if (Controller.hasRightPanel()) {
-         const toolbarContent = $('.controls-ToolBar', this._childControl.getContainer());
+   _setCustomToolbar(): void {
+      if (this._options.isToolbarOnRightPanel && Controller.hasRightPanel()) {
+         const toolbarContent = $('.controls-ToolBar:first', this._childControl.getContainer());
          if (toolbarContent.length) {
             const toolbarContainer = $('.controls-CompoundArea_toolbar', this.getContainer());
             if (toolbarContainer.length) {
