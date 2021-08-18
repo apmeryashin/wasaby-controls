@@ -49,7 +49,6 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
         if (this._sourceController) {
             this._sourceController.unsubscribe('itemsChanged', this._updateBreadCrumbsItems);
             this._sourceController.unsubscribe('breadcrumbsDataChanged', this._updateBreadCrumbsItems);
-            this._sourceController.destroy();
         }
     }
 
