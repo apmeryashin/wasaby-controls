@@ -1216,16 +1216,17 @@ describe('Controls/browser:Browser', () => {
         });
 
         it('search view mode changed on dataLoadCallback', async () => {
-            const options = getBrowserOptions();
+            let options = getBrowserOptions();
             options.searchValue = 'Sash';
             const browser = await getBrowserWithMountCall(options);
 
             browser._viewMode = 'search';
-            browser._dataLoadCallback(new RecordSet());
             assert.ok(browser._searchValue === 'Sash');
 
-            browser._searchValue = '';
-            browser._dataLoadCallback(new RecordSet());
+            options = {...options};
+            options.searchValue = '';
+            await browser._beforeUpdate(options);
+            assert.ok(browser._searchValue === '');
             assert.isUndefined(browser._viewMode);
             assert.ok(browser._misspellValue === '');
         });
