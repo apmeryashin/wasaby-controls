@@ -2704,6 +2704,32 @@ describe('Controls/_display/Tree', () => {
 
             assert.isTrue(tree._displayExpanderPadding);
         })
+
+        it('update all items', () => {
+            const rs = new RecordSet({
+                rawData: [
+                    {id: 1, hasChildren: false, node: null, pid: 0},
+                    {id: 2, hasChildren: false, node: null, pid: 0}
+                ],
+                keyProperty: 'id'
+            });
+            const tree = getTree(rs);
+
+            assert.equal(tree.getItemBySourceKey(1).getVersion(), 2);
+            assert.equal(tree.getItemBySourceKey(2).getVersion(), 2);
+
+            const newItem = new Model({
+                rawData: {id: 3, hasChildren: false, node: true, pid: 0},
+                keyProperty: 'id'
+            })
+            rs.add(newItem)
+
+            assert.isTrue(tree.hasNode());
+            assert.equal(tree.getItemBySourceKey(1).getVersion(), 3);
+            assert.equal(tree.getItemBySourceKey(2).getVersion(), 4); // 4 - т.к. еще изменился lastItem
+            assert.isTrue(tree.getItemBySourceKey(1).shouldDisplayExpanderPadding());
+            assert.isTrue(tree.getItemBySourceKey(2).shouldDisplayExpanderPadding());
+        })
     });
 
     describe('parent', () => {
