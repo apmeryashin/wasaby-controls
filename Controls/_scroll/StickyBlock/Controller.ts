@@ -486,7 +486,7 @@ class StickyHeaderController {
 
             // If the header is "replaceable", we take into account the last one after all "stackable" headers.
             if (header.mode === 'stackable') {
-                fixedHeadersHeight += header.inst.height;
+                fixedHeadersHeight += header.inst.height + header.inst.offsetTop;
                 replaceableHeight = 0;
             } else if (header.mode === 'replaceable') {
                 replaceableHeight = header.inst.height;
