@@ -151,6 +151,29 @@ body:not(.rtl-Body) .controls-CompoundArea {
    .controls-StackTemplate__maximized_button {
       display: none;
    }
+
+   .controls-CompoundArea_toolbar {
+      .controls-ToolBar__itemsContainer {
+         display: flex;
+         flex-direction: column;
+         margin-right: 0;
+
+         .controls-ToolBar__item {
+            margin: 0 0 var(--offset_xs) 0;
+            width: var(--inline_height_xl);
+            height: var(--inline_height_xl);
+
+            &:hover {
+               background-color: var(--background-color_hover_button_toolButton);
+               border-radius: var(--border-radius_button_toolButton);
+            }
+         }
+      }
+
+      .controls-ToolBar__menuIcon {
+         margin: 0;
+      }
+   }
 }
 
 .controls-CompoundArea__container {
