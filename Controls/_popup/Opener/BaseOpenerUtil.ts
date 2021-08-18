@@ -140,7 +140,7 @@ export default {
         ];
 
         for (let i = 0; i < ignoreOptions.length; i++) {
-            const option = ignoreOptions[i];ManagerWrapperCreatingPromise
+            const option = ignoreOptions[i];
             if (options[option] !== undefined) {
                 delete baseConfig[option];
             }
