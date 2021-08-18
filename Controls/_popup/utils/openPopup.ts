@@ -50,7 +50,9 @@ export default function openPopup(config: IBaseOpenerOptions, controller: string
 
         if (config.pageId) {
             PageController.getPagePopupOptions(config.pageId, config).then((popupCfg) => {
-                PageController.loadModules(popupCfg).then(() => {
+                // Защита от старых страниц, где не задан загрузчик. в этом случае открываемся по старой схеме
+                const template = popupCfg.templateOptions.pageTemplate || config.template;
+                PageController.loadModules(template).then(() => {
                     openByConfig(popupCfg, controller);
                 }).catch(reject);
             }).catch(reject);

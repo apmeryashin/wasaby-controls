@@ -76,6 +76,16 @@ class Manager {
                 // Для IPAD PRO необходимо 50мс
                 setTimeout(() => {
                     this.orientationChangeHandler();
+                    // Еще 1 баг: при блокировке и разблокировки ipad'a с открытым safari, ios решает:
+                    // 1. Заресайзить страницу по высоте (html растянут на всю высоту, body меньше половины)
+                    // сделать так, чтобы body не уменьшался помог только min-height: 100vh.
+                    // 2. Стрельнуть событием orientationChanged
+                    // Если при неправильной высоте body пересчитать позицию, то получим неверный результат.
+                    // Чтобы сильно долгой задержки не было при реальной смене ориентации, добавляю
+                    // еще 1 пересчет позиции, с расчетом на то, что тело страницы успеет вернуть прежние размеры.
+                    setTimeout(() => {
+                        this.orientationChangeHandler();
+                    }, ORIENTATION_CHANGE_DELAY * 2);
                 }, ORIENTATION_CHANGE_DELAY);
             });
         }
@@ -146,6 +156,17 @@ class Manager {
             this._redrawItems();
         }
         return item.id;
+    }
+
+    updatePosition(id: string): void {
+        const item = this.find(id);
+        let needUpdate = false;
+        if (item) {
+            needUpdate = item.controller.updatePosition(item, this._getItemContainer(item.id));
+        }
+        if (needUpdate) {
+            this._redrawItems();
+        }
     }
 
     updateOptionsAfterInitializing(id: string, options: IPopupOptions): void {

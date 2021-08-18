@@ -14,7 +14,7 @@
             </ws:if>
             <ws:else data="{{!_hasRightPanel}}">
                 <div class="controls-StackTemplate__command_buttons_without_head">
-                    <ws:if data="{{_options.showMaximizedButton || _maximizeButtonVisibility}}">
+                    <ws:if data="{{_maximizeButtonVisibility}}">
                         <div class="controls-StackTemplate__maximized_button"
                              on:click="changeMaximizedState()"
                              attr:title="{{_maximizeButtonTitle}}"></div>
@@ -57,7 +57,7 @@
                         closeButtonVisibility="{{_options.closeButtonVisibility}}"
                         rightBorderVisible="{{_options.rightBorderVisible}}"
                         toolbarContentTemplate="{{_options.toolbarContentTemplate}}"
-                        maximizeButtonVisibility="{{_options.showMaximizedButton || _maximizeButtonVisibility}}"
+                        maximizeButtonVisibility="{{_maximizeButtonVisibility}}"
                         maximizeButtonTitle="{{_maximizeButtonTitle}}"
                         maximizeButtonClickCallback="{{_maximizeButtonClickCallback}}"
                         rightPanelOptions="{{_options.rightPanelOptions}}"/>

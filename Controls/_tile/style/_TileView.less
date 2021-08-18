@@ -407,11 +407,11 @@
 }
 
 .controls-TileView__itemsPaddingContainer_spacingLeft_3xs {
-   margin-left: calc(-1 * var(--offset_3xs) / 2 + var(--padding-left_3xs_tile));
+   margin-left: calc(-1 * var(--offset_3xs) / 2 + var(--offset_3xs));
 }
 
 .controls-TileView__itemsPaddingContainer_spacingLeft_2xs {
-   margin-left: calc(-1 * var(--offset_2xs) / 2 + var(--padding-left_2xs_tile));
+   margin-left: calc(-1 * var(--offset_2xs) / 2 + var(--offset_2xs));
 }
 
 .controls-TileView__itemsPaddingContainer_spacingLeft_xs {
@@ -447,11 +447,11 @@
 }
 
 .controls-TileView__itemsPaddingContainer_spacingRight_3xs {
-   margin-right: calc(-1 * var(--offset_3xs) / 2 + var(--padding-right_3xs_tile));
+   margin-right: calc(-1 * var(--offset_3xs) / 2 + var(--offset_3xs));
 }
 
 .controls-TileView__itemsPaddingContainer_spacingRight_2xs {
-   margin-right: calc(-1 * var(--offset_2xs) / 2 + var(--padding-right_2xs_tile));
+   margin-right: calc(-1 * var(--offset_2xs) / 2 + var(--offset_2xs));
 }
 
 .controls-TileView__itemsPaddingContainer_spacingRight_xs {
@@ -643,7 +643,7 @@
 }
 
 .controls-TileView__title {
-   border-top: var(--item_caption_separator-thickness_tile) solid var(--item_caption_separator-color_tile);
+   border-top: 1px solid var(--item_caption_separator-color_tile);
    max-height: var(--unaccented_item_caption_max-height_tile);
    min-height: var(--unaccented_item_caption_min-height_tile);
    padding: var(--offset_2xs) var(--offset_2xs) var(--offset_3xs) var(--offset_2xs);
@@ -849,12 +849,12 @@
 }
 
 .controls-TileView__resizer {
-   margin-bottom: calc(-1*(var(--unaccented_item_caption_min-height_tile) + var(--item_caption_separator-thickness_tile) + var(--offset_2xs) + var(--offset_3xs)));
+   margin-bottom: calc(-1*(var(--unaccented_item_caption_min-height_tile) + 1px + var(--offset_2xs) + var(--offset_3xs)));    //1px - толщина разделителя
 }
 
 .controls-TileView__imageWrapper_reduced {
-   border-bottom: calc(var(--unaccented_item_caption_min-height_tile) + var(--item_caption_separator-thickness_tile) + var(--offset_2xs) + var(--offset_3xs)) solid transparent;
-   margin-bottom: calc(-1*(var(--unaccented_item_caption_min-height_tile) + var(--item_caption_separator-thickness_tile) + var(--offset_2xs) + var(--offset_3xs)));
+   border-bottom: calc(var(--unaccented_item_caption_min-height_tile) + 1px + var(--offset_2xs) + var(--offset_3xs)) solid transparent;  //1px - толщина разделителя
+   margin-bottom: calc(-1*(var(--unaccented_item_caption_min-height_tile) + 1px + var(--offset_2xs) + var(--offset_3xs)));  //1px - толщина разделителя
    box-sizing: border-box;
 }
 

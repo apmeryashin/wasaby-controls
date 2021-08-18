@@ -1,5 +1,6 @@
 <Controls.browser:Browser listsOptions="{{_listConfigurations}}"
                           keyProperty="id"
+                          on:filterChanged="_filterChanged()"
                           bind:selectedKeys="_selectedKeys"
                           bind:excludedKeys="_excludedKeys">
   <div>

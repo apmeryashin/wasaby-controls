@@ -25,7 +25,7 @@ class PopupStack extends Control<IControlOptions> {
             template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
             templateOptions: {
                 maximized: true,
-                maximizedButtonVisibility: true
+                maximizeButtonVisibility: true
             }
         });
     }

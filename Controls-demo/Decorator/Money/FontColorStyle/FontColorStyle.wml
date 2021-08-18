@@ -35,4 +35,8 @@
         <div class="controls-text-label">fontColorStyle=danger</div>
         <Controls.decorator:Money value="{{_value}}" fontColorStyle="danger" />
     </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">fontColorStyle=label</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="label" />
+    </div>
 </div>

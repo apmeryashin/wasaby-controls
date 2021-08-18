@@ -136,9 +136,9 @@ var CompoundArea = CompoundContainer.extend([
       if (this._options.canMaximize) {
          var maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
          var templateComponent = this._getTemplateComponent();
-         this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.showMaximizedButton || false);
+         this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.maximizeButtonVisibility || false);
          const maximizedButtonClass = ' ws-float-area-has-maximized-button';
-         if (popupOptions.showMaximizedButton) {
+         if (popupOptions.maximizeButtonVisibility) {
             this._className += maximizedButtonClass;
          } else if (this._className.indexOf(maximizedButtonClass) >= 0) {
             this._className = this._className.replace(maximizedButtonClass, '');
@@ -532,9 +532,9 @@ var CompoundArea = CompoundContainer.extend([
       return isVisible;
    },
 
-   _setCustomToolbar: function() {
-      if (Controller.hasRightPanel()) {
-         const toolbarContent = $('.controls-ToolBar', this._childControl.getContainer());
+   _setCustomToolbar(): void {
+      if (this._options.isToolbarOnRightPanel && Controller.hasRightPanel()) {
+         const toolbarContent = $('.controls-ToolBar:first', this._childControl.getContainer());
          if (toolbarContent.length) {
             const toolbarContainer = $('.controls-CompoundArea_toolbar', this.getContainer());
             if (toolbarContainer.length) {

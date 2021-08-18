@@ -1,7 +1,7 @@
 import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions} from 'Controls/popup';
 import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
-import {getPopupWidth, savePopupWidth} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
+import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {List} from 'Types/collection';
 import getTargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import {parse as parserLib} from 'Core/library';
@@ -311,7 +311,7 @@ class StackController extends BaseController {
         this._setStackContent(item);
         if (StackStrategy.isMaximizedPanel(item)) {
             // set default values
-            item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
+            item.popupOptions.templateOptions.maximizeButtonVisibility = undefined; // for vdom dirtyChecking
             const maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
             this._setMaximizedState(item, maximizedState);
         }
@@ -435,10 +435,10 @@ class StackController extends BaseController {
         const canMaximized = maxPanelWidth > item.popupOptions.minWidth;
         if (!canMaximized) {
             // If we can't turn around, we hide the turn button and change the state
-            item.popupOptions.templateOptions.showMaximizedButton = false;
+            item.popupOptions.templateOptions.maximizeButtonVisibility = false;
             item.popupOptions.templateOptions.maximized = false;
         } else {
-            item.popupOptions.templateOptions.showMaximizedButton = true;
+            item.popupOptions.templateOptions.maximizeButtonVisibility = true;
 
             // Restore the state after resize
             item.popupOptions.templateOptions.maximized = item.popupOptions.maximized;
@@ -504,7 +504,7 @@ class StackController extends BaseController {
         });
     }
 
-    private _writeCompatiblePopupWidth(item: IStackItem, widthState: number | object): void {
+    private _writeCompatiblePopupWidth(item: IStackItem, widthState: number | IStackSavedConfig): void {
         // Обратная совместимость со старым режимом работы максимизации окна.
         // Раньше сохранялась только текущая ширина окна.
         if (typeof widthState === 'number') {
@@ -521,7 +521,7 @@ class StackController extends BaseController {
             width: item.position.width,
             minSavedWidth: item.minSavedWidth,
             maxSavedWidth: item.maxSavedWidth
-        }
+        };
         savePopupWidth(item.popupOptions.propStorageId, widthState);
     }
 

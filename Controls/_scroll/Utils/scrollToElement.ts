@@ -56,7 +56,7 @@ function getOffset(element: HTMLElement): { top: number; bottom: number } {
    }
 }
 
-function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number } {
+function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number; topWithOffset: number } {
    const scrollControlNode: HTMLElement = scrollableElement.closest(SCROLL_CONTAINERS_SELECTOR);
    if (scrollControlNode) {
       const controls = goUpByControlTree(scrollControlNode);
@@ -66,11 +66,12 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
       if (scrollContainer) {
          return {
             top: scrollContainer.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.fixed),
+            topWithOffset: scrollContainer.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.fixed, false),
             bottom: scrollContainer.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.fixed)
          };
       }
    }
-   return { top: 0, bottom: 0 };
+   return { top: 0, bottom: 0, topWithOffset: 0 };
 }
 
 function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): number {
@@ -80,22 +81,26 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
 }
 
 /**
+ * Модуль с функциями без классов.
+ * @module
+ */
+
+/**
  * Позволяет проскроллить содержимое, находящееся внутри родительского скролл-контейнера, к выбранному элементу, сделав его видимым.
  * @param {HTMLElement} element DOM-элемент, к которому нужно проскроллить содержимое.
- * @param {boolean} toBottomOrPosition Определяет, должен ли быть виден нижний край контейнера. Допустимые значения: top, bottom, center.
+ * @param {boolean|String} toBottomOrPosition Определяет, должен ли быть виден нижний край контейнера. Допустимые значения: top, bottom, center.
  * @param {boolean} force
- * * true - позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
- * * false - элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
+ * * true — позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
+ * * false — элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
  *
  * @example
  * <pre class="brush: js">
- * require(['Controls/Utils/scrollToElement'], function(scrollToElement) {
- *    class Component extends Control {
- *       _onClick() {
- *          scrollToElement(this._children.child, true);
- *       }
- *    }
- * });
+ * // TypeScript
+ * import {scrollToElement} from 'Controls/scroll';
+ * 
+ * _onClick(): void {
+ *    scrollToElement(this._children.child, true);
+ * }
  * </pre>
  */
 
@@ -140,11 +145,17 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
       if (force || parentOffset.bottom < elemOffset.bottom) {
          if (position === SCROLL_POSITION.center) {
             const centerOffset: number = getCenterOffset(parent, element);
-            elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.top - centerOffset);
+            elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.topWithOffset - centerOffset);
          } else if (position === SCROLL_POSITION.bottom) {
             elemToScroll.scrollTop += Math.ceil(elemOffset.bottom - parentOffset.bottom + stickyHeaderHeight.bottom);
          } else {
-            elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.top);
+            // При принудительном скролировании к верху не скролируем если
+            // заголовок с установленным offsetTop частично скрыт.
+            // Т.е. скролируем только когда верх элемента выше свернутой шапки, или когда ниже развернутой.
+            if (!force || elemOffset.top < parentOffset.top + stickyHeaderHeight.topWithOffset ||
+                elemOffset.top > parentOffset.top + stickyHeaderHeight.top) {
+               elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.topWithOffset);
+            }
          }
          // Принудительно скроллим в самый вверх или вниз, только первый родительский скролл контейнер,
          // остальные скролл контейнер, скроллим только если элемент невидим
@@ -153,11 +164,11 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
          if (parentOffset.top + stickyHeaderHeight.top > elemOffset.top) {
             if (position === SCROLL_POSITION.center) {
                const centerOffset: number = getCenterOffset(parent, element);
-               elemToScroll.scrollTop -= Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.top + centerOffset, 0);
+               elemToScroll.scrollTop -= Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.topWithOffset + centerOffset, 0);
             } else if (position === SCROLL_POSITION.bottom) {
                elemToScroll.scrollTop -= Math.max(parentOffset.bottom - elemOffset.bottom + stickyHeaderHeight.bottom, 0);
             } else {
-               elemToScroll.scrollTop -= Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.top, 0);
+               elemToScroll.scrollTop -= Math.max(parentOffset.top - elemOffset.top + stickyHeaderHeight.topWithOffset, 0);
             }
          }
       }

@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Stack/Template/StackPageWrapper/StackPageWrapper';
-import {getPopupWidth, savePopupWidth} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
+import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
@@ -43,9 +43,14 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._updateProperties(options);
         if (!receivedState && options.propStorageId) {
             return new Promise((resolve) => {
-                getPopupWidth(options.propStorageId).then((width?: number) => {
-                    if (width) {
-                        this._workspaceWidth = width;
+                getPopupWidth(options.propStorageId).then((data?: number | IStackSavedConfig) => {
+                    let width = data;
+                    if (data) {
+                        // Обратная совместимость со старой историей. Стали сохранять объект с настройками.
+                        if (typeof data === 'object') {
+                            width = data.width;
+                        }
+                        this._workspaceWidth = width as number;
                     }
                     this._updateProperties(options);
                     resolve({width});
@@ -80,8 +85,14 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         // offsetChanged нужно только в 4100, пока в ЭДО полностью не перейдут на работу через нашу обертку.
         this._notify('offsetChanged', [offset]);
         this._savedWorkspaceWidth = this._workspaceWidth;
-        savePopupWidth(this._options.propStorageId, this._workspaceWidth);
+        const data = {
+            width: this._workspaceWidth
+        };
+        savePopupWidth(this._options.propStorageId, data);
         this._updateOffset();
+
+        // Так же как в реестрах, сообщаем про смену размеров рабочей области.
+        this._notify('workspaceResize', [this._workspaceWidth], {bubbling: true});
     }
 
     private _updateProperties(options: IPageTemplate): void {

@@ -733,6 +733,8 @@ const _private = {
         if (navigation) {
             switch (navigation.view) {
                 case 'infinity':
+                    // todo remove loadedList.getCount() === 0 by task
+                    // https://online.sbis.ru/opendoc.html?guid=909926f2-f62a-4de8-a44b-3c10006f530f
                     result = !loadedList || loadedList.getCount() === 0 || _private.isPortionedLoad(this, loadedList);
                     break;
                 case 'maxCount':
@@ -1656,7 +1658,10 @@ const _private = {
                 const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
-                _private.addShowActionsClass(self);
+                // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
+                if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
+                    _private.addShowActionsClass(self);
+                }
             }
         }
     },
@@ -4317,12 +4322,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
-        this._handleLoadToDirection = !!this._sourceController && this._sourceController.hasMoreData(direction);
+        this._handleLoadToDirection = this._needScrollCalculation && !!this._sourceController && this._sourceController.hasMoreData(direction);
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
             }
-            if (result) {
+            if (result && this._needScrollCalculation) {
                 _private.handleScrollControllerResult(this, result);
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
@@ -5909,6 +5914,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             options.navigation = newNavigation;
         }
 
+        // Удалим текущие items иначе SourceController их запомнит и будет модифицировать
+        delete options.items;
+
         return options;
     }
 
@@ -6138,7 +6146,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _shouldRegisterIntersectionObserver(): boolean {
-        return document && this._isMounted && this._needScrollCalculation && this._listViewModel
+        return document && this._isMounted && this._listViewModel
             && !this._intersectionObserver;
     }
 

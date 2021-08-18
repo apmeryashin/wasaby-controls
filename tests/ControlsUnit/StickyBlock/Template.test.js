@@ -32,6 +32,7 @@ define(
                position: 'top'
             };
             inst._model = {};
+            inst._restoreBottomShadowHiddenClass = () => {}
          });
 
          after(function() {

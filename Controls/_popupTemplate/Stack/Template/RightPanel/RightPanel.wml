@@ -18,13 +18,13 @@
          />
 
          <ws:if data="{{_options.maximizeButtonVisibility}}">
-            <div class="controls-StackTemplate__maximized_button"
+            <div class="controls-StackTemplate__maximized_button controls-StackTemplate__rightPanel__maximized"
                  on:click="_maximizeButtonClickHandler()"
                  attr:title="{{_options.maximizeButtonTitle}}"></div>
          </ws:if>
 
          <ws:if data="{{_options.toolbarContentTemplate}}">
-            <ws:partial template="{{_options.toolbarContentTemplate}}" attr:class="controls-margin_top-xs"/>
+            <ws:partial template="{{_options.toolbarContentTemplate}}" attr:class="{{(_options.closeButtonVisibility || _options.maximizeButtonVisibility) ? 'controls-margin_top-xs'}}"/>
          </ws:if>
       </div>
 
