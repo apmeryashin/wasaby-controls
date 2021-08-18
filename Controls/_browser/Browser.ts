@@ -409,7 +409,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (searchValueOptionsChanged && searchValueChanged) {
             this._inputSearchValue = newOptions.searchValue;
 
-            if (!newOptions.searchValue && sourceChanged && this._getSearchControllerSync()) {
+            if (!newOptions.searchValue && (sourceChanged || rootChanged) && this._getSearchControllerSync()) {
                 this._resetSearch();
                 sourceController.setFilter(this._filter);
             }
