@@ -64,15 +64,20 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     protected _$hasChildrenProperty: string;
 
     /**
+     * Признак, означающий что нужно отрисовать отступ под экспандер
+     * @private
+     */
+    private _$displayExpanderPadding: boolean;
+
+    /**
      * Признак, означающий что в узле можно еще подгрузить данные
      * @protected
      */
     protected _$hasMore: boolean;
-
     // TODO должен быть указан парвильный тип, но сейчас футеры есть только в триГриде
     //  и если указать типом TreeGridNodeFooterRow, то будет неправильная зависимость
-    private _nodeFooter: TreeItem;
 
+    private _nodeFooter: TreeItem;
     /**
      * Признак, что узел является целью при перетаскивании
      * @private
@@ -316,11 +321,19 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return (this._$owner.getExpanderVisibility() === 'visible' || hasChildren) && correctPosition;
     }
 
+    setDisplayExpanderPadding(displayExpanderPadding: boolean): void {
+        if (this._$displayExpanderPadding !== displayExpanderPadding) {
+            this._$displayExpanderPadding = displayExpanderPadding;
+            this._nextVersion();
+        }
+    }
+
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
         const expanderPosition = this._$owner.getExpanderPosition();
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
 
+        // нельзя заюзать _$displayExpanderPadding, т.к. экспандер могут скрыть для определенной записи
         if (this._$owner.getExpanderVisibility() === 'hasChildren') {
             const hasChildren = this.getHasChildrenProperty() ? this.hasChildren() : this.hasChildrenByRecordSet();
             return !hasChildren && expanderIcon !== 'none' && expanderPosition === 'default';
@@ -458,5 +471,6 @@ Object.assign(TreeItem.prototype, {
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
     _$hasMore: false,
+    _$displayExpanderPadding: false,
     _instancePrefix: 'tree-item-'
 });
