@@ -157,12 +157,17 @@ export default class ErrorController {
         options?: IControllerOptions,
         private _popupHelper: IPopupHelper = getPopupHelper()
     ) {
-        this.options = { ...ErrorController.defaultOptions, ...options };
+        this.options = {
+            handlers: [],
+            viewConfig: {},
+            ...options
+        };
     }
 
     destroy(): void {
         delete this.handlerIterator;
         delete this._popupHelper;
+        delete this.options;
     }
 
     /**
@@ -184,8 +189,12 @@ export default class ErrorController {
      * @param isPostHandler Был ли обработчик добавлен для выполнения после обработчиков уровня приложения.
      */
     removeHandler(handler: Handler, isPostHandler?: boolean): void {
-        const handlers = isPostHandler ? '_postHandlers' : '_handlers';
-        this[handlers] = this[handlers].filter((_handler) => handler !== _handler);
+        const deleteHandler = (handlers) => handlers.filter((_handler) => handler !== _handler);
+        if (isPostHandler) {
+            this.postHandlers = deleteHandler(this.postHandlers);
+        } else {
+            this.options.handlers = deleteHandler(this.options.handlers);
+        }
     }
 
     /**
@@ -195,6 +204,7 @@ export default class ErrorController {
      * Если ни один обработчик не вернёт результат, будет показан диалог с сообщением об ошибке.
      * @param config Обрабатываемая ошибка или объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения.
      * @return Промис с данными для отображения сообщения об ошибке или промис без данных, если ошибка не распознана.
+     * @todo нужно оставить в аргументах только ошибку, начиная с 21.6100
      */
     process<TError extends ProcessedError = ProcessedError>(
         config: HandlerConfig<TError> | TError
@@ -227,7 +237,10 @@ export default class ErrorController {
              * даже если она была обработана ранее
              */
             handlerConfig.error.processed = viewConfig.processed !== false;
-            return this.composeViewConfig(viewConfig, handlerConfig.mode);
+
+            // mode, переданная в конфиге функции process, временно в приоритете (до 21.6100)
+            const processMode = config instanceof Error ? undefined : config.mode;
+            return this.composeViewConfig(viewConfig, processMode);
         }).catch((error: PromiseCanceledError) => {
             if (!error.isCanceled) {
                 Logger.error('Handler error', null, error);
@@ -238,9 +251,9 @@ export default class ErrorController {
     /**
      * Составить конфиг ошибки из предустановленных данных и результата из обработчика.
      * @param viewConfig Результат обработчика
-     * @param mode Предпочтительный режим отображения
+     * @param processMode Предпочтительный режим отображения
      */
-    private composeViewConfig(viewConfig: ViewConfig, mode?: Mode): ViewConfig {
+    private composeViewConfig(viewConfig: ViewConfig, processMode?: Mode): ViewConfig {
         let customStandardConfig: Partial<ViewConfig> = { options: {} };
 
         if (this.handlerIterator.lastHandler && this.options.standardViewConfigs) {
@@ -248,17 +261,22 @@ export default class ErrorController {
                 this.options.standardViewConfigs[this.handlerIterator.lastHandler.handlerType] || customStandardConfig;
         }
 
-        return {
+        const result = {
             ...viewConfig,
             ...customStandardConfig,
             ...this.options.viewConfig,
-            mode,
             options: {
                 ...viewConfig.options,
                 ...customStandardConfig.options,
                 ...this.options.viewConfig.options
             }
         };
+
+        if (processMode) {
+            result.mode = processMode;
+        }
+
+        return result;
     }
 
     private getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
@@ -285,11 +303,6 @@ export default class ErrorController {
             ...config
         };
     }
-
-    private static defaultOptions: Partial<IControllerOptions> = {
-        viewConfig: {},
-        handlers: []
-    };
 
     private static _isNeedHandle(error: ProcessedError & CanceledError): boolean {
         return !(

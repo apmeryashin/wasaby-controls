@@ -86,7 +86,7 @@ define([
             assert.isTrue(_popupHelper.openDialog.calledOnce, 'openDialog called');
 
             const args = _popupHelper.openDialog.getCall(0).args[0];
-            assert.include(args, viewConfig, 'openDialog called with viewConfig');
+            assert.deepEqual(args, viewConfig, 'openDialog called with viewConfig');
             assert.strictEqual(result, popupId, 'returns popupId');
          });
       });
@@ -106,7 +106,7 @@ define([
             assert.isTrue(_popupHelper.openDialog.calledOnce, 'openDialog called');
 
             const args = _popupHelper.openDialog.getCall(0).args[0];
-            assert.include(args, viewConfig, 'openDialog called with viewConfig');
+            assert.deepEqual(args, viewConfig, 'openDialog called with viewConfig');
             assert.strictEqual(result, popupId, 'returns popupId');
          });
       });

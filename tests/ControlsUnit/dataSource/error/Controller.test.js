@@ -41,19 +41,19 @@ define([
       describe('addHandler()', function() {
          createController();
 
-         it('adds to _handlers', function() {
+         it('adds to options.handlers', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
-            assert.include(controller._controller._handlers, handler);
+            assert.include(controller.options.handlers, handler);
          });
 
-         it('doesn\'t add to _handlers twice', function() {
+         it('doesn\'t add to options.handlers twice', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
             controller.addHandler(handler);
             assert.equal(
-               controller._controller._handlers.indexOf(handler),
-               controller._controller._handlers.lastIndexOf(handler)
+               controller.options.handlers.indexOf(handler),
+               controller.options.handlers.lastIndexOf(handler)
             );
          });
       });
@@ -65,11 +65,11 @@ define([
             assert.isFunction(controller.removeHandler);
          });
 
-         it('removes from _handlers', function() {
+         it('removes from options.handlers', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
             controller.removeHandler(handler);
-            assert.notInclude(controller._controller._handlers, handler);
+            assert.notInclude(controller.options.handlers, handler);
          });
 
          it('doesn\'t remove other handlers', function() {
@@ -78,7 +78,7 @@ define([
             controller.addHandler(handler1);
             controller.addHandler(handler2);
             controller.removeHandler(handler1);
-            assert.include(controller._controller._handlers, handler2);
+            assert.include(controller.options.handlers, handler2);
          });
       });
 
@@ -243,11 +243,11 @@ define([
             return controller.process(error).then((result) => {
                checkHandler();
 
-               assert.deepEqual(viewConfig, {
+               assert.deepEqual({
                   mode: result.mode,
                   template: result.template,
                   options: result.options
-               }, 'viewConfig');
+               }, viewConfig, 'viewConfig');
 
                assert.isTrue(Logger.error.calledTwice, 'all handler errors were logged');
 
@@ -311,32 +311,6 @@ define([
          // dafault template
       });
 
-      describe('_getIVersion()', () => {
-         it('returns empty object on server side', () => {
-            const { isServerSide } = constants;
-            constants.isServerSide = true;
-            try {
-               assert.isEmpty(Controller._getIVersion());
-            } finally {
-               constants.isServerSide = isServerSide;
-            }
-         });
-
-         it('returns IVersionable on browser side', () => {
-            const { isServerSide } = constants;
-            constants.isServerSide = false;
-            try {
-               const result = Controller._getIVersion();
-               assert.isObject(result, 'must return an object');
-               assert.isTrue(result['[Types/_entity/IVersionable]'], 'must have [Types/_entity/IVersionable]');
-               assert.isFunction(result.getVersion, 'must have getVersion()');
-               assert.isNumber(result.getVersion(), 'getVersion() must return a number');
-            } finally {
-               constants.isServerSide = isServerSide;
-            }
-         });
-      });
-
       describe('_isNeedHandle()', () => {
          it('returns false for Abort error', () => {
             const error = new Transport.fetch.Errors.Abort('test-url');
@@ -359,14 +333,68 @@ define([
          });
       });
 
-      describe('_prepareConfig()', () => {
+      describe('composeViewConfig()', () => {
+         const getPriorityMapConfig = (txt, count) => {
+            const map = { ...Array(count).fill(txt) };
+            return {
+               ...map,
+               options: map
+            };
+         };
+         const configs = {
+            ViewConfig: getPriorityMapConfig('ViewConfig', 3),
+            customStandardConfig: getPriorityMapConfig('customStandardConfig', 2),
+            customViewConfig: getPriorityMapConfig('customViewConfig', 1)
+         };
+         const expectedResult = {
+            0: 'customViewConfig',
+            1: 'customStandardConfig',
+            2: 'ViewConfig',
+            options: {
+               0: 'customViewConfig',
+               1: 'customStandardConfig',
+               2: 'ViewConfig'
+            }
+         };
+
+         beforeEach(() => {
+            controller = new Controller({
+               viewConfig: configs.customViewConfig,
+               standardViewConfigs: {
+                  test: configs.customStandardConfig
+               }
+            });
+            controller.handlerIterator = { lastHandler: { handlerType: 'test' } };
+         });
+
+         afterEach(() => {
+            controller.destroy();
+            controller = null;
+         });
+
+         it('returns ViewConfig, that was composed by priority', () => {
+            const result = controller.composeViewConfig(configs.ViewConfig);
+            assert.deepEqual(result, expectedResult);
+         });
+
+         it('returns ViewConfig with passed mode', () => {
+            const mode = 'mode';
+            const result = controller.composeViewConfig(configs.ViewConfig, mode);
+            assert.deepEqual(result, {
+               ...expectedResult,
+               mode
+            });
+         });
+      });
+
+      describe('getHandlerConfig()', () => {
          beforeEach(() => {
             createController();
          });
 
          it('returns a config for an error', () => {
             const error = new Error();
-            const result = controller._prepareConfig(error);
+            const result = controller.getHandlerConfig(error);
             assert.deepEqual(result, {
                error,
                mode: 'dialog'
@@ -380,7 +408,7 @@ define([
                   mode: 'include'
                }
             }, popupHelper);
-            const result = controller._prepareConfig(error);
+            const result = controller.getHandlerConfig(error);
             assert.deepEqual(result, {
                error,
                mode: 'include'
@@ -390,7 +418,7 @@ define([
          it('returns a config with default mode', () => {
             const error = new Error();
             const config = { error };
-            const result = controller._prepareConfig(config);
+            const result = controller.getHandlerConfig(config);
             assert.notStrictEqual(result, config, 'must return a new object');
             assert.deepEqual(result, {
                error,
@@ -404,7 +432,7 @@ define([
                error,
                mode: 'include'
             };
-            const result = controller._prepareConfig(config);
+            const result = controller.getHandlerConfig(config);
             assert.notStrictEqual(result, config, 'must return a new object');
             assert.deepEqual(result, config);
          });
@@ -419,26 +447,7 @@ define([
                   mode: 'include'
                }
             }, popupHelper);
-            const result = controller._prepareConfig(config);
-            assert.notStrictEqual(result, config, 'must return a new object');
-            assert.deepEqual(result, {
-               error,
-               mode: 'include'
-            });
-         });
-
-         it('returns a config, preset mode overrides config mode', () => {
-            const error = new Error();
-            const config = {
-               error,
-               mode: 'page'
-            };
-            controller = new Controller({
-               viewConfig: {
-                  mode: 'include'
-               }
-            }, popupHelper);
-            const result = controller._prepareConfig(config);
+            const result = controller.getHandlerConfig(config);
             assert.notStrictEqual(result, config, 'must return a new object');
             assert.deepEqual(result, {
                error,
