@@ -85,7 +85,7 @@ class Manager {
                     // еще 1 пересчет позиции, с расчетом на то, что тело страницы успеет вернуть прежние размеры.
                     setTimeout(() => {
                         this.orientationChangeHandler();
-                    }, ORIENTATION_CHANGE_DELAY * 2);
+                    }, ORIENTATION_CHANGE_DELAY * 3);
                 }, ORIENTATION_CHANGE_DELAY);
             });
         }
