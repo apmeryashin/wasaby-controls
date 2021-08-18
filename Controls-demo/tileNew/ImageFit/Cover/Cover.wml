@@ -14,7 +14,7 @@
       imageProperty="image"
       keyProperty="id"
       source="{{_viewSource}}"
-      attr:data-qa="controlsDemo-tileNew_ImageFit__cover_wrapper">
+      attr:data-qa="controlsDemo-tileNew_ImageFit__cover">
       <ws:itemTemplate>
          <ws:partial
             template="Controls/tile:ItemTemplate"

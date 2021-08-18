@@ -9,7 +9,7 @@
       nodeProperty="parent@"
       keyProperty="id"
       source="{{_viewSource}}"
-      attr:data-qa="controlsDemo-tileNew_ImageFit__none_wrapper">
+      attr:data-qa="controlsDemo-tileNew_ImageFit__none">
       <ws:itemTemplate>
          <ws:partial
             template="Controls/tile:ItemTemplate"
