@@ -75,9 +75,9 @@
 }
 
 .controls-MasterDetail_resizing-line {
-   position: absolute;
-   top: 0;
-   height: 100%;
+   // 5px это размеры resizingLine(@thickness_dragnDropResizingLine), но из-за того что используются less переменные, задаем значением
+   // Будет поправлено после того, как resizingLine перейдет на css var
+   margin-left: -5px;
    // Движение границ всегда должно быть выше любого прикладного элемента в контроле.
    // Решать проблему через z-index на контейнерах 'master' и 'detail' нельзя.
    // Они должны лежать в одном контексте наложения. Иначе будет перекрытие
@@ -97,14 +97,6 @@
          border-radius: 0 var(--border-radius_default_block) 0 0;
       }
    }
-}
-
-.controls-MasterDetail_resizing-line-left {
-   right: 0;
-}
-
-.controls-MasterDetail_resizing-line-right {
-   left: 0;
 }
 
 .controls-background-master {
