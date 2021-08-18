@@ -6635,6 +6635,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             options.navigation = newNavigation;
         }
 
+        // Удалим текущие items иначе SourceController их запомнит и будет модифицировать
+        delete options.items;
+
         return options;
     }
 
