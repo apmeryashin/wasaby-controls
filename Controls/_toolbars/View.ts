@@ -152,6 +152,7 @@ export interface IMenuOptions {
  * @implements Controls/toolbars:IToolbarSource
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IHeight
  */
 
 /**
