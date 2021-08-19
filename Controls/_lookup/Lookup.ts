@@ -379,7 +379,7 @@ export default class Lookup extends BaseLookupInput {
    _isInputVisible(options: ILookupOptions): boolean {
       return ((!options.readOnly || this._getInputValue(options) && !options.multiSelect) &&
          !!(this._isEmpty() || options.multiSelect || options.comment)) ||
-         (options.placeholder && options.placeholderVisibility === 'empty');
+         (options.readOnly && options.placeholder && options.placeholderVisibility === 'empty');
    }
 
    _isNeedCalculatingSizes(options: ILookupOptions): boolean {
