@@ -1050,7 +1050,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         replaced.forEach((item, index) => {
             const strategyIndex = replaced.start + index;
             if (strategyIndex < count) {
-                strategy.at(strategyIndex).setExpanded(item.isExpanded(), true);
+                const projectionItem = strategy.at(strategyIndex);
+                if (projectionItem['[Controls/_display/ExpandableMixin]']) {
+                    projectionItem.setExpanded(item.isExpanded(), true);
+                }
             }
         });
 
