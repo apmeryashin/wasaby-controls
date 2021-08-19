@@ -4,7 +4,6 @@ import { constants } from 'Env/Env';
 import { loadAsync } from 'WasabyLoader/ModulesLoader';
 import { fetch } from 'Browser/Transport';
 import {
-    AppHandlerTypes,
     Handler,
     HandlerConfig,
     ProcessedError,
@@ -25,14 +24,14 @@ export interface IControllerOptions {
     handlers?: Handler[];
 
     /**
-     * @cfg {Controls/error:ViewConfig} Конфигурация для отображения ошибки по умолчанию.
+     * @cfg {Controls/error:ViewConfig} Эта функция будет вызвана во время обработки ошибки.
+     * Она возвращает конфигурацию для отображения ошибки.
      * Эта конфигурация объединится с той, которую вернёт обработчик ошибки.
      */
-    viewConfig?: Partial<ViewConfig>;
-
-    standardViewConfigs?: Partial<Record<AppHandlerTypes, Partial<ViewConfig>>>;
+    onProcess?: onProcessCallback;
 }
 
+export type onProcessCallback = (viewConfig: ViewConfig) => (ViewConfig | PromiseCanceledError);
 type RawHandler = Handler | string;
 
 let popupHelper: IPopupHelper;
@@ -112,6 +111,8 @@ const getApplicationHandlers = (): RawHandler[] => {
     return handlers;
 };
 
+const DEFAULT_ERROR_TEMPLATE = 'SbisEnvUI/ParkingTemplates:Dialog';
+
 /**
  * Класс для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
  * Передаёт ошибку по цепочке функций-обработчиков.
@@ -159,7 +160,6 @@ export default class ErrorController {
     ) {
         this.options = {
             handlers: [],
-            viewConfig: {},
             ...options
         };
     }
@@ -197,6 +197,10 @@ export default class ErrorController {
         }
     }
 
+    onProcess(onProcess?: onProcessCallback): void {
+        this.options.onProcess = onProcess;
+    }
+
     /**
      * Обработать ошибку и получить данные для шаблона ошибки.
      * Передаёт ошибку по цепочке функций-обработчиков, пока какой-нибудь обработчик не вернёт результат.
@@ -204,7 +208,6 @@ export default class ErrorController {
      * Если ни один обработчик не вернёт результат, будет показан диалог с сообщением об ошибке.
      * @param config Обрабатываемая ошибка или объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения.
      * @return Промис с данными для отображения сообщения об ошибке или промис без данных, если ошибка не распознана.
-     * @todo нужно оставить в аргументах только ошибку, начиная с 21.6100
      */
     process<TError extends ProcessedError = ProcessedError>(
         config: HandlerConfig<TError> | TError
@@ -217,7 +220,7 @@ export default class ErrorController {
 
         const handlers = [...this.options.handlers, ...getApplicationHandlers(), ...this.postHandlers];
 
-        return this.handlerIterator.getViewConfig(handlers, handlerConfig).then((viewConfig: ViewConfig | void) => {
+        return this.handlerIterator.getViewConfig(handlers, handlerConfig).then((handlerResult: ViewConfig | void) => {
             /**
              * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
              * Проверяем, обработана ли ошибка каким-то из контроллеров.
@@ -226,9 +229,15 @@ export default class ErrorController {
                 return;
             }
 
+            let viewConfig = handlerResult;
+
             if (!viewConfig) {
                 handlerConfig.error.processed = true;
-                return this.getDefault(handlerConfig);
+                viewConfig = this.getDefaultViewConfig(handlerConfig);
+            }
+
+            if (this.handlerIterator.lastHandler && this.handlerIterator.lastHandler.handlerType) {
+                viewConfig.type = this.handlerIterator.lastHandler.handlerType;
             }
 
             /**
@@ -238,9 +247,21 @@ export default class ErrorController {
              */
             handlerConfig.error.processed = viewConfig.processed !== false;
 
-            // mode, переданная в конфиге функции process, временно в приоритете (до 21.6100)
-            const processMode = config instanceof Error ? undefined : config.mode;
-            return this.composeViewConfig(viewConfig, processMode);
+            if (!(config instanceof Error) && config.mode) {
+                viewConfig.mode = config.mode;
+            }
+
+            if (typeof this.options.onProcess === 'function') {
+                const callbackResult = this.options.onProcess(viewConfig);
+
+                if (callbackResult instanceof PromiseCanceledError) {
+                    throw callbackResult;
+                }
+
+                viewConfig = callbackResult;
+            }
+
+            return viewConfig;
         }).catch((error: PromiseCanceledError) => {
             if (!error.isCanceled) {
                 Logger.error('Handler error', null, error);
@@ -248,58 +269,26 @@ export default class ErrorController {
         });
     }
 
-    /**
-     * Составить конфиг ошибки из предустановленных данных и результата из обработчика.
-     * @param viewConfig Результат обработчика
-     * @param processMode Предпочтительный режим отображения
-     */
-    private composeViewConfig(viewConfig: ViewConfig, processMode?: Mode): ViewConfig {
-        let customStandardConfig: Partial<ViewConfig> = { options: {} };
-
-        if (this.handlerIterator.lastHandler && this.options.standardViewConfigs) {
-            customStandardConfig =
-                this.options.standardViewConfigs[this.handlerIterator.lastHandler.handlerType] || customStandardConfig;
-        }
-
-        const result = {
-            ...viewConfig,
-            ...customStandardConfig,
-            ...this.options.viewConfig,
+    private getDefaultViewConfig<T extends Error = Error>(config: HandlerConfig<T>): ViewConfig {
+        return {
+            template: DEFAULT_ERROR_TEMPLATE,
+            mode: config.mode,
             options: {
-                ...viewConfig.options,
-                ...customStandardConfig.options,
-                ...this.options.viewConfig.options
+                message: config.error.message
             }
         };
-
-        if (processMode) {
-            result.mode = processMode;
-        }
-
-        return result;
-    }
-
-    private getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
-        this._popupHelper.openConfirmation({
-            type: 'ok',
-            style: 'danger',
-            theme: config.theme,
-            message: config.error.message
-        });
     }
 
     private getHandlerConfig<T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> {
-        const mode = this.options.viewConfig.mode || Mode.dialog;
-
         if (config instanceof Error) {
             return {
                 error: config,
-                mode
+                mode: Mode.dialog
             };
         }
 
         return {
-            mode,
+            mode: Mode.dialog,
             ...config
         };
     }

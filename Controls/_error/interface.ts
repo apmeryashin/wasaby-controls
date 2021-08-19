@@ -1,33 +1,48 @@
 import { IVersionable } from 'Types/entity';
 import { HTTPStatus } from 'Browser/Transport';
-import { TemplateFunction } from 'UICommon/_base/Control';
+import { Control, TemplateFunction } from 'UI/Base';
+
+/**
+ * Опции шаблона для {@link Controls/_error/interface/ViewConfig}, возвращаемые стандартными обработчиками
+ * @public
+ */
+export interface IDefaultTemplateOptions {
+    details?: string;
+    image?: string;
+    message?: string;
+    action: string | TemplateFunction | (new (args: unknown) => Control);
+}
 
 /**
  * Данные для отображения сообщения об ошибке.
  * @public
  * @author Северьянов А.А.
  */
-export interface ViewConfig<TOptions = object> extends Partial<IVersionable> { // tslint:disable-line:interface-name
+// tslint:disable-next-line:interface-name
+export interface ViewConfig<TOptions = IDefaultTemplateOptions> extends Partial<IVersionable> {
     /**
-     * Способ показа ошибки: в диалоге, в контентной области компонента или во всю страницу.
+     * @name Controls/_error/interface/ViewConfig#mode
+     * @cfg Способ показа ошибки: в диалоге, в контентной области компонента или во всю страницу.
      */
     mode?: Mode;
 
     /**
-     * @name Controls/_dataSource/_parking/ViewConfig#options
+     * @name Controls/_error/interface/ViewConfig#options
      * @cfg {Object} Параметры построения шаблона ошибки.
      * @remark
-     * This
+     * This is remark
      */
     options?: Partial<TOptions>;
 
     /**
-     * Обработана ли ошибка. Для обработанных ошибок сообщения не выводятся.
+     * @name Controls/_error/interface/ViewConfig#processed
+     * @cfg Обработана ли ошибка. Для обработанных ошибок сообщения не выводятся.
      */
     readonly processed?: boolean;
 
     /**
-     * Код состояния HTTP, соответствующий ошибке.
+     * @name Controls/_error/interface/ViewConfig#status
+     * @cfg Код состояния HTTP, соответствующий ошибке.
      */
     status?: HTTPStatus;
 
@@ -36,6 +51,12 @@ export interface ViewConfig<TOptions = object> extends Partial<IVersionable> { /
      * @cfg {Function | String} Шаблон для отображения ошибки.
      */
     template: TemplateFunction | string;
+
+    /**
+     * @name Controls/_error/interface/ViewConfig#type
+     * @cfg Если ошибка одна из стандартных, то это поле укажет на ее тип
+     */
+    type?: DefaultErrorTypes;
 }
 
 export type ProcessedError = Error & { processed?: boolean; };
@@ -45,7 +66,7 @@ export type CanceledError = Error & {
     isCanceled?: boolean; // from PromiseCanceledError
 };
 
-export enum AppHandlerTypes {
+export enum DefaultErrorTypes {
     javaScript = 'javaScript',
     require = 'require',
     internal = 'internal',
@@ -68,7 +89,7 @@ export type Handler< // tslint:disable-line:interface-over-type-literal
     TError extends Error = Error,
     TOptions = object
 > = {
-    handlerType?: AppHandlerTypes;
+    handlerType?: DefaultErrorTypes;
     (config: HandlerConfig<TError>): ViewConfig<TOptions> | void;
 };
 

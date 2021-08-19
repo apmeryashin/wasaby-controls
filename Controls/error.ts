@@ -11,7 +11,7 @@ import {
     Handler,
     ViewConfig,
     HandlerConfig,
-    AppHandlerTypes,
+    DefaultErrorTypes,
     Mode
 } from './_error/interface';
 import Controller from './_error/Controller';
@@ -20,15 +20,20 @@ import Popup, { IPopupHelper } from './_error/Popup';
 import DialogOpener from './_error/DialogOpener';
 
 export {
-    AppHandlerTypes,
+    DefaultErrorTypes,
     Controller,
+    Controller as ErrorController,
     DialogOpener,
     Handler,
+    Handler as ErrorHandler,
     HandlerConfig,
+    HandlerConfig as IErrorHandlerConfig,
     IPopupHelper,
     IProcessOptions,
     Mode,
+    Mode as ErrorDisplayMode,
     Popup,
     process,
-    ViewConfig
+    ViewConfig,
+    ViewConfig as IErrorViewConfig
 };
