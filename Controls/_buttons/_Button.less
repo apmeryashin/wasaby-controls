@@ -467,7 +467,7 @@
    }
    .controls-Button_button_style-@{_item}.controls-Button_bg-contrast {
       background-color: ~"var(--@{_item}_contrast_background-color)";
-      border-color: ~"var(--@{_item}_contrast_background-color)";
+      border-color: transparent;  //если заливка полупрозрачная, то получается наложение
    }
 });
 
@@ -514,7 +514,7 @@
       }
       .controls-Button_button_style-@{_item}.controls-Button_bg-contrast:hover {
          background-color: ~"var(--@{_item}_hover_contrast_background-color)";
-         border-color: ~"var(--@{_item}_hover_contrast_background-color)";
+         border-color: transparent;  //если заливка полупрозрачная, то получается наложение
       }
    });
 
@@ -541,7 +541,7 @@
       }
       .controls-Button_button_style-@{_item}.controls-Button_bg-contrast:active {
          background-color: ~"var(--@{_item}_active_contrast_background-color)";
-         border-color: ~"var(--@{_item}_active_contrast_background-color)";
+         border-color: transparent;  //если заливка полупрозрачная, то получается наложение
       }
    });
 
