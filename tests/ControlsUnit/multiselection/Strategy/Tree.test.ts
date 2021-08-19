@@ -899,6 +899,38 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const count = strategyWithDescendantsAndAncestors.getCount(selection, false);
          assert.isNull(count);
       });
+
+      it('should count leafs are childs of not selectable items', () => {
+         const model = new Tree({
+            collection: new RecordSet({
+               keyProperty: 'id',
+               rawData: [
+                  {id: 1, parent: null, node: true},
+                  {id: 11, parent: 1, node: null},
+                  {id: 12, parent: 1, node: null},
+                  {id: 2, parent: null, node: true},
+                  {id: 21, parent: 2, node: null},
+                  {id: 22, parent: 2, node: null},
+               ]
+            }),
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node'
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model,
+            selectionType: 'leaf'
+         });
+
+         const selection = { selected: [null], excluded: [null] };
+         const res = strategy.getCount(selection, false);
+         assert.equal(res, 4);
+      });
    });
 
    describe('cases of go inside node and out it', () => {
