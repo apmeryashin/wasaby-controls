@@ -346,7 +346,16 @@ describe('Controls/search:ControllerClass', () => {
          });
 
          assert.isFalse(searchStub.called);
-         assert.isTrue(resetStub.called);
+         assert.isFalse(resetStub.called);
+
+         controllerClass._options.searchValue = 'test';
+         controllerClass.update({
+            sourceController: sandbox.mock({
+               ver: 'new'
+            })
+         });
+         assert.isTrue(searchStub.called);
+         assert.isFalse(resetStub.called);
       });
 
       it('should call search when new sourceController and new SearchValue in options', () => {
