@@ -720,7 +720,7 @@ export default class DataLoader {
                     return PageController.loadData(pageConfig, loadDataMethodArguments).then((pageLoadedData) => {
                         result[key] = pageLoadedData;
                     });
-                });
+                }).catch((error) => resolve(error));
             })).then(() => resolve(result)).catch((error) => resolve(error));
         });
     }
