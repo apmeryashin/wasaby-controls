@@ -690,7 +690,7 @@ export default class DataLoader {
         return Promise.resolve(config.loadDataMethod(config.loadDataMethodArguments, dependencies))
             .then((pageKeys: string[], loadDataMethodArguments: Record<string, unknown> = {}) => {
                 const args = {...loadDataMethodArguments, ...listConfigArguments};
-                this._loadDepsData(pageKeys, args);
+                return this._loadDepsData(pageKeys, args);
             })
             .catch((error) => error);
     }
