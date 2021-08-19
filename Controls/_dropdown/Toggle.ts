@@ -37,6 +37,12 @@ export default class Toggle extends Control<IToggleOptions> {
             keyProperty: 'key'
         });
     }
+
+    _beforeUpdate(options: IToggleOptions): void {
+        if (options.selectedKeys !== this._options.selectedKeys) {
+            this._selectedKeys = options.selectedKeys;
+        }
+    }
 }
 
 /**

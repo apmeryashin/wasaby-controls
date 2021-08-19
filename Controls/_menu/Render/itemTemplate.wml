@@ -23,6 +23,7 @@
       <ws:if data="{{marker !== false && (treeItem.isMarked ? treeItem.isMarked() : treeItem.isSelected())
                && (!itemData.multiSelect || itemData.isEmptyItem || itemData.isFixedItem)}}">
          <div class="controls-Menu__row_selected
+                     {{treeItem.getContents().get('icon') ? 'controls-Menu__row_selected_iconSize_' + (iconPadding || itemData.iconPadding)}}
                      controls-Menu__row_selected_markerSize_{{markerSize || 'default'}}
                         {{_options.multiLine ? 'controls-Menu__row_selected-multiLine'}}
                         {{additionalTextTemplate ? 'controls-Menu__content_padding'}}"></div>

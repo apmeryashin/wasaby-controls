@@ -360,6 +360,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue?.length >= options.minSearchLength;
         const searchValueOptionsChanged = options.searchValue !== newOptions.searchValue;
         const searchValueChanged = this._searchValue !== newOptions.searchValue;
+        const rootChanged = newOptions.root !== options.root;
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -377,7 +378,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._source = newOptions.source;
         }
 
-        if (newOptions.root !== options.root) {
+        if (rootChanged) {
             this._root = newOptions.root;
             this._getSearchControllerSync(id)?.setRoot(newOptions.root);
         }
@@ -408,7 +409,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (searchValueOptionsChanged && searchValueChanged) {
             this._inputSearchValue = newOptions.searchValue;
 
-            if (!newOptions.searchValue && sourceChanged && this._getSearchControllerSync()) {
+            if (!newOptions.searchValue && (sourceChanged || rootChanged) && this._getSearchControllerSync()) {
                 this._resetSearch();
                 sourceController.setFilter(this._filter);
             }
@@ -440,7 +441,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._inputSearchValue = '';
         }
 
-        if ((hasSearchValueInOptions && searchValueChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
+        if ((hasSearchValueInOptions && searchValueOptionsChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
             if (!methodResult) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
@@ -467,9 +468,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {
-        return this._getSearchController().then((searchController) => {
+        return this._callSearchController((searchController) => {
             if (this._destroyed) {
-                return ;
+                return Promise.resolve();
             }
             this._validateSearchOptions(newOptions);
             const updateResult = searchController.update({
@@ -480,11 +481,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
             if (updateResult instanceof Promise) {
                 this._loading = true;
-                updateResult.catch(this._processSearchError);
+                return updateResult.catch(this._processSearchError);
+            } else {
+                return Promise.resolve(updateResult);
             }
-
-            return updateResult;
-        }).catch((error) => error);
+        }) as Promise<void>;
     }
 
     private _afterSourceLoad(sourceController: SourceController, options: IBrowserOptions): void {
@@ -564,6 +565,15 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _getSearchControllerSync(id?: string): SearchController {
         return this._dataLoader.getSearchControllerSync(id);
+    }
+
+    private _callSearchController<T>(callback: (controller: SearchController) => T): T|Promise<T> {
+        const dataLoader = this._dataLoader;
+        if (dataLoader.getSearchControllerSync()) {
+            return callback(dataLoader.getSearchControllerSync());
+        } else {
+            return this._getSearchController().then(callback);
+        }
     }
 
     protected _handleItemOpen(root: Key, items: RecordSet): void {
@@ -926,9 +936,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
     }
 
-    private _searchResetHandler(): Promise<void> {
+    private _searchResetHandler(): void {
         this._cancelLoading();
-        return this._getSearchController().then(() => {
+        this._callSearchController(() => {
             this._resetSearch();
             this._updateRootAfterSearch();
         });

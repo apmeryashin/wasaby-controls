@@ -839,7 +839,7 @@ function getCalculatedFilter(config) {
             calculatedFilter = this._calculateFilterByItems(config.filter, this._filterButtonItems, this._fastFilterItems);
 
             if (config.prefetchParams && config.historyId) {
-                const history = this._getHistoryByItems(config.historyId, this._filterButtonItems);
+                const history = this._findItemInHistory(config.historyId, this._filterButtonItems);
 
                 if (history) {
                     calculatedFilter = Prefetch.applyPrefetchFromHistory(calculatedFilter, history.data);

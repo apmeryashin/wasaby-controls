@@ -418,7 +418,15 @@ export default class DataLoader {
     }
 
     getSearchControllerSync(id?: string): SearchController {
-        return this._getConfig(id)?.searchController;
+        const config = this._getConfig(id);
+
+        if (!config?.searchController && config?.searchParam && isLoaded('Controls/search')) {
+            const searchControllerClass = loadSync<typeof import('Controls/search')>('Controls/search').ControllerClass;
+            config.searchController = new searchControllerClass(
+                {...config} as ISearchControllerOptions
+            );
+        }
+        return config?.searchController;
     }
 
     getState(): Record<string, IControllerState> {
@@ -682,7 +690,7 @@ export default class DataLoader {
         return Promise.resolve(config.loadDataMethod(config.loadDataMethodArguments, dependencies))
             .then((pageKeys: string[], loadDataMethodArguments: Record<string, unknown> = {}) => {
                 const args = {...loadDataMethodArguments, ...listConfigArguments};
-                this._loadDepsData(pageKeys, args);
+                return this._loadDepsData(pageKeys, args);
             })
             .catch((error) => error);
     }

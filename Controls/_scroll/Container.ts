@@ -342,6 +342,19 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
         event.stopImmediatePropagation();
+
+        let isChanged: boolean = false;
+        for (let position in shadowsVisibility) {
+            if (this._shadows[position] &&
+                this._shadows[position].getVisibilityByInnerComponents() !== shadowsVisibility[position]) {
+                isChanged = true;
+            }
+        }
+
+        if (!isChanged) {
+            return;
+        }
+
         if (this._gridAutoShadows) {
             this._gridAutoShadows = false;
             this._shadows.updateOptions(this._getShadowsModelOptions(this._options));

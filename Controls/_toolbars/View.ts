@@ -152,6 +152,7 @@ export interface IMenuOptions {
  * @implements Controls/toolbars:IToolbarSource
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IHeight
  */
 
 /**
@@ -306,7 +307,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             iconStyle: options.iconStyle,
             itemTemplateProperty: options.itemTemplateProperty,
             closeButtonViewMode: isVertical ? 'external' : 'link',
-            itemAlign: isVertical ? 'left' : 'right',
         };
     }
 

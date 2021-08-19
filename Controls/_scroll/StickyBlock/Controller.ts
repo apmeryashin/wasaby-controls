@@ -460,12 +460,16 @@ class StickyHeaderController {
 
         const isFixed: Function = (headerId: number, headersHeight) => {
             return this._getHeaderOffset(headerId, position) < headersHeight;
-        }
+        };
 
         for (let i = 0; i < headersStack.length; i++) {
             const headerId: number = headersStack[i];
             const header = this._headers[headerId];
-
+            // По контролРесайзу попадаем в этот метод, ресайзОбсёрвер к этому моменту может еще не стрельнуть
+            // таким образом получится, что в headersStack могут лежать скрытые стикиБлоки.
+            if (isHidden(header.inst.getHeaderContainer())) {
+                continue;
+            }
             if (headers.includes(headerId)) {
                 const currentHeadersHeight: number = fixedHeadersHeight + replaceableHeight;
                 if (isFixed(headerId, currentHeadersHeight)) {
@@ -486,7 +490,7 @@ class StickyHeaderController {
 
             // If the header is "replaceable", we take into account the last one after all "stackable" headers.
             if (header.mode === 'stackable') {
-                fixedHeadersHeight += header.inst.height;
+                fixedHeadersHeight += header.inst.height + header.inst.offsetTop;
                 replaceableHeight = 0;
             } else if (header.mode === 'replaceable') {
                 replaceableHeight = header.inst.height;

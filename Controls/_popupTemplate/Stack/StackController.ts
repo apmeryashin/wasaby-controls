@@ -1,7 +1,7 @@
 import BaseController, {getRightPanelWidth} from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IPopupSizes, IPopupOptions, IPopupPosition, IStackPopupOptions} from 'Controls/popup';
 import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
-import {getPopupWidth, savePopupWidth} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
+import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {List} from 'Types/collection';
 import getTargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import {parse as parserLib} from 'Core/library';
@@ -502,7 +502,7 @@ class StackController extends BaseController {
         });
     }
 
-    private _writeCompatiblePopupWidth(item: IStackItem, widthState: number | object): void {
+    private _writeCompatiblePopupWidth(item: IStackItem, widthState: number | IStackSavedConfig): void {
         // Обратная совместимость со старым режимом работы максимизации окна.
         // Раньше сохранялась только текущая ширина окна.
         if (typeof widthState === 'number') {
@@ -519,7 +519,7 @@ class StackController extends BaseController {
             width: item.position.width,
             minSavedWidth: item.minSavedWidth,
             maxSavedWidth: item.maxSavedWidth
-        }
+        };
         savePopupWidth(item.popupOptions.propStorageId, widthState);
     }
 

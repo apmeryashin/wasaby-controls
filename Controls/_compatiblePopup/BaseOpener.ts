@@ -74,6 +74,10 @@ const BaseOpener = {
          cfg.templateOptions.hoverTarget = cfg.hoverTarget;
       }
 
+      if (cfg.isToolbarOnRightPanel) {
+         cfg.templateOptions.isToolbarOnRightPanel = cfg.isToolbarOnRightPanel;
+      }
+
       if (cfg.closeButtonStyle || cfg.closeButtonViewMode) {
          cfg.templateOptions.closeButtonViewMode = cfg.closeButtonStyle || cfg.closeButtonViewMode;
       }

@@ -5,6 +5,10 @@ import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import 'css!Controls/popupTemplate';
 
+export interface IRightPanelOption {
+    helpButtonItems: object[];
+}
+
 export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOptions {
     headerBackgroundStyle: string;
     maximizeButtonVisibility?: boolean;
@@ -16,7 +20,7 @@ export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOp
     stackMinWidth?: number;
     stackMinimizedWidth?: number;
     stackWidth?: number;
-    rightPanelOptions?: object;
+    rightPanelOptions?: IRightPanelOption;
 }
 
 const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
@@ -132,6 +136,16 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 });
 
 /**
+ * @typedef {Object} IRightPanelOption
+ * @property {Array.<Hint/interface:IHelpButtonItem>} helpButtonItems Список пунктов меню помощи.
+ * @remark
+ * Элементы по умолчанию:
+ * - "База знаний";
+ * - "Диагностика места";
+ * - "Поддержка СБИС".
+ */
+
+/**
  * @name Controls/_popupTemplate/Stack#headerBackgroundStyle
  * @cfg {String} Определяет цвет фона шапки стекового окна.
  * @variant default
@@ -195,6 +209,11 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
  */
 
 /**
+ * @name Controls/_popupTemplate/Stack#rightPanelOptions
+ * @cfg {IRightPanelOption} Опции правой панели стековой панели.
+ */
+
+/**
  * @name Controls/_popupTemplate/Stack#toggleMaximizeState
  * @function
  * @description Переключает состояние разворота панели.
@@ -233,11 +252,6 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
  *    ...
  * }
  * </pre>
- */
-
-/**
- * @name Controls/_popupTemplate/Stack#rightPanelOptions
- * @cfg {Object} Опции правой панели.
  */
 
 export default StackTemplate;

@@ -36,6 +36,7 @@ export interface IFieldOptions<Value, ModelOptions> extends IControlOptions {
     inputCallback?: ICallback<Value>;
     readOnlyTemplate: TemplateFunction;
     model: BaseViewModel<Value, ModelOptions>;
+    transliterate?: boolean;
 }
 
 /**
@@ -418,8 +419,8 @@ class Field<Value, ModelOptions>
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
 
         if (
-            event.nativeEvent.altKey && event.nativeEvent.keyCode === T_KEY_CODE ||
-            event.nativeEvent.keyCode === PAUSE_KEY_CODE
+            (event.nativeEvent.altKey && event.nativeEvent.keyCode === T_KEY_CODE
+            || event.nativeEvent.keyCode === PAUSE_KEY_CODE) && this._options.transliterate
         ) {
             transliterate(this._model.value, this._getFieldSelection()).then((value) => {
                 this._updateField(value, this._getFieldSelection());
@@ -526,13 +527,15 @@ class Field<Value, ModelOptions>
     static getOptionTypes(): Partial<Record<keyof IFieldOptions<string, {}>, Function>> {
         return {
             tag: descriptor(String),
-            name: descriptor(String).required()
+            name: descriptor(String).required(),
+            transliterate: descriptor(Boolean)
         };
     }
 
     static getDefaultOptions(): Partial<IFieldOptions<string, {}>> {
         return {
-            tag: 'input'
+            tag: 'input',
+            transliterate: true
         };
     }
 }

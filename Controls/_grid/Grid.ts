@@ -105,3 +105,9 @@ Object.defineProperty(Grid, 'defaultProps', {
  * @cfg {Controls/_list/interface/IList/ItemPadding.typedef}
  * @demo Controls-demo/gridNew/ItemPaddingNull/Index
  */
+
+/**
+ * @name Controls/_grid/Grid#multiSelectPosition
+ * @cfg
+ * @demo Controls-demo/gridNew/Multiselect/CustomPosition/Index
+ */
