@@ -106,13 +106,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     private _gridAutoShadows: boolean = true;
 
     _beforeMount(options: IContainerOptions) {
-        // Будем показывать скроллбар до тех пор, пока пользователь не воспользовался колесиком мышки, даже если
-        // прикладник задал опцию scrollbarVisible=false.
-        // Таким образом пользователи без колесика мышки смогут скроллить контент.
-        // Если пользователь использовал колесико мышки - записываем это в localstorage
-        WheelEventSettings.getWheelEventSettingPromise().then((data) => {
-            ScrollbarsModel.wheelEventHappened = data;
-        });
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
         this._scrollbars = new ScrollbarsModel(options);
         this._stickyHeaderController = new StickyHeaderController(
@@ -131,7 +124,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         super._beforeMount(...arguments);
     }
 
-    _afterMount(options: IContainerOptions) {
+    _afterMount(options: IContainerOptions): void {
+        // Будем показывать скроллбар до тех пор, пока пользователь не воспользовался колесиком мышки, даже если
+        // прикладник задал опцию scrollbarVisible=false.
+        // Таким образом пользователи без колесика мышки смогут скроллить контент.
+        // Если пользователь использовал колесико мышки - записываем это в localstorage
+        WheelEventSettings.getWheelEventSettingPromise().then((data) => {
+            ScrollbarsModel.wheelEventHappened = data;
+        });
 
         if (this._isPagingVisible(this._options)) {
             this._paging = new PagingModel();
