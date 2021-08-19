@@ -1,3 +1,10 @@
+.controls_theme-@{themeName} {         // переменные, которые должны переопределяться через wrapper должны быть опеределены на корневмо элементе темы
+   //Иконка папки
+
+   --node_expander_icon-color_treeGrid: #313e78;
+   --node_expander_hover_icon-color_treeGrid: #05b;
+}
+
 .controls_list_theme-@{themeName} {
    // Костыль для выравнивания в дереве expander'а ниже базовой линии на 1px.
    // Будет удалено после исправления шрифта: https://online.sbis.ru/opendoc.html?guid=04c812e3-ba62-44f8-aa94-30fec6bdfe75
@@ -22,10 +29,8 @@
 
    //Иконка папки
 
-   --node_expander_icon-color_treeGrid: #313e78;
    --node_expander_icon-size_treeGrid: var(--icon-size_s);
    --node_expander_icon_font-family_treeGrid: var(--icon_font-family_s);
-   --node_expander_hover_icon-color_treeGrid: #0055bb;
 
    //Иконка скрытого узла
 

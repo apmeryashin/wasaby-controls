@@ -2,8 +2,8 @@
     <div class="controlsDemo__wrapper controlsDemo_zen_dark">
         <div class="controlsDemo__cell controlsDemo_fixedWidth500">
             <div class="controls-text-label">Dark</div>
-            <Controls.themes:ZenWrapper brightness="dark" complementaryColor="119, 195, 216" dominantColor="(49, 49, 49)">
-                <ws:partial template="wml!Controls-demo/themes/ZenWrapper/resources/themedContent" />
+            <Controls.themes:ZenWrapper brightness="dark" complementaryColor="151, 216, 119" dominantColor="(33, 33, 65)">
+                <ws:partial template="Controls-demo/themes/ZenWrapper/resources/themedContent" />
             </Controls.themes:ZenWrapper>
         </div>
     </div>
@@ -11,7 +11,7 @@
         <div class="controlsDemo__cell controlsDemo_fixedWidth500">
             <div class="controls-text-label">Light</div>
             <Controls.themes:ZenWrapper brightness="light" complementaryColor="178, 35, 35" dominantColor="(255, 255, 255)">
-                <ws:partial template="wml!Controls-demo/themes/ZenWrapper/resources/themedContent" />
+                <ws:partial template="Controls-demo/themes/ZenWrapper/resources/themedContent" />
             </Controls.themes:ZenWrapper>
         </div>
 
@@ -19,7 +19,7 @@
     <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
         <div class="controlsDemo__cell">
             <div class="controls-text-label">Original</div>
-            <ws:partial template="wml!Controls-demo/themes/ZenWrapper/resources/themedContent"/>
+            <ws:partial template="Controls-demo/themes/ZenWrapper/resources/themedContent"/>
         </div>
 
     </div>

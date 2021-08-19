@@ -12,17 +12,17 @@
             <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="default" caption="link" fontColorStyle="default"></Controls.buttons:Button>
             <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="primary" caption="link" fontColorStyle="primary"></Controls.buttons:Button>
             <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="secondary" caption="link" fontColorStyle="secondary"></Controls.buttons:Button>
-            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="unaccented" caption="link" fontColorStyle="unaccented"></Controls.buttons:Button>
             <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="label" caption="link" fontColorStyle="label"></Controls.buttons:Button>
+            <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="unaccented" caption="link" fontColorStyle="unaccented"></Controls.buttons:Button>
             <Controls.buttons:Button viewMode="link" icon="icon-Edit" iconSize="s" iconStyle="secondary"  caption="link" fontColorStyle="secondary" readOnly="{{true}}"></Controls.buttons:Button>
         </div>
     </div>
-    <div class="ws-flexbox">
+    <div class="ws-flexbox controls-padding_top-l">
         <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
-            <Controls.heading:Title caption="Default heading" fontColorStyle="default"></Controls.heading:Title>
+            <Controls.heading:Title caption="Default heading" fontColorStyle="default" readOnly="{{true}}"></Controls.heading:Title>
             <Controls.heading:Title caption="Primary heading" fontColorStyle="primary"></Controls.heading:Title>
             <Controls.heading:Title caption="Secondary heading" fontColorStyle="secondary"></Controls.heading:Title>
-            <Controls.heading:Title caption="Unaccented heading" fontColorStyle="unaccented"></Controls.heading:Title>
+            <Controls.heading:Title caption="Unaccented heading" fontColorStyle="unaccented" readOnly="{{true}}"></Controls.heading:Title>
         </div>
         <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
             <Controls.decorator:Money value="123.45" fontColorStyle="default"/>
@@ -34,14 +34,98 @@
         </div>
     </div>
 
-    <div class="ws-flexbox">
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.toggle:BigSeparator caption="Button" bind:value="_expandedEllipsis"
+                                          viewMode="ellipsis"></Controls.toggle:BigSeparator>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+            <Controls.toggle:BigSeparator caption="Button 2" bind:value="_expandedArrow"
+                                          viewMode="arrow"></Controls.toggle:BigSeparator>
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.toggle:BigSeparator caption="Button" bind:value="_expandedEllipsis" readOnly="{{true}}"
+                                          viewMode="ellipsis"></Controls.toggle:BigSeparator>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
         <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
             <Controls.buttons:Button contrastBackground="{{false}}" buttonStyle="primary" caption="Button"></Controls.buttons:Button>
-            <Controls.buttons:Button contrastBackground="{{false}}" buttonStyle="primary" caption="Button" readOnly="{{true}}"></Controls.buttons:Button>
         </div>
         <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
             <Controls.buttons:Button contrastBackground="{{true}}" buttonStyle="primary" caption="Button"></Controls.buttons:Button>
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
             <Controls.buttons:Button contrastBackground="{{false}}" buttonStyle="primary" caption="Button" readOnly="{{true}}"></Controls.buttons:Button>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+            <Controls.buttons:Button contrastBackground="{{false}}" buttonStyle="primary" caption="Button" readOnly="{{true}}"></Controls.buttons:Button>
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.buttons:Button contrastBackground="{{true}}" viewMode="functionalButton" icon="icon-EmptyMessage" iconSize="s" iconStyle="primary" buttonStyle="pale"></Controls.buttons:Button>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+            <Controls.buttons:Button contrastBackground="{{false}}" viewMode="functionalButton" icon="icon-EmptyMessage" iconSize="s" iconStyle="contrast" buttonStyle="primary" readOnly="{{true}}"></Controls.buttons:Button>
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.buttons:Button contrastBackground="{{false}}" viewMode="functionalButton" icon="icon-EmptyMessage" iconSize="s" iconStyle="contrast" buttonStyle="primary"></Controls.buttons:Button>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.breadcrumbs:Path keyProperty="id" items="{{_bcitems}}"/>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.treeGrid:View
+                    expandedItems="{{[2]}}"
+                    keyProperty="key"
+                    source="{{_tgSource}}"
+                    columns="{{_tgColumns}}"
+                    parentProperty="parent"
+                    nodeProperty="type"/>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+
+        </div>
+    </div>
+
+    <div class="ws-flexbox controls-padding_top-l">
+        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
+            <Controls.columns:View
+                    keyProperty="key"
+                    source="{{ _tgSource }}">
+                <ws:itemTemplate>
+                    <ws:partial template="Controls/columns:ItemTemplate" attr:class="controlsDemo__height18_item"></ws:partial>
+                </ws:itemTemplate>
+            </Controls.columns:View>
+        </div>
+        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+
         </div>
     </div>
 </div>

@@ -14,7 +14,7 @@
   "--text-color": "#333",
   "--contrast_text-color": "#ffffff",
   "--label_text-color": "#8991a9",
-
+  "--label_hover_text-color": "#313e78",
   "--link_text-color": "#0055bb",
   "--link_hover_text-color": "#313e78",
   "--unaccented_text-color": "var(--unaccented_color)",
@@ -23,6 +23,8 @@
   "--icon-color": "#333",
   "--contrast_icon-color": "#ffffff",
   "--unaccented_icon-color": "#cccccc",
+  "--unaccented_hover_icon-color": "#999",
+  "--label_hover_icon-color": "#313e78",
 
   "--primary_color": "#ff7033",
   "--primary_text-color": "#cc3d00",
@@ -1452,6 +1454,7 @@
   "--success_text-color_decorator_fraction": "#9fcca7",
   "--warning_text-color_decorator_fraction": "#ccc1a9",
   "--danger_text-color_decorator_fraction": "#ceb1b1",
+  "--label_text-color_decorator_fraction": "#afb4cc",
   "--stroked_line-color_decorator": "#999",
 
   "--monthview_width_monthSlider": "calc(var(--monthview_item_height_monthSlider) * 7 + var(--monthview_item_border-thickness_monthSlider) * 8)",
