@@ -640,7 +640,12 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
     private _loadUnloadedFrequentItems(configs: IFilterItemConfigs, items: IFilterItem[]): Promise<RecordSet[]> {
         const loadPromises = [];
         factory(items).each((item): void => {
-            if (this._isFrequentItem(item) && (!configs[item.name] || !configs[item.name].items)) {
+            if (this._isFrequentItem(item) &&
+                (!configs[item.name] || !configs[item.name].items || !configs[item.name].sourceController)
+            ) {
+                if (configs[item.name]) {
+                    configs[item.name].items = null;
+                }
                 loadPromises.push(this._loadItems(item));
             }
         });
