@@ -1,5 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_themes/Wrapper/Wrapper';
+import 'css!Controls/themes';
 
 export interface IWrapperOptions extends IControlOptions {
     variables: Record<string, string>;
