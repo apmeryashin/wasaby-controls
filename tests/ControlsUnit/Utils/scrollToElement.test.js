@@ -483,6 +483,41 @@ define([
             assert.equal(element.parentElement.scrollTop, -5);
          });
 
+         it('to top force and inner sticky block', function() {
+            mockDOM();
+            const element = {
+               offsetHeight: 10,
+               classList: {
+                  contains: () => true
+               },
+               querySelector: () => null,
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 160,
+                  clientHeight: 150,
+                  top: 10,
+                  className: '',
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 15,
+                  closest: () => []
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 20,
+                     height: 100
+                  };
+               },
+               closest: () => {}
+            };
+            scroll.scrollToElement(element, false, true);
+            assert.equal(element.parentElement.scrollTop, 25);
+         });
+
          it('to top force and sticky block with offsetTop', function() {
             mockDOM();
             sinon.stub(NodeCollector, 'goUpByControlTree').returns([{ getHeadersHeight: () => 10 }]);
