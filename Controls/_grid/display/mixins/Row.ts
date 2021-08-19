@@ -277,9 +277,9 @@ export default abstract class Row<T> {
         if (addEmptyCellsForStickyLadder) {
             if (stickyLadderCellsCount) {
                 const params = {owner: this, isLadderCell: true, column: {}};
-                this._$columnItems.splice(1, 0, new stickyLadderCellCtor(params));
+                this._$columnItems.splice(1, 0, new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}}));
                 if (stickyLadderCellsCount === 2) {
-                    this._$columnItems = ([new stickyLadderCellCtor(params)] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
+                    this._$columnItems = ([new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}})] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
                 }
             }
             return;
