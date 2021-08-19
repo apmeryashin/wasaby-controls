@@ -53,6 +53,8 @@ export default class Template extends Control<IControlOptions> {
             return PageController.getPageConfig(key).then((config) => {
                 return PageController.loadData(config, this._options.pageTemplateOptions).then((loaderResult) => {
                     result[key] = loaderResult;
+                }).catch((err) => {
+                    // Обрабатываем ошибку промиса, чтобы не красилась консоль
                 });
             });
         });
