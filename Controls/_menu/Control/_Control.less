@@ -65,10 +65,17 @@
    display: inline-flex;
    align-items: baseline;
    left: var(--offset_2xs);
+
+   // FIXME https://online.sbis.ru/opendoc.html?guid=7201da12-e34b-432f-b949-7ca6af6573e6
+   &.controls-Menu__row_selected_iconSize_m::before {
+      line-height: var(--icon-size_m);
+   }
+
    &::before {
       content: '\200b';
       font-size: inherit;
    }
+
    &::after {
       content: '';
       display: block;
