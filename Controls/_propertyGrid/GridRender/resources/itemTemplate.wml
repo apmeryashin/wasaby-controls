@@ -7,7 +7,6 @@
 </ws:template>
 
 <ws:template name="label">
-  <ws:partial template="levelPadding"/>
   <ws:if data="{{collectionItem.isNode()}}">
     <div class="controls-PropertyGrid__editor_nodeCaption_wrapper">
       <Controls.heading:Title scope="{{_options}}"
@@ -46,12 +45,13 @@
                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
                        {{collectionItem.getItemPaddingClasses(1)}}"
                  style="{{getItemStyles(collectionItem, 1, !collectionItem.getEditorTemplateName())}}">
+            <ws:partial template="levelPadding"/>
             <ws:if data="{{item.captionTemplate}}">
                 <ws:partial template="{{item.captionTemplate}}" item="{{item}}">
                     <ws:defaultCaptionTemplate>
                         <ws:partial template="defaultCaptionTemplate" item="{{item}}"/>
                     </ws:defaultCaptionTemplate>
-                </ws:partial>>
+                </ws:partial>
             </ws:if>
             <ws:else>
                 <ws:partial template="defaultCaptionTemplate" item="{{item}}"/>
