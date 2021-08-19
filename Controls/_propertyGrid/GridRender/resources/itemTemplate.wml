@@ -22,6 +22,16 @@
   </ws:else>
 </ws:template>
 
+<ws:template name="defaultCaptionTemplate">
+    <ws:partial template="label"
+                caption="{{item.caption}}"
+                scope="{{item.captionOptions}}"
+                attr:class="controls-PropertyGrid__editor-caption_theme-{{theme}}
+                                        controls-PropertyGrid__gridLayout_editor-caption-baseline"
+                attr:tabindex="-1"
+    />
+</ws:template>
+
 <ws:if data="{{_options.colspan || _options.colspanTemplate}}">
    <ws:partial template="{{_options.colspanTemplate}}"
                attr:class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}"
@@ -30,20 +40,22 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
-    <ws:if data="{{!item.editorOptions.jumpingLabel && item.caption}}">
+    <ws:if data="{{!item.editorOptions.jumpingLabel && (item.caption || item.captionTemplate)}}">
         <div class="controls-PropertyGrid__gridLayout_editor-caption
                        controls-PropertyGrid__gridLayout_editor-caption_theme-{{theme}}
                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}
                        {{collectionItem.getItemPaddingClasses(theme, 1)}}"
                  style="{{getItemStyles(collectionItem, 1, !collectionItem.getEditorTemplateName())}}">
-
-            <ws:partial template="label"
-                        caption="{{item.caption}}"
-                        scope="{{item.captionOptions}}"
-                        attr:class="controls-PropertyGrid__editor-caption_theme-{{theme}}
-                                    controls-PropertyGrid__gridLayout_editor-caption-baseline"
-                        attr:tabindex="-1"
-            />
+            <ws:if data="{{item.captionTemplate}}">
+                <ws:partial template="{{item.captionTemplate}}" item="{{item}}">
+                    <ws:defaultCaptionTemplate>
+                        <ws:partial template="defaultCaptionTemplate" item="{{item}}"/>
+                    </ws:defaultCaptionTemplate>
+                </ws:partial>>
+            </ws:if>
+            <ws:else>
+                <ws:partial template="defaultCaptionTemplate" item="{{item}}"/>
+            </ws:else>
             <ws:if data="{{!collectionItem.getEditorTemplateName() && collectionItem.shouldDisplayActions()}}">
                 <ws:if data="{{ !collectionItem.isSwiped() }}">
                     <ws:partial
