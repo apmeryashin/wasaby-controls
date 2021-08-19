@@ -132,7 +132,7 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
           }
       }
       if (innerStickyHeaderHeight) {
-         const positions = ['top', 'bottom'];
+         const positions = ['top', 'topWithOffset', 'bottom'];
          for (const position of positions) {
              // Если мы отнимаем высоту заголовка и получаем результат меьнше нуля, значит заголовок был последним.
              // В таком случае не нужно отнимать высоту.
