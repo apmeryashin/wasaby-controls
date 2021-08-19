@@ -197,7 +197,7 @@ export default class VirtualScroll {
         const segmentSize = this._segmentSize || this._options.segmentSize;
         let {start, stop} = this._range;
 
-        if (segmentSize) {
+        if (segmentSize && itemsCount >= pageSize) {
             const quantity = this._getItemsToHideQuantity(direction);
 
             if (direction === 'up') {
