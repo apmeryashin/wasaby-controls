@@ -17,7 +17,7 @@ import {IDialogPopupOptions} from 'Controls/_popup/interface/IDialog';
 
 export default class Dialog extends Base {
     _opener = DialogOpener;
-    open(popupOptions: IDialogPopupOptions): void {
+    open(popupOptions: IDialogPopupOptions): Promise<void> {
         return super.open(popupOptions);
     }
 }

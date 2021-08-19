@@ -15,8 +15,8 @@ export default class NotificationOpener extends Base {
     protected _opener = Notification;
     private _compatiblePopupInstance: unknown;
 
-   open(popupOptions: INotificationPopupOptions) {
-        super.open(popupOptions);
+   open(popupOptions: INotificationPopupOptions): Promise<void> {
+        return super.open(popupOptions);
     }
 
     close(): void {
