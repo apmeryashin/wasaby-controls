@@ -99,4 +99,33 @@ describe('lookup', () => {
         });
 
     });
+
+    describe('_isInputVisible', () => {
+
+        it('selectedKeys is empty (selectedKeys: []), readOnly: true, placeholderVisbility: "empty", input should be visible', async () => {
+            const options = getLookupOptions();
+            options.placeholderVisibility = 'empty';
+            options.readOnly = true;
+            options.placeholder = {};
+            const lookup = new Input(options);
+            await lookup._beforeMount(options);
+            lookup.saveOptions(options);
+
+            ok(lookup._isInputVisible(options));
+        });
+
+        it('readOnly: false, placeholderVisbility: "empty", input should be hidden', async () => {
+            const options = getLookupOptions();
+            options.placeholderVisibility = 'empty';
+            options.readOnly = false;
+            options.placeholder = {};
+            options.selectedKeys = [1];
+            const lookup = new Input(options);
+            await lookup._beforeMount(options);
+            lookup.saveOptions(options);
+
+            ok(!lookup._isInputVisible(options));
+        });
+
+    });
 });
