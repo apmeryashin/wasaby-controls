@@ -1,4 +1,5 @@
-<div class="controls-Menu__iconPin
+<div title="{{treeItem.getContents().get('pinned') === true ? rk('Открепить') : rk('Закрепить')}}"
+     class="controls-Menu__iconPin
             controls-HistoryMenu__iconPin
             controls-Menu__iconPin
             {{treeItem.isSwiped() ? 'controls-Menu__iconPin_swiped'}}
