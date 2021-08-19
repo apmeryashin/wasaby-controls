@@ -174,6 +174,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
             selection: commandParams.selection,
             sourceController: commandParams.sourceController,
             operationsController: commandParams.operationsController,
+            selectedKeysCount: commandParams.selectedKeysCount,
             target: commandParams.target,
             toolbarItem: commandParams.toolbarItem
         });

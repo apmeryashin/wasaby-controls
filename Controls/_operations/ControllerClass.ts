@@ -36,6 +36,7 @@ export interface IExecuteCommandParams extends ISourceOptions {
     navigation?: INavigationSourceConfig;
     sourceController?: SourceController;
     operationsController: OperationsController;
+    selectedKeysCount?: number;
     toolbarItem: Model;
 }
 
