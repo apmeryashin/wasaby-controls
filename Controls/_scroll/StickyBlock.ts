@@ -884,7 +884,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._bottomShadowHiddenClassRemovedinJS = null;
             if (!this._isBottomShadowVisible) {
                 const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
-                this._container.classList.add(hiddenClass);
+                this._children.shadowBottom.classList.add(hiddenClass);
             }
         }
     }
