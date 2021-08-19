@@ -16,6 +16,7 @@
             model="{{model}}"
             inputCallback="{{inputCallback}}"
             recalculateLocationVisibleArea="{{recalculateLocationVisibleArea}}"
+            transliterate="{{_options.transliterate}}"
             on:keydown="_keyDownHandler()"
             attr:spellcheck="{{options.spellCheck || false}}"
             attr:readOnly="{{readOnly || ''}}"

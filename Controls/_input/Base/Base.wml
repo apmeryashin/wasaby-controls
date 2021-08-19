@@ -17,6 +17,7 @@
                         wasActionByUser="{{_wasActionUser}}"
                         contrastBackground="{{ _options.contrastBackground }}"
                         horizontalPadding="{{_horizontalPadding}}"
+                        transliterate="{{_options.transliterate}}"
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
