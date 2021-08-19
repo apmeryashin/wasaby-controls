@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Stack/Template/StackPageWrapper/StackPageWrapper';
 import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
-import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 interface IPageTemplate extends IControlOptions, IPropStorageOptions {
     minWidth: number;
@@ -33,8 +32,6 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     protected _maxOffset: number;
     protected _canResize: boolean;
     protected _minWidth: number;
-    protected _maxWidth: number;
-    private _savedWorkspaceWidth: number;
 
     protected _beforeMount(options?: IPageTemplate, context?: object,
                            receivedState?: IReceivedState): void | Promise<IReceivedState> {
@@ -59,32 +56,10 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         }
     }
 
-    protected _afterMount(): void {
-        this._savedWorkspaceWidth = this._workspaceWidth;
-        RegisterUtil(this, 'controlResize', this._resizeHandler);
-    }
-
-    protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'controlResize');
-    }
-
-    private _resizeHandler(): void {
-        const bodyWidth = document.body.clientWidth;
-        // Если ширина не умещается в экран, то отображаем максимально допустипый размер
-        if (this._savedWorkspaceWidth > bodyWidth) {
-            const min = Math.max(bodyWidth, this._minWidth);
-            const max = Math.min(bodyWidth, this._maxWidth);
-            this._workspaceWidth = Math.max(min, max);
-        } else {
-            this._workspaceWidth = this._savedWorkspaceWidth;
-        }
-    }
-
     protected _offsetHandler(event: Event, offset: number): void {
         this._workspaceWidth += offset;
         // offsetChanged нужно только в 4100, пока в ЭДО полностью не перейдут на работу через нашу обертку.
         this._notify('offsetChanged', [offset]);
-        this._savedWorkspaceWidth = this._workspaceWidth;
         const data = {
             width: this._workspaceWidth
         };
@@ -99,11 +74,9 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._canResize = StackPageWrapper._canResize(options.propStorageId, this._workspaceWidth,
             options.minWidth, options.maxWidth);
         this._minWidth = options.minWidth;
-        this._maxWidth = options.maxWidth;
         // Если размер фиксирован
         if (this._workspaceWidth && !options.minWidth && !options.maxWidth) {
             this._minWidth = options.workspaceWidth;
-            this._maxWidth = options.workspaceWidth;
         }
     }
 

@@ -1,5 +1,5 @@
 <div class="controls-PageTemplate controls_popupTemplate_theme-{{_options.theme}}"
-     attr:style="width: {{ _workspaceWidth ? (_workspaceWidth + 'px') : '100vw' }};min-width: {{ _minWidth }}px;max-width: {{ _maxWidth }}px;">
+     attr:style="width: 100vw; min-width: {{ _minWidth }}px; max-width: {{ _workspaceWidth }}px;">
     <ws:if data="{{_canResize}}">
         <Controls.dragnDrop:ResizingLine attr:class="controls-PageTemplate__resizingLine controls-PageTemplate__resizingLine-left"
                                          direction="reverse"
