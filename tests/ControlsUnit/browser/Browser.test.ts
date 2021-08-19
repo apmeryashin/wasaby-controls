@@ -1,4 +1,4 @@
-import {Browser} from 'Controls/browser';
+import {Browser, IBrowserOptions} from 'Controls/browser';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
@@ -45,7 +45,7 @@ const eventMock = {
     preventDefault: () => void 0
 };
 
-function getBrowserOptions(): object {
+function getBrowserOptions(): Partial<IBrowserOptions> {
     return {
         minSearchLength: 3,
         source: new Memory({
@@ -55,6 +55,17 @@ function getBrowserOptions(): object {
         searchParam: 'name',
         filter: {},
         keyProperty: 'id'
+    };
+}
+
+function getBrowserOptionsHierarchy(): Partial<IBrowserOptions> {
+    return {
+        ...getBrowserOptions(),
+        parentProperty: 'parent',
+        source: new Memory({
+            keyProperty: 'id',
+            data: browserHierarchyData
+        })
     };
 }
 
@@ -732,6 +743,20 @@ describe('Controls/browser:Browser', () => {
                 options.searchValue = '';
                 browser._beforeUpdate(options);
                 assert.ok(!browser._inputSearchValue);
+                assert.ok(!browser._filter.name);
+            });
+
+            it('update root and reset searchValue', async () => {
+                let options = getBrowserOptionsHierarchy();
+                options.searchValue = 'testSearchValue';
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                options = {...options};
+                options.root = 0;
+                options.searchValue = '';
+                await browser._beforeUpdate(options);
                 assert.ok(!browser._filter.name);
             });
 
