@@ -74,7 +74,8 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         const hasMoreContent = this._scrollState ?
             this._scrollState.clientHeight < this._scrollState.scrollHeight : false;
 
-        return slidingPanelOptions.height === slidingPanelOptions.maxHeight ||
+        return slidingPanelOptions.height > slidingPanelOptions.maxHeight || // см fixIosBug в контроллере
+            slidingPanelOptions.height === slidingPanelOptions.maxHeight ||
             slidingPanelOptions.height === contentHeight && !hasMoreContent;
     }
 
