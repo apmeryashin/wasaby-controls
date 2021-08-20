@@ -34,16 +34,9 @@ type Config<OptionsType = object> = ViewConfig<OptionsType> & ({
 }) & {
     /**
      * @cfg {Boolean} [isShowed?]
-     * @name Controls/dataSource/error/Container/Config#isShowed
+     * @name Controls/dataSource/error/Container/Config#isShown
      */
-    isShowed?: boolean;
-};
-
-const getTemplate = (template: string | Control): Promise<Control> => {
-    if (typeof template === 'string') {
-        return load(template);
-    }
-    return Promise.resolve(template);
+    isShown?: boolean;
 };
 
 /**
@@ -98,9 +91,11 @@ export default class Container extends Control<IContainerConfig> implements ICon
             return;
         }
 
-        if (viewConfig && viewConfig.mode === Mode.dialog) {
-            return this.__showDialog(viewConfig);
+        if (this.canOpenDialog(viewConfig)) {
+            this._openDialog(viewConfig);
+            return;
         }
+
         this.__setConfig(viewConfig);
         this._forceUpdate();
     }
@@ -110,15 +105,20 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        if (isEqual(this._options.viewConfig, options.viewConfig)) {
-            // Чтобы диалог не показывался каждый раз при обновлении контрола
-            if (options.viewConfig?.mode === Mode.dialog) {
-                this.__viewConfig = null;
-            }
+        const isDialogMode = options.viewConfig?.mode === Mode.dialog;
+
+        if (
+            !isDialogMode && isEqual(this._options.viewConfig, options.viewConfig) ||
+            isDialogMode && this._popupId
+        ) {
             return;
         }
 
         this.__updateConfig(options);
+
+        if (this.canOpenDialog(this.__viewConfig)) {
+            this._openDialog(this.__viewConfig);
+        }
 
         // обновляем опции списка, чтобы он корректно обновлялся
         if (this.__viewConfig?.mode === Mode.inlist) {
@@ -127,14 +127,8 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _afterMount(): void {
-        if (this.__viewConfig) {
-            this.__showDialog(this.__viewConfig);
-        }
-    }
-
-    protected _afterUpdate(): void {
-        if (this.__viewConfig) {
-            this.__showDialog(this.__viewConfig);
+        if (this.canOpenDialog(this.__viewConfig)) {
+            this._openDialog(this.__viewConfig);
         }
     }
 
@@ -163,13 +157,17 @@ export default class Container extends Control<IContainerConfig> implements ICon
         this._popupId = null;
     }
 
+    private canOpenDialog(viewConfig: ViewConfig): boolean {
+        return !this._popupId && viewConfig?.mode === Mode.dialog && constants.isBrowserPlatform;
+    }
+
     /**
      * Открыть диалог.
      * Если есть незакрытый диалог, открытый этим контролом, то сначала он будет закрыт.
-     * @param config Конфигурация с шаблоном диалога и опциями для этого шаблона.
+     * @param viewConfig Конфигурация с шаблоном диалога и опциями для этого шаблона.
      */
-    private _openDialog(config: Config): Promise<void> {
-        return this._popupHelper.openDialog(config, {
+    private _openDialog(viewConfig: ViewConfig): Promise<void> {
+        return this._popupHelper.openDialog(viewConfig, {
             id: this._popupId,
             opener: this,
             eventHandlers: {
@@ -182,34 +180,11 @@ export default class Container extends Control<IContainerConfig> implements ICon
         });
     }
 
-    private _notifyServiceError(template: Control, options: object): Promise<IDialogData> | IDialogData | void {
-        if (this._isUnmounted) {
-            return;
-        }
-
-        return this._notify(
-            'serviceError',
-            [template, options, this],
-            { bubbling: true }
-        ) as Promise<IDialogData> | IDialogData | void;
-    }
-
-    private __showDialog(config: Config): void {
-        if (
-            config.mode !== Mode.dialog ||
-            !constants.isBrowserPlatform
-        ) {
-            return;
-        }
-
-        this._openDialog(config);
-    }
-
     private __updateConfig(options: IContainerConfig): void {
         this.__setConfig(options.viewConfig);
 
         if (this.__viewConfig) {
-            this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
+            this.__viewConfig.isShown = this.__viewConfig.isShown || this.__viewConfig.mode !== Mode.dialog;
         }
     }
 
@@ -234,9 +209,4 @@ export default class Container extends Control<IContainerConfig> implements ICon
         };
         (this.__viewConfig as Config<IInlistTemplateOptions>).options.listOptions = options;
     }
-}
-
-interface IDialogData {
-    popupId: string;
-    closePopupPromise: Promise<void>;
 }
