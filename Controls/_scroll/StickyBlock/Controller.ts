@@ -713,9 +713,17 @@ class StickyHeaderController {
             for (const position of [POSITION.top, POSITION.bottom, POSITION.left, POSITION.right]) {
                 this._headersStack[position].reduce((offset, headerId, i) => {
                     header = this._headers[headerId];
+                    // Если заголовок скрыт, то не будем ему проставлять offset.
+                    // Возникает следующая ошибка: невидимым заголовкам проставляется одинаковый offset, т.к
+                    // размер у скрытого заголовка получить нельзя и им задаётся смещение первого видимого заголовка.
+                    // В будущем, когда заголовки покажутся, они будут все иметь одинаковый offset
+                    // из-за чего в неправильном порядке запишутся в headersStack.
+                    if (isHidden(header.inst.getHeaderContainer())) {
+                        return offset;
+                    }
                     curHeader = null;
                     offsets[position][headerId] = offset;
-                    if (header.mode === 'stackable' && !isHidden(header.inst.getHeaderContainer())) {
+                    if (header.mode === 'stackable') {
                         if (!this._isLastIndex(this._headersStack[position], i)) {
                             const curHeaderId = this._headersStack[position][i + 1];
                             curHeader = this._headers[curHeaderId];
