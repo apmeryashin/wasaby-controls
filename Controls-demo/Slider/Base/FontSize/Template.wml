@@ -1,0 +1,33 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">scaleFontSize=default, tooltipFontSize=default</div>
+        <Controls.slider:Base
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:value="_value"
+                scaleStep="{{10}}"
+        />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">scaleFontSize=l, tooltipFontSize=s</div>
+        <Controls.slider:Base
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:value="_value"
+                scaleStep="{{10}}"
+                scaleFontSize="l"
+                tooltipFontSize="s"
+        />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">scaleFontSize=xs, tooltipFontSize=3xl</div>
+        <Controls.slider:Base
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:value="_value"
+                scaleStep="{{10}}"
+                scaleFontSize="xs"
+                tooltipFontSize="3xl"
+        />
+    </div>
+</div>
