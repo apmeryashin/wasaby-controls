@@ -115,9 +115,7 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
     }
 
     protected _onSearch(e: SyntheticEvent, value: string): void {
-        if (this._searchValue !== value) {
-            this._searchValue = value === undefined || value === null ? '' : value;
-        }
+        this._searchValue = value;
     }
 
     protected _onSearchReset(): void {
