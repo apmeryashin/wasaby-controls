@@ -42,7 +42,39 @@ class Controller extends BaseController {
         item.sizes = this._getPopupSizes(item, container);
         item.position = SlidingPanelStrategy.getPosition(item);
         item.popupOptions.workspaceWidth = item.position.width;
+        this._fixIosBug(item, container);
         return true;
+    }
+
+    _fixIosBug(item: ISlidingPanelItem, container: HTMLDivElement): void {
+        if (!document) {
+            return;
+        }
+        const bodyHeight = document.body.clientHeight;
+        const vieportHeight = window.visualViewport?.height || document.body.clientHeight;
+        const vieportOffsetTop = window.visualViewport?.offsetTop || 0;
+        const isFullHeight = item.position.height === item.position.maxHeight;
+
+        // Если поле ввода в верхней части экрана, то при показе клавиатуры размер экрана браузера не ресайзится
+        // (ресайзится только visualViewPort). В этом случае css св-во bottom: 0 будет позиционировать окно под
+        // клавиатурой, т.к. физически отсчет координат начинается там.
+        // Если же поле ввода в нижней части, то будет сдвиг всего тела страницы и bottom: 0 будет начинаться над клавой
+
+        // Чтобы визаульно не было видно реакции окна при открыти клавы (изменения размеров, скачка позиции и т.п.)
+        // Добавляю компенсацию высоты клавиатуры через отступ, сохраняя высоту окна. Делаю только когда клава не
+        // подкроллила боди (vieportOffsetTop === 0). Когда подскроллила ничего дополнительного делать не надо.
+        const toggle = isFullHeight && (bodyHeight > vieportHeight) && !vieportOffsetTop;
+        if (toggle) {
+            const dif = bodyHeight - vieportHeight;
+            // todo: https://online.sbis.ru/opendoc.html?guid=2b5e5b84-5b2f-4e2a-af92-bd46e13db48d
+            container.style.paddingBottom = dif + 'px';
+            container.style.boxSizing = 'border-box';
+            item.position.height = bodyHeight;
+            item.position.maxHeight = bodyHeight;
+        } else {
+            container.style.paddingBottom = '0px';
+            container.style.boxSizing = '';
+        }
     }
 
     elementDestroyed(item: ISlidingPanelItem): Promise<void> {
