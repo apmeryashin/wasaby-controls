@@ -73,7 +73,7 @@ describe('Controls/treeGrid_clean/Display/Grid/getResults', () => {
         it('resultsVisibility=visible, should create results when root contains no items', () => {
             const treeGridCollection = new TreeGridCollection({
                 collection: new RecordSet({
-                    [],
+                    rawData: [],
                     keyProperty: 'key'
                 }),
                 resultsPosition: 'top',
