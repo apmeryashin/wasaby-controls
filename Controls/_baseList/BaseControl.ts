@@ -6096,7 +6096,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     ): void {
         _private.updateItemActionsOnce(this, this._options);
         _private.openContextMenu(this, tapEvent, itemData);
-        this._notify('itemLongTap', [itemData, tapEvent]);
+        this._notify('itemLongTap', [itemData.item, tapEvent]);
     }
 
     /**
