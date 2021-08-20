@@ -428,11 +428,11 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     protected _hasItemsToCreateResults(): boolean {
-        return this.getCollectionCount() > (this._$resultsVisibility === 'visible' ? 0 : 1);
+        return this.getCollectionCount() > 1;
     }
 
     protected _resultsIsVisible(): boolean {
-        return !!this._$resultsPosition && this._$resultsVisibility !== 'hidden' && this._hasItemsToCreateResults();
+        return !!this._$resultsPosition && this._$resultsVisibility !== 'hidden' && (this._$resultsVisibility === 'visible' || this._hasItemsToCreateResults());
     }
 
     protected _initializeHeader(options: IOptions): void {
