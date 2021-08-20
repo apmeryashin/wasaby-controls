@@ -43,6 +43,11 @@ interface IMoverColumnTemplateOptions {
 }
 
 /**
+ * Минимальная длина значения для начала поиска.
+ */
+const MIN_SEARCH_LENGTH = 3;
+
+/**
  * Ключ рутовой записи. Должен быть числовым, т.к. при добавлении в рекордсет
  * всегда происходит попытка привести значение к типу.
  * При неправильном приведении типов в рекордсет добавится Null
@@ -104,7 +109,7 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
     }
 
     protected _onSearchValueChanged(e: SyntheticEvent, value: string): void {
-        if (this._searchValue !== value) {
+        if (this._searchValue !== value && (!value || value.length >= MIN_SEARCH_LENGTH)) {
             this._searchValue = value === undefined || value === null ? '' : value;
         }
     }
