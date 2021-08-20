@@ -95,7 +95,7 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
 /**
  * @name Controls/_breadcrumbs/interface/IBreadCrumbs#containerWidth
  * @cfg {Number} Ширина контейнера крошек.
- * Необходимо указывать для правильного расчета ширины вкладок.
+ * Необходимо указывать для правильного расчета ширины крошек.
  */
 
 /**
