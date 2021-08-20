@@ -939,8 +939,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _searchResetHandler(): void {
         this._cancelLoading();
         this._callSearchController(() => {
-            this._resetSearch();
-            this._updateRootAfterSearch();
+            if (!this._destroyed) {
+                this._resetSearch();
+                this._updateRootAfterSearch();
+            }
         });
     }
 
