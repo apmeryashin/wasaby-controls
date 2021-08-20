@@ -23,28 +23,9 @@ describe('Controls/treeGrid_clean/Display/Grid/getResults', () => {
 
     describe('_resultsIsVisible', () => {
 
-        it('resultsVisibility=visible, should not create results when root contains no items', () => {
-            rawData = [];
-            const treeGridCollection = new TreeGridCollection({
-                collection: new RecordSet({
-                    rawData,
-                    keyProperty: 'key'
-                }),
-                resultsPosition: 'top',
-                keyProperty: 'key',
-                parentProperty: 'parent',
-                nodeProperty: 'type',
-                resultsVisibility: 'visible',
-                multiSelectVisibility: 'visible',
-                columns: [{}],
-                expandedItems: [ null ],
-                root: null
-            });
-
-            assert.notExists(treeGridCollection.getResults());
-        });
-
         it('resultsVisibility=hasdata, should not create results when root contains single item', () => {
+            // При наличии в корне единственного узла (даже если он развернут и у него есть дочерние элементы) - не
+            // должны создаваться results.
             const treeGridCollection = new TreeGridCollection({
                 collection: new RecordSet({
                     rawData,
@@ -65,10 +46,34 @@ describe('Controls/treeGrid_clean/Display/Grid/getResults', () => {
             assert.notExists(treeGridCollection.getResults());
         });
 
-        it('resultsVisibility=visible, should create results when root contains single item', () => {
+        it('resultsVisibility=hasdata, Should create results when root contains single groupNode item', () => {
+            // При наличии в корне единственного узла в виде группы если у него есть дочерние элементы
+            // должны создаваться results.
+            rawData[0].nodeType = 'group';
             const treeGridCollection = new TreeGridCollection({
                 collection: new RecordSet({
                     rawData,
+                    keyProperty: 'key'
+                }),
+                resultsPosition: 'top',
+                keyProperty: 'key',
+                parentProperty: 'parent',
+                nodeProperty: 'type',
+                resultsVisibility: 'hasdata',
+                multiSelectVisibility: 'visible',
+                columns: [{}],
+                expandedItems: [ null ],
+                root: null,
+                nodeTypeProperty: 'nodeType'
+            });
+
+            assert.exists(treeGridCollection.getResults());
+        });
+
+        it('resultsVisibility=visible, should create results when root contains no items', () => {
+            const treeGridCollection = new TreeGridCollection({
+                collection: new RecordSet({
+                    [],
                     keyProperty: 'key'
                 }),
                 resultsPosition: 'top',
@@ -85,5 +90,6 @@ describe('Controls/treeGrid_clean/Display/Grid/getResults', () => {
 
             assert.exists(treeGridCollection.getResults());
         });
+
     });
 });
