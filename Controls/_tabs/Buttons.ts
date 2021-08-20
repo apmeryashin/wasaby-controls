@@ -431,7 +431,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
 
     protected _prepareItemMinWidthClass(item: ITabButtonItem): string {
         const isLeftTemplate = this._getTemplate(this._options.itemLeftTemplate, item, this._options.leftTemplateProperty);
-        const isRightTemplate = this._getTemplate(this._options.itemLeftTemplate, item, this._options.rightTemplateProperty);
+        const isRightTemplate = this._getTemplate(this._options.itemRightTemplate, item, this._options.rightTemplateProperty);
         if (detection.isIE && (!isLeftTemplate && !isRightTemplate)) {
             return 'controls-Tabs__itemClickableArea_minWidth';
         }

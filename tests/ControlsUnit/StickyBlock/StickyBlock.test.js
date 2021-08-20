@@ -686,6 +686,24 @@ define([
 
       });
 
+      describe('_restoreBottomShadowHiddenClass', function () {
+         it ('should add ws-hidden class if added shadow in js and shadow should be turned off', function () {
+            const component = createComponent(StickyHeader, {});
+            component._bottomShadowHiddenClassRemovedinJS = true;
+            component._isBottomShadowVisible = false;
+            let addCalled = false;
+            component._children = {
+               shadowBottom: {
+                  classList: {
+                     add: () => { addCalled = true; }
+                  }
+               }
+            };
+            component._restoreBottomShadowHiddenClass();
+            assert.isTrue(addCalled);
+         });
+      });
+
       describe('getOffset', function() {
          it('should should`t take into account gap fix if fixed but changes but the changes are not applied to DOM', function () {
             const getOffsetValue = 0;

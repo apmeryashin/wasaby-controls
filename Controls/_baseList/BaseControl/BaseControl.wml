@@ -130,6 +130,7 @@
                 on:restoreScrollPosition="_stopBubblingEvent()"
                 on:loadMore="_onloadMore()"
                 on:toggleHorizontalScroll="_onToggleHorizontalScroll()"
+                on:updateShadowMode="_stopInnerUpdateShadowMode()"
         >
             <ws:itemActionsTemplate>
                 <ws:partial

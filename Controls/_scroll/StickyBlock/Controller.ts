@@ -75,11 +75,11 @@ class StickyHeaderController {
         this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers);
     }
 
-    init(container: HTMLElement): void {
+    init(container: HTMLElement): Promise<void> {
         this.updateContainer(container);
         this._initialized = true;
         this._sizeObserver.init(this._container);
-        this._registerDelayed();
+        return this._registerDelayed();
     }
 
     updateContainer(container: HTMLElement): void {
@@ -460,12 +460,16 @@ class StickyHeaderController {
 
         const isFixed: Function = (headerId: number, headersHeight) => {
             return this._getHeaderOffset(headerId, position) < headersHeight;
-        }
+        };
 
         for (let i = 0; i < headersStack.length; i++) {
             const headerId: number = headersStack[i];
             const header = this._headers[headerId];
-
+            // По контролРесайзу попадаем в этот метод, ресайзОбсёрвер к этому моменту может еще не стрельнуть
+            // таким образом получится, что в headersStack могут лежать скрытые стикиБлоки.
+            if (isHidden(header.inst.getHeaderContainer())) {
+                continue;
+            }
             if (headers.includes(headerId)) {
                 const currentHeadersHeight: number = fixedHeadersHeight + replaceableHeight;
                 if (isFixed(headerId, currentHeadersHeight)) {
@@ -709,9 +713,17 @@ class StickyHeaderController {
             for (const position of [POSITION.top, POSITION.bottom, POSITION.left, POSITION.right]) {
                 this._headersStack[position].reduce((offset, headerId, i) => {
                     header = this._headers[headerId];
+                    // Если заголовок скрыт, то не будем ему проставлять offset.
+                    // Возникает следующая ошибка: невидимым заголовкам проставляется одинаковый offset, т.к
+                    // размер у скрытого заголовка получить нельзя и им задаётся смещение первого видимого заголовка.
+                    // В будущем, когда заголовки покажутся, они будут все иметь одинаковый offset
+                    // из-за чего в неправильном порядке запишутся в headersStack.
+                    if (isHidden(header.inst.getHeaderContainer())) {
+                        return offset;
+                    }
                     curHeader = null;
                     offsets[position][headerId] = offset;
-                    if (header.mode === 'stackable' && !isHidden(header.inst.getHeaderContainer())) {
+                    if (header.mode === 'stackable') {
                         if (!this._isLastIndex(this._headersStack[position], i)) {
                             const curHeaderId = this._headersStack[position][i + 1];
                             curHeader = this._headers[curHeaderId];

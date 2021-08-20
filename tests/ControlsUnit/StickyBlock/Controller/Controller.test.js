@@ -1040,7 +1040,8 @@ define([
                   mode: 'stackable',
                   inst: {
                      height: 10,
-                     offsetTop: 0
+                     offsetTop: 0,
+                     getHeaderContainer: sinon.fake()
                   }
                },
                sticky2: {
@@ -1048,7 +1049,8 @@ define([
                   inst: {
                      height: 10,
                      setFixedPosition: setFixedPosition,
-                     offsetTop: 0
+                     offsetTop: 0,
+                     getHeaderContainer: sinon.fake()
                   },
                   offset: { top: 5 }
                },
@@ -1056,7 +1058,8 @@ define([
                   mode: 'stackable',
                   inst: {
                      height: 10,
-                     offsetTop: 0
+                     offsetTop: 0,
+                     getHeaderContainer: sinon.fake()
                   }
                }
             };
@@ -1075,14 +1078,16 @@ define([
                   mode: 'stackable',
                   inst: {
                      height: 10,
-                     offsetTop: -5
+                     offsetTop: -5,
+                     getHeaderContainer: sinon.fake()
                   }
                },
                sticky2: {
                   mode: 'replaceable',
                   inst: {
                      height: 10,
-                     setFixedPosition: setFixedPosition
+                     setFixedPosition: setFixedPosition,
+                     getHeaderContainer: sinon.fake()
                   },
                   offset: { top: 5 }
                }
@@ -1101,14 +1106,16 @@ define([
                sticky1: {
                   mode: 'stackable',
                   inst: {
-                     height: 10
+                     height: 10,
+                     getHeaderContainer: sinon.fake()
                   }
                },
                sticky2: {
                   mode: 'stackable',
                   inst: {
                      height: 10,
-                     setFixedPosition: setFixedPosition
+                     setFixedPosition: setFixedPosition,
+                     getHeaderContainer: sinon.fake()
                   },
                   offset: { top: 10 }
                }

@@ -3,6 +3,7 @@ import {DimensionsMeasurer, getDimensions} from 'Controls/sizeUtils';
 import {getGapFixSize, POSITION, TYPE_FIXED_HEADERS} from 'Controls/_scroll/StickyBlock/Utils';
 import {goUpByControlTree} from 'UI/NodeCollector';
 import {IControl} from 'UICommon/interfaces';
+import Container from '../Container';
 
 const SCROLL_CONTAINERS_SELECTOR = '.controls-Scroll, .controls-Scroll-Container';
 
@@ -56,12 +57,16 @@ function getOffset(element: HTMLElement): { top: number; bottom: number } {
    }
 }
 
+function getScrollContainerByElement(scrollableElement: HTMLElement): Container {
+    const controls = goUpByControlTree(scrollableElement);
+    return controls.find(
+        (control: IControl) => cInstance.instanceOfModule(control, 'Controls/_scroll/Container')) as Container;
+}
+
 function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number; topWithOffset: number } {
    const scrollControlNode: HTMLElement = scrollableElement.closest(SCROLL_CONTAINERS_SELECTOR);
    if (scrollControlNode) {
-      const controls = goUpByControlTree(scrollControlNode);
-      const scrollContainer =
-          controls.find((control: IControl) => cInstance.instanceOfModule(control, 'Controls/scroll:Container'));
+      const scrollContainer = getScrollContainerByElement(scrollControlNode);
 
       if (scrollContainer) {
          return {
@@ -104,13 +109,33 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
  * </pre>
  */
 
-export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boolean | SCROLL_POSITION, force?: Boolean): void {
+export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boolean | SCROLL_POSITION,
+                                force?: Boolean, waitInitialization: boolean = false): Promise<void> {
    // TODO: переделать аргумент toBottom в position https://online.sbis.ru/opendoc.html?guid=4693dfce-f11d-4792-b62d-9faf54564553
    const position: SCROLL_POSITION = toBottomOrPosition === true ? SCROLL_POSITION.bottom : toBottomOrPosition;
    const stickyHeaderClass = 'controls-StickyHeader';
    // Элемент, к которому нужно подскролить, может находиться в стики блоке.
    const outerStickyHeaderElement = element.closest(`.${stickyHeaderClass}`);
    const scrollableParent = getScrollableParents(element, outerStickyHeaderElement);
+
+   // Если будут подобные ошибки, то можно будет попробовать сделать по умолчанию waitInitialization = true.
+   // Эта логика правильнее, но может сломать существующие сценарии.
+   if (waitInitialization) {
+      const promises: Promise<void>[] = [];
+      for (const parent of scrollableParent) {
+         const scrollContainer = getScrollContainerByElement(parent);
+         const headerControllerInited = scrollContainer.initHeaderController();
+         if (headerControllerInited != undefined ) {
+            promises.push(headerControllerInited);
+         }
+      }
+      if (promises.length) {
+         return Promise.all(promises).then(() => {
+            scrollToElement(element, toBottomOrPosition, force, waitInitialization);
+         });
+      }
+   }
+
    for (const parent of scrollableParent) {
       const
          elemToScroll = parent === document.documentElement ? document.body : parent,
@@ -132,7 +157,7 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
           }
       }
       if (innerStickyHeaderHeight) {
-         const positions = ['top', 'bottom'];
+         const positions = ['top', 'topWithOffset', 'bottom'];
          for (const position of positions) {
              // Если мы отнимаем высоту заголовка и получаем результат меьнше нуля, значит заголовок был последним.
              // В таком случае не нужно отнимать высоту.

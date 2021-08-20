@@ -7,7 +7,8 @@ describe('Controls/grid_clean/Display/Results/ResultsCell/getWrapperStyles', () 
     const mockResultRow = {
         hasMultiSelectColumn: () => false,
         isFullGridSupport: () => true,
-        hasColumnScroll: () => hasColumnScroll
+        hasColumnScroll: () => hasColumnScroll,
+        getColumnIndex: () => 0
     } as undefined as GridRow<any>;
 
     beforeEach(() => {
@@ -20,7 +21,7 @@ describe('Controls/grid_clean/Display/Results/ResultsCell/getWrapperStyles', () 
             owner: mockResultRow,
             isSticked: true
         });
-        assert.equal(cell.getWrapperStyles(), 'z-index: 4;');
+        assert.equal(cell.getWrapperStyles(), 'z-index: 4; grid-column: 1 / 2;');
     });
 
     it('stickyHeader, with columnScroll, isFixed', () => {
@@ -31,7 +32,7 @@ describe('Controls/grid_clean/Display/Results/ResultsCell/getWrapperStyles', () 
             isFixed: true,
             isSticked: true
         });
-        assert.equal(cell.getWrapperStyles(), 'z-index: 4;');
+        assert.equal(cell.getWrapperStyles(), 'z-index: 4; grid-column: 1 / 2;');
     });
 
     it('stickyHeader, with columnScroll, not isFixed', () => {
@@ -42,7 +43,7 @@ describe('Controls/grid_clean/Display/Results/ResultsCell/getWrapperStyles', () 
             isFixed: false,
             isSticked: true
         });
-        assert.equal(cell.getWrapperStyles(), 'z-index: 3;');
+        assert.equal(cell.getWrapperStyles(), 'z-index: 3; grid-column: 1 / 2;');
     });
 
     it('not stickyHeader', () => {
@@ -51,6 +52,6 @@ describe('Controls/grid_clean/Display/Results/ResultsCell/getWrapperStyles', () 
             owner: mockResultRow,
             isSticked: false
         });
-        assert.equal(cell.getWrapperStyles(), '');
+        assert.equal(cell.getWrapperStyles().trim(), 'grid-column: 1 / 2;');
     });
 });

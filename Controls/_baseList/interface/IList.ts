@@ -659,6 +659,14 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
+ * @event Происходит при долгом тапе на элементе списка на touch устройствах.
+ * @name Controls/_list/interface/IList#itemLongTap
+ * @param {UICommon/Events:SyntheticEvent} event Дескриптор события.
+ * @param {Types/entity:Record} item Элемент, на котором произошёл долгий тап.
+ * @param {Object} nativeEvent Объект нативного события браузера.
+ */
+
+/**
  * @event Происходит в момент нажатия на кнопку мыши над элементом списка.
  * @name Controls/_list/interface/IList#itemMouseDown
  * @param {UICommon/Events:SyntheticEvent} event Дескриптор события.

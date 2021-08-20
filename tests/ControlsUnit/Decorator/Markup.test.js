@@ -1198,6 +1198,36 @@ define([
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1]);
             assert.deepEqual(goodResultNode, checkResultNode);
          });
+
+         it('Ссылка на кириллице с протоколом', function() {
+            var parentNode = ['p', 'https://налог.рф'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'https://налог.рф',
+                  target: '_blank'
+               },
+               'https://налог.рф'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('Ссылка на кириллице без протокола', () => {
+            var parentNode = ['p', 'налог.рф'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://налог.рф',
+                  target: '_blank'
+               },
+               'налог.рф'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
       });
 
       describe('getLinks', function() {

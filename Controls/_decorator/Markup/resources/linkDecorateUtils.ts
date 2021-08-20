@@ -37,7 +37,7 @@ const correctTopLevelDomainNames = [
 ];
 const linkMaxLenght = 2048;
 const protocolLinkPrefixPattern = `(?:${protocolNames.join('|')})`.replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`);
-const simpleLinkPrefixPattern = '([\\w\\-]{1,2048}(?:\\.[a-zA-Z]{1,2048}){0,2048}\\.([a-zA-Z]{1,2048})(?::[0-9]{1,2048})?)';
+const simpleLinkPrefixPattern = '([\\w\\-а-яёА-ЯЁ]{1,2048}(?:\\.[a-zA-Zа-яёА-ЯЁ]{1,2048}){0,2048}\\.([a-zA-Zа-яёА-ЯЁ]{1,2048})(?::[0-9]{1,2048})?)';
 const linkPrefixPattern = `(?:${protocolLinkPrefixPattern}|${simpleLinkPrefixPattern})`;
 const linkPattern = `(${linkPrefixPattern}(?:[^\\s\\ud800-\\udfff]{0,2048}))`;
 const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]{1,2048}@[^\\s@()\\ud800-\\udfff]{1,2048}\\.([\\wа-яёА-ЯЁ]{1,2048}))';

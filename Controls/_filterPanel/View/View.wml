@@ -53,7 +53,7 @@
                            groupItems="{{_viewModel.getGroupItems()}}"/>
             </ws:groupTemplate>
          </Controls.propertyGrid:PropertyGrid>
-         <ws:if data="{{_options.viewMode === 'default'}}">
+         <ws:if data="{{_options.viewMode === 'default' && !_viewModel.isFilterReseted()}}">
             <Controls.scroll:StickyHeader backgroundStyle="filterPanel"
                                           position="bottom"
                                           attr:class="controls-FilterViewPanel__applyButton-{{_options.viewMode}}">

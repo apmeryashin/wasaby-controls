@@ -360,6 +360,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue?.length >= options.minSearchLength;
         const searchValueOptionsChanged = options.searchValue !== newOptions.searchValue;
         const searchValueChanged = this._searchValue !== newOptions.searchValue;
+        const rootChanged = newOptions.root !== options.root;
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -377,7 +378,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._source = newOptions.source;
         }
 
-        if (newOptions.root !== options.root) {
+        if (rootChanged) {
             this._root = newOptions.root;
             this._getSearchControllerSync(id)?.setRoot(newOptions.root);
         }
@@ -408,7 +409,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (searchValueOptionsChanged && searchValueChanged) {
             this._inputSearchValue = newOptions.searchValue;
 
-            if (!newOptions.searchValue && sourceChanged && this._getSearchControllerSync()) {
+            if (!newOptions.searchValue && (sourceChanged || rootChanged) && this._getSearchControllerSync()) {
                 this._resetSearch();
                 sourceController.setFilter(this._filter);
             }
@@ -440,7 +441,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._inputSearchValue = '';
         }
 
-        if ((hasSearchValueInOptions && searchValueChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
+        if ((hasSearchValueInOptions && searchValueOptionsChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
             if (!methodResult) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
@@ -938,8 +939,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _searchResetHandler(): void {
         this._cancelLoading();
         this._callSearchController(() => {
-            this._resetSearch();
-            this._updateRootAfterSearch();
+            if (!this._destroyed) {
+                this._resetSearch();
+                this._updateRootAfterSearch();
+            }
         });
     }
 

@@ -136,4 +136,36 @@ describe('Controls/_searchBreadcrumbsGrid/display/SearchGridCollection', () => {
 
       assert.exists(treeGridCollection.getResults());
    });
+
+   it('not should throw error when update breadcrumbs contents after remove', () => {
+      const items = new RecordSet({
+         rawData: [
+            { key: 1, parent: null, type: true, value: 1 },
+            { key: 11, parent: 1, type: null },
+            { key: 2, parent: null, type: true },
+            { key: 22, parent: 2, type: null }
+         ],
+         keyProperty: 'key'
+      });
+      const collection = new SearchGridCollection({
+         collection: items,
+         keyProperty: 'key',
+         parentProperty: 'parent',
+         nodeProperty: 'type',
+         columns: [{}],
+         root: null
+      });
+
+      items.remove(items.getRecordById(11));
+
+      const newItems = new RecordSet({
+         rawData: [
+            { key: 1, parent: null, type: true, value: 2 }
+         ],
+         keyProperty: 'key'
+      });
+      items.merge(newItems, { remove: false, add: false });
+
+      assert.equal(collection.getCount(), 3);
+   });
 });

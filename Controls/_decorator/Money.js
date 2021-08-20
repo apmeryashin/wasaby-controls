@@ -127,6 +127,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
  *
  * @public
  * @demo Controls-demo/Decorator/Money/Index
+ * @demo Controls-demo/Decorator/Money/Hovered/Index
  *
  * @author Красильников А.С.
  */

@@ -688,17 +688,19 @@
 }
 
 // TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
-.controls-ListView__item_withMarkerSize {
-   .controls-ListView__item-leftPadding_default {
-      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
-   }
+.controls-master-template-default {
+   .controls-ListView__item_withMarkerSize {
+      .controls-ListView__item-leftPadding_default {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+      }
 
-   .controls-ListView__item-leftPadding_s {
-      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
-   }
+      .controls-ListView__item-leftPadding_s {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
+      }
 
-   .controls-ListView__item-leftPadding_m {
-      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
+      .controls-ListView__item-leftPadding_m {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
+      }
    }
 }
 

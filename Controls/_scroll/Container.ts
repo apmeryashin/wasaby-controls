@@ -106,13 +106,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     private _gridAutoShadows: boolean = true;
 
     _beforeMount(options: IContainerOptions) {
-        // Будем показывать скроллбар до тех пор, пока пользователь не воспользовался колесиком мышки, даже если
-        // прикладник задал опцию scrollbarVisible=false.
-        // Таким образом пользователи без колесика мышки смогут скроллить контент.
-        // Если пользователь использовал колесико мышки - записываем это в localstorage
-        WheelEventSettings.getWheelEventSettingPromise().then((data) => {
-            ScrollbarsModel.wheelEventHappened = data;
-        });
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
         this._scrollbars = new ScrollbarsModel(options);
         this._stickyHeaderController = new StickyHeaderController(
@@ -131,7 +124,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         super._beforeMount(...arguments);
     }
 
-    _afterMount(options: IContainerOptions) {
+    _afterMount(options: IContainerOptions): void {
+        // Будем показывать скроллбар до тех пор, пока пользователь не воспользовался колесиком мышки, даже если
+        // прикладник задал опцию scrollbarVisible=false.
+        // Таким образом пользователи без колесика мышки смогут скроллить контент.
+        // Если пользователь использовал колесико мышки - записываем это в localstorage
+        WheelEventSettings.getWheelEventSettingPromise().then((data) => {
+            ScrollbarsModel.wheelEventHappened = data;
+        });
 
         if (this._isPagingVisible(this._options)) {
             this._paging = new PagingModel();
@@ -156,7 +156,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // т.к. они будут зафиксированы.
         // Если тени принудительно включены, то надо инициализировать заголовки, что бы отрисовать тени на них.
         if (compatibility.touch || hasBottomHeaders() || this._shadows.hasVisibleShadow()) {
-            this._initHeaderController();
+            this.initHeaderController();
         }
 
         this._updateShadowsScrollState();
@@ -214,10 +214,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         super._beforeUnmount();
     }
 
-    private _initHeaderController(): void {
+    private initHeaderController(): Promise<void> {
         if (!this._isControllerInitialized) {
-            this._stickyHeaderController.init(this._children.content);
             this._isControllerInitialized = true;
+            return this._stickyHeaderController.init(this._children.content);
         }
     }
 
@@ -253,7 +253,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _scrollHandler(e: SyntheticEvent): void {
         super._scrollHandler(e);
-        this._initHeaderController();
+        this.initHeaderController();
     }
 
     _controlResizeHandler(): void {
@@ -369,7 +369,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
         // Если принудительно включили тени изнутри, то надо инициализировать заголовки что бы отрисовать тени на них.
         if (this._shadows.hasVisibleShadow()) {
-            this._initHeaderController();
+            this.initHeaderController();
         }
         this._stickyHeaderController.setShadowVisibility(
                 this._shadows.top?.getStickyHeadersShadowsVisibility(),
@@ -510,7 +510,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                 this._scrollbars.updateScrollState(this._scrollModel, this._container);
             }
             if (!compatibility.touch) {
-                this._initHeaderController();
+                this.initHeaderController();
             }
         }
 
