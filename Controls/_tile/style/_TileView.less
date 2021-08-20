@@ -819,6 +819,15 @@
    z-index: 1;
 }
 
+// ipad не любит position: absolute и криво вычисляет его расположение, из-за чего часто обрезает на 1px одну из сторон:
+// https://online.sbis.ru/opendoc.html?guid=235704ae-cef4-4011-bb67-90e234cdaf4c
+// исправить расчёты помогает любая трансформацию с absolute-блоком, например, поворот
+.ws-is-mobile-safari {
+   .controls-TileView__item_withMarker::after {
+      transform: rotateX(180deg);
+   }
+}
+
 //TODO: Убрать перебитие, сделать отдельные классы в плитке и других списках
 .controls-itemActionsV.controls-TileView__itemActions {
    padding: 0 var(--itemActions_offset-right_tile) var(--itemActions_offset-bottom_tile) 0;
