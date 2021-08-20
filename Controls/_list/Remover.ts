@@ -111,7 +111,7 @@ var Remover = BaseAction.extend({
     removeItems(keys: string[]): Promise<void> {
         const both = (result) => {
             if (this._destroyed) {
-                return Promise.reject();
+                return;
             }
             return _private.afterItemsRemove(this, keys, result).then((eventResult) => {
                 if (eventResult === false || !(result instanceof Error)) {
@@ -139,7 +139,7 @@ var Remover = BaseAction.extend({
                 return this._removeAction.execute()
                     .then((result) => {
                         if (this._destroyed) {
-                            return Promise.reject();
+                            return;
                         }
                         _private.removeFromItems(this, selection);
                         return result;
