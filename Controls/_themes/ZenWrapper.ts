@@ -1,0 +1,208 @@
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import * as template from 'wml!Controls/_themes/ZenWrapper/Template';
+
+interface IRgb {
+    r: number;
+    g: number;
+    b: number;
+}
+
+type TBrightness = 'dark' | 'light';
+
+export interface IZenWrapperOptions extends IControlOptions {
+    dominantColor: string;
+    complementaryColor: string;
+    brightness: TBrightness;
+}
+
+/**
+ * Контейнер для стилизации элементов, лежащих на фоне некоторого изображения. Цвета элементов рассчитываются исходя из доминантного цвета изображения и комплиментарного к нему.
+ * @class Controls/_themes/ZenWrapper
+ * @extends UI/Base:Control
+ * @author Клепиков И.А.
+ * @public
+ * @demo Controls-demo/themes/ZenWrapper/Index
+ * @remark Доминантный и комплиментарный цвет изображения должны быть вычисоены заранее и переданы в опции контрола.
+ */
+
+export default class ZenWrapper extends Control<IZenWrapperOptions> {
+    protected _template: TemplateFunction = template;
+    protected _variables: object = {};
+
+    protected _beforeMount(options: IZenWrapperOptions): void {
+        this._variables = ZenWrapper.getDerivedStateFromProps(options);
+    }
+
+    protected _beforeUpdate(options: IZenWrapperOptions): void {
+        if (options.dominantColor !== this._options.dominantColor ||
+            options.complementaryColor !== this._options.complementaryColor ||
+            options.brightness !== this._options.brightness
+        ) {
+            this._variables = ZenWrapper.getDerivedStateFromProps(options);
+        }
+    }
+
+    static calculateRGB(color: string): IRgb {
+        if (/(\d+),\s*(\d+),\s*(\d+)/.test(color)) {
+            return {
+                r: parseInt(RegExp.$1, 10),
+                g: parseInt(RegExp.$2, 10),
+                b: parseInt(RegExp.$3, 10)
+            };
+        } else {
+            return { r: 255, g: 255, b: 255 };
+        }
+    }
+
+    static calculateVariables(rgb: IRgb, brightness: TBrightness): object {
+        const baseVars = ZenWrapper.calculateBaseVariables(rgb, brightness);
+        const buttonsVars = ZenWrapper.calculateButtonsVariables(rgb, brightness);
+        const decoratorsVars = ZenWrapper.calculateDecoratorsVariables(rgb, brightness);
+        const listsVars = ZenWrapper.calculateListsVariables(rgb, brightness);
+        const headingVars = ZenWrapper.calculateHeadingVariables(rgb, brightness);
+        return {
+            ...baseVars,
+            ...buttonsVars,
+            ...decoratorsVars,
+            ...listsVars,
+            ...headingVars
+        };
+    }
+
+    static calculateBaseVariables(rgb: IRgb, brightness: TBrightness): object {
+        return {
+            '--text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--label_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--unaccented_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--unaccented_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--readonly_color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
+            '--primary_text-color': ZenWrapper.getColor(rgb),
+            '--primary_icon-color': ZenWrapper.getColor(rgb),
+            '--primary_border-color': ZenWrapper.getColor(rgb),
+            '--secondary_text-color': ZenWrapper.getMonochromeColor(brightness),
+            '--secondary_icon-color': ZenWrapper.getMonochromeColor(brightness),
+            '--link_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--label_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--label_hover_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+        };
+    }
+
+    static calculateButtonsVariables(rgb: IRgb, brightness: TBrightness): object {
+        return {
+            '--text-color_button': ZenWrapper.getMonochromeColor(brightness),
+            '--text-contrast-color_button': brightness === 'light' ? '#fff' : '#000',
+            '--primary_background-color_button': 'transparent',
+            '--primary_hover_same_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.3'),
+            '--primary_active_same_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.6'),
+            '--primary_contrast_background-color': ZenWrapper.getColor(rgb),
+            '--primary_hover_contrast_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.8'),
+            '--primary_active_contrast_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.6'),
+            '--readonly_background-color_button': 'transparent',
+            '--border-color_hover_button_toolButton': 'transparent',
+            '--readonly_border-color_button_functionalButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3')
+        };
+    }
+
+    static calculateDecoratorsVariables(rgb: IRgb, brightness: TBrightness): object {
+        return {
+            '--default_text-color_decorator_fraction': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--primary_text-color_decorator_fraction': ZenWrapper.getColorWithOpacity(rgb, '0.5'),
+            '--secondary_text-color_decorator_fraction': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--unaccented_text-color_decorator_fraction':  ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--label_text-color_decorator_fraction': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--readOnly_text-color_decorator_fraction': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3')
+        };
+    }
+
+    static calculateListsVariables(rgb: IRgb, brightness: TBrightness): object {
+        return {
+            '--node_expander_icon-color_treeGrid': ZenWrapper.getMonochromeColor(brightness),
+            '--marker_color_list': ZenWrapper.getColor(rgb),
+            '--item_hover_background-color_list': brightness === 'dark' ?
+                ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1') :
+                ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.05'),
+            '--item_shadow-color_columns': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.15'),
+            '--item_hover_shadow-color_columns':  ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.45')
+        };
+    }
+
+    static calculateHeadingVariables(rgb: IRgb, brightness: TBrightness): object {
+        return {
+            '--primary_hover_text-color_heading': ZenWrapper.getColorWithOpacity(rgb, '0.8'),
+            '--secondary_hover_text-color_heading': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
+        };
+    }
+
+    static getMonochromeColor(brightness: TBrightness): string {
+        return brightness === 'dark' ? '#fff' : '#000';
+    }
+
+    static getMonochromeColorWithOpacity(brightness: TBrightness, opacity: string = '1'): string {
+        return brightness === 'dark' ? `rgba(255,255,255,${opacity})` : `rgba(0,0,0,${opacity})`;
+    }
+
+    static getColor(rgb: IRgb): string {
+        const {r: red, g: green, b: blue} = rgb;
+        return `rgb(${red},${green},${blue})`;
+    }
+
+    static getColorWithOpacity(rgb: IRgb, opacity: string = '1'): string {
+        const {r: red, g: green, b: blue} = rgb;
+        return `rgba(${red},${green},${blue},${opacity})`;
+    }
+
+    static getDerivedStateFromProps(options: IZenWrapperOptions): object {
+        return ZenWrapper.calculateVariables(
+            ZenWrapper.calculateRGB(options.complementaryColor), options.brightness
+        );
+    }
+}
+
+
+
+/**
+ * @name Controls/_themes/ZenWrapper#dominantColor
+ * @cfg {String} Задает доминантный цвет изображения на фоне которого строится контрол. Цвет в формате rgb - 45, 34, 81
+ * @remark
+ * @example
+ * Установлен доминантный цвет
+ * <pre>
+ *    <Controls.themes:ZenWrapper dominantColor="255, 255, 255 >
+ *       <ws:partial template="MyModule/someContent" />
+ *    </Controls.themes:ZenWrapper>
+ * </pre>
+ * @see option complementaryColor
+ */
+
+/**
+ * @name Controls/_themes/ZenWrapper#complementaryColor
+ * @cfg {String} Задает комплиментарный цвет к доминантному цвет изображения на фоне которого строится контрол. Цвет в формате rgb - 45, 34, 81
+ * @remark
+ * @example
+ * Установлен комплиментарный цвет
+ * <pre>
+ *    <Controls.themes:ZenWrapper complementaryColor="178, 35, 35" >
+ *       <ws:partial template="MyModule/someContent" />
+ *    </Controls.themes:ZenWrapper>
+ * </pre>
+ * @see option dominantColor
+ */
+
+/**
+ * @name Controls/_themes/ZenWrapper#brightness
+ * @cfg {String} Определяет темным или светлым является доминантный цвет изображения.
+ * @variant dark Изображение с доминантным темным цветом.
+ * @variant light Изображение с доминантным светлым цветом.
+ * @default light
+ * @example
+ * Кнопка в режиме отображения "linkButton".
+ * Установлен комплиментарный цвет и яркость "светлый"
+ * <pre>
+ *    <Controls.themes:ZenWrapper complementaryColor="178, 35, 35" brightness="light" >
+ *       <ws:partial template="MyModule/someContent" />
+ *    </Controls.themes:ZenWrapper>
+ * </pre>
+ * @see option complementaryColor
+ * @see option dominantColor
+ */
