@@ -123,7 +123,7 @@ class ResultsCell extends Cell<null, ResultsRow> {
         }
 
         if (this._$owner.isFullGridSupport() && !this._getColspanParams()) {
-            wrapperStyles += ` grid-column: ${(this.getColumnIndex() + 1)} / ${(this.getColumnIndex() + 2)};`;
+            wrapperStyles += ` grid-column: ${(this.getColumnIndex(true) + 1)} / ${(this.getColumnIndex(true) + 2)};`;
         }
 
         return wrapperStyles;
