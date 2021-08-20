@@ -19,22 +19,24 @@ interface IInlistTemplateOptions {
  * @interface Controls/dataSource/error/Container/Config
  * @extends Controls/_dataSource/_error/ViewConfig
  */
-type Config<OptionsType = object> = ViewConfig<OptionsType> & {
+type Config<OptionsType = object> = ViewConfig<OptionsType> & ({
+    /**
+     * @cfg {String} [templateName?]
+     * @name Controls/dataSource/error/Container/Config#templateName
+     */
+    templateName: string;
+} | {
+    /**
+     * @cfg {any} [template?]
+     * @name Controls/dataSource/error/Container/Config#template
+     */
+    template: TemplateFunction;
+}) & {
     /**
      * @cfg {Boolean} [isShowed?]
      * @name Controls/dataSource/error/Container/Config#isShowed
      */
     isShowed?: boolean;
-    /**
-     * @cfg {String} [templateName?]
-     * @name Controls/dataSource/error/Container/Config#templateName
-     */
-    templateName?: string;
-    /**
-     * @cfg {any} [template?]
-     * @name Controls/dataSource/error/Container/Config#template
-     */
-    template?: TemplateFunction;
 };
 
 const getTemplate = (template: string | Control): Promise<Control> => {
@@ -200,33 +202,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
             return;
         }
 
-        if (this._popupId) {
-            this._openDialog(config);
-            return;
-        }
-
-        getTemplate(config.template)
-            .then((dialogTemplate) => this._notifyServiceError(dialogTemplate, config.options))
-            .then((dialogData) => {
-                if (this._isUnmounted) {
-                    return;
-                }
-
-                /**
-                 * Controls/popup:Global ловит событие 'serviceError'.
-                 * В Wasaby окружении Controls/popup:Global есть на каждой странице в виде глобальной обертки.
-                 * На старых страницах этого нет, поэтому если errorContainer
-                 * был создан в контроле, который был вставлен в старое окружение ws3 с помощью Core/create,
-                 * то событие 'serviceError' будет некому ловить и результата _notify не будет.
-                 * Тогда гарантированно показываем диалог с помощью popupHelper.
-                 */
-                if (!dialogData) {
-                    return this._openDialog(config);
-                }
-
-                this._popupId = dialogData.popupId;
-                dialogData.closePopupPromise.then(() => this._onDialogClosed());
-            });
+        this._openDialog(config);
     }
 
     private __updateConfig(options: IContainerConfig): void {

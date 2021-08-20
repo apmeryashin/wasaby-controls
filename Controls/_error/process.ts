@@ -2,7 +2,7 @@ import { Control } from 'UI/Base';
 import { logger } from 'Application/Env';
 import { constants } from 'Env/Env';
 import { IBasePopupOptions } from 'Controls/popup';
-import { Handler, ViewConfig } from './interface';
+import { ErrorHandler, ErrorViewConfig } from './interface';
 import ErrorController, { getPopupHelper } from './Controller';
 import { IPopupHelper, PopupId } from './Popup';
 
@@ -15,9 +15,9 @@ export interface IProcessOptions {
 
     /**
      * @name Controls/_error/IProcess#handlers
-     * @cfg {Handler[]} Дополнительные обработчики ошибки, которые вызываются перед платформенными.
+     * @cfg {ErrorHandler[]} Дополнительные обработчики ошибки, которые вызываются перед платформенными.
      */
-    handlers?: Handler[];
+    handlers?: ErrorHandler[];
     opener?: Control;
     dialogEventHandlers?: Record<string, Function>;
 
@@ -29,9 +29,9 @@ export interface IProcessOptions {
 
     /**
      * @name Controls/_error/IProcess#postHandlers
-     * @cfg {Handler[]} Дополнительные обработчики ошибки, которые вызываются после платформенных.
+     * @cfg {ErrorHandler[]} Дополнительные обработчики ошибки, которые вызываются после платформенных.
      */
-    postHandlers?: Handler[];
+    postHandlers?: ErrorHandler[];
 
     /**
      * @name Controls/_error/IProcess
@@ -39,7 +39,7 @@ export interface IProcessOptions {
      * Функция, в которую передаётся конфиг для показа ошибки.
      * Функция вызывается перед показом диалога, в ней можно поменять конфигурацию для показа ошибки.
      */
-    beforeOpenDialogCallback?: (viewConfig: ViewConfig) => void;
+    beforeOpenDialogCallback?: (viewConfig: ErrorViewConfig) => void;
     _popupHelper?: IPopupHelper;
 }
 
@@ -78,7 +78,7 @@ export interface IProcessOptions {
  * </pre>
  *
  * @public
- * @author Северьянов А.А.
+ * @author Кашин О.А.
  */
 export default function process(options: IProcessOptions): Promise<PopupId | void> {
     const {
@@ -120,7 +120,7 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
     });
 }
 
-function logServerSideError(error: Error, viewConfig: ViewConfig<{ message?: string; details?: string; }>): void {
+function logServerSideError(error: Error, viewConfig: ErrorViewConfig<{ message?: string; details?: string; }>): void {
     const tabSpace = 4;
     let errorMessage =
         'Controls/dataSource:error.process is being called during server-side rendering!\n' +
@@ -149,5 +149,5 @@ function logServerSideError(error: Error, viewConfig: ViewConfig<{ message?: str
  * Парамертры показа дружелюбного диалога.
  * @interface Controls/_error/IProcess
  * @public
- * @author Северьянов А.А.
+ * @author Кашин О.А.
  */

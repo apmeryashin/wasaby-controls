@@ -8,32 +8,33 @@
  */
 
 import {
-    Handler,
-    ViewConfig,
-    HandlerConfig,
-    DefaultErrorTypes,
-    Mode
+    ErrorHandler,
+    ErrorViewConfig,
+    IErrorHandlerConfig,
+    ErrorType,
+    ErrorViewMode
 } from './_error/interface';
-import Controller from './_error/Controller';
+import ErrorController from './_error/Controller';
 import process, { IProcessOptions } from './_error/process';
 import Popup, { IPopupHelper } from './_error/Popup';
 import DialogOpener from './_error/DialogOpener';
 
+// TODO удалить совместимость после перевода всех на новые имена
 export {
-    DefaultErrorTypes,
-    Controller,
-    Controller as ErrorController,
+    ErrorType,
+    ErrorController,
+    ErrorController as Controller, // для совместимости
     DialogOpener,
-    Handler,
-    Handler as ErrorHandler,
-    HandlerConfig,
-    HandlerConfig as IErrorHandlerConfig,
+    ErrorHandler,
+    ErrorHandler as Handler, // для совместимости
+    IErrorHandlerConfig,
+    IErrorHandlerConfig as HandlerConfig, // для совместимости
     IPopupHelper,
     IProcessOptions,
-    Mode,
-    Mode as ErrorDisplayMode,
+    ErrorViewMode,
+    ErrorViewMode as Mode, // для совместимости
     Popup,
     process,
-    ViewConfig,
-    ViewConfig as IErrorViewConfig
+    ErrorViewConfig as ViewConfig, // для совместимости
+    ErrorViewConfig
 };

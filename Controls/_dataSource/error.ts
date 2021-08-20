@@ -17,14 +17,14 @@
  */
 
 export {
-    Controller,
-    Handler,
-    HandlerConfig,
+    ErrorController as Controller,
+    ErrorHandler as Handler,
+    IErrorHandlerConfig as HandlerConfig,
     IProcessOptions,
-    Mode,
+    ErrorViewMode as Mode,
     Popup,
     process,
-    ViewConfig
+    ErrorViewConfig as ViewConfig
 } from 'Controls/error';
 export { default as Container } from './_error/Container';
 export { default as DataLoader } from './_error/DataLoader';

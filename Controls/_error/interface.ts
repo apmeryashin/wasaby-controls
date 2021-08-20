@@ -3,7 +3,7 @@ import { HTTPStatus } from 'Browser/Transport';
 import { Control, TemplateFunction } from 'UI/Base';
 
 /**
- * Опции шаблона для {@link Controls/_error/interface/ViewConfig}, возвращаемые стандартными обработчиками
+ * Опции шаблона для {@link Controls/_error/interface/ErrorViewConfig}, возвращаемые стандартными обработчиками
  * @public
  */
 export interface IDefaultTemplateOptions {
@@ -14,50 +14,99 @@ export interface IDefaultTemplateOptions {
 }
 
 /**
- * Данные для отображения сообщения об ошибке.
+ * Перечисление. Способы отображения шаблона с сообщением об ошибке.
+ * @class Controls/_error/ErrorViewMode
  * @public
- * @author Северьянов А.А.
+ * @author Кашин О.А.
+ * @todo Переписать как typedef, как появится возможность автодоки прогружать из библиотек тайпдефы
  */
-// tslint:disable-next-line:interface-name
-export interface ViewConfig<TOptions = IDefaultTemplateOptions> extends Partial<IVersionable> {
+export enum ErrorViewMode {
     /**
-     * @name Controls/_error/interface/ViewConfig#mode
-     * @cfg Способ показа ошибки: в диалоге, в контентной области компонента или во всю страницу.
+     * @name Controls/_error/ErrorViewMode#dialog
+     * @cfg {string} В диалоговом окне.
      */
-    mode?: Mode;
-
+    dialog = 'dialog',
     /**
-     * @name Controls/_error/interface/ViewConfig#options
+     * @name Controls/_error/ErrorViewMode#page
+     * @cfg {string} Во всю страницу.
+     */
+    page = 'page',
+    /**
+     * @name Controls/_error/ErrorViewMode#include
+     * @cfg {string} В области контрола (вместо содержимого).
+     */
+    include = 'include',
+    /**
+     * @name Controls/_error/ErrorViewMode#inlist
+     * @cfg {string} В области списка (вместе с содержимым).
+     */
+    inlist = 'inlist'
+}
+
+interface IBaseViewConfig<TOptions> {
+    /**
+     * @name Controls/_error/interface/ErrorViewConfig#options
      * @cfg {Object} Параметры построения шаблона ошибки.
      * @remark
      * This is remark
      */
-    options?: Partial<TOptions>;
+    options: Partial<TOptions>;
 
     /**
-     * @name Controls/_error/interface/ViewConfig#processed
+     * @name Controls/_error/interface/ErrorViewConfig#processed
      * @cfg Обработана ли ошибка. Для обработанных ошибок сообщения не выводятся.
      */
     readonly processed?: boolean;
 
     /**
-     * @name Controls/_error/interface/ViewConfig#status
+     * @name Controls/_error/interface/ErrorViewConfig#status
      * @cfg Код состояния HTTP, соответствующий ошибке.
      */
     status?: HTTPStatus;
 
     /**
-     * @name Controls/_dataSource/_parking/ViewConfig#template
+     * @name Controls/_error/interface/ErrorViewConfig#type
+     * @cfg Если ошибка одна из стандартных, то это поле укажет на ее тип
+     */
+    type?: ErrorType;
+}
+
+interface IDialogViewConfig {
+    /**
+     * @name Controls/_error/interface/ErrorViewConfig#mode
+     * @cfg Способ показа ошибки: в диалоге, в контентной области компонента или во всю страницу.
+     */
+    mode?: ErrorViewMode.dialog;
+
+    /**
+     * @name Controls/_dataSource/_parking/ErrorViewConfig#template
+     * @cfg {Function | String} Шаблон для отображения ошибки.
+     */
+    template?: TemplateFunction | string;
+}
+
+interface IContainerViewConfig {
+    /**
+     * @name Controls/_error/interface/ErrorViewConfig#mode
+     * @cfg Способ показа ошибки: в диалоге, в контентной области компонента или во всю страницу.
+     */
+    mode: ErrorViewMode.include | ErrorViewMode.inlist | ErrorViewMode.page;
+
+    /**
+     * @name Controls/_dataSource/_parking/ErrorViewConfig#template
      * @cfg {Function | String} Шаблон для отображения ошибки.
      */
     template: TemplateFunction | string;
-
-    /**
-     * @name Controls/_error/interface/ViewConfig#type
-     * @cfg Если ошибка одна из стандартных, то это поле укажет на ее тип
-     */
-    type?: DefaultErrorTypes;
 }
+
+/**
+ * Данные для отображения сообщения об ошибке.
+ * @public
+ * @author Кашин О.А.
+ */
+export type ErrorViewConfig<TOptions = IDefaultTemplateOptions> = IBaseViewConfig<TOptions> & (
+    IDialogViewConfig | IContainerViewConfig
+);
 
 export type ProcessedError = Error & { processed?: boolean; };
 
@@ -66,39 +115,38 @@ export type CanceledError = Error & {
     isCanceled?: boolean; // from PromiseCanceledError
 };
 
-export enum DefaultErrorTypes {
-    javaScript = 'javaScript',
-    require = 'require',
-    internal = 'internal',
-    notFound = 'notFound',
-    maintenance = 'maintenance',
-    connection = 'connection',
+export enum ErrorType {
     accessDenied = 'accessDenied',
+    connection = 'connection',
+    internal = 'internal',
+    maintenance = 'maintenance',
+    notFound = 'notFound',
+    require = 'require',
     rpc = 'rpc'
 }
 
 /**
  * Тип функции-обработчика ошибки.
  * Анализирует ошибку и определяет, какой парковочный шаблон нужно отобразить.
- * Принимает объект с параметрами ошибки и возвращет ViewConfig, если ошибка распознана.
- * @interface Controls/_dataSource/_error/Handler
+ * Принимает объект с параметрами ошибки и возвращет ErrorViewConfig, если ошибка распознана.
+ * @interface Controls/_dataSource/_error/ErrorHandler
  * @public
- * @author Северьянов А.А.
+ * @author Кашин О.А.
  */
-export type Handler< // tslint:disable-line:interface-over-type-literal
+export type ErrorHandler< // tslint:disable-line:interface-over-type-literal
     TError extends Error = Error,
     TOptions = object
 > = {
-    handlerType?: DefaultErrorTypes;
-    (config: HandlerConfig<TError>): ViewConfig<TOptions> | void;
+    handlerType?: ErrorType;
+    (config: IErrorHandlerConfig<TError>): ErrorViewConfig<TOptions> | void;
 };
 
 /**
  * Параметры для функции-обработчика ошибки.
  * @public
- * @author Северьянов А.А.
+ * @author Кашин О.А.
  */
-export interface HandlerConfig<TError extends ProcessedError = ProcessedError> { // tslint:disable-line:interface-name
+export interface IErrorHandlerConfig<TError extends ProcessedError = ProcessedError> {
     /**
      * Обрабатываемая ошибка.
      */
@@ -107,41 +155,11 @@ export interface HandlerConfig<TError extends ProcessedError = ProcessedError> {
     /**
      * Способ отображения ошибки (на всё окно / диалог / внутри компонента)
      */
-    mode: Mode;
+    mode: ErrorViewMode;
 
     /**
-     * @name Controls/_dataSource/_error/HandlerConfig#theme
+     * @name Controls/_dataSource/_error/IErrorHandlerConfig#theme
      * @cfg {String} Тема для окон уведомлений, которые контроллер показывает, если не удалось распознать ошибку.
      */
     theme?: string;
-}
-
-/**
- * Перечисление. Способы отображения шаблона с сообщением об ошибке.
- * @class Controls/_error/Mode
- * @public
- * @author Северьянов А.А.
- * @todo Переписать как typedef, как появится возможность автодоки прогружать из библиотек тайпдефы
- */
-export enum Mode {
-    /**
-     * @name Controls/_error/Mode#dialog
-     * @cfg {string} В диалоговом окне.
-     */
-    dialog = 'dialog',
-    /**
-     * @name Controls/_error/Mode#page
-     * @cfg {string} Во всю страницу.
-     */
-    page = 'page',
-    /**
-     * @name Controls/_error/Mode#include
-     * @cfg {string} В области контрола (вместо содержимого).
-     */
-    include = 'include',
-    /**
-     * @name Controls/_error/Mode#inlist
-     * @cfg {string} В области списка (вместе с содержимым).
-     */
-    inlist = 'inlist'
 }

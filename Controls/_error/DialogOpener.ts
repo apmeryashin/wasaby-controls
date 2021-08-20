@@ -1,11 +1,11 @@
 import { IBasePopupOptions } from 'Controls/popup';
-import { ViewConfig } from './interface';
+import { ErrorViewConfig } from './interface';
 import Popup, { IPopupHelper,  PopupId } from './Popup';
 
 /**
  * Класс позволяет открывать диалог дружелюбных ошибок и работать с ним.
  * @class Controls/_error/DialogOpener
- * @author Северьянов А.А.
+ * @author Кашин О.А.
  */
 export default class DialogOpener {
     private _popupHelper: IPopupHelper;
@@ -40,7 +40,7 @@ export default class DialogOpener {
         return options;
     }
 
-    open(viewConfig: ViewConfig, dialogOptions: IBasePopupOptions): Promise<void> {
+    open(viewConfig: ErrorViewConfig, dialogOptions: IBasePopupOptions): Promise<void> {
         if (!viewConfig) {
             return Promise.resolve();
         }
