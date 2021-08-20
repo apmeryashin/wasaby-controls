@@ -17,7 +17,7 @@ describe('Controls/treeGrid_clean/Display/Grid/getResults', () => {
         rawData = [
             { key: 1, parent: null, type: true },
             { key: 2, parent: 1, type: true },
-            { key: 3, parent: 2, type: null }
+            { key: 3, parent: 1, type: null }
         ];
     });
 
