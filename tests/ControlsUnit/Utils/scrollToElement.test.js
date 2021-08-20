@@ -41,6 +41,57 @@ define([
          sinon.restore();
       });
 
+      it('waitInitialization = true', function() {
+         mockDOM();
+         let isInited = false;
+         sinon.stub(NodeCollector, 'goUpByControlTree').returns([{
+            initHeaderController: () => {
+               let resp;
+               if (!isInited) {
+                  resp = Promise.resolve();
+                  isInited = true;
+               }
+               return resp;
+            },
+            getHeadersHeight: () => 4
+         }]);
+         sinon.stub(cInstance, 'instanceOfModule').returns(true);
+         var element = {
+            classList: {
+               contains: () => false
+            },
+            querySelector: () => null,
+            parentElement: {
+               overflowY: 'scroll',
+               scrollHeight: 110,
+               clientHeight: 100,
+               top: 10,
+               getBoundingClientRect: function() {
+                  return {
+                     top: this.top,
+                     height: this.clientHeight
+                  };
+               },
+               scrollTop: 0,
+               className: '',
+               closest: () => []
+            },
+            getBoundingClientRect: function() {
+               return {
+                  top: 15,
+                  height: 150
+               };
+            },
+            closest: () => {}
+         };
+         const resp = scroll.scrollToElement(element, 'top', false, true).then(() => {
+            assert.equal(element.parentElement.scrollTop, 1);
+            console.log(resp);
+         });
+         assert.equal(element.parentElement.scrollTop, 0);
+         return resp;
+      });
+
       describe('scroll down', function() {
          it('to top', function() {
             mockDOM();

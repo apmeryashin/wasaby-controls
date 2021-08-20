@@ -75,11 +75,11 @@ class StickyHeaderController {
         this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers);
     }
 
-    init(container: HTMLElement): void {
+    init(container: HTMLElement): Promise<void> {
         this.updateContainer(container);
         this._initialized = true;
         this._sizeObserver.init(this._container);
-        this._registerDelayed();
+        return this._registerDelayed();
     }
 
     updateContainer(container: HTMLElement): void {
