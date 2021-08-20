@@ -329,8 +329,12 @@ export default class TreeGridCollection<
     // endregion itemsFactoryResolver
 
     protected _hasItemsToCreateResults(): boolean {
-        const rootItems = this.getChildrenByRecordSet(this.getRoot().getContents());
-        return rootItems.length > (this._$resultsVisibility === 'visible' ? 0 : 1);
+        let rootItems = this.getChildrenByRecordSet(this.getRoot().getContents());
+        // Если единственный узел в списке - группа, показываем строку итогов в зависимости от наличия его дочерних узлов
+        if (rootItems.length === 1 && this._$nodeTypeProperty && rootItems[0].get(this._$nodeTypeProperty) === 'group') {
+            return this.getChildrenByRecordSet(rootItems[0]).length > 1;
+        }
+        return rootItems.length > 1;
     }
 
     protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {
