@@ -1,6 +1,5 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_themes/ZenWrapper/Template';
-import {Logger} from 'UI/Utils';
 
 interface IRgb {
     r: number;
@@ -17,12 +16,15 @@ export interface IZenWrapperOptions extends IControlOptions {
 }
 
 /**
- * ХОК для установки css-переменных в inline-стили.
- * @class Controls/_themes/Wrapper
+ * Контейнер для стилизации элементов, лежащих на фоне некоторого изображения. Цвета элементов рассчитываются исходя из доминантного цвета изображения и комплиментарного к нему.
+ * @class Controls/_themes/ZenWrapper
  * @extends UI/Base:Control
- * @author Крайнов Д.О.
+ * @author Клепиков И.А.
  * @public
+ * @demo Controls-demo/themes/ZenWrapper/Index
+ * @remark Доминантный и комплиментарный цвет изображения должны быть вычисоены заранее и переданы в опции контрола.
  */
+
 export default class ZenWrapper extends Control<IZenWrapperOptions> {
     protected _template: TemplateFunction = template;
     protected _variables: object = {};
@@ -32,6 +34,12 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
     }
 
     protected _beforeUpdate(options: IZenWrapperOptions): void {
+        if (options.dominantColor !== this._options.dominantColor ||
+            options.complementaryColor !== this._options.complementaryColor ||
+            options.brightness !== this._options.brightness
+        ) {
+            this._variables = ZenWrapper.getDerivedStateFromProps(options);
+        }
     }
 
     static calculateRGB(color: string): IRgb {
@@ -47,7 +55,6 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
     }
 
     static calculateVariables(rgb: IRgb, brightness: TBrightness): object {
-        const {r: red, g: green, b: blue} = rgb;
         return {
             '--text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
@@ -104,8 +111,8 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         return brightness === 'dark' ? '#fff' : '#000';
     }
 
-    static getMonochromeColorWithOpacity(brightness: TBrightness, opacity: string): string {
-        return brightness === 'dark' ? `rgba(255,255,255, ${opacity})` : `rgba(0,0,0, ${opacity})`;
+    static getMonochromeColorWithOpacity(brightness: TBrightness, opacity: string = '1'): string {
+        return brightness === 'dark' ? `rgba(255,255,255,${opacity})` : `rgba(0,0,0,${opacity})`;
     }
 
     static getColor(rgb: IRgb): string {
@@ -113,7 +120,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         return `rgb(${red},${green},${blue})`;
     }
 
-    static getColorWithOpacity(rgb: IRgb, opacity: string): string {
+    static getColorWithOpacity(rgb: IRgb, opacity: string = '1'): string {
         const {r: red, g: green, b: blue} = rgb;
         return `rgba(${red},${green},${blue},${opacity})`;
     }
@@ -124,3 +131,51 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         );
     }
 }
+
+
+
+/**
+ * @name Controls/_themes/ZenWrapper#dominantColor
+ * @cfg {String} Задает доминантный цвет изображения на фоне которого строится контрол. Цвет в формате rgb - 45, 34, 81
+ * @remark
+ * @example
+ * Установлен доминантный цвет
+ * <pre>
+ *    <Controls.themes:ZenWrapper dominantColor="255, 255, 255 >
+ *       <ws:partial template="MyModule/someContent" />
+ *    </Controls.themes:ZenWrapper>
+ * </pre>
+ * @see option complementaryColor
+ */
+
+/**
+ * @name Controls/_themes/ZenWrapper#complementaryColor
+ * @cfg {String} Задает комплиментарный цвет к доминантному цвет изображения на фоне которого строится контрол. Цвет в формате rgb - 45, 34, 81
+ * @remark
+ * @example
+ * Установлен комплиментарный цвет
+ * <pre>
+ *    <Controls.themes:ZenWrapper complementaryColor="178, 35, 35" >
+ *       <ws:partial template="MyModule/someContent" />
+ *    </Controls.themes:ZenWrapper>
+ * </pre>
+ * @see option dominantColor
+ */
+
+/**
+ * @name Controls/_themes/ZenWrapper#brightness
+ * @cfg {String} Определяет темным или светлым является доминантный цвет изображения.
+ * @variant dark Изображение с доминантным темным цветом.
+ * @variant light Изображение с доминантным светлым цветом.
+ * @default light
+ * @example
+ * Кнопка в режиме отображения "linkButton".
+ * Установлен комплиментарный цвет и яркость "светлый"
+ * <pre>
+ *    <Controls.themes:ZenWrapper complementaryColor="178, 35, 35" brightness="light" >
+ *       <ws:partial template="MyModule/someContent" />
+ *    </Controls.themes:ZenWrapper>
+ * </pre>
+ * @see option complementaryColor
+ * @see option dominantColor
+ */
