@@ -5,7 +5,7 @@
                  controls-Suggest__suggestionsContainer_popup_shadow_{{_options.stickyPosition.direction.vertical}}
                  controls-Suggest__suggestionsContainer_popup_{{_options.stickyPosition.direction.vertical}}
                  {{!_showContent ? 'controls-Suggest__suggestionsContainer_hidden'}}">
-    <Controls.scroll:Container attr:class="controls-Suggest__scrollContainer" name="scrollContainer">
+    <Controls.scroll:Container attr:class="controls-Suggest__scrollContainer controls-Suggest__scrollContainer_{{_options.stickyPosition.direction.vertical}}" name="scrollContainer">
         <ws:content>
             <ws:partial template="{{_options.content}}"
                         suggestWidth="{{_suggestWidth}}"
