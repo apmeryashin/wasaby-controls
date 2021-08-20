@@ -5533,6 +5533,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
+    /**
+     * Останавливает всплытие события updateShadowMode от внутренних списков. Иначе они могут испортить видимость
+     * тени у ScrollContainer.
+     */
+    protected _stopInnerUpdateShadowMode(event: SyntheticEvent): void {
+        event.stopImmediatePropagation();
+    }
+
     protected _notifyItemClick(args: [SyntheticEvent?, Model, SyntheticEvent, number?]): boolean {
         const notifyArgs = args.slice(1);
         return this._notify('itemClick', notifyArgs, { bubbling: true }) as boolean;
