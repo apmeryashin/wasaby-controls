@@ -96,10 +96,9 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
     getWrapperClasses(
         backgroundColorStyle: string,
         templateHighlightOnHover?: boolean,
-        templateHoverBackgroundStyle?: string,
-        markerClassName?: string
+        templateHoverBackgroundStyle?: string
     ): string {
-        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, markerClassName);
+        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
 
         // нужен shouldDisplayMarker именно для всего элемента, т.к. эти стили навешиваются на все ячейки для текста
         if (this.getOwner().shouldDisplayMarker()) {
