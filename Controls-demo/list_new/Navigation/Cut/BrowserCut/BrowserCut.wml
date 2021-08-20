@@ -1,5 +1,7 @@
-<Controls.browser:Browser
-    source="{{_source}}"
-    navigation="{{_navigation}}">
-    <Controls.list:View/>
-</Controls.browser:Browser>
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
+    <Controls.browser:Browser
+        source="{{_source}}"
+        navigation="{{_navigation}}">
+        <Controls.list:View/>
+    </Controls.browser:Browser>
+</div>
