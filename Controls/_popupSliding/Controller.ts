@@ -123,6 +123,7 @@ class Controller extends BaseController {
         } else {
             item.position = SlidingPanelStrategy.getPosition(item);
         }
+        this._fixIosBug(item, container);
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
         item.popupOptions.workspaceWidth = item.position.width;
         return true;
@@ -160,6 +161,7 @@ class Controller extends BaseController {
         position.height = newHeight;
         item.sizes.height = newHeight;
         item.position = SlidingPanelStrategy.getPosition(item);
+        this._fixIosBug(item, container);
         item.popupOptions.workspaceWidth = item.position.width;
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
     }
