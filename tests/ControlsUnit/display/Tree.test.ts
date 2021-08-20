@@ -2200,6 +2200,29 @@ describe('Controls/_display/Tree', () => {
                 item = tree.getItemBySourceKey(2);
                 assert.isTrue(item.shouldDisplayExpanderPadding());
             });
+
+            it('add list with childs and then make it is node', () => {
+                const rs = new RecordSet({
+                    rawData: [
+                        {id: 1, hasChildren: false, node: true, pid: 0}
+                    ],
+                    keyProperty: 'id'
+                });
+                const tree = getTree(rs, {hasChildrenProperty: '', expanderVisibility: 'hasChildren'});
+                assert.isFalse(tree.at(0).hasChildrenByRecordSet());
+
+                rs.add(new Model({
+                    rawData: {id: 2, hasChildren: false, node: null, pid: 0},
+                    keyProperty: 'id'
+                }));
+                rs.add(new Model({
+                    rawData: {id: 21, hasChildren: false, node: null, pid: 2},
+                    keyProperty: 'id'
+                }));
+                rs.getRecordById(2).set('node', true)
+
+                assert.isTrue(tree.getItemBySourceKey(2).hasChildrenByRecordSet());
+            });
         });
     });
 
