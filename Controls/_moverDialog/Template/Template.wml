@@ -15,7 +15,8 @@
             <div class="controls-MoveDialog__content">
                <Controls.search:InputContainer attr:class="controls-MoveDialog__search"
                                                inputSearchValue="{{_searchValue}}"
-                                               on:inputSearchValueChanged="_onSearchValueChanged()">
+                                               on:search="_onSearch()"
+                                               on:searchReset="_onSearchReset()">
                   <Controls.search:Input/>
                </Controls.search:InputContainer>
                <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
