@@ -388,6 +388,12 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
     _onEditingItemClick(e: SyntheticEvent, item: Row, nativeEvent: Event): void {
         e.stopImmediatePropagation();
+
+        if (!e.preventItemEvent && nativeEvent.target.closest('.js-controls-ListView__checkbox')) {
+            this._notify('checkBoxClick', [item, nativeEvent]);
+            return;
+        }
+
         if (this._listModel.getEditingConfig()?.mode === 'cell') {
             const columnIndex = this._getCellIndexByEventTarget(nativeEvent);
             if (item.getEditingColumnIndex() !== columnIndex) {
