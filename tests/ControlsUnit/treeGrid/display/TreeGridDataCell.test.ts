@@ -71,7 +71,7 @@ describe('Controls/_treeGrid/display/TreeGridDataCell', () => {
              'controls-TreeGrid__row-cell_default controls-TreeGrid__row-cell__node ' +
              'controls-Grid__no-rowSeparator controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__cell_fit ' +
              'controls-Grid__row-cell-background-hover-default controls-Grid__row-cell_background_master ' +
-             'js-controls-ListView__measurableContainer ' + 'controls-Grid__row-cell__first-default';
+             'js-controls-ListView__measurableContainer';
          const cell = treeGridCollection.at(0).getColumns()[0];
          CssClassesAssert.isSame(cell.getWrapperClasses('master'), expected);
       });
@@ -80,7 +80,7 @@ describe('Controls/_treeGrid/display/TreeGridDataCell', () => {
          const expected = ' controls-Grid__row-cell controls-Grid__cell_default controls-Grid__row-cell_default controls-Grid__row-cell_default_min_height controls-TreeGrid__row-cell ' +
             'controls-TreeGrid__row-cell_default controls-TreeGrid__row-cell__node controls-Grid__no-rowSeparator controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__cell_fit ' +
             'controls-Grid__row-cell-background-hover-default ' +
-            'js-controls-ListView__measurableContainer ' + 'controls-Grid__row-cell__first-default';
+            'js-controls-ListView__measurableContainer';
          const cell = treeGridCollection.at(0).getColumns()[0];
          CssClassesAssert.isSame(cell.getWrapperClasses('default'), expected);
       });
