@@ -176,12 +176,42 @@ function(menu, source, Clone, display, collection) {
          isClose = true;
          clock.tick(1500);
 
-          menuPopop._mouseEvent({type:'mouseenter'});
-          menuPopop._mouseEvent({type:'mouseleave'});
-          menuPopop._mouseEvent({type:'mouseenter'});
-          isClose = false;
-          clock.tick(1500);
-          clock.restore();
+         menuPopop._mouseEvent({type:'mouseenter'});
+         menuPopop._mouseEvent({type:'mouseleave'});
+         menuPopop._mouseEvent({type:'mouseenter'});
+         isClose = false;
+         clock.tick(1500);
+         clock.restore();
+      });
+
+      it('_prepareSubMenuConfig', function() {
+         const menuPopup = new menu.Popup();
+         menuPopup._options = { root: '1' };
+         const popupOptions = {
+            direction: {
+               horizontal: 'left'
+            },
+            targetPoint: {
+               horizontal: 'left'
+            },
+            className: ''
+         };
+         menuPopup._horizontalDirection = 'right';
+
+         menuPopup._prepareSubMenuConfig({stopPropagation: () => {}},
+            popupOptions,
+            'right',
+            'right');
+         assert.equal(popupOptions.direction.horizontal, 'right');
+         assert.equal(popupOptions.className, ' controls-Menu__subMenu_marginLeft');
+
+         popupOptions.className = '';
+         menuPopup._prepareSubMenuConfig({stopPropagation: () => {}},
+            popupOptions,
+            'right',
+            'left');
+         assert.equal(popupOptions.direction.horizontal, 'right');
+         assert.equal(popupOptions.className, ' controls-Menu__subMenu_marginLeft-revert');
       });
    });
 });

@@ -401,16 +401,17 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     setResultsVisibility(resultsVisibility: TResultsVisibility): void {
         if (this._$resultsVisibility !== resultsVisibility) {
             this._$resultsVisibility = resultsVisibility;
+            this._$results = null;
             this._nextVersion();
         }
     }
 
     protected _hasItemsToCreateResults(): boolean {
-        return this.getCollectionCount() > (this._$resultsVisibility === 'visible' ? 0 : 1);
+        return this.getCollectionCount() > 1;
     }
 
     protected _resultsIsVisible(): boolean {
-        return !!this._$resultsPosition && this._hasItemsToCreateResults();
+        return !!this._$resultsPosition && (this._$resultsVisibility === 'visible' || this._hasItemsToCreateResults());
     }
 
     protected _initializeHeader(options: IOptions): void {

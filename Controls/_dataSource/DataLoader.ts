@@ -420,7 +420,7 @@ export default class DataLoader {
     getSearchControllerSync(id?: string): SearchController {
         const config = this._getConfig(id);
 
-        if (!config?.searchController && config?.searchParam && isLoaded('Controls/search')) {
+        if (!config?.searchController && config?.searchParam && config?.sourceController && isLoaded('Controls/search')) {
             const searchControllerClass = loadSync<typeof import('Controls/search')>('Controls/search').ControllerClass;
             config.searchController = new searchControllerClass(
                 {...config} as ISearchControllerOptions

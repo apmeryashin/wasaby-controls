@@ -1142,7 +1142,7 @@ export default abstract class TileItem<T extends Model = Model> {
         templateShadowVisibility?: TShadowVisibility,
         border?: boolean
     ): string {
-        let classes = 'controls-TileView__item controls-ListView__itemV';
+        let classes = 'controls-TileView__item controls-ListView__itemV js-controls-ListView__editingTarget';
 
         if (templateClickable !== false) {
             classes += ` controls-ListView__itemV_cursor-${cursor}`;
