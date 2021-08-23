@@ -538,6 +538,11 @@ var CompoundArea = CompoundContainer.extend([
          if (toolbarContent.length) {
             const toolbarContainer = $('.controls-CompoundArea_toolbar', this.getContainer());
             if (toolbarContainer.length) {
+               const toolbarMenuIcon = toolbarContent[0].querySelector('.controls-ToolBar__menuIcon .icon-ExpandDown');
+               if (toolbarMenuIcon) {
+                  toolbarMenuIcon.classList.remove('icon-ExpandDown');
+                  toolbarMenuIcon.classList.add('icon-SettingsNew');
+               }
                toolbarContainer.prepend(toolbarContent);
             }
          }
