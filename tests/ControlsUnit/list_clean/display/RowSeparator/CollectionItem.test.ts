@@ -127,6 +127,44 @@ describe('Controls/list/display/RowSeparator/CollectionItem', () => {
             assert.isFalse(collection.at(1).isBottomSeparatorEnabled());
             assert.isTrue(collection.at(3).isBottomSeparatorEnabled());
         });
+
+        // 2.4 Записи добавились через prepend
+        it('RecordSet + prepend', () => {
+            const recordSet = new RecordSet({ rawData: [{id: 1}, {id: 2}], keyProperty: 'id' });
+            const collection = new Collection({
+                keyProperty: 'id',
+                collection: recordSet,
+                rowSeparatorSize: 's'
+            });
+
+            const initialFirstItem = collection.at(0);
+            assert.isTrue(initialFirstItem.isTopSeparatorEnabled());
+
+            recordSet.prepend(new RecordSet({ rawData: [{id: 3}, {id: 4}], keyProperty: 'id' }));
+
+            assert.isTrue(initialFirstItem.isTopSeparatorEnabled()); // not changed
+            assert.isTrue(collection.at(0).isTopSeparatorEnabled()); // set true
+        });
+
+
+        // 2.4 Записи добавились через prepend
+        it('RecordSet + prepend + newDesign', () => {
+            const recordSet = new RecordSet({ rawData: [{id: 1}, {id: 2}], keyProperty: 'id' });
+            const collection = new Collection({
+                keyProperty: 'id',
+                collection: recordSet,
+                rowSeparatorSize: 's',
+                newDesign: true
+            });
+
+            const initialFirstItem = collection.at(0);
+            assert.isFalse(initialFirstItem.isTopSeparatorEnabled());
+
+            recordSet.prepend(new RecordSet({ rawData: [{id: 3}, {id: 4}], keyProperty: 'id' }));
+
+            assert.isTrue(initialFirstItem.isTopSeparatorEnabled()); // set true
+            assert.isFalse(collection.at(0).isTopSeparatorEnabled()); // set false
+        });
     });
 
     // 8. DragAndDrop
