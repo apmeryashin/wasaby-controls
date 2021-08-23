@@ -47,6 +47,8 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     }
 
     protected _afterMount(options: ISlidingPanelTemplateOptions): void {
+        this._isPanelMounted = true;
+
         /*
             Если высотка контента максимальная, то нужно отпустить скролл,
             т.к. внутри могут быть поля со своим скроллом, а мы превентим touchmove и не даем им скроллиться.
@@ -55,7 +57,6 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         if (scrollAvailable !== this._scrollAvailable) {
             this._scrollAvailable = scrollAvailable;
         }
-        this._isPanelMounted = true;
         if (detection.isMobileIOS) {
             this._toggleScrollObserveForKeyboardClose(true);
         }
@@ -242,8 +243,11 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         } = this._dragStartHeightDimensions;
         const scrollContentOffset = contentHeight - startScrollHeight;
 
-        // Если остаток доступного контента меньше сдвига, то сдвигаем на размер оставшегося контента
-        if (
+        // Если нет доступного контента для разворота, то не пытаемся что-то развернуть
+        if (this._options.slidingPanelOptions.height === contentHeight && realHeightOffset > 0) {
+            offsetY = 0;
+        } else if (
+            // Если остаток доступного контента меньше сдвига, то сдвигаем на размер оставшегося контента
             realHeightOffset > scrollContentOffset &&
             this._getHeight() > this._options.slidingPanelOptions.minHeight
         ) {
