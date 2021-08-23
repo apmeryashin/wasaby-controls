@@ -962,10 +962,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _setSearchValueAndNotify(value: string): void {
         this._searchValue = value;
-        // FIXME https://online.sbis.ru/opendoc.html?guid=c7e198c4-b663-4ea2-b258-30ad778a91c5
-        if (this._mounted) {
-            this._notify('searchValueChanged', [value]);
-        }
+        this._notify('searchValueChanged', [value]);
     }
 
     private _updateParams(): void {
