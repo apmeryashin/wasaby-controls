@@ -39,8 +39,13 @@ class Strategy {
         const maxHeight = this._getHeightWithoutOverflow(this.getMaxHeight(item), windowHeight);
         const minHeight = this._getHeightWithoutOverflow(this.getMinHeight(item), maxHeight);
         const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
-        const heightValue = autoHeight && !initialHeight ? undefined : (initialHeight || minHeight);
-        const height = this._getHeightWithoutOverflow(heightValue, maxHeight);
+        const heightInitialized = initialHeight !== undefined;
+        let height;
+        if (autoHeight && !heightInitialized) {
+            height = undefined;
+        } else {
+            height = heightInitialized ? initialHeight : minHeight;
+        }
         return {
             left: 0,
             right: 0,
@@ -140,7 +145,8 @@ class Strategy {
         if (!height) {
             return height;
         }
-        return maxHeight > height ? height : maxHeight;
+        const result = maxHeight > height ? height : maxHeight;
+        return result < 0 ? 0 : result;
     }
 
     /**
