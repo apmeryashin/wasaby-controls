@@ -1,50 +1,35 @@
 import {IControlOptions} from 'UI/Base';
-import {CrudEntityKey, ICrud, QueryWhereExpression} from 'Types/source';
 import {Path} from 'Controls/dataSource';
+import {ISourceOptions} from 'Controls/_interface/ISource';
+import {IHierarchyOptions} from 'Controls/_interface/IHierarchy';
+import {IFilterOptions} from 'Controls/_interface/IFilter';
+import IItemTemplateOptions from 'Controls/_baseList/interface/ItemTemplate';
 
 /**
  * Структура объекта конфигурации компонента {@link Controls/breadcrumbs:PathButton}
+ *
+ * @implements Controls/interface#ISource
+ * @implements Controls/interface#IHierarchy
+ * @implements Controls/interface#IFilter
+ *
+ * @ignoreOptions dataLoadCallback
+ * @ignoreOptions dataLoadErrback
+ * @ignoreOptions nodeHistoryId
+ * @ignoreOptions nodeHistoryType
+ *
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface IPathButton extends IControlOptions {
-    /**
-     * @cfg {Types/source:ICrud} Источник данных через который будет запрошен список всех доступных узлов.
-     */
-    source: ICrud;
+export interface IPathButton
+    extends
+        IControlOptions,
+        ISourceOptions,
+        IHierarchyOptions,
+        IFilterOptions,
+        IItemTemplateOptions {
 
     /**
-     * @cfg {Types/source:QueryWhereExpression} Источник данных через который будет запрошен список всех доступных узлов.
-     */
-    filter?: QueryWhereExpression<unknown>;
-
-    /**
-     * @cfg {Types/source:CrudEntityKey}
-     */
-    markedKey?: CrudEntityKey;
-
-    /**
-     * @cfg {String} Имя свойства, содержащего информацию об идентификаторе записи каталога.
-     */
-    keyProperty?: string;
-
-    /**
-     * @cfg {string}
-     */
-    nodeProperty?: string;
-
-    /**
-     * @cfg {string}
-     */
-    parentProperty?: string;
-
-    /**
-     * @cfg {string}
-     */
-    displayProperty?: string;
-
-    /**
-     * @cfg {Controls/breadcrumbs#Path}
+     * @cfg {Controls/breadcrumbs#Path} Текущий отображаемый путь
      */
     path?: Path;
 }
