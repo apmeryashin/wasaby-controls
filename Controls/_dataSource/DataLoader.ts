@@ -248,7 +248,7 @@ function loadDataByConfig(
 
     if (loadConfig.actions) {
         operationsPromise = loadAsync('Controls/operations').then((operations) => {
-            return new operations.ControllerClass();
+            return new operations.ControllerClass({});
         });
     }
 
