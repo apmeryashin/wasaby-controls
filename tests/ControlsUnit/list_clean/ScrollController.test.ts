@@ -278,7 +278,7 @@ describe('Controls/list_clean/ScrollController', () => {
                     params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
                 });
 
-                assert.strictEqual(result.triggerOffset.bottom, 0);
+                assert.strictEqual(result.triggerOffset.bottom, 1);
             });
             it('resetDownTriggerOffset === false', () => {
                 const collection = new Collection({
