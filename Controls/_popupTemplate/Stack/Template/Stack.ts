@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_popupTemplate/Stack/Template/Stack/Stac
 import * as rk from 'i18n!Controls';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
+import StackStrategy from 'Controls/_popupTemplate/Stack/StackStrategy';
 import 'css!Controls/popupTemplate';
 
 export interface IRightPanelOption {
@@ -106,7 +107,12 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     private static _calculateMaximized(options: IStackTemplateOptions): boolean {
         // TODO: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
         if (!options.stackMinimizedWidth && options.stackMinWidth && options.stackMaxWidth) {
-            const middle = (options.stackMinWidth + options.stackMaxWidth) / 2;
+            const maxPanelWidth = StackStrategy.getMaxPanelWidth();
+            // Если максимально возможная ширина окна меньше, чем выставлена через опцию, то нужно ориентироваться
+            // на неё. Иначе кнопка разворота будет всегда пытаться развернуть окно,
+            // которое уже итак максимально широкое.
+            const stackMaxWidth = options.stackMaxWidth < maxPanelWidth ? options.stackMaxWidth : maxPanelWidth;
+            const middle = (options.stackMinWidth + stackMaxWidth) / 2;
             return options.stackWidth - middle > 0;
         }
         return options.maximized;
