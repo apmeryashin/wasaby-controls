@@ -106,7 +106,7 @@ describe('Controls/filterPanel:ViewModel', () => {
             };
             viewModel.collapseGroup('owners');
             viewModel.setEditingObject(editingObject);
-            assert.isEmpty(viewModel._collapsedGroups);
+            assert.deepEqual(viewModel._collapsedGroups, ['owners']);
         });
     });
 
