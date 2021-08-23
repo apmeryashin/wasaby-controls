@@ -400,8 +400,13 @@ const ListView = BaseControl.extend(
             return false;
         },
 
-        _onEditingItemClick(e): void {
+        _onEditingItemClick(e, dispItem, nativeEvent): void {
             e.stopPropagation();
+
+            if (!e.preventItemEvent && nativeEvent.target.closest('.js-controls-ListView__checkbox')) {
+                this._notify('checkBoxClick', [dispItem, nativeEvent]);
+                return;
+            }
         }
     });
 
