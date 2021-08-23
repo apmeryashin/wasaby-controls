@@ -2,7 +2,7 @@
     <ws:template name="templateMore">
         <div class="controls-AdaptiveButtons__more controls-AdaptiveButtons__more_align_{{_options.align}}" >
             <div class="controls-AdaptiveButtons__more__text controls-AdaptiveButtons__more__text_align_{{_options.align}}">
-                <Controls.Container.Async templateName="Controls/dropdown:Selector">
+                <Controls.Container.Async templateName="Controls/dropdown:Selector" attr:data-qa="AdaptiveButtons__more">
                     <Controls.source:SelectedKey selectedKey="{{_options.selectedKey}}">
                         <ws:partial template="{{content.resolvedTemplate}}"
                                 name="menuButton"
