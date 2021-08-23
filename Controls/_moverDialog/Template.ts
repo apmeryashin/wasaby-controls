@@ -114,14 +114,6 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
         return result;
     }
 
-    protected _onSearch(e: SyntheticEvent, value: string): void {
-        this._searchValue = value;
-    }
-
-    protected _onSearchReset(): void {
-        this.resetSearch();
-    }
-
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
         this._applyMove(item.getKey() === ROOT_KEY ? this._options.root : item);
     }

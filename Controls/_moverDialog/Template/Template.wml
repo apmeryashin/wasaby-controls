@@ -4,7 +4,7 @@
                                 bind:filter="_filter"
                                 root="{{_root}}"
                                 bind:expandedItems="_expandedItems"
-                                searchValue="{{_searchValue}}"
+                                bind:searchValue="_searchValue"
                                 navigation="{{_options.navigation}}"
                                 dataLoadCallback="{{_options.dataLoadCallback}}"
                                 keyProperty="{{_options.keyProperty}}"
@@ -13,10 +13,7 @@
                                 parentProperty="{{_options.parentProperty}}"
                                 displayProperty="{{_options.displayProperty}}">
             <div class="controls-MoveDialog__content">
-               <Controls.search:InputContainer attr:class="controls-MoveDialog__search"
-                                               inputSearchValue="{{_searchValue}}"
-                                               on:search="_onSearch()"
-                                               on:searchReset="_onSearchReset()">
+               <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
                   <Controls.search:Input/>
                </Controls.search:InputContainer>
                <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
