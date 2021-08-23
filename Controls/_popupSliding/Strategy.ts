@@ -27,8 +27,10 @@ class Strategy {
      * Returns popup position
      * @function Controls/_popupSliding/Strategy#getPosition
      * @param item Popup configuration
+     * @param isResize При ресайзе надо валидировать размеры попапа, чтобы он не оказался меньше минимального размера,
+     * иначе драг на разворот из маленькой шторки в большую приведет к закрытию
      */
-    getPosition(item: ISlidingPanelItem): IPopupPosition {
+    getPosition(item: ISlidingPanelItem, isResize?: boolean): IPopupPosition {
         const windowHeight = this._getWindowHeight();
         const {position: popupPosition = {}, popupOptions} = item;
         const {
@@ -41,7 +43,14 @@ class Strategy {
         const minHeight = this._getHeightWithoutOverflow(this.getMinHeight(item), maxHeight);
         const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
         const heightValue = autoHeight && !initialHeight ? undefined : (initialHeight || minHeight);
-        const height = this._getHeightWithoutOverflow(heightValue, maxHeight);
+        let height = this._getHeightWithoutOverflow(heightValue, maxHeight);
+
+        // В случае ресайза, проверяем на валидность высоты,
+        // т.к. высота могла быть уменьшена по размеру экрана
+        // и оказаться меньше минимальной после восстановления высоты экрана
+        if (isResize && height < minHeight) {
+            height = minHeight;
+        }
         return {
             left: 0,
             right: 0,
