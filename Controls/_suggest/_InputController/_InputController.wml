@@ -85,6 +85,7 @@
                     misspellingCaption="{{_misspellingCaption}}"
                     suggestPopupOptions="{{_options.suggestPopupOptions}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
+                    contrastBackground="{{_options.contrastBackground}}"
                     on:close="_closeHandler()">
             <ws:content>
                 <ws:partial template="suggestWrapperTpl"/>
