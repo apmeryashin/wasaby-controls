@@ -16,7 +16,7 @@ describe('Controls/Store', () => {
     it('change context', () => {
         Store.updateStoreContext('firstContextName');
         Store.dispatch('myValue', 'myFirstValue');
-        assert.equal(Store.getState().myValue as unknown as string, 'mySecondValue');
+        assert.equal(Store.getState().myValue as unknown as string, 'myFirstValue');
 
         Store.updateStoreContext('secondContextName');
         assert.equal(Store.getState().myValue, undefined);
