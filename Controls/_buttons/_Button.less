@@ -197,7 +197,7 @@
    }
 
    .controls-BaseButton:hover .controls-text-label {
-      color: var(--link_hover_text-color);
+      color: var(--label_hover_text-color);
    }
 }
 
@@ -207,7 +207,7 @@
    }
 
    .controls-BaseButton:active .controls-text-label {
-      color: var(--link_hover_text-color);
+      color: var(--label_hover_text-color);
    }
 }
 
@@ -217,8 +217,8 @@
       fill: var(--link_hover_text-color);
    }
    .controls-Button_hoverIcon:hover .controls-icon_style-label {
-      color: var(--link_hover_text-color);
-      fill: var(--link_hover_text-color);
+      color: var(--label_hover_icon-color);
+      fill: var(--label_hover_icon-color);
    }
 }
 
@@ -228,8 +228,8 @@
 }
 
 .controls-Button_hoverIcon:active .controls-icon_style-label {
-   color: var(--link_hover_text-color);
-   fill: var(--link_hover_text-color);
+   color: var(--label_hover_icon-color);
+   fill: var(--label_hover_icon-color);
 }
 
 //borders
@@ -467,7 +467,7 @@
    }
    .controls-Button_button_style-@{_item}.controls-Button_bg-contrast {
       background: ~"var(--@{_item}_contrast_background-color)";
-      border-color: ~"var(--@{_item}_contrast_background-color)";
+      border-color: transparent;  //если заливка полупрозрачная, то получается наложение
    }
 });
 
@@ -514,7 +514,7 @@
       }
       .controls-Button_button_style-@{_item}.controls-Button_bg-contrast:hover {
          background: ~"var(--@{_item}_hover_contrast_background-color)";
-         border-color: ~"var(--@{_item}_hover_contrast_background-color)";
+         border-color: transparent;  //если заливка полупрозрачная, то получается наложение
       }
    });
 
@@ -541,7 +541,7 @@
       }
       .controls-Button_button_style-@{_item}.controls-Button_bg-contrast:active {
          background: ~"var(--@{_item}_active_contrast_background-color)";
-         border-color: ~"var(--@{_item}_active_contrast_background-color)";
+         border-color: transparent;  //если заливка полупрозрачная, то получается наложение
       }
    });
 

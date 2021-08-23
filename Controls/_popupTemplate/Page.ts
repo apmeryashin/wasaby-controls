@@ -40,6 +40,10 @@ export default class Template extends Control<IControlOptions> {
         }
     }
 
+    protected _beforeUnmount(): void {
+        this._cancelCurrentLoading();
+    }
+
     /**
      * Обработчик подгрузки новых страниц внутри попапа.
      * Загружаем для них данные и спускаем вместе с остальными.
