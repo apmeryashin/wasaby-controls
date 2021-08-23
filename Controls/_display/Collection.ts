@@ -2572,14 +2572,14 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
         if (firstItem !== this._firstItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                this._updateTopItemSeparator(this._firstItem, firstItem, this._isRowSeparatorsEnabled(), silent);
+                this._updateTopItemSeparator(this._firstItem, firstItem, this._shouldAddEdgeSeparator(), silent);
             }
             this._updateFirstItem(this._firstItem, firstItem, silent);
         }
 
         if (lastItem !== this._lastItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                this._updateBottomItemSeparator(this._lastItem, lastItem, noMoreData && this._isRowSeparatorsEnabled(), silent);
+                this._updateBottomItemSeparator(this._lastItem, lastItem, noMoreData && this._shouldAddEdgeSeparator(), silent);
             }
             this._updateLastItem(this._lastItem, lastItem, silent);
         }
@@ -2625,7 +2625,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         }
     }
 
-    protected _isRowSeparatorsEnabled(): boolean {
+    protected _shouldAddEdgeSeparator(): boolean {
         return !this._$newDesign || !!this.getFooter();
     }
 

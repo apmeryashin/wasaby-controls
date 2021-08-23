@@ -243,7 +243,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return emptyTemplateClasses;
     }
 
-    protected _isRowSeparatorsEnabled(): boolean {
+    protected _shouldAddEdgeSeparator(): boolean {
         const isVisibleByHeaderOrFooter = (
             this._headerIsVisible(this._$header) || this._resultsIsVisible() || !!this.getFooter());
         return !this._$newDesign || (this._$newDesign && isVisibleByHeaderOrFooter);
