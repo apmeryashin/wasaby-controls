@@ -353,12 +353,18 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         }
     },
 
-    _onEditingItemClick(e, dispItem, nativeEvent): void {
-        e.stopImmediatePropagation();
+    _onEditingItemClick(event: SyntheticEvent, row: GridRow<Model>, nativeEvent: SyntheticEvent): void {
+        event.stopImmediatePropagation();
+
+        if (!event.preventItemEvent && nativeEvent.target.closest('.js-controls-ListView__checkbox')) {
+            this._notify('checkBoxClick', [row, nativeEvent]);
+            return;
+        }
+
         if (this._listModel.getEditingConfig()?.mode === 'cell') {
             const columnIndex = this._getCellIndexByEventTarget(nativeEvent);
-            if (dispItem.getEditingColumnIndex() !== columnIndex) {
-                this._notify('itemClick', [dispItem.getContents(), nativeEvent, columnIndex]);
+            if (row.getEditingColumnIndex() !== columnIndex) {
+                this._notify('itemClick', [row.getContents(), nativeEvent, columnIndex]);
             }
         }
     },
