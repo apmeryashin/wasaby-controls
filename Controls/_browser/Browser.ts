@@ -879,16 +879,18 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             if (searchParam) {
                 this._loading = true;
                 searchPromises.push(this._dataLoader.getSearchController(id).then((searchController) => {
-                    return searchController.search(value).finally(() => {
-                        if (!this._destroyed) {
-                            this._loading = false;
-                            this._afterSourceLoad(
-                                this._getSourceController(id),
-                                this._listsOptions[index] as IBrowserOptions
-                            );
-                            this._updateItemsOnState();
-                        }
-                    });
+                    if (!this._destroyed) {
+                        return searchController.search(value).finally(() => {
+                            if (!this._destroyed) {
+                                this._loading = false;
+                                this._afterSourceLoad(
+                                    this._getSourceController(id),
+                                    this._listsOptions[index] as IBrowserOptions
+                                );
+                                this._updateItemsOnState();
+                            }
+                        });
+                    }
                 }));
             }
         });
