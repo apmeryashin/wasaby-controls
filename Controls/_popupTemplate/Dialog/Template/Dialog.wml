@@ -6,7 +6,9 @@
                         scope="{{_options}}"
                         on:mousedown="_onMouseDown()"
                         on:touchstart="_onMouseDown()"
-                        theme="{{_headerTheme}}"/>
+                        theme="{{_headerTheme}}"
+                        attr:class="{{_headerTheme && (_options.theme !== _headerTheme) ?
+                                'controls_popupTemplate_theme-' + _headerTheme + ' controls_theme-' + _headerTheme}}"/>
         </ws:if>
         <ws:else>
             <div class="controls-DialogTemplate__close-button_without_head">
