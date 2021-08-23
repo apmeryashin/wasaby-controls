@@ -293,7 +293,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       return {
          selectedKeys: [],
          excludedKeys: [],
-         fontColorStyle: 'link'
+         fontColorStyle: 'operationsPanel'
       };
    }
 }
