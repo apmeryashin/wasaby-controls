@@ -288,7 +288,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 itemActionVisibilityCallback: options.itemActionVisibilityCallback,
                 additionalProperty: options.additionalProperty,
                 footerContentTemplate: options.popupFooterTemplate,
-                closeButtonVisibility: true
+                closeButtonVisibility: true,
+                dropdownClassName: `controls-Toolbar-${options.direction}__dropdown`
             },
             target: options.direction === 'vertical' ? this._children.toolbarItems : this._children.menuTarget
         };
