@@ -7,5 +7,5 @@ export default abstract class ListMenuAction extends MassAction {
         super(options);
         this['parent@'] = true;
     }
-    abstract load(): Promise<RecordSet | DataSet>;
+    abstract load(root: string | number): Promise<RecordSet | DataSet>;
 }

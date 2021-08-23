@@ -74,7 +74,7 @@ export default class extends Control<IOperationsPanelOptions> {
                     excludedKeys: this._options.excludedKeys,
                     selectedKeysCount: this._options.selectedKeysCount,
                     isAllSelected: this._options.isAllSelected,
-                    selectedCountConfig: this._options.selectedKeysCount
+                    selectedCountConfig: this._options.selectedCountConfig
                 },
                 eventHandlers: {
                     onClose: () => {
