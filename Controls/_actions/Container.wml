@@ -1,10 +1,16 @@
-<ws:partial template="{{_options.content}}"
-            name="toolbar"
-            scope="{{_options}}"
-            items="{{_toolbarItems}}"
-            menuSource="{{_menuSource}}"
-            keyProperty="id"
-            parentProperty="parent"
-            nodeProperty="parent@"
-            on:itemClick="_toolbarItemClick()"
-/>
+<Controls.Container.Async
+    templateName="Controls/toolbars:View">
+    <ws:content>
+        <ws:partial template="{{_options.content}}"
+                    name="toolbar"
+                    scope="{{_options.toolbarOptions}}"
+                    items="{{_toolbarItems}}"
+                    menuSource="{{_menuSource}}"
+                    keyProperty="id"
+                    parentProperty="parent"
+                    nodeProperty="parent@"
+                    on:itemClick="_toolbarItemClick()"
+        />
+    </ws:content>
+</Controls.Container.Async>
+

@@ -5,7 +5,7 @@ import {IAction} from './IAction';
 import {SyntheticEvent} from 'UI/Vdom';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController, ILoadDataResult} from 'Controls/dataSource';
 import {Object as EventObject} from 'Env/Event';
 import {ISelectionObject, TKeySelection} from 'Controls/interface';
 import Store from 'Controls/Store';
@@ -16,6 +16,7 @@ interface IContainerOptions extends IControlOptions {
     _dataOptionsValue: {
         sourceController?: SourceController
     };
+    prefetchData: ILoadDataResult[];
     listActions?: IAction[];
     actions: IAction[];
     selectedKeys: TKeySelection;
@@ -30,12 +31,16 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     private _sourceController: SourceController;
     private _operationsController: OperationsController =  null;
 
-    protected _beforeMount(options: IContainerOptions): void {
+    constructor() {
+        super();
         this._updateActions = this._updateActions.bind(this);
         this._operationsPanelVisibleChanged = this._operationsPanelVisibleChanged.bind(this);
         this._operationsMenuVisibleChanged = this._operationsMenuVisibleChanged.bind(this);
         this._selectionChanged = this._selectionChanged.bind(this);
-        this._subscribeCollectionChange(options._dataOptionsValue);
+    }
+
+    protected _beforeMount(options: IContainerOptions): void {
+        this._subscribeCollectionChange(options._dataOptionsValue, options.prefetchData);
         this._actionsCollection = new ActionsCollection({
             actions: options.actions,
             listActions: options.listActions
@@ -95,16 +100,31 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._notify('operationPanelItemClick', [action, clickEvent], {bubbling: true});
     }
 
-    private _subscribeCollectionChange(dataContext): void {
-        if (dataContext.sourceController) {
-            this._sourceController = dataContext.sourceController;
-            this._sourceController.subscribe('itemsChanged', this._updateActions);
+    getSourceController(dataValue, prefetch: ILoadDataResult[]): SourceController {
+        if (prefetch) {
+            return prefetch[0].sourceController;
+        } else {
+            return dataValue.sourceController;
         }
-        if (dataContext.operationsController) {
+    }
+
+    getOperationController(dataValue, prefetch: ILoadDataResult[]): OperationsController {
+        if (prefetch) {
+            return prefetch[0].operationsController;
+        } else {
+            return dataValue.operationsController;
+        }
+    }
+
+    private _subscribeCollectionChange(dataContext, prefetch: ILoadDataResult[]): void {
+        if (prefetch || dataContext) {
+            this._sourceController = this.getSourceController(dataContext, prefetch);
+            this._operationsController = this.getOperationController(dataContext, prefetch);
+            this._sourceController.subscribe('itemsChanged', this._updateActions);
             this._operationsController = dataContext.operationsController;
             this._operationsController.subscribe('operationsPanelVisibleChanged', this._operationsPanelVisibleChanged);
             this._operationsController.subscribe('selectionChanged', this._selectionChanged);
-            this._operationsController.subscribe('operationsMenuVisibleChanged', this._operationsPanelVisibleChanged);
+            this._operationsController.subscribe('operationsMenuVisibleChanged', this._operationsMenuVisibleChanged);
         }
     }
 
