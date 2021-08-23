@@ -1,5 +1,9 @@
 <ws:partial template="{{_options.content}}"
             scope="{{_options}}"
             items="{{_toolbarItems}}"
+            menuSource="{{_menuSource}}"
+            keyProperty="id"
+            parentProperty="parent"
+            nodeProperty="parent@"
             on:itemClick="_toolbarItemClick()"
 />

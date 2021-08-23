@@ -53,6 +53,7 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     private _selectedKeysByList: IKeysByList = {};
     private _excludedKeysByList: IKeysByList = {};
     private _selectedKeysCountByList: ISelectedKeysCountByList = {};
+    private _operationsMenuOpened: boolean = false;
     protected _options: IOperationsControllerOptions;
 
     constructor(options: Partial<IOperationsControllerOptions>) {
@@ -83,10 +84,17 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
         return this._setListMarkedKey(key);
     }
 
+    setOperationsMenuOpened(state: boolean): void {
+        this._operationsMenuOpened = state;
+        this._notify('operationsMenuOpenedChanged', state);
+    }
+
     setOperationsPanelVisible(visible: boolean): TKey {
         let markedKey;
-
-        this._isOperationsPanelVisible = visible;
+        if (visible !== this._isOperationsPanelVisible) {
+            this._isOperationsPanelVisible = visible;
+            this._notify('operationsPanelVisibleChanged', this._isOperationsPanelVisible);
+        }
 
         if (visible && this._savedListMarkedKey !== null) {
             markedKey = this.setListMarkedKey(this._savedListMarkedKey);
@@ -146,7 +154,10 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
             result = [null];
         }
         this._$selectedKeys = result;
-
+        this._notify('selectionChanged', {
+            selected: this._$selectedKeys,
+            excluded: this._$excludedKeys
+        });
         return result;
     }
 
@@ -160,7 +171,10 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
             result = [];
         }
         this._$excludedKeys = result;
-
+        this._notify('selectionChanged', {
+            selected: this._$selectedKeys,
+            excluded: this._$excludedKeys
+        });
         return result;
     }
 

@@ -26,33 +26,76 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     protected _actions: IBaseAction[];
     protected _toolbarItems: IAction[] = [];
     protected _options: IActionsCollectionOptions;
+    protected _childItems: Record<unknown, any> = {};
+    protected _operationsPanelVisible: boolean = false;
 
     constructor(options: IActionsCollectionOptions) {
         super();
         EventRaisingMixin.call(this, options);
         this._options = options;
-        this._actions = this._createActions(options.actions, options.listActions);
+        this._actions = this._createActions(options.actions);
         this._toolbarItems = this._getToolbarItemsByActions(this._actions);
     }
 
     update(options: IActionsCollectionOptions): void {
         if (!isEqual(this._options, options)) {
-            this._actions = this._createActions(options.actions, options.listActions);
-            this._toolbarItems = this._getToolbarItemsByActions(this._actions);
-            this._notify('toolbarConfigChanged', this._toolbarItems);
+            this._options = options;
+            this._updateToolbarItems();
         }
     }
 
     getAction(item: Model<IAction>): IBaseAction {
-        return this._actions.find((action) => action.id === item.getKey());
+        return this.getActionById(item.getKey());
     }
 
-    collectionChange(items: RecordSet): void {
-        this._callChangeAction('onCollectionChanged', items);
+    getExecuteAction(item: Model<IAction>): IBaseAction {
+        return this.getActionByItem(item);
+    }
+
+    getActionByItem(item: Model<IAction>): IBaseAction {
+        let action = this.getActionById(item.getKey());
+        if (action) {
+            return action;
+        } else {
+            const parentKey = item.get('parent');
+            const parentItem = Object.values(this._childItems).find((childs) => {
+                return childs.getRecordById(parentKey);
+            });
+            if (!parentItem) {
+                return this.getActionById(parentKey);
+            } else {
+                return this.getActionByItem(parentItem);
+            }
+        }
+    }
+
+    protected _updateToolbarItems(): void {
+        const currentActions = this._operationsPanelVisible ? this._options.listActions : this._options.actions;
+        this._actions = this._createActions(currentActions);
+        this._toolbarItems = this._getToolbarItemsByActions(this._actions);
+        this._childItems = {};
+        this._notify('toolbarConfigChanged', this._toolbarItems);
+    }
+
+    addChildItems(id: string, items: RecordSet): void {
+        this._childItems[id] = items;
+    }
+
+    getActionById(id: unknown): IBaseAction {
+        return this._actions.find((action) => action.id === id);
+    }
+
+    collectionChange(items: RecordSet, selection: ISelectionObject): void {
+        this._callChangeAction('onCollectionChanged', items, selection);
     }
 
     selectionChange(items: RecordSet, selection: ISelectionObject): void {
         this._callChangeAction('onSelectionChanged', items, selection);
+    }
+
+    setOperationsPanelVisible(state: boolean): void {
+        this._operationsPanelVisible = state;
+        this._updateToolbarItems();
     }
 
     private _callChangeAction(methodName: string, items: RecordSet, selection?: ISelectionObject): void {

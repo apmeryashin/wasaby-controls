@@ -1,82 +1,91 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_operationsPanel/Panel/Panel';
-import {Memory} from 'Types/source';
 import 'css!Controls/operationsPanel';
-import {SyntheticEvent} from 'UI/Events';
-import {isEqual} from 'Types/object';
-import {IDragObject, Container} from 'Controls/dragnDrop';
-import Store from 'Controls/Store';
-import 'Controls/menu';
+import {Container} from 'Controls/dragnDrop';
+import {DialogOpener} from 'Controls/popup';
+import {ControllerClass as OperationsController} from 'Controls/operations';
+import {TKey} from 'Controls/interface';
 
 export interface IOperationsPanelOptions extends IControlOptions {
-    source: Memory;
+    operationsController: OperationsController;
+    propStorageId: string;
+    selectedKeys: TKey;
+    excludedKeys: TKey;
+    selectedKeysCount: number;
+    selectionViewMode: string;
+    selectedCountConfig: unknown;
+    isAllSelected: boolean;
 }
 
 export default class extends Control<IOperationsPanelOptions> {
     protected _template: TemplateFunction = template;
-    protected _operationPanelConfig: Record<string, any>;
-    protected _operationPanelConfigStoreId: string = '';
-    protected _children: Record<string, any> = {
-        dragNDrop: Container
+    protected _operationsController: OperationsController;
+    protected _dialogOpener: DialogOpener = null;
+    protected _children: Record<string, Control> = {
+        dragNDrop: Container,
+        target: HTMLElement
     };
 
-    protected _beforeMount(): void {
-        this._operationPanelConfig = Store.getState().operationPanelConfig;
+    protected _beforeMount(options: IOperationsPanelOptions): void {
+        this._operationsController = options.operationsController;
     }
 
-    protected _shouldOpenMenuByConfig(config): void {
-        return !Store.getState().operationsMenuExpanded && config.selectedKeysCount > 0;
-    }
-
-    protected _afterMount(): void {
-        if (this._shouldOpenMenuByConfig(this._operationPanelConfig)) {
-            Store.dispatch('operationsMenuExpanded', true);
+    protected _beforeUpdate(options: IOperationsPanelOptions): void {
+        if (this._shouldOpenMenu(options)) {
+            this._operationsController.setOperationsMenuOpened(true);
         }
-        this._operationPanelConfigStoreId = Store.onPropertyChanged('operationPanelConfig', (config) => {
-            if (!isEqual(config, this._operationPanelConfig)) {
-                const shouldOpenMenu = this._shouldOpenMenuByConfig(config);
-                this._operationPanelConfig = config;
-                if (shouldOpenMenu) {
-                    Store.dispatch('operationsMenuExpanded', true);
-                }
-            }
+
+        if (this._options.selectedKeys !== options.selectedKeys ||
+            this._options.excludedKeys !== options.excludedKeys ||
+            this._options.selectedKeysCount !== options.selectedKeysCount
+        ) {
+            this._openCloud();
+        }
+    }
+
+    protected _afterMount(options: IOperationsPanelOptions): void {
+        this._openCloud();
+        if (this._shouldOpenMenu(options)) {
+            this._operationsController.setOperationsMenuOpened(true);
+        }
+    }
+
+    protected _getDialogOpener(): Promise<DialogOpener> {
+        if (!this._dialogOpener) {
+            return import('Controls/popup').then((popup) => {
+                this._dialogOpener = new popup.DialogOpener();
+                return this._dialogOpener;
+            });
+        } else {
+            return Promise.resolve(this._dialogOpener);
+        }
+    }
+
+    private _openCloud(): void {
+        this._getDialogOpener().then((opener) => {
+            const target = this._children.target;
+            opener.open({
+                template: 'Controls/operationsPanel:Panel',
+                opener: this,
+                className: 'controls-operationPanel__offset',
+                propStorageId: this._options.propStorageId,
+                templateOptions: {
+                    selectedKeys: this._options.selectedKeys,
+                    excludedKeys: this._options.excludedKeys,
+                    selectedKeysCount: this._options.selectedKeysCount,
+                    isAllSelected: this._options.isAllSelected,
+                    selectedCountConfig: this._options.selectedKeysCount
+                },
+                eventHandlers: {
+                    onClose: () => {
+                        this._options.operationsController.setOperationsMenuOpened(false);
+                    }
+                },
+                target
+            });
         });
     }
-
-    protected _beforeUnmount(): void {
-        if (this._operationPanelConfigStoreId) {
-            Store.unsubscribe(this._operationPanelConfigStoreId);
-            Store.dispatch('operationsMenuExpanded', false);
-        }
-    }
-
-    protected _onDragEnd(): void {
-        this._notify('popupDragEnd', [], {bubbling: true});
-    }
-
-    protected _onDragMove(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
-        this._notify('popupDragStart', [dragObject.offset], {bubbling: true});
-    }
-
-    protected _onMouseDown(event: SyntheticEvent<MouseEvent>): void {
-        this._startDragNDrop(event);
-    }
-
-    private _startDragNDrop(event: SyntheticEvent<Event>): void {
-        this._children.dragNDrop.startDragNDrop(null, event);
-    }
-
-    protected _closePanel(e: SyntheticEvent): void {
-        e.stopImmediatePropagation();
-        Store.dispatch('operationsPanelExpanded', false);
-        Store.dispatch('operationsMenuExpanded', false);
-    }
-
-    protected _selectedTypeChanged(e: SyntheticEvent, type: string): void {
-        Store.dispatch('selectedType', type);
-    }
-
-    protected _click(e: SyntheticEvent): void {
-        Store.dispatch('operationsMenuExpanded', true);
+    protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
+        return options.selectedKeysCount > 0;
     }
 }

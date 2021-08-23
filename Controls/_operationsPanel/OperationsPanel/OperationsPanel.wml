@@ -37,5 +37,15 @@
     </div>
 </ws:if>
 <ws:else>
-    <div name="toolbarBlock"></div>
+    <Controls._operationsPanel.Panel
+            selectedKeys="{{ _options.selectedKeys }}"
+            excludedKeys="{{ _options.excludedKeys }}"
+            size="{{_options.multiSelectSize}}"
+            fontColorStyle="{{_options.fontColorStyle}}"
+            fontSize="{{_options.multiSelectFontSize}}"
+            selectedKeysCount="{{ _options.selectedKeysCount }}"
+            selectionViewMode="{{ _options.selectionViewMode }}"
+            selectedCountConfig="{{ _options.selectedCountConfig }}"
+            isAllSelected="{{ _options.isAllSelected }}"
+            name="toolbarBlock"/>
 </ws:else>
