@@ -29,6 +29,7 @@
             layerName="Controls/suggestPopup:__PopupLayer"
             value="{{_getInputValue(_options)}}"
             validationStatus="{{_options.validationStatus}}"
+            contrastBackground="{{_options.contrastBackground}}"
             attr:class="controls-Lookup__suggest">
         <Controls._lookup.BaseLookupView.InputRender
                 name="inputRender"
