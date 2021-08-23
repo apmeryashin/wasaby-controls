@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, которые служат для <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/">организации фильтрации в списках</a>.
+ * Библиотека контролов, которые служат для {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/ организации фильтрации в списках}.
  * @library
  * @includes View Controls/_filter/View
  * @includes IEditorOptions Controls/filter:EditorOptions
@@ -7,6 +7,7 @@
  * @includes ViewContainer Controls/_filter/View/Container
  * @includes IFastFilter Controls/_filter/View/interface/IFastFilter
  * @includes IFilterButton Controls/_filter/View/interface/IFilterButton
+ * @includes IPrefetch Controls/filter:IPrefetch
  * @public
  * @author Крайнов Д.О.
  */
@@ -20,7 +21,7 @@
  * @includes ViewContainer Controls/_filter/View/Container
  * @includes IFastFilter Controls/_filter/View/interface/IFastFilter
  * @includes IFilterButton Controls/_filter/View/interface/IFilterButton
- * @includes Prefetch Controls/_filter/Prefetch
+ * @includes IPrefetch Controls/filter:IPrefetch
  * @public
  * @author Крайнов Д.О.
  */
