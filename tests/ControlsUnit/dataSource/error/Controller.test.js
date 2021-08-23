@@ -3,26 +3,32 @@ define([
    'Controls/error',
    'Browser/Transport',
    'Types/entity',
+   'Env/Env',
    'UI/Utils'
 ], function(
    errLib,
    Transport,
    { PromiseCanceledError },
+   { constants },
    { Logger }
 ) {
    describe('Controls/error:ErrorController', function() {
       const Controller = errLib.ErrorController;
+      const newConfigProp = 'testErrorController';
+      let oldConfigProp = Controller.APP_CONFIG_PROP;
       let controller;
-      let popupHelper;
+      let appHandlers;
 
       function createController() {
-         popupHelper = {
-            openConfirmation: sinon.stub().returns(Promise.resolve())
-         };
+         Controller.APP_CONFIG_PROP = newConfigProp;
+         constants.ApplicationConfig[newConfigProp] = [];
+         appHandlers = constants.ApplicationConfig[newConfigProp];
          controller = new Controller();
       }
 
       afterEach(() => {
+         Controller.APP_CONFIG_PROP = oldConfigProp;
+         delete constants.ApplicationConfig[newConfigProp];
          sinon.restore();
       });
 
@@ -163,12 +169,22 @@ define([
                .then(args => assert.deepEqual(args, ARGS));
          });
 
-         it('calls all registered handlers', function() {
-            const promises = [];
-            for (let i = 0; i < 5; i++) {
-               promises.push(addHandlerPromise());
+         it('calls all registered handlers in correct order', function() {
+            const result = [];
+            const pushResult = (data) => (() => { result.push(data) });
+
+            for (let i = 0; i < 3; i++) {
+               appHandlers.push(pushResult(`appHandler${i}`));
+               controller.addHandler(pushResult(`postHandler${i}`), true);
+               controller.addHandler(pushResult(`handler${i}`));
             }
-            return controller.process(error).then(() => Promise.all(promises));
+
+            return controller.process(error)
+               .then(() => assert.deepEqual(result, [
+                  'handler0', 'handler1', 'handler2',
+                  'appHandler0', 'appHandler1', 'appHandler2',
+                  'postHandler0', 'postHandler1', 'postHandler2'
+               ]));
          });
 
          it('stops calling handlers after receiving an answer', function() {
@@ -313,8 +329,6 @@ define([
             return controller.process(error).then((viewConfig) => {
                checkHandler();
                assert.isUndefined(viewConfig, 'returns undefined');
-               assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
-
                return Promise.all(handlerPromises);
             });
          });
@@ -338,8 +352,6 @@ define([
             return controller.process(error).then((viewConfig) => {
                checkHandler();
                assert.isUndefined(viewConfig, 'returns undefined');
-               assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
-
                return Promise.all(handlerPromises);
             });
          });

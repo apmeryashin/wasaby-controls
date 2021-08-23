@@ -11,7 +11,6 @@ import {
     ErrorViewMode,
     CanceledError
 } from './interface';
-import Popup, { IPopupHelper } from './Popup';
 
 /**
  * Параметры конструктора контроллера ошибок.
@@ -38,26 +37,10 @@ export interface IControllerOptions {
 
 export type OnProcessCallback = (viewConfig: ErrorViewConfig) => ErrorViewConfig;
 
-let popupHelper: IPopupHelper;
-
-/**
- * Получить экземпляр IPopupHelper, который контроллер ошибок использует по умолчанию, если ему не передали другого.
- * @private
- */
-export function getPopupHelper(): IPopupHelper {
-    if (!popupHelper) {
-        popupHelper = new Popup();
-    }
-
-    return popupHelper;
-}
-
-const getApplicationHandlers = (): string[] => {
-    // Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
-    const CONFIG_PROP = 'errorHandlers';
-    const handlers = constants.ApplicationConfig?.[CONFIG_PROP];
+const getApplicationHandlers = (configProp: string): string[] => {
+    const handlers = constants.ApplicationConfig?.[configProp];
     if (!Array.isArray(handlers)) {
-        Logger.info(`ApplicationConfig:${CONFIG_PROP} must be Array<Function>`);
+        Logger.info(`ApplicationConfig:${configProp} must be Array<Function>`);
         return [];
     }
     return handlers;
@@ -180,7 +163,7 @@ export default class ErrorController {
 
         const handlers = [
             ...this.handlers,
-            ...getApplicationHandlers(),
+            ...getApplicationHandlers(ErrorController.APP_CONFIG_PROP),
             ...this.postHandlers
         ];
 
@@ -218,6 +201,9 @@ export default class ErrorController {
                 }
             });
     }
+
+    // Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
+    private static readonly APP_CONFIG_PROP: string = 'errorHandlers';
 
     private static getDefaultViewConfig({ message }: Error): ErrorViewConfig {
         return {

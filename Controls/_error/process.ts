@@ -3,8 +3,8 @@ import { logger } from 'Application/Env';
 import { constants } from 'Env/Env';
 import { IBasePopupOptions } from 'Controls/popup';
 import { ErrorHandler, ErrorViewConfig } from './interface';
-import ErrorController, { getPopupHelper } from './Controller';
-import { IPopupHelper, PopupId } from './Popup';
+import ErrorController from './Controller';
+import Popup, { IPopupHelper, PopupId } from './Popup';
 
 export interface IProcessOptions {
     /**
@@ -89,10 +89,10 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
         dialogOptions = {},
         postHandlers = [],
         beforeOpenDialogCallback,
-        _popupHelper = getPopupHelper()
+        _popupHelper = new Popup()
     } = options;
 
-    const controller = new ErrorController({ handlers }, _popupHelper);
+    const controller = new ErrorController({ handlers });
 
     for (const postHandler of postHandlers) {
         controller.addHandler(postHandler, true);
