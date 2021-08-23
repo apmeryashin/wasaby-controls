@@ -232,6 +232,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
+    openMenu(templateOptions: object): void {
+        this._openMenu(this._getMenuConfig(templateOptions));
+    }
+
+    closeMenu(): void {
+        this._sticky.close();
+    }
+
     private _getSynchronousSourceForMenu(menuItems?: TItems): ICrudPlus {
         const items = menuItems || this._options.items;
         if (items) {
@@ -274,13 +282,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    private _getMenuConfig(): IStickyPopupOptions {
+    private _getMenuConfig(templateOptions: object = {}): IStickyPopupOptions {
         const options = this._options;
         return {
             ...this._getMenuOptions(),
             opener: this,
             className: `${options.popupClassName} controls-Toolbar-${options.direction}__popup__list controls_popupTemplate_theme-${options.theme}`,
             templateOptions: {
+                ...templateOptions,
                 source: this._menuSource,
                 ...this._getMenuTemplateOptions(),
                 itemActions: options.itemActions,

@@ -32,7 +32,7 @@ export default class extends Control<IOperationsPanelCloudOptions> {
         this._children.dragNDrop.startDragNDrop(null, event);
     }
 
-    protected _closePanel(e: SyntheticEvent): void {
-        this._notify('close', {bubbling: true});
+    protected _closePanel(): void {
+        this._notify('close', [], {bubbling: true});
     }
 }

@@ -33,6 +33,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     protected _beforeMount(options: IContainerOptions): void {
         this._updateActions = this._updateActions.bind(this);
         this._operationsPanelVisibleChanged = this._operationsPanelVisibleChanged.bind(this);
+        this._operationsMenuVisibleChanged = this._operationsMenuVisibleChanged.bind(this);
         this._selectionChanged = this._selectionChanged.bind(this);
         this._subscribeCollectionChange(options._dataOptionsValue);
         this._actionsCollection = new ActionsCollection({
@@ -46,6 +47,14 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._menuSource = new MenuSource({
             collection: this._actionsCollection
         });
+    }
+
+    protected _operationsMenuVisibleChanged(e: SyntheticEvent, state: boolean): void {
+        if (state) {
+            this._children.toolbar.openMenu();
+        } else {
+            this._children.toolbar.closeMenu();
+        }
     }
 
     protected _getToolbarItems(items: IAction[]): RecordSet {
@@ -95,6 +104,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             this._operationsController = dataContext.operationsController;
             this._operationsController.subscribe('operationsPanelVisibleChanged', this._operationsPanelVisibleChanged);
             this._operationsController.subscribe('selectionChanged', this._selectionChanged);
+            this._operationsController.subscribe('operationsMenuVisibleChanged', this._operationsPanelVisibleChanged);
         }
     }
 
@@ -110,6 +120,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             this._operationsController.unsubscribe('operationsPanelVisibleChanged',
                 this._operationsPanelVisibleChanged);
             this._operationsController.unsubscribe('selectionChanged', this._selectionChanged);
+            this._operationsController.unsubscribe('operationsMenuVisibleChanged', this._operationsPanelVisibleChanged);
         }
     }
 

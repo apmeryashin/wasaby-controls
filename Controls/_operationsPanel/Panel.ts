@@ -65,7 +65,7 @@ export default class extends Control<IOperationsPanelOptions> {
         this._getDialogOpener().then((opener) => {
             const target = this._children.target;
             opener.open({
-                template: 'Controls/operationsPanel:Panel',
+                template: 'Controls/operationsPanel:Cloud',
                 opener: this,
                 className: 'controls-operationPanel__offset',
                 propStorageId: this._options.propStorageId,

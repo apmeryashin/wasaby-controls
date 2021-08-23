@@ -16,3 +16,4 @@
 
 export {default as OperationsPanel} from './_operationsPanel/OperationsPanel';
 export {default as Panel} from './_operationsPanel/Panel';
+export {default as Cloud} from './_operationsPanel/Panel/Cloud';

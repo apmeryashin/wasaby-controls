@@ -1,4 +1,5 @@
 <ws:partial template="{{_options.content}}"
+            name="toolbar"
             scope="{{_options}}"
             items="{{_toolbarItems}}"
             menuSource="{{_menuSource}}"
