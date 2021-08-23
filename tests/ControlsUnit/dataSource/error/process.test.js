@@ -38,19 +38,6 @@ define([
          assert.strictEqual(process, errorProcess);
       });
 
-      it('does nothing for unknown error', () => {
-         const message = 'test message';
-         const error = new Error(message);
-         return process({
-            error,
-            _popupHelper
-         }).then((result) => {
-            assert.isUndefined(result, 'returns undefined');
-            assert.isFalse(_popupHelper.openConfirmation.calledOnceWith({ message }), 'openConfirmation called');
-            assert.isNotOk(_popupHelper.openDialog.called, 'openDialog was not called');
-         });
-      });
-
       it('returns popupId', () => {
          const opener = {};
          const dialogEventHandlers = {};

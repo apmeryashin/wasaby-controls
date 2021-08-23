@@ -125,7 +125,7 @@ export default class ErrorController {
     ) {
         this.handlers = options?.handlers?.slice() || [];
         this.postHandlers = options?.postHandlers?.slice() || [];
-        this.onProcess = options.onProcess;
+        this.onProcess = options?.onProcess;
     }
 
     /**
@@ -184,38 +184,39 @@ export default class ErrorController {
             ...this.postHandlers
         ];
 
-        return this.handlerIterator.getViewConfig(handlers, handlerConfig).then((handlerResult: ErrorViewConfig | void) => {
-            /**
-             * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
-             * Проверяем, обработана ли ошибка каким-то из контроллеров.
-             */
-            if (!ErrorController.isNeedHandle(error)) {
-                return;
-            }
+        return this.handlerIterator.getViewConfig(handlers, handlerConfig)
+            .then((handlerResult: ErrorViewConfig | void) => {
+                /**
+                 * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
+                 * Проверяем, обработана ли ошибка каким-то из контроллеров.
+                 */
+                if (!ErrorController.isNeedHandle(error)) {
+                    return;
+                }
 
-            const viewConfig = handlerResult || ErrorController.getDefaultViewConfig(error);
+                const viewConfig = handlerResult || ErrorController.getDefaultViewConfig(error);
 
-            /**
-             * Обработчик может вернуть флаг processed === false в том случае,
-             * когда он точно знает, что его ошибку нужно обработать всегда,
-             * даже если она была обработана ранее
-             */
-            error.processed = viewConfig.processed !== false;
+                /**
+                 * Обработчик может вернуть флаг processed === false в том случае,
+                 * когда он точно знает, что его ошибку нужно обработать всегда,
+                 * даже если она была обработана ранее
+                 */
+                error.processed = viewConfig.processed !== false;
 
-            if (!(config instanceof Error) && config.mode) {
-                viewConfig.mode = config.mode;
-            }
+                if (!(config instanceof Error) && config.mode) {
+                    viewConfig.mode = config.mode;
+                }
 
-            if (typeof this.onProcess === 'function') {
-                return this.onProcess(viewConfig);
-            }
+                if (typeof this.onProcess === 'function') {
+                    return this.onProcess(viewConfig);
+                }
 
-            return viewConfig;
-        }).catch((err: PromiseCanceledError) => {
-            if (!err.isCanceled) {
-                Logger.error('ErrorHandler error', null, err);
-            }
-        });
+                return viewConfig;
+            }).catch((err: PromiseCanceledError) => {
+                if (!err.isCanceled) {
+                    Logger.error('ErrorHandler error', null, err);
+                }
+            });
     }
 
     private static getDefaultViewConfig({ message }: Error): ErrorViewConfig {
