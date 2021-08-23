@@ -233,7 +233,7 @@ export class StickyController extends BaseController {
         }
     }
 
-    getDefaultConfig(item: IStickyItem): void {
+    getDefaultConfig(item: IStickyItem): void | boolean {
         const target = this._getTargetNode(item);
         this._setStickyContent(item);
         item.popupOptions = this._prepareOriginPoint(item.popupOptions);
@@ -241,7 +241,7 @@ export class StickyController extends BaseController {
         this._updateStickyPosition(item, popupCfg);
         // Если идет dnd на странице, стики окна не открываем
         if (DnDController.isDragging()) {
-            return;
+            return false;
         }
         item.position = {
             top: -10000,
