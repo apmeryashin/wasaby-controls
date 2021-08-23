@@ -401,6 +401,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     setResultsVisibility(resultsVisibility: TResultsVisibility): void {
         if (this._$resultsVisibility !== resultsVisibility) {
             this._$resultsVisibility = resultsVisibility;
+            this._$results = null;
             this._nextVersion();
         }
     }
