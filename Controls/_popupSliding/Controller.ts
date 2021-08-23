@@ -53,7 +53,11 @@ class Controller extends BaseController {
         const bodyHeight = document.body.clientHeight;
         const vieportHeight = window.visualViewport?.height || document.body.clientHeight;
         const vieportOffsetTop = window.visualViewport?.offsetTop || 0;
-        const isFullHeight = item.position.height === item.position.maxHeight;
+
+        // Если высчитана высота берем ее, если высота по контенту, смотрим на контенте. На контенте до цикла синх.
+        // значение может быть больше, чем позволяет maxHeight.
+        const isFullHeight = item.position.height ? (item.position.height === item.position.maxHeight) :
+                                                    (item.sizes.height >= item.position.maxHeight);
 
         // Если поле ввода в верхней части экрана, то при показе клавиатуры размер экрана браузера не ресайзится
         // (ресайзится только visualViewPort). В этом случае css св-во bottom: 0 будет позиционировать окно под
