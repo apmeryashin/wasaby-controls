@@ -1762,7 +1762,7 @@ const _private = {
                 _private.recountAttachIndicatorsAfterReload(self);
             }
 
-            if (action === IObservable.ACTION_RESET && self._options.searchValue) {
+            if (action === IObservable.ACTION_RESET && self._options.searchValue && !self._options.task1182874998) {
                 _private.resetPortionedSearchAndCheckLoadToDirection(self, self._options);
             }
 
@@ -4509,7 +4509,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // если при этом в списке кол-во записей было 0 (ноль) и поисковой запрос тоже вернул 0 записей,
             // onCollectionChange у рекордсета не стрельнёт, и не сработает код,
             // запускающий подгрузку по скролу (в навигации more: true)
-            if (searchValueChanged ||
+            if (searchValueChanged && (!newOptions.task1182874998 || newOptions.searchValue) ||
                 (isPortionedLoad && (this._loadedBySourceController || needCheckLoadToDirection))) {
                 _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
             }
