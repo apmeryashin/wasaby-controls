@@ -6,9 +6,9 @@
                                 bind:expandedItems="_expandedItems"
                                 bind:searchValue="_searchValue"
                                 navigation="{{_options.navigation}}"
-                                dataLoadCallback="{{_options.dataLoadCallback}}"
                                 keyProperty="{{_options.keyProperty}}"
                                 searchParam="{{_options.searchParam}}"
+                                dataLoadCallback="{{ _dataLoadCallback }}"
                                 dedicatedItemProperty="{{_options.dedicatedItemProperty}}"
                                 parentProperty="{{_options.parentProperty}}"
                                 displayProperty="{{_options.displayProperty}}">
@@ -24,7 +24,6 @@
                              on:markedKeyChanged="_onMarkedKeyChanged()"
                              on:beforeMarkedKeyChanged="_onBeforeMarkedKeyChanged()"
                              on:itemClick="_onItemClick()"
-                             dataLoadCallback="{{ _dataLoadCallback }}"
                              nodeProperty="{{_options.nodeProperty}}"
                              hasChildrenProperty="{{_options.hasChildrenProperty}}"
                              itemsFilterMethod="{{_itemsFilterMethod}}"
