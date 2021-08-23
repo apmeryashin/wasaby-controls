@@ -370,7 +370,7 @@ function onCollectionChange<T>(
             break;
     }
 
-    this._updateEdgeItemsSeparators();
+    this._updateEdgeItems();
     this._finishUpdateSession(session);
     this._nextVersion();
 }
@@ -973,7 +973,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
         this._footer = this._initializeFooter(options);
 
-        this._updateEdgeItemsSeparators(true, true);
+        this._updateEdgeItems(true, true);
     }
 
     _initializeCollection(): void {
@@ -2266,7 +2266,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
             this._reFilter();
-            this._updateEdgeItemsSeparators();
+            this._updateEdgeItems();
         }
     }
 
@@ -2359,7 +2359,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     setRowSeparatorSize(rowSeparatorSize: string): void {
         this._$rowSeparatorSize = rowSeparatorSize;
         this._nextVersion();
-        this._updateEdgeItemsSeparators(true, true);
+        this._updateEdgeItems(true, true);
         this._updateItemsProperty('setRowSeparatorSize', this._$rowSeparatorSize);
     }
 
@@ -2564,50 +2564,68 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this.getIndex(this.getItemBySourceKey(key) as T);
     }
 
-    protected _updateEdgeItemsSeparators(force?: boolean, silent?: boolean): void {
-        const navigation = this.getNavigation();
-        const noMoreNavigation = !navigation || navigation.view !== 'infinity' || !this.hasMoreData();
-
-        const oldFirstItem = this._firstItem;
+    protected _updateEdgeItems(force?: boolean, silent?: boolean): void {
         const firstItem = this.getFirst();
-        if (firstItem !== oldFirstItem || force) {
-            this._updateFirstItemSeparator(oldFirstItem, false, silent);
-            this._updateFirstItemSeparator(firstItem, true, silent);
-            this._firstItem = firstItem;
-        }
-
-        const oldLastItem = this._lastItem;
         const lastItem = this.getLast('EdgeRowSeparatorItem');
-        if (lastItem !== oldLastItem || force) {
-            this._updateLastItemSeparator(oldLastItem, false, silent);
-            this._updateLastItemSeparator(lastItem, noMoreNavigation, silent);
-            this._lastItem = lastItem;
-        }
-    }
+        const navigation = this.getNavigation();
+        const noMoreData = !navigation || navigation.view !== 'infinity' || !this.hasMoreData();
 
-    private _updateLastItemSeparator(item: CollectionItem, state: boolean, silent?: boolean): void {
-        if (item) {
+        if (firstItem !== this._firstItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                item.setBottomSeparatorEnabled(state && this._isRowSeparatorsEnabled(), silent);
+                this._updateTopItemSeparator(this._firstItem, firstItem, this._shouldAddEdgeSeparator(), silent);
             }
-
-            // @TODO https://online.sbis.ru/opendoc.html?guid=ef1556f8-fce4-401f-9818-f4d1f8d8789a
-            item.setLastItem(state, silent);
+            this._updateFirstItem(this._firstItem, firstItem, silent);
         }
-    }
 
-    private _updateFirstItemSeparator(item: CollectionItem, state: boolean, silent?: boolean): void {
-        if (item) {
+        if (lastItem !== this._lastItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                item.setTopSeparatorEnabled(state && this._isRowSeparatorsEnabled(), silent);
+                this._updateBottomItemSeparator(this._lastItem, lastItem, noMoreData && this._shouldAddEdgeSeparator(), silent);
             }
-
-            // @TODO https://online.sbis.ru/opendoc.html?guid=ef1556f8-fce4-401f-9818-f4d1f8d8789a
-            item.setFirstItem(state, silent);
+            this._updateLastItem(this._lastItem, lastItem, silent);
         }
     }
 
-    protected _isRowSeparatorsEnabled(): boolean {
+    private _updateLastItem(oldItem: CollectionItem, newItem: CollectionItem, silent?: boolean): void {
+        // @TODO https://online.sbis.ru/opendoc.html?guid=ef1556f8-fce4-401f-9818-f4d1f8d8789a
+        if (oldItem) {
+            oldItem.setLastItem(false, silent);
+        }
+        if (newItem) {
+            newItem.setLastItem(true, silent);
+        }
+        this._lastItem = newItem;
+    }
+
+    private _updateFirstItem(oldItem: CollectionItem, newItem: CollectionItem, silent?: boolean): void {
+        // @TODO https://online.sbis.ru/opendoc.html?guid=ef1556f8-fce4-401f-9818-f4d1f8d8789a
+        if (oldItem) {
+            oldItem.setFirstItem(false, silent);
+        }
+        if (newItem) {
+            newItem.setFirstItem(true, silent);
+        }
+        this._firstItem = newItem;
+    }
+
+    private _updateBottomItemSeparator(oldItem: CollectionItem, newItem: CollectionItem, newState: boolean, silent?: boolean): void {
+        if (oldItem) {
+            oldItem.setBottomSeparatorEnabled(false, silent);
+        }
+        if (newItem) {
+            newItem.setBottomSeparatorEnabled(newState, silent);
+        }
+    }
+
+    private _updateTopItemSeparator(oldItem: CollectionItem, newItem: CollectionItem, newState: boolean, silent?: boolean): void {
+        if (oldItem) {
+            oldItem.setTopSeparatorEnabled(true, silent);
+        }
+        if (newItem) {
+            newItem.setTopSeparatorEnabled(newState, silent);
+        }
+    }
+
+    protected _shouldAddEdgeSeparator(): boolean {
         return !this._$newDesign || !!this.getFooter();
     }
 
@@ -2618,7 +2636,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     setHasMoreData(hasMoreData: IHasMoreData): void {
         if (!isEqual(this._$hasMoreData, hasMoreData)) {
             this._$hasMoreData = hasMoreData;
-            this._updateEdgeItemsSeparators(true);
+            this._updateEdgeItems(true);
             this._nextVersion();
         }
     }
@@ -2851,13 +2869,13 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             addIndex: options.index,
             groupMethod: this.getGroup()
         }, GroupItemsStrategy);
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
     }
 
     resetAddingItem(): void {
         if (this.getStrategyInstance(AddStrategy)) {
             this.removeStrategy(AddStrategy);
-            this._updateEdgeItemsSeparators();
+            this._updateEdgeItems();
         }
     }
 
@@ -4110,7 +4128,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
     }
 
     protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}

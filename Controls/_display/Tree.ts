@@ -755,7 +755,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._reBuildNodeFooters(true);
         this._reIndex();
         this._reAnalize();
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
         this.resetHasNode();
     }
 
@@ -885,7 +885,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         //endregion
 
         this._expandedItems = [...expandedKeys];
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
@@ -912,7 +912,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 item.setExpanded(false);
             }
         });
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
     }
 
     toggleExpanded(item: T): void {
