@@ -10,7 +10,9 @@
                             _maximizeButtonTitle="{{_maximizeButtonTitle}}"
                             changeMaximizedState="{{changeMaximizedState}}"
                             hasRightPanel="{{_hasRightPanel}}"
-                            _maximizeButtonVisibility="{{_maximizeButtonVisibility}}" />
+                            _maximizeButtonVisibility="{{_maximizeButtonVisibility}}"
+                            attr:class="{{_headerTheme && (_options.theme !== _headerTheme) ?
+                                'controls_popupTemplate_theme-' + _headerTheme + ' controls_theme-' + _headerTheme}}"/>
             </ws:if>
             <ws:else data="{{!_hasRightPanel}}">
                 <div class="controls-StackTemplate__command_buttons_without_head">
