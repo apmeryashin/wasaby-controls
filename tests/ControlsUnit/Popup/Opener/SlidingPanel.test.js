@@ -55,6 +55,19 @@ define(
                assert.equal(position.height, item.position.height);
                assert.equal(position.bottom, 0);
             });
+            it('Height can be zero', () => {
+               const SlidingPanelStrategy = new StrategyConstructor();
+               const item = getPopupItem();
+               item.position = {
+                  bottom: 0,
+                  height: 0
+               };
+               SlidingPanelStrategy._getWindowHeight = () => 900;
+               const position = SlidingPanelStrategy.getPosition(item);
+
+               assert.equal(position.height, 0);
+               assert.equal(position.bottom, 0);
+            });
             describe('check overflow', () => {
                it('window height < minHeight', () => {
                   const SlidingPanelStrategy = new StrategyConstructor();
