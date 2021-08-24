@@ -278,6 +278,33 @@ describe('Controls/list_clean/ScrollController', () => {
                     params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
                 });
 
+                assert.strictEqual(result.triggerOffset.bottom, 0);
+            });
+            it('resetDownTriggerOffset === true and has items', () => {
+                const collection = new Collection({
+                    collection: new RecordSet({
+                        rawData: [{key: 1}],
+                        keyProperty: 'key'
+                    })
+                });
+                const controller = new ScrollController({
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    resetDownTriggerOffset: true
+                });
+                controller.handleResetItems();
+
+                let result = controller.update({
+                    options: {
+                        collection,
+                        virtualScrollConfig: {},
+                        needScrollCalculation: false,
+                        resetDownTriggerOffset: true
+                    },
+                    params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
+                });
+
                 assert.strictEqual(result.triggerOffset.bottom, 1);
             });
             it('resetDownTriggerOffset === false', () => {
