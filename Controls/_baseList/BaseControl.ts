@@ -6718,7 +6718,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _getNavigationButtonClasses(options, buttonConfig): string {
-        if (buttonConfig && buttonConfig.buttonPosition !== 'center') {
+        const buttonView = this._resolveNavigationButtonView() === 'separator';
+        if (!buttonView || (buttonConfig && buttonConfig.buttonPosition !== 'center')) {
             return this._getFooterSpacingClasses(options);
         }
     }
