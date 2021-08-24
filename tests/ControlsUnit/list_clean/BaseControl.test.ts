@@ -1453,7 +1453,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
     });
 
-    describe('getFooterClasses', () => {
+    describe('getFooterSpacingClasses', () => {
         [
             // multiSelectVisibility, multiSelectPosition, itemPadding, expectedResult
             ['hidden', 'default', undefined, undefined, 'controls__BaseControl__footer-default__paddingLeft_default'],
@@ -1472,8 +1472,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 const baseControl = new BaseControl({});
 
                 aAssert.isSame(
-                    baseControl._getFooterClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
-                    `controls__BaseControl__footer ${expectedResult}`
+                    baseControl._getFooterSpacingClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
+                    `${expectedResult}`
                 );
             });
         });
