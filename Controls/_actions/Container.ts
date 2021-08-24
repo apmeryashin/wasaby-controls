@@ -102,7 +102,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
 
     getSourceController(dataValue, prefetch: ILoadDataResult[]): SourceController {
         if (prefetch) {
-            return prefetch[0].sourceController;
+            return prefetch[0].prefetchResult?.sourceController;
         } else {
             return dataValue.sourceController;
         }
@@ -110,7 +110,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
 
     getOperationController(dataValue, prefetch: ILoadDataResult[]): OperationsController {
         if (prefetch) {
-            return prefetch[0].operationsController;
+            return prefetch[0].prefetchResult?.operationsController;
         } else {
             return dataValue.operationsController;
         }
@@ -121,7 +121,6 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             this._sourceController = this.getSourceController(dataContext, prefetch);
             this._operationsController = this.getOperationController(dataContext, prefetch);
             this._sourceController.subscribe('itemsChanged', this._updateActions);
-            this._operationsController = dataContext.operationsController;
             this._operationsController.subscribe('operationsPanelVisibleChanged', this._operationsPanelVisibleChanged);
             this._operationsController.subscribe('selectionChanged', this._selectionChanged);
             this._operationsController.subscribe('operationsMenuVisibleChanged', this._operationsMenuVisibleChanged);

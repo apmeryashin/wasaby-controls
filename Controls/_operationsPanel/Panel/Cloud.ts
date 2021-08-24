@@ -35,4 +35,8 @@ export default class extends Control<IOperationsPanelCloudOptions> {
     protected _closePanel(): void {
         this._notify('close', [], {bubbling: true});
     }
+
+    protected _click(): void {
+        this._notify('sendResult', ['click'], {bubbling: true});
+    }
 }

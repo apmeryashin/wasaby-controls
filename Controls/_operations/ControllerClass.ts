@@ -53,7 +53,7 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     private _selectedKeysByList: IKeysByList = {};
     private _excludedKeysByList: IKeysByList = {};
     private _selectedKeysCountByList: ISelectedKeysCountByList = {};
-    private _operationsMenuOpened: boolean = false;
+    private _operationsMenuVisible: boolean = false;
     protected _options: IOperationsControllerOptions;
 
     constructor(options: Partial<IOperationsControllerOptions>) {
@@ -84,9 +84,11 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
         return this._setListMarkedKey(key);
     }
 
-    setOperationsMenuOpened(state: boolean): void {
-        this._operationsMenuOpened = state;
-        this._notify('operationsMenuOpenedChanged', state);
+    setOperationsMenuVisible(state: boolean): void {
+        if (state !== this._operationsMenuVisible) {
+            this._operationsMenuVisible = state;
+            this._notify('operationsMenuVisibleChanged', state);
+        }
     }
 
     setOperationsPanelVisible(visible: boolean): TKey {

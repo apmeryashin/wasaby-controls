@@ -1,7 +1,7 @@
 <Controls.Container.Async
     templateName="Controls/toolbars:View">
     <ws:content>
-        <ws:partial template="{{_options.content}}"
+        <ws:partial template="{{content.resolvedTemplate}}"
                     name="toolbar"
                     scope="{{_options.toolbarOptions}}"
                     items="{{_toolbarItems}}"

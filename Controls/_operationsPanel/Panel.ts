@@ -32,7 +32,7 @@ export default class extends Control<IOperationsPanelOptions> {
 
     protected _beforeUpdate(options: IOperationsPanelOptions): void {
         if (this._shouldOpenMenu(options)) {
-            this._operationsController.setOperationsMenuOpened(true);
+            this._operationsController.setOperationsMenuVisible(true);
         }
 
         if (this._options.selectedKeys !== options.selectedKeys ||
@@ -79,6 +79,11 @@ export default class extends Control<IOperationsPanelOptions> {
                 eventHandlers: {
                     onClose: () => {
                         this._options.operationsController.setOperationsMenuOpened(false);
+                    },
+                    onResult: (action: string) => {
+                        if (action === 'click') {
+                            this._options.operationsController.selectionTypeChanged('all');
+                        }
                     }
                 },
                 target
