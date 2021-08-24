@@ -39,7 +39,7 @@
 <ws:template name="sysFooterTemplate">
     <div class="controls__BaseControl__footer">
         <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
-            <div class="controls-BaseControl__footerPaging_wrapper {{_getFooterSpacingClasses(_options)}}">
+            <div class="controls-BaseControl__footerPaging_wrapper">
                 <ws:if data="{{_options.columnScroll}}">
                     <div class="controls-BaseControl_paging-wrapper">
                         <ws:partial template="pagingTpl" />
