@@ -7,7 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import rk = require('i18n!Controls');
 
 import {TColumns, ColumnTemplate, IColumn} from 'Controls/grid';
-import {IHierarchyOptions, TKeysSelection} from 'Controls/interface';
+import {Direction, IHierarchyOptions, TKeysSelection} from 'Controls/interface';
 
 import Template = require('wml!Controls/_moverDialog/Template/Template');
 import MoverColumnTemplate = require('wml!Controls/_moverDialog/Template/CellTemplate');
@@ -34,6 +34,7 @@ export interface IMoverDialogTemplateOptions extends IControlOptions, IHierarchy
     headingCaption?: string;
     rootTitle: string;
     rootLabelVisible?: boolean;
+    dataLoadCallback?: (items: RecordSet, direction?: Direction) => void;
 }
 
 interface IMoverColumnTemplateOptions {
@@ -103,12 +104,6 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
         this._filter = this._options.filter || {};
     }
 
-    protected _onSearchValueChanged(e: SyntheticEvent, value: string): void {
-        if (this._searchValue !== value) {
-            this._searchValue = value === undefined || value === null ? '' : value;
-        }
-    }
-
     protected _itemsFilterMethod(items: Model | Model[]): boolean {
         let result = true;
         const item = Array.isArray(items) ? items[items.length - 1] : items;
@@ -137,10 +132,13 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
         this._notify('close', [], {bubbling: true});
     }
 
-    protected _dataLoadCallback(recordSet: RecordSet): void {
+    protected _dataLoadCallback(items: RecordSet, direction: Direction): void {
         if ((!this._searchValue || this._searchValue.length === 0) &&
             (this._options.showRoot || this._options.rootVisible)) {
-            recordSet.add(this._getRootRecord(recordSet.getKeyProperty(), recordSet.getAdapter()), 0);
+            items.add(this._getRootRecord(items.getKeyProperty(), items.getAdapter()), 0);
+        }
+        if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(items, direction);
         }
     }
 
