@@ -244,7 +244,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         const scrollContentOffset = contentHeight - startScrollHeight;
 
         // Если нет доступного контента для разворота, то не пытаемся что-то развернуть
-        if (this._options.slidingPanelOptions.height === contentHeight && realHeightOffset > 0) {
+        if (this._options.slidingPanelOptions.height === startContentHeight && realHeightOffset > 0) {
             offsetY = 0;
         } else if (
             // Если остаток доступного контента меньше сдвига, то сдвигаем на размер оставшегося контента
