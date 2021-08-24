@@ -15,6 +15,7 @@
                 styleClass="{{ _styleClass }}"
                 caption="{{ _caption }}"
                 on:mousedown="_onClick()"
+                attr:data-qa="DateLinkView__template"
     />
     <ws:if data="{{ _resetButtonVisible }}">
         <span class="controls-DateLinkView__resetButton
