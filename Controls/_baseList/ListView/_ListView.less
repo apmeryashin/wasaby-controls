@@ -719,7 +719,6 @@
 
 .controls-master-template-newDesign .controls-ListView__item_master {
    border-radius: var(--master_item_border-radius_list);
-   overflow: hidden;
 }
 
 .controls-ListView__item__marked_master {
@@ -802,8 +801,7 @@
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
 .ws-is-hover:not(.ws-is-mobile-platform) {
-   .controls-ListView__item_master,
-   .controls-ListView__itemContent_master {
+   .controls-ListView__item_master {
       &:hover {
          background-color: var(--master_item_hover_background-color_list);
       }
