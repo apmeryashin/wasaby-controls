@@ -6052,7 +6052,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             emptyTemplateOptions: {items, filter: modelConfig.filter},
             hasMoreData: _private.getHasMoreData(this),
             // TODO LI нужно переименовать в portionedSearchTemplate, но нужно переименовывать и у прикладников
-            portionedSearchTemplate: modelConfig.loadingIndicatorTemplate
+            portionedSearchTemplate: modelConfig.loadingIndicatorTemplate,
+            filter: modelConfig.collectionFilter
         });
     }
 
