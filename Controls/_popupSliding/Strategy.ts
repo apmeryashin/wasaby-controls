@@ -42,8 +42,16 @@ class Strategy {
         const maxHeight = this._getHeightWithoutOverflow(this.getMaxHeight(item), windowHeight);
         const minHeight = this._getHeightWithoutOverflow(this.getMinHeight(item), maxHeight);
         const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
-        const heightValue = autoHeight && !initialHeight ? undefined : (initialHeight || minHeight);
-        let height = this._getHeightWithoutOverflow(heightValue, maxHeight);
+        const heightInitialized = initialHeight !== undefined;
+        let height;
+        if (autoHeight && !heightInitialized) {
+            height = undefined;
+        } else {
+            // Высота может быть 0, если пользователь утащит вниз до конца при закрытии, поэтому проверяем на undefined,
+            // чтобы не убрать фиксированную высоту когда стащат до 0,
+            // иначе с высотой undefined шторка растянется по контенту
+            height = heightInitialized ? initialHeight : minHeight;
+        }
 
         // В случае ресайза, проверяем на валидность высоты,
         // т.к. высота могла быть уменьшена по размеру экрана
@@ -150,7 +158,10 @@ class Strategy {
         if (!height) {
             return height;
         }
-        return maxHeight > height ? height : maxHeight;
+        // При очередном драге вниз высота может стать отрицательной, если драгают вниз с нулевой высоты,
+        // отрицательной высоты быть не должно
+        const result = maxHeight > height ? height : maxHeight;
+        return result < 0 ? 0 : result;
     }
 
     /**
