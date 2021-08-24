@@ -402,7 +402,8 @@ define(
                         iconStyle: 'secondary',
                         keyProperty: 'id',
                         nodeProperty: '@parent',
-                        parentProperty: 'parent'
+                        parentProperty: 'parent',
+                        direction: 'horizontal'
                      },
                      _children: {
                         menuTarget: 'menuTarget'
@@ -427,7 +428,8 @@ define(
                      footerContentTemplate: undefined,
                      itemActions: undefined,
                      itemActionVisibilityCallback: undefined,
-                     closeButtonVisibility: true
+                     closeButtonVisibility: true,
+                     dropdownClassName: 'controls-Toolbar-horizontal__dropdown'
                   };
                const toolbar = new toolbars.View();
                const config = toolbar._getMenuConfig.call(testSelf);

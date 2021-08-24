@@ -879,16 +879,18 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             if (searchParam) {
                 this._loading = true;
                 searchPromises.push(this._dataLoader.getSearchController(id).then((searchController) => {
-                    return searchController.search(value).finally(() => {
-                        if (!this._destroyed) {
-                            this._loading = false;
-                            this._afterSourceLoad(
-                                this._getSourceController(id),
-                                this._listsOptions[index] as IBrowserOptions
-                            );
-                            this._updateItemsOnState();
-                        }
-                    });
+                    if (!this._destroyed) {
+                        return searchController.search(value).finally(() => {
+                            if (!this._destroyed) {
+                                this._loading = false;
+                                this._afterSourceLoad(
+                                    this._getSourceController(id),
+                                    this._listsOptions[index] as IBrowserOptions
+                                );
+                                this._updateItemsOnState();
+                            }
+                        });
+                    }
                 }));
             }
         });
@@ -962,10 +964,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _setSearchValueAndNotify(value: string): void {
         this._searchValue = value;
-        // FIXME https://online.sbis.ru/opendoc.html?guid=c7e198c4-b663-4ea2-b258-30ad778a91c5
-        if (this._mounted) {
-            this._notify('searchValueChanged', [value]);
-        }
+        this._notify('searchValueChanged', [value]);
     }
 
     private _updateParams(): void {

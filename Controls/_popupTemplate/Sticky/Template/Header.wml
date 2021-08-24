@@ -1,6 +1,5 @@
 <div class="controls-StickyTemplate__top-area
             {{_options.roundBorder !== false ? 'controls-StickyTemplate__top-area_roundBorder'}}
-            controls_popupTemplate_theme-{{_options.theme}}
             controls-StickyTemplate-background-{{_options.backgroundStyle}}
             controls-StickyTemplate__top-area-{{_options.closeButtonVisibility ? 'withClose' : 'withoutClose'}}">
    <div class="controls-StickyTemplate__top-area-content">

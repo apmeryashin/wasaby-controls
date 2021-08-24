@@ -2,6 +2,7 @@
                  controls_popupTemplate_theme-{{_options.theme}}
                  controls-Suggest__suggestionsContainer
                  controls-Suggest__suggestionsContainer_popup
+                 {{_options.contrastBackground ? 'controls-Suggest__suggestionsContainer_popup-contrastBackground'}}
                  controls-Suggest__suggestionsContainer_popup_shadow_{{_options.stickyPosition.direction.vertical}}
                  controls-Suggest__suggestionsContainer_popup_{{_options.stickyPosition.direction.vertical}}
                  {{!_showContent ? 'controls-Suggest__suggestionsContainer_hidden'}}">
