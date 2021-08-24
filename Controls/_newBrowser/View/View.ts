@@ -191,7 +191,7 @@ export default class View extends Control<IOptions, IReceivedState> {
         if (!direction) {
             this._processItemsMetadata(items);
         }
-        if (imageProperty && (!this._hasImageInItems || rootChanged)) {
+        if (imageProperty && (!this._hasImageInItems || rootChanged) && items.getCount()) {
             this._hasImageInItems = this._hasImages(items, imageProperty);
             const imageVisibility = this._hasImageInItems ? 'visible' : 'hidden';
             if (imageVisibility !== this._listCfg?.getImageVisibility()) {
