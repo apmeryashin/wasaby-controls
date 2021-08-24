@@ -32,6 +32,7 @@ export interface IDataOptions extends IControlOptions,
     IErrorControllerOptions {
    dataLoadErrback?: Function;
    dataLoadCallback?: Function;
+   nodeLoadCallback?: Function;
    root?: TKey;
    groupProperty?: string;
    groupingKeyCallback?: Function;
@@ -358,6 +359,14 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       }
    }
 
+   private _nodeLoadCallback(items: RecordSet, key: TKey, direction: Direction): void {
+      this._hideError();
+
+      if (typeof this._options.nodeLoadCallback === 'function') {
+         this._options.nodeLoadCallback(items, key, direction);
+      }
+   }
+
    private _getSourceControllerOptions(options: IDataOptions, receivedState?: object): ISourceControllerOptions {
       if (receivedState?.expandedItems) {
          options.expandedItems = receivedState.expandedItems;
@@ -368,7 +377,8 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
          filter: this._filter || options.filter,
          root: this._root,
-         dataLoadCallback: this._dataLoadCallback
+         dataLoadCallback: this._dataLoadCallback,
+         nodeLoadCallback: this._nodeLoadCallback.bind(this)
       } as ISourceControllerOptions;
    }
 
@@ -552,20 +562,11 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._errorConfig = null;
    }
 
-   private _processError(config): Promise<dataSourceError.ViewConfig> {
-      if (config.error.canceled || config.error.isCanceled) {
-         return Promise.resolve();
-      }
+   private _processError(config): Promise<dataSourceError.ViewConfig | void> {
       return this._errorController.process({
          error: config.error,
          theme: this._options.theme,
          mode: config.mode || dataSourceError.Mode.include
-      }).then((errorConfig) => {
-         if (errorConfig && config.templateOptions) {
-            Object.assign(errorConfig.options, config.templateOptions);
-         }
-
-         return errorConfig as dataSourceError.ViewConfig;
       });
    }
 

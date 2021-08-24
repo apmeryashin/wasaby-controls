@@ -5689,11 +5689,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // region remove
 
     removeItems(selection: ISelectionObject): Promise<string | void> {
-        return _private.removeItems(this, selection, 'Controls/listActions:RemoveProvider')
+        return _private
+            .removeItems(this, selection, 'Controls/listActions:RemoveProvider')
+            .catch((error) => dataSourceError.process({error}));
     }
 
     removeItemsWithConfirmation(selection: ISelectionObject): Promise<string | void> {
-        return _private.removeItems(this, selection);
+        return _private.removeItems(this, selection).catch((error) => dataSourceError.process({error}));
     }
 
     // endregion remove
