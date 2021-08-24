@@ -60,10 +60,7 @@
                     </ws:else>
                 </ws:showSelectorButtonTemplate>
                 <ws:showMoreButtonTemplate>
-                    <span if="{{_moreCount}}"
-                          class="controls-Suggest__moreLink
-                          {{_options.footerTemplate.templateOptions.showSelectorButtonTemplate === null ? 'controls-Suggest__moreLink-padding'}}"
-                          on:click="_moreClick()">
+                    <span if="{{_moreCount}}" class="controls-Suggest__moreLink" on:click="_moreClick()">
                         <span class="controls-Suggest__moreLink-content">{[Ещё]} {{_moreCount}}</span>
                     </span>
                 </ws:showMoreButtonTemplate>
