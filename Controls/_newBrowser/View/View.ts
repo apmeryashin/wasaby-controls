@@ -198,7 +198,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             this._masterDataLoadResolver();
             this._masterDataLoadResolver = null;
         }
-        if (imageProperty && (!this._hasImageInItems || rootChanged)) {
+        if (imageProperty && (!this._hasImageInItems || rootChanged) && items.getCount()) {
             this._hasImageInItems = this._hasImages(items, imageProperty);
             const imageVisibility = this._hasImageInItems ? 'visible' : 'hidden';
             if (imageVisibility !== this._listCfg?.getImageVisibility()) {
