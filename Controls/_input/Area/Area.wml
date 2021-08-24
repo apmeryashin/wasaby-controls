@@ -73,6 +73,7 @@
                         hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                         isIE="{{_isIE}}"
                         lineHeightForIE="{{ _lineHeightForIE[_options.fontSize] }}"
+                        placeholderDisplay="{{_placeholderDisplay}}"
                         isEdge="{{_isEdge}}"/>
          </ws:else>
       </Controls.scroll:Container>
