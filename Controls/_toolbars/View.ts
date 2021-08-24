@@ -233,6 +233,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
+    openMenu(): void {
+        this._openMenu(this._getMenuConfig());
+    }
+
+    closeMenu(): void {
+        this._sticky.close();
+    }
+
     private _getSynchronousSourceForMenu(menuItems?: TItems): ICrudPlus {
         const items = menuItems || this._options.items;
         if (items) {
@@ -277,11 +285,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
+        const beforeMenuOpenResult = this._notify('beforeMenuOpen', [], {bubbling: true});
+        const popupOptions = beforeMenuOpenResult?.popupOptions || {};
+        const templateOptions = beforeMenuOpenResult?.templateOptions || {};
         return {
             ...this._getMenuOptions(),
+            ...popupOptions,
             opener: this,
             className: `${options.popupClassName} controls-Toolbar-${options.direction}__popup__list controls_popupTemplate_theme-${options.theme}`,
             templateOptions: {
+                ...templateOptions,
                 source: this._menuSource,
                 ...this._getMenuTemplateOptions(),
                 itemActions: options.itemActions,
@@ -517,7 +530,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (item.get(this._nodeProperty)) {
             this._getSourceForMenu(item).then((source) => {
                 const root = item.get(this._options.keyProperty);
-                let menuSource = source;
+                const menuSource = source;
 
                 const config = this._getMenuConfigByItem(item, menuSource, root, this._menuItems[root]);
                 this._openMenu({

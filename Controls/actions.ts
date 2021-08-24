@@ -10,6 +10,7 @@ export {default as BaseAction, IBaseActionOptions as IActionOptions} from './_ac
 export {default as Remove} from './_actions/MassActions/Remove';
 export {default as Move} from './_actions/MassActions/Move';
 export {default as MassAction} from './_actions/MassActions/MassAction';
+export {default as ListMenuAction} from './_actions/MassActions/ListMenuAction';
 
 export {
     Container
