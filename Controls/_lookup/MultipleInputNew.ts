@@ -7,6 +7,7 @@ import {IStackPopupOptions} from 'Controls/popup';
 import {EventUtils} from 'UI/Events';
 import 'css!Controls/lookup';
 import {Model} from 'Types/entity';
+import {isEqual} from 'Types/object';
 
 interface IMultipleLookupInputOptions extends ILookupInputOptions {
     name: string;
@@ -47,10 +48,18 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
     private _calcSizesAfterDraw: boolean = false;
     protected _children: Record<string, BaseLookupInput>;
 
-    protected _beforeMount(options: IMultipleInputNewOptions): void {
-        options.lookupsOptions.forEach((lookupOptions) => {
-            this._selectedKeys[lookupOptions.name] = lookupOptions.selectedKeys || [];
-            this._value[lookupOptions.name] = lookupOptions.value || '';
+    protected _beforeMount({lookupsOptions}: IMultipleInputNewOptions): void {
+        lookupsOptions.forEach(({name, value, selectedKeys}) => {
+            this._selectedKeys[name] = selectedKeys || [];
+            this._value[name] = value || '';
+        });
+    }
+
+    _beforeUpdate({lookupsOptions}: IMultipleInputNewOptions): void {
+        lookupsOptions.forEach(({name, selectedKeys}) => {
+            if (!isEqual(selectedKeys, this._getLookupOptions(this._options, name).selectedKeys)) {
+                this._cloneAndSetStateByOptionValue(selectedKeys, 'selectedKeys', name);
+            }
         });
     }
 
@@ -84,11 +93,27 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
         this._setStateAndNotifyEventByOptionName(value, 'value', lookupName);
     }
 
-    protected _setStateAndNotifyEventByOptionName(value: unknown, optionName: string, lookupName: string): void {
-        const state = '_' + optionName;
+    protected _getLookupOptions(options: IMultipleInputNewOptions, lookupName: string): IMultipleLookupInputOptions {
+        return options.lookupsOptions.find(({name}) => name === lookupName);
+    }
+
+    protected _cloneAndSetStateByOptionValue(value: unknown, optionName: string, lookupName: string): void {
+        const state = this._getStateNameByOptionName(optionName);
         this[state] = this._cloneObject(this[state]);
         this[state][lookupName] = value;
-        this._notify(optionName + 'Changed', [this[state]]);
+    }
+
+    protected _getValueFromStateByOptionName(optionName: string, lookupName: string): unknown {
+        return this[this._getStateNameByOptionName(optionName)][lookupName];
+    }
+
+    protected _getStateNameByOptionName(optionName: string): string {
+        return '_' + optionName;
+    }
+
+    protected _setStateAndNotifyEventByOptionName(value: unknown, optionName: string, lookupName: string): void {
+        this._cloneAndSetStateByOptionValue(value, optionName, lookupName);
+        this._notify(optionName + 'Changed', [this[this._getStateNameByOptionName(optionName)]]);
     }
 
     protected _cloneObject(obj: object): object {

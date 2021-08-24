@@ -3,6 +3,7 @@ export interface ITextOptions {
     maxLength?: number;
     convertPunycode: boolean;
     trim: number;
+    transliterate?: boolean;
 }
 
 /**
@@ -45,4 +46,10 @@ export interface IText {
  * * true - Пробельные символы удаляются.
  * @demo Controls-demo/Input/Trim/Index
  * @default true
+ */
+/**
+ * @name Controls/_input/interface/IText#transliterate
+ * @cfg {Boolean} Определяет включена ли транслитерация на сочетание клавиш Alt+t или PauseBreak.
+ * @default true
+ * @demo Controls-demo/Input/Text/Transliterate/Index
  */

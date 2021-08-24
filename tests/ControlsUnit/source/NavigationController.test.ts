@@ -606,6 +606,57 @@ describe('Controls/_source/NavigationController', () => {
                 assert.deepEqual([1], params[1].backwardPosition, 'Wrong query properties');
             });
 
+            it('updateQueryProperties + meta.NextPosition recordSet, direction: forward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        field: 'id',
+                        direction: 'forward'
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                const metaMoreRs = new RecordSet({
+                    rawData: [
+                        {
+                            id: 0,
+                            nav_result: 'testId'
+                        },
+                        {
+                            id: 2,
+                            nav_result: null
+                        }
+                    ],
+                    keyProperty: 'id'
+                });
+                let nextPositionRs = new RecordSet({
+                    rawData: [
+                        {
+                            id: 0,
+                            nav_result: ['testId']
+                        },
+                        {
+                            id: 2,
+                            nav_result: null
+                        }
+                    ],
+                    keyProperty: 'anyKeyProperty'
+                });
+
+                rs.setMetaData({
+                    more: metaMoreRs,
+                    nextPosition: nextPositionRs
+                });
+
+                const params = nc.updateQueryProperties(rs);
+                assert.deepEqual(['testId'], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([6], params[1].forwardPosition, 'Wrong query properties');
+            });
+
             it('updateQueryProperties bothways + meta.NextPosition root', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
@@ -668,13 +719,16 @@ describe('Controls/_source/NavigationController', () => {
             });
 
             it('updateQueryProperties forward + meta.iterative changed', () => {
-                const nc = new NavigationController({
-                    navigationType: 'position',
-                    navigationConfig: {
-                        field: 'id',
-                        direction: 'forward'
-                    }
-                });
+                function getNavController() {
+                    return  new NavigationController({
+                        navigationType: 'position',
+                        navigationConfig: {
+                            field: 'id',
+                            direction: 'forward'
+                        }
+                    });
+                }
+                let nc = getNavController();
 
                 const rs = new RecordSet({
                     rawData: data,
@@ -688,6 +742,11 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({nextPosition : null, iterative: true});
                 params = nc.updateQueryProperties(rs, null, null, 'forward');
                 assert.deepEqual([null], params[0].forwardPosition, 'Wrong query properties');
+
+                nc = getNavController();
+                rs.setMetaData({iterative: true});
+                params = nc.updateQueryProperties(rs, null, null, 'forward');
+                assert.deepEqual([6], params[0].forwardPosition, 'Wrong query properties');
             });
 
             it('updateQueryProperties + multiNavigaion', () => {
@@ -939,10 +998,34 @@ describe('Controls/_source/NavigationController', () => {
                 nc.getQueryParams({}, '1');
                 nc.getQueryParams({}, '2');
 
-                const params = nc.getQueryParamsForHierarchy({filter: defFilter, sorting: defSorting});
+                let params = nc.getQueryParamsForHierarchy({filter: defFilter, sorting: defSorting});
                 assert.equal(2, params.length, 'Wrong query params');
                 assert.equal('1', params[0].filter.__root.valueOf(), 'Wrong query params');
                 assert.equal('2', params[1].filter.__root.valueOf(), 'Wrong query params');
+
+                params = nc.getQueryParamsForHierarchy(
+                    {filter: defFilter, sorting: defSorting},
+                    void 0,
+                    true,
+                    ['3']
+                );
+                assert.equal(1, params.length, 'Wrong query params');
+
+                params = nc.getQueryParamsForHierarchy(
+                    {filter: defFilter, sorting: defSorting},
+                    void 0,
+                    true,
+                    ['1', '2', '3']
+                );
+                assert.equal(3, params.length, 'Wrong query params');
+
+                params = nc.getQueryParamsForHierarchy(
+                    {filter: defFilter, sorting: defSorting},
+                    void 0,
+                    true,
+                    ['1', '2', '3']
+                );
+                assert.equal(3, params.length, 'Wrong query params');
             });
 
             it ('Page + do not reset navigation', () => {

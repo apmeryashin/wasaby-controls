@@ -25,7 +25,7 @@ export default interface IIconSize {
  * @variant l большой
  * @variant default по-умолчанию
  * @remark
- * Размер иконки задается константой из стандартного набора размеров, который определен для текущей темы оформления.
+ * Размер иконки задается константой из стандартного набора размеров, который определен для текущей {@link /doc/platform/developmentapl/interface-development/themes/ темы оформления}.
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @example
  * Кнопка с размером иконки по умолчанию.

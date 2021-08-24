@@ -19,6 +19,8 @@ export interface IBaseDropdownOptions extends IControlOptions, ISourceOptions,
     emptyText?: string;
     displayProperty: string;
     closeMenuOnOutsideClick: boolean;
+    menuBackgroundStyle: string;
+    menuHoverBackgroundStyle: string;
 }
 
 /**
@@ -173,6 +175,29 @@ export default interface IBaseDropdown {
  * @name Controls/_dropdown/interface/IBaseDropdown#closeMenuOnOutsideClick
  * @cfg {Boolean} Определяет возможность закрытия меню по клику вне.
  * @default true
+ */
+
+/**
+ * @typedef {String} backgroundStyle
+ * @variant primary.
+ * @variant secondary.
+ * @variant danger.
+ * @variant warning.
+ * @variant info.
+ * @variant unaccented.
+ */
+
+/**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuBackgroundStyle
+ * @cfg {backgroundStyle} Цвет фона меню.
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
+ * @default default
+ */
+
+/**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuHoverBackgroundStyle
+ * @cfg {backgroundStyle} Цвет фона пункта меню при наведении.
+ * @default default
  */
 
 /**

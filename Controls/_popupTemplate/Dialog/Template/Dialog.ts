@@ -102,20 +102,20 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
 });
 
 /**
- * @name Controls/_popupTemplate/Dialog/Template/Dialog#draggable
+ * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#draggable
  * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью {@link /doc/platform/developmentapl/interface-development/controls/drag-n-drop/ d'n'd}.
  * @default false
  */
 
 /**
- * @name Controls/_popupTemplate/Dialog/Template/Dialog#headerBorderVisible
+ * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#headerBorderVisible
  * @cfg {Boolean} Видимость границы шапки панели.
  * @default false
  * @demo Controls-demo/PopupTemplate/Dialog/headerBorderVisible/Index
  */
 
 /**
- * @name Controls/_popupTemplate/Dialog/Template/Dialog#headerBackgroundStyle
+ * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#headerBackgroundStyle
  * @cfg {String} Цвет фона шапки диалогового окна.
  * @variant default
  * @variant unaccented
@@ -127,7 +127,7 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
  */
 
 /**
- * @name Controls/_popupTemplate/Dialog/Template/Dialog#backgroundStyle
+ * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#backgroundStyle
  * @cfg {String} Цвет фона диалогового окна.
  * @variant default
  * @variant unaccented
@@ -139,7 +139,7 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
  */
 
 /**
- * @name Controls/_popupTemplate/Dialog/Template/Dialog#maximize
+ * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#maximize
  * @cfg {Boolean} Режим отображения окна во всесь экран. Влияет на видимость границы и тени диалогового окна.
  * @see headerBorderVisible
  */

@@ -1,3 +1,6 @@
+@_gradient_dark_height_preview_tile: 14px;
+@_gradient_light_height_preview_tile: 4px;
+
 .controls-TileView__previewTemplate_title {
    position: absolute;
    bottom: 0;
@@ -25,11 +28,11 @@
 }
 
 .controls-TileView__previewTemplate_gradient_light {
-   background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) calc(100% - var(--gradient_light_height_preview_tile)), rgba(255, 255, 255, 0) 100%);
+   background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) calc(100% - @_gradient_light_height_preview_tile), rgba(255, 255, 255, 0) 100%);
 }
 
 .controls-TileView__previewTemplate_gradient_dark {
-   background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) calc(100% - var(--gradient_dark_height_preview_tile)), transparent 100%);
+   background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) calc(100% - @_gradient_dark_height_preview_tile), transparent 100%);
 }
 
 .controls-TileView__previewTemplate_title_gradient_dark .controls-Highlight_highlight {
@@ -37,7 +40,7 @@
 }
 
 .ws-is-hover .controls-TileView__previewTemplate_content:hover .controls-TileView__previewTemplate_gradient_dark {
-   background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.6) calc(100% - var(--gradient_dark_height_preview_tile)), transparent 100%);
+   background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.6) calc(100% - @_gradient_dark_height_preview_tile), transparent 100%);
 }
 
 .controls-TileView__previewTemplate_title_text {

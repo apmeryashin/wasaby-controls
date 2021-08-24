@@ -755,7 +755,7 @@ export default class ScrollController {
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, scrollTop: number, resetTopTriggerOffset: boolean, resetBottomTriggerOffset: boolean):
             {top: number, bottom: number} {
 
-        const scrollBottom = scrollHeight - scrollTop - viewportHeight;
+        const scrollBottom = Math.max(scrollHeight - scrollTop - viewportHeight, 0);
         const maxTopOffset = Math.min(scrollTop + viewportHeight / 2, scrollHeight / 2);
         const maxBottomOffset =  Math.min(scrollBottom + viewportHeight / 2, scrollHeight / 2);
 

@@ -1,3 +1,8 @@
+.controls_theme-@{themeName} { // переменные, которые должны переопределяться через wrapper должны быть опеределены на корневмо элементе темы
+  --item_shadow-color_columns: rgba(0, 0, 0, 0.2);
+  --item_hover_shadow-color_columns: rgba(0, 0, 0, 0.35);
+}
+
 .controls_columns_theme-@{themeName} {
   // Переменные для многоколоночного списка
   //
@@ -9,8 +14,6 @@
   // Тень
 
   --item_shadow-size_columns: 0 0 4px;
-  --item_shadow-color_columns: rgba(0, 0, 0, 0.2);
-  --item_hover_shadow-color_columns: rgba(0, 0, 0, 0.35);
 
   // операции
 
@@ -20,4 +23,5 @@
 
   --item_dragging_shadow-size_columns: 0 0 10px;
   --item_dragging_shadow-color_columns: rgba(0, 0, 0, 0.4);
+
 }

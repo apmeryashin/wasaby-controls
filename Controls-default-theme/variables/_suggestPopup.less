@@ -1,19 +1,17 @@
+@import 'Controls/_scroll/Scroll/_contentEnvironmentZIndex';
+
 .controls_suggestPopup_theme-@{themeName} {
    // Переменные для окна автодополнения
    //
    // Граница
 
-   --popup_border-thickness_suggest: var(--border-thickness);
    --popup_border-color_suggest: var(--border-color);
-   --popup_z-index_suggest: calc(var(--z-index_Scroll-contentEnvironment) + 1);
    --box-shadow-color_suggest: rgba(0, 0, 0, 0.12);
    --box-shadow-blur_suggest: 12px;
    --border-radius_suggest: 12px;
 
    // Кнопки в футере
    --footer_height_suggest: 24px;
-   --showall_text-color_suggest: var(--link_text-color);
-   --showall_hover_text-color_suggest: var(--link_hover_text-color);
 
    // Кнопка сброса
 
@@ -28,5 +26,4 @@
    --misspell_padding-horizontal_suggest: var(--offset_m);
    --spinner_offset_suggest: var(--offset_2xs);
 
-   --input_z-index_suggest: calc(var(--z-index_Scroll-contentEnvironment) + 2);
 }

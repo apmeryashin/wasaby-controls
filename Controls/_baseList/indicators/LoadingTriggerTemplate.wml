@@ -1,4 +1,5 @@
 <div name="{{item.isTopTrigger() ? 'topLoadingTrigger' : 'bottomLoadingTrigger' }}"
      style="{{ item.getStyles() }}"
      class="{{ item.getClasses() }}"
-     data-qa="{{ item.getQAData() }}"/>
+     data-qa="{{ item.getQAData() }}">
+</div>

@@ -8,6 +8,7 @@ import {Model} from 'Types/entity';
 import {default as ViewModel} from './View/ViewModel';
 import {StickyOpener} from 'Controls/popup';
 import 'css!Controls/filterPanel';
+import Store from 'Controls/Store';
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами".
@@ -45,6 +46,7 @@ interface IViewPanelOptions {
     collapsedGroups: string[] | number[];
     backgroundStyle: string;
     viewMode: string;
+    useStore?: boolean;
 }
 
 export default class View extends Control<IViewPanelOptions> {
@@ -54,6 +56,7 @@ export default class View extends Control<IViewPanelOptions> {
     };
     protected _viewModel: ViewModel = null;
     protected _applyButtonSticky: StickyOpener;
+    private _resetCallbackId: string;
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._applyButtonSticky = new StickyOpener();
@@ -64,12 +67,25 @@ export default class View extends Control<IViewPanelOptions> {
         });
     }
 
+    protected _afterMount(options: IViewPanelOptions): void {
+        if (options.useStore) {
+            this._resetCallbackId = Store.declareCommand('resetFilter', this._resetFilter.bind(this));
+        }
+    }
+
     protected _beforeUpdate(options: IViewPanelOptions): void {
         this._viewModel.update({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
             applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky
         });
+    }
+
+    protected _beforeUnmount(): void {
+        this._applyButtonSticky.close();
+        if (this._options.useStore) {
+            Store.unsubscribe(this._resetCallbackId);
+        }
     }
 
     protected _handleHistoryItemClick(event: SyntheticEvent, filterValue: object): void {
@@ -106,8 +122,7 @@ export default class View extends Control<IViewPanelOptions> {
     protected _groupClick(e: SyntheticEvent, dispItem: GroupItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         const itemContents = dispItem.getContents() as string;
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
-        const isExpanderClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupExpander');
-        this._viewModel.handleGroupClick(itemContents, isExpanderClick);
+        this._viewModel.handleGroupClick(itemContents, !isResetClick);
         if (isResetClick) {
             this._resetFilterItem(dispItem);
         }

@@ -197,7 +197,7 @@
    }
 
    .controls-BaseButton:hover .controls-text-label {
-      color: var(--link_hover_text-color);
+      color: var(--label_hover_text-color);
    }
 }
 
@@ -207,7 +207,7 @@
    }
 
    .controls-BaseButton:active .controls-text-label {
-      color: var(--link_hover_text-color);
+      color: var(--label_hover_text-color);
    }
 }
 
@@ -217,8 +217,8 @@
       fill: var(--link_hover_text-color);
    }
    .controls-Button_hoverIcon:hover .controls-icon_style-label {
-      color: var(--link_hover_text-color);
-      fill: var(--link_hover_text-color);
+      color: var(--label_hover_icon-color);
+      fill: var(--label_hover_icon-color);
    }
 }
 
@@ -228,8 +228,8 @@
 }
 
 .controls-Button_hoverIcon:active .controls-icon_style-label {
-   color: var(--link_hover_text-color);
-   fill: var(--link_hover_text-color);
+   color: var(--label_hover_icon-color);
+   fill: var(--label_hover_icon-color);
 }
 
 //borders
@@ -256,19 +256,19 @@
 }
 
 .controls-Button_button_style-danger {
-   border-color: var(--danger_contrast_background-color);
+   border-color: var(--danger_border-color);
 }
 
 .controls-Button_button_style-success {
-   border-color: var(--success_contrast_background-color);
+   border-color: var(--success_border-color);
 }
 
 .controls-Button_button_style-warning {
-   border-color: var(--warning_contrast_background-color);
+   border-color: var(--warning_border-color);
 }
 
 .controls-Button_button_style-info {
-   border-color: var(--info_contrast_background-color);
+   border-color: var(--info_border-color);
 }
 
 .controls-Button_button_style-unaccented {
@@ -286,7 +286,7 @@
 .controls-Button_toolButton {
    border-width: var(--border-thickness_button);
    border-color: var(--border-color_button_toolButton);
-   background-color: var(--background-color_button_toolButton);
+   background: var(--background-color_button_toolButton);
    border-radius: var(--border-radius_button_toolButton);
    box-shadow: var(--box-shadow_button_toolButton);
 }
@@ -294,13 +294,13 @@
 .ws-is-hover {
    .controls-Button_toolButton_style-default:hover {
       border-color: var(--border-color_hover_button_toolButton);
-      background-color: var(--background-color_hover_button_toolButton);
+      background: var(--background-color_hover_button_toolButton);
    }
 }
 
 .controls-Button_toolButton_style-default:active {
    border-color: var(--border-color_hover_button_toolButton);
-   background-color: var(--background-color_hover_button_toolButton);
+   background: var(--background-color_hover_button_toolButton);
 }
 
 .controls-Button_functionalButton {
@@ -310,99 +310,99 @@
 
 .controls-Button_functionalButton_style-primary {
    border-color: var(--primary_contrast_background-color);
-   background-color: var(--primary_contrast_background-color);
+   background: var(--primary_contrast_background-color);
 }
 
 .controls-Button_functionalButton_style-secondary {
    border-color: var(--secondary_contrast_background-color);
-   background-color: var(--secondary_contrast_background-color);
+   background: var(--secondary_contrast_background-color);
 }
 
 .controls-Button_functionalButton_style-danger {
    border-color: var(--danger_contrast_background-color);
-   background-color: var(--danger_contrast_background-color);
+   background: var(--danger_contrast_background-color);
 }
 
 .controls-Button_functionalButton_style-success {
    border-color: var(--success_border-color_button_functionalButton);
-   background-color: var(--success_background-color_button_functionalButton);
+   background: var(--success_background-color_button_functionalButton);
 }
 
 .controls-Button_functionalButton_style-warning {
    border-color: var(--warning_contrast_background-color);
-   background-color: var(--warning_contrast_background-color);
+   background: var(--warning_contrast_background-color);
 }
 
 .controls-Button_functionalButton_style-unaccented {
    border-color: var(--unaccented_contrast_background-color);
-   background-color: var(--unaccented_contrast_background-color);
+   background: var(--unaccented_contrast_background-color);
 }
 
 .controls-Button_functionalButton_style-info {
    border-color: var(--info_contrast_background-color);
-   background-color: var(--info_contrast_background-color);
+   background: var(--info_contrast_background-color);
 }
 
 .controls-Button_functionalButton_style-default {
    border-color: var(--default_contrast_background-color_button);
-   background-color: var(--default_contrast_background-color_button);
+   background: var(--default_contrast_background-color_button);
 }
 
 .controls-Button_functionalButton_style-pale {
    border-color: var(--pale_border-color);
-   background-color: var(--pale_contrast_background-color);
+   background: var(--pale_contrast_background-color);
 }
 
 .controls-Button_style-translucent {
    border-width: 0;
-   background-color: var(--translucent_background-color_button);
+   background: var(--translucent_background-color_button);
 }
 
 .controls-Button_functionalButton_style-readonly {
    border-color: var(--readonly_border-color_button_functionalButton);
-   background-color: var(--readonly_background-color_button_functionalButton);
+   background: var(--readonly_background-color_button_functionalButton);
 }
 
 .ws-is-hover {
    .controls-Button_functionalButton_style-success:hover {
       border-color: var(--success_hover_border-color_button_functionalButton);
-      background-color: var(--success_hover_background-color_button_functionalButton);
+      background: var(--success_hover_background-color_button_functionalButton);
    }
    .controls-Button_functionalButton_style-danger:hover {
       border-color: var(--danger_hover_contrast_background-color);
-      background-color: var(--danger_hover_contrast_background-color);
+      background: var(--danger_hover_contrast_background-color);
    }
    .controls-Button_functionalButton_style-secondary:hover {
       border-color: var(--secondary_hover_contrast_background-color);
-      background-color: var(--secondary_hover_contrast_background-color);
+      background: var(--secondary_hover_contrast_background-color);
    }
    .controls-Button_functionalButton_style-unaccented:hover {
       border-color: var(--unaccented_hover_contrast_background-color);
-      background-color: var(--unaccented_hover_contrast_background-color);
+      background: var(--unaccented_hover_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-primary:hover {
       border-color: var(--primary_hover_contrast_background-color);
-      background-color: var(--primary_hover_contrast_background-color);
+      background: var(--primary_hover_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-info:hover {
       border-color: var(--info_hover_contrast_background-color);
-      background-color: var(--info_hover_contrast_background-color);
+      background: var(--info_hover_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-warning:hover {
       border-color: var(--warning_hover_contrast_background-color);
-      background-color: var(--warning_hover_contrast_background-color);
+      background: var(--warning_hover_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-pale:hover {
       border-color: var(--pale_hover_contrast_background-color);
-      background-color: var(--pale_hover_contrast_background-color);
+      background: var(--pale_hover_contrast_background-color);
    }
 
    .controls-Button_style-translucent:hover {
-      background-color: var(--translucent_hover_background-color_button);
+      background: var(--translucent_hover_background-color_button);
    }
 
    .controls-Button_functionalButton_style-default:hover {
@@ -414,48 +414,48 @@
 .ws-is-touch {
    .controls-Button_functionalButton_style-success:active {
       border-color: var(--success_active_contrast_background-color);
-      background-color: var(--success_active_background-color_button_functionalButton);
+      background: var(--success_active_background-color_button_functionalButton);
    }
    .controls-Button_functionalButton_style-danger:active {
       border-color: var(--danger_active_contrast_background-color);
-      background-color: var(--danger_active_contrast_background-color);
+      background: var(--danger_active_contrast_background-color);
    }
    .controls-Button_functionalButton_style-secondary:active {
       border-color: var(--secondary_active_contrast_background-color);
-      background-color: var(--secondary_active_contrast_background-color);
+      background: var(--secondary_active_contrast_background-color);
    }
    .controls-Button_functionalButton_style-unaccented:active {
       border-color: var(--unaccented_active_contrast_background-color);
-      background-color: var(--unaccented_active_contrast_background-color);
+      background: var(--unaccented_active_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-primary:active {
       border-color: var(--primary_active_contrast_background-color);
-      background-color: var(--primary_active_contrast_background-color);
+      background: var(--primary_active_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-info:active {
       border-color: var(--info_active_contrast_background-color);
-      background-color: var(--info_active_contrast_background-color);
+      background: var(--info_active_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-warning:active {
       border-color: var(--warning_active_contrast_background-color);
-      background-color: var(--warning_active_contrast_background-color);
+      background: var(--warning_active_contrast_background-color);
    }
 
    .controls-Button_functionalButton_style-pale:active {
       border-color: var(--pale_active_contrast_background-color);
-      background-color: var(--pale_active_contrast_background-color);
+      background: var(--pale_active_contrast_background-color);
    }
 
    .controls-Button_style-translucent:active {
-      background-color: var(--translucent_active_background-color_button);
+      background: var(--translucent_active_background-color_button);
    }
 
    .controls-Button_functionalButton_style-default:active {
       border-color: var(--default_active_border-color_button);
-      background-color: var(--default_active_background-color_button);
+      background: var(--default_active_background-color_button);
    }
 }
 //background
@@ -463,24 +463,24 @@
 
 .for(@button_styles, {
    .controls-Button_button_style-@{_item}.controls-Button_bg-same {
-      background-color: var(--background-color_button);
+      background: var(--background-color_button);
    }
    .controls-Button_button_style-@{_item}.controls-Button_bg-contrast {
-      background-color: ~"var(--@{_item}_contrast_background-color)";
-      border-color: ~"var(--@{_item}_contrast_background-color)";
+      background: ~"var(--@{_item}_contrast_background-color)";
+      border-color: transparent;  //если заливка полупрозрачная, то получается наложение
    }
 });
 
 .controls-Button_button_style-primary.controls-Button_bg-same {
-   background-color: var(--primary_background-color_button);
+   background: var(--primary_background-color_button);
 }
 
 .controls-Button_button_style-secondary.controls-Button_bg-same {
-   background-color: var(--secondary_background-color_button);
+   background: var(--secondary_background-color_button);
 }
 
 .controls-Button_button_style-readonly.controls-Button_bg-same {
-   background-color: var(--readonly_background-color_button);
+   background: var(--readonly_background-color_button);
 }
 
 .controls-Button_button_style-unaccented.controls-Button_bg-contrast {
@@ -488,19 +488,19 @@
 }
 
 .controls-Button_button_style-readonly.controls-Button_bg-contrast {
-   background-color: var(--readonly_background-color_button);
+   background: var(--readonly_background-color_button);
 }
 
 .controls-Button_button_style-default.controls-Button_bg-contrast {
    border-color: var(--default_contrast_background-color_button);
-   background-color: var(--default_contrast_background-color_button);
+   background: var(--default_contrast_background-color_button);
    .controls-Button__text_clickable_bg-contrast {
       color: var(--text-color_button);
    }
 }
 
 .controls-Button_button_style-pale.controls-Button_bg-contrast {
-   background-color: var(--pale_contrast_background-color);
+   background: var(--pale_contrast_background-color);
    border-color: var(--pale_border-color);
    .controls-Button__text_clickable_bg-contrast {
       color: var(--text-color_button);
@@ -510,24 +510,24 @@
 .ws-is-hover {
    .for(@button_styles, {
       .controls-Button_button_style-@{_item}:hover {
-         background-color: ~"var(--@{_item}_hover_same_background-color)";
+         background: ~"var(--@{_item}_hover_same_background-color)";
       }
       .controls-Button_button_style-@{_item}.controls-Button_bg-contrast:hover {
-         background-color: ~"var(--@{_item}_hover_contrast_background-color)";
-         border-color: ~"var(--@{_item}_hover_contrast_background-color)";
+         background: ~"var(--@{_item}_hover_contrast_background-color)";
+         border-color: transparent;  //если заливка полупрозрачная, то получается наложение
       }
    });
 
    .controls-Button_button_style-primary:hover.controls-Button_bg-same {
-      background-color: var(--primary_hover_background-color_button);
+      background: var(--primary_hover_background-color_button);
    }
 
    .controls-Button_button_style-secondary:hover.controls-Button_bg-same {
-      background-color: var(--secondary_hover_background-color_button);
+      background: var(--secondary_hover_background-color_button);
    }
 
    .controls-Button_button_style-pale:hover {
-      background-color: var(--pale_hover_contrast_background-color);
+      background: var(--pale_hover_contrast_background-color);
    }
    .controls-Button_button_style-default:hover {
       border-color: var(--default_hover_border-color_button);
@@ -537,28 +537,28 @@
 .ws-is-no-touch, .ws-is-touch {
    .for(@button_styles, {
       .controls-Button_button_style-@{_item}:active {
-         background-color: ~"var(--@{_item}_active_same_background-color)";
+         background: ~"var(--@{_item}_active_same_background-color)";
       }
       .controls-Button_button_style-@{_item}.controls-Button_bg-contrast:active {
-         background-color: ~"var(--@{_item}_active_contrast_background-color)";
-         border-color: ~"var(--@{_item}_active_contrast_background-color)";
+         background: ~"var(--@{_item}_active_contrast_background-color)";
+         border-color: transparent;  //если заливка полупрозрачная, то получается наложение
       }
    });
 
    .controls-Button_button_style-primary:active.controls-Button_bg-same {
-      background-color: var(--primary_active_background-color_button);
+      background: var(--primary_active_background-color_button);
    }
 
    .controls-Button_button_style-secondary:active.controls-Button_bg-same {
-      background-color: var(--secondary_active_background-color_button);
+      background: var(--secondary_active_background-color_button);
    }
 
    .controls-Button_button_style-pale:active {
-      background-color: var(--pale_active_contrast_background-color);
+      background: var(--pale_active_contrast_background-color);
    }
    .controls-Button_button_style-default:active {
       border-color: var(--default_active_border-color_button);
-      background-color: var(--default_active_background-color_button);
+      background: var(--default_active_background-color_button);
    }
 }
 

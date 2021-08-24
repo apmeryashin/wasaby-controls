@@ -152,6 +152,7 @@ export interface IMenuOptions {
  * @implements Controls/toolbars:IToolbarSource
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IHeight
  */
 
 /**
@@ -185,6 +186,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _parentProperty: string = null;
     protected _isLoadMenuItems: boolean = false;
     protected _firstItem: TItem = null;
+    protected _countShowItems: number = 0;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
     private _menuItems: {
         [key: number]: TItems
@@ -286,7 +288,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 itemActionVisibilityCallback: options.itemActionVisibilityCallback,
                 additionalProperty: options.additionalProperty,
                 footerContentTemplate: options.popupFooterTemplate,
-                closeButtonVisibility: true
+                closeButtonVisibility: true,
+                dropdownClassName: `controls-Toolbar-${options.direction}__dropdown`
             },
             target: options.direction === 'vertical' ? this._children.toolbarItems : this._children.menuTarget
         };
@@ -306,7 +309,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             iconStyle: options.iconStyle,
             itemTemplateProperty: options.itemTemplateProperty,
             closeButtonViewMode: isVertical ? 'external' : 'link',
-            itemAlign: isVertical ? 'left' : 'right',
         };
     }
 
@@ -392,6 +394,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _setStateByItems(items: TItems, source?: ICrudPlus): void {
         this._items = items;
+        this._countShowItems = 0;
+        items.forEach((item) => {
+            if (this._isShowToolbar(item as TItem, this._parentProperty)) {
+                this._countShowItems++;
+            }
+        });
         // у первой записи тулбара не требуется показывать отступ слева
         this._firstItem = this._getFirstToolbarItem() as TItem;
         if (source) {

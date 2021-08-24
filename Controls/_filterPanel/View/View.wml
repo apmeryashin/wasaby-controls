@@ -22,12 +22,13 @@
                                            inlineHeight="filterPanel"
                                            attr:class="controls-FilterViewPanel__applyButton controls-FilterViewPanel_header__applyButton"
                                            on:click="_applyFilter()"/>
-                  <Controls.buttons:Button viewMode="linkButton"
-                                           caption="{{rk('Сбросить')}}"
-                                           fontColorStyle="label"
-                                           fontSize="xs"
-                                           readOnly="{{_viewModel.isFilterReseted()}}"
-                                           on:click="_resetFilter()"/>
+                  <ws:if data="{{!_viewModel.isFilterReseted()}}">
+                     <Controls.buttons:Button viewMode="linkButton"
+                                              caption="{{rk('Сбросить')}}"
+                                              fontColorStyle="label"
+                                              fontSize="xs"
+                                              on:click="_resetFilter()"/>
+                  </ws:if>
                </div>
             </Controls.scroll:StickyBlock>
          </ws:if>
@@ -52,7 +53,7 @@
                            groupItems="{{_viewModel.getGroupItems()}}"/>
             </ws:groupTemplate>
          </Controls.propertyGrid:PropertyGrid>
-         <ws:if data="{{_options.viewMode === 'default'}}">
+         <ws:if data="{{_options.viewMode === 'default' && !_viewModel.isFilterReseted()}}">
             <Controls.scroll:StickyHeader backgroundStyle="filterPanel"
                                           position="bottom"
                                           attr:class="controls-FilterViewPanel__applyButton-{{_options.viewMode}}">

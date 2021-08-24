@@ -733,6 +733,8 @@ const _private = {
         if (navigation) {
             switch (navigation.view) {
                 case 'infinity':
+                    // todo remove loadedList.getCount() === 0 by task
+                    // https://online.sbis.ru/opendoc.html?guid=909926f2-f62a-4de8-a44b-3c10006f530f
                     result = !loadedList || loadedList.getCount() === 0 || _private.isPortionedLoad(this, loadedList);
                     break;
                 case 'maxCount':
@@ -1656,7 +1658,10 @@ const _private = {
                 const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
-                _private.addShowActionsClass(self);
+                // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
+                if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
+                    _private.addShowActionsClass(self);
+                }
             }
         }
     },
@@ -2183,6 +2188,12 @@ const _private = {
     // endregion
 
     notifyVirtualNavigation(self, scrollController: ScrollController, sourceController: SourceController): void {
+
+        // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
+        if (self._container && self._container.closest && self._container.closest('.ws-hidden')) {
+            return;
+        }
+
         let topEnabled = false;
         let bottomEnabled = false;
 
@@ -4303,28 +4314,35 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._shiftToDirection(direction);
         }
     }
+
+    protected _shouldLoadOnScroll(direction: string): boolean {
+        return _private.isInfinityNavigation(this._options.navigation);
+    }
+
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
-        this._handleLoadToDirection = !!this._sourceController && this._sourceController.hasMoreData(direction);
+        this._handleLoadToDirection = this._needScrollCalculation && !!this._sourceController && this._sourceController.hasMoreData(direction);
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
             }
-            if (result) {
+            if (result && this._needScrollCalculation) {
                 _private.handleScrollControllerResult(this, result);
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
                 this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
                 resolver();
             } else {
-                this._loadMore(direction).then(() => {
-                    if (this._destroyed) {
-                        return;
-                    }
-                    this._handleLoadToDirection = false;
-                    resolver();
-                }).catch((error) => error);
+                if (this._shouldLoadOnScroll(direction)) {
+                    this._loadMore(direction).then(() => {
+                        if (this._destroyed) {
+                            return;
+                        }
+                        this._handleLoadToDirection = false;
+                        resolver();
+                    }).catch((error) => error);
+                }
             }
         });
         return shiftPromise;
@@ -4767,23 +4785,23 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         );
         if (canEditByClick) {
             e.stopPropagation();
+            this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
             this._beginEdit({ item }, { columnIndex }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
                 return result;
             });
-        } else if (this._editInPlaceController) {
-            this._commitEdit();
-        }
-        // При клике по элементу может случиться 2 события: itemClick и itemActivate.
-        // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
-        // порядок событий будет beforeBeginEdit -> itemClick
-        // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
-        // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
-        if (e.isStopped()) {
-            this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
         } else {
+            if (this._editInPlaceController) {
+                this._commitEdit();
+            }
+
+            // При клике по элементу может случиться 2 события: itemClick и itemActivate.
+            // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
+            // порядок событий будет beforeBeginEdit -> itemClick
+            // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
+            // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
             if (e.isBubbling()) {
                 e.stopPropagation();
             }
@@ -4792,6 +4810,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('itemActivate', [item, originalEvent], {bubbling: true});
             }
         }
+    }
+
+    /**
+     * Останавливает всплытие события updateShadowMode от внутренних списков. Иначе они могут испортить видимость
+     * тени у ScrollContainer.
+     */
+    protected _stopInnerUpdateShadowMode(event: SyntheticEvent): void {
+        event.stopImmediatePropagation();
     }
 
     protected _notifyItemClick(args: [SyntheticEvent?, Model, SyntheticEvent, number?]): boolean {
@@ -5367,6 +5393,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     ): void {
         _private.updateItemActionsOnce(this, this._options);
         _private.openContextMenu(this, tapEvent, itemData);
+        this._notify('itemLongTap', [itemData.item, tapEvent]);
     }
 
     /**
@@ -5896,6 +5923,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             options.navigation = newNavigation;
         }
 
+        // Удалим текущие items иначе SourceController их запомнит и будет модифицировать
+        delete options.items;
+
         return options;
     }
 
@@ -6125,7 +6155,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _shouldRegisterIntersectionObserver(): boolean {
-        return document && this._isMounted && this._needScrollCalculation && this._listViewModel
+        return document && this._isMounted && this._listViewModel
             && !this._intersectionObserver;
     }
 
@@ -6246,7 +6276,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
     }
 
-    private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void): void {
+    private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void, onDrawItems: boolean = false): void {
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то корректируем scrollTop на высоту уромашки, чтобы не было прыжков
@@ -6256,10 +6286,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 const scrollResult = this._scrollToFirstItem();
                 scrollResult.then(showTriggerCallback);
             }
-        }
+        };
 
         // Скроллить нужно после того как ромашка отрисуется, то есть на _afterRender
-        _private.doAfterRender(this, scrollAndShowTrigger);
+        if (onDrawItems) {
+            this._doAfterDrawItems = scrollAndShowTrigger;
+        } else {
+            _private.doAfterRender(this, scrollAndShowTrigger);
+        }
     }
 
     private _scrollToFirstItem(): Promise<void> {

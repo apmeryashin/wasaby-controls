@@ -1,6 +1,15 @@
 /**
  * Интерфейс опций для контрола "Браузер".
  * @interface Controls/_browser/interface/IBrowser
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:ISearch
+ * @implements Controls/interface:IFilter
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface/IHierarchySearch
+ * @implements Controls/interface:ISelectFields
+ * @implements Controls/marker:IMarkerList
+ * @implements Controls/scroll:IShadows
  * @author Герасимов А.М.
  * @public
  */

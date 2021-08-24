@@ -294,7 +294,6 @@ define(
                         iconSize: 'm',
                         itemTemplateProperty: 'myTemplate',
                         closeButtonViewMode: "link",
-                        itemAlign: "right",
                         showHeader: true,
                         closeButtonVisibility: false,
                         headConfig: {
@@ -403,7 +402,8 @@ define(
                         iconStyle: 'secondary',
                         keyProperty: 'id',
                         nodeProperty: '@parent',
-                        parentProperty: 'parent'
+                        parentProperty: 'parent',
+                        direction: 'horizontal'
                      },
                      _children: {
                         menuTarget: 'menuTarget'
@@ -427,9 +427,9 @@ define(
                      groupProperty: undefined,
                      footerContentTemplate: undefined,
                      itemActions: undefined,
-                     itemAlign: "right",
                      itemActionVisibilityCallback: undefined,
-                     closeButtonVisibility: true
+                     closeButtonVisibility: true,
+                     dropdownClassName: 'controls-Toolbar-horizontal__dropdown'
                   };
                const toolbar = new toolbars.View();
                const config = toolbar._getMenuConfig.call(testSelf);

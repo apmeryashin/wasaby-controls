@@ -586,9 +586,11 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
             }
             // Стили должны быть применены незамедлительно, в не через requestAnimationFrame,
             // иначе нативный подскролл сработает раньше, затем подскролл горизонтального скролла.
-            const isScrolled = this._$columnScrollController.scrollToElementIfHidden(cell.getBoundingClientRect(), true);
-            if (isScrolled) {
-                setScrollPosition(this, this._$columnScrollController.getScrollPosition(), true);
+            const currentPosition = this._$columnScrollController.getScrollPosition();
+            const newScrollPosition = this._$columnScrollController.getScrollPositionToColumnRectEdge(cell.getBoundingClientRect());
+
+            if (currentPosition !== newScrollPosition) {
+                setScrollPosition(this, newScrollPosition, true);
             }
         }
     },

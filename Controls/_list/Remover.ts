@@ -110,6 +110,9 @@ var Remover = BaseAction.extend({
 
     removeItems(keys: string[]): Promise<void> {
         const both = (result) => {
+            if (this._destroyed) {
+                return Promise.reject();
+            }
             return _private.afterItemsRemove(this, keys, result).then((eventResult) => {
                 if (eventResult === false || !(result instanceof Error)) {
                     return;
@@ -128,15 +131,20 @@ var Remover = BaseAction.extend({
                     source: this._source,
                     filter: this._filter,
                     providerName: 'Controls/listActions:RemoveProvider',
-                    selection: keys instanceof Array ? {
-                        selected: keys,
+                    selection: selection instanceof Array ? {
+                        selected: selection,
                         excluded: []
-                    } : keys
+                    } : selection
                 });
-                return this._removeAction.execute().then((result) => {
-                    _private.removeFromItems(this, selection);
-                    return result;
-                }).then((result) => both(result))
+                return this._removeAction.execute()
+                    .then((result) => {
+                        if (this._destroyed) {
+                            return Promise.reject();
+                        }
+                        _private.removeFromItems(this, selection);
+                        return result;
+                    })
+                    .then((result) => both(result))
                     .catch((result) => both(result));
             });
         });

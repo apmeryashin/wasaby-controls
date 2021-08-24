@@ -7,7 +7,7 @@ define('Controls-demo/Popup/TestMaximizedStack',
       'use strict';
       var TestMaximizedStack = Base.Control.extend({
          _template: template,
-         _showMaximizedButton: false,
+         _maximizeButtonVisibility: false,
          _beforeMount: function(options) {
             this.updateMaximizeButton(options);
          },
@@ -15,7 +15,7 @@ define('Controls-demo/Popup/TestMaximizedStack',
             this.updateMaximizeButton(options);
          },
          updateMaximizeButton: function(options) {
-            this._showMaximizedButton = options.stackMaxWidth - options.stackMinWidth > 200;
+            this._maximizeButtonVisibility = options.stackMaxWidth - options.stackMinWidth > 200;
          },
          _close: function() {
             this._notify('close', [], { bubbling: true });

@@ -81,7 +81,37 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
      * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
      */
     menuPopupTrigger?: 'click' | 'hover';
-    isAutoItemClick?: boolean;
+
+    /**
+     * @name Controls/_dropdown/Button#reloadOnOpen
+     * @cfg {Boolean} Определяет, будут ли элементы меню загружаться при каждом клике на кнопку.
+     * @default false
+     * @example
+     * В данном примере данные для меню будут загружены при каждом клике по кнопке.
+     * <pre class="brush: html; highlight: [7];">
+     * <!-- WML -->
+     * <Controls.dropdown:Button
+     *    bind:selectedKeys="_selectedKeys"
+     *    keyProperty="id"
+     *    displayProperty="title"
+     *    source="{{_source)}}"
+     *    reloadOnOpen="{{true}}" />
+     * </pre>
+     * <pre>
+     * // JavaScript
+     * _source:null,
+     * _beforeMount: function() {
+     *    this._source = new source.Memory({
+     *       idProperty: 'id',
+     *       data: [
+     *          {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+     *          {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+     *       ]
+     *    });
+     * }
+     * </pre>
+     */
+    reloadOnOpen?: boolean;
 }
 
 /**
@@ -336,7 +366,6 @@ export default class Button extends BaseDropdown {
             iconStyle: 'secondary',
             contrastBackground: false,
             lazyItemsLoading: false,
-            isAutoItemClick: true,
             closeMenuOnOutsideClick: true
         };
     }
@@ -388,36 +417,6 @@ export default class Button extends BaseDropdown {
  *       {key: '4', title: 'News', readOnly: true}
  *    ]
  * })
- * </pre>
- */
-
-/**
- * @name Controls/_dropdown/Button#reloadOnOpen
- * @cfg {Boolean} Определяет, будут ли элементы меню загружаться при каждом клике на кнопку.
- * @default false
- * @example
- * В данном примере данные для меню будут загружены при каждом клике по кнопке.
- * <pre class="brush: html; highlight: [7];">
- * <!-- WML -->
- * <Controls.dropdown:Button
- *    bind:selectedKeys="_selectedKeys"
- *    keyProperty="id"
- *    displayProperty="title"
- *    source="{{_source)}}"
- *    reloadOnOpen="{{true}}" />
- * </pre>
- * <pre>
- * // JavaScript
- * _source:null,
- * _beforeMount: function() {
- *    this._source = new source.Memory({
- *       idProperty: 'id',
- *       data: [
- *          {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
- *          {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
- *       ]
- *    });
- * }
  * </pre>
  */
 

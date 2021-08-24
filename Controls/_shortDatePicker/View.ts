@@ -36,7 +36,7 @@ const MAX_VISIBLE_YEARS = 14;
  * @mixes Controls/shortDatePicker/IDateLitePopup
  *
  * @implements Controls/interface:IDisplayedRanges
- * @mixes Controls/dateRange:ICaptionFormatter
+ * @implements Controls/dateRange:ICaptionFormatter
  *
  * @public
  * @author Красильников А.С.

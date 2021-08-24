@@ -15,7 +15,7 @@ export interface IIndicatorsControllerOptions {
     hasMoreDataToTop: boolean;
     hasMoreDataToBottom: boolean;
     shouldShowEmptyTemplate: boolean;
-    scrollToFirstItem: (afterScrollCallback: () => void) => void;
+    scrollToFirstItem: (afterScrollCallback: () => void, onDrawItems?: boolean) => void;
     hasHiddenItemsByVirtualScroll: (direction: 'up'|'down') => boolean;
     attachLoadTopTriggerToNull: boolean; // TODO LI переименовать
     attachLoadDownTriggerToNull: boolean; // TODO LI переименовать
@@ -26,7 +26,7 @@ const INDICATOR_DELAY = 2000;
 export const INDICATOR_HEIGHT = 48;
 
 const SEARCH_MAX_DURATION = 30 * 1000;
-const SEARCH_CONTINUED_MAX_DURATION = 2 * 60 * 1000;
+const SEARCH_CONTINUED_MAX_DURATION = 30 * 1000;
 
 enum SEARCH_STATES {
     NOT_STARTED = 0,
@@ -106,7 +106,7 @@ export default class IndicatorsController {
             && this._shouldDisplayIndicator('up');
     }
 
-    displayTopIndicator(scrollToFirstItem: boolean): void {
+    displayTopIndicator(scrollToFirstItem: boolean, onDrawItems?: boolean): void {
         const isDisplayedIndicator = this._model.getTopIndicator().isDisplayed();
         if (isDisplayedIndicator) {
             return;
@@ -116,7 +116,7 @@ export default class IndicatorsController {
         this._model.displayIndicator('top', indicatorState);
 
         if (scrollToFirstItem) {
-            this._options.scrollToFirstItem(() => this._model.displayLoadingTopTrigger());
+            this._options.scrollToFirstItem(() => this._model.displayLoadingTopTrigger(), onDrawItems);
         } else {
             this._model.displayLoadingTopTrigger();
         }
@@ -252,7 +252,7 @@ export default class IndicatorsController {
         }
 
         if (this.shouldDisplayTopIndicator()) {
-            this.displayTopIndicator(scrollToFirstItem);
+            this.displayTopIndicator(scrollToFirstItem, true);
         }
     }
 

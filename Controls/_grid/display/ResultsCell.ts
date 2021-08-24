@@ -84,7 +84,6 @@ class ResultsCell extends Cell<null, ResultsRow> {
 
         wrapperClasses += 'controls-Grid__results-cell'
             + ` controls-Grid__cell_${this.getStyle()}`
-            + ` ${this._getWrapperPaddingClasses()}`
             + ` ${this._getColumnSeparatorClasses()}`;
 
         wrapperClasses += this._getControlsBackgroundClass(backgroundColorStyle);
@@ -122,6 +121,11 @@ class ResultsCell extends Cell<null, ResultsRow> {
         if (this._$isSticked) {
             wrapperStyles += `z-index: ${this.getZIndex()};`;
         }
+
+        if (this._$owner.isFullGridSupport() && !this._getColspanParams()) {
+            wrapperStyles += ` grid-column: ${(this.getColumnIndex(true) + 1)} / ${(this.getColumnIndex(true) + 2)};`;
+        }
+
         return wrapperStyles;
     }
 
@@ -135,8 +139,14 @@ class ResultsCell extends Cell<null, ResultsRow> {
         return zIndex;
     }
 
-    getContentClasses(): string {
-        return 'controls-Grid__results-cell__content';
+    getContentClasses(backgroundColorStyle: string = this._$column.backgroundColorStyle): string {
+        let classes = this._getWrapperPaddingClasses() + ' controls-Grid__results-cell__content';
+        if (backgroundColorStyle && backgroundColorStyle !== 'default') {
+            // Если на списке есть скролл колонок или ячейка застикана, то ей надо выставить backgroundStyle
+            // Сюда же попадаем, если backgroundColorStyle = default
+            classes += ` controls-Grid__row-cell_background_${backgroundColorStyle}`;
+        }
+        return classes;
     }
 
     //endregion

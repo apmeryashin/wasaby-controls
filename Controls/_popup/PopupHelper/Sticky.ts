@@ -11,7 +11,7 @@ import * as randomId from 'Core/helpers/Number/randomId';
  * Хелпер для открытия прилипающих окон
  * @class Controls/_popup/PopupHelper/Sticky
  * @implements Controls/popup:IStickyOpener
- *
+ * @implements Controls/popup:IBaseOpener
  * @remark
  * Для предотвращения потенциальной утечки памяти не забывайте уничтожать экземпляр опенера с помощью метода {@link Controls/_popup/PopupHelper/Sticky#destroy destroy}.
  *

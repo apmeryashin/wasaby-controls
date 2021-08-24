@@ -162,6 +162,9 @@
 .controls-Grid__results-cell {
    z-index: @z-index-Grid-results-cell;
    min-width: 0;
+}
+
+.controls-Grid__results-cell__content {
    min-height: var(--results_cell_min-height_grid);
 }
 
@@ -383,12 +386,16 @@
    .controls-BaseControl_showActions_visible .controls-ListView__item_showActions,
    .controls-BaseControl_showActions_delayed .controls-ListView__item_showActions:hover,
    .controls-BaseControl_showActions_onhover .controls-ListView__item_showActions:hover {
-      .controls-Grid__editArrow-wrapper {
-         visibility: visible;
-      }
+      > .controls-Grid__row-cell,
+      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
+         .controls-Grid__editArrow-wrapper {
+            visibility: visible;
+         }
 
-      .controls-Grid__editArrow:hover {
-         fill: var(--secondary_hover_icon-color);
+         .controls-Grid__editArrow:hover {
+            fill: var(--secondary_hover_icon-color);
+         }
       }
    }
 }
@@ -858,13 +865,42 @@
    background-color: var(--master_item_background-color_list);
 }
 
-//Классы совместимости для перехода со старого дизайна masterDetail на новый
-.controls-master-template-newDesign .controls-Grid__cell_spacingFirstCol_default {
-   padding-left: var(--item_padding-left_s_list);
+// TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
+.controls-master-template-default {
+   .controls-Grid__row-cell__withMarkerSize {
+      .controls-Grid__cell_spacingFirstCol_default {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+      }
+
+      .controls-Grid__cell_spacingFirstCol_s {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
+      }
+
+      .controls-Grid__cell_spacingFirstCol_m {
+         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
+      }
+   }
 }
 
-.controls-master-template-newDesign .controls-Grid__row-cell_master {
-   border-radius: var(--master_item_border-radius_list);
+//Классы совместимости для перехода со старого дизайна masterDetail на новый
+.controls-master-template-newDesign .controls-Grid__cell_spacingFirstCol_default {
+   // TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
+   padding-left: var(--item_padding-left_s_list);
+
+   .controls-Grid__row-cell__withMarkerSize .controls-Grid__cell_spacingFirstCol_default {
+      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+   }
+}
+
+//Каскады будут удалены по задаче: https://online.sbis.ru/opendoc.html?guid=5fc79725-a439-4aaa-8564-ee78a9c27a7e
+.controls-master-template-newDesign .controls-Grid__row-cell__first-master {
+   border-top-left-radius: var(--master_item_border-radius_list);
+   border-bottom-left-radius: var(--master_item_border-radius_list);
+}
+
+.controls-master-template-newDesign .controls-Grid__row-cell__last-master {
+   border-top-right-radius: var(--master_item_border-radius_list);
+   border-bottom-right-radius: var(--master_item_border-radius_list);
 }
 
 .controls-Grid__row-cell_selected-master.controls-background-master {
@@ -873,12 +909,36 @@
 
 .controls-GridView__itemV_marker-master {
    position: absolute;
-   box-sizing: border-box;
-   width: var(--master-marker_thickness_list);
-   height: var(--master-marker_height_list);
-   background-color: var(--master-marker_color_list);
    top: 0;
-   left: 0;
+   bottom: 0;
+   display: inline-flex;
+   align-items: baseline;
+   box-sizing: border-box;
+}
+
+.controls-GridView__itemV_marker-master::before {
+   content: '\200b';
+   font-size: var(--font-size_2xl);
+}
+
+.controls-GridView__itemV_marker-master::after {
+   content: '';
+   background-color: var(--master-marker_color_list);
+   width: var(--master-marker_thickness_list);
+   border-radius: var(--marker_border-radius_list);
+   height: 100%;
+}
+
+.controls-GridView__itemV_marker-master.controls-ListView__itemV_marker_height::after {
+   height: var(--master-marker_height_list);
+}
+
+.controls-GridView__itemV_marker-master.controls-ListView__itemV_marker-left {
+   left: var(--offset_xs);
+}
+
+.controls-GridView__itemV_marker-master.controls-ListView__itemV_marker-right {
+   right: var(--offset_xs);
 }
 
 .ws-is-hover .controls-BaseControl_hover_enabled {
@@ -955,17 +1015,14 @@
 }
 
 .controls-Grid__editArrow-wrapper {
-   visibility: hidden;
-}
-
-.controls-Grid__editArrow-wrapper {
    position: relative;
-   flex-shrink: 9999999999;
+   flex-shrink: 1;
    min-width: 0;
    display: flex;
    justify-content: flex-end;
    align-items: baseline;
    align-self: baseline;
+   visibility: hidden;
 }
 .controls-Grid__editArrow-cellContent {
    flex-shrink:0;
@@ -1021,6 +1078,7 @@
 
 .controls-Grid__editArrow-overflow-ellipsis {
    margin-right: calc(-1 * var(--edit-arrow_icon-size_grid));
+   flex-shrink: 1;
 }
 
 .controls-Grid__editArrow-withTextOverflow {

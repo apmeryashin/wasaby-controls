@@ -21,10 +21,9 @@ import 'css!Controls/calendar';
  * @extends UI/Base:Control
  * @mixes Controls/calendar:IMonth
  * @mixes Controls/dateRange:IRangeSelectable
- * @mixes Controls/dateRange:IDateRangeSelectable
- * @mixes Controls/dateRange:IDayTemplate
- * @mixes Controls/interface:IDisplayedRanges
- *
+ * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDayTemplate
+ * @implements Controls/interface:IDisplayedRanges
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Calendar/MonthSlider/SelectionType/Index

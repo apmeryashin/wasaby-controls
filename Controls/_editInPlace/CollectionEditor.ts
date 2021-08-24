@@ -100,7 +100,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             throw Error(ERROR_MSG.EDITING_IS_ALREADY_RUNNING);
         }
 
-        this._editingItem = this._options.collection.getItemBySourceKey(item.getKey());
+        this._editingItem = this._options.collection.getItemBySourceKey(item.getKey(), false);
         if (!this._editingItem) {
             this._throwEditingItemMissingError(item);
         }
@@ -126,7 +126,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
         // Вещественный ключ не должен дублироваться в коллекции.
         const addingItemKey = item.getKey();
-        if (addingItemKey && this._options.collection.getItemBySourceKey(addingItemKey)) {
+        if (addingItemKey && this._options.collection.getItemBySourceKey(addingItemKey, false)) {
             throw Error(`${ERROR_MSG.ADD_ITEM_KEY_DUPLICATED} Duplicated key: ${addingItemKey}.`);
         }
 
@@ -250,7 +250,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             let rootItem;
             if (
                 !this._isValidRootType(editingItemParentKey) || !(
-                    (rootItem = this._options.collection.getItemBySourceKey(editingItemParentKey)) ||
+                    (rootItem = this._options.collection.getItemBySourceKey(editingItemParentKey, false)) ||
                     collectionRootKey === editingItemParentKey
                 )
             ) {

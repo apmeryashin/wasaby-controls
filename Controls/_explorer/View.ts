@@ -31,7 +31,7 @@ import {TreeGridView, TreeGridViewTable } from 'Controls/treeGrid';
 import {SyntheticEvent} from 'UI/Vdom';
 import {IDragObject} from 'Controls/_dragnDrop/Container';
 import {ItemsEntity} from 'Controls/dragnDrop';
-import {TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
+import {TBreadcrumbsVisibility, TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
 import {TreeControl} from 'Controls/tree';
 import {IEditableList} from 'Controls/list';
 import 'css!Controls/tile';
@@ -117,6 +117,11 @@ interface IExplorerOptions
     sourceController?: NewSourceController;
     expandByItemClick?: boolean;
     /**
+     * Задает видимость крошек и кнопки назад. Если explorer их выводить не должен, то нужно указать
+     * 'hidden'.
+     */
+    breadcrumbsVisibility?: TBreadcrumbsVisibility;
+    /**
      * Задает режим вывода строки с хлебными крошками в результатах поиска
      *  * row - все ячейки строки с хлебными крошками объединяются в одну ячейку в которой выводятся хлебные крошки.
      *  * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной
@@ -125,8 +130,9 @@ interface IExplorerOptions
      */
     breadCrumbsMode?: 'row' | 'cell';
     useColumns?: boolean;
+    groupTemplate?: string | TemplateFunction;
     /**
-     * Кастомный шаблон, который выводится перед зоголовком кнопки назад в хлебных крошках.
+     * Кастомный шаблон, который выводится перед заголовком кнопки назад в хлебных крошках.
      * В шаблон передается опция item в которой содержится запись хлебной крошки.
      */
     backButtonBeforeCaptionTemplate?: string | TemplateFunction;
@@ -139,13 +145,15 @@ interface IMarkedKeysStore {
 export default class Explorer extends Control<IExplorerOptions> {
     //region protected fields
     protected _template: TemplateFunction = template;
+    // не видит WebStorm _options у базового контрола
+    protected _options: IExplorerOptions;
     protected _viewName: string;
     protected _markerStrategy: string;
     protected _viewMode: TExplorerViewMode;
     protected _viewModelConstructor: string;
     private _navigation: INavigationOptionValue<any>;
     protected _itemTemplate: TemplateFunction;
-    protected _groupTemplate: TemplateFunction;
+    protected _groupTemplate: string | TemplateFunction;
     protected _notifyHandler: typeof EventUtils.tmplNotify = EventUtils.tmplNotify;
     protected _backgroundStyle: string;
     protected _itemsReadyCallback: Function;
@@ -194,6 +202,9 @@ export default class Explorer extends Control<IExplorerOptions> {
      */
     protected _headerVisibility: string;
 
+    protected _itemActionsPosition: string;
+    protected _searchInitialBreadCrumbsMode: 'row' | 'cell';
+
     protected _children: {
         treeControl: TreeControl,
         pathController: PathController
@@ -220,7 +231,6 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _potentialMarkedKey: TKey;
     private _newItemPadding: IItemPadding;
     private _newItemActionsPosition: string;
-    private _itemActionsPosition: string;
     private _newItemTemplate: TemplateFunction;
     private _newBackgroundStyle: string;
     private _isGoingBack: boolean;
@@ -230,7 +240,6 @@ export default class Explorer extends Control<IExplorerOptions> {
 
     private _items: RecordSet;
     private _isGoingFront: boolean;
-    private _searchInitialBreadCrumbsMode: 'row' | 'cell';
     //endregion
 
     protected _beforeMount(cfg: IExplorerOptions): Promise<void> | void {
@@ -278,7 +287,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         this._navigation = cfg.navigation;
 
         const root = this._getRoot(cfg.root);
-        this._headerVisibility = this._getHeaderVisibility(root, cfg.headerVisibility);
+        this._headerVisibility = this._getHeaderVisibility(root, cfg.headerVisibility, cfg.breadcrumbsVisibility);
 
         // TODO: для 20.5100. в 20.6000 можно удалить
         if (cfg.displayMode) {
@@ -322,7 +331,11 @@ export default class Explorer extends Control<IExplorerOptions> {
         // searchStartingWith === 'root', после сбрасываем поиск и возвращаем root в предыдущую папку после чего
         // этот код покажет заголовок и только после получения данных они отрисуются
         if (!isRootChanged) {
-            this._headerVisibility = this._getHeaderVisibility(this._getRoot(cfg.root), cfg.headerVisibility);
+            this._headerVisibility = this._getHeaderVisibility(
+                this._getRoot(cfg.root),
+                cfg.headerVisibility,
+                cfg.breadcrumbsVisibility
+            );
         }
 
         if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
@@ -477,7 +490,12 @@ export default class Explorer extends Control<IExplorerOptions> {
         const curRoot = this._options.sourceController
             ? this._options.sourceController.getRoot()
             : this._getRoot(this._options.root);
-        this._headerVisibility = this._getHeaderVisibility(curRoot, this._options.headerVisibility);
+
+        this._headerVisibility = this._getHeaderVisibility(
+            curRoot,
+            this._options.headerVisibility,
+            this._options.breadcrumbsVisibility
+        );
     }
 
     protected _subscribeOnCollectionChange(): void {
@@ -887,14 +905,26 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     /**
-     * На основании переданного root и значения опции headerVisibility вычисляет
-     * итоговую видимость заголовка таблицы.
-     *    * Если находимся в корне то видимость берем либо из headerVisibility
+     * На основании переданного root и значения опции headerVisibility и breadcrumbsVisibility
+     * вычисляет итоговую видимость заголовка таблицы.
+     *    * Если breadcrumbsVisibility === 'hidden', то видимость берем либо из headerVisibility
      *    либо проставляем 'hasdata'.
-     *    * Если находимся не в корне, то заголовок всегда делаем видимым
-     *    https://online.sbis.ru/doc/19106882-fada-47f7-96bd-516f9fb0522f
+     *    * Если breadcrumbsVisibility === 'visible', то
+     *      * Если находимся в корне то видимость берем либо из headerVisibility
+     *      либо проставляем 'hasdata'.
+     *      * Если находимся не в корне, то заголовок всегда делаем видимым
+     *      https://online.sbis.ru/doc/19106882-fada-47f7-96bd-516f9fb0522f
      */
-    private _getHeaderVisibility(root: TKey, headerVisibility: string): string {
+    private _getHeaderVisibility(
+        root: TKey,
+        headerVisibility: string,
+        breadcrumbsVisibility: TBreadcrumbsVisibility
+    ): string {
+        // Если крошки скрыты, то руководствуется значением опции headerVisibility
+        if (breadcrumbsVisibility === 'hidden') {
+            return headerVisibility || 'hasdata';
+        }
+
         return root === (this._topRoot || null) ? (headerVisibility || 'hasdata') : 'visible';
     }
 

@@ -18,7 +18,7 @@
          />
 
          <ws:if data="{{_options.maximizeButtonVisibility}}">
-            <div class="controls-StackTemplate__maximized_button"
+            <div class="controls-StackTemplate__maximized_button controls-StackTemplate__rightPanel__maximized"
                  on:click="_maximizeButtonClickHandler()"
                  attr:title="{{_options.maximizeButtonTitle}}"></div>
          </ws:if>

@@ -525,6 +525,17 @@ describe('Controls/scroll:Container', () => {
             sinon.assert.called(event.stopImmediatePropagation);
         });
 
+        it('should`t update models if shadow visibility does not changed', () => {
+            const component = createComponent(Container, {});
+
+            sinon.stub(component._shadows, 'updateVisibilityByInnerComponents');
+
+            component._updateShadowVisibility(
+                event, { top: SHADOW_VISIBILITY.AUTO, bottom: SHADOW_VISIBILITY.AUTO });
+
+            sinon.assert.notCalled(component._shadows.updateVisibilityByInnerComponents);
+        });
+
         it('should set always visible', () => {
             const component = createComponent(Container, {});
             const version: number = component._shadows.getVersion();

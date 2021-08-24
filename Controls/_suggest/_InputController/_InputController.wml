@@ -35,7 +35,7 @@
         <ws:if data="{{_options.suggestTemplate}}">
            <Controls.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" name="indicator">
                <Controls.event:Register name="inputKeydown" register="inputKeydown">
-                   <ws:partial template="suggestTpl" attr:style="width:{{content.suggestWidth}}px"/>
+                   <ws:partial template="suggestTpl" attr:style="{{_getSuggestPopupStyles(content.suggestWidth)}}"/>
                </Controls.event:Register>
            </Controls.LoadingIndicator>
         </ws:if>
@@ -85,6 +85,7 @@
                     misspellingCaption="{{_misspellingCaption}}"
                     suggestPopupOptions="{{_options.suggestPopupOptions}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
+                    contrastBackground="{{_options.contrastBackground}}"
                     on:close="_closeHandler()">
             <ws:content>
                 <ws:partial template="suggestWrapperTpl"/>

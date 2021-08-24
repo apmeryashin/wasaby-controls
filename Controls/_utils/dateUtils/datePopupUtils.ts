@@ -37,3 +37,17 @@ export function getCommonTemplateOptions(self: Control<IControlOptions, unknown>
         dateConstructor: self._options.dateConstructor
     };
 }
+
+export const getFormattedSingleSelectionValue = (value) => {
+    // Если передать null в datePopup в качестве начала и конца периода, то он выделит
+    // период от -бесконечности до +бесконечности.
+    // В режиме выбора одного дня мы не должны выбирать ни один день.
+    let formattedValue = value;
+    if (value === null) {
+        formattedValue = undefined;
+    }
+    return {
+        startValue: formattedValue,
+        endValue: formattedValue
+    };
+};

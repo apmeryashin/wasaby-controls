@@ -64,6 +64,7 @@ const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
 const ACTIVE_HISTORY_FILTER_INDEX = 0;
 const SELECTION_PATH_FILTER_FIELD = 'SelectionWithPath';
+const MIN_SEARCH_LENGTH = 3;
 
 export default class FilterControllerClass {
     private _options: Partial<IFilterControllerOptions> = null;
@@ -689,7 +690,7 @@ export default class FilterControllerClass {
                                  {
                                      searchValue,
                                      searchParam,
-                                     minSearchLength,
+                                     minSearchLength = MIN_SEARCH_LENGTH,
                                      parentProperty
                                  }: Partial<IFilterControllerOptions>): void {
         const preparedFilter = {...filter} || {};
@@ -765,11 +766,6 @@ export default class FilterControllerClass {
             minimizedItem.name = getPropValue(item, 'name');
             minimizedItem.viewMode = getPropValue(item, 'viewMode');
         }
-        if (isNeedSaveHistory && getPropValue(item, 'displayTextValue')) {
-            const displayText = {...getPropValue(item, 'displayTextValue')};
-            delete displayText.title;
-            minimizedItem.displayTextValue = displayText;
-        }
         return minimizedItem;
     }
 
@@ -843,7 +839,7 @@ function getCalculatedFilter(config) {
             calculatedFilter = this._calculateFilterByItems(config.filter, this._filterButtonItems, this._fastFilterItems);
 
             if (config.prefetchParams && config.historyId) {
-                const history = this._getHistoryByItems(config.historyId, this._filterButtonItems);
+                const history = this._findItemInHistory(config.historyId, this._filterButtonItems);
 
                 if (history) {
                     calculatedFilter = Prefetch.applyPrefetchFromHistory(calculatedFilter, history.data);

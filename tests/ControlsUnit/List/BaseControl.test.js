@@ -2501,6 +2501,7 @@ define([
                const event = {
                   stopPropagation() {},
                   isStopped() { return true },
+                  isBubbling() {},
                   original: {
                       target: {
                           closest(name) {
@@ -3893,6 +3894,18 @@ define([
             const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
             instance._onItemActionsMenuClose({id: 'popupId_1'});
             sinon.assert.called(spyShowActions);
+            spyShowActions.restore();
+         });
+
+         // после закрытия меню ItemActions не должны появиться снова, если включен режим редактирования
+         it('should not restore showActionsClass on menu close event, when editing', () => {
+            instance._itemActionsMenuId = 'popupId_1';
+            const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
+            instance._editInPlaceController = {
+               isEditing: () => true
+            };
+            instance._onItemActionsMenuClose({id: 'popupId_1'});
+            sinon.assert.notCalled(spyShowActions);
             spyShowActions.restore();
          });
 
@@ -5589,7 +5602,7 @@ define([
          });
 
          describe('_onItemClick', () => {
-            it('in list wit EIP itemClick should fire after beforeBeginEdit', () => {
+            it('in list wit EIP itemClick should fire after beforeBeginEdit', (done) => {
                let isItemClickStopped = false;
                let firedEvents = [];
 
