@@ -9,6 +9,7 @@
                     keyProperty="id"
                     parentProperty="parent"
                     nodeProperty="parent@"
+                    on:beforeMenuOpen="_beforeMenuOpen()"
                     on:itemClick="_toolbarItemClick()"
         />
     </ws:content>

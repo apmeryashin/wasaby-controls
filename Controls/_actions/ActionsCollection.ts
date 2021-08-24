@@ -1,12 +1,13 @@
-import {loadSync, isLoaded} from 'WasabyLoader/ModulesLoader';
-import {EventRaisingMixin, ObservableMixin, Model} from 'Types/entity';
+import {isLoaded, loadSync} from 'WasabyLoader/ModulesLoader';
+import {EventRaisingMixin, Model, ObservableMixin} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {mixin} from 'Types/util';
 import {IBaseAction} from './BaseAction';
 import {IAction} from './IAction';
 import {ISelectionObject} from 'Controls/interface';
 import {isEqual} from 'Types/object';
-import { Logger } from 'UI/Utils';
+import {showType} from 'Controls/toolbars';
+import {Logger} from 'UI/Utils';
 
 /**
  * @public
@@ -19,11 +20,13 @@ interface IActionsCollectionOptions {
 }
 
 const BASE_ACTION_MODULE = 'Controls/actions:BaseAction';
+const MAX_VISIBLE_BASIC_ACTIONS_WITH_OPERATION_PANEL = 5;
 
 export default class ActionsCollection extends mixin<ObservableMixin>(
     ObservableMixin
 ) {
     protected _actions: IBaseAction[];
+    protected _listActions: IBaseAction[] = [];
     protected _toolbarItems: IAction[] = [];
     protected _options: IActionsCollectionOptions;
     protected _childItems: Record<unknown, any> = {};
@@ -70,8 +73,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     }
 
     protected _updateToolbarItems(): void {
-        const currentActions = this._operationsPanelVisible ? this._options.listActions : this._options.actions;
-        this._actions = this._createActions(currentActions);
+        this._actions = this._createActions(this._options.actions);
         this._toolbarItems = this._getToolbarItemsByActions(this._actions);
         this._childItems = {};
         this._notify('toolbarConfigChanged', this._toolbarItems);
@@ -95,7 +97,15 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
 
     setOperationsPanelVisible(state: boolean): void {
         this._operationsPanelVisible = state;
-        this._updateToolbarItems();
+        if (this._operationsPanelVisible) {
+            this._listActions = this._createActions(this._options.listActions);
+            this._actions = this._actions.concat(this._listActions);
+        } else {
+            this._actions = this._actions.filter((action) => {
+                return !this._listActions.includes(action);
+            });
+        }
+        this._toolbarItems = this._getToolbarItemsByActions(this._actions);
     }
 
     private _callChangeAction(methodName: string, items: RecordSet, selection?: ISelectionObject): void {
@@ -112,9 +122,19 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
 
     protected _getToolbarItemsByActions(actions: IBaseAction[]): IAction[] {
         const result = [];
-        actions.forEach((action) => {
+        actions.forEach((action, index) => {
+            let countBasicActions = 0;
             if (action.visible) {
-                result.push(action.getState());
+                const isListAction = this._listActions.includes(action);
+                const state = {...action.getState()};
+                if (isListAction) {
+                    state.showType = showType.MENU;
+                    result.push(state);
+                } else if (countBasicActions <= MAX_VISIBLE_BASIC_ACTIONS_WITH_OPERATION_PANEL - 1) {
+                    state.showType = this._operationsPanelVisible ? showType.TOOLBAR : showType.MENU_TOOLBAR;
+                    countBasicActions++;
+                    result.push(state);
+                }
             }
         });
         return result.sort((operationFirst, operationSecond) => {

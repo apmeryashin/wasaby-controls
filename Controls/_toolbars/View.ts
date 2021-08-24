@@ -232,8 +232,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    openMenu(templateOptions: object): void {
-        this._openMenu(this._getMenuConfig(templateOptions));
+    openMenu(): void {
+        this._openMenu(this._getMenuConfig());
     }
 
     closeMenu(): void {
@@ -282,10 +282,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    private _getMenuConfig(templateOptions: object = {}): IStickyPopupOptions {
+    private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
+        let {popupOptions, templateOptions} = this._notify('beforeMenuOpen', [], {bubbling: true});
+        popupOptions = popupOptions || {};
+        templateOptions = templateOptions || {};
         return {
             ...this._getMenuOptions(),
+            ...popupOptions,
             opener: this,
             className: `${options.popupClassName} controls-Toolbar-${options.direction}__popup__list controls_popupTemplate_theme-${options.theme}`,
             templateOptions: {
@@ -519,7 +523,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (item.get(this._nodeProperty)) {
             this._getSourceForMenu(item).then((source) => {
                 const root = item.get(this._options.keyProperty);
-                let menuSource = source;
+                const menuSource = source;
 
                 const config = this._getMenuConfigByItem(item, menuSource, root, this._menuItems[root]);
                 this._openMenu({

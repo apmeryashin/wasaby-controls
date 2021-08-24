@@ -4,6 +4,7 @@ import 'css!Controls/operationsPanel';
 import {Container} from 'Controls/dragnDrop';
 import {DialogOpener} from 'Controls/popup';
 import {ControllerClass as OperationsController} from 'Controls/operations';
+import Store from 'Controls/Store';
 import {TKey} from 'Controls/interface';
 
 export interface IOperationsPanelOptions extends IControlOptions {
@@ -46,7 +47,7 @@ export default class extends Control<IOperationsPanelOptions> {
     protected _afterMount(options: IOperationsPanelOptions): void {
         this._openCloud();
         if (this._shouldOpenMenu(options)) {
-            this._operationsController.setOperationsMenuOpened(true);
+            this._operationsController.setOperationsMenuVisible(true);
         }
     }
 
@@ -78,7 +79,9 @@ export default class extends Control<IOperationsPanelOptions> {
                 },
                 eventHandlers: {
                     onClose: () => {
-                        this._options.operationsController.setOperationsMenuOpened(false);
+                        this._options.operationsController.setOperationsMenuVisible(false);
+                        this._options.operationsController.setOperationsPanelVisible(false);
+                        Store.dispatch('operationsPanelExpanded', false);
                     },
                     onResult: (action: string) => {
                         if (action === 'click') {

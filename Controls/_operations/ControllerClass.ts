@@ -163,6 +163,14 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
         return result;
     }
 
+    getOperationsPanelVisible(): boolean {
+        return this._isOperationsPanelVisible;
+    }
+
+    getOperationsMenuVisible(): boolean {
+        return this._operationsMenuVisible;
+    }
+
     updateExcludedKeys(values: TKey[],
                        added: TKey[],
                        deleted: TKey[],

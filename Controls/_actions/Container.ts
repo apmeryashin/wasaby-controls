@@ -62,6 +62,20 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         }
     }
 
+    protected _beforeMenuOpen(): object | void {
+        if (this._operationsController.getOperationsPanelVisible()) {
+            return {
+                popupOptions: {
+                    closeOnOutsideClick: false
+                },
+                templateOptions: {
+                    backgroundStyle: 'secondary',
+                    hoverBackgroundStyle: 'secondary'
+                }
+            };
+        }
+    }
+
     protected _getToolbarItems(items: IAction[]): RecordSet {
         return new RecordSet({
             keyProperty: 'id',
