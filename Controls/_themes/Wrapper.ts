@@ -44,7 +44,7 @@ export default class Wrapper extends Control<IWrapperOptions> {
 }
 
 /**
- * @name Controls/_themes/ZenWrapper#variables
+ * @name Controls/_themes/Wrapper#variables
  * @cfg {Object} Хэш-мэп, в котором ключами являются названия переменных, а значениями - значения переменных
  * @remark
  * @example
