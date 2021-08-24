@@ -169,7 +169,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
         return this._popupHelper.openDialog(viewConfig, {
             id: this._popupId,
             opener: this,
-            modal: this._options.isModalDialog !== false,
+            modal: this._options.isModalDialog === true,
             eventHandlers: {
                 onClose: () => this._onDialogClosed()
             }
