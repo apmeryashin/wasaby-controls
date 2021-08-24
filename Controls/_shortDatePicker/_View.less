@@ -32,7 +32,7 @@
 }
 
 .controls-PeriodLiteDialog__footer {
-   background-color: var(--header_background-color_shortDatePicker);
+   background-color: var(--yearselector_background-color_shortDatePicker);
    display: flex;
    flex-shrink: 0;
    height: var(--footer_height_shortDatePicker);
@@ -132,7 +132,7 @@
 
 .controls-PeriodLiteDialog__header {
    display: flex;
-   background-color: var(--header_background-color_sticky);
+   background-color: var(--header_background-color_shortDatePicker);
    align-items: center;
    flex-shrink: 0;
    position: relative;
@@ -158,7 +158,7 @@
 
 .controls-PeriodLiteDialog__yearWrapper {
    padding-bottom: var(--item_border-thickness_shortDatePicker);
-   background-color: var(--header_background-color_shortDatePicker);
+   background-color: var(--yearselector_background-color_shortDatePicker);
    height: var(--yearselector_height_shortDatePicker);
    position: relative;
    box-sizing: border-box;
@@ -180,7 +180,7 @@
 }
 
 .controls-PeriodLiteDialog__year-next {
-   margin: 0 calc(var(--yearselector_arrow_margin_shortDatePicker) - var(--item_border-thickness_shortDatePicker)) 0 var(--yearselector_arrow_margin_shortDatePicker);
+   margin: 0 calc(var(--yearselector_arrow_margin_shortDatePicker) - var(--item_border-thickness_shortDatePicker)) 0 calc(var(--yearselector_arrow_margin_shortDatePicker) + var(--separator_thickness_shortDatePicker));
 }
 
 .controls-PeriodLiteDialog__year-prev {
