@@ -3,7 +3,6 @@ import _template = require('wml!Controls/_dataSource/_error/Container');
 import { constants } from 'Env/Env';
 import { Mode, Popup, ViewConfig } from 'Controls/error';
 import { isEqual } from 'Types/object';
-import { load } from 'Core/library';
 import { default as IContainer, IContainerConfig } from './IContainer';
 /**
  * Нужно загружать стили для показа диалога сразу.
@@ -170,6 +169,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
         return this._popupHelper.openDialog(viewConfig, {
             id: this._popupId,
             opener: this,
+            modal: this._options.isModalDialog !== false,
             eventHandlers: {
                 onClose: () => this._onDialogClosed()
             }
