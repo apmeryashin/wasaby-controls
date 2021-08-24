@@ -37,9 +37,9 @@
    * cut-кнопку "(•••)"
 -->
 <ws:template name="sysFooterTemplate">
-    <div class="{{ _getFooterClasses(_options) }}">
+    <div class="controls__BaseControl__footer">
         <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
-            <div class="controls-BaseControl__footerPaging_wrapper">
+            <div class="controls-BaseControl__footerPaging_wrapper {{_getFooterSpacingClasses(_options)}}">
                 <ws:if data="{{_options.columnScroll}}">
                     <div class="controls-BaseControl_paging-wrapper">
                         <ws:partial template="pagingTpl" />
@@ -52,6 +52,7 @@
         </ws:if>
         <ws:if data="{{_shouldDrawNavigationButton}}">
             <ws:partial template="wml!Controls/_baseList/BaseControl/NavigationButton"
+                        attr:class="{{ _getNavigationButtonClasses(_options, _options.navigation.viewConfig.buttonConfig) }}"
                         value="{{_cutExpanded}}"
                         buttonConfig="{{_options.navigation.viewConfig.buttonConfig}}"
                         buttonView="{{_resolveNavigationButtonView()}}"
