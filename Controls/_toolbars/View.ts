@@ -284,9 +284,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
-        let {popupOptions, templateOptions} = this._notify('beforeMenuOpen', [], {bubbling: true});
-        popupOptions = popupOptions || {};
-        templateOptions = templateOptions || {};
+        const beforeMenuOpenResult = this._notify('beforeMenuOpen', [], {bubbling: true});
+        const popupOptions = beforeMenuOpenResult?.popupOptions || {};
+        const templateOptions = beforeMenuOpenResult?.templateOptions || {};
         return {
             ...this._getMenuOptions(),
             ...popupOptions,
