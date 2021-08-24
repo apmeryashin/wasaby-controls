@@ -56,7 +56,7 @@ function getOffset(element: HTMLElement): { top: number; bottom: number } {
 function getScrollContainerByElement(scrollableElement: HTMLElement): Container {
     const controls = goUpByControlTree(scrollableElement);
     return controls.find(
-        (control: IControl) => cInstance.instanceOfModule(control, 'Controls/_scroll/Container')) as Container;
+        (control: IControl) => cInstance.instanceOfModule(control, 'Controls/scroll:_ContainerBase')) as Container;
 }
 
 function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number; topWithOffset: number } {
