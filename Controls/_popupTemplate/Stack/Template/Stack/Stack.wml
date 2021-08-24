@@ -56,7 +56,7 @@
 
         <ws:if data="{{_hasRightPanel}}">
             <ws:partial template="Controls/_popupTemplate/Stack/Template/RightPanel"
-                        toolbarContentOptions="{{_options}}"
+                        scope="{{_options}}"
                         closeButtonVisibility="{{_options.closeButtonVisibility}}"
                         rightBorderVisible="{{_options.rightBorderVisible}}"
                         toolbarContentTemplate="{{_options.toolbarContentTemplate}}"

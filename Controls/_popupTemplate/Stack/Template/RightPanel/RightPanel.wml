@@ -24,7 +24,7 @@
          </ws:if>
 
          <ws:if data="{{_options.toolbarContentTemplate}}">
-            <ws:partial template="{{_options.toolbarContentTemplate}}" scope="{{_options.toolbarContentOptions}}" attr:class="controls-margin_top-xs"/>
+            <ws:partial template="{{_options.toolbarContentTemplate}}" scope="{{_options}}" attr:class="controls-margin_top-xs"/>
          </ws:if>
       </div>
 
