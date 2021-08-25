@@ -1397,7 +1397,8 @@ define([
             {
                _options: {},
                getViewModel: () => ({
-                  getMarkedItem: () => myMarkedItem
+                  getMarkedItem: () => myMarkedItem,
+                  getCount: () => 1
                }),
                _notify: () => {
                   notified = true;
@@ -1414,6 +1415,31 @@ define([
          enterClick({ getContents: () => ({ key: 123 }) });
          assert.isFalse(notified);
       });
+
+       it('enterHandler in empty list should not fire', function() {
+           let
+               myMarkedItem = null,
+               notified = false;
+
+           function enterClick(markedItem) {
+               const event = { nativeEvent: { ctrlKey: false }, isStopped: () => true, stopImmediatePropagation: () => {} };
+               lists.BaseControl._private.enterHandler(
+                   {
+                       _options: {},
+                       getViewModel: () => ({
+                           getMarkedItem: () => myMarkedItem,
+                           getCount: () => 0
+                       }),
+                       _notify: () => {
+                           notified = true;
+                       }
+                   }, event);
+           }
+
+           // With marker
+           enterClick({ getContents: () => ({ key: 123 }) });
+           assert.isFalse(notified);
+       });
 
       describe('_private.keyDownDel', () => {
          let cfg;
