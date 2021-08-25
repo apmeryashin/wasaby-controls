@@ -43,7 +43,8 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._subscribeCollectionChange(options._dataOptionsValue, options.prefetchData);
         this._actionsCollection = new ActionsCollection({
             actions: options.actions,
-            listActions: options.listActions
+            listActions: options.listActions,
+            prefetch: options.prefetchData
         });
         this._toolbarItems = this._getToolbarItems(this._actionsCollection.getToolbarItems());
         this._actionsCollection.subscribe('toolbarConfigChanged', (event, items) => {

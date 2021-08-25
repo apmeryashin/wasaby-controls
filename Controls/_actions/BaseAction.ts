@@ -9,6 +9,8 @@ import {merge} from 'Types/object';
 import {IAction} from './IAction';
 import {IExecuteCommandParams} from 'Controls/operations';
 import {IToolBarItem} from 'Controls/toolbars';
+import {RecordSet} from 'Types/collection';
+import {DataSet} from 'Types/source';
 
 export interface IBaseAction {
     execute: (options: unknown) => Promise<unknown>;
@@ -49,7 +51,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     readonly order: number;
     readonly parent: string | number;
     readonly showType: number;
-    readonly 'parent@': boolean;
+    'parent@': boolean;
     readonly onExecuteHandler: Function;
     commandName: string;
     commandOptions: Record<string, any>;
@@ -124,7 +126,11 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     }
 
     execute(options): Promise<unknown> {
-        return this._executeCommand(options)
+        return this._executeCommand(options);
+    }
+
+    getChildren(root: number | string): Promise<RecordSet | DataSet> | void {
+        // for override
     }
 
     private _executeCommand(options): Promise<unknown> {

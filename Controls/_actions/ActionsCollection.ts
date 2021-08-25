@@ -8,6 +8,7 @@ import {ISelectionObject} from 'Controls/interface';
 import {isEqual} from 'Types/object';
 import {showType} from 'Controls/toolbars';
 import {Logger} from 'UI/Utils';
+import {ILoadDataResult} from 'Controls/_dataSource/DataLoader';
 
 /**
  * @public
@@ -17,6 +18,7 @@ import {Logger} from 'UI/Utils';
 interface IActionsCollectionOptions {
     listActions: IAction[];
     actions: IAction[];
+    prefetchData: ILoadDataResult[];
 }
 
 const BASE_ACTION_MODULE = 'Controls/actions:BaseAction';
@@ -28,6 +30,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     protected _actions: IBaseAction[];
     protected _listActions: IBaseAction[] = [];
     protected _toolbarItems: IAction[] = [];
+    protected _prefetchData: ILoadDataResult[] = [];
     protected _options: IActionsCollectionOptions;
     protected _childItems: Record<unknown, any> = {};
     protected _operationsPanelVisible: boolean = false;
@@ -153,7 +156,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
                                    Action ${actionName} не был загружен до создания коллекции`);
             } else {
                 const action = loadSync(actionName);
-                const actionClass = new action(item);
+                const actionClass = new action({...item, prefetchResult: this._options.prefetchData?.find(() => {})});
                 actionClass.subscribe('itemChanged', this._notifyChanges.bind(this));
                 result.push(actionClass);
             }
