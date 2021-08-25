@@ -404,6 +404,9 @@ define([
          let configData = {
             additionalData: {
                name: 'cat'
+            },
+            updateMetaData: {
+               someField: 'someValue'
             }
          };
          let FC = new form.Controller();
@@ -417,7 +420,10 @@ define([
          };
          FC._isNewRecord = true;
          let dataSource = {
-            update: () => (new Deferred()).callback('key')
+            update: (record, updateMeta) => {
+               assert.deepEqual(updateMeta, configData.updateMetaData);
+               return new Deferred().callback('key');
+            }
          };
          let argsCorrectUpdate = {
             key: 'key',
