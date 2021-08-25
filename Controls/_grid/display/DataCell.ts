@@ -100,6 +100,13 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
     ): string {
         let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
 
+        if (this.isFirstColumn()) {
+            classes += ` controls-Grid__row-cell__first-${this.getStyle()}`;
+        }
+        if (this.isLastColumn()) {
+            classes += ` controls-Grid__row-cell__last-${this.getStyle()}`;
+        }
+
         // нужен shouldDisplayMarker именно для всего элемента, т.к. эти стили навешиваются на все ячейки для текста
         if (this.getOwner().shouldDisplayMarker()) {
             classes += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${this.getStyle()}`;

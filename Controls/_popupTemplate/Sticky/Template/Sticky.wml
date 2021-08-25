@@ -11,8 +11,9 @@
                     theme="{{_headerTheme}}"
                     closeBtnPosition="{{_closeBtnPosition}}"
                     stickyOptions="{{_options}}"
-                    on:click="_proxyEvent('headerClick')"
-        />
+                    attr:class="{{_headerTheme && (_options.theme !== _headerTheme) ?
+                                   'controls_popupTemplate_theme-' + _headerTheme + ' controls_theme-' + _headerTheme}}"
+                    on:click="_proxyEvent('headerClick')"/>
     </ws:if>
     <ws:else>
         <ws:if data="{{_options.closeButtonVisibility}}">

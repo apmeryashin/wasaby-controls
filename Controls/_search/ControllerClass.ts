@@ -198,7 +198,9 @@ export default class ControllerClass {
       const searchValue = options.hasOwnProperty('searchValue') ? options.searchValue : this._options.searchValue;
 
       if (this._options.root !== options.root) {
-         this._rootBeforeSearch = null;
+         if (this._root !== options.root) {
+            this._rootBeforeSearch = null;
+         }
          this.setRoot(options.root);
       }
 

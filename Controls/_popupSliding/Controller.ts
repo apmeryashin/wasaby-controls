@@ -39,11 +39,23 @@ class Controller extends BaseController {
         if (!this._isTopPopup(item) && !forced) {
             return false;
         }
+        this._updatePosition(item, container, forced);
+        return true;
+    }
+
+    /**
+     * Обновление размеров и позиции попапа
+     * @param item
+     * @param container
+     * @param isResize При изменении размеров экрана нужно варидировать размер шторки, чтобы она не оказалась меньше,
+     * чем минимальная высота после возвращение экрана к нормальным размерам
+     * @private
+     */
+    private _updatePosition(item: ISlidingPanelItem, container: HTMLDivElement, isResize?: boolean): void {
         item.sizes = this._getPopupSizes(item, container);
-        item.position = SlidingPanelStrategy.getPosition(item);
+        item.position = SlidingPanelStrategy.getPosition(item, isResize);
         item.popupOptions.workspaceWidth = item.position.width;
         this._fixIosBug(item, container);
-        return true;
     }
 
     _fixIosBug(item: ISlidingPanelItem, container: HTMLDivElement): void {
@@ -51,26 +63,43 @@ class Controller extends BaseController {
             return;
         }
         const bodyHeight = document.body.clientHeight;
-        const vieportHeight = window.visualViewport?.height || document.body.clientHeight;
-        const vieportOffsetTop = window.visualViewport?.offsetTop || 0;
-        const isFullHeight = item.position.height === item.position.maxHeight;
+        const viewportHeight = window.visualViewport?.height || document.body.clientHeight;
+        const viewportOffsetTop = window.visualViewport?.offsetTop || 0;
+
+        // Если высчитана высота берем ее, если высота по контенту, смотрим на контенте. На контенте до цикла синх.
+        // значение может быть больше, чем позволяет maxHeight.
+        const isFullHeight = item.position.height ? (item.position.height === item.position.maxHeight) :
+                                                    (item.sizes.height >= item.position.maxHeight);
 
         // Если поле ввода в верхней части экрана, то при показе клавиатуры размер экрана браузера не ресайзится
         // (ресайзится только visualViewPort). В этом случае css св-во bottom: 0 будет позиционировать окно под
         // клавиатурой, т.к. физически отсчет координат начинается там.
-        // Если же поле ввода в нижней части, то будет сдвиг всего тела страницы и bottom: 0 будет начинаться над клавой
 
         // Чтобы визаульно не было видно реакции окна при открыти клавы (изменения размеров, скачка позиции и т.п.)
-        // Добавляю компенсацию высоты клавиатуры через отступ, сохраняя высоту окна. Делаю только когда клава не
-        // подкроллила боди (vieportOffsetTop === 0). Когда подскроллила ничего дополнительного делать не надо.
-        const toggle = isFullHeight && (bodyHeight > vieportHeight) && !vieportOffsetTop;
+        // Добавляю компенсацию высоты клавиатуры через отступ, сохраняя высоту окна.
+        // Когда есть viewport.offsetTop, значит браузер при установке фокуса подскроллил окно и нужно компенсировать
+        // отступ на размер offsetTop, т.к. нижняя часть body, от которой будет считаться позиция окажется выше
+        const toggle = isFullHeight && (bodyHeight > viewportHeight);
         if (toggle) {
-            const dif = bodyHeight - vieportHeight;
+            const dif = bodyHeight - viewportHeight - viewportOffsetTop;
             // todo: https://online.sbis.ru/opendoc.html?guid=2b5e5b84-5b2f-4e2a-af92-bd46e13db48d
             container.style.paddingBottom = dif + 'px';
             container.style.boxSizing = 'border-box';
-            item.position.height = bodyHeight;
-            item.position.maxHeight = bodyHeight;
+
+            // Высоту так же компенсируем на размер офсета, т.к. мы уменьшили нижний отступ
+            const panelMaxHeight = bodyHeight - viewportOffsetTop;
+            item.position.height = panelMaxHeight;
+            item.position.maxHeight = panelMaxHeight;
+
+            // В шаблон нужно спускать высоту шаблона, без учета паддинга,
+            // т.к. шаблон расчитывает там увидить данные о размерах попапа и он не знает ничего о паддинге
+            const templateHeight = panelMaxHeight - dif;
+            const slidingPanelData = item.popupOptions.slidingPanelData;
+            slidingPanelData.height = templateHeight;
+            slidingPanelData.maxHeight = templateHeight;
+            if (slidingPanelData.minHeight > templateHeight) {
+                slidingPanelData.minHeight = templateHeight;
+            }
         } else {
             container.style.paddingBottom = '0px';
             container.style.boxSizing = '';
@@ -121,12 +150,20 @@ class Controller extends BaseController {
         if (item.animationState === 'showing') {
             item.position = SlidingPanelStrategy.getStartPosition(item);
         } else {
-            item.position = SlidingPanelStrategy.getPosition(item);
+            item.position = SlidingPanelStrategy.getPosition(item, true);
         }
-        this._fixIosBug(item, container);
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
         item.popupOptions.workspaceWidth = item.position.width;
+        this._fixIosBug(item, container);
         return true;
+    }
+
+    resizeOuter(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
+        if (this._isTopPopup(item)) {
+            this._updatePosition(item, container, true);
+            return true;
+        }
+        return false;
     }
 
     getDefaultConfig(item: ISlidingPanelItem): void|Promise<void> {
@@ -161,9 +198,9 @@ class Controller extends BaseController {
         position.height = newHeight;
         item.sizes.height = newHeight;
         item.position = SlidingPanelStrategy.getPosition(item);
-        this._fixIosBug(item, container);
         item.popupOptions.workspaceWidth = item.position.width;
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
+        this._fixIosBug(item, container);
     }
 
     popupDragEnd(item: ISlidingPanelItem): void {
