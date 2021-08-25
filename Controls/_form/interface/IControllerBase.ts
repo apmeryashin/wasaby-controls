@@ -1,5 +1,5 @@
 import {IControlOptions} from 'UI/Base';
-import {Record} from 'Types/entity';
+import {Model} from 'Types/entity';
 
 /**
  * Интерфейс для котрола, реализующего функционал редактирования записи.
@@ -12,7 +12,7 @@ export default interface IControllerBase extends IControlOptions {
      * @name Controls/form:IControllerBase#record
      * @cfg {Types/entity:Model} Запись, по данным которой будет инициализирован диалог редактирования.
      */
-    record: Record;
+    record: Model;
     /**
      * @name Controls/form:IControllerBase#confirmationShowingCallback
      * @cfg {Function} Функция, которая определяет должно ли показаться окно с подтверждением сохранения/не сохранения измененных данных при закрытии диалога редактирования записи. Необходимо для случаев, когда есть измененные данные, не связанные с рекордом.
@@ -27,10 +27,22 @@ export default interface IControllerBase extends IControlOptions {
     keyProperty?: string;
 }
 
+export interface IUpdateConfig {
+    additionalData: Record<string, unknown>;
+    showLoadingIndicator: boolean;
+}
+
+/**
+ * @typedef {Object} UpdateConfig
+ * @description Параметр сохранения.
+ * @property {Object} additionalData Дополнительные данные, которые будут переданы в метод записи.
+ * @property {Boolean} [showLoadingIndicator=true] Отображение индикатора
+ */
+
 /**
  * Вызывает сохранение записи (завершение всех редактирований по месту, валидация).
  * @function Controls/form:IControllerBase#update
- * @param {Controls/form:IFormController/UpdateConfig.typedef} config Параметр сохранения.
+ * @param {Controls/form:IControllerBase/UpdateConfig.typedef} config Параметр сохранения.
  */
 
 /**

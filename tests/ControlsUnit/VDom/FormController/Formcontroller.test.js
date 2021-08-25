@@ -417,7 +417,10 @@ define([
          };
          FC._isNewRecord = true;
          let dataSource = {
-            update: () => (new Deferred()).callback('key')
+            update: (record, updateMeta) => {
+               assert.deepEqual(updateMeta, configData.additionalData);
+               return new Deferred().callback('key');
+            }
          };
          let argsCorrectUpdate = {
             key: 'key',
