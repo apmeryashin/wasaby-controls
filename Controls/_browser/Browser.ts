@@ -314,7 +314,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 keyProperty: this._getSourceController().getKeyProperty(),
                 parentProperty: this._getSourceController().getParentProperty(),
                 nodeProperty: this._options.nodeProperty,
-                sourceController: this._getSourceController()
+                sourceController: this._getSourceController(),
+                operationsController: this._operationsController
             });
         });
         return [
