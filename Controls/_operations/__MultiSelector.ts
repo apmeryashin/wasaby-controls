@@ -256,7 +256,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    }
 
    private _getCountBySourceCall(selection, selectionCountConfig): CountPromise {
-      this._children.countIndicator.show();
+      this._children.countIndicator?.show();
       this._countPromise = new CancelablePromise(getCountUtil.getCount(selection, selectionCountConfig));
       return this._countPromise.promise.then(
           (result: number): number => {
