@@ -1,0 +1,15 @@
+<Controls.popupTemplate:Sticky
+   shadowVisible="{{true}}"
+   closeButtonVisibility="{{false}}"
+>
+   <ws:bodyContentTemplate>
+      <Controls._breadcrumbs.PathButton.Body
+         path="{{path}}"
+         source="{{source}}"
+         keyProperty="{{keyProperty}}"
+         nodeProperty="{{nodeProperty}}"
+         parentProperty="{{parentProperty}}"
+         displayProperty="{{displayProperty}}"
+      />
+   </ws:bodyContentTemplate>
+</Controls.popupTemplate:Sticky>
