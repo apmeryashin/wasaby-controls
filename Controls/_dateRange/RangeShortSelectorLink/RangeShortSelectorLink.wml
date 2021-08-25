@@ -7,7 +7,7 @@
                 tooltip="{{ _options.tooltip }}"
                 styleClass="{{ _styleClass }}"
                 caption="{{ _caption }}"
-                attr:class="{{_isMinWidth ? 'controls-RangeShortSelectorLink__value-wrapper-minWidth'}}"
+                attr:class="controls-RangeShortSelectorLink__button-value"
                 attr:data-qa="RangeShortSelectorLink__template"
                 on:mousedown="_onClick()"
     />
