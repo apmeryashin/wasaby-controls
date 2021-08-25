@@ -261,11 +261,13 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _operationPanelItemClick(
         event: SyntheticEvent,
         action: IBaseAction,
+        toolbarItem,
         clickEvent: SyntheticEvent
     ): void {
         event.stopImmediatePropagation();
         this._getOperationsController().executeAction({
             action,
+            toolbarItem,
             source: this._source,
             target: clickEvent,
             selection: {
@@ -276,7 +278,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             keyProperty: this._getSourceController().getKeyProperty(),
             parentProperty: this._getSourceController().getParentProperty(),
             nodeProperty: this._options.nodeProperty,
-            sourceController: this._getSourceController()
+            sourceController: this._getSourceController(),
+            operationsController: this._operationsController
         });
     }
 
@@ -297,9 +300,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                     this._searchResetHandler();
                 }
            });
-        const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent}) => {
+        const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent, toolbarItem}) => {
             this._getOperationsController().executeAction({
                 action,
+                toolbarItem,
                 source: this._source,
                 target: clickEvent,
                 selection: {
@@ -310,7 +314,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 keyProperty: this._getSourceController().getKeyProperty(),
                 parentProperty: this._getSourceController().getParentProperty(),
                 nodeProperty: this._options.nodeProperty,
-                sourceController: this._getSourceController()
+                sourceController: this._getSourceController(),
+                operationsController: this._operationsController
             });
         });
         return [
