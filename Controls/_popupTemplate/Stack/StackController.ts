@@ -185,9 +185,7 @@ class StackController extends BaseController {
             // Если максимально возможная ширина окна меньше, чем выставлена через опцию, то нужно ориентироваться
             // на неё. Иначе кнопка разворота будет всегда пытаться развернуть окно,
             // которое уже итак максимально широкое.
-            const stackMaxWidth = item.popupOptions.stackMaxWidth < maxPanelWidth ?
-                item.popupOptions.stackMaxWidth :
-                maxPanelWidth;
+            const stackMaxWidth = Math.min(item.popupOptions.stackMaxWidth, maxPanelWidth);
             const middle = (item.popupOptions.stackMinWidth + stackMaxWidth) / 2;
             return item.popupOptions.stackWidth - middle > 0;
         }
