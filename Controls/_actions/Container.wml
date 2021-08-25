@@ -8,6 +8,7 @@
                     menuSource="{{_menuSource}}"
                     keyProperty="id"
                     parentProperty="parent"
+                    itemTemplateProperty="template"
                     nodeProperty="parent@"
                     on:beforeMenuOpen="_beforeMenuOpen()"
                     on:itemClick="_toolbarItemClick()"

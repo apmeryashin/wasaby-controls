@@ -36,7 +36,13 @@ export default class extends Control<IOperationsPanelCloudOptions> {
         this._notify('close', [], {bubbling: true});
     }
 
+    protected _selectedTypeChanged(event: SyntheticEvent, type: string): void {
+        this._notify('sendResult', ['selectedTypeChanged', type], {bubbling: true});
+    }
+
     protected _click(): void {
-        this._notify('sendResult', ['click'], {bubbling: true});
+        if (this._options.selectedKeysCount === 0) {
+            this._notify('sendResult', ['selectedTypeChanged', 'all'], {bubbling: true});
+        }
     }
 }

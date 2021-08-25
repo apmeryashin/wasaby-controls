@@ -17,7 +17,7 @@ export default class ActionsSource extends Memory {
         const where = query.getWhere() as FilterExpression;
         if (where.parent) {
             const action = this._collection.getActionById(where.parent);
-            return action.load(where.parent).then((result) => {
+            return action.getChildren(where.parent).then((result) => {
                 this._collection.addChildItems(where.parent, result);
                 return result;
             });

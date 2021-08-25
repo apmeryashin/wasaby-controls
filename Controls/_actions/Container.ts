@@ -43,7 +43,8 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._subscribeCollectionChange(options._dataOptionsValue, options.prefetchData);
         this._actionsCollection = new ActionsCollection({
             actions: options.actions,
-            listActions: options.listActions
+            listActions: options.listActions,
+            prefetch: options.prefetchData
         });
         this._toolbarItems = this._getToolbarItems(this._actionsCollection.getToolbarItems());
         this._actionsCollection.subscribe('toolbarConfigChanged', (event, items) => {
@@ -70,7 +71,8 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 },
                 templateOptions: {
                     backgroundStyle: 'secondary',
-                    hoverBackgroundStyle: 'secondary'
+                    hoverBackgroundStyle: 'secondary',
+                    itemTemplateProperty: 'itemTemplate'
                 }
             };
         }
@@ -109,9 +111,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         const action = this._actionsCollection.getExecuteAction(item);
         Store.dispatch('executeOperation', {
             action,
-            clickEvent
+            clickEvent,
+            toolbarItem: item
         });
-        this._notify('operationPanelItemClick', [action, clickEvent], {bubbling: true});
+        this._notify('operationPanelItemClick', [action, clickEvent, item], {bubbling: true});
     }
 
     getSourceController(dataValue, prefetch: ILoadDataResult[]): SourceController {
