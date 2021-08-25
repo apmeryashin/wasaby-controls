@@ -83,9 +83,12 @@ export default class extends Control<IOperationsPanelOptions> {
                         this._options.operationsController.setOperationsPanelVisible(false);
                         Store.dispatch('operationsPanelExpanded', false);
                     },
-                    onResult: (action: string) => {
+                    onResult: (action: string, type) => {
                         if (action === 'click') {
                             this._options.operationsController.selectionTypeChanged('all');
+                        }
+                        if (action === 'selectedTypeChanged') {
+                            this._options.operationsController.selectionTypeChanged(type);
                         }
                     }
                 },

@@ -14,11 +14,15 @@ import {ILoadDataResult} from 'Controls/_dataSource/DataLoader';
  * @public
  * @author Золотова Э.Е.
  */
+interface IPrefetchResult  {
+    key: string | number;
+    prefetchResult: ILoadDataResult;
+}
 
 interface IActionsCollectionOptions {
     listActions: IAction[];
     actions: IAction[];
-    prefetchData: ILoadDataResult[];
+    prefetch: IPrefetchResult[];
 }
 
 const BASE_ACTION_MODULE = 'Controls/actions:BaseAction';
@@ -30,7 +34,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     protected _actions: IBaseAction[];
     protected _listActions: IBaseAction[] = [];
     protected _toolbarItems: IAction[] = [];
-    protected _prefetchData: ILoadDataResult[] = [];
+    protected _prefetchData: Record<string | number, ILoadDataResult> = {};
     protected _options: IActionsCollectionOptions;
     protected _childItems: Record<unknown, any> = {};
     protected _operationsPanelVisible: boolean = false;
@@ -41,6 +45,11 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         this._options = options;
         this._actions = this._createActions(options.actions);
         this._toolbarItems = this._getToolbarItemsByActions(this._actions);
+        if (options.prefetch) {
+            options.prefetch.forEach((result) => {
+                this._prefetchData[result.key] = result.prefetchResult;
+            });
+        }
     }
 
     update(options: IActionsCollectionOptions): void {
@@ -156,7 +165,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
                                    Action ${actionName} не был загружен до создания коллекции`);
             } else {
                 const action = loadSync(actionName);
-                const actionClass = new action({...item, prefetchResult: this._options.prefetchData?.find(() => {})});
+                const actionClass = new action({...item, prefetchResult: this._prefetchData[item.prefetchResultId]});
                 actionClass.subscribe('itemChanged', this._notifyChanges.bind(this));
                 result.push(actionClass);
             }

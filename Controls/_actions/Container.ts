@@ -110,9 +110,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         const action = this._actionsCollection.getExecuteAction(item);
         Store.dispatch('executeOperation', {
             action,
-            clickEvent
+            clickEvent,
+            toolbarItem: item
         });
-        this._notify('operationPanelItemClick', [action, clickEvent], {bubbling: true});
+        this._notify('operationPanelItemClick', [action, clickEvent, item], {bubbling: true});
     }
 
     getSourceController(dataValue, prefetch: ILoadDataResult[]): SourceController {
