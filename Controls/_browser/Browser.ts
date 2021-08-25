@@ -613,8 +613,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (this._listsOptions && id) {
             this._getListOptionsById(id).filter = this._getListOptionsById(id).filter || filter;
         }
-        this._filter = filter;
-        this._notify('filterChanged', [this._filter, id]);
+        if (!Browser._hasInOptions(this._options, ['filter']) || !this._options.task1182865383) {
+            this._filter = filter;
+        }
+        this._notify('filterChanged', [filter, id]);
     }
 
     protected _breadCrumbsItemClick(event: SyntheticEvent, root: Key): void {
