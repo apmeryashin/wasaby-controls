@@ -414,6 +414,78 @@ define([
                   }
                };
             });
+
+            it('should not called fakeFixedNotifier if prev header in headersStack mode=stackable', () => {
+               let fakeFixedNotifierStb = sinon.fake();
+               sinon.stub(component, '_updateShadowsVisibility');
+               sinon.stub(component, '_callFixedCallback');
+               component._headersStack.top = [0, 1];
+               component._headers = [{
+                  mode: 'stackable',
+                  inst: {
+                     fakeFixedNotifier: fakeFixedNotifierStb
+                  }
+               }, {
+                  mode: 'replaceable'
+               }];
+               component.fixedHandler(event, coreMerge({
+                  id: 1,
+                  fixedPosition: 'top'
+               }, data, {preferSource: true}));
+               sinon.assert.notCalled(fakeFixedNotifierStb);
+               sinon.restore();
+            });
+
+            it('should called fakeFixedNotifier with correct arg (isFixed = true)', () => {
+               let updateFixedStub = sinon.fake();
+               sinon.stub(component, '_updateShadowsVisibility');
+               sinon.stub(component, '_callFixedCallback');
+               sinon.stub(component, '_updateFixationState').returns(true);
+               component._headersStack.top = [0, 1];
+               component._headers = [{
+                  mode: 'replaceable',
+                  inst: {
+                     fakeFixedNotifier: updateFixedStub,
+                     updateFixed: sinon.fake(),
+                     updateShadowVisibility: sinon.fake()
+                  }
+               }, {
+                  mode: 'replaceable',
+                  inst: {
+                     updateFixed: sinon.fake(),
+                     updateShadowVisibility: sinon.fake()
+                  }
+               }];
+               component.fixedHandler(event, coreMerge({
+                  id: 1,
+                  fixedPosition: '',
+                  prevPosition: 'top'
+               }, data, {preferSource: true}));
+               sinon.assert.calledWith(updateFixedStub, true);
+               sinon.restore();
+            });
+
+            it('should called fakeFixedNotifier with correct arg (isFixed = false)', () => {
+               let updateFixedStub = sinon.fake();
+               sinon.stub(component, '_updateShadowsVisibility');
+               sinon.stub(component, '_callFixedCallback');
+               component._headersStack.top = [0, 1];
+               component._headers = [{
+                  mode: 'replaceable',
+                  inst: {
+                     fakeFixedNotifier: updateFixedStub
+                  }
+               }, {
+                  mode: 'replaceable'
+               }];
+               component.fixedHandler(event, coreMerge({
+                  id: 1,
+                  fixedPosition: 'top'
+               }, data, {preferSource: true}));
+               sinon.assert.calledWith(updateFixedStub, false);
+               sinon.restore();
+            });
+
             it('Header with id equal to "sticky" stops being fixed', function() {
                component.fixedHandler(event, coreMerge({
                   id: 'sticky1',

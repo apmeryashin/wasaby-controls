@@ -848,7 +848,14 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         return `${position}: ${-coord}px;`;
     }
 
-    protected updateFixed(ids: number[]): void {
+    // Необходимость в "фейковом" событии fixed описана в интерфейсе IFixedEventData (scroll/StickyBlock/Utils.ts)
+    protected fakeFixedNotifier(isFixed: boolean): void {
+        const newPosition = isFixed ? this._model.fixedPosition : '';
+        const prevPosition = isFixed ? '' : this._model.fixedPosition;
+        this._fixedNotifier(newPosition, prevPosition, true);
+    }
+
+    protected updateFixed(ids: number[], needFakeFixedNotify: boolean = true): void {
         const isFixed: boolean = ids.indexOf(this._index) !== -1;
         if (this._isFixed !== isFixed) {
             if (!this._model) {
@@ -864,12 +871,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                         this._bottomShadowHiddenClassRemovedinJS = true;
                     }
                 });
-            } else if (this._model.fixedPosition) {
-                if (isFixed) {
-                    this._fixedNotifier(this._model.fixedPosition, '', true);
-                } else {
-                    this._fixedNotifier('', this._model.fixedPosition, true);
-                }
+            } else if (this._model.fixedPosition && needFakeFixedNotify) {
+                this.fakeFixedNotifier(isFixed);
             }
             this._isFixed = isFixed;
             this._updateStylesIfCanScroll();

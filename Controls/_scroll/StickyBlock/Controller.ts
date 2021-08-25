@@ -15,6 +15,7 @@ import StickyBlock from 'Controls/_scroll/StickyBlock';
 import fastUpdate from './FastUpdate';
 import {IPositionOrientation} from './StickyBlock/Utils';
 import SizeAndVisibilityObserver, {STACK_OPERATION} from "Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver";
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 // @ts-ignore
 
@@ -316,7 +317,7 @@ class StickyHeaderController {
      * @param {Controls/_scroll/StickyBlock/Types/InformationFixationEvent.typedef} fixedHeaderData
      * @private
      */
-    fixedHandler(event, fixedHeaderData: IFixedEventData) {
+    fixedHandler(event: SyntheticEvent, fixedHeaderData: IFixedEventData): void {
         event.stopImmediatePropagation();
         const isFixationUpdated = this._updateFixationState(fixedHeaderData);
         if (!isFixationUpdated) {
@@ -335,12 +336,31 @@ class StickyHeaderController {
                 this._headers[id].inst.updateFixed([
                     this._getLastFixedHeaderWithShadowId(POSITION.top),
                     this._getLastFixedHeaderWithShadowId(POSITION.bottom)
-                ]);
+                ], false);
             }
+        }
+        // Если зафиксировался (отфиксировался) replaceable заголовок, значит другой replaceable заголовок
+        // (если такой есть) стал не виден (виден). Получим id этого заголовка и стрельнем у него событием fixed.
+        const headerFixedChangedVisibilityId = this._getHeaderFixedChangedVisibilityId(fixedHeaderData, position);
+        if (headerFixedChangedVisibilityId !== undefined) {
+            const isFixed = !fixedHeaderData.fixedPosition;
+            this._headers[headerFixedChangedVisibilityId].inst.fakeFixedNotifier(isFixed);
         }
         this._updateShadowsVisibility();
         // Спилить после того ак удалим старый скролл контейнер. Используется только там.
         this._callFixedCallback(position);
+    }
+
+    private _getHeaderFixedChangedVisibilityId(fixedHeaderData: IFixedEventData, position: POSITION): number {
+        let resultId;
+        if (this._headers[fixedHeaderData.id].mode === MODE.replaceable) {
+            const indexInHeadersStack = this._headersStack[position].indexOf(fixedHeaderData.id);
+            const tempResultId = this._headersStack[position][indexInHeadersStack - 1];
+            if (tempResultId !== undefined && this._headers[tempResultId].mode === MODE.replaceable) {
+                resultId = tempResultId;
+            }
+        }
+        return resultId;
     }
 
     _getLastFixedHeaderWithShadowId(position: POSITION): number {
