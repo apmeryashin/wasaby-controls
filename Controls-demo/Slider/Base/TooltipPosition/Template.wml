@@ -6,7 +6,7 @@
                 minValue="{{0}}"
                 bind:value="_value"
                 borderVisible="{{true}}"
-                tooltipPosition="top"/>
+                tooltipPosition="top" attr:data-qa="controlsDemo_slider_top"/>
     </div>
     <div class="controlsDemo__cell controlsDemo__margin-top">
         <div class="controlsDemo__margin-top controls-text-label">tooltipPosition='bottom'
@@ -16,7 +16,7 @@
                 minValue="{{0}}"
                 bind:value="_value"
                 borderVisible="{{true}}"
-                tooltipPosition="bottom"/>
+                tooltipPosition="bottom" attr:data-qa="controlsDemo_slider_bottom"/>
     </div>
     <!--<div class="controlsDemo__cell controlsDemo__margin-top">
         <div class="controlsDemo__margin-top controls-text-label">position='center'</div>
