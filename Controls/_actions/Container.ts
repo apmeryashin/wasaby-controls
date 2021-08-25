@@ -71,7 +71,8 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 },
                 templateOptions: {
                     backgroundStyle: 'secondary',
-                    hoverBackgroundStyle: 'secondary'
+                    hoverBackgroundStyle: 'secondary',
+                    itemTemplateProperty: 'itemTemplate'
                 }
             };
         }

@@ -405,6 +405,7 @@ define(
                         nodeProperty: '@parent',
                         parentProperty: 'parent'
                      },
+                     _notify: () => {},
                      _children: {
                         menuTarget: 'menuTarget'
                      },
