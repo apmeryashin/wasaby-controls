@@ -29,13 +29,15 @@ export default interface IControllerBase extends IControlOptions {
 
 export interface IUpdateConfig {
     additionalData: Record<string, unknown>;
+    updateMetaData: Record<string, unknown>;
     showLoadingIndicator: boolean;
 }
 
 /**
  * @typedef {Object} UpdateConfig
  * @description Параметр сохранения.
- * @property {Object} additionalData Дополнительные данные, которые будут переданы в метод записи.
+ * @property {Object} updateMetaData Дополнительные данные, которые будут переданы в метод записи.
+ * @property {Object} additionalData Дополнительные данные, которые будут обрабатываться при синхронизации записи с реестром.
  * @property {Boolean} [showLoadingIndicator=true] Отображение индикатора
  */
 
