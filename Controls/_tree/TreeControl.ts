@@ -1414,8 +1414,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return this._expandController.isItemExpanded(item.getKey());
     }
 
-    protected _getFooterClasses(options): string {
-        let result = super._getFooterClasses(options);
+    protected _getFooterSpacingClasses(options): string {
+        let result = super._getFooterSpacingClasses(options);
 
         if (this._listViewModel && this._listViewModel['[Controls/_display/Tree]']) {
             const expanderVisibility = this._listViewModel.getExpanderVisibility();
