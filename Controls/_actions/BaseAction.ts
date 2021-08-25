@@ -42,7 +42,7 @@ export interface IBaseActionOptions {
     requiredLevel: string[];
 }
 
-const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType'];
+const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType', 'template'];
 
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
