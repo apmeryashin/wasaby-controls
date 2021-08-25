@@ -752,13 +752,21 @@ export default abstract class Row<T> {
         this._reinitializeColumns(true);
     }
 
-    setRowTemplateOptions(rowTemplateOptions: object): void {
+    setRowTemplateOptions(rowTemplateOptions: object, shouldRebuildColumns: boolean = true): void {
         if (!isEqual(this._$rowTemplateOptions, rowTemplateOptions)) {
             this._$rowTemplateOptions = rowTemplateOptions;
             if (this._$rowTemplate && this._$columnsConfig) {
                 this._$columnsConfig[this._$columnsConfig.length - 1].templateOptions = this._$rowTemplateOptions;
             }
-            this._reinitializeColumns(true);
+
+            if (shouldRebuildColumns) {
+                this._reinitializeColumns(true);
+            } else if (this._$columnItems) {
+                this._$columnItems.forEach((item) => {
+                    item.nextVersion();
+                });
+                this._nextVersion();
+            }
         }
     }
 

@@ -76,6 +76,10 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         if (changes.includes('emptyTemplateColumns')) {
             listModel.setEmptyTemplateColumns(options.emptyTemplateColumns);
         }
+
+        if (changes.includes('itemEditorTemplateOptions')) {
+            listModel.setItemEditorTemplateOptions(options.itemEditorTemplateOptions);
+        }
     },
 
     /**
@@ -120,6 +124,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             }
             if (changedOptions.hasOwnProperty('emptyTemplateColumns')) {
                 changes.push('emptyTemplateColumns');
+            }
+            if (changedOptions.hasOwnProperty('itemEditorTemplateOptions')) {
+                changes.push('itemEditorTemplateOptions');
             }
         }
 

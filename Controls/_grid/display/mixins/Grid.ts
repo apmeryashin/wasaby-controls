@@ -567,6 +567,20 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._$itemEditorTemplate;
     }
 
+    getItemEditorTemplateOptions(): object {
+        return this._$itemEditorTemplateOptions;
+    }
+
+    setItemEditorTemplateOptions(options: object): void {
+        this._$itemEditorTemplateOptions = options;
+        this._getItems().forEach((item) => {
+            if (item.isEditing()) {
+                item.setRowTemplateOptions(options, false);
+            }
+        });
+        this._nextVersion();
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;
@@ -616,5 +630,6 @@ Object.assign(Grid.prototype, {
     _$stickyColumnsCount: 1,
     _$sorting: null,
     _$emptyTemplateColumns: null,
-    _$itemEditorTemplate: null
+    _$itemEditorTemplate: null,
+    _$itemEditorTemplateOptions: null
 });

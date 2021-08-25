@@ -226,4 +226,25 @@ describe('Controls/grid_clean/GridView', () => {
             assert.equal(colspanGroup, true);
         });
     });
+
+    it('should update itemEditorTemplateOptions', () => {
+        let gridView;
+        let itemEditorTemplateOptions;
+
+        const options = {
+            itemEditorTemplateOptions: 'initialValue'
+        };
+        gridView = new GridView(options);
+        gridView.saveOptions(options);
+        gridView._listModel = {
+            setItemEditorTemplateOptions: (value) => {
+                itemEditorTemplateOptions = value;
+            },
+            setColspanGroup: () => {
+            }
+        };
+
+        gridView._beforeUpdate({itemEditorTemplateOptions: 'newValue'});
+        assert.equal(itemEditorTemplateOptions, 'newValue');
+    });
 });
