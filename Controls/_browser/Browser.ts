@@ -361,6 +361,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const searchValueOptionsChanged = options.searchValue !== newOptions.searchValue;
         const searchValueChanged = this._searchValue !== newOptions.searchValue;
         const rootChanged = newOptions.root !== options.root;
+        const searchController = this._getSearchControllerSync(id);
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -380,7 +381,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
         if (rootChanged) {
             this._root = newOptions.root;
-            this._getSearchControllerSync(id)?.setRoot(newOptions.root);
+        }
+
+        if (rootChanged || Browser._hasRootInOptions(newOptions) && searchController?.getRoot() !== newOptions.root) {
+            searchController?.setRoot(newOptions.root);
         }
 
         if (options.viewMode !== newOptions.viewMode) {
@@ -409,7 +413,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (searchValueOptionsChanged && searchValueChanged) {
             this._inputSearchValue = newOptions.searchValue;
 
-            if (!newOptions.searchValue && (sourceChanged || rootChanged) && this._getSearchControllerSync()) {
+            if (!newOptions.searchValue && (sourceChanged || rootChanged) && searchController) {
                 this._resetSearch();
                 sourceController.setFilter(this._filter);
             }

@@ -6,6 +6,7 @@ import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {adapter} from 'Types/entity';
 import {NewSourceController, getControllerState} from 'Controls/dataSource';
+import {ControllerClass as SearchController} from 'Controls/search';
 
 const browserData = [
     {
@@ -461,6 +462,19 @@ describe('Controls/browser:Browser', () => {
                     await browser._beforeUpdate(browserOptions);
                     assert.ok(browser._searchValue === 'test');
                 });
+            });
+
+            it('root is not changed, but root in searchController is updated', async () => {
+                let browserOptions = getBrowserOptionsHierarchy();
+                const searchController = new SearchController(getBrowserOptionsHierarchy());
+                browserOptions.searchController = searchController;
+                browserOptions.root = null;
+                const browser = await getBrowserWithMountCall(browserOptions);
+
+                searchController.setRoot('anyRoot');
+                browserOptions = {...browserOptions};
+                await browser._beforeUpdate(browserOptions);
+                assert.ok(searchController.getRoot() === null);
             });
 
             describe('_searchReset', () => {
