@@ -8463,7 +8463,7 @@ define([
             it('select', () => {
                const notifySpy = sinon.spy(baseControl, '_notify');
 
-               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1) );
+               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1), {} );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
@@ -8480,7 +8480,7 @@ define([
                };
 
                const notifySpy = sinon.spy(baseControl, '_notify');
-               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1) );
+               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1), {} );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[2], [2], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
 
@@ -8495,8 +8495,12 @@ define([
                   },
                   stopPropagation: () => {}
                };
-               baseControl._onCheckBoxClick(event, baseControl._listViewModel.getItemBySourceKey(1));
+               baseControl._onCheckBoxClick(event, baseControl._listViewModel.getItemBySourceKey(1), event);
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
+               assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
+               notifySpy.resetHistory();
+               baseControl._onCheckBoxClick(event, baseControl._listViewModel.getItemBySourceKey(3), event);
+               assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1, 2, 3], [1, 2, 3], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
          });
@@ -8625,7 +8629,7 @@ define([
                baseControl._beforeMount(newCfg);
 
                const notifySpy = sinon.spy(baseControl, '_notify');
-               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1) );
+               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1), {} );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
