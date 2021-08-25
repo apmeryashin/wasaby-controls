@@ -482,7 +482,7 @@ const _private = {
     },
 
     enterHandler(self, event) {
-        if (event.nativeEvent.ctrlKey) {
+        if (event.nativeEvent.ctrlKey || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
         if (_private.hasMarkerController(self)) {
