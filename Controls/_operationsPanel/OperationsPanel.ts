@@ -12,8 +12,6 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
 import {IOperationsPanelItem, IOperationsPanelOptions} from './_interface/IOperationsPanel';
 import 'css!Controls/toolbars';
 import 'css!Controls/operationsPanel';
-import Store from 'Controls/Store';
-import {DialogOpener} from 'Controls/popup';
 
 /*
  * Контрол, предназначенный для операций над множеством записей списка.
@@ -56,8 +54,6 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
    protected _notifyHandler: typeof EventUtils.tmplNotify = EventUtils.tmplNotify;
    protected _items: RecordSet = null;
    protected _toolbarSource: Memory = null;
-   protected _dialogOpener: DialogOpener = null;
-   protected _storeCallbackId: string = null;
    protected _children: {
       toolbarBlock: HTMLElement
    };
@@ -141,9 +137,7 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
 
    protected _beforeMount(options: IOperationsPanelOptions): Promise<void> | void {
       let result;
-      this._updateOperationPanelConfig(options);
       if (options.source) {
-         Store.dispatch('operationToolbarItems', options.source.data);
          result = this._loadData(options.source).then((data) => {
             this._loadDataCallback(data, options);
          });
@@ -157,14 +151,6 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
       return result;
    }
 
-   protected _beforeUnmount(): void {
-      if (this._storeCallbackId && this._options.newDesign) {
-         Store.unsubscribe(this._storeCallbackId);
-         Store.dispatch('operationsPanelExpanded', false);
-      }
-      this._dialogOpener?.destroy();
-   }
-
    protected _afterMount(): void {
       this._checkToolbarWidth();
       this._setInitializedState(this._options);
@@ -172,9 +158,6 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
          this._notify('controlResize', [], {bubbling: true});
       });
       this._notify('operationsPanelOpened');
-      if (this._options.newDesign) {
-         this._openOperationPanel();
-      }
    }
 
    protected _onResize(): void {
@@ -182,9 +165,7 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
    }
 
    protected _afterUpdate(oldOptions: IOperationsPanelOptions): void {
-      this._updateOperationPanelConfig(this._options);
       if (this._options.source !== oldOptions.source) {
-         Store.dispatch('operationToolbarItems', this._options.source.data);
          // We should recalculate the size of the toolbar only when all the children have updated,
          // otherwise available width may be incorrect.
          const loadResult = this._loadData(this._options.source);
@@ -209,41 +190,6 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
          selected: this._options.selectedKeys,
          excluded: this._options.excludedKeys
       }]);
-   }
-
-   protected _updateOperationPanelConfig(options): void {
-      Store.dispatch('operationPanelConfig', {
-         selectedKeys: options.selectedKeys,
-         excludedKeys: options.excludedKeys,
-         selectedKeysCount: options.selectedKeysCount,
-         selectionViewMode: options.selectionViewMode,
-         selectedCountConfig: options.selectedCountConfig,
-         isAllSelected: options.isAllSelected
-      });
-   }
-
-   protected _getDialogOpener(): Promise<DialogOpener> {
-      if (!this._dialogOpener) {
-         return import('Controls/popup').then((popup) => {
-            this._dialogOpener = new popup.DialogOpener();
-            return this._dialogOpener;
-         });
-      } else {
-         return Promise.resolve(this._dialogOpener);
-      }
-   }
-
-   private _openOperationPanel(): void {
-      this._getDialogOpener().then((opener) => {
-         const target = this._children.toolbarBlock;
-         opener.open({
-            template: 'Controls/operationsPanel:Panel',
-            opener: this,
-            className: 'controls-operationPanel__offset',
-            propStorageId: this._options.propStorageId,
-            target
-         });
-      });
    }
 }
 

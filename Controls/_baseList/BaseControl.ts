@@ -482,7 +482,7 @@ const _private = {
     },
 
     enterHandler(self, event) {
-        if (event.nativeEvent.ctrlKey) {
+        if (event.nativeEvent.ctrlKey || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
         if (_private.hasMarkerController(self)) {
@@ -4508,7 +4508,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return (emptyTemplate || emptyTemplateColumns) && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     }
 
-    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>): void {
+    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, originalEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
 
         const contents = _private.getPlainItemContents(item);
@@ -4522,7 +4522,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             let newSelection;
 
-            if (e.nativeEvent && e.nativeEvent.shiftKey) {
+            if (originalEvent.nativeEvent && originalEvent.nativeEvent.shiftKey) {
                 newSelection = _private.getSelectionController(this).selectRange(key);
             } else {
                 newSelection = _private.getSelectionController(this).toggleItem(key);
@@ -6705,7 +6705,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
     // endregion
 
-    _getFooterClasses(options): string {
+    _getFooterSpacingClasses(options): string {
         const hasCheckboxes = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
         const paddingClassName = `controls__BaseControl__footer-${options.style}__paddingLeft_`;
@@ -6715,7 +6715,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             paddingClassName += (options.itemPadding?.left?.toLowerCase() || 'default');
         }
 
-        return `controls__BaseControl__footer ${paddingClassName}`;
+        return `${paddingClassName}`;
+    }
+
+    _getNavigationButtonClasses(options, buttonConfig): string {
+        const buttonView = this._resolveNavigationButtonView() === 'separator';
+        if (!buttonView || (buttonConfig && buttonConfig.buttonPosition !== 'center')) {
+            return this._getFooterSpacingClasses(options);
+        }
     }
 
     /**

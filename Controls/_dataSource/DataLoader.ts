@@ -12,6 +12,7 @@ import {
 } from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
+import {ControllerClass as OperationsController} from 'Controls/operations';
 import {Logger} from 'UI/Utils';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {loadAsync, loadSync, isLoaded} from 'WasabyLoader/ModulesLoader';
@@ -106,6 +107,7 @@ export interface ILoadDataResult extends ILoadDataConfig {
     searchController?: SearchController;
     collapsedGroups?: TArrayGroupId;
     source: PrefetchProxy;
+    operationsController?: OperationsController;
 }
 export type TLoadersConfigsMap = Record<string, TLoadConfig>;
 type TLoadedConfigs = Map<string, ILoadDataResult|ILoadDataConfig>;
@@ -171,6 +173,7 @@ function getLoadResult(
     sourceController: NewSourceController,
     filterController: FilterController,
     historyItems?: IFilterItem[],
+    operationsController?: OperationsController,
     listConfigStoreId?: string
 ): ILoadDataResult {
     return {
@@ -189,7 +192,8 @@ function getLoadResult(
         error: sourceController.getLoadError(),
         filter: sourceController.getFilter(),
         sorting:  sourceController.getSorting() as TSortingOptionValue,
-        collapsedGroups: sourceController.getCollapsedGroups()
+        collapsedGroups: sourceController.getCollapsedGroups(),
+        operationsController
     };
 }
 
@@ -200,6 +204,7 @@ function loadDataByConfig(
 ): Promise<ILoadDataResult> {
     const loadDataTimeout = loadTimeout || getLoadTimeout(loadConfig);
     let filterController: FilterController;
+    let operationsPromise;
     let filterHistoryItems;
     let sortingPromise;
     let filterPromise;
@@ -241,10 +246,17 @@ function loadDataByConfig(
         });
     }
 
+    if (loadConfig.actions) {
+        operationsPromise = loadAsync('Controls/operations').then((operations) => {
+            return new operations.ControllerClass({});
+        });
+    }
+
     return Promise.all([
         filterPromise,
-        sortingPromise
-    ]).then(([, sortingPromiseResult]: [TFilter, ISortingOptions]) => {
+        sortingPromise,
+        operationsPromise
+    ]).then(([, sortingPromiseResult, operationsController]: [TFilter, ISortingOptions, any]) => {
         const sorting = sortingPromiseResult ? sortingPromiseResult.sorting : loadConfig.sorting;
         const sourceController = getSourceController({
             ...loadConfig,
@@ -258,10 +270,10 @@ function loadDataByConfig(
                 sourceController.reload(undefined, true)
                     .catch((error) => error)
                     .finally(() => {
-                        resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems));
+                        resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems, operationsController));
                     });
             } else {
-                resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems));
+                resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems, operationsController));
             }
         });
     });

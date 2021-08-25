@@ -1,26 +1,17 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import {IButton, IButtonOptions} from './interface/IButton';
 import {IClick} from './interface/IClick';
 import {isSVGIcon, getIcon} from '../Utils/Icon';
 import {
     ICaption,
-    ICaptionOptions,
     IFontColorStyle,
-    IFontColorStyleOptions,
     IFontSize,
-    IFontSizeOptions,
     IHeight,
-    IHeightOptions,
     IIcon,
-    IIconOptions,
     IIconSize,
-    IIconSizeOptions,
     IIconStyle,
-    IIconStyleOptions,
     ITooltip,
-    ITooltipOptions,
-    IHref,
-    IHrefOptions
+    IHref
 } from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
@@ -29,18 +20,6 @@ import {constants} from 'Env/Env';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
-
-export type IViewMode = 'button' | 'link' | 'linkButton' | 'toolButton' | 'functionalButton';
-export type TextAlign = 'left' | 'right' | 'center';
-
-export interface IButtonControlOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
-    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
-    IButtonOptions {
-    viewMode?: IViewMode;
-    captionPosition: 'left' | 'right';
-    textAlign?: TextAlign;
-    translucent?: boolean;
-}
 
 export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
@@ -56,7 +35,7 @@ export function defaultFontColorStyle(viewMode: string): string {
     }
 }
 
-export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
+export function simpleCssStyleGeneration(options: IButtonOptions): void {
     this._buttonStyle = options.readOnly ? 'readonly' :
         (options.viewMode === 'toolButton' ? 'default' : options.buttonStyle);
     this._contrastBackground = options.contrastBackground === undefined ?
@@ -161,7 +140,7 @@ export function getDefaultOptions(): object {
  * @author Красильников А.С.
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
-class Button extends Control<IButtonControlOptions> implements IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize,
+class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize,
                                                                IClick, IFontColorStyle, IFontSize, IHeight, IButton {
     protected _template: TemplateFunction = ButtonTemplate;
 
@@ -183,11 +162,11 @@ class Button extends Control<IButtonControlOptions> implements IHref, ICaption, 
     protected _isSVGIcon: boolean = false;
     protected _textAlign: string;
 
-    protected _beforeMount(options: IButtonControlOptions): void {
+    protected _beforeMount(options: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, options);
     }
 
-    protected _beforeUpdate(newOptions: IButtonControlOptions): void {
+    protected _beforeUpdate(newOptions: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, newOptions);
     }
 

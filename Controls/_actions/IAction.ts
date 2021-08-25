@@ -12,4 +12,5 @@ export interface IAction extends IToolBarItem {
     permissions?: string[];
     requiredLevel?: string;
     visible?: boolean;
+    prefetchResultId?: string;
 }

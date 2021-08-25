@@ -1,0 +1,6 @@
+<Controls.buttons:Button
+   icon="icon-Burger"
+   viewMode="toolButton"
+
+   on:click="_openMenu()"
+/>

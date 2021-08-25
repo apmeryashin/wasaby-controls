@@ -199,7 +199,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             this._masterDataLoadResolver();
             this._masterDataLoadResolver = null;
         }
-        if (imageProperty && (!this._hasImageInItems || rootChanged)) {
+        if (imageProperty && (!this._hasImageInItems || rootChanged) && items.getCount()) {
             this._hasImageInItems = this._hasImages(items, imageProperty);
             const imageVisibility = this._hasImageInItems ? 'visible' : 'hidden';
             if (imageVisibility !== this._listCfg?.getImageVisibility()) {
@@ -455,7 +455,7 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._detailDataSource = listsConfigs.detail.sourceController;
         this._detailDataSource.subscribe('dataLoad', this._onDetailDataLoadCallback);
         this._masterDataSource = listsConfigs.master?.sourceController;
-        this._masterDataSource.subscribe('dataLoad', this._onMasterDataLoadCallback);
+        this._masterDataSource?.subscribe('dataLoad', this._onMasterDataLoadCallback);
         if (options.listConfiguration) {
             this._createTemplateControllers(options.listConfiguration, options);
         }

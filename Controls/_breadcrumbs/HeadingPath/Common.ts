@@ -1,8 +1,9 @@
 import {Model} from 'Types/entity';
-import {Control} from 'UI/Base';
+import {CrudEntityKey} from 'Types/source';
+import {Control, IControlOptions} from 'UI/Base';
 
-function getRootModel(root, keyProperty) {
-   let rawData = {};
+function getRootModel(root: CrudEntityKey, keyProperty: string): Model {
+   const rawData = {};
 
    rawData[keyProperty] = root;
    return new Model({
@@ -11,7 +12,17 @@ function getRootModel(root, keyProperty) {
    });
 }
 
-function onBackButtonClick(this: Control, e: Event, itemsProperty: string = 'items'): void {
+interface IBreadcrumbsControlOptions extends IControlOptions {
+   keyProperty?: string;
+   parentProperty?: string;
+}
+
+/**
+ * Обработчик клика по кнопке "Назад". Предназначен для запуска в контексте контрола, поддерживающего опции
+ * keyProperty, parentProperty и опцию в которой лежит массив хлебных крошек.
+ * Название опции с хлебными крошками кастомизируется по средствам параметра itemsProperty.
+ */
+function onBackButtonClick(this: Control<IBreadcrumbsControlOptions>, e: Event, itemsProperty: string = 'items'): void {
    let item;
    const items = this._options[itemsProperty];
 
