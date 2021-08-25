@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper {{_options.theme.indexOf('default')<0 ? 'controlsDemo_fixedWidth500' : 'controlsDemo_fixedWidth300'}}">
+<div class="controlsDemo__wrapper {{_options.theme.indexOf('default')<0 ? 'controlsDemo_fixedWidth800' : 'controlsDemo_fixedWidth500'}}">
     <div class="controlsDemo__cell demo-checkboxIndex__base">
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
