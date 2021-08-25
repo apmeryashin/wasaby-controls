@@ -204,7 +204,7 @@ class PositionParamsCalculator implements IParamsCalculator {
         let queryDirection;
 
         if (direction === 'backward') {
-            if (shiftMode === 'edge' || shiftMode === 'end') {
+            if (shiftMode === 'edge' || shiftMode === 'end' || shiftMode === 'edges') {
                 position = [EDGE_BACKWARD_POSITION];
             }
         } else if (direction === 'forward') {
