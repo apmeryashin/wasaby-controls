@@ -15,6 +15,8 @@ import Container = require('wml!Controls/_breadcrumbs/WrappedContainer');
 
 export {default as Path} from './_breadcrumbs/Path';
 export {default as View} from './_breadcrumbs/View';
+export {PathButton} from './_breadcrumbs/PathButton';
+export * from 'Controls/_breadcrumbs/PathButton/interfaces';
 export {default as HeadingPath} from './_breadcrumbs/HeadingPath';
 export {default as MultilinePath} from './_breadcrumbs/MultilinePath';
 export {default as HeadingPathBack} from './_breadcrumbs/HeadingPath/Back';

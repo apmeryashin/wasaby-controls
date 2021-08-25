@@ -1,0 +1,15 @@
+<Controls.popupSliding:Template
+   slidingPanelOptions="{{ _options.slidingPanelOptions }}"
+   controlButtonVisibility="{{false}}"
+>
+   <ws:bodyContentTemplate>
+      <Controls._breadcrumbs.PathButton.Body
+         path="{{path}}"
+         source="{{source}}"
+         keyProperty="{{keyProperty}}"
+         nodeProperty="{{nodeProperty}}"
+         parentProperty="{{parentProperty}}"
+         displayProperty="{{displayProperty}}"
+      />
+   </ws:bodyContentTemplate>
+</Controls.popupSliding:Template>
