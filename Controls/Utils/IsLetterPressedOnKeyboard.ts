@@ -23,7 +23,8 @@ export default function isLetterPressedOnKeyboard(event: SyntheticEvent|Keyboard
     const activeElement = getActiveElement();
     const allowProcessKeydown = activeElement &&
         activeElement.tagName !== 'INPUT' &&
-        activeElement.tagName !== 'TEXTAREA';
+        activeElement.tagName !== 'TEXTAREA' &&
+        activeElement.getAttribute('contenteditable') !== 'true';
 
     return !isSpecialKeyPressed && isLetterPressed && allowProcessKeydown && nativeEvent.type === 'keydown';
 }
