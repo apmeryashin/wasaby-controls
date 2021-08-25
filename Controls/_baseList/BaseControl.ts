@@ -7376,7 +7376,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
     // endregion
 
-    _getFooterClasses(options): string {
+    _getFooterSpacingClasses(options): string {
         const hasCheckboxes = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
         const paddingClassName = `controls__BaseControl__footer-${options.style}__paddingLeft_`;
@@ -7386,7 +7386,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             paddingClassName += (options.itemPadding?.left?.toLowerCase() || 'default');
         }
 
-        return `controls__BaseControl__footer ${paddingClassName}`;
+        return `${paddingClassName}`;
+    }
+
+    _getNavigationButtonClasses(options, buttonConfig): string {
+        const buttonView = this._resolveNavigationButtonView() === 'separator';
+        if (!buttonView || (buttonConfig && buttonConfig.buttonPosition !== 'center')) {
+            return this._getFooterSpacingClasses(options);
+        }
     }
 
     /**
