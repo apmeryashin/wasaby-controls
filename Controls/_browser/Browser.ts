@@ -459,9 +459,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const filterChanged = !isEqual(options.filter, newOptions.filter);
 
         if (filterController?.update(filterControllerOptions) || filterChanged) {
+            const currentFilter = this._filter;
             this._updateFilterAndFilterItems(newOptions);
 
-            if (!isEqual(options.filterButtonSource, newOptions.filterButtonSource) && !filterChanged) {
+            if (!isEqual(options.filterButtonSource, newOptions.filterButtonSource) &&
+                !isEqual(currentFilter, this._filter)) {
                 this._notify('filterChanged', [this._filter]);
             }
         }
