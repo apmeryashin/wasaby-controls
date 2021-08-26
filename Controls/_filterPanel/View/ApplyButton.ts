@@ -4,7 +4,7 @@ import * as template from 'wml!Controls/_filterPanel/View/ApplyButton';
 
 interface IApplyButton {
     resultHandler: Function;
-    caption: string;
+    name: string;
 }
 export default class ApplyButton extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -13,7 +13,7 @@ export default class ApplyButton extends Control<IControlOptions> {
 
     protected _beforeUpdate(options: IApplyButton): void {
         if (options.resultHandler) {
-            this._resultHandlers[options.caption] = options.resultHandler;
+            this._resultHandlers[options.name] = options.resultHandler;
         }
     }
 
@@ -24,6 +24,7 @@ export default class ApplyButton extends Control<IControlOptions> {
                 editorHandler();
             }
         }
-       this._notify('sendResult', [], {bubbling: true});
+        this._resultHandlers = [];
+        this._notify('sendResult', [], {bubbling: true});
     }
 }

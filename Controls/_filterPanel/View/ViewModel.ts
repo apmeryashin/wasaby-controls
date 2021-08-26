@@ -62,7 +62,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 ...item.editorOptions,
                 ...{
                     viewMode: item.viewMode,
-                    applyButtonSticky: this._options.applyButtonSticky
+                    applyButtonSticky: this._options.applyButtonSticky,
+                    name: item.name
                 }};
             newSource.push({...item, ...{editorOptions}});
         });

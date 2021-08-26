@@ -24,7 +24,7 @@ export abstract class BaseEditor extends Control<IControlOptions> {
                 },
                 templateOptions: {
                     resultHandler: this._resultHandler.bind(this),
-                    caption: this._options.caption
+                    name: this._options.name
                 },
                 direction: {
                     horizontal: 'right'
