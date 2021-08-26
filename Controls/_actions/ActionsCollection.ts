@@ -155,6 +155,10 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         });
     }
 
+    private _isListAction(item: IAction): boolean {
+        return this._options.listActions.includes(item);
+    }
+
     private _createActions(actions: IAction[] = [], listActions: IAction[] = []): IBaseAction[] {
         const items = actions.concat(listActions);
         const result = [];
@@ -165,7 +169,14 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
                                    Action ${actionName} не был загружен до создания коллекции`);
             } else {
                 const action = loadSync(actionName);
-                const actionClass = new action({...item, prefetchResult: this._prefetchData[item.prefetchResultId]});
+                const resultItem = {...item};
+                if (this._isListAction(item)) {
+                    resultItem.showType = showType.MENU;
+                }
+                const actionClass = new action({
+                    ...resultItem,
+                    prefetchResult: this._prefetchData[item.prefetchResultId]
+                });
                 actionClass.subscribe('itemChanged', this._notifyChanges.bind(this));
                 result.push(actionClass);
             }
