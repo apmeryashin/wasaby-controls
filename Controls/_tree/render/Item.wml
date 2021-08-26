@@ -64,7 +64,7 @@
    </ws:if>
 </ws:template>
 
-<ws:if data="{{(item || itemData).isSticked(style, stickyCallback, item)}}">
+<ws:if data="{{(item || itemData).isSticked(stickyCallback, item)}}">
 <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
 <Controls.scroll:StickyBlock
         attr:data-qa="{{(item || itemData).getQAData(marker)}}"
