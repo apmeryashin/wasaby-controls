@@ -197,16 +197,23 @@ class Controller extends BaseController {
         item.position = SlidingPanelStrategy.getPosition(item);
         item.popupOptions.workspaceWidth = item.position.width;
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
+        item.dragOffset = offset;
         this._fixIosBug(item, container);
     }
 
     popupDragEnd(item: ISlidingPanelItem): void {
-        if (item.position.height < SlidingPanelStrategy.getMinHeight(item)) {
+        // Если драгали по горизонтали возвращаем первоначальную высоту,
+        // чтобы не двигали шторку случайно при горизонтальном свайпе(например горизонтальный скролл)
+        const finishHeight = this._isVerticalDrag(item.dragOffset) ? item.position.height : item.dragStartHeight;
+        item.position.height = finishHeight;
+
+        if (finishHeight < SlidingPanelStrategy.getMinHeight(item)) {
             PopupController.remove(item.id);
         } else {
             item.position = SlidingPanelStrategy.getPositionAfterDrag(item);
         }
         item.dragStartHeight = null;
+        item.dragOffset = null;
     }
 
     orientationChanged(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
@@ -244,6 +251,17 @@ class Controller extends BaseController {
             position: slidingPanelOptions.position,
             desktopMode
         };
+    }
+
+    /**
+     * Возвращает признак того, что драг на шторке был вертикальный
+     * Только вертикальный драг считаем драгом для движения шторки,
+     * горизонтальный драг игнорируем и возвращаем шторку к изначальному значению высоты.
+     * @param offset
+     * @private
+     */
+    private _isVerticalDrag(offset: IDragOffset): boolean {
+        return Math.abs(offset.y) > Math.abs(offset.x);
     }
 
     private _addPopupToList(item: ISlidingPanelItem): void {
