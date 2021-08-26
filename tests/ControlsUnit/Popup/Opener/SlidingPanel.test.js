@@ -147,7 +147,7 @@ define(
                      height: 600
                   };
                   SlidingPanelStrategy._getWindowHeight = () => 900;
-                  const position = SlidingPanelStrategy.getPosition(item, 'inner');
+                  let position = SlidingPanelStrategy.getPosition(item, 'inner');
 
                   assert.equal(position.height, undefined);
 
@@ -155,7 +155,7 @@ define(
                      width: 300,
                      height: 490
                   };
-                  const position = SlidingPanelStrategy.getPosition(item, 'inner');
+                  position = SlidingPanelStrategy.getPosition(item, 'inner');
                   assert.equal(position.height, 500);
                });
             });
