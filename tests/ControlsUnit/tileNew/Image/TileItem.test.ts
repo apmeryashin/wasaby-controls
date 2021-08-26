@@ -83,7 +83,7 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
 
                result = item.getImageWrapperClasses('rich', undefined, 'center', 'rectangle', 1, 'left', 's', '1:1');
                CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_left_viewMode_rectangle');
-               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_vertical');
+               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_horizontal');
            });
        });
     });
