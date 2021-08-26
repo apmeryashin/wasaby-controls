@@ -63,6 +63,7 @@
 .ws-is-hover .controls-Paging__arrow__state-normal:hover {
    background-color: var(--arrow_hover_background-color_paging);
    color: var(--arrow_hover_icon-color_paging);
+   border-color: var(--arrow_hover_background-color_paging);
 }
 
 .controls-Paging__info {
@@ -166,4 +167,12 @@
 // остаются видны артефакты от прошлого состояния элемента.
 .ws-is-mobile-safari .controls-PagingV {
    transform: translateZ(0);
+}
+
+.controls-Paging__icon-resetDay {
+   font-family: var(--font-family);
+   font-size: var(--font-size_xs);
+   border-top: 1px solid var(--arrow_icon-color_paging);
+   display: flex;
+   justify-content: center;
 }
