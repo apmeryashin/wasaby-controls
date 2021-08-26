@@ -251,9 +251,14 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             contentHeight: startContentHeight
         } = this._dragStartHeightDimensions;
         const scrollContentOffset = contentHeight - startScrollHeight;
+        const popupHeight = this._options.slidingPanelOptions.height;
 
-        // Если нет доступного контента для разворота, то не пытаемся что-то развернуть
-        if (this._options.slidingPanelOptions.height === startContentHeight && realHeightOffset > 0) {
+        // Если при старте свайпа нет доступного контента для разворота, то не пытаемся что-то развернуть
+        if (
+            popupHeight === startContentHeight &&
+            popupHeight === startScrollHeight &&
+            realHeightOffset > 0
+        ) {
             offsetY = 0;
         } else if (
             // Если остаток доступного контента меньше сдвига, то сдвигаем на размер оставшегося контента
