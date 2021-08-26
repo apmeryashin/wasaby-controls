@@ -91,8 +91,8 @@ export default class Popup implements IPopupHelper {
             });
         }
 
-        const preloadTemplate = typeof template === 'string'
-            ? loadAsync(template).catch(() => undefined)
+        const preloadTemplate: Promise<void | TemplateFunction> = typeof template === 'string'
+            ? (loadAsync(template) as Promise<void | TemplateFunction>).catch(() => undefined)
             : Promise.resolve(template);
 
         return Promise.all([
@@ -105,7 +105,7 @@ export default class Popup implements IPopupHelper {
             }
 
             return popup.Dialog.openPopup({
-                template: popupTemplate as TemplateFunction,
+                template: popupTemplate,
                 modal: true,
                 ...dialogOptions,
                 templateOptions: {

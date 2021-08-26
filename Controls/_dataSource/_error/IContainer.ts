@@ -1,4 +1,4 @@
-import { ViewConfig } from 'Controls/error';
+import { ErrorViewConfig } from 'Controls/error';
 import { IControlOptions } from 'UI/Base';
 
 /**
@@ -12,7 +12,7 @@ export interface IContainerConfig extends IControlOptions {
      * @name Controls/_dataSource/_error/Container#viewConfig
      * @cfg {Controls/error:ErrorViewConfig} Данные для отображения сообщения об ошибке.
      */
-    viewConfig?: ViewConfig;
+    viewConfig?: ErrorViewConfig;
 
     /**
      * @name Controls/_dataSource/_error/Container#isModalDialog
@@ -35,7 +35,7 @@ export default interface IContainer {
      * @function
      * @public
      */
-    show(viewConfig: ViewConfig): void;
+    show(viewConfig: ErrorViewConfig): void;
 
     /**
      * Скрыть компонент, отображающий данные об ошибке

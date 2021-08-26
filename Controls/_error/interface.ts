@@ -14,32 +14,16 @@ export interface IDefaultTemplateOptions {
 }
 
 /**
- * Перечисление. Способы отображения шаблона с сообщением об ошибке.
- * @class Controls/_error/ErrorViewMode
- * @public
- * @author Кашин О.А.
- * @todo Переписать как typedef, как появится возможность автодоки прогружать из библиотек тайпдефы
+ * @typedef {Enum} ErrorViewMode
+ * @description Способы отображения шаблона с сообщением об ошибке.
+ * @variant dialog В диалоговом окне.
+ * @variant page Во всю страницу.
+ * @variant include В области контрола (вместо содержимого).
  */
 export enum ErrorViewMode {
-    /**
-     * @name Controls/_error/ErrorViewMode#dialog
-     * @cfg {string} В диалоговом окне.
-     */
     dialog = 'dialog',
-    /**
-     * @name Controls/_error/ErrorViewMode#page
-     * @cfg {string} Во всю страницу.
-     */
     page = 'page',
-    /**
-     * @name Controls/_error/ErrorViewMode#include
-     * @cfg {string} В области контрола (вместо содержимого).
-     */
     include = 'include',
-    /**
-     * @name Controls/_error/ErrorViewMode#inlist
-     * @cfg {string} В области списка (вместе с содержимым).
-     */
     inlist = 'inlist'
 }
 
@@ -73,8 +57,7 @@ interface IBaseViewConfig<TOptions> {
 
 interface IDialogViewConfig {
     /**
-     * @name Controls/_error/interface/ErrorViewConfig#mode
-     * @cfg Способ показа ошибки: в диалоге, в контентной области компонента или во всю страницу.
+     * @cfg {ErrorViewMode}
      */
     mode?: ErrorViewMode.dialog;
 
@@ -87,8 +70,7 @@ interface IDialogViewConfig {
 
 interface IContainerViewConfig {
     /**
-     * @name Controls/_error/interface/ErrorViewConfig#mode
-     * @cfg Способ показа ошибки: в диалоге, в контентной области компонента или во всю страницу.
+     * @cfg {ErrorViewMode}
      */
     mode: ErrorViewMode.include | ErrorViewMode.inlist | ErrorViewMode.page;
 
@@ -133,13 +115,10 @@ export enum ErrorType {
  * @public
  * @author Кашин О.А.
  */
-export type ErrorHandler< // tslint:disable-line:interface-over-type-literal
+export type ErrorHandler<
     TError extends Error = Error,
     TOptions = object
-> = {
-    handlerType?: ErrorType;
-    (config: IErrorHandlerConfig<TError>): ErrorViewConfig<TOptions> | void;
-};
+> = (config: IErrorHandlerConfig<TError>) => ErrorViewConfig<TOptions> | void;
 
 /**
  * Параметры для функции-обработчика ошибки.

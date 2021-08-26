@@ -67,13 +67,13 @@ export interface IProcessOptions {
  * @example
  * <pre class="brush: js">
  * // TypeScript
- * import { error as dataSourceError } from 'Controls/dataSource';
+ * import {process} from 'Controls/error';;
  *
  * // Функция вызывает БЛ через Types/source:SbisService, возвращает результат метода call().
  * declare callMethod(): Promise<object>;
  *
  * function callAndHandleResult() {
- *     return callMethod().catch((error) => dataSourceError.process({ error }));
+ *     return callMethod().catch((error) => process({ error }));
  * }
  * </pre>
  *
@@ -123,7 +123,7 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
 function logServerSideError(error: Error, viewConfig: ErrorViewConfig<{ message?: string; details?: string; }>): void {
     const tabSpace = 4;
     let errorMessage =
-        'Controls/dataSource:error.process is being called during server-side rendering!\n' +
+        'Controls/error:process is being called during server-side rendering!\n' +
         'Use Controls/dataSource:error.Container to render an error.\n' +
         'Error config:\n' +
         JSON.stringify({

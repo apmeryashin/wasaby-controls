@@ -1,7 +1,7 @@
 import { Control, TemplateFunction } from 'UI/Base';
-import _template = require('wml!Controls/_dataSource/_error/Container');
+import * as template from 'wml!Controls/_dataSource/_error/Container';
 import { constants } from 'Env/Env';
-import { Mode, Popup, ViewConfig } from 'Controls/error';
+import { ErrorViewMode, Popup, ErrorViewConfig } from 'Controls/error';
 import { isEqual } from 'Types/object';
 import { default as IContainer, IContainerConfig } from './IContainer';
 /**
@@ -13,30 +13,6 @@ import 'css!Controls/popupConfirmation';
 interface IInlistTemplateOptions {
     listOptions: object;
 }
-
-/**
- * @interface Controls/dataSource/error/Container/Config
- * @extends Controls/_dataSource/_error/ViewConfig
- */
-type Config<OptionsType = object> = ViewConfig<OptionsType> & ({
-    /**
-     * @cfg {String} [templateName?]
-     * @name Controls/dataSource/error/Container/Config#templateName
-     */
-    templateName: string;
-} | {
-    /**
-     * @cfg {any} [template?]
-     * @name Controls/dataSource/error/Container/Config#template
-     */
-    template: TemplateFunction;
-}) & {
-    /**
-     * @cfg {Boolean} [isShowed?]
-     * @name Controls/dataSource/error/Container/Config#isShown
-     */
-    isShown?: boolean;
-};
 
 /**
  * Компонент для отображения сообщения об ошибки на основе данных, полученных от контроллера {@link Controls/_dataSource/_error/Controller}.
@@ -52,9 +28,9 @@ type Config<OptionsType = object> = ViewConfig<OptionsType> & ({
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
     private _isUnmounted: boolean = false;
-    private __viewConfig: Config; // tslint:disable-line:variable-name
+    private __viewConfig: ErrorViewConfig; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
-    protected _template: TemplateFunction = _template;
+    protected _template: TemplateFunction = template;
 
     /**
      * Идентификатор текущего открытого диалога. Одновременно отображается только один диалог.
@@ -73,7 +49,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
 
         const mode = this.__viewConfig.mode;
         this.__setConfig(null);
-        if (mode === Mode.dialog) {
+        if (mode === ErrorViewMode.dialog) {
             return;
         }
         this._forceUpdate();
@@ -85,13 +61,12 @@ export default class Container extends Control<IContainerConfig> implements ICon
      * @function
      * @public
      */
-    show(viewConfig: ViewConfig): void {
+    show(viewConfig: ErrorViewConfig): void {
         if (this._isUnmounted) {
             return;
         }
 
-        if (this.canOpenDialog(viewConfig)) {
-            this._openDialog(viewConfig);
+        if (!this._openDialog(viewConfig)) {
             return;
         }
 
@@ -104,31 +79,25 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        const isDialogMode = options.viewConfig?.mode === Mode.dialog;
-
         if (
-            !isDialogMode && isEqual(this._options.viewConfig, options.viewConfig) ||
-            isDialogMode && this._popupId
+            options.viewConfig &&
+            options.viewConfig.mode !== ErrorViewMode.dialog &&
+            isEqual(this._options.viewConfig, options.viewConfig)
         ) {
             return;
         }
 
         this.__updateConfig(options);
-
-        if (this.canOpenDialog(this.__viewConfig)) {
-            this._openDialog(this.__viewConfig);
-        }
+        this._openDialog(this.__viewConfig);
 
         // обновляем опции списка, чтобы он корректно обновлялся
-        if (this.__viewConfig?.mode === Mode.inlist) {
+        if (this.__viewConfig?.mode === ErrorViewMode.inlist) {
             this._updateInlistOptions(options);
         }
     }
 
     protected _afterMount(): void {
-        if (this.canOpenDialog(this.__viewConfig)) {
-            this._openDialog(this.__viewConfig);
-        }
+        this._openDialog(this.__viewConfig);
     }
 
     protected _beforeUnmount(): void {
@@ -156,16 +125,16 @@ export default class Container extends Control<IContainerConfig> implements ICon
         this._popupId = null;
     }
 
-    private canOpenDialog(viewConfig: ViewConfig): boolean {
-        return !this._popupId && viewConfig?.mode === Mode.dialog && constants.isBrowserPlatform;
-    }
-
     /**
      * Открыть диалог.
      * Если есть незакрытый диалог, открытый этим контролом, то сначала он будет закрыт.
      * @param viewConfig Конфигурация с шаблоном диалога и опциями для этого шаблона.
      */
-    private _openDialog(viewConfig: ViewConfig): Promise<void> {
+    private _openDialog(viewConfig: ErrorViewConfig): Promise<void> {
+        if (viewConfig?.mode !== ErrorViewMode.dialog || !constants.isBrowserPlatform) {
+            return;
+        }
+
         return this._popupHelper.openDialog(viewConfig, {
             id: this._popupId,
             opener: this,
@@ -184,11 +153,11 @@ export default class Container extends Control<IContainerConfig> implements ICon
         this.__setConfig(options.viewConfig);
 
         if (this.__viewConfig) {
-            this.__viewConfig.isShown = this.__viewConfig.isShown || this.__viewConfig.mode !== Mode.dialog;
+            this.__viewConfig.isShown = this.__viewConfig.isShown || this.__viewConfig.mode !== ErrorViewMode.dialog;
         }
     }
 
-    private __setConfig(viewConfig?: ViewConfig): void {
+    private __setConfig(viewConfig?: ErrorViewConfig): void {
         if (!viewConfig) {
             this.__viewConfig = null;
             return;
