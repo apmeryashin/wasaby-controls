@@ -560,6 +560,33 @@ define(
                   assert.equal(item.position.height, heightList[1]);
                   sandbox.restore();
                });
+
+               it('horizontal drag should not change popup height', () => {
+                  const sandbox = sinon.sandbox.create();
+                  const item = getPopupItem();
+                  const SlidingPanelStrategy = new StrategyConstructor();
+                  let height = 0;
+
+                  sandbox.stub(StrategySingleton, '_getWindowHeight').callsFake(() => 900);
+                  sandbox.stub(StrategySingleton, 'getPosition').callsFake((item) => {
+                     height = item.position.height;
+                     return item.position;
+                  });
+                  SlidingPanelStrategy._getWindowHeight = () => 900;
+
+                  item.popupOptions.slidingPanelOptions.position = 'bottom';
+                  item.position = SlidingPanelStrategy.getPosition(item);
+                  item.position.height = item.position.height + 100;
+                  const startHeight = item.position.height;
+
+                  Controller.popupDragStart(item, {}, {
+                     x: 20,
+                     y: -10
+                  });
+                  Controller.popupDragEnd(item);
+                  assert.equal(height, startHeight);
+                  sandbox.restore();
+               });
             });
             describe('compatibility min/max height and heightList', () => {
                it('minHeight', () => {

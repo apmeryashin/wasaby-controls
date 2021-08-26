@@ -1,4 +1,4 @@
-import {IPopupItem, IPopupPosition, ISlidingPanelPopupOptions} from 'Controls/popup';
+import {IDragOffset, IPopupItem, IPopupPosition, ISlidingPanelPopupOptions} from 'Controls/popup';
 import {constants} from 'Env/Env';
 
 export enum AnimationState {
@@ -11,6 +11,7 @@ export interface ISlidingPanelItem extends IPopupItem {
     popupOptions: ISlidingPanelPopupOptions;
     animationState: AnimationState;
     dragStartHeight: number;
+    dragOffset: IDragOffset;
 }
 
 const INVERTED_POSITION_MAP = {
