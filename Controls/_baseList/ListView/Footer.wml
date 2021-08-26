@@ -14,7 +14,7 @@
 <ws:else>
    <div>
       <div class="controls-ListView__footer__content">
-         <ws:partial template="{{item.getContentTemplate()}}"/>
+         <ws:partial template="{{item.getContentTemplate()}}" attr:class="controls-ListView__footer__user-content"/>
       </div>
    </div>
 </ws:else>
