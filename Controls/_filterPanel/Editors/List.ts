@@ -15,7 +15,7 @@ import {
     IItemActionsOptions,
     ISelectorDialogOptions
 } from 'Controls/interface';
-import {IList} from 'Controls/list';
+import {IList, MultiSelectCircleTemplate} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
 import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
@@ -71,7 +71,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
 
 class ListEditor extends BaseEditor {
     protected _template: TemplateFunction = ListTemplate;
-    protected _circleTemplate: TemplateFunction = CircleTemplate;
+    protected _circleTemplate: TemplateFunction = MultiSelectCircleTemplate;
     protected _columns: object[] = null;
     protected _popupOpener: StackOpener|DialogOpener = null;
     protected _items: RecordSet = null;

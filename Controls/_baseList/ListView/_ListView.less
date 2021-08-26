@@ -158,6 +158,37 @@
    visibility: visible;
 }
 
+/* region circle multiselect */
+
+.controls-ListView__multiSelect__circle {
+   align-self: center;
+   display: inline-block;
+   flex-shrink: 0;
+   width: var(--icon-size_2xs);
+   left: calc((var(--offset_2xl) - var(--icon-size_2xs)) / 2);
+   top: 0;
+}
+
+.controls-ListView__multiSelect__innerCircle_selected-default {
+   fill: var(--marker_color);
+}
+
+.controls-ListView__multiSelect__innerCircle_unselected {
+   fill: none;
+}
+
+.controls-ListView__multiSelect__borderCircle {
+   fill: transparent;
+}
+
+.ws-is-hover .controls-ListView__itemV:hover {
+   .controls-ListView__multiSelect__borderCircle {
+      stroke: var(--border-color);
+   }
+}
+
+/* endregion circle multiselect */
+
 .controls-ListView__footer {
    display: flex;
    align-items: baseline;

@@ -15,9 +15,7 @@
                        attr:class="controls_toggle_theme-{{_options.theme}}"
                        on:itemClick="_handleItemClick()">
       <ws:multiSelectTemplate>
-         <ws:partial template="Controls/baseList:MultiSelectTemplate">
-            <ws:partial template="{{_circleTemplate}}" style="{{_options.style}}" on:click="_handleCheckBoxClick()"/>
-         </ws:partial>
+         <ws:partial template="{{_circleTemplate}}" style="{{_options.style}}" on:click="_handleCheckBoxClick()"/>
       </ws:multiSelectTemplate>
    </Controls.grid:View>
 </ws:template>
