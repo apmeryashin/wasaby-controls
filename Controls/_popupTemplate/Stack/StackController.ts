@@ -180,13 +180,13 @@ class StackController extends BaseController {
     }
 
     private _getMaximizedState(item: IStackItem): boolean {
-        if (!item.popupOptions.stackMinimizedWidth && item.popupOptions.stackMinWidth && item.popupOptions.stackMaxWidth) {
+        if (!item.popupOptions.minimizedWidth && item.popupOptions.minWidth && item.popupOptions.maxWidth) {
             const maxPanelWidth = StackStrategy.getMaxPanelWidth();
             // Если максимально возможная ширина окна меньше, чем выставлена через опцию, то нужно ориентироваться
             // на неё. Иначе кнопка разворота будет всегда пытаться развернуть окно,
             // которое уже итак максимально широкое.
-            const stackMaxWidth = Math.min(item.popupOptions.stackMaxWidth, maxPanelWidth);
-            const middle = (item.popupOptions.stackMinWidth + stackMaxWidth) / 2;
+            const maxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
+            const middle = (item.popupOptions.minWidth + maxWidth) / 2;
             return item.popupOptions.stackWidth - middle > 0;
         }
         return item.popupOptions.templateOptions.maximized;
