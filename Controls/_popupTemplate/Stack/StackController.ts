@@ -125,7 +125,8 @@ class StackController extends BaseController {
         }
     }
 
-    elementMaximized(item: IStackItem, container: HTMLElement, state: boolean): boolean {
+    elementMaximized(item: IStackItem, container: HTMLElement, maximized: boolean): boolean {
+        const state = maximized !== undefined ? maximized : !this._getMaximizedState(item);
         this._setMaximizedState(item, state);
         const minWidth = item.minSavedWidth || item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         const maxWidth = item.maxSavedWidth || item.popupOptions.maxWidth;
@@ -176,6 +177,19 @@ class StackController extends BaseController {
         this._update();
         this._savePopupWidth(item);
         return true;
+    }
+
+    private _getMaximizedState(item: IStackItem): boolean {
+        if (!item.popupOptions.minimizedWidth && item.popupOptions.minWidth && item.popupOptions.maxWidth) {
+            const maxPanelWidth = StackStrategy.getMaxPanelWidth();
+            // Если максимально возможная ширина окна меньше, чем выставлена через опцию, то нужно ориентироваться
+            // на неё. Иначе кнопка разворота будет всегда пытаться развернуть окно,
+            // которое уже итак максимально широкое.
+            const maxWidth = Math.min(item.popupOptions.maxWidth, maxPanelWidth);
+            const middle = (item.popupOptions.minWidth + maxWidth) / 2;
+            return item.popupOptions.stackWidth - middle > 0;
+        }
+        return item.popupOptions.templateOptions.maximized;
     }
 
     private _updateItemPosition(item: IStackItem): boolean {

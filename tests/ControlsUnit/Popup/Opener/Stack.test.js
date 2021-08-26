@@ -50,6 +50,39 @@ define(
             }
          };
 
+         it('Should return correct maximized state', () => {
+            let item = {
+               popupOptions: {
+                  minimizedWidth: 1,
+                  templateOptions: {
+                     maximized: false
+                  }
+               }
+            };
+            let result = popupTemplate.StackController._getMaximizedState(item);
+            assert.isFalse(result);
+            item = {
+               popupOptions: {
+                  minWidth: 800,
+                  maxWidth: 900,
+                  stackWidth: 900
+               }
+            };
+            StackStrategy.getMaxPanelWidth();
+            result = popupTemplate.StackController._getMaximizedState(item);
+            assert.isTrue(result);
+            item = {
+               popupOptions: {
+                  minWidth: 800,
+                  maxWidth: 1300,
+                  stackWidth: 950
+               }
+            };
+            StackStrategy.getMaxPanelWidth();
+            result = popupTemplate.StackController._getMaximizedState(item);
+            assert.isTrue(result);
+         });
+
          it('Opener: getConfig', () => {
             const baseConfig = {options: false};
             let config = popupMod.Stack.prototype._getStackConfig(baseConfig);
