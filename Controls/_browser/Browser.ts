@@ -211,6 +211,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
         this._searchStartCallback = this._searchStartCallback.bind(this);
+        this._operationsController = options.operationsController;
 
         if (options.root !== undefined) {
             this._root = options.root;

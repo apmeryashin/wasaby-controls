@@ -117,7 +117,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         this.commandOptions = options.commandOptions || this.commandOptions;
         this.viewCommandName = options.viewCommandName || this.viewCommandName;
         this.viewCommandOptions = options.viewCommandOptions || this.viewCommandOptions;
-        this.showType = options.showType || this.showType;
+        this.showType = options.hasOwnProperty('showType') ? options.showType : this.showType;
         this.parent = options.parent || this.parent;
         this.id = options.id || this.id;
         this['parent@'] = options['parent@'] || this['parent@'];
