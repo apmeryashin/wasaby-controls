@@ -392,7 +392,7 @@ define([
                      mode: 'stackable',
                      inst: {
                         height: 10,
-                        updateFixed: sinon.fake(),
+                        updateShadowVisible: sinon.fake(),
                         updateShadowVisibility: sinon.fake()
                      }
                   },
@@ -400,7 +400,7 @@ define([
                      mode: 'stackable',
                      inst: {
                         height: 10,
-                        updateFixed: sinon.fake(),
+                        updateShadowVisible: sinon.fake(),
                         updateShadowVisibility: sinon.fake()
                      }
                   },
@@ -408,7 +408,7 @@ define([
                      mode: 'stackable',
                      inst: {
                         height: 10,
-                        updateFixed: sinon.fake(),
+                        updateShadowVisible: sinon.fake(),
                         updateShadowVisibility: sinon.fake()
                      }
                   }
@@ -446,13 +446,13 @@ define([
                   mode: 'replaceable',
                   inst: {
                      fakeFixedNotifier: updateFixedStub,
-                     updateFixed: sinon.fake(),
+                     updateShadowVisible: sinon.fake(),
                      updateShadowVisibility: sinon.fake()
                   }
                }, {
                   mode: 'replaceable',
                   inst: {
-                     updateFixed: sinon.fake(),
+                     updateShadowVisible: sinon.fake(),
                      updateShadowVisibility: sinon.fake()
                   }
                }];
@@ -586,7 +586,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.notCalled(component._headers['sticky1'].inst.updateFixed);
+               sinon.assert.notCalled(component._headers['sticky1'].inst.updateShadowVisible);
                component.fixedHandler(event, {
                   id: 'sticky2',
                   fixedPosition: 'top',
@@ -595,7 +595,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.called(component._headers['sticky1'].inst.updateFixed);
+               sinon.assert.called(component._headers['sticky1'].inst.updateShadowVisible);
                component.fixedHandler(event, {
                   id: 'sticky3',
                   fixedPosition: 'top',
@@ -604,7 +604,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.called(component._headers['sticky1'].inst.updateFixed);
+               sinon.assert.called(component._headers['sticky1'].inst.updateShadowVisible);
             });
             it('Should not notify new state if one header registered', function() {
                component.fixedHandler(event, {
@@ -614,7 +614,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.notCalled(component._headers['sticky1'].inst.updateFixed);
+               sinon.assert.notCalled(component._headers['sticky1'].inst.updateShadowVisible);
             });
          });
       });

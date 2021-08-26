@@ -71,7 +71,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         top: 0,
         bottom: 0
     };
-    protected _isFixed: boolean = false;
+    protected _isShadowVisible: boolean = false;
     protected _isShadowVisibleByController: { top: SHADOW_VISIBILITY_BY_CONTROLLER; bottom: SHADOW_VISIBILITY_BY_CONTROLLER; } = {
         top: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
         bottom: SHADOW_VISIBILITY_BY_CONTROLLER.auto
@@ -186,10 +186,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 // Если это не первый заголовок в группе, то группа уже знает надо ли отображить тень,
                 // сообщим это заголовку.
                 if (headersIds.length > 1) {
-                    if (this._isFixed) {
-                        this._headers[fixedHeaderData.id].inst.updateFixed([fixedHeaderData.id]);
+                    if (this._isShadowVisible) {
+                        this._headers[fixedHeaderData.id].inst.updateShadowVisible([fixedHeaderData.id]);
                     } else {
-                        this._headers[fixedHeaderData.id].inst.updateFixed([]);
+                        this._headers[fixedHeaderData.id].inst.updateShadowVisible([]);
                     }
                 }
             } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
@@ -203,7 +203,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 // Свести к одному полю, либо дать адекватные названия.
                 // https://online.sbis.ru/opendoc.html?guid=08a36766-8ac6-4884-bd3b-c28514c9574c
                 this._fixed = true;
-                this._isFixed = true;
+                this._isShadowVisible = true;
             }
             this._notifyFixed(fixedHeaderData);
         } else if (!fixedHeaderData.fixedPosition && this._fixed &&
@@ -215,21 +215,21 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
-    protected updateFixed(ids: number[]): void {
-        var isFixed = ids.indexOf(this._index) !== -1;
-        if (this._isFixed !== isFixed) {
-            this._isFixed = isFixed;
-            if (isFixed) {
-               this._updateFixed(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
+    protected updateShadowVisible(ids: number[]): void {
+        const isShadowVisible = ids.indexOf(this._index) !== -1;
+        if (this._isShadowVisible !== isShadowVisible) {
+            this._isShadowVisible = isShadowVisible;
+            if (isShadowVisible) {
+               this._updateShadowVisible(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
             } else {
-               this._updateFixed([]);
+               this._updateShadowVisible([]);
             }
         }
     }
 
-    _updateFixed(ids: number[]): void {
+    _updateShadowVisible(ids: number[]): void {
         for (const id in this._headers) {
-            this._headers[id].inst.updateFixed(ids);
+            this._headers[id].inst.updateShadowVisible(ids);
         }
     }
 
@@ -268,8 +268,8 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 data.inst.updateShadowVisibility(this._isShadowVisibleByController[position], position);
             }
 
-            if (this._isFixed) {
-                data.inst.updateFixed([data.id]);
+            if (this._isShadowVisible) {
+                data.inst.updateShadowVisible([data.id]);
             }
 
             data.inst.setSyncDomOptimization(this._syncDomOptimization);

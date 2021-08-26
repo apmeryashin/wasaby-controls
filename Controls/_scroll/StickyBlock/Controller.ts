@@ -333,7 +333,7 @@ class StickyHeaderController {
 
         if (!isSingleHeader) {
             for (const id in this._headers) {
-                this._headers[id].inst.updateFixed([
+                this._headers[id].inst.updateShadowVisible([
                     this._getLastFixedHeaderWithShadowId(POSITION.top),
                     this._getLastFixedHeaderWithShadowId(POSITION.bottom)
                 ], false);
