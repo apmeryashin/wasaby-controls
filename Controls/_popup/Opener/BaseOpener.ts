@@ -356,8 +356,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 try {
                     requirejs.onError(error);
                 } finally {
-                    import('Controls/dataSource').then((dataSource) => {
-                        dataSource.error.process({error}).then(() => {
+                    import('Controls/error').then(({ process }) => {
+                        process({error}).then(() => {
                             Logger.error('Controls/popup' + ': ' + error.message, undefined, error);
                             reject(error);
                         });

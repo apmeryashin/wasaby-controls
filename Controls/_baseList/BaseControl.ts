@@ -26,7 +26,6 @@ import {Logger} from 'UI/Utils';
 
 import { TouchDetect } from 'Env/Touch';
 import {
-    error as dataSourceError,
     NewSourceController as SourceController,
     isEqualItems,
     ISourceControllerOptions
@@ -40,6 +39,7 @@ import {
     TNavigationButtonView
 } from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
+import { process } from 'Controls/error';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_baseList/resources/utils/getItemsBySelection';
@@ -4008,7 +4008,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         return reloadItemDeferred.addErrback((error) => {
-            return dataSourceError.process({error});
+            return process({error});
         });
     }
 
@@ -4910,7 +4910,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         throw Error('BaseControl::create before add error! Source returned non Model.');
                     })
                     .catch((error: Error) => {
-                        return dataSourceError.process({error});
+                        return process({error});
                     });
             }
             //endregion
@@ -5030,7 +5030,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 ? this._saveEditingInSource(params.item, params.isAdd, params.sourceIndex)
                 : Promise.resolve(eventResult);
         }).catch((error: Error) => {
-            return dataSourceError.process({error}).then(() => {
+            return process({error}).then(() => {
                 return LIST_EDITING_CONSTANTS.CANCEL;
             });
         });
@@ -5691,11 +5691,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     removeItems(selection: ISelectionObject): Promise<string | void> {
         return _private
             .removeItems(this, selection, 'Controls/listActions:RemoveProvider')
-            .catch((error) => dataSourceError.process({error}));
+            .catch((error) => process({error}));
     }
 
     removeItemsWithConfirmation(selection: ISelectionObject): Promise<string | void> {
-        return _private.removeItems(this, selection).catch((error) => dataSourceError.process({error}));
+        return _private.removeItems(this, selection).catch((error) => process({error}));
     }
 
     // endregion remove

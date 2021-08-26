@@ -23,7 +23,7 @@ import {PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import ISuggest, {IEmptyTemplateProp, ISuggestFooterTemplate, ISuggestTemplateProp} from 'Controls/interface/ISuggest';
 import {IValueOptions} from 'Controls/input';
 import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
-import { error as dataSourceError } from 'Controls/dataSource';
+import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 
 import Env = require('Env/Env');
 import mStubs = require('Core/moduleStubs');
@@ -128,9 +128,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _markerVisibility: TVisibility = 'onactivated';
    private _suggestOpened: boolean = null;
 
-   private _errorController: dataSourceError.Controller = null;
-   private _errorConfig: dataSourceError.ViewConfig | void = null;
-   private _pendingErrorConfig: dataSourceError.ViewConfig | void = null;
+   private _errorController: ErrorController = null;
+   private _errorConfig: ErrorViewConfig | void = null;
+   private _pendingErrorConfig: ErrorViewConfig | void = null;
 
    private _searchResolverController: SearchResolverController = null;
    private _sourceController: SourceController = null;
@@ -330,8 +330,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this.getErrorController().process({
             error,
             theme: this._options.theme,
-            mode: dataSourceError.Mode.include
-         }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
+            mode: ErrorViewMode.include
+         }).then((errorConfig: ErrorViewConfig|void): ErrorViewConfig|void => {
             if (errorConfig) {
                this._pendingErrorConfig = errorConfig;
                this._open();
@@ -1054,9 +1054,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   getErrorController(): dataSourceError.Controller {
+   getErrorController(): ErrorController {
       if (!this._errorController) {
-         this._errorController = new dataSourceError.Controller({});
+         this._errorController = new ErrorController({});
       }
       return this._errorController;
    }

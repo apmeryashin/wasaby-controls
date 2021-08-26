@@ -4,11 +4,10 @@ import {RegisterClass, RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {RecordSet} from 'Types/collection';
 import {QueryWhereExpression, PrefetchProxy, ICrud, ICrudPlus, IData, Memory, CrudEntityKey} from 'Types/source';
 import {
-   error as dataSourceError,
+   ISourceControllerState,
    ISourceControllerOptions,
    NewSourceController as SourceController, Path
 } from 'Controls/dataSource';
-import {ISourceControllerState} from 'Controls/dataSource';
 import { IContextOptionsValue } from 'Controls/context';
 import {
    ISourceOptions,
@@ -20,6 +19,7 @@ import {
    Direction,
    IErrorControllerOptions
 } from 'Controls/interface';
+import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 import {SyntheticEvent} from 'UI/Vdom';
 import {isEqual} from 'Types/object';
 
@@ -55,7 +55,7 @@ export interface IDataContextOptions extends ISourceOptions,
 interface IReceivedState {
    items?: RecordSet | Error;
    expandedItems?: CrudEntityKey[];
-   errorConfig?: dataSourceError.ViewConfig;
+   errorConfig?: ErrorViewConfig;
 }
 
 /**
@@ -136,8 +136,8 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    protected _breadCrumbsItemsWithoutBackButton: Path;
    protected _expandedItems: CrudEntityKey[];
    protected _shouldSetExpandedItemsOnUpdate: boolean;
-   protected _errorController: dataSourceError.Controller;
-   protected _errorConfig: dataSourceError.ViewConfig;
+   protected _errorController: ErrorController;
+   protected _errorConfig: ErrorViewConfig;
 
    private _filter: QueryWhereExpression<unknown>;
 
@@ -149,7 +149,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
-      this._errorController = options.errorController || new dataSourceError.Controller({});
+      this._errorController = options.errorController || new ErrorController({});
       this._loadToDirectionRegister = new RegisterClass({register: 'loadToDirection'});
 
       if (options.expandedItems) {
@@ -546,15 +546,15 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       }
    }
 
-   private _onDataError(event: SyntheticEvent, errorConfig: dataSourceError.ViewConfig): void {
+   private _onDataError(event: SyntheticEvent, errorConfig: ErrorViewConfig): void {
       event?.stopPropagation();
       this._processAndShowError({
          error: errorConfig.error,
-         mode: errorConfig.mode || dataSourceError.Mode.dialog
+         mode: errorConfig.mode || ErrorViewMode.dialog
       });
    }
 
-   private _showError(errorConfig: dataSourceError.ViewConfig): void {
+   private _showError(errorConfig: ErrorViewConfig): void {
       this._errorConfig = errorConfig;
    }
 
@@ -562,15 +562,15 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._errorConfig = null;
    }
 
-   private _processError(config): Promise<dataSourceError.ViewConfig | void> {
+   private _processError(config): Promise<ErrorViewConfig | void> {
       return this._errorController.process({
          error: config.error,
          theme: this._options.theme,
-         mode: config.mode || dataSourceError.Mode.include
+         mode: config.mode || ErrorViewMode.include
       });
    }
 
-   private _processAndShowError(config: dataSourceError.ViewConfig): Promise<unknown> {
+   private _processAndShowError(config: ErrorViewConfig): Promise<unknown> {
       return this._processError(config).then((errorConfig) => {
          if (errorConfig) {
             this._showError(errorConfig);
@@ -579,7 +579,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       });
    }
 
-   private _getErrorConfig(currentRoot: TKey, root: TKey, direction: Direction): Partial<dataSourceError.ViewConfig> {
+   private _getErrorConfig(currentRoot: TKey, root: TKey, direction: Direction): Partial<ErrorViewConfig> {
       const errorConfig = {
          mode: Data._getErrorViewMode(currentRoot, root, direction),
          templateOptions: {
@@ -596,15 +596,15 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       return errorConfig;
    }
 
-   private static _getErrorViewMode(currentRoot?: TKey, root?: TKey, direction?: Direction): dataSourceError.Mode {
+   private static _getErrorViewMode(currentRoot?: TKey, root?: TKey, direction?: Direction): ErrorViewMode {
       let errorViewMode;
 
       if (direction && root === currentRoot) {
-         errorViewMode = dataSourceError.Mode.inlist;
+         errorViewMode = ErrorViewMode.inlist;
       } else if (root !== currentRoot) {
-         errorViewMode = dataSourceError.Mode.dialog;
+         errorViewMode = ErrorViewMode.dialog;
       } else {
-         errorViewMode = dataSourceError.Mode.include;
+         errorViewMode = ErrorViewMode.include;
       }
 
       return errorViewMode;

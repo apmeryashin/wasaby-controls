@@ -10,7 +10,6 @@ import {RecordSet} from 'Types/collection';
 import { IContextOptionsValue } from 'Controls/context';
 import {RegisterClass} from 'Controls/event';
 import {
-    error as dataSourceError,
     ISourceControllerOptions,
     NewSourceController as SourceController
 } from 'Controls/dataSource';
@@ -25,6 +24,7 @@ import {
     TKey,
     ISelectFieldsOptions
 } from 'Controls/interface';
+import {ErrorViewMode, ErrorViewConfig} from 'Controls/error';
 import Store from 'Controls/Store';
 import {SHADOW_VISIBILITY} from 'Controls/scroll';
 import {detection} from 'Env/Env';
@@ -77,7 +77,7 @@ interface IReceivedState {
 
 type TReceivedState = IReceivedState[] | Error | void;
 
-type TErrbackConfig = dataSourceError.ViewConfig & { error: Error };
+type TErrbackConfig = ErrorViewConfig & { error: Error };
 
 /**
  * Контрол "Браузер" обеспечивает связь между списком (см. {@link Controls/list:View Плоский список}, {@link Controls/grid:View Таблица}, {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) и контролами его окружения, таких как {@link Controls/search:Input Строка поиска}, {@link Controls/breadcrumbs:Path Хлебные крошки}, {@link Controls/operations:Panel Панель действий} и {@link Controls/filter:View Объединенный фильтр}.
@@ -700,7 +700,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (error && !error.isCanceled) {
             this._onDataError(null, {
                 error,
-                mode: dataSourceError.Mode.include
+                mode: ErrorViewMode.include
             } as TErrbackConfig);
         }
     }
@@ -932,7 +932,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._filterChanged(null, this._dataLoader.getSearchControllerSync().getFilter());
             this._getErrorRegister().start({
                 error,
-                mode: dataSourceError.Mode.include
+                mode: ErrorViewMode.include
             });
             return error;
         }

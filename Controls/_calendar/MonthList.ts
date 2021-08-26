@@ -21,7 +21,7 @@ import {getDimensions} from 'Controls/sizeUtils';
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
-import {error as dataSourceError, parking} from 'Controls/dataSource';
+import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 import {Logger} from 'UI/Utils';
 
 interface IModuleComponentOptions extends
@@ -100,9 +100,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _enrichItemsDebounced: Function;
 
     protected _virtualPageSize: number;
-    protected _errorViewConfig: parking.ViewConfig;
+    protected _errorViewConfig: ErrorViewConfig;
     protected _threshold: number[];
-    private _errorController: dataSourceError.Controller = new dataSourceError.Controller({});
+    private _errorController: ErrorController = new ErrorController({});
 
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
                            Promise<TItems> | void {
@@ -566,7 +566,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _errorHandler(error: Error): Promise<unknown> {
         return this._errorController.process({
             error,
-            mode: dataSourceError.Mode.dialog
+            mode: ErrorViewMode.dialog
         }).then((errorViewConfig) => {
             this._errorViewConfig = errorViewConfig;
             return error;

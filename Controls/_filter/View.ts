@@ -17,7 +17,8 @@ import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
 import {load} from 'Core/library';
 
-import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {process} from 'Controls/error';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {
     StickyOpener,
@@ -344,7 +345,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             }, (error) => {
                 // Если во время загрузки данных произошла ошибка, то попытаемся догрузить при следующем открытии
                 this._configs = {};
-                dataSourceError.process({ error });
+                process({ error });
             });
         } else if (!this._options.panelTemplateName) {
             this._showSelector(name);
