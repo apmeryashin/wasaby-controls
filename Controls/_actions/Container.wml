@@ -11,6 +11,7 @@
                     itemTemplateProperty="template"
                     nodeProperty="parent@"
                     on:beforeMenuOpen="_beforeMenuOpen()"
+                    closeMenuOnOutsideClick="{{false}}"
                     on:itemClick="_toolbarItemClick()"
         />
     </ws:content>
