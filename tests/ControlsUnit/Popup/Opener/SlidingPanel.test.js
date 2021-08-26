@@ -600,7 +600,7 @@ define(
 
                   // closer to first step
                   Controller.popupDragStart(item, {}, {
-                     x: 0, y: -50
+                     x: 0, y: 50
                   });
                   Controller.popupDragEnd(item);
                   assert.equal(item.position.height, heightList[0]);
