@@ -88,11 +88,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
          * @event maximized
          * Occurs when you click the expand / collapse button of the panels.
          */
-        let calcMaximized = maximized;
-        if (calcMaximized === undefined) {
-            calcMaximized = !StackTemplate._calculateMaximized(this._options);
-        }
-        this._notify('maximized', [calcMaximized], {bubbling: true});
+        this._notify('maximized', [maximized], {bubbling: true});
     }
 
     protected changeMaximizedState(): void {
@@ -101,15 +97,6 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
 
     private _prepareTheme(): void {
         this._headerTheme = ManagerController.getPopupHeaderTheme();
-    }
-
-    private static _calculateMaximized(options: IStackTemplateOptions): boolean {
-        // TODO: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
-        if (!options.stackMinimizedWidth && options.stackMinWidth && options.stackMaxWidth) {
-            const middle = (options.stackMinWidth + options.stackMaxWidth) / 2;
-            return options.stackWidth - middle > 0;
-        }
-        return options.maximized;
     }
 
     static getDefaultOptions(): IStackTemplateOptions {
