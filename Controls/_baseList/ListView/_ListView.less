@@ -691,30 +691,16 @@
    padding-right: var(--master_item_horizontal-offset_list);
 }
 
-// TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
 .controls-master-template-default {
-   .controls-ListView__item_withMarkerSize {
-      .controls-ListView__item-leftPadding_default {
-         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
-      }
-
-      .controls-ListView__item-leftPadding_s {
-         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_s_list));
-      }
-
-      .controls-ListView__item-leftPadding_m {
-         padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_m_list));
-      }
+   .controls-ListView__item-leftPadding_default {
+      padding-left: var(--item_padding-left_l_list);
    }
 }
 
 //Классы совместимости для перехода со старого дизайна masterDetail на новый
-.controls-master-template-newDesign .controls-ListView__item-leftPadding_default {
-   // TODO будет удалено по задаче https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
-   padding-left: var(--item_padding-left_s_list);
-
-   .controls-ListView__item_withMarkerSize .controls-ListView__item-leftPadding_default {
-      padding-left: calc(var(--master-marker_thickness_list) + var(--item_padding-left_default_list));
+.controls-master-template-newDesign {
+   .controls-ListView__item-leftPadding_default {
+      padding-left: var(--item_padding-left_l_list);
    }
 }
 
@@ -777,7 +763,7 @@
 }
 
 .controls-ListView__itemV_marker_master.controls-ListView__itemV_marker-left {
-   left: var(--offset_xs);
+   left: calc(var(--item_padding-left_l_list) - var(--master-marker_thickness_list) - var(--offset_xs));
 }
 
 .controls-ListView__itemV_marker_master.controls-ListView__itemV_marker-right {
