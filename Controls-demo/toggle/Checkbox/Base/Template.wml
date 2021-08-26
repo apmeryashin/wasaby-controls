@@ -1,14 +1,33 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell demo-checkboxBase__default">
-        <div class="controls-text-label">default checkbox</div>
-        <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value1"></Controls.toggle:Checkbox>
+    <div>
+        <div class="controlsDemo__cell demo-checkboxBase__default">
+            <div class="controls-text-label">default checkbox</div>
+            <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value1"></Controls.toggle:Checkbox>
+        </div>
+        <div class="controlsDemo__cell demo-checkboxBase__readonly">
+            <div class="controls-text-label">readOnly=true</div>
+            <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value2" readOnly="{{true}}"></Controls.toggle:Checkbox>
+        </div>
+        <div class="controlsDemo__cell demo-checkboxBase__custom">
+            <div class="controls-text-label">custom caption</div>
+            <Controls.toggle:Checkbox caption="{{_caption}}" bind:value="_value2"></Controls.toggle:Checkbox>
+        </div>
     </div>
-    <div class="controlsDemo__cell demo-checkboxBase__readonly">
-        <div class="controls-text-label">readOnly=true</div>
-        <Controls.toggle:Checkbox caption="Checkbox" bind:value="_value2" readOnly="{{true}}"></Controls.toggle:Checkbox>
-    </div>
-    <div class="controlsDemo__cell demo-checkboxBase__custom">
-        <div class="controls-text-label">custom caption</div>
-        <Controls.toggle:Checkbox caption="{{_caption}}" bind:value="_value2"></Controls.toggle:Checkbox>
+    <div class="ws-flexbox" attr:style="width: 400px; border: 1px solid black; padding: 5px; border-radius: 8px">
+        <div attr:style="flex-shrink: 1;min-width: 1px">
+            <div class="controlsDemo__cell demo-checkboxBase__default">
+                <div class="controls-text-label">Чекбокс с прикладной версткой и ограниченной областью размещения</div>
+                <Controls.toggle:Checkbox attr:style="width: 100%;" bind:value="_value3">
+                    <ws:caption>
+                        <div class="ws-ellipsis">
+                            Lorem Ipsum - это текст-рыба,
+                            часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной
+                            рыбой для текстов на латинице с начала XVI века.
+                        </div>
+                    </ws:caption>
+                </Controls.toggle:Checkbox>
+            </div>
+        </div>
+        <img attr:style="width: 100px; height: 100px; border: 1px solid black; border-radius: 8px" src="{{_imageSrc}}"/>
     </div>
 </div>
