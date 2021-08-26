@@ -93,6 +93,10 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         if (needOptionsValidation) {
             validateGridParts(options);
         }
+
+        if (changes.includes('itemEditorTemplateOptions')) {
+            listModel.setItemEditorTemplateOptions(options.itemEditorTemplateOptions);
+        }
     },
 
     /**
@@ -137,6 +141,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             }
             if (changedOptions.hasOwnProperty('emptyTemplateColumns')) {
                 changes.push('emptyTemplateColumns');
+            }
+            if (changedOptions.hasOwnProperty('itemEditorTemplateOptions')) {
+                changes.push('itemEditorTemplateOptions');
             }
         }
 
