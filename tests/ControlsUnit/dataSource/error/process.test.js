@@ -146,7 +146,7 @@ define([
             const msg = logger.error.getCall(0).args[0];
             assert.isString(msg, 'error message');
             assert(msg.startsWith(
-               'Error: Controls/dataSource:error.process is being called during server-side rendering!\n' +
+               'Error: Controls/error:process is being called during server-side rendering!\n' +
                'Use Controls/dataSource:error.Container to render an error.\n' +
                'Error config:\n' +
                '{\n' +

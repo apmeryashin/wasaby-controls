@@ -50,25 +50,25 @@ define([
          assert.instanceOf(instance, Container);
       });
 
-      describe('_openDialog()', function() {
-         beforeEach(() => {
-            createInstance();
-         });
-
-         it('notifies "dialogClosed" on closing opened dialog', function() {
-            const popupId = String(Date.now());
-            const config = {};
-            mockPopupHelper(popupId);
-            return instance._openDialog(config).then(() => {
-               assert.strictEqual(instance._popupId, popupId, 'saves popupId');
-
-               // Диалог открылся. Теперь эмулируем закрытие диалога.
-               instance._popupHelper.closeDialog(popupId);
-               assert.isNotOk(instance._popupId, 'clears popupId');
-               assert.isTrue(instance._notify.calledOnceWith('dialogClosed', []), 'notifies "dialogClosed"');
-            });
-         });
-      });
+      // describe('_openDialog()', function() {
+      //    beforeEach(() => {
+      //       createInstance();
+      //    });
+      //
+      //    it('notifies "dialogClosed" on closing opened dialog', function() {
+      //       const popupId = String(Date.now());
+      //       const config = {};
+      //       mockPopupHelper(popupId);
+      //       return instance._openDialog(config).then(() => {
+      //          assert.strictEqual(instance._popupId, popupId, 'saves popupId');
+      //
+      //          // Диалог открылся. Теперь эмулируем закрытие диалога.
+      //          instance._popupHelper.closeDialog(popupId);
+      //          assert.isNotOk(instance._popupId, 'clears popupId');
+      //          assert.isTrue(instance._notify.calledOnceWith('dialogClosed', []), 'notifies "dialogClosed"');
+      //       });
+      //    });
+      // });
 
       describe('_beforeUpdate()', () => {
          let viewConfig;
