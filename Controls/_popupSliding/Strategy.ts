@@ -1,4 +1,4 @@
-import {IPopupItem, IPopupPosition, IPopupSizes, ISlidingPanelPopupOptions} from 'Controls/popup';
+import {IDragOffset, IPopupItem, IPopupPosition, IPopupSizes, ISlidingPanelPopupOptions} from 'Controls/popup';
 import {constants} from 'Env/Env';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
@@ -12,6 +12,7 @@ export interface ISlidingPanelItem extends IPopupItem {
     popupOptions: ISlidingPanelPopupOptions;
     animationState: AnimationState;
     dragStartHeight: number;
+    dragOffset: IDragOffset;
     previousSizes: IPopupSizes;
 }
 
