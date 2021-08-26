@@ -1,33 +1,24 @@
 .controls_theme-@{themeName} {
-  // Переменные для ввода интервала дат
+   // Переменные для ввода интервала дат
+   --dash_length_dateRangeInput: 5px;
+   --dash_thickness_dateRangeInput: 1px;
 
-  --dash_length_dateRangeInput:                         5px;
-  --dash_padding-horizontal_dateRangeInput:             var(--offset_2xs);
-  --dash_thickness_dateRangeInput:                      1px;
+   //кнопка ссылка для отображения периода
+   --min-width_dateRangeSelector: 150px;
+   --arrow_width_dateRangeSelector: 24px;
+   --font-weight_dateRangeSelector: bold;
+   --reset-button_margin-left_dateRangeSelector: 4px;
+   --height_dateRangeSelector: 19px;
 
-  //кнопка ссылка для отображения периода
-  --min-width_dateRangeSelector:                        150px;
-  --arrow_width_dateRangeSelector:                      24px;
-  --font-weight_dateRangeSelector:                      bold;
-  --arrow_icon-size_dateRangeSelector:                  var(--icon-size_s);
+   //кнопка ссылка для быстрого выбора периода
+   --height_rangeShortSelectorLink: 24px;
 
-  --reset-button_margin-left_dateRangeSelector:         4px;
-  --height_dateRangeSelector:                           19px;
-
-  //кнопка ссылка для быстрого выбора периода
-  --height_rangeShortSelectorLink:                      24px;
-  --line-height_rangeShortSelectorLink:                 18px;
-  --clear_line-height_rangeShortSelectorLink:           24px;
-
-  //кнопка для связывания периодов
-
-
-  // Смещаем на расстояние высоты эл-та со стрелкой + расстояние от верха текста эл-та с годом до начала этого блока
-  // и так же учитываем такое же расстояние у вызывающего эл-та.
-  // Выносим выражение в отдельную переменную, т.к вложенные calc в IE не работают.
-  --shift-top_fontSize-s_expression_PeriodLiteDialog-selector:  calc(-1 * (var(--annually_header_height_shortDatePicker) + var(--item_layout_line-height_expression_shortDatePicker) / 2 - (var(--height_rangeShortSelectorLink) - var(--item_font-size_shortDatePicker))));
-  --shift-top_fontSize-s_PeriodLiteDialog-selector:             calc(var(--shift-top_fontSize-s_expression_PeriodLiteDialog-selector));
-  --shift-top_fontSize-m_expression_PeriodLiteDialog-selector:  calc(var(--shift-top_fontSize-s_expression_PeriodLiteDialog-selector) + 1px);
-
-  --shift-top_fontSize-l_PeriodLiteDialog-selector:             calc(var(--shift-top_fontSize-m_expression_PeriodLiteDialog-selector) + 1px);
+   //кнопка для связывания периодов
+   // Смещаем на расстояние высоты эл-та со стрелкой + расстояние от верха текста эл-та с годом до начала этого блока
+   // и так же учитываем такое же расстояние у вызывающего эл-та.
+   // Выносим выражение в отдельную переменную, т.к вложенные calc в IE не работают.
+   --shift-top_fontSize-s_expression_PeriodLiteDialog-selector: calc(-1 * (var(--annually_header_height_shortDatePicker) + var(--item_layout_line-height_expression_shortDatePicker) / 2 - (var(--height_rangeShortSelectorLink) - var(--item_font-size_shortDatePicker))));
+   --shift-top_fontSize-s_PeriodLiteDialog-selector: calc(var(--shift-top_fontSize-s_expression_PeriodLiteDialog-selector));
+   --shift-top_fontSize-m_expression_PeriodLiteDialog-selector: calc(var(--shift-top_fontSize-s_expression_PeriodLiteDialog-selector) + 1px);
+   --shift-top_fontSize-l_PeriodLiteDialog-selector: calc(var(--shift-top_fontSize-m_expression_PeriodLiteDialog-selector) + 1px);
 }
