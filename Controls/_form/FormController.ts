@@ -72,7 +72,6 @@ export const enum INITIALIZING_WAY {
  * @extends Controls/form:ControllerBase
  * @implements Controls/interface:ISource
  * @implements Controls/form:IFormController
- * @implements Controls/interface:IErrorController
  * @public
  * @author Красильников А.С.
  *
@@ -86,7 +85,6 @@ export const enum INITIALIZING_WAY {
  * @extends Controls/form:ControllerBase
  * @implements Controls/interface:ISource
  * @implements Controls/form:IFormController
- * @implements Controls/interface:IErrorController
  * @demo Controls-demo/Popup/Edit/Opener
  *
  * @public

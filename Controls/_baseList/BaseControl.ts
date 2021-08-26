@@ -2882,7 +2882,6 @@ const _private = {
  * @implements Controls/marker:IMarkerList
  * @implements Controls/list:IMovableList
  * @implements Controls/list:IListNavigation
- * @implements Controls/interface:IErrorController
  *
  * @private
  * @author Авраменко А.С.

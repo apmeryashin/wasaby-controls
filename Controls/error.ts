@@ -12,7 +12,8 @@ import {
     ErrorViewConfig,
     IErrorHandlerConfig,
     ErrorType,
-    ErrorViewMode
+    ErrorViewMode,
+    IErrorControllerOptions
 } from './_error/interface';
 import ErrorController from './_error/Controller';
 import process, { IProcessOptions } from './_error/process';
@@ -27,6 +28,7 @@ export {
     DialogOpener,
     ErrorHandler,
     ErrorHandler as Handler, // для совместимости
+    IErrorControllerOptions,
     IErrorHandlerConfig,
     IErrorHandlerConfig as HandlerConfig, // для совместимости
     IPopupHelper,

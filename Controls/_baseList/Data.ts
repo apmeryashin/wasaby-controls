@@ -16,10 +16,9 @@ import {
    INavigationOptions,
    ISortingOptions,
    TKey,
-   Direction,
-   IErrorControllerOptions
+   Direction
 } from 'Controls/interface';
-import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
+import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions} from 'Controls/error';
 import {SyntheticEvent} from 'UI/Vdom';
 import {isEqual} from 'Types/object';
 

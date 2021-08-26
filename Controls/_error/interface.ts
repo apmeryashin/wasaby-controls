@@ -1,6 +1,6 @@
-import { IVersionable } from 'Types/entity';
 import { HTTPStatus } from 'Browser/Transport';
 import { Control, TemplateFunction } from 'UI/Base';
+import ErrorController from './Controller';
 
 /**
  * Опции шаблона для {@link Controls/_error/interface/ErrorViewConfig}, возвращаемые стандартными обработчиками
@@ -141,4 +141,13 @@ export interface IErrorHandlerConfig<TError extends ProcessedError = ProcessedEr
      * @cfg {String} Тема для окон уведомлений, которые контроллер показывает, если не удалось распознать ошибку.
      */
     theme?: string;
+}
+
+/**
+ * Интерфейс контролов, использующих источники данных и обрабатывающих ошибки от сервисов через {@link Controls/error:ErrorController error-controller}.
+ * @public
+ * @author Кашин О.А.
+ */
+export interface IErrorControllerOptions {
+    errorController?: ErrorController;
 }
