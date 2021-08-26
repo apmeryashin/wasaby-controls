@@ -20,7 +20,8 @@ const mockedCollection = {
     notifyItemChange: () => {},
     getItemEditorTemplate: () => {},
     hasColumnScroll: () => false,
-    isFullGridSupport: () => true
+    isFullGridSupport: () => true,
+    getItemEditorTemplateOptions: () => {}
 } as GridCollection<Model>;
 
 describe('Controls/grid_clean/Display/DataRow', () => {
