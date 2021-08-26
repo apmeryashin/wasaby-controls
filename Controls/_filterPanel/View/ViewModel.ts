@@ -13,6 +13,7 @@ interface IFilterViewModelOptions {
     source: IFilterItem[];
     collapsedGroups: string[] | number[];
     applyButtonSticky: StickyOpener;
+    filterViewMode: string;
 }
 
 interface IFilterGroup {
@@ -62,7 +63,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 ...item.editorOptions,
                 ...{
                     viewMode: item.viewMode,
-                    applyButtonSticky: this._options.applyButtonSticky
+                    applyButtonSticky: this._options.applyButtonSticky,
+                    filterViewMode: this._options.filterViewMode
                 }};
             newSource.push({...item, ...{editorOptions}});
         });
