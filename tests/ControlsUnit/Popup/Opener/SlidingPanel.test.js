@@ -18,8 +18,11 @@ define(
                left: 0,
                right: 0
             },
-            sizes: {
+            previousSizes: {
                height: 400
+            },
+            sizes: {
+               height: 500
             },
             popupOptions: {
                desktopMode: 'stack',
@@ -108,6 +111,52 @@ define(
                   const position = SlidingPanelStrategy.getPosition(item);
 
                   assert.equal(position.top, 0);
+               });
+            });
+
+            describe('autoHeight', () => {
+               it('initialisedHeight should be saved', () => {
+                  const SlidingPanelStrategy = new StrategyConstructor();
+                  const item = getPopupItem();
+                  SlidingPanelStrategy._getWindowHeight = () => 900;
+                  item.position.height = 800;
+                  item.popupOptions.slidingPanelOptions.autoHeight = true;
+                  const position = SlidingPanelStrategy.getPosition(item);
+
+                  assert.equal(position.height, 800);
+               });
+               it('after recalc position height should be undefined, if drag is not started', () => {
+                  const SlidingPanelStrategy = new StrategyConstructor();
+                  const item = getPopupItem();
+                  SlidingPanelStrategy._getWindowHeight = () => 900;
+                  item.popupOptions.slidingPanelOptions.autoHeight = true;
+                  const position = SlidingPanelStrategy.getPosition(item);
+
+                  assert.equal(position.height, undefined);
+               });
+               it('if we have inner resize we can increase height but cant decrease', () => {
+                  const SlidingPanelStrategy = new StrategyConstructor();
+                  const item = getPopupItem();
+                  item.popupOptions.slidingPanelOptions.autoHeight = true;
+                  item.previousSizes = {
+                     width: 300,
+                     height: 500
+                  };
+                  item.sizes = {
+                     width: 300,
+                     height: 600
+                  };
+                  SlidingPanelStrategy._getWindowHeight = () => 900;
+                  let position = SlidingPanelStrategy.getPosition(item, 'inner');
+
+                  assert.equal(position.height, undefined);
+
+                  item.sizes = {
+                     width: 300,
+                     height: 490
+                  };
+                  position = SlidingPanelStrategy.getPosition(item, 'inner');
+                  assert.equal(position.height, 500);
                });
             });
          });
