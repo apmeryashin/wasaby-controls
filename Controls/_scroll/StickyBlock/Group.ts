@@ -215,21 +215,28 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
-    protected updateShadowVisible(ids: number[]): void {
+    protected updateShadowVisible(ids: number[], needFakeFixedNotify: boolean = true): void {
         const isShadowVisible = ids.indexOf(this._index) !== -1;
         if (this._isShadowVisible !== isShadowVisible) {
             this._isShadowVisible = isShadowVisible;
             if (isShadowVisible) {
-               this._updateShadowVisible(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
+               this._updateShadowVisible(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom), needFakeFixedNotify);
             } else {
-               this._updateShadowVisible([]);
+               this._updateShadowVisible([], needFakeFixedNotify);
             }
         }
     }
 
-    _updateShadowVisible(ids: number[]): void {
+    _updateShadowVisible(ids: number[], needFakeFixedNotify: boolean = true): void {
         for (const id in this._headers) {
-            this._headers[id].inst.updateShadowVisible(ids);
+            this._headers[id].inst.updateShadowVisible(ids, needFakeFixedNotify);
+        }
+    }
+
+    // Необходимость в "фейковом" событии fixed описана в интерфейсе IFixedEventData (scroll/StickyBlock/Utils.ts)
+    fakeFixedNotifier(isFixed: boolean): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.fakeFixedNotifier(isFixed);
         }
     }
 
