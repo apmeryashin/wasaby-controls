@@ -17,6 +17,7 @@ export default class Columns extends View {/** @lends Controls/_list/List.protot
 
     static getDefaultOptions(): object {
         return {
+            disableVirtualScroll: true,
             ...super.getDefaultOptions()
         };
     }
