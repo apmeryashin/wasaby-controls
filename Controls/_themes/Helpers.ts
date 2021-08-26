@@ -205,11 +205,11 @@ const processColorVariables = (
     const result: Record<string, string> = {};
     for (const coefName in transformTemplate) {
         if (transformTemplate.hasOwnProperty(coefName)) {
-            const mainColorName = prefix ? `${prefix}_${coefName}` : coefName;
+            const mainColorName = prefix ? `--${prefix}_${coefName}` : coefName;
             if (colors[mainColorName]) {
                 const baseColor = HexToHSL(colors[mainColorName]);
                 transformTemplate[coefName].forEach((colorDesc: IColorDescriptor) => {
-                    const subColorName = prefix ? `${prefix}_${colorDesc.name}` : colorDesc.name;
+                    const subColorName = prefix ? `--${prefix}_${colorDesc.name}` : colorDesc.name;
                     // пропускаем переменные, значения которых пришло в аргументах. Их рассчитывать не нужно.
                     if (!colors[subColorName]) {
                         const convertedColor = colorDesc.callback ?
