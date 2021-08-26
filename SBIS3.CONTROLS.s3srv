@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<application global_parameters="1" id="81a5acd8-7d3f-4dff-a9f8-714ea6a4dd22" name="SBIS3.CONTROLS" user_parameters="0">
+<service db_template="" id="aef88aad-0641-45fc-97b1-9be2b61c8878" initial_db_count="0" initial_replica_count="0" name="SBIS3.CONTROLS" postgresql_version="" system_name="sbis3_controls" use_replica="0" version="1.01">
 
   <description/>
 
@@ -12,4 +12,4 @@
 
   <templates/>
 
-</application>
+</service>

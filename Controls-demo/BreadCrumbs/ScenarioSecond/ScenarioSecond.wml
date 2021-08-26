@@ -29,7 +29,7 @@
         <div>
             <Controls.popupTemplate:Stack
                     attr:class="demo-FourthExample"
-                    showMaximizedButton="{{true}}">
+                    maximizeButtonVisibility="{{true}}">
                 <ws:headerContentTemplate>
                     <div class="demo-SeventhExample__headerWrapper">
                         <div class="demo-SeventhExample__firstRow">

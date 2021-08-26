@@ -8,12 +8,15 @@
       <div class="controls-StackTemplate-shadow"></div>
       <Controls.popupTemplate:Stack
          closeButtonVisibility="{{!_options.hideCross}}"
-         showMaximizedButton="{{_options.canMaximize}}"
+         maximizeButtonVisibility="{{_options.canMaximize}}"
          closeButtonViewMode="{{_options.closeButtonStyle}}"
          on:maximized="_changeMaximizedMode()">
          <ws:bodyContentTemplate>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:bodyContentTemplate>
+         <ws:toolbarContentTemplate>
+            <div name="toolbarBlock" attr:class="controls-CompoundArea_toolbar"></div>
+         </ws:toolbarContentTemplate>
          <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
       </Controls.popupTemplate:Stack>
    </ws:else>

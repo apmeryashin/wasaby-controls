@@ -3,6 +3,7 @@
       templateName="Controls/popupTemplate:Sticky">
       <ws:partial
         template="{{content.resolvedTemplate}}"
+        roundBorder="{{_options.roundBorder}}"
         shadowVisible="{{true}}">
          <ws:headerContentTemplate>
             <div

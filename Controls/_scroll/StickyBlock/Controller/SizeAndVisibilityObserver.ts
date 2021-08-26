@@ -1,7 +1,8 @@
-import {ResizeObserverUtil} from "Controls/sizeUtils";
-import {isHidden} from "Controls/_scroll/StickyBlock/Utils";
-import {getClosestControl} from "UI/NodeCollector";
-import StickyBlock from "Controls/_scroll/StickyBlock";
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
+import {isHidden} from 'Controls/_scroll/StickyBlock/Utils';
+import {getClosestControl} from 'UI/NodeCollector';
+import StickyBlock from 'Controls/_scroll/StickyBlock';
+import Group from 'Controls/_scroll/StickyBlock/Group';
 
 interface IHeightEntry {
     key: HTMLElement;
@@ -68,6 +69,26 @@ export default class SizeAndVisibilityObserver {
         this._resizeObserver.controlResizeHandler();
     }
 
+    private _isHeaderOfGroup(id: number): boolean {
+        return !this._headers[id];
+    }
+
+    private _isGroup(id: string): boolean {
+        return this._headers[id].inst instanceof Group;
+    }
+
+    private _getGroupByHeader(header: StickyBlock) {
+        for (const headerId in this._headers) {
+            if (this._isGroup(headerId)) {
+                const groupChildren = this._headers[headerId].inst.getChildrenHeaders();
+                const isHeaderGroup = groupChildren.find((groupHeader) => groupHeader.id === header.index);
+                if (isHeaderGroup) {
+                    return this._headers[headerId];
+                }
+            }
+        }
+    }
+
     private _resizeObserverCallback(entries: any): void {
         // В момент переключения по вкладкам в мастер детейле на ноде может не быть замаунчен стикиБлок
         // Контроллер инициализируется при наведении мыши или когда заголовки зафиксированы.
@@ -88,11 +109,11 @@ export default class SizeAndVisibilityObserver {
                 }
 
                 if (operation) {
-                    if (header.isInGroup) {
-                        const groupHeader = header.group;
-                        const groupInUpdateHeaders = Object.entries(updateHeaders).find(([, updateHeader]) => updateHeader.header.index === groupHeader.index);
+                    if (this._isHeaderOfGroup(header.index)) {
+                        const groupHeader = this._getGroupByHeader(header);
+                        const groupInUpdateHeaders = Object.entries(updateHeaders).find(([, updateHeader]) => updateHeader.header.id === groupHeader.id);
                         if (!groupInUpdateHeaders) {
-                            updateHeaders[groupHeader.index] = {
+                            updateHeaders[groupHeader.id] = {
                                 header: groupHeader,
                                 operation
                             };

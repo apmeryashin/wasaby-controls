@@ -149,23 +149,24 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
    }
 
-   private _getAdditionalMenuItems(options: IMultiSelectorOptions): MultiSelectorMenuItems {
+   private _getAdditionalMenuItems({selectedKeys, selectionViewMode, isAllSelected, selectedKeysCount}: IMultiSelectorOptions): MultiSelectorMenuItems {
       const additionalItems = [];
+      const hasSelected = !!selectedKeys.length;
 
-      if (options.selectionViewMode === 'selected') {
+      if (selectionViewMode === 'selected') {
          additionalItems.push(SHOW_ALL_ITEM);
          // Показываем кнопку если есть выбранные и невыбранные записи
-      } else if (options.selectionViewMode === 'all' && options.selectedKeys.length && !options.isAllSelected) {
+      } else if (selectionViewMode === 'all' && hasSelected && !isAllSelected) {
          additionalItems.push(SHOW_SELECTED_ITEM);
-      } else if (options.selectionViewMode === 'partial') {
-         if (options.selectedKeys.length) {
+      } else if (selectionViewMode === 'partial') {
+         if (hasSelected && (selectedKeysCount > 0 || selectedKeysCount === null)) {
             additionalItems.push(...SHOW_SELECT_COUNT_SELECTED_ITEMS);
          } else {
             additionalItems.push(...SHOW_SELECT_COUNT);
          }
       }
 
-      if (!(options.selectionViewMode === 'partial')) {
+      if (!(selectionViewMode === 'partial')) {
          additionalItems.push(SHOW_INVERT_ITEM);
       }
 
@@ -255,7 +256,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    }
 
    private _getCountBySourceCall(selection, selectionCountConfig): CountPromise {
-      this._children.countIndicator.show();
+      this._children.countIndicator?.show();
       this._countPromise = new CancelablePromise(getCountUtil.getCount(selection, selectionCountConfig));
       return this._countPromise.promise.then(
           (result: number): number => {
@@ -292,7 +293,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       return {
          selectedKeys: [],
          excludedKeys: [],
-         fontColorStyle: 'link'
+         fontColorStyle: 'operationsPanel'
       };
    }
 }

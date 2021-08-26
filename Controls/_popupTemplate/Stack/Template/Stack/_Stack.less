@@ -19,10 +19,7 @@
 
 .controls-StackTemplate-content {
    flex-direction: column;
-}
-
-.controls-stack-Button__close {
-   margin-top: var(--offset_2xs);
+   min-width: 0;
 }
 
 .controls-StackTemplate-shadow {
@@ -113,6 +110,24 @@
    z-index: 3;
    cursor: pointer;
    margin-top: var(--maximized-button_offset-top_stack);
+}
+
+.controls-StackTemplate__rightPanel__maximized {
+   background-position: center;
+   background-repeat: no-repeat;
+   width: var(--inline_height_xl);
+   height: var(--inline_height_xl);
+   &:active {
+      background-color: var(--background-color_hover_button_toolButton);
+      border-radius: var(--border-radius_button_toolButton);
+   }
+}
+
+.ws-is-hover {
+   .controls-StackTemplate__rightPanel__maximized:hover {
+      background-color: var(--background-color_hover_button_toolButton);
+      border-radius: var(--border-radius_button_toolButton);
+   }
 }
 
 .controls-StackTemplate__header_maximized_button {

@@ -54,9 +54,8 @@ class PageController {
     getPageConfig(pageId: string): Promise<unknown> {
         const configLoaderModule = this._pageConfigLoaderModule;
         if (!configLoaderModule) {
-            const message = 'При попытке открыть страницу в окне произошла ошибка. ' +
-                'На приложении не задан модуль для получения конфигурации страницы.';
-            throw new Error(message);
+            // Если нет загрузчика - обрабатываем ошибку и открываемся по старой схеме.
+            return Promise.reject();
         }
         return new Promise((resolve, reject) => {
             this._getModuleByModuleName(configLoaderModule, (ConfigLoader) => {
@@ -80,21 +79,25 @@ class PageController {
         return new Promise((resolve, reject) => {
             this._getModuleByModuleName(dataLoaderModule, (DataLoader) => {
                 const pagePrefetchConfig = pageConfig?.templateOptions?.prefetchConfig;
-                const prefetchConfig = {
-                    ...pagePrefetchConfig,
-                    configLoaderArguments: {
-                        ...pagePrefetchConfig.configLoaderArguments,
+                if (pagePrefetchConfig) {
+                    const prefetchConfig = {
+                        ...pagePrefetchConfig,
+                        configLoaderArguments: {
+                            ...pagePrefetchConfig.configLoaderArguments,
 
-                        /*
-                            Добавляем опции в аргументы лоадера,
-                            чтобы можно было дополнять статические опции динамикой нужно на попапах
-                         */
-                        ...additionalOptions
-                    }
-                };
-                DataLoader.loadData(prefetchConfig).then((result) => {
-                    resolve(result.configError || this._getPreparedLoadResult(result.data));
-                }, reject);
+                            /*
+                                Добавляем опции в аргументы лоадера,
+                                чтобы можно было дополнять статические опции динамикой нужно на попапах
+                             */
+                            ...additionalOptions
+                        }
+                    };
+                    DataLoader.loadData(prefetchConfig).then((result) => {
+                        resolve(result.configError || this._getPreparedLoadResult(result.data));
+                    }, reject).catch((err) => reject(err));
+                } else {
+                    reject();
+                }
             });
         });
     }

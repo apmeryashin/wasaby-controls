@@ -99,7 +99,7 @@ export default class CrudController {
      */
     update(record: Model, isNewRecord: boolean, config?: unknown): Promise<void> | null {
         if (record.isChanged() || isNewRecord) {
-            const updateMetaData = config?.additionalData;
+            const updateMetaData = config?.updateMetaData;
             const resultUpdate = this._dataSource.update(record, updateMetaData);
             this._registerPending(resultUpdate, config);
             return new Promise((res, rej) => {

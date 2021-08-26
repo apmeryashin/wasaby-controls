@@ -1,3 +1,10 @@
+.controls_theme-@{themeName} {         // переменные, которые должны переопределяться через wrapper должны быть опеределены на корневмо элементе темы
+   //Иконка папки
+
+   --node_expander_icon-color_treeGrid: #313e78;
+   --node_expander_hover_icon-color_treeGrid: #05b;
+}
+
 .controls_list_theme-@{themeName} {
    // Костыль для выравнивания в дереве expander'а ниже базовой линии на 1px.
    // Будет удалено после исправления шрифта: https://online.sbis.ru/opendoc.html?guid=04c812e3-ba62-44f8-aa94-30fec6bdfe75
@@ -15,23 +22,12 @@
    --expander_xl_padding-right_treeGrid: 18px;
    --expander_xl_padding-left_treeGrid: var(--offset_m);
 
-   //Размеры иконки
-
-   --expander_width_treeGrid: var(--icon-size_s);
-   --expander_height_treeGrid: var(--icon-size_s);
-
    //Иконка папки
 
-   --node_expander_icon-color_treeGrid: #313e78;
-   --node_expander_icon-size_treeGrid: var(--icon-size_s);
-   --node_expander_icon_font-family_treeGrid: var(--icon_font-family_s);
-   --node_expander_hover_icon-color_treeGrid: #0055bb;
 
    //Иконка скрытого узла
 
    --hidden-node_expander_icon-color_treeGrid: #8991a9;
-   --hidden-node_expander_icon_font-family_treeGrid: var(--icon_font-family_s);
-   --hidden-node_expander_icon-size_treeGrid: var(--icon-size_s);
    --hidden-node_expander_hover_icon-color_treeGrid: #0055bb;
 
    // Иконки узлов в мастере
@@ -43,16 +39,12 @@
    --master_node_expander_hover_icon-color_treeGrid: #313e78;
    --master_hidden-node_expander_hover_icon-color_treeGrid: #0055bb;
 
-   
-   --node-footer_more_font-size_treeGrid: var(--font-size_l);
    --node-footer_min-height: 25px;
    --node-footer_padding-top: 3px;
 
    //Драг н дроп
 
-   --item_droppable_border_thickness_treeGrid: 1px;
    --item_droppable_border_color_treeGrid: var(--primary_border-color);
-   --item_droppable_border_radius: 8px;
 
    // Размеры шрифта текста
 
@@ -61,11 +53,8 @@
    
 
    // Результаты поиска
-   // иерархический отступ элементов
-   --search-hierarchy_offset_treeGrid: var(--offset_xl);
+
    // разделитель между результатами из корня и из папок
-   --search-separator_length_treeGrid: 100px;
-   --search-separator_thickness_treeGrid: 1px;
    --search-separator_color_treeGrid: #8991a9;
    --search-separator_padding-top_treeGrid: 16px;
    --search-separator_padding-bottom_treeGrid: 8px;

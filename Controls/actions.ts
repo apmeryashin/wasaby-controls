@@ -13,4 +13,4 @@ export {default as MassAction} from './_actions/MassActions/MassAction';
 
 export {
     Container
-}
+};

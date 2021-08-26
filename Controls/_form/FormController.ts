@@ -11,6 +11,7 @@ import { Mode } from 'Controls/error';
 import ControllerBase from 'Controls/_form/ControllerBase';
 import {default as IFormController} from 'Controls/_form/interface/IFormController';
 import * as rk from 'i18n!Controls';
+import {IUpdateConfig} from 'Controls/_form/interface/IControllerBase';
 
 interface IReceivedState {
     data?: Model;
@@ -43,11 +44,6 @@ interface IDataValid {
 interface IConfigInMounting {
     isError: boolean;
     result: Model;
-}
-
-interface IUpdateConfig {
-    additionalData: IAdditionalData;
-    showLoadingIndicator: boolean;
 }
 
 export const enum INITIALIZING_WAY {
@@ -450,7 +446,7 @@ class FormController extends ControllerBase<IFormController> {
                 this._updateIsNewRecord(false);
                 updateResult.callback(true);
             }
-        }
+        };
 
         // maybe anybody want to do custom update. check it.
         const result = this._notify('requestCustomUpdate', [this._record]);

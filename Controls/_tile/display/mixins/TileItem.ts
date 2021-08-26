@@ -34,6 +34,7 @@ export type TImageEffect = 'none'|'gradient';
 export type TTitleStyle = 'light'|'dark'|'accent'|'onhover'|'partial';
 export type TGradientPlace = 'image'|'title';
 export type TGradientType = 'dark'|'light'|'custom';
+export type TGradientDirection = 'toBottom' | 'toBottomRight';
 export type TFooterPlace = 'wrapper'|'content';
 export type TActionMode = 'showType'|'adaptive'|'strict';
 
@@ -1076,13 +1077,15 @@ export default abstract class TileItem<T extends Model = Model> {
     /**
      * Возвращает стили для большого градиента
      * @param {TTileItem} itemType Тип элемента
-     * @param {string} gradientStartColor Начальный цвет градиента
-     * @param {string} gradientStopColor Конечный цвет градиента
+     * @param {string} gradientStartColor Начальный цвет высокого градиента
+     * @param {string} gradientStopColor Конечный цвет высокого градиента
+     * @param {TGradientDirection} gradientDirection Направление высокого градиента
      */
     getBigGradientStyles(
         itemType: TTileItem = 'default',
         gradientStartColor: string = '#ffffff',
-        gradientStopColor: string = '#ffffff'
+        gradientStopColor: string = '#ffffff',
+        gradientDirection: TGradientDirection = 'toBottom'
     ): string {
         let styles = '';
 
@@ -1095,7 +1098,8 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 const startColor = `${gradientStartColor} 0%`;
                 const endColor = `${gradientStopColor} 100%`;
-                styles += ` background: linear-gradient(to bottom, ${startColor}, ${endColor});`;
+                const gradientDirectionStyle = gradientDirection === 'toBottom' ? 'to bottom' : 'to bottom right';
+                styles += ` background: linear-gradient(${gradientDirectionStyle}, ${startColor}, ${endColor});`;
                 break;
         }
 
@@ -1168,7 +1172,7 @@ export default abstract class TileItem<T extends Model = Model> {
         templateShadowVisibility?: TShadowVisibility,
         border?: boolean
     ): string {
-        let classes = 'controls-TileView__item controls-ListView__itemV';
+        let classes = 'controls-TileView__item controls-ListView__itemV js-controls-ListView__editingTarget';
 
         if (templateClickable !== false) {
             classes += ` controls-ListView__itemV_cursor-${cursor}`;
@@ -1570,13 +1574,19 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      * @param {TImageViewMode} imageViewMode Режим отображения изображения
      * @param {TImagePosition} imagePosition Позиция изображения
-     * @param {string} gradientColor Цвет градиента
+     * @param {string} gradientColor Цвет градиента в месте перехода от изображения к контенту
+     * @param {string} gradientStartColor Начальный цвет высокого градиента
+     * @param {string} gradientStopColor Конечный цвет высокого градиента
+     * @param {TGradientDirection} gradientDirection Направление высокого градиента
      */
     getTitleWrapperStyles(
         itemType: TTileItem = 'default',
         imageViewMode: TImageViewMode,
         imagePosition: TImagePosition,
-        gradientColor: string = '#FFF'
+        gradientColor: string = '#FFF',
+        gradientStartColor: string = '#FFF',
+        gradientStopColor: string = '#FFF',
+        gradientDirection: TGradientDirection = 'toBottom'
     ): string {
         let styles = '';
 
@@ -1595,6 +1605,8 @@ export default abstract class TileItem<T extends Model = Model> {
                     imagePosition !== 'right'
                 ) {
                     styles += ` background-color: ${rgbaToString(toRgb(gradientColor))};`;
+                } else if (imageViewMode === 'none') {
+                    styles += ` ${this.getBigGradientStyles(itemType, gradientStartColor, gradientStopColor, gradientDirection)}`;
                 }
                 break;
         }
@@ -1731,6 +1743,35 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
+    /**
+     * Возвращает стили для размытия в afterTitleTemplate
+     * @param {TTileItem} itemType Тип элемента
+     * @param {TImageViewMode} imageViewMode Режим отображения изображения
+     * @param {string} gradientColor Цвет градиента
+     */
+    getBlurStyles(
+        itemType: TTileItem = 'default',
+        imageViewMode: TImageViewMode,
+        gradientColor: string = '#FFF'
+    ): string {
+        let styles = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'preview':
+            case 'medium':
+                break;
+            case 'rich':
+                const rgbColor = toRgb(gradientColor);
+                if ((!imageViewMode || imageViewMode === 'rectangle')) {
+                    styles += ` background: linear-gradient(to right, ${rgbaToString(rgbToRgba(rgbColor, 0))} 0%, ${rgbaToString(rgbColor)} 12px, ${rgbaToString(rgbColor)} 100%);`;
+                }
+                break;
+        }
+
+        return styles;
+    }
     // endregion Title
 
     // region Description

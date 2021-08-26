@@ -115,7 +115,9 @@ class PositionParamsCalculator implements IParamsCalculator {
         }
 
         const metaData = list.getMetaData();
-        const metaNextPosition = additionalMeta.nextPosition || metaData.nextPosition;
+        const metaNextPosition = additionalMeta.nextPosition !== undefined ?
+            additionalMeta.nextPosition :
+            metaData.nextPosition;
         const metaIterative = metaData.iterative;
 
         store.setIterative(metaIterative);
@@ -153,7 +155,10 @@ class PositionParamsCalculator implements IParamsCalculator {
 
         } else {
             let edgeElem;
-            if (list.getCount() && !(metaIterative && metaIterative !== storeParams.iterative)) {
+            const isIterativeChanged = storeParams.iterative !== undefined &&
+                                       metaIterative &&
+                                       metaIterative !== storeParams.iterative;
+            if (list.getCount() && !isIterativeChanged) {
                 if (queryDirection !== 'forward') {
                     edgeElem = listForCurrentStore.shift() || list.at(0);
                     store.setBackwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
@@ -199,7 +204,7 @@ class PositionParamsCalculator implements IParamsCalculator {
         let queryDirection;
 
         if (direction === 'backward') {
-            if (shiftMode === 'edge' || shiftMode === 'end') {
+            if (shiftMode === 'edge' || shiftMode === 'end' || shiftMode === 'edges') {
                 position = [EDGE_BACKWARD_POSITION];
             }
         } else if (direction === 'forward') {
@@ -250,7 +255,7 @@ class PositionParamsCalculator implements IParamsCalculator {
         const metaNextPosition = metaData.nextPosition;
         let nextPosition;
 
-        if (metaNextPosition instanceof RecordSet && id) {
+        if (metaNextPosition instanceof RecordSet && id !== undefined) {
             nextPosition = metaNextPosition.at(metaNextPosition.getIndexByValue('id', id)).get('nav_result');
         } else {
             nextPosition = metaNextPosition;

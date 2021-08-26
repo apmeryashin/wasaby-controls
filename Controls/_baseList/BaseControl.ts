@@ -482,7 +482,7 @@ const _private = {
     },
 
     enterHandler(self, event) {
-        if (event.nativeEvent.ctrlKey) {
+        if (event.nativeEvent.ctrlKey || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
         if (_private.hasMarkerController(self)) {
@@ -733,6 +733,8 @@ const _private = {
         if (navigation) {
             switch (navigation.view) {
                 case 'infinity':
+                    // todo remove loadedList.getCount() === 0 by task
+                    // https://online.sbis.ru/opendoc.html?guid=909926f2-f62a-4de8-a44b-3c10006f530f
                     result = !loadedList || loadedList.getCount() === 0 || _private.isPortionedLoad(this, loadedList);
                     break;
                 case 'maxCount':
@@ -1656,7 +1658,10 @@ const _private = {
                 const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
-                _private.addShowActionsClass(self);
+                // Если ховер заморожен для редактирования по месту, не надо сбрасывать заморозку.
+                if ((!self._editInPlaceController || !self._editInPlaceController.isEditing())) {
+                    _private.addShowActionsClass(self);
+                }
             }
         }
     },
@@ -4317,12 +4322,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
-        this._handleLoadToDirection = !!this._sourceController && this._sourceController.hasMoreData(direction);
+        this._handleLoadToDirection = this._needScrollCalculation && !!this._sourceController && this._sourceController.hasMoreData(direction);
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
             }
-            if (result) {
+            if (result && this._needScrollCalculation) {
                 _private.handleScrollControllerResult(this, result);
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
@@ -4503,7 +4508,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return (emptyTemplate || emptyTemplateColumns) && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     }
 
-    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>): void {
+    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, originalEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
 
         const contents = _private.getPlainItemContents(item);
@@ -4517,7 +4522,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             let newSelection;
 
-            if (e.nativeEvent && e.nativeEvent.shiftKey) {
+            if (originalEvent.nativeEvent && originalEvent.nativeEvent.shiftKey) {
                 newSelection = _private.getSelectionController(this).selectRange(key);
             } else {
                 newSelection = _private.getSelectionController(this).toggleItem(key);
@@ -4780,23 +4785,23 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         );
         if (canEditByClick) {
             e.stopPropagation();
+            this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
             this._beginEdit({ item }, { columnIndex }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
                 return result;
             });
-        } else if (this._editInPlaceController) {
-            this._commitEdit();
-        }
-        // При клике по элементу может случиться 2 события: itemClick и itemActivate.
-        // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
-        // порядок событий будет beforeBeginEdit -> itemClick
-        // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
-        // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
-        if (e.isStopped()) {
-            this._savedItemClickArgs = [e, item, originalEvent, columnIndex];
         } else {
+            if (this._editInPlaceController) {
+                this._commitEdit();
+            }
+
+            // При клике по элементу может случиться 2 события: itemClick и itemActivate.
+            // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
+            // порядок событий будет beforeBeginEdit -> itemClick
+            // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
+            // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
             if (e.isBubbling()) {
                 e.stopPropagation();
             }
@@ -4805,6 +4810,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('itemActivate', [item, originalEvent], {bubbling: true});
             }
         }
+    }
+
+    /**
+     * Останавливает всплытие события updateShadowMode от внутренних списков. Иначе они могут испортить видимость
+     * тени у ScrollContainer.
+     */
+    protected _stopInnerUpdateShadowMode(event: SyntheticEvent): void {
+        event.stopImmediatePropagation();
     }
 
     protected _notifyItemClick(args: [SyntheticEvent?, Model, SyntheticEvent, number?]): boolean {
@@ -5380,6 +5393,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     ): void {
         _private.updateItemActionsOnce(this, this._options);
         _private.openContextMenu(this, tapEvent, itemData);
+        this._notify('itemLongTap', [itemData.item, tapEvent]);
     }
 
     /**
@@ -5909,6 +5923,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             options.navigation = newNavigation;
         }
 
+        // Удалим текущие items иначе SourceController их запомнит и будет модифицировать
+        delete options.items;
+
         return options;
     }
 
@@ -6138,7 +6155,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _shouldRegisterIntersectionObserver(): boolean {
-        return document && this._isMounted && this._needScrollCalculation && this._listViewModel
+        return document && this._isMounted && this._listViewModel
             && !this._intersectionObserver;
     }
 
@@ -6687,7 +6704,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
     // endregion
 
-    _getFooterClasses(options): string {
+    _getFooterSpacingClasses(options): string {
         const hasCheckboxes = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
         const paddingClassName = `controls__BaseControl__footer-${options.style}__paddingLeft_`;
@@ -6697,7 +6714,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             paddingClassName += (options.itemPadding?.left?.toLowerCase() || 'default');
         }
 
-        return `controls__BaseControl__footer ${paddingClassName}`;
+        return `${paddingClassName}`;
+    }
+
+    _getNavigationButtonClasses(options, buttonConfig): string {
+        const buttonView = this._resolveNavigationButtonView() === 'separator';
+        if (!buttonView || (buttonConfig && buttonConfig.buttonPosition !== 'center')) {
+            return this._getFooterSpacingClasses(options);
+        }
     }
 
     /**

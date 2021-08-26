@@ -8,22 +8,24 @@ export type TNavigation = INavigationOptionValue<INavigationSourceConfig>;
 export type TKey = boolean | string | number;
 
 /**
- * @interface Controls/filter:EditorOptions
+ * Интерфейс опций для конфигурации редактора полей фильтра.
+ * @remark
+ * См. {@link Controls/filter:IFilterItem#editorOptions}
+ * @interface Controls/filter:IEditorOptions
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IFilter
+ * @implements Controls/interface:INavigation
  * @public
  * @author Михайлов С.Е.
  */
 export interface IEditorOptions {
-    /**
-     * Объект, который реализует интерфейс {@link Types/source:ICrud} для доступа к данным.
-     * Если свойство items указано, то свойство source будет игнорироваться.
-     */
     source?: ICrudPlus | HistorySource;
-    /**
-     * Имя свойства, уникально идентифицирующего элемент коллекции.
-     */
     keyProperty?: string;
     /**
      * Имя свойства элемента, содержимое которого будет отображаться. Влияет только на значение при выборе.
+     * @see nodeProperty
+     * @see parentProperty
      */
     displayProperty?: string;
     parentProperty?: string;
@@ -45,29 +47,25 @@ export interface IEditorOptions {
         popupOptions?: IPopupOptions;
     };
     /**
-     * Шаблон рендеринга элементов.
-     * Подробнее о настройке itemTemplate читайте {@link Controls/_menu/interface/IMenuBase#itemTemplate здесь}.
+     * Шаблон отображения элементов.
+     * @remark
+     * Подробнее о настройке itemTemplate читайте {@link Controls/menu:IMenuBase#itemTemplate здесь}.
      * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
+     * @see itemTemplateProperty
      */
     itemTemplate?: string;
     /**
      * Режим отображения редактора. Принимаемые значения смотрите в документации редактора.
      */
     editorMode?: string;
-    /**
-     * Конфигурация фильтра-объект с именами полей и их значениями.
-     * Подробнее читайте {@link Controls/_interface/IFilter#filter здесь}.
-     */
     filter?: QueryWhereExpression<unknown>;
-    /**
-     * Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.).
-     * Подробнее читайте {@link Controls/_interface/INavigation#navigation здесь}.
-     */
     navigation?: TNavigation;
     /**
      * Имя свойства, содержащего шаблон для рендеринга элементов.
-     * Подробнее о настройке itemTemplateProperty читайте {@link Controls/_menu/interface/IMenuBase#itemTemplateProperty здесь}.
+     * @remark
+     * Подробнее о настройке itemTemplateProperty читайте {@link Controls/menu:IMenuBase#itemTemplateProperty здесь}.
      * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
+     * @see itemTemplate
      */
     itemTemplateProperty?: string;
 }

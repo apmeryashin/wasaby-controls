@@ -1,6 +1,12 @@
 import {getSettings, setSettings} from 'Controls/Application/SettingsController';
 
-export function getPopupWidth(propStorageId: string): Promise<number | void> {
+export interface IStackSavedConfig {
+    width: number;
+    minSavedWidth?: number;
+    maxSavedWidth?: number;
+}
+
+export function getPopupWidth(propStorageId: string): Promise<IStackSavedConfig | void> {
     return new Promise((resolve) => {
         if (propStorageId) {
             getSettings([propStorageId]).then((storage) => {
@@ -12,8 +18,8 @@ export function getPopupWidth(propStorageId: string): Promise<number | void> {
     });
 }
 
-export function savePopupWidth(propStorageId: string, width: number): void {
-    if (propStorageId && width) {
-        setSettings({[propStorageId]: width});
+export function savePopupWidth(propStorageId: string, data: IStackSavedConfig): void {
+    if (propStorageId && data) {
+        setSettings({[propStorageId]: data});
     }
 }

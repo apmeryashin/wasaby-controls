@@ -4,7 +4,8 @@
            template="{{_options.master}}"
            shadowMode="js"
            attr:class="controls-MasterDetail_master-template controls-master-template-{{_newDesign ? 'newDesign' : 'default'}}
-                           controls-MasterDetail_{{_options.style || 'master'}}-template-{{_options.contrastBackground ? 'contrast'}}"
+                       controls-master-template-{{_newDesign ? 'newDesign' : 'default'}}-{{_options.masterPosition}}
+                       controls-MasterDetail_{{_options.style || 'master'}}-template-{{_options.contrastBackground ? 'contrast'}}"
            on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
 </ws:template>
 
@@ -26,16 +27,19 @@
                <ws:partial template="masterContentTemplate" />
             </ws:else>
          </Controls.event:Register>
-         <ws:if data="{{_canResizing}}">
-            <Controls.dragnDrop:ResizingLine name="resizingLine"
-                                             attr:class="controls-MasterDetail_resizing-line {{_newDesign ? 'controls-MasterDetail_resizing-line-newDesign'}} controls-MasterDetail_resizing-line-{{_options.masterPosition}}"
-                                             minOffset="{{_minOffset}}"
-                                             maxOffset="{{_maxOffset}}"
-                                             direction="{{ _options.masterPosition === 'left' ? 'direct' : 'reverse' }}"
-                                             on:dragStart="_dragStartHandler()"
-                                             on:offset="_offsetHandler()"/>
-         </ws:if>
       </div>
+   </ws:if>
+</ws:template>
+
+<ws:template name="resizingLineTemplate">
+   <ws:if data="{{_canResizing}}">
+      <Controls.dragnDrop:ResizingLine name="resizingLine"
+                                       attr:class="controls-MasterDetail_resizing-line {{_newDesign ? 'controls-MasterDetail_resizing-line-newDesign'}}"
+                                       minOffset="{{_minOffset}}"
+                                       maxOffset="{{_maxOffset}}"
+                                       direction="{{ _options.masterPosition === 'left' ? 'direct' : 'reverse' }}"
+                                       on:dragStart="_dragStartHandler()"
+                                       on:offset="_offsetHandler()"/>
    </ws:if>
 </ws:template>
 
@@ -44,6 +48,7 @@
       <div class="controls-MasterDetail_details ws-flexbox ws-flex-grow-1">
          <ws:partial
                  attr:class="controls-MasterDetail_detailsContent
+                             {{_options.masterPosition === 'right' ? 'ws-flex-grow-1'}}
                             {{_options.contrastBackground ?
                                ('controls-MasterDetail_details-bg-contrast ' + (_newDesign ? 'controls-MasterDetail_details-newDesign') + (_options.masterVisibility === 'visible' ? ' tlr' : ' tr')) :
                                'controls-MasterDetail_details_bg-same'}}"
@@ -59,10 +64,12 @@
 <div class="controls-MasterDetail ws-flexbox controls_list_theme-{{_options.theme}}">
    <ws:if data="{{_options.masterPosition === 'right'}}">
       <ws:partial template="detail" />
+      <ws:partial template="resizingLineTemplate" />
       <ws:partial template="master" />
    </ws:if>
    <ws:else>
       <ws:partial template="master" />
+      <ws:partial template="resizingLineTemplate" />
       <ws:partial template="detail" />
    </ws:else>
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>

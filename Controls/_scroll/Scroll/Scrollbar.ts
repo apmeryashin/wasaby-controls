@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {constants, detection} from 'Env/Env';
 import * as ScrollBarTemplate from 'wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar';
+import {SCROLL_DIRECTION} from '../Utils/Scroll';
 import 'Controls/event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
@@ -54,7 +55,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _currentCoords: IScrollBarCoords | null = null;
     // Координата точки на ползунке, за которую начинаем тащить
     private _dragPointOffset: number | null = null;
-    protected _trackVisible: boolean = false;
     private _scrollPosition: number = 0;
     private _viewportSize: number | null = null;
 
@@ -71,9 +71,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
     }
 
     protected _afterMount(): void {
-        if (this._options.direction === 'horizontal') {
-            this._trackVisible = !!this._options.trackVisible;
-        }
         this._resizeHandler();
         this._forceUpdate();
         const position = this._scrollPosition || this._options.position || 0;
@@ -124,14 +121,14 @@ class Scrollbar extends Control<IScrollBarOptions> {
         if (options.thumbStyle) {
             return options.thumbStyle;
         }
-        return (options.direction === 'vertical' ? 'accented' : 'unaccented');
+        return (options.direction === SCROLL_DIRECTION.VERTICAL ? 'accented' : 'unaccented');
     }
 
     private _getThumbThickness(options: IScrollBarOptions): string {
         if (options.thumbThickness) {
             return options.thumbThickness;
         }
-        return (options.direction === 'vertical' ? 'l' : 's');
+        return (options.direction === SCROLL_DIRECTION.VERTICAL ? 'l' : 's');
     }
 
     private _getThumbCoordByScroll(scrollbarSize: number, thumbSize: number, scrollPosition: number,
@@ -157,7 +154,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         let sizeValue: number;
 
         const scrollBarClientRect = this._children.scrollbar.getBoundingClientRect();
-        if (direction === 'vertical') {
+        if (direction === SCROLL_DIRECTION.VERTICAL) {
             offsetValue = scrollBarClientRect.top;
             sizeValue = scrollBarClientRect.height;
         } else {
@@ -232,7 +229,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @return {boolean} изменились ли размеры.
      */
     private _setSizes(contentSize: number): boolean {
-        const verticalDirection = this._options.direction === 'vertical';
+        const verticalDirection = this._options.direction === SCROLL_DIRECTION.VERTICAL;
         const scrollbar = this._children.scrollbar;
         if (!Scrollbar._isScrollBarVisible(scrollbar as HTMLElement)) {
             return false;
@@ -291,7 +288,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     }
 
     protected _scrollbarTouchStartHandler(event: Event): void {
-        if (this._options.direction === 'horizontal') {
+        if (this._options.direction === SCROLL_DIRECTION.HORIZONTAL) {
             this._scrollbarBeginDragHandler(event);
         }
     }
@@ -306,7 +303,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @param {SyntheticEvent} event дескриптор события.
      */
     private _scrollbarBeginDragHandler(event): void {
-        const verticalDirection = this._options.direction === 'vertical';
+        const verticalDirection = this._options.direction === SCROLL_DIRECTION.VERTICAL;
         const thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'];
         const mouseCoord = Scrollbar._getMouseCoord(event.nativeEvent, this._options.direction);
 
@@ -392,7 +389,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
 
     private static _getMouseCoord(nativeEvent: Event, direction: TDirection): number {
         let offset: number;
-        const offsetAxis = direction === 'vertical' ? 'pageY' : 'pageX';
+        const offsetAxis = direction === SCROLL_DIRECTION.VERTICAL ? 'pageY' : 'pageX';
 
         if (nativeEvent instanceof MouseEvent) {
             offset = nativeEvent[offsetAxis];
@@ -432,7 +429,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private static _calcThumbSize(thumb: HTMLElement, scrollbarAvailableSize: number,
                                   viewportRatio: number, direction: TDirection): number {
         const thumbSize = scrollbarAvailableSize * viewportRatio;
-        const minSize = parseFloat(getComputedStyle(thumb)[direction === 'vertical' ? 'min-height' : 'min-width']);
+        const minSize = parseFloat(getComputedStyle(thumb)[direction === SCROLL_DIRECTION.VERTICAL ? 'min-height' : 'min-width']);
 
         return Math.max(minSize, thumbSize);
     }

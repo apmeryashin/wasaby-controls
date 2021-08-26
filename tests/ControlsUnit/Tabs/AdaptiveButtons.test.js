@@ -78,11 +78,12 @@ define([
 
             adaptiveButtons._calcVisibleItems(items, options);
             assert.deepEqual(adaptiveButtons._visibleItems.getRawData(), [{
+                canShrink: false,
                 id: 1,
                 title: 'Первый'
             }, {
+                canShrink: true,
                 id: 2,
-                minWidth: 0,
                 title: 'Второй'
             }
             ]);
@@ -90,11 +91,12 @@ define([
             options.selectedKey = 3;
             adaptiveButtons._calcVisibleItems(items, options);
             assert.deepEqual(adaptiveButtons._visibleItems.getRawData(), [{
+                canShrink: false,
                 id: 1,
                 title: 'Первый'
             }, {
+                canShrink: true,
                 id: 3,
-                minWidth: 0,
                 title: 'Третий'
             }
             ]);

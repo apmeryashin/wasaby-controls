@@ -36,6 +36,7 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
             };
             const item = new TileCollectionItem({owner, roundBorder: {tl: 's', tr: 'xs', bl: 'm'}});
             const classes = item.getItemClasses();
+            CssClassesAssert.include(classes, 'js-controls-ListView__editingTarget');
             CssClassesAssert.include(classes, 'controls-TileView__item_roundBorder_topLeft_s');
             CssClassesAssert.include(classes, 'controls-TileView__item_roundBorder_topRight_xs');
             CssClassesAssert.include(classes, 'controls-TileView__item_roundBorder_bottomLeft_m');

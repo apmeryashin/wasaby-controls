@@ -42,6 +42,7 @@ interface IPropertyGridValidatorArguments {
  * @extends UI/Base:Control
  * @implements Controls/interface/IPropertyGrid
  * @implements Controls/propertyGrid:IProperty
+ * @implements Controls/propertyGrid:IPropertyGrid
  * @implements Controls/interface:ISource
  * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
  *

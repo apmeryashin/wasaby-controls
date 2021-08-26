@@ -41,3 +41,4 @@ export {
     TLoadersConfigsMap as TLoadConfig
 } from './_dataSource/DataLoader';
 export {default as PageController, IPageConfig} from './_dataSource/PageController';
+export {getState as getControllerState, saveState as saveControllerState} from 'Controls/_dataSource/Controller/State';

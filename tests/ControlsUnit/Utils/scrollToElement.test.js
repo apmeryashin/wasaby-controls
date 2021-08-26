@@ -41,6 +41,57 @@ define([
          sinon.restore();
       });
 
+      it('waitInitialization = true', function() {
+         mockDOM();
+         let isInited = false;
+         sinon.stub(NodeCollector, 'goUpByControlTree').returns([{
+            initHeaderController: () => {
+               let resp;
+               if (!isInited) {
+                  resp = Promise.resolve();
+                  isInited = true;
+               }
+               return resp;
+            },
+            getHeadersHeight: () => 4
+         }]);
+         sinon.stub(cInstance, 'instanceOfModule').returns(true);
+         var element = {
+            classList: {
+               contains: () => false
+            },
+            querySelector: () => null,
+            parentElement: {
+               overflowY: 'scroll',
+               scrollHeight: 110,
+               clientHeight: 100,
+               top: 10,
+               getBoundingClientRect: function() {
+                  return {
+                     top: this.top,
+                     height: this.clientHeight
+                  };
+               },
+               scrollTop: 0,
+               className: '',
+               closest: () => []
+            },
+            getBoundingClientRect: function() {
+               return {
+                  top: 15,
+                  height: 150
+               };
+            },
+            closest: () => {}
+         };
+         const resp = scroll.scrollToElement(element, 'top', false, true).then(() => {
+            assert.equal(element.parentElement.scrollTop, 1);
+            console.log(resp);
+         });
+         assert.equal(element.parentElement.scrollTop, 0);
+         return resp;
+      });
+
       describe('scroll down', function() {
          it('to top', function() {
             mockDOM();
@@ -481,6 +532,77 @@ define([
             };
             scroll.scrollToElement(element, false, true);
             assert.equal(element.parentElement.scrollTop, -5);
+         });
+
+         it('to top force and inner sticky block', function() {
+            mockDOM();
+            const element = {
+               offsetHeight: 10,
+               classList: {
+                  contains: () => true
+               },
+               querySelector: () => null,
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 160,
+                  clientHeight: 150,
+                  top: 10,
+                  className: '',
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 15,
+                  closest: () => []
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 20,
+                     height: 100
+                  };
+               },
+               closest: () => {}
+            };
+            scroll.scrollToElement(element, false, true);
+            assert.equal(element.parentElement.scrollTop, 25);
+         });
+
+         it('to top force and sticky block with offsetTop', function() {
+            mockDOM();
+            sinon.stub(NodeCollector, 'goUpByControlTree').returns([{ getHeadersHeight: () => 10 }]);
+            sinon.stub(cInstance, 'instanceOfModule').returns(true);
+            var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 160,
+                  clientHeight: 150,
+                  top: 10,
+                  className: '',
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 15,
+                  closest: () => []
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 20,
+                     height: 100
+                  };
+               },
+               closest: () => {}
+            };
+            scroll.scrollToElement(element, false, true);
+            assert.equal(element.parentElement.scrollTop, 15);
          });
 
          it('to bottom', function() {

@@ -166,4 +166,20 @@ describe('Controls/grid_clean/Display/ResultsColspan', () => {
         assert.strictEqual(columnItems[1].getColspan(), 1);
         assert.strictEqual(columnItems[1].getColspanStyles(), '');
     });
+
+    it('getWrapperStyles on cells should look at colspan', () => {
+        const gridCollection = new GridCollection({
+            collection,
+            keyProperty: 'key',
+            columns,
+            multiSelectVisibility: 'hidden',
+            resultsPosition: 'top',
+            resultsColspanCallback: () => 2
+        });
+
+        const columnItems = gridCollection.getResults().getColumns();
+        assert.strictEqual(columnItems.length, 2);
+        assert.strictEqual(columnItems[0].getWrapperStyles(), 'grid-column: 1 / 3;');
+        assert.strictEqual(columnItems[1].getWrapperStyles(), 'grid-column: 3 / 5;');
+    });
 });

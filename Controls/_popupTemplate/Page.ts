@@ -40,6 +40,10 @@ export default class Template extends Control<IControlOptions> {
         }
     }
 
+    protected _beforeUnmount(): void {
+        this._cancelCurrentLoading();
+    }
+
     /**
      * Обработчик подгрузки новых страниц внутри попапа.
      * Загружаем для них данные и спускаем вместе с остальными.
@@ -53,6 +57,8 @@ export default class Template extends Control<IControlOptions> {
             return PageController.getPageConfig(key).then((config) => {
                 return PageController.loadData(config, this._options.pageTemplateOptions).then((loaderResult) => {
                     result[key] = loaderResult;
+                }).catch((err) => {
+                    // Обрабатываем ошибку промиса, чтобы не красилась консоль
                 });
             });
         });

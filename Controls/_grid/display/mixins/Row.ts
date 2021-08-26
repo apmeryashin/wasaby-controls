@@ -293,9 +293,9 @@ export default abstract class Row<T extends Model = Model> {
         if (addEmptyCellsForStickyLadder) {
             if (stickyLadderCellsCount) {
                 const params = {owner: this, isLadderCell: true, column: {}};
-                this._$columnItems.splice(1, 0, new stickyLadderCellCtor(params));
+                this._$columnItems.splice(1, 0, new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}}));
                 if (stickyLadderCellsCount === 2) {
-                    this._$columnItems = ([new stickyLadderCellCtor(params)]).concat(this._$columnItems);
+                    this._$columnItems = ([new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}})]).concat(this._$columnItems);
                 }
             }
             return;
@@ -586,10 +586,11 @@ export default abstract class Row<T extends Model = Model> {
             // TODO: Не работает с колспаннутыми узлами. Нужно чтобы лесенка работала до колспана или сквозь него.
             if (options.shouldAddStickyLadderCells !== false &&
                 this.isFullGridSupport() &&
+                this._$columnItems.length &&
                 this._$columnItems[0].getColspan() === 1) {
-                this._processStickyLadderCells(
-                    options.addEmptyCellsForStickyLadder, options.extensionCellsConstructors?.stickyLadderCell
-                );
+                    this._processStickyLadderCells(
+                        options.addEmptyCellsForStickyLadder, options.extensionCellsConstructors?.stickyLadderCell
+                    );
             }
 
             // Ячейка под чекбокс множественного выбора.

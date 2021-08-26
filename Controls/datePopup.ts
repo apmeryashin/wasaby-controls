@@ -403,7 +403,7 @@ export default class DatePopup extends Control implements EventProxyMixin {
                 this._scrollToCurrentMonth();
                 break;
             case constants.key.esc:
-                this._applyResult();
+                this._notify('close');
                 break;
             case constants.key.tab:
                 // Если управление происходит через клавиатуру,

@@ -32,12 +32,34 @@ export = {
       var options = IRangeSelectable.getDefaultOptions();
 
       /**
+       * @typedef {Object} Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges
+       * @description Конфигурация диапазонов дат. Используется в опции {@link Controls/_dateRange/interfaces/IDateRangeSelectable#ranges ranges}.
+       * @property {Array.<number>} days Диапазоны дней.
+       * Каждый элемент массива — натуральное число, которое задает диапазон.
+       * Например, "days: [2,5]" означает, что в контроле можно выбрать диапазон из 2 дней, либо из 5.
+       * @property {Array.<number>} weeks Диапазоны недель.
+       * Каждый элемент массива — натуральное число, которое задает диапазон.
+       * Например, "weeks: [2,5]" означает, что в контроле можно выбрать диапазон из 2 недель, либо из 5.
+       * @property {Array.<number>} months Диапазоны месяцев.
+       * Каждый элемент массива — натуральное число, которое задает диапазон.
+       * Например, "months: [2,5]" означает, что в контроле можно выбрать диапазон из 2 месяцев, либо из 5.
+       * @property {Array.<number>} quarters Диапазоны кварталов.
+       * Каждый элемент массива — натуральное число, которое задает диапазон.
+       * Например, "quarters: [2,5]" означает, что в контроле можно выбрать диапазон из 2 кварталов, либо из 5.
+       * @property {Array.<number>} halfyears Диапазоны полугодий.
+       * Каждый элемент массива — натуральное число, которое задает диапазон.
+       * Например, "halfyears: [2,5]" означает, что в контроле можно выбрать диапазон из 2 полугодий, либо из 5.
+       * @property {Array.<number>} years Диапазоны лет.
+       * Каждый элемент массива — натуральное число, которое задает диапазон.
+       * Например, "years: [2,5]" означает, что в контроле можно выбрать диапазон из 2 лет, либо из 5.
+       */
+
+      /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
-       * @cfg {Object} Кванты.
+       * @cfg {Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges.typedef} Диапазон дат, который доступен для выбора.
        * @remark
-       * Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды.
-       * Объект принимает свойства days, weeks, months, quarters, halfyears, и years со значениями типа Array.
-       * @default []
+       * Использование опции актуально, когда опция {@link selectionType} установлена в значение "quantum".
+       * @default {}
        * @example
        * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц.
        * <pre class="brush: html">
@@ -52,31 +74,23 @@ export = {
        * </pre>
        */
       options.ranges = {};
-      /**
-       * @typedef {String} SelectionType
-       * @variant range Выделение произвольного диапазона.
-       * @variant single Выделение одного элемента.
-       * @variant quantum Выделение квантами. Кванты задаются через опцию {@link /docs/js/Controls/dateRange/IDateRangeSelectable/options/ranges/ range}
-       * @variant disable Выбор отключен.
-       */
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#selectionType
-       * @cfg {SelectionType} Определяет режим выделения диапазона.
+       * @cfg {String} Режим выделения диапазона дат.
+       * @variant range Выделение произвольного диапазона дат.
+       * @variant single Выделение только одной даты.
+       * @variant quantum Выделение ограниченного диапазона дат. Конфигурация такого диапазона задается в опции {@link ranges}.
+       * @variant disable Выбор диапазона дат отключен.
        * @demo Controls-demo/datePopup/SelectionType/Index
        * @default quantum
        */
 
       /**
-       * @typedef {String} MinRange
-       * @description Режим выбора диапазона дат.
-       * @variant day Выбора периода из нескольких дней.
-       * @variant month Выбора периода из нескольких месяцев.
-       */
-
-      /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#minRange
-       * @cfg {MinRange} Задает режим выбора диапазона дат.
+       * @cfg {String} Режим выбора диапазона дат.
+       * @variant day Выбор периода из нескольких дней.
+       * @variant month Выбор периода из нескольких месяцев.
        * @default day
        */
 
@@ -93,6 +107,7 @@ export = {
        * Возвращаемым значением функции должен быть массив с двумя элементами, начальным и конечным значением диапазона [startValue, endValue].
        * @example
        * <pre class="brush: html">
+       * <!-- WML -->
        * <Controls.dateRange:RangeSelector rangeSelectedCallback="{{_rangeSelectedCallback}}" />
        * </pre>
        * <pre class="brush: js">

@@ -1,8 +1,28 @@
-import {IContrastBackground} from 'Controls/interface';
+import {IControlOptions} from 'UI/Base';
+import {
+    ICaptionOptions,
+    IContrastBackground,
+    IFontColorStyleOptions,
+    IFontSizeOptions,
+    IHeightOptions,
+    IHrefOptions,
+    IIconOptions,
+    IIconSizeOptions,
+    IIconStyleOptions,
+    ITooltipOptions
+} from 'Controls/interface';
 
-export interface IButtonOptions {
+export type IViewMode = 'button' | 'link' | 'linkButton' | 'toolButton' | 'functionalButton';
+export type TextAlign = 'left' | 'right' | 'center';
+
+export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions, IIconStyleOptions,
+    IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
     contrastBackground?: boolean;
     buttonStyle?: string;
+    viewMode?: IViewMode;
+    captionPosition?: 'left' | 'right';
+    textAlign?: TextAlign;
+    translucent?: boolean;
 }
 /**
  * Интерфейс для стилевого оформления кнопки.

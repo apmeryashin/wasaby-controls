@@ -27,6 +27,28 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
         record = undefined;
     });
 
+    describe('constructor', () => {
+        it('empty columns', () => {
+            const columnsConfig = [];
+            const gridRow = new GridDataRow({
+                owner: {
+                    ...mockedCollection,
+                    getGridColumnsConfig: () => columnsConfig
+                },
+                columnsConfig: columnsConfig,
+                stickyLadder: {
+                    'prop1': {headingStyle: 'style'},
+                    'prop2': {headingStyle: 'style'}
+                },
+                gridColumnsConfig: columnsConfig,
+                contents: record
+            });
+
+            assert.isArray(gridRow.getColumns());
+            assert.equal(gridRow.getColumns().length, 0);
+        });
+    })
+
     describe('.setColumnsConfig()', () => {
         it('[DATA] => [DATA]', () => {
             const columnsConfig = [{displayProperty: 'before'}];

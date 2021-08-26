@@ -163,17 +163,4 @@ describe('Controls/columnScroll', () => {
         );
 
     });
-
-    // TODO: Переписать на публичные вызовы. Тестировать поведение кусками.
-    describe('tests in old format. REWRITE.', () => {
-        it('should scroll to position', () => {
-            const target = {
-                left: 0,
-                right: 200
-            };
-            assert.equal(columnScroll.getScrollPosition(), 0);
-            columnScroll.scrollToElementIfHidden(target);
-            assert.equal(columnScroll.getScrollPosition(), 0);
-        });
-    });
 });

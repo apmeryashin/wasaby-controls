@@ -1,3 +1,14 @@
+@_image_size_s_position_horizontal_rich_tile: var(--size_6xl_image);
+@_image_size_m_position_horizontal_rich_tile: var(--size_6xl_image);
+@_image_size_l_position_horizontal_rich_tile: var(--size_6xl_image);
+@_image_size_xl_position_horizontal_rich_tile: var(--size_xl_image);
+@_image_size_2xl_position_horizontal_rich_tile: var(--size_2xl_image);
+@_image_size_3xl_position_horizontal_rich_tile: var(--size_3xl_image);
+@_image_size_4xl_position_horizontal_rich_tile: var(--size_4xl_image);
+@_image_size_5xl_position_horizontal_rich_tile: var(--size_5xl_image);
+@_image_size_6xl_position_horizontal_rich_tile: var(--size_6xl_image);
+@_image_size_7xl_position_horizontal_rich_tile: var(--size_7xl_image);
+
 .controls-TileView__richTemplate_imagePosition_right {
    flex-direction: row-reverse;
 }
@@ -115,8 +126,8 @@
 
 .for(@variants, {
    .controls-TileView__richTemplate_image_size_@{_item}_position_horizontal {
-      width: ~"var(--image_size_@{_item}_position_horizontal_rich_tile)";
-      height: ~"var(--image_size_@{_item}_position_horizontal_rich_tile)";
+      width: ~"@{_image_size_@{_item}_position_horizontal_rich_tile}";
+      height: ~"@{_image_size_@{_item}_position_horizontal_rich_tile}";
    }
 });
 
@@ -136,7 +147,8 @@
 
    .controls-TileView__richTemplate_image_size_s_position_top_viewMode_circle,
    .controls-TileView__richTemplate_image_size_s_position_top_viewMode_ellipse {
-      width: var(--image_width_s_position_horizontal_rich_tile);
+      width: @_image_size_s_position_horizontal_rich_tile);
+      width: @_image_size_s_position_horizontal_rich_tile;
    }
 
    .controls-TileView__richTemplate_image_size_m_position_top_viewMode_circle,
@@ -149,18 +161,18 @@
       width: var(--image_height_l_position_top_rich_tile);
    }
    .controls-TileView__richTemplate_image_size_s_position_horizontal {
-      height: var(--image_height_s_position_horizontal_rich_tile);
-      width: var(--image_width_s_position_horizontal_rich_tile);
+      height: @_image_size_s_position_horizontal_rich_tile;
+      width: @_image_size_s_position_horizontal_rich_tile;
    }
 
    .controls-TileView__richTemplate_image_size_m_position_horizontal {
-      height: var(--image_height_m_position_horizontal_rich_tile);
-      width: var(--image_width_m_position_horizontal_rich_tile);
+      height: @_image_size_m_position_horizontal_rich_tile;
+      width: @_image_size_m_position_horizontal_rich_tile;
    }
 
    .controls-TileView__richTemplate_image_size_l_position_horizontal {
-      height: var(--image_height_l_position_horizontal_rich_tile);
-      width: var(--image_width_l_position_horizontal_rich_tile);
+      height: @_image_size_l_position_horizontal_rich_tile;
+      width: @_image_size_l_position_horizontal_rich_tile;
    }
 }
 
@@ -203,36 +215,19 @@
    right: 0;
 }
 
-.controls-TileView__afterTitleTemplate-overlay {
-   display: inline-block;
-   width: 0;
-   position: relative;
-}
-
-.controls-TileView__afterTitleTemplate-overlay::after {
-   content: '\200b';
-   display: inline-block;
-   width: 1000px;
-   position: absolute;
-
-   // элемент должен перекрывать строку с небольшим запасом, чтобы не просвечивали части символов
-   height: 1em;
-   bottom: 0;
-   left: 0;
-   z-index: 1;
-}
-
-.controls-TileView__afterTitleTemplate-overflow {
+.controls-TileView__afterTitleTemplate-wrapper {
    position: absolute;
    right: 0;
    bottom: 0;
    display: flex;
    z-index: 0;
+   align-items: center;
+   height: var(--inline_height_s);
 }
 
-.controls-TileView__afterTitleTemplate-overflow::before {
+.controls-TileView__afterTitleTemplate-wrapper::before {
    content: '\200b';
-   width: var(--offset_s);
+   width: calc(var(--offset_m) + var(--offset_xs));
 }
 
 .controls-TileView__richTemplate_title {
@@ -244,31 +239,6 @@
    display: inline-flex;
    align-items: center;
    height: var(--inline_height_s);
-}
-
-.controls-TileView__afterTitleTemplate-overlay,
-.controls-TileView__afterTitleTemplate-overlay::after,
-.controls-TileView__afterTitleTemplate-overflow,
-.controls-TileView__richTemplate_title,
-.controls-TileView__previewTemplate_text,
-.controls-TileView__afterTitleTemplate-inline,
-.controls-TileView__afterTitleTemplate-overflow {
-   background: inherit;
-}
-
-.controls-TileView__afterTitleTemplate-inline {
-   margin-left: var(--offset_s);
-   display: inline;
-}
-
-.controls-TileView__afterTitleTemplate-icon {
-   position: relative;
-   background: inherit;
-   z-index: 1;
-   &:before {
-      position: absolute;
-      background: inherit;
-   }
 }
 
 .controls-TileView__beforeTitleTemplate {

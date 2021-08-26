@@ -1426,6 +1426,9 @@ define([
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'last');
+
+         // Если не нашли элемент, значит, еще рано менять состояние.
+         assert.equal(treeControl._getMarkedLeaf(-1, treeControl.getViewModel()), 'last');
       });
 
       describe('_notifyItemClick', async () => {
@@ -1591,7 +1594,7 @@ define([
          });
       });
 
-      describe('_getFooterClasses', () => {
+      describe('_getFooterSpacingClasses', () => {
          const items = new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
@@ -1616,19 +1619,19 @@ define([
          it('expanderIcon is none', () => {
             const options = {...cfg, expanderIcon: 'none'};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.notInclude(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.notInclude(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
 
          it('expanderVisibility is hasChildren', () => {
             const options = {...cfg, expanderVisibility: 'hasChildren'};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.include(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.include(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
 
          it('expanderVisibility is visible', () => {
             const options = {...cfg, expanderVisibility: 'visible'};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.include(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.include(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
 
          it('expanderVisibility is visible and not has node', () => {
@@ -1638,31 +1641,31 @@ define([
             });
             const options = {...cfg, expanderVisibility: 'visible', items};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.notInclude(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.notInclude(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
 
          it('expanderPosition is custom', () => {
             const options = {...cfg, expanderVisibility: 'visible', expanderPosition: 'custom'};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.notInclude(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.notInclude(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
 
          it('expanderPosition is right', () => {
             const options = {...cfg, expanderVisibility: 'visible', expanderPosition: 'right'};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.notInclude(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.notInclude(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
 
          it('expanderPosition is default', () => {
             const options = {...cfg, expanderVisibility: 'visible', expanderPosition: 'default'};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.include(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.include(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
 
          it('expanderPosition is undefined', () => {
             const options = {...cfg, expanderVisibility: 'visible'};
             treeControl = correctCreateTreeControl(options);
-            asserts.CssClassesAssert.include(treeControl._getFooterClasses(options), 'controls-TreeGridView__expanderPadding-default');
+            asserts.CssClassesAssert.include(treeControl._getFooterSpacingClasses(options), 'controls-TreeGridView__expanderPadding-default');
          });
       });
 

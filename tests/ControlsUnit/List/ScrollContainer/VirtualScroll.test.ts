@@ -269,6 +269,14 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
                 placeholders: {top: 0, bottom: 300}
             }, instance.shiftRange('down'));
         });
+
+        it('itemsCount less pageSize', () => {
+            instance.resetRange(0, 1, {itemsHeights: [60]});
+            assert.deepEqual({start: 0, stop: 1 }, instance.getRange());
+
+            instance.addItems(1, 3, {up: true, down: true});
+            assert.deepEqual({start: 0, stop: 4 }, instance.getRange());
+        });
     });
     describe('.isNeedToRestorePosition', () => {
         it('after shift range', () => {

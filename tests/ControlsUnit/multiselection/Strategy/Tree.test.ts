@@ -91,9 +91,9 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    describe('unselect', () => {
       it('selected node', () => {
          // выбран узел, в котором выбраны дети
-         let selection = { selected: [2, 3], excluded: [] };
+         let selection = { selected: [], excluded: [] };
          selection = strategy.unselect(selection, 2);
-         assert.deepEqual(selection.selected, [3]);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
 
          // выбран узел, в котором выбраны дети
@@ -157,6 +157,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = strategyWithDescendantsAndAncestors.unselect(selection, 3);
          assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
+      });
+
+      it('selectDescendants = false, unselect all selected childs', () => {
+         let selection = { selected: [3], excluded: [] };
+         selection = strategy.unselect(selection, 2);
+         assert.deepEqual(selection.selected, []);
+         assert.deepEqual(selection.excluded, [);
       });
 
       it('with entry path', () => {
@@ -317,13 +324,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
          selection = strategy.unselect(selection, 2);
 
-         assert.deepEqual(selection.selected, [1, 3, 4, 5, 6, 7]);
+         assert.deepEqual(selection.selected, [1, 5, 6, 7]);
          assert.deepEqual(selection.excluded, []);
 
          selection = strategy.toggleAll(selection);
 
          assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, [null, 1, 3, 4, 5, 6, 7]);
+         assert.deepEqual(selection.excluded, [null, 1, 5, 6, 7]);
       });
 
       it('toggleAll after select all by one in root', () => {
@@ -898,6 +905,38 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const selection = { selected: [20], excluded: [] };
          const count = strategyWithDescendantsAndAncestors.getCount(selection, false);
          assert.isNull(count);
+      });
+
+      it('should count leafs are childs of not selectable items', () => {
+         const model = new Tree({
+            collection: new RecordSet({
+               keyProperty: 'id',
+               rawData: [
+                  {id: 1, parent: null, node: true},
+                  {id: 11, parent: 1, node: null},
+                  {id: 12, parent: 1, node: null},
+                  {id: 2, parent: null, node: true},
+                  {id: 21, parent: 2, node: null},
+                  {id: 22, parent: 2, node: null},
+               ]
+            }),
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node'
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model,
+            selectionType: 'leaf'
+         });
+
+         const selection = { selected: [null], excluded: [null] };
+         const res = strategy.getCount(selection, false);
+         assert.equal(res, 4);
       });
    });
 

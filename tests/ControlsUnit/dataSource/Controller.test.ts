@@ -3,7 +3,7 @@ import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 import {adapter} from 'Types/entity';
-import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
+import {INavigationPageSourceConfig, INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {createSandbox, stub, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 
@@ -334,6 +334,11 @@ describe('Controls/dataSource:SourceController', () => {
             ok(controller.getItems().getCount() === allItemsCount);
 
             await controller.reload({
+                multiNavigation: true
+            } as INavigationSourceConfig);
+            ok(controller.getItems().getCount() === pageSize);
+
+            await controller.reload({
                 page: 0,
                 pageSize
             });
@@ -633,8 +638,14 @@ describe('Controls/dataSource:SourceController', () => {
 
         it('expandedItems is [null]',  async () => {
             let options = {...getControllerWithHierarchyOptions()};
+            options.source = new Memory({
+                data: hierarchyItems,
+                keyProperty: 'key',
+                filter: filterByRoot
+            });
             options.expandedItems = [null];
-            const controller = getControllerWithHierarchy(options);
+            options.root = null;
+            const controller = getController(options);
 
             deepStrictEqual(controller.getExpandedItems(), [null]);
 
@@ -642,6 +653,9 @@ describe('Controls/dataSource:SourceController', () => {
             options.filter = {newFilterField: 'newFilterValue'};
             controller.updateOptions(options);
             deepStrictEqual(controller.getExpandedItems(), [null]);
+
+            await controller.reload();
+            ok(controller.getItems().getCount() === 2);
         });
     });
 

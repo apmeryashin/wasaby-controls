@@ -1153,6 +1153,38 @@ describe('Controls/list_clean/BaseControl', () => {
             });
         });
 
+        it('should remember click event args before begin edit', async () => {
+            const cfg = {
+                ...baseControlCfg,
+                editingConfig: {
+                    editOnClick: true
+                }
+            };
+            baseControl = new BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            const e = {
+                stopPropagation: () => {}
+            };
+            const item = {};
+            const originalEvent = {
+                target: {
+                    closest: (eName) => eName === '.js-controls-ListView__editingTarget' ? {} : undefined
+                }
+            };
+
+            return new Promise((resolve) => {
+                baseControl._editInPlaceController = {
+                    edit() {
+                        assert.deepEqual(baseControl._savedItemClickArgs, [e, item, originalEvent, null]);
+                        resolve();
+                    }
+                };
+
+                baseControl._onItemClick(e, item, originalEvent, undefined);
+            });
+        });
+
         describe('readOnly mode', () => {
             beforeEach(() => {
                 baseControl.saveOptions({...baseControlCfg, readOnly: true});
@@ -1421,7 +1453,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
     });
 
-    describe('getFooterClasses', () => {
+    describe('getFooterSpacingClasses', () => {
         [
             // multiSelectVisibility, multiSelectPosition, itemPadding, expectedResult
             ['hidden', 'default', undefined, undefined, 'controls__BaseControl__footer-default__paddingLeft_default'],
@@ -1440,8 +1472,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 const baseControl = new BaseControl({});
 
                 aAssert.isSame(
-                    baseControl._getFooterClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
-                    `controls__BaseControl__footer ${expectedResult}`
+                    baseControl._getFooterSpacingClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
+                    `${expectedResult}`
                 );
             });
         });

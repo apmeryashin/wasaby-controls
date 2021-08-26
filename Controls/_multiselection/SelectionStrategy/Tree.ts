@@ -456,10 +456,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _unselectNode(selection: ISelection, node: TreeItem<Model>): void {
       this._unselectLeaf(selection, node);
-
-      if (this._selectDescendants) {
-         this._removeChildes(selection, node);
-      }
+      // снять выбор с детей мы можем в любом случае, независимо от selectDescendants и selectAncestors,
+      // т.к. по клику по закрашенному чекбоксу это нужно делать
+      this._removeChildes(selection, node);
    }
 
    private _selectLeaf(selection: ISelection, leafId: string|number): void {
@@ -733,11 +732,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                selectedChildrenCount = null;
             }
 
-            if (selectedChildrenCount !== null && this._canBeSelected(childItem)) {
+            if (selectedChildrenCount !== null) {
                childId = this._getKey(childItem);
 
                if (!selection.excluded.includes(childId)) {
-                  if (!selection.selected.includes(childId)) {
+                  if (!selection.selected.includes(childId) && this._canBeSelected(childItem)) {
                      selectedChildrenCount++;
                   }
 
