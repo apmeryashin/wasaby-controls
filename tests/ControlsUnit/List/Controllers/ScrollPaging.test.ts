@@ -21,7 +21,8 @@ describe('Controls/Controllers/ScrollPaging', () => {
                     begin: 'readonly',
                     end: 'hidden',
                     next: 'visible',
-                    prev: 'readonly'
+                    prev: 'readonly',
+                    reset: 'hidden'
                 }
             });
         });
@@ -42,7 +43,8 @@ describe('Controls/Controllers/ScrollPaging', () => {
                     begin: 'visible',
                     end: 'hidden',
                     next: 'visible',
-                    prev: 'visible'
+                    prev: 'visible',
+                    reset: 'hidden'
                 }
             });
         });
@@ -63,7 +65,8 @@ describe('Controls/Controllers/ScrollPaging', () => {
                     begin: 'visible',
                     end: 'hidden',
                     next: 'readonly',
-                    prev: 'visible'
+                    prev: 'visible',
+                    reset: 'hidden'
                 }
             });
         });
@@ -92,7 +95,8 @@ describe('Controls/Controllers/ScrollPaging', () => {
                     begin: 'visible',
                     end: 'hidden',
                     next: 'readonly',
-                    prev: 'visible'
+                    prev: 'visible',
+                    reset: 'hidden'
                 }
             });
         });

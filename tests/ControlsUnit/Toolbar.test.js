@@ -405,6 +405,7 @@ define(
                         parentProperty: 'parent',
                         direction: 'horizontal'
                      },
+                     _notify: () => {},
                      _children: {
                         menuTarget: 'menuTarget'
                      },

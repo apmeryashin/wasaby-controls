@@ -8,7 +8,7 @@
  * <Controls.grid:View source="{{_viewSource}}" columns="{{_columns}}">
  *    <ws:editingConfig editOnClick="{{true}}" />
  *    <ws:itemEditorTemplate>
- *       <ws:partial scope="{{itemEditorTemplate}}" 
+ *       <ws:partial scope="{{itemEditorTemplate}}"
  *          template="Controls/grid:ItemEditorTemplate">
  *         <Controls.input:Text contrastBackground="{{true}}"
  *            bind:value="itemEditorTemplate.item.contents.title"/>

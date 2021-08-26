@@ -1,28 +1,10 @@
 .controls-RangeShortSelectorLink {
-   display: inline-block;
+   display: flex;
    .user-select();
    white-space: nowrap;
    max-width: 100%;
-}
-
-.controls-RangeShortSelectorLink {
    height: var(--height_rangeShortSelectorLink);
    line-height: var(--height_rangeShortSelectorLink);
-}
-
-.controls-RangeShortSelectorLink-wrapper {
-   height: 100%;
-   width: 100%;
-   display: inline-flex;
-   align-items: center;
-   justify-content: center;
-}
-
-.controls-RangeShortSelectorLink__clear {
-   cursor: pointer;
-   text-align: center;
-   color: var(--reset-button_icon-color_dateRangeSelector);
-   width: var(--arrow_width_dateRangeSelector);
 }
 
 .controls-RangeShortSelectorLink__arrow-next {
@@ -33,66 +15,6 @@
    margin-left: var(--yearselector_arrow-prev_margin_shortDatePicker);
 }
 
-.controls-RangeShortSelectorLink__prev,
-.controls-RangeShortSelectorLink__next {
-   font-weight: normal;
-   text-align: center;
-}
-
-.controls-RangeShortSelectorLink__style-readOnly {
-   color: var(--text-color);
-}
-
-.controls-RangeShortSelectorLink__style-clickable {
-   cursor: pointer;
-}
-
-.controls-RangeShortSelectorLink__value-fixed {
-   text-decoration: underline;
-}
-
-.ws-is-hover {
-   .controls-RangeShortSelectorLink__value-hovered:hover {
-      text-decoration: underline;
-   }
-
-   .controls-RangeShortSelectorLink__style-hover:hover {
-      color: var(--link_hover_text-color);
-   }
-}
-
-.controls-RangeShortSelectorLink__value-wrapper {
-   //В разных браузерах, при нечетнром количестве пикселей при делении, разные браузеры округлят по разному.
-   //Из-за этого существует разница в 1px по высоте. Увиеличил высоту контейнера на 1px и прижал к низу.
-   display: flex;
-   justify-content: flex-start;
-   align-items: baseline;
+.controls-RangeShortSelectorLink__button-value {
    flex-grow: 1;
-   text-align: center;
-   height: 100%;
-   min-width: 0;
-}
-
-.controls-RangeShortSelectorLink__value-wrapper-minWidth {
-   min-width: var(--min-width_dateRangeSelector);
-}
-
-.controls-RangeShortSelectorLink__value_fontWeight-bold {
-   font-weight: var(--font-weight_dateRangeSelector);
-}
-
-.controls-RangeShortSelectorLink__value-viewMode-link {
-   max-width: 100%;
-}
-
-.controls-RangeShortSelectorLink_text-primary-hover:hover {
-   color: var(--primary_hover_text-color);
-}
-
-.controls-RangeShortSelectorLink_text-secondary-hover:hover {
-   color: var(--secondary_hover_text-color);
-}
-
-.controls-RangeShortSelectorLink_text-link-hover:hover {
-   color: var(--link_hover_text-color);
 }

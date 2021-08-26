@@ -947,7 +947,7 @@ export default abstract class TileItem<T extends Model = Model> {
                     classes += ` controls-TileView__richTemplate_image_size_` +
                         `${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}`;
                     classes += ` controls-TileView__richTemplate_image_size_` +
-                        `${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}`;
+                        `${imageSize}_position_${imagePosition !== 'top' ? 'horizontal' : 'top'}`;
                 }
                 break;
             case 'preview':

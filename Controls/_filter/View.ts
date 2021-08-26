@@ -258,6 +258,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             this._resolveItems(newOptions.source);
             this._detailPanelTemplateName = this._getDetailPanelTemplateName(newOptions);
             const itemsForReload = this._getItemsForReload(this._options.source, newOptions.source, this._configs);
+            const hasAsyncRedraw = itemsForReload.length || !!this._loadPromise;
             if (itemsForReload.length) {
                 this._clearConfigs(this._source, this._configs);
                 resultDef = this._reload(null, !!newOptions.panelTemplateName, itemsForReload);
@@ -274,6 +275,13 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                         this.openDetailPanel();
                     }
                 });
+            }
+            /* Если идет или будет асинхронная загруза, то будет висеть старый текст, пока не загрузим айтемы
+               Нцжно научиться понимать, когда можем айтем сразу перерисовать и делать это точечно
+               TODO: https://online.sbis.ru/opendoc.html?guid=bd378c3f-b1f8-41ff-a3c1-9344c720c3c7
+            */
+            if (hasAsyncRedraw && this._options.task1182866412) {
+                this._updateText(this._source, this._configs);
             }
             return resultDef;
         }

@@ -1,0 +1,44 @@
+<div class="controls-breadcrumbsMenuButton__menu">
+   <!-- Шапка -->
+   <div class="controls-breadcrumbsMenuButton__menu-header">
+      <!-- На главную -->
+      <Controls.buttons:Button
+         viewMode="link"
+         icon="icon-Home2"
+         iconSize="s"
+         caption="{[На главную]}"
+         on:click="_goToRoot()"
+      />
+
+      <!-- Крестик закрытия -->
+      <Controls.popupTemplate:CloseButton
+         viewMode="linkButton"
+         on:click="_onCloseClick()"
+      />
+   </div>
+
+   <!-- Список -->
+   <Controls.scroll:Container attr:class="controls-breadcrumbsMenuButton__menu-body">
+      <Controls.treeGrid:View
+         name="treeGrid"
+         source="{{_options.source}}"
+         markedKey="{{_markedKey}}"
+
+         keyProperty="{{_options.keyProperty}}"
+         nodeProperty="{{_options.nodeProperty}}"
+         parentProperty="{{_options.parentProperty}}"
+
+         expanderIcon="hiddenNode"
+         expanderVisibility="hasChildren"
+
+         on:itemClick="_onItemClick()"
+         bind:expandedItems="_expandedItems"
+      >
+         <ws:columns>
+            <ws:Array>
+               <ws:Object displayProperty="{{_options.displayProperty}}"/>
+            </ws:Array>
+         </ws:columns>
+      </Controls.treeGrid:View>
+   </Controls.scroll:Container>
+</div>

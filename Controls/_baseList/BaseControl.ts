@@ -482,7 +482,7 @@ const _private = {
     },
 
     enterHandler(self, event) {
-        if (event.nativeEvent.ctrlKey) {
+        if (event.nativeEvent.ctrlKey || !self.getViewModel() || !self.getViewModel().getCount()) {
             return;
         }
         if (_private.hasMarkerController(self)) {
@@ -1086,8 +1086,9 @@ const _private = {
         }
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
-            scrollParams,
+            scrollParams: {...scrollParams, initial: true},
             showEndButton: self._options.navigation.viewConfig.showEndButton,
+            resetButtonMode: self._options.navigation.viewConfig.resetButtonMode,
             totalElementsCount: elementsCount,
             loadedElementsCount: self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex(),
             pagingCfgTrigger: (cfg) => {
@@ -1191,12 +1192,15 @@ const _private = {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
+        if (self._scrollController.isRealScroll()) {
+            self._scrolled = true;
+        }
         // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным
         self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
-                _private.updateScrollPagingButtons(self, self._getScrollParams());
+                _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
             }
         }
     },
@@ -4131,6 +4135,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._shouldNotifyOnDrawItems) {
             if (this._resetScrollAfterReload) {
                 this._notify('doScroll', ['top'], {bubbling: true});
+                this._scrolled = false;
+                this._scrollTop = 0;
                 this._resetScrollAfterReload = false;
             }
         }
@@ -4254,7 +4260,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         //TODO: можно убрать после https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (_private.needScrollPaging(this._options.navigation)) {
             if (this._scrollController && !this._scrollController.getParamsToRestoreScrollPosition()) {
-                _private.updateScrollPagingButtons(this, this._getScrollParams());
+                _private.updateScrollPagingButtons(this, {...this._getScrollParams(), initial: !this._scrolled});
             }
         }
 
@@ -4419,6 +4425,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.scrollToEdge(this, 'down');
                 }
                 break;
+            case 'Reset':
+                this._scrolled = false;
+                this.reload();
+                break;
         }
     }
     _canScroll(scrollTop: number, direction): boolean {
@@ -4507,7 +4517,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return (emptyTemplate || emptyTemplateColumns) && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     }
 
-    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>): void {
+    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, originalEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
 
         const contents = _private.getPlainItemContents(item);
@@ -4521,7 +4531,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             let newSelection;
 
-            if (e.nativeEvent && e.nativeEvent.shiftKey) {
+            if (originalEvent.nativeEvent && originalEvent.nativeEvent.shiftKey) {
                 newSelection = _private.getSelectionController(this).selectRange(key);
             } else {
                 newSelection = _private.getSelectionController(this).toggleItem(key);
@@ -6705,7 +6715,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
     // endregion
 
-    _getFooterClasses(options): string {
+    _getFooterSpacingClasses(options): string {
         const hasCheckboxes = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
         const paddingClassName = `controls__BaseControl__footer-${options.style}__paddingLeft_`;
@@ -6715,7 +6725,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             paddingClassName += (options.itemPadding?.left?.toLowerCase() || 'default');
         }
 
-        return `controls__BaseControl__footer ${paddingClassName}`;
+        return `${paddingClassName}`;
+    }
+
+    _getNavigationButtonClasses(options, buttonConfig): string {
+        const buttonView = this._resolveNavigationButtonView() === 'separator';
+        if (!buttonView || (buttonConfig && buttonConfig.buttonPosition !== 'center')) {
+            return this._getFooterSpacingClasses(options);
+        }
     }
 
     /**

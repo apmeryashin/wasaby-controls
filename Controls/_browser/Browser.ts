@@ -261,11 +261,13 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _operationPanelItemClick(
         event: SyntheticEvent,
         action: IBaseAction,
+        toolbarItem,
         clickEvent: SyntheticEvent
     ): void {
         event.stopImmediatePropagation();
         this._getOperationsController().executeAction({
             action,
+            toolbarItem,
             source: this._source,
             target: clickEvent,
             selection: {
@@ -276,7 +278,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             keyProperty: this._getSourceController().getKeyProperty(),
             parentProperty: this._getSourceController().getParentProperty(),
             nodeProperty: this._options.nodeProperty,
-            sourceController: this._getSourceController()
+            sourceController: this._getSourceController(),
+            operationsController: this._operationsController
         });
     }
 
@@ -297,9 +300,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                     this._searchResetHandler();
                 }
            });
-        const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent}) => {
+        const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent, toolbarItem}) => {
             this._getOperationsController().executeAction({
                 action,
+                toolbarItem,
                 source: this._source,
                 target: clickEvent,
                 selection: {
@@ -310,7 +314,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 keyProperty: this._getSourceController().getKeyProperty(),
                 parentProperty: this._getSourceController().getParentProperty(),
                 nodeProperty: this._options.nodeProperty,
-                sourceController: this._getSourceController()
+                sourceController: this._getSourceController(),
+                operationsController: this._operationsController
             });
         });
         return [
@@ -361,6 +366,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const searchValueOptionsChanged = options.searchValue !== newOptions.searchValue;
         const searchValueChanged = this._searchValue !== newOptions.searchValue;
         const rootChanged = newOptions.root !== options.root;
+        const searchController = this._getSearchControllerSync(id);
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -380,7 +386,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
         if (rootChanged) {
             this._root = newOptions.root;
-            this._getSearchControllerSync(id)?.setRoot(newOptions.root);
+        }
+
+        if (rootChanged || Browser._hasRootInOptions(newOptions) && searchController?.getRoot() !== newOptions.root) {
+            searchController?.setRoot(newOptions.root);
         }
 
         if (options.viewMode !== newOptions.viewMode) {
@@ -409,7 +418,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (searchValueOptionsChanged && searchValueChanged) {
             this._inputSearchValue = newOptions.searchValue;
 
-            if (!newOptions.searchValue && (sourceChanged || rootChanged) && this._getSearchControllerSync()) {
+            if (!newOptions.searchValue && (sourceChanged || rootChanged) && searchController) {
                 this._resetSearch();
                 sourceController.setFilter(this._filter);
             }
@@ -459,9 +468,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const filterChanged = !isEqual(options.filter, newOptions.filter);
 
         if (filterController?.update(filterControllerOptions) || filterChanged) {
+            const currentFilter = this._filter;
             this._updateFilterAndFilterItems(newOptions);
 
-            if (!isEqual(options.filterButtonSource, newOptions.filterButtonSource) && !filterChanged) {
+            if (!isEqual(options.filterButtonSource, newOptions.filterButtonSource) &&
+                !isEqual(currentFilter, this._filter)) {
                 this._notify('filterChanged', [this._filter]);
             }
         }
@@ -613,8 +624,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (this._listsOptions && id) {
             this._getListOptionsById(id).filter = this._getListOptionsById(id).filter || filter;
         }
-        this._filter = filter;
-        this._notify('filterChanged', [this._filter, id]);
+        if (!Browser._hasInOptions(this._options, ['filter']) || !this._options.task1182865383) {
+            this._filter = filter;
+        }
+        this._notify('filterChanged', [filter, id]);
     }
 
     protected _breadCrumbsItemClick(event: SyntheticEvent, root: Key): void {

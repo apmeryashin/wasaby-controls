@@ -1,10 +1,7 @@
 import {BaseController, IDragOffset} from 'Controls/popupTemplate';
-import {
-    Controller as PopupController,
-    ISlidingPanelPopupOptions
-} from 'Controls/popup';
+import {Controller as PopupController, ISlidingPanelPopupOptions} from 'Controls/popup';
 import * as PopupContent from 'wml!Controls/_popupSliding/SlidingPanelContent';
-import SlidingPanelStrategy, {AnimationState, ISlidingPanelItem} from './Strategy';
+import SlidingPanelStrategy, {AnimationState, ISlidingPanelItem, ResizeType} from './Strategy';
 import {constants} from 'Env/Env';
 
 /**
@@ -20,7 +17,7 @@ class Controller extends BaseController {
     private _panels: ISlidingPanelItem[] = [];
 
     elementCreated(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
-        item.sizes = this._getPopupSizes(item, container);
+        this._updatePopupSizes(item, container);
         // После создания запускаем анимацию изменив позицию
         item.position = SlidingPanelStrategy.getShowingPosition(item);
         item.popupOptions.workspaceWidth = item.position.width;
@@ -35,11 +32,11 @@ class Controller extends BaseController {
         return true;
     }
 
-    elementUpdated(item: ISlidingPanelItem, container: HTMLDivElement, forced?: boolean): boolean {
-        if (!this._isTopPopup(item) && !forced) {
+    elementUpdated(item: ISlidingPanelItem, container: HTMLDivElement, isOrientationChanging?: boolean): boolean {
+        if (!this._isTopPopup(item) && !isOrientationChanging) {
             return false;
         }
-        this._updatePosition(item, container, forced);
+        this._updatePosition(item, container, isOrientationChanging);
         return true;
     }
 
@@ -47,13 +44,13 @@ class Controller extends BaseController {
      * Обновление размеров и позиции попапа
      * @param item
      * @param container
-     * @param isResize При изменении размеров экрана нужно варидировать размер шторки, чтобы она не оказалась меньше,
+     * @param resizeType При изменении размеров экрана нужно варидировать размер шторки, чтобы она не оказалась меньше,
      * чем минимальная высота после возвращение экрана к нормальным размерам
      * @private
      */
-    private _updatePosition(item: ISlidingPanelItem, container: HTMLDivElement, isResize?: boolean): void {
-        item.sizes = this._getPopupSizes(item, container);
-        item.position = SlidingPanelStrategy.getPosition(item, isResize);
+    private _updatePosition(item: ISlidingPanelItem, container: HTMLDivElement, resizeType?: ResizeType): void {
+        this._updatePopupSizes(item, container);
+        item.position = SlidingPanelStrategy.getPosition(item, resizeType);
         item.popupOptions.workspaceWidth = item.position.width;
         this._fixIosBug(item, container);
     }
@@ -144,13 +141,13 @@ class Controller extends BaseController {
     }
 
     resizeInner(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
-        item.sizes = this._getPopupSizes(item, container);
+        this._updatePopupSizes(item, container);
 
         // Если еще открытие, то ресайзим по стартовым координатам(по которым анимируем открытие)
         if (item.animationState === 'showing') {
             item.position = SlidingPanelStrategy.getStartPosition(item);
         } else {
-            item.position = SlidingPanelStrategy.getPosition(item, true);
+            item.position = SlidingPanelStrategy.getPosition(item, ResizeType.inner);
         }
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
         item.popupOptions.workspaceWidth = item.position.width;
@@ -160,7 +157,7 @@ class Controller extends BaseController {
 
     resizeOuter(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
         if (this._isTopPopup(item)) {
-            this._updatePosition(item, container, true);
+            this._updatePosition(item, container, ResizeType.outer);
             return true;
         }
         return false;
@@ -266,6 +263,11 @@ class Controller extends BaseController {
 
     private _isTopPopup(item: ISlidingPanelItem): boolean {
         return this._panels.indexOf(item) === this._panels.length - 1;
+    }
+
+    protected _updatePopupSizes(item: ISlidingPanelItem, container: HTMLDivElement): void {
+        item.previousSizes = item.sizes;
+        item.sizes = this._getPopupSizes(item, container);
     }
 
     /**
