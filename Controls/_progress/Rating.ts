@@ -192,8 +192,8 @@ interface IStar {
 const _private = {
     resolveStars(options: IRatingOptions, selectedStars?: number, halfStar?: boolean): void {
         this._stars = [];
-        const selectStars = selectedStars !== undefined ? selectedStars : this._selectStars;
-        const isHalfStar = halfStar !== undefined ? halfStar : this._isHalfStar;
+        const selectStars = typeof selectedStars === 'number' ? selectedStars : this._selectStars;
+        const isHalfStar = typeof halfStar === 'boolean' ? halfStar : this._isHalfStar;
         for (let i = 0; i < COUNT_STARS; i++) {
             let type; let icon; let iconStyle;
             if (i < selectStars) {
