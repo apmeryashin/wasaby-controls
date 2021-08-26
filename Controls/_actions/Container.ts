@@ -49,6 +49,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._toolbarItems = this._getToolbarItems(this._actionsCollection.getToolbarItems());
         this._actionsCollection.subscribe('toolbarConfigChanged', (event, items) => {
             this._toolbarItems = this._getToolbarItems(items);
+            this._menuSource = new MenuSource({
+                collection: this._actionsCollection
+            });
         });
         this._menuSource = new MenuSource({
             collection: this._actionsCollection
@@ -66,9 +69,6 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     protected _beforeMenuOpen(): object | void {
         if (this._operationsController.getOperationsPanelVisible()) {
             return {
-                popupOptions: {
-                    closeOnOutsideClick: false
-                },
                 templateOptions: {
                     backgroundStyle: 'secondary',
                     hoverBackgroundStyle: 'secondary',
