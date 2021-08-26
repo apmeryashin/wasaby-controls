@@ -63,7 +63,8 @@ export default class View extends Control<IViewPanelOptions> {
         this._viewModel = new ViewModel({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky
+            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky,
+            filterViewMode: options.viewMode
         });
     }
 
@@ -77,7 +78,8 @@ export default class View extends Control<IViewPanelOptions> {
         this._viewModel.update({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky
+            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky,
+            filterViewMode: options.viewMode
         });
     }
 

@@ -199,7 +199,8 @@ class ListEditor extends BaseEditor {
             selected: propertyValue,
             displayProperty: options.displayProperty,
             keyProperty: options.keyProperty,
-            imageProperty: options.imageProperty
+            imageProperty: options.imageProperty,
+            filterViewMode: options.filterViewMode
         }];
         if (options.additionalTextProperty) {
             this._columns.push({
