@@ -19,7 +19,7 @@ import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 
 export default class Stack extends Base {
     _opener = StackOpener;
-    open(popupOptions: IStackPopupOptions): void {
+    open(popupOptions: IStackPopupOptions): Promise<void> {
         return super.open(popupOptions);
     }
 }

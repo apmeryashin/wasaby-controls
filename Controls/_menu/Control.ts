@@ -212,7 +212,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>,
                               item: CollectionItem<Model>,
                               sourceEvent: SyntheticEvent<MouseEvent>): void {
-        if (item.getContents() instanceof Model && !this._isTouch()) {
+        // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
+        // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
+        if (item.getContents() instanceof Model && !this._isTouch() &&
+            sourceEvent.target.closest('.controls-menu') === this._container) {
             this._clearClosingTimout();
             this._setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
 
@@ -960,7 +963,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         // just check _children to make sure, that the control isn't destroyed
         if (item && this._children.Sticky && this._subDropdownItem) {
             this._getPopupOptions(target, item).then((popupOptions) => {
-                this._notify('beforeSubMenuOpen', [popupOptions, this._options.subMenuDirection, this._options.itemAlign]);
+                this._notify('beforeSubMenuOpen',
+                    [popupOptions, this._options.subMenuDirection, this._options.itemAlign],
+                    // menu:Control могут положить в пункт меню, чтобы событие долетело до menu:Popup
+                    {bubbling: true}
+                );
                 this._children.Sticky.open(popupOptions);
             });
         }

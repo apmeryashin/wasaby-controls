@@ -110,9 +110,9 @@ class Store implements IStore {
     }
 
     // обновляем название актуального контекста в зависимости от урла (сейчас это делает OnlineSbisRu/_router/Router)
-    updateStoreContext(contextName: string, isSabyPage?: boolean): void {
+    updateStoreContext(contextName: string): void {
         if (contextName !== Store._getActiveContext()) {
-            if (isSabyPage && (Store._getState()[Store._getActiveContext()])) {
+            if (Store._getState()[Store._getActiveContext()]) {
                 delete Store._getState()[Store._getActiveContext()];
             }
             Store._setActiveContext(contextName);

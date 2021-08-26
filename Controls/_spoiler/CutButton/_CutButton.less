@@ -1,5 +1,7 @@
 .controls-CutButton__container {
-   z-index: 1;
+   // Ставим z-index: 2, этого достаточно, чтобы кнопка находилась выше контента в БТР. Если ставить z-index больше,
+   // кнопка может быть выше, чем контент за пределами ката
+   z-index: 2;
    display: flex;
    justify-content: center;
 }

@@ -1,4 +1,4 @@
-import {Browser} from 'Controls/browser';
+import {Browser, IBrowserOptions} from 'Controls/browser';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
@@ -6,6 +6,7 @@ import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {adapter} from 'Types/entity';
 import {NewSourceController, getControllerState} from 'Controls/dataSource';
+import {ControllerClass as SearchController} from 'Controls/search';
 
 const browserData = [
     {
@@ -45,7 +46,7 @@ const eventMock = {
     preventDefault: () => void 0
 };
 
-function getBrowserOptions(): object {
+function getBrowserOptions(): Partial<IBrowserOptions> {
     return {
         minSearchLength: 3,
         source: new Memory({
@@ -55,6 +56,17 @@ function getBrowserOptions(): object {
         searchParam: 'name',
         filter: {},
         keyProperty: 'id'
+    };
+}
+
+function getBrowserOptionsHierarchy(): Partial<IBrowserOptions> {
+    return {
+        ...getBrowserOptions(),
+        parentProperty: 'parent',
+        source: new Memory({
+            keyProperty: 'id',
+            data: browserHierarchyData
+        })
     };
 }
 
@@ -440,6 +452,29 @@ describe('Controls/browser:Browser', () => {
                     browser._resetSearch();
                     assert.ok(!browser._searchValue);
                 });
+
+                it('reset search, option does not change', async () => {
+                    let browserOptions = getBrowserOptions();
+                    browserOptions.searchValue = 'test';
+                    const browser = await getBrowserWithMountCall(browserOptions);
+
+                    await browser._resetSearch();
+                    await browser._beforeUpdate(browserOptions);
+                    assert.ok(browser._searchValue === 'test');
+                });
+            });
+
+            it('root is not changed, but root in searchController is updated', async () => {
+                let browserOptions = getBrowserOptionsHierarchy();
+                const searchController = new SearchController(getBrowserOptionsHierarchy());
+                browserOptions.searchController = searchController;
+                browserOptions.root = null;
+                const browser = await getBrowserWithMountCall(browserOptions);
+
+                searchController.setRoot('anyRoot');
+                browserOptions = {...browserOptions};
+                await browser._beforeUpdate(browserOptions);
+                assert.ok(searchController.getRoot() === null);
             });
 
             describe('_searchReset', () => {
@@ -735,6 +770,20 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(!browser._filter.name);
             });
 
+            it('update root and reset searchValue', async () => {
+                let options = getBrowserOptionsHierarchy();
+                options.searchValue = 'testSearchValue';
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                options = {...options};
+                options.root = 0;
+                options.searchValue = '';
+                await browser._beforeUpdate(options);
+                assert.ok(!browser._filter.name);
+            });
+
             it('cancel query while searching', async () => {
                 const options = getBrowserOptions();
                 const browser = getBrowser(options);
@@ -946,6 +995,9 @@ describe('Controls/browser:Browser', () => {
                         textValue: ''
                     }
                 ];
+                browserOptions.filter = {
+                    filterField2: ''
+                };
                 const browser = getBrowser(browserOptions);
                 await browser._beforeMount(browserOptions);
                 browser.saveOptions(browserOptions);
@@ -960,8 +1012,26 @@ describe('Controls/browser:Browser', () => {
                     }
                 ];
                 await browser._beforeUpdate(browserOptions);
-                assert.isTrue(notifyStub.withArgs('filterChanged', [{filterField: 'test'}]).called);
-                assert.deepStrictEqual(browser._filter, {filterField: 'test'});
+                assert.isTrue(notifyStub.withArgs('filterChanged', [{filterField: 'test', filterField2: ''}]).called);
+                assert.deepStrictEqual(browser._filter, {filterField: 'test', filterField2: ''});
+
+                browserOptions = {...browserOptions};
+                browserOptions.filterButtonSource = [
+                    {
+                        name: 'filterField',
+                        value: 'test',
+                        textValue: ''
+                    },
+                    {
+                        name: 'filterField2',
+                        value: '',
+                        resetValue: '',
+                        textValue: ''
+                    }
+                ];
+                await browser._beforeUpdate(browserOptions);
+                assert.isTrue(notifyStub.withArgs('filterChanged', [{filterField: 'test', filterField2: '' }]).calledOnce);
+                assert.deepStrictEqual(browser._filter, {filterField: 'test', filterField2: ''});
             });
         });
 
@@ -1216,16 +1286,17 @@ describe('Controls/browser:Browser', () => {
         });
 
         it('search view mode changed on dataLoadCallback', async () => {
-            const options = getBrowserOptions();
+            let options = getBrowserOptions();
             options.searchValue = 'Sash';
             const browser = await getBrowserWithMountCall(options);
 
             browser._viewMode = 'search';
-            browser._dataLoadCallback(new RecordSet());
             assert.ok(browser._searchValue === 'Sash');
 
-            browser._searchValue = '';
-            browser._dataLoadCallback(new RecordSet());
+            options = {...options};
+            options.searchValue = '';
+            await browser._beforeUpdate(options);
+            assert.ok(browser._searchValue === '');
             assert.isUndefined(browser._viewMode);
             assert.ok(browser._misspellValue === '');
         });

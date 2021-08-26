@@ -5,6 +5,7 @@ import {Memory, QueryWhereExpression} from 'Types/source';
 import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
 import {RecordSet} from 'Types/collection';
+import {ISearchControllerOptions} from "Controls/_search/ControllerClass";
 
 const getMemorySource = (): Memory => {
    return new Memory({
@@ -181,48 +182,79 @@ describe('Controls/search:ControllerClass', () => {
          }).called);
       });
 
-      it('startingWith: root', async () => {
-         const hierarchyOptions = {
-            parentProperty: 'parentProperty',
-            root: 'testRoot',
-            startingWith: 'root'
-         };
+      describe('startingWith: root', () => {
+         function getHierarchyOptions(): Partial<ISearchControllerOptions> {
+            return {
+               parentProperty: 'parentProperty',
+               root: 'testRoot',
+               startingWith: 'root'
+            };
+         }
 
-         const sourceController = getSourceController(hierarchyOptions);
-         let searchControllerOptions = {
-            sourceController,
-            ...hierarchyOptions
-         };
-         const searchController = getSearchController(searchControllerOptions);
-         const path = new RecordSet({
-            rawData: [
-               {
-                  id: 0,
-                  parentProperty: null
-               },
-               {
-                  id: 1,
-                  parentProperty: 0
-               }
-            ]
+         function getPath(): RecordSet {
+            return new RecordSet({
+               rawData: [
+                  {
+                     id: 0,
+                     parentProperty: null
+                  },
+                  {
+                     id: 1,
+                     parentProperty: 0
+                  }
+               ]
+            });
+         }
+
+         it('root before search should saved after reset search', async() => {
+            const sourceController = getSourceController(getHierarchyOptions());
+            let searchControllerOptions = {
+               sourceController,
+               ...getHierarchyOptions()
+            };
+            const searchController = getSearchController(searchControllerOptions);
+            searchController.setPath(getPath());
+            await searchController.search('testSearchValue');
+            assert.ok(sourceController.getRoot() === null);
+            assert.ok(searchController.getRoot() === null);
+            assert.ok(sourceController.getFilter()['parentProperty'] === null);
+
+            searchController.reset(true);
+            assert.ok(searchController.getRoot() === 'testRoot');
          });
 
-         searchController.setPath(path);
-         await searchController.search('testSearchValue');
-         assert.ok(sourceController.getRoot() === null);
-         assert.ok(searchController.getRoot() === null);
-         assert.ok(sourceController.getFilter()['parentProperty'] === null);
+         it('update root while searching', async() => {
+            const sourceController = getSourceController(getHierarchyOptions());
+            let searchControllerOptions = {
+               sourceController,
+               ...getHierarchyOptions()
+            };
+            const searchController = getSearchController(searchControllerOptions);
+            searchController.setPath(getPath());
+            await searchController.search('testSearchValue');
+            searchControllerOptions = {...searchControllerOptions};
+            searchControllerOptions.root = 'myRoot';
+            searchController.update(searchControllerOptions);
+            searchController.reset(true);
+            assert.ok(searchController.getRoot() === 'myRoot');
+         });
 
-         searchController.reset(true);
-         assert.ok(searchController.getRoot() === 'testRoot');
+         it('update with same root while searching', async() => {
+            const sourceController = getSourceController(getHierarchyOptions());
+            let searchControllerOptions = {
+               sourceController,
+               ...getHierarchyOptions()
+            };
+            const searchController = getSearchController(searchControllerOptions);
+            searchController.setPath(getPath());
+            await searchController.search('testSearchValue');
+            searchControllerOptions = {...searchControllerOptions};
+            searchControllerOptions.root = null;
+            searchController.update(searchControllerOptions);
+            searchController.reset(true);
+            assert.ok(searchController.getRoot() === 'testRoot');
+         });
 
-         searchController.setPath(path);
-         await searchController.search('testSearchValue');
-         searchControllerOptions = {...searchControllerOptions};
-         searchControllerOptions.root = 'myRoot';
-         searchController.update(searchControllerOptions);
-         searchController.reset(true);
-         assert.ok(searchController.getRoot() === 'myRoot');
       });
 
       it('without parent property', () => {
@@ -346,7 +378,16 @@ describe('Controls/search:ControllerClass', () => {
          });
 
          assert.isFalse(searchStub.called);
-         assert.isTrue(resetStub.called);
+         assert.isFalse(resetStub.called);
+
+         controllerClass._options.searchValue = 'test';
+         controllerClass.update({
+            sourceController: sandbox.mock({
+               ver: 'new'
+            })
+         });
+         assert.isTrue(searchStub.called);
+         assert.isFalse(resetStub.called);
       });
 
       it('should call search when new sourceController and new SearchValue in options', () => {

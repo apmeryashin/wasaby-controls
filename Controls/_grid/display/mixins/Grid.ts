@@ -257,7 +257,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         return emptyTemplateClasses;
     }
 
-    protected _isRowSeparatorsEnabled(): boolean {
+    protected _shouldAddEdgeSeparator(): boolean {
         const isVisibleByHeaderOrFooter = (
             this._headerIsVisible(this._$header) || this._resultsIsVisible() || !!this.getFooter());
         return !this._$newDesign || (this._$newDesign && isVisibleByHeaderOrFooter);
@@ -428,11 +428,11 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     protected _hasItemsToCreateResults(): boolean {
-        return this.getCollectionCount() > (this._$resultsVisibility === 'visible' ? 0 : 1);
+        return this.getCollectionCount() > 1;
     }
 
     protected _resultsIsVisible(): boolean {
-        return !!this._$resultsPosition && this._$resultsVisibility !== 'hidden' && this._hasItemsToCreateResults();
+        return !!this._$resultsPosition && this._$resultsVisibility !== 'hidden' && (this._$resultsVisibility === 'visible' || this._hasItemsToCreateResults());
     }
 
     protected _initializeHeader(options: IOptions): void {

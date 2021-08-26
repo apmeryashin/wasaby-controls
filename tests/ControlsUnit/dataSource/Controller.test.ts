@@ -638,8 +638,14 @@ describe('Controls/dataSource:SourceController', () => {
 
         it('expandedItems is [null]',  async () => {
             let options = {...getControllerWithHierarchyOptions()};
+            options.source = new Memory({
+                data: hierarchyItems,
+                keyProperty: 'key',
+                filter: filterByRoot
+            });
             options.expandedItems = [null];
-            const controller = getControllerWithHierarchy(options);
+            options.root = null;
+            const controller = getController(options);
 
             deepStrictEqual(controller.getExpandedItems(), [null]);
 
@@ -647,6 +653,9 @@ describe('Controls/dataSource:SourceController', () => {
             options.filter = {newFilterField: 'newFilterValue'};
             controller.updateOptions(options);
             deepStrictEqual(controller.getExpandedItems(), [null]);
+
+            await controller.reload();
+            ok(controller.getItems().getCount() === 2);
         });
     });
 

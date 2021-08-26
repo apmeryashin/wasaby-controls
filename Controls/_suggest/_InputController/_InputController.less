@@ -12,13 +12,21 @@
 }
 
 .controls-Suggest__suggestionsContainer {
-	border: var(--popup_border-color_suggest) var(--popup_border-thickness_suggest) solid;
+	border: var(--border-thickness) var(--popup_border-color_suggest) solid;
 	box-sizing: border-box;
 	background-color: var(--background-color_sticky);
 	border-radius: var(--border-radius_suggest);
-	padding: var(--offset_xs) 0;
 	// Строка поиска с автодополнением должна перекрывать тени скрола, скроллбар, стики заголовки внутри скрола
 	z-index: @z-index_Scroll-contentEnvironment + 1;
+}
+
+.controls-Suggest__scrollContainer {
+	padding: var(--offset_s) 0;
+	box-sizing: border-box;
+}
+
+.controls-Suggest__scrollContainer_top {
+	padding-bottom: 0;
 }
 
 .controls-Suggest-Text_style_overInput {
@@ -31,22 +39,23 @@
 }
 
 .controls-Suggest__showAllLink {
-	color: var(--showall_text-color_suggest);
+	color: var(--link_text-color);
 	height: var(--footer_height_suggest);
 	font-size: var(--font-size_m);
 	cursor: pointer;
-	padding: 0 var(--offset_m);
+	padding-left: var(--offset_2xs);
+	padding-right: var(--offset_m);
 }
 
 .ws-is-hover {
 	.controls-Suggest__showAllLink:hover {
-		color: var(--showall_hover_text-color_suggest);
+		color: var(--link_hover_text-color);
 		text-decoration: underline;
 	}
 }
 
 .controls-Suggest__showAllLink:active {
-	color: var(--showall_hover_text-color_suggest);
+	color: var(--link_hover_text-color);
 	text-decoration: underline;
 }
 
@@ -62,7 +71,7 @@
 	height: var(--footer_height_suggest);
 	font-size: var(--font-size_m);
 	cursor: pointer;
-	padding: 0 var(--offset_s);
+	padding: 0 var(--offset_m);
 }
 
 .ws-is-hover {

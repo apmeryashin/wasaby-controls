@@ -19,13 +19,15 @@
             <div class="controls-BaseControl_paging-label">{{rk('Всего')}} {{_pagingLabelData.totalItemsCount}}</div>
         </ws:else>
     </ws:if>
-    <Controls.paging:Paging
-        attr:class="controls-BaseControl__footerPaging"
-        showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
-        pagesCount = "{{_knownPagesCount}}"
-        selectedPage = "{{_currentPage}}"
-        arrowState="{{_pagingCfg.arrowState}}"
-        on:selectedPageChanged="__pagingChangePage()" />
+    <Controls.Container.Async templateName="Controls/paging:Paging">
+        <ws:partial template="{{ content.resolvedTemplate }}"
+                    attr:class="controls-BaseControl__footerPaging"
+                    showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
+                    pagesCount = "{{_knownPagesCount}}"
+                    selectedPage = "{{_currentPage}}"
+                    arrowState="{{_pagingCfg.arrowState}}"
+                    on:selectedPageChanged="__pagingChangePage()" />
+    </Controls.Container.Async>
 </ws:template>
 
 <!--
@@ -35,7 +37,7 @@
    * cut-кнопку "(•••)"
 -->
 <ws:template name="sysFooterTemplate">
-    <div class="{{ _getFooterClasses(_options) }}">
+    <div class="controls__BaseControl__footer">
         <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
             <div class="controls-BaseControl__footerPaging_wrapper">
                 <ws:if data="{{_options.columnScroll}}">
@@ -50,6 +52,7 @@
         </ws:if>
         <ws:if data="{{_shouldDrawNavigationButton}}">
             <ws:partial template="wml!Controls/_baseList/BaseControl/NavigationButton"
+                        attr:class="{{ _getNavigationButtonClasses(_options, _options.navigation.viewConfig.buttonConfig) }}"
                         value="{{_cutExpanded}}"
                         buttonConfig="{{_options.navigation.viewConfig.buttonConfig}}"
                         buttonView="{{_resolveNavigationButtonView()}}"
@@ -128,6 +131,7 @@
                 on:restoreScrollPosition="_stopBubblingEvent()"
                 on:loadMore="_onloadMore()"
                 on:toggleHorizontalScroll="_onToggleHorizontalScroll()"
+                on:updateShadowMode="_stopInnerUpdateShadowMode()"
         >
             <ws:itemActionsTemplate>
                 <ws:partial
@@ -190,14 +194,16 @@ controls-BaseControl__pagingContainer_position-{{_options.navigation.viewConfig.
             <ws:if data="{{_options.pagingLeftTemplate}}">
                 <ws:partial template="{{_options.pagingLeftTemplate}}"/>
             </ws:if>
-            <Controls.paging:Paging
-                    attr:class="controls-BaseControl__scrollPaging"
-                    contrastBackground="{{true}}"
-                    pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
-                    scope="{{_pagingCfg}}"
-                    contentTemplate="{{_options.pagingContentTemplate}}"
-                    on:onArrowClick="__onPagingArrowClick()"
-                    on:selectedPageChanged="__selectedPageChanged()"/>
+            <Controls.Container.Async templateName="Controls/paging:Paging">
+                <ws:partial template="{{ content.resolvedTemplate }}"
+                            attr:class="controls-BaseControl__scrollPaging"
+                            contrastBackground="{{true}}"
+                            pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
+                            scope="{{_pagingCfg}}"
+                            contentTemplate="{{_options.pagingContentTemplate}}"
+                            on:onArrowClick="__onPagingArrowClick()"
+                            on:selectedPageChanged="__selectedPageChanged()"/>
+            </Controls.Container.Async>
             <ws:if data="{{_options.pagingRightTemplate}}">
                 <ws:partial template="{{_options.pagingRightTemplate}}"/>
             </ws:if>

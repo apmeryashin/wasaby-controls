@@ -125,6 +125,8 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _tileLoaded: boolean = false;
     protected _masterLoading: boolean = false;
     protected _detailLoading: boolean = false;
+    protected _detailRootChanged: boolean = false;
+    protected _masterDataLoadResolver: Function = null;
 
     /**
      * Опции для Controls/explorer:View в master-колонке
@@ -151,6 +153,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     constructor(options: IOptions, context?: object) {
         super(options, context);
         this._onDetailDataLoadCallback = this._onDetailDataLoadCallback.bind(this);
+        this._onMasterDataLoadCallback = this._onMasterDataLoadCallback.bind(this);
     }
 
     private _processItems(items: RecordSet): void {
@@ -192,7 +195,11 @@ export default class View extends Control<IOptions, IReceivedState> {
         if (!direction) {
             this._processItemsMetadata(items);
         }
-        if (imageProperty && (!this._hasImageInItems || rootChanged)) {
+        if (this._masterDataLoadResolver) {
+            this._masterDataLoadResolver();
+            this._masterDataLoadResolver = null;
+        }
+        if (imageProperty && (!this._hasImageInItems || rootChanged) && items.getCount()) {
             this._hasImageInItems = this._hasImages(items, imageProperty);
             const imageVisibility = this._hasImageInItems ? 'visible' : 'hidden';
             if (imageVisibility !== this._listCfg?.getImageVisibility()) {
@@ -236,6 +243,9 @@ export default class View extends Control<IOptions, IReceivedState> {
         const detailOptionsChanged = !isEqual(newOptions.detail, this._options.detail);
         const masterOptionsChanged = !isEqual(newOptions.master, this._options.master);
         const isDetailRootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
+        if (isDetailRootChanged) {
+            this._detailRootChanged = true;
+        }
         if (detailOptionsChanged || contextVersionChanged) {
             const oldColumns = this._detailExplorerOptions.columns;
             this._detailExplorerOptions = this._getListOptions(
@@ -252,7 +262,11 @@ export default class View extends Control<IOptions, IReceivedState> {
                 newOptions.master
             );
         }
-        this._viewMode = newOptions.viewMode;
+        // Пока viewMode не распространяется по контексту
+        // FIXME: https://online.sbis.ru/opendoc.html?guid=577201e1-e388-4ed0-bcb7-cda0b026c03e
+        if (!this._detailDataSource?.isLoading()) {
+            this._viewMode = newOptions.viewMode;
+        }
 
         if (newOptions.listConfiguration && !isEqual(this._options.listConfiguration, newOptions.listConfiguration)) {
             this._createTemplateControllers(newOptions.listConfiguration, newOptions);
@@ -441,10 +455,20 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._detailDataSource = listsConfigs.detail.sourceController;
         this._detailDataSource.subscribe('dataLoad', this._onDetailDataLoadCallback);
         this._masterDataSource = listsConfigs.master?.sourceController;
+        this._masterDataSource?.subscribe('dataLoad', this._onMasterDataLoadCallback);
         if (options.listConfiguration) {
             this._createTemplateControllers(options.listConfiguration, options);
         }
         this._updateMasterVisibility(options);
+    }
+
+    protected _onMasterDataLoadCallback(event): Promise<void> | void {
+        if (this._detailRootChanged && this._detailDataSource.isLoading()) {
+            event.setResult(new Promise((resolve) => {
+                this._masterDataLoadResolver = resolve;
+            }));
+        }
+        this._detailRootChanged = false;
     }
 
     protected _getDetailBreadCrumbsVisibility(detailOptions: IDetailOptions): string {

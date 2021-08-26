@@ -10,8 +10,7 @@ var _private = {
    },
 
    getPopupOffsets(container?: HTMLElement): number {
-      return container ? Number(getComputedStyle(container, null).getPropertyValue('margin-right').replace('px', '')) -
-          Number(getComputedStyle(container, null).getPropertyValue('margin-left').replace('px', '')) : 0;
+      return container ? Math.abs(getComputedStyle(container, null).getPropertyValue('margin-left').replace('px', '') * 2) : 0;
    },
 
    getSuggestWidth(target: HTMLElement, container?: HTMLElement): number {

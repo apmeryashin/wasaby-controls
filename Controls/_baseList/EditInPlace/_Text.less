@@ -14,9 +14,9 @@
    background-color: var(--background-color_inputText);
 }
 
+// Последняя обертка перед прикладным контентом шаблона редактирования.
+// Внимание: при установке display: flex, прикладные шаблоны поедут.
 .controls-EditingTemplateText__editorWrapper {
-   // Для правильной высоты шаблона, https://online.sbis.ru/opendoc.html?guid=46a0f83a-c51c-4852-8ddf-0e3e9cf3dbeb
-   display: flex;
    flex-grow: 1;
    min-width: 0;
 
@@ -63,6 +63,9 @@
    box-sizing: border-box;
    width: 100%;
    border-width: 0;
+   &:before {
+      font-size: var(--font-size_2xl);
+   }
 }
 
 .controls-EditingTemplateText_border-partial {

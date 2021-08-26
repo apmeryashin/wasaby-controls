@@ -130,16 +130,6 @@ function onCollectionChange<T>(
  */
 function onCollectionItemChange<T extends Model>(event: EventObject, item: T, index: number, properties: Object): void {
     this.instance._reIndex();
-    if (this.instance.getExpanderVisibility() === 'hasChildren') {
-        if (!this.instance.getHasChildrenProperty() && properties.hasOwnProperty(this.instance.getParentProperty())) {
-            this.instance._recountHasChildrenByRecordSet();
-
-            // нужно пересчитать, т.к. hasNodeWithChildren может считаться по рекордсету, если нет hasChildrenProperty
-            this.instance._recountHasNodeWithChildren();
-        } else if (properties.hasOwnProperty(this.instance.getHasChildrenProperty())) {
-            this.instance._recountHasNodeWithChildren();
-        }
-    }
     this.prev(event, item, index, properties);
 
     if (properties.hasOwnProperty(this.instance.getNodeProperty())) {
@@ -148,6 +138,22 @@ function onCollectionItemChange<T extends Model>(event: EventObject, item: T, in
         displayItem.setNode(item.get(this.instance.getNodeProperty()));
 
         this.instance.resetHasNode();
+    }
+
+    if (this.instance.getExpanderVisibility() === 'hasChildren') {
+        if (!this.instance.getHasChildrenProperty() &&
+            (
+                properties.hasOwnProperty(this.instance.getParentProperty()) ||
+                properties.hasOwnProperty(this.instance.getNodeProperty())
+            )
+        ) {
+            this.instance._recountHasChildrenByRecordSet();
+
+            // нужно пересчитать, т.к. hasNodeWithChildren может считаться по рекордсету, если нет hasChildrenProperty
+            this.instance._recountHasNodeWithChildren();
+        } else if (properties.hasOwnProperty(this.instance.getHasChildrenProperty())) {
+            this.instance._recountHasNodeWithChildren();
+        }
     }
 
     if (this.instance._isChangedValueInParentProperty(null, null, properties)) {
@@ -635,6 +641,12 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 // oldItem и newItem в событии приходят как один и тот же рекорд, поэтому мы не можем узнать
                 // так старое значение, но у нас есть CollectionItem, в котором хрантся старое значение
                 const oldCollectionItem = this.getItemBySourceItem(oldItems[i]);
+                // элемента может не быть, например если у нового элемента задали parent и он не отобразился
+                // и сразу же в нем что-то изменили. И сюда может прийти, например, группа -> проверяем на TreeItem
+                if (!oldCollectionItem || !oldCollectionItem['[Controls/_display/TreeItem]']) {
+                    continue;
+                }
+
                 const oldItemParent = oldCollectionItem.getParent();
                 const oldValue = oldItemParent.isRoot()
                     ? oldItemParent.getContents()
@@ -749,7 +761,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._reBuildNodeFooters(true);
         this._reIndex();
         this._reAnalize();
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
         this.resetHasNode();
     }
 
@@ -879,7 +891,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         //endregion
 
         this._expandedItems = [...expandedKeys];
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
@@ -906,7 +918,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 item.setExpanded(false);
             }
         });
-        this._updateEdgeItemsSeparators();
+        this._updateEdgeItems();
     }
 
     toggleExpanded(item: T): void {
@@ -1050,7 +1062,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         replaced.forEach((item, index) => {
             const strategyIndex = replaced.start + index;
             if (strategyIndex < count) {
-                strategy.at(strategyIndex).setExpanded(item.isExpanded(), true);
+                const projectionItem = strategy.at(strategyIndex);
+                if (projectionItem['[Controls/_display/ExpandableMixin]']) {
+                    projectionItem.setExpanded(item.isExpanded(), true);
+                }
             }
         });
 

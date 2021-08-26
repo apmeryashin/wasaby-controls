@@ -112,9 +112,11 @@ export interface IPopupController {
 
     elementDestroyedWrapper(item: IPopupItem, container: HTMLElement): Promise<void>;
 
-    getDefaultConfig(item: IPopupItem): Promise<void> | void;
+    getDefaultConfig(item: IPopupItem): Promise<void> | void | boolean;
 
     elementUpdateOptions(item: IPopupItem, container: HTMLElement): boolean | Promise<boolean>;
+
+    updatePosition(item: IPopupItem, container: HTMLElement): boolean;
 
     orientationChanged(item: IPopupItem, container: HTMLElement): boolean;
 

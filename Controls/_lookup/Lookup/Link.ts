@@ -47,7 +47,7 @@ export default class Link extends Control<IControlOptions> {
    }
 
    static defaultProps: object = {
-      fontSize: 'm',
+      fontSize: 'lookupLink',
       underline: true
    };
 }

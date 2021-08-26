@@ -4,18 +4,16 @@
                                 bind:filter="_filter"
                                 root="{{_root}}"
                                 bind:expandedItems="_expandedItems"
-                                searchValue="{{_searchValue}}"
+                                bind:searchValue="_searchValue"
                                 navigation="{{_options.navigation}}"
-                                dataLoadCallback="{{_options.dataLoadCallback}}"
                                 keyProperty="{{_options.keyProperty}}"
                                 searchParam="{{_options.searchParam}}"
+                                dataLoadCallback="{{ _dataLoadCallback }}"
                                 dedicatedItemProperty="{{_options.dedicatedItemProperty}}"
                                 parentProperty="{{_options.parentProperty}}"
                                 displayProperty="{{_options.displayProperty}}">
             <div class="controls-MoveDialog__content">
-               <Controls.search:InputContainer attr:class="controls-MoveDialog__search"
-                                               inputSearchValue="{{_searchValue}}"
-                                               on:inputSearchValueChanged="_onSearchValueChanged()">
+               <Controls.search:InputContainer attr:class="controls-MoveDialog__search">
                   <Controls.search:Input/>
                </Controls.search:InputContainer>
                <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
@@ -26,7 +24,6 @@
                              on:markedKeyChanged="_onMarkedKeyChanged()"
                              on:beforeMarkedKeyChanged="_onBeforeMarkedKeyChanged()"
                              on:itemClick="_onItemClick()"
-                             dataLoadCallback="{{ _dataLoadCallback }}"
                              nodeProperty="{{_options.nodeProperty}}"
                              hasChildrenProperty="{{_options.hasChildrenProperty}}"
                              itemsFilterMethod="{{_itemsFilterMethod}}"

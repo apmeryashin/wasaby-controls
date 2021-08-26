@@ -1,4 +1,5 @@
 .controls-ListEditor__svg {
+   align-self: center;
    display: inline-block;
    flex-shrink: 0;
    width: var(--icon-size_2xs);
@@ -21,6 +22,7 @@
 }
 
 .controls-ListEditor__column {
+   height: 100%;
    display: flex;
    align-items: center;
    padding-left: var(--offset_2xs);
@@ -30,6 +32,7 @@
 }
 
 .controls-EditorList__additional-column {
+   align-self: center;
    color: var(--label_text-color);
 }
 
@@ -65,4 +68,12 @@
    height: var(--icon-size_m);
    border-radius: var(--border-radius_s_image);
    margin-right: var(--offset_m);
+}
+
+.controls-ListEditor__column_unselected-title {
+   color: var(--unaccented_color);
+}
+
+.controls-ListEditor__column-text {
+   font-size: var(--font-size_l);
 }

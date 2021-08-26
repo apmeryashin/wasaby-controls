@@ -5,6 +5,48 @@ import {RecordSet} from 'Types/collection';
 
 describe('Controls/filterPanel:ListEditor', () => {
 
+    describe('_beforeMount', () => {
+        const navigation = {
+            pageSize: 3
+        };
+        const getEditorOptions = () => {
+            return {
+                propertyValue: [1],
+                filter: {},
+                keyProperty: 'id',
+                navigation
+            };
+        };
+
+        const getEditorOptionsWithEmptyValue = () => {
+            return {
+                propertyValue: [],
+                filter: {},
+                keyProperty: 'id',
+                navigation
+            };
+        };
+        const getEditor = () => {
+            const listEditor = new ListEditor({});
+            const options = getEditorOptions();
+            listEditor._beforeMount(options);
+            listEditor.saveOptions(options);
+            return listEditor;
+        };
+
+        it('propertyValue is not empty', () => {
+            const listEditor = new ListEditor({});
+            listEditor._beforeMount(getEditorOptions());
+            assert.isNull(listEditor._navigation);
+        });
+
+        it('propertyValue is empty', () => {
+            const listEditor = new ListEditor({});
+            listEditor._beforeMount(getEditorOptionsWithEmptyValue());
+            assert.deepEqual(listEditor._navigation, navigation);
+        });
+    });
+
     describe('_beforeUpdate', () => {
         const getEditorOptions = () => {
             return {

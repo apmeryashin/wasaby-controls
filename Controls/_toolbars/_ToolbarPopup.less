@@ -1,16 +1,16 @@
 .controls-Toolbar__popup__link {
    margin-top: calc(((var(--item_height_menu) - var(--icon-size_m)) / 2 + var(--border-thickness_sticky)) / (-1));
-   margin-left: calc((var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu)) / (-1));
+   margin-left: calc((var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu) + var(--offset_xs)) / (-1));
 }
 
 .controls-Toolbar__popup__icon {
    margin-top: calc(((var(--item_height_menu) - var(--icon-size_m)) / 2 + var(--border-thickness_sticky)) / (-1));
-   margin-left: calc((var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu)) / (-1));
+   margin-left: calc((var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu) + var(--offset_xs)) / (-1));
 }
 
 .controls-Toolbar__popup__toolButton {
    margin-top: calc(((var(--item_height_menu) - var(--inline_height_m) / 2) + var(--border-thickness_sticky)) / (-1));
-   margin-left: calc((var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu)) / (-1));
+   margin-left: calc((var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu) + var(--offset_xs)) / (-1));
 }
 
 .controls-Toolbar-horizontal__popup__list {
@@ -21,6 +21,9 @@
 .controls-Toolbar-vertical__popup__list {
    margin-top: calc((var(--content_padding-top_sticky) + var(--border-thickness_sticky)) / (-1));
    margin-left: calc(var(--close-button_offset-right_sticky) + var(--border-thickness_sticky) + var(--offset_s));
+}
+
+.controls-Toolbar-vertical__dropdown {
    // todo временный костыль. Будет удален после:
    // https://online.sbis.ru/opendoc.html?guid=9656c76d-6c9d-4b03-9e26-1db471d5f8f1
    .controls-Menu__row_singleLine {

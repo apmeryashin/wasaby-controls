@@ -67,6 +67,11 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
                 type: true
             },
             {
+                id: '11',
+                parent: 1,
+                type: null
+            },
+            {
                 id: '2',
                 parent: null,
                 type: true
@@ -172,10 +177,27 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
         const treeControl = initTreeControl({
             nodeFooterTemplate: () => {}
         });
-        treeControl.toggleExpanded('2');
+        treeControl.toggleExpanded('1');
 
         await treeControl.handleTriggerVisible('down');
         sinonAssert.notCalled(spyQuery);
+        spyQuery.restore();
+    });
+
+    it ('should load from last expanded node when nodeFooterTemplate overrided by moreTemplate', async () => {
+        source = new HierarchicalMemory({
+            keyProperty: 'id',
+            data
+        });
+
+        const spyQuery = spy(source, 'query');
+        const treeControl = initTreeControl({
+            nodeFooterTemplate: () => {}
+        });
+        treeControl.toggleExpanded('2');
+
+        await treeControl.handleTriggerVisible('down');
+        sinonAssert.called(spyQuery);
         spyQuery.restore();
     });
 

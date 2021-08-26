@@ -130,6 +130,7 @@
          <ws:footerContent>
             <ws:partial template="{{_options.footerContentTemplate || _options.footerTemplate}}"
                         on:mouseenter="_onFooterMouseEnter()"
+                        on:beforeSubMenuOpen="_prepareSubMenuConfig()"
                         calmTimer="{{_calmTimer}}"></ws:partial>
          </ws:footerContent>
       </ws:partial>

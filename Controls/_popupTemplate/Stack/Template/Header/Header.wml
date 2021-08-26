@@ -1,5 +1,4 @@
 <div class="controls-StackTemplate__top-area
-            controls_popupTemplate_theme-{{_options.theme}} controls_theme-{{_options.theme}}
             {{_options.headerBorderVisible ? 'controls-StackTemplate__top-area-border'}}
             controls-StackTemplate__top-area_{{_options.headerBackgroundStyle}}">
    <div class="controls-StackTemplate__top-area-content">
@@ -27,7 +26,7 @@
       </ws:if>
       <ws:if data="{{!_options.hasRightPanel}}">
          <div class="controls-StackTemplate__command_buttons">
-            <ws:if data="{{_options.showMaximizedButton || _options._maximizeButtonVisibility}}">
+            <ws:if data="{{_options.maximizeButtonVisibility}}">
                <div class="controls-StackTemplate__maximized_button controls-StackTemplate__header_maximized_button" on:click="changeMaximizedState()"
                     attr:title="{{_options._maximizeButtonTitle}}"></div>
             </ws:if>

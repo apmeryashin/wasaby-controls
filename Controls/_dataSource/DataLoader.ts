@@ -12,6 +12,7 @@ import {
 } from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
+import {ControllerClass as OperationsController} from 'Controls/operations';
 import {Logger} from 'UI/Utils';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {loadAsync, loadSync, isLoaded} from 'WasabyLoader/ModulesLoader';
@@ -39,6 +40,11 @@ interface IFilterResult {
 
 interface IBaseLoadDataConfig {
     afterLoadCallback?: string;
+}
+
+interface IPrefetchConfig {
+    configLoaderArguments: unknown;
+    pageId?: string;
 }
 
 export interface ILoadDataConfig extends
@@ -101,6 +107,7 @@ export interface ILoadDataResult extends ILoadDataConfig {
     searchController?: SearchController;
     collapsedGroups?: TArrayGroupId;
     source: PrefetchProxy;
+    operationsController?: OperationsController;
 }
 export type TLoadersConfigsMap = Record<string, TLoadConfig>;
 type TLoadedConfigs = Map<string, ILoadDataResult|ILoadDataConfig>;
@@ -166,6 +173,7 @@ function getLoadResult(
     sourceController: NewSourceController,
     filterController: FilterController,
     historyItems?: IFilterItem[],
+    operationsController?: OperationsController,
     listConfigStoreId?: string
 ): ILoadDataResult {
     return {
@@ -184,7 +192,8 @@ function getLoadResult(
         error: sourceController.getLoadError(),
         filter: sourceController.getFilter(),
         sorting:  sourceController.getSorting() as TSortingOptionValue,
-        collapsedGroups: sourceController.getCollapsedGroups()
+        collapsedGroups: sourceController.getCollapsedGroups(),
+        operationsController
     };
 }
 
@@ -195,6 +204,7 @@ function loadDataByConfig(
 ): Promise<ILoadDataResult> {
     const loadDataTimeout = loadTimeout || getLoadTimeout(loadConfig);
     let filterController: FilterController;
+    let operationsPromise;
     let filterHistoryItems;
     let sortingPromise;
     let filterPromise;
@@ -236,10 +246,17 @@ function loadDataByConfig(
         });
     }
 
+    if (loadConfig.actions) {
+        operationsPromise = loadAsync('Controls/operations').then((operations) => {
+            return new operations.ControllerClass({});
+        });
+    }
+
     return Promise.all([
         filterPromise,
-        sortingPromise
-    ]).then(([, sortingPromiseResult]: [TFilter, ISortingOptions]) => {
+        sortingPromise,
+        operationsPromise
+    ]).then(([, sortingPromiseResult, operationsController]: [TFilter, ISortingOptions, any]) => {
         const sorting = sortingPromiseResult ? sortingPromiseResult.sorting : loadConfig.sorting;
         const sourceController = getSourceController({
             ...loadConfig,
@@ -253,10 +270,10 @@ function loadDataByConfig(
                 sourceController.reload(undefined, true)
                     .catch((error) => error)
                     .finally(() => {
-                        resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems));
+                        resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems, operationsController));
                     });
             } else {
-                resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems));
+                resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems, operationsController));
             }
         });
     });
@@ -314,17 +331,24 @@ export default class DataLoader {
     loadEvery<T extends ILoadDataConfig|ILoadDataCustomConfig>(
         sourceConfigs: TLoadConfig[] | TLoadersConfigsMap = this._loadDataConfigs,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        prefetchConfig?: IPrefetchConfig
     ): TLoadPromiseResult[] | TLoadPromiseResultMap {
+        // TODO для совместимости добросок, чтобы не ломать тесты. можно удалить как смержат в sabyPage
+        if (typeof prefetchConfig === 'string') {
+            prefetchConfig = {
+                pageId: prefetchConfig,
+                configLoaderArguments: {}
+            };
+        }
         if (sourceConfigs instanceof Array) {
             const configsWithKeys = this._getConfigsWithKeys(sourceConfigs);
             const loadersMap = this._getLoadersMap(
                 configsWithKeys,
                 sourceConfigs ? sourceConfigs as TLoadConfig[] : this._originLoadDataConfigs
             );
-            return this._loadLoadersArray(configsWithKeys, loadersMap, loadTimeout, listConfigStoreId);
+            return this._loadLoadersArray(configsWithKeys, loadersMap, loadTimeout, prefetchConfig);
         } else {
-            return this._loadLoadersMap(sourceConfigs, loadTimeout, listConfigStoreId);
+            return this._loadLoadersMap(sourceConfigs, loadTimeout, prefetchConfig);
         }
     }
 
@@ -406,7 +430,15 @@ export default class DataLoader {
     }
 
     getSearchControllerSync(id?: string): SearchController {
-        return this._getConfig(id).searchController;
+        const config = this._getConfig(id);
+
+        if (!config?.searchController && config?.searchParam && config?.sourceController && isLoaded('Controls/search')) {
+            const searchControllerClass = loadSync<typeof import('Controls/search')>('Controls/search').ControllerClass;
+            config.searchController = new searchControllerClass(
+                {...config} as ISearchControllerOptions
+            );
+        }
+        return config?.searchController;
     }
 
     getState(): Record<string, IControllerState> {
@@ -460,7 +492,7 @@ export default class DataLoader {
     private _loadLoadersMap(
         sourceConfigs?: TLoadersConfigsMap,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        prefetchConfig?: IPrefetchConfig
     ): TLoadPromiseResultMap {
         const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
         const loadResult = {};
@@ -470,7 +502,8 @@ export default class DataLoader {
                 loadPromise = startedLoaders[loaderKey];
             } else {
                 loadPromise =
-                    this._callLoaderWithDependencies(loaderKey, sourceConfigs, startedLoaders, loadTimeout, listConfigStoreId);
+                    this._callLoaderWithDependencies(loaderKey, sourceConfigs, startedLoaders,
+                        loadTimeout, prefetchConfig);
             }
             loadResult[loaderKey] = loadPromise;
         });
@@ -488,7 +521,7 @@ export default class DataLoader {
         sourceConfigs: TLoadConfig[],
         loadersMap: TLoadersConfigsMap,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        prefetchConfig?: IPrefetchConfig
     ): TLoadPromiseResult[] {
         const loadDataPromises = [];
         const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
@@ -498,7 +531,8 @@ export default class DataLoader {
                 loadDataPromises.push(startedLoaders[loadConfig.id]);
             } else {
                 loadDataPromises.push(
-                    this._callLoaderWithDependencies(loadConfig.id, loadersMap, startedLoaders, loadTimeout, listConfigStoreId)
+                    this._callLoaderWithDependencies(loadConfig.id, loadersMap, startedLoaders,
+                        loadTimeout, prefetchConfig)
                 );
             }
         });
@@ -520,7 +554,7 @@ export default class DataLoader {
         loadersMap: TLoadersConfigsMap,
         startedLoaders: Record<string, TLoadPromiseResult>,
         loadTimeout?: number,
-        listConfigStoreId?: string
+        prefetchConfig?: IPrefetchConfig
     ): TLoadPromiseResult {
         const loadConfig = loadersMap[id];
         let loadPromise;
@@ -537,11 +571,11 @@ export default class DataLoader {
                 loadPromise = Promise.all(
                     this._loadDependencies(loadersMap, startedLoaders, dependencies, loadTimeout)
                 ).then((results) => {
-                    return this._callLoader(id, loadConfig, loadTimeout, results, listConfigStoreId);
+                    return this._callLoader(id, loadConfig, loadTimeout, results, prefetchConfig);
                 });
             }
         } else {
-            loadPromise = this._callLoader(id, loadConfig, loadTimeout, void 0, listConfigStoreId);
+            loadPromise = this._callLoader(id, loadConfig, loadTimeout, void 0, prefetchConfig);
         }
         startedLoaders[id] = loadPromise;
         return loadPromise;
@@ -560,7 +594,7 @@ export default class DataLoader {
         loaderConfig: TLoadConfig,
         loadTimeout?: number,
         dependencies?: TLoadResult[],
-        listConfigStoreId?: string
+        prefetchConfig?: IPrefetchConfig
     ): TLoadPromiseResult {
         let loadPromise;
         if (loaderConfig.type === 'custom') {
@@ -572,9 +606,9 @@ export default class DataLoader {
                 customPromise, loadTimeout || getLoadTimeout(loaderConfig)
             ).catch((error) => error);
         } else if (loaderConfig.type === 'additionalDependencies') {
-            loadPromise = this._loadAdditionalDependencies(loaderConfig, dependencies);
+            loadPromise = this._loadAdditionalDependencies(loaderConfig, dependencies, prefetchConfig?.configLoaderArguments);
         } else {
-            loadPromise = loadDataByConfig(loaderConfig, loadTimeout, listConfigStoreId);
+            loadPromise = loadDataByConfig(loaderConfig, loadTimeout, prefetchConfig?.pageId);
         }
         Promise.resolve(loadPromise).then((result) => {
             if (loaderConfig.type === 'list' && !result.source && result.historyItems) {
@@ -662,10 +696,14 @@ export default class DataLoader {
      */
     private _loadAdditionalDependencies(
         config: ILoadDataAdditionalDepsConfig,
-        dependencies?: TLoadResult[]
+        dependencies?: TLoadResult[],
+        listConfigArguments?: object
     ): Promise<Record<string, unknown>> {
         return Promise.resolve(config.loadDataMethod(config.loadDataMethodArguments, dependencies))
-            .then(this._loadDepsData)
+            .then((pageKeys: string[], loadDataMethodArguments: Record<string, unknown> = {}) => {
+                const args = {...loadDataMethodArguments, ...listConfigArguments};
+                return this._loadDepsData(pageKeys, args);
+            })
             .catch((error) => error);
     }
 
@@ -694,7 +732,7 @@ export default class DataLoader {
                     return PageController.loadData(pageConfig, loadDataMethodArguments).then((pageLoadedData) => {
                         result[key] = pageLoadedData;
                     });
-                });
+                }).catch((error) => resolve(error));
             })).then(() => resolve(result)).catch((error) => resolve(error));
         });
     }

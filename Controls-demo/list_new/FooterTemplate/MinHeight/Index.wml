@@ -1,0 +1,21 @@
+<div class="controlsDemo__wrapper controlsDemo__maxWidth200 controlsDemo_list-new_FooterMinHeight">
+   <Controls.toggle:ButtonGroup
+      items="{{_items}}"
+      allowEmptySelection="{{false}}"
+      bind:selectedKey="_footerContent"
+   />
+
+   <Controls.list:View source="{{_viewSource}}" keyProperty="key">
+      <ws:footerTemplate>
+         <ws:if data="{{_footerContent === 'show'}}">
+            <div class="controlsDemo__footer-min-height">
+               <Controls.list:AddButton caption="Add record"/>
+            </div>
+         </ws:if>
+      </ws:footerTemplate>
+   </Controls.list:View>
+
+   <div>
+      Контент после списка
+   </div>
+</div>

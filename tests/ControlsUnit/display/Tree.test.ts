@@ -2200,6 +2200,29 @@ describe('Controls/_display/Tree', () => {
                 item = tree.getItemBySourceKey(2);
                 assert.isTrue(item.shouldDisplayExpanderPadding());
             });
+
+            it('add list with childs and then make it is node', () => {
+                const rs = new RecordSet({
+                    rawData: [
+                        {id: 1, hasChildren: false, node: true, pid: 0}
+                    ],
+                    keyProperty: 'id'
+                });
+                const tree = getTree(rs, {hasChildrenProperty: '', expanderVisibility: 'hasChildren'});
+                assert.isFalse(tree.at(0).hasChildrenByRecordSet());
+
+                rs.add(new Model({
+                    rawData: {id: 2, hasChildren: false, node: null, pid: 0},
+                    keyProperty: 'id'
+                }));
+                rs.add(new Model({
+                    rawData: {id: 21, hasChildren: false, node: null, pid: 2},
+                    keyProperty: 'id'
+                }));
+                rs.getRecordById(2).set('node', true)
+
+                assert.isTrue(tree.getItemBySourceKey(2).hasChildrenByRecordSet());
+            });
         });
     });
 
@@ -2704,6 +2727,32 @@ describe('Controls/_display/Tree', () => {
 
             assert.isTrue(tree._displayExpanderPadding);
         })
+
+        it('update all items', () => {
+            const rs = new RecordSet({
+                rawData: [
+                    {id: 1, hasChildren: false, node: null, pid: 0},
+                    {id: 2, hasChildren: false, node: null, pid: 0}
+                ],
+                keyProperty: 'id'
+            });
+            const tree = getTree(rs);
+
+            assert.equal(tree.getItemBySourceKey(1).getVersion(), 2);
+            assert.equal(tree.getItemBySourceKey(2).getVersion(), 2);
+
+            const newItem = new Model({
+                rawData: {id: 3, hasChildren: false, node: true, pid: 0},
+                keyProperty: 'id'
+            })
+            rs.add(newItem)
+
+            assert.isTrue(tree.hasNode());
+            assert.equal(tree.getItemBySourceKey(1).getVersion(), 3);
+            assert.equal(tree.getItemBySourceKey(2).getVersion(), 4); // 4 - т.к. еще изменился lastItem
+            assert.isTrue(tree.getItemBySourceKey(1).shouldDisplayExpanderPadding());
+            assert.isTrue(tree.getItemBySourceKey(2).shouldDisplayExpanderPadding());
+        })
     });
 
     describe('parent', () => {
@@ -2747,6 +2796,26 @@ describe('Controls/_display/Tree', () => {
             // переместили одну запись в корень
             rs.getRecordById(21).set('pid', 0);
             assert.deepEqual(tree.getItemBySourceKey(21).getParent().key, { id: 0, title: 'Root' });
+        });
+
+        it('not throw error when has group or when add item with not exists parent', () => {
+            const rs = new RecordSet({
+                rawData: [
+                    {id: 1, hasChildren: false, node: true, pid: 0, group: 1},
+                    {id: 2, hasChildren: false, node: true, pid: 0, group: 1}
+                ],
+                keyProperty: 'id'
+            });
+            const tree = getTree(rs, {groupProperty: 'group'});
+
+            let newItem = new Model({
+                rawData: {id: 3, hasChildren: false, node:  false, pid: null, group: 1},
+                keyProperty: 'id'
+            })
+            assert.doesNotThrow(rs.add.bind(rs,newItem));
+            newItem = rs.getRecordById(3);
+            assert.doesNotThrow(newItem.set.bind(newItem, 'pid', 0));
+            assert.isOk(tree.getItemBySourceKey(3));
         });
     });
 });

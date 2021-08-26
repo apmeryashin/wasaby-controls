@@ -27,7 +27,9 @@
                     style="left: {{_options.direction === 'horizontal' ? point.position + '%'}};
                            bottom: {{_options.direction === 'vertical' ? point.position + '%'}};">
                   <ws:if data="{{point.name=='tooltip' && _options.tooltipVisible && !_options.readOnly && (_tooltipValue || _tooltipValue==0)}}">
-                     <div class="controls-Slider__tooltipValue controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue_position-{{_options.tooltipPosition}}">
+                     <div class="controls-Slider__tooltipValue
+                                 controls-fontsize-{{_options.tooltipFontSize}}
+                                 controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue_position-{{_options.tooltipPosition}}">
                         {{_tooltipValue}}
                      </div>
                   </ws:if>
@@ -68,6 +70,7 @@
    <div if="{{_scaleData && !_options.borderVisible}}" class="controls-Slider__scale">
       <ws:for data="key, segment in _scaleData">
          <span class="controls-Slider__segment
+                      controls-fontsize-{{_options.scaleFontSize}}
                       controls-Slider__segment{{_options.size=='m' ? '_big' : '_small'}}
                       controls-Slider__segment{{_options.readOnly ? '_disabled' : '_enabled'}}">{{segment.value}}</span>
       </ws:for>

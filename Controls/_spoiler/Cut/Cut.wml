@@ -12,7 +12,9 @@
                   'var(--calculated-content-max-height_inputArea); ')
             )
          }}">
-      <ws:partial attr:class="controls-Cut__content" template="{{_options.content}}"/>
+      <div name="content" attr:class="controls-Cut__content">
+         <ws:partial template="{{_options.content}}"/>
+      </div>
       <ws:if data="{{_options.lines !== null}}">
          <div class="controls-Cut__ellipsisWrapper{{ _expanded ? '_expanded_lineHeight-' +  _options.lineHeight}}"
               style="{{

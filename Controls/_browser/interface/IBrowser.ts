@@ -39,16 +39,3 @@
  * @cfg {String} Идентификатор, по которому будет получен sourceController из контекста.
  * @remark Опцию следует задавать, если в конексте передаётся несколько sourceController'ов
  */
-
-
-/**
- * @name Controls/_browser/interface/IBrowser#dataLoadCallback
- * @cfg {Function} Функция, которая вызывается каждый раз непосредственно после загрузки данных из источника контрола.
- * @remark Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/source/#data-load-callback здесь}.
- */
-
-/**
- * @name Controls/_browser/interface/IBrowser#dataLoadErrback
- * @cfg {Function} Функция обратного вызова для определения сбоя загрузки данных из источника.
- * @remark Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/source/#data-load-callback здесь}.
- */

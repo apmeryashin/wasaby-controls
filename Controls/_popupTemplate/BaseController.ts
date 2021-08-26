@@ -39,6 +39,8 @@ abstract class BaseController implements IPopupController {
     // Окно удалено из верстки
     POPUP_STATE_DESTROYED: string = 'destroyed';
 
+    TYPE: string = 'Base';
+
     elementCreatedWrapper(item: IPopupItem, container: HTMLElement): boolean {
         if (this._checkContainer(item, container, 'elementCreated')) {
             item.popupState = this.POPUP_STATE_CREATED;
@@ -69,6 +71,11 @@ abstract class BaseController implements IPopupController {
     }
 
     protected elementUpdated(item: IPopupItem, container: HTMLElement): boolean {
+        // method can be implemented
+        return false;
+    }
+
+    updatePosition(item: IPopupItem, container: HTMLElement): boolean {
         // method can be implemented
         return false;
     }
@@ -116,7 +123,7 @@ abstract class BaseController implements IPopupController {
         return (new Deferred()).callback();
     }
 
-    getDefaultConfig(item: IPopupItem): Promise<void> | void {
+    getDefaultConfig(item: IPopupItem): Promise<void> | void | boolean {
         item.position = {
             top: -10000,
             left: -10000,

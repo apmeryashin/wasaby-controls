@@ -17,7 +17,7 @@
       <ws:if data="{{_needShowMenu}}">
          <Controls.buttons:Button
                  attr:class="controls-Toolbar__menu
-                             controls-Toolbar__menu_{{_options.direction}}-spacing-{{_options.contrastBackground ? _options.itemsSpacing : 'small'}}"
+                             controls-Toolbar__menu_{{_options.direction}}-spacing-{{_countShowItems ? (_options.contrastBackground ? _options.itemsSpacing : 'small') : 'none'}}"
                  name="menuTarget"
                  translucent="{{_options.translucent}}"
                  viewMode="{{_options.translucent ? 'functionalButton' : 'toolButton'}}"

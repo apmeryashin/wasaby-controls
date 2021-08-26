@@ -179,6 +179,26 @@ describe('Controls/grid_clean/Display/Collection', () => {
                 assert.exists(gridCollection.getResults());
             });
         });
+        describe('resultsVisibility', () => {
+            it('setResultsVisibility resets results object', () => {
+                const gridCollection = new GridCollection({
+                    collection: [],
+                    keyProperty: 'key',
+                    columns: [{
+                        displayProperty: 'id',
+                        resultTemplate: () => 'result'
+                    }],
+                    resultsPosition: 'top',
+                    resultsVisibility: 'visible'
+                });
+
+                assert.exists(gridCollection.getResults());
+
+                gridCollection.setResultsVisibility('hasdata');
+
+                assert.notExists(gridCollection.getResults());
+            });
+        });
         describe('emptyTemplateColumns', () => {
             it('Initialize with emptyTemplateColumns', () => {
                 const emptyColumnsConfig = [

@@ -748,6 +748,15 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._notify('inputCompleted', [value]);
    }
 
+   protected _getSuggestPopupStyles(suggestWidth: number): string {
+      const maxWidth = this._options.suggestPopupOptions?.maxWidth;
+      if (maxWidth) {
+         return `min-width: ${suggestWidth}px; max-width: ${maxWidth}px`;
+      } else {
+         return `width: ${suggestWidth}px;`;
+      }
+   }
+
    private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
       if (this._searchResolverController) {
          this._searchResolverController.resolve(value);
