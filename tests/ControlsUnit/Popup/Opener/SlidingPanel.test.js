@@ -550,12 +550,16 @@ define(
                   const heightList = item.popupOptions.slidingPanelOptions.heightList;
 
                   // closer to first step
-                  item.position.height = heightList[0] + 50;
+                  Controller.popupDragStart(item, {}, {
+                     x: 0, y: -50
+                  });
                   Controller.popupDragEnd(item);
                   assert.equal(item.position.height, heightList[0]);
 
                   // closer to second step
-                  item.position.height = heightList[1] - 50;
+                  Controller.popupDragStart(item, {}, {
+                     x: 0, y: -100
+                  });
                   Controller.popupDragEnd(item);
                   assert.equal(item.position.height, heightList[1]);
                   sandbox.restore();
@@ -576,7 +580,6 @@ define(
 
                   item.popupOptions.slidingPanelOptions.position = 'bottom';
                   item.position = SlidingPanelStrategy.getPosition(item);
-                  item.position.height = item.position.height + 100;
                   const startHeight = item.position.height;
 
                   Controller.popupDragStart(item, {}, {
