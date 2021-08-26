@@ -599,14 +599,44 @@ define(
                   const heightList = item.popupOptions.slidingPanelOptions.heightList;
 
                   // closer to first step
-                  item.position.height = heightList[0] + 50;
+                  Controller.popupDragStart(item, {}, {
+                     x: 0, y: -50
+                  });
                   Controller.popupDragEnd(item);
                   assert.equal(item.position.height, heightList[0]);
 
                   // closer to second step
-                  item.position.height = heightList[1] - 50;
+                  Controller.popupDragStart(item, {}, {
+                     x: 0, y: -100
+                  });
                   Controller.popupDragEnd(item);
                   assert.equal(item.position.height, heightList[1]);
+                  sandbox.restore();
+               });
+
+               it('horizontal drag should not change popup height', () => {
+                  const sandbox = sinon.sandbox.create();
+                  const item = getPopupItem();
+                  const SlidingPanelStrategy = new StrategyConstructor();
+                  let height = 0;
+
+                  sandbox.stub(StrategySingleton, '_getWindowHeight').callsFake(() => 900);
+                  sandbox.stub(StrategySingleton, 'getPosition').callsFake((item) => {
+                     height = item.position.height;
+                     return item.position;
+                  });
+                  SlidingPanelStrategy._getWindowHeight = () => 900;
+
+                  item.popupOptions.slidingPanelOptions.position = 'bottom';
+                  item.position = SlidingPanelStrategy.getPosition(item);
+                  const startHeight = item.position.height;
+
+                  Controller.popupDragStart(item, {}, {
+                     x: 20,
+                     y: -10
+                  });
+                  Controller.popupDragEnd(item);
+                  assert.equal(height, startHeight);
                   sandbox.restore();
                });
             });
