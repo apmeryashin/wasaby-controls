@@ -179,7 +179,7 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
             // Т.е. скролируем только когда верх элемента выше свернутой шапки, или когда ниже развернутой.
             if (!force || elemOffset.top < parentOffset.top + stickyHeaderHeight.topWithOffset ||
                 elemOffset.top > parentOffset.top + stickyHeaderHeight.top) {
-               elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.topWithOffset);
+               elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.top);
             }
          }
          // Принудительно скроллим в самый вверх или вниз, только первый родительский скролл контейнер,
