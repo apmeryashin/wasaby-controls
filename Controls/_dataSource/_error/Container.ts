@@ -14,6 +14,11 @@ interface IInlistTemplateOptions {
     listOptions: object;
 }
 
+type ContainerViewConfig<OptionsType = object> =
+    ErrorViewConfig<OptionsType> &
+    { isShown?: boolean; } &
+    ({ templateName?: string; } | { template?: TemplateFunction; });
+
 /**
  * Компонент для отображения сообщения об ошибки на основе данных, полученных от контроллера {@link Controls/_dataSource/_error/Controller}.
  * Может отображать сообщение об ошибке разными способами:
@@ -28,7 +33,7 @@ interface IInlistTemplateOptions {
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
     private _isUnmounted: boolean = false;
-    private __viewConfig: ErrorViewConfig; // tslint:disable-line:variable-name
+    private __viewConfig: ContainerViewConfig; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
     protected _template: TemplateFunction = template;
 
@@ -79,11 +84,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        if (
-            options.viewConfig &&
-            options.viewConfig.mode !== ErrorViewMode.dialog &&
-            isEqual(this._options.viewConfig, options.viewConfig)
-        ) {
+        if (isEqual(this._options.viewConfig, options.viewConfig)) {
             return;
         }
 
@@ -176,6 +177,6 @@ export default class Container extends Control<IContainerConfig> implements ICon
         this.__viewConfig.options = {
             ...this.__viewConfig.options
         };
-        (this.__viewConfig as Config<IInlistTemplateOptions>).options.listOptions = options;
+        (this.__viewConfig as ContainerViewConfig<IInlistTemplateOptions>).options.listOptions = options;
     }
 }
