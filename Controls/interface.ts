@@ -62,6 +62,7 @@ export {
     IBasePositionSourceConfig,
     IBasePageSourceConfig,
     TNavigationPagingMode,
+    TNavigationResetButtonMode,
     TNavigationSource,
     TNavigationDirection,
     INavigationViewConfig,
