@@ -161,11 +161,6 @@
 .controls-ListView__footer {
    display: flex;
    align-items: baseline;
-   min-height: var(--inline_height_m);
-   &::before {
-      content: '\200b';
-      font-size: var(--font-size_xl);
-   }
 }
 
 .controls-ListView__footer__itemActionsV_outside {
@@ -174,6 +169,15 @@
 
 .controls-ListView__footer__content {
    width: 100%;
+}
+
+.controls-ListView__footer__user-content {
+   min-height: var(--inline_height_m);
+
+   &::before {
+      content: '\200b';
+      font-size: var(--font-size_xl);
+   }
 }
 
 .controls-ListView__footer__paddingLeft_withCheckboxes {
