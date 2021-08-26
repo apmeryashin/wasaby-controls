@@ -190,15 +190,17 @@ interface IStar {
 }
 
 const _private = {
-    resolveStars(options: IRatingOptions): void {
+    resolveStars(options: IRatingOptions, selectedStars?: number, halfStar?: boolean): void {
         this._stars = [];
+        const selectStars = selectedStars !== undefined ? selectedStars : this._selectStars;
+        const isHalfStar = halfStar !== undefined ? halfStar : this._isHalfStar;
         for (let i = 0; i < COUNT_STARS; i++) {
             let type; let icon; let iconStyle;
-            if (i < this._selectStars) {
+            if (i < selectStars) {
                 type = 'star';
                 icon = 'icon-Favorite';
                 iconStyle = options.iconStyle;
-            } else if (this._isHalfStar && i === this._selectStars) {
+            } else if (isHalfStar && i === selectStars) {
                 type = 'halfStar';
                 icon = 'icon-FavoriteHalf';
                 iconStyle = options.iconStyle;
@@ -215,17 +217,21 @@ const _private = {
             });
         }
     },
-    updateCountStars(event: SyntheticEvent<Event>): void {
+    updateCountStars(event: SyntheticEvent<Event>, onlyVisibility: boolean): void {
         const starId = event.target?.getAttribute('id');
         if (starId) {
             const idValue = starId.split('_')[0];
             const newSelectStars = parseInt(idValue, 10) + 1;
             if (newSelectStars) {
-                this._selectStars = newSelectStars;
-                if (this._isHalfStar !== null) {
-                    this._isHalfStar = false;
+                if (onlyVisibility) {
+                    _private.resolveStars.call(this, this._options, newSelectStars, false);
+                } else {
+                    this._selectStars = newSelectStars;
+                    if (this._isHalfStar !== null) {
+                        this._isHalfStar = false;
+                    }
+                    _private.resolveStars.call(this, this._options);
                 }
-                _private.resolveStars.call(this, this._options);
             }
         }
     },
@@ -287,7 +293,7 @@ class Rating extends Control<IRatingOptions> {
 
     private _onHoverStar(event: SyntheticEvent<Event>): void {
         if (!this._options.readOnly && !detection.isMobilePlatform) {
-            _private.updateCountStars.call(this, event);
+            _private.updateCountStars.call(this, event, true);
         }
     }
 
