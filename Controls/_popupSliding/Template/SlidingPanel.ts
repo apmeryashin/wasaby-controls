@@ -174,7 +174,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             this._notifyDragEnd();
             this._touchDragOffset = null;
         }
-        this._startTouchYPosition = null;
+        this._currentTouchPosition = null;
         this._swipeInProcess = false;
     }
 
