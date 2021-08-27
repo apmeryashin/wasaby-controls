@@ -142,7 +142,7 @@
    right: calc(-1 * var(--resizingLine_mobile_offset-left_masterDetail));
    width: var(--resizingLine_mobile_thickness_masterDetail);
    // Чтоб не менялись размеры мастера, сдвигаем левее на ширин resizingLine
-   margin-left: calc(var(--resizingLine_mobile_offset-left_masterDetail) - var(--resizingLine_mobile_thickness_masterDetail));
+   margin-left: calc(var(--resizingLine_mobile_thickness_masterDetail) * -1);
 
    .controls-ResizingLine__areaWrapper_horizontal {
       width: calc(var(--resizingLine_mobile_thickness_masterDetail) - var(--resizingLine_mobile_offset-left_masterDetail));
