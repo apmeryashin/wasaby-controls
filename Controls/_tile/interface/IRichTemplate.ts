@@ -79,7 +79,7 @@ export default interface IRichTemplateOptions {
      * @see nodesScaleSize
      * @see imageEffect
      */
-    imagePosition?: 'top' | 'left' | 'right';
+    imagePosition?: 'top' | 'right' | 'bottom' | 'left';
 
     /**
      * @typedef {String} TitlePosition

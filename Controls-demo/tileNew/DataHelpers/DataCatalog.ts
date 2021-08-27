@@ -345,6 +345,21 @@ export const Gadgets = {
             imageHeight: 'l',
             image: explorerImages[8],
             isShadow: true
+        },
+        {
+            id: 5,
+            parent: null,
+            type: null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            description: 'Элемент с описанием',
+            imageProportion: '16:9',
+            titleLines: 1,
+            imagePosition: 'top',
+            imageViewMode: 'rectangle',
+            'parent@': null,
+            imageHeight: 's',
+            image: explorerImages[8],
+            isShadow: true
         }],
 
    getActions: (): IItemAction[] => [
