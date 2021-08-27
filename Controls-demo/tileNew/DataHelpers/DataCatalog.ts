@@ -354,7 +354,7 @@ export const Gadgets = {
             description: 'Элемент с описанием',
             imageProportion: '16:9',
             titleLines: 1,
-            imagePosition: 'top',
+            imagePosition: 'bottom',
             imageViewMode: 'rectangle',
             'parent@': null,
             imageHeight: 's',
