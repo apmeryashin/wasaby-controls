@@ -99,6 +99,34 @@ define(
             assert.equal(position.height, windowData.height);
          });
 
+         it('dialog positioning left/right', () => {
+            let windowData = {
+               width: 1920,
+               height: 1080,
+               topScroll: 0
+            };
+            const popupOptions = {
+               left: 100,
+               top: 100,
+               width: 200
+            };
+            let position = DialogStrategy.getPosition(windowData, sizes, { popupOptions });
+            assert.equal(position.left, 100);
+
+            popupOptions.left = 1900;
+            position = DialogStrategy.getPosition(windowData, sizes, { popupOptions });
+            assert.equal(position.left, 1720);
+
+            popupOptions.left = undefined;
+            popupOptions.right = 120;
+            position = DialogStrategy.getPosition(windowData, sizes, { popupOptions });
+            assert.equal(position.right, 1720);
+
+            popupOptions.right = 1900;
+            position = DialogStrategy.getPosition(windowData, sizes, { popupOptions });
+            assert.equal(position.right, 20);
+         });
+
          it('dialog positioning overflow container', () => {
             let windowData = {
                width: 300,

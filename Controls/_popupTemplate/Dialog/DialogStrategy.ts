@@ -117,7 +117,10 @@ export class DialogStrategy {
         const topCoordinate = this._getCoordinate(popupItem, 'top');
         const isRightCoordinate = typeof popupItem.popupOptions.right !== 'undefined';
         const coordinate = isRightCoordinate ? 'right' : 'left';
-        const horizontalCoordinate = this._getCoordinate(popupItem, coordinate);
+        let horizontalCoordinate = this._getCoordinate(popupItem, coordinate);
+        if (coordinate === 'right') {
+            horizontalCoordinate = windowData.width - horizontalCoordinate;
+        }
 
         if (topCoordinate === undefined && horizontalCoordinate === undefined) {
             return;
@@ -133,7 +136,7 @@ export class DialogStrategy {
             position.top = top;
         }
         if (horizontalCoordinate !== undefined) {
-            const popupWidth = (popupItem.popupOptions.width || popupItem.sizes.width);
+            const popupWidth = (popupItem.popupOptions.width || popupItem.sizes?.width);
             // Calculating the position when reducing the size of the browser window
             const differenceWindowWidth: number =
                 (horizontalPosition + popupWidth) - windowData.width;
