@@ -1,6 +1,7 @@
 import {Record} from 'Types/entity';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFontSizeOptions} from 'Controls/interface';
+import {ICrudPlus} from 'Types/source';
 
 export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
     items: Record[];
@@ -9,6 +10,18 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
     displayProperty: string;
     containerWidth: number;
     backButtonBeforeCaptionTemplate: string | TemplateFunction;
+
+    /**
+     * Временная опция, которая включает отображение крошек в новом дизайне
+     * https://online.sbis.ru/opendoc.html?guid=bc6cb214-d119-4ae6-98b2-c147df660b46
+     */
+    feature1182709671?: boolean;
+    pathButtonSource: ICrudPlus;
+    pathButtonFilter: object;
+    pathButtonKeyProperty: string;
+    pathButtonNodeProperty: string;
+    pathButtonParentProperty: string;
+    pathButtonDisplayProperty: string;
 }
 
 /**
@@ -117,4 +130,34 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
  * @name Controls/_breadcrumbs/interface/IBreadCrumbs#itemClick
  * @param {UICommon/Events:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Key of the clicked item.
+ */
+
+/**
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonSource
+ * @cfg {Types/source#ICrud} Источник данных для кнопки меню при клике на которую отображается дерево каталогов.
+ */
+
+/**
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonFilter
+ * @cfg {Types/source#ICrud} Данные фильтра, используемого при запросе дерева каталогов для кнопки меню.
+ */
+
+/**
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonKeyProperty
+ * @cfg {Types/source#ICrud} Имя поля записи содержащее её ключ.
+ */
+
+/**
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonNodeProperty
+ * @cfg {Types/source#ICrud} Имя поля записи содержащее её тип (узел, скрытый узел, лист).
+ */
+
+/**
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonParentProperty
+ * @cfg {Types/source#ICrud} Имя поля записи содержащее идентификатор родительского узла.
+ */
+
+/**
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#pathButtonDisplayProperty
+ * @cfg {Types/source#ICrud} Имя поля записи содержащее её отображаемое значение.
  */

@@ -1,4 +1,4 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import PrepareDataUtil from './PrepareDataUtil';
 import {EventUtils} from 'UI/Events';
@@ -10,8 +10,10 @@ import 'css!Controls/heading';
 import 'css!Controls/breadcrumbs';
 import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
-import {Record} from 'Types/entity';
+import {Model, Record} from 'Types/entity';
 import {Logger} from 'UI/Utils';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Path} from 'Controls/dataSource';
 
 interface IReceivedState {
     items: Record[];
@@ -78,7 +80,6 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
                            contexts?: object,
                            receivedState?: IReceivedState): Promise<IReceivedState> | void {
         this._prepareItems(options);
-        const arrPromise = [];
 
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
@@ -108,7 +109,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     }
 
     protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
-        const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
+        const isItemsChanged = newOptions.items !== this._options.items;
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
         const isFontSizeChanged = newOptions.fontSize !== this._options.fontSize;
         if (isItemsChanged) {
@@ -159,20 +160,40 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         }
     }
 
-    private _onBackButtonClick(e: Event): void {
+    protected _onBackButtonClick(e: Event): void {
         Common.onBackButtonClick.call(this, e);
     }
-    private _onHomeClick(): void {
-        /**
-         * TODO: _options.root is actually current root, so it's wrong to use it. For now, we can take root from the first item. Revert this commit after:
-         * https://online.sbis.ru/opendoc.html?guid=93986788-48e1-48df-9595-be9d8fb99e81
-         */
-        this._notify('itemClick', [this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty)]);
+
+    protected _onHomeClick(): void {
+        this._notify('itemClick', [this._buildRootModel()]);
     }
 
-    private _getCounterCaption(items: Record[] = []): void {
+    /**
+     * Обработчик изменения пути через компонент Controls._breadcrumbs.PathButton
+     */
+    protected _onPathChanged(event: SyntheticEvent, path: Path): void {
+        const newRoot = path.length ? path[path.length - 1] : this._buildRootModel();
+        this._notify('itemClick', [newRoot]);
+    }
+
+    protected _getCounterCaption(items: Record[] = []): void {
+        if (items === null) {
+            items = [];
+        }
+
         const lastItem = items[items.length - 1];
         return lastItem?.get('counterCaption');
+    }
+
+    /**
+     * На основании текущий опций собирает модель корневого каталога
+     *
+     * TODO: _options.root is actually current root, so it's wrong to use it.
+     *  For now, we can take root from the first item. Revert this commit after:
+     *  https://online.sbis.ru/opendoc.html?guid=93986788-48e1-48df-9595-be9d8fb99e81
+     */
+    private _buildRootModel(): Model {
+        return this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty);
     }
 
     private _prepareItems(options: IBreadCrumbsOptions): void {
@@ -184,7 +205,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
             this._isHomeVisible = false;
         };
 
-        if (options.items && options.items.length > 0) {
+        if (options.items?.length > 0) {
             const lastItem = options.items[options.items.length - 1];
 
             this._backButtonItem = lastItem;
@@ -207,7 +228,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     }
 
     static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
-    static getDefaultOptions() {
+    static getDefaultOptions(): object {
         return {
             displayProperty: 'title',
             root: null,

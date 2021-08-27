@@ -2,6 +2,7 @@
  * Библиотека контролов, которые служат для поддержки навигации, позволяющей  пользователю перейти c текущей страницы/документа на любой уровень вложенности.
  * @library
  * @includes IBreadCrumbs Controls/_breadcrumbs/interface/IBreadCrumbs
+ * @includes IPathButton Controls/_breadcrumbs/PathButton/interfaces
  * @author Авраменко А. С.
  */
 
@@ -15,7 +16,7 @@ import Container = require('wml!Controls/_breadcrumbs/WrappedContainer');
 
 export {default as Path} from './_breadcrumbs/Path';
 export {default as View} from './_breadcrumbs/View';
-export {PathButton} from './_breadcrumbs/PathButton';
+export {default as PathButton} from './_breadcrumbs/PathButton';
 export * from 'Controls/_breadcrumbs/PathButton/interfaces';
 export {default as HeadingPath} from './_breadcrumbs/HeadingPath';
 export {default as MultilinePath} from './_breadcrumbs/MultilinePath';

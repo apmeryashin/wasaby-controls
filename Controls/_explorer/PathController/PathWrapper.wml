@@ -5,9 +5,18 @@
                   name="Path"
                   items="{{_options.breadCrumbsItems}}"
                   displayMode="{{_options.breadcrumbsDisplayMode}}"
+
                   withoutBackButton="{{_withoutBackButton}}"
                   backButtonNewIcon="{{_options.backButtonNewIcon}}"
                   backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
+
+                  pathButtonSource="{{_options.source}}"
+                  pathButtonFilter="{{_options.filter}}"
+                  pathButtonKeyProperty="{{_options.keyProperty}}"
+                  pathButtonNodeProperty="{{_options.nodeProperty}}"
+                  pathButtonParentProperty="{{_options.parentProperty}}"
+                  pathButtonDisplayProperty="{{_options.displayProperty}}"
+
                   attr:class="controls-Explorer__Path"
                   on:backButtonClick="_notifyHandler('backButtonClick')"
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"

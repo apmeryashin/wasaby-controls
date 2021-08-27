@@ -9,17 +9,16 @@ import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
 /**
  * Контрол кнопки меню для хлебных крошек. При клике открывается popup со списком всех узлов в виде дерева.
  *
- * Список узлов запрашивается через метод {@link Types/source:ICrud#query query} указанный в переданном в опциях
- * {@link Controls/breadcrumbs:IPathButton#source source}. При запросе данных в фильтр автоматически подставляется
- * параметр <b>"Только узлы": true</b>. Если указан кастомный {@link Controls/breadcrumbs:IPathButton#filter фильтр}, то
- * параметр "Только узлы" так же будет добавлен к нему.
+ * Список узлов запрашивается через метод {@link Types/source:ICrud#query query} указанный в переданном в опциях {@link Controls/breadcrumbs:IPathButton#source source}. При запросе данных в фильтр автоматически подставляется параметр <b>"Только узлы": true</b>. Если указан кастомный {@link Controls/breadcrumbs:IPathButton#filter фильтр}, то параметр "Только узлы" так же будет добавлен к нему.
+ *
+ * @demo Controls-demo/breadCrumbs_new/PathButton/Index
  *
  * @extends UI/Base:Control
  *
  * @public
  * @author Уфимцев Д.Ю.
  */
-export class PathButton extends Control<IPathButton> {
+export default class PathButton extends Control<IPathButton> {
     //region base props
     protected _template: TemplateFunction = template;
     //endregion
@@ -113,6 +112,7 @@ export class PathButton extends Control<IPathButton> {
         return {
             path: this._options.path,
             source: this._options.source,
+            filter: this._options.filter,
             keyProperty: this._options.keyProperty,
             nodeProperty: this._options.nodeProperty,
             parentProperty: this._options.parentProperty,
