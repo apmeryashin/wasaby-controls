@@ -27,7 +27,7 @@
 
 <ws:if data="{{ imageViewMode !== 'none' }}">
     <div
-        attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem) }}"
+        attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem, imagePadding) }}"
         attr:style="{{ (item || itemData).getImageWrapperStyles(itemType, imageViewMode, imagePosition) }}"
         data-qa="{{ (item || itemData).getImageWrapperDataQa() }}"
     >
