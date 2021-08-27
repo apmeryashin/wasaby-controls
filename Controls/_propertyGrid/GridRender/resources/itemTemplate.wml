@@ -63,6 +63,11 @@
                             template="{{ itemActionsTemplate }}" />
                 </ws:if>
             </ws:if>
+            <ws:if data="{{!collectionItem.getEditorTemplateName() || options.captionPosition === 'top'}}">
+                <ws:if data="{{afterEditorTemplate}}">
+                    <ws:partial template="{{afterEditorTemplate}}"/>
+                </ws:if>
+            </ws:if>
         </div>
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
@@ -85,6 +90,9 @@
                             template="{{ itemActionsTemplate }}" />
                 </ws:if>
             </ws:if>
+           <ws:if data="{{afterEditorTemplate && options.captionPosition !== 'top'}}">
+               <ws:partial template="{{afterEditorTemplate}}"/>
+           </ws:if>
         </div>
     </ws:if>
 </ws:else>
