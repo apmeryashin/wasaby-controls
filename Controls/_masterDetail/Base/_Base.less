@@ -75,10 +75,14 @@
    border-radius: 0;
 }
 
+.controls-MasterDetail_resizing-line_wrapper {
+   position: relative;
+}
+
 .controls-MasterDetail_resizing-line {
-   // 5px это размеры resizingLine(@thickness_dragnDropResizingLine), но из-за того что используются less переменные, задаем значением
-   // Будет поправлено после того, как resizingLine перейдет на css var
-   margin-left: -5px;
+   position: absolute;
+   top: 0;
+   height: 100%;
    // Движение границ всегда должно быть выше любого прикладного элемента в контроле.
    // Решать проблему через z-index на контейнерах 'master' и 'detail' нельзя.
    // Они должны лежать в одном контексте наложения. Иначе будет перекрытие
@@ -141,8 +145,6 @@
 .ws-is-mobile-platform .controls-MasterDetail_resizing-line {
    right: calc(-1 * var(--resizingLine_mobile_offset-left_masterDetail));
    width: var(--resizingLine_mobile_thickness_masterDetail);
-   // Чтоб не менялись размеры мастера, сдвигаем левее на ширин resizingLine
-   margin-left: calc(var(--resizingLine_mobile_thickness_masterDetail) * -1);
 
    .controls-ResizingLine__areaWrapper_horizontal {
       width: calc(var(--resizingLine_mobile_thickness_masterDetail) - var(--resizingLine_mobile_offset-left_masterDetail));
