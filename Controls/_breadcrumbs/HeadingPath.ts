@@ -187,10 +187,6 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
 
     /**
      * На основании текущий опций собирает модель корневого каталога
-     *
-     * TODO: _options.root is actually current root, so it's wrong to use it.
-     *  For now, we can take root from the first item. Revert this commit after:
-     *  https://online.sbis.ru/opendoc.html?guid=93986788-48e1-48df-9595-be9d8fb99e81
      */
     private _buildRootModel(): Model {
         return this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty);

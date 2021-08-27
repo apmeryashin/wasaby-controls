@@ -16,10 +16,6 @@ export default class extends Control {
       keyProperty: 'id',
       rawData: [
          {
-            id: 'xs',
-            title: 'xs'
-         },
-         {
             id: 's',
             title: 's'
          },
