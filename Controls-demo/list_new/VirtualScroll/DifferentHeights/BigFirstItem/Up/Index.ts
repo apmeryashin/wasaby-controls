@@ -6,6 +6,7 @@ import {generateData} from '../../../../DemoHelpers/DataCatalog';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
+    protected _scrollToLastItem: boolean = true;
 
     private _dataArray: Array<{ key: number, title: string }> = generateData<{key: number, title: string}>({
         count: 1000,
@@ -24,6 +25,13 @@ export default class extends Control {
             keyProperty: 'key',
             data: this._dataArray
         });
+    }
+
+    protected _drawItems() {
+        if (this._scrollToLastItem) {
+            this._children.listView.scrollToItem(999);
+            this._scrollToLastItem = false;
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

@@ -18,6 +18,7 @@
            stickyCallback="{{_options.stickyCallback}}"
 
            attr:key="{{ keyPrefix }}-{{ item.key }}"
+           attr:item-key="{{ keyPrefix }}-{{ item.key }}"
            attr:attr-data-qa="key-{{item.key}}"
            attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'controls-ListView__hiddenContainer' }}"
 

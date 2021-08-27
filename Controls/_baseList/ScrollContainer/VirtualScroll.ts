@@ -4,7 +4,7 @@ import {
     IDirection,
     IItemsHeights,
     IVirtualScrollOptions, IPlaceholders,
-    IRangeShiftResult, ITriggerState, IScrollRestoreParams
+    IRangeShiftResult, ITriggerState
 } from './interfaces';
 
 const RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT = 4;
@@ -162,7 +162,7 @@ export default class VirtualScroll {
 
         if (direction === 'down') {
             if (!predicatedDirection && triggerState[direction]) {
-                return this.shiftRange(direction);
+                return this._shiftRange(direction);
             } else {
                 return this._setRange(this._shiftRangeBySegment(direction, count));
             }
@@ -190,29 +190,9 @@ export default class VirtualScroll {
      * @param direction
      */
     shiftRange(direction: IDirection): IRangeShiftResult {
+        // savedDirection нужно убрать в scrollController, т.к. сейчас он используется для восстановления скролла
         this._savedDirection = direction;
-        const itemsHeightsData = this._itemsHeightData;
-        const itemsCount = this._itemsCount;
-        const pageSize = this._options.pageSize;
-        const segmentSize = this._segmentSize || this._options.segmentSize;
-        let {start, stop} = this._range;
-
-        if (segmentSize && itemsCount >= pageSize) {
-            const quantity = this._getItemsToHideQuantity(direction);
-
-            if (direction === 'up') {
-                start = Math.max(0, start - segmentSize);
-                stop = Math.max(stop - quantity, Math.min(start + pageSize, itemsCount));
-            } else {
-                stop = Math.min(stop + segmentSize, itemsCount);
-                start = Math.min(start + quantity, Math.max(stop - pageSize, 0));
-            }
-        } else {
-            start = 0;
-            stop = itemsCount;
-        }
-
-        return this._setRange({start, stop});
+        return this._shiftRange(direction);
     }
 
     /**
@@ -236,30 +216,10 @@ export default class VirtualScroll {
     }
 
     /**
-     * Возвращает параметры для восстановления скролла
+     * Возвращает направление восстановления скролла
      */
-    getParamsToRestoreScroll(): IScrollRestoreParams {
-        const itemsHeights = this._itemsHeightData.itemsHeights;
-        let heightDifference;
-        // Могут быть ситуации, когда newStopIndex > oldStopIndex. Например, когда подгружается вверх очередная пачка
-        // данных и функция корректировки индекса изменяет не только startIndex, но и stopIndex (вместо 38 делает 40).
-        // Тогда корректировку высоты нужно делать с отрицательным знаком, а саму высоту расчитывать обратном порядке.
-        if (this._savedDirection === 'up') {
-            heightDifference = this._range.stop > this._oldRange.stop ?
-                - this._getItemsHeightsSum(this._oldRange.stop, this._range.stop, itemsHeights) :
-                this._getItemsHeightsSum(this._range.stop, this._oldRange.stop, itemsHeights);
-        } else {
-            heightDifference = this._range.start < this._oldRange.start ?
-               - this._getItemsHeightsSum(this._range.start, this._oldRange.start, itemsHeights) :
-               this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights);
-        }
-
-        const paramsForRestore = {
-            direction: this._savedDirection,
-            heightDifference
-        };
-
-        return paramsForRestore;
+    getDirectionToRestoreScroll(): IDirection {
+        return this._savedDirection;
     }
 
     beforeRestoreScrollPosition(): void {
@@ -388,6 +348,34 @@ export default class VirtualScroll {
             this._updateItemsHeights(itemsHeights);
             this.rangeChanged = false;
         }
+    }
+
+    /**
+     * Производит смещение диапазона по направлению на segmentSize
+     * @param direction
+     */
+    private _shiftRange(direction: IDirection): IRangeShiftResult {
+        const itemsCount = this._itemsCount;
+        const pageSize = this._options.pageSize;
+        const segmentSize = this._segmentSize || this._options.segmentSize;
+        let {start, stop} = this._range;
+
+        if (segmentSize && itemsCount >= pageSize) {
+            const quantity = this._getItemsToHideQuantity(direction);
+
+            if (direction === 'up') {
+                start = Math.max(0, start - segmentSize);
+                stop = Math.max(stop - quantity, Math.min(start + pageSize, itemsCount));
+            } else {
+                stop = Math.min(stop + segmentSize, itemsCount);
+                start = Math.min(start + quantity, Math.max(stop - pageSize, 0));
+            }
+        } else {
+            start = 0;
+            stop = itemsCount;
+        }
+
+        return this._setRange({start, stop});
     }
 
     /**

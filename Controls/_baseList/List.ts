@@ -80,6 +80,7 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
     protected _viewName = viewName;
     protected _viewTemplate: unknown = ListControl;
     protected _viewModelConstructor = null;
+    protected _itemsSelector: string = '.controls-ListView__itemV';
     protected _children: { listControl: ListControl };
 
     protected _beforeMount(options) {

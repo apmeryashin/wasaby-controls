@@ -612,7 +612,7 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             assert.equal(instance.getActiveElementIndex(scrollTop), expectedIndex);
         });
     });
-    describe('.getParamsToRestoreScroll()', () => {
+    describe('.getDirectionToRestoreScroll()', () => {
         it('after shift', () => {
             // tslint:disable-next-line:no-magic-numbers
             const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 60, bottomTrigger: 60, scroll: 240});
@@ -621,12 +621,12 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             instance.shiftRange('down');
 
             // tslint:disable-next-line:no-magic-numbers
-            assert.deepEqual({direction: 'down', heightDifference: 0}, instance.getParamsToRestoreScroll());
+            assert.deepEqual(instance.getDirectionToRestoreScroll(), 'down');
             instance.beforeRestoreScrollPosition();
 
             instance.shiftRange('up');
 
-            assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
+            assert.deepEqual(instance.getDirectionToRestoreScroll(), 'up');
         });
         it('after insert with predicted direction', () => {
             // tslint:disable-next-line:no-magic-numbers
@@ -639,7 +639,7 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             instance.updateItemsHeights(getItemsHeightsData([60, 60, 60, 60, 60]));
             // tslint:disable-next-line:no-magic-numbers
             instance.addItems(0, 2, {up: false, down: false}, 'up');
-            assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
+            assert.deepEqual('up', instance.getDirectionToRestoreScroll());
         });
         it('after shift with recalculate indexes to both direction', () => {
             // test for task https://online.sbis.ru/opendoc.html?guid=d739f7ec-36e2-4386-8b17-f39d135f4656
@@ -657,7 +657,7 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             // render items 5, 6, 7, 8
             // tslint:disable-next-line:no-magic-numbers
             instance.updateItemsHeights(getItemsHeightsData([3, 3, 3, 3]));
-            instance.getParamsToRestoreScroll();
+            instance.getDirectionToRestoreScroll();
             instance.beforeRestoreScrollPosition();
             // add 5 items and render items *0, *1, *2, *3, *4, 5, 6, 7, 8, *9 (* - new items)
             // tslint:disable-next-line:no-magic-numbers
@@ -667,7 +667,7 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             // tslint:disable-next-line:no-magic-numbers
             instance.updateItemsHeights(getItemsHeightsData([3, 3, 3, 3, 3, 3, 3, 3, 3, 3]));
             // tslint:disable-next-line:no-magic-numbers
-            assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
+            assert.deepEqual('up', instance.getDirectionToRestoreScroll());
         });
         it('after shifting and adding items in opposite directiond', () => {
             // test for task https://online.sbis.ru/opendoc.html?guid=9040b3b7-eb6c-4a1f-b16a-7cf917bf6137
@@ -678,7 +678,7 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             instance.addItems(0, 1, {up: false, down: false}, 'up');
             instance.shiftRange('up');
             instance.updateItemsHeights(getItemsHeightsData([60, 60, 60, 60, 60, 60, 60]));
-            assert.deepEqual({direction: 'up', heightDifference: -60}, instance.getParamsToRestoreScroll());
+            assert.deepEqual('up', instance.getDirectionToRestoreScroll());
         });
     });
     describe('.updateItemsHeights()', () => {
