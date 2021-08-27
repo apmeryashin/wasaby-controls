@@ -1044,7 +1044,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 return false;
             case 'rich':
                 return position === 'image' && imageEffect === 'gradient'
-                    && imageViewMode === 'rectangle' && (imagePosition === 'top' || imagePosition === 'bottom');
+                    && imageViewMode === 'rectangle' && imagePosition === 'top';
             case 'preview':
                 return position === 'title';
         }
