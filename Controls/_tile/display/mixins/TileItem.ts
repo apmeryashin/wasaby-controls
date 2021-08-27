@@ -307,8 +307,9 @@ export default abstract class TileItem<T extends Model = Model> {
         }
 
         const sizeParams = object.clone(TILE_SIZES[this.getTileSize()]);
-        const tileSizes: ITileSize = sizeParams[imagePosition === 'top' || imagePosition === 'bottom' ? 'vertical' : 'horizontal'];
-        if (imagePosition === 'top' || imagePosition === 'bottom') {
+        const isVertical = imagePosition === 'top' || imagePosition === 'bottom';
+        const tileSizes: ITileSize = sizeParams[isVertical ? 'vertical' : 'horizontal'];
+        if (isVertical) {
             tileSizes.imageWidth = null;
             if (imageViewMode !== 'rectangle') {
                 tileSizes.imageHeight = null;
@@ -360,7 +361,8 @@ export default abstract class TileItem<T extends Model = Model> {
         imageProportion?: number
     ): boolean {
         if (itemType === 'rich') {
-            return (imagePosition === 'top' || imagePosition === 'bottom') && imageViewMode === 'rectangle' && !!imageProportion;
+            const isVertical = imagePosition === 'top' || imagePosition === 'bottom';
+            return isVertical && imageViewMode === 'rectangle' && !!imageProportion;
         } else {
             return !staticHeight && this.getTileMode() !== 'dynamic';
         }
@@ -943,6 +945,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 // TODO в этом случае не нужны общие классы вверху, нужно написать так чтобы они не считались
                 classes = ' controls-TileView__richTemplate_imageWrapper';
                 classes += ` controls-TileView_richTemplate_image_spacing_viewMode_${imageViewMode}`;
+
                 const isVertical = imagePosition === 'top' || imagePosition === 'bottom';
                 if (!imageProportionOnItem || imageViewMode !== 'rectangle' || !isVertical) {
                     classes += ' controls-TileView__richTemplate_image_size_' +
