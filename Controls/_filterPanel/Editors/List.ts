@@ -3,7 +3,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
 import * as ColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/ColumnTemplate';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
-import * as CircleTemplate from 'wml!Controls/_filterPanel/Editors/resources/CircleTemplate';
 import {StackOpener, DialogOpener} from 'Controls/popup';
 import {BaseEditor} from 'Controls/_filterPanel/Editors/Base';
 import {Model} from 'Types/entity';
