@@ -32,13 +32,15 @@
 
 <ws:template name="resizingLineTemplate">
    <ws:if data="{{_canResizing}}">
-      <Controls.dragnDrop:ResizingLine name="resizingLine"
+      <div class="controls-MasterDetail_resizing-line_wrapper">
+         <Controls.dragnDrop:ResizingLine name="resizingLine"
                                        attr:class="controls-MasterDetail_resizing-line {{_newDesign ? 'controls-MasterDetail_resizing-line-newDesign'}}"
                                        minOffset="{{_minOffset}}"
                                        maxOffset="{{_maxOffset}}"
                                        direction="{{ _options.masterPosition === 'left' ? 'direct' : 'reverse' }}"
                                        on:dragStart="_dragStartHandler()"
                                        on:offset="_offsetHandler()"/>
+      </div>
    </ws:if>
 </ws:template>
 
