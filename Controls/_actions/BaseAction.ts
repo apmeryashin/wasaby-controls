@@ -9,6 +9,8 @@ import {merge} from 'Types/object';
 import {IAction} from './IAction';
 import {IExecuteCommandParams} from 'Controls/operations';
 import {IToolBarItem} from 'Controls/toolbars';
+import {RecordSet} from 'Types/collection';
+import {DataSet} from 'Types/source';
 
 export interface IBaseAction {
     execute: (options: unknown) => Promise<unknown>;
@@ -40,7 +42,7 @@ export interface IBaseActionOptions {
     requiredLevel: string[];
 }
 
-const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType'];
+const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType', 'template'];
 
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
@@ -49,7 +51,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     readonly order: number;
     readonly parent: string | number;
     readonly showType: number;
-    readonly 'parent@': boolean;
+    'parent@': boolean;
     readonly onExecuteHandler: Function;
     commandName: string;
     commandOptions: Record<string, any>;
@@ -115,7 +117,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         this.commandOptions = options.commandOptions || this.commandOptions;
         this.viewCommandName = options.viewCommandName || this.viewCommandName;
         this.viewCommandOptions = options.viewCommandOptions || this.viewCommandOptions;
-        this.showType = options.showType || this.showType;
+        this.showType = options.hasOwnProperty('showType') ? options.showType : this.showType;
         this.parent = options.parent || this.parent;
         this.id = options.id || this.id;
         this['parent@'] = options['parent@'] || this['parent@'];
@@ -124,7 +126,11 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     }
 
     execute(options): Promise<unknown> {
-        return this._executeCommand(options)
+        return this._executeCommand(options);
+    }
+
+    getChildren(root: number | string): Promise<RecordSet | DataSet> | void {
+        // for override
     }
 
     private _executeCommand(options): Promise<unknown> {

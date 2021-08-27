@@ -60,7 +60,7 @@ function getOffset(element: HTMLElement): { top: number; bottom: number } {
 function getScrollContainerByElement(scrollableElement: HTMLElement): Container {
     const controls = goUpByControlTree(scrollableElement);
     return controls.find(
-        (control: IControl) => cInstance.instanceOfModule(control, 'Controls/_scroll/Container')) as Container;
+        (control: IControl) => cInstance.instanceOfModule(control, 'Controls/scroll:_ContainerBase')) as Container;
 }
 
 function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number; topWithOffset: number } {
@@ -179,7 +179,7 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
             // Т.е. скролируем только когда верх элемента выше свернутой шапки, или когда ниже развернутой.
             if (!force || elemOffset.top < parentOffset.top + stickyHeaderHeight.topWithOffset ||
                 elemOffset.top > parentOffset.top + stickyHeaderHeight.top) {
-               elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.topWithOffset);
+               elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.top);
             }
          }
          // Принудительно скроллим в самый вверх или вниз, только первый родительский скролл контейнер,

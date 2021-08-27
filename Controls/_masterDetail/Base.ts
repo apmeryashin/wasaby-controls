@@ -12,6 +12,8 @@ import { Logger} from 'UI/Utils';
 
 const RESIZE_DELAY = 50;
 
+export type TMasterVisibility = 'left' | 'right';
+
 interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     master: TemplateFunction;
     detail: TemplateFunction;
@@ -19,7 +21,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     masterMinWidth: number | string;
     masterMaxWidth: number | string;
     contrastBackground: boolean;
-    masterVisibility: 'visible' | 'hidden';
+    masterVisibility: TMasterVisibility;
     scrollTop?: number;
     scrollOffsetTop?: number;
     masterOffsetTop?: number;
@@ -97,10 +99,14 @@ class Base extends Control<IMasterDetail, string> {
      */
 
     /**
-     * @name Controls/_masterDetail/Base#masterVisibility
-     * @cfg {String} Определяет видимость контента мастера.
+     * @typedef {String} Controls/_masterDetail/Base/TMasterVisibility
      * @variant visible Мастер отображается.
      * @variant hidden Мастер скрыт.
+     */
+
+    /**
+     * @name Controls/_masterDetail/Base#masterVisibility
+     * @cfg {Controls/_masterDetail/Base/TMasterVisibility.typedef} Определяет видимость контента мастера.
      * @default visible
      * @demo Controls-demo/MasterDetail/MasterVisibility/Index
      */

@@ -584,7 +584,7 @@ define([
                }
             }
          }, {
-            methodName: '_applyResult',
+            methodName: '_notify',
             event: {
                nativeEvent: {
                   keyCode: 27

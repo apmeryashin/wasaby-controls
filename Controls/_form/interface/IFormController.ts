@@ -93,13 +93,6 @@ export default interface IFormController extends IControllerBase {
 }
 
 /**
- * @typedef {Object} UpdateConfig
- * @description Параметр сохранения.
- * @property {Object} additionalData Дополнительные данные, которые будут обрабатываться при синхронизации записи с реестром.
- * @property {Boolean} [showLoadingIndicator=true] Отображение индикатора
- */
-
-/**
  * @typedef {Object} CrudConfig
  * @description Параметр Crud операций.
  * @property {Boolean} [showLoadingIndicator=true] Отображение индикатора
@@ -108,15 +101,28 @@ export default interface IFormController extends IControllerBase {
 /**
  * Обновляет запись в источнике данных. Подробнее {@link Types/source:ICrud#update}.
  * @function Controls/form:IFormController#update
- * @param {UpdateConfig} config Параметр сохранения.
+ * @param {Controls/form:IControllerBase/UpdateConfig.typedef} config Параметр сохранения.
  * @return {Promise<undefined | Model>}
+ * @example
+ * Передаем доп данные в update и выключаем индикатор.
+ * <pre class="brush: js;">
+ *    // TypeScript
+ *    _saveButtonClickHandler(): Promise<boolean> {
+ *        return this._children.formController.update({
+ *            showIndicator: false,
+ *            additionalData: {
+ *                someField: 'someValue'
+ *            }
+ *        });
+ *    }
+ * </pre>
  */
 
 /**
  * Создает пустую запись через источник данных. Подробнее {@link Types/source:ICrud#create}.
  * @function Controls/form:IFormController#create
  * @param {Object} createMetaData
- * @param {CrudConfig} config
+ * @param {Controls/form:IControllerBase/CrudConfig.typedef} config
  */
 
 /**
@@ -124,14 +130,14 @@ export default interface IFormController extends IControllerBase {
  * @function Controls/form:IFormController#read
  * @param {String} key
  * @param {Object} readMetaData
- * @param {CrudConfig} config
+ * @param {Controls/form:IControllerBase/CrudConfig.typedef} config
  */
 
 /**
  * Удаляет запись из источника данных. Подробнее {@link Types/source:ICrud#delete}.
  * @function Controls/form:IFormController#delete
  * @param {Object} destroyMetaData
- * @param {CrudConfig} config
+ * @param {Controls/form:IControllerBase/CrudConfig.typedef} config
  */
 
 /**

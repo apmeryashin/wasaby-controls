@@ -530,6 +530,9 @@ export default class ScrollController {
         return result;
     }
 
+    isRealScroll(): boolean {
+        return !this._fakeScroll;
+    }
     /**
      * Обработчик изменения положения виртуального скролла
      * @param params

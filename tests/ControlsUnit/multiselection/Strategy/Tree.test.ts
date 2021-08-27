@@ -91,9 +91,9 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    describe('unselect', () => {
       it('selected node', () => {
          // выбран узел, в котором выбраны дети
-         let selection = { selected: [2, 3], excluded: [] };
+         let selection = { selected: [], excluded: [] };
          selection = strategy.unselect(selection, 2);
-         assert.deepEqual(selection.selected, [3]);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
 
          // выбран узел, в котором выбраны дети
@@ -159,6 +159,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(selection.excluded, []);
       });
 
+      it('selectDescendants = false, unselect all selected childs', () => {
+         let selection = { selected: [3], excluded: [] };
+         selection = strategy.unselect(selection, 2);
+         assert.deepEqual(selection.selected, []);
+         assert.deepEqual(selection.excluded, [);
+      });
+
       it('with entry path', () => {
          strategy.setEntryPath([
             {id: 3, parent: 2},
@@ -210,6 +217,37 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
          const newSelection = strategy.unselect({ selected: [null], excluded: [null] }, 1);
          assert.deepEqual(newSelection, {selected: [], excluded: []});
+      });
+
+      it('unselect only one child of not fully loaded node ', () => {
+         const items = new RecordSet({
+            rawData: [
+               {id: 1, parent: null, node: null},
+               {id: 2, parent: null, node: true},
+               {id: 21, parent: 2, node: null}
+            ],
+            keyProperty: 'id'
+         });
+         const model = new Tree({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node',
+            expandedItems: [null],
+            hasMoreStorage: {2: true}
+         });
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model,
+            selectionType: 'all',
+            recursiveSelection: false
+         });
+
+         const newSelection = strategy.unselect({ selected: [null], excluded: [null] }, 21);
+         assert.deepEqual(newSelection, {selected: [null], excluded: [null, 21]});
       });
    });
 
@@ -317,13 +355,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
          selection = strategy.unselect(selection, 2);
 
-         assert.deepEqual(selection.selected, [1, 3, 4, 5, 6, 7]);
+         assert.deepEqual(selection.selected, [1, 5, 6, 7]);
          assert.deepEqual(selection.excluded, []);
 
          selection = strategy.toggleAll(selection);
 
          assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, [null, 1, 3, 4, 5, 6, 7]);
+         assert.deepEqual(selection.excluded, [null, 1, 5, 6, 7]);
       });
 
       it('toggleAll after select all by one in root', () => {

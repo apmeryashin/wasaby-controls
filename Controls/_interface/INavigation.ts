@@ -229,7 +229,15 @@ type TNavigationPagingPadding = 'default' | 'null';
  * @variant left Отображения пэйджинга слева.
  * @variant right Отображения пэйджинга справа.
  */
-type TNavigationPagingPosition= 'left' | 'right';
+type TNavigationPagingPosition = 'left' | 'right';
+
+/**
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigationViewConfig#resetButtonMode resetButtonMode}.
+ * @typedef {String} TNavigationResetButtonMode
+ * @variant home Отображение кнопки возврата к исходной позиции в виде иконки домика.
+ * @variant day Отображение кнопки возврата к исходной позиции в виде иконки с сегодняшним числа.
+ */
+export type TNavigationResetButtonMode = 'home' | 'day';
 
 /**
  * @typedef {String} TNavigationButtonView
@@ -311,6 +319,12 @@ export interface INavigationViewConfig {
      * @default false
      */
     showEndButton?: boolean;
+    /**
+     * Режим отображения кнопки возврата к начальной позиции.
+     * Если не указывать значение из допустимых, кнопка не отображается.
+     * Пример использования свойства читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/ здесь}.
+     */
+    resetButtonMode?: TNavigationResetButtonMode;
     /**
      * Опция управляет отображением отступа под пэйджинг.
      * @default default

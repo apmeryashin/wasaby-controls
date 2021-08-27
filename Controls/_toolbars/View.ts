@@ -233,6 +233,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
+    openMenu(): void {
+        this._openMenu(this._getMenuConfig());
+    }
+
+    closeMenu(): void {
+        this._sticky.close();
+    }
+
     private _getSynchronousSourceForMenu(menuItems?: TItems): ICrudPlus {
         const items = menuItems || this._options.items;
         if (items) {
@@ -277,11 +285,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
+        const beforeMenuOpenResult = this._notify('beforeMenuOpen', [], {bubbling: true});
+        const popupOptions = beforeMenuOpenResult?.popupOptions || {};
+        const templateOptions = beforeMenuOpenResult?.templateOptions || {};
         return {
             ...this._getMenuOptions(),
+            ...popupOptions,
             opener: this,
             className: `${options.popupClassName} controls-Toolbar-${options.direction}__popup__list controls_popupTemplate_theme-${options.theme}`,
             templateOptions: {
+                ...templateOptions,
                 source: this._menuSource,
                 ...this._getMenuTemplateOptions(),
                 itemActions: options.itemActions,
@@ -359,7 +372,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 }
             },
             template: 'Controls/menu:Popup',
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: this._options.closeMenuOnOutsideClick,
             actionOnScroll: 'close',
             fittingMode: {
                 vertical: 'adaptive',
@@ -406,6 +419,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._source = this._createPrefetchProxy(source, this._items);
         }
         this._needShowMenu = needShowMenu(this._items);
+        if (this._sticky?.isOpened() && !this._options.closeMenuOnOutsideClick) {
+            this.openMenu();
+        }
     }
 
     private _needChangeState(newOptions: IToolbarOptions): boolean {
@@ -432,7 +448,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         // Перед открытием нового меню закроем старое.
         // Т.к. вып. список грузит данные асинхронно, то при перерисовке открытого окна будет визуальный баг,
         // когда позиция окна обновилась, а содержимое нет, т.к. не успело загрузиться.
-        this._sticky.close();
+        if (this._options.closeMenuOnOutsideClick) {
+            this._sticky.close();
+        }
         this._sticky.open(config);
     }
 
@@ -517,7 +535,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (item.get(this._nodeProperty)) {
             this._getSourceForMenu(item).then((source) => {
                 const root = item.get(this._options.keyProperty);
-                let menuSource = source;
+                const menuSource = source;
 
                 const config = this._getMenuConfigByItem(item, menuSource, root, this._menuItems[root]);
                 this._openMenu({
@@ -658,7 +676,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             direction: 'horizontal',
             itemTemplate: defaultItemTemplate,
             iconStyle: 'secondary',
-            translucent: false
+            translucent: false,
+            closeMenuOnOutsideClick: true
         };
     }
 

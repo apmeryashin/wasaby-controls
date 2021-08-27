@@ -1,4 +1,4 @@
-import {IPopupItem, IPopupPosition, ISlidingPanelPopupOptions} from 'Controls/popup';
+import {IDragOffset, IPopupItem, IPopupPosition, IPopupSizes, ISlidingPanelPopupOptions} from 'Controls/popup';
 import {constants} from 'Env/Env';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
@@ -12,6 +12,13 @@ export interface ISlidingPanelItem extends IPopupItem {
     popupOptions: ISlidingPanelPopupOptions;
     animationState: AnimationState;
     dragStartHeight: number;
+    dragOffset: IDragOffset;
+    previousSizes: IPopupSizes;
+}
+
+export enum ResizeType {
+    inner = 'inner',
+    outer = 'outer'
 }
 
 const INVERTED_POSITION_MAP = {
@@ -27,8 +34,9 @@ class Strategy {
      * Returns popup position
      * @function Controls/_popupSliding/Strategy#getPosition
      * @param item Popup configuration
+     * @param resizeType Не пустой, если пересчет позиции происходит при ресайзе окна браузера или контента внутри попапа
      */
-    getPosition(item: ISlidingPanelItem): IPopupPosition {
+    getPosition(item: ISlidingPanelItem, resizeType?: ResizeType): IPopupPosition {
         const windowHeight = this._getWindowHeight();
         const {position: popupPosition = {}, popupOptions} = item;
         const {
@@ -40,8 +48,36 @@ class Strategy {
         const maxHeight = this._getHeightWithoutOverflow(this.getMaxHeight(item), windowHeight);
         const minHeight = this._getHeightWithoutOverflow(this.getMinHeight(item), maxHeight);
         const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
-        const heightValue = autoHeight && !initialHeight ? undefined : (initialHeight || minHeight);
-        const height = this._getHeightWithoutOverflow(heightValue, maxHeight);
+        const heightInitialized = initialHeight !== undefined;
+        let height;
+
+        // Высота может быть 0, если пользователь утащит вниз до конца при закрытии, поэтому проверяем на undefined,
+        // чтобы не убрать фиксированную высоту когда стащат до 0,
+        // иначе с высотой undefined шторка растянется по контенту
+        if (heightInitialized) {
+            height = initialHeight;
+        } else if (autoHeight) {
+            const currSize = item.sizes.height;
+            const oldSize = item.previousSizes?.height || 0;
+
+            // При автовысоте при изменении размера контента даем шторке только увеличиваться,
+            // при уменьшении фиксируем высоту.
+            // https://online.sbis.ru/open_dialog.html?guid=89bd5ff3-4a41-48e5-88b9-1e53c188fc33
+            if (resizeType === ResizeType.inner && currSize < oldSize) {
+                height = oldSize;
+            } else {
+                height = undefined;
+            }
+        } else {
+            height = minHeight;
+        }
+
+        // В случае ресайза, проверяем на валидность высоты,
+        // т.к. высота могла быть уменьшена по размеру экрана
+        // и оказаться меньше минимальной после восстановления высоты экрана
+        if (resizeType && height < minHeight) {
+            height = minHeight;
+        }
         return {
             left: 0,
             right: 0,
@@ -141,7 +177,10 @@ class Strategy {
         if (!height) {
             return height;
         }
-        return maxHeight > height ? height : maxHeight;
+        // При очередном драге вниз высота может стать отрицательной, если драгают вниз с нулевой высоты,
+        // отрицательной высоты быть не должно
+        const result = maxHeight > height ? height : maxHeight;
+        return result < 0 ? 0 : result;
     }
 
     /**

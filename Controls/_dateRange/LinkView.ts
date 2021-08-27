@@ -204,28 +204,6 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
       }
       this._fontSize = newOption.fontSize || this._defaultFontSize;
       this._fontWeight = newOption.fontWeight || this._defaultFontWeight;
-      let changed = false;
-      if (options.viewMode !== newOption.viewMode) {
-         this._viewMode = newOption.viewMode;
-
-         changed = true;
-      }
-      if (options.readOnly !== newOption.readOnly || options.clickable !== newOption.clickable) {
-         changed = true;
-      }
-      if (changed) {
-         if (this._viewMode !== 'label') {
-            this._styleClass = '';
-            if (newOption.clickable && !newOption.readOnly) {
-               this._styleClass +=  ' controls-DateLinkView__style-clickable';
-            }
-            if (this._viewMode === 'selector' && this._fontColorStyle === 'link' && !newOption.readOnly) {
-               this._styleClass += ' controls-DateLinkView__style-hover';
-            }
-         } else {
-            this._styleClass = null;
-         }
-      }
    }
 }
 

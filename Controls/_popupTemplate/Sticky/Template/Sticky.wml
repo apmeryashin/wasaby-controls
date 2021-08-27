@@ -11,8 +11,9 @@
                     theme="{{_headerTheme}}"
                     closeBtnPosition="{{_closeBtnPosition}}"
                     stickyOptions="{{_options}}"
-                    on:click="_proxyEvent('headerClick')"
-        />
+                    attr:class="{{_headerTheme && (_options.theme !== _headerTheme) ?
+                                   'controls_popupTemplate_theme-' + _headerTheme + ' controls_theme-' + _headerTheme}}"
+                    on:click="_proxyEvent('headerClick')"/>
     </ws:if>
     <ws:else>
         <ws:if data="{{_options.closeButtonVisibility}}">
@@ -32,9 +33,8 @@
     </ws:if>
     <ws:if data="{{_options.footerContentTemplate}}">
         <ws:partial template="{{_options.footerContentTemplate}}"
-                    class="controls-StickyTemplate__footer"
                     scope="{{_options}}"
-                    attr:class="controls-StickyTemplate__bottom_roundBorder"
+                    attr:class="controls-StickyTemplate__footer controls-StickyTemplate__bottom_roundBorder"
                     on:click="_proxyEvent('footerClick')"></ws:partial>
     </ws:if>
 </div>

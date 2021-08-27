@@ -1340,45 +1340,50 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 640);
 
             assert.deepEqual({
-                    begin: "visible",
-                    end: "readonly",
-                    next: "readonly",
-                    prev: "visible"
+                    begin: 'visible',
+                    end: 'readonly',
+                    next: 'readonly',
+                    prev: 'visible',
+                    reset: 'hidden'
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll to bottom');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-                    begin: "visible",
-                    end: "visible",
-                    next: "visible",
-                    prev: "visible"
+                    begin: 'visible',
+                    end: 'visible',
+                    next: 'visible',
+                    prev: 'visible',
+                    reset: 'hidden'
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
             ctrl._pagingVisible = true;
             ctrl._onAbortSearchClick();
             assert.deepEqual({
-                    begin: "visible",
-                    end: "readonly",
-                    next: "readonly",
-                    prev: "visible"
+                    begin: 'visible',
+                    end: 'readonly',
+                    next: 'readonly',
+                    prev: 'visible',
+                    reset: 'hidden'
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after abort search');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-                    begin: "visible",
-                    end: "readonly",
-                    next: "readonly",
-                    prev: "visible"
+                    begin: 'visible',
+                    end: 'readonly',
+                    next: 'readonly',
+                    prev: 'visible',
+                    reset: 'hidden'
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after abort search');
 
             // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
             // и еще раз доскроллили до конца, то самое время блокировать кнопки.
             lists.BaseControl._private.handleListScrollSync(ctrl, 400);
             assert.deepEqual({
-                    begin: "visible",
-                    end: "readonly",
-                    next: "readonly",
-                    prev: "visible"
+                    begin: 'visible',
+                    end: 'readonly',
+                    next: 'readonly',
+                    prev: 'visible',
+                    reset: 'hidden'
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
 
@@ -1732,6 +1737,7 @@ define([
                      return Promise.resolve();
                   },
                   handleResetItems: () => undefined,
+                  isRealScroll: () => true,
                   registerObserver: () => undefined,
                   continueScrollToItemIfNeed: () => undefined,
                   completeVirtualScrollIfNeed: () => undefined,
@@ -6848,7 +6854,7 @@ define([
             it('select', () => {
                const notifySpy = sinon.spy(baseControl, '_notify');
 
-               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1) );
+               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1), {} );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
@@ -6865,7 +6871,7 @@ define([
                };
 
                const notifySpy = sinon.spy(baseControl, '_notify');
-               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1) );
+               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1), {} );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[2], [2], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
 
@@ -6880,8 +6886,12 @@ define([
                   },
                   stopPropagation: () => {}
                };
-               baseControl._onCheckBoxClick(event, baseControl._listViewModel.getItemBySourceKey(1));
+               baseControl._onCheckBoxClick(event, baseControl._listViewModel.getItemBySourceKey(1), event);
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
+               assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
+               notifySpy.resetHistory();
+               baseControl._onCheckBoxClick(event, baseControl._listViewModel.getItemBySourceKey(3), event);
+               assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1, 2, 3], [1, 2, 3], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
          });
@@ -7010,7 +7020,7 @@ define([
                baseControl._beforeMount(newCfg);
 
                const notifySpy = sinon.spy(baseControl, '_notify');
-               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1) );
+               baseControl._onCheckBoxClick({ stopPropagation: () => {} }, baseControl._listViewModel.getItemBySourceKey(1), {} );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });

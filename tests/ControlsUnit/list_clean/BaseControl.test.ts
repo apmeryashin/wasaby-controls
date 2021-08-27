@@ -347,7 +347,8 @@ describe('Controls/list_clean/BaseControl', () => {
                     begin: 'visible',
                     end: 'hidden',
                     next: 'visible',
-                    prev: 'visible'
+                    prev: 'visible',
+                    reset: 'hidden'
                 }, baseControl._pagingCfg.arrowState);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 640});
@@ -355,7 +356,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'visible',
                 end: 'hidden',
                 next: 'readonly',
-                prev: 'visible'
+                prev: 'visible',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
         });
 
@@ -390,7 +392,8 @@ describe('Controls/list_clean/BaseControl', () => {
                     begin: 'visible',
                     end: 'visible',
                     next: 'visible',
-                    prev: 'visible'
+                    prev: 'visible',
+                    reset: 'hidden'
                 }, baseControl._pagingCfg.arrowState);
         });
 
@@ -424,7 +427,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 800});
@@ -432,7 +436,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'visible',
                 end: 'hidden',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
         });
 
@@ -466,7 +471,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 800});
@@ -474,7 +480,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'hidden',
                 end: 'hidden',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
         });
 
@@ -508,7 +515,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 600});
@@ -516,14 +524,16 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
             baseControl.scrollMoveSyncHandler({scrollTop: 640});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'hidden',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
             cfgClone.navigation.viewConfig.pagingMode = 'edge';
@@ -534,7 +544,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 600});
@@ -542,7 +553,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
         });
 
@@ -599,7 +611,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 begin: 'visible',
                 end: 'visible',
                 next: 'hidden',
-                prev: 'hidden'
+                prev: 'hidden',
+                reset: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
             assert.equal(baseControl._currentPage, 1);
@@ -1453,7 +1466,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
     });
 
-    describe('getFooterClasses', () => {
+    describe('getFooterSpacingClasses', () => {
         [
             // multiSelectVisibility, multiSelectPosition, itemPadding, expectedResult
             ['hidden', 'default', undefined, undefined, 'controls__BaseControl__footer-default__paddingLeft_default'],
@@ -1472,8 +1485,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 const baseControl = new BaseControl({});
 
                 aAssert.isSame(
-                    baseControl._getFooterClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
-                    `controls__BaseControl__footer ${expectedResult}`
+                    baseControl._getFooterSpacingClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
+                    `${expectedResult}`
                 );
             });
         });

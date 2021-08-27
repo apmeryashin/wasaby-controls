@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 13.11.2017.
  */
-import {TNavigationPagingMode} from 'Controls/interface';
+import {TNavigationPagingMode, TNavigationResetButtonMode} from 'Controls/interface';
 import {IArrowState} from 'Controls/paging';
 
 /**
@@ -16,6 +16,7 @@ interface IScrollParams {
     clientHeight: number;
     scrollTop: number;
     scrollHeight: number;
+    initial: boolean;
 }
 
 interface IPagingCfg {
@@ -33,6 +34,7 @@ interface IScrollPagingOptions {
     totalElementsCount?: number;
     loadedElementsCount?: number;
     showEndButton?: boolean;
+    resetButtonMode?: TNavigationResetButtonMode;
 
     pagingCfgTrigger(cfg: IPagingCfg): void;
 }
@@ -87,7 +89,8 @@ export default class ScrollPagingController {
                     begin: 'readonly',
                     prev: 'readonly',
                     next: 'visible',
-                    end: 'visible'
+                    end: 'visible',
+                    reset: !this._options.scrollParams.initial && this._options.resetButtonMode || 'hidden'
                 }, hasMoreData);
                 pagingCfg.selectedPage = 1;
             } else {
@@ -95,7 +98,8 @@ export default class ScrollPagingController {
                     begin: 'visible',
                     prev: 'visible',
                     next: 'readonly',
-                    end: 'readonly'
+                    end: 'readonly',
+                    reset: !this._options.scrollParams.initial && this._options.resetButtonMode || 'hidden'
                 }, hasMoreData);
                 pagingCfg.selectedPage = this._pagingData.pagesCount;
             }
@@ -229,12 +233,13 @@ export default class ScrollPagingController {
     }
 
     protected handleScrollMiddle(hasMoreData: IHasMoreData): void {
-        if (!(this._curState === 'middle') || this._options.pagingMode === 'numbers') {
+        if (!(this._curState === 'middle') || this._options.pagingMode === 'numbers' || this._options.resetButtonMode) {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'visible',
                 prev: 'visible',
                 next: 'visible',
-                end: this._options.showEndButton ? 'visible' : 'hidden'
+                end: this._options.showEndButton ? 'visible' : 'hidden',
+                reset: !this._options.scrollParams.initial && this._options.resetButtonMode || 'hidden'
             }, hasMoreData));
             this._curState = 'middle';
         }
@@ -246,7 +251,8 @@ export default class ScrollPagingController {
                 begin: 'readonly',
                 prev: 'readonly',
                 next: 'visible',
-                end: this._options.showEndButton ? 'visible' : 'hidden'
+                end: this._options.showEndButton ? 'visible' : 'hidden',
+                reset: !this._options.scrollParams.initial && this._options.resetButtonMode || 'hidden'
             }, hasMoreData));
             this._curState = 'top';
         }
@@ -258,7 +264,8 @@ export default class ScrollPagingController {
                 begin: 'visible',
                 prev: 'visible',
                 next: 'readonly',
-                end: this._options.showEndButton ? 'readonly' : 'hidden'
+                end: this._options.showEndButton ? 'readonly' : 'hidden',
+                reset: !this._options.scrollParams.initial && this._options.resetButtonMode || 'hidden'
             }, hasMoreData));
             this._curState = 'bottom';
         }

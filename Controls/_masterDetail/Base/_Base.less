@@ -18,10 +18,18 @@
 }
 
 .controls-master-template-default {
-   border-right-style: solid;
-   border-right-width: var(--master-same_separator_thickness_list);
    border-color: var(--master_separator_color_list);
    box-sizing: border-box;
+}
+
+.controls-master-template-default-right {
+   border-left-style: solid;
+   border-left-width: var(--master-same_separator_thickness_list);
+}
+
+.controls-master-template-default-left {
+   border-right-style: solid;
+   border-right-width: var(--master-same_separator_thickness_list);
 }
 
 .controls-master-template-newDesign {
@@ -139,6 +147,9 @@
 .ws-is-mobile-platform .controls-MasterDetail_resizing-line {
    right: calc(-1 * var(--resizingLine_mobile_offset-left_masterDetail));
    width: var(--resizingLine_mobile_thickness_masterDetail);
+   // Чтоб не менялись размеры мастера, сдвигаем левее на ширин resizingLine
+   margin-left: calc(var(--resizingLine_mobile_offset-left_masterDetail) - var(--resizingLine_mobile_thickness_masterDetail));
+
    .controls-ResizingLine__areaWrapper_horizontal {
       width: calc(var(--resizingLine_mobile_thickness_masterDetail) - var(--resizingLine_mobile_offset-left_masterDetail));
    }

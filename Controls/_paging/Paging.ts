@@ -1,17 +1,19 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import pagingTemplate = require('wml!Controls/_paging/Paging/Paging');
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {TNavigationPagingMode} from 'Controls/interface';
+import {TNavigationPagingMode, TNavigationResetButtonMode} from 'Controls/interface';
 import 'css!Controls/paging';
 
 type TButtonState = 'normal' | 'disabled';
 type TArrowStateVisibility = 'visible' | 'hidden' | 'readonly';
+type TResetButtonState = TNavigationResetButtonMode | 'hidden';
 
 export interface IArrowState {
     begin: TArrowStateVisibility;
     prev: TArrowStateVisibility;
     next: TArrowStateVisibility;
     end: TArrowStateVisibility;
+    reset: TResetButtonState;
 }
 
 export interface IPagingOptions extends IControlOptions {
@@ -47,7 +49,7 @@ class Paging extends Control<IPagingOptions> {
     protected _template: TemplateFunction = pagingTemplate;
     protected _stateBackward: TButtonState = 'normal';
     protected _stateForward: TButtonState = 'normal';
-
+    protected _stateReset: TButtonState = 'disabled';
     protected _stateTop: TButtonState = 'normal';
     protected _stateBottom: TButtonState = 'normal';
 
@@ -70,6 +72,8 @@ class Paging extends Control<IPagingOptions> {
                 this._stateBackward = this._getState(config.arrowState.prev || 'readonly');
                 this._stateForward = this._getState(config.arrowState.next || 'readonly');
                 this._stateBottom = this._getState(config.arrowState.end || 'readonly');
+                this._stateReset = config.arrowState.reset === 'day' ||
+                                   config.arrowState.reset === 'home' ? 'normal' : 'disabled';
             }
         }
     }
@@ -82,6 +86,9 @@ class Paging extends Control<IPagingOptions> {
         return (state === 'visible') ? 'normal' : 'disabled';
     }
 
+    private _getResetButtonDay(): number {
+        return (new Date()).getDate();
+    }
     private _needLeftPadding(pagingMode, contentTemplate) {
         return !(contentTemplate && (pagingMode === 'edge' || pagingMode === 'edges' || pagingMode === 'end'));
     }

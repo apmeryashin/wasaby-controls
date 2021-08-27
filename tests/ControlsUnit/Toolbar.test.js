@@ -405,6 +405,7 @@ define(
                         parentProperty: 'parent',
                         direction: 'horizontal'
                      },
+                     _notify: () => {},
                      _children: {
                         menuTarget: 'menuTarget'
                      },
@@ -450,6 +451,7 @@ define(
             });
             it('_closeHandler', () => {
                let isMenuClosed = false;
+               toolbar._sticky.isOpened = () => false;
                toolbar._notify = (e, arr, bubl) => {
                   assert.equal(e, 'menuClosed', 'closeHandler is uncorrect');
                   assert.equal(bubl.bubbling, true, 'closeHandler is uncorrect');

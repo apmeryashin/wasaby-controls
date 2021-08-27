@@ -1,5 +1,19 @@
-<ws:partial template="{{_options.content}}"
-            scope="{{_options}}"
-            items="{{_toolbarItems}}"
-            on:itemClick="_toolbarItemClick()"
-/>
+<Controls.Container.Async
+    templateName="Controls/toolbars:View">
+    <ws:content>
+        <ws:partial template="{{content.resolvedTemplate}}"
+                    name="toolbar"
+                    scope="{{_options.toolbarOptions}}"
+                    items="{{_toolbarItems}}"
+                    menuSource="{{_menuSource}}"
+                    keyProperty="id"
+                    parentProperty="parent"
+                    itemTemplateProperty="template"
+                    nodeProperty="parent@"
+                    on:beforeMenuOpen="_beforeMenuOpen()"
+                    closeMenuOnOutsideClick="{{false}}"
+                    on:itemClick="_toolbarItemClick()"
+        />
+    </ws:content>
+</Controls.Container.Async>
+

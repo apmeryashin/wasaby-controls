@@ -65,7 +65,7 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
            it('by default', () => {
                const item = new TileCollectionItem();
                const result = item.getImageWrapperClasses('rich', undefined, 'center', 'rectangle', 1, 'top', 's');
-               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_top_viewMode_rectangle controls-TileView__richTemplate_image_size_s_position_top');
+               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_top_viewMode_rectangle controls-TileView__richTemplate_image_size_s_position_vertical');
            });
 
            it('setup image size', () => {
@@ -75,15 +75,15 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
 
                result = item.getImageWrapperClasses('rich', undefined, 'center', 'rectangle', 1, 'top', 's');
                CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_top_viewMode_rectangle');
-               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_top');
+               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_vertical');
 
                result = item.getImageWrapperClasses('rich', undefined, 'center', 'ellipsis', 1, 'top', 's', '1:1');
                CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_top_viewMode_ellipsis');
-               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_top');
+               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_vertical');
 
                result = item.getImageWrapperClasses('rich', undefined, 'center', 'rectangle', 1, 'left', 's', '1:1');
                CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_left_viewMode_rectangle');
-               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_vertical');
+               CssClassesAssert.include(result, 'controls-TileView__richTemplate_image_size_s_position_horizontal');
            });
        });
     });

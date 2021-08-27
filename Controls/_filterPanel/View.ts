@@ -63,7 +63,8 @@ export default class View extends Control<IViewPanelOptions> {
         this._viewModel = new ViewModel({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky
+            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky,
+            filterViewMode: options.viewMode
         });
     }
 
@@ -77,7 +78,8 @@ export default class View extends Control<IViewPanelOptions> {
         this._viewModel.update({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky
+            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky,
+            filterViewMode: options.viewMode
         });
     }
 
@@ -122,8 +124,7 @@ export default class View extends Control<IViewPanelOptions> {
     protected _groupClick(e: SyntheticEvent, dispItem: GroupItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         const itemContents = dispItem.getContents() as string;
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
-        const isExpanderClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupExpander');
-        this._viewModel.handleGroupClick(itemContents, isExpanderClick);
+        this._viewModel.handleGroupClick(itemContents, !isResetClick);
         if (isResetClick) {
             this._resetFilterItem(dispItem);
         }

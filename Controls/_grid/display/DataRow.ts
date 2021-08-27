@@ -86,6 +86,7 @@ export default class DataRow<T extends Model = Model> extends Row<T> implements
         //  itemEditorTemplate (обычная колонка с прикладным контентом).
         //  Избавиться по https://online.sbis.ru/opendoc.html?guid=80420a0d-1f45-4acb-8feb-281bf1007821
         this.setRowTemplate(editing ? this._$owner.getItemEditorTemplate() : undefined);
+        this.setRowTemplateOptions(editing ? this._$owner.getItemEditorTemplateOptions() : undefined);
         this._reinitializeColumns();
     }
 

@@ -93,6 +93,10 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         if (needOptionsValidation) {
             validateGridParts(options);
         }
+
+        if (changes.includes('itemEditorTemplateOptions')) {
+            listModel.setItemEditorTemplateOptions(options.itemEditorTemplateOptions);
+        }
     },
 
     /**
@@ -137,6 +141,9 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
             }
             if (changedOptions.hasOwnProperty('emptyTemplateColumns')) {
                 changes.push('emptyTemplateColumns');
+            }
+            if (changedOptions.hasOwnProperty('itemEditorTemplateOptions')) {
+                changes.push('itemEditorTemplateOptions');
             }
         }
 
@@ -388,6 +395,12 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 
     _onEditingItemClick(e: SyntheticEvent, item: Row, nativeEvent: Event): void {
         e.stopImmediatePropagation();
+
+        if (!e.preventItemEvent && nativeEvent.target.closest('.js-controls-ListView__checkbox')) {
+            this._notify('checkBoxClick', [item, nativeEvent]);
+            return;
+        }
+
         if (this._listModel.getEditingConfig()?.mode === 'cell') {
             const columnIndex = this._getCellIndexByEventTarget(nativeEvent);
             if (item.getEditingColumnIndex() !== columnIndex) {
