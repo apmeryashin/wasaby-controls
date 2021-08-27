@@ -888,6 +888,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ' controls-TileView__image';
                 classes += ' controls-TileView__image_align_center';
                 classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
+                classes += getImageClasses(this.getImageFit(imageFit));
+
                 break;
         }
 
