@@ -260,6 +260,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._offsetTopChanged = true;
             this._notify('stickyHeaderOffsetTopChanged', [], {bubbling: true});
         }
+        this._bottomShadowHiddenClassRemovedinJS = null;
     }
 
     protected _afterUpdate(oldOptions: IStickyHeaderOptions): void {
@@ -660,6 +661,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                 // отрисуется в следующем цикле синхронизации.
                 if (this._isBottomShadowVisible && this._children.hasOwnProperty('shadowBottom')) {
                     this._children.shadowBottom.classList.remove(this._isMobileIOS ? 'ws-invisible' : 'ws-hidden');
+                    this._bottomShadowHiddenClassRemovedinJS = true;
                 }
                 this._container.style.zIndex = this._model?.fixedPosition ? this._options.fixedZIndex : '';
             });
@@ -880,12 +882,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // При создании нового заголовка в группе проставляем ему видимость тени в обход циклов синхронизации, чтобы не было скачков.
         // Может произойти такой случай, когда группа в этот момент открепляется (тень нужно скрыть), а мы убрали ws-hidden с тени руками,
         // поэтому vdom думает, что данный класс на ноде весит и не проставляет его при синхронизации - восстановим ws-hidden сами.
-        if (this._bottomShadowHiddenClassRemovedinJS) {
-            this._bottomShadowHiddenClassRemovedinJS = null;
-            if (!this._isBottomShadowVisible) {
-                const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
-                this._children.shadowBottom.classList.add(hiddenClass);
-            }
+        // _bottomShadowHiddenClassRemovedinJS будем сбрасывать в каждом цикле синхронизации, т.к _isBottomShadowVisible
+        // может измениться лишь под конец цикла синхронизации.
+        if (this._bottomShadowHiddenClassRemovedinJS && !this._isBottomShadowVisible) {
+            const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
+            this._children.shadowBottom.classList.add(hiddenClass);
         }
     }
 
