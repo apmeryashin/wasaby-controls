@@ -1,9 +1,3 @@
-export interface IRBGColor {
-    r: number;
-    g: number;
-    b: number;
-}
-
 export interface IHSLColor {
     h: number;
     s: number;

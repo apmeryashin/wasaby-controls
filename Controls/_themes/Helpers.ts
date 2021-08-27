@@ -1,121 +1,10 @@
-import {IRBGColor, IHSLColor, IColorDescriptor} from './interface/IColor';
+import {IHSLColor, IColorDescriptor} from './interface/IColor';
+import {hslToRgb, hexToHsl, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 
-const MAX_RGB = 255;
-const DEG = 360;
-const ZERO = 0;
-const DOUBLE = 2;
-const SHORT_HEX_LENGTH = 4;
-const NORMAL_HEX_LENGTH = 7;
-const HEX_INDEX_1 = 1;
-const HEX_INDEX_2 = 2;
-const HEX_INDEX_3 = 3;
-const HEX_INDEX_4 = 4;
-const HEX_INDEX_5 = 5;
-const HEX_INDEX_6 = 6;
-const RGB_R_COEF = 6;
-const RGB_G_COEF = 2;
-const RGB_B_COEF = 4;
-const MAX_HSL_VAL = 100;
 const HEXADECIMAL = 16;
-const FIRST_RGB_COEF = 60;
-const SECOND_RGB_COEF = 120;
-const THIRD_RGB_COEF = 180;
-const FOURTH_RGB_COEF = 240;
-const FIFTH_RGB_COEF = 300;
-const FRACTION_DIGITS = 1;
-const DEGREE_MULTIPLIER = 60;
-// saturation и lightness в процентах.
-const HSLToRGB = (hue: number, saturation: number, lightness: number): IRBGColor => {
-    // Must be fractions of 1
-    const s = (saturation > MAX_HSL_VAL ? MAX_HSL_VAL : saturation) / MAX_HSL_VAL;
-    const l = (lightness > MAX_HSL_VAL ? MAX_HSL_VAL : lightness) / MAX_HSL_VAL;
-
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs((hue / FIRST_RGB_COEF) % 2 - 1));
-    const m = l - c / 2;
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    if (ZERO <= hue && hue < FIRST_RGB_COEF) {
-        r = c;
-        g = x;
-        b = ZERO;
-    } else if (FIRST_RGB_COEF <= hue && hue < SECOND_RGB_COEF) {
-        r = x;
-        g = c;
-        b = ZERO;
-    } else if (SECOND_RGB_COEF <= hue && hue < THIRD_RGB_COEF) {
-        r = ZERO;
-        g = c;
-        b = x;
-    } else if (THIRD_RGB_COEF <= hue && hue < FOURTH_RGB_COEF) {
-        r = ZERO;
-        g = x;
-        b = c;
-    } else if (FOURTH_RGB_COEF <= hue && hue < FIFTH_RGB_COEF) {
-        r = x;
-        g = ZERO;
-        b = c;
-    } else if (FIFTH_RGB_COEF <= hue && hue < DEG) {
-        r = c;
-        g = ZERO;
-        b = x;
-    }
-    r = Math.round((r + m) * MAX_RGB);
-    g = Math.round((g + m) * MAX_RGB);
-    b = Math.round((b + m) * MAX_RGB);
-    return {r, g, b};
-};
 const intToHex = (n: number): string => {
     const str = n.toString(HEXADECIMAL);
     return str.length === 1 ? ('0' + str) : str;
-};
-const HexToHSL = (hex: string): { h: number, s: number, l: number } => {
-    // Convert hex to RGB first
-    let r = 0;
-    let g = 0;
-    let b = 0;
-    if (hex.length === SHORT_HEX_LENGTH) {
-        r = parseInt(hex[HEX_INDEX_1] + hex[HEX_INDEX_1], HEXADECIMAL);
-        g = parseInt(hex[HEX_INDEX_2] + hex[HEX_INDEX_2], HEXADECIMAL);
-        b = parseInt(hex[HEX_INDEX_3] + hex[HEX_INDEX_3], HEXADECIMAL);
-    } else if (hex.length === NORMAL_HEX_LENGTH) {
-        r = parseInt(hex[HEX_INDEX_1] + hex[HEX_INDEX_2], HEXADECIMAL);
-        g = parseInt(hex[HEX_INDEX_3] + hex[HEX_INDEX_4], HEXADECIMAL);
-        b = parseInt(hex[HEX_INDEX_5] + hex[HEX_INDEX_6], HEXADECIMAL);
-    }
-    r /= MAX_RGB;
-    g /= MAX_RGB;
-    b /= MAX_RGB;
-    const cmin = Math.min(r, g, b);
-    const cmax = Math.max(r, g, b);
-    const delta = cmax - cmin;
-    let h;
-    // Calculate hue
-    // No difference
-    if (delta === ZERO) {
-        h = ZERO;
-    } else if (cmax === r) { // Red is max
-        h = ((g - b) / delta) % RGB_R_COEF;
-    } else if (cmax === g) { // Green is max
-        h = (b - r) / delta + RGB_G_COEF;
-    } else { // Blue is max
-        h = (r - g) / delta + RGB_B_COEF;
-    }
-    h = Math.round(h * DEGREE_MULTIPLIER);
-    // Make negative hues positive behind 360°
-    if (h < ZERO) {
-        h += DEG;
-    }
-    // Calculate lightness
-    let l = (cmax + cmin) / 2;
-    // Calculate saturation
-    let s = delta === ZERO ? ZERO : delta / (1 - Math.abs(DOUBLE * l - 1));
-    // Multiply l and s by 100
-    s = +(s * MAX_HSL_VAL).toFixed(FRACTION_DIGITS);
-    l = +(l * MAX_HSL_VAL).toFixed(FRACTION_DIGITS);
-    return {h, s, l};
 };
 const prefixes = ['primary', 'secondary', 'danger', 'success', 'warning', 'info'];
 const colorTemplate = {
@@ -207,7 +96,7 @@ const processColorVariables = (
         if (transformTemplate.hasOwnProperty(coefName)) {
             const mainColorName = prefix ? `--${prefix}_${coefName}` : coefName;
             if (colors[mainColorName]) {
-                const baseColor = HexToHSL(colors[mainColorName]);
+                const baseColor = hexToHsl(colors[mainColorName]);
                 transformTemplate[coefName].forEach((colorDesc: IColorDescriptor) => {
                     const subColorName = prefix ? `--${prefix}_${colorDesc.name}` : colorDesc.name;
                     // пропускаем переменные, значения которых пришло в аргументах. Их рассчитывать не нужно.
@@ -215,9 +104,9 @@ const processColorVariables = (
                         const convertedColor = colorDesc.callback ?
                             colorDesc.callback(baseColor, subColorName) :
                             calculateColor(baseColor, colorDesc);
-                        const rgbColor = HSLToRGB(convertedColor.h, convertedColor.s, convertedColor.l);
+                        const rgbColor = hslToRgb(convertedColor.h, convertedColor.s, convertedColor.l);
                         if (colorDesc.transparent) {
-                            result[subColorName] = `rgba(${rgbColor.r},${rgbColor.g},${rgbColor.b},0)`;
+                            result[subColorName] = rgbaToString(rgbToRgba(rgbColor, 0));
                         } else {
                             result[subColorName] =
                                 '#' + intToHex(rgbColor.r) + intToHex(rgbColor.g) + intToHex(rgbColor.b);
@@ -246,7 +135,5 @@ const calculateControlsTheme = (colors: Record<string, string>): Record<string, 
 export {
     processColorVariables,
     calculateControlsTheme,
-    HSLToRGB,
-    HexToHSL,
     intToHex
 };

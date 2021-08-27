@@ -7,7 +7,7 @@
  * @author Клепиков И.А.
  */
 
-export {IHSLColor, IRBGColor, IColorDescriptor} from 'Controls/_themes/interface/IColor';
+export {IHSLColor, IColorDescriptor} from 'Controls/_themes/interface/IColor';
 export {calculateControlsTheme, processColorVariables} from 'Controls/_themes/Helpers';
 export {default as Wrapper, IWrapperOptions} from 'Controls/_themes/Wrapper';
 export {default as ZenWrapper, IZenWrapperOptions} from 'Controls/_themes/ZenWrapper';
