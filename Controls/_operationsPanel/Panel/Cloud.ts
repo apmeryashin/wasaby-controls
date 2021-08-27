@@ -12,6 +12,8 @@ export interface IOperationsPanelCloudOptions extends IControlOptions {
 
 export default class extends Control<IOperationsPanelCloudOptions> {
     protected _template: TemplateFunction = template;
+    protected _dragging: boolean = false;
+
     protected _children: Record<string, any> = {
         dragNDrop: Container
     };
@@ -21,6 +23,7 @@ export default class extends Control<IOperationsPanelCloudOptions> {
     }
 
     protected _onDragMove(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
+        this._dragging = true;
         this._notify('popupDragStart', [dragObject.offset], {bubbling: true});
     }
 
@@ -32,17 +35,30 @@ export default class extends Control<IOperationsPanelCloudOptions> {
         this._children.dragNDrop.startDragNDrop(null, event);
     }
 
-    protected _closePanel(): void {
+    protected _closePanel(e: SyntheticEvent): void {
+        e.stopImmediatePropagation();
         this._notify('close', [], {bubbling: true});
+    }
+
+    protected _mouseOut(): void {
+        this._dragging = false;
     }
 
     protected _selectedTypeChanged(event: SyntheticEvent, type: string): void {
         this._notify('sendResult', ['selectedTypeChanged', type], {bubbling: true});
     }
 
-    protected _click(): void {
-        if (this._options.selectedKeysCount === 0) {
-            this._notify('sendResult', ['selectedTypeChanged', 'all'], {bubbling: true});
+    private _getChangedSelectedType(): string {
+        if (this._options.isAllSelected || this._options.selectedKeysCount !== 0) {
+            return 'unselectAll';
         }
+        return 'selectAll';
+    }
+
+    protected _click(): void {
+        if (!this._dragging) {
+            this._notify('sendResult', ['selectedTypeChanged', this._getChangedSelectedType()], {bubbling: true});
+        }
+        this._dragging = false;
     }
 }
