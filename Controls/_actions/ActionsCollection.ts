@@ -66,16 +66,8 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     }
 
     protected _prepareActionsShowType(actions: IAction[] = []): IAction[] {
-        const resultActions = [...actions];
-        resultActions.forEach((action) => {
-            if (this._isListAction(action)) {
-                action.showType = showType.MENU;
-            } else if (this._getToolbarActionsCount(actions) === actions.length) {
-                action.showType = showType.TOOLBAR;
-            }
-        });
-
-        return resultActions;
+        //TODO: тут должен быть код, который уберет кнопку с меню если все основные команды в тулбаре
+        return actions;
     }
 
     update(options: IActionsCollectionOptions): void {

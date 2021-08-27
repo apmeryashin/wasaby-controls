@@ -11,6 +11,7 @@
                     itemTemplateProperty="template"
                     nodeProperty="parent@"
                     on:menuOpened="_toolbarMenuOpened()"
+                    on:menuClosed="_toolbarMenuClosed()"
                     on:beforeMenuOpen="_beforeMenuOpen()"
                     closeMenuOnOutsideClick="{{false}}"
                     on:itemClick="_toolbarItemClick()"

@@ -171,6 +171,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._operationsController.setOperationsMenuVisible(true);
     }
 
+    protected _toolbarMenuClosed(): void {
+        this._operationsController.setOperationsMenuVisible(false);
+    }
+
     protected _beforeUnmount(): void {
         if (this._sourceController) {
             this._sourceController.unsubscribe('itemsChanged', this._updateActions);
