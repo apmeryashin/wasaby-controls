@@ -7,7 +7,7 @@
             bind:selectedKeys="_selectedKeys"
             bind:excludedKeys="_excludedKeys">
         <ws:multiSelectTemplate>
-            <ws:partial template="Controls/baseList:MultiSelectCircleTemplate"/>
+            <ws:partial template="Controls/list:MultiSelectCircleTemplate"/>
         </ws:multiSelectTemplate>
     </Controls.list:View>
 </div>
