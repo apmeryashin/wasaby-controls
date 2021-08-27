@@ -32,7 +32,8 @@
                  contentTemplate="{{_contentTemplate}}"
                  crossTemplate="{{_crossTemplate}}"
                  theme="{{_options.theme}}"
-                 on:click="_itemClick(item)">
+                 on:click="_itemClick(item)"
+                 attr:data-qa="SelectedCollection__item">
          </ws:partial>
       </ws:for>
 </div>
