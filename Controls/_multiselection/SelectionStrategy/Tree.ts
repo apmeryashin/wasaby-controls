@@ -632,7 +632,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       let result = true;
 
-      if (childes.getCount()) {
+      if (childes.getCount() && !node.hasMoreStorage()) {
          for (let i = 0; i < childes.getCount(); i++) {
             const child = childes.at(i);
             const childId = this._getKey(child);
