@@ -117,10 +117,7 @@ export class DialogStrategy {
         const topCoordinate = this._getCoordinate(popupItem, 'top');
         const isRightCoordinate = typeof popupItem.popupOptions.right !== 'undefined';
         const coordinate = isRightCoordinate ? 'right' : 'left';
-        let horizontalCoordinate = this._getCoordinate(popupItem, coordinate);
-        if (coordinate === 'right') {
-            horizontalCoordinate = windowData.width - horizontalCoordinate;
-        }
+        const horizontalCoordinate = this._getCoordinate(popupItem, coordinate);
 
         if (topCoordinate === undefined && horizontalCoordinate === undefined) {
             return;

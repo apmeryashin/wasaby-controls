@@ -120,11 +120,11 @@ define(
             popupOptions.left = undefined;
             popupOptions.right = 120;
             position = DialogStrategy.getPosition(windowData, sizes, { popupOptions });
-            assert.equal(position.right, 1720);
+            assert.equal(position.right, 120);
 
             popupOptions.right = 1900;
             position = DialogStrategy.getPosition(windowData, sizes, { popupOptions });
-            assert.equal(position.right, 20);
+            assert.equal(position.right, 1720);
          });
 
          it('dialog positioning overflow container', () => {
