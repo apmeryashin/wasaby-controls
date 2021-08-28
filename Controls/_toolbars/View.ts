@@ -395,9 +395,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
-    private _setMenuSource(): void {
+    private _setMenuSource(menuSource: ICrudPlus = this._options.menuSource): void {
         if (this._options.menuSource) {
-            this._menuSource = this._options.menuSource;
+            this._menuSource = menuSource;
         } else {
             const menuItems = Toolbar._calcMenuItems(this._items);
             const source = this._options.source || this._getSynchronousSourceForMenu(menuItems);
@@ -419,9 +419,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._source = this._createPrefetchProxy(source, this._items);
         }
         this._needShowMenu = needShowMenu(this._items);
-        if (this._sticky?.isOpened() && !this._options.closeMenuOnOutsideClick) {
-            this.openMenu();
-        }
     }
 
     private _needChangeState(newOptions: IToolbarOptions): boolean {
@@ -472,6 +469,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _beforeUpdate(newOptions: IToolbarOptions): void {
+        const itemsChanged = this._options.items !== newOptions.items;
+        const menuSourceChanged = this._options.menuSource !== newOptions.menuSource;
         if (this._needChangeState(newOptions)) {
             this._setState(newOptions);
         }
@@ -480,15 +479,20 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._sticky?.close();
             this.setStateBySource(newOptions.source);
         }
-        if (this._options.items !== newOptions.items) {
+        if (itemsChanged) {
             this._isLoadMenuItems = false;
             this._sourceByItems = null;
             this._setStateByItems(newOptions.items);
         }
-        if (this._options.menuSource !== newOptions.menuSource) {
+        if (menuSourceChanged) {
             this._menuItems = {};
             this._isLoadMenuItems = false;
-            this._setMenuSource();
+            this._setMenuSource(newOptions.menuSource);
+        }
+        if (itemsChanged || menuSourceChanged) {
+            if (this._sticky?.isOpened() && !this._options.closeMenuOnOutsideClick) {
+                this.openMenu();
+            }
         }
     }
 
