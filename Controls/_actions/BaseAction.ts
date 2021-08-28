@@ -42,7 +42,7 @@ export interface IBaseActionOptions {
     requiredLevel: string[];
 }
 
-const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType', 'template'];
+const TOOLBAR_PROPS = ['icon', 'iconStyle', 'title', 'tooltip', 'visible', 'viewMode', 'parent', 'parent@', 'showType', 'template', 'order'];
 
 export default abstract class BaseAction extends mixin<ObservableMixin>(
     ObservableMixin
@@ -108,7 +108,7 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
 
         this.icon = options.icon || this.icon;
         this.title = options.title || this.title;
-        this.tooltip = options.tooltip || this.tooltip;
+        this.tooltip = options.tooltip || this.tooltip || this.title;
         this.visible = options.hasOwnProperty('visible') ? options.visible as boolean : this.visible;
         this.iconStyle = options.iconStyle || this.iconStyle;
         this.order = options.order || this.order;
@@ -165,13 +165,15 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     private _getCommandOptions(commandParams: Partial<IExecuteCommandParams> = {}): object {
         const commandOptions = object.clone(this.commandOptions) || {};
         merge(commandOptions, {
-            source: commandParams.source,
-            filter: commandParams.filter,
-            keyProperty: commandParams.keyProperty,
-            parentProperty: commandParams.parentProperty,
+            source: commandParams.sourceController.getSource(),
+            filter: commandParams.sourceController.getFilter(),
+            keyProperty: commandParams.sourceController.getKeyProperty(),
+            parentProperty: commandParams.sourceController.getParentProperty(),
             nodeProperty: commandParams.nodeProperty,
             navigation: commandParams.navigation,
             selection: commandParams.selection,
+            sourceController: commandParams.sourceController,
+            operationsController: commandParams.operationsController,
             target: commandParams.target
         });
         return commandOptions;

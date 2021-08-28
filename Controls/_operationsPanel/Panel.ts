@@ -62,6 +62,16 @@ export default class extends Control<IOperationsPanelOptions> {
         }
     }
 
+    protected _beforeUnmount(): void {
+        this._operationsController.setOperationsMenuVisible(false);
+        this._operationsController.setOperationsPanelVisible(false);
+        this._operationsController = null;
+        if (this._dialogOpener) {
+            this._dialogOpener.destroy();
+            this._dialogOpener = null;
+        }
+    }
+
     private _openCloud(): void {
         this._getDialogOpener().then((opener) => {
             const target = this._children.target;
@@ -79,16 +89,15 @@ export default class extends Control<IOperationsPanelOptions> {
                 },
                 eventHandlers: {
                     onClose: () => {
-                        this._options.operationsController.setOperationsMenuVisible(false);
-                        this._options.operationsController.setOperationsPanelVisible(false);
+                        if (this._operationsController) {
+                            this._operationsController.setOperationsMenuVisible(false);
+                            this._operationsController.setOperationsPanelVisible(false);
+                        }
                         Store.dispatch('operationsPanelExpanded', false);
                     },
                     onResult: (action: string, type) => {
-                        if (action === 'click') {
-                            this._options.operationsController.selectionTypeChanged('all');
-                        }
                         if (action === 'selectedTypeChanged') {
-                            this._options.operationsController.selectionTypeChanged(type);
+                            this._operationsController.selectionTypeChanged(type);
                         }
                     }
                 },
@@ -97,6 +106,6 @@ export default class extends Control<IOperationsPanelOptions> {
         });
     }
     protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
-        return options.selectedKeysCount > 0;
+        return options.selectedKeysCount !== 0;
     }
 }
