@@ -1,5 +1,7 @@
 <div class="controls-PageTemplate controls_popupTemplate_theme-{{_options.theme}}"
-     attr:style="width: 100vw; min-width: {{ _minWidth }}px; max-width: {{ _workspaceWidth }}px;">
+     attr:style="width: 100vw; min-width: {{ _minWidth }}px; max-width: {{ _workspaceWidth }}px;"
+     on:register="_registerHandler()"
+     on:unregister="_unregisterHandler()">
     <ws:if data="{{_canResize}}">
         <Controls.dragnDrop:ResizingLine attr:class="controls-PageTemplate__resizingLine controls-PageTemplate__resizingLine-left"
                                          direction="reverse"
