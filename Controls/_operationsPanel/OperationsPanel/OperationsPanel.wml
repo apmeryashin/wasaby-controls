@@ -43,6 +43,7 @@
             size="{{_options.multiSelectSize}}"
             fontColorStyle="{{_options.fontColorStyle}}"
             operationsController="{{_options.operationsController}}"
+            propStorageId="{{_options.propStorageId}}"
             fontSize="{{_options.multiSelectFontSize}}"
             selectedKeysCount="{{_options.selectedKeysCount}}"
             selectionViewMode="{{_options.selectionViewMode}}"
