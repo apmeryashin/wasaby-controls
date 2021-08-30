@@ -85,7 +85,7 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
     protected _children: { listControl: ListControl };
 
     protected _beforeMount(options) {
-        this._viewModelConstructor = this._getModelConstructor();
+        this._viewModelConstructor = this._getModelConstructor(options);
     }
 
     protected _getActionsMenuConfig(e, item, clickEvent, action, isContextMenu) {
@@ -96,8 +96,8 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
 
     }
 
-    protected _getModelConstructor(): string|Function {
-        return 'Controls/display:Collection';
+    protected _getModelConstructor(options: Object): string|Function {
+        return options.collectionConstructor || 'Controls/display:Collection';
     }
 
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig) {
