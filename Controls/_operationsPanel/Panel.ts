@@ -31,6 +31,10 @@ export default class extends Control<IOperationsPanelOptions> {
         this._operationsController = options.operationsController;
     }
 
+    protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
+        return options.selectedKeysCount !== 0;
+    }
+
     protected _beforeUpdate(options: IOperationsPanelOptions): void {
         if (this._shouldOpenMenu(options)) {
             this._operationsController.setOperationsMenuVisible(true);
@@ -51,14 +55,12 @@ export default class extends Control<IOperationsPanelOptions> {
         }
     }
 
-    protected _getDialogOpener(): Promise<DialogOpener> {
+    protected _getDialogOpener(): DialogOpener {
         if (!this._dialogOpener) {
-            return import('Controls/popup').then((popup) => {
-                this._dialogOpener = new popup.DialogOpener();
-                return this._dialogOpener;
-            });
+            this._dialogOpener = new DialogOpener();
+            return this._dialogOpener;
         } else {
-            return Promise.resolve(this._dialogOpener);
+            return this._dialogOpener;
         }
     }
 
@@ -73,8 +75,9 @@ export default class extends Control<IOperationsPanelOptions> {
     }
 
     private _openCloud(): void {
-        this._getDialogOpener().then((opener) => {
-            const target = this._children.target;
+        const target = this._children.target;
+        const opener = this._getDialogOpener();
+        if (!opener.isOpened()) {
             opener.open({
                 template: 'Controls/operationsPanel:Cloud',
                 opener: this,
@@ -103,9 +106,6 @@ export default class extends Control<IOperationsPanelOptions> {
                 },
                 target
             });
-        });
-    }
-    protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
-        return options.selectedKeysCount !== 0;
+        }
     }
 }
