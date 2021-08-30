@@ -95,6 +95,28 @@
    border-bottom: var(--offset_s) solid transparent;
 }
 
+// region image rounded borders
+
+.controls-TileView__richTemplate_image_roundBorder {
+   @variants: 3xs, 2xs, xs, s, m;
+   .for(@variants, {
+      &_bottomLeft_@{_item} {
+         border-bottom-left-radius: ~"var(--border_radius_@{_item}_tile)";
+      }
+      &_bottomRight_@{_item} {
+         border-bottom-right-radius: ~"var(--border_radius_@{_item}_tile)";
+      }
+      &_topLeft_@{_item} {
+         border-top-left-radius: ~"var(--border_radius_@{_item}_tile)";
+      }
+      &_topRight_@{_item} {
+         border-top-right-radius: ~"var(--border_radius_@{_item}_tile)";
+      }
+   });
+}
+
+// region image rounded borders
+
 .controls-TileView_richTemplate_image_spacing_default_viewMode_circle,
 .controls-TileView_richTemplate_image_spacing_default_viewMode_ellipse {
    border: var(--offset_m) solid transparent;

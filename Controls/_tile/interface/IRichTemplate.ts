@@ -67,6 +67,21 @@ export default interface IRichTemplateOptions {
     imageSize?: 's' | 'm' | 'l' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 
     /**
+     * @typedef {String} TImagePadding
+     * @variant s Отступ, соответствующий величине s. Только для горизонтально расположенных изображений в виде прямоугольника.
+     * @variant default Отступ, соответствующий величине m. Только для изображений, в виде круга или суперэллипса.
+     */
+    /**
+     * @cfg {TImagePadding} Отступ от края плитки до изображения.
+     * @remark
+     * При установке отступа величины s для горизонтально расположенных изображений в виде прямоугольника к изображению
+     * применяется скругление углов.
+     * @see imageViewMode
+     * @see Controls/_tile/interface/ITile#roundBorder
+     */
+    imagePadding?: 's' | 'default';
+
+    /**
      * @typedef {String} ImagePosition
      * @variant top Изображение отображается сверху.
      * @variant left Изображение отображается слева.
