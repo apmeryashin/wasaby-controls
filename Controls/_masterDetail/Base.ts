@@ -12,7 +12,7 @@ import { Logger} from 'UI/Utils';
 
 const RESIZE_DELAY = 50;
 
-export type TMasterVisibility = 'left' | 'right';
+export type TMasterVisibility = 'visible' | 'hidden';
 
 interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     master: TemplateFunction;
