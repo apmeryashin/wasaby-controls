@@ -5,7 +5,8 @@ import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
 import { isEqual } from 'Types/object';
 import {RecordSet} from 'Types/collection';
-import {error as errorLib, ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
+import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
+import {process} from 'Controls/error';
 import {factory} from 'Types/chain';
 import { Model } from 'Types/entity';
 
@@ -158,7 +159,7 @@ export default class Controller<P> {
       const controller = new NewSourceController(options);
       return controller.reload()
           .then((list) => factory(list).toArray().map((it: Model) => it.getKey()))
-          .catch((error) => errorLib.process({error}).then(() => []));
+          .catch((error) => process({error}).then(() => []));
    }
 
    /**

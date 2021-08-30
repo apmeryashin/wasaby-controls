@@ -24,7 +24,6 @@ export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions, TSelectedKey} from './_interface/ISingleSelectable';
 export {default as IMultiSelectable, IMultiSelectableOptions, TSelectedKeys} from './_interface/IMultiSelectable';
 export {default as ISource, ISourceOptions} from './_interface/ISource';
-export {default as IErrorController, IErrorControllerOptions} from './_interface/IErrorController';
 export {default as IHierarchy, IHierarchyOptions} from './_interface/IHierarchy';
 export {default as INumberFormat, INumberFormatOptions} from './_interface/INumberFormat';
 export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';

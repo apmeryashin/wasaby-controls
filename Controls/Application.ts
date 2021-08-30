@@ -184,6 +184,7 @@ export default class Application extends Control<IApplication> {
 
       if (Application._isIOS13()) {
          window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
+         window.addEventListener('orientationchange', this._orientationChange);
       }
       window.addEventListener('resize', this._resizePage.bind(this));
       window.document.addEventListener('scroll', this._scrollPage.bind(this));
@@ -579,6 +580,18 @@ export default class Application extends Control<IApplication> {
    protected _cancelFinishingPendingHandler(event: Event, root: string): void {
       event.stopPropagation();
       this._pendingController.cancelFinishingPending(root);
+   }
+
+   /**
+    * Решения взято отсюда
+    * https://stackoverflow.com/questions/62717621/white-space-at-page-bottom-after-device-rotation-in-ios-safari
+    * @protected
+    */
+   protected _orientationChange(): void {
+      document.documentElement.style.height = 'initial';
+      setTimeout(() => {
+         document.documentElement.style.height = '100%';
+      }, 500);
    }
 
    /**

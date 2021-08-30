@@ -8,6 +8,7 @@
                     containerWidth="{{_containerWidth}}"
                     items="{{_items}}"
                     align="right"
+                    attr:data-qa="AdaptiveButtons__right"
             />
         </div>
     </div>
@@ -20,6 +21,7 @@
                     markerThickness="l"
                     inlineHeight="l"
                     containerWidth="{{_containerWidth}}"
+                    attr:data-qa="AdaptiveButtons__right2"
             items="{{_items}}"
             align="right"
             />
@@ -35,6 +37,7 @@
                     displayProperty="caption"
                     items="{{_items2}}"
                     align="left"
+                    attr:data-qa="AdaptiveButtons__left"
             />
         </div>
     </div>

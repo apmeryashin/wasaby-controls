@@ -558,29 +558,29 @@ define([
          });
       });
 
-      describe('updateFixed', function() {
+      describe('updateShadowVisible', function() {
          it('should turn on a shadow and generate force update if the corresponding identifier is passed.', function() {
             const component = createComponent(StickyHeader, {});
-            component._isFixed = false;
+            component._isStickyShadowVisible = false;
             component._canScroll = true;
             component._model = { fixedPosition: false };
-            component.updateFixed([component._index]);
-            assert.isTrue(component._isFixed);
+            component.updateShadowVisible([component._index]);
+            assert.isTrue(component._isStickyShadowVisible);
          });
          it('should turn off a shadow and generate force update if the corresponding identifier is not passed.', function() {
             const component = createComponent(StickyHeader, {});
-            component._isFixed = true;
+            component._isStickyShadowVisible = true;
             component._canScroll = true;
             component._model = { fixedPosition: false };
-            component.updateFixed(['someId']);
-            assert.isFalse(component._isFixed);
+            component.updateShadowVisible(['someId']);
+            assert.isFalse(component._isStickyShadowVisible);
          });
          it('should not apply force update if the shadow has not changed.', function() {
             const component = createComponent(StickyHeader, {});
-            component._isFixed = true;
+            component._isStickyShadowVisible = true;
             sinon.stub(component, '_forceUpdate');
-            component.updateFixed([component._index]);
-            assert.isTrue(component._isFixed);
+            component.updateShadowVisible([component._index]);
+            assert.isTrue(component._isStickyShadowVisible);
             sinon.assert.notCalled(component._forceUpdate);
             sinon.restore();
          });
@@ -598,7 +598,7 @@ define([
                   }
                }
             }
-            component.updateFixed([component._index]);
+            component.updateShadowVisible([component._index]);
             return Promise.resolve().then(() => {
                assert.isTrue(component._isBottomShadowVisible);
                sinon.assert.calledOnce(component._children.shadowBottom.classList.remove);
@@ -641,7 +641,7 @@ define([
             const component = createComponent(StickyHeader, {});
             component._context = {};
             component._model = { fixedPosition: 'top' };
-            component._isFixed = true;
+            component._isStickyShadowVisible = true;
             component._scrollState = {
                verticalPosition: 'middle',
                hasUnrenderedContent: {
@@ -665,7 +665,7 @@ define([
             const component = createComponent(StickyHeader, {});
             component._context = {};
             component._model = { fixedPosition: 'top' };
-            component._isFixed = true;
+            component._isStickyShadowVisible = true;
             component._scrollState = {
                verticalPosition: 'middle',
                hasUnrenderedContent: {
