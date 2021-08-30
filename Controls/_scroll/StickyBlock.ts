@@ -885,6 +885,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // _bottomShadowHiddenClassRemovedinJS будем сбрасывать в каждом цикле синхронизации, т.к _isBottomShadowVisible
         // может измениться лишь под конец цикла синхронизации.
         if (this._bottomShadowHiddenClassRemovedinJS && !this._isBottomShadowVisible) {
+            this._bottomShadowHiddenClassRemovedinJS = null;
             const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
             this._children.shadowBottom.classList.add(hiddenClass);
         }
