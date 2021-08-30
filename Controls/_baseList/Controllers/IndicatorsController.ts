@@ -5,7 +5,7 @@ import {
     EIndicatorState,
     ITriggerOffset
 } from 'Controls/display';
-import {RecordSet, IObservable} from 'Types/collection';
+import {RecordSet} from 'Types/collection';
 import {TIndicatorState} from 'Controls/_display/Indicator';
 
 export interface IIndicatorsControllerOptions {
@@ -39,11 +39,11 @@ enum SEARCH_STATES {
 type TPortionedSearchDirection = 'top'|'bottom';
 
 export const DIRECTION_COMPATIBILITY = {
-    'top': 'up',
-    'up': 'top',
-    'bottom': 'down',
-    'down': 'bottom',
-}
+    top: 'up',
+    up: 'top',
+    bottom: 'down',
+    down: 'bottom'
+};
 
 export default class IndicatorsController {
     private _options: IIndicatorsControllerOptions;
@@ -82,14 +82,20 @@ export default class IndicatorsController {
         }
     }
 
-    updateOptions(options: IIndicatorsControllerOptions): boolean {
-        const shouldRecountAllIndicators = options.items && this._options.items !== options.items ||
-            this._options.isInfinityNavigation !== options.isInfinityNavigation ||
-            this._options.shouldShowEmptyTemplate !== options.shouldShowEmptyTemplate;
+    updateOptions(options: IIndicatorsControllerOptions, isLoading: boolean): boolean {
+        // во время загрузки sourceController всегда возвращает hasMore = false, а корректным значение будет
+        // уже только после загрузки, поэтому hasMore обновим только после загрузки
+        if (isLoading) {
+            options.hasMoreDataToBottom = this._options.hasMoreDataToBottom;
+            options.hasMoreDataToTop = this._options.hasMoreDataToTop;
+        }
+        const navigationChanged = this._options.isInfinityNavigation !== options.isInfinityNavigation;
+
+        const shouldRecountAllIndicators = options.items && this._options.items !== options.items;
         const shouldRecountBottomIndicator = !shouldRecountAllIndicators &&
-            this._options.hasMoreDataToBottom !== options.hasMoreDataToBottom;
+            (this._options.hasMoreDataToBottom !== options.hasMoreDataToBottom || navigationChanged);
         const shouldRecountTopIndicator = !shouldRecountAllIndicators &&
-            this._options.hasMoreDataToTop !== options.hasMoreDataToTop;
+            (this._options.hasMoreDataToTop !== options.hasMoreDataToTop || navigationChanged);
 
         this._options = options;
         this._model = options.model;
@@ -453,14 +459,14 @@ export default class IndicatorsController {
     stopPortionedSearch(): void {
         this.clearPortionedSearchTimer();
         this._setSearchState(SEARCH_STATES.STOPPED);
-        this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.ContinueSearch)
+        this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.ContinueSearch);
         this._options.stopPortionedSearchCallback();
     }
 
     continuePortionedSearch(): void {
         this._setSearchState(SEARCH_STATES.CONTINUED);
         this._startPortionedSearchTimer(SEARCH_CONTINUED_MAX_DURATION);
-        this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.PortionedSearch)
+        this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.PortionedSearch);
     }
 
     abortPortionedSearch(): void {
@@ -541,7 +547,7 @@ export default class IndicatorsController {
 
     private _isPortionedSearch(): boolean {
         const metaData = this._options.items && this._options.items.getMetaData();
-        return !!(metaData && metaData['iterative']);
+        return !!(metaData && metaData.iterative);
     }
     // endregion PortionedSearch
 }

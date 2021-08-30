@@ -3717,7 +3717,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // region Indicators
 
-        this._updateIndicatorsController(newOptions);
+        this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
 
         if (this._options.searchValue  && !newOptions.searchValue) {
             this._indicatorsController.endPortionedSearch();
@@ -6225,10 +6225,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController = new IndicatorsController(this._getIndicatorsControllerOptions(options));
     }
 
-    private _updateIndicatorsController(newOptions?: IBaseControlOptions): void {
+    private _updateIndicatorsController(newOptions?: IBaseControlOptions, isLoading: boolean = false): void {
         const options = newOptions || this._options;
         const controllerOptions = this._getIndicatorsControllerOptions(options);
-        const changedResetTrigger = this._indicatorsController.updateOptions(controllerOptions);
+        const changedResetTrigger = this._indicatorsController.updateOptions(controllerOptions, isLoading);
         if (changedResetTrigger) {
             this._updateScrollController(newOptions);
         }
