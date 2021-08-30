@@ -3,7 +3,7 @@ import {Memory} from 'Types/source';
 import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {CrudWrapper} from 'Controls/dataSource';
-import {error as dsError} from 'Controls/dataSource';
+import {ErrorViewConfig} from 'Controls/error';
 
 const data = [
     {
@@ -59,7 +59,7 @@ describe('Controls/_dataSource/CrudWrapper', () => {
                  .then((record: Record) => {
                      assert.equal(record.get('title'), 'Запись 666');
                  })
-                 .catch((errorData: dsError.ViewConfig) => {
+                 .catch((errorData: ErrorViewConfig) => {
                      assert.isNotTrue(true, 'This call should not throw any exceptions');
                  });
         });
@@ -75,7 +75,7 @@ describe('Controls/_dataSource/CrudWrapper', () => {
             return crudWrapper.read(1)
                 .then((record: Record) => {
                     assert.equal(record.get('title'), 'Первый');
-                }).catch((errorData: dsError.ViewConfig) => {
+                }).catch((errorData: ErrorViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });
@@ -102,7 +102,7 @@ describe('Controls/_dataSource/CrudWrapper', () => {
                 .then(() => {
                     assert.isTrue(true, 'This call should not throw any exceptions');
                 })
-                .catch((errorData: dsError.ViewConfig) => {
+                .catch((errorData: ErrorViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });
@@ -121,7 +121,7 @@ describe('Controls/_dataSource/CrudWrapper', () => {
                 .then((recordSet: RecordSet) => {
                     assert.equal(recordSet.at(0).get('id'), 1, 'Wrong responce data');
                 })
-                .catch((errorData: dsError.ViewConfig) => {
+                .catch((errorData: ErrorViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });
@@ -138,7 +138,7 @@ describe('Controls/_dataSource/CrudWrapper', () => {
                 .then(() => {
                     assert.isTrue(true, 'This call should not throw any exceptions');
                 })
-                .catch((errorData: dsError.ViewConfig) => {
+                .catch((errorData: ErrorViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });

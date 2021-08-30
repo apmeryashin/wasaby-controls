@@ -1,5 +1,6 @@
 import {IFilterOptions, ISourceOptions, TKey} from 'Controls/interface';
-import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {process} from 'Controls/error';
 import {RecordSet, List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
@@ -111,7 +112,7 @@ export default class LookupBaseControllerClass {
                 return items;
             },
             (error) => {
-                dataSourceError.process({error});
+                process({error});
                 return new List();
             }
         );

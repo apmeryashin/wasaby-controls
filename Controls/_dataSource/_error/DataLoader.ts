@@ -1,5 +1,5 @@
 import {Control, TemplateFunction, IControlOptions } from 'UI/Base';
-import { Controller, Mode, ViewConfig as ErrorViewConfig } from 'Controls/error';
+import { ErrorController, ErrorViewMode, ErrorViewConfig } from 'Controls/error';
 import * as template from 'wml!Controls/_dataSource/_error/DataLoader';
 import {PrefetchProxy} from 'Types/source';
 import {default as DataLoaderController, ILoadDataResult, ILoadDataConfig} from 'Controls/_dataSource/DataLoader';
@@ -13,7 +13,7 @@ interface IErrorContainerOptions extends IControlOptions {
    sources: ILoadDataConfig[];
    errorHandlingEnabled: boolean;
    requestTimeout: number;
-   errorController: Controller;
+   errorController: ErrorController;
 }
 
 /**
@@ -21,8 +21,7 @@ interface IErrorContainerOptions extends IControlOptions {
  * данных, будет выведена соответствующая ошибка.
  * @class Controls/_dataSource/_error/DataLoader
  * @extends UI/Base:Control
- * @implements Controls/interface:IErrorController
- * 
+ *
  * @public
  * @author Северьянов А.А.
  */
@@ -31,7 +30,7 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
    protected _template: TemplateFunction = template;
    protected _sources: ILoadDataConfig[];
    protected _errorViewConfig: ErrorViewConfig;
-   private _errorController: Controller = new Controller({});
+   private _errorController: ErrorController = new ErrorController({});
 
    protected _beforeMount({sources, errorHandlingEnabled, requestTimeout}: IErrorContainerOptions,
                           ctx?: unknown,
@@ -62,11 +61,11 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
       return this._getErrorController().process({
          error,
          theme: this._options.theme,
-         mode: Mode.include
+         mode: ErrorViewMode.include
       });
    }
 
-   private _getErrorController(): Controller {
+   private _getErrorController(): ErrorController {
       return this._options.errorController || this._errorController;
    }
 

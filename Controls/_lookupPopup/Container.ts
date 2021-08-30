@@ -18,7 +18,7 @@ import {
 } from 'Controls/interface';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
-import {error as dataSourceError} from 'Controls/dataSource';
+import {process} from 'Controls/error';
 
 interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selection: TSelectionRecord;
@@ -286,7 +286,7 @@ var _private = {
             loadItemsPromise = crudWrapper
                 .query({filter})
                 .catch((error) => {
-                    dataSourceError.process({error});
+                    process({error});
                     return Promise.reject(error);
                 })
                 .finally(() => {

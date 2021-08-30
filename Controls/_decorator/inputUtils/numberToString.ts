@@ -1,10 +1,10 @@
 import {Logger} from 'UI/Utils';
 
 const exponentialSymbol = 'e';
-const parseExponentialNotation = new RegExp(`^(\\d+)\\.?(\\d+|)${exponentialSymbol}(\\+|-)(\\d+)$`);
+const parseExponentialNotation = new RegExp(`^(-?\\d+)\\.?(\\d+|)${exponentialSymbol}(\\+|-)(\\d+)$`);
 
-export default function numberToString(original: number): string {
-    if (Math.abs(original) === Infinity) {
+export default function numberToString(original: number | string): string {
+    if (Math.abs(+original) === Infinity) {
         return '0';
     }
     const str = original.toString();
@@ -22,7 +22,7 @@ function exponentialToDecimalNotation(original: string): string {
         Logger.error('Не удалось распарсить экспоненциальную запись.');
         return '0';
     }
-    const integer = expNotation[1];
+    let integer = expNotation[1];
     const fraction = expNotation[2];
     const sign = expNotation[3];
     const degree: number = parseInt(expNotation[4], 10);
@@ -31,7 +31,12 @@ function exponentialToDecimalNotation(original: string): string {
         case '+':
             return `${integer}${fraction}${'0'.repeat(degree - fraction.length)}`;
         case '-':
-            return `0.${'0'.repeat(degree - integer.length)}${integer}${fraction}`;
+            let symbol = '';
+            if (+integer < 0) {
+                symbol = '-';
+                integer = integer.slice(1);
+            }
+            return `${symbol}0.${'0'.repeat(degree - integer.length)}${integer}${fraction}`;
         default:
             Logger.error('Неподдерживаемый знак в экспоненициальной записи.', sign);
             return '0';
