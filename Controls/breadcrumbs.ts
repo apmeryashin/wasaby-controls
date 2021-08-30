@@ -2,6 +2,7 @@
  * Библиотека контролов, которые служат для поддержки навигации, позволяющей  пользователю перейти c текущей страницы/документа на любой уровень вложенности.
  * @library
  * @includes IBreadCrumbs Controls/_breadcrumbs/interface/IBreadCrumbs
+ * @includes IHeadingPath Controls/_breadcrumbs/interface/IHeadingPath
  * @includes IPathButton Controls/_breadcrumbs/PathButton/interfaces
  * @author Авраменко А. С.
  */
@@ -18,6 +19,7 @@ export {default as Path} from './_breadcrumbs/Path';
 export {default as View} from './_breadcrumbs/View';
 export {default as PathButton} from './_breadcrumbs/PathButton';
 export * from 'Controls/_breadcrumbs/PathButton/interfaces';
+export * from 'Controls/_breadcrumbs/interface/IHeadingPath';
 export {default as HeadingPath} from './_breadcrumbs/HeadingPath';
 export {default as MultilinePath} from './_breadcrumbs/MultilinePath';
 export {default as HeadingPathBack} from './_breadcrumbs/HeadingPath/Back';
