@@ -105,7 +105,7 @@ class Previewer extends BaseOpener<IPreviewerOpenerOptions> implements IPreviewe
     }
 
     static openPopup(config: IPreviewerPopupOptions, type?: string): Promise<IPreviewerPopupOptions> {
-        return new Promise((resolve: Function) => {
+        return new Promise((resolve: Function, reject: Function) => {
             const newCfg: IPreviewerPopupOptions = prepareConfig(config);
             if (!newCfg.id) {
                 newCfg.id = randomId('popup-');
@@ -116,6 +116,8 @@ class Previewer extends BaseOpener<IPreviewerOpenerOptions> implements IPreviewe
                     if (!newCfg.isCancelOpening) {
                         BaseOpener.showDialog(result.template, newCfg, result.controller);
                     }
+                }).catch((error: RequireError) => {
+                    reject(error);
                 });
             }, newCfg, type);
             resolve(newCfg);
