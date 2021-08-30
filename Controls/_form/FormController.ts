@@ -466,7 +466,7 @@ class FormController extends ControllerBase<IFormController> {
         return updateResult;
     }
 
-    private _update(config?: IUpdateConfig): Promise<IDataValid> {
+    private _update(config: IUpdateConfig = {}): Promise<IDataValid> {
         const record = this._record;
         const updateDef = new Deferred();
 
@@ -478,7 +478,7 @@ class FormController extends ControllerBase<IFormController> {
                 this._notify('validationSuccessed', []);
                 let res = this._crudController.update(record, this._isNewRecord, {
                     updateMetaData: this._options.updateMetaData,
-                    ...(config || {})
+                    ...config
                 });
                 // fake deferred used for code refactoring
                 if (!(res && res.then)) {
