@@ -476,7 +476,10 @@ class FormController extends ControllerBase<IFormController> {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
                 this._notify('validationSuccessed', []);
-                let res = this._crudController.update(record, this._isNewRecord, config);
+                let res = this._crudController.update(record, this._isNewRecord, {
+                    updateMetaData: this._options.updateMetaData,
+                    ...(config || {})
+                });
                 // fake deferred used for code refactoring
                 if (!(res && res.then)) {
                     res = new Deferred();
