@@ -1,24 +1,16 @@
 <div class="controlsDemo__wrapper">
-    <Controls.browser:Browser bind:filter="_filter" filterButtonSource="{{_filterSource}}"
-                              source="{{_source}}" keyProperty="id" searchParam="department">
+    <Controls.browser:Browser filterButtonSource="{{_filterSource}}"
+                              source="{{_source}}"
+                              searchParam="city">
         <div>
             <Controls.search:InputContainer>
-                <Controls.search:Input bind:value="_searchValue"/>
+                <Controls.search:Input />
             </Controls.search:InputContainer>
             <Controls.filter:ViewContainer>
                 <Controls.filter:View/>
             </Controls.filter:ViewContainer>
             <Controls.list:Container>
-                <Controls.list:View emptyTemplate="Не найдено">
-                    <ws:itemTemplate>
-                        <ws:partial template="Controls/list:ItemTemplate">
-                            <ws:contentTemplate>
-                                <span>{{itemTemplate.item.contents.get('owner')}}</span>
-                                <span class="controlsDemo-Filter__additionalText"> {{itemTemplate.item.contents.get('department')}}</span>
-                            </ws:contentTemplate>
-                        </ws:partial>
-                    </ws:itemTemplate>
-                </Controls.list:View>
+                <Controls.list:View emptyTemplate="Не найдено" />
             </Controls.list:Container>
         </div>
     </Controls.browser:Browser>
