@@ -8,7 +8,7 @@
       <ws:if data="{{_canShadowVisible.top}}">
          <!-- We use visibility style instead of "display: none;" statement to prevent jumps when scrolling on iPad -->
          <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
-                  {{ !_isTopShadowVisible ? ' ws-invisible' }}"
+                  {{ !_isTopShadowVisible ? ' ws-invisible' }}" data-qa="StickyHeader__shadow-top"
          ></div>
       </ws:if>
 
@@ -19,7 +19,8 @@
                   scope="{{_options}}"
                   isHeaderFixed="{{_isStickyShadowVisible}}"
                   on:arrowClick="_notifyHandler('arrowClick')"
-                  on:controlResize="_selfResizeHandler()"/>
+                  on:controlResize="_selfResizeHandler()"
+                  attr:data-qa="StickyHeader__content"/>
       <div name="observationTargetBottomLeft" class="controls-StickyHeader__observationTargetBottomLeft" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
       <div name="observationTargetBottomRight" class="controls-StickyHeader__observationTargetBottomRight" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
 
@@ -29,7 +30,7 @@
          <!-- Проблема возникает например если свернуть последнюю группировку. -->
          <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
                   {{ !_isBottomShadowVisible ? (_isMobileIOS ? ' ws-invisible' : ' ws-hidden') }}"
-              name="shadowBottom"></div>
+              name="shadowBottom" data-qa="StickyHeader__shadow-bottom"></div>
       </ws:if>
    </div>
 </ws:if>

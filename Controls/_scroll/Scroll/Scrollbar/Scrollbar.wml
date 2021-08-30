@@ -9,7 +9,8 @@
          controls-VScrollbar_horizontal-track_size-{{_thumbThickness}}"
      on:wheel="_wheelHandler()"
      on:mousedown="_scrollbarMouseDownHandler()"
-     on:touchstart="_scrollbarTouchStartHandler()">
+     on:touchstart="_scrollbarTouchStartHandler()"
+     data-qa="VScrollbar_{{_options.direction}}">
    <Controls.dragnDrop:Container name="dragNDrop" resetTextSelection="{{false}}" on:dragstart="_scrollbarStartDragHandler()" on:dragmove="_scrollbarOnDragHandler()" on:documentdragend="_scrollbarEndDragHandler()">
       <div name="thumb" class="controls-VScrollbar__thumbWrapper controls-VScrollbar__thumbWrapper_size-{{_thumbThickness}}
       controls-VScrollbar__thumbWrapper_{{_options.direction}}"
@@ -22,6 +23,7 @@
                      controls-VScrollbar__thumb_{{_options.direction}}
                      controls-VScrollbar__thumb_{{_options.direction}}_size-{{_thumbThickness}}
                      {{_dragging ? 'controls-VScrollbar__thumb_dragging_size-' + _thumbThickness + ' controls-VScrollbar__thumb_dragging_' + _thumbStyle}}"
+                     data-qa="VScrollbar__thumb"
          ></div>
       </div>
    </Controls.dragnDrop:Container>
