@@ -138,6 +138,13 @@ export interface IMenuOptions {
       * @demo Controls-demo/Toolbar/Translucent/Index
       */
      translucent?: boolean;
+     /**
+      * @name Controls/toolbars:IToolbar#menuButtonViewMode
+      * @cfg {IViewMode} Стиль отображения кнопки открытия выпадающего меню тулбара
+      * @default toolButton
+      * @demo Controls-demo/Toolbar/MenuButtonViewMode/Index
+      */
+     menuButtonViewMode?: IViewMode;
 }
 
 /**
@@ -681,7 +688,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             itemTemplate: defaultItemTemplate,
             iconStyle: 'secondary',
             translucent: false,
-            closeMenuOnOutsideClick: true
+            closeMenuOnOutsideClick: true,
+            menuButtonViewMode: 'toolButton'
         };
     }
 
