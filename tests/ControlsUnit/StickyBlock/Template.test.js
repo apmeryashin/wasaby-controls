@@ -223,7 +223,7 @@ define(
 
             it('The header is fixed, but there should be no shadow', function() {
                inst._scrollState.verticalPosition = 'end';
-               inst._isFixed = true;
+               inst._isStickyShadowVisible = true;
                inst._isShadowVisibleByController = {
                   top: StickyHeaderUtils.SHADOW_VISIBILITY_BY_CONTROLLER.auto,
                   bottom: StickyHeaderUtils.SHADOW_VISIBILITY_BY_CONTROLLER.auto
@@ -252,7 +252,7 @@ define(
 
             it('The header is fixed, the shadow should be', function() {
                inst._scrollState.verticalPosition = 'start';
-               inst._isFixed = true;
+               inst._isStickyShadowVisible = true;
                inst._isShadowVisibleByController = {
                   top: StickyHeaderUtils.SHADOW_VISIBILITY_BY_CONTROLLER.auto,
                   bottom: StickyHeaderUtils.SHADOW_VISIBILITY_BY_CONTROLLER.auto
