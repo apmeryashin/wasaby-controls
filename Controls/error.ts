@@ -8,40 +8,35 @@
  */
 
 import {
-    Handler as ParkingHandler,
-    ViewConfig as ParkingViewConfig
-} from './_error/_parking/Handler';
-import ParkingController, {
-    loadHandlers,
-    IParkingControllerOptions
-} from './_error/_parking/Controller';
-
-import {
-    Handler,
-    ViewConfig,
-    HandlerConfig
-} from './_error/Handler';
-import Controller, { Config } from './_error/Controller';
-import Mode from './_error/Mode';
+    ErrorHandler,
+    ErrorViewConfig,
+    IErrorHandlerConfig,
+    ErrorType,
+    ErrorViewMode,
+    IErrorControllerOptions
+} from './_error/interface';
+import ErrorController from './_error/Controller';
 import process, { IProcessOptions } from './_error/process';
 import Popup, { IPopupHelper } from './_error/Popup';
 import DialogOpener from './_error/DialogOpener';
 
+// TODO удалить совместимость после перевода всех на новые имена
 export {
-    Config,
-    Controller,
+    ErrorType,
+    ErrorController,
+    ErrorController as Controller, // для совместимости
     DialogOpener,
-    Handler,
-    HandlerConfig,
-    IParkingControllerOptions,
+    ErrorHandler,
+    ErrorHandler as Handler, // для совместимости
+    IErrorControllerOptions,
+    IErrorHandlerConfig,
+    IErrorHandlerConfig as HandlerConfig, // для совместимости
     IPopupHelper,
     IProcessOptions,
-    loadHandlers,
-    Mode,
-    ParkingHandler,
-    ParkingViewConfig,
-    ParkingController,
+    ErrorViewMode,
+    ErrorViewMode as Mode, // для совместимости
     Popup,
     process,
-    ViewConfig
+    ErrorViewConfig as ViewConfig, // для совместимости
+    ErrorViewConfig
 };

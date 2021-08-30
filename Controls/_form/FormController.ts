@@ -3,11 +3,9 @@ import { TemplateFunction } from 'UI/Base';
 import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
 import { error as dataSourceError } from 'Controls/dataSource';
-import { IContainerConstructor } from 'Controls/_dataSource/error';
+import { ErrorViewMode, ErrorViewConfig, ErrorController, DialogOpener } from 'Controls/error';
 import { Model } from 'Types/entity';
 import {CRUD_EVENTS, default as CrudController, ICrudConfig} from 'Controls/_form/CrudController';
-import { DialogOpener } from 'Controls/error';
-import { Mode } from 'Controls/error';
 import ControllerBase from 'Controls/_form/ControllerBase';
 import {default as IFormController} from 'Controls/_form/interface/IFormController';
 import * as rk from 'i18n!Controls';
@@ -15,7 +13,7 @@ import {IUpdateConfig} from 'Controls/_form/interface/IControllerBase';
 
 interface IReceivedState {
     data?: Model;
-    errorConfig?: dataSourceError.ViewConfig;
+    errorConfig?: ErrorViewConfig;
 }
 
 interface ICrudResult extends IReceivedState {
@@ -70,7 +68,6 @@ export const enum INITIALIZING_WAY {
  * @extends Controls/form:ControllerBase
  * @implements Controls/interface:ISource
  * @implements Controls/form:IFormController
- * @implements Controls/interface:IErrorController
  * @public
  * @author Красильников А.С.
  *
@@ -84,7 +81,6 @@ export const enum INITIALIZING_WAY {
  * @extends Controls/form:ControllerBase
  * @implements Controls/interface:ISource
  * @implements Controls/form:IFormController
- * @implements Controls/interface:IErrorController
  * @demo Controls-demo/Popup/Edit/Opener
  *
  * @public
@@ -93,17 +89,17 @@ export const enum INITIALIZING_WAY {
 
 class FormController extends ControllerBase<IFormController> {
     protected _template: TemplateFunction = tmpl;
-    protected _errorContainer: IContainerConstructor = dataSourceError.Container;
+    protected _errorContainer: dataSourceError.IContainerConstructor = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
-    private _errorController: dataSourceError.Controller;
+    private _errorController: ErrorController;
     private _createdInMounting: IConfigInMounting;
     private _isMount: boolean;
     private _readInMounting: IConfigInMounting;
     private _wasCreated: boolean;
     private _wasRead: boolean;
     private _wasDestroyed: boolean;
-    private _error: dataSourceError.ViewConfig;
+    private _error: ErrorViewConfig;
     private _crudController: CrudController = null;
     private _dialogOpener: DialogOpener;
     private _updatePromise: Promise<unknown>;
@@ -113,7 +109,7 @@ class FormController extends ControllerBase<IFormController> {
         context?: object,
         receivedState: IReceivedState = {}
     ): Promise<ICrudResult> | void {
-        this._errorController = options.errorController || new dataSourceError.Controller({});
+        this._errorController = options.errorController || new ErrorController({});
         this._crudController = new CrudController(options.source, this._notifyHandler.bind(this),
             this.registerPendingNotifier.bind(this));
         const receivedError = receivedState.errorConfig;
@@ -493,7 +489,7 @@ class FormController extends ControllerBase<IFormController> {
                     return arg;
                 }).catch((error: Error) => {
                     updateDef.errback(error);
-                    return this.processError(error, dataSourceError.Mode.dialog);
+                    return this.processError(error, ErrorViewMode.dialog);
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
@@ -519,19 +515,19 @@ class FormController extends ControllerBase<IFormController> {
             this._forceUpdate();
             return record;
         }, (error) => {
-            return this._crudErrback(error, dataSourceError.Mode.dialog);
+            return this._crudErrback(error, ErrorViewMode.dialog);
         });
     }
 
     /**
      *
      * @param {Error} error
-     * @param {Controls/_dataSource/_error/Mode} [mode]
+     * @param {Controls/_dataSource/_error/ErrorViewMode} [ErrorViewMode]
      * @return {Promise<*>}
      * @private
      */
-    private _crudErrback(error: Error, mode: dataSourceError.Mode): Promise<undefined | Model> {
-        return this.processError(error, mode).then(this._getData);
+    private _crudErrback(error: Error, ErrorViewMode: ErrorViewMode): Promise<undefined | Model> {
+        return this.processError(error, ErrorViewMode).then(this._getData);
     }
 
     private _updateIsNewRecord(value: boolean): void {
@@ -545,15 +541,15 @@ class FormController extends ControllerBase<IFormController> {
      * Обработка ошибки возникшей при чтении/создании записи.
      * Нужно использовать, если вы каким-либо образом самостоятельно получаете запись и получаете ошибку от сервера.
      * @param {Error} error
-     * @param {Controls/_dataSource/_error/Mode} [mode]
+     * @param {Controls/_dataSource/_error/ErrorViewMode} [ErrorViewMode]
      * @return {Promise.<CrudResult>}
      */
-    processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
+    processError(error: Error, ErrorViewMode?: ErrorViewMode): Promise<ICrudResult> {
         return this._errorController.process({
             error,
             theme: this._options.theme,
-            mode: mode || dataSourceError.Mode.include
-        }).then((errorConfig: dataSourceError.ViewConfig) => {
+            ErrorViewMode: ErrorViewMode || ErrorViewMode.include
+        }).then((errorConfig: ErrorViewConfig) => {
             if (errorConfig) {
                 this._showError(errorConfig);
             }
@@ -568,8 +564,8 @@ class FormController extends ControllerBase<IFormController> {
     /**
      * @private
      */
-    private _showError(errorConfig: dataSourceError.ViewConfig): void {
-        if (errorConfig.mode !== Mode.dialog) {
+    private _showError(errorConfig: ErrorViewConfig): void {
+        if (errorConfig.ErrorViewMode !== ErrorViewMode.dialog) {
             this._error = errorConfig;
             return;
         }
