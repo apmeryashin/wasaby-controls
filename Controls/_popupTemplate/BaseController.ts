@@ -10,11 +10,12 @@ import * as cMerge from 'Core/core-merge';
 import * as cInstance from 'Core/core-instance';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
+export const RIGHT_PANEL_WIDTH = 54;
+
 export const getRightPanelWidth = () => {
     // Вычисляем значение при вызове. Если делать при загрузке модуля,
     // то тема в контроллеры проставиться не успеет и результат будет неверный
-    const rightPanelWidth = 54;
-    return ManagerController.hasRightPanel() ? rightPanelWidth : 0; // --width_stack-right_panel + borders
+    return ManagerController.hasRightPanel() ? RIGHT_PANEL_WIDTH : 0; // --width_stack-right_panel + borders
 };
 let _fakeDiv: HTMLElement;
 /**
