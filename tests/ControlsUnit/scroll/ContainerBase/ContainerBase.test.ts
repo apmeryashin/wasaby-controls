@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import {fake, assert as sinonAssert} from 'sinon';
 
+import {Logger} from 'UICommon/Utils';
 import {_ContainerBase as ContainerBase} from 'Controls/scroll';
 import {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
@@ -795,4 +796,30 @@ describe('Controls/scroll:ContainerBase', () => {
       })
    });
 
+   describe('_logScrollPosition', () => {
+      it('не логирует положение скролла если логирование выключено', () => {
+         const control: ContainerBase = new ContainerBase(options);
+         sinon.stub(Logger, 'warn');
+
+         control._logScrollPosition(10, 10);
+
+         sinonAssert.notCalled(Logger.warn);
+         sinon.restore();
+      });
+
+      it('логирует положение скролла если логирование включено', () => {
+         const control: ContainerBase = new ContainerBase(options);
+         ContainerBase.setDebug(true);
+
+         sinon.stub(Logger, 'warn');
+
+         control._logScrollPosition(10, 10);
+
+         sinonAssert.calledWith(
+             Logger.warn,
+             'Controls/scroll:ContainerBase: изменение положения скролла. ' +
+             'По вертикали: новое 10, старое 0. По горизонтали: новое 10, старое 0.');
+         sinon.restore();
+      });
+   });
 });
