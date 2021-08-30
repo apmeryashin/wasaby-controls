@@ -448,6 +448,35 @@ define([
             FC.destroy();
          });
       });
+      it('FormController update with updateMetaData options', (done) => {
+         let FC = new form.Controller();
+         let validation = {
+            submit: () => Promise.resolve(true)
+         };
+         FC._record = {
+            getKey: () => 'id1',
+            isChanged: () => true
+         };
+         const updateMetaData = {someField: 'someValue'};
+         let dataSource = {
+            update: (record, updateMeta) => {
+               assert.deepEqual(updateMeta, updateMetaData);
+               return new Deferred().callback('key');
+            }
+         };
+         FC.saveOptions({ updateMetaData });
+         FC._children = { validation };
+         FC._processError = () => {};
+         FC._forceUpdate = () => {
+            setTimeout(FC._afterUpdate.bind(FC));
+         };
+         FC._crudController = new CrudController.default(dataSource,
+            FC._notifyHandler.bind(FC), FC.registerPendingNotifier.bind(FC), FC.indicatorNotifier.bind(FC));
+         FC.update().then(() => {
+            done();
+            FC.destroy();
+         });
+      });
 
       it('beforeUnmount', () => {
          let isDestroyCall = false;
