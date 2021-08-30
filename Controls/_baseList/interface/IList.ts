@@ -210,6 +210,16 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
+ * @name Controls/_list/interface/IList#multiSelectTemplate
+ * @cfg {TemplateFunction|String} Пользовательский шаблон множественного выбора.
+ * @demo Controls-demo/list_new/Multiselect/CircleTemplate/Index
+ * @description
+ * Доступны следующие платформенные шаблоны множественного выбора:
+ * 1. Controls/list:MultiSelectTemplate - множественный выбор при помощи чекбоксов (по умолчанию)
+ * 2. Controls/list:MultiSelectCircleTemplate - множественный выбор при помощи radiobutton
+ */
+
+/**
  * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {String} Видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбоксов}.
  * @variant visible Показать.
