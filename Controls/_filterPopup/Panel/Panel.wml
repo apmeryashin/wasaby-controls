@@ -58,7 +58,7 @@
             </ws:if>
             <div class="controls-FilterPanel__header__buttons">
                <ws:if data="{{_hasResetValue && _isChanged}}">
-                  <Controls.buttons:Button class="controls-FilterPanel__resetButton"
+                  <Controls.buttons:Button attr:class="controls-FilterPanel__resetButton"
                                            on:click="_resetFilter()"
                                            viewMode="link"
                                            name="resetButton"
@@ -67,7 +67,7 @@
                                            inlineHeight="m"
                                            caption="{[По умолчанию]}"
                                            tooltip="{[По умолчанию]}"
-                                           data-qa="FilterPanel__resetButton" />
+                                           attr:data-qa="FilterPanel__resetButton" />
                </ws:if>
                <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
                                         attr:tabindex="1"

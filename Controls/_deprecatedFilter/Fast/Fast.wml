@@ -3,7 +3,7 @@
       <ws:if data="{{_configs[index]._items && _configs[index]._items.getCount()}}">
          <div class="controls-FastFilter__wrapper
                      controls-FastFilter__wrapper_state{{_options.readOnly ? 'readOnly' : 'enabled'}}
-                     {{ _needShowCross(item) ? 'controls-FastFilter__wrapper-changed'}}" daya-qa="FastFilter__wrapper">
+                     {{ _needShowCross(item) ? 'controls-FastFilter__wrapper-changed'}}" data-qa="FastFilter__wrapper">
             <div class="controls-FastFilter__block" on:click="_open(item, index)">
                <div class="controls-FastFilter__iconArrow icon-DayForward controls-FastFilter__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}"></div>
                <div class="controls-FastFilter__text-wrapper controls-FastFilter__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}"
