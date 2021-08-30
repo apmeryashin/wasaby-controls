@@ -36,7 +36,8 @@ import {
     IBaseSourceConfig,
     Direction,
     ISelectionObject,
-    TNavigationButtonView
+    TNavigationButtonView,
+    ISourceOptions
 } from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 import { process } from 'Controls/error';
@@ -1330,11 +1331,10 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET) {
+                self._updateIndicatorsController();
+
                 self._indicatorsController.onCollectionReset(!!self._options.searchValue);
 
-                // перезагрузили список, нужно пересчитать hasMore
-
-                self._updateIndicatorsController();
                 if (self._options.searchValue) {
                     _private.tryLoadToDirectionAgain(self);
                 }
@@ -2891,7 +2891,7 @@ const _private = {
  * @author Авраменко А.С.
  */
 
-export interface IBaseControlOptions extends IControlOptions, IItemActionsOptions {
+export interface IBaseControlOptions extends IControlOptions, ISourceOptions, IItemActionsOptions {
     keyProperty: string;
     viewModelConstructor: string;
     navigation?: INavigationOptionValue<INavigationSourceConfig>;
@@ -6226,7 +6226,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController = new IndicatorsController(this._getIndicatorsControllerOptions(options));
     }
 
-    private _updateIndicatorsController(newOptions?: IBaseControlOptions) {
+    private _updateIndicatorsController(newOptions?: IBaseControlOptions): void {
         const options = newOptions || this._options;
         const controllerOptions = this._getIndicatorsControllerOptions(options);
         const changedResetTrigger = this._indicatorsController.updateOptions(controllerOptions);
