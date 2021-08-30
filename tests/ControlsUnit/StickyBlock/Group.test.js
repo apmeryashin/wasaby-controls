@@ -90,7 +90,7 @@ define([
             component._fixedHandler(event,
                {fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
-            assert.isTrue(component._isFixed);
+            assert.isTrue(component._isShadowVisible);
             assert.isTrue(component._fixed);
 
             sinon.assert.calledWith(
@@ -126,7 +126,7 @@ define([
             sinon.stub(component, '_notify');
             component._headers = {};
             component._headers[headerId] = {
-              inst: { updateFixed: () => undefined }
+              inst: { updateShadowVisible: () => undefined }
             };
             component._fixedHandler(event,
                {
@@ -185,7 +185,7 @@ define([
 
             component._headers = {};
             component._headers[headerId] = {
-              inst: { updateFixed: () => undefined }
+              inst: { updateShadowVisible: () => undefined }
             };
 
             component._fixedHandler(event,
@@ -204,11 +204,11 @@ define([
                component = createComponent(scroll.Group, options),
                firstHeaderId = scroll.getNextStickyId(),
                secondHeaderId = scroll.getNextStickyId(),
-               updateFixed = sinon.fake();
+                updateShadowVisible = sinon.fake();
 
             component._headers = {};
             component._headers[secondHeaderId] = {
-              inst: { updateFixed: updateFixed }
+              inst: { updateShadowVisible: updateShadowVisible }
             };
 
             component._fixedHandler(event,
@@ -217,20 +217,20 @@ define([
             component._fixedHandler(event,
                {fixedPosition: 'top', prevPosition: '', id: secondHeaderId, mode: 'replaceable', offsetHeight: 10});
 
-            sinon.assert.called(updateFixed);
+            sinon.assert.called(updateShadowVisible);
             sinon.restore();
          });
       });
 
-      describe('updateFixed', function() {
+      describe('updateShadowVisible', function() {
          it('should update children headers if the header identifier is equal to the current one', function() {
             const
                component = createComponent(scroll.Group, options);
 
-            sinon.stub(component, '_updateFixed');
+            sinon.stub(component, '_updateShadowVisible');
 
-            component.updateFixed([component._index]);
-            sinon.assert.called(component._updateFixed);
+            component.updateShadowVisible([component._index]);
+            sinon.assert.called(component._updateShadowVisible);
             sinon.restore();
          });
 
@@ -238,10 +238,10 @@ define([
             const
                component = createComponent(scroll.Group, options);
 
-            sinon.stub(component, '_updateFixed');
+            sinon.stub(component, '_updateShadowVisible');
 
-            component.updateFixed([component._index + 1]);
-            sinon.assert.notCalled(component._updateFixed);
+            component.updateShadowVisible([component._index + 1]);
+            sinon.assert.notCalled(component._updateShadowVisible);
             sinon.restore();
          });
       });
@@ -329,7 +329,7 @@ define([
             inst: {
                _container: {},
                setSyncDomOptimization: () => {},
-               updateFixed: () => {},
+               updateShadowVisible: () => {},
                updateShadowVisibility: () => {}
             },
             position: 'top'
@@ -385,9 +385,9 @@ define([
 
          it('should update fixed property on sticky header if group is fixed and isShadowVisibleByController !== hidden', function() {
             const component = createComponent(scroll.Group, options);
-            component._isFixed = true;
+            component._isShadowVisible = true;
             sinon.stub(component, '_notify');
-            const stubUpdateFixed = sinon.stub(data.inst, 'updateFixed');
+            const stubUpdateFixed = sinon.stub(data.inst, 'updateShadowVisible');
 
             component._stickyRegisterHandler(event, data, true);
 
