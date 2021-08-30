@@ -83,14 +83,28 @@ export default class IndicatorsController {
     }
 
     updateOptions(options: IIndicatorsControllerOptions): boolean {
-        const shouldRecountAllIndicators = options.items && this._options.items !== options.items;
+        const shouldRecountAllIndicators = options.items && this._options.items !== options.items ||
+            this._options.isInfinityNavigation !== options.isInfinityNavigation ||
+            this._options.shouldShowEmptyTemplate !== options.shouldShowEmptyTemplate;
+        const shouldRecountBottomIndicator = !shouldRecountAllIndicators &&
+            this._options.hasMoreDataToBottom !== options.hasMoreDataToBottom;
+        const shouldRecountTopIndicator = !shouldRecountAllIndicators &&
+            this._options.hasMoreDataToTop !== options.hasMoreDataToTop;
 
         this._options = options;
         this._model = options.model;
 
         let changedResetTrigger = false;
         if (shouldRecountAllIndicators) {
-            changedResetTrigger = this.recountIndicators('all', true)
+            changedResetTrigger = this.recountIndicators('all', true);
+        }
+        if (shouldRecountTopIndicator) {
+            const changedResetTriggerByTop = this.recountIndicators('up', false);
+            changedResetTrigger = changedResetTrigger || changedResetTriggerByTop;
+        }
+        if (shouldRecountBottomIndicator) {
+            const changedResetTriggerByBottom = this.recountIndicators('down', false);
+            changedResetTrigger = changedResetTrigger || changedResetTriggerByBottom;
         }
         return changedResetTrigger;
     }
