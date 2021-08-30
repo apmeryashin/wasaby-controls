@@ -13,6 +13,6 @@ Object.assign(Move.prototype, {
     title: rk('Переместить'),
     icon: 'icon-Move',
     iconStyle: 'secondary',
-    commandName: 'Controls/listActions:Move',
+    commandName: 'Controls/listCommands:Move',
     viewCommandName: 'Controls/viewCommands:PartialReload'
 });

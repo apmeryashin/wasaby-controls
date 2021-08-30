@@ -1,4 +1,4 @@
-import {ICommand} from 'Controls/listActions';
+import {ICommand} from 'Controls/listCommands';
 import {IExecuteCommandParams} from 'Controls/operations';
 
 export interface IOptions extends IExecuteCommandParams {
