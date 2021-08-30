@@ -69,6 +69,7 @@ export default interface IRichTemplateOptions {
     /**
      * @typedef {String} ImagePosition
      * @variant top Изображение отображается сверху.
+     * @variant bottom Изображение отображается снизу.
      * @variant left Изображение отображается слева.
      * @variant right Изображение отображается справа.
      */
