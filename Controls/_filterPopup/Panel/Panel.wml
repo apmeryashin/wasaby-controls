@@ -66,12 +66,14 @@
                                            tabindex="-1"
                                            inlineHeight="m"
                                            caption="{[По умолчанию]}"
-                                           tooltip="{[По умолчанию]}" />
+                                           tooltip="{[По умолчанию]}"
+                                           data-qa="FilterPanel__resetButton" />
                </ws:if>
                <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
                                         attr:tabindex="1"
                                         attr:ws-autofocus="true"
-                                        attr:class="controls-FilterPanel__filterButton"/>
+                                        attr:class="controls-FilterPanel__filterButton"
+                                        attr:data-qa="FilterPanel__filterButton"/>
             </div>
          </ws:headerContentTemplate>
          <ws:bodyContentTemplate>

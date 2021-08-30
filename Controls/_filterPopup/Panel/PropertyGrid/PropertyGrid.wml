@@ -9,7 +9,7 @@
                      item="{{item}}"/>
                <ws:content>
                   <div class="controls-FilterPanel__PropertyGrid__item
-                              {{index === _lastVisibleIndex ? 'controls-FilterPanel__PropertyGrid__lastItem' : 'controls-FilterPanel__PropertyGrid__notLastItem'}}">
+                              {{index === _lastVisibleIndex ? 'controls-FilterPanel__PropertyGrid__lastItem' : 'controls-FilterPanel__PropertyGrid__notLastItem'}}" data-qa="FilterPanel__PropertyGrid__item">
                      <ws:partial template="{{content.resolvedTemplate}}"
                                  item="{{content.item}}"
                                  templateOptions="{{_options.itemTemplate.templateOptions}}"
@@ -25,7 +25,7 @@
          </ws:if>
          <ws:else>
             <div class="controls-FilterPanel__PropertyGrid__item
-                           {{index === _lastVisibleIndex ? 'controls-FilterPanel__PropertyGrid__lastItem' : 'controls-FilterPanel__PropertyGrid__notLastItem'}}">
+                           {{index === _lastVisibleIndex ? 'controls-FilterPanel__PropertyGrid__lastItem' : 'controls-FilterPanel__PropertyGrid__notLastItem'}}" data-qa="FilterPanel__PropertyGrid__item">
                <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
                            item="{{item}}"
                            templateOptions="{{_options.itemTemplate.templateOptions}}"

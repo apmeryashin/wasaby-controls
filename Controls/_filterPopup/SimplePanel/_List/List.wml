@@ -44,7 +44,8 @@
                                fontColorStyle="link"
                                caption="{[Еще]}..."
                                on:click="_openSelectorDialog()"
-                               afterOpenCallback="{{_afterOpenDialogCallback}}"/>
+                               afterOpenCallback="{{_afterOpenDialogCallback}}"
+                               data-qa="SimplePanel-List__hasMoreButton"/>
    </ws:if>
    <ws:if data="{{!_options.isLast && _options.showSeparator !== false}}">
       <div class="controls-SimplePanel__block_separator"></div>
