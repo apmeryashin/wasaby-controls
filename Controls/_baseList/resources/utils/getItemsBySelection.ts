@@ -5,7 +5,7 @@ import {ISelectionObject, TSelectionType, TSelectionRecord} from 'Controls/inter
 import * as cClone from 'Core/core-clone';
 import * as Deferred from 'Core/Deferred' ;
 import * as operations from 'Controls/operations';
-import { error as errorLib } from 'Controls/dataSource';
+import {process} from 'Controls/error';
 import {RecordSet} from 'Types/collection';
 
 function selectionToRecord(selection: ISelectionObject, adapter: adapter.IAdapter,
@@ -94,7 +94,7 @@ export function getItemsBySelection(
             return curItem.getId();
         });
     }).addErrback((error) => {
-        return errorLib.process({ error }).then(() => []);
+        return process({ error }).then(() => []);
     });
     return result;
 

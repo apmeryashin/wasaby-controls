@@ -7,7 +7,7 @@ import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import rk = require('i18n!Controls');
-import {error as dataSourceError} from 'Controls/dataSource';
+import {process} from 'Controls/error';
 import * as Constants from './Constants';
 import {default as Service} from './Service';
 
@@ -418,7 +418,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
             }
             this._$historySource.saveHistory(this._$historySource.getHistoryIdForStorage(), this._$history);
         }, (error) => {
-            dataSourceError.process({error});
+            process({error});
         });
     }
 

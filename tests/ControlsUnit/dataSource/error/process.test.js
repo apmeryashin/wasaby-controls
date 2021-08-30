@@ -38,19 +38,6 @@ define([
          assert.strictEqual(process, errorProcess);
       });
 
-      it('does nothing for unknown error', () => {
-         const message = 'test message';
-         const error = new Error(message);
-         return process({
-            error,
-            _popupHelper
-         }).then((result) => {
-            assert.isUndefined(result, 'returns undefined');
-            assert.isFalse(_popupHelper.openConfirmation.calledOnceWith({ message }), 'openConfirmation called');
-            assert.isNotOk(_popupHelper.openDialog.called, 'openDialog was not called');
-         });
-      });
-
       it('returns popupId', () => {
          const opener = {};
          const dialogEventHandlers = {};
@@ -86,7 +73,7 @@ define([
             assert.isTrue(_popupHelper.openDialog.calledOnce, 'openDialog called');
 
             const args = _popupHelper.openDialog.getCall(0).args[0];
-            assert.include(args, viewConfig, 'openDialog called with viewConfig');
+            assert.deepEqual(args, viewConfig, 'openDialog called with viewConfig');
             assert.strictEqual(result, popupId, 'returns popupId');
          });
       });
@@ -106,7 +93,7 @@ define([
             assert.isTrue(_popupHelper.openDialog.calledOnce, 'openDialog called');
 
             const args = _popupHelper.openDialog.getCall(0).args[0];
-            assert.include(args, viewConfig, 'openDialog called with viewConfig');
+            assert.deepEqual(args, viewConfig, 'openDialog called with viewConfig');
             assert.strictEqual(result, popupId, 'returns popupId');
          });
       });
@@ -159,7 +146,7 @@ define([
             const msg = logger.error.getCall(0).args[0];
             assert.isString(msg, 'error message');
             assert(msg.startsWith(
-               'Error: Controls/dataSource:error.process is being called during server-side rendering!\n' +
+               'Error: Controls/error:process is being called during server-side rendering!\n' +
                'Use Controls/dataSource:error.Container to render an error.\n' +
                'Error config:\n' +
                '{\n' +

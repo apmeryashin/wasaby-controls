@@ -3,7 +3,7 @@ import template = require('wml!Controls/_popup/Previewer/PreviewerTemplate');
 import 'Controls/Container/Async';
 import {load} from 'Core/library';
 import {constants} from 'Env/Env';
-import { error as errorLib } from 'Controls/dataSource';
+import {process} from 'Controls/error';
 
 /**
  * @class Controls/_popup/Previewer/PreviewerTemplate
@@ -20,7 +20,7 @@ class PreviewerTemplate extends Control<IPreviewerOptions> {
 
     protected _beforeMount(options: IPreviewerOptions): void|Promise<void> {
         if (constants.isBrowserPlatform && this._needRequireModule(options.template)) {
-            return load(options.template).catch((error) => errorLib.process({ error }));
+            return load(options.template).catch((error) => process({ error }));
         }
     }
 
