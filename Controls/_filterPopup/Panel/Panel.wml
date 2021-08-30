@@ -63,7 +63,7 @@
                                            viewMode="link"
                                            name="resetButton"
                                            fontColorStyle="filterResetButton"
-                                           tabindex="-1"
+                                           attr:tabindex="-1"
                                            inlineHeight="m"
                                            caption="{[По умолчанию]}"
                                            tooltip="{[По умолчанию]}"
