@@ -5828,9 +5828,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._dragEnter(this._getDragObject());
         }
 
-        if (this._indicatorsController.shouldDisplayTopIndicator()) {
-            this._indicatorsController.displayTopIndicator(true);
-        }
+        // нужно всегда вызывать пересчет верхнего индикатора, он покажется только если нужен,
+        // но вместе с ним пересчитается и верхний триггер.
+        this._recountIndicators('up', true);
 
         if (!this._pagingVisible) {
             _private.initPaging(this);
