@@ -8,9 +8,9 @@ import IItemTemplateOptions from 'Controls/_baseList/interface/ItemTemplate';
 /**
  * Структура объекта конфигурации компонента {@link Controls/breadcrumbs:PathButton}
  *
- * @implements Controls/interface#ISource
- * @implements Controls/interface#IHierarchy
- * @implements Controls/interface#IFilter
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IFilter
  *
  * @ignoreOptions dataLoadCallback
  * @ignoreOptions dataLoadErrback
