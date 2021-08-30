@@ -45,6 +45,7 @@ export {
     TKeySelection,
     TKeysSelection
 } from './_interface/ISelectionType';
+export {IRoundBorder, TRoundBorderSize} from './_interface/IRoundBorder';
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions, TFilter} from './_interface/IFilter';

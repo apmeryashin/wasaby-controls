@@ -2,6 +2,7 @@ import { DestroyableMixin, Model, ObservableMixin } from 'Types/entity';
 import {IEnumerable} from '../Abstract';
 import {IBaseCollection} from 'Controls/_display/interface';
 import {ICollectionItem} from 'Controls/_display/interface/ICollectionItem';
+import {IRoundBorder} from 'Controls/interface';
 
 export interface ISourceCollection<T extends Model = Model> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
     getCount(): number;
@@ -97,12 +98,7 @@ export enum ANIMATION_STATE {
  * @author Аверкиев П.А.
  */
 
-export type TRoundBorder = {
-    tl: string;
-    tr: string;
-    bl: string;
-    br: string;
-}
+export type TRoundBorder = IRoundBorder;
 
 export interface ICollection<S extends Model, T extends ICollectionItem> extends IBaseCollection<S, T> {
     getCollection(): ISourceCollection<S>;

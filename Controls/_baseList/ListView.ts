@@ -8,13 +8,14 @@ import * as GroupTemplate from 'wml!Controls/_baseList/GroupTemplate';
 import * as ListViewTpl from 'wml!Controls/_baseList/ListView/ListView';
 import * as defaultItemTemplate from 'wml!Controls/_baseList/ItemTemplate';
 import 'css!Controls/baseList';
-import {Collection, TRoundBorder} from 'Controls/display';
+import {Collection} from 'Controls/display';
+import {IRoundBorder} from 'Controls/interface';
 
 export interface IListViewOptions {
     listModel: Collection;
     theme: string;
     needShowEmptyTemplate: boolean;
-    roundBorder: TRoundBorder;
+    roundBorder: IRoundBorder;
 }
 
 const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
