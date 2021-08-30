@@ -1,0 +1,18 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">menuButtonViewMode=toolButton</div>
+        <Controls.toolbars:View
+                source="{{_buttonsSource}}"
+                keyProperty="id"
+                menuButtonViewMode="toolButton"
+        />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">menuButtonViewMode=link</div>
+        <Controls.toolbars:View
+                source="{{_buttonsSource}}"
+                on:itemClick="_itemClick()"
+                menuButtonViewMode="link"
+        />
+    </div>
+</div>
