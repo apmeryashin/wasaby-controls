@@ -1331,6 +1331,9 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET) {
+                // reset значит что произошла перезагрузка, поэтому мы должны обновить hasMore в контроллере
+                // И еще _beforeUpdate написан так, что событие reset на новой модели происходит раньше,
+                // чем обновление контроллеров
                 self._updateIndicatorsController();
 
                 self._indicatorsController.onCollectionReset(!!self._options.searchValue);
