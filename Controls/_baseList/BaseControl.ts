@@ -1331,11 +1331,6 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET) {
-                // reset значит что произошла перезагрузка, поэтому мы должны обновить hasMore в контроллере
-                // И еще _beforeUpdate написан так, что событие reset на новой модели происходит раньше,
-                // чем обновление контроллеров
-                self._updateIndicatorsController();
-
                 self._indicatorsController.onCollectionReset(!!self._options.searchValue);
 
                 if (self._options.searchValue) {
@@ -3720,6 +3715,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._updateScrollController(newOptions);
         }
 
+        // region Indicators
+
+        this._updateIndicatorsController(newOptions);
+
+        if (this._options.searchValue  && !newOptions.searchValue) {
+            this._indicatorsController.endPortionedSearch();
+        }
+
+        if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
+            this._displayGlobalIndicator();
+        }
+
+        // endregion Indicators
+
         if (_private.hasMarkerController(this) && this._listViewModel) {
             _private.getMarkerController(this).updateOptions({
                 model: this._listViewModel,
@@ -3873,19 +3882,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 collection: this._listViewModel
             });
         }
-
-        // region Indicators
-
-        this._updateIndicatorsController(newOptions);
-
-        if (this._options.searchValue  && !newOptions.searchValue) {
-            this._indicatorsController.endPortionedSearch();
-        }
-        if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
-            this._displayGlobalIndicator();
-        }
-
-        // endregion Indicators
 
         // После нажатии на enter или лупу в строке поиска, будут загружены данные и установлены в recordSet,
         // если при этом в списке кол-во записей было 0 (ноль) и поисковой запрос тоже вернул 0 записей,
