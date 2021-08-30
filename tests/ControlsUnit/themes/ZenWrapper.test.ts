@@ -46,10 +46,10 @@ describe('Controls/themes:ZenWrapper', () => {
         assert.equal('rgba(255,255,255,0.2)', result, 'Wrong calculated color');
 
         result = ZenWrapper.getMonochromeColorWithOpacity('light', '0.3');
-        assert.equal('rgba(255,255,255,0.3)', result, 'Wrong calculated color');
+        assert.equal('rgba(0,0,0,0.3)', result, 'Wrong calculated color');
 
         result = ZenWrapper.getMonochromeColorWithOpacity('light');
-        assert.equal('rgba(255,255,255,1)', result, 'Wrong calculated color');
+        assert.equal('rgba(0,0,0,1)', result, 'Wrong calculated color');
     });
 
     it('getColor', () => {
@@ -61,9 +61,9 @@ describe('Controls/themes:ZenWrapper', () => {
     it('getColorWithOpacity', () => {
         let result: string;
         result = ZenWrapper.getColor({ r: 45, g: 45, b: 45});
-        assert.equal('rgb(45,45,45,1)', result, 'Wrong calculated color');
+        assert.equal('rgb(45,45,45)', result, 'Wrong calculated color');
 
         result = ZenWrapper.getColorWithOpacity({ r: 45, g: 45, b: 45}, '0.2');
-        assert.equal('rgb(45,45,45,0.2)', result, 'Wrong calculated color');
+        assert.equal('rgba(45,45,45,0.2)', result, 'Wrong calculated color');
     });
 });

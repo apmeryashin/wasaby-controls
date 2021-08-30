@@ -1,6 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_themes/ZenWrapper/Template';
 import {IRgbColor} from 'Controls/_themes/interface/IColor';
+import 'css!Controls/themes';
 
 type TBrightness = 'dark' | 'light';
 
@@ -88,7 +89,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--pale_border-color': 'transparent',
             '--pale_hover_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
             '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
-            '--primary_hover_icon-color': brightness === 'light' ? '#fff' : '#000'
+            //'--primary_hover_icon-color': brightness === 'light' ? '#fff' : '#000'
         };
     }
 
