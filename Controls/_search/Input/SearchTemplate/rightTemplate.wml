@@ -8,7 +8,8 @@
                     controls-Search__resetButton_color icon-Close"
              on:click="_resetClick()"
              on:mousedown="_resetMousedown()"
-             attr:ws-no-focus="true"></div>
+             attr:ws-no-focus="true"
+             data-qa="Search__resetButton"></div>
     </ws:if>
 
     <ws:if data="{{options.rightFieldTemplate}}">
