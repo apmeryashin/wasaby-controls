@@ -504,12 +504,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _resultHandler(action, data, nativeEvent): void {
         if (action === 'itemClick' || action === 'rightTemplateClick') {
             const item = data;
-            this._notify(action, [item, nativeEvent]);
+            const notifyActionResult = this._notify(action, [item, nativeEvent]);
 
             /**
              * menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
              */
-            if (this._sticky.isOpened() && !item.get(this._nodeProperty)) {
+            if (this._sticky.isOpened() && !item.get(this._nodeProperty) && notifyActionResult !== false) {
                 this._sticky.close();
             }
         }
@@ -549,8 +549,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             });
         }
 
-        this._notify('itemClick', [item, event.nativeEvent]);
         event.stopPropagation();
+        return this._notify('itemClick', [item, event.nativeEvent]);
     }
 
     protected _getTemplateByItem(item: TItem): TemplateFunction {
