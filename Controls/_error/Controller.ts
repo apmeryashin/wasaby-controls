@@ -1,58 +1,75 @@
 import { Logger } from 'UI/Utils';
-import { IVersionable, PromiseCanceledError } from 'Types/entity';
+import { PromiseCanceledError } from 'Types/entity';
 import { constants } from 'Env/Env';
 import { fetch } from 'Browser/Transport';
-import ParkingController, { loadHandlers } from './_parking/Controller';
+import HandlerIterator from './HandlerIterator';
 import {
-    Handler,
-    HandlerConfig,
+    ErrorHandler,
+    IErrorHandlerConfig,
     ProcessedError,
-    ViewConfig
-} from './Handler';
-import Mode from './Mode';
-import Popup, { IPopupHelper } from './Popup';
+    ErrorViewConfig,
+    ErrorViewMode,
+    CanceledError
+} from './interface';
 
 /**
  * Параметры конструктора контроллера ошибок.
  * @public
  */
-export interface Config { // tslint:disable-line: interface-name
+export interface IControllerOptions {
     /**
      * Пользовательские обработчики ошибок.
      */
-    handlers?: Handler[];
+    handlers?: ErrorHandler[];
 
     /**
-     * @cfg {Controls/error:ViewConfig} Конфигурация для отображения ошибки по умолчанию.
+     * Пользовательские постобработчики ошибок.
+     */
+    postHandlers?: ErrorHandler[];
+
+    /**
+     * @cfg {Controls/error:ErrorViewConfig} Эта функция будет вызвана во время обработки ошибки.
+     * Она возвращает конфигурацию для отображения ошибки.
      * Эта конфигурация объединится с той, которую вернёт обработчик ошибки.
      */
-    viewConfig?: Partial<ViewConfig>;
+    onProcess?: OnProcessCallback;
 }
 
-type CanceledError = Error & { canceled?: boolean; };
+export type OnProcessCallback = (viewConfig: ErrorViewConfig) => ErrorViewConfig;
 
-let popupHelper: IPopupHelper;
-
-/**
- * Получить экземпляр IPopupHelper, который контроллер ошибок использует по умолчанию, если ему не передали другого.
- * @private
- */
-export function getPopupHelper(): IPopupHelper {
-    if (!popupHelper) {
-        popupHelper = new Popup();
+const getApplicationHandlers = (configProp: string): string[] => {
+    const handlers = constants.ApplicationConfig?.[configProp];
+    if (!Array.isArray(handlers)) {
+        Logger.info(`ApplicationConfig:${configProp} must be Array<Function>`);
+        return [];
     }
+    return handlers;
+};
 
-    return popupHelper;
+export interface IProcessConfig<TError extends ProcessedError = ProcessedError> {
+    /**
+     * Обрабатываемая ошибка.
+     */
+    error: TError;
+
+    /**
+     * Способ отображения ошибки (на всё окно / диалог / внутри компонента)
+     */
+    mode?: ErrorViewMode;
+
+    /**
+     * @name Controls/_dataSource/_error/IErrorHandlerConfig#theme
+     * @cfg {String} Тема для окон уведомлений, которые контроллер показывает, если не удалось распознать ошибку.
+     */
+    theme?: string;
 }
-
-/// endregion helpers
 
 /**
  * Класс для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
  * Передаёт ошибку по цепочке функций-обработчиков.
  * Обработчики предоставляются пользователем или берутся из настроек приложения.
  * @public
- * @author Северьянов А.А.
+ * @author Кашин О.А.
  * @example
  * <pre class="brush: js">
  * // TypeScript
@@ -81,24 +98,17 @@ export function getPopupHelper(): IPopupHelper {
  * </pre>
  */
 export default class ErrorController {
-    private _controller: ParkingController<ViewConfig>;
-    private _mode?: Mode;
+    private handlers: ErrorHandler[];
+    private postHandlers: ErrorHandler[];
+    private handlerIterator: HandlerIterator = new HandlerIterator();
+    private onProcess: OnProcessCallback;
 
-    /**
-     * @param options Параметры контроллера.
-     */
-    constructor(options: Config, private _popupHelper: IPopupHelper = getPopupHelper()) {
-        this._mode = options?.viewConfig?.mode;
-        this._controller = new ParkingController<ViewConfig>({
-            configField: ErrorController.CONFIG_FIELD,
-            ...options
-        });
-    }
-
-    destroy(): void {
-        this._controller.destroy();
-        delete this._controller;
-        delete this._popupHelper;
+    constructor(
+        options?: IControllerOptions
+    ) {
+        this.handlers = options?.handlers?.slice() || [];
+        this.postHandlers = options?.postHandlers?.slice() || [];
+        this.onProcess = options?.onProcess;
     }
 
     /**
@@ -106,8 +116,12 @@ export default class ErrorController {
      * @param handler Обработчик ошибки.
      * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
      */
-    addHandler(handler: Handler, isPostHandler?: boolean): void {
-        this._controller.addHandler(handler, isPostHandler);
+    addHandler(handler: ErrorHandler, isPostHandler?: boolean): void {
+        const handlers = isPostHandler ? this.postHandlers : this.handlers;
+
+        if (!handlers.includes(handler)) {
+            handlers.push(handler);
+        }
     }
 
     /**
@@ -115,8 +129,18 @@ export default class ErrorController {
      * @param handler Обработчик ошибки.
      * @param isPostHandler Был ли обработчик добавлен для выполнения после обработчиков уровня приложения.
      */
-    removeHandler(handler: Handler, isPostHandler?: boolean): void {
-        this._controller.removeHandler(handler, isPostHandler);
+    removeHandler(handler: ErrorHandler, isPostHandler?: boolean): void {
+        const deleteHandler = (hs: ErrorHandler[]) => hs.filter((h) => handler !== h);
+
+        if (isPostHandler) {
+            this.postHandlers = deleteHandler(this.postHandlers);
+        } else {
+            this.handlers = deleteHandler(this.handlers);
+        }
+    }
+
+    setOnProcess(onProcess?: OnProcessCallback): void {
+        this.onProcess = onProcess;
     }
 
     /**
@@ -128,114 +152,90 @@ export default class ErrorController {
      * @return Промис с данными для отображения сообщения об ошибке или промис без данных, если ошибка не распознана.
      */
     process<TError extends ProcessedError = ProcessedError>(
-        config: HandlerConfig<TError> | TError
-    ): Promise<ViewConfig | void> {
-        const _config = this._prepareConfig<TError>(config);
+        config: IProcessConfig<TError> | TError
+    ): Promise<ErrorViewConfig | void> {
+        const handlerConfig = ErrorController.getHandlerConfig<TError>(config);
+        const { error } = handlerConfig;
 
-        if (!ErrorController._isNeedHandle(_config.error)) {
+        if (!ErrorController.isNeedHandle(error)) {
             return Promise.resolve();
         }
 
-        return this._controller.process(_config).then((handlerResult: ViewConfig | void) => {
-            /**
-             * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
-             * Проверяем, обработана ли ошибка каким-то из контроллеров.
-             */
-            if (!ErrorController._isNeedHandle(_config.error)) {
-                return;
-            }
+        const handlers = [
+            ...this.handlers,
+            ...getApplicationHandlers(ErrorController.APP_CONFIG_PROP),
+            ...this.postHandlers
+        ];
 
-            if (!handlerResult) {
-                _config.error.processed = true;
-                return this._getDefault(_config);
-            }
+        return this.handlerIterator.getViewConfig(handlers, handlerConfig)
+            .then((handlerResult: ErrorViewConfig | void) => {
+                /**
+                 * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
+                 * Проверяем, обработана ли ошибка каким-то из контроллеров.
+                 */
+                if (!ErrorController.isNeedHandle(error)) {
+                    return;
+                }
 
-            /**
-             * Обработчик может вернуть флаг processed === false в том случае,
-             * когда он точно знает, что его ошибку нужно обработать всегда,
-             * даже если она была обработана ранее
-             */
-            _config.error.processed = handlerResult.processed !== false;
-            return {
-                status: handlerResult.status,
-                mode: handlerResult.mode || _config.mode,
-                template: handlerResult.template,
-                options: handlerResult.options,
-                ...ErrorController._getIVersion()
-            };
-        }).catch((error: PromiseCanceledError) => {
-            if (!error.isCanceled) {
-                Logger.error('Handler error', null, error);
-            }
-        });
+                const viewConfig = handlerResult || ErrorController.getDefaultViewConfig(error);
+
+                /**
+                 * Обработчик может вернуть флаг processed === false в том случае,
+                 * когда он точно знает, что его ошибку нужно обработать всегда,
+                 * даже если она была обработана ранее
+                 */
+                error.processed = viewConfig.processed !== false;
+
+                if (!(config instanceof Error) && config.mode) {
+                    viewConfig.mode = config.mode;
+                }
+
+                if (typeof this.onProcess === 'function') {
+                    return this.onProcess(viewConfig);
+                }
+
+                return viewConfig;
+            }).catch((err: PromiseCanceledError) => {
+                if (!err.isCanceled) {
+                    Logger.error('ErrorHandler error', null, err);
+                }
+            });
     }
 
-    private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
-        this._popupHelper.openConfirmation({
-            type: 'ok',
-            style: 'danger',
-            theme: config.theme,
-            message: config.error.message
-        });
+    // Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
+    private static readonly APP_CONFIG_PROP: string = 'errorHandlers';
+
+    private static getDefaultViewConfig({ message }: Error): ErrorViewConfig {
+        return {
+            mode: ErrorViewMode.dialog,
+            options: {
+                message
+            }
+        };
     }
 
-    private _prepareConfig<T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> {
-        const mode = this._mode || Mode.dialog;
-
+    private static getHandlerConfig<TError extends Error = Error>(
+        config: IProcessConfig<TError> | TError
+    ): IErrorHandlerConfig<TError> {
         if (config instanceof Error) {
             return {
                 error: config,
-                mode
+                mode: ErrorViewMode.dialog
             };
         }
 
-        const result = {
-            mode,
+        return {
+            mode: ErrorViewMode.dialog,
             ...config
         };
-
-        if (this._mode) {
-            result.mode = this._mode;
-        }
-
-        return result;
     }
 
-    /**
-     * Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
-     */
-    static readonly CONFIG_FIELD: string = 'errorHandlers';
-
-    private static _getIVersion(): Partial<IVersionable> {
-        if (constants.isServerSide) {
-            // При построении контролов на сервере мы не будем добавлять в конфиг
-            // функцию getVersion(), иначе конфиг не сможет нормально десериализоваться.
-            return {};
-        }
-
-        const id: number = Math.random();
-        /*
-         * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
-         * для дальнейшего его отображения через прокидывание параметра в Container
-         * в случа, когда два раза пришла одна и та же ошибка, а между ними стейт не менялся
-         */
-        return {
-            '[Types/_entity/IVersionable]': true,
-            getVersion(): number {
-                return id;
-            }
-        };
-    }
-
-    private static _isNeedHandle(error: ProcessedError & CanceledError): boolean {
+    private static isNeedHandle(error: ProcessedError & CanceledError): boolean {
         return !(
             (error instanceof fetch.Errors.Abort) ||
             error.processed ||
             error.canceled ||
-            error.isCanceled // PromiseCanceledError
+            error.isCanceled // from PromiseCanceledError
         );
     }
 }
-
-// Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения.
-loadHandlers(ErrorController.CONFIG_FIELD);

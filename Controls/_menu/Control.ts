@@ -16,7 +16,8 @@ import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 import {groupConstants as constView} from 'Controls/list';
 import { TouchDetect } from 'Env/Touch';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
-import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {ErrorViewMode, ErrorViewConfig, ErrorController} from 'Controls/error';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StickyOpener, StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
@@ -91,8 +92,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _enterEvent: MouseEvent;
     private _subMenuPosition: IMenuPosition;
     private _openSubMenuEvent: MouseEvent;
-    private _errorController: dataSourceError.Controller;
-    private _errorConfig: dataSourceError.ViewConfig|void;
+    private _errorController: ErrorController;
+    private _errorConfig: ErrorViewConfig|void;
     private _stack: StackOpener;
     private _markerController: MarkerController;
     private _selectionController: SelectionController = null;
@@ -916,7 +917,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
                 return items;
             },
-            (error: Error): Promise<void | dataSourceError.ViewConfig> => {
+            (error: Error): Promise<void | ErrorViewConfig> => {
                 return Promise.reject(this._processError(error));
             }
         );
@@ -1135,15 +1136,15 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         });
     }
 
-    private _processError(error: Error): Promise<dataSourceError.ViewConfig|void> {
+    private _processError(error: Error): Promise<ErrorViewConfig|void> {
         if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(error);
         }
         return this._getErrorController().process({
             error,
             theme: this._options.theme,
-            mode: dataSourceError.Mode.include
-        }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
+            mode: ErrorViewMode.include
+        }).then((errorConfig: ErrorViewConfig|void): ErrorViewConfig|void => {
             if (errorConfig) {
                 errorConfig.options.size = 'medium';
             }
@@ -1152,13 +1153,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         });
     }
 
-    private _showError(error: dataSourceError.ViewConfig|void): void {
+    private _showError(error: ErrorViewConfig|void): void {
         this._errorConfig = error;
     }
 
-    private _getErrorController(): dataSourceError.Controller {
+    private _getErrorController(): ErrorController {
         if (!this._errorController) {
-            this._errorController = new dataSourceError.Controller({});
+            this._errorController = new ErrorController({});
         }
         return this._errorController;
     }

@@ -4,7 +4,7 @@ import {RecordSet, List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {deepStrictEqual, ok} from 'assert';
 import {stub, spy} from 'sinon';
-import {error} from 'Controls/dataSource';
+import * as error from 'Controls/error';
 import {Service} from 'Controls/history';
 
 function getData(): object[] {

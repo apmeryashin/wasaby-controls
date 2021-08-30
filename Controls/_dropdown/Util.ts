@@ -5,7 +5,7 @@ import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IDropdownControllerOptions} from './interface/IDropdownController';
-import {error as dataSourceError} from 'Controls/dataSource';
+import {process} from 'Controls/error';
 import {TKey} from '../interface';
 
 export function prepareEmpty(emptyText) {
@@ -30,7 +30,7 @@ export function loadItems(
       });
    } else if (source) {
       return controller.loadItems().catch((error) => {
-         dataSourceError.process({error});
+         process({error});
       });
    } else if (options.items) {
       controller.setItems(options.items);
@@ -46,7 +46,7 @@ export function loadSelectedItems(
       controller.updateSelectedItems(receivedState.items);
    } else if (source) {
       return controller.loadSelectedItems().catch((error) => {
-         dataSourceError.process({error});
+         process({error});
       });
    }
 }

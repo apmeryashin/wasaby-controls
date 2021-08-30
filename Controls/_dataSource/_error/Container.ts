@@ -1,9 +1,8 @@
 import { Control, TemplateFunction } from 'UI/Base';
-import _template = require('wml!Controls/_dataSource/_error/Container');
+import * as template from 'wml!Controls/_dataSource/_error/Container';
 import { constants } from 'Env/Env';
-import { Mode, Popup, ViewConfig } from 'Controls/error';
+import { ErrorViewMode, Popup, ErrorViewConfig } from 'Controls/error';
 import { isEqual } from 'Types/object';
-import { load } from 'Core/library';
 import { default as IContainer, IContainerConfig } from './IContainer';
 /**
  * Нужно загружать стили для показа диалога сразу.
@@ -15,34 +14,10 @@ interface IInlistTemplateOptions {
     listOptions: object;
 }
 
-/**
- * @interface Controls/dataSource/error/Container/Config
- * @extends Controls/_dataSource/_error/ViewConfig
- */
-type Config<OptionsType = object> = ViewConfig<OptionsType> & {
-    /**
-     * @cfg {Boolean} [isShowed?]
-     * @name Controls/dataSource/error/Container/Config#isShowed
-     */
-    isShowed?: boolean;
-    /**
-     * @cfg {String} [templateName?]
-     * @name Controls/dataSource/error/Container/Config#templateName
-     */
-    templateName?: string;
-    /**
-     * @cfg {any} [template?]
-     * @name Controls/dataSource/error/Container/Config#template
-     */
-    template?: TemplateFunction;
-};
-
-const getTemplate = (template: string | Control): Promise<Control> => {
-    if (typeof template === 'string') {
-        return load(template);
-    }
-    return Promise.resolve(template);
-};
+type ContainerViewConfig<OptionsType = object> =
+    ErrorViewConfig<OptionsType> &
+    { isShown?: boolean; } &
+    ({ templateName?: string; } | { template?: TemplateFunction; });
 
 /**
  * Компонент для отображения сообщения об ошибки на основе данных, полученных от контроллера {@link Controls/_dataSource/_error/Controller}.
@@ -58,9 +33,9 @@ const getTemplate = (template: string | Control): Promise<Control> => {
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
     private _isUnmounted: boolean = false;
-    private __viewConfig: Config; // tslint:disable-line:variable-name
+    private __viewConfig: ContainerViewConfig; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
-    protected _template: TemplateFunction = _template;
+    protected _template: TemplateFunction = template;
 
     /**
      * Идентификатор текущего открытого диалога. Одновременно отображается только один диалог.
@@ -79,7 +54,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
 
         const mode = this.__viewConfig.mode;
         this.__setConfig(null);
-        if (mode === Mode.dialog) {
+        if (mode === ErrorViewMode.dialog) {
             return;
         }
         this._forceUpdate();
@@ -91,14 +66,15 @@ export default class Container extends Control<IContainerConfig> implements ICon
      * @function
      * @public
      */
-    show(viewConfig: ViewConfig): void {
+    show(viewConfig: ErrorViewConfig): void {
         if (this._isUnmounted) {
             return;
         }
 
-        if (viewConfig && viewConfig.mode === Mode.dialog) {
-            return this.__showDialog(viewConfig);
+        if (!this._openDialog(viewConfig)) {
+            return;
         }
+
         this.__setConfig(viewConfig);
         this._forceUpdate();
     }
@@ -109,31 +85,20 @@ export default class Container extends Control<IContainerConfig> implements ICon
 
     protected _beforeUpdate(options: IContainerConfig): void {
         if (isEqual(this._options.viewConfig, options.viewConfig)) {
-            // Чтобы диалог не показывался каждый раз при обновлении контрола
-            if (options.viewConfig?.mode === Mode.dialog) {
-                this.__viewConfig = null;
-            }
             return;
         }
 
         this.__updateConfig(options);
+        this._openDialog(this.__viewConfig);
 
         // обновляем опции списка, чтобы он корректно обновлялся
-        if (this.__viewConfig?.mode === Mode.inlist) {
+        if (this.__viewConfig?.mode === ErrorViewMode.inlist) {
             this._updateInlistOptions(options);
         }
     }
 
     protected _afterMount(): void {
-        if (this.__viewConfig) {
-            this.__showDialog(this.__viewConfig);
-        }
-    }
-
-    protected _afterUpdate(): void {
-        if (this.__viewConfig) {
-            this.__showDialog(this.__viewConfig);
-        }
+        this._openDialog(this.__viewConfig);
     }
 
     protected _beforeUnmount(): void {
@@ -164,12 +129,17 @@ export default class Container extends Control<IContainerConfig> implements ICon
     /**
      * Открыть диалог.
      * Если есть незакрытый диалог, открытый этим контролом, то сначала он будет закрыт.
-     * @param config Конфигурация с шаблоном диалога и опциями для этого шаблона.
+     * @param viewConfig Конфигурация с шаблоном диалога и опциями для этого шаблона.
      */
-    private _openDialog(config: Config): Promise<void> {
-        return this._popupHelper.openDialog(config, {
+    private _openDialog(viewConfig: ErrorViewConfig): Promise<void> {
+        if (viewConfig?.mode !== ErrorViewMode.dialog || !constants.isBrowserPlatform) {
+            return;
+        }
+
+        return this._popupHelper.openDialog(viewConfig, {
             id: this._popupId,
             opener: this,
+            modal: this._options.isModalDialog === true,
             eventHandlers: {
                 onClose: () => this._onDialogClosed()
             }
@@ -180,64 +150,15 @@ export default class Container extends Control<IContainerConfig> implements ICon
         });
     }
 
-    private _notifyServiceError(template: Control, options: object): Promise<IDialogData> | IDialogData | void {
-        if (this._isUnmounted) {
-            return;
-        }
-
-        return this._notify(
-            'serviceError',
-            [template, options, this],
-            { bubbling: true }
-        ) as Promise<IDialogData> | IDialogData | void;
-    }
-
-    private __showDialog(config: Config): void {
-        if (
-            config.mode !== Mode.dialog ||
-            !constants.isBrowserPlatform
-        ) {
-            return;
-        }
-
-        if (this._popupId) {
-            this._openDialog(config);
-            return;
-        }
-
-        getTemplate(config.template)
-            .then((dialogTemplate) => this._notifyServiceError(dialogTemplate, config.options))
-            .then((dialogData) => {
-                if (this._isUnmounted) {
-                    return;
-                }
-
-                /**
-                 * Controls/popup:Global ловит событие 'serviceError'.
-                 * В Wasaby окружении Controls/popup:Global есть на каждой странице в виде глобальной обертки.
-                 * На старых страницах этого нет, поэтому если errorContainer
-                 * был создан в контроле, который был вставлен в старое окружение ws3 с помощью Core/create,
-                 * то событие 'serviceError' будет некому ловить и результата _notify не будет.
-                 * Тогда гарантированно показываем диалог с помощью popupHelper.
-                 */
-                if (!dialogData) {
-                    return this._openDialog(config);
-                }
-
-                this._popupId = dialogData.popupId;
-                dialogData.closePopupPromise.then(() => this._onDialogClosed());
-            });
-    }
-
     private __updateConfig(options: IContainerConfig): void {
         this.__setConfig(options.viewConfig);
 
         if (this.__viewConfig) {
-            this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
+            this.__viewConfig.isShown = this.__viewConfig.isShown || this.__viewConfig.mode !== ErrorViewMode.dialog;
         }
     }
 
-    private __setConfig(viewConfig?: ViewConfig): void {
+    private __setConfig(viewConfig?: ErrorViewConfig): void {
         if (!viewConfig) {
             this.__viewConfig = null;
             return;
@@ -256,11 +177,6 @@ export default class Container extends Control<IContainerConfig> implements ICon
         this.__viewConfig.options = {
             ...this.__viewConfig.options
         };
-        (this.__viewConfig as Config<IInlistTemplateOptions>).options.listOptions = options;
+        (this.__viewConfig as ContainerViewConfig<IInlistTemplateOptions>).options.listOptions = options;
     }
-}
-
-interface IDialogData {
-    popupId: string;
-    closePopupPromise: Promise<void>;
 }

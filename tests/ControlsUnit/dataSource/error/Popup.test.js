@@ -128,6 +128,7 @@ define([
             sinon.stub(Popup, 'showDefaultDialog');
             Popup.POPUP_MODULES = [fakeModuleNames[0]];
             p = new Popup([], [fakeModuleNames[1]]);
+            sinon.stub(p, 'openConfirmation').resolves();
          });
 
          afterEach(() => {
@@ -153,9 +154,31 @@ define([
             });
          });
 
+         it('calls openConfirmation with proper arguments if gets on template in config', () => {
+            const config = {
+               options: {
+                  message: 'message',
+                  details: 'details'
+               }
+            };
+            return p.openDialog(config).then(() => {
+               assert.isTrue(p.openConfirmation.calledOnce, 'openConfirmation() called');
+               assert.deepEqual(
+                  p.openConfirmation.getCall(0).args[0],
+                  {
+                     type: 'ok',
+                     style: 'danger',
+                     message: config.options.message
+                  },
+                  'openConfirmation() called with message'
+               );
+            });
+         });
+
          it('calls showDefaultDialog()', () => {
             p.themes = ['FakeFailModule1'];
             const config = {
+               template: 'template',
                options: {
                   message: 'message',
                   details: 'details'
@@ -177,7 +200,7 @@ define([
             Popup.POPUP_MODULES = [fakeModuleNames[0]];
             const dialogTmplOptions = { dialogOption: 'dialogTemplateOption' };
             const dialogOptions = { templateOptions: dialogTmplOptions, handler: 42 };
-            const viewConfig = { options: { configOption: 'configTemplateOption' } };
+            const viewConfig = { template: () => null, options: { configOption: 'configTemplateOption' } };
             const p = new Popup([], [fakeModuleNames[1]]);
             return p.openDialog(viewConfig, dialogOptions).then(() => {
                const popup = require(fakeModuleNames[0]);
