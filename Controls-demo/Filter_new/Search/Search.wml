@@ -1,0 +1,20 @@
+<div class="controlsDemo__wrapper">
+    <Controls.browser:Browser bind:filter="_filter" filterButtonSource="{{_filterSource}}"
+                              source="{{_source}}" keyProperty="id" searchParam="department">
+        <div>
+            <Controls.search:InputContainer>
+                <Controls.search:Input bind:value="_searchValue"/>
+            </Controls.search:InputContainer>
+            <Controls.filter:ViewContainer>
+                <Controls.filter:View/>
+            </Controls.filter:ViewContainer>
+            <Controls.list:Container>
+                <Controls.list:View emptyTemplate="Не найдено">
+                    <ws:itemTemplate>
+                        <ws:partial template="Controls/list:ItemTemplate"/>
+                    </ws:itemTemplate>
+                </Controls.list:View>
+            </Controls.list:Container>
+        </div>
+    </Controls.browser:Browser>
+</div>
