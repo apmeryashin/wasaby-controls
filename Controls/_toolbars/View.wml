@@ -20,7 +20,7 @@
                              controls-Toolbar__menu_{{_options.direction}}-spacing-{{_countShowItems ? (_options.contrastBackground ? _options.itemsSpacing : 'small') : 'none'}}"
                  name="menuTarget"
                  translucent="{{_options.translucent}}"
-                 viewMode="{{_options.translucent ? 'functionalButton' : 'toolButton'}}"
+                 viewMode="{{_options.translucent ? 'functionalButton' : _options.menuButtonViewMode}}"
                  buttonStyle="{{_options.translucent ? 'pale'}}"
                  iconStyle="{{_options.translucent ? 'contrast' : 'secondary'}}"
                  tooltip="{[Открыть меню]}"
