@@ -42,5 +42,5 @@ export default class extends Control {
             })
         });
     }
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Filter_new/Filter'];
 }
