@@ -105,31 +105,42 @@ export class DialogStrategy {
         }
     }
 
+    private _getCoordinate(popupItem: IDialogItem, coordinate: string): number {
+        if (popupItem.targetCoords && popupItem.targetCoords[coordinate]) {
+            return popupItem.targetCoords[coordinate];
+        }
+        return popupItem.popupOptions[coordinate];
+    }
+
     private _updateCoordsByOptions(windowData: IPopupPosition, popupItem: IDialogItem,
                                    position: IDialogPosition): void {
-        const topCoordinate = popupItem.targetCoords?.top || popupItem.popupOptions.top;
-        const bottomCoordinate = popupItem.targetCoords?.left || popupItem.popupOptions.left;
+        const topCoordinate = this._getCoordinate(popupItem, 'top');
+        const isRightCoordinate = typeof popupItem.popupOptions.right !== 'undefined';
+        const coordinate = isRightCoordinate ? 'right' : 'left';
+        const horizontalCoordinate = this._getCoordinate(popupItem, coordinate);
 
-        if (topCoordinate === undefined && bottomCoordinate === undefined) {
+        if (topCoordinate === undefined && horizontalCoordinate === undefined) {
             return;
         }
 
         const topOffset = (popupItem.sizes?.margins?.top || 0) + (popupItem.popupOptions.offset?.vertical || 0);
-        const leftOffset = (popupItem.sizes?.margins?.left || 0) + (popupItem.popupOptions.offset?.horizontal || 0);
+        const horizontalOffset = (popupItem.sizes?.margins && popupItem.sizes.margins[coordinate] || 0) +
+            (popupItem.popupOptions.offset?.horizontal || 0);
         const top = (topCoordinate || 0) + topOffset;
-        const left = (bottomCoordinate || 0) + leftOffset;
+        const horizontalPosition = (horizontalCoordinate || 0) + horizontalOffset;
 
         if (topCoordinate !== undefined) {
             position.top = top;
         }
-        if (bottomCoordinate !== undefined) {
-            // Calculating the left position when reducing the size of the browser window
+        if (horizontalCoordinate !== undefined) {
+            const popupWidth = (popupItem.popupOptions.width || popupItem.sizes?.width);
+            // Calculating the position when reducing the size of the browser window
             const differenceWindowWidth: number =
-                (left + popupItem.popupOptions.width) - windowData.width;
+                (horizontalPosition + popupWidth) - windowData.width;
             if (differenceWindowWidth > 0) {
-                position.left = left - differenceWindowWidth;
+                position[coordinate] = horizontalPosition - differenceWindowWidth;
             } else {
-                position.left = left;
+                position[coordinate] = horizontalPosition;
             }
         }
     }
