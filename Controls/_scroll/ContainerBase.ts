@@ -18,6 +18,7 @@ import {isHidden} from './StickyBlock/Utils';
 import {getHeadersHeight} from './StickyBlock/Utils/getHeadersHeight';
 import {location} from 'Application/Env';
 import {Entity} from 'Controls/dragnDrop';
+import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
 
 
@@ -112,6 +113,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     private _isUnmounted: boolean = false;
 
     private _scrollMoveTimer: number;
+
+    // Состояние для логирования сохраняем отдельно, т.к. состояние положения скрола в некоторых сценариях
+    // обновляется синхронно, и невозможно узнать старое состояние в обработчике.
+    private _lastLogState: {top: number, left: number} = { top: 0, left: 0 };
 
     _beforeMount(options: IContainerBaseOptions, context?, receivedState?) {
         this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
@@ -329,13 +334,18 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     protected _scrollHandler(e: SyntheticEvent): void {
+        const scrollTop: number = e.currentTarget.scrollTop;
+        const scrollLeft: number = e.currentTarget.scrollLeft;
+
+        this._logScrollPosition(scrollTop, scrollLeft);
+
         if (this._scrollLockedPosition !== null) {
             this._children.content.scrollTop = this._scrollLockedPosition;
             return;
         }
         this.onScrollContainer({
-            scrollTop: e.currentTarget.scrollTop,
-            scrollLeft: e.currentTarget.scrollLeft
+            scrollTop: scrollTop,
+            scrollLeft: scrollLeft
         });
     }
 
@@ -574,6 +584,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         const scrollState = this._scrollModel.clone();
         const oldScrollState = this._oldScrollState.clone();
         if (isStateUpdated) {
+            this._logSizes(scrollState, oldScrollState);
             // Новое событие
             this._generateEvent('scrollStateChanged', [scrollState, oldScrollState]);
 
@@ -1144,6 +1155,45 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         if (!event.propagating()) {
             return this._notify(eventName, args) || event.result;
         }
+    }
+
+    private _logScrollPosition(scrollTop: number, scrollLeft: number): void {
+        if (ContainerBase._debug) {
+            let msg:string = `Controls/scroll:ContainerBase: изменение положения скролла.`;
+
+            if (this._lastLogState.top !== scrollTop) {
+                msg += ` По вертикали: новое ${scrollTop}, старое ${this._lastLogState.top}.`;
+            }
+            if (this._lastLogState.left !== scrollLeft) {
+                msg += ` По горизонтали: новое ${scrollLeft}, старое ${this._lastLogState.left}.`;
+            }
+
+            this._lastLogState.top = scrollTop;
+            this._lastLogState.left = scrollLeft;
+
+            Logger.warn(msg, this);
+        }
+    }
+
+    private _logSizes(state:IScrollState, oldState: IScrollState): void {
+        if (ContainerBase._debug) {
+            let msg:string = '';
+
+            for (const field of ['clientHeight', 'scrollHeight', 'clientWidth', 'scrollWidth']) {
+                if (state[field] !== oldState[field]) {
+                    msg += ` ${field}: новое ${state[field]}, старое ${oldState[field]}.`;
+                }
+            }
+            if (msg) {
+                Logger.warn(`Controls/scroll:ContainerBase: изменение размеров. ${msg}`, this);
+            }
+        }
+    }
+
+    static _debug: boolean = false;
+
+    static setDebug(debug: boolean): void {
+        ContainerBase._debug = debug;
     }
 
 
