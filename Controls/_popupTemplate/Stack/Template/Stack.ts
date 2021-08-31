@@ -123,7 +123,7 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 });
 
 /**
- * @typedef {Object} IRightPanelOption
+ * @typedef {Object} Controls/_popupTemplate/Stack/RightPanelOption
  * @property {Array.<Hint/interface:IHelpButtonItem>} helpButtonItems Список пунктов меню помощи.
  * @remark
  * Элементы по умолчанию:
@@ -197,7 +197,7 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 
 /**
  * @name Controls/_popupTemplate/Stack#rightPanelOptions
- * @cfg {IRightPanelOption} Опции правой панели стековой панели.
+ * @cfg {Controls/_popupTemplate/Stack/RightPanelOption.typedef} Опции правой панели стековой панели.
  */
 
 /**
