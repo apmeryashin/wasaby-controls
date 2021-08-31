@@ -19,8 +19,7 @@
                   scope="{{_options}}"
                   isHeaderFixed="{{_isStickyShadowVisible}}"
                   on:arrowClick="_notifyHandler('arrowClick')"
-                  on:controlResize="_selfResizeHandler()"
-                  attr:data-qa="StickyHeader__content"/>
+                  on:controlResize="_selfResizeHandler()"/>
       <div name="observationTargetBottomLeft" class="controls-StickyHeader__observationTargetBottomLeft" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
       <div name="observationTargetBottomRight" class="controls-StickyHeader__observationTargetBottomRight" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>
 
