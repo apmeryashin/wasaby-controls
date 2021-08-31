@@ -17,6 +17,10 @@
    flex-direction: column;
 }
 
+.controls-TileView__richTemplate_imagePosition_bottom {
+   flex-direction: column-reverse;
+}
+
 .controls-TileView__richTemplate_itemContent {
    display: flex;
    flex-direction: column;
@@ -101,14 +105,17 @@
    right: var(--offset_m);
 }
 
+.controls-TileView__richTemplate_image_size_s_position_bottom_viewMode_rectangle,
 .controls-TileView__richTemplate_image_size_s_position_top_viewMode_rectangle {
    height: var(--image_height_s_position_top_rich_tile);
 }
 
+.controls-TileView__richTemplate_image_size_m_position_bottom_viewMode_rectangle,
 .controls-TileView__richTemplate_image_size_m_position_top_viewMode_rectangle {
    height: var(--image_height_m_position_top_rich_tile);
 }
 
+.controls-TileView__richTemplate_image_size_l_position_bottom_viewMode_rectangle,
 .controls-TileView__richTemplate_image_size_l_position_top_viewMode_rectangle {
    height: var(--image_height_l_position_top_rich_tile);
 }
@@ -133,15 +140,15 @@
 
 // поддержка старой плитки
 .controls-TileView_old {
-   .controls-TileView__richTemplate_image_size_s_position_top {
+   .controls-TileView__richTemplate_image_size_s_position_vertical {
       height: var(--image_height_s_position_top_rich_tile);
    }
 
-   .controls-TileView__richTemplate_image_size_m_position_top {
+   .controls-TileView__richTemplate_image_size_m_position_vertical {
       height: var(--image_height_m_position_top_rich_tile);
    }
 
-   .controls-TileView__richTemplate_image_size_l_position_top {
+   .controls-TileView__richTemplate_image_size_l_position_vertical {
       height: var(--image_height_l_position_top_rich_tile);
    }
 

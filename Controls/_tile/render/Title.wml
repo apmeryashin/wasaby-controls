@@ -53,7 +53,7 @@
         <ws:partial template="{{descriptionEditor}}"/>
     </ws:if>
     <ws:else>
-        <ws:if data="{{ item.shouldDisplayDescription(itemType, description, descriptionLines) }}">
+        <ws:if data="{{ item.shouldDisplayDescription(itemType, description, descriptionLines, imagePosition) }}">
             <div class="{{ item.getDescriptionClasses(itemType, descriptionLines, titlePosition, imageViewMode) }}"
                  style="{{ item.getDescriptionStyles(itemType, descriptionLines, textColor) }}"
                  attr:itemprop="description"
