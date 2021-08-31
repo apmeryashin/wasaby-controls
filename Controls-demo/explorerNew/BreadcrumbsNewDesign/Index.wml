@@ -1,12 +1,15 @@
 <div class="controlsDemo__wrapper">
-   <div>Back button font size</div>
-   <Controls.toggle:Tumbler
-      displayProperty="title"
-      items="{{_fontSizes}}"
-      bind:selectedKey="_backButtonFontSize"
-   />
+   <div style="margin-bottom: 8px;">
+      <div>Back button font size</div>
+      <Controls.toggle:Tumbler
+         displayProperty="title"
+         items="{{_fontSizes}}"
+         bind:selectedKey="_backButtonFontSize"
+      />
+   </div>
    <Controls.explorer:View
       feature1182709671="{{true}}"
+      showActionButton="{{true}}"
       backButtonFontSize="{{_backButtonFontSize}}"
 
       columns="{{_columns}}"

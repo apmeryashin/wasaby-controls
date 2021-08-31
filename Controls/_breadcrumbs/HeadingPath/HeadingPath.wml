@@ -45,16 +45,19 @@
                "
             >
                <ws:if data="{{_options.feature1182709671}}">
-                  <Controls._breadcrumbs.PathButton
-                     path="{{_options.items}}"
-                     source="{{_options.pathButtonSource}}"
-                     filter="{{_options.pathButtonFilter}}"
-                     keyProperty="{{_options.pathButtonKeyProperty}}"
-                     nodeProperty="{{_options.pathButtonNodeProperty}}"
-                     parentProperty="{{_options.pathButtonParentProperty}}"
-                     displayProperty="{{_options.pathButtonDisplayProperty}}"
-                     on:pathChanged="_onPathChanged()"
-                  />
+                  <div class="controls-BreadCrumbsPath__pathButton-wrapper">
+                     <Controls._breadcrumbs.PathButton
+                        path="{{_options.items}}"
+                        source="{{_options.pathButtonSource}}"
+                        filter="{{_options.pathButtonFilter}}"
+                        keyProperty="{{_options.pathButtonKeyProperty}}"
+                        nodeProperty="{{_options.pathButtonNodeProperty}}"
+                        parentProperty="{{_options.pathButtonParentProperty}}"
+                        displayProperty="{{_options.pathButtonDisplayProperty}}"
+                        on:pathChanged="_onPathChanged()"
+                        attr:class="controls-BreadCrumbsPath__pathButton"
+                     />
+                  </div>
                </ws:if>
                <ws:else>
                   <div

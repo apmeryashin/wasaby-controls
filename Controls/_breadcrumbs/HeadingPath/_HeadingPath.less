@@ -105,6 +105,7 @@
 
 .controls-BreadCrumbsPath__backButtonArrow-container {
    .baseline-fix();
+
    height: 100%;
    position: absolute;
    align-self: baseline;
@@ -112,16 +113,33 @@
    right: calc(-1 * var(--back_offset_breadcrumbsHeadingPath));
    bottom: 0;
 
-   &:before {
+   &::before {
       font-size: var(--line-height_breadcrumbsView);
    }
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
-   cursor: pointer;
-   .icon(var(--back_editButton_icon-size_breadcrumbsHeadingPath));
    display: none;
+   cursor: pointer;
+   height: var(--back_editButton_icon-size_breadcrumbsHeadingPath);
    fill: var(--back_editButton_icon-color_breadcrumbsHeadingPath);
+}
+
+// Выравниваем шеврон по базовой для размера 5xl
+.controls-BreadCrumbsPath__backButtonArrow-container_size-5xl::before {
+   font-size: var(--font-size_5xl);
+}
+
+.controls-BreadCrumbsPath__backButtonArrow_size-l {
+   height: var(--icon_l_height_headingBack);
+}
+
+.controls-BreadCrumbsPath__backButtonArrow_size-m {
+   height: var(--icon_m_height_headingBack);
+}
+
+.controls-BreadCrumbsPath__backButtonArrow_size-s {
+   height: var(--icon_s_height_headingBack);
 }
 
 .controls-Path__backButtonArrow_readonly {
@@ -228,4 +246,21 @@
    display: flex;
    flex-grow: 1;
    overflow: hidden;
+}
+
+.controls-BreadCrumbsPath__pathButton-wrapper {
+   position: relative;
+   margin-left: var(--offset_m);
+   width: var(--icon-size_m);
+   height: var(--icon-size_m);
+
+   .baseline-fix();
+
+   &::before {
+      font-size: var(--line-height_breadcrumbsView);
+   }
+}
+
+.controls-BreadCrumbsPath__pathButton {
+   position: absolute;
 }

@@ -655,6 +655,8 @@
   "--icon_s_height_headingBack": "11px",
   "--icon_m_height_headingBack": "12px",
   "--icon_l_height_headingBack": "14px",
+  "--new-icon_5xl_width_headingBack": "10px",
+  "--new-icon_5xl_height_headingBack": "16px",
   "--text-color_decoratorHighlight": "inherit",
   "--text_background-color_decoratorHighlight": "#FFFECE",
   "--text_background-color_decoratorHighlight_dark": "#ccc",
