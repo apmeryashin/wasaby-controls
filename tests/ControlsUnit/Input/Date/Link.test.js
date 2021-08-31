@@ -20,16 +20,11 @@ define([
       describe('openPopup', function() {
          it('should open opener', function() {
             const component = calendarTestUtils.createComponent(dateRange.DateSelector, options);
-            component._children = {
-               opener: {
-                  open: sinon.fake()
-               },
-               linkView: {
-                   getPopupTarget: sinon.stub().returns()
-               }
+            component._stickyOpener = {
+               open: sinon.fake()
             };
             component.openPopup();
-            sinon.assert.called(component._children.opener.open);
+            sinon.assert.called(component._stickyOpener.open);
          });
       });
 
@@ -40,7 +35,7 @@ define([
                component = calendarTestUtils.createComponent(dateRange.DateSelector, options),
                value = new Date(2018, 11, 10);
 
-            component._children.opener = {
+            component._stickyOpener = {
                close: sinon.fake()
             };
             sandbox.stub(component, '_notify');
@@ -48,7 +43,7 @@ define([
             component._onResult(null, value);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');
-            sinon.assert.called(component._children.opener.close);
+            sinon.assert.called(component._stickyOpener.close);
             sandbox.restore();
          });
       });
@@ -59,7 +54,7 @@ define([
                component = calendarTestUtils.createComponent(dateRange.DateSelector, options),
                value = new Date(2018, 11, 10);
 
-            component._children.opener = {
+            component._stickyOpener = {
                close: sinon.fake()
             };
             sandbox.stub(component, '_notify');
