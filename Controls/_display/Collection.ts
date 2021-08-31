@@ -35,8 +35,8 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
+import { IRoundBorder } from './interface/IRoundBorder';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {TRoundBorder} from "Controls/_display/interface/ICollection";
 import {Footer} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
@@ -705,7 +705,7 @@ export default class Collection<
 
     protected _$bottomPadding: string;
 
-    protected _$roundBorder: TRoundBorder;
+    protected _$roundBorder: IRoundBorder;
 
     protected _$emptyTemplate: TemplateFunction;
 
@@ -2375,7 +2375,7 @@ export default class Collection<
         return this._$stickyFooter;
     }
 
-    setRoundBorder(roundBorder: TRoundBorder): void {
+    setRoundBorder(roundBorder: IRoundBorder): void {
         if (!isEqual(this._$roundBorder, roundBorder)) {
             this._$roundBorder = roundBorder;
             this._updateItemsProperty('setRoundBorder', this._$roundBorder, 'setRoundBorder');
