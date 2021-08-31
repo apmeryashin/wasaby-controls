@@ -250,7 +250,8 @@ export default class IndicatorsController {
         if (this._options.attachLoadTopTriggerToNull) {
             // если нужно будет скроллить к первой записи, то значит что сверху записей нет
             // и не нужно будет их сразу подгружать, поэтому скрываем триггер
-            if (scrollToFirstItem) {
+            const hasTopIndicator = this.shouldDisplayTopIndicator() || this._model.getTopIndicator().isDisplayed();
+            if (scrollToFirstItem && hasTopIndicator) {
                 this._model.hideLoadingTopTrigger();
             } else if (this._options.hasHiddenItemsByVirtualScroll('up')) {
                 this._model.displayLoadingTopTrigger();
