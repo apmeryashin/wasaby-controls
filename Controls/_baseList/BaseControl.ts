@@ -6289,8 +6289,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void, onDrawItems: boolean = false): void {
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
-                // если уже список проскроллен, то корректируем scrollTop на высоту уромашки, чтобы не было прыжков
-                this._notify('doScroll', [this._scrollTop + INDICATOR_HEIGHT], { bubbling: true });
+                // если уже список проскроллен, то не нужно скроллить к первому элементу
                 showTriggerCallback();
             } else {
                 const scrollResult = this._scrollToFirstItem();
