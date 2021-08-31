@@ -365,11 +365,29 @@ const _private = {
         }
     },
 
-    initializeModel(self, options, list): void {
+    initializeModel(self: BaseControl, options: IBaseControlOptions, data: RecordSet): void {
         // Модели могло изначально не создаться (не передали receivedState и source)
         // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
-        if (!self._destroyed && list) {
-            self._initNewModel(options, list, options);
+        if (!self._destroyed && data) {
+            self._items = data;
+
+            self._onItemsReady(options, data);
+            if (options.collection) {
+                self._listViewModel = options.collection;
+            } else {
+                self._listViewModel = self._createNewModel(
+                    data,
+                    options,
+                    options.viewModelConstructor
+                );
+            }
+            self._afterItemsSet(options);
+
+            if (self._listViewModel) {
+                _private.initListViewModelHandler(self, self._listViewModel);
+            }
+            _private.prepareFooter(self, options, self._sourceController);
+
             self._shouldNotifyOnDrawItems = true;
         }
     },
@@ -2932,7 +2950,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _drawingIndicatorDirection: 'top'|'bottom';
 
     protected _listViewModel: Collection = null;
-    _viewModelConstructor = null;
     protected _items: RecordSet;
 
     _loadMoreCaption = null;
@@ -3145,28 +3162,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return state === 'sync' ? void 0 : result;
     }
 
-    _initNewModel(cfg, data, viewModelConfig) {
-        this._items = data;
-
-        this._onItemsReady(cfg, data);
-        if (cfg.collection) {
-            this._listViewModel = cfg.collection;
-        } else {
-            this._listViewModel = this._createNewModel(
-                data,
-                viewModelConfig,
-                cfg.viewModelConstructor
-            );
-        }
-        this._afterItemsSet(cfg);
-
-        if (this._listViewModel) {
-            _private.initListViewModelHandler(this, this._listViewModel);
-        }
-        this._shouldNotifyOnDrawItems = true;
-        _private.prepareFooter(this, cfg, this._sourceController);
-    }
-
     protected _onItemsReady(options, items): void {
         if (options.itemsReadyCallback) {
             options.itemsReadyCallback(items);
@@ -3217,20 +3212,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             collapsedGroups: collapsedGroups || newOptions.collapsedGroups
         };
 
-        self._viewModelConstructor = newOptions.viewModelConstructor;
-        if (items) {
-            self._onItemsReady(newOptions, items);
-            _private.initializeModel(self, viewModelConfig, items);
-            self._afterItemsSet(newOptions);
-        } else {
-            const emptyItems = new RecordSet();
-            _private.initializeModel(self, viewModelConfig, emptyItems);
-        }
-
-        if (self._listViewModel) {
-            self._shouldNotifyOnDrawItems = true;
-            _private.initListViewModelHandler(self, self._listViewModel);
-        }
+        _private.initializeModel(self, viewModelConfig, items || new RecordSet());
 
         if (items) {
             _private.setHasMoreData(self._listViewModel, _private.getHasMoreData(self), true);
@@ -3656,7 +3638,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = newOptions.viewModelConstructor !== this._viewModelConstructor ||
+        const oldViewModelConstructorChanged = newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
         if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
@@ -3681,26 +3663,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if ((oldViewModelConstructorChanged || !!newOptions._recreateCollection) && this._listViewModel) {
-            this._viewModelConstructor = newOptions.viewModelConstructor;
+        if (newOptions.viewModelConstructor && (oldViewModelConstructorChanged || !!newOptions._recreateCollection) && this._listViewModel) {
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
             this._listViewModel.destroy();
 
             this._noDataBeforeReload = !(items && items.getCount());
-            if (newOptions.viewModelConstructor) {
-                _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
-            }
+            _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
 
-            _private.initListViewModelHandler(this, this._listViewModel);
             this._modelRecreated = true;
-            this._onItemsReady(newOptions, items);
-            this._shouldNotifyOnDrawItems = true;
 
             _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
         } else {

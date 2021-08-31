@@ -4409,7 +4409,7 @@ define([
                isEIPDestroyed = true;
             }
          };
-         instance._beforeUpdate(cfg);
+         instance._beforeUpdate({...cfg, viewModelConstructor: 'Controls/grid:GridCollection', columns: []});
          return cancelPromise.then(() => {
             assert.isTrue(isEditingCanceled);
             assert.isTrue(isEIPDestroyed);
