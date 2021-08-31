@@ -1,7 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_themes/ZenWrapper/Template';
 import {IRgbColor} from 'Controls/_themes/interface/IColor';
-import 'css!Controls/themes';
 
 type TBrightness = 'dark' | 'light';
 
@@ -57,12 +56,14 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         const decoratorsVars = ZenWrapper.calculateDecoratorsVariables(dominantRGB, complementaryRGB, brightness);
         const listsVars = ZenWrapper.calculateListsVariables(dominantRGB, complementaryRGB, brightness);
         const headingVars = ZenWrapper.calculateHeadingVariables(dominantRGB, complementaryRGB, brightness);
+        const toggleVars = ZenWrapper.calculateToggleVariables(dominantRGB, complementaryRGB, brightness);
         return {
             ...baseVars,
             ...buttonsVars,
             ...decoratorsVars,
             ...listsVars,
-            ...headingVars
+            ...headingVars,
+            ...toggleVars
         };
     }
 
@@ -144,6 +145,17 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         return {
             '--primary_hover_text-color_heading': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.8'),
             '--secondary_hover_text-color_heading': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
+        };
+    }
+
+    static calculateToggleVariables(dominantRGB: IRgbColor,
+                                    complementaryRGB: IRgbColor, brightness: TBrightness): object {
+        return {
+            '--icon_container_background_color_BigSeparator':  brightness === 'dark' ?
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.2') :
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
+            '--icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--hover_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
         };
     }
 
