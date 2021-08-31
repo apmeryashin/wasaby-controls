@@ -9,24 +9,23 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._filterSource = [{
             name: 'city',
-            value: null,
-            resetValue: null,
-            emptyText: 'Choose city',
-            emptyKey: 10,
-            filterTemplate: 'Controls/filterPopup:Dropdown',
+            value: ['Yaroslavl'],
+            resetValue: ['Yaroslavl'],
+            viewMode: 'basic',
+            textValue: '',
+            itemTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/Dropdown',
             editorOptions: {
                 source: new Memory({
                     keyProperty: 'id',
                     data: [
-                        { id: 'Yaroslavl', city: 'Yaroslavl' },
-                        { id: 'Moscow', city: 'Moscow' },
-                        { id: 'Kazan', city: 'Kazan' }
+                        { id: 'Yaroslavl', title: 'Yaroslavl' },
+                        { id: 'Moscow', title: 'Moscow' },
+                        { id: 'Kazan', title: 'Kazan' }
                     ]
                 }),
-                displayProperty: 'city',
+                displayProperty: 'title',
                 keyProperty: 'id'
-            },
-            viewMode: 'frequent'
+            }
         }];
     }
     static _styles: string[] = ['Controls-demo/Controls-demo'];
