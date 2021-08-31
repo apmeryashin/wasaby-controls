@@ -94,8 +94,8 @@ import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_displ
 import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
 export {IItemsStrategy, IItemsStrategyOptions};
 
-import {Footer} from './_display/Footer';
-export {Footer};
+import {Footer, IOptions as IFooterOptions} from './_display/Footer';
+export {Footer, IFooterOptions};
 
 import Indicator from 'Controls/_display/Indicator';
 import LoadingTrigger from 'Controls/_display/LoadingTrigger';

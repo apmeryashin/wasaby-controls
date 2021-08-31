@@ -3149,11 +3149,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._items = data;
 
         this._onItemsReady(cfg, data);
-        this._listViewModel = this._createNewModel(
-            data,
-            viewModelConfig,
-            cfg.viewModelConstructor
-        );
+        if (cfg.collection) {
+            this._listViewModel = cfg.collection;
+        } else {
+            this._listViewModel = this._createNewModel(
+                data,
+                viewModelConfig,
+                cfg.viewModelConstructor
+            );
+        }
         this._afterItemsSet(cfg);
 
         if (this._listViewModel) {
@@ -3216,19 +3220,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         self._viewModelConstructor = newOptions.viewModelConstructor;
         if (items) {
             self._onItemsReady(newOptions, items);
-            self._listViewModel = self._createNewModel(
-                items,
-                viewModelConfig,
-                newOptions.viewModelConstructor
-            );
+            _private.initializeModel(self, viewModelConfig, items);
             self._afterItemsSet(newOptions);
         } else {
             const emptyItems = new RecordSet();
-            self._listViewModel = self._createNewModel(
-                emptyItems,
-                viewModelConfig,
-                newOptions.viewModelConstructor
-            );
+            _private.initializeModel(self, viewModelConfig, emptyItems);
         }
 
         if (self._listViewModel) {
@@ -3694,11 +3690,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             this._noDataBeforeReload = !(items && items.getCount());
             if (newOptions.viewModelConstructor) {
-                this._listViewModel = this._createNewModel(
-                    items,
-                    {...newOptions, keyProperty: this._keyProperty},
-                    newOptions.viewModelConstructor
-                );
+                _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
             }
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
@@ -6054,7 +6046,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _createNewModel(items, modelConfig, modelName): void {
+    _createNewModel(items, modelConfig, modelName): Collection {
         return diCreate(modelName, {
             ...modelConfig,
             collection: items,
