@@ -1,0 +1,25 @@
+<div class="controlsDemo__wrapper">
+   <div>Back button font size</div>
+   <Controls.toggle:Tumbler
+      displayProperty="title"
+      items="{{_fontSizes}}"
+      bind:selectedKey="_backButtonFontSize"
+   />
+   <Controls.explorer:View
+      feature1182709671="{{true}}"
+      backButtonFontSize="{{_backButtonFontSize}}"
+
+      columns="{{_columns}}"
+      header="{{_gridHeader}}"
+      source="{{_viewSource}}"
+
+      viewMode="table"
+      keyProperty="id"
+      nodeProperty="parent@"
+      parentProperty="parent"
+      displayProperty="title"
+
+      bind:root="_root"
+      attr:class="demo-Explorer ControlsDemo-Explorer"
+   />
+</div>

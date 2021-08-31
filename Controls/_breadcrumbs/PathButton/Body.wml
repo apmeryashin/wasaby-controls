@@ -21,8 +21,8 @@
    <Controls.scroll:Container attr:class="controls-breadcrumbsMenuButton__menu-body">
       <Controls.treeGrid:View
          name="treeGrid"
+         filter="{{_filter}}"
          source="{{_options.source}}"
-         markedKey="{{_markedKey}}"
 
          keyProperty="{{_options.keyProperty}}"
          nodeProperty="{{_options.nodeProperty}}"
@@ -31,8 +31,10 @@
          expanderIcon="hiddenNode"
          expanderVisibility="hasChildren"
 
-         on:itemClick="_onItemClick()"
+         bind:markedKey="_markedKey"
          bind:expandedItems="_expandedItems"
+
+         on:itemClick="_onItemClick()"
       >
          <ws:columns>
             <ws:Array>

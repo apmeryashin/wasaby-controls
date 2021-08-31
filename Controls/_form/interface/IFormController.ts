@@ -49,6 +49,11 @@ export default interface IFormController extends IControllerBase {
      */
     destroyMetaData?: object;
     /**
+     * @name Controls/form:IFormController#updateMetaData
+     * @cfg {Object} Дополнительные данные, которые будут переданы в метод записи. Подробнее {@link Types/source:ICrud#update}.
+     */
+    updateMetaData?: object;
+    /**
      * @name Controls/form:IFormController#errorContainer
      * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения ошибки, он оборачивает весь контент формы.
      * Способ отображения ошибки (диалог, вместо контента или во всю страницу) настраивается через переопределение {@link errorController}.

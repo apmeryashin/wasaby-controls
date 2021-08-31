@@ -1,4 +1,4 @@
-import {ICrud} from 'Types/source';
+import {ICrudPlus} from 'Types/source';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TKey} from 'Controls/_interface/IItems';
@@ -9,7 +9,8 @@ import * as template from 'wml!Controls/_breadcrumbs/PathButton/Body';
 
 export interface IBody extends IControlOptions {
     path: Path;
-    source: ICrud;
+    source: ICrudPlus;
+    filter: object;
     keyProperty: string;
     nodeProperty: string;
     parentProperty: string;
@@ -31,22 +32,35 @@ export default class Body extends Control<IBody> {
     };
     //endregion
 
+    //region template fields
+    protected _filter: object;
+
     protected _markedKey: TKey;
 
     protected _expandedItems: TKey[] = [];
+    //endregion
 
     protected _beforeMount(options?: IBody, contexts?: object, receivedState?: void): Promise<void> | void {
-        if (!options.path.length) {
-            return;
-        }
+        // noinspection NonAsciiCharacters
+        this._filter = {...options.filter, 'Только узлы': true};
 
-        this._markedKey = options.path[options.path.length - 1].getKey();
-        this._expandedItems = options.path.map((item) => item.getKey());
-        this._expandedItems.pop();
+        if (options.path?.length) {
+            // Вычислим markedKey им будет id последней записи в крошках
+            this._markedKey = options.path[options.path.length - 1].getKey();
+
+            // Так же на основании path вычислим expandedItems, т.к. все узлы до текущего должны быть раскрыты
+            this._expandedItems = options.path.map((item) => item.getKey());
+            // Сам текущий узел раскрывать не надо
+            this._expandedItems.pop();
+
+            // Обновим рут в фильтре что бы запрашивались все каталоги от корня а не от текущей папки
+            // в которой находимся
+            this._filter[options.parentProperty] = options.path[0][options.parentProperty];
+        }
     }
 
     /**
-     * Обработчик клика по кнопке в заголовке
+     * Обработчик клика по кнопке в заголовке. Инициирует переход в корневой каталог.
      */
     protected _goToRoot(): void {
         let root = null;
@@ -61,14 +75,14 @@ export default class Body extends Control<IBody> {
     }
 
     /**
-     * Обработчик клика по записи списка
+     * Обработчик клика по записи списка. Инициирует переход в кликнутый каталог.
      */
     protected _onItemClick(event: SyntheticEvent, item: Model): void {
         this._changePath(item.getKey());
     }
 
     /**
-     * Обработчик клика по крестику закрытия.
+     * Обработчик клика по крестику закрытия. Инициирует закрытие панели.
      */
     protected _onCloseClick(): void {
         this._notify('close', [], {bubbling: true});
