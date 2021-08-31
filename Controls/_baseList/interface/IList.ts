@@ -540,27 +540,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * @typedef {String} Controls/_list/interface/IList/TRoundBorderSize
- * @variant null Без скругления. Значение передается строкой.
- * @variant XS Минимальный радиус скругления.
- * @variant S Малый радиус скругления.
- * @variant M Средний радиус скругления.
- * @variant L Большой радиус скругления.
- * @variant XL Максимальный радиус скругления.
- */
-
-/**
- * @typedef {Object} Controls/_list/interface/IList/TRoundBorder
- * @description Допустимые значения для опции {@link roundBorder}.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} tr Правый верхний угол.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} tl Левый верхний угол.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} br Правый нижний угол.
- * @property {Controls/_list/interface/IList/TRoundBorderSize.typedef} bl Левый нижний угол.
- */
-
-/**
  * @name Controls/_list/interface/IList#roundBorder
- * @cfg {Controls/_list/interface/IList/TRoundBorder.typedef} Cкругление углов элемента списка.
+ * @cfg {Controls/_interface/IRoundBorder} Cкругление углов элемента списка.
  * В настоящий момент поддерживается для плоского списка поддерживается только для шаблона Controls/listTemplates:ListItemTemplate
  */
 

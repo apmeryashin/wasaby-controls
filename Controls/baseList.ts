@@ -92,4 +92,4 @@ export * as LoadingIndicatorTemplate from 'wml!Controls/_baseList/indicators/Por
 export * as ContinueSearchTemplate from 'wml!Controls/_baseList/indicators/ContinueSearchTemplate';
 // endregion Indicators
 
-export {groupConstants, IHiddenGroupPosition, IItemPadding, MultiSelectAccessibility, TRoundBorder} from './display';
+export {groupConstants, IHiddenGroupPosition, IItemPadding, MultiSelectAccessibility, IRoundBorder, IRoundBorder as TRoundBorder} from './display';

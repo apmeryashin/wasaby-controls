@@ -44,7 +44,7 @@ export default class extends Control<IOperationsPanelOptions> {
             this._options.excludedKeys !== options.excludedKeys ||
             this._options.selectedKeysCount !== options.selectedKeysCount
         ) {
-            this._openCloud();
+            this._openCloud(options);
         }
     }
 
@@ -74,38 +74,35 @@ export default class extends Control<IOperationsPanelOptions> {
         }
     }
 
-    private _openCloud(): void {
+    private _openCloud(options = this._options): void {
         const target = this._children.target;
-        const opener = this._getDialogOpener();
-        if (!opener.isOpened()) {
-            opener.open({
-                template: 'Controls/operationsPanel:Cloud',
-                opener: this,
-                className: 'controls-operationPanel__offset',
-                propStorageId: this._options.propStorageId,
-                templateOptions: {
-                    selectedKeys: this._options.selectedKeys,
-                    excludedKeys: this._options.excludedKeys,
-                    selectedKeysCount: this._options.selectedKeysCount,
-                    isAllSelected: this._options.isAllSelected,
-                    selectedCountConfig: this._options.selectedCountConfig
-                },
-                eventHandlers: {
-                    onClose: () => {
-                        if (this._operationsController) {
-                            this._operationsController.setOperationsMenuVisible(false);
-                            this._operationsController.setOperationsPanelVisible(false);
-                        }
-                        Store.dispatch('operationsPanelExpanded', false);
-                    },
-                    onResult: (action: string, type) => {
-                        if (action === 'selectedTypeChanged') {
-                            this._operationsController.selectionTypeChanged(type);
-                        }
+        this._getDialogOpener().open({
+            template: 'Controls/operationsPanel:Cloud',
+            opener: this,
+            className: 'controls-operationPanel__offset',
+            propStorageId: options.propStorageId,
+            templateOptions: {
+                selectedKeys: options.selectedKeys,
+                excludedKeys: options.excludedKeys,
+                selectedKeysCount: options.selectedKeysCount,
+                isAllSelected: options.isAllSelected,
+                selectedCountConfig: options.selectedCountConfig
+            },
+            eventHandlers: {
+                onClose: () => {
+                    if (this._operationsController) {
+                        this._operationsController.setOperationsMenuVisible(false);
+                        this._operationsController.setOperationsPanelVisible(false);
                     }
+                    Store.dispatch('operationsPanelExpanded', false);
                 },
-                target
-            });
-        }
+                onResult: (action: string, type) => {
+                    if (action === 'selectedTypeChanged') {
+                        this._operationsController.selectionTypeChanged(type);
+                    }
+                }
+            },
+            target
+        });
     }
 }

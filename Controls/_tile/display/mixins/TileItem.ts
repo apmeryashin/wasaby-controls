@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
-import {ICollectionItemOptions, TRoundBorder} from 'Controls/display';
+import {ICollectionItemOptions} from 'Controls/display';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tile/utils/imageUtil';
 import * as ImageTemplate from 'wml!Controls/_tile/render/Image';
 import * as DefaultContent from 'wml!Controls/_tile/render/itemsContent/Default';
@@ -17,6 +17,7 @@ import Tile, {
     TImageUrlResolver, TTileMode, TTileScalingMode, TTileSize
 } from './Tile';
 import { TItemActionsPosition } from 'Controls/itemActions';
+import {ITileRoundBorder} from 'Controls/interface';
 import {TBackgroundColorStyle, TCursor } from 'Controls/list';
 import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 
@@ -78,7 +79,7 @@ export interface IOptions<S extends Model = Model> extends ICollectionItemOption
     tileHeight: number;
     tileWidth: number;
     tileWidthProperty: string;
-    roundBorder: TRoundBorder;
+    roundBorder: ITileRoundBorder;
     imageProperty: string;
     imageFit: TImageFit;
     imageHeightProperty: string;
@@ -103,7 +104,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
     protected _$canShowActions: boolean;
 
-    protected _$roundBorder: TRoundBorder;
+    protected _$roundBorder: ITileRoundBorder;
 
     // region TileOptions
 
@@ -1868,10 +1869,10 @@ export default abstract class TileItem<T extends Model = Model> {
 
     /**
      * Устанавливает скругление углов элемента
-     * @param {TRoundBorder} roundBorder Скругление углов элемента
+     * @param {ITileRoundBorder} roundBorder Скругление углов элемента
      * @void
      */
-    setRoundBorder(roundBorder: TRoundBorder): void {
+    setRoundBorder(roundBorder: ITileRoundBorder): void {
         if (!isEqual(this._$roundBorder, roundBorder)) {
             this._$roundBorder = roundBorder;
             this._nextVersion();
