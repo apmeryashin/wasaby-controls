@@ -273,7 +273,7 @@ export default class IndicatorsController {
         }
 
         if (this.shouldDisplayTopIndicator()) {
-            this.displayTopIndicator(scrollToFirstItem, true);
+            this.displayTopIndicator(scrollToFirstItem, false);
         }
     }
 
