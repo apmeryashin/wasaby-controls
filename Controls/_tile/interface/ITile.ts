@@ -444,7 +444,7 @@
 
 /**
  * @name Controls/_tile/interface/ITile#roundBorder
- * @cfg {Controls/_interface/IRoundBorder} Cкругление углов элемента плитки.
+ * @cfg {Controls/_interface/ITileRoundBorder} Cкругление углов элемента плитки.
  */
 
 /**
