@@ -39,12 +39,13 @@
    </ws:for>
    <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
       <Controls.buttons:Button viewMode="link"
-                               class="controls-SimplePanel-List__hasMoreButton
-                                      controls-SimplePanel-List__{{_options.nodeProperty ? 'hierarchy-'}}hasMoreButton"
+                               attr:class="controls-SimplePanel-List__hasMoreButton
+                                           controls-SimplePanel-List__{{_options.nodeProperty ? 'hierarchy-'}}hasMoreButton"
                                fontColorStyle="link"
                                caption="{[Еще]}..."
                                on:click="_openSelectorDialog()"
-                               afterOpenCallback="{{_afterOpenDialogCallback}}"/>
+                               afterOpenCallback="{{_afterOpenDialogCallback}}"
+                               attr:data-qa="SimplePanel-List__hasMoreButton"/>
    </ws:if>
    <ws:if data="{{!_options.isLast && _options.showSeparator !== false}}">
       <div class="controls-SimplePanel__block_separator"></div>
