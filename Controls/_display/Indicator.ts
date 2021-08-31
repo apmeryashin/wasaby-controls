@@ -135,7 +135,7 @@ export default class Indicator extends CollectionItem<null> {
         return this.key;
     }
 
-    isDisplayed() {
+    isDisplayed(): boolean {
         return this._$visible;
     }
 }

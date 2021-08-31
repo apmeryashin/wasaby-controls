@@ -60,7 +60,14 @@ export function getCorrectBaseControlConfig(options): object {
     return cfg;
 }
 
-async function getCorrectBaseControlConfigAsync(cfg): Promise<object> {
+export async function getCorrectBaseControlConfigAsync(options): Promise<object> {
+    const cfg = {
+        viewName: 'Controls/List/ListView',
+        keyProperty: 'id',
+        viewModelConstructor: 'Controls/display:Collection',
+        ...options
+    };
+
     // Эмулируем, что в baseControl передан sourceController
     let sourceController;
     if (cfg.source) {
@@ -918,7 +925,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     keyProperty: 'keyProperty',
                     data: []
                 }),
-                viewModelConstructor: 'Controls/display:Collection'
+                keyProperty: undefined
             });
 
             let baseControl = new BaseControl(baseControlOptions);
