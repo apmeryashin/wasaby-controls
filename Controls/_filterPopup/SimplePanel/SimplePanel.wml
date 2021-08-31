@@ -17,7 +17,7 @@
          </ws:for>
    </Controls.scroll:Container>
    <ws:if data="{{_applyButtonVisible}}">
-      <div class="controls-SimplePanel__applyButton">
+      <div class="controls-SimplePanel__applyButton" data-qa="SimplePanel__applyButton">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"
                                   iconSize="m"

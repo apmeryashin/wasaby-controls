@@ -1,7 +1,8 @@
 import { constants } from 'Env/Env';
 import { Confirmation, Dialog, IConfirmationOptions, IBasePopupOptions } from 'Controls/popup';
-import { ViewConfig } from './Handler';
-import { load } from 'WasabyLoader/Library';
+import { ErrorViewConfig } from './interface';
+import { loadAsync } from 'WasabyLoader/ModulesLoader';
+import { TemplateFunction } from 'UICommon/_base/Control';
 
 interface IPopupModule {
     Confirmation: typeof Confirmation;
@@ -11,6 +12,7 @@ interface IPopupModule {
 interface IViewConfigMessage {
     message: string;
     details?: string;
+    bodyContentTemplate?: string;
 }
 
 export type PopupId = string;
@@ -21,7 +23,7 @@ export interface IPopupHelper {
     openConfirmation(options: IConfirmationOptions): Promise<void>;
 
     openDialog<T extends IViewConfigMessage>(
-        config: ViewConfig<T>,
+        config: ErrorViewConfig<T>,
         dialogOptions: IBasePopupOptions): Promise<PopupId | void>;
 
     closeDialog(popupId: string): Promise<void>;
@@ -77,24 +79,33 @@ export default class Popup implements IPopupHelper {
      * @returns Если диалог открылся, в промисе будет идентификатор окна, который надо использовать для закрытия
      * окна через {@link Controls/_popup/interface/IDialog#closePopup}.
      */
-    openDialog<T extends IViewConfigMessage>(config: ViewConfig<T>,
+    openDialog<T extends IViewConfigMessage>(config: ErrorViewConfig<T>,
                                              dialogOptions: IBasePopupOptions): Promise<PopupId | void> {
         const { template } = config;
-        const preloadConfigTemplate = typeof template === 'string'
-            ? load(template).catch(() => undefined)
-            : Promise.resolve(true);
+
+        if (typeof template === 'undefined') {
+            return this.openConfirmation({
+                type: 'ok',
+                style: 'danger',
+                message: config.options.message
+            });
+        }
+
+        const preloadTemplate: Promise<void | TemplateFunction> = typeof template === 'string'
+            ? (loadAsync(template) as Promise<void | TemplateFunction>).catch(() => undefined)
+            : Promise.resolve(template);
 
         return Promise.all([
             this.preloadPopup(),
-            preloadConfigTemplate
-        ]).then(([popup, configTemplate]) => {
-            if (!popup || !configTemplate) {
+            preloadTemplate
+        ]).then(([popup, popupTemplate]) => {
+            if (!popup || !popupTemplate) {
                 Popup.showDefaultDialog(config.options.message, config.options.details);
                 return;
             }
 
             return popup.Dialog.openPopup({
-                template: config.template,
+                template: popupTemplate,
                 modal: true,
                 ...dialogOptions,
                 templateOptions: {

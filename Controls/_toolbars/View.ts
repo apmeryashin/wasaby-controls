@@ -138,6 +138,13 @@ export interface IMenuOptions {
       * @demo Controls-demo/Toolbar/Translucent/Index
       */
      translucent?: boolean;
+     /**
+      * @name Controls/toolbars:IToolbar#menuButtonViewMode
+      * @cfg {IViewMode} Стиль отображения кнопки открытия выпадающего меню тулбара
+      * @default toolButton
+      * @demo Controls-demo/Toolbar/MenuButtonViewMode/Index
+      */
+     menuButtonViewMode?: IViewMode;
 }
 
 /**
@@ -395,9 +402,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
-    private _setMenuSource(): void {
+    private _setMenuSource(menuSource: ICrudPlus = this._options.menuSource): void {
         if (this._options.menuSource) {
-            this._menuSource = this._options.menuSource;
+            this._menuSource = menuSource;
         } else {
             const menuItems = Toolbar._calcMenuItems(this._items);
             const source = this._options.source || this._getSynchronousSourceForMenu(menuItems);
@@ -419,9 +426,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._source = this._createPrefetchProxy(source, this._items);
         }
         this._needShowMenu = needShowMenu(this._items);
-        if (this._sticky?.isOpened() && !this._options.closeMenuOnOutsideClick) {
-            this.openMenu();
-        }
     }
 
     private _needChangeState(newOptions: IToolbarOptions): boolean {
@@ -472,6 +476,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _beforeUpdate(newOptions: IToolbarOptions): void {
+        const itemsChanged = this._options.items !== newOptions.items;
+        const menuSourceChanged = this._options.menuSource !== newOptions.menuSource;
         if (this._needChangeState(newOptions)) {
             this._setState(newOptions);
         }
@@ -480,15 +486,20 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._sticky?.close();
             this.setStateBySource(newOptions.source);
         }
-        if (this._options.items !== newOptions.items) {
+        if (itemsChanged) {
             this._isLoadMenuItems = false;
             this._sourceByItems = null;
             this._setStateByItems(newOptions.items);
         }
-        if (this._options.menuSource !== newOptions.menuSource) {
+        if (menuSourceChanged) {
             this._menuItems = {};
             this._isLoadMenuItems = false;
-            this._setMenuSource();
+            this._setMenuSource(newOptions.menuSource);
+        }
+        if (itemsChanged || menuSourceChanged) {
+            if (this._sticky?.isOpened() && !this._options.closeMenuOnOutsideClick) {
+                this.openMenu();
+            }
         }
     }
 
@@ -500,12 +511,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _resultHandler(action, data, nativeEvent): void {
         if (action === 'itemClick' || action === 'rightTemplateClick') {
             const item = data;
-            this._notify(action, [item, nativeEvent]);
+            const notifyActionResult = this._notify(action, [item, nativeEvent]);
 
             /**
              * menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
              */
-            if (this._sticky.isOpened() && !item.get(this._nodeProperty)) {
+            if (this._sticky.isOpened() && !item.get(this._nodeProperty) && notifyActionResult !== false) {
                 this._sticky.close();
             }
         }
@@ -545,8 +556,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             });
         }
 
-        this._notify('itemClick', [item, event.nativeEvent]);
         event.stopPropagation();
+        return this._notify('itemClick', [item, event.nativeEvent]);
     }
 
     protected _getTemplateByItem(item: TItem): TemplateFunction {
@@ -677,7 +688,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             itemTemplate: defaultItemTemplate,
             iconStyle: 'secondary',
             translucent: false,
-            closeMenuOnOutsideClick: true
+            closeMenuOnOutsideClick: true,
+            menuButtonViewMode: 'toolButton'
         };
     }
 

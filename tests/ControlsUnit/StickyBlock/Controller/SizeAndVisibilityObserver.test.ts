@@ -106,12 +106,13 @@ describe('SizeAndVisibilityObserver', () => {
                 }
             ];
             sinon.stub(component, '_getHeaderFromNode').returns(header);
+            sinon.stub(component, '_isHeaderOfGroup').returns(false);
             component._resizeObserverCallback(entries);
 
             assert.equal(component._elementsHeight.length, entries.length);
         });
 
-        it('should call _getGroupByHeader if header is groud', function () {
+        it('should call _getGroupByHeader and resizeHandler if header is group', function () {
             const header = {
                 id: 1,
                 getHeaderContainer: function() {
@@ -126,17 +127,24 @@ describe('SizeAndVisibilityObserver', () => {
                     }
                 }
             ];
+            const resizeHandlerStub = sinon.fake();
             const operation = 'add';
             sinon.stub(component, '_getHeaderFromNode').returns(header);
             sinon.stub(component, '_getElementHeightEntry').returns({value: 1});
             sinon.stub(component, '_getOperationForHeadersStack').returns(operation);
             sinon.stub(component, '_resizeHeadersCallback');
-            const getGroupByHeaderStub = sinon.stub(component, '_getGroupByHeader').returns({id: 1});
+            const getGroupByHeaderStub = sinon.stub(component, '_getGroupByHeader').returns({
+                id: 1,
+                inst: {
+                    resizeHandler: resizeHandlerStub
+                }
+            });
 
             component._headers = {1: header};
             component._resizeObserverCallback(entries);
             sinon.assert.calledOnce(getGroupByHeaderStub);
-        })
+            sinon.assert.calledOnce(resizeHandlerStub);
+        });
 
         it('should call _resizeHeadersCallback with correct operation', () => {
             const header = {
@@ -189,6 +197,7 @@ describe('SizeAndVisibilityObserver', () => {
             ];
             sinon.stub(component, '_getHeaderFromNode').returns(getHeader());
             sinon.stub(component, '_resizeHeadersCallback');
+            sinon.stub(component, '_isHeaderOfGroup').returns(false);
             component._resizeObserverCallback(entries);
             sinon.assert.called(component._resizeHeadersCallback);
 

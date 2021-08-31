@@ -35,6 +35,8 @@ export interface IExecuteCommandParams extends ISourceOptions {
     nodeProperty?: string;
     navigation?: INavigationSourceConfig;
     sourceController?: SourceController;
+    operationsController: OperationsController;
+    toolbarItem: Model;
 }
 
 export default class OperationsController extends mixin<SerializableMixin, OptionsToPropertyMixin, ObservableMixin>(

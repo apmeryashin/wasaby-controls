@@ -34,7 +34,7 @@ export enum BACKGROUND_STYLE {
 }
 
 export interface IStickyHeaderOptions extends IControlOptions {
-    position: POSITION;
+    position: IPositionOrientation;
     mode: MODE;
     fixedZIndex: number;
     zIndex: number;
@@ -104,7 +104,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     protected _isIOSChrome: boolean = StickyBlock._isIOSChrome();
     protected _isMobileIOS: boolean = detection.isMobileIOS;
 
-    private _isFixed: boolean = false;
+    private _isStickyShadowVisible: boolean = false;
     private _isShadowVisibleByController: {
         top: SHADOW_VISIBILITY_BY_CONTROLLER;
         bottom: SHADOW_VISIBILITY_BY_CONTROLLER;
@@ -260,6 +260,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._offsetTopChanged = true;
             this._notify('stickyHeaderOffsetTopChanged', [], {bubbling: true});
         }
+        this._bottomShadowHiddenClassRemovedinJS = null;
     }
 
     protected _afterUpdate(oldOptions: IStickyHeaderOptions): void {
@@ -357,6 +358,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     resetSticky(): void {
         fastUpdate.resetSticky([this._container]);
+    }
+
+    get position(): IPositionOrientation {
+        return this._options.position;
     }
 
     get height(): number {
@@ -660,6 +665,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                 // отрисуется в следующем цикле синхронизации.
                 if (this._isBottomShadowVisible && this._children.hasOwnProperty('shadowBottom')) {
                     this._children.shadowBottom.classList.remove(this._isMobileIOS ? 'ws-invisible' : 'ws-hidden');
+                    this._bottomShadowHiddenClassRemovedinJS = true;
                 }
                 this._container.style.zIndex = this._model?.fixedPosition ? this._options.fixedZIndex : '';
             });
@@ -671,7 +677,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
      * @private
      */
     protected _fixationStateChangeHandler(newPosition: POSITION, prevPosition: POSITION): void {
-        this._isFixed = !!newPosition;
+        this._isStickyShadowVisible = !!newPosition;
         this._fixedNotifier(newPosition, prevPosition);
     }
 
@@ -848,9 +854,16 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         return `${position}: ${-coord}px;`;
     }
 
-    protected updateFixed(ids: number[]): void {
-        const isFixed: boolean = ids.indexOf(this._index) !== -1;
-        if (this._isFixed !== isFixed) {
+    // Необходимость в "фейковом" событии fixed описана в интерфейсе IFixedEventData (scroll/StickyBlock/Utils.ts)
+    fakeFixedNotifier(isFixed: boolean): void {
+        const newPosition = isFixed ? this._model.fixedPosition : '';
+        const prevPosition = isFixed ? '' : this._model.fixedPosition;
+        this._fixedNotifier(newPosition, prevPosition, true);
+    }
+
+    protected updateShadowVisible(ids: number[], needFakeFixedNotify: boolean = true): void {
+        const isStickyShadowVisible: boolean = ids.indexOf(this._index) !== -1;
+        if (this._isStickyShadowVisible !== isStickyShadowVisible) {
             if (!this._model) {
                 this._init();
                 // Модель еще не существует, значит заголвок только что создан и контроллер сказал
@@ -864,14 +877,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                         this._bottomShadowHiddenClassRemovedinJS = true;
                     }
                 });
-            } else if (this._model.fixedPosition) {
-                if (isFixed) {
-                    this._fixedNotifier(this._model.fixedPosition, '', true);
-                } else {
-                    this._fixedNotifier('', this._model.fixedPosition, true);
-                }
+            } else if (this._model.fixedPosition && needFakeFixedNotify) {
+                this.fakeFixedNotifier(isStickyShadowVisible);
             }
-            this._isFixed = isFixed;
+            this._isStickyShadowVisible = isStickyShadowVisible;
             this._updateStylesIfCanScroll();
         }
     }
@@ -880,12 +889,12 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         // При создании нового заголовка в группе проставляем ему видимость тени в обход циклов синхронизации, чтобы не было скачков.
         // Может произойти такой случай, когда группа в этот момент открепляется (тень нужно скрыть), а мы убрали ws-hidden с тени руками,
         // поэтому vdom думает, что данный класс на ноде весит и не проставляет его при синхронизации - восстановим ws-hidden сами.
-        if (this._bottomShadowHiddenClassRemovedinJS) {
+        // _bottomShadowHiddenClassRemovedinJS будем сбрасывать в каждом цикле синхронизации, т.к _isBottomShadowVisible
+        // может измениться лишь под конец цикла синхронизации.
+        if (this._bottomShadowHiddenClassRemovedinJS && !this._isBottomShadowVisible) {
             this._bottomShadowHiddenClassRemovedinJS = null;
-            if (!this._isBottomShadowVisible) {
-                const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
-                this._children.shadowBottom.classList.add(hiddenClass);
-            }
+            const hiddenClass = this._isMobileIOS ? 'ws-invisible' : 'ws-hidden';
+            this._children.shadowBottom.classList.add(hiddenClass);
         }
     }
 
@@ -920,11 +929,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         const shadowEnabled: boolean = this._isShadowVisibleByScrollState(shadowPosition);
 
         return !!(shadowEnabled &&
-            ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
+            ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isStickyShadowVisible)) &&
             (shadowVisibility === SHADOW_VISIBILITY.visible ||
                 shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
                 shadowVisibility === SHADOW_VISIBILITY.initial) &&
-            (mode === MODE.stackable || this._isFixed));
+            (mode === MODE.stackable || this._isStickyShadowVisible));
     }
 
     private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {

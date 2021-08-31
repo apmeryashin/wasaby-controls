@@ -37,7 +37,7 @@ import VirtualScrollContainer from 'Controls/_scroll/VirtualScrollContainer';
 import {SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
 
 import Group from 'Controls/_scroll/StickyBlock/Group';
-import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset} from 'Controls/_scroll/StickyBlock/Utils';
+import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset, IFixedEventData} from 'Controls/_scroll/StickyBlock/Utils';
 import {getHeadersHeight as getStickyHeadersHeight} from 'Controls/_scroll/StickyBlock/Utils/getHeadersHeight';
 import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
@@ -60,5 +60,6 @@ export {
    IntersectionObserverSyntheticEntry,
    VirtualScrollContainer,
    _ContainerBase,
-   SHADOW_VISIBILITY
+   SHADOW_VISIBILITY,
+   IFixedEventData
 };

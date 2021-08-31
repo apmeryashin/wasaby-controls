@@ -3,7 +3,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
 import * as ColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/ColumnTemplate';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
-import * as CircleTemplate from 'wml!Controls/_filterPanel/Editors/resources/CircleTemplate';
 import {StackOpener, DialogOpener} from 'Controls/popup';
 import {BaseEditor} from 'Controls/_filterPanel/Editors/Base';
 import {Model} from 'Types/entity';
@@ -15,7 +14,7 @@ import {
     IItemActionsOptions,
     ISelectorDialogOptions
 } from 'Controls/interface';
-import {IList} from 'Controls/list';
+import {IList, MultiSelectCircleTemplate} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
 import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
@@ -71,7 +70,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
 
 class ListEditor extends BaseEditor {
     protected _template: TemplateFunction = ListTemplate;
-    protected _circleTemplate: TemplateFunction = CircleTemplate;
+    protected _circleTemplate: TemplateFunction = MultiSelectCircleTemplate;
     protected _columns: object[] = null;
     protected _popupOpener: StackOpener|DialogOpener = null;
     protected _items: RecordSet = null;

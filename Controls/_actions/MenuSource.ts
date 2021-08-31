@@ -22,12 +22,9 @@ export default class ActionsSource extends Memory {
                 return result;
             });
         } else {
-            const menuItems = this._collection.getToolbarItems().filter((item) => {
-                return item.showType !== showType.TOOLBAR;
-            });
             return Promise.resolve(new RecordSet({
                 keyProperty: 'id',
-                rawData: menuItems
+                rawData: this._collection.getMenuItems()
             }));
         }
     }

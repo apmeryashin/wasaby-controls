@@ -8,10 +8,10 @@ define(
       'Types/chain',
       'Controls/_dropdown/dropdownHistoryUtils',
       'Application/Env',
-      'Controls/dataSource',
+      'Controls/error',
       'Core/nativeExtensions'
    ],
-   function(filter, Clone, sourceLib, collection, history, chain, historyUtils, Env, dataSource) {
+   function(filter, Clone, sourceLib, collection, history, chain, historyUtils, Env, errorLib) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -437,7 +437,7 @@ define(
                let sandBox = sinon.createSandbox();
                sandBox.stub(view, '_loadUnloadedFrequentItems').rejects(42);
                sandBox.stub(view, '_sourcesIsLoaded').returns(true);
-               let stub = sandBox.stub(dataSource.error, 'process');
+               let stub = sandBox.stub(errorLib, 'process');
 
                view._configs = {};
                view._options.panelTemplateName = 'panelTemplateName.wml';

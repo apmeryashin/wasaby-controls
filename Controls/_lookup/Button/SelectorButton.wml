@@ -21,7 +21,7 @@
         </Controls._lookup.SelectedCollection>
         <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
             <span on:click="_showSelectorHandler()" attr:class="controls-Selectorbutton_button-more
-                    controls-Selectorbutton_button-more_fontsize-{{_options.selectorCaptionFontSize}}">
+                    controls-Selectorbutton_button-more_fontsize-{{_options.selectorCaptionFontSize}}" attr:data-qa="Selectorbutton_button-more">
                 {{_options.showSelectorCaption}}
             </span>
         </ws:if>
@@ -30,7 +30,7 @@
                 <ws:partial template="{{_options.clearButtonTemplate}}"/>
             </ws:if>
             <ws:else>
-                <span on:click="_reset()" attr:class="controls-Selectorbutton__button-reset">{[Очистить]}</span>
+                <span on:click="_reset()" attr:class="controls-Selectorbutton__button-reset" attr:data-qa="Selectorbutton__button-reset">{[Очистить]}</span>
             </ws:else>
         </ws:if>
     </ws:if>
@@ -48,7 +48,8 @@
                                      fontSize="{{_options.fontSize}}"
                                      buttonStyle="{{_options.buttonStyle}}"
                                      style="{{_options.style}}"
-                                     on:click="_showSelectorHandler()"/>
+                                     on:click="_showSelectorHandler()"
+                                     attr:data-qa="Selectorbutton_link"/>
         </ws:else>
     </ws:else>
     <ws:if data="{{_options.validationStatus!== 'valid'}}">

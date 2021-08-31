@@ -125,7 +125,7 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
         return Notification._privateOpenPopup(config);
     }
     private static _privateOpenPopup(config: INotificationPopupOptions): Promise<string> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             if (!config.hasOwnProperty('isHelper')) {
                 Logger.warn('Controls/popup:Dialog: Для открытия нотификационных окон из ' +
                     'кода используйте NotificationOpener');
@@ -147,6 +147,8 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
                     BaseOpener.showDialog(result.template, newConfig, result.controller).then((popupId: string) => {
                         resolve(popupId);
                     });
+                }).catch((error: RequireError) => {
+                    reject(error);
                 });
             } else {
                 compatibleOpen(newConfig).then((popupId: string) => {

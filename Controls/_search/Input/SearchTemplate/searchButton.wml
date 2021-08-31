@@ -6,4 +6,5 @@
                     {{searchButtonIconStyle ? 'controls-icon_style-' + searchButtonIconStyle : 'controls-Search__searchButton_color' + calculateState()}}
                     {{searchButtonAlign === 'right' ? 'icon-Search2' : 'icon-Search3'}}"
      on:mousedown="_searchClick()"
-     attr:ws-no-focus="true"></div>
+     attr:ws-no-focus="true"
+     data-qa="Search__searchButton"></div>

@@ -2,13 +2,12 @@
 import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 import { Async as BaseAsync, IAsyncOptions, TAsyncStateReceived } from 'UICore/Async';
 import rk = require('i18n!Controls');
-import {ViewConfig} from "../_error/Handler";
-import {IoC} from "Env/Env";
-import {Controller, ParkingController} from "Controls/error";
+import { IoC } from 'Env/Env';
+import { ErrorController, ErrorViewConfig, ErrorViewMode } from 'Controls/error';
 import { IControlOptions } from 'UICommon/Base';
 
 export interface IOptions extends IAsyncOptions {
-   errorCallback: (viewConfig: void|ViewConfig, error: unknown) => void;
+   errorCallback: (viewConfig: void|ErrorViewConfig, error: unknown) => void;
 }
 
 const ERROR_NOT_FOUND = 404;
@@ -26,7 +25,7 @@ const ERROR_NOT_FOUND = 404;
 
 export default class Async extends BaseAsync {
    protected defaultErrorMessage: string = rk('У СБИС возникла проблема');
-   private errorCallback: (viewConfig: void|ViewConfig, error: unknown) => void;
+   private errorCallback: (viewConfig: void|ErrorViewConfig, error: unknown) => void;
 
    _beforeMount(options: IOptions, _: unknown, receivedState: TAsyncStateReceived): Promise<TAsyncStateReceived> {
       this.errorCallback = options.errorCallback;
@@ -37,20 +36,19 @@ export default class Async extends BaseAsync {
       return ModulesLoader.loadAsync<T>(name).catch((error) => {
          IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, error);
 
-         return new ParkingController(
-             {configField: Controller.CONFIG_FIELD}
-         ).process({error, mode: 'include'}).then((viewConfig: ViewConfig<{message: string}>) => {
-            if (this.errorCallback && typeof this.errorCallback === 'function') {
-               this.errorCallback(viewConfig, error);
-            }
+         return new ErrorController().process({error, mode: ErrorViewMode.include})
+             .then((viewConfig: ErrorViewConfig<{message: string}>) => {
+                if (this.errorCallback && typeof this.errorCallback === 'function') {
+                   this.errorCallback(viewConfig, error);
+                }
 
-            if (!viewConfig?.status || viewConfig.status !== ERROR_NOT_FOUND) {
-               ModulesLoader.unloadSync(name);
-            }
+                if (!viewConfig?.status || viewConfig.status !== ERROR_NOT_FOUND) {
+                   ModulesLoader.unloadSync(name);
+                }
 
-            const message = viewConfig?.options?.message;
-            throw new Error(message || this.defaultErrorMessage);
-         });
+                const message = viewConfig?.options?.message;
+                throw new Error(message || this.defaultErrorMessage);
+             });
       });
    }
 
@@ -66,6 +64,6 @@ export default class Async extends BaseAsync {
  * Если не передавать (т.е. не обрабатывать ошибку), то при ошибке загрузки компонента будет выведен текст ошибки,
  * поясняющий причину ошибки.
  * С этим callback можно обработать ошибку как нужно прикладному разработчику.
- * @see Controls/dataSource:error.Controller
+ * @see Controls/error:ErrorController
  *
  */

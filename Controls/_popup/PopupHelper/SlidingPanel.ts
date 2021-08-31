@@ -18,11 +18,13 @@ type TDesktopOpener = StackOpener | DialogOpener;
 
 class SlidingPanelOpener extends BaseOpener {
     static _openPopup(config: ISlidingPanelPopupOptions, popupController: string = POPUP_CONTROLLER): Promise<string> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             BaseOpener.requireModules(config, popupController).then((result: ILoadDependencies) => {
                 BaseOpener.showDialog(result.template, config, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });
+            }).catch((error: RequireError) => {
+                reject(error);
             });
         });
     }

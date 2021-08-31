@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {BaseControl} from 'Controls/list';
+import {BaseControl, IBaseControlOptions} from 'Controls/list';
 import {IEditableList} from 'Controls/_baseList/interface/IEditableList';
 import {RecordSet} from 'Types/collection';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
@@ -7,7 +7,6 @@ import {NewSourceController} from 'Controls/dataSource';
 import * as sinon from 'sinon';
 import {Logger} from 'UI/Utils';
 import {CssClassesAssert as aAssert} from 'ControlsUnit/CustomAsserts';
-import {fetch, HTTPStatus} from 'Browser/Transport';
 
 const getData = (dataCount: number = 0) => {
     const data = [];
@@ -31,8 +30,14 @@ function getBaseControlOptionsWithEmptyItems(): object {
     };
 }
 
-function getCorrectBaseControlConfig(cfg): object {
+export function getCorrectBaseControlConfig(options): object {
     let sourceController;
+    const cfg = {
+        viewName: 'Controls/List/ListView',
+        keyProperty: 'id',
+        viewModelConstructor: 'Controls/display:Collection',
+        ...options
+    };
 
     if (cfg.source) {
         sourceController = new NewSourceController({
@@ -55,7 +60,14 @@ function getCorrectBaseControlConfig(cfg): object {
     return cfg;
 }
 
-async function getCorrectBaseControlConfigAsync(cfg): Promise<object> {
+export async function getCorrectBaseControlConfigAsync(options): Promise<object> {
+    const cfg = {
+        viewName: 'Controls/List/ListView',
+        keyProperty: 'id',
+        viewModelConstructor: 'Controls/display:Collection',
+        ...options
+    };
+
     // Эмулируем, что в baseControl передан sourceController
     let sourceController;
     if (cfg.source) {
@@ -913,7 +925,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     keyProperty: 'keyProperty',
                     data: []
                 }),
-                viewModelConstructor: 'Controls/display:Collection'
+                keyProperty: undefined
             });
 
             let baseControl = new BaseControl(baseControlOptions);
