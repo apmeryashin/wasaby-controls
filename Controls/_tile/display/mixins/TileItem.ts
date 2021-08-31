@@ -25,6 +25,7 @@ const DEFAULT_WIDTH_PROPORTION = 1;
 export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
 export type TTitlePosition = 'underImage'|'onImage';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
+export type TImagePadding = 's'|'default';
 export type TImagePosition = 'top'|'right'|'bottom'|'left';
 export type TShadowVisibility = 'visible'|'hidden'|'onhover';
 export type TItemActionsPlace = 'wrapper'|'title';
@@ -846,6 +847,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TImageSize} imageSize Размер изображения
      * @param {TImageFit} imageFit Режим отображения изображения
      * @param {string} imageProportionOnItem Пропорции изображения, заданные на темплейте элемента
+     * @param {TImagePadding} imagePadding отступы изображения от края плитки
      */
     getImageClasses(
         itemType: TTileItem = 'default',
@@ -856,7 +858,8 @@ export default abstract class TileItem<T extends Model = Model> {
         imagePosition?: TImagePosition,
         imageSize?: TImageSize,
         imageFit?: TImageFit,
-        imageProportionOnItem?: string
+        imageProportionOnItem?: string,
+        imagePadding: TImagePadding = 'default'
     ): string {
         let classes = '';
 
@@ -890,6 +893,16 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ' controls-TileView__image';
                 classes += ' controls-TileView__image_align_center';
                 classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
+
+                // При установке отступа величины s для горизонтально расположенных изображений в виде прямоугольника
+                // к изображению применяется скругление углов.
+                if (imagePadding !== 'default' && imageViewMode === 'rectangle' &&
+                    (imagePosition === 'left' || imagePosition === 'right')) {
+                    classes += ` controls-TileView__richTemplate_image_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
+                    classes += ` controls-TileView__richTemplate_image_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
+                    classes += ` controls-TileView__richTemplate_image_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
+                    classes += ` controls-TileView__richTemplate_image_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}`;
+                }
                 break;
         }
 
@@ -906,6 +919,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TImagePosition} imagePosition Позиция изображения
      * @param {TImageSize} imageSize Размер изображения
      * @param {string} imageProportionOnItem Пропорции изображения, заданные на темплейте элемента
+     * @param {TImagePadding} imagePadding отступы изображения от края плитки
      */
     getImageWrapperClasses(
         itemType: TTileItem = 'default',
@@ -915,7 +929,8 @@ export default abstract class TileItem<T extends Model = Model> {
         imageProportion?: number,
         imagePosition?: TImagePosition,
         imageSize?: TImageSize,
-        imageProportionOnItem?: string
+        imageProportionOnItem?: string,
+        imagePadding: TImagePadding = 'default'
     ): string {
         let classes = 'controls-TileView__imageWrapper';
         if (templateTitleStyle === 'accent') {
@@ -944,7 +959,16 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 // TODO в этом случае не нужны общие классы вверху, нужно написать так чтобы они не считались
                 classes = ' controls-TileView__richTemplate_imageWrapper';
-                classes += ` controls-TileView_richTemplate_image_spacing_viewMode_${imageViewMode}`;
+
+                if (imagePosition === 'left' || imagePosition === 'right' || imageViewMode !== 'rectangle') {
+                    // Для imageViewMode === 'rectangle' и imagePosition === 'left' || 'right'
+                    // не надо добавлять отступ со стороны текста, поэтому тут важна позиция.
+                    // Для остальных вариантов добавляется отступ по умолчанию.
+                    const positionMod = imageViewMode === 'rectangle' ? `_position_${imagePosition}` : '';
+                    classes += ' controls-TileView_richTemplate_image_spacing_' +
+                        `${imagePadding}${positionMod}_viewMode_${imageViewMode}`;
+                }
+
 
                 const isVertical = imagePosition === 'top' || imagePosition === 'bottom';
                 if (!imageProportionOnItem || imageViewMode !== 'rectangle' || !isVertical) {
