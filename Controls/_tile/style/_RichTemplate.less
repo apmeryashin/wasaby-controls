@@ -83,18 +83,6 @@
    position: relative;
 }
 
-.controls-TileView_richTemplate_image_spacing_s_position_left_viewMode_rectangle {
-   border-left: var(--offset_s) solid transparent;
-   border-top: var(--offset_s) solid transparent;
-   border-bottom: var(--offset_s) solid transparent;
-}
-
-.controls-TileView_richTemplate_image_spacing_s_position_right_viewMode_rectangle {
-   border-right: var(--offset_s) solid transparent;
-   border-top: var(--offset_s) solid transparent;
-   border-bottom: var(--offset_s) solid transparent;
-}
-
 // region image rounded borders
 
 .controls-TileView__richTemplate_image_roundBorder {
@@ -117,10 +105,44 @@
 
 // region image rounded borders
 
-.controls-TileView_richTemplate_image_spacing_default_viewMode_circle,
-.controls-TileView_richTemplate_image_spacing_default_viewMode_ellipse {
+// region image spacing
+
+.controls-TileView_richTemplate_image_offset_default_position_left_viewMode_rectangle,
+.controls-TileView_richTemplate_image_offset_s_position_left_viewMode_rectangle {
+   border-left: var(--offset_s) solid transparent;
+   border-top: var(--offset_s) solid transparent;
+   border-bottom: var(--offset_s) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_offset_default_position_right_viewMode_rectangle,
+.controls-TileView_richTemplate_image_offset_s_position_right_viewMode_rectangle {
+   border-right: var(--offset_s) solid transparent;
+   border-top: var(--offset_s) solid transparent;
+   border-bottom: var(--offset_s) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_offset_m_position_left_viewMode_rectangle {
+   border-left: var(--offset_m) solid transparent;
+   border-top: var(--offset_m) solid transparent;
+   border-bottom: var(--offset_m) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_offset_m_position_right_viewMode_rectangle {
+   border-right: var(--offset_m) solid transparent;
+   border-top: var(--offset_m) solid transparent;
+   border-bottom: var(--offset_m) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_offset_default_viewMode_circle,
+.controls-TileView_richTemplate_image_offset_m_viewMode_ellipse {
    border: var(--offset_m) solid transparent;
 }
+
+.controls-TileView_richTemplate_image_offset_s_viewMode_ellipse {
+   border: var(--offset_s) solid transparent;
+}
+
+// endregion image spacing
 
 .controls-TileView__richTemplate_characteristics_spacing,
 .controls-TileView__richTemplate_description_spacing,

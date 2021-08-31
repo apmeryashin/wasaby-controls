@@ -5,7 +5,7 @@
                 imageSize="{{ imageSize || 's' }}"
                 imageFit="{{ imageFit || 'cover' }}"
                 imageProportion="{{ (item || itemData).getImageProportion(imageProportion) }}"
-                imagePadding="{{ imagePadding }}"
+                imageOffset="{{ imageOffset }}"
                 scope="{{_options}}"/>
     <ws:partial if="{{afterImageTemplate}}"
                 template="{{afterImageTemplate}}"
