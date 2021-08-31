@@ -1,6 +1,6 @@
 import { IContainerConstructor } from 'Controls/_dataSource/error';
 import IControllerBase from 'Controls/_form/interface/IControllerBase';
-import { error as dataSourceError } from 'Controls/dataSource';
+import {ErrorController} from 'Controls/error';
 import {Memory, SbisService} from 'Types/source';
 
 /**
@@ -49,6 +49,11 @@ export default interface IFormController extends IControllerBase {
      */
     destroyMetaData?: object;
     /**
+     * @name Controls/form:IFormController#updateMetaData
+     * @cfg {Object} Дополнительные данные, которые будут переданы в метод записи. Подробнее {@link Types/source:ICrud#update}.
+     */
+    updateMetaData?: object;
+    /**
      * @name Controls/form:IFormController#errorContainer
      * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения ошибки, он оборачивает весь контент формы.
      * Способ отображения ошибки (диалог, вместо контента или во всю страницу) настраивается через переопределение {@link errorController}.
@@ -57,10 +62,10 @@ export default interface IFormController extends IControllerBase {
     errorContainer?: IContainerConstructor;
     /**
      * @name Controls/form:IFormController#errorController
-     * @cfg {Controls/dataSource:error.Controller} Компонент для обработки ошибки.
+     * @cfg {Controls/error:ErrorController} Компонент для обработки ошибки.
      * Данную опцию следует определять, если нужно изменить способ отображения ошибки (диалог, вместо контента или во всю страницу) или добавить свои обработчики ошибок.
      */
-    errorController?: dataSourceError.Controller;
+    errorController?: ErrorController;
     /**
      * @name Controls/form:IFormController#initializingWay
      * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.

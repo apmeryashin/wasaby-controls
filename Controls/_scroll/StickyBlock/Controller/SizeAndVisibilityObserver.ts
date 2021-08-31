@@ -89,6 +89,11 @@ export default class SizeAndVisibilityObserver {
         }
     }
 
+    private _groupInObject(group: Group, object: object): boolean {
+        const groupInObject = Object.entries(object).find(([, updateGroup]) => updateGroup.index === group.index);
+        return !!groupInObject;
+    }
+
     private _resizeObserverCallback(entries: any): void {
         // В момент переключения по вкладкам в мастер детейле на ноде может не быть замаунчен стикиБлок
         // Контроллер инициализируется при наведении мыши или когда заголовки зафиксированы.
@@ -98,7 +103,9 @@ export default class SizeAndVisibilityObserver {
 
         let heightChanged = false;
         let operation;
+        let groupHeader;
         const updateHeaders = {};
+        const updateGroups = {};
         for (const entry of entries) {
             const header = this._getHeaderFromNode(entry.target);
 
@@ -108,10 +115,19 @@ export default class SizeAndVisibilityObserver {
                     operation = this._getOperationForHeadersStack(entry.contentRect.height, heightEntry.value);
                 }
 
+                // Если заголовок состоит в группе и у него изменился размер, то нужно будет пересчитать top'ы всех
+                // заголовков группы.
+                if (this._isHeaderOfGroup(header.index)) {
+                    groupHeader = this._getGroupByHeader(header);
+                    const groupInUpdateGroups = this._groupInObject(groupHeader, updateGroups);
+                    if (!groupInUpdateGroups) {
+                        updateGroups[groupHeader.id] = groupHeader;
+                    }
+                }
+
                 if (operation) {
                     if (this._isHeaderOfGroup(header.index)) {
-                        const groupHeader = this._getGroupByHeader(header);
-                        const groupInUpdateHeaders = Object.entries(updateHeaders).find(([, updateHeader]) => updateHeader.header.id === groupHeader.id);
+                        const groupInUpdateHeaders = this._groupInObject(groupHeader, updateHeaders);
                         if (!groupInUpdateHeaders) {
                             updateHeaders[groupHeader.id] = {
                                 header: groupHeader,
@@ -132,6 +148,9 @@ export default class SizeAndVisibilityObserver {
 
         if (heightChanged) {
             this._resizeHeadersCallback(updateHeaders);
+            for (const groupId of Object.keys(updateGroups)) {
+                updateGroups[groupId].inst.resizeHandler();
+            }
         }
     }
 

@@ -1307,7 +1307,6 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * @class Controls/_explorer/View
  * @extends UI/Base:Control
- * @implements Controls/interface:IErrorController
  * @implements Controls/list:IReloadableList
  * @implements Controls/interface:ISource
  * @implements Controls/interface/ITreeGridItemTemplate
@@ -1344,7 +1343,6 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * @class Controls/_explorer/View
  * @extends UI/Base:Control
- * @implements Controls/interface:IErrorController
  * @implements Controls/list:IReloadableList
  * @implements Controls/interface:ISource
  * @implements Controls/interface/ITreeGridItemTemplate

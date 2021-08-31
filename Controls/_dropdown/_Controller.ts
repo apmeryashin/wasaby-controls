@@ -3,7 +3,8 @@ import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdow
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {isEmptyItem, prepareEmpty} from 'Controls/_dropdown/Util';
-import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {process} from 'Controls/error';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {descriptor, Model} from 'Types/entity';
@@ -356,7 +357,7 @@ export default class _Controller implements IDropdownController {
           (error) => {
              // Если не загрузился модуль меню, то просто выводим сообщение о ошибке загрузки
              if (!requirejs.defined('Controls/menu')) {
-                dataSourceError.process({error});
+                process({error});
              } else if (this._menuSource) {
                 return openPopup();
              }

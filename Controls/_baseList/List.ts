@@ -22,7 +22,6 @@ import 'css!Controls/baseList';
  *
  * @class Controls/_list/List
  * @extends UI/Base:Control
- * @implements Controls/interface:IErrorController
  * @implements Controls/interface:ISource
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/interface/IPromisedSelectable
@@ -51,7 +50,6 @@ import 'css!Controls/baseList';
  *
  * @class Controls/_list/List
  * @extends UI/Base:Control
- * @implements Controls/interface:IErrorController
  * @implements Controls/interface:ISource
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/interface/IPromisedSelectable

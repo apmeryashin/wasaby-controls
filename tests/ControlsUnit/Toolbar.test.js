@@ -448,9 +448,15 @@ define(
                toolbar._notify = () => {};
                toolbar._resultHandler('itemClick', itemWithOutMenu);
                assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
+
+               isMenuClosed = false;
+               toolbar._notify = () => false;
+               toolbar._resultHandler('itemClick', itemWithOutMenu);
+               assert.equal(isMenuClosed, false, 'menu opened if notify click result is false');
             });
             it('_closeHandler', () => {
                let isMenuClosed = false;
+               toolbar._sticky.isOpened = () => false;
                toolbar._notify = (e, arr, bubl) => {
                   assert.equal(e, 'menuClosed', 'closeHandler is uncorrect');
                   assert.equal(bubl.bubbling, true, 'closeHandler is uncorrect');

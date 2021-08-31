@@ -29,7 +29,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         controlLine: Element;
     };
     private _isPanelMounted: boolean = false;
-    private _currentTouchYPosition: number = null;
+    private _currentTouchPosition: { x: number, y: number } = null;
     private _startTouchYPosition: number = null;
     private _scrollState: object = null;
     private _swipeInProcess: boolean = false;
@@ -128,7 +128,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     protected _touchMoveHandler(event: SyntheticEvent<TouchEvent>): void {
         if (this._scrollAvailable && this._isSwipeForScroll(event)) {
             // Расчет оффсета тача должен начинаться только с того момента как закончится скролл, а не со старта тача
-            this._currentTouchYPosition = null;
+            this._currentTouchPosition = null;
             return;
         }
 
@@ -137,23 +137,32 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             event.preventDefault();
         }
 
+        const touchData = event.nativeEvent.changedTouches[0];
+        const currentTouchPosition = {
+            x: touchData.clientX,
+            y: touchData.clientY
+        };
+
         // Если тач начался со скролла, то оффсет нужно начинать с того момента, как закончился скролл
-        if (!this._currentTouchYPosition) {
-            this._currentTouchYPosition = event.nativeEvent.changedTouches[0].clientY;
+        if (!this._currentTouchPosition) {
+            this._currentTouchPosition = currentTouchPosition;
         }
 
-        const currentTouchY = event.nativeEvent.changedTouches[0].clientY;
-        const offsetY = currentTouchY - this._currentTouchYPosition;
+        const prevTouchPosition = this._currentTouchPosition;
 
-        this._currentTouchYPosition = currentTouchY;
+        this._currentTouchPosition = currentTouchPosition;
+
+        const xOffset = currentTouchPosition.x - prevTouchPosition.x;
+        const yOffset = currentTouchPosition.y - prevTouchPosition.y;
 
         // Аналогичный drag'n'drop функционал. Собираем общий offset относительно начальной точки тача.
         if (this._touchDragOffset) {
-            this._touchDragOffset.y += offsetY;
+            this._touchDragOffset.x += xOffset;
+            this._touchDragOffset.y += yOffset;
         } else {
             this._touchDragOffset = {
-                x: 0,
-                y: offsetY
+                x: xOffset,
+                y: yOffset
             };
         }
         event.stopPropagation();
@@ -165,7 +174,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             this._notifyDragEnd();
             this._touchDragOffset = null;
         }
-        this._startTouchYPosition = null;
+        this._currentTouchPosition = null;
         this._swipeInProcess = false;
     }
 
@@ -242,9 +251,14 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             contentHeight: startContentHeight
         } = this._dragStartHeightDimensions;
         const scrollContentOffset = contentHeight - startScrollHeight;
+        const popupHeight = this._options.slidingPanelOptions.height;
 
-        // Если нет доступного контента для разворота, то не пытаемся что-то развернуть
-        if (this._options.slidingPanelOptions.height === startContentHeight && realHeightOffset > 0) {
+        // Если при старте свайпа нет доступного контента для разворота, то не пытаемся что-то развернуть
+        if (
+            popupHeight === startContentHeight &&
+            popupHeight === startScrollHeight &&
+            realHeightOffset > 0
+        ) {
             offsetY = 0;
         } else if (
             // Если остаток доступного контента меньше сдвига, то сдвигаем на размер оставшегося контента

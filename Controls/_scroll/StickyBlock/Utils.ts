@@ -1,5 +1,6 @@
 import {detection} from 'Env/Env';
 import {getDimensions} from 'Controls/sizeUtils';
+import {StickyBlock} from 'Controls/scroll';
 
 let lastId = 0;
 
@@ -48,7 +49,7 @@ export const enum MODE {
 
 export type TRegisterEventData = {
    id: number;
-   inst?: object;
+   inst?: StickyBlock;
    container: HTMLElement;
    position?: string;
    mode?: string;

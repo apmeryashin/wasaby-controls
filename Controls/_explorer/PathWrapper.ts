@@ -3,8 +3,6 @@ import {Path} from 'Controls/_dataSource/calculatePath';
 import {IHeaderCell} from 'Controls/grid';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-// tslint:disable-next-line:ban-ts-ignore
-// @ts-ignore
 import * as template from 'wml!Controls/_explorer/PathController/PathWrapper';
 import {TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
 
@@ -23,6 +21,12 @@ interface IOptions extends IControlOptions {
     rootVisible?: boolean;
     breadcrumbsVisibility?: 'hidden' | 'visible';
     afterBreadCrumbsTemplate?: string | TemplateFunction;
+
+    /**
+     * Временная опция, которая включает отображение крошек в новом дизайне
+     * https://online.sbis.ru/opendoc.html?guid=bc6cb214-d119-4ae6-98b2-c147df660b46
+     */
+    feature1182709671?: boolean;
 }
 
 /**
@@ -69,6 +73,13 @@ export default class PathWrapper extends Control<IOptions> {
     private static _isNeedCrumbs(options: IOptions): boolean {
         if (options.breadcrumbsVisibility === 'hidden') {
             return false;
+        }
+
+        // В новом дизайне крошки видны всегда, т.к. там есть кнопка меню.
+        // Кроме случая когда крошки явно скрыли через breadcrumbsVisibility, т.к.
+        // в этом случае кто-то другой крошки показывает
+        if (options.feature1182709671) {
+            return true;
         }
 
         const items = options.breadCrumbsItems;

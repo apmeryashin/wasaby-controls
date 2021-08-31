@@ -7,7 +7,6 @@
  * @public
  * @author Северьянов А.А.
  */
-import * as parking from 'Controls/_dataSource/parking';
 import * as error from 'Controls/_dataSource/error';
 import requestDataUtil from 'Controls/_dataSource/requestDataUtil';
 import {nodeHistoryUtil} from 'Controls/_dataSource/nodeHistoryUtil';
@@ -15,7 +14,6 @@ import groupUtil from 'Controls/_dataSource/GroupUtil';
 import {ILoadDataConfig, ILoadDataResult, IDataLoaderOptions} from './_dataSource/DataLoader';
 
 export {
-    parking,
     error,
     requestDataUtil,
     ILoadDataConfig as ISourceConfig,

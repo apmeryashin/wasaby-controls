@@ -8,7 +8,6 @@
  *
  * @class Controls/columns:View
  * @extends UI/Base:Control
- * @implements Controls/interface:IErrorController
  * @implements Controls/list:IListNavigation
  * @implements Controls/interface:ISource
  * @implements Controls/interface/IItemTemplate

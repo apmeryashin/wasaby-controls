@@ -23,6 +23,14 @@ interface IContainerOptions extends IControlOptions {
     excludedKeys: TKeySelection;
 }
 
+const INVERT_ACTION_CONFIG = {
+    actionName: 'Controls/actions:InvertSelection',
+    order: 1
+};
+
+const DEFAULT_LIST_ACTIONS = [INVERT_ACTION_CONFIG];
+const START_ORDER_NOT_DEFAULT_ACTIONS = 1000;
+
 export default class ActionsContainer extends Control<IContainerOptions> {
     protected _template: TemplateFunction = template;
     protected _actionsCollection: ActionsCollection;
@@ -40,15 +48,18 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     }
 
     protected _beforeMount(options: IContainerOptions): void {
-        this._subscribeCollectionChange(options._dataOptionsValue, options.prefetchData);
+        this._subscribeControllersChanges(options._dataOptionsValue, options.prefetchData);
         this._actionsCollection = new ActionsCollection({
-            actions: options.actions,
-            listActions: options.listActions,
+            listActions: this._prepareActionsOrder(options.listActions).concat(DEFAULT_LIST_ACTIONS),
+            actions: this._prepareActionsOrder(options.actions),
             prefetch: options.prefetchData
         });
         this._toolbarItems = this._getToolbarItems(this._actionsCollection.getToolbarItems());
         this._actionsCollection.subscribe('toolbarConfigChanged', (event, items) => {
             this._toolbarItems = this._getToolbarItems(items);
+            this._menuSource = new MenuSource({
+                collection: this._actionsCollection
+            });
         });
         this._menuSource = new MenuSource({
             collection: this._actionsCollection
@@ -66,9 +77,6 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     protected _beforeMenuOpen(): object | void {
         if (this._operationsController.getOperationsPanelVisible()) {
             return {
-                popupOptions: {
-                    closeOnOutsideClick: false
-                },
                 templateOptions: {
                     backgroundStyle: 'secondary',
                     hoverBackgroundStyle: 'secondary',
@@ -85,6 +93,14 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         });
     }
 
+    protected _prepareActionsOrder(actions: IAction[]): IAction[] {
+        const resultActions = [...actions];
+        return resultActions.map((action) => {
+            action.order = action.order ? action.order + START_ORDER_NOT_DEFAULT_ACTIONS : START_ORDER_NOT_DEFAULT_ACTIONS;
+            return action;
+        });
+    }
+
     protected _operationsPanelVisibleChanged(e: SyntheticEvent, state: boolean): void {
         this._actionsCollection.setOperationsPanelVisible(state);
     }
@@ -93,11 +109,14 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._actionsCollection.selectionChange(this._sourceController.getItems(), selection);
     }
 
-    protected _beforeUpdate(newOptions: IContainerOptions): void {
-        if (newOptions.actions !== this._options.actions) {
+    protected _beforeUpdate(options: IContainerOptions): void {
+        if (options.actions !== this._options.actions ||
+            this._options.listActions !== options.listActions
+        ) {
             this._actionsCollection.update({
-                listActions: newOptions.listActions,
-                actions: newOptions.actions
+                listActions: this._prepareActionsOrder(options.listActions).concat(DEFAULT_LIST_ACTIONS),
+                actions: this._prepareActionsOrder(options.actions),
+                prefetch: options.prefetchData
             });
         }
     }
@@ -106,8 +125,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         event: SyntheticEvent,
         item: Model,
         clickEvent: SyntheticEvent
-    ): void {
+    ): boolean {
         event.stopPropagation();
+        const isOperationsPanelVisible = this._operationsController.getOperationsPanelVisible();
         const action = this._actionsCollection.getExecuteAction(item);
         Store.dispatch('executeOperation', {
             action,
@@ -115,6 +135,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             toolbarItem: item
         });
         this._notify('operationPanelItemClick', [action, clickEvent, item], {bubbling: true});
+        return !isOperationsPanelVisible;
     }
 
     getSourceController(dataValue, prefetch: ILoadDataResult[]): SourceController {
@@ -133,7 +154,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         }
     }
 
-    private _subscribeCollectionChange(dataContext, prefetch: ILoadDataResult[]): void {
+    private _subscribeControllersChanges(dataContext, prefetch: ILoadDataResult[]): void {
         if (prefetch || dataContext) {
             this._sourceController = this.getSourceController(dataContext, prefetch);
             this._operationsController = this.getOperationController(dataContext, prefetch);
@@ -146,6 +167,14 @@ export default class ActionsContainer extends Control<IContainerOptions> {
 
     private _updateActions(event: EventObject, items: RecordSet): void {
         this._actionsCollection.collectionChange(items);
+    }
+
+    protected _toolbarMenuOpened(): void {
+        this._operationsController.setOperationsMenuVisible(true);
+    }
+
+    protected _toolbarMenuClosed(): void {
+        this._operationsController.setOperationsMenuVisible(false);
     }
 
     protected _beforeUnmount(): void {

@@ -3,14 +3,14 @@ import {Record, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 
-import {Controller as ErrorController, Mode as ErrorMode, ViewConfig as ErrorViewConfig} from 'Controls/error';
+import {ErrorController, ErrorViewMode, ErrorViewConfig} from 'Controls/error';
 import {Logger} from 'UI/Utils';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 
 export interface ICrudWrapperOptions {
     source: ICrud;
     errorController?: ErrorController;
-    errorViewMode?: ErrorMode;
+    errorViewMode?: ErrorViewMode;
 }
 
 /**
@@ -25,13 +25,13 @@ export interface ICrudWrapperOptions {
  * });
  * const handlers = {
  *    handlers: [
- *        (config: HandlerConfig): error.ViewConfig) => ({
+ *        (config: IErrorHandlerConfig): error.ViewConfig) => ({
  *            template: LockedErrorTemplate,
  *            options: {
  *                // ...
  *            }
  *        })
- *        (config: HandlerConfig): error.ViewConfig) => ({
+ *        (config: IErrorHandlerConfig): error.ViewConfig) => ({
  *            template: LockedErrorTemplate,
  *            options: {
  *                // ...
@@ -39,7 +39,7 @@ export interface ICrudWrapperOptions {
  *        })
  *    ]
  * }
- * const errorController = new error.Controller({handlers});
+ * const errorController = new ErrorController({handlers});
  * const errorConfig: ISourceErrorConfig = {
  *     mode: error.Mode.include,
  *     onBeforeProcessError: (error: Error) => {
@@ -203,10 +203,10 @@ export class CrudWrapper {
      * @param mode
      * @private
      */
-    private _processError(error: Error, mode?: ErrorMode): Promise<void | ErrorViewConfig> {
+    private _processError(error: Error, mode?: ErrorViewMode): Promise<void | ErrorViewConfig> {
         return this._errorController.process({
             error,
-            mode: mode || ErrorMode.include
+            mode: mode || ErrorViewMode.include
         });
     }
 
@@ -262,17 +262,17 @@ export class CrudWrapper {
 
 /**
  * @name Controls/dataSource/CrudWrapper#errorController
- * @cfg {Controls/dataSource:error.Controller} Контроллер ошибки c предварительно настроенными Handlers
+ * @cfg {Controls/error:ErrorController} Контроллер ошибки c предварительно настроенными Handlers
  * @example
  * const handlers = {
  *    handlers: [
- *        (config: HandlerConfig): error.ViewConfig) => ({
+ *        (config: IErrorHandlerConfig): error.ViewConfig) => ({
  *            template: LockedErrorTemplate,
  *            options: {
  *                // ...
  *            }
  *        })
- *        (config: HandlerConfig): error.ViewConfig) => ({
+ *        (config: IErrorHandlerConfig): error.ViewConfig) => ({
  *            template: LockedErrorTemplate,
  *            options: {
  *                // ...
@@ -280,9 +280,9 @@ export class CrudWrapper {
  *        })
  *    ]
  * }
- * const errorController = new error.Controller(handlers);
+ * const errorController = new ErrorController(handlers);
  */
 /*
  * @name Controls/dataSource/CrudWrapper#errorController
- * @cfg {Controls/dataSource:error.Controller} Error controller instance with previously configured handlers
+ * @cfg {Controls/error:ErrorController} Error controller instance with previously configured handlers
  */

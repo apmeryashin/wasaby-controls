@@ -1,30 +1,34 @@
 /* global define, beforeEach, afterEach, describe, it, assert, sinon */
 define([
-   'Controls/dataSource',
-   'Env/Env',
+   'Controls/error',
    'Browser/Transport',
    'Types/entity',
+   'Env/Env',
    'UI/Utils'
 ], function(
-   dataSource,
-   { constants },
+   errLib,
    Transport,
    { PromiseCanceledError },
+   { constants },
    { Logger }
 ) {
-   describe('Controls/dataSource:error.Controller', function() {
-      const Controller = dataSource.error.Controller;
+   describe('Controls/error:ErrorController', function() {
+      const Controller = errLib.ErrorController;
+      const newConfigProp = 'testErrorController';
+      let oldConfigProp = Controller.APP_CONFIG_PROP;
       let controller;
-      let popupHelper;
+      let appHandlers;
 
       function createController() {
-         popupHelper = {
-            openConfirmation: sinon.stub().returns(Promise.resolve())
-         };
-         controller = new Controller({}, popupHelper);
+         Controller.APP_CONFIG_PROP = newConfigProp;
+         constants.ApplicationConfig[newConfigProp] = [];
+         appHandlers = constants.ApplicationConfig[newConfigProp];
+         controller = new Controller();
       }
 
       afterEach(() => {
+         Controller.APP_CONFIG_PROP = oldConfigProp;
+         delete constants.ApplicationConfig[newConfigProp];
          sinon.restore();
       });
 
@@ -41,19 +45,19 @@ define([
       describe('addHandler()', function() {
          createController();
 
-         it('adds to _handlers', function() {
+         it('adds to handlers', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
-            assert.include(controller._controller._handlers, handler);
+            assert.include(controller.handlers, handler);
          });
 
-         it('doesn\'t add to _handlers twice', function() {
+         it('doesn\'t add to handlers twice', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
             controller.addHandler(handler);
             assert.equal(
-               controller._controller._handlers.indexOf(handler),
-               controller._controller._handlers.lastIndexOf(handler)
+               controller.handlers.indexOf(handler),
+               controller.handlers.lastIndexOf(handler)
             );
          });
       });
@@ -65,11 +69,11 @@ define([
             assert.isFunction(controller.removeHandler);
          });
 
-         it('removes from _handlers', function() {
+         it('removes from handlers', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
             controller.removeHandler(handler);
-            assert.notInclude(controller._controller._handlers, handler);
+            assert.notInclude(controller.handlers, handler);
          });
 
          it('doesn\'t remove other handlers', function() {
@@ -78,7 +82,22 @@ define([
             controller.addHandler(handler1);
             controller.addHandler(handler2);
             controller.removeHandler(handler1);
-            assert.include(controller._controller._handlers, handler2);
+            assert.include(controller.handlers, handler2);
+         });
+      });
+
+      describe('setOnProcess', () => {
+         const onProcess = () => null;
+
+         it('onProcess function is set from options', () => {
+            const ctrl = new Controller({ onProcess });
+            assert.strictEqual(ctrl.onProcess, onProcess);
+         });
+
+         it('sets new onProcess function', () => {
+            const ctrl = new Controller();
+            ctrl.setOnProcess(onProcess);
+            assert.strictEqual(ctrl.onProcess, onProcess);
          });
       });
 
@@ -102,7 +121,6 @@ define([
          });
 
          afterEach(function() {
-            controller.destroy();
             controller = null;
             error = null;
          });
@@ -143,7 +161,7 @@ define([
          it('calls handler with current args', function() {
             const ARGS = {
                error: error,
-               mode: dataSource.error.Mode.include
+               mode: errLib.ErrorViewMode.include
             };
             const handlerPromise = addHandlerPromise();
             return controller.process(ARGS)
@@ -151,12 +169,22 @@ define([
                .then(args => assert.deepEqual(args, ARGS));
          });
 
-         it('calls all registered handlers', function() {
-            const promises = [];
-            for (let i = 0; i < 5; i++) {
-               promises.push(addHandlerPromise());
+         it('calls all registered handlers in correct order', function() {
+            const result = [];
+            const pushResult = (data) => (() => { result.push(data) });
+
+            for (let i = 0; i < 3; i++) {
+               appHandlers.push(pushResult(`appHandler${i}`));
+               controller.addHandler(pushResult(`postHandler${i}`), true);
+               controller.addHandler(pushResult(`handler${i}`));
             }
-            return controller.process(error).then(() => Promise.all(promises));
+
+            return controller.process(error)
+               .then(() => assert.deepEqual(result, [
+                  'handler0', 'handler1', 'handler2',
+                  'appHandler0', 'appHandler1', 'appHandler2',
+                  'postHandler0', 'postHandler1', 'postHandler2'
+               ]));
          });
 
          it('stops calling handlers after receiving an answer', function() {
@@ -175,7 +203,7 @@ define([
             const RESULT = {
                template: 'test',
                options: {},
-               mode: dataSource.error.Mode.include
+               mode: errLib.ErrorViewMode.include
             };
             controller.addHandler(() => RESULT);
             return controller.process(error).then((result) => {
@@ -187,22 +215,49 @@ define([
             });
          });
 
-         it('shows default dialog if gets no result from handlers', function() {
+         it('returns default ViewConfig if gets no result from handlers', function() {
             for (let i = 0; i < 5; i++) {
                controller.addHandler(() => undefined);
             }
-            const theme = 'test';
+            return controller.process({ error })
+               .then((viewConfig) => {
+                  assert.isTrue(error.processed, 'marks error as processed');
+                  assert.deepEqual(viewConfig, {
+                     mode: 'dialog',
+                     options: { message: 'test error' }
+                  });
+               });
+         });
+
+         it('sets ViewConfig.mode the same as was passed in ProcessConfig', () => {
+            const RESULT = {
+               template: 'test',
+               mode: errLib.ErrorViewMode.include
+            };
+            controller.addHandler(() => RESULT);
             return controller.process({
                error,
-               theme
-            }).then((viewConfig) => {
-               assert.isUndefined(viewConfig, 'returns undefined');
-               assert.isTrue(error.processed, 'marks error as processed');
-               assert.isTrue(popupHelper.openConfirmation.calledOnce, 'openConfirmation called');
-               assert.include(popupHelper.openConfirmation.getCall(0).args[0], {
-                  theme,
-                  message: error.message
-               }, 'openConfirmation called with theme and message');
+               mode: errLib.ErrorViewMode.page
+            }).then((result) => {
+               assert.deepEqual(result, {
+                  template: RESULT.template,
+                  mode: 'page'
+               });
+            });
+         });
+
+         it('calls onProcess function and replace ViewConfig by it\'s result', () => {
+            controller.setOnProcess((viewConfig) => {
+               viewConfig.mode = errLib.ErrorViewMode.page;
+               return viewConfig;
+            });
+            return controller.process(error).then((result) => {
+               // deleting onProcess function
+               controller.setOnProcess();
+               assert.deepEqual(result, {
+                  mode: 'page',
+                  options: { message: 'test error' }
+               });
             });
          });
 
@@ -210,7 +265,7 @@ define([
             const viewConfig = {
                template: 'test',
                options: {},
-               mode: dataSource.error.Mode.include
+               mode: errLib.ErrorViewMode.include
             };
 
             const handlerPromises = [
@@ -243,11 +298,11 @@ define([
             return controller.process(error).then((result) => {
                checkHandler();
 
-               assert.deepEqual(viewConfig, {
+               assert.deepEqual({
                   mode: result.mode,
                   template: result.template,
                   options: result.options
-               }, 'viewConfig');
+               }, viewConfig, 'viewConfig');
 
                assert.isTrue(Logger.error.calledTwice, 'all handler errors were logged');
 
@@ -274,8 +329,6 @@ define([
             return controller.process(error).then((viewConfig) => {
                checkHandler();
                assert.isUndefined(viewConfig, 'returns undefined');
-               assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
-
                return Promise.all(handlerPromises);
             });
          });
@@ -299,98 +352,51 @@ define([
             return controller.process(error).then((viewConfig) => {
                checkHandler();
                assert.isUndefined(viewConfig, 'returns undefined');
-               assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
-
                return Promise.all(handlerPromises);
             });
          });
-
-         // call application handler
-         // default mode in handler's config
-         // default mode in result
-         // dafault template
       });
 
-      describe('_getIVersion()', () => {
-         it('returns empty object on server side', () => {
-            const { isServerSide } = constants;
-            constants.isServerSide = true;
-            try {
-               assert.isEmpty(Controller._getIVersion());
-            } finally {
-               constants.isServerSide = isServerSide;
-            }
-         });
-
-         it('returns IVersionable on browser side', () => {
-            const { isServerSide } = constants;
-            constants.isServerSide = false;
-            try {
-               const result = Controller._getIVersion();
-               assert.isObject(result, 'must return an object');
-               assert.isTrue(result['[Types/_entity/IVersionable]'], 'must have [Types/_entity/IVersionable]');
-               assert.isFunction(result.getVersion, 'must have getVersion()');
-               assert.isNumber(result.getVersion(), 'getVersion() must return a number');
-            } finally {
-               constants.isServerSide = isServerSide;
-            }
-         });
-      });
-
-      describe('_isNeedHandle()', () => {
+      describe('isNeedHandle()', () => {
          it('returns false for Abort error', () => {
             const error = new Transport.fetch.Errors.Abort('test-url');
-            assert.isFalse(Controller._isNeedHandle(error));
+            assert.isFalse(Controller.isNeedHandle(error));
          });
 
          it('returns false for processed error', () => {
             const error = { processed: true };
-            assert.isFalse(Controller._isNeedHandle(error));
+            assert.isFalse(Controller.isNeedHandle(error));
          });
 
          it('returns false for canceled error', () => {
             const error = { canceled: true };
-            assert.isFalse(Controller._isNeedHandle(error));
+            assert.isFalse(Controller.isNeedHandle(error));
          });
 
          it('returns true for other types', () => {
             const error = new Error();
-            assert.isTrue(Controller._isNeedHandle(error));
+            assert.isTrue(Controller.isNeedHandle(error));
          });
       });
 
-      describe('_prepareConfig()', () => {
+      describe('getHandlerConfig()', () => {
          beforeEach(() => {
             createController();
          });
 
          it('returns a config for an error', () => {
             const error = new Error();
-            const result = controller._prepareConfig(error);
+            const result = Controller.getHandlerConfig(error);
             assert.deepEqual(result, {
                error,
                mode: 'dialog'
-            });
-         });
-
-         it('returns a config for an error with preset mode', () => {
-            const error = new Error();
-            controller = new Controller({
-               viewConfig: {
-                  mode: 'include'
-               }
-            }, popupHelper);
-            const result = controller._prepareConfig(error);
-            assert.deepEqual(result, {
-               error,
-               mode: 'include'
             });
          });
 
          it('returns a config with default mode', () => {
             const error = new Error();
             const config = { error };
-            const result = controller._prepareConfig(config);
+            const result = Controller.getHandlerConfig(config);
             assert.notStrictEqual(result, config, 'must return a new object');
             assert.deepEqual(result, {
                error,
@@ -398,47 +404,14 @@ define([
             });
          });
 
-         it('returns a copy of the config', () => {
-            const error = new Error();
-            const config = {
-               error,
-               mode: 'include'
-            };
-            const result = controller._prepareConfig(config);
-            assert.notStrictEqual(result, config, 'must return a new object');
-            assert.deepEqual(result, config);
-         });
-
          it('returns a config with the preset mode', () => {
             const error = new Error();
             const config = {
-               error
-            };
-            controller = new Controller({
-               viewConfig: {
-                  mode: 'include'
-               }
-            }, popupHelper);
-            const result = controller._prepareConfig(config);
-            assert.notStrictEqual(result, config, 'must return a new object');
-            assert.deepEqual(result, {
                error,
                mode: 'include'
-            });
-         });
-
-         it('returns a config, preset mode overrides config mode', () => {
-            const error = new Error();
-            const config = {
-               error,
-               mode: 'page'
             };
-            controller = new Controller({
-               viewConfig: {
-                  mode: 'include'
-               }
-            }, popupHelper);
-            const result = controller._prepareConfig(config);
+            controller = new Controller();
+            const result = Controller.getHandlerConfig(config);
             assert.notStrictEqual(result, config, 'must return a new object');
             assert.deepEqual(result, {
                error,

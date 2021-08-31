@@ -342,7 +342,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         if (this._$childrenProperty) {
             this._setImportantProperty(this._$childrenProperty);
         }
-        this._$hasMoreStorage = options.hasMoreStorage || {};
 
         if (options.expandedItems instanceof Array) {
             this.setExpandedItems(options.expandedItems);
@@ -1386,5 +1385,6 @@ Object.assign(Tree.prototype, {
     _$nodeFooterVisibilityCallback: null,
     _$nodeFooterTemplateMoreButton: null,
     _$moreFontColorStyle: null,
+    _$hasMoreStorage: {},
     _root: null
 });

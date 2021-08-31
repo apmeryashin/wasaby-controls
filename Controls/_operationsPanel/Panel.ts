@@ -31,6 +31,10 @@ export default class extends Control<IOperationsPanelOptions> {
         this._operationsController = options.operationsController;
     }
 
+    protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
+        return options.selectedKeysCount !== 0;
+    }
+
     protected _beforeUpdate(options: IOperationsPanelOptions): void {
         if (this._shouldOpenMenu(options)) {
             this._operationsController.setOperationsMenuVisible(true);
@@ -51,20 +55,29 @@ export default class extends Control<IOperationsPanelOptions> {
         }
     }
 
-    protected _getDialogOpener(): Promise<DialogOpener> {
+    protected _getDialogOpener(): DialogOpener {
         if (!this._dialogOpener) {
-            return import('Controls/popup').then((popup) => {
-                this._dialogOpener = new popup.DialogOpener();
-                return this._dialogOpener;
-            });
+            this._dialogOpener = new DialogOpener();
+            return this._dialogOpener;
         } else {
-            return Promise.resolve(this._dialogOpener);
+            return this._dialogOpener;
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        this._operationsController.setOperationsMenuVisible(false);
+        this._operationsController.setOperationsPanelVisible(false);
+        this._operationsController = null;
+        if (this._dialogOpener) {
+            this._dialogOpener.destroy();
+            this._dialogOpener = null;
         }
     }
 
     private _openCloud(): void {
-        this._getDialogOpener().then((opener) => {
-            const target = this._children.target;
+        const target = this._children.target;
+        const opener = this._getDialogOpener();
+        if (!opener.isOpened()) {
             opener.open({
                 template: 'Controls/operationsPanel:Cloud',
                 opener: this,
@@ -79,24 +92,20 @@ export default class extends Control<IOperationsPanelOptions> {
                 },
                 eventHandlers: {
                     onClose: () => {
-                        this._options.operationsController.setOperationsMenuVisible(false);
-                        this._options.operationsController.setOperationsPanelVisible(false);
+                        if (this._operationsController) {
+                            this._operationsController.setOperationsMenuVisible(false);
+                            this._operationsController.setOperationsPanelVisible(false);
+                        }
                         Store.dispatch('operationsPanelExpanded', false);
                     },
                     onResult: (action: string, type) => {
-                        if (action === 'click') {
-                            this._options.operationsController.selectionTypeChanged('all');
-                        }
                         if (action === 'selectedTypeChanged') {
-                            this._options.operationsController.selectionTypeChanged(type);
+                            this._operationsController.selectionTypeChanged(type);
                         }
                     }
                 },
                 target
             });
-        });
-    }
-    protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
-        return options.selectedKeysCount > 0;
+        }
     }
 }

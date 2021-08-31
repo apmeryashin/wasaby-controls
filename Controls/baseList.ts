@@ -29,6 +29,7 @@ import GroupTemplate = require('wml!Controls/_baseList/GroupTemplate');
 import NavigationButtonTemplate = require('wml!Controls/_baseList/BaseControl/NavigationButton');
 import FooterTemplate = require('wml!Controls/_baseList/ListView/Footer');
 import MultiSelectTemplate = require('wml!Controls/_baseList/Render/multiSelect');
+import MultiSelectCircleTemplate = require('wml!Controls/_baseList/Render/CircleTemplate');
 import EditingTemplate = require('wml!Controls/_baseList/EditInPlace/EditingTemplate');
 import MoneyEditingTemplate = require('wml!Controls/_baseList/EditInPlace/decorated/Money');
 import NumberEditingTemplate = require('wml!Controls/_baseList/EditInPlace/decorated/Number');
@@ -43,6 +44,7 @@ export {
     // TODO: Удалить по https://online.sbis.ru/opendoc.html?guid=d63d6b23-e271-4d0b-a015-1ad37408b76b
     EditingTemplate as BaseEditingTemplate,
     MultiSelectTemplate,
+    MultiSelectCircleTemplate,
     MoneyEditingTemplate,
     NumberEditingTemplate
 };

@@ -2,6 +2,9 @@ import {Model} from 'Types/entity';
 import {CrudEntityKey} from 'Types/source';
 import {Control, IControlOptions} from 'UI/Base';
 
+/**
+ * На основании переданного значения root и keyProperty собирает Model хлебной крошки
+ */
 function getRootModel(root: CrudEntityKey, keyProperty: string): Model {
    const rawData = {};
 
