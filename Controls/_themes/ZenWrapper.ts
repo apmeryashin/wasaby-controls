@@ -77,6 +77,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--readonly_color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
             '--primary_text-color': ZenWrapper.getColor(complementaryRGB),
             '--primary_icon-color': ZenWrapper.getColor(complementaryRGB),
+            '--primary_hover_icon-color': ZenWrapper.getColor(complementaryRGB),
             '--primary_border-color': ZenWrapper.getColor(complementaryRGB),
             '--secondary_text-color': ZenWrapper.getMonochromeColor(brightness),
             '--secondary_icon-color': ZenWrapper.getMonochromeColor(brightness),
@@ -88,8 +89,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                     ZenWrapper.getColorWithOpacity(dominantRGB, '0.6'),
             '--pale_border-color': 'transparent',
             '--pale_hover_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
-            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
-            //'--primary_hover_icon-color': brightness === 'light' ? '#fff' : '#000'
+            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB)
         };
     }
 
@@ -109,7 +109,8 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--readonly_border-color_button_functionalButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
             '--background-color_button_toolButton': ZenWrapper.getColor(dominantRGB),
             '--background-color_hover_button_toolButton': ZenWrapper.getColor(complementaryRGB),
-            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB)
+            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
+            '--readonly_border-color_button_toolButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3')
         };
     }
 
