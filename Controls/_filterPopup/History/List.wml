@@ -1,6 +1,6 @@
 <ws:template name="pinned">
    <span title="{{item.get('pinned') ? rk('Открепить') : rk('Закрепить')}}" class="{{item.get('pinned') ? 'icon-Pin controls-HistoryList__iconPin-active' : 'icon-PinNull controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin controls-HistoryList__iconPin"
-         on:click="_onPinClick(item)"></span>
+         on:click="_onPinClick(item)" data-qa="HistoryList__iconPin"></span>
 </ws:template>
 
 <ws:template name="favorite">
@@ -10,7 +10,7 @@
 
 <ws:template name="itemContent">
    <div on:swipe="_itemSwipe(item)"
-      class="controls-HistoryList__itemWrapper controls-HistoryList_{{_options.orientation}}__itemWrapper">
+      class="controls-HistoryList__itemWrapper controls-HistoryList_{{_options.orientation}}__itemWrapper" data-qa="HistoryList__item">
       <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
            on:click="_clickHandler(item)" title="{{text}}">{{text}}</div>
       <ws:partial

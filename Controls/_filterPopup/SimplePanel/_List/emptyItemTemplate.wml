@@ -1,7 +1,8 @@
 <Controls.scroll:StickyBlock
         mode="replaceable"
         attr:class="controls-SimplePanel-dropdown__emptyItem"
-        shadowVisibility="visible">
+        shadowVisibility="visible"
+        attr:data-qa="SimplePanel-dropdown__emptyItem">
    <ws:partial template="Controls/dropdown:ItemTemplate"
                itemData="{{itemData}}"
                displayProperty="{{displayProperty}}"
