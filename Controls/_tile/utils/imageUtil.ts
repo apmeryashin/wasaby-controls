@@ -104,7 +104,13 @@ export function getImageSize(
 export function getImageClasses(imageFit: TImageFit, imageRestrictions: IImageRestrictions = {}): string {
     let result = '';
     if (imageFit === IMAGE_FIT.CONTAIN) {
-        result = 'controls-TileView__image-contain';
+        result = ' controls-TileView__image-contain';
+    }
+    if (imageFit === IMAGE_FIT.COVER) {
+        result = ' controls-TileView__image-cover';
+    }
+    if (imageFit === IMAGE_FIT.NONE) {
+        result = ' controls-TileView__image-none';
     }
     if (imageRestrictions.height) {
         result += ' controls-TileView__image_fullHeight';

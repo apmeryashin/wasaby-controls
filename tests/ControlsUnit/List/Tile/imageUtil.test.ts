@@ -24,8 +24,8 @@ function mockHTMLElement(width, height) {
 
 describe('tileImageUtil', () => {
     describe('getImageClasses', () => {
-        assert.strictEqual(getImageClasses(IMAGE_FIT.CONTAIN), 'controls-TileView__image-contain');
-        assert.strictEqual(getImageClasses(IMAGE_FIT.COVER), '');
+        assert.strictEqual(getImageClasses(IMAGE_FIT.CONTAIN), ' controls-TileView__image-contain');
+        assert.strictEqual(getImageClasses(IMAGE_FIT.COVER), ' controls-TileView__image-cover');
     });
     describe('getImageUrl', () => {
         it ('get url', () => {
