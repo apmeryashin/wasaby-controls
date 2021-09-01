@@ -37,7 +37,7 @@ import { ICollection, ISourceCollection, IItemPadding } from './interface/IColle
 import { IDragPosition } from './interface/IDragPosition';
 import { IRoundBorder } from './interface/IRoundBorder';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {Footer} from 'Controls/_display/Footer';
+import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
 
@@ -3342,13 +3342,17 @@ export default class Collection<
             return;
         }
 
-        return new Footer({
+        return new Footer(this._getFooterOptions(options));
+    }
+
+    protected _getFooterOptions(options: IOptions): IFooterOptions {
+        return {
             owner: this,
             sticky: options.stickyFooter,
             contentTemplate: options.footerTemplate,
             style: this.getStyle(),
             theme: this.getTheme()
-        });
+        }
     }
     //endregion
 
