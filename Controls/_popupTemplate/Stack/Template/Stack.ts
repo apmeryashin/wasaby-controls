@@ -156,6 +156,11 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
  */
 
 /**
+ * @name Controls/_popupTemplate/Stack#leftContentTemplate
+ * @cfg {function|String} Шаблон контента слева границы стекового окна.
+ */
+
+/**
  * @name Controls/_popupTemplate/Stack#maximizeButtonVisibility
  * @cfg {Boolean} Определяет, будет ли отображаться кнопка изменения размера.
  * @default false
