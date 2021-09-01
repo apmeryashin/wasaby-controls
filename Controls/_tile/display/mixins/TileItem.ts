@@ -22,20 +22,24 @@ import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 
+import {
+    TImagePosition,
+    TImageViewMode,
+    TGradientDirection,
+    TImageSize,
+    TTitlePosition,
+    TImageEffect,
+    TContentPadding
+} from 'Controls/_tile/interface/IRichTemplate';
+
 export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
-export type TTitlePosition = 'underImage'|'onImage';
-export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
-export type TImageOffset = 's'|'m'|'none'|'default';
-export type TImagePosition = 'top'|'left'|'right';
+
 export type TShadowVisibility = 'visible'|'hidden'|'onhover';
 export type TItemActionsPlace = 'wrapper'|'title';
-export type TImageSize = 's'|'m'|'l';
 export type TImageAlign = 'top'|'center';
-export type TImageEffect = 'none'|'gradient';
 export type TTitleStyle = 'light'|'dark'|'accent'|'onhover'|'partial';
 export type TGradientPlace = 'image'|'title';
 export type TGradientType = 'dark'|'light'|'custom';
-export type TGradientDirection = 'toBottom' | 'toBottomRight';
 export type TFooterPlace = 'wrapper'|'content';
 export type TActionMode = 'showType'|'adaptive'|'strict';
 
@@ -845,7 +849,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TImageSize} imageSize Размер изображения
      * @param {TImageFit} imageFit Режим отображения изображения
      * @param {string} imageProportionOnItem Пропорции изображения, заданные на темплейте элемента
-     * @param {TImageOffset} imageOffset отступы изображения от края плитки
+     * @param {TContentPadding} contentPadding: Отступ от края плитки до контента внутри неё
      */
     getImageClasses(
         itemType: TTileItem = 'default',
@@ -857,7 +861,7 @@ export default abstract class TileItem<T extends Model = Model> {
         imageSize?: TImageSize,
         imageFit?: TImageFit,
         imageProportionOnItem?: string,
-        imageOffset: TImageOffset = 'default'
+        contentPadding: TContentPadding = 'default'
     ): string {
         let classes = '';
 
@@ -894,7 +898,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
                 // При установке отступа для изображений в виде прямоугольника
                 // к изображению применяется скругление углов.
-                if (imageOffset !== 'default' && imageViewMode === 'rectangle') {
+                if (contentPadding !== 'default' && imageViewMode === 'rectangle') {
                     classes += ` controls-TileView__richTemplate_image_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
                     classes += ` controls-TileView__richTemplate_image_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
                     classes += ` controls-TileView__richTemplate_image_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
@@ -916,7 +920,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TImagePosition} imagePosition Позиция изображения
      * @param {TImageSize} imageSize Размер изображения
      * @param {string} imageProportionOnItem Пропорции изображения, заданные на темплейте элемента
-     * @param {TImageOffset} imageOffset отступы изображения от края плитки
+     * @param {TContentPadding} contentPadding: Отступ от края плитки до контента внутри неё
      */
     getImageWrapperClasses(
         itemType: TTileItem = 'default',
@@ -927,7 +931,7 @@ export default abstract class TileItem<T extends Model = Model> {
         imagePosition?: TImagePosition,
         imageSize?: TImageSize,
         imageProportionOnItem?: string,
-        imageOffset: TImageOffset = 'default'
+        contentPadding: TContentPadding = 'default'
     ): string {
         let classes = 'controls-TileView__imageWrapper';
         if (templateTitleStyle === 'accent') {
@@ -956,9 +960,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 // TODO в этом случае не нужны общие классы вверху, нужно написать так чтобы они не считались
                 classes = ' controls-TileView__richTemplate_imageWrapper';
-                const positionMod = imageViewMode === 'rectangle' ? `_position_${imagePosition}` : '';
-                classes += ` controls-TileView_richTemplate_image_offset_${imageOffset}` +
-                    `${positionMod}_viewMode_${imageViewMode}`;
+                classes += this._getImageSpacingClasses(imageViewMode, imagePosition, contentPadding);
 
                 if (!imageProportionOnItem || imageViewMode !== 'rectangle' || imagePosition !== 'top') {
                     classes += ` controls-TileView__richTemplate_image_size_` +
@@ -972,6 +974,27 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
         }
 
+        return classes;
+    }
+
+    private _getImageSpacingClasses(imageViewMode: TImageViewMode = 'rectangle',
+                                    imagePosition?: TImagePosition,
+                                    contentPadding: TContentPadding = 'default'): string {
+        const top = ` controls-TileView_richTemplate_image_viewMode_${imageViewMode}_spacing_top_${contentPadding}`;
+        const right = ` controls-TileView_richTemplate_image_viewMode_${imageViewMode}_spacing_right_${contentPadding}`;
+        const bottom = ` controls-TileView_richTemplate_image_viewMode_${imageViewMode}_spacing_bottom_${contentPadding}`;
+        const left = ` controls-TileView_richTemplate_image_viewMode_${imageViewMode}_spacing_left_${contentPadding}`;
+        let classes = '';
+
+        if (contentPadding === 'default' || imageViewMode !== 'rectangle') {
+            return top + right + bottom + left;
+
+        } else {
+            classes += imagePosition !== 'top' ? bottom : '';
+            classes += imagePosition !== 'right' ? left : '';
+            classes += imagePosition !== 'bottom' ? top : '';
+            classes += imagePosition !== 'left' ? right : '';
+        }
         return classes;
     }
 
@@ -1554,12 +1577,17 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {number} titleLines Кол-во строк в заголовке
      * @param {TGradientType} gradientType Тип градиента
      * @param {TTitleStyle} titleStyle Стиль заголовка
+     * @param {TImagePosition} imagePosition Позиция изображения
+     * @param {TImageViewMode} imageViewMode Режим отображения изображения,
+     * @param {TContentPadding} contentPadding: Отступ от края плитки до контента внутри неё
      */
     getTitleWrapperClasses(
         itemType: TTileItem = 'default',
         titleLines: number = 1,
         gradientType: TGradientType = 'dark',
-        titleStyle: TTitleStyle = 'light'
+        titleStyle: TTitleStyle = 'light',
+        imagePosition: TImagePosition = 'top',
+        contentPadding: TContentPadding = 'default'
     ): string {
         let classes = '';
 
@@ -1572,6 +1600,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'rich':
                 classes += 'controls-TileView__richTemplate_itemContent ws-ellipsis';
+                classes += this._getContentSpacingClasses(imagePosition, contentPadding);
                 break;
             case 'preview':
                 classes += 'controls-TileView__previewTemplate_title';
@@ -1582,6 +1611,22 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ` controls-TileView__previewTemplate_title_text_${titleStyle}`;
                 break;
         }
+
+        return classes;
+    }
+
+    private _getContentSpacingClasses(imagePosition?: TImagePosition,
+                                      contentPadding: TContentPadding = 'default'): string {
+        let classes = '';
+        const contentPaddingTop = imagePosition !== 'top' ? contentPadding : 'default';
+        const contentPaddingRight = imagePosition !== 'right' ? contentPadding : 'default';
+        const contentPaddingBottom = imagePosition !== 'bottom' ? contentPadding : 'default';
+        const contentPaddingLeft = imagePosition !== 'left' ? contentPadding : 'default';
+
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_top_${contentPadding}`;
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_right_${contentPadding}`;
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_bottom_${contentPadding}`;
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_left_${contentPadding}`;
 
         return classes;
     }

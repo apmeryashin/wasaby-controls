@@ -3,7 +3,7 @@ import {HierarchicalMemory} from 'Types/source';
 
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 
-import * as Template from 'wml!Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/ImagePadding/ImagePadding';
+import * as Template from 'wml!Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/ContentPadding/ContentPadding';
 
 const data = [
     {

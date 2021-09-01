@@ -7,7 +7,7 @@
            height="{{ item.getImageHeightAttribute(itemType) }}"
            width="{{ item.getImageWidthAttribute(itemType) }}"
            style="{{ item.getBigGradientStyles(itemType, gradientStartColor, gradientStopColor, gradientDirection ) }}"
-           class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, imageOffset) }}"
+           class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, contentPadding) }}"
            preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType, imageFit) }}"
            data-qa="controls-TileView__image"
       >
@@ -17,7 +17,7 @@
    <ws:else>
       <div class="{{ (item || itemData).getImageAlignClasses(imageAlign) }}">
         <img
-            class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, imageOffset) }}"
+            class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, contentPadding) }}"
             src="{{(item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode)}}"
             data-qa="controls-TileView__image"
         />
@@ -27,7 +27,7 @@
 
 <ws:if data="{{ imageViewMode !== 'none' }}">
     <div
-        attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem, imageOffset) }}"
+        attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem, contentPadding) }}"
         attr:style="{{ (item || itemData).getImageWrapperStyles(itemType, imageViewMode, imagePosition) }}"
         data-qa="{{ (item || itemData).getImageWrapperDataQa() }}"
     >
