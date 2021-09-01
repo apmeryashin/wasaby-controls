@@ -1179,7 +1179,7 @@
   "--master_separator_color_list": "var(--detail_background-color_masterDetail)",
   "--master-marker_thickness_list": "3px",
   "--master-marker_color_list": "#d94700",
-  "--master-marker_height_list": "0",
+  "--master-marker_height_list": "11px",
   "--marker_border-radius_list": "2px",
   "--master_item_background-color_list": "#F8F8F8",
   "--master_item_hover_background-color_list": "#f1f2f5",
