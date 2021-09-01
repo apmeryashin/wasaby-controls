@@ -1,11 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_themes/ZenWrapper/Template';
-
-interface IRgb {
-    r: number;
-    g: number;
-    b: number;
-}
+import {IRgbColor} from 'Controls/_themes/interface/IColor';
 
 type TBrightness = 'dark' | 'light';
 
@@ -42,7 +37,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         }
     }
 
-    static calculateRGB(color: string): IRgb {
+    static calculateRGB(color: string): IRgbColor {
         if (/(\d+),\s*(\d+),\s*(\d+)/.test(color)) {
             return {
                 r: parseInt(RegExp.$1, 10),
@@ -54,22 +49,26 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         }
     }
 
-    static calculateVariables(rgb: IRgb, brightness: TBrightness): object {
-        const baseVars = ZenWrapper.calculateBaseVariables(rgb, brightness);
-        const buttonsVars = ZenWrapper.calculateButtonsVariables(rgb, brightness);
-        const decoratorsVars = ZenWrapper.calculateDecoratorsVariables(rgb, brightness);
-        const listsVars = ZenWrapper.calculateListsVariables(rgb, brightness);
-        const headingVars = ZenWrapper.calculateHeadingVariables(rgb, brightness);
+    static calculateVariables(dominantRGB: IRgbColor,
+                              complementaryRGB: IRgbColor, brightness: TBrightness): object {
+        const baseVars = ZenWrapper.calculateBaseVariables(dominantRGB, complementaryRGB, brightness);
+        const buttonsVars = ZenWrapper.calculateButtonsVariables(dominantRGB, complementaryRGB, brightness);
+        const decoratorsVars = ZenWrapper.calculateDecoratorsVariables(dominantRGB, complementaryRGB, brightness);
+        const listsVars = ZenWrapper.calculateListsVariables(dominantRGB, complementaryRGB, brightness);
+        const headingVars = ZenWrapper.calculateHeadingVariables(dominantRGB, complementaryRGB, brightness);
+        const toggleVars = ZenWrapper.calculateToggleVariables(dominantRGB, complementaryRGB, brightness);
         return {
             ...baseVars,
             ...buttonsVars,
             ...decoratorsVars,
             ...listsVars,
-            ...headingVars
+            ...headingVars,
+            ...toggleVars
         };
     }
 
-    static calculateBaseVariables(rgb: IRgb, brightness: TBrightness): object {
+    static calculateBaseVariables(dominantRGB: IRgbColor,
+                                  complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
@@ -77,37 +76,50 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--unaccented_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--unaccented_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--readonly_color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
-            '--primary_text-color': ZenWrapper.getColor(rgb),
-            '--primary_icon-color': ZenWrapper.getColor(rgb),
-            '--primary_border-color': ZenWrapper.getColor(rgb),
+            '--primary_text-color': ZenWrapper.getColor(complementaryRGB),
+            '--primary_icon-color': ZenWrapper.getColor(complementaryRGB),
+            '--primary_hover_icon-color': ZenWrapper.getColor(complementaryRGB),
+            '--primary_border-color': ZenWrapper.getColor(complementaryRGB),
             '--secondary_text-color': ZenWrapper.getMonochromeColor(brightness),
             '--secondary_icon-color': ZenWrapper.getMonochromeColor(brightness),
             '--link_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--pale_contrast_background-color': brightness === 'light' ?
+                    ZenWrapper.getColorWithOpacity(complementaryRGB, '0.2') :
+                    ZenWrapper.getColorWithOpacity(dominantRGB, '0.6'),
+            '--pale_border-color': 'transparent',
+            '--pale_hover_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
+            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB)
         };
     }
 
-    static calculateButtonsVariables(rgb: IRgb, brightness: TBrightness): object {
+    static calculateButtonsVariables(dominantRGB: IRgbColor,
+                                     complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--text-color_button': ZenWrapper.getMonochromeColor(brightness),
             '--text-contrast-color_button': brightness === 'light' ? '#fff' : '#000',
             '--primary_background-color_button': 'transparent',
-            '--primary_hover_same_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.3'),
-            '--primary_active_same_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.6'),
-            '--primary_contrast_background-color': ZenWrapper.getColor(rgb),
-            '--primary_hover_contrast_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.8'),
-            '--primary_active_contrast_background-color': ZenWrapper.getColorWithOpacity(rgb, '0.6'),
+            '--primary_hover_same_background-color': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.3'),
+            '--primary_active_same_background-color': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.6'),
+            '--primary_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
+            '--primary_hover_contrast_background-color': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.8'),
+            '--primary_active_contrast_background-color': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.6'),
             '--readonly_background-color_button': 'transparent',
             '--border-color_hover_button_toolButton': 'transparent',
-            '--readonly_border-color_button_functionalButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3')
+            '--readonly_border-color_button_functionalButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
+            '--background-color_button_toolButton': ZenWrapper.getColor(dominantRGB),
+            '--background-color_hover_button_toolButton': ZenWrapper.getColor(complementaryRGB),
+            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
+            '--readonly_border-color_button_toolButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3')
         };
     }
 
-    static calculateDecoratorsVariables(rgb: IRgb, brightness: TBrightness): object {
+    static calculateDecoratorsVariables(dominantRGB: IRgbColor,
+                                        complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--default_text-color_decorator_fraction': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
-            '--primary_text-color_decorator_fraction': ZenWrapper.getColorWithOpacity(rgb, '0.5'),
+            '--primary_text-color_decorator_fraction': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.5'),
             '--secondary_text-color_decorator_fraction': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--unaccented_text-color_decorator_fraction':  ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--label_text-color_decorator_fraction': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
@@ -115,10 +127,11 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         };
     }
 
-    static calculateListsVariables(rgb: IRgb, brightness: TBrightness): object {
+    static calculateListsVariables(dominantRGB: IRgbColor,
+                                   complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--node_expander_icon-color_treeGrid': ZenWrapper.getMonochromeColor(brightness),
-            '--marker_color_list': ZenWrapper.getColor(rgb),
+            '--marker_color_list': ZenWrapper.getColor(complementaryRGB),
             '--item_hover_background-color_list': brightness === 'dark' ?
                 ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1') :
                 ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.05'),
@@ -127,10 +140,22 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         };
     }
 
-    static calculateHeadingVariables(rgb: IRgb, brightness: TBrightness): object {
+    static calculateHeadingVariables(dominantRGB: IRgbColor,
+                                     complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
-            '--primary_hover_text-color_heading': ZenWrapper.getColorWithOpacity(rgb, '0.8'),
+            '--primary_hover_text-color_heading': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.8'),
             '--secondary_hover_text-color_heading': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
+        };
+    }
+
+    static calculateToggleVariables(dominantRGB: IRgbColor,
+                                    complementaryRGB: IRgbColor, brightness: TBrightness): object {
+        return {
+            '--icon_container_background_color_BigSeparator':  brightness === 'dark' ?
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.2') :
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
+            '--icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--hover_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
         };
     }
 
@@ -142,24 +167,24 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         return brightness === 'dark' ? `rgba(255,255,255,${opacity})` : `rgba(0,0,0,${opacity})`;
     }
 
-    static getColor(rgb: IRgb): string {
+    static getColor(rgb: IRgbColor): string {
         const {r: red, g: green, b: blue} = rgb;
         return `rgb(${red},${green},${blue})`;
     }
 
-    static getColorWithOpacity(rgb: IRgb, opacity: string = '1'): string {
+    static getColorWithOpacity(rgb: IRgbColor, opacity: string = '1'): string {
         const {r: red, g: green, b: blue} = rgb;
         return `rgba(${red},${green},${blue},${opacity})`;
     }
 
     static getDerivedStateFromProps(options: IZenWrapperOptions): object {
         return ZenWrapper.calculateVariables(
-            ZenWrapper.calculateRGB(options.complementaryColor), options.brightness
+            ZenWrapper.calculateRGB(options.dominantColor),
+            ZenWrapper.calculateRGB(options.complementaryColor),
+            options.brightness
         );
     }
 }
-
-
 
 /**
  * @name Controls/_themes/ZenWrapper#dominantColor
