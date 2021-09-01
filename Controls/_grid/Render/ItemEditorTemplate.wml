@@ -6,7 +6,7 @@
             <!-- Контент в реультате не тянется. -->
             <!-- Инлайн стиль, т.к. решение временное. Нет желания разбивать фикс на 2 файла -->
             <!-- Один файл удалить проще чем 2 -->
-            <div style="width: 100%;">
+            <div class="controls-GridView__itemEditor_contentWrapper">
                 <ws:partial template="{{ originContentTemplate }}" scope="{{ _options }}"/>
             </div>
         </ws:contentTemplate>
