@@ -898,7 +898,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
                 // При установке отступа для изображений в виде прямоугольника
                 // к изображению применяется скругление углов.
-                if (contentPadding !== 'default' && imageViewMode === 'rectangle') {
+                if (contentPadding !== 'default' && contentPadding !== 'null' && imageViewMode === 'rectangle') {
                     classes += ` controls-TileView__richTemplate_image_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
                     classes += ` controls-TileView__richTemplate_image_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
                     classes += ` controls-TileView__richTemplate_image_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;

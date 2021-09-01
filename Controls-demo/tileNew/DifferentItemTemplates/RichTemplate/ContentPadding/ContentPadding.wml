@@ -19,7 +19,7 @@
             imagePosition="{{itemTemplate.item.contents.imagePosition}}"
             imageViewMode="rectangle"
             imageEffect="gradient"
-            contentPadding="s"
+            contentPadding="null"
             scope="{{itemTemplate}}">
          </ws:partial>
       </ws:itemTemplate>
