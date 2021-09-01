@@ -291,6 +291,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return this._nodeFooter;
     }
 
+    getNodeFooterTemplate(): TemplateFunction {
+        return this.getOwner().getNodeFooterTemplate();
+    }
+
     // TODO есть ExpandableMixin, иконку тоже наверное нужно туда перенести
     //  он используется для группы, но можно от него унаследоваться и расширить вот этим кодом
     // region Expandable

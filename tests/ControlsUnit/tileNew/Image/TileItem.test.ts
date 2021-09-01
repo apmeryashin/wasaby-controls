@@ -20,7 +20,7 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
             it('by default', () => {
                 const item = new TileCollectionItem();
                 const result = item.getImageClasses('rich', undefined, 'center', 'rectangle', 1, 'top', 's');
-                CssClassesAssert.isSame(result, 'controls-TileView__richTemplate_image controls-TileView__image controls-TileView__image_align_center controls-TileView__richTemplate_image_viewMode_rectangle');
+                CssClassesAssert.isSame(result, 'controls-TileView__richTemplate_image controls-TileView__image controls-TileView__image_align_center controls-TileView__richTemplate_image_viewMode_rectangle controls-TileView__image-cover');
             });
 
             it('contains controls-TileView__image', () => {
@@ -55,7 +55,7 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
             it('image fit is cover', () => {
                 const item = new TileCollectionItem({imageFit: 'cover'});
                 const result = item.getImageClasses('default', undefined, 'top');
-                CssClassesAssert.isSame(result, 'controls-TileView__image_align_top controls-TileView__image_fullHeight controls-TileView__image_fullWidth');
+                CssClassesAssert.isSame(result, 'controls-TileView__image_align_top controls-TileView__image_fullHeight controls-TileView__image_fullWidth controls-TileView__image-cover');
             });
         });
     });

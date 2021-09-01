@@ -100,6 +100,7 @@ export default class DateSelector extends BaseSelector<IDateSelectorOptions> {
             selectionType: 'single',
             ranges: null,
             state: this._state,
+            _date: this._options._date,
             stateChangedCallback: this._stateChangedCallback
          }
       };

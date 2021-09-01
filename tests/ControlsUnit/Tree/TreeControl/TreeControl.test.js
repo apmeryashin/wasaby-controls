@@ -974,7 +974,8 @@ define([
                selectionType: 'all',
                selectedKeys: [],
                excludedKeys: [],
-               keyProperty: 'id'
+               keyProperty: 'id',
+               viewModelConstructor: 'Controls/treeGrid:TreeGridCollection'
             };
             const newOptions1 = {
                ...options,
@@ -991,13 +992,13 @@ define([
             };
 
             treeControl.isEditing = () => true;
-            treeControl._beforeUpdate({ ...newOptions1, viewModelConstructor: treeControl._viewModelConstructor });
+            treeControl._beforeUpdate({ ...newOptions1 });
             assert.isTrue(cancelEditCalled);
             cancelEditCalled = false;
-            treeControl.saveOptions({ ...newOptions1, viewModelConstructor: treeControl._viewModelConstructor });
+            treeControl.saveOptions({ ...newOptions1 });
 
             treeControl.isEditing = () => false;
-            treeControl._beforeUpdate({ ...newOptions2, viewModelConstructor: treeControl._viewModelConstructor });
+            treeControl._beforeUpdate({ ...newOptions2 });
             assert.isFalse(cancelEditCalled);
          });
       });

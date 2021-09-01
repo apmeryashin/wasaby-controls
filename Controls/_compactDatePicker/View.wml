@@ -1,0 +1,47 @@
+<div class="controls-CompactDatePicker controls_compactDatePicker_theme-{{ _options.theme }}">
+    <div class="controls-CompactDatePicker__header">
+        <div class="controls-CompactDatePicker__header__top-layer">
+            <div class="controls-CompactDatePicker__header__today controls-CompactDatePicker__header__today_{{ _todayIconVisible ? 'visible' : 'hidden'}}"
+                 on:click="_scrollToCurrentDate()">
+                {{ _today }}
+            </div>
+            <div class="controls-CompactDatePicker__header__month">
+                {{ _headerCaption }}
+            </div>
+            <Controls.popupTemplate:CloseButton attr:title="{[Закрыть]}" on:click="_closeClick()" viewMode="linkButton"/>
+        </div>
+        <div class="controls-CompactDatePicker__header__weekdays">
+            <ws:for data="weekday in _weekdaysCaptions">
+                <span class="controls-CompactDatePicker__header__weekdays__{{ weekday.weekend ? 'weekend' : 'workday'}}">{{ weekday.caption }}</span>
+            </ws:for>
+        </div>
+    </div>
+    <Controls.dateRange:DateRangeSelectionController
+            attr:class="controls_calendar_theme-{{_options.theme}}"
+            name="selectionController"
+
+            selectionType="{{_options.selectionType}}"
+            quantum="{{_options.ranges}}"
+
+            startValue="{{ _rangeModel.startValue }}"
+            endValue="{{ _rangeModel.endValue }}"
+
+            rangeSelectedCallback="{{ _options.rangeSelectedCallback }}"
+
+            on:rangeChanged="_rangeChangedHandler()"
+            on:startValueChanged="_proxyEvent()"
+            on:endValueChanged="_proxyEvent()"
+            on:itemClick="_itemClickHandler()"
+            on:selectionEnded="_dateRangeSelectionEndedHandler()"
+    >
+        <Controls._compactDatePicker.List
+                rangeModel="{{ _rangeModel }}"
+                displayedRanges="{{ _options.displayedRanges }}"
+                selectionType="{{ _options.selectionType }}"
+                ranges="{{ _options.ranges }}"
+                bind:position="_position"
+                bind:todayIconVisible="_todayIconVisible"
+                on:positionChanged="_positionChangedHandler()"
+        />
+    </Controls.dateRange:DateRangeSelectionController>
+</div>

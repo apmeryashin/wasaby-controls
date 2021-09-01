@@ -30,6 +30,7 @@
             value="{{_getInputValue(_options)}}"
             validationStatus="{{_options.validationStatus}}"
             contrastBackground="{{_options.contrastBackground}}"
+            dataLoadCallback="{{_options.suggestDataLoadCallback}}"
             attr:class="controls-Lookup__suggest">
         <Controls._lookup.BaseLookupView.InputRender
                 name="inputRender"

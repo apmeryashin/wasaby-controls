@@ -1,1 +1,1 @@
-<Controls._themes.Wrapper class="controls_theme-default" content="{{_options.content}}" variables="{{_variables}}"></Controls._themes.Wrapper>
+<Controls._themes.Wrapper class="controls_theme-default controls-ZenWrapper controls-ZenWrapper__{{_options.brightness}}" content="{{_options.content}}" variables="{{_variables}}"></Controls._themes.Wrapper>

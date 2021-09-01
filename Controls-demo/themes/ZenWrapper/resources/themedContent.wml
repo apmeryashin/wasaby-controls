@@ -75,20 +75,9 @@
 
     <div class="ws-flexbox controls-padding_top-l">
         <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
-            <Controls.buttons:Button contrastBackground="{{true}}" viewMode="functionalButton" icon="icon-EmptyMessage" iconSize="s" iconStyle="primary" buttonStyle="pale"></Controls.buttons:Button>
+            <Controls.buttons:Button contrastBackground="{{true}}" viewMode="functionalButton" icon="icon-EmptyMessage" translucent="{{true}}" iconSize="s" iconStyle="contrast" buttonStyle="pale"></Controls.buttons:Button>
         </div>
         <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
-            <Controls.buttons:Button contrastBackground="{{false}}" viewMode="functionalButton" icon="icon-EmptyMessage" iconSize="s" iconStyle="contrast" buttonStyle="primary" readOnly="{{true}}"></Controls.buttons:Button>
-        </div>
-    </div>
-
-
-    <div class="ws-flexbox controls-padding_top-l">
-        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
-            <Controls.buttons:Button contrastBackground="{{true}}" viewMode="toolButton" icon="icon-EmptyMessage" iconSize="s" iconStyle="primary" buttonStyle="pale"></Controls.buttons:Button>
-        </div>
-        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
-            <Controls.buttons:Button contrastBackground="{{false}}" viewMode="toolButton" icon="icon-EmptyMessage" iconSize="s" iconStyle="contrast" buttonStyle="primary" readOnly="{{true}}"></Controls.buttons:Button>
         </div>
     </div>
 

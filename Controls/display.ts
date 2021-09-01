@@ -65,10 +65,11 @@ export {BreadcrumbsItem};
 import SearchSeparator from './_display/SearchSeparator';
 export {SearchSeparator};
 
-export {ANIMATION_STATE, IItemPadding, TRoundBorder} from './_display/interface/ICollection';
+export {ANIMATION_STATE, IItemPadding} from './_display/interface/ICollection';
 export {IEditableCollection} from './_display/interface/IEditableCollection';
 export {IEditableCollectionItem} from './_display/interface/IEditableCollectionItem';
 export {ICollectionItem} from './_display/interface/ICollectionItem';
+export {IRoundBorder} from './_display/interface/IRoundBorder';
 export {IBaseCollection, TItemKey} from './_display/interface';
 
 import * as GridLadderUtil from './_display/utils/GridLadderUtil';
@@ -94,8 +95,8 @@ import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_displ
 import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
 export {IItemsStrategy, IItemsStrategyOptions};
 
-import {Footer} from './_display/Footer';
-export {Footer};
+import {Footer, IOptions as IFooterOptions} from './_display/Footer';
+export {Footer, IFooterOptions};
 
 import Indicator from 'Controls/_display/Indicator';
 import LoadingTrigger from 'Controls/_display/LoadingTrigger';

@@ -13,6 +13,7 @@ export {IList} from './_baseList/interface/IList';
 export * from './_baseList/interface/IEditableList';
 export * from 'Controls/_baseList/interface/IMovableList';
 export {IVirtualScrollConfig} from './_baseList/interface/IVirtualScroll';
+export {default as IEmptyTemplateOptions} from './_baseList/interface/EmptyTemplate';
 export {IRemovableList} from 'Controls/_baseList/interface/IRemovableList';
 export {default as IListNavigation} from './_baseList/interface/IListNavigation';
 export {IBaseGroupTemplate} from 'Controls/_baseList/interface/BaseGroupTemplate';
@@ -91,4 +92,4 @@ export * as LoadingIndicatorTemplate from 'wml!Controls/_baseList/indicators/Por
 export * as ContinueSearchTemplate from 'wml!Controls/_baseList/indicators/ContinueSearchTemplate';
 // endregion Indicators
 
-export {groupConstants, IHiddenGroupPosition, IItemPadding, MultiSelectAccessibility, TRoundBorder} from './display';
+export {groupConstants, IHiddenGroupPosition, IItemPadding, MultiSelectAccessibility, IRoundBorder, IRoundBorder as TRoundBorder} from './display';
