@@ -2,7 +2,7 @@ import { constants } from 'Env/Env';
 import { Confirmation, Dialog, IConfirmationOptions, IBasePopupOptions } from 'Controls/popup';
 import { ErrorViewConfig } from './interface';
 import { loadAsync } from 'WasabyLoader/ModulesLoader';
-import { TemplateFunction } from 'UICommon/_base/Control';
+import { TemplateFunction } from 'UI/Base';
 
 interface IPopupModule {
     Confirmation: typeof Confirmation;
