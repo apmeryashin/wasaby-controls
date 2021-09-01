@@ -1,7 +1,7 @@
 import {DataSet} from 'Types/source';
 /**
  * Базовый интерфейс действия над записью
- * @interface Controls/_listCommands/interface/IAction
+ * @interface Controls/_listActions/interface/IAction
  * @public
  * @author Крайнов Д.О.
  */

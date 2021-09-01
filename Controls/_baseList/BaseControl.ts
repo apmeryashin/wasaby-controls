@@ -110,7 +110,7 @@ import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scrol
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {ISiblingStrategy} from './interface/ISiblingStrategy';
 import {FlatSiblingStrategy} from './Strategies/FlatSiblingStrategy';
-import {Remove as RemoveAction, Move as MoveAction, IMoveActionOptions} from 'Controls/listCommands';
+import {Remove as RemoveAction, Move as MoveAction, IMoveActionOptions} from 'Controls/listActions';
 import {isLeftMouseButton} from 'Controls/popup';
 import {IMovableList} from './interface/IMovableList';
 import {saveConfig} from 'Controls/Application/SettingsController';
@@ -2689,7 +2689,7 @@ const _private = {
         };
         return _private.getMoveAction(self).execute({
             selection,
-            providerName: 'Controls/listCommands:MoveProviderDirection',
+            providerName: 'Controls/listActions:MoveProviderDirection',
             direction
         }) as Promise<void>;
     },
@@ -5638,7 +5638,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             filter: this._filter,
             targetKey,
             position,
-            providerName: 'Controls/listCommands:MoveProvider'
+            providerName: 'Controls/listActions:MoveProvider'
         }) as Promise<DataSet>;
     }
 
@@ -5666,7 +5666,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     removeItems(selection: ISelectionObject): Promise<string | void> {
         return _private
-            .removeItems(this, selection, 'Controls/listCommands:RemoveProvider')
+            .removeItems(this, selection, 'Controls/listActions:RemoveProvider')
             .catch((error) => process({error}));
     }
 

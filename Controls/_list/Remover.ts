@@ -1,7 +1,7 @@
 import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
 import {ContextOptions as dataOptions} from 'Controls/context';
-import {Remove as RemoveAction} from 'Controls/listCommands';
+import {Remove as RemoveAction} from 'Controls/listActions';
 import {getItemsBySelection} from 'Controls/baseList';
 import {Logger} from 'UI/Utils';
 import {ISelectionObject} from "Controls/_interface/ISelectionType";
@@ -130,7 +130,7 @@ var Remover = BaseAction.extend({
                 this._removeAction = new RemoveAction({
                     source: this._source,
                     filter: this._filter,
-                    providerName: 'Controls/listCommands:RemoveProvider',
+                    providerName: 'Controls/listActions:RemoveProvider',
                     selection: selection instanceof Array ? {
                         selected: selection,
                         excluded: []
