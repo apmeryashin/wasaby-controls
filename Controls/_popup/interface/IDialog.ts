@@ -119,6 +119,17 @@ export interface IResizeDirection {
  * @see top
  */
 
+/*
+ * @name Controls/_popup/interface/IDialogOpener#right
+ * @cfg {Number} Distance from the window to the left border of the screen.
+ * @see top
+ */
+/**
+ * @name Controls/_popup/interface/IDialogOpener#right
+ * @cfg {Number} Расстояние от диалогового окна до правого края экрана.
+ * @see top
+ */
+
 /**
  * @name Controls/_popup/interface/IDialogOpener#maximize
  * @cfg {Boolean} Определяет, должно ли диалоговое окно открываться на весь экран.

@@ -1,5 +1,5 @@
 const WORD_BOUNDARY = '^|[^\\wа-я]|$';
-const SPECIAL_CHARS = /[$^*+?.(){}[\]\\|]/g;
+const SPECIAL_CHARS = /[$^*+?.(){}[\]\\|"']/g;
 
 /**
  * $1 - Minus.

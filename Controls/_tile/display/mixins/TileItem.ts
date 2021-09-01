@@ -21,6 +21,8 @@ import {TBackgroundColorStyle, TCursor } from 'Controls/list';
 import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 
 const DEFAULT_WIDTH_PROPORTION = 1;
+const DEFAULT_ITEM_IMAGE_FIT = 'none';
+const DEFAULT_RICH_ITEM_IMAGE_FIT = 'cover';
 
 import {
     TImagePosition,
@@ -663,6 +665,14 @@ export default abstract class TileItem<T extends Model = Model> {
     }
 
     /**
+     * Возвращает режим отображения изображения по умолчанию
+     * @return {TImageFit} Режим отображения изображения
+     */
+    getDefaultImageFit(itemType: TTileItem): TImageFit {
+        return itemType === 'rich' ? DEFAULT_RICH_ITEM_IMAGE_FIT : DEFAULT_ITEM_IMAGE_FIT;
+    }
+
+    /**
      * Устанавливает режим отображения изображения
      * @param {TImageFit} imageFit Режим отображения изображения
      * @void
@@ -895,6 +905,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ' controls-TileView__image';
                 classes += ' controls-TileView__image_align_center';
                 classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
+                classes += getImageClasses(this.getImageFit(imageFit) || this.getDefaultImageFit(itemType));
+
 
                 // При установке отступа для изображений в виде прямоугольника
                 // к изображению применяется скругление углов.
@@ -2063,7 +2075,7 @@ Object.assign(TileItem.prototype, {
     _$tileFitProperty: '',
     _$tileScalingMode: 'none',
     _$imageProperty: '',
-    _$imageFit: 'none',
+    _$imageFit: null,
     _$imageHeightProperty: '',
     _$imageWidthProperty: '',
     _$imageUrlResolver: null,

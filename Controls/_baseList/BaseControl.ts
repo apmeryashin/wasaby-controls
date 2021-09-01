@@ -36,7 +36,8 @@ import {
     IBaseSourceConfig,
     Direction,
     ISelectionObject,
-    TNavigationButtonView
+    TNavigationButtonView,
+    ISourceOptions
 } from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 import { process } from 'Controls/error';
@@ -1332,9 +1333,6 @@ const _private = {
             if (action === IObservable.ACTION_RESET) {
                 self._indicatorsController.onCollectionReset(!!self._options.searchValue);
 
-                // перезагрузили список, нужно пересчитать hasMore
-
-                self._updateIndicatorsController();
                 if (self._options.searchValue) {
                     _private.tryLoadToDirectionAgain(self);
                 }
@@ -2891,7 +2889,7 @@ const _private = {
  * @author Авраменко А.С.
  */
 
-export interface IBaseControlOptions extends IControlOptions, IItemActionsOptions {
+export interface IBaseControlOptions extends IControlOptions, ISourceOptions, IItemActionsOptions {
     keyProperty: string;
     viewModelConstructor: string;
     navigation?: INavigationOptionValue<INavigationSourceConfig>;
@@ -3717,6 +3715,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._updateScrollController(newOptions);
         }
 
+        // region Indicators
+
+        this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
+
+        if (this._options.searchValue  && !newOptions.searchValue) {
+            this._indicatorsController.endPortionedSearch();
+        }
+
+        if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
+            this._displayGlobalIndicator();
+        }
+
+        // endregion Indicators
+
         if (_private.hasMarkerController(this) && this._listViewModel) {
             _private.getMarkerController(this).updateOptions({
                 model: this._listViewModel,
@@ -3870,19 +3882,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 collection: this._listViewModel
             });
         }
-
-        // region Indicators
-
-        this._updateIndicatorsController(newOptions);
-
-        if (this._options.searchValue  && !newOptions.searchValue) {
-            this._indicatorsController.endPortionedSearch();
-        }
-        if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
-            this._displayGlobalIndicator();
-        }
-
-        // endregion Indicators
 
         // После нажатии на enter или лупу в строке поиска, будут загружены данные и установлены в recordSet,
         // если при этом в списке кол-во записей было 0 (ноль) и поисковой запрос тоже вернул 0 записей,
@@ -5829,9 +5828,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._dragEnter(this._getDragObject());
         }
 
-        if (this._indicatorsController.shouldDisplayTopIndicator()) {
-            this._indicatorsController.displayTopIndicator(true);
-        }
+        // нужно всегда вызывать пересчет верхнего индикатора, он покажется только если нужен,
+        // но вместе с ним пересчитается и верхний триггер.
+        this._recountIndicators('up', true);
 
         if (!this._pagingVisible) {
             _private.initPaging(this);
@@ -6226,10 +6225,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController = new IndicatorsController(this._getIndicatorsControllerOptions(options));
     }
 
-    private _updateIndicatorsController(newOptions?: IBaseControlOptions) {
+    private _updateIndicatorsController(newOptions?: IBaseControlOptions, isLoading: boolean = false): void {
         const options = newOptions || this._options;
         const controllerOptions = this._getIndicatorsControllerOptions(options);
-        const changedResetTrigger = this._indicatorsController.updateOptions(controllerOptions);
+        const changedResetTrigger = this._indicatorsController.updateOptions(controllerOptions, isLoading);
         if (changedResetTrigger) {
             this._updateScrollController(newOptions);
         }
@@ -6290,8 +6289,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void, onDrawItems: boolean = false): void {
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
-                // если уже список проскроллен, то корректируем scrollTop на высоту уромашки, чтобы не было прыжков
-                this._notify('doScroll', [this._scrollTop + INDICATOR_HEIGHT], { bubbling: true });
+                // если уже список проскроллен, то не нужно скроллить к первому элементу
                 showTriggerCallback();
             } else {
                 const scrollResult = this._scrollToFirstItem();

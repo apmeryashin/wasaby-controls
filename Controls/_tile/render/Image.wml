@@ -1,28 +1,21 @@
-<ws:template name="imageTpl">
-   <ws:if data="{{(item || itemData).getImageFit() === 'contain' || itemType === 'rich'}}">
-      <!--Делаем всегда object-fit: contain(background-size: contain) кроссбраузерно, пока поддерживаем ie11-->
-      <svg role="image"
-           attr:itemprop="image"
-           xmlns="http://www.w3.org/2000/svg"
-           height="{{ item.getImageHeightAttribute(itemType) }}"
-           width="{{ item.getImageWidthAttribute(itemType) }}"
-           style="{{ item.getBigGradientStyles(itemType, gradientStartColor, gradientStopColor, gradientDirection ) }}"
-           class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, contentPadding) }}"
-           preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType, imageFit) }}"
-           data-qa="controls-TileView__image"
-      >
-          <image preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType, imageFit) }}" height="100%" width="100%" xlink:href="{{ (item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode, fallbackImage) }}"></image>
-      </svg>
-   </ws:if>
-   <ws:else>
-      <div class="{{ (item || itemData).getImageAlignClasses(imageAlign) }}">
-        <img
-            class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, contentPadding) }}"
-            src="{{(item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode)}}"
-            data-qa="controls-TileView__image"
+<ws:template name="innerImageTpl">
+    <div class="{{ (item || itemData).getImageAlignClasses(imageAlign) }}">
+        <ws:partial template="{{ tag }}"
+                    attr:style="{{ itemType === 'rich' ? item.getBigGradientStyles(itemType, gradientStartColor, gradientStopColor, gradientDirection ) }}"
+                    attr:class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, contentPadding) }}"
+                    attr:src="{{(item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode)}}"
+                    attr:data-qa="controls-TileView__image"
         />
-      </div>
-   </ws:else>
+    </div>
+</ws:template>
+
+<ws:template name="imageTpl">
+   <ws:partial template="innerImageTpl">
+       <ws:tag>
+           <img if="{{ (item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode) }}"/>
+           <div if="{{ !((item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode)) }}"></div>
+       </ws:tag>
+   </ws:partial>
 </ws:template>
 
 <ws:if data="{{ imageViewMode !== 'none' }}">

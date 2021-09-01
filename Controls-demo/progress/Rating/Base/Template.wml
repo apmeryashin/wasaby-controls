@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper" attr:data-qa="controlsDemo_field__base_rating">
    <div class="controlsDemo__cell">
       <div class="controls-text-label">Базовая настройка компонента рейтинга</div>
       <div class="ws-flexbox">

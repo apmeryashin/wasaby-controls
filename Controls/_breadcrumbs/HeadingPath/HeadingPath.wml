@@ -9,7 +9,7 @@
                                                     backButtonStyle="{{ _options.backButtonStyle }}"
                                                     backButtonIconStyle="{{ _options.backButtonIconStyle }}"
                                                     backButtonFontColorStyle="{{ _options.backButtonFontColorStyle }}"
-                                                    backButtonNewIcon="{{_options.backButtonNewIcon}}"
+                                                    backButtonNewIcon="{{_options.feature1182709671 ? true : _options.backButtonNewIcon}}"
                                                     backButtonFontSize="{{_options.backButtonFontSize}}"
                                                     showActionButton="{{_options.showActionButton}}"
                                                     displayMode="{{_options.displayMode}}"
@@ -35,31 +35,60 @@
                </ws:beforeCaptionTemplate>
             </Controls._breadcrumbs.HeadingPath.Back>
         </ws:if>
-        <ws:if data="{{_visibleItems || _options.rootVisible}}">
-            <div class="controls-BreadCrumbsPath__crumbsWrapper {{_visibleItems || !_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__crumbsWrapper_fullWidth'}}
-             {{_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__twoRows'}}">
-                <div class="controls-BreadCrumbsPath__homeContainer {{ _applyHighlighter(_options.highlighter, _options.items ? _options.items[0].get(_options.parentProperty) : _options.root) }}
-            {{_options.withoutBackButton || _options.displayMode === 'multiline' ? ' controls-BreadCrumbsPath__homeContainer__withoutBackButton' : ' controls-BreadCrumbsPath__homeContainer__withBackButton'}}"
+
+        <ws:if data="{{_visibleItems || _options.rootVisible || _options.feature1182709671}}">
+            <div
+               class="
+                  controls-BreadCrumbsPath__crumbsWrapper
+                  {{_visibleItems || !_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__crumbsWrapper_fullWidth'}}
+                  {{_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__twoRows'}}
+               "
+            >
+               <ws:if data="{{_options.feature1182709671}}">
+                  <Controls._breadcrumbs.PathButton
+                     path="{{_options.items}}"
+                     source="{{_options.pathButtonSource}}"
+                     filter="{{_options.pathButtonFilter}}"
+                     keyProperty="{{_options.pathButtonKeyProperty}}"
+                     nodeProperty="{{_options.pathButtonNodeProperty}}"
+                     parentProperty="{{_options.pathButtonParentProperty}}"
+                     displayProperty="{{_options.pathButtonDisplayProperty}}"
+                     on:pathChanged="_onPathChanged()"
+                  />
+               </ws:if>
+               <ws:else>
+                  <div
+                     class="
+                        controls-BreadCrumbsPath__homeContainer
+                        {{ _applyHighlighter(_options.highlighter, _options.items ? _options.items[0].get(_options.parentProperty) : _options.root) }}
+                        {{_options.withoutBackButton || _options.displayMode === 'multiline'
+                           ? ' controls-BreadCrumbsPath__homeContainer__withoutBackButton'
+                           : ' controls-BreadCrumbsPath__homeContainer__withBackButton'}}
+                     "
                      on:mouseEnter="_notifyHandler('hoveredItemChanged', _getRootModel(_options.items ? _options.items[0].get(_options.parentProperty) : _options.root, _options.keyProperty))"
                      on:mouseLeave="_notifyHandler('hoveredItemChanged')"
-                     on:click="_onHomeClick()">
-                    <div class="controls-BreadCrumbsPath__home icon-Home3"></div>
-                </div>
-                <ws:if data="{{_visibleItems}}">
-                    <Controls._breadcrumbs.View
-                            attr:class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
-                            items="{{_breadCrumbsItems}}"
-                            visibleItems="{{_visibleItems}}"
-                            backgroundStyle="{{_options.backgroundStyle || _options.style}}"
-                            keyProperty="{{_options.keyProperty}}"
-                            displayProperty="{{_options.displayProperty}}"
-                            highlighter="{{_options.highlighter}}"
-                            fontColorStyle="{{_options.fontColorStyle}}"
-                            fontSize="{{_options.fontSize}}"
-                            containerWidth="{{_options.containerWidth}}"
-                            on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                            on:itemClick="_notifyHandler('itemClick')"/>
-                </ws:if>
+                     on:click="_onHomeClick()"
+                  >
+                     <div class="controls-BreadCrumbsPath__home icon-Home3"></div>
+                  </div>
+               </ws:else>
+
+               <ws:if data="{{_visibleItems}}">
+                  <Controls._breadcrumbs.View
+                     attr:class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
+                     items="{{_breadCrumbsItems}}"
+                     visibleItems="{{_visibleItems}}"
+                     backgroundStyle="{{_options.backgroundStyle || _options.style}}"
+                     keyProperty="{{_options.keyProperty}}"
+                     displayProperty="{{_options.displayProperty}}"
+                     highlighter="{{_options.highlighter}}"
+                     fontColorStyle="{{_options.fontColorStyle}}"
+                     fontSize="{{_options.fontSize}}"
+                     containerWidth="{{_options.containerWidth}}"
+                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                     on:itemClick="_notifyHandler('itemClick')"
+                  />
+               </ws:if>
             </div>
         </ws:if>
    </div>

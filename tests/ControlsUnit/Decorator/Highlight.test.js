@@ -248,6 +248,28 @@ define(
                      }
                   ]);
                });
+               it('Quotes.', function() {
+                  ctrl._beforeMount({
+                     value: 'Здравствуй, "мир"! Как дела?',
+                     highlightedValue: 'мир',
+                     highlightMode: 'word'
+                  });
+
+                  assert.deepEqual(ctrl._parsedText, [
+                     {
+                        type: 'plain',
+                        value: 'Здравствуй, "'
+                     },
+                     {
+                        type: 'highlight',
+                        value: 'мир'
+                     },
+                     {
+                        type: 'plain',
+                        value: '"! Как дела?'
+                     }
+                  ]);
+               });
                it('The search word is not in the text.', function() {
                   ctrl._beforeMount({
                      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',

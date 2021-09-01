@@ -31,6 +31,10 @@ export default class extends Control<IOperationsPanelOptions> {
         this._operationsController = options.operationsController;
     }
 
+    protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
+        return options.selectedKeysCount !== 0;
+    }
+
     protected _beforeUpdate(options: IOperationsPanelOptions): void {
         if (this._shouldOpenMenu(options)) {
             this._operationsController.setOperationsMenuVisible(true);
@@ -40,7 +44,7 @@ export default class extends Control<IOperationsPanelOptions> {
             this._options.excludedKeys !== options.excludedKeys ||
             this._options.selectedKeysCount !== options.selectedKeysCount
         ) {
-            this._openCloud();
+            this._openCloud(options);
         }
     }
 
@@ -51,14 +55,12 @@ export default class extends Control<IOperationsPanelOptions> {
         }
     }
 
-    protected _getDialogOpener(): Promise<DialogOpener> {
+    protected _getDialogOpener(): DialogOpener {
         if (!this._dialogOpener) {
-            return import('Controls/popup').then((popup) => {
-                this._dialogOpener = new popup.DialogOpener();
-                return this._dialogOpener;
-            });
+            this._dialogOpener = new DialogOpener();
+            return this._dialogOpener;
         } else {
-            return Promise.resolve(this._dialogOpener);
+            return this._dialogOpener;
         }
     }
 
@@ -72,40 +74,35 @@ export default class extends Control<IOperationsPanelOptions> {
         }
     }
 
-    private _openCloud(): void {
-        this._getDialogOpener().then((opener) => {
-            const target = this._children.target;
-            opener.open({
-                template: 'Controls/operationsPanel:Cloud',
-                opener: this,
-                className: 'controls-operationPanel__offset',
-                propStorageId: this._options.propStorageId,
-                templateOptions: {
-                    selectedKeys: this._options.selectedKeys,
-                    excludedKeys: this._options.excludedKeys,
-                    selectedKeysCount: this._options.selectedKeysCount,
-                    isAllSelected: this._options.isAllSelected,
-                    selectedCountConfig: this._options.selectedCountConfig
-                },
-                eventHandlers: {
-                    onClose: () => {
-                        if (this._operationsController) {
-                            this._operationsController.setOperationsMenuVisible(false);
-                            this._operationsController.setOperationsPanelVisible(false);
-                        }
-                        Store.dispatch('operationsPanelExpanded', false);
-                    },
-                    onResult: (action: string, type) => {
-                        if (action === 'selectedTypeChanged') {
-                            this._operationsController.selectionTypeChanged(type);
-                        }
+    private _openCloud(options = this._options): void {
+        const target = this._children.target;
+        this._getDialogOpener().open({
+            template: 'Controls/operationsPanel:Cloud',
+            opener: this,
+            className: 'controls-operationPanel__offset',
+            propStorageId: options.propStorageId,
+            templateOptions: {
+                selectedKeys: options.selectedKeys,
+                excludedKeys: options.excludedKeys,
+                selectedKeysCount: options.selectedKeysCount,
+                isAllSelected: options.isAllSelected,
+                selectedCountConfig: options.selectedCountConfig
+            },
+            eventHandlers: {
+                onClose: () => {
+                    if (this._operationsController) {
+                        this._operationsController.setOperationsMenuVisible(false);
+                        this._operationsController.setOperationsPanelVisible(false);
                     }
+                    Store.dispatch('operationsPanelExpanded', false);
                 },
-                target
-            });
+                onResult: (action: string, type) => {
+                    if (action === 'selectedTypeChanged') {
+                        this._operationsController.selectionTypeChanged(type);
+                    }
+                }
+            },
+            target
         });
-    }
-    protected _shouldOpenMenu(options: IOperationsPanelOptions): boolean {
-        return options.selectedKeysCount !== 0;
     }
 }

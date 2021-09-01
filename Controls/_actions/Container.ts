@@ -125,8 +125,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         event: SyntheticEvent,
         item: Model,
         clickEvent: SyntheticEvent
-    ): void {
+    ): boolean {
         event.stopPropagation();
+        const isOperationsPanelVisible = this._operationsController.getOperationsPanelVisible();
         const action = this._actionsCollection.getExecuteAction(item);
         Store.dispatch('executeOperation', {
             action,
@@ -134,6 +135,7 @@ export default class ActionsContainer extends Control<IContainerOptions> {
             toolbarItem: item
         });
         this._notify('operationPanelItemClick', [action, clickEvent, item], {bubbling: true});
+        return !isOperationsPanelVisible || !!item.get('parent');
     }
 
     getSourceController(dataValue, prefetch: ILoadDataResult[]): SourceController {

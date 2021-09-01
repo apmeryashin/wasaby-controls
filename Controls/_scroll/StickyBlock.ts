@@ -34,7 +34,7 @@ export enum BACKGROUND_STYLE {
 }
 
 export interface IStickyHeaderOptions extends IControlOptions {
-    position: POSITION;
+    position: IPositionOrientation;
     mode: MODE;
     fixedZIndex: number;
     zIndex: number;
@@ -358,6 +358,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     resetSticky(): void {
         fastUpdate.resetSticky([this._container]);
+    }
+
+    get position(): IPositionOrientation {
+        return this._options.position;
     }
 
     get height(): number {

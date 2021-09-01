@@ -1,5 +1,4 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
+import {Control, TemplateFunction} from 'UI/Base';
 import PrepareDataUtil from './PrepareDataUtil';
 import {EventUtils} from 'UI/Events';
 import {applyHighlighter} from 'Controls/_breadcrumbs/resources/applyHighlighter';
@@ -10,8 +9,11 @@ import 'css!Controls/heading';
 import 'css!Controls/breadcrumbs';
 import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
-import {Record} from 'Types/entity';
+import {Model, Record} from 'Types/entity';
 import {Logger} from 'UI/Utils';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Path} from 'Controls/dataSource';
+import {IHeadingPath} from './interface/IHeadingPath';
 
 interface IReceivedState {
     items: Record[];
@@ -54,7 +56,7 @@ const SIZES = {
  *
  * @demo Controls-demo/BreadCrumbs/ScenarioFirst/Index
  */
-class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
+class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _template: TemplateFunction = template;
     protected _backButtonCaption: string = '';
     protected _backButtonItem: Record = null;
@@ -74,11 +76,10 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected _paddingRight: number;
     private _initializingWidth: number;
 
-    protected _beforeMount(options?: IBreadCrumbsOptions,
+    protected _beforeMount(options?: IHeadingPath,
                            contexts?: object,
                            receivedState?: IReceivedState): Promise<IReceivedState> | void {
         this._prepareItems(options);
-        const arrPromise = [];
 
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
@@ -97,8 +98,8 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
                     this._prepareData(options);
                 } else if (this._breadCrumbsItems) {
                     const getTextWidth = res[1];
-                    this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
-                    this._prepareData(options, getTextWidth);
+                    this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth as Function);
+                    this._prepareData(options, getTextWidth as Function);
                     return {
                         items: options.items
                     };
@@ -107,8 +108,8 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         }
     }
 
-    protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
-        const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
+    protected _beforeUpdate(newOptions: IHeadingPath): void {
+        const isItemsChanged = newOptions.items !== this._options.items;
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
         const isFontSizeChanged = newOptions.fontSize !== this._options.fontSize;
         if (isItemsChanged) {
@@ -142,7 +143,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         const dotsWidth = getTextWidth('...', fontSize) + this._paddingRight;
         return this._arrowWidth + dotsWidth;
     }
-    private _prepareData(options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
+    private _prepareData(options: IHeadingPath, getTextWidth: Function = this._getTextWidth): void {
         if (options.items && options.items.length > 1) {
             this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, options, getTextWidth);
         }
@@ -150,7 +151,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     private _getTextWidth(text: string, size: string  = 'xs'): number {
         return getFontWidth(text, size);
     }
-    private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
+    private _calculateBreadCrumbsToDraw(items: Record[], options: IHeadingPath, getTextWidth: Function = this._getTextWidth): void {
         if (items && items.length > 0) {
             const width = options.containerWidth - getTextWidth(this._backButtonCaption, '3xl') - SIZES.ARROW_WIDTH - SIZES.HOME_BUTTON_WIDTH;
             this._visibleItems = this.calculateBreadcrumbsUtil.calculateItemsWithDots(items, options, 0, width, this._dotsWidth, getTextWidth);
@@ -159,23 +160,39 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         }
     }
 
-    private _onBackButtonClick(e: Event): void {
+    protected _onBackButtonClick(e: Event): void {
         Common.onBackButtonClick.call(this, e);
     }
-    private _onHomeClick(): void {
-        /**
-         * TODO: _options.root is actually current root, so it's wrong to use it. For now, we can take root from the first item. Revert this commit after:
-         * https://online.sbis.ru/opendoc.html?guid=93986788-48e1-48df-9595-be9d8fb99e81
-         */
-        this._notify('itemClick', [this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty)]);
+
+    protected _onHomeClick(): void {
+        this._notify('itemClick', [this._buildRootModel()]);
     }
 
-    private _getCounterCaption(items: Record[] = []): void {
+    /**
+     * Обработчик изменения пути через компонент Controls._breadcrumbs.PathButton
+     */
+    protected _onPathChanged(event: SyntheticEvent, path: Path): void {
+        const newRoot = path.length ? path[path.length - 1] : this._buildRootModel();
+        this._notify('itemClick', [newRoot]);
+    }
+
+    protected _getCounterCaption(items: Record[] = []): void {
+        if (items === null) {
+            items = [];
+        }
+
         const lastItem = items[items.length - 1];
         return lastItem?.get('counterCaption');
     }
 
-    private _prepareItems(options: IBreadCrumbsOptions): void {
+    /**
+     * На основании текущий опций собирает модель корневого каталога
+     */
+    private _buildRootModel(): Model {
+        return this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty);
+    }
+
+    private _prepareItems(options: IHeadingPath): void {
         const clearCrumbsView = () => {
             this._visibleItems = null;
             this._breadCrumbsItems = null;
@@ -184,7 +201,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
             this._isHomeVisible = false;
         };
 
-        if (options.items && options.items.length > 0) {
+        if (options.items?.length > 0) {
             const lastItem = options.items[options.items.length - 1];
 
             this._backButtonItem = lastItem;
@@ -207,7 +224,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     }
 
     static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
-    static getDefaultOptions() {
+    static getDefaultOptions(): object {
         return {
             displayProperty: 'title',
             root: null,

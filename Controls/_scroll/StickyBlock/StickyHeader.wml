@@ -8,7 +8,7 @@
       <ws:if data="{{_canShadowVisible.top}}">
          <!-- We use visibility style instead of "display: none;" statement to prevent jumps when scrolling on iPad -->
          <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
-                  {{ !_isTopShadowVisible ? ' ws-invisible' }}"
+                  {{ !_isTopShadowVisible ? ' ws-invisible' }}" data-qa="StickyHeader__shadow-top"
          ></div>
       </ws:if>
 
@@ -29,7 +29,7 @@
          <!-- Проблема возникает например если свернуть последнюю группировку. -->
          <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
                   {{ !_isBottomShadowVisible ? (_isMobileIOS ? ' ws-invisible' : ' ws-hidden') }}"
-              name="shadowBottom"></div>
+              name="shadowBottom" data-qa="StickyHeader__shadow-bottom"></div>
       </ws:if>
    </div>
 </ws:if>

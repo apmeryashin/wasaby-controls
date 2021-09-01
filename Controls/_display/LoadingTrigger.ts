@@ -93,6 +93,10 @@ export default class LoadingTrigger extends CollectionItem<null> {
         return isVisible;
     }
 
+    isDisplayed(): boolean {
+        return this._$visible;
+    }
+
     getQAData(marker?: boolean): string {
         return this.key;
     }

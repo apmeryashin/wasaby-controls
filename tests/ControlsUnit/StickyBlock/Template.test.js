@@ -108,11 +108,11 @@ define(
                inst._updateStyles(inst._options);
 
                assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
+                  '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                   '</div>');
             });
 
@@ -140,11 +140,11 @@ define(
                inst._updateStyles(inst._options);
 
                assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
+                  '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                   '</div>');
                sandbox.restore();
             });
@@ -165,11 +165,11 @@ define(
                inst._updateStyles(inst._options);
 
                assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
+                  '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                   '</div>');
             });
 
@@ -190,11 +190,11 @@ define(
                inst._updateStyles(inst._options);
 
                assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="bottom: 0px;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
+                  '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                   '</div>');
             });
 
@@ -212,12 +212,12 @@ define(
                inst._updateStyles(inst._options);
 
                assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
+                  '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                   '</div>');
             });
 
@@ -241,12 +241,12 @@ define(
                inst._updateStyles(inst._options);
 
                assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
+                  '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal"></div>' +
                   '</div>');
             });
 
@@ -271,12 +271,12 @@ define(
                inst._updateStyles(inst._options);
 
                assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal"></div>' +
+                  '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
                   '</div>');
             });
          });

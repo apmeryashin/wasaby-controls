@@ -1,4 +1,5 @@
 <Controls.buttons:Button
+   iconSize="s"
    icon="icon-Burger"
    viewMode="toolButton"
 

@@ -22,18 +22,23 @@ export abstract class BaseEditor extends Control<IControlOptions> {
                 targetPoint: {
                     horizontal: 'right'
                 },
+                templateOptions: {
+                    resultHandler: this._resultHandler.bind(this),
+                    name: this._options.name
+                },
                 direction: {
                     horizontal: 'right'
                 },
                 target: this._editorTarget || this._container,
                 eventHandlers: {
-                    onResult: () => {
-                        this._notify('propertyValueChanged', [this._getExtendedValue(true)], {bubbling: true});
-                        this._hideApplyButton();
-                    }
+                    onResult: this._hideApplyButton.bind(this)
                 }
             });
         }
+    }
+
+    protected _resultHandler(): void {
+        this._notify('propertyValueChanged', [this._getExtendedValue(true)], {bubbling: true});
     }
 
     protected _hideApplyButton(): void {

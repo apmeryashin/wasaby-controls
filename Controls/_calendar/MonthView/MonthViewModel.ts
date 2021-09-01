@@ -71,11 +71,17 @@ export default class MonthViewModel extends VersionableMixin {
         if (scope.selected && (scope.isCurrentMonth || scope.mode === 'extended')) {
             backgroundColorClass += '-selected';
             if (scope.selectedStart || scope.selectedEnd) {
-                if (scope.selectionProcessing) {
-                    backgroundColorClass += '-startend-unfinished';
-                }
                 if (fontWeight !== 'normal') {
                     css.push('controls-MonthView__fontWeight');
+                }
+            }
+            if (scope.selectionProcessing) {
+                if (scope.selectedStart && scope.selectedEnd) {
+                    backgroundColorClass += '-startend-unfinished';
+                } else if (scope.selectedStart) {
+                    backgroundColorClass += '-start-unfinished';
+                } else if (scope.selectedEnd) {
+                    backgroundColorClass += '-end-unfinished';
                 }
             }
 

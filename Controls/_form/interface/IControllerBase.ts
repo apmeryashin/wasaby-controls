@@ -28,9 +28,9 @@ export default interface IControllerBase extends IControlOptions {
 }
 
 export interface IUpdateConfig {
-    additionalData: Record<string, unknown>;
-    updateMetaData: Record<string, unknown>;
-    showLoadingIndicator: boolean;
+    additionalData?: Record<string, unknown>;
+    updateMetaData?: Record<string, unknown>;
+    showLoadingIndicator?: boolean;
 }
 
 /**

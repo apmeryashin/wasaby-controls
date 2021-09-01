@@ -58,17 +58,17 @@ define([
                TARGET = 'value';
             component._options.nextArrowVisibility = true;
             component._children = {
-               opener: {
-                  open: sinon.fake()
-               },
                linkView: {
                    getPopupTarget: sinon.stub().returns(TARGET)
                }
             };
+            component._stickyOpener = {
+               open: sinon.fake()
+            };
             component.openPopup();
-            sinon.assert.called(component._children.opener.open);
+            sinon.assert.called(component._stickyOpener.open);
             sinon.assert.called(component._children.linkView.getPopupTarget);
-            sinon.assert.calledWith(component._children.opener.open, sinon.match({
+            sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
                className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft',
                target: TARGET,
                templateOptions: {
@@ -90,15 +90,15 @@ define([
                },
                component = calendarTestUtils.createComponent(dateRange.RangeSelector, cMerge(cClone(extOptions), options));
             component._children = {
-               opener: {
-                  open: sinon.fake()
-               },
                linkView: {
                    getPopupTarget: sinon.fake()
                }
             };
+            component._stickyOpener = {
+               open: sinon.fake()
+            };
             component.openPopup();
-            sinon.assert.calledWith(component._children.opener.open, sinon.match({
+            sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
                className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft',
                templateOptions: {
                   ranges: extOptions.ranges,
@@ -135,15 +135,15 @@ define([
                   const
                      component = calendarTestUtils.createComponent(dateRange.RangeSelector, cMerge(cClone(test), options));
                   component._children = {
-                     opener: {
-                        open: sinon.fake()
-                     },
                      linkView: {
                          getPopupTarget: sinon.fake()
                      }
                   };
+                  component._stickyOpener = {
+                     open: sinon.fake()
+                  };
                   component.openPopup();
-                  sinon.assert.calledWith(component._children.opener.open, sinon.match({
+                  sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
                      className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft'
                   }));
                });
@@ -165,15 +165,15 @@ define([
                   const
                      component = calendarTestUtils.createComponent(dateRange.RangeSelector, cMerge(cClone(test), options));
                   component._children = {
-                     opener: {
-                        open: sinon.fake()
-                     },
                      linkView: {
                          getPopupTarget: sinon.fake()
                      }
                   };
+                  component._stickyOpener = {
+                     open: sinon.fake()
+                  };
                   component.openPopup();
-                  sinon.assert.calledWith(component._children.opener.open, sinon.match({
+                  sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
                      className: 'controls_datePicker_theme-default controls-DatePopup__selector-marginTop_fontSize-m controls-DatePopup__selector-marginLeft-withoutModeBtn'
                   }));
                });
@@ -190,7 +190,7 @@ define([
                startValue = new Date(2018, 11, 10),
                endValue = new Date(2018, 11, 13);
 
-            component._children.opener = {
+            component._stickyOpener = {
                close: sinon.fake()
             };
             sandbox.stub(component, '_notify');
@@ -199,7 +199,7 @@ define([
 
             sinon.assert.calledWith(component._notify, 'startValueChanged');
             sinon.assert.calledWith(component._notify, 'endValueChanged');
-            sinon.assert.called(component._children.opener.close);
+            sinon.assert.called(component._stickyOpener.close);
             sandbox.restore();
          });
       });
@@ -235,12 +235,12 @@ define([
 
             component._startValue = null;
             component._children = {
-               opener: {
-                  open: sinon.fake()
-               },
                linkView: {
                   getPopupTarget: sinon.stub().returns()
                }
+            };
+            component._stickyOpener = {
+               open: sinon.fake()
             };
             const popupOptions = component._getPopupOptions();
             assert.isUndefined(popupOptions.startValue);

@@ -70,6 +70,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _itemActionsController: ItemActionsController;
     private _itemActionSticky: StickyOpener;
     private _collapsedGroupsChanged: boolean = false;
+    private _editingObject: Record<string, unknown> | entityRecord = null;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         this._collapsedGroups = this._getCollapsedGroups(options.collapsedGroups);
@@ -78,11 +79,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (options.captionColumnOptions || options.editorColumnOptions) {
             this._render = gridRenderTemplate;
         }
+        this._editingObject = options.editingObject;
     }
 
     protected _beforeUpdate(newOptions: IPropertyGridOptions): void {
         if (newOptions.editingObject !== this._options.editingObject) {
             this._listModel.setEditingObject(newOptions.editingObject);
+            this._editingObject = newOptions.editingObject;
         }
         if (newOptions.typeDescription !== this._options.typeDescription) {
             this._toggledEditors = this._getToggledEditors(newOptions.typeDescription, newOptions.keyProperty);
@@ -205,8 +208,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
         const name = item.get(this._listModel.getKeyProperty());
-        const propertyValue = this._updatePropertyValue(this._options.editingObject, name, value);
-        this._notify('editingObjectChanged', [propertyValue]);
+        this._editingObject = this._updatePropertyValue(this._editingObject, name, value);
+        this._notify('editingObjectChanged', [this._editingObject]);
     }
 
     protected _groupClick(
