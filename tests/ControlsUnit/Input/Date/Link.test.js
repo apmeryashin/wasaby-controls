@@ -23,6 +23,11 @@ define([
             component._stickyOpener = {
                open: sinon.fake()
             };
+            component._children = {
+               linkView: {
+                  getPopupTarget: sinon.stub().returns()
+               }
+            };
             component.openPopup();
             sinon.assert.called(component._stickyOpener.open);
          });
