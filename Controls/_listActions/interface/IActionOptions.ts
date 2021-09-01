@@ -20,54 +20,54 @@ export default interface IActionOptions {
 
 /**
  * Интерфейс стандартного набора опций для действия над записью
- * @interface Controls/_listCommands/interface/IAction
+ * @interface Controls/_listActions/interface/IAction
  * @public
  * @author Крайнов Д.О.
  */
 
 /**
- * @typedef {Object} Controls/_listCommands/interface/IAction/ISelection
+ * @typedef {Object} Controls/_listActions/interface/IAction/ISelection
  * @description Выборка записей
  * @property {Array<Types/source:CrudEntityKey>} selected Массив ключей выбранных записей
  * @property {Array<Types/source:CrudEntityKey>} excluded Массив ключей исключенных записей
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#source
+ * @name Controls/_listActions/interface/IAction#source
  * @cfg {Types/source:ICrud} Источник записи
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#filter
+ * @name Controls/_listActions/interface/IAction#filter
  * @cfg {object} Текущая фильтрация
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#navigation
+ * @name Controls/_listActions/interface/IAction#navigation
  * @cfg {Controls/interface:INavigationOptionValue} Навигация для источника данных
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#sorting
+ * @name Controls/_listActions/interface/IAction#sorting
  * @cfg {object} Сортировка для источника данных
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#parentProperty
+ * @name Controls/_listActions/interface/IAction#parentProperty
  * @cfg {string} Название поля иерархии
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#columns
+ * @name Controls/_listActions/interface/IAction#columns
  * @cfg {Array<Controls/grid:IColumn>} Конфигурация колонок
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#selection
- * @cfg {Controls/_listCommands/interface/IAction/ISelection.typedef} Объект выборки
+ * @name Controls/_listActions/interface/IAction#selection
+ * @cfg {Controls/_listActions/interface/IAction/ISelection.typedef} Объект выборки
  */
 
 /**
- * @name Controls/_listCommands/interface/IAction#items
+ * @name Controls/_listActions/interface/IAction#items
  * @cfg {Types/collection:RecordSet} Коллекция отображаемых записей
  */

@@ -1,5 +1,5 @@
 import {IToolBarItem} from 'Controls/toolbars';
-import {ICommandOptions} from 'Controls/listCommands';
+import {ICommandOptions} from 'Controls/listActions';
 
 export interface IAction extends IToolBarItem {
     order?: number;
