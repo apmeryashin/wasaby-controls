@@ -1,5 +1,5 @@
 import IAction from './interface/IAction';
-import IActionOptions from 'Controls/_listActions/interface/IActionOptions';
+import IActionOptions from 'Controls/_listCommands/interface/IActionOptions';
 import {MoveController, IMoveControllerOptions} from 'Controls/list';
 import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {loadSync, loadAsync, isLoaded} from 'WasabyLoader/ModulesLoader';
