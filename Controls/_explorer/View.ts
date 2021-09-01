@@ -222,7 +222,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _markerForRestoredScroll: TKey;
     private _resetScrollAfterViewModeChange: boolean = false;
     private _isMounted: boolean = false;
-    private _restoredMarkedKeys: IMarkedKeysStore;
+    private _restoredMarkedKeys: IMarkedKeysStore = {};
     private _potentialMarkedKey: TKey;
     private _newItemPadding: IItemPadding;
     private _newItemActionsPosition: string;
@@ -825,7 +825,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         navigation: INavigationOptionValue<INavigationPageSourceConfig>
     ): void {
 
-        const store = this._restoredMarkedKeys || {} as IMarkedKeysStore;
+        const store = this._restoredMarkedKeys;
 
         if (!store[root]) {
             store[root] = {markedKey: null};
