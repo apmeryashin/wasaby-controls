@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Filter_new/FastFilter/Base/Base';
+import * as Template from 'wml!Controls-demo/Filter_new/FilterView/Source/FrequentWithMultiSelect/Index';
 import {Memory} from 'Types/source';
 
 export default class extends Control {
@@ -11,8 +11,9 @@ export default class extends Control {
         this._filterSource = [{
             name: 'city',
             value: ['Yaroslavl'],
-            filterTemplate: 'Controls/filterPopup:Dropdown',
+            emptyText: 'Choose city',
             editorOptions: {
+                multiSelect: true,
                 source: new Memory({
                     keyProperty: 'id',
                     data: [
@@ -22,7 +23,8 @@ export default class extends Control {
                     ]
                 }),
                 displayProperty: 'city',
-                keyProperty: 'id'
+                keyProperty: 'id',
+                multiSelect: true
             },
             viewMode: 'frequent'
         }];

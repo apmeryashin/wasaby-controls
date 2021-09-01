@@ -1,4 +1,0 @@
-<div class="controlsDemo__wrapper">
-    <Controls.filter:View source="{{_filterSource}}"
-                          itemTemplateProperty="filterTemplate"/>
-</div>
