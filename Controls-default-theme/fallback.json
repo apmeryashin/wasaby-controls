@@ -1067,6 +1067,7 @@
   "--margin-horizontal_m_AreaCut": "10px",
   "--margin-horizontal_l_AreaCut": "12px",
   "--shadow_thickness_AreaCut": "5px",
+  "--line-height_richEditor_inputArea": "21px",
   "--width_filterViewPanel": "280px",
   "--heading_height_filterViewPanel": "40px",
   "--heading-default_height_filterViewPanel": "30px",
