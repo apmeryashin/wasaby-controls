@@ -58,8 +58,6 @@ export interface IOptions<T extends Model = Model> extends IBaseOptions<T> {
  * Миксин, который содержит логику отображения строки в таблице
  */
 export default abstract class Row<T extends Model = Model> {
-    readonly LadderSupport: boolean = false;
-
     protected _$owner: Collection<T>;
     protected _cellModule: string;
 
