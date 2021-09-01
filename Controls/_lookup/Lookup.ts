@@ -56,6 +56,12 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @public
  * @author Герасимов А.М.
  */
+
+/**
+ * @name Controls/_lookup/Lookup#suggestDataLoadCallback
+ * @cfg {Function} Функция, которая вызывается каждый раз  для контрола автодоплнения непосредственно после загрузки данных из источника.
+ */
+
 /*
  * “Lookup:Input” is an input field with auto-completion and the ability to select a value from the directory.
  * Сan be displayed in single-line and multi-line mode.
