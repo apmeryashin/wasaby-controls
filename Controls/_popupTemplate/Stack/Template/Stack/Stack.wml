@@ -1,5 +1,18 @@
 <div class="controls_popupTemplate_theme-{{_options.theme}} controls-StackTemplate" ws-tab-cycling="true">
     <div class="controls-StackTemplate-shadow"></div>
+
+    <ws:if data="{{_options.leftContentTemplate }}">
+        <div class="controls-StackTemplate__leftArea">
+            <div class="controls-StackTemplate__leftArea-wrapper">
+                <ws:partial template="{{_options.leftContentTemplate}}"
+                            scope="{{_options}}"
+                            bodyContentTemplate="{{null}}"
+                            headerContentTemplate="{{null}}"
+                            footerContentTemplate="{{null}}"/>
+            </div>
+        </div>
+    </ws:if>
+
     <div class="controls-StackTemplate-content_wrapper">
         <div class="controls-StackTemplate-content">
             <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
