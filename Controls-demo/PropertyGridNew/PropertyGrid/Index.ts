@@ -1,9 +1,9 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/PropertyGrid/Index';
 import {showType} from 'Controls/toolbars';
 import {IItemAction} from 'Controls/itemActions';
 import {Enum, RecordSet} from 'Types/collection';
-import { Model } from 'Types/entity';
+import {Model} from 'Types/entity';
 import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
 
 export default class Demo extends Control<IControlOptions> {
@@ -81,8 +81,7 @@ export default class Demo extends Control<IControlOptions> {
                 showType: showType.MENU,
                 title: 'Переместить вверх',
                 handler: (item: Model) => {
-                    const sourceItemIndex = this._getSourceItemIndex(source, item);
-                    source.move(sourceItemIndex, sourceItemIndex - 1);
+                    this._children.propertyGrid.moveItemUp(item.getKey());
                 }
             },
             {
@@ -92,8 +91,19 @@ export default class Demo extends Control<IControlOptions> {
                 showType: showType.MENU,
                 title: 'Переместить вниз',
                 handler: (item: Model) => {
-                    const sourceItemIndex = this._getSourceItemIndex(source, item);
-                    source.move(sourceItemIndex, sourceItemIndex + 1);
+                    this._children.propertyGrid.moveItemDown(item.getKey());
+                }
+            },
+            {
+                id: 5,
+                icon: 'icon-Folder',
+                iconStyle: 'secondary',
+                showType: showType.MENU,
+                title: 'Переместить в папку',
+                handler: (item: Model) => {
+                    this._children.propertyGrid.moveWithDialog({
+                        selected: [item.getKey()]
+                    });
                 }
             },
             {

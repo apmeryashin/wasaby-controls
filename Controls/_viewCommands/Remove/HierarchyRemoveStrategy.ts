@@ -1,6 +1,7 @@
 import {RecordSet} from 'Types/collection';
 import {relation} from 'Types/entity';
 import {ISelectionObject} from 'Controls/interface';
+import {Model} from 'Types/entity';
 
 export interface IHierarchyRemoveStrategyOptions {
     keyProperty?: string;
@@ -12,10 +13,10 @@ export interface IHierarchyRemoveStrategyOptions {
 
 export default class HierarchyRemoveStrategy {
     remove(items: RecordSet, options: IHierarchyRemoveStrategyOptions): void {
-        this._removeFromRecordSet(items, options)
+        this._removeFromRecordSet(items, options);
     }
 
-    protected _removeFromRecordSet(items: RecordSet, options) {
+    protected _removeFromRecordSet(items: RecordSet, options): void {
         const hierarchy = new relation.Hierarchy({
             keyProperty: options.keyProperty,
             parentProperty: options.parentProperty,
@@ -34,7 +35,7 @@ export default class HierarchyRemoveStrategy {
         HierarchyRemoveStrategy._setEventRaising(true, items, options.silent);
     }
 
-    protected _hierarchyRemove(items: RecordSet, selection, hierarchy: relation.Hierarchy, children) {
+    protected _hierarchyRemove(items: RecordSet, selection, hierarchy: relation.Hierarchy, children: Model[]): void {
         let key;
         let isNode;
         children.forEach((item) => {
@@ -51,7 +52,7 @@ export default class HierarchyRemoveStrategy {
         });
     }
 
-    private static _setEventRaising(enabled: boolean, items: RecordSet, silent: boolean) {
+    private static _setEventRaising(enabled: boolean, items: RecordSet, silent: boolean): void {
         if (!silent) {
             items.setEventRaising(enabled, true);
         }

@@ -9,6 +9,8 @@ import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
+import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
+import {Move as MoveCommand} from 'Controls/listActions';
 import {default as IPropertyGridItem} from './IProperty';
 import {
     PROPERTY_GROUP_FIELD,
@@ -21,6 +23,8 @@ import {IItemAction, Controller as ItemActionsController} from 'Controls/itemAct
 import {StickyOpener} from 'Controls/popup';
 import 'css!Controls/itemActions';
 import 'css!Controls/propertyGrid';
+import {ISelectionObject, TKey} from 'Controls/interface';
+import {LOCAL_MOVE_POSITION, Memory} from 'Types/source';
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -327,6 +331,82 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             });
         }
         return validatorResult;
+    }
+
+    _getRemoveViewCommand(selection: ISelectionObject): RemoveViewCommand {
+        return new RemoveViewCommand({
+            keyProperty: this._listModel.getKeyProperty(),
+            nodeProperty: this._listModel.getNodeProperty(),
+            parentProperty: this._listModel.getParentProperty(),
+            items: this._listModel.getCollection(),
+            selection
+        });
+    }
+
+    _getMoveViewCommand(keys: TKey[], direction: LOCAL_MOVE_POSITION, target?: Model): MoveViewCommand {
+        return new MoveViewCommand({
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty,
+            collection: this._listModel.getCollection(),
+            items: keys,
+            root: null,
+            direction,
+            target,
+            keyProperty: this._listModel.getKeyProperty()
+        });
+    }
+
+    removeItems(selection: ISelectionObject): Promise<void | string> {
+        const resultSelection = {
+            selected: selection.selected || [],
+            excluded: selection.excluded || []
+        };
+        return this._getRemoveViewCommand(resultSelection).execute({});
+    }
+
+    moveItemUp(key: TKey): void {
+        return this._getMoveViewCommand([key], LOCAL_MOVE_POSITION.Before).execute();
+    }
+
+    moveItemDown(key: TKey): void {
+        return this._getMoveViewCommand([key], LOCAL_MOVE_POSITION.After).execute();
+    }
+
+    moveWithDialog(selection: ISelectionObject): Promise<void> {
+        let movedItems = [];
+        let resultTarget = null;
+        const source = new Memory({
+            keyProperty: this._listModel.getKeyProperty(),
+            data: this._listModel.getCollection().getRawData(),
+            filter: (item: Model): boolean => {
+                return !!item.get(this._options.nodeProperty);
+            }
+        });
+        const moveCommand = new MoveCommand({
+            source,
+            selection,
+            parentProperty: this._options.parentProperty,
+            popupOptions: {
+                template: 'Controls/moverDialog:Template',
+                opener: this,
+                templateOptions: {
+                    parentProperty: this._options.parentProperty,
+                    nodeProperty: this._options.nodeProperty,
+                    keyProperty: this._listModel.getKeyProperty(),
+                    columns: [{
+                        displayProperty: 'caption'
+                    }],
+                    source
+                },
+                beforeMoveCallback: (selection: ISelectionObject, target: Model): void => {
+                    movedItems = selection.selected;
+                    resultTarget = target;
+                }
+            }
+        });
+        return moveCommand.execute({}).then(() => {
+            this._getMoveViewCommand(movedItems, LOCAL_MOVE_POSITION.On, resultTarget).execute();
+        });
     }
 
     static defaultProps: Partial<IPropertyGridOptions> = {
