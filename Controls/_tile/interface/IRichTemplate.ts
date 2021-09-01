@@ -1,4 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
+import {TPaddingSize} from 'Controls/interface';
 
 /**
  * @typedef {Object} ICharacteristicsItem
@@ -14,6 +15,15 @@ interface ICharacteristicsItem {
     title?: string;
     tooltip?: string;
 }
+
+/**
+ * @typedef {String} TImagePosition
+ * @variant top Изображение отображается сверху.
+ * @variant right Изображение отображается справа.
+ * @variant bottom Изображение отображается снизу.
+ * @variant left Изображение отображается слева.
+ */
+export type TImagePosition = 'top'|'right'|'bottom'|'left';
 
 /**
  * "Богатый" шаблон отображения элементов в {@link Controls/tile:View плитке}.
@@ -67,14 +77,7 @@ export default interface IRichTemplateOptions {
     imageSize?: 's' | 'm' | 'l' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 
     /**
-     * @typedef {String} ImagePosition
-     * @variant top Изображение отображается сверху.
-     * @variant bottom Изображение отображается снизу.
-     * @variant left Изображение отображается слева.
-     * @variant right Изображение отображается справа.
-     */
-    /**
-     * @cfg {ImagePosition} Положение изображения.
+     * @cfg {TImagePosition} Положение изображения.
      * @see imageSize
      * @see imageViewMode
      * @see nodesScaleSize
@@ -280,4 +283,12 @@ export default interface IRichTemplateOptions {
     * @see imageSize
     */
     imageProportion?: string;
+
+    /**
+     * @cfg {TPaddingSize} Отступ от края плитки до изображения.
+     * @remark
+     * При установке отступа для изображений в виде прямоугольника к изображению применяется скругление углов аналогичное плитке.
+     * @see imageViewMode
+     */
+    contentPadding?: TPaddingSize;
 }

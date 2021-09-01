@@ -2,6 +2,7 @@ import { DestroyableMixin, Model, ObservableMixin } from 'Types/entity';
 import {IEnumerable} from '../Abstract';
 import {IBaseCollection} from 'Controls/_display/interface';
 import {ICollectionItem} from 'Controls/_display/interface/ICollectionItem';
+import {TPaddingSize} from 'Controls/_interface/TPaddingSize';
 
 export interface ISourceCollection<T extends Model = Model> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
     getCount(): number;
@@ -16,17 +17,7 @@ export interface ISourceCollection<T extends Model = Model> extends IEnumerable<
  */
 export type TVerticalItemPadding = 'S'|'null'|'default';
 
-/**
- * @typedef {String} THorizontalItemPadding
- * @variant XS
- * @variant S
- * @variant M
- * @variant L
- * @variant XL
- * @variant XXL
- * @variant null
- */
-export type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null'|'default';
+export type THorizontalItemPadding = TPaddingSize;
 
 /**
  * Интерфейс настройки отступов записи
@@ -53,14 +44,14 @@ export interface IItemPadding {
     bottom?: TVerticalItemPadding;
     /**
      * @name Controls/_display/interface/ICollection/IItemPadding#left
-     * @cfg {THorizontalItemPadding} Отступ записи слева
+     * @cfg {TPaddingSize} Отступ записи слева
      */
-    left?: THorizontalItemPadding;
+    left?: TPaddingSize;
     /**
      * @name Controls/_display/interface/ICollection/IItemPadding#right
-     * @cfg {THorizontalItemPadding} Отступ записи справа
+     * @cfg {TPaddingSize} Отступ записи справа
      */
-    right?: THorizontalItemPadding;
+    right?: TPaddingSize;
 }
 
 /*
