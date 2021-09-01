@@ -9,6 +9,11 @@
 @_image_size_6xl_position_horizontal_rich_tile: var(--size_6xl_image);
 @_image_size_7xl_position_horizontal_rich_tile: var(--size_7xl_image);
 
+.controls-TileView__richTemplate {
+   display: flex;
+   height: 100%;
+}
+
 .controls-TileView__richTemplate_imagePosition_right {
    flex-direction: row-reverse;
 }
@@ -30,14 +35,59 @@
    white-space: normal;
 }
 
-.controls-TileView__richTemplate_itemContent {
-   padding: var(--offset_m);
+// region content spacing
+
+.controls-TileView__richTemplate_itemContent_spacing_top_default {
+   padding-top: var(--offset_m);
 }
 
-.controls-TileView__richTemplate {
-   display: flex;
-   height: 100%;
+.controls-TileView__richTemplate_itemContent_spacing_right_default {
+   padding-right: var(--offset_m);
 }
+
+.controls-TileView__richTemplate_itemContent_spacing_bottom_default {
+   padding-bottom: var(--offset_m);
+}
+
+.controls-TileView__richTemplate_itemContent_spacing_left_default {
+   padding-left: var(--offset_m);
+}
+
+.controls-TileView__richTemplate_itemContent_spacing_top_null {
+   padding-top: 0;
+}
+
+.controls-TileView__richTemplate_itemContent_spacing_right_null {
+   padding-right: 0;
+}
+
+.controls-TileView__richTemplate_itemContent_spacing_bottom_null {
+   padding-bottom: 0;
+}
+
+.controls-TileView__richTemplate_itemContent_spacing_left_null {
+   padding-left: 0;
+}
+
+.controls-TileView__richTemplate_itemContent_spacing {
+   @variants: xs, s, m, l, xl, xxl;
+   .for(@variants, {
+      &_top_@{_item} {
+         padding-top: ~"var(--offset_@{_item})";
+      }
+      &_right_@{_item} {
+         padding-right: ~"var(--offset_@{_item})";
+      }
+      &_bottom_@{_item} {
+         padding-bottom: ~"var(--offset_@{_item})";
+      }
+      &_left_@{_item} {
+         padding-left: ~"var(--offset_@{_item})";
+      }
+   });
+}
+
+// endregion content spacing
 
 .controls-TileView__richTemplate_image_viewMode_circle {
    border-radius: 50%;
@@ -87,18 +137,6 @@
    position: relative;
 }
 
-.controls-TileView_richTemplate_image_spacing_s_position_left_viewMode_rectangle {
-   border-left: var(--offset_s) solid transparent;
-   border-top: var(--offset_s) solid transparent;
-   border-bottom: var(--offset_s) solid transparent;
-}
-
-.controls-TileView_richTemplate_image_spacing_s_position_right_viewMode_rectangle {
-   border-right: var(--offset_s) solid transparent;
-   border-top: var(--offset_s) solid transparent;
-   border-bottom: var(--offset_s) solid transparent;
-}
-
 // region image rounded borders
 
 .controls-TileView__richTemplate_image_roundBorder {
@@ -121,10 +159,78 @@
 
 // region image rounded borders
 
-.controls-TileView_richTemplate_image_spacing_default_viewMode_circle,
-.controls-TileView_richTemplate_image_spacing_default_viewMode_ellipse {
-   border: var(--offset_m) solid transparent;
+// region image spacing
+
+// null
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_top_null,
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_top_null,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_top_null,
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_top_default {
+   border-top: none;
 }
+
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_right_null,
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_right_null,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_right_null,
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_right_default {
+   border-right: none;
+}
+
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_bottom_null,
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_bottom_null,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_bottom_null,
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_bottom_default {
+   border-bottom: none;
+}
+
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_left_null,
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_left_null,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_left_null,
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing_left_default {
+   border-left: none;
+}
+
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_top_default,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_top_default {
+   border-top: var(--offset_m) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_right_default,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_right_default {
+   border-right: var(--offset_m) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_bottom_default,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_bottom_default {
+   border-bottom: var(--offset_m) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_viewMode_circle_spacing_left_default,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing_left_default {
+   border-left: var(--offset_m) solid transparent;
+}
+
+.controls-TileView_richTemplate_image_viewMode_rectangle_spacing,
+.controls-TileView_richTemplate_image_viewMode_circle_spacing,
+.controls-TileView_richTemplate_image_viewMode_ellipse_spacing {
+   @variants: xs, s, m, l, xl, xxl;
+   .for(@variants, {
+      &_top_@{_item} {
+         border-top: ~"var(--offset_@{_item}) solid transparent;";
+      }
+      &_right_@{_item} {
+         border-right: ~"var(--offset_@{_item}) solid transparent;";
+      }
+      &_bottom_@{_item} {
+         border-bottom: ~"var(--offset_@{_item}) solid transparent;";
+      }
+      &_left_@{_item} {
+         border-left: ~"var(--offset_@{_item}) solid transparent;";
+      }
+   });
+}
+
+// endregion image spacing
 
 .controls-TileView__richTemplate_characteristics_spacing,
 .controls-TileView__richTemplate_description_spacing,
@@ -216,16 +322,9 @@
    }
 }
 
-
-.controls-TileView__richTemplate {
-   display: flex;
-   height: 100%;
-}
-
 .controls-TileView__richTemplate_item {
    overflow: hidden;
 }
-
 
 .controls-TileView__richTemplate_item .controls-TileView__item_withoutBorder {
    border: none;
