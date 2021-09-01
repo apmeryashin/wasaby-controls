@@ -795,6 +795,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             wrapperClasses += ' controls-ListView__item_active';
         }
 
+        if (this._$roundBorder) {
+            wrapperClasses += this.getRoundBorderClasses();
+        }
+
         return wrapperClasses;
     }
 
