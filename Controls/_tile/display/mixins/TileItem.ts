@@ -28,7 +28,6 @@ const DEFAULT_RICH_ITEM_IMAGE_FIT = 'cover';
 export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
 export type TTitlePosition = 'underImage'|'onImage';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
-export type TImageOffset = 's'|'m'|'none'|'default';
 export type TImagePosition = 'top'|'left'|'right';
 export type TShadowVisibility = 'visible'|'hidden'|'onhover';
 export type TItemActionsPlace = 'wrapper'|'title';

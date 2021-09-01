@@ -270,15 +270,15 @@ export default interface IRichTemplateOptions {
      * @cfg {TemplateFunction|String} Шаблон, вставляемый в правом верхнем углу плитки для отображения дополнительных прикладных элементов.
      * @demo Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/AdditionalPaneltemplate/Index
      */
-    additionalPanelTemplate?: TemplateFunction;
+     additionalPanelTemplate?: TemplateFunction;
 
     /**
-     * @cfg {String} Соотношение сторон изображения в формате x:y, где x-ширина, y-высота.
+    * @cfg {String} Соотношение сторон изображения в формате x:y, где x-ширина, y-высота.
      * Например, для получения широкого изображения можно использовать значение 16:9.
-     * @default 1:1
-     *
-     * @see imageSize
-     */
+    * @default 1:1
+    *
+    * @see imageSize
+    */
     imageProportion?: string;
 
     /**
