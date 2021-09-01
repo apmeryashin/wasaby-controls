@@ -70,7 +70,7 @@
 }
 
 .controls-TileView__richTemplate_itemContent_spacing {
-   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+   @variants: xs, s, m, l, xl, 2xl;
    .for(@variants, {
       &_top_@{_item} {
          padding-top: ~"var(--offset_@{_item})";
@@ -213,7 +213,7 @@
 .controls-TileView_richTemplate_image_viewMode_rectangle_spacing,
 .controls-TileView_richTemplate_image_viewMode_circle_spacing,
 .controls-TileView_richTemplate_image_viewMode_ellipse_spacing {
-   @variants: 3xs, 2xs, xs, s, m, l, xl, 2xl;
+   @variants: xs, s, m, l, xl, 2xl;
    .for(@variants, {
       &_top_@{_item} {
          border-top: ~"var(--offset_@{_item}) solid transparent;";
