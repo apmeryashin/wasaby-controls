@@ -33,16 +33,18 @@ export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
 
 /**
  * @typedef {String} TContentPadding
+ * @variant 3xs
+ * @variant 2xs
  * @variant xs
  * @variant s
  * @variant m
  * @variant l
  * @variant xl
- * @variant xxl
+ * @variant 2xl
  * @variant null
  * @variant default
  */
-export type TContentPadding = 'xs'|'s'|'m'|'l'|'xl'|'xxl'|'null'|'default';
+export type TContentPadding = '3xs' | '2xs' | 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl'| 'null' | 'default';
 
 /**
  * @typedef {String} TImagePosition
