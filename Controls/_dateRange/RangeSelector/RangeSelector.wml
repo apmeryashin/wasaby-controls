@@ -1,22 +1,15 @@
-<div class="controls-DateRangeSelector">
-      <Controls._dateRange.LinkView
-         name="linkView"
-         scope="{{_options}}"
-         startValue="{{ _rangeModel.startValue }}"
-         endValue="{{ _rangeModel.endValue }}"
-         emptyCaption="{{ _emptyCaption }}"
-         fontColorStyle="{{_options.fontColorStyle}}"
-         fontWeight="{{ _options.fontWeight }}"
-         on:resetButtonClick="_resetButtonClickHandler()"
-         on:rangeChanged="_rangeChangedHandler()"
-         on:linkClick="openPopup()"
-         on:mouseenter="_mouseEnterHandler()"
-         on:mouseleave="_mouseLeaveHandler()"
-         attr:class="controls-DateRangeSelector__view {{_isMinWidth ? 'controls-DateRangeSelector__view_minWidth'}}"
-      />
-
-      <Controls.popup:Sticky name="opener"
-                                    closeOnOutsideClick="{{true}}"
-                                    actionOnScroll="close">
-      </Controls.popup:Sticky>
-</div>
+<Controls._dateRange.LinkView
+        name="linkView"
+        scope="{{_options}}"
+        startValue="{{ _rangeModel.startValue }}"
+        endValue="{{ _rangeModel.endValue }}"
+        emptyCaption="{{ _emptyCaption }}"
+        fontColorStyle="{{_options.fontColorStyle}}"
+        fontWeight="{{ _options.fontWeight }}"
+        on:resetButtonClick="_resetButtonClickHandler()"
+        on:rangeChanged="_rangeChangedHandler()"
+        on:linkClick="openPopup()"
+        on:mouseenter="_mouseEnterHandler()"
+        on:mouseleave="_mouseLeaveHandler()"
+        attr:class="controls-DateRangeSelector controls-DateRangeSelector__view {{_isMinWidth ? 'controls-DateRangeSelector__view_minWidth'}}"
+/>

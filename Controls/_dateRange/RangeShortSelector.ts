@@ -92,7 +92,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
             },
             targetPoint: { horizontal: 'left' },
             eventHandlers: {
-                onResult: this._onResult.bind(this)
+                onResult: this._sendResultHandler.bind(this)
             },
             templateOptions: {
                 popupClassName: this._options.popupClassName,
@@ -132,11 +132,12 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
         this._rangeModel.setRange(this._options.resetStartValue || null, this._options.resetEndValue || null);
     }
 
-    _sendResultHandler(event: SyntheticEvent, fittingMode: string): void {
+    _sendResultHandler(fittingMode: string): void {
         if (typeof fittingMode === 'string') {
             this._fittingMode = fittingMode;
             this.openPopup();
         }
+        super._onResult(...arguments);
     }
 
     shiftBack(): void {
