@@ -61,13 +61,12 @@ export {
     getItemSize
 };
 
+export {TContentPadding, TImagePosition, TTitlePosition, TImageViewMode} from 'Controls/_tile/interface/IRichTemplate';
+
 export {
     TTileItem,
     TActionMode,
     TGradientType,
-    TImagePosition,
-    TTitlePosition,
-    TImageViewMode,
     TShadowVisibility,
     TTitleStyle
 } from 'Controls/_tile/display/mixins/TileItem';

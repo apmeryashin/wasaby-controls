@@ -1623,10 +1623,10 @@ export default abstract class TileItem<T extends Model = Model> {
         const contentPaddingBottom = imagePosition !== 'bottom' ? contentPadding : 'default';
         const contentPaddingLeft = imagePosition !== 'left' ? contentPadding : 'default';
 
-        classes += ` controls-TileView__richTemplate_itemContent_spacing_top_${contentPadding}`;
-        classes += ` controls-TileView__richTemplate_itemContent_spacing_right_${contentPadding}`;
-        classes += ` controls-TileView__richTemplate_itemContent_spacing_bottom_${contentPadding}`;
-        classes += ` controls-TileView__richTemplate_itemContent_spacing_left_${contentPadding}`;
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_top_${contentPaddingTop}`;
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_right_${contentPaddingRight}`;
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_bottom_${contentPaddingBottom}`;
+        classes += ` controls-TileView__richTemplate_itemContent_spacing_left_${contentPaddingLeft}`;
 
         return classes;
     }
