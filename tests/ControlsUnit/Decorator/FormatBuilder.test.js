@@ -14,7 +14,7 @@ define(
 
          it('getMaskParsing', function() {
             const actual = MaskFormatBuilder.getMaskParsing('Lldx');
-            assert.deepEqual(actual, /([Lldx])(?:\\({.*?}|.))?|([\(\)\{\}\[\]⟨⟩<>''""«»„“‘’””])|(.)/g);
+            assert.deepEqual(actual, /([Lldx])(?:\\({.*?}|.))?|([\(\)\{\}\[\]⟨⟩<>\'\'\"\"«»„“‘’””])|(.)/g);
          });
 
          describe('getMaskKeys', function() {
