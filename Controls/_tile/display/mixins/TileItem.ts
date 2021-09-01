@@ -21,6 +21,7 @@ import {ITileRoundBorder} from 'Controls/interface';
 import {TBackgroundColorStyle, TCursor } from 'Controls/list';
 import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 import {TPaddingSize} from 'Controls/interface';
+import {TImagePosition} from 'Controls/_tile/interface/IRichTemplate';
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 const DEFAULT_ITEM_IMAGE_FIT = 'none';
@@ -29,7 +30,7 @@ const DEFAULT_RICH_ITEM_IMAGE_FIT = 'cover';
 export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
 export type TTitlePosition = 'underImage'|'onImage';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
-export type TImagePosition = 'top'|'left'|'right';
+
 export type TShadowVisibility = 'visible'|'hidden'|'onhover';
 export type TItemActionsPlace = 'wrapper'|'title';
 export type TImageSize = 's'|'m'|'l';
