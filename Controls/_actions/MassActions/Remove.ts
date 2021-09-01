@@ -13,6 +13,6 @@ Object.assign(Remove.prototype, {
     title: rk('Удалить'),
     icon: 'icon-Erase',
     iconStyle: 'danger',
-    commandName: 'Controls/listCommands:Remove',
+    commandName: 'Controls/listActions:Remove',
     viewCommandName: 'Controls/viewCommands:PartialReload'
 });

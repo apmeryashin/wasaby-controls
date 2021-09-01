@@ -4,7 +4,7 @@ import cInstance = require('Core/core-instance');
 import {getItemsBySelection} from 'Controls/baseList';
 import {Logger} from 'UI/Utils';
 
-import {Move as MoveAction, IMoveActionOptions} from 'Controls/listCommands';
+import {Move as MoveAction, IMoveActionOptions} from 'Controls/listActions';
 import {Model} from 'Types/entity';
 import {LOCAL_MOVE_POSITION} from 'Types/source';
 
@@ -35,7 +35,7 @@ var _private = {
                     filter: _private.extractFilter(items),
                     targetKey: _private.getIdByItem(self, target),
                     position: position,
-                    providerName: 'Controls/listCommands:MoveProvider'
+                    providerName: 'Controls/listActions:MoveProvider'
                 });
             }
             if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
