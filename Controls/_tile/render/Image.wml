@@ -2,7 +2,7 @@
     <div class="{{ (item || itemData).getImageAlignClasses(imageAlign) }}">
         <ws:partial template="{{ tag }}"
                     attr:style="{{ itemType === 'rich' ? item.getBigGradientStyles(itemType, gradientStartColor, gradientStopColor, gradientDirection ) }}"
-                    attr:class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem) }}"
+                    attr:class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, contentPadding) }}"
                     attr:src="{{(item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode)}}"
                     attr:data-qa="controls-TileView__image"
         />
@@ -20,7 +20,7 @@
 
 <ws:if data="{{ imageViewMode !== 'none' }}">
     <div
-        attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem) }}"
+        attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem, contentPadding) }}"
         attr:style="{{ (item || itemData).getImageWrapperStyles(itemType, imageViewMode, imagePosition) }}"
         data-qa="{{ (item || itemData).getImageWrapperDataQa() }}"
     >

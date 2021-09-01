@@ -1,4 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
+import {TPaddingSize} from 'Controls/interface';
 
 /**
  * @typedef {Object} ICharacteristicsItem
@@ -279,4 +280,12 @@ export default interface IRichTemplateOptions {
     * @see imageSize
     */
     imageProportion?: string;
+
+    /**
+     * @cfg {TPaddingSize} Отступ от края плитки до изображения.
+     * @remark
+     * При установке отступа для изображений в виде прямоугольника к изображению применяется скругление углов аналогичное плитке.
+     * @see imageViewMode
+     */
+    contentPadding?: TPaddingSize;
 }

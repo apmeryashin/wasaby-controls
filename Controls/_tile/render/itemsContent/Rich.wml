@@ -5,12 +5,13 @@
                 imageSize="{{ imageSize || 's' }}"
                 imageFit="{{ imageFit || 'cover' }}"
                 imageProportion="{{ (item || itemData).getImageProportion(imageProportion) }}"
+                contentPadding="{{ contentPadding }}"
                 scope="{{_options}}"/>
     <ws:partial if="{{afterImageTemplate}}"
                 template="{{afterImageTemplate}}"
                 itemData="{{(item || itemData)}}"
                 item="{{(item || itemData)}}"/>
-    <ws:partial template="wml!Controls/_tile/render/Title" scope="{{_options}}">
+    <ws:partial template="wml!Controls/_tile/render/Title" scope="{{_options}}" contentPadding="{{ contentPadding }}">
         <ws:footerTpl>
             <ws:partial if="{{footerTemplate}}"
                         template="{{footerTemplate}}"

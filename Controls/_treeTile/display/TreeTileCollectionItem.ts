@@ -11,6 +11,7 @@ import {
     TShadowVisibility,
     TTitleStyle
 } from 'Controls/tile';
+import {TPaddingSize} from 'Controls/interface';
 import {ITreeItemOptions, TreeItem} from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
 import * as FolderIcon from 'wml!Controls/_treeTile/render/FolderIcon';
@@ -249,9 +250,12 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         itemType: TTileItem = 'default',
         titleLines: number = 1,
         gradientType: TGradientType = 'dark',
-        titleStyle: TTitleStyle = 'light'
+        titleStyle: TTitleStyle = 'light',
+        imagePosition: TImagePosition = 'top',
+        contentPadding: TPaddingSize = 'default'
     ): string {
-        let classes = super.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle);
+        let classes = super.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle,
+            imagePosition, contentPadding);
         switch (itemType) {
             case 'default':
             case 'medium':
