@@ -551,7 +551,7 @@ Object.assign(Tile.prototype, {
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$tileWidth: DEFAULT_TILE_WIDTH,
     _$imageProperty: '',
-    _$imageFit: 'none',
+    _$imageFit: null,
     _$imageHeightProperty: '',
     _$imageWidthProperty: '',
     _$imageUrlResolver: null,
