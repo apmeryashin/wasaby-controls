@@ -212,16 +212,16 @@
    @variants: xs, s, m, l, xl, xxl;
    .for(@variants, {
       &_top_@{_item} {
-         border-top: ~"var(--offset_@{_item})";
+         border-top: ~"var(--offset_@{_item}) solid transparent;";
       }
       &_right_@{_item} {
-         border-right: ~"var(--offset_@{_item})";
+         border-right: ~"var(--offset_@{_item}) solid transparent;";
       }
       &_bottom_@{_item} {
-         border-bottom: ~"var(--offset_@{_item})";
+         border-bottom: ~"var(--offset_@{_item}) solid transparent;";
       }
       &_left_@{_item} {
-         border-left: ~"var(--offset_@{_item})";
+         border-left: ~"var(--offset_@{_item}) solid transparent;";
       }
    });
 }
