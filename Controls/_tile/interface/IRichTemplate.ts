@@ -1,4 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
+import {TPaddingSize} from 'Controls/interface';
 
 /**
  * @typedef {Object} ICharacteristicsItem
@@ -14,74 +15,6 @@ interface ICharacteristicsItem {
     title?: string;
     tooltip?: string;
 }
-
-/**
- * @typedef {String} TTitlePosition
- * @variant underImage Заголовок отображается под изображением.
- * @variant onImage Заголовок отображается в верхней части поверх изображения изображением.
- */
-export type TTitlePosition = 'underImage'|'onImage';
-
-/**
- * @typedef {String} ImageViewMode
- * @variant rectangle Изображение отображается в виде прямоугольника.
- * @variant circle Изображение отображается в виде круга.
- * @variant ellipse Изображение отображается в виде суперэллипса.
- * @variant none Изображение не отображается.
- */
-export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
-
-/**
- * @typedef {String} TContentPadding
- * @variant 3xs
- * @variant 2xs
- * @variant xs
- * @variant s
- * @variant m
- * @variant l
- * @variant xl
- * @variant 2xl
- * @variant null
- * @variant default
- */
-export type TContentPadding = '3xs' | '2xs' | 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl'| 'null' | 'default';
-
-/**
- * @typedef {String} TImagePosition
- * @variant top Изображение отображается сверху.
- * @variant left Изображение отображается слева.
- * @variant right Изображение отображается справа.
- */
-export type TImagePosition = 'top'|'right'|'bottom'|'left';
-
-/**
- * @typedef {String} ImageSize
- * @variant s Размер, соответствующий размеру s.
- * @variant m Размер, соответствующий размеру m.
- * @variant l Размер, соответствующий размеру l.
- * @variant 2xl Размер, соответствующий размеру изображения 2xl. Только для горизонтального расположения изображений.
- * @variant 3xl Размер, соответствующий размеру изображения 3xl. Только для горизонтального расположения изображений.
- * @variant 4xl Размер, соответствующий размеру изображения 4xl. Только для горизонтального расположения изображений.
- * @variant 5xl Размер, соответствующий размеру изображения 5xl. Только для горизонтального расположения изображений.
- * @variant 6xl Размер, соответствующий размеру изображения 6xl. Только для горизонтального расположения изображений.
- * @variant 7xl Размер, соответствующий размеру изображения 7xl. Только для горизонтального расположения изображений.
- */
-export type TImageSize = 's'|'m'|'l'|'2xl'|'3xl'|'4xl'|'5xl'|'6xl'|'7xl';
-
-/**
- * @typedef {String} ImageEffect
- * @variant none Изображение отображается без эффектов.
- * @variant gradient Изображение отображается с градиентом.
- * @see gradientColor
- */
-export type TImageEffect = 'none'|'gradient';
-
-/**
- * @typedef {String} TGradientDirection
- * @variant toBottom Направление градиента сверху вниз.
- * @variant toBottomRight Направление градиента из верхнего левого в правый нижний угол.
- */
-export type TGradientDirection = 'toBottom' | 'toBottomRight';
 
 /**
  * "Богатый" шаблон отображения элементов в {@link Controls/tile:View плитке}.
@@ -112,49 +45,70 @@ export type TGradientDirection = 'toBottom' | 'toBottomRight';
  */
 
 export default interface IRichTemplateOptions {
-
     /**
-     * @cfg {TImageSize} Размер изображения.
+     * @typedef {String} ImageSize
+     * @variant s Размер, соответствующий размеру s.
+     * @variant m Размер, соответствующий размеру m.
+     * @variant l Размер, соответствующий размеру l.
+     * @variant 2xl Размер, соответствующий размеру изображения 2xl. Только для горизонтального расположения изображений.
+     * @variant 3xl Размер, соответствующий размеру изображения 3xl. Только для горизонтального расположения изображений.
+     * @variant 4xl Размер, соответствующий размеру изображения 4xl. Только для горизонтального расположения изображений.
+     * @variant 5xl Размер, соответствующий размеру изображения 5xl. Только для горизонтального расположения изображений.
+     * @variant 6xl Размер, соответствующий размеру изображения 6xl. Только для горизонтального расположения изображений.
+     * @variant 7xl Размер, соответствующий размеру изображения 7xl. Только для горизонтального расположения изображений.
+     */
+    /**
+     * @cfg {ImageSize} Размер изображения.
      * @remark При горизональном расположении изображений размер фото фиксированный.
      * @default s
      * @see imagePosition
      * @see imageViewMode
      * @see imageEffect
      */
-    imageSize?: TImageSize;
+    imageSize?: 's' | 'm' | 'l' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 
     /**
-     * @cfg {TContentPadding} Отступ от края плитки до изображения.
-     * @remark
-     * При установке отступа для изображений в виде прямоугольника к изображению применяется скругление углов аналогичное плитке.
-     * @see imageViewMode
+     * @typedef {String} ImagePosition
+     * @variant top Изображение отображается сверху.
+     * @variant left Изображение отображается слева.
+     * @variant right Изображение отображается справа.
      */
-    contentPadding?: TContentPadding;
-
     /**
-     * @cfg {TImagePosition} Положение изображения.
+     * @cfg {ImagePosition} Положение изображения.
      * @see imageSize
      * @see imageViewMode
      * @see nodesScaleSize
      * @see imageEffect
      */
-    imagePosition?: TImagePosition;
+    imagePosition?: 'top' | 'left' | 'right';
 
     /**
-     * @cfg {TTitlePosition} Положение заголовка.
+     * @typedef {String} TitlePosition
+     * @variant underImage Заголовок отображается под изображением.
+     * @variant onImage Заголовок отображается в верхней части поверх изображения изображением.
+     */
+    /**
+     * @cfg {TitlePosition} Положение заголовка.
      * @default underImage
      */
-    titlePosition?: TTitlePosition;
+    titlePosition?: 'top' | 'left' | 'right';
 
     /**
-     * @cfg {TImageViewMode} Вид отображения изображения.
+     * @typedef {String} ImageViewMode
+     * @variant rectangle Изображение отображается в виде прямоугольника.
+     * @variant circle Изображение отображается в виде круга.
+     * @variant ellipse Изображение отображается в виде суперэллипса.
+     * @variant none Изображение не отображается.
+     */
+    /**
+     * @cfg {ImageViewMode} Вид отображения изображения.
      * @default rectangle
      * @see imageSize
      * @see imagePosition
      * @see nodesScaleSize
      * @see imageEffect
      */
-    imageViewMode?: TImageViewMode;
+    imageViewMode?: 'rectangle' | 'circle' | 'ellipse' | 'none';
 
     /**
      * @typedef {String} NodesScaleSize
@@ -173,12 +127,18 @@ export default interface IRichTemplateOptions {
     nodesScaleSize?: 's' | 'm' | 'l';
 
     /**
-     * @cfg {TImageEffect} Эффект у изображения.
+     * @typedef {String} ImageEffect
+     * @variant none Изображение отображается без эффектов.
+     * @variant gradient Изображение отображается с градиентом.
+     * @see gradientColor
+     */
+    /**
+     * @cfg {ImageEffect} Эффект у изображения.
      * @default none
      *
      * @see nodesScaleSize
      */
-    imageEffect?: TImageEffect;
+    imageEffect?: 'none' | 'gradient';
 
     /**
      * @cfg {String} Цвет градиента в месте перехода от изображения к контенту. Можно указывать в любом формате, который поддерживается в CSS.
@@ -191,12 +151,17 @@ export default interface IRichTemplateOptions {
     gradientColor?: string;
 
     /**
+     * @typedef {String} TGradientDirection
+     * @variant toBottom Направление градиента сверху вниз.
+     * @variant toBottomRight Направление градиента из верхнего левого в правый нижний угол.
+     */
+    /**
      * @cfg {TGradientDirection} Направление градиента.
      * @default toBottom
      * @see gradientStartColor
      * @see gradientStopColor
      */
-    gradientDirection?: TGradientDirection;
+    gradientDirection?: string;
 
     /**
      * @cfg {String} Начальный цвет высокого градиента. Можно указывать в любом формате, который поддерживается в CSS.
@@ -305,14 +270,22 @@ export default interface IRichTemplateOptions {
      * @cfg {TemplateFunction|String} Шаблон, вставляемый в правом верхнем углу плитки для отображения дополнительных прикладных элементов.
      * @demo Controls-demo/tileNew/DifferentItemTemplates/RichTemplate/AdditionalPaneltemplate/Index
      */
-    additionalPanelTemplate?: TemplateFunction;
+     additionalPanelTemplate?: TemplateFunction;
 
     /**
-     * @cfg {String} Соотношение сторон изображения в формате x:y, где x-ширина, y-высота.
+    * @cfg {String} Соотношение сторон изображения в формате x:y, где x-ширина, y-высота.
      * Например, для получения широкого изображения можно использовать значение 16:9.
-     * @default 1:1
-     *
-     * @see imageSize
-     */
+    * @default 1:1
+    *
+    * @see imageSize
+    */
     imageProportion?: string;
+
+    /**
+     * @cfg {TPaddingSize} Отступ от края плитки до изображения.
+     * @remark
+     * При установке отступа для изображений в виде прямоугольника к изображению применяется скругление углов аналогичное плитке.
+     * @see imageViewMode
+     */
+    contentPadding?: TPaddingSize;
 }
