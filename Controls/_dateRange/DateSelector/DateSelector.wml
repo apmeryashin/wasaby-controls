@@ -1,20 +1,13 @@
-<div class="controls-DateLink">
-   <div class="controls-DateLink__wrapper">
-      <Controls._dateRange.LinkView
-         name="linkView"
-         scope="{{_options}}"
-         startValue="{{ _startValue }}"
-         endValue="{{ _endValue }}"
-         fontColorStyle="{{_options.fontColorStyle}}"
-         fontWeight="{{ _options.fontWeight }}"
-         on:linkClick="openPopup()"
-         on:rangeChanged="_rangeChangedHandler()"
-         on:mouseenter="_mouseEnterHandler()"
-         on:mouseleave="_mouseLeaveHandler()"
-         attr:class="controls-DateLink__view"
-      />
-
-      <Controls.popup:Sticky name="opener" closeOnOutsideClick="{{true}}">
-      </Controls.popup:Sticky>
-   </div>
-</div>
+<Controls._dateRange.LinkView
+        name="linkView"
+        scope="{{_options}}"
+        startValue="{{ _startValue }}"
+        endValue="{{ _endValue }}"
+        fontColorStyle="{{_options.fontColorStyle}}"
+        fontWeight="{{ _options.fontWeight }}"
+        on:linkClick="openPopup()"
+        on:rangeChanged="_rangeChangedHandler()"
+        on:mouseenter="_mouseEnterHandler()"
+        on:mouseleave="_mouseLeaveHandler()"
+        attr:class="controls-DateLink controls-DateLink__view"
+/>

@@ -1,7 +1,7 @@
 import {Control, IControlOptions} from 'UI/Base';
 import DateRangeModel from './DateRangeModel';
 import {EventUtils} from 'UI/Events';
-import {DependencyTimer} from 'Controls/popup';
+import {DependencyTimer, StickyOpener} from 'Controls/popup';
 import {Logger} from 'UI/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import Sticky from 'Controls/_popup/Opener/Sticky';
@@ -22,8 +22,9 @@ export default class BaseSelector<T> extends Control<T> {
     protected _rangeModel: DateRangeModel = null;
     protected _isMinWidth: boolean = null;
     protected _state: string;
+
+    private _stickyOpener: StickyOpener;
     protected _children: {
-        opener: Sticky;
         linkView: LinkView;
     };
 
@@ -34,6 +35,8 @@ export default class BaseSelector<T> extends Control<T> {
         this._updateIsMinWidth(options.prevArrowVisibility);
         this._stateChangedCallback = this._stateChangedCallback.bind(this);
         this.shiftPeriod = this.shiftPeriod.bind(this);
+
+        this._stickyOpener = new StickyOpener({closeOnOutsideClick: true, actionOnScroll: 'close'});
     }
 
     protected _beforeUnmount(): void {
@@ -72,11 +75,11 @@ export default class BaseSelector<T> extends Control<T> {
     }
 
     closePopup(): void {
-        this._children.opener?.close();
+        this._stickyOpener.close();
     }
 
     openPopup(): void {
-        this._children.opener.open(this._getPopupOptions());
+        this._stickyOpener.open(this._getPopupOptions());
     }
 
     protected _getPopupOptions(): IStickyPopupOptions {
