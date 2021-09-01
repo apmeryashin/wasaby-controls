@@ -1,0 +1,89 @@
+<ws:template name="day">
+    <ws:partial template="Controls/calendar:MonthViewDayTemplate"
+                attr:date="{{ day }}"
+                attr:class="{{ firstDayOfMonth || dayOfWeek === 0  ? 'controls-CompactDatePicker__month-list__item-edge-start' }}
+                    {{ lastDayOfMonth || dayOfWeek === 6 ? 'controls-CompactDatePicker__month-list__item-edge-end' }}"
+                sizeStyle="CompactDatePickerItem"
+                fontColorStyle="CompactDatePickerItem"
+                borderStyle="CompactDatePickerItem"
+                backgroundStyle="CompactDatePickerItem">
+    </ws:partial>
+</ws:template>
+<Controls.calendar:MonthList class="controls-CompactDatePicker__month-list"
+                             viewMode="month"
+                             hoveredStartValue="{{ null }}"
+                             hoveredEndValue="{{ null }}"
+                             _shouldUseScrollToItem="{{ true }}"
+                             displayedRanges="{{ _options.displayedRanges }}"
+                             position="{{ _options.position }}"
+                             on:positionChanged="_positionChangedHandler()"
+                             on:itemClick="_monthViewItemClickHandler()"
+>
+<ws:monthHeaderTemplate>
+    <div class="controls-CompactDatePicker__header__month">
+        {{ _getFormattedCaption(monthHeaderTemplate.date) }}
+    </div>
+</ws:monthHeaderTemplate>
+<ws:monthTemplate>
+    <ws:partial template="Controls/calendar:MonthListMonthTemplate">
+        <ws:bodyTemplate>
+            <Controls.calendar:MonthView
+                    monthViewModel="{{ _monthViewModel }}"
+                    attr:class="controls-CompactDatePicker__month-list__item"
+                    ranges="{{_options.ranges}}"
+                    showWeekdays="{{false}}"
+                    month="{{ monthTemplate.date }}"
+                    daysData="{{extData[monthTemplate.date.getMonth()]}}"
+                    selectionType="{{ _options.selectionType }}"
+
+                    startValue="{{ _options.rangeModel.startValue }}"
+                    endValue="{{ _options.rangeModel.endValue }}"
+                    newMode="{{true}}"
+                    selectionProcessing="{{_options.selectionProcessing}}"
+                    on:selectionProcessingChanged="_proxyEvent()"
+                    selectionBaseValue="{{_options.selectionBaseValue}}"
+                    selectionHoveredValue="{{_options.selectionHoveredValue}}"
+
+                    hoveredStartValue="{{ null }}"
+                    hoveredEndValue="{{ null }}"
+
+
+                    on:monthClick="_proxyEvent()"
+                    on:fixedPeriodClick="_proxyEvent()"
+                    on:itemClick="_proxyEvent()"
+                    on:itemMouseEnter="_proxyEvent()"
+                    on:itemMouseLeave="_proxyEvent()"
+                    on:itemKeyDown="_proxyEvent()"
+            >
+                <ws:dayTemplate>
+                    <ws:if data="{{dayTemplate.value.today && dayTemplate.value.isCurrentMonth}}">
+                        <Controls.scroll:IntersectionObserverContainer
+                                on:intersect="_currentDayIntersectHandler()"
+                                on:intersectionObserverUnregister="_unregisterCurrentDayIntersectHandler()"
+                                threshold="{{[0, 0.01, 0.99, 1]}}">
+                            <!--в IE котнейнеры с дисплеем flex неправильно расчитывают положение детей если задана минимальная высота-->
+                            <!--display: flex на родителе пофиксит проблему-->
+                            <div class="ws-flexbox">
+                                <ws:partial template="day"
+                                            day="{{ dayTemplate.value.day }}"
+                                            dayOfWeek="{{ dayTemplate.value.dayOfWeek }}"
+                                            firstDayOfMonth="{{ dayTemplate.value.firstDayOfMonth }}"
+                                            lastDayOfMonth="{{ dayTemplate.value.lastDayOfMonth }}"
+                                />
+                            </div>
+                        </Controls.scroll:IntersectionObserverContainer>
+                    </ws:if>
+                    <ws:else>
+                        <ws:partial template="day"
+                                    day="{{ dayTemplate.value.day }}"
+                                    dayOfWeek="{{ dayTemplate.value.dayOfWeek }}"
+                                    firstDayOfMonth="{{ dayTemplate.value.firstDayOfMonth }}"
+                                    lastDayOfMonth="{{ dayTemplate.value.lastDayOfMonth }}"
+                        />
+                    </ws:else>
+                </ws:dayTemplate>
+            </Controls.calendar:MonthView>
+        </ws:bodyTemplate>
+    </ws:partial>
+</ws:monthTemplate>
+</Controls.calendar:MonthList>

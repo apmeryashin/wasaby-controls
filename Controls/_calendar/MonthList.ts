@@ -321,8 +321,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             // After changing the navigation options, we must call the "reload" to redraw the control,
             // because the last time we could start rendering from the same position.
             // Position option is the initial position from which control is initially drawn.
-            if (oldPositionId === this._startPositionId && this._children.months) {
-                this._children.months.reload();
+            // TODO: Удалить по https://online.sbis.ru/opendoc.html?guid=775879fd-5eb6-4449-ac95-c27a4107c52d
+            if (this._options._shouldUseScrollToItem) {
+                this._children.months.scrollToItem(this._startPositionId, false);
+            } else {
+                if (oldPositionId === this._startPositionId && this._children.months) {
+                    this._children.months.reload();
+                }
             }
             // Если компонент скрыт, то сбросим _positionToScroll, доверим списочному контролу восстановление скрола
             // после того, как компонент станет видимым. Скорее всего _positionToScroll уже нигде не актален.
