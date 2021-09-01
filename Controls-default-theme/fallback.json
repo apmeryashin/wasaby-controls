@@ -1646,5 +1646,17 @@
   "--item_offset_m_progressStateIndicator": "var(--offset_3xs)",
   "--item_height_s_progressStateIndicator": "8px",
   "--item_width_s_progressStateIndicator": "3px",
-  "--unselected_item_color_progressStateIndicator": "var(--readonly_color)"
+  "--unselected_item_color_progressStateIndicator": "var(--readonly_color)",
+  "--width_compactDatePicker": "270px",
+  "--max-height_compactDatePicker": "400px",
+  "--border-radius_compactDatePicker": "8px",
+  "--header_height_compactDatePicker": "72px",
+  "--header_caption_height_compactDatePicker": "46px",
+  "--header_today_width_compactDatePicker": "20px",
+  "--calendar_item-size_compactDatePicker": "32px",
+  "--calendar_margin_compactDatePicker": "0 23px",
+  "--calendar_today_background-color_compactDatePicker": "#f0f0f0",
+  "--calendar_selected-day_background-color_compactDatePicker": "#eaeaea",
+  "--calendar_selected-day-edge_background-color_compactDatePicker": "#333",
+  "--calendar_item_hover_border-color_compactDatePicker":  "#333"
 }
