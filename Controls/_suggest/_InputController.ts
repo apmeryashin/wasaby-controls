@@ -883,6 +883,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                      resetResult.then((recordSet) => {
                         if (recordSet instanceof RecordSet) {
                            this._setItems(recordSet);
+                           this._loadEnd(recordSet);
                         }
                      }).catch((e) => {
                         if (!e.isCanceled) {
