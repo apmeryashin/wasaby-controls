@@ -796,7 +796,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
 
         if (this._$roundBorder) {
-            wrapperClasses += this.getRoundBorderClasses();
+            wrapperClasses += ' ' + this.getRoundBorderClasses();
         }
 
         return wrapperClasses;
