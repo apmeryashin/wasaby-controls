@@ -72,6 +72,8 @@ define('Controls-demo/explorerNew/ExplorerMemory', [
                   keyProperty: 'id'
                }));
             } else {
+               parents = [parent];
+
                query.where(function(item) {
                   if (filter.parent && filter.parent.forEach) {
                      for (var i = 0; i < filter.parent.length; i++) {
@@ -82,7 +84,11 @@ define('Controls-demo/explorerNew/ExplorerMemory', [
                      return false;
                   } else {
                      if (parent !== undefined) {
-                        return item.get('parent') === parent;
+                        var isMatch = parents.indexOf(item.get('parent')) !== -1;
+                        if (isMatch && filter['Разворот'] === 'С разворотом') {
+                           parents.push(item.get('id'));
+                        }
+                        return isMatch;
                      }
                      return true;
                   }
