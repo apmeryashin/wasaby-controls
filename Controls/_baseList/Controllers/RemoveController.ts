@@ -60,13 +60,14 @@ export class RemoveController {
      * @function Controls/_list/Controllers/RemoveController#removeWithConfirmation
      * @param {Controls/interface:ISelectionObject} selection Массив элементов для удаления.
      * @param {TFilterObject} filter дополнительный фильтр записей при использовании Excluded.
+     * @param {Number} selectedKeysCount - количество выбранных записей.
      * @returns {Promise}
      */
-    removeWithConfirmation(selection: ISelectionObject, filter: TFilterObject = {}): Promise<void> {
+    removeWithConfirmation(selection: ISelectionObject, filter: TFilterObject = {}, selectedKeysCount?: number): Promise<void> {
         return Confirmation.openPopup({
             type: 'yesno',
             style: 'danger',
-            message: rk('Удалить выбранные записи?')
+            message: selectedKeysCount === 1 ? rk('Удалить выбранную запись?') : rk('Удалить выбранные записи?')
         }).then((result) => result ? this._removeFromSource(selection, filter) : Promise.reject());
     }
 

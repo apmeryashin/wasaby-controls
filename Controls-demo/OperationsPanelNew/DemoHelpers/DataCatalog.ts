@@ -337,6 +337,43 @@ function getListData(): Array<{
    }];
 }
 
+function getFlatData(): Array<{key: number, title: string}> {
+   return [
+      {
+         key: 1,
+         title: 'Элемент 1'
+      },
+      {
+         key: 2,
+         title: 'Элемент 2'
+      },
+      {
+         key: 3,
+         title: 'Элемент 3'
+      },
+      {
+         key: 4,
+         title: 'Элемент 4'
+      },
+      {
+         key: 5,
+         title: 'Элемент 5'
+      },
+      {
+         key: 6,
+         title: 'Элемент 6'
+      },
+      {
+         key: 7,
+         title: 'Элемент 7'
+      },
+      {
+         key: 8,
+         title: 'Элемент 8'
+      }
+   ];
+}
+
 function getPanelData(): Array<{
    id: string,
    '@parent': boolean,
@@ -422,6 +459,7 @@ function getPanelDataWithLongCaption(): Array<{
 
 export {
    getListData,
+   getFlatData,
    getPanelData,
    getPanelDataWithLongCaption
 };
