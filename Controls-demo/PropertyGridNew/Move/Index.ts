@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/Move/Index';
-import {showType} from 'Controls/_toolbars/interfaces/IShowType';
+import {showType} from 'Controls/toolbars';
 import {Model} from 'Types/entity';
 
 export default class Demo extends Control<IControlOptions> {

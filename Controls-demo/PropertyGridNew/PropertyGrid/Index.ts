@@ -95,18 +95,6 @@ export default class Demo extends Control<IControlOptions> {
                 }
             },
             {
-                id: 5,
-                icon: 'icon-Folder',
-                iconStyle: 'secondary',
-                showType: showType.MENU,
-                title: 'Переместить в папку',
-                handler: (item: Model) => {
-                    this._children.propertyGrid.moveWithDialog({
-                        selected: [item.getKey()]
-                    });
-                }
-            },
-            {
                 id: 1,
                 icon: 'icon-Erase',
                 iconStyle: 'danger',
