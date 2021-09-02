@@ -1330,7 +1330,7 @@ const _private = {
                 }
             }
 
-            if (this._indicatorsController) {
+            if (self._indicatorsController) {
                 switch (action) {
                     case IObservable.ACTION_RESET:
                         const changedResetTrigger = self._indicatorsController.onCollectionReset(
@@ -1338,7 +1338,7 @@ const _private = {
                             !!self._options.searchValue
                         );
                         if (changedResetTrigger) {
-                            this._updateScrollController(self._options);
+                            self._updateScrollController(self._options);
                         }
 
                         if (self._options.searchValue) {
@@ -1346,7 +1346,7 @@ const _private = {
                         }
                         if (self._shouldStartPortionedSearch()) {
                             // Нужно сбросить флаг, чтобы подгрузка по триггеру работала после порционного поиска.
-                            this._handleLoadToDirection = false;
+                            self._handleLoadToDirection = false;
                         }
                         break;
                     case IObservable.ACTION_ADD:
