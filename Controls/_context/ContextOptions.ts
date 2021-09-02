@@ -16,6 +16,7 @@ import {
    ISortingOptions
 } from 'Controls/interface';
 import { RecordSet } from 'Types/collection';
+import {ControllerClass as OperationsController} from 'Controls/operations';
 
 export interface IContextOptionsValue extends ISortingOptions {
    newLayout?: boolean; // до 3100 для OnlinePage/_base/View/Content.ts и Layout/_browsers/Browser/Tabs.ts
@@ -32,6 +33,7 @@ export interface IContextOptionsValue extends ISortingOptions {
    newDesign?: boolean;
    groupProperty?: string;
    parentProperty?: string;
+   operationsController: OperationsController;
 }
 
 const Context = DataContext.extend({

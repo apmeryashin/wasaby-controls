@@ -6,8 +6,8 @@ import {loadSync, loadAsync, isLoaded} from 'WasabyLoader/ModulesLoader';
 
 export interface IMoveProviderOptions extends IActionOptions, IMoveControllerOptions {
     targetKey?: CrudEntityKey;
-    position?: LOCAL_MOVE_POSITION,
-    direction?: 'up' | 'down'
+    position?: LOCAL_MOVE_POSITION;
+    direction?: 'up' | 'down';
 }
 
 export interface IMoveProvider {
@@ -33,7 +33,7 @@ export default class Move implements IAction, IMoveProvider {
             return loadAsync(CONTROLLER_MODULE_NAME).then((moveController) => {
                 this._createMoveController(moveController, meta);
                 return this._move(meta);
-            })
+            });
         }
     }
 

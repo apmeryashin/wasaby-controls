@@ -280,7 +280,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             parentProperty: this._getSourceController().getParentProperty(),
             nodeProperty: this._options.nodeProperty,
             sourceController: this._getSourceController(),
-            operationsController: this._operationsController
+            operationsController: this._operationsController,
+            selectedKeysCount: this._selectedKeysCount
         });
     }
 
@@ -690,7 +691,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             ...sourceControllerState,
             listsConfigs: this._dataLoader.getState(),
             listsSelectedKeys: this._getOperationsController().getSelectedKeysByLists(),
-            listsExcludedKeys: this._getOperationsController().getExcludedKeysByLists()
+            listsExcludedKeys: this._getOperationsController().getExcludedKeysByLists(),
+            operationsController: this._getOperationsController()
         };
         this._sourceControllerState = sourceControllerState;
     }

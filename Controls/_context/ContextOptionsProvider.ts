@@ -21,7 +21,8 @@ const CONTEXT_FIELDS: ReadonlyArray<keyof IContextOptionsValue> = [
     'contrastBackground',
     'newDesign',
     'groupProperty',
-    'parentProperty'
+    'parentProperty',
+    'operationsController'
 ];
 
 export default class ControllerContextProvider extends Control<IOptions> {

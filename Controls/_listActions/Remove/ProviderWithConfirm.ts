@@ -7,6 +7,6 @@ import RemoveProvider from 'Controls/_listActions/Remove/Provider';
 export default class ProviderWithConfirm extends RemoveProvider {
     protected _callRemove(meta): Promise<string> {
         return this._removeController.removeWithConfirmation(meta.selection,
-            meta.filter).then(() => 'fullReload');
+            meta.filter, meta.selectedKeysCount).then(() => 'fullReload');
     }
 }
