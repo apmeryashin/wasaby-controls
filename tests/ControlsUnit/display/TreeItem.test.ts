@@ -348,6 +348,14 @@ describe('Controls/_display/TreeItem', () => {
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_hiddenNode_default');
             });
 
+            it('expanderPosition is custom', () => {
+                owner.getExpanderPosition = () => 'right';
+                let item = new TreeItem({ owner });
+                const classes = item.getExpanderClasses();
+                CssClassesAssert.notInclude(classes, 'controls-TreeGrid__row_expander_position_right');
+                CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_hiddenNode_default');
+            });
+
             it('expanderPosition is right, style is master', () => {
                 owner.getExpanderPosition = () => 'right';
                 let item = new TreeItem({ owner, style: 'master' });
