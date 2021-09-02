@@ -30,7 +30,7 @@ function getBaseControlOptionsWithEmptyItems(): object {
     };
 }
 
-export function getCorrectBaseControlConfig(options): object {
+export function getCorrectBaseControlConfig(options: Partial<IBaseControlOptions>): IBaseControlOptions {
     let sourceController;
     const cfg = {
         viewName: 'Controls/List/ListView',

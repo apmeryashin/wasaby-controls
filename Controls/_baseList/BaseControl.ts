@@ -3526,6 +3526,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._children.listView.getBottomIndicator()
             );
         }
+        // если элементов не хватает на всю страницу, то сразу же показываем ромашки и триггеры, чтобы догрузить данные
+        if (this._viewSize < this._viewportSize) {
+            // В первую очередь показываем нижний индикатор, но если данных вниз нет,
+            // то показываем верхний индикатор с триггером при наличч еще данных.
+            // Сделано так, чтобы не было сразу загрузки в обе стороны.
+            if (this._indicatorsController.shouldDisplayBottomIndicator()) {
+                this._indicatorsController.displayBottomIndicator();
+            } else if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                // скроллить не нужно, т.к. не куда, ведь элементы не занимают весь вьюПорт
+                this._indicatorsController.displayTopIndicator(false);
+            }
+        }
 
         _private.tryLoadToDirectionAgain(this);
     }
