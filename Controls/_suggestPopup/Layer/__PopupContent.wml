@@ -11,6 +11,7 @@
             <ws:partial template="{{_options.content}}"
                         suggestWidth="{{_suggestWidth}}"
                         reverseList="{{_reverseList}}"
+                        stickyPosition="{{_options.stickyPosition}}"
                         on:controlResize="resize()"/>
         </ws:content>
     </Controls.scroll:Container>

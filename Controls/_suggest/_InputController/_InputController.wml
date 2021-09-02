@@ -25,7 +25,7 @@
 
     <ws:template name="suggestWrapperTpl">
         <div class="controls-Suggest__wrapper
-                    controls-Suggest__wrapper_{{_options.stickyPosition.direction.vertical}}">
+                    controls-Suggest__wrapper_{{content.stickyPosition.direction.vertical}}">
             <ws:if data="{{_misspellingCaption}}">
                 <ws:partial template="{{'Controls/search:Misspell'}}" attr:class="controls-Suggest__Misspell" attr:style="width:{{content.suggestWidth}}px">
                     <ws:caption>
