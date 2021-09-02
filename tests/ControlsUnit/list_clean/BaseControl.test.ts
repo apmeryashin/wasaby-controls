@@ -1278,6 +1278,36 @@ describe('Controls/list_clean/BaseControl', () => {
                 });
             });
 
+            it('autoAddOnInit. Source create method should be called with filter if it exists', async () => {
+                let isCreated = false;
+                const filter = { FILTER_FIELD: 'FILTER_FIELD_VALUE' };
+                const options = await getCorrectBaseControlConfigAsync({
+                    source: new Memory(),
+                    filter,
+                    editingConfig: { autoAddOnInit: true }
+                });
+
+                baseControl = new BaseControl(options);
+
+                const originGetSourceController = baseControl.getSourceController;
+                baseControl.getSourceController = () => {
+                    const sc = originGetSourceController.apply(baseControl);
+                    if (sc) {
+                        const originCreate = sc.create;
+                        sc.create = (meta) => {
+                            assert.equal(meta, filter);
+                            isCreated = true;
+                            return originCreate.apply(sc, [meta]);
+                        };
+                    }
+                    return sc;
+                };
+
+                await baseControl._beforeMount(options).then(() => {
+                    assert.isTrue(isCreated);
+                    assert.isDefined(baseControl.getViewModel().getItems().find((i) => i.isEditing()));
+                });
+            });
         });
 
         describe('_beforeUpdate sourceController', () => {
