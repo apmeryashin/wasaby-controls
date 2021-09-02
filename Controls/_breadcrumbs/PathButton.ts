@@ -2,7 +2,7 @@ import {detection} from 'Env/Env';
 import {IBody} from './PathButton/Body';
 import {Path} from 'Controls/dataSource';
 import {Control, TemplateFunction} from 'UI/Base';
-import {SlidingPanelOpener, StickyOpener} from 'Controls/popup';
+import {SlidingPanelOpener} from 'Controls/popup';
 import {IPathButton} from 'Controls/_breadcrumbs/PathButton/interfaces';
 import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
 
@@ -24,15 +24,12 @@ export default class PathButton extends Control<IPathButton> {
     //endregion
 
     //region private props
-    private _stickyMenu: StickyOpener;
-
-    private _slidingMenu: SlidingPanelOpener;
+    private _menu: SlidingPanelOpener;
     //endregion
 
     //region life circle hooks
     protected _afterMount(): void {
-        this._stickyMenu = new StickyOpener();
-        this._slidingMenu = new SlidingPanelOpener();
+        this._menu = new SlidingPanelOpener();
     }
     //endregion
 
@@ -49,60 +46,51 @@ export default class PathButton extends Control<IPathButton> {
      * В зависимости от текущего устройства открывает либо StickyPanel либо SlidingPanel
      */
     protected _openMenu(): void {
-        detection.isMobilePlatform ? this._openSlidingMenu() : this._openStickyMenu();
-    }
+        this._menu.open({
+            modal: detection.isPhone,
 
-    /**
-     * Закрывает открытое ранее меню
-     */
-    protected _closeMenu(): void {
-        detection.isMobilePlatform ? this._slidingMenu.close() : this._stickyMenu.close();
-    }
-
-    /**
-     * Открывает sticky панель со списком каталогов
-     */
-    private _openStickyMenu(): Promise<void> {
-        return this._stickyMenu.open({
-            // tslint:disable-next-line:ban-ts-ignore
-            // @ts-ignore - не видит _container
-            target: this._container,
-
-            opener: this,
-            maxWidth: 700,
-
-            backgroundStyle: 'default',
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'right'
-            },
-            direction: {
-                vertical: 'bottom',
-                horizontal: 'right'
-            },
-            template: 'wml!Controls/_breadcrumbs/PathButton/StickyPanel',
-            templateOptions: this._getPanelTemplateOptions(),
-            eventHandlers: this._getPanelEventHandlers()
-        });
-    }
-
-    /**
-     * Открывает sliding панель со списком каталогов
-     */
-    private _openSlidingMenu(): void {
-        this._slidingMenu.open({
-            modal: true,
             slidingPanelOptions: {
                 minHeight: 100,
                 position: 'bottom',
                 autoHeight: true
             },
+
+            desktopMode: 'sticky',
+            dialogOptions: {
+                // tslint:disable-next-line:ban-ts-ignore
+                // @ts-ignore - не видит _container
+                target: this._container,
+
+                opener: this,
+                maxWidth: 700,
+
+                backgroundStyle: 'default',
+                targetPoint: {
+                    vertical: 'top',
+                    horizontal: 'left'
+                },
+                direction: {
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                },
+                offset: {
+                    horizontal: -8
+                }
+            },
+
             // tslint:disable-next-line:ban-ts-ignore
             // @ts-ignore
             template: 'wml!Controls/_breadcrumbs/PathButton/SlidingPanel',
             templateOptions: this._getPanelTemplateOptions(),
             eventHandlers: this._getPanelEventHandlers()
         });
+    }
+
+    /**
+     * Закрывает открытое ранее меню
+     */
+    protected _closeMenu(): void {
+        this._menu.close();
     }
 
     /**
