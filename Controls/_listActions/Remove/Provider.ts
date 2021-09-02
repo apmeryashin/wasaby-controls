@@ -32,7 +32,7 @@ export default class RemoveProvider implements IAction, IRemoveProvider {
         this._removeController = new removeController({
             source: meta.source
         });
-        return this._callRemove(meta)
+        return this._callRemove(meta);
     }
 
     protected _callRemove(meta): Promise<string> {
