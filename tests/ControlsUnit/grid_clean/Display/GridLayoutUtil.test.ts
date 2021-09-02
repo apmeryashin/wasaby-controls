@@ -5,7 +5,7 @@ describe('Controls/grid_clean/_display/utils/GridLayoutUtil', () => {
     describe('.isValidWidthValue()', () => {
         describe('invalid cases', () => {
             [
-                '0fr', 'fr', '1fl', '1f', '01fr', '-1fr', '!2fr', '10fr!',
+                '0fr', 'fr', '1fl', '1f', '01fr', '-1fr', '!2fr', '10fr!', '1.5.5fr', '1..5fr', '.5fr', '0.0fr', '010.5fr',
                 '-1px', '-0px', 'px', '010px', '10pn', '10ph',
                 '%', '01%', '-1%', '!2%', '10%!',
                 'Auto', 'auTo',
@@ -26,7 +26,7 @@ describe('Controls/grid_clean/_display/utils/GridLayoutUtil', () => {
         });
         describe('valid cases', () => {
             [
-                '1fr', '123fr',
+                '1fr', '123fr', '1.5fr', '0.5fr', '1.01fr', '1.010fr',
                 '0px', '10px', '100px',
                 '0%', '1%', '100%',
                 'auto', 'min-content', 'max-content',
