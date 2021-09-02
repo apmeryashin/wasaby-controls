@@ -68,10 +68,9 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         }
     }
 
-    protected _isScrollAvailable({
-        slidingPanelOptions
-    }: ISlidingPanelTemplateOptions): boolean {
-        const contentHeight = this._getHeight();
+    protected _isScrollAvailable(options: ISlidingPanelTemplateOptions): boolean {
+        const {slidingPanelOptions} = options;
+        const contentHeight = this._getHeight(options);
         const hasMoreContent = this._scrollState ?
             this._scrollState.clientHeight < this._scrollState.scrollHeight : false;
 
@@ -80,8 +79,19 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             slidingPanelOptions.height === contentHeight && !hasMoreContent;
     }
 
-    private _getHeight(): number {
-        return this._isPanelMounted ? this._container.clientHeight : 0;
+    /**
+     * Получение доступного контента шторки, включая пользовательский, который обрезан overflow
+     * @param options
+     * @private
+     */
+    private _getHeight(options: ISlidingPanelTemplateOptions): number {
+        if (this._isPanelMounted) {
+            const sliderHeight = options.controlButtonVisibility ? this._children.controlLine.clientHeight : 0;
+            const customContentHeight = this._children.customContent.clientHeight;
+            return sliderHeight + customContentHeight;
+        } else {
+            return 0;
+        }
     }
 
     protected _dragEndHandler(): void {
@@ -263,7 +273,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         } else if (
             // Если остаток доступного контента меньше сдвига, то сдвигаем на размер оставшегося контента
             realHeightOffset > scrollContentOffset &&
-            this._getHeight() > this._options.slidingPanelOptions.minHeight
+            this._getHeight(this._options) > this._options.slidingPanelOptions.minHeight
         ) {
 
             /*
