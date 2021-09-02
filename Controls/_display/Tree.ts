@@ -29,6 +29,7 @@ import {isEqual} from 'Types/object';
 import {IObservable, RecordSet} from 'Types/collection';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { ISourceCollection } from './interface/ICollection';
+import AddStrategy from 'Controls/_display/itemsStrategy/Add';
 
 export type TNodeFooterVisibilityCallback<S extends Model = Model> = (contents: S) => boolean;
 
@@ -1161,6 +1162,15 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             changed = it.setHasChildrenByRecordSet(hasChildrenByRecordSet) || changed;
         });
 
+        if (this.getStrategyInstance(AddStrategy)) {
+            const parentOfAddingItem = this._getParentOfAddingItem();
+            if (parentOfAddingItem) {
+                const hasChildrenByRecordSet = parentOfAddingItem.hasChildrenByRecordSet();
+                changed = hasChildrenByRecordSet === false;
+                parentOfAddingItem.setHasChildrenByRecordSet(true);
+            }
+        }
+
         if (changed) {
             this._nextVersion();
         }
@@ -1261,6 +1271,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
         }
 
+        if (this.getStrategyInstance(AddStrategy) && !hasNodeWithChildren) {
+            const parentOfAddingItem = this._getParentOfAddingItem();
+            hasNodeWithChildren = parentOfAddingItem && !parentOfAddingItem.isRoot();
+        }
+
         this._setHasNodeWithChildren(hasNodeWithChildren);
     }
 
@@ -1315,6 +1330,43 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     // endregion HasNode
+
+    // region Adding
+
+    setAddingItem(item: T, options: { position: 'top' | 'bottom'; index?: number }): void {
+        super.setAddingItem(item, options);
+        const shouldRecountExpander = item.getContents().get(this.getParentProperty()) !== undefined;
+        if (shouldRecountExpander) {
+            this._recountHasNodeWithChildren();
+            this._recountHasChildrenByRecordSet();
+        }
+    }
+
+    resetAddingItem(): void {
+        const addStrategy = this.getStrategyInstance(AddStrategy) as AddStrategy<S, T>;
+        const addingItem = addStrategy.getAddingItem();
+        const shouldRecountExpander = addingItem.getContents().get(this.getParentProperty()) !== undefined;
+        super.resetAddingItem();
+        if (shouldRecountExpander) {
+            this._recountHasNodeWithChildren();
+            this._recountHasChildrenByRecordSet();
+        }
+    }
+
+    protected _getParentOfAddingItem(): T {
+        let parent = null;
+
+        const addStrategy = this.getStrategyInstance(AddStrategy) as AddStrategy<S, T>;
+        if (addStrategy) {
+            const addingItem = addStrategy.getAddingItem();
+            const parentKey = addingItem.getContents().get(this.getParentProperty());
+            parent = this.getItemBySourceKey(parentKey);
+        }
+
+        return parent;
+    }
+
+    // endregion Adding
 
     private _createHierarchyRelation(): void {
         this._hierarchyRelation = new relation.Hierarchy({

@@ -2063,6 +2063,26 @@ describe('Controls/_display/Tree', () => {
            rs.getRecordById(2).set('pid', 1);
            assert.isTrue(tree.hasNodeWithChildren());
        });
+
+       it('recount by add item in place', () => {
+           const rs = new RecordSet({
+               rawData: [
+                   {id: 1, node: true, pid: 0}
+               ],
+               keyProperty: 'id'
+           });
+           const tree = getTree(rs, {expanderVisibility: 'hasChildren', hasChildrenProperty: ''});
+           assert.isFalse(tree.hasNodeWithChildren());
+
+           const contents = new Model({ rawData: {id: 11, node: null, pid: 1} });
+           const addingItem = tree.createItem({ contents, isAdd: true });
+           addingItem.setEditing(true, contents, false);
+           tree.setAddingItem(addingItem, {position: 'bottom'});
+           assert.isTrue(tree.hasNodeWithChildren());
+
+           tree.resetAddingItem();
+           assert.isFalse(tree.hasNodeWithChildren());
+       });
     });
 
     describe('hasChildren', () => {
@@ -2222,6 +2242,27 @@ describe('Controls/_display/Tree', () => {
                 rs.getRecordById(2).set('node', true)
 
                 assert.isTrue(tree.getItemBySourceKey(2).hasChildrenByRecordSet());
+            });
+
+            it('recount by add item in place', () => {
+                const rs = new RecordSet({
+                    rawData: [
+                        {id: 1, hasChildren: false, node: true, pid: 0}
+                    ],
+                    keyProperty: 'id'
+                });
+                const tree = getTree(rs, {hasChildrenProperty: '', expanderVisibility: 'hasChildren'});
+                assert.isFalse(tree.at(0).hasChildrenByRecordSet());
+
+                const contents = new Model({ rawData: {id: 11, node: null, pid: 1} });
+                const addingItem = tree.createItem({ contents, isAdd: true });
+                addingItem.setEditing(true, contents, false);
+                tree.setAddingItem(addingItem, {position: 'bottom'});
+
+                assert.isTrue(tree.at(0).hasChildrenByRecordSet());
+
+                tree.resetAddingItem();
+                assert.isFalse(tree.at(0).hasChildrenByRecordSet());
             });
         });
     });
