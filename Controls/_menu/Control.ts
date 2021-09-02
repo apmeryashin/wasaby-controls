@@ -182,7 +182,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._listModel = null;
         }
         if (this._errorController) {
-            this._errorController.destroy();
             this._errorController = null;
         }
     }
