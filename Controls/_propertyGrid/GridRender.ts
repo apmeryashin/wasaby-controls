@@ -23,11 +23,17 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     protected _template: TemplateFunction = template;
     protected _toggleEditorsTemplate: TemplateFunction = toggleEditorsTemplate;
 
-    protected _beforeMount(options: IPropertyGridGridRenderOptions): void {
-        this._getItemStyles = this._getItemStyles.bind(this);
+    protected _beforeMount(): void {
+        this._getCaptionStyles = this._getCaptionStyles.bind(this);
+        this._getEditorStyles = this._getEditorStyles.bind(this);
+        this._getCheckboxStyles = this._getCheckboxStyles.bind(this);
     }
 
-    protected _getColumnsWidth(captionTemplateOptions: IColumnOptions, editorTemplateOptions: IColumnOptions): string {
+    protected _getColumnsWidth(
+        captionTemplateOptions: IColumnOptions,
+        editorTemplateOptions: IColumnOptions,
+        multiSelectVisibility: string = 'hidden'
+    ): string {
         const width = {
             compatibleCaption: captionTemplateOptions?.compatibleWidth || '1fr',
             compatibleEditor: editorTemplateOptions?.compatibleWidth || '1fr',
@@ -36,24 +42,81 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
         };
         const captionColumnWidth = isFullGridSupport() ? width.caption : width.compatibleCaption;
         const editorColumn = isFullGridSupport() ? width.editor : width.compatibleEditor;
-        return `-ms-grid-columns: ${width.compatibleCaption} ${width.compatibleEditor};
-                 grid-template-columns: ${captionColumnWidth} ${editorColumn};`;
+        const multiSelectColumnsWidth = multiSelectVisibility !== 'hidden' ? 'max-content' : '';
+        return `-ms-grid-columns: ${multiSelectColumnsWidth} ${width.compatibleCaption} ${width.compatibleEditor};
+                 grid-template-columns: ${multiSelectColumnsWidth} ${captionColumnWidth} ${editorColumn};`;
     }
 
-    protected _getItemStyles(item: PropertyGridItem<Model>, columnIndex: number, colspan?: boolean): string {
-        const itemIndex = this._options.listModel.getIndex(item);
-        if (colspan) {
-            return `-ms-grid-column: 1;
-                    -ms-grid-column-span: 2;
-                    grid-column-start: 1;
-                    grid-column-end: 3;
-                    grid-row: ${itemIndex + 1};
-                    -ms-grid-row: ${itemIndex + 1}`;
+    protected _getCheckboxStyles(
+        item: PropertyGridItem<Model>,
+        captionPosition: string,
+        isEmptyCell: boolean
+    ): string {
+        const rowIndex = this._getRowIndex(item, captionPosition, item.getEditorTemplateName() && !isEmptyCell ? 2 : 1);
+        const columnIndex = 1;
+        return this._getGridStyles(rowIndex, columnIndex);
+    }
+
+    protected _getCaptionStyles(item: PropertyGridItem<Model>, captionPosition?: string, colspan: boolean): string {
+        const rowIndex = this._getRowIndex(item, captionPosition, 1);
+        const columnIndex = this._isMultiSelect() ? 2 : 1;
+        let colspanIndex;
+        if (colspan || captionPosition === 'top') {
+            colspanIndex = columnIndex + 1;
         }
+        return this._getGridStyles(rowIndex, columnIndex, colspanIndex);
+    }
+
+    protected _getEditorStyles(item: PropertyGridItem<Model>, captionPosition: string, colspan?: boolean): string {
+        const rowIndex = this._getRowIndex(item, captionPosition, 2);
+        const columnIndex = (this._isMultiSelect() ? 2 : 1) + (captionPosition === 'top' ? 0 : 1);
+        let colspanIndex;
+        if (colspan || captionPosition === 'top') {
+            colspanIndex = columnIndex + (captionPosition === 'top' ? 1 : 0);
+        }
+        return this._getGridStyles(rowIndex, columnIndex, colspanIndex);
+    }
+
+    private _getRowIndex(item: PropertyGridItem<Model>, captionPosition: string, rowOffset: number): number {
+        const itemIndex = this._getItemIndex(item);
+        const rowIndexByItemIndex = itemIndex + 1; // индекс строки грида не может начинаться с 0
+        return captionPosition === 'top' ?
+            (rowIndexByItemIndex + this._getPreviousItemIndex(item) + rowOffset) :
+            (rowIndexByItemIndex);
+    }
+
+    private _getGridStyles(rowIndex: number, columnIndex: number, colspanIndex?: number): string {
+        return this._getGridRowStyles(rowIndex) +
+            this._getGridColumnStyles(columnIndex) +
+            (colspanIndex !== undefined ? this._getColspanStyles(colspanIndex) : '');
+    }
+
+    private _getGridRowStyles(rowIndex: number): string {
+        return `grid-row: ${rowIndex};
+               -ms-grid-row: ${rowIndex};`;
+    }
+
+    private _getGridColumnStyles(columnIndex: number): string {
         return `grid-column: ${columnIndex};
-                grid-row: ${itemIndex + 1};
-                -ms-grid-column: ${columnIndex};
-                -ms-grid-row: ${itemIndex + 1};`;
+               -ms-grid-column: ${columnIndex};`;
+    }
+
+    private _getColspanStyles(columnIndex: number): string {
+        return `-ms-grid-column-span: 2;
+               grid-column-end: ${columnIndex + 1};`;
+    }
+
+    private _isMultiSelect(): boolean {
+        const multiSelectVisibility = this._options.listModel.getMultiSelectVisibility();
+        return multiSelectVisibility && multiSelectVisibility !== 'hidden';
+    }
+
+    private _getItemIndex(item: PropertyGridItem<Model>): number {
+        return this._options.listModel.getIndex(item);
+    }
+
+    private _getPreviousItemIndex(item: PropertyGridItem<Model>): number {
+        return this._getItemIndex(this._options.listModel.getPrevious(item));
     }
 
     protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, any>): void {
@@ -93,7 +156,9 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
-        if (item['[Controls/_display/GroupItem]']) {
+        if (e.target.closest('.js-controls-ListView__checkbox')) {
+            this._notify('checkBoxClick', [item, e]);
+        } else if (item['[Controls/_display/GroupItem]']) {
             this._notify('groupClick', [item, e]);
         } else {
             this._notify('itemClick', [item.getContents(), e]);

@@ -85,6 +85,12 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return classes;
     }
 
+    getCheckboxPaddingClasses(): string {
+        const owner = this.getOwner();
+        return `controls-PropertyGrid__editor_spacingTop_${owner.getTopPadding()}
+                controls-PropertyGrid__editor_spacingBottom_${owner.getBottomPadding()}`;
+    }
+
     getEditorOptions(): object {
         return this.getContents().get('editorOptions') || {};
     }
