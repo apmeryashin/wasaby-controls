@@ -87,9 +87,11 @@ import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
 // region @deprecated
 
+import {IRoundBorder as TRoundBorder} from 'Controls/_list/interface/IRoundBorder';
 import Remover = require('Controls/_list/Remover');
 import Mover from 'Controls/_list/WrappedMover';
 export {IMoveItemsParams, IMover, IRemover, BEFORE_ITEMS_MOVE_RESULT} from 'Controls/_list/interface/IMoverAndRemover';
+export {TRoundBorder};
 
 // endregion @deprecated
 

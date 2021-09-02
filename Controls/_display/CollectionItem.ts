@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder} from './interface/IRoundBorder';
+import {IRoundBorder} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -793,6 +793,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (templateHighlightOnHover && this.isActive()) {
             wrapperClasses += ' controls-ListView__item_active';
+        }
+
+        if (this._$roundBorder) {
+            wrapperClasses += ' ' + this.getRoundBorderClasses();
         }
 
         return wrapperClasses;
