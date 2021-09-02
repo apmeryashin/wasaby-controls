@@ -154,9 +154,11 @@ define(
             });
             it('click toolbar item', function() {
                let isNotify = false;
+               let eventResult = null;
+               let event = null;
                toolbar._notify = (e, data) => {
-                  assert.equal(e, 'itemClick');
-                  assert.equal(data[1], 'nativeEvent');
+                  eventResult = e;
+                  event = data[1];
                   isNotify = true;
                };
                toolbar._itemClickHandler({
@@ -169,7 +171,8 @@ define(
                   handler: () => {
                   }
                });
-               toolbar._notify = () => {};
+               assert.equal(eventResult, 'itemClick');
+               assert.equal(event, 'nativeEvent');
                assert.equal(isNotify, true);
             });
             it('click item with menu', function(done) {
@@ -214,7 +217,7 @@ define(
                     }
                 }, itemWithMenu);
                 setTimeout(() => {
-                    assert.equal(eventString, 'itemClickmenuOpened');
+                    assert.equal(eventString, 'itemClickbeforeMenuOpenmenuOpened');
                     assert.equal(isNotify, true);
                 });
                 done();
