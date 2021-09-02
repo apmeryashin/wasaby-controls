@@ -4,9 +4,19 @@ import isFullGridSupport from './GridSupportUtil';
 // 1) N%, где N - число больше или равно 0
 // 2) Npx, где N - число больше или равно 0
 // 3) Nfr, где N - число больше или равно 1
-// 4) auto|min-content|max-content
-// 5) minmax(N, N), где N - валидные значения в px, %, fr, либо константы auto, min-content, max-content
-const VALID_GRID_COLUMN_WIDTH_VALUE = new RegExp(/^((([1-9][0-9]*px)|0px)|(([1-9][0-9]*%)|0%)|([1-9][0-9]*fr)|(auto|min-content|max-content)|(minmax\(((\d+px)|(\d+%)|([1-9][0-9]*fr)|(auto|min-content|max-content)),\s?(((\d+px)|(\d+%)|([1-9][0-9]*fr)|(auto|min-content|max-content)))\)))$/);
+// 4) constants = auto|min-content|max-content
+// 5) fit-content = fit-content(N%|Npx|Nfr|constants)
+// 6) minmax(N, N), где N - валидные значения в px, %, fr, либо константы auto, min-content, max-content
+
+const _PX             = '(([1-9][0-9]*px)|0px)';
+const _PERCENT        = '(([1-9][0-9]*%)|0%)';
+const _FR             = '((([1-9].[0-9]*)|(0.[0-9]*[1-9]+[0-9]*)|([1-9][0-9]*))fr)';
+const _CONSTANTS      = '(auto|min-content|max-content)';
+const _FIT_CONTENT    = `(fit-content\\((${_PX}|${_PERCENT}|${_FR})\\))`;
+const _MIN_MAX_PART   = `((\\d+px)|(\\d+%)|${_FR}|${_CONSTANTS})`;
+const _MIN_MAX        = `(minmax\\(${_MIN_MAX_PART},\\s?${_MIN_MAX_PART}\\))`;
+
+const VALID_GRID_COLUMN_WIDTH_VALUE = new RegExp(`^(${_PX}|${_PERCENT}|${_FR}|${_FIT_CONTENT}|${_CONSTANTS}|${_MIN_MAX})$`);
 
 const DEFAULT_GRID_COLUMN_WIDTH = '1fr';
 const DEFAULT_TABLE_COLUMN_WIDTH = 'auto';
