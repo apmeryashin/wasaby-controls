@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder} from './interface/IRoundBorder';
+import {IRoundBorder} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;

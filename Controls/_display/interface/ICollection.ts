@@ -2,7 +2,7 @@ import { DestroyableMixin, Model, ObservableMixin } from 'Types/entity';
 import {IEnumerable} from '../Abstract';
 import {IBaseCollection} from 'Controls/_display/interface';
 import {ICollectionItem} from 'Controls/_display/interface/ICollectionItem';
-import {TPaddingSize} from 'Controls/_interface/TPaddingSize';
+import {TPaddingSize, IRoundBorder as ICommonRoundBorder} from 'Controls/interface';
 
 export interface ISourceCollection<T extends Model = Model> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
     getCount(): number;
@@ -18,6 +18,9 @@ export interface ISourceCollection<T extends Model = Model> extends IEnumerable<
 export type TVerticalItemPadding = 'S'|'null'|'default';
 
 export type THorizontalItemPadding = TPaddingSize;
+
+export type TRoundBorder = ICommonRoundBorder;
+export type IRoundBorder = ICommonRoundBorder;
 
 /**
  * Интерфейс настройки отступов записи
