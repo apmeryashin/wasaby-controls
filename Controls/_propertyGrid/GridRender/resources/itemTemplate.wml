@@ -34,17 +34,27 @@
 <ws:if data="{{_options.colspan || _options.colspanTemplate}}">
    <ws:partial template="{{_options.colspanTemplate}}"
                attr:class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}"
-               attr:style="{{getItemStyles(collectionItem, 2, true)}}"
+               attr:style="{{getEditorStyles(collectionItem, captionPosition, true)}}"
                item="{{_options.item}}"
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
     <ws:if data="{{!item.editorOptions.jumpingLabel && (item.caption || item.captionTemplate)}}">
+        <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden'}}">
+            <ws:if data="{{captionPosition === 'top'}}">
+                <div style="{{getCheckboxStyles(collectionItem, captionPosition, true)}}"
+                     class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}"></div>
+            </ws:if>
+            <div style="{{getCheckboxStyles(collectionItem, captionPosition)}}"
+                 class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}">
+                <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}"
+                            item="{{collectionItem}}"/>
+            </div>
+        </ws:if>
         <div class="controls-PropertyGrid__gridLayout_editor-caption
-                       controls-PropertyGrid__gridLayout_editor-caption
-                       {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
-                       {{collectionItem.getItemPaddingClasses(1)}}"
-                 style="{{getItemStyles(collectionItem, 1, !collectionItem.getEditorTemplateName())}}">
+                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
+                    {{collectionItem.getItemPaddingClasses(1)}}"
+             style="{{getCaptionStyles(collectionItem, captionPosition, !collectionItem.getEditorTemplateName())}}">
             <ws:partial template="levelPadding"/>
             <ws:if data="{{item.captionTemplate}}">
                 <ws:partial template="{{item.captionTemplate}}" item="{{item}}">
@@ -72,11 +82,10 @@
     </ws:if>
     <ws:if data="{{collectionItem.getEditorTemplateName()}}">
        <div class="controls-PropertyGrid__gridLayout_editor
-                   controls-PropertyGrid__gridLayout_editor
                    {{(!item.caption || _options.captionPosition === 'top') ? 'controls-PropertyGrid__gridLayout_editor-withoutCaption'}}
                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}
                    {{collectionItem.getItemPaddingClasses(_options.captionPosition === 'top' ? 1 : 2)}}"
-             style="{{getItemStyles(collectionItem, 2, !item.caption)}}">
+             style="{{getEditorStyles(collectionItem, captionPosition, !item.caption)}}">
            <ws:if data="{{!(!item.editorOptions.jumpingLabel && item.caption) || (item.caption && _options.captionPosition === 'top')}}">
                <ws:partial template="levelPadding"/>
            </ws:if>

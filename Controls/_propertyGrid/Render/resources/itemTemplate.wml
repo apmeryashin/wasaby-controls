@@ -14,6 +14,9 @@
 </ws:template>
 
 <ws:template name="itemTemplate">
+    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && captionPosition !== 'top'}}">
+        <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}" item="{{collectionItem}}" />
+    </ws:if>
     <ws:if data="{{item.captionTemplate}}">
         <ws:partial template="{{item.captionTemplate}}" item="{{item}}"/>
     </ws:if>
@@ -26,6 +29,9 @@
                     collectionItem="{{collectionItem}}"
                     scope="{{item.captionOptions}}"/>
     </ws:else>
+    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && captionPosition === 'top'}}">
+        <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}" item="{{collectionItem}}" />
+    </ws:if>
     <!-- Прикладники передают caption в editorOptions, чтобы нарисовать lookup с меткой, которая откроет окно, костыль, иначе перебиваем scope
          TODO: https://online.sbis.ru/opendoc.html?guid=89e73e15-8f85-427e-b49c-16c6f8df5c34-->
     <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
@@ -36,14 +42,7 @@
 
 
 <ws:if data="{{isGridLayout}}">
-    <ws:if data="{{captionPosition === 'top'}}">
-        <div class="controls-PropertyGrid__flex-editor" style="{{getItemStyles(collectionItem, 1, true)}}">
-            <ws:partial scope="{{_options}}" template="wml!Controls/_propertyGrid/GridRender/resources/itemTemplate"/>
-        </div>
-    </ws:if>
-    <ws:else>
-        <ws:partial scope="{{_options}}" template="wml!Controls/_propertyGrid/GridRender/resources/itemTemplate"/>
-    </ws:else>
+    <ws:partial scope="{{_options}}" template="wml!Controls/_propertyGrid/GridRender/resources/itemTemplate"/>
 </ws:if>
 <ws:else>
     <div class="controls-PropertyGrid__editor
