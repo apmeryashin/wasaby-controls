@@ -1,6 +1,6 @@
 import IAction from './interface/IAction';
 import IActionOptions from './interface/IActionOptions';
-import {IRemoveProvider} from 'Controls/_listActions/Remove/Provider';
+import {IRemoveProvider} from 'Controls/_listCommands/Remove/Provider';
 import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 
 interface IOptions extends IActionOptions {
@@ -11,7 +11,7 @@ interface IOptions extends IActionOptions {
 /**
  * Действие "удаление записи"
  * @class Controls/_actions/Remove
- * @implements Controls/listActions:IAction
+ * @implements Controls/listCommands:IAction
  * @public
  * @author Крайнов Д.О.
  */
@@ -32,7 +32,7 @@ export default class Remove implements IAction {
         });
     }
 
-    private _getProvider(providerName: string = 'Controls/listActions:RemoveProviderWithConfirm'): Promise<IRemoveProvider> {
+    private _getProvider(providerName: string = 'Controls/listCommands:RemoveProviderWithConfirm'): Promise<IRemoveProvider> {
         return ModulesLoader.loadAsync(providerName).then((provider) => {
             return new provider();
         });
