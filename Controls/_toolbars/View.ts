@@ -327,8 +327,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfigByItem(item: TItem, source: ICrudPlus, root: number, items: RecordSet): IStickyPopupOptions {
         const options = this._options;
+        const beforeMenuOpenResult = this._notify('beforeMenuOpen', [item], {bubbling: true});
+        const popupOptions = beforeMenuOpenResult?.popupOptions || {};
         return {
             ...this._getMenuOptions(),
+            ...popupOptions,
             opener: this,
             className: `controls-Toolbar__popup__${Toolbar._typeItem(item)} ${Toolbar._menuItemClassName(item)} controls_popupTemplate_theme-${options.theme} controls_dropdownPopup_theme-${options.theme}`,
             targetPoint: {
