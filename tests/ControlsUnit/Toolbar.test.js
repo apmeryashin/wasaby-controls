@@ -169,6 +169,7 @@ define(
                   handler: () => {
                   }
                });
+               toolbar._notify = () => {};
                assert.equal(isNotify, true);
             });
             it('click item with menu', function(done) {
@@ -272,6 +273,7 @@ define(
                      _items: { getIndexByValue: () => {} },
                      _getSourceForMenu: () => Promise.resolve(testSelf._source),
                      _getMenuOptions: () => '',
+                     _notify: () => '',
                      _getMenuTemplateOptions: () => toolbar._getMenuTemplateOptions.call(testSelf)
                   },
                   expectedConfig = {
