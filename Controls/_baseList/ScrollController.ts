@@ -615,7 +615,7 @@ export default class ScrollController {
     /**
      * Получает направление восстановления скролла
      */
-    getDirectionToRestoreScroll(): IDirection {
+    getParamsToRestoreScrollPosition(): IDirection {
         if (this._virtualScroll && this._virtualScroll.isNeedToRestorePosition) {
             return this._virtualScroll.getDirectionToRestoreScroll();
         } else {

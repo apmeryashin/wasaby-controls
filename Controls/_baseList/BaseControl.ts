@@ -1218,7 +1218,7 @@ const _private = {
         self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
-            if (!self._scrollController.getDirectionToRestoreScroll()) {
+            if (!self._scrollController.getParamsToRestoreScrollPosition()) {
                 _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
             }
         }
@@ -3369,7 +3369,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (_private.needScrollPaging(this._options.navigation)) {
                 _private.doAfterUpdate(this, () => {
-                    if (this._scrollController?.getDirectionToRestoreScroll()) {
+                    if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                         return;
                     }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
@@ -4110,7 +4110,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         // save scroll
         let directionToRestoreScroll = this._scrollController &&
-            this._scrollController.getDirectionToRestoreScroll();
+            this._scrollController.getParamsToRestoreScrollPosition();
         if (!directionToRestoreScroll) {
             if (this._indicatorsController.hasNotRenderedChanges()) {
                 directionToRestoreScroll = 'down';
@@ -4187,7 +4187,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             // restore scroll
-            let directionToRestoreScroll = this._scrollController.getDirectionToRestoreScroll();
+            let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (!directionToRestoreScroll) {
                 if (this._indicatorsController.hasNotRenderedChanges()) {
                     directionToRestoreScroll = 'down';
@@ -4242,7 +4242,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         //TODO: можно убрать после https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (_private.needScrollPaging(this._options.navigation)) {
-            if (this._scrollController && !this._scrollController.getDirectionToRestoreScroll()) {
+            if (this._scrollController && !this._scrollController.getParamsToRestoreScrollPosition()) {
                 _private.updateScrollPagingButtons(this, {...this._getScrollParams(), initial: !this._scrolled});
             }
         }
@@ -4441,7 +4441,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._applySelectedPage = () => {
             this._currentPage = page;
-            if (this._scrollController.getDirectionToRestoreScroll()) {
+            if (this._scrollController.getParamsToRestoreScrollPosition()) {
                 return;
             }
             scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
