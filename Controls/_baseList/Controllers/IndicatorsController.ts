@@ -115,6 +115,48 @@ export default class IndicatorsController {
         return changedResetTrigger;
     }
 
+    onCollectionReset(hasMoreData: { up: boolean, down: boolean }, hasSearchValue: boolean): boolean {
+        // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
+        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
+        this._options.hasMoreDataToTop = hasMoreData.up;
+        this._options.hasMoreDataToBottom = hasMoreData.down;
+
+        if (hasSearchValue) {
+            // Событие reset коллекции приводит к остановке активного порционного поиска.
+            // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
+            this.endPortionedSearch();
+        }
+
+        let changedResetTrigger = false;
+        if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
+            const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
+            this.startPortionedSearch(direction);
+        } else {
+            changedResetTrigger = this.recountIndicators('all', true);
+        }
+
+        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
+        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
+        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
+        // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
+        const hasItems = this._model && !this._model.destroyed && !!this._model.getCount();
+        if (!hasItems) {
+            this.setLoadingTriggerOffset({
+                top: 0,
+                bottom: 0
+            });
+        }
+
+        return changedResetTrigger;
+    }
+
+    onCollectionAdd(): void {
+        const hasMoreInAnyDirection = this._options.hasMoreDataToTop || this._options.hasMoreDataToBottom;
+        if (!hasMoreInAnyDirection && !this._isPortionedSearch()) {
+            this.hideGlobalIndicator();
+        }
+    }
+
     destroy(): void {
         this.clearPortionedSearchTimer();
     }
@@ -384,25 +426,6 @@ export default class IndicatorsController {
         this._model.setLoadingTriggerOffset(newOffset);
     }
 
-    onCollectionReset(hasSearchValue: boolean): void {
-        if (hasSearchValue) {
-            // Событие reset коллекции приводит к остановке активного порционного поиска.
-            // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
-            this.endPortionedSearch();
-        }
-        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
-        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
-        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
-        // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
-        const hasItems = this._model && !this._model.destroyed && !!this._model.getCount();
-        if (!hasItems) {
-            this.setLoadingTriggerOffset({
-                top: 0,
-                bottom: 0
-            });
-        }
-    }
-
     /**
      * Корректируем оффсет на высоту индикатора, т.к. триггер отображается абсолютно, то он рисуется от края вьюхи,
      * а надо от края индикатора.
@@ -549,5 +572,6 @@ export default class IndicatorsController {
         const metaData = this._options.items && this._options.items.getMetaData();
         return !!(metaData && metaData.iterative);
     }
+
     // endregion PortionedSearch
 }

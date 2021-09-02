@@ -622,7 +622,7 @@ const _private = {
         self._onFooterPrepared(options);
     },
 
-    loadToDirection(self: BaseControl, direction, receivedFilter?) {
+    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet|void> | void {
         const changed = self._indicatorsController.recountResetTriggerOffsets(direction);
         if (changed) {
             self._updateScrollController();
@@ -631,7 +631,7 @@ const _private = {
         if (self._sourceController) {
             const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
             if (self._shouldStartPortionedSearch()) {
-                self._startPortionedSearch(direction);
+                self._indicatorsController.startPortionedSearch(DIRECTION_COMPATIBILITY[direction] as 'top'|'bottom');
             } else {
                 self._recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
@@ -1330,23 +1330,28 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET) {
-                self._indicatorsController.onCollectionReset(!!self._options.searchValue);
+            if (this._indicatorsController) {
+                switch (action) {
+                    case IObservable.ACTION_RESET:
+                        const changedResetTrigger = self._indicatorsController.onCollectionReset(
+                            _private.getHasMoreData(self),
+                            !!self._options.searchValue
+                        );
+                        if (changedResetTrigger) {
+                            this._updateScrollController(self._options);
+                        }
 
-                if (self._options.searchValue) {
-                    _private.tryLoadToDirectionAgain(self);
-                }
-                if (self._shouldStartPortionedSearch()) {
-                    self._startPortionedSearch();
-                } else {
-                    self._recountIndicators('all', true);
-                }
-            }
-            if (action === IObservable.ACTION_ADD) {
-                // на beforeUpdate ожем показать глоабльный индкатор по началу загрузки,
-                // после загрузки данных если их больше нет, то скрываем
-                if (!_private.hasMoreDataInAnyDirection(self) && !_private.isPortionedLoad(self)) {
-                    self._indicatorsController?.hideGlobalIndicator();
+                        if (self._options.searchValue) {
+                            _private.tryLoadToDirectionAgain(self);
+                        }
+                        if (self._shouldStartPortionedSearch()) {
+                            // Нужно сбросить флаг, чтобы подгрузка по триггеру работала после порционного поиска.
+                            this._handleLoadToDirection = false;
+                        }
+                        break;
+                    case IObservable.ACTION_ADD:
+                        self._indicatorsController.onCollectionAdd();
+                        break;
                 }
             }
 
@@ -6335,23 +6340,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     protected _shouldStartPortionedSearch(): boolean {
         return _private.isPortionedLoad(this);
-    }
-
-    protected _startPortionedSearch(direction?: IDirection): void {
-        let newDirection = direction;
-
-        if (!direction) {
-            // если после прерывания порционного поиска нажимают на лупу, то сработает только событие
-            // onCollectionChanged(reset), в котором мы не знаем точно направление
-            newDirection = this._hasMoreData('down') ? 'down' : 'up';
-        }
-
-        newDirection = DIRECTION_COMPATIBILITY[newDirection] as IDirection;
-
-        this._indicatorsController.startPortionedSearch(newDirection as 'top'|'bottom');
-
-        // Нужно сбросить флаг, чтобы подгрузка по триггеру работала после порционного поиска.
-        this._handleLoadToDirection = false;
     }
 
     protected _shouldEndPortionedSearch(loadedItems?: RecordSet): boolean {
