@@ -25,7 +25,7 @@
             <div
                class="
                   controls-BreadCrumbsPath__backButtonArrow-container
-                  controls-BreadCrumbsPath__backButtonArrow-container_size-{{_options.backButtonFontSize}}
+                  controls-fontsize-{{_options.backButtonFontSize || 'm'}}
                   {{_options.showArrowOutsideOfBackButton || _options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__backButtonArrow-container__only'}}
                   controls-background-{{_options.backgroundStyle || 'default'}}
                   {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly'}}
@@ -34,19 +34,13 @@
                title="{[Подробнее]}"
                on:click="_onArrowClick()"
             >
-                <div class="
-                  controls-BreadCrumbsPath__backButtonArrow
-                  controls-BreadCrumbsPath__backButtonArrow_size-{{_options.backButtonFontSize || 'm'}}
-               ">
+                <div class="controls-BreadCrumbsPath__backButtonArrow">
                     <svg
-                       attr:class="
-                           controls-BreadCrumbsPath__backButtonArrow
-                           controls-BreadCrumbsPath__backButtonArrow_size-{{_options.backButtonFontSize || 'm'}}
-                       "
+                       attr:class="controls-BreadCrumbsPath__backButtonArrow"
                        xmlns="http://www.w3.org/2000/svg"
                        viewBox="0 0 16 16"
                     >
-                       <path d="M10,8l-8,8v-3l5-5-5-5v-3Zm6,0-8,8v-3l5-5-5-5v-3Z"/>
+                       <path transform="matrix(0.7,0,0,0.7,0,5)" d="M10,8l-8,8v-3l5-5-5-5v-3Zm6,0-8,8v-3l5-5-5-5v-3Z"/>
                     </svg>
                 </div>
             </div>
