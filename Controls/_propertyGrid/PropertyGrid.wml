@@ -16,10 +16,12 @@
     collapsedGroups="{{_collapsedGroups}}"
     editingObject="{{_options.editingObject}}"
     captionPosition="{{_options.captionPosition}}"
+    multiSelectVisibility="{{_options.multiSelectVisibility}}"
     on:groupClick="_groupClick()"
     on:propertyValueChanged="_propertyValueChanged()"
     on:toggleEditor="_toggleEditor()"
     on:hoveredItemChanged="_hoveredItemChanged()"
     on:mouseenter="_mouseEnterHandler()"
     on:itemActionMouseDown="_itemActionMouseDown()"
+    on:checkboxClick="_checkboxClick()"
 />
