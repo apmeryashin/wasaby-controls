@@ -349,7 +349,7 @@ describe('Controls/_display/TreeItem', () => {
             });
 
             it('expanderPosition is custom', () => {
-                owner.getExpanderPosition = () => 'right';
+                owner.getExpanderPosition = () => 'custom';
                 let item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses();
                 CssClassesAssert.notInclude(classes, 'controls-TreeGrid__row_expander_position_right');
