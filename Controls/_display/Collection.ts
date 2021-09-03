@@ -44,6 +44,7 @@ const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
+const REBUILD_ITEM_PROPERTIES = ['expanded', 'contents'];
 
 /**
  *
@@ -2178,8 +2179,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     notifyItemChange(item: T, properties?: object): void {
         const isFiltered = this._isFiltered();
         const isGrouped = this._isGrouped();
-
-        if (isFiltered || isGrouped) {
+        const shouldRebuild = REBUILD_ITEM_PROPERTIES.indexOf(properties as unknown as string) !== -1;
+        if ((isFiltered || isGrouped) && shouldRebuild) {
             const session = this._startUpdateSession();
 
             const rebuild = this._handleNotifyItemChangeRebuild(item, properties);
