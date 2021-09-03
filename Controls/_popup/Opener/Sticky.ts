@@ -1,16 +1,23 @@
-import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener, {IBaseOpenerOptions} from 'Controls/_popup/Opener/BaseOpener';
 import {IStickyOpener, IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import {TemplateFunction} from 'UI/Base';
+import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
+import {Logger} from 'UI/Utils';
 import Template = require('wml!Controls/_popup/Opener/Sticky');
 import {detection} from 'Env/Env';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import CancelablePromise from 'Controls/_popup/utils/CancelablePromise';
 import openPopup from 'Controls/_popup/utils/openPopup';
 
-const getStickyConfig = (config) => {
-    config = config || {};
+const getStickyConfig = (config: IStickyOpenerOptions = {}) => {
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-    // Открывается всегда вдомным
+    if (!(config.target instanceof HTMLElement) && !BaseOpenerUtil.isControl(config.target)) {
+        Logger.warn('Controls/popup:Sticky. В опцию target передано неверное значение. Опция принимает либо HTMLElement, либо контрол');
+        // Если передали jquery, выцеплю значение из него, чтобы контрол продолжал работать.
+        if (config.target) {
+            config.target = config.target[0] || config.target;
+        }
+    }
     return config;
 };
 
