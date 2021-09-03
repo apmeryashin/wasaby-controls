@@ -1344,6 +1344,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     resetAddingItem(): void {
         const addStrategy = this.getStrategyInstance(AddStrategy) as AddStrategy<S, T>;
+        if (!addStrategy) {
+            return;
+        }
         const addingItem = addStrategy.getAddingItem();
         const shouldRecountExpander = addingItem.getContents().get(this.getParentProperty()) !== undefined;
         super.resetAddingItem();
