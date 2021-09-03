@@ -3133,9 +3133,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _notifyCollectionChange(
         action: string,
-        newItems: T[],
+        newItems: ISessionItems<T>,
         newItemsIndex: number,
-        oldItems: T[],
+        oldItems: ISessionItems<T>,
         oldItemsIndex: number,
         reason?: string
     ): void {
@@ -3161,12 +3161,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         // Split by groups and notify
         const notify = (start, finish) => {
             if (start < finish) {
+                const newItemsCopy: ISessionItems<T> = newItems.slice(start, finish);
+                newItemsCopy.properties = newItems.properties;
+                const oldItemsCopy: ISessionItems<T> = oldItems.slice(start, finish);
+                oldItemsCopy.properties = oldItems.properties;
                 this._notifyLater(
                     'onCollectionChange',
                     action,
-                    newItems.slice(start, finish),
+                    newItemsCopy,
                     newItems.length ? newItemsIndex + start : 0,
-                    oldItems.slice(start, finish),
+                    oldItemsCopy,
                     oldItems.length ? oldItemsIndex + start : 0,
                     reason
                 );
