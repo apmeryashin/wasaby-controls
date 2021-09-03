@@ -4,9 +4,9 @@ import { TemplateFunction } from 'UI/Base';
 export type TIndicatorPosition = 'top'|'bottom'|'global';
 export type TIndicatorState = 'portioned-search'|'continue-search'|'loading';
 export enum EIndicatorState {
-    PortionedSearch='portioned-search',
-    ContinueSearch='continue-search',
-    Loading='loading'
+    PortionedSearch= 'portioned-search',
+    ContinueSearch= 'continue-search',
+    Loading= 'loading'
 }
 
 export interface IOptions extends ICollectionOptions<null> {
@@ -76,11 +76,11 @@ export default class Indicator extends CollectionItem<null> {
 
     getContentTemplate(): TemplateFunction|string|void {
         switch (this._$state) {
-            case "loading":
+            case 'loading':
                 return 'Controls/baseList:LoadingIndicatorItemTemplate';
-            case "portioned-search":
+            case 'portioned-search':
                 return this._$portionedSearchTemplate;
-            case "continue-search":
+            case 'continue-search':
                 return this._$continueSearchTemplate;
         }
     }
@@ -89,20 +89,20 @@ export default class Indicator extends CollectionItem<null> {
         let classes = '';
 
         switch (this._$state) {
-            case "loading":
+            case 'loading':
                 classes += ' controls-BaseControl__loadingIndicator';
                 classes += ` controls-BaseControl__loadingIndicator__state-${this._$position}`;
                 break;
-            case "portioned-search":
+            case 'portioned-search':
                 classes += ' controls-BaseControl__loadingIndicator controls-BaseControl__portionedSearch';
                 classes += ` controls-BaseControl__portionedSearch__state-${this._$position}`;
                 break;
-            case "continue-search":
+            case 'continue-search':
                 classes += ' controls-BaseControl__continueSearch ws-justify-content-center';
                 break;
         }
 
-        return classes
+        return classes;
     }
 
     getStyles(): string {

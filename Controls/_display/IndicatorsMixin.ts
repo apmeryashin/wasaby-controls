@@ -1,13 +1,16 @@
 import Indicator, {
     EIndicatorState,
     IOptions as ILoadingIndicatorOptions,
-    TIndicatorPosition, TIndicatorState
+    TIndicatorPosition,
+    TIndicatorState
 } from './Indicator';
 import LoadingTrigger, {
     TLoadingTriggerPosition,
-    IOptions as ILoadingTriggerOptions, DEFAULT_TOP_TRIGGER_OFFSET, DEFAULT_BOTTOM_TRIGGER_OFFSET,
+    IOptions as ILoadingTriggerOptions,
+    DEFAULT_TOP_TRIGGER_OFFSET,
+    DEFAULT_BOTTOM_TRIGGER_OFFSET
 } from './LoadingTrigger';
-import {TemplateFunction} from "UI/Base";
+import {TemplateFunction} from 'UI/Base';
 
 export interface ITriggerOffset {
     top: number;
@@ -15,6 +18,9 @@ export interface ITriggerOffset {
 }
 
 export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
+    private _indicatorModule: string;
+    private _triggerModule: string;
+
     protected _topIndicator: Indicator = null;
     protected _bottomIndicator: Indicator = null;
     protected _globalIndicator: Indicator = null;
@@ -90,7 +96,7 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
 
     private _createIndicator(position: TIndicatorPosition, state: TIndicatorState): void {
         const indicator = this.createItem({
-            itemModule: 'Controls/display:Indicator',
+            itemModule: this._indicatorModule,
             position,
             state,
             // только глобальный индикатор изначально показан, т.к. он при показе - создается, при скрытии - удаляется
@@ -173,7 +179,7 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         }
 
         const trigger = this.createItem({
-            itemModule: 'Controls/display:LoadingTrigger',
+            itemModule: this._triggerModule,
             position,
             offset,
             visible
@@ -191,6 +197,8 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
 
 Object.assign(IndicatorsMixin.prototype, {
     'Controls/display:IndicatorsMixin': true,
+    _indicatorModule: 'Controls/display:Indicator',
+    _triggerModule: 'Controls/display:LoadingTrigger',
     _topIndicator: null,
     _bottomIndicator: null,
     _globalIndicator: null,
