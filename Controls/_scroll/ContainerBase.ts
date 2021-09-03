@@ -802,12 +802,12 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         }, KEYBOARD_SHOWING_DURATION);
     }
 
-    protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number): void {
-        this._doScroll(scrollParam);
+    protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number|string, isVirtual: boolean): void {
+        this._doScroll(scrollParam, isVirtual);
         e.stopPropagation();
     }
 
-    protected _doScroll(scrollParam) {
+    protected _doScroll(scrollParam, isVirtual) {
         if (scrollParam === 'top') {
             this._setScrollTop(0);
         } else {
@@ -824,7 +824,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             } else if (scrollParam === 'pageDown') {
                 this._setScrollTop(currentScrollTop + clientHeight);
             } else if (typeof scrollParam === 'number') {
-                this._setScrollTop(scrollParam);
+                this._setScrollTop(scrollParam, isVirtual);
             }
         }
     }

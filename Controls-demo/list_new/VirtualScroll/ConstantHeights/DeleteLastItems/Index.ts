@@ -14,6 +14,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
     private _itemsCount: number = 1000;
+    protected _scrollToLastItem: boolean = true;
 
     private dataArray: IItem[] = generateData<IItem>({
         keyProperty: 'key',
@@ -42,6 +43,13 @@ export default class extends Control {
             keyProperty: 'key',
             data: this.dataArray
         });
+    }
+
+    protected _drawItems() {
+        if (this._scrollToLastItem) {
+            this._children.list.scrollToItem(999);
+            this._scrollToLastItem = false;
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

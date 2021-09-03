@@ -2401,6 +2401,7 @@ const _private = {
             bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
             resetTopTriggerOffset,
             resetBottomTriggerOffset,
+            itemsSelector: options.itemsSelector,
             notifyKeyOnRender: options.notifyKeyOnRender
         });
         const result = self._scrollController.handleResetItems();
@@ -3367,7 +3368,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
-                    _private.doAfterUpdate(this, () => {if (this._scrollController?.getParamsToRestoreScrollPosition()) {
+                _private.doAfterUpdate(this, () => {
+                    if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                         return;
                     }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
@@ -3496,7 +3498,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // на мобильных устройствах не сработает mouseEnter, поэтому ромашку сверху добавляем сразу после моунта
         // до моунта нельзя, т.к. нельзя будет проскроллить
         if (detection.isMobilePlatform && this._indicatorsController.shouldDisplayTopIndicator()) {
-            this._indicatorsController.displayTopIndicator(true);
+            this._indicatorsController.displayTopIndicator(true, false, false);
         }
         if (this._children.listView) {
             this._indicatorsController.setIndicatorElements(
@@ -4106,8 +4108,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        if (this._scrollController && this._scrollController.getParamsToRestoreScrollPosition()) {
-            this._notify('saveScrollPosition', [], {bubbling: true});
+        // save scroll
+        let directionToRestoreScroll = this._scrollController &&
+            this._scrollController.getParamsToRestoreScrollPosition();
+        if (!directionToRestoreScroll) {
+            if (this._indicatorsController.hasNotRenderedChanges()) {
+                directionToRestoreScroll = 'down';
+            }
+        }
+        if (directionToRestoreScroll) {
+            this._scrollController.saveEdgeItem(directionToRestoreScroll, this._getItemsContainer());
         }
     }
 
@@ -4176,13 +4186,21 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._drawingIndicatorDirection = null;
             }
 
-            const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
-            if (paramsToRestoreScroll) {
-                this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition',
-                             [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
-                             {bubbling: true});
+            // restore scroll
+            let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
+            if (!directionToRestoreScroll) {
+                if (this._indicatorsController.hasNotRenderedChanges()) {
+                    directionToRestoreScroll = 'down';
+                }
             }
+            if (directionToRestoreScroll) {
+                const newScrollTop = this._scrollController.getScrollTopToEdgeItem(directionToRestoreScroll,
+                    this._getItemsContainer());
+                this._scrollController.beforeRestoreScrollPosition();
+                this._notify('doScroll', [newScrollTop, true], { bubbling: true });
+            }
+
+            this._indicatorsController.afterRenderCallback();
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4194,7 +4212,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             const scrollToItemContinued = this._scrollController.continueScrollToItemIfNeed();
             const virtualScrollCompleted = this._scrollController.completeVirtualScrollIfNeed();
-            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || paramsToRestoreScroll;
+            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || directionToRestoreScroll;
 
             if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
@@ -6056,7 +6074,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     // Уйдет когда будем наследоваться от baseControl
-    protected _getItemsContainer() {}
+    protected _getItemsContainer(): HTMLElement {}
     getItemsContainer() {
         return this._getItemsContainer();
     }
@@ -6155,33 +6173,29 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _observeScrollHandler(_: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         if (this._needScrollCalculation) {
             switch (eventName) {
-                case 'scrollMoveSync':
-                    this.scrollMoveSyncHandler(params);
-                    break;
-                case 'viewportResize':
-                    this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
-                    break;
                 case 'virtualScrollMove':
                     _private.throttledVirtualScrollPositionChanged(this, params);
                     break;
                 case 'canScroll':
                     this.canScrollHandler(params);
                     break;
-                case 'scrollMove':
-                    this.scrollMoveHandler(params);
-                    break;
                 case 'cantScroll':
                     this.cantScrollHandler(params);
                     break;
             }
-        } else {
-            switch (eventName) {
-                case 'viewportResize':
-                    // размеры вью порта нужно знать всегда, независимо от navigation,
-                    // т.к. по ним рисуется глобальная ромашка
-                    this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
-                    break;
-            }
+        }
+        switch (eventName) {
+            case 'scrollMove':
+                this.scrollMoveHandler(params);
+                break;
+            case 'scrollMoveSync':
+                this.scrollMoveSyncHandler(params);
+                break;
+            case 'viewportResize':
+                // размеры вью порта нужно знать всегда, независимо от navigation,
+                // т.к. по ним рисуется глобальная ромашка
+                this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
+                break;
         }
     }
 

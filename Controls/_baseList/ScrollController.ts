@@ -10,13 +10,12 @@ import {
     ITriggerState,
     IContainerHeights,
     IShadowVisibility,
-    IScrollRestoreParams,
     IScrollControllerResult
 } from './ScrollContainer/interfaces';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
-import { getDimensions as uDimension } from '../sizeUtils';
+import { getOffsetTop, getDimensionsByRelativeParent as uDimension } from '../sizeUtils';
 import { getStickyHeadersHeight } from '../scroll';
 import {IVirtualScrollConfig} from 'Controls/_baseList/interface/IVirtualScroll';
 
@@ -40,6 +39,12 @@ export interface IOptions extends IControlOptions {
     forceInitVirtualScroll: boolean;
     resetTopTriggerOffset: boolean;
     resetBottomTriggerOffset: boolean;
+}
+
+interface IEdgeItemParams {
+    key: string;
+    border: 'top'|'bottom';
+    borderDistance: number;
 }
 
 /**
@@ -67,6 +72,7 @@ export default class ScrollController {
     private _isRendering: boolean = false;
 
     private _placeholders: IPlaceholders;
+    private _edgeItemParams: IEdgeItemParams;
 
     private _shadowVisibility: IShadowVisibility;
     private _resetInEnd: boolean;
@@ -607,18 +613,106 @@ export default class ScrollController {
     }
 
     /**
-     * Получает параметры для восстановления скролла
+     * Получает направление восстановления скролла
      */
-    getParamsToRestoreScrollPosition(): IScrollRestoreParams {
+    getParamsToRestoreScrollPosition(): IDirection {
         if (this._virtualScroll && this._virtualScroll.isNeedToRestorePosition) {
-            return this._virtualScroll.getParamsToRestoreScroll();
+            return this._virtualScroll.getDirectionToRestoreScroll();
         } else {
             return null;
         }
     }
 
+    saveEdgeItem(direction: IDirection, itemsContainer: HTMLElement): void {
+        const viewportHeight = this._viewportHeight;
+
+        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
+        const topCompensation = getOffsetTop(itemsContainer);
+
+        const scrollTop = this.getScrollTop();
+
+        const items = Array.from(itemsContainer.querySelectorAll(`:scope > ${ this._options.itemsSelector }`));
+        let edgeItemParams: IEdgeItemParams;
+
+        items.some((item: HTMLElement) => {
+            if (item.className.includes('controls-ListView__hiddenContainer')) {
+                return false;
+            }
+
+            const itemDimensions = uDimension(item);
+            const itemOffsetTop = getOffsetTop(item);
+
+            const itemBorderBottom = Math.round(itemOffsetTop) + Math.round(itemDimensions.height);
+
+            // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
+            let edgeBorder = scrollTop + topCompensation;
+            // при скроле вниз - на границе тот элемент, нижняя граница которого больше scrollTop + viewportHeight
+            if (direction === 'down') {
+                // нижняя граница - это верхняя + размер viewPort
+                edgeBorder += viewportHeight;
+            }
+            // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
+            if (itemBorderBottom >= edgeBorder || items.indexOf(item) === items.length - 1) {
+                let borderDistance;
+                let border;
+                if (direction === 'down') {
+                    // от верхней границы элемента до нижней границы viewPort
+                    // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
+                    const bottomViewportBorder = scrollTop + viewportHeight;
+                    border = 'top';
+                    borderDistance = bottomViewportBorder - itemOffsetTop;
+                } else {
+                    // запись - выше, чем верхняя граница viewPort
+                    if (scrollTop >= itemOffsetTop) {
+                        border = 'bottom';
+                        borderDistance = itemBorderBottom - scrollTop;
+                    } else {
+                        border = 'top';
+                        borderDistance = scrollTop - itemOffsetTop;
+                    }
+                }
+                edgeItemParams = {
+                    key: item.getAttribute('item-key'),
+                    border,
+                    borderDistance
+                };
+                return true;
+            }
+
+            return false;
+        });
+
+        if (edgeItemParams) {
+            this._edgeItemParams = edgeItemParams;
+        }
+    }
+
+    getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement): number {
+        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
+        // const compensation = getOffsetTop(itemsContainer);
+
+        if (this._edgeItemParams) {
+            const item = itemsContainer.querySelector(`[item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
+            if (item) {
+                const itemOffsetTop = getOffsetTop(item);
+                if (direction === 'up') {
+                    const itemDimensions = uDimension(item);
+                    if (this._edgeItemParams.border === 'bottom') {
+                        return itemOffsetTop + (itemDimensions.height - this._edgeItemParams.borderDistance);
+                    } else {
+                        return itemOffsetTop + this._edgeItemParams.borderDistance;
+                    }
+                }
+                const viewportHeight = this._viewportHeight;
+                return itemOffsetTop + this._edgeItemParams.borderDistance - viewportHeight;
+            }
+        }
+        return 0;
+    }
+
     beforeRestoreScrollPosition(): void {
         this._fakeScroll = true;
+        this._edgeItemParams = null;
         this._virtualScroll.beforeRestoreScrollPosition();
     }
 

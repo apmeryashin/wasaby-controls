@@ -56,6 +56,8 @@ export default class ItemsView<TOptions extends IItemsViewOptions = IItemsViewOp
     protected _viewName: Function = ListView;
 
     protected _viewModelConstructor: string = 'Controls/display:Collection';
+
+    protected _itemsSelector: string = '.controls-ListView__itemV';
     //endregion
 
     //region helper props for the template

@@ -30,6 +30,16 @@ describe('Controls/list_clean/Indicators/BaseControl', () => {
     });
 
     describe('_onMouseEnter', () => {
+        beforeEach(() => {
+            global.window = {
+                requestAnimationFrame: (callback) => {
+                    callback();
+                }
+            };
+        });
+        afterEach(() => {
+            global.window = undefined;
+        });
         it('not display top indicator, display trigger', async () => {
             const source = new Memory({
                 keyProperty: 'id',

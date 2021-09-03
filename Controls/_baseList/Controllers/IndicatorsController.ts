@@ -59,6 +59,7 @@ export default class IndicatorsController {
 
     private _topIndicatorElement: HTMLElement;
     private _bottomIndicatorElement: HTMLElement;
+    private _hasNotRenderedChanges: boolean = false;
 
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
@@ -126,10 +127,14 @@ export default class IndicatorsController {
             && this._shouldDisplayIndicator('up');
     }
 
-    displayTopIndicator(scrollToFirstItem: boolean, onDrawItems?: boolean): void {
+    displayTopIndicator(scrollToFirstItem: boolean, onDrawItems: boolean, isTopIndicatorDisplayed: boolean): void {
         const isDisplayedIndicator = this._model.getTopIndicator().isDisplayed();
         if (isDisplayedIndicator) {
             return;
+        }
+
+        if (!isTopIndicatorDisplayed) {
+            this._hasNotRenderedChanges = true;
         }
 
         const indicatorState = this._getLoadingIndicatorState();
@@ -140,6 +145,14 @@ export default class IndicatorsController {
         } else {
             this._model.displayLoadingTopTrigger();
         }
+    }
+
+    hasNotRenderedChanges(): boolean {
+        return this._hasNotRenderedChanges;
+    }
+
+    afterRenderCallback() {
+        this._hasNotRenderedChanges = false;
     }
 
     shouldDisplayBottomIndicator(): boolean {
@@ -266,6 +279,8 @@ export default class IndicatorsController {
             return;
         }
 
+        const isTopIndicatorDisplayed = this._model.getTopIndicator().isDisplayed();
+
         if (this._options.attachLoadTopTriggerToNull) {
             // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
             // и так был показан, подскроллить к нему.
@@ -273,7 +288,7 @@ export default class IndicatorsController {
         }
 
         if (this.shouldDisplayTopIndicator()) {
-            this.displayTopIndicator(scrollToFirstItem, false);
+            this.displayTopIndicator(scrollToFirstItem, false, isTopIndicatorDisplayed);
         }
     }
 
