@@ -2915,6 +2915,7 @@ export interface IBaseControlOptions extends IControlOptions, ISourceOptions, II
     sourceController?: SourceController;
     items?: RecordSet;
     searchValue?: string;
+    hasItemWithImage: boolean;
 }
 
 export default class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions>
@@ -2931,6 +2932,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _markedKeyForRestoredScroll = null;
 
     _updateInProgress = false;
+
+    _hasItemWithImageChanged = false;
 
     _isMounted = false;
 
@@ -3890,6 +3893,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.closeSwipe(this);
         }
 
+        if (newOptions.hasItemWithImage !== this._options.hasItemWithImage) {
+            this._hasItemWithImageChanged = true;
+        }
+
         /*
          * Переинициализация ранее проинициализированных опций записи нужна при:
          * 1. Изменились опции записи
@@ -4111,10 +4118,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // save scroll
         let directionToRestoreScroll = this._scrollController &&
             this._scrollController.getDirectionToRestoreScroll();
-        if (!directionToRestoreScroll) {
-            if (this._indicatorsController.hasNotRenderedChanges()) {
-                directionToRestoreScroll = 'down';
-            }
+        if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+            directionToRestoreScroll = 'up';
         }
         if (directionToRestoreScroll) {
             this._scrollController.saveEdgeItem(directionToRestoreScroll, this._getItemsContainer());
@@ -4188,15 +4193,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             // restore scroll
             let directionToRestoreScroll = this._scrollController.getDirectionToRestoreScroll();
-            if (!directionToRestoreScroll) {
-                if (this._indicatorsController.hasNotRenderedChanges()) {
-                    directionToRestoreScroll = 'down';
-                }
+            if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+                directionToRestoreScroll = 'up';
             }
             if (directionToRestoreScroll) {
                 const newScrollTop = this._scrollController.getScrollTopToEdgeItem(directionToRestoreScroll,
                     this._getItemsContainer());
                 this._scrollController.beforeRestoreScrollPosition();
+                this._hasItemWithImageChanged = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
             }
 

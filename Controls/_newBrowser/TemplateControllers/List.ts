@@ -12,11 +12,7 @@ export default class ListController extends BaseController<IListConfig, TreeItem
     }
 
     get imagePosition(): string {
-        if (this.getImageVisibility() === 'hidden') {
-            return 'none';
-        } else {
-            return this._viewModeConfig.list.imagePosition;
-        }
+        return this._viewModeConfig.list.imagePosition;
     }
 
     get imageViewMode(): string {

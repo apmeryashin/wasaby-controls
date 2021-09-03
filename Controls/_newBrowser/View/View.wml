@@ -51,37 +51,40 @@
             <!-- beforeBeginEdit юзают для отмены редактирования узлов, нужна доработка списков
                  beforeEndEdit юзают для кастомной логики сохранения записи, т.к не хотят менять БЛ -->
             <Controls.list:Container id="detail">
-                <Controls.explorer:View
-                        attr:class="controls-newBrowser__detail-list"
-                        name="detailList"
-                        loading="{{_detailLoading}}"
-                        on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
-                        on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
-                        on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-                        on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-                        on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
-                        on:afterEndEdit="_notifyHandler('afterEndEdit')"
-                        on:dragStart="_notifyHandler('detailDragStart')"
-                        on:actionClick="_notifyHandler('detailActionClick')"
-                        on:arrowClick="_notifyHandler('detailArrowClick')"
-                        on:dragEnter="_notifyHandler('detailDragEnter')"
-                        on:dragMove="_notifyHandler('detailDragMove')"
-                        on:dragEnd="_notifyHandler('detailDragEnd')"
-                        on:dragLeave="_notifyHandler('detailDragLeave')"
-                        on:itemMouseDown="_notifyHandler('detailItemMouseDown')"
-                        on:drawItems="_notifyHandler('drawItems')"
-                        on:beforeItemsMove="_notifyHandler('detailBeforeItemsMove')"
-                        afterBreadCrumbsTemplate="{{_options.detail.afterBreadCrumbsTemplate}}"
-                        searchValue="{{_options.searchValue}}"
-                        tileSize="{{_tileCfg.tileSize}}"
-                        on:changeDragTarget="_notifyHandler('detailChangeDragTarget')"
-                        viewMode="{{viewMode}}"
-                        columns="{{_columns}}"
-                        scope="{{_detailExplorerOptions}}"
-                        breadcrumbsVisibility="{{_getDetailBreadCrumbsVisibility(_options.detail)}}"
-                        on:itemClick="_onExplorerItemClick(false)"
-                        on:viewModeChanged="_onDetailExplorerChangedViewMode()"
-                >
+                <Controls.listTemplates:ImageDisplayContainer
+                    scope="{{_detailExplorerOptions}}"
+                    columns="{{_columns}}">
+                    <ws:content>
+                        <Controls.explorer:View
+                                attr:class="controls-newBrowser__detail-list"
+                                afterBreadCrumbsTemplate="{{_options.detail.afterBreadCrumbsTemplate}}"
+                                breadcrumbsVisibility="{{_getDetailBreadCrumbsVisibility(_options.detail)}}"
+                                loading="{{_detailLoading}}"
+                                name="detailList"
+                                searchValue="{{_options.searchValue}}"
+                                tileSize="{{_tileCfg.tileSize}}"
+                                viewMode="{{viewMode}}"
+                                on:actionClick="_notifyHandler('detailActionClick')"
+                                on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+                                on:afterEndEdit="_notifyHandler('afterEndEdit')"
+                                on:arrowClick="_notifyHandler('detailArrowClick')"
+                                on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+                                on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+                                on:beforeItemsMove="_notifyHandler('detailBeforeItemsMove')"
+                                on:changeDragTarget="_notifyHandler('detailChangeDragTarget')"
+                                on:dragEnd="_notifyHandler('detailDragEnd')"
+                                on:dragEnter="_notifyHandler('detailDragEnter')"
+                                on:dragLeave="_notifyHandler('detailDragLeave')"
+                                on:dragMove="_notifyHandler('detailDragMove')"
+                                on:dragStart="_notifyHandler('detailDragStart')"
+                                on:drawItems="_notifyHandler('drawItems')"
+                                on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+                                on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                                on:itemClick="_onExplorerItemClick(false)"
+                                on:itemMouseDown="_notifyHandler('detailItemMouseDown')"
+                                on:viewModeChanged="_onDetailExplorerChangedViewMode()"
+                        />
+                    </ws:content>
                     <ws:itemTemplate>
                         <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
                         <ws:if data="{{_appliedViewMode === _viewModeEnum.table || _appliedViewMode === _viewModeEnum.search}}">
@@ -95,20 +98,23 @@
                                     scope="{{itemTemplate}}"
                                     template="{{_detailExplorerOptions.itemTemplate || _options.detail.itemTemplate || _defaultListItemTemplate}}"
                                     listConfiguration="{{_listConfiguration}}"
+                                    imageViewMode="{{itemTemplate.imageViewMode}}"
+                                    imagePosition="{{itemTemplate.imagePosition}}"
                                     listCfg="{{_listCfg}}"
                             />
                         </ws:else>
                     </ws:itemTemplate>
-
                     <ws:tileItemTemplate>
                         <ws:partial
                                 scope="{{tileItemTemplate}}"
                                 template="{{_detailExplorerOptions.tileItemTemplate || _options.detail.tileItemTemplate || _defaultTileItemTemplate}}"
                                 listConfiguration="{{_listConfiguration}}"
+                                imageViewMode="{{tileItemTemplate.imageViewMode}}"
+                                imagePosition="{{tileItemTemplate.imagePosition}}"
                                 tileCfg="{{_tileCfg}}"
                         />
                     </ws:tileItemTemplate>
-                </Controls.explorer:View>
+                </Controls.listTemplates:ImageDisplayContainer>
             </Controls.list:Container>
         </ws:else>
         <ws:if data="{{_options.detailFooterTemplate}}">

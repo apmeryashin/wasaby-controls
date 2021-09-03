@@ -1,5 +1,6 @@
 <div class="{{ (item || itemData).getContentClasses(itemType, imagePosition, imageViewMode) }}">
     <ws:partial template="{{ (item || itemData).getImageTemplate(itemType) }}"
+                fallbackImage="{{ fallbackImage }}"
                 imagePosition="{{ imagePosition || 'top' }}"
                 imageViewMode="{{ imageViewMode || 'rectangle' }}"
                 imageSize="{{ imageSize || 's' }}"

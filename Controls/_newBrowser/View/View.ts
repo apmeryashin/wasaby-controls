@@ -118,8 +118,6 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _listCfg: ListController = null;
     protected _dataContext: Record<string, any> = null;
     protected _masterDataSource: SourceController = null;
-    protected _hasImageInItems: boolean = false;
-    protected _itemToScroll: CrudEntityKey = null;
     protected _contrastBackground: boolean = true;
     protected _listLoaded: boolean = false;
     protected _tileLoaded: boolean = false;
@@ -156,12 +154,6 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._onMasterDataLoadCallback = this._onMasterDataLoadCallback.bind(this);
     }
 
-    private _processItems(items: RecordSet): void {
-        if (items) {
-            this._hasImageInItems = this._hasImages(items, this._detailExplorerOptions.imageProperty);
-        }
-    }
-
     protected _beforeMount(
         options?: IOptions,
         contexts?: object
@@ -170,7 +162,6 @@ export default class View extends Control<IOptions, IReceivedState> {
         if (this._dataContext.listsConfigs) {
             this._contextVersion = this._dataContext.getVersion?.();
             this._initState(options);
-            this._processItems(this._detailDataSource.getItems());
             this._processItemsMetadata(this._detailDataSource.getItems(), options);
             this._afterViewModeChanged(options);
         }
@@ -180,44 +171,14 @@ export default class View extends Control<IOptions, IReceivedState> {
         this._isMounted = true;
     }
 
-    private _hasImages(items: RecordSet, imageProperty: string): boolean {
-        return !!factory(items).filter((item) => {
-            return !!item.get(imageProperty);
-        }).first();
-    }
-
     //region ⇑ events handlers
     private _onDetailDataLoadCallback(event: SyntheticEvent, items: RecordSet, direction: string): void {
-        // Не обрабатываем последующие загрузки страниц. Нас интересует только
-        // загрузка первой страницы
-        const rootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
-        const imageProperty = this._detailExplorerOptions.imageProperty;
         if (!direction) {
             this._processItemsMetadata(items);
         }
         if (this._masterDataLoadResolver) {
             this._masterDataLoadResolver();
             this._masterDataLoadResolver = null;
-        }
-        if (imageProperty && (!this._hasImageInItems || rootChanged) && items.getCount()) {
-            this._hasImageInItems = this._hasImages(items, imageProperty);
-            const imageVisibility = this._hasImageInItems ? 'visible' : 'hidden';
-            if (imageVisibility !== this._listCfg?.getImageVisibility()) {
-                this._listCfg.setImageVisibility(imageVisibility);
-                this._tileCfg.setImageVisibility(imageVisibility);
-                this._tableCfg.setImageVisibility(imageVisibility);
-                /*
-                    Восстанавливать скролл нужно только если фотки появились в текущем узле при подгрузке по скроллу
-                    Если видимость меняется при проваливании в папку, то скролл всегда будет в шапке списка.
-                */
-                if (imageVisibility === 'visible' && !rootChanged && direction) {
-                    if (this._children.hasOwnProperty('detailList')) {
-                        this._itemToScroll = this._children.detailList.getLastVisibleItemKey();
-                    }
-                }
-            }
-        } else if (!this._hasImageInItems) {
-            this._hasImageInItems = this._hasImages(items, imageProperty);
         }
 
         if (this._newMasterVisibility) {
@@ -400,20 +361,16 @@ export default class View extends Control<IOptions, IReceivedState> {
 
     protected _createTemplateControllers(cfg: IBrowserViewConfig, options: IOptions): void {
         this._listConfiguration = cfg;
-        const imageVisibility = this._hasImageInItems ? 'visible' : 'hidden';
         this._tileCfg = new TileController({
             listConfiguration: this._listConfiguration,
-            imageVisibility,
             browserOptions: options
         });
         this._listCfg = new ListController({
             listConfiguration: this._listConfiguration,
-            imageVisibility,
             browserOptions: options
         });
         this._tableCfg = new TableController({
             listConfiguration: this._listConfiguration,
-            imageVisibility,
             browserOptions: options
         });
         this._columns = this._getPatchedColumns(this._columns);
@@ -430,13 +387,6 @@ export default class View extends Control<IOptions, IReceivedState> {
             });
         }
         return newColumns;
-    }
-
-    protected _afterRender(): void {
-        if (this._itemToScroll) {
-            this._children.detailList.scrollToItem(this._itemToScroll, true);
-            this._itemToScroll = null;
-        }
     }
 
     //endregion
