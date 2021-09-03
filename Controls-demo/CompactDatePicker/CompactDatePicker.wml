@@ -1,0 +1,6 @@
+<div class="controlsDemo__wrapper">
+    <Controls.compactDatePicker:View
+            bind:startValue="_startValue"
+            bind:endValue="_endValue"
+    />
+</div>
