@@ -20,7 +20,9 @@ describe('Controls/grid_clean/_display/utils/GridLayoutUtil', () => {
                 'minmax(10px,)',
                 'minmax(, 10px)',
                 'minmax(10px)',
+                'minmax(01px, 10px)',
                 'minmax(10px, 0fr)',
+                'minmax(-1px, 0fr)',
                 'minmax(10px, minmax(20px, 30px))'
             ].forEach((width) => {
                 it(`${width} is invalid`, () => {

@@ -13,7 +13,7 @@ const _PERCENT        = '(([1-9][0-9]*%)|0%)';
 const _FR             = '((([1-9].[0-9]*)|(0.[0-9]*[1-9]+[0-9]*)|([1-9][0-9]*))fr)';
 const _CONSTANTS      = '(auto|min-content|max-content)';
 const _FIT_CONTENT    = `(fit-content\\((${_PX}|${_PERCENT}|${_FR})\\))`;
-const _MIN_MAX_PART   = `((\\d+px)|(\\d+%)|${_FR}|${_CONSTANTS})`;
+const _MIN_MAX_PART   = `(${_PX}|${_PERCENT}|${_FR}|${_CONSTANTS})`;
 const _MIN_MAX        = `(minmax\\(${_MIN_MAX_PART},\\s?${_MIN_MAX_PART}\\))`;
 
 const VALID_GRID_COLUMN_WIDTH_VALUE = new RegExp(`^(${_PX}|${_PERCENT}|${_FR}|${_FIT_CONTENT}|${_CONSTANTS}|${_MIN_MAX})$`);
