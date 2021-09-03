@@ -26,7 +26,7 @@
    padding: @block-wrapper-padding 0 0 @block-wrapper-padding;
    margin: @block-wrapper-margin 0 0 @block-wrapper-margin;
 
-   .controls__block {
+   > .controls__block {
       border-radius: var(--border-radius_default_block) 0 0 0;
    }
 }
@@ -35,7 +35,7 @@
    padding: @block-wrapper-padding @block-wrapper-padding 0 0;
    margin: @block-wrapper-margin @block-wrapper-margin 0 0;
 
-   .controls__block {
+   > .controls__block {
       border-radius: 0 var(--border-radius_default_block) 0 0;
    }
 }
@@ -44,7 +44,7 @@
    padding: @block-wrapper-padding @block-wrapper-padding 0 @block-wrapper-padding;
    margin: @block-wrapper-margin @block-wrapper-margin 0 @block-wrapper-margin;
 
-   .controls__block {
+   > .controls__block {
       border-radius: var(--border-radius_default_block) var(--border-radius_default_block) 0 0;
    }
 }
@@ -53,13 +53,13 @@
    padding: 0;
    margin: 0;
 
-   .controls__block {
+   > .controls__block {
       border-radius: 0;
    }
 }
 
 .controls__block-wrapper.without-shadow {
-   .controls__block {
+   > .controls__block {
       box-shadow: none;
    }
 }
