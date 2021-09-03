@@ -1747,7 +1747,7 @@ define([
                   setTriggers: () => undefined,
                   setIndicesAfterCollectionChange: () => undefined,
                   calculateVirtualScrollHeight: () => 0,
-                  getDirectionToRestoreScroll: () => null,
+                  getParamsToRestoreScrollPosition: () => null,
                   setTriggerVisibility: () => undefined,
                   getPlaceholders: () => { return { top: 0, bottom: 0 }; },
                   updateItemsHeights: () => undefined
