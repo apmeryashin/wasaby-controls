@@ -12,7 +12,7 @@ import openPopup from 'Controls/_popup/utils/openPopup';
 const getStickyConfig = (config: IStickyOpenerOptions = {}) => {
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
     if (!(config.target instanceof HTMLElement) && !BaseOpenerUtil.isControl(config.target)) {
-        Logger.error('Controls/popup:Sticky. В опцию target передано неверное значение. Опция принимает либо HTMLElement, либо контрол');
+        Logger.warn('Controls/popup:Sticky. В опцию target передано неверное значение. Опция принимает либо HTMLElement, либо контрол');
         // Если передали jquery, выцеплю значение из него, чтобы контрол продолжал работать.
         if (config.target) {
             config.target = config.target[0] || config.target;
