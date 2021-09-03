@@ -5,6 +5,7 @@
    overflow: hidden;
    padding: @block-wrapper-padding;
    margin: @block-wrapper-margin;
+   pointer-events: none;
 }
 
 .controls__block {
@@ -14,6 +15,7 @@
    width: 100%;
    height: 100%;
    overflow: hidden;
+   pointer-events: auto;
 }
 
 // Из-за ошибки в движке рендеринга в safari WebKit тень торчит из элемента с border-radius.
