@@ -1,4 +1,4 @@
-import {getSettings} from 'Controls/Application/SettingsController';
+import {getSettings, hasSettingsController} from 'Controls/Application/SettingsController';
 
 interface ISettingsStorage {
     scrollContainerWheelEventHappened?: boolean;
@@ -10,6 +10,9 @@ class WheelEventSettings {
     protected _getWheelEventPromise: Promise<boolean>;
 
     getWheelEventSettingPromise(): Promise<boolean> {
+        if (!hasSettingsController()) {
+            return Promise.resolve(true);
+        }
         if (this._getWheelEventPromise) {
             return this._getWheelEventPromise;
         }
