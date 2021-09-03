@@ -11,6 +11,39 @@ import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 import {Model} from 'Types/entity';
 
+/**
+ * Класс используется для управления в списочных шаблонах выводом контейнера, предназначенного под изображение и
+ * позволяет в случае отсутствия изображений среди загруженных записей - при выводе шаблона скрывать данный контейнер.
+ * @remark
+ * При использовании ImageDisplayContainer необходимо оборачивать в Controls.list:DataContainer.
+ * Опции {@link Controls/tile:RichTemplate#imageViewMode imageViewMode}, {@link Controls/tile:RichTemplate#imagePosition imagePosition} и {@link Controls/tile:ITile#imageProperty imageProperty} необходимо задавать непосредственно на ImageDisplayContainer.
+ * @example
+ * <pre class="brush:html">
+ *    <Controls.list:DataContainer
+ *            displayProperty="title"
+ *            navigation="{{_navigation}}"
+ *            source="{{_viewSource}}">
+ *        <Controls.listTemplates:ImageDisplayContainer
+ *                imageProperty="image"
+ *                imageViewMode="rectangle"
+ *                imagePosition="left">
+ *            <ws:content>
+ *                <Controls.tile:View
+ *                        tileMode="static"
+ *                        tileWidth="350"
+ *                        keyProperty="key"/>
+ *            </ws:content>
+ *        </Controls.listTemplates:ImageDisplayContainer>
+ *    </Controls.list:DataContainer>
+ * </pre>
+ * @class Controls/_listTemplates/ImageDisplayContainer/ImageDisplayContainer
+ * @extends UI/Base:Control
+ *
+ * @author Авраменко А.С.
+ * @public
+ * @demo Controls-demo/tileNew/DifferentItemTemplates/ToggleImageVisible/ScrollToDown/
+ */
+
 interface IImageDisplayContainerOptions extends IControlOptions {
     itemsReadyCallback: (items: RecordSet) => void;
     imageProperty: string;
