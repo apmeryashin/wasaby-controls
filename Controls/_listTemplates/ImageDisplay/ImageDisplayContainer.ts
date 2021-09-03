@@ -55,21 +55,6 @@ interface IImageDisplayContainerOptions extends IControlOptions {
     sourceController: SourceController;
 }
 
-/**
- * @class Controls/_listTemplates/ImageDisplayContainer Контейнер, позволяющий управлять показом изображений в списочных контролах.
- * @description
- * Отслеживает наличие изображения в поле imageProperty хотя бы у единственной записи списка и
- * изменяет опции imageViewMode и imagePosition, передаваемые в шаблон записи списочного контрола.
- * Если в списке пояляется хотя бы единственная запись, у которой присутствует значение в imageProperty
- * перерисовывает список, отображая для каждой записи изображение или placeholder (fallbackImage).
- * Если в списке больше нет записей, у которых присутствует значение в imageProperty
- * перерисовывает список без изображений и placeholder (fallbackImage).
- * Работает со списочными контролами, использующими шаблоны из библиотеки Controls/listTemplates, Controls/tile:View,
- * а также с Controls/treeTile:View.
- * Используется по умолчанию в Controls/newBrowser.
- * @public
- * @author Авраменко А.С.
- */
 export default class ImageDisplayContainer extends Control<IImageDisplayContainerOptions> {
     protected _template: TemplateFunction = Template;
 
@@ -194,28 +179,3 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         return has;
     }
 }
-
-/**
- * @name Controls/_listTemplates/ImageDisplayContainer#imageProperty
- * @cfg {String} Свойство, в котором хранится изображение
- */
-
-/**
- * @name Controls/_listTemplates/ImageDisplayContainer#imagePosition
- * @cfg {String} Позиция изображения в плитке
- */
-
-/**
- * @name Controls/_listTemplates/ImageDisplayContainer#imageViewMode
- * @cfg {String} Вид отображения изображения.
- */
-
-/**
- * @name Controls/_listTemplates/ImageDisplayContainer#itemTemplate
- * @cfg {String} Шаблон отображения элемента
- */
-
-/**
- * @name Controls/_listTemplates/ImageDisplayContainer#columns
- * @cfg {String} Колонки с табличным отображением
- */
