@@ -1,0 +1,40 @@
+<ws:template name="day">
+    <ws:partial template="{{ defaultDayTemplate }}"
+                attr:date="{{ day }}"
+                attr:class="{{ firstDayOfMonth || dayOfWeek === 0  ? 'controls-CompactDatePicker__month-list__item-edge-start' }}
+                    {{ lastDayOfMonth || dayOfWeek === 6 ? 'controls-CompactDatePicker__month-list__item-edge-end' }}"
+                sizeStyle="CompactDatePickerItem"
+                fontColorStyle="CompactDatePickerItem"
+                borderStyle="CompactDatePickerItem"
+                scope="{{ _options }}"
+                backgroundStyle="CompactDatePickerItem">
+    </ws:partial>
+</ws:template>
+<ws:if data="{{value.today && value.isCurrentMonth}}">
+    <Controls.scroll:IntersectionObserverContainer
+            on:intersect="currentDayIntersectHandler()"
+            on:intersectionObserverUnregister="unregisterCurrentDayIntersectHandler()"
+            threshold="{{[0, 0.01, 0.99, 1]}}">
+        <!--в IE котнейнеры с дисплеем flex неправильно расчитывают положение детей если задана минимальная высота-->
+        <!--display: flex на родителе пофиксит проблему-->
+        <div class="ws-flexbox">
+            <ws:partial template="day"
+                        day="{{ value.day }}"
+                        dayOfWeek="{{ value.dayOfWeek }}"
+                        firstDayOfMonth="{{ value.firstDayOfMonth }}"
+                        lastDayOfMonth="{{ value.lastDayOfMonth }}"
+                        defaultDayTemplate="{{ defaultDayTemplate }}"
+            />
+        </div>
+    </Controls.scroll:IntersectionObserverContainer>
+</ws:if>
+<ws:else>
+<ws:partial template="day"
+            day="{{ value.day }}"
+            dayOfWeek="{{ value.dayOfWeek }}"
+            fontWeight="normal"
+            firstDayOfMonth="{{ value.firstDayOfMonth }}"
+            lastDayOfMonth="{{ value.lastDayOfMonth }}"
+            defaultDayTemplate="{{ defaultDayTemplate }}"
+/>
+</ws:else>
