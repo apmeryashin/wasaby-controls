@@ -56,7 +56,7 @@ type Path = ILink | IEmail | IPlain;
  * Активная ссылка - это элемент страницы, при клике на который происходит переход на внешний ресурс.
  * @remark
  * Поддерживаемые ссылки:
- * * Ссылка на web-страницу ({@link https://en.wikipedia.org/wiki/File_Transfer_Protocol ftp}, www, http, https).
+ * * Ссылка на web-страницу ({@link https://en.wikipedia.org/wiki/File_Transfer_Protocol ftp}, www, http, https, Notes).
  * * Ссылка на email адрес ([текст]@[текст].[текст от 2 до 6 знаков]).
  * * Ссылка на локальный файл ({@link https://en.wikipedia.org/wiki/File_URI_scheme file}).
  *
@@ -98,7 +98,7 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
      * $6 - Closing delimiter.
      * @private
      */
-    private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
+    private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file|Notes):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
 
     private static mapExec: IMap = {
         result: 0,
