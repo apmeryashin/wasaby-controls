@@ -2830,6 +2830,12 @@ const _private = {
                     };
                 }
             }
+        } else {
+            if (result.newCollectionRenderedKeys?.length) {
+                self._doAfterDrawItems = () => {
+                    self._notify('preloadItemsByKeys', [result.newCollectionRenderedKeys], {bubbling: true});
+                };
+            }
         }
         if (result.triggerOffset) {
             self.applyTriggerOffset(result.triggerOffset);
