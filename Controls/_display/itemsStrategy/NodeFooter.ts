@@ -18,6 +18,11 @@ interface ISortOptions<S, T extends TreeItem<S>> {
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
 }
 
+/**
+ * Определяет нужно или нет выводить кастомным шаблоном футера узла.
+ * Выводить нужно если он передан и нет данных для загрузки (в этом случае показывается кнопка "Ещё")
+ * и ф-ия nodeFooterVisibilityCallback не указана или указана и вернула true.
+ */
 export function shouldDisplayNodeFooterTemplate(
     item: TreeItem,
     nodeFooterTemplate: TemplateFunction,

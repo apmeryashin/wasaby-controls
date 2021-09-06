@@ -15,7 +15,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
     let data = [];
 
     const fakeSourceController = {
-        hasMoreData: (direction: string, root: string) => root !== null && root !== '3',
+        hasMoreData: (direction: string, root: string) => root != null && root !== '3',
         setDataLoadCallback: () => {},
         getState: () => ({}),
         getItems: () => new RecordSet({
@@ -50,6 +50,9 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
             sourceController: fakeSourceController,
             virtualScrollConfig: {
                 pageSize: 1
+            },
+            navigation: {
+                view: 'infinity'
             },
             ...cfg
         };

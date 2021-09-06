@@ -1,8 +1,9 @@
-import { TemplateFunction } from 'UI/Base';
-import { TreeItem } from 'Controls/display';
-import { Model } from 'Types/entity';
+import {TemplateFunction} from 'UI/Base';
+import {TreeItem} from 'Controls/display';
+import {Model} from 'Types/entity';
 import TreeGridDataRow from './TreeGridDataRow';
 import {GridCell, GridCell as Cell, IColumn, TColspanCallbackResult} from 'Controls/grid';
+import {MoreButtonVisibility} from 'Controls/_display/Collection';
 
 /**
  * Футер узла в иерархической таблице
@@ -96,12 +97,13 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return classes;
     }
 
-    // Возможна ситуация, когда nodeFooterTemplate адали только для настрйоки опций,
+    // Возможна ситуация, когда nodeFooterTemplate задали только для настройки опций,
     // а отображаться он будет при hasMoreStorage
     // То есть в этой случае мы не должны отображать футер, если нет данных еще, т.к. content не задан
     // При создании футера(в стратегии) это не определить
     shouldDisplayVisibleFooter(content: TemplateFunction): boolean {
-        return this.hasMoreStorage() || !!content;
+        // Нужно рисовать футер если есть пользовательский контент или нужно рисовать нашу кнопку "Еще" для подгрузки.
+        return !!content || this.needMoreButton();
     }
 
     shouldDisplayContent(column: Cell<null, TreeGridNodeFooterRow>, colspan?: boolean): boolean {
@@ -126,6 +128,27 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
             this._$moreFontColorStyle = moreFontColorStyle;
             this._nextVersion();
         }
+    }
+
+    /**
+     * Кнопка "Ещё" нужна всегда кроме следующих случаев:
+     *  * Нет данных для загрузки
+     *  ИЛИ
+     *  * выставлен режим скрытия для последнего узла
+     *  * текущий узел является последней записью в коллекции
+     *  * не задан футер списка
+     */
+    needMoreButton(): boolean {
+        const dataRow = this.getParent();
+        const collection = this.getOwner();
+        const dataRowIsLastCollectionItem = collection.getRoot().getLastChildItem() === dataRow;
+        const hideForLastNode = collection.getMoreButtonVisibility() === MoreButtonVisibility.exceptLastNode;
+
+        const needHide =
+            !this.hasMoreStorage() ||
+            (hideForLastNode && dataRowIsLastCollectionItem && !collection.getFooter());
+
+        return !needHide;
     }
 
     protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
