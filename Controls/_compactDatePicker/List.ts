@@ -6,6 +6,8 @@ import {Utils as DateControlsUtils} from 'Controls/dateRange';
 import 'css!Controls/compactDatePicker';
 import {SyntheticEvent} from "UICommon/Events";
 import {IntersectionObserverSyntheticEntry} from "Controls/scroll";
+import * as dayTemplate from 'wml!Controls/_compactDatePicker/dayTemplate';
+import {MonthViewDayTemplate} from 'Controls/calendar';
 import {MonthModel} from 'Controls/calendar';
 
 interface ICompactDatePickerOptions extends IControlOptions {
@@ -15,7 +17,9 @@ interface ICompactDatePickerOptions extends IControlOptions {
 }
 
 export default class List extends Control<ICompactDatePickerOptions> {
-    _template: TemplateFunction = template;
+    protected _template: TemplateFunction = template;
+    protected _dayTemplate: TemplateFunction = dayTemplate;
+    protected _defaultDayTemplate: TemplateFunction = MonthViewDayTemplate;
     protected _weekdaysCaptions: string = DateControlsUtils.getWeekdaysCaptions();
     protected _formatDate: Function = formatDate;
     protected _today: number = (new WSDate()).getDate();
