@@ -78,21 +78,29 @@ export default class MonthView extends Control<IControlOptions> {
       return {};
    }
 
+   private _isDayAvailable(date: Date): boolean {
+      if (this._options.isDayAvailable) {
+         return this._options.isDayAvailable(date);
+      }
+      return true;
+   }
+
    protected _dayClickHandler(event, item, isCurrentMonth): void {
       if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable &&
-          !this._options.readOnly && (isCurrentMonth || this._options.mode === 'extended')) {
+          !this._options.readOnly && (isCurrentMonth || this._options.mode === 'extended') &&
+          this._isDayAvailable(item)) {
          this._notify('itemClick', [item, event]);
       }
    }
 
    protected _mouseEnterHandler(event, item, isCurrentMonth): void {
-      if (isCurrentMonth || this._options.mode === 'extended') {
+      if (isCurrentMonth || this._options.mode === 'extended' && this._isDayAvailable(item)) {
          this._notify('itemMouseEnter', [item]);
       }
    }
 
    protected _mouseLeaveHandler(event, item, isCurrentMonth): void {
-      if (isCurrentMonth || this._options.mode === 'extended') {
+      if (isCurrentMonth || this._options.mode === 'extended' && this._isDayAvailable(item)) {
          this._notify('itemMouseLeave', [item]);
       }
    }
