@@ -16,6 +16,7 @@ import {
    ISortingOptions
 } from 'Controls/interface';
 import { RecordSet } from 'Types/collection';
+import { CrudEntityKey } from 'Types/source';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 
 export interface IContextOptionsValue extends ISortingOptions {
@@ -34,6 +35,7 @@ export interface IContextOptionsValue extends ISortingOptions {
    groupProperty?: string;
    parentProperty?: string;
    operationsController: OperationsController;
+   expandedItems: CrudEntityKey[];
 }
 
 const Context = DataContext.extend({
