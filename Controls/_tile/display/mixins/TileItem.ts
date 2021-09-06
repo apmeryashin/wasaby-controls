@@ -1624,6 +1624,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ` controls-text-${titleColorStyle}`;
                 if (titlePosition === 'onImage' && imageViewMode !== 'none') {
                     classes += ' controls-TileView__richTemplate_title-onImage';
+                } else {
+                    classes += ' controls-TileView__richTemplate_title-underImage';
                 }
                 break;
             case 'preview':
