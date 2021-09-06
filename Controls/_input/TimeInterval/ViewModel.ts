@@ -77,9 +77,11 @@ export class ViewModel extends BaseViewModel {
         const result = Formatter.formatData(this._format, {
             value: clearResult.value,
             carriagePosition: 0
-        }).value;
-
-        return result;
+        });
+        if (result) {
+            return result.value
+        }
+        return '';
     }
 
     private _timeIntervalToValueConverter(value) {

@@ -40,14 +40,18 @@ var ViewModel = BaseViewModel.extend({
     },
 
     _convertToDisplayValue: function (value) {
-        var stringValue = value === null ? '' : value;
+        const stringValue = value === null ? '' : value;
 
         _private.updateFormat(this, stringValue);
 
-        return Formatter.formatData(this._format, {
+        const data = Formatter.formatData(this._format, {
             value: stringValue,
             carriagePosition: 0
-        })?.value || '';
+        });
+        if (data) {
+            return data.value;
+        }
+        return ''
     },
 
     handleInput: function (splitValue, inputType) {
