@@ -1,6 +1,7 @@
 define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resources/Money'], function(Executor, Money) {
    var filename = 'Controls/_decorator/Money';
    var thelpers = Executor.TClosure;
+   // tslint:disable-next-line
    var templateFunction = function Money_Template(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
       var key = thelpers.validateNodeKey(attr && attr.key);
 
@@ -8,7 +9,8 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
       var useGrouping = data.useGrouping !== false;
       var abbreviationType = data.abbreviationType || 'none';
       var precision = data.precision === 0 ? 0 : 2;
-      var formattedNumber = Money.calculateFormattedNumber(value, useGrouping, abbreviationType, precision, data.onlyPositive);
+      var formattedNumber = Money.calculateFormattedNumber(value, useGrouping, abbreviationType,
+                              precision, data.onlyPositive);
       var stroked = data.stroked || false;
       var fontColorStyle = Money.calculateFontColorStyle(stroked, data) || 'default';
       var fontSize = data.fontSize || 'm';
@@ -25,18 +27,23 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
       var mainClass = Money.calculateMainClass(fontColorStyle, underline, data.style);
       var calculateCurrencyClass = Money.calculateCurrencyClass(currencySize, fontColorStyle, fontWeight);
       var strokedClass = Money.calculateStrokedClass(stroked);
-      var integerClass = Money.calculateIntegerClass(fontSize, fontColorStyle, fontWeight, data.currency, currencyPosition, isDisplayFractionPath);
-      var fractionClass = Money.calculateFractionClass(formattedNumber.fraction, fontColorStyle, fractionFontSize, data.currency, currencyPosition);
+      var integerClass = Money.calculateIntegerClass(fontSize, fontColorStyle, fontWeight, data.currency,
+                           currencyPosition, isDisplayFractionPath);
+      var fractionClass = Money.calculateFractionClass(formattedNumber.fraction, fontColorStyle,
+                           fractionFontSize, data.currency, currencyPosition);
 
       var defCollection = {
          id: [],
          def: undefined
       };
+      // tslint:disable-next-line
       var viewController = thelpers.calcParent(this, typeof currentPropertyName === 'undefined' ? undefined : currentPropertyName, data);
       if (typeof forceCompatible === 'undefined') {
+         // tslint:disable-next-line
          forceCompatible = false;
       }
       var markupGenerator = thelpers.createGenerator(isVdom, forceCompatible, generatorConfig);
+      // tslint:disable-next-line
       var funcContext = thelpers.getContext(this);
       try {
          var out = markupGenerator.joinElements([markupGenerator.createTag('span', {
@@ -98,6 +105,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
       } catch (e) {
          thelpers.templateError(filename, e, data);
       }
+      // tslint:disable-next-line
       return out || markupGenerator.createText('');
    };
    templateFunction.stable = true;
