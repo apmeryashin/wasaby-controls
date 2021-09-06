@@ -2,7 +2,7 @@
  * Упрощенный шаблон отображения элементов в {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/ISmallTemplate
  * @implements Controls/tile:ItemTemplate
- * @author Михайлов С.Е
+ * @author Колесов В.А
  * @see Controls/tile:View
  * @example
  * <pre class="brush: html; highlight: [3-7]">
