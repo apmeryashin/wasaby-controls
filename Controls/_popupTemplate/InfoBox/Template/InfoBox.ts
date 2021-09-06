@@ -37,6 +37,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _arrowSide: THorizontal | TVertical;
     protected _arrowPosition: TArrowPosition;
     protected _borderStyle: TStyle;
+    protected _horizontalDirection: string;
     protected _beforeMount(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
         this._borderStyle = InfoboxTemplate._setBorderStyle(newOptions.style, newOptions.validationStatus);
@@ -61,6 +62,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
             this._arrowSide = 'top';
             this._arrowPosition = InfoboxTemplate._getArrowPosition(direction.horizontal);
         }
+        this._horizontalDirection = (direction.horizontal || 'right');
     }
 
     protected _close(): void {

@@ -2,13 +2,15 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {GroupItem, CollectionItem} from 'Controls/display';
-import {RecordSet} from 'Types/collection';
+import {IObservable, RecordSet} from 'Types/collection';
 import {Model, Record as entityRecord} from 'Types/entity';
 import {factory} from 'Types/chain';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
+import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
+import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
 import {
     PROPERTY_GROUP_FIELD,
@@ -21,6 +23,17 @@ import {IItemAction, Controller as ItemActionsController} from 'Controls/itemAct
 import {StickyOpener} from 'Controls/popup';
 import 'css!Controls/itemActions';
 import 'css!Controls/propertyGrid';
+import {
+    FlatSelectionStrategy,
+    IFlatSelectionStrategyOptions,
+    ISelectionStrategy,
+    ITreeSelectionStrategyOptions,
+    SelectionController,
+    TreeSelectionStrategy
+} from 'Controls/multiselection';
+import {isEqual} from 'Types/object';
+import {ISelectionObject, TKey} from 'Controls/interface';
+import {LOCAL_MOVE_POSITION, Memory} from 'Types/source';
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -67,6 +80,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _render: TemplateFunction = renderTemplate;
     protected _collapsedGroups: Record<string, boolean> = {};
     protected _toggledEditors: TToggledEditors = {};
+    private _selectionController: SelectionController;
     private _itemActionsController: ItemActionsController;
     private _itemActionSticky: StickyOpener;
     private _collapsedGroupsChanged: boolean = false;
@@ -75,7 +89,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _beforeMount(options: IPropertyGridOptions): void {
         this._collapsedGroups = this._getCollapsedGroups(options.collapsedGroups);
         this._toggledEditors = this._getToggledEditors(options.typeDescription, options.keyProperty);
+
+        this._collectionChangedHandler = this._collectionChangedHandler.bind(this);
         this._listModel = this._getCollection(options);
+        this._subscribeOnModelChanged();
+
         if (options.captionColumnOptions || options.editorColumnOptions) {
             this._render = gridRenderTemplate;
         }
@@ -100,6 +118,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (newOptions.captionPosition !== this._options.captionPosition) {
             this._listModel.setCaptionPosition(newOptions.captionPosition);
         }
+
+        if (newOptions.multiSelectAccessibilityProperty !== this._options.multiSelectAccessibilityProperty) {
+            this._listModel.setMultiSelectAccessibilityProperty(newOptions.multiSelectAccessibilityProperty);
+        }
+        this._updateSelectionController(newOptions);
     }
 
     protected _afterUpdate(oldOptions: IPropertyGridOptions): void {
@@ -121,7 +144,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             group: this._groupCallback.bind(this, options.groupProperty),
             filter: this._displayFilter.bind(this),
             toggledEditors: this._toggledEditors,
-            itemPadding: options.itemPadding
+            itemPadding: options.itemPadding,
+            multiSelectAccessibilityProperty: options.multiSelectAccessibilityProperty,
+            multiSelectTemplate: options.multiSelectTemplate,
+            multiSelectVisibility: options.multiSelectVisibility
         });
     }
 
@@ -311,6 +337,137 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
+    private _getSelectionController(options: IPropertyGridOptions = this._options): SelectionController {
+        if (!this._selectionController) {
+            const strategy = this._createSelectionStrategy(
+                options,
+                this._listModel
+            );
+            this._selectionController = new SelectionController({
+                model: this._listModel,
+                selectedKeys: options.selectedKeys,
+                excludedKeys: options.excludedKeys,
+                strategy
+            });
+        }
+
+        return this._selectionController;
+    }
+
+    private _updateSelectionController(newOptions: IPropertyGridOptions): void {
+        const selectionChanged = !isEqual(this._options.selectedKeys, newOptions.selectedKeys) ||
+                                 !isEqual(this._options.excludedKeys, newOptions.excludedKeys);
+
+        if (selectionChanged) {
+            const controller = this._getSelectionController(newOptions);
+            const newSelection = newOptions.selectedKeys === undefined
+                ? controller.getSelection()
+                : {
+                    selected: newOptions.selectedKeys,
+                    excluded: newOptions.excludedKeys || []
+                };
+            controller.setSelection(newSelection);
+        }
+        if (newOptions.multiSelectVisibility === 'hidden' && this._selectionController) {
+            this._selectionController.destroy();
+            this._selectionController = null;
+        }
+    }
+
+    private _createSelectionStrategy(
+        options: IPropertyGridOptions,
+        collection: TPropertyGridCollection
+    ): ISelectionStrategy {
+        const strategyOptions = this._getSelectionStrategyOptions(options, collection);
+        if (options.parentProperty) {
+            return new TreeSelectionStrategy(strategyOptions as ITreeSelectionStrategyOptions);
+        } else {
+            return new FlatSelectionStrategy(strategyOptions);
+        }
+    }
+
+    private _getSelectionStrategyOptions(
+        {parentProperty}: IPropertyGridOptions,
+        collection: TPropertyGridCollection
+    ): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+        if (parentProperty) {
+            return {
+                rootId: null,
+                model: collection,
+                selectionType: 'all',
+                recursiveSelection: false
+            };
+        } else {
+            return { model: collection };
+        }
+    }
+
+    protected _checkboxClick(event: SyntheticEvent, item: PropertyGridCollectionItem<Model>): void {
+        if (!item.isReadonlyCheckbox()) {
+            const newSelection = this._getSelectionController().toggleItem(item.getContents().getKey());
+            this._changeSelection(newSelection);
+        }
+    }
+
+    private _changeSelection(selection: ISelectionObject): void {
+        const selectionController = this._getSelectionController();
+        const selectionDifference = selectionController.getSelectionDifference(selection);
+
+        if (this._options.selectedKeys === undefined) {
+            this._getSelectionController().setSelection(selection);
+        }
+
+        const selectedDiff = selectionDifference.selectedKeysDifference;
+        if (selectedDiff.added.length || selectedDiff.removed.length) {
+            this._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
+        }
+
+        const excludedDiff = selectionDifference.excludedKeysDifference;
+        if (excludedDiff.added.length || excludedDiff.removed.length) {
+            this._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
+        }
+    }
+
+    private _subscribeOnModelChanged(): void {
+        this._listModel.subscribe('onCollectionChange', this._collectionChangedHandler);
+    }
+
+    private _collectionChangedHandler(
+        event: SyntheticEvent,
+        action: string,
+        newItems: Array<CollectionItem<Model>>,
+        newItemsIndex: number,
+        removedItems: Array<CollectionItem<Model>>
+    ): void {
+        const options = this._options || {};
+        const handleSelection =
+            action === IObservable.ACTION_RESET &&
+            options.selectedKeys &&
+            options.selectedKeys.length &&
+            options.multiSelectVisibility !== 'hidden';
+
+        if (handleSelection) {
+            const selectionController = this._getSelectionController();
+
+            let newSelection;
+            switch (action) {
+                case IObservable.ACTION_REMOVE:
+                    newSelection = selectionController.onCollectionRemove(...removedItems);
+                    break;
+                case IObservable.ACTION_REPLACE:
+                    selectionController.onCollectionReplace(newItems);
+                    break;
+                case IObservable.ACTION_MOVE:
+                    selectionController.onCollectionMove();
+                    break;
+            }
+
+            if (newSelection) {
+                this._changeSelection(newSelection);
+            }
+        }
+    }
+
     validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
@@ -330,6 +487,82 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             });
         }
         return validatorResult;
+    }
+
+    _getRemoveViewCommand(selection: ISelectionObject): RemoveViewCommand {
+        return new RemoveViewCommand({
+            keyProperty: this._listModel.getKeyProperty(),
+            nodeProperty: this._listModel.getNodeProperty(),
+            parentProperty: this._listModel.getParentProperty(),
+            items: this._listModel.getCollection(),
+            selection
+        });
+    }
+
+    _getMoveViewCommand(keys: TKey[], direction: LOCAL_MOVE_POSITION, target?: Model): MoveViewCommand {
+        return new MoveViewCommand({
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty,
+            collection: this._listModel.getCollection(),
+            items: keys,
+            root: null,
+            direction,
+            target,
+            keyProperty: this._listModel.getKeyProperty()
+        });
+    }
+
+    removeItems(selection: ISelectionObject): Promise<void | string> {
+        const resultSelection = {
+            selected: selection.selected || [],
+            excluded: selection.excluded || []
+        };
+        return this._getRemoveViewCommand(resultSelection).execute({});
+    }
+
+    moveItemUp(key: TKey): void {
+        return this._getMoveViewCommand([key], LOCAL_MOVE_POSITION.Before).execute();
+    }
+
+    moveItemDown(key: TKey): void {
+        return this._getMoveViewCommand([key], LOCAL_MOVE_POSITION.After).execute();
+    }
+
+    moveWithDialog(selection: ISelectionObject): Promise<void> {
+        let movedItems = [];
+        let resultTarget = null;
+        const source = new Memory({
+            keyProperty: this._listModel.getKeyProperty(),
+            data: this._listModel.getCollection().getRawData(),
+            filter: (item: Model): boolean => {
+                return !!item.get(this._options.nodeProperty);
+            }
+        });
+        const moveCommand = new MoveCommand({
+            source,
+            selection,
+            parentProperty: this._options.parentProperty,
+            popupOptions: {
+                template: 'Controls/moverDialog:Template',
+                opener: this,
+                templateOptions: {
+                    parentProperty: this._options.parentProperty,
+                    nodeProperty: this._options.nodeProperty,
+                    keyProperty: this._listModel.getKeyProperty(),
+                    columns: [{
+                        displayProperty: 'caption'
+                    }],
+                    source
+                },
+                beforeMoveCallback: (selection: ISelectionObject, target: Model): void => {
+                    movedItems = selection.selected;
+                    resultTarget = target;
+                }
+            }
+        });
+        return moveCommand.execute({}).then(() => {
+            this._getMoveViewCommand(movedItems, LOCAL_MOVE_POSITION.On, resultTarget).execute();
+        });
     }
 
     static defaultProps: Partial<IPropertyGridOptions> = {

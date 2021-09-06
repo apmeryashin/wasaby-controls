@@ -398,6 +398,55 @@ export interface ITreeControlOptions extends IControlOptions {
  */
 
 /**
+ * @name Controls/_tree/interface/ITreeControl#source
+ * @cfg {Types/source:ICrud|Types/source:ICrudPlus} Объект реализующий интерфейс {@link Types/source:ICrud}, необходимый для работы с источником данных.
+ * @remark
+ * Более подробно об источниках данных вы можете почитать {@link /doc/platform/developmentapl/interface-development/data-sources/ здесь}.
+ * @example
+ * В приведённом примере для контрола {@link Controls/list:View} в опцию source передаётся {@link Types/source:HierarchicalMemory} источник.
+ * Контрол получит данные из источника и выведет их.
+ *
+ * <pre class="brush: html">
+ * <!-- WML --> 
+ * <Controls.tree:View
+      source="{{_viewSource}}"
+      parentProperty="parent"
+      nodeProperty="type" />
+ * </pre>
+ *
+ * <pre class="brush: js">
+ * import {HierarchicalMemory} from "Types/source";
+ *
+ * _source: null,
+ * _beforeMount: function() {
+ *     this._source = new HierarchicalMemory({
+ *         keyProperty: 'key',
+ *         parentProperty: 'parent',
+ *         data: [
+ *             {
+ *                 key: '1',
+ *                 title: 'Ярославль',
+ *                 parent: null,
+ *                 '@parent': true,
+ *                 type: true,
+ *                 hasChild: true
+ *             },
+ *             {
+ *                 key: 11, 
+ *                 title: 'Smartphones1', 
+ *                 parent: 1, 
+ *                 type: true, 
+                   rating: '9.2',hasChild: true 
+ *             },
+ *         ]
+ *     });
+ * }
+ * </pre>
+ * @see 
+ * @see Types/source:ICrud
+ */
+
+/**
  * @event Происходит после развертывания узла.
  * @name Controls/_tree/interface/ITreeControl#afterItemExpand
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.

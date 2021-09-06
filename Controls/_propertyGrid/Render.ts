@@ -47,7 +47,9 @@ export default class PropertyGridRender extends Control<IPropertyGridRenderOptio
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridCollectionItem<Model>): void {
-        if (item['[Controls/_display/GroupItem]']) {
+        if (e.target.closest('.js-controls-ListView__checkbox')) {
+            this._notify('checkBoxClick', [item, e]);
+        } else if (item['[Controls/_display/GroupItem]']) {
             this._notify('groupClick', [item, e]);
         } else {
             this._notify('itemClick', [item.getContents(), e]);

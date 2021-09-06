@@ -5,7 +5,6 @@
             template="{{headerTemplate}}"
             date="{{date}}"
             extData="{{extData}}"
-            _options="{{_options}}"
          />
       </ws:if>
    </div>

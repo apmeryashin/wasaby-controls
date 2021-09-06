@@ -3,8 +3,9 @@ import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {goUpByControlTree} from 'UI/Focus';
 import {ILoadingIndicatorOptions, IndicatorOpener} from 'Controls/LoadingIndicator';
-import rk = require('i18n!Controls');
+import * as rk from 'i18n!Controls';
 import * as CoreMerge from 'Core/core-merge';
+import * as cInstance from 'Core/core-instance';
 import {IBaseOpenerOptions} from './BaseOpener';
 
 let ManagerWrapperCreatingPromise; // TODO: Compatible
@@ -123,6 +124,12 @@ export default {
         }
 
         return ManagerWrapperCreatingPromise;
+    },
+
+    isControl(data: unknown): boolean {
+        return cInstance.instanceOfModule(data, 'UI/Base:Control') ||
+               cInstance.instanceOfModule(data, 'Lib/Control/Control:Control') ||
+               cInstance.instanceOfModule(data, 'Lib/Control/CompoundControl/CompoundControl');
     },
 
     getConfig(options: IBaseOpenerOptions, popupOptions: IBaseOpenerOptions): IBaseOpenerOptions {

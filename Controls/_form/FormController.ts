@@ -544,14 +544,14 @@ class FormController extends ControllerBase<IFormController> {
      * Обработка ошибки возникшей при чтении/создании записи.
      * Нужно использовать, если вы каким-либо образом самостоятельно получаете запись и получаете ошибку от сервера.
      * @param {Error} error
-     * @param {Controls/_dataSource/_error/ErrorViewMode} [ErrorViewMode]
+     * @param {Controls.error:ErrorViewMode} [mode]
      * @return {Promise.<CrudResult>}
      */
-    processError(error: Error, ErrorViewMode?: ErrorViewMode): Promise<ICrudResult> {
+    processError(error: Error, mode?: ErrorViewMode): Promise<ICrudResult> {
         return this._errorController.process({
             error,
             theme: this._options.theme,
-            ErrorViewMode: ErrorViewMode || ErrorViewMode.include
+            mode: mode || ErrorViewMode.include
         }).then((errorConfig: ErrorViewConfig) => {
             if (errorConfig) {
                 this._showError(errorConfig);
@@ -568,7 +568,7 @@ class FormController extends ControllerBase<IFormController> {
      * @private
      */
     private _showError(errorConfig: ErrorViewConfig): void {
-        if (errorConfig.ErrorViewMode !== ErrorViewMode.dialog) {
+        if (errorConfig.mode !== ErrorViewMode.dialog) {
             this._error = errorConfig;
             return;
         }
