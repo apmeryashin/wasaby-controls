@@ -7,6 +7,7 @@ import {IStackPopupOptions} from 'Controls/popup';
 import {EventUtils} from 'UI/Events';
 import 'css!Controls/lookup';
 import {Model} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
 
 interface IMultipleLookupInputOptions extends ILookupInputOptions {
@@ -19,6 +20,7 @@ export interface IMultipleInputNewOptions extends IControlOptions {
 
 type TMultipleSelectedKeys = Record<string, TKeysSelection>;
 type TMultipleValue = Record<string, string>;
+type TMultipleItems = Record<string, RecordSet>;
 type TLookupSizes = Record<string, number>;
 
 /**
@@ -43,24 +45,26 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
     protected _suggestTarget: HTMLElement;
     protected _selectedKeys: TMultipleSelectedKeys = {};
     protected _value: TMultipleValue = {};
+    protected _items: TMultipleItems = {};
     protected _lookupSizes: TLookupSizes = {};
     protected _notifyProxy: Function = EventUtils.tmplNotify;
     private _calcSizesAfterDraw: boolean = false;
     protected _children: Record<string, BaseLookupInput>;
 
-    protected _beforeMount({lookupsOptions}: IMultipleInputNewOptions): void {
-        lookupsOptions.forEach(({name, value, selectedKeys}) => {
-            this._selectedKeys[name] = selectedKeys || [];
-            this._value[name] = value || '';
+    protected _beforeMount(options: IMultipleInputNewOptions): void {
+        options.lookupsOptions.forEach(({name, value, selectedKeys, items}) => {
+            this._cloneAndSetStateByOptionValue(selectedKeys || options.selectedKeys, 'selectedKeys', name);
+            this._cloneAndSetStateByOptionValue(value ||  options.value, 'value', name);
+            this._cloneAndSetStateByOptionValue(items ||  options.items, 'items', name);
         });
     }
 
-    _beforeUpdate({lookupsOptions}: IMultipleInputNewOptions): void {
-        lookupsOptions.forEach(({name, selectedKeys}) => {
-            if (!isEqual(selectedKeys, this._getLookupOptions(this._options, name).selectedKeys)) {
-                this._cloneAndSetStateByOptionValue(selectedKeys, 'selectedKeys', name);
-            }
-        });
+    _beforeUpdate(newOptions: IMultipleInputNewOptions): void {
+        if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
+            newOptions.lookupsOptions.forEach(({name, selectedKeys}) => {
+                this._cloneAndSetStateByOptionValue(selectedKeys || newOptions.selectedKeys, 'selectedKeys', name);
+            });
+        }
     }
 
     protected _afterRender(): void {
@@ -93,6 +97,10 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
         this._setStateAndNotifyEventByOptionName(value, 'value', lookupName);
     }
 
+    protected _itemsChanged(event: SyntheticEvent, lookupName: string, items: RecordSet): void {
+        this._setStateAndNotifyEventByOptionName(items, 'items', lookupName);
+    }
+
     protected _getLookupOptions(options: IMultipleInputNewOptions, lookupName: string): IMultipleLookupInputOptions {
         return options.lookupsOptions.find(({name}) => name === lookupName);
     }
@@ -100,7 +108,7 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
     protected _cloneAndSetStateByOptionValue(value: unknown, optionName: string, lookupName: string): void {
         const state = this._getStateNameByOptionName(optionName);
         this[state] = this._cloneObject(this[state]);
-        this[state][lookupName] = value;
+        this[state][lookupName] = (value instanceof Object && value[lookupName]) ? value[lookupName] : value;
     }
 
     protected _getValueFromStateByOptionName(optionName: string, lookupName: string): unknown {
