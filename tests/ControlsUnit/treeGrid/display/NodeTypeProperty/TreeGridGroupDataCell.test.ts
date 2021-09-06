@@ -4,6 +4,8 @@ import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 import {TreeGridGroupDataRow, TreeGridGroupDataCell} from 'Controls/treeGrid';
 
 describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () => {
+    let columnIndex: number;
+    let multiSelectVisibility: string;
 
     const owner = {
         getHoverBackgroundStyle: () => 'default',
@@ -14,9 +16,9 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
         getLeftPadding: () => 'default',
         getRightPadding: () => 'default',
         getEditingConfig: () => null,
-        getColumnIndex: () => 0,
+        getColumnIndex: () => columnIndex,
         getColumnsCount: () => 0,
-        getMultiSelectVisibility: () => 'hidden',
+        getMultiSelectVisibility: () => multiSelectVisibility,
         hasMultiSelectColumn: () => false,
         hasColumnScroll: () => false,
         isDragTargetNode: () => false,
@@ -33,6 +35,11 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
             style: 'default'
         });
     }
+
+    beforeEach(() => {
+        columnIndex = 0;
+        multiSelectVisibility = 'hidden';
+    });
 
     it('getContentClasses should return group cell content classes', () => {
         CssClassesAssert.include(getGroupCell().getContentClasses(), [
@@ -62,11 +69,13 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
     });
 
     it('return default column template when no groupNodeConfig', () => {
+        columnIndex = 3;
         const groupCell = getGroupCell({column: {displayProperty: 'key',  width: '100px'}});
         assert.equal(groupCell.getTemplate(), 'Controls/grid:ColumnTemplate');
     });
 
     it('return group column template when groupNodeConfig', () => {
+        columnIndex = 3;
         const groupCell = getGroupCell({column: {
             displayProperty: 'key',
             width: '100px',
@@ -74,6 +83,18 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
                 textAlign: 'center'
             }
         }});
+        assert.equal(groupCell.getTemplate(), 'Controls/treeGrid:GroupColumnTemplate');
+    });
+
+    it('return group column template when the very first column', () => {
+        const groupCell = getGroupCell({column: {displayProperty: 'key',  width: '100px'}});
+        assert.equal(groupCell.getTemplate(), 'Controls/treeGrid:GroupColumnTemplate');
+    });
+
+    it('return group column template when the very first column and multiselect', () => {
+        multiSelectVisibility = 'visible';
+        columnIndex = 1;
+        const groupCell = getGroupCell({column: {displayProperty: 'key',  width: '100px'}});
         assert.equal(groupCell.getTemplate(), 'Controls/treeGrid:GroupColumnTemplate');
     });
 });
