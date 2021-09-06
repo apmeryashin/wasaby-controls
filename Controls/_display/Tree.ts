@@ -1162,6 +1162,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             changed = it.setHasChildrenByRecordSet(hasChildrenByRecordSet) || changed;
         });
 
+        // Добавляемого элемента нет в рекордсете, поэтому учитываем его отдельно
         if (this.getStrategyInstance(AddStrategy)) {
             const parentOfAddingItem = this._getParentOfAddingItem();
             if (parentOfAddingItem) {
@@ -1335,25 +1336,28 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     setAddingItem(item: T, options: { position: 'top' | 'bottom'; index?: number }): void {
         super.setAddingItem(item, options);
-        const shouldRecountExpander = item.getContents().get(this.getParentProperty()) !== undefined;
-        if (shouldRecountExpander) {
+        if (this._shouldRecountExpanderByAddInPlace()) {
             this._recountHasNodeWithChildren();
             this._recountHasChildrenByRecordSet();
         }
     }
 
     resetAddingItem(): void {
-        const addStrategy = this.getStrategyInstance(AddStrategy) as AddStrategy<S, T>;
-        if (!addStrategy) {
-            return;
-        }
-        const addingItem = addStrategy.getAddingItem();
-        const shouldRecountExpander = addingItem.getContents().get(this.getParentProperty()) !== undefined;
+        const shouldRecountExpander = this._shouldRecountExpanderByAddInPlace();
         super.resetAddingItem();
         if (shouldRecountExpander) {
             this._recountHasNodeWithChildren();
             this._recountHasChildrenByRecordSet();
         }
+    }
+
+    protected _shouldRecountExpanderByAddInPlace(): boolean {
+        const addStrategy = this.getStrategyInstance(AddStrategy) as AddStrategy<S, T>;
+        if (!addStrategy) {
+            return;
+        }
+        const addingItem = addStrategy.getAddingItem();
+        return addingItem.getContents().get(this.getParentProperty()) !== undefined;
     }
 
     protected _getParentOfAddingItem(): T {
