@@ -1476,6 +1476,16 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.ok(!itemsReadyCallbackCalled);
         });
 
+        it('reload return recordset', async () => {
+            const options = await getCorrectBaseControlConfigAsync(getBaseControlOptionsWithEmptyItems());
+            const baseControl = new BaseControl(options);
+            await baseControl._beforeMount(options);
+            baseControl.saveOptions(options);
+            return baseControl.reload().then((rs) => {
+                assert.instanceOf(rs, RecordSet);
+            });
+        });
+
     });
 
     describe('getFooterSpacingClasses', () => {
