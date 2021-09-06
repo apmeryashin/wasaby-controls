@@ -74,7 +74,7 @@ export class ViewModel extends BaseViewModel {
         this._format = FormatBuilder.getFormat(this._options.mask, ViewModel._formatMaskChars, ViewModel._replacer);
 
         const clearResult = Formatter.clearData(this._format, preResult);
-        let result = Formatter.formatData(this._format, {
+        const result = Formatter.formatData(this._format, {
             value: clearResult.value,
             carriagePosition: 0
         }).value;

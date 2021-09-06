@@ -23,7 +23,7 @@ export interface IPhoneOptions extends IControlOptions {
  *
  * @remark
  * Форматы телефонных номеров:
- * 
+ *
  * * Российские мобильные номера, например +7(XXX) XXX-XX-XX[ доб. {остальные цифры}];
  * * Российские мобильные номера в зависимости от кода города, например +7(XXXX) XX-XX-XX[ доб. {остальные цифры}] или +7(XXXXX) X-XX-XX[ доб. {остальные цифры}];
  * * Иностранные номера, например +{иностранный код} {остальные цифры};
@@ -62,10 +62,14 @@ class Phone extends Control<IPhoneOptions> {
         const validPhone = toString(phone.replace(/[^+\d]/g, ''));
         const mask = phoneMask(validPhone);
         const format = FormatBuilder.getFormat(mask, FORMAT_MASK_CHARS, REPLACER);
-        return Formatter.formatData(format, {
+        const data = Formatter.formatData(format, {
             value: validPhone,
             carriagePosition: 0
-        }).value;
+        });
+        if (data) {
+            return data.value;
+        }
+        return ''
     }
 
     static getOptionTypes() {
