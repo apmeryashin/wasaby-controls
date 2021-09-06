@@ -35,6 +35,7 @@
             on:selectionEnded="_dateRangeSelectionEndedHandler()"
     >
         <Controls._compactDatePicker.List
+                isDayAvailable="{{ _options.isDayAvailable }}"
                 rangeModel="{{ _rangeModel }}"
                 displayedRanges="{{ _options.displayedRanges }}"
                 selectionType="{{ _options.selectionType }}"
