@@ -13,6 +13,7 @@
                             constraint="{{_options.constraint}}"
                             maxLength="{{_options.maxLength}}"
                             trim="{{_options.trim}}"
+                            contrastBackground="{{_options.contrastBackground}}"
                             autoComplete="{{_options.autoComplete}}"
                             leftFieldTemplate="{{_options.leftFieldTemplate}}"
                             placeholder="{{_options.placeholder}}"
