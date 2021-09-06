@@ -24,7 +24,7 @@ export default class {
         const executePromise = config.command ? config.command.execute(config) : Promise.resolve();
         return executePromise.then((result) => {
             if (result) {
-                this._options.strategy.remove(config.sourceController.getItems(), config);
+                this._strategy.remove(config.sourceController.getItems(), config);
             }
         });
     }
