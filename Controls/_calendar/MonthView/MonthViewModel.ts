@@ -15,9 +15,12 @@ export default class MonthViewModel extends VersionableMixin {
     _state: object;
     _modelArray: object[] = [];
     _singleDayHover: boolean = true;
+    private _isDayAvailable: Function;
 
     constructor(cfg) {
         super(cfg);
+
+        this._isDayAvailable = cfg.isDayAvailable;
 
         // Нет необходимости каждый раз обовлять стили месяца при наведении,
         // если хавер работает только по одной ячейке дня, а не по нескольким.
@@ -99,7 +102,9 @@ export default class MonthViewModel extends VersionableMixin {
                 (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
                 borderColorClass += '-end';
             }
-            css.push(`${borderColorClass}${borderStylePostfix}`);
+            if (scope.readOnly) {
+                borderColorClass += '-readOnly';
+            }
             css.push(`${borderColorClass}${borderStylePostfix}`);
         } else {
             backgroundColorClass += '-unselected';
@@ -107,6 +112,7 @@ export default class MonthViewModel extends VersionableMixin {
 
         if (scope.readOnly) {
             backgroundColorClass += '-readOnly';
+            textColorClass += '-readOnly';
         }
         backgroundColorClassRangeHovered = backgroundColorClass + '-hovered';
 
@@ -128,47 +134,49 @@ export default class MonthViewModel extends VersionableMixin {
         // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
         // TODO: Выпилить старые классы
         if (scope.isCurrentMonth || scope.mode === 'extended') {
-            if (scope.selectionEnabled) {
-                css.push('controls-MonthViewVDOM__cursor-item');
-            }
-            if (!scope.selected) {
-                let borderStyle;
-                if (scope.selectionEnabled && this._singleDayHover) {
-                    borderStyle = 'controls-MonthView__border-currentMonthDay-unselected';
-                } else if (scope.hovered) {
-                    borderStyle = 'controls-MonthView__border-hover';
+            if (!scope.readOnly) {
+                if (scope.selectionEnabled) {
+                    css.push('controls-MonthViewVDOM__cursor-item');
                 }
-                if (borderStyle) {
-                    borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
-                    css.push(borderStyle);
+                if (!scope.selected) {
+                    let borderStyle;
+                    if (scope.selectionEnabled && this._singleDayHover) {
+                        borderStyle = 'controls-MonthView__border-currentMonthDay-unselected';
+                    } else if (scope.hovered) {
+                        borderStyle = 'controls-MonthView__border-hover';
+                    }
+                    if (borderStyle) {
+                        borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
+                        css.push(borderStyle);
+                    }
                 }
-            }
-            css.push('controls-MonthViewVDOM__selectableItem');
-            if (scope.enabled && scope.selectionEnabled) {
-                css.push('controls-MonthViewVDOM__hover-selectableItem');
-            }
-            if (scope.selected) {
-                css.push('controls-MonthViewVDOM__item-selected');
-            }
+                css.push('controls-MonthViewVDOM__selectableItem');
+                if (scope.enabled && scope.selectionEnabled) {
+                    css.push('controls-MonthViewVDOM__hover-selectableItem');
+                }
+                if (scope.selected) {
+                    css.push('controls-MonthViewVDOM__item-selected');
+                }
 
-            if (scope.selectedUnfinishedStart) {
-                css.push('controls-MonthViewVDOM__item-selectedStart-unfinished');
-            }
-            if (scope.selectedUnfinishedEnd) {
-                css.push('controls-MonthViewVDOM__item-selectedEnd-unfinished');
-            }
-            if (scope.selected) {
-                if (scope.selectedStart && scope.selectedEnd && !scope.selectionProcessing) {
-                    css.push('controls-MonthViewVDOM__item-selectedStartEnd');
-                } else if (scope.selectedStart && !scope.selectedUnfinishedStart) {
-                    css.push('controls-MonthViewVDOM__item-selectedStart');
-                } else if (scope.selectedEnd && (!scope.selectionProcessing ||
-                    (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
-                    css.push('controls-MonthViewVDOM__item-selectedEnd');
+                if (scope.selectedUnfinishedStart) {
+                    css.push('controls-MonthViewVDOM__item-selectedStart-unfinished');
                 }
-            }
-            if (scope.selectedInner) {
-                css.push('controls-MonthViewVDOM__item-selectedInner');
+                if (scope.selectedUnfinishedEnd) {
+                    css.push('controls-MonthViewVDOM__item-selectedEnd-unfinished');
+                }
+                if (scope.selected) {
+                    if (scope.selectedStart && scope.selectedEnd && !scope.selectionProcessing) {
+                        css.push('controls-MonthViewVDOM__item-selectedStartEnd');
+                    } else if (scope.selectedStart && !scope.selectedUnfinishedStart) {
+                        css.push('controls-MonthViewVDOM__item-selectedStart');
+                    } else if (scope.selectedEnd && (!scope.selectionProcessing ||
+                        (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
+                        css.push('controls-MonthViewVDOM__item-selectedEnd');
+                    }
+                }
+                if (scope.selectedInner) {
+                    css.push('controls-MonthViewVDOM__item-selectedInner');
+                }
             }
 
             if (scope.today) {
@@ -221,6 +229,9 @@ export default class MonthViewModel extends VersionableMixin {
             lastDateOfMonth = DateUtil.getEndOfMonth(date);
 
         obj.readOnly = state.readOnly;
+        if (!obj.readOnly && this._isDayAvailable) {
+            obj.readOnly = !this._isDayAvailable(date);
+        }
         obj.mode = state.mode;
         obj.date = date;
         obj.id = formatDate(date, 'YYYY-MM-DD');
