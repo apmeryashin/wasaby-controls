@@ -16,12 +16,11 @@ export default class RenderDemo extends Control {
     protected _selectedKeys: Number[] = [];
 
     protected _beforeMount(): void {
-        this._dataArray = generateData<{id: number, key: number, title: string}>({
+        this._dataArray = generateData<{key: number, title: string}>({
             count: NUMBER_OF_ITEMS,
             entityTemplate: {title: 'string'},
             beforeCreateItemCallback: (item) => {
-                item.title = `Запись с key="${item.id}". `;
-                item.key = item.id;
+                item.title = `Запись с key="${item.key}". `;
             }
         });
         this._viewSource = new Memory({
@@ -32,7 +31,7 @@ export default class RenderDemo extends Control {
 
     protected _dragStart(_: SyntheticEvent, items: number[]): Dnd.ItemsEntity {
         return new Dnd.ItemsEntity({
-            items,
+            items
         });
     }
 
