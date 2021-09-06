@@ -161,7 +161,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     }
 
     hasHeader(): boolean {
-        return !!this.getHeader();
+        return !!this._$headerModel;
     }
 
     getEmptyGridRow(): EmptyRow<S> {
