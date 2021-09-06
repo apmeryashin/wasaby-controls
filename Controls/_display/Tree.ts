@@ -1272,6 +1272,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
         }
 
+        // Добавляемого элемента нет в рекордсете, поэтому учитываем его отдельно
         if (this.getStrategyInstance(AddStrategy) && !hasNodeWithChildren) {
             const parentOfAddingItem = this._getParentOfAddingItem();
             hasNodeWithChildren = parentOfAddingItem && !parentOfAddingItem.isRoot();
