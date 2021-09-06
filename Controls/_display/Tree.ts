@@ -1375,7 +1375,7 @@ Object.assign(Tree.prototype, {
     _$expanderTemplate: null,
     _$expanderPosition: 'default',
     _$expanderVisibility: 'visible',
-    _$expanderSize: 'default',
+    _$expanderSize: undefined,
     _$expanderIcon: undefined,
     _$root: undefined,
     _$rootEnumerable: false,

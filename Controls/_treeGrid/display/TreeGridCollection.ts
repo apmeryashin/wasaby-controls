@@ -363,7 +363,9 @@ export default class TreeGridCollection<
     }
 
     protected _initializeHeader(options: ITreeGridOptions): void {
-        options.expanderSize = this.getExpanderSize();
+        if (this.getExpanderSize()) {
+            options.expanderSize = this.getExpanderSize();
+        }
         options.displayExpanderPadding = this._displayExpanderPadding;
         super._initializeHeader(options);
     }
