@@ -8,7 +8,9 @@
             <td class="{{ column.getContentClasses(backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
                  attr:key="{{item.key}}_column_{{index}}"
                  attr:colspan="{{ column.getColspan(colspan) }}">
-                <ws:if data="{{ item.shouldDisplayContent(column) }}">
+                <div class="{{ column.getRelativeCellWrapperClasses() }}"
+                     style="{{ column.getRelativeCellWrapperStyles() }}">
+                    <ws:if data="{{ item.shouldDisplayContent(column) }}">
                     <!-- Отступы для выравнивания с экспандером -->
                     <ws:if data="{{item.shouldDisplayExpanderBlock(column)}}">
                         <ws:if data="{{!withoutLevelPadding && item.getLevel() > 1}}">
@@ -35,6 +37,7 @@
                                     linkClass="controls-TreeGrid__nodeFooterLoadMore"/>
                     </ws:else>
                 </ws:if>
+                </div>
             </td>
         </ws:for>
     </tr>
