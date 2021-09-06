@@ -47,7 +47,7 @@ var ViewModel = BaseViewModel.extend({
         return Formatter.formatData(this._format, {
             value: stringValue,
             carriagePosition: 0
-        }).value;
+        })?.value || '';
     },
 
     handleInput: function (splitValue, inputType) {
