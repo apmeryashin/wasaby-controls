@@ -10,7 +10,7 @@ import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
-import {Move as MoveCommand} from 'Controls/listActions';
+import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
 import {
     PROPERTY_GROUP_FIELD,
