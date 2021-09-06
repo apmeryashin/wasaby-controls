@@ -11,7 +11,7 @@ export default class extends Control {
    protected _columns: IColumn[] = Gadgets.getColumns();
    protected _root: string | number | null = 121;
 
-   protected _backButtonFontSize: string = 'm';
+   protected _backButtonFontSize: string = 's';
    protected _fontSizes: RecordSet = new RecordSet({
       keyProperty: 'id',
       rawData: [
@@ -28,32 +28,8 @@ export default class extends Control {
             title: 'l'
          },
          {
-            id: 'xl',
-            title: 'xl'
-         },
-         {
-            id: '2xl',
-            title: '2xl'
-         },
-         {
-            id: '3xl',
-            title: '3xl'
-         },
-         {
-            id: '4xl',
-            title: '4xl'
-         },
-         {
             id: '5xl',
             title: '5xl'
-         },
-         {
-            id: '6xl',
-            title: '6xl'
-         },
-         {
-            id: '7xl',
-            title: '7xl'
          }
       ]
    });
