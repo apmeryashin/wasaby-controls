@@ -3534,12 +3534,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         // если элементов не хватает на всю страницу, то сразу же показываем ромашки и триггеры, чтобы догрузить данные
         if (this._viewSize < this._viewportSize) {
-            // В первую очередь показываем нижний индикатор, но если данных вниз нет,
-            // то показываем верхний индикатор с триггером при наличч еще данных.
+            // В первую очередь показываем нижний индикатор(он покажется в _beforeMount), но если данных вниз нет,
+            // то показываем верхний индикатор с триггером при наличии еще данных.
             // Сделано так, чтобы не было сразу загрузки в обе стороны.
-            if (this._indicatorsController.shouldDisplayBottomIndicator()) {
-                this._indicatorsController.displayBottomIndicator();
-            } else if (this._indicatorsController.shouldDisplayTopIndicator()) {
+            // Верхний индикатор нельзя показать в _beforeMount, т.к. мы не знаем хватит ли элементов на всю страницу
+            // и при показе верхнего индикатора нужно добавить отступ от триггера.
+            if (
+                !this._indicatorsController.shouldDisplayBottomIndicator() &&
+                this._indicatorsController.shouldDisplayTopIndicator()
+            ) {
                 // скроллить не нужно, т.к. не куда, ведь элементы не занимают весь вьюПорт
                 this._indicatorsController.displayTopIndicator(false);
             }
