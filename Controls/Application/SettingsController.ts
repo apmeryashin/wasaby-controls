@@ -12,6 +12,10 @@ export function setController(controller: IPopupSettingsController): void {
     settingsController = controller;
 }
 
+export function hasSettingsController(): boolean {
+    return !!settingsController;
+}
+
 export function getSettings(ids: string[]): Promise<unknown> {
     if (settingsController && settingsController.getSettings) {
         const settings = settingsController.getSettings(ids);

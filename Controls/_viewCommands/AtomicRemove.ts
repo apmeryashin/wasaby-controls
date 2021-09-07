@@ -10,7 +10,7 @@ export default class AtomicRemove extends Remove {
     execute(meta: Partial<IOptions>): Promise<string | void> {
         const config = {...this._options, ...meta};
 
-        this._options.strategy.remove(config.sourceController.getItems(), config);
+        this._strategy.remove(this._options.items || config.sourceController.getItems(), config);
         return config.command ? config.command.execute(config) : Promise.resolve();
     }
 }

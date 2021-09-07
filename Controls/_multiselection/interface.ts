@@ -100,7 +100,6 @@ export interface ISelectionControllerOptions {
 export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOptions {
    selectAncestors: boolean;
    selectDescendants: boolean;
-   hierarchyRelation: relation.Hierarchy;
    rootId: CrudEntityKey;
    entryPath: IEntryPathItem[];
    selectionType: 'node'|'leaf'|'all';

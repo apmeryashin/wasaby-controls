@@ -46,6 +46,7 @@ const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
+const REBUILD_ITEM_PROPERTIES = ['expanded', 'contents'];
 
 /**
  *
@@ -2205,8 +2206,8 @@ export default class Collection<
     notifyItemChange(item: T, properties?: object): void {
         const isFiltered = this._isFiltered();
         const isGrouped = this._isGrouped();
-
-        if (isFiltered || isGrouped) {
+        const shouldRebuild = REBUILD_ITEM_PROPERTIES.indexOf(properties as unknown as string) !== -1;
+        if ((isFiltered || isGrouped) && shouldRebuild) {
             const session = this._startUpdateSession();
 
             const rebuild = this._handleNotifyItemChangeRebuild(item, properties);
@@ -3164,9 +3165,9 @@ export default class Collection<
 
     protected _notifyCollectionChange(
         action: string,
-        newItems: T[],
+        newItems: ISessionItems<T>,
         newItemsIndex: number,
-        oldItems: T[],
+        oldItems: ISessionItems<T>,
         oldItemsIndex: number,
         reason?: string
     ): void {
@@ -3192,12 +3193,16 @@ export default class Collection<
         // Split by groups and notify
         const notify = (start, finish) => {
             if (start < finish) {
+                const newItemsCopy: ISessionItems<T> = newItems.slice(start, finish);
+                newItemsCopy.properties = newItems.properties;
+                const oldItemsCopy: ISessionItems<T> = oldItems.slice(start, finish);
+                oldItemsCopy.properties = oldItems.properties;
                 this._notifyLater(
                     'onCollectionChange',
                     action,
-                    newItems.slice(start, finish),
+                    newItemsCopy,
                     newItems.length ? newItemsIndex + start : 0,
-                    oldItems.slice(start, finish),
+                    oldItemsCopy,
                     oldItems.length ? oldItemsIndex + start : 0,
                     reason
                 );

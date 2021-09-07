@@ -227,7 +227,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _markerForRestoredScroll: TKey;
     private _resetScrollAfterViewModeChange: boolean = false;
     private _isMounted: boolean = false;
-    private _restoredMarkedKeys: IMarkedKeysStore;
+    private _restoredMarkedKeys: IMarkedKeysStore = {};
     private _potentialMarkedKey: TKey;
     private _newItemPadding: IItemPadding;
     private _newItemActionsPosition: string;
@@ -830,7 +830,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         navigation: INavigationOptionValue<INavigationPageSourceConfig>
     ): void {
 
-        const store = this._restoredMarkedKeys || {} as IMarkedKeysStore;
+        const store = this._restoredMarkedKeys;
 
         if (!store[root]) {
             store[root] = {markedKey: null};
@@ -1156,7 +1156,8 @@ export default class Explorer extends Control<IExplorerOptions> {
             // проставится setViewMode, т.к. он может проставится асинхронно
             // а код ниже вызывает изменение версии модели что приводит к лишней
             // перерисовке до изменения viewMode
-            if (cfg.searchNavigationMode !== 'expand') {
+            const isAllExpanded = cfg.expandedItems && cfg.expandedItems[0] === null;
+            if (cfg.searchNavigationMode !== 'expand' && !isAllExpanded) {
                 this._children.treeControl.resetExpandedItems();
             }
         });

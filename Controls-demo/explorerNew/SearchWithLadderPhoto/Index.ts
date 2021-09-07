@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/explorerNew/SearchWithLadderPhoto/SearchWithLadderPhoto';
 import {Gadgets} from '../DataHelpers/DataCatalog';
-import {HierarchicalMemory, Memory} from 'Types/source';
+import {HierarchicalMemory} from 'Types/source';
 import {IItemAction} from 'Controls/itemActions';
 import {IRemovableList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
@@ -13,9 +13,6 @@ export default class extends Control {
     protected _columns: IColumn[] = Gadgets.getSearchColumnsWithLadderPhoto();
     protected _root: TRoot = null;
     protected _searchStartingWith: string = 'root';
-    protected _searchStartingWithSource: Memory = null;
-    // tslint:disable-next-line
-    protected _filter: object = {demo: 123};
     protected _ladderProperties: string[] = ['image'];
 
     protected _itemActions: IItemAction[] = [
@@ -40,18 +37,8 @@ export default class extends Control {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             parentProperty: 'parent',
-            data: Gadgets.getSearchData()
-        });
-        this._searchStartingWithSource = new Memory({
-            keyProperty: 'id',
-            data: [
-                {
-                    id: 'root', title: 'root'
-                },
-                {
-                    id: 'current', title: 'current'
-                }
-            ]
+            data: Gadgets.getSearchData(),
+            filter: () => true
         });
     }
 

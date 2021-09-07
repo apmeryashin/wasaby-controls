@@ -74,13 +74,19 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         }
     }
 
-    protected _beforeMenuOpen(): object | void {
-        if (this._operationsController.getOperationsPanelVisible()) {
+    protected _beforeMenuOpen(e: SyntheticEvent, item: Model): object | void {
+        if (this._operationsController.getOperationsPanelVisible() && !item) {
             return {
                 templateOptions: {
                     backgroundStyle: 'secondary',
                     hoverBackgroundStyle: 'secondary',
                     itemTemplateProperty: 'itemTemplate'
+                }
+            };
+        } else {
+            return {
+                popupOptions: {
+                    closeOnOutsideClick: true
                 }
             };
         }
@@ -170,7 +176,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     }
 
     protected _toolbarMenuOpened(): void {
-        this._operationsController.setOperationsMenuVisible(true);
+        if (this._operationsController.getOperationsPanelVisible()) {
+            this._operationsController.setOperationsMenuVisible(true);
+        }
     }
 
     protected _toolbarMenuClosed(): void {

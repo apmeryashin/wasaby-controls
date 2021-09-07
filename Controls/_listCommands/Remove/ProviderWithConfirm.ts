@@ -1,4 +1,4 @@
-import RemoveProvider from 'Controls/_listActions/Remove/Provider';
+import RemoveProvider from 'Controls/_listCommands/Remove/Provider';
 
 /**
  * Провайдер "удаления записей". Удаляет элементы из источника данных c подтверждением удаления.

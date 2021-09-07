@@ -1,14 +1,3 @@
-<ws:template name="day">
-    <ws:partial template="Controls/calendar:MonthViewDayTemplate"
-                attr:date="{{ day }}"
-                attr:class="{{ firstDayOfMonth || dayOfWeek === 0  ? 'controls-CompactDatePicker__month-list__item-edge-start' }}
-                    {{ lastDayOfMonth || dayOfWeek === 6 ? 'controls-CompactDatePicker__month-list__item-edge-end' }}"
-                sizeStyle="CompactDatePickerItem"
-                fontColorStyle="CompactDatePickerItem"
-                borderStyle="CompactDatePickerItem"
-                backgroundStyle="CompactDatePickerItem">
-    </ws:partial>
-</ws:template>
 <Controls.calendar:MonthList class="controls-CompactDatePicker__month-list"
                              viewMode="month"
                              hoveredStartValue="{{ null }}"
@@ -29,6 +18,7 @@
         <ws:bodyTemplate>
             <Controls.calendar:MonthView
                     monthViewModel="{{ _monthViewModel }}"
+                    isDayAvailable="{{ _options.isDayAvailable }}"
                     attr:class="controls-CompactDatePicker__month-list__item"
                     ranges="{{_options.ranges}}"
                     showWeekdays="{{false}}"
@@ -42,7 +32,6 @@
                     selectionProcessing="{{_options.selectionProcessing}}"
                     on:selectionProcessingChanged="_proxyEvent()"
                     selectionBaseValue="{{_options.selectionBaseValue}}"
-                    selectionHoveredValue="{{_options.selectionHoveredValue}}"
 
                     hoveredStartValue="{{ null }}"
                     hoveredEndValue="{{ null }}"
@@ -56,31 +45,13 @@
                     on:itemKeyDown="_proxyEvent()"
             >
                 <ws:dayTemplate>
-                    <ws:if data="{{dayTemplate.value.today && dayTemplate.value.isCurrentMonth}}">
-                        <Controls.scroll:IntersectionObserverContainer
-                                on:intersect="_currentDayIntersectHandler()"
-                                on:intersectionObserverUnregister="_unregisterCurrentDayIntersectHandler()"
-                                threshold="{{[0, 0.01, 0.99, 1]}}">
-                            <!--в IE котнейнеры с дисплеем flex неправильно расчитывают положение детей если задана минимальная высота-->
-                            <!--display: flex на родителе пофиксит проблему-->
-                            <div class="ws-flexbox">
-                                <ws:partial template="day"
-                                            day="{{ dayTemplate.value.day }}"
-                                            dayOfWeek="{{ dayTemplate.value.dayOfWeek }}"
-                                            firstDayOfMonth="{{ dayTemplate.value.firstDayOfMonth }}"
-                                            lastDayOfMonth="{{ dayTemplate.value.lastDayOfMonth }}"
-                                />
-                            </div>
-                        </Controls.scroll:IntersectionObserverContainer>
-                    </ws:if>
-                    <ws:else>
-                        <ws:partial template="day"
-                                    day="{{ dayTemplate.value.day }}"
-                                    dayOfWeek="{{ dayTemplate.value.dayOfWeek }}"
-                                    firstDayOfMonth="{{ dayTemplate.value.firstDayOfMonth }}"
-                                    lastDayOfMonth="{{ dayTemplate.value.lastDayOfMonth }}"
-                        />
-                    </ws:else>
+                    <ws:partial
+                        template="{{ _dayTemplate }}"
+                        defaultDayTemplate="{{ _defaultDayTemplate }}"
+                        value="{{ dayTemplate.value }}"
+                        currentDayIntersectHandler="{{ _currentDayIntersectHandler }}"
+                        unregisterCurrentDayIntersectHandler="{{ _unregisterCurrentDayIntersectHandler }}"
+                    />
                 </ws:dayTemplate>
             </Controls.calendar:MonthView>
         </ws:bodyTemplate>

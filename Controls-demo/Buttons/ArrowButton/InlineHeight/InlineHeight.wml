@@ -1,5 +1,14 @@
 <div class="controlsDemo__flexColumn controlsDemo__ml2">
     <div class="controlsDemo__cell">
+        <div class="controls-text-label controlsDemo__maxWidth200">inlineHeight='default'</div>
+        <div class="controlDemo__input-row">
+            <Controls.buttons:ArrowButton direction="left"/>
+            <Controls.buttons:ArrowButton direction="right"/>
+            <Controls.buttons:ArrowButton direction="up"/>
+            <Controls.buttons:ArrowButton direction="down"/>
+        </div>
+    </div>
+    <div class="controlsDemo__cell">
         <div class="controls-text-label controlsDemo__maxWidth200">inlineHeight='s'</div>
         <div class="controlDemo__input-row">
             <Controls.buttons:ArrowButton direction="left" inlineHeight="s"/>

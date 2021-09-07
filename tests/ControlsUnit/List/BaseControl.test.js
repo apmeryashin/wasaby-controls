@@ -6297,7 +6297,7 @@ define([
          it('moveItemUp() should call moveAction', () => {
             return baseControl.moveItemUp(2).then((providerName) => {
                sinon.assert.called(spyMove);
-               assert.equal(providerName, 'Controls/listActions:MoveProviderDirection');
+               assert.equal(providerName, 'Controls/listCommands:MoveProviderDirection');
             });
          });
 
@@ -6305,7 +6305,7 @@ define([
          it('moveItemDown() should call moveAction', () => {
             return baseControl.moveItemDown(2).then((providerName) => {
                sinon.assert.called(spyMove);
-               assert.equal(providerName, 'Controls/listActions:MoveProviderDirection');
+               assert.equal(providerName, 'Controls/listCommands:MoveProviderDirection');
             });
          });
 
@@ -6317,7 +6317,7 @@ define([
             };
             return baseControl.moveItems(selectionObject, 3, 'on').then((providerName) => {
                sinon.assert.called(spyMove);
-               assert.equal(providerName, 'Controls/listActions:MoveProvider');
+               assert.equal(providerName, 'Controls/listCommands:MoveProvider');
             });
          });
 

@@ -390,7 +390,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
         if (expanderPosition === 'default') {
             expanderClasses += ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')} `;
-        } else {
+        } else if (expanderPosition === 'right') {
             expanderClasses += ' controls-TreeGrid__row_expander_position_right';
         }
 
@@ -404,7 +404,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         if (appliedIcon) {
             expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
         } else {
-            let icon = expanderIcon || (this.isNode() ? 'node' : 'hiddenNode');
+            const icon = expanderIcon || (this.isNode() ? 'node' : 'hiddenNode');
             expanderIconClass = ` controls-TreeGrid__row-expander_${icon}_${iconStyle}`;
         }
 
