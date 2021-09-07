@@ -231,7 +231,7 @@ export default class IndicatorsController {
                 // после перезагрузки скрываем глобальный индикатор
                 this.hideGlobalIndicator();
                 break;
-     ]   }
+        }
 
         return changedResetTrigger;
     }
