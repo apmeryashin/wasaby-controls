@@ -46,7 +46,6 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
 import {IoC} from 'Env/Env';
-import {IFieldOptions} from "Controls/_input/resources/Field";
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
