@@ -4908,7 +4908,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // Если есть источник и сверху не пришел добавляемый итем, то выполним запрос на создание новой записи
             if (sourceController && !(addedItem instanceof Model)) {
                 return sourceController
-                    .create()
+                    .create(!this._isMounted ? params.options.filter : undefined)
                     .then((item) => {
                         if (item instanceof Model) {
                             return {item};
@@ -5121,7 +5121,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (editingConfig.autoAddOnInit && !!this._sourceController && !hasItems) {
             this._createEditInPlaceController(options);
-            return this._beginAdd({}, { addPosition: editingConfig.addPosition });
+            return this._beginAdd({ filter: options.filter }, { addPosition: editingConfig.addPosition });
         } else if (editingConfig.item) {
             this._createEditInPlaceController(options);
             if (this._items && this._items.getRecordById(editingConfig.item.getKey())) {
