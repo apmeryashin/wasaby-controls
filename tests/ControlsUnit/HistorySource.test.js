@@ -273,6 +273,50 @@ define(
                   });
                });
             });
+            it('query with parent', function() {
+               let itemsWithChildren = items.slice();
+               itemsWithChildren.push(
+                  {
+                     id: 'children_1',
+                     title: 'Запись 8',
+                     parent: '1',
+                     '@parent': false
+                  },
+                  {
+                     id: 'children_2',
+                     title: 'Запись 8',
+                     parent: '1',
+                     '@parent': false
+                  }
+               );
+               let hSourceWithChildren = new historyMod.Source({
+                  ...config,
+                  originSource: new sourceLib.Memory({
+                     keyProperty: 'id',
+                     data: itemsWithChildren
+                  })
+               });
+               let query = new sourceLib.Query().where({
+                  $_history: true
+               });
+               let historyDef = hSourceWithChildren.query(query);
+
+               return historyDef.addCallback(function(data) {
+                  let records = data.getAll();
+                  assert.equal(records.getCount(), 10);
+
+                  query = new sourceLib.Query().where({
+                     $_history: true,
+                     parent: '1'
+                  });
+                  historyDef = hSourceWithChildren.query(query);
+                  historyDef.addCallback(function(data) {
+                     records = data.getAll();
+                     assert.equal(records.getCount(), 12);
+                  });
+               });
+            });
+
             it('getItemsWithHistory', function() {
                let newHistoryItem = new entity.Model({
                   rawData: {
