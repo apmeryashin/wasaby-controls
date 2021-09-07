@@ -4,7 +4,7 @@ import {INavigationButtonConfig, TNavigationButtonView} from 'Controls/interface
  * Шаблон подвала узлов
  * @interface Controls/_tree/interface/INodeFooterTemplate
  * @public
- * @autor Панихин К.А.
+ * @author Панихин К.А.
  */
 export interface INodeFooterTemplate {
     /**

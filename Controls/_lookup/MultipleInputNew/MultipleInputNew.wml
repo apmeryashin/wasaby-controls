@@ -6,7 +6,7 @@
                                        on:valueChanged="_valueChanged(lookupOptions.name)"
                                        on:itemClick="_proxyEvent('itemClick', lookupOptions.name)"
                                        on:choose="_proxyEvent('choose', lookupOptions.name)"
-                                       on:itemsChanged="_proxyEvent('itemsChanged', lookupOptions.name)"
+                                       on:itemsChanged="_itemsChanged(lookupOptions.name)"
                                        on:showSelector="_showSelector(lookupOptions.name)"
                                        on:toolbarItemClick="_proxyEvent('toolbarItemClick', lookupOptions.name)"
                                        on:textValueChanged="_proxyEvent('textValueChanged', lookupOptions.name)"

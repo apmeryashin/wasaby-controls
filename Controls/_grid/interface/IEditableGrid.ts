@@ -166,7 +166,7 @@ type TEditingMode = 'row' | 'cell';
  * @interface Controls/_grid/interface/IGridEditingConfig
  * @implements Controls/list:IEditingConfig
  * @public
- * @autor Авраменко А.C.
+ * @author Авраменко А.C.
  */
 export interface IGridEditingConfig {
     autoAddOnInit?: boolean;

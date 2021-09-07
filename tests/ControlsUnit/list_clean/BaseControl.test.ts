@@ -30,7 +30,7 @@ function getBaseControlOptionsWithEmptyItems(): object {
     };
 }
 
-export function getCorrectBaseControlConfig(options): object {
+export function getCorrectBaseControlConfig(options: Partial<IBaseControlOptions>): IBaseControlOptions {
     let sourceController;
     const cfg = {
         viewName: 'Controls/List/ListView',
@@ -1504,6 +1504,16 @@ describe('Controls/list_clean/BaseControl', () => {
             itemsReadyCallbackCalled = false;
             await baseControl.reload();
             assert.ok(!itemsReadyCallbackCalled);
+        });
+
+        it('reload return recordset', async () => {
+            const options = await getCorrectBaseControlConfigAsync(getBaseControlOptionsWithEmptyItems());
+            const baseControl = new BaseControl(options);
+            await baseControl._beforeMount(options);
+            baseControl.saveOptions(options);
+            return baseControl.reload().then((rs) => {
+                assert.instanceOf(rs, RecordSet);
+            });
         });
 
     });

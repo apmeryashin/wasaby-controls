@@ -99,6 +99,7 @@
 .controls-MonthView__item-border-start-end_style-CompactDatePickerItem::before,
 .controls-MonthView__item-border-start_style-CompactDatePickerItem::before,
 .controls-MonthView__item-border-end_style-CompactDatePickerItem::before {
+   font-weight: bold;
    content: attr(date);
    position: absolute;
    top: calc(-1 * var(--border-thickness));
@@ -142,4 +143,10 @@
 .controls-MonthView__border-currentMonthDay-unselected_style-CompactDatePickerItem:hover {
    border: 1px solid var(--calendar_item_hover_border-color_compactDatePicker);
    border-radius: 50%;
+}
+
+.controls-MonthView__textColor-currentMonthDay-today-readOnly_style-CompactDatePickerItem,
+.controls-MonthView__textColor-currentMonthDay-weekend-readOnly_style-CompactDatePickerItem,
+.controls-MonthView__textColor-currentMonthDay-workday-readOnly_style-CompactDatePickerItem {
+   color: var(--readonly_color);
 }

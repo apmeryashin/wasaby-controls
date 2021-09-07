@@ -102,6 +102,11 @@ export default class extends Control {
                 })
             }
         ];
+        this._selectedKeys = {
+            company: [0],
+            contractor: [1],
+            employee: [0]
+        };
     }
 
     protected _selectedKeysChanged(event, value): void {

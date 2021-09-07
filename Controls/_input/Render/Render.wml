@@ -26,7 +26,8 @@
                   on:focusin="_setContentActive(true)"
                   on:focusout="_setContentActive(false)"
                   attr:data-qa="controls-Render__field"
-                  attr:class="controls-Render__field controls-Render__field_textAlign_{{_options.textAlign}}">
+                  attr:class="controls-Render__field controls-Render__field_textAlign_{{_options.textAlign}}
+                                                            {{_options.minLines > 1 ? 'controls-Render__fullHeight'}}">
          <ws:placeholderTemplate>
             <ws:if data="{{_options.placeholder}}">
                <div class="controls-Render__placeholder

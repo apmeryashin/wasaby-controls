@@ -178,7 +178,7 @@ export interface IEditableList {
  *
  * @interface Controls/_list/interface/IEditingConfig
  * @public
- * @autor Авраменко А.C.
+ * @author Авраменко А.C.
  */
 export interface IEditingConfig {
     /**
@@ -298,7 +298,7 @@ type TAddPosition = 'top' | 'bottom';
  *
  * @interface Controls/_list/interface/IItemAddOptions
  * @public
- * @autor Авраменко А.C.
+ * @author Авраменко А.C.
  */
 export interface IItemAddOptions {
     /**
@@ -330,7 +330,7 @@ export interface IItemAddOptions {
  *
  * @interface Controls/_list/interface/IItemEditOptions
  * @public
- * @autor Авраменко А.C.
+ * @author Авраменко А.C.
  */
 export interface IItemEditOptions {
     /**
