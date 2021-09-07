@@ -2,16 +2,21 @@
    <span attr:class="ws-flex-shrink-0 controls-icon controls-rating__star {{icon}}
          {{'controls-rating__star_padding-' + _options.iconPadding}}
          {{'controls-icon_size-' + _options.iconSize}}
-         {{'controls-icon_style-' + iconStyle}}"
-         on:click="_clickStar()"></span>
+         {{'controls-icon_style-' + iconStyle}}"></span>
 </ws:template>
-<div class="controls-rating ws-flexbox controls-rating-{{_options.readOnly? 'read-only' : 'active'}} controls_progress_theme-{{ _options.theme }}">
-   <ws:for data="item in _stars">
+
+
+<ws:template name="stars">
+   <ws:for data="item in model.getItems()">
       <ws:partial template="star"
-                  attr:id="{{item.id + '_' + item.type}}"
                   icon="{{item.icon}}"
                   iconStyle="{{item.iconStyle}}"
-                  on:mouseover="_onHoverStar()"
-                  on:mouseout="_onHoverOutStar()"/>
+                  on:mouseover="_onHoverStar(item.index)"
+                  on:mouseout="_onHoverOutStar()"
+                  on:click="_clickStar(item.index)"/>
    </ws:for>
+</ws:template>
+
+<div class="controls-rating ws-flexbox controls-rating-{{_options.readOnly? 'read-only' : 'active'}} controls_progress_theme-{{ _options.theme }}">
+   <ws:partial template="stars" model="{{_viewModel}}"></ws:partial>
 </div>
