@@ -166,6 +166,23 @@ class DimensionsMeasurer {
     }
 
     /**
+     * Получение значения зума для html элемента с учетом того, что zoom может лежать не на одном родительском элементе
+     * @param element
+     */
+    getZoomValue(element: HTMLElement = document?.body): number {
+        let zoomValue = DEFAULT_ZOOM_VALUE;
+        let zoomElement = element.closest(`.${ZOOM_CLASS}`);
+        while (zoomElement) {
+            const parentZoomValue = window?.getComputedStyle(zoomElement)?.zoom;
+            if (parentZoomValue) {
+                zoomValue *= parseFloat(parentZoomValue);
+            }
+            zoomElement = zoomElement?.parentElement?.closest(`.${ZOOM_CLASS}`);
+        }
+        return zoomValue;
+    }
+
+    /**
      * Скалирует необходимые поля размеров и координат элемента относительно зума
      * @private
      */
@@ -288,24 +305,6 @@ class DimensionsMeasurer {
     protected _needScaleByZoom(element: HTMLElement, zoomValue: number, scaleToBodyZoom: boolean): boolean {
         return scaleToBodyZoom || zoomValue !== DEFAULT_ZOOM_VALUE &&
             (element === document.documentElement || !element.closest('body'));
-    }
-
-    /**
-     * Получение значения зума для html элемента с учетом того, что zoom может лежать не на одном родительском элементе
-     * @param element
-     * @protected
-     */
-    protected _getZoomValue(element: HTMLElement = document?.body): number {
-        let zoomValue = 1;
-        let zoomElement = element.closest(`.${ZOOM_CLASS}`);
-        while (zoomElement) {
-            const parentZoomValue = window?.getComputedStyle(zoomElement)?.zoom;
-            if (parentZoomValue) {
-                zoomValue *= parseFloat(parentZoomValue);
-            }
-            zoomElement = zoomElement?.parentElement?.closest(`.${ZOOM_CLASS}`);
-        }
-        return zoomValue;
     }
 
     /**

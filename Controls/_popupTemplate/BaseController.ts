@@ -314,7 +314,8 @@ abstract class BaseController implements IPopupController {
                 bottom: y + size,
                 right: x + size,
                 topScroll: 0,
-                leftScroll: 0
+                leftScroll: 0,
+                zoom: DimensionsMeasurer.getZoomValue(item.popupOptions.nativeEvent.target)
             };
         }
 
