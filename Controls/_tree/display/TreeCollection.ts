@@ -45,7 +45,8 @@ export default class TreeCollection<
         super(options);
         this._setupProjectionFilters();
         this.appendStrategy(itemsStrategy.NodeFooter, {
-            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback
+            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
+            itemModule: 'Controls/tree:TreeNodeFooterItem'
         });
     }
 
