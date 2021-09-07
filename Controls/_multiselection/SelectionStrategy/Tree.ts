@@ -583,15 +583,18 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          }
       }
 
+      const nodeKey = this._getKey(node);
       if (countChildrenInList && countChildrenInList === children.getCount() && node && node['[Controls/_display/BreadcrumbsItem]']) {
          stateNode = !initialState;
       } else if (countChildrenInList > 0) {
          stateNode = null;
       } else if (this._entryPath) {
-         const nodeKey = this._getKey(node);
          if (this._childFromEntryPathIsSelected(nodeKey, selection.selected)) {
             stateNode = null;
          }
+      } else if (selection.selected.includes(nodeKey) && selection.excluded.includes(nodeKey)) {
+         // если ключ узла в excluded, то это значит что он выбран не полностью и чекбокс нужно закрасить квадратиком
+         stateNode = null;
       }
 
       return stateNode;
