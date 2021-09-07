@@ -99,7 +99,6 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     protected _$historyItems: RecordSet = null;
     protected _$pinned: Array<string | number> = null;
     protected _$recentCount: number = null;
-    protected _$appendChildrenToItems: boolean = false;
 
     constructor(options: IHistorySourceOptions) {
         super(options);
@@ -632,9 +631,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                 if (!isCancelled && data[1] && !this._isError(data[1])) {
                     // PrefetchProxy returns RecordSet
                     const loadedItems = data[1].getAll ? data[1].getAll() : data[1];
-                    // TODO Remove _$appendChildrenToItems
-                    //  https://online.sbis.ru/opendoc.html?guid=10b64e28-1ae1-4541-bd32-4e2173d83a37
-                    if (where[this._$parentProperty] && this._$appendChildrenToItems) {
+                    if (where[this._$parentProperty]) {
                         this._$oldItems.append(loadedItems);
                     } else {
                         this._$oldItems = loadedItems;
