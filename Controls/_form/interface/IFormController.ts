@@ -228,6 +228,7 @@ export default interface IFormController extends IControllerBase {
  * @name Controls/form:IFormController#requestCustomUpdate
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} record Редактируемая запись.
+ * @param {Controls/form:IControllerBase/UpdateConfig.typedef} updateConfig Конфиг переданный в метод {@link Controls/form:IFormController#update}.
  * @remark
  * В обработчике события можно отменить  базовую логику сохранения (вернуть true) или отложить ее для выполнения пользовательских действий перед сохранением (вернуть Promise<boolean>).
  * Используется, например, для асинхронной валидации или пользовательского сохранения записи.

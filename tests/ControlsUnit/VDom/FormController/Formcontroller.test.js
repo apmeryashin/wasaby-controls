@@ -562,11 +562,12 @@ define([
       it('requestCustomUpdate isNewRecord', (done) => {
          let FC = new form.Controller();
          const sandbox = sinon.createSandbox();
+         const updateCfg = {};
          FC._isNewRecord = true;
          sandbox.stub(FC, '_notify').returns(true);
-         FC.update().then(() => {
+         FC.update(updateCfg).then(() => {
             assert.equal(FC._isNewRecord, false);
-            assert.deepEqual(FC._notify.args[0], ['requestCustomUpdate', [FC._record]]);
+            assert.deepEqual(FC._notify.args[0], ['requestCustomUpdate', [FC._record, updateCfg]]);
             done();
             FC.destroy();
             sandbox.restore();
