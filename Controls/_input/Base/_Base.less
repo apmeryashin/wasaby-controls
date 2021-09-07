@@ -162,19 +162,12 @@
    margin-left: calc(var(--padding-horizontal_inputText) / (-1));
 }
 
-input:-webkit-autofill {
-   box-shadow: inset 0 0 0 1000px var(--autofill_shadow-color_inputText);
-   -webkit-text-fill-color: var(--text-color);
-}
-
 // Нельзя перебить стили из -internal-autofill-selected, поэтому задаем большой transition
 // https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus {
+/* stylelint-disable selector-max-pseudo-class */
+.controls-Field:-webkit-autofill,
+.controls-Field:-webkit-autofill:hover,
+.controls-Field:-webkit-autofill:focus {
    transition: background-color 2147483647s ease-in-out 0s;
 }
 
