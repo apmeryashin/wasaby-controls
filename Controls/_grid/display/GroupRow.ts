@@ -101,7 +101,7 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
 
     getItemClasses(params: IItemTemplateParams): string {
         return `${this._getBaseItemClasses()} ` +
-            `${this._getCursorClasses(params.cursor, params.clickable)} ` +
+            `${this._getCursorClasses(params.cursor || 'default', params.clickable)} ` +
             `controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
     }
 
