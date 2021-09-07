@@ -221,8 +221,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IFilter]': boolean = true;
     private _sticky: StickyOpener;
 
-    constructor(cfg: IToolbarOptions, context?: object) {
-        super(cfg, context);
+    constructor(...args) {
+        super(...args);
 
         this._resultHandler = this._resultHandler.bind(this);
         this._closeHandler = this._closeHandler.bind(this);
