@@ -276,7 +276,6 @@ export const data = {
             icon: 'icon-Print',
             title: 'Распечатать',
             '@parent': false,
-            group: 'group1',
             parent: null
         }, {
             id: '4',
