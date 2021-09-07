@@ -166,8 +166,8 @@
 // https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied
 /* stylelint-disable selector-max-pseudo-class */
 .controls-Field:-webkit-autofill,
-.controls-Field:-webkit-autofill:hover,
-.controls-Field:-webkit-autofill:focus {
+.controls-Field:-webkit-autofill:focus,
+.ws-is-hover .controls-Field:-webkit-autofill:hover {
    transition: background-color 2147483647s ease-in-out 0s;
 }
 
