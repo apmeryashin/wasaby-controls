@@ -6,7 +6,7 @@ export interface ITextEditorOptions extends IControlOptions {
     value: unknown;
 }
 
-class TextEditor extends Control {
+class TextEditor extends Control<ITextEditorOptions> {
     protected _template: TemplateFunction = TextTemplate;
 
     protected _extendedCaptionClickHandler(): void {

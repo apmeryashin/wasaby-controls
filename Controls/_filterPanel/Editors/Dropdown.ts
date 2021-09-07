@@ -20,7 +20,7 @@ interface IDropdown {
  * @public
  */
 
-class DropdownEditor extends Control implements IDropdown {
+class DropdownEditor extends Control<IDropdownOptions> implements IDropdown {
     readonly '[Controls/_filterPanel/Editors/Dropdown]': boolean = true;
     protected _template: TemplateFunction = DropdownTemplate;
     protected _textValue: string = '';
