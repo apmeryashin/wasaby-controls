@@ -4748,7 +4748,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 }
                 dispItem.setExpanded(needExpandGroup);
 
-                // TODO временное решение для новой модели https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
+                // TODO https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
+                // По задаче предлагается объединить collapsedGroups и collapsedItems.
+                // Сейчас collapsedGroups необходим стратегии группировки в модели при создании и перерисовке групп.
+                // Стратегия группировки всегда заново пересоздаёт группы и опирается на это свойство для получения
+                // информации о свёрнутости групп.
                 const collapsedGroups = collection.getCollapsedGroups() || [];
                 const groupIndex = collapsedGroups.indexOf(groupId);
                 if (groupIndex === -1) {
