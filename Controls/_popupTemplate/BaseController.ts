@@ -338,7 +338,7 @@ abstract class BaseController implements IPopupController {
             target = item.popupOptions.target || (constants.isBrowserPlatform && document.body);
         }
         // На случай если попала нода jquery
-        if (target.length) {
+        if (target.jquery) {
             target = target[0];
         }
         return target;
