@@ -3,7 +3,7 @@ import {TemplateFunction} from 'UI/Base';
  * Шаблон для отображения элементов в режиме превью в {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/IPreviewTemplate
  * @implements Controls/tile:ItemTemplate
- * @author Михайлов С.Е
+ * @author Колесов В.А
  * @see Controls/tile:View
  * @example
  * <pre class="brush: html; highlight: [3-9]">
