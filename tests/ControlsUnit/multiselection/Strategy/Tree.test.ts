@@ -370,6 +370,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(selection.excluded, [5]);
          strategy.reset();
       });
+
+      it('with limit', () => {
+         let selection = { selected: [3], excluded: [] };
+         selection = strategy.selectAll(selection, 1);
+         assert.deepEqual(selection.selected, [3, null]);
+         assert.deepEqual(selection.excluded, [null]);
+      });
    });
 
    describe('unselectAll', () => {
@@ -774,11 +781,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       });
 
       it('with limit', () => {
-         const selection = { selected: [null], excluded: [null] };
-         let res = strategy.getSelectionForModel(selection, 3);
+         let res = strategy.getSelectionForModel({ selected: [null], excluded: [null] }, 3);
          assert.deepEqual(toArrayKeys(res.get(true)), [1, 2, 3] );
          assert.deepEqual(toArrayKeys(res.get(null)), []);
          assert.deepEqual(toArrayKeys(res.get(false)), [4, 5, 6, 7]);
+
+         res = strategy.getSelectionForModel({ selected: [null, 5], excluded: [null] }, 3);
+         assert.deepEqual(toArrayKeys(res.get(true)), [1, 2, 3, 5] );
+         assert.deepEqual(toArrayKeys(res.get(null)), []);
+         assert.deepEqual(toArrayKeys(res.get(false)), [4, 6, 7]);
       });
 
       it('search model', () => {
