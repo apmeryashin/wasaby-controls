@@ -4572,7 +4572,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        const filter: IHashMap<unknown> = cClone(cfg.filter);
         const resDeferred = new Deferred();
         const self = this;
 
@@ -4581,11 +4580,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (self._sourceController) {
             self._indicatorsController.endPortionedSearch();
             self._displayGlobalIndicator();
-
-            if (cfg.groupProperty) {
-                const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
-                GroupingController.prepareFilterCollapsedGroups(collapsedGroups, filter);
-            }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             _private.setReloadingState(self, true);
