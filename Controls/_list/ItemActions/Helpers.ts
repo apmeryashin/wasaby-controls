@@ -1,9 +1,12 @@
 import { Tree } from 'Controls/display';
+import { Model } from 'Types/entity';
+import { RecordSet } from 'Types/collection';
+import { CrudEntityKey } from 'Types/source';
 
-var MOVE_DIRECTION = {
-    'UP': 'up',
-    'DOWN': 'down'
-};
+enum MOVE_DIRECTION {
+    UP = 'up',
+    DOWN = 'down'
+}
 
 let cachedDisplay;
 let cachedVersion;
@@ -72,7 +75,7 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
  * @public
  * @author Авраменко А.С.
  */
-var helpers = {
+const helpers = {
 
     /**
      * @typedef {String} MoveDirection
@@ -85,6 +88,7 @@ var helpers = {
      * @variant up Move up
      * @variant down Move down
      */
+    MOVE_DIRECTION,
 
     /**
      * Хелпер для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} наверху/внизу.
@@ -124,7 +128,6 @@ var helpers = {
      * }
      * </pre>
      */
-
 
     /*
      * Helper to display up/down item actions.
@@ -169,15 +172,18 @@ var helpers = {
      * }
      * </pre>
      */
-    reorderMoveActionsVisibility: function (direction, item, items, parentProperty, nodeProperty, root) {
-        var siblingItem = getSiblingItem(direction, item, items, parentProperty, nodeProperty, root);
+    reorderMoveActionsVisibility(direction: string,
+                                 item: Model,
+                                 items: RecordSet,
+                                 parentProperty: string,
+                                 nodeProperty: string,
+                                 root?: CrudEntityKey): boolean {
+        const siblingItem = getSiblingItem(direction, item, items, parentProperty, nodeProperty, root);
 
         return !!siblingItem &&
-            (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) && //items in one folder
-            (!nodeProperty || siblingItem.get(nodeProperty) === item.get(nodeProperty));//items of the same type
+            (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) && //items in the same folder
+            (!nodeProperty || siblingItem.get(nodeProperty) === item.get(nodeProperty)); //items of the same type
     }
 };
-
-helpers.MOVE_DIRECTION = MOVE_DIRECTION;
 
 export = helpers;
