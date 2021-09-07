@@ -31,27 +31,32 @@ class ModuleClass {
     }
 
     updateRanges(start, end, changedRangeIndex, relationMode) {
-        let
-            oldRelationMode,
-            newRanges;
+        if (start !== null && end !== null) {
+            let oldRelationMode;
+            let newRanges;
 
-        if (relationMode) {
-            oldRelationMode = relationMode;
-            this._relationMode = relationMode;
+            if (relationMode) {
+                oldRelationMode = relationMode;
+                this._relationMode = relationMode;
+            } else {
+                oldRelationMode = this._relationMode;
+                this._autoRelation(this.ranges,[start, end], changedRangeIndex);
+            }
+            newRanges = this._getUpdatedRanges(
+                this.ranges,
+                changedRangeIndex,
+                [start, end],
+                oldRelationMode,
+                this._steps
+            );
+            this.ranges = newRanges;
+            if (oldRelationMode !== this._relationMode && oldRelationMode === 'normal') {
+                this._updateSteps(this.ranges);
+            }
         } else {
-            oldRelationMode = this._relationMode;
-            this._autoRelation(this.ranges,[start, end], changedRangeIndex);
-        }
-        newRanges = this._getUpdatedRanges(
-            this.ranges,
-            changedRangeIndex,
-            [start, end],
-            oldRelationMode,
-            this._steps
-        );
-        this.ranges = newRanges;
-        if (oldRelationMode !== this._relationMode && oldRelationMode === 'normal') {
-            this._updateSteps(this.ranges);
+            const newRanges = this.ranges.slice();
+            newRanges[changedRangeIndex] = [start, end];
+            this.ranges = newRanges;
         }
     }
 
@@ -136,8 +141,10 @@ class ModuleClass {
 
     private _updateSteps(dateRanges) {
         this._steps = [];
-        for (var i = 0; i < dateRanges.length - 1; i++) {
-            this._steps[i] = this._getMonthCount(dateRanges[i][0], dateRanges[i + 1][0]);
+        for (const i = 0; i < dateRanges.length - 1; i++) {
+            if (dateRanges[i][0] !== null && dateRanges[i][0] !== null) {
+                this._steps[i] = this._getMonthCount(dateRanges[i][0], dateRanges[i + 1][0]);
+            }
         }
     }
 
@@ -213,7 +220,7 @@ class ModuleClass {
             if (!(this._periodTypeIsDay(periodType) && this._periodTypeIsYears(oldPeriodType)) &&
                 relationMode === 'byCapacity' ||
                     (capacityChanged && steps[number] % 12 !== 0 && periodLength > oldPeriodLength &&
-                        (start.getMonth() !== oldStart.getMonth() || steps[number] % periodLength !== 0))) {
+                        (start.getMonth() !== oldStart?.getMonth() || steps[number] % periodLength !== 0))) {
                 s = periodLength;
             } else {
                 s = steps[number] || periodLength;
