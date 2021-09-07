@@ -5,6 +5,7 @@ import {TColumns, TColumnSeparatorSize} from './interface/IColumn';
 import Collection from './Collection';
 import HeaderRow, {IOptions as IHeaderRowOptions} from './HeaderRow';
 import {ISortItem} from './mixins/Grid';
+import {OptionsToPropertyMixin} from 'Types/entity';
 
 export interface IOptions extends IHeaderRowOptions {
 }
@@ -17,7 +18,7 @@ export interface IHeaderBounds {
 /**
  * Заголовок таблицы
  */
-export default class Header {
+export default class Header extends OptionsToPropertyMixin {
     protected _$owner: Collection;
     protected _$rows: HeaderRow[];
     protected _$headerBounds: IHeaderBounds;
@@ -25,7 +26,7 @@ export default class Header {
     protected _$style: string;
 
     constructor(options: IOptions) {
-        this._$owner = options.owner;
+        super(options);
         this._$rows = this._initializeRows(options);
     }
 
@@ -148,6 +149,7 @@ Object.assign(Header.prototype, {
     _instancePrefix: 'grid-header-',
     _rowModule: 'Controls/grid:GridHeaderRow',
     _cellModule: 'Controls/grid:GridHeaderCell',
+    _$owner: null,
     _$style: 'default',
     _$theme: 'default'
 });
