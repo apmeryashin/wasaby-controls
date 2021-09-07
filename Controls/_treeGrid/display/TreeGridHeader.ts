@@ -10,6 +10,12 @@ export default class TreeGridHeader extends GridHeader {
      */
     protected _$expanderSize: string;
 
+    /**
+     * Признак, означающий что нужно рисовать отступ вместо экспандеров
+     * @protected
+     */
+    protected _$displayExpanderPadding: boolean;
+
     setDisplayExpanderPadding(displayExpanderPadding: boolean): void {
         this._$rows.forEach((row) => {
             (row as unknown as TreeGridHeaderRow).setDisplayExpanderPadding(displayExpanderPadding);
@@ -20,6 +26,7 @@ export default class TreeGridHeader extends GridHeader {
         const superFactory = super._getRowsFactory();
         return (options: ITreeGridHeaderRowOptions) => {
             options.expanderSize = this._$expanderSize;
+            options.displayExpanderPadding = this._$displayExpanderPadding;
             return superFactory.call(this, options);
         };
     }
@@ -31,5 +38,6 @@ Object.assign(TreeGridHeader.prototype, {
     _instancePrefix: 'tree-grid-header-',
     _rowModule: 'Controls/treeGrid:TreeGridHeaderRow',
     _cellModule: 'Controls/treeGrid:TreeGridHeaderCell',
-    _$expanderSize: 'default'
+    _$expanderSize: 'default',
+    _$displayExpanderPadding: true
 });
