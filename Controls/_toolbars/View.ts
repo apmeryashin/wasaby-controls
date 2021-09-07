@@ -221,7 +221,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _sticky: StickyOpener;
 
     constructor(...args) {
-        super(args);
+        super(...args);
 
         this._resultHandler = this._resultHandler.bind(this);
         this._closeHandler = this._closeHandler.bind(this);
