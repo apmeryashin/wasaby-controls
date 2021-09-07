@@ -53,7 +53,7 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
 
     protected _beforeMount(options: IMultipleInputNewOptions): void {
         options.lookupsOptions.forEach(({name, value, selectedKeys, items}) => {
-            this._cloneAndSetStateByOptionValue(selectedKeys || options.selectedKeys, 'selectedKeys', name);
+            this._cloneAndSetStateByOptionValue(selectedKeys || options.selectedKeys || [], 'selectedKeys', name);
             this._cloneAndSetStateByOptionValue(value ||  options.value, 'value', name);
             this._cloneAndSetStateByOptionValue(items ||  options.items, 'items', name);
         });
@@ -121,7 +121,7 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
 
     protected _setStateAndNotifyEventByOptionName(value: unknown, optionName: string, lookupName: string): void {
         this._cloneAndSetStateByOptionValue(value, optionName, lookupName);
-        this._notify(optionName + 'Changed', [this[this._getStateNameByOptionName(optionName)]]);
+        this._notify(optionName + 'Changed', [this[this._getStateNameByOptionName(optionName)], lookupName]);
     }
 
     protected _cloneObject(obj: object): object {
