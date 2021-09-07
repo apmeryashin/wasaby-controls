@@ -4,6 +4,7 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import { IItemPadding } from 'Controls/display';
+import {IPromiseSelectableOptions} from 'Controls/interface';
 
 type TPadding = 'null'|'m';
 
@@ -64,7 +65,7 @@ export interface IPropertyGridColumnOptions {
      */
     compatibleWidth: string;
 }
-export interface IPropertyGridOptions extends IControlOptions {
+export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectableOptions {
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#editingObject
      * @cfg {Object | Types/entity:Model} Объект, свойства которого являются значениями для редакторов.
@@ -280,6 +281,28 @@ export interface IPropertyGridOptions extends IControlOptions {
      * @see itemPadding
      */
     itemsContainerPadding?: IItemsContainerPadding;
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#multiSelectAccessibilityProperty
+     * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости чекбокса.
+     * @see multiSelectVisibility
+     */
+    multiSelectAccessibilityProperty?: string;
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#multiSelectVisibility
+     * @cfg {String} Видимость чекбоксов.
+     * @variant visible Показать.
+     * @variant hidden Скрыть.
+     * @variant onhover Показывать при наведении.
+     * @default hidden
+     * @demo Controls-demo/PropertyGridNew/MultiSelectVisibility/VisibleWithColumns/Index
+     * @see multiSelectAccessibilityProperty
+     */
+    multiSelectVisibility?: 'visible'|'onhover'|'hidden';
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#multiSelectTemplate
+     * @cfg {TemplateFunction|String} Пользовательский шаблон множественного выбора.
+     */
+    multiSelectTemplate?: Function;
     captionPosition?: TCaptionPosition;
 }
 

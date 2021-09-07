@@ -22,8 +22,6 @@ import {Model as EntityModel, Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 import {CrudEntityKey} from 'Types/source';
 import {TGroupNodeVisibility} from '../interface/ITreeGrid';
-import TreeGridHeader from './TreeGridHeader';
-import TreeGridTableHeader from './TreeGridTableHeader';
 import {ITreeGridOptions} from '../TreeGridView';
 
 /**
@@ -293,13 +291,12 @@ export default class TreeGridCollection<
         if (this.getFooter()) {
             this.getFooter().setDisplayExpanderPadding(newValue);
         }
-        if (this.getHeader()) {
+        if (this.hasHeader()) {
             this.getHeader().setDisplayExpanderPadding(newValue);
         }
     }
 
     // endregion HasNodeWithChildren
-
 
     // region itemsFactoryResolver
 
@@ -366,11 +363,14 @@ export default class TreeGridCollection<
     }
 
     protected _initializeHeader(options: ITreeGridOptions): void {
-        options.expanderSize = this.getExpanderSize();
+        if (this.getExpanderSize()) {
+            options.expanderSize = this.getExpanderSize();
+        }
+        options.displayExpanderPadding = this._displayExpanderPadding;
         super._initializeHeader(options);
     }
 
-    protected setMetaResults(metaResults: EntityModel) {
+    protected setMetaResults(metaResults: EntityModel): void {
         super.setMetaResults(metaResults);
         this._$results?.setMetaResults(metaResults);
     }

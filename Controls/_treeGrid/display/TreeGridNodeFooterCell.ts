@@ -1,12 +1,11 @@
 import { TemplateFunction } from 'UI/Base';
-import { GridCell } from 'Controls/grid';
-import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
+import TreeGridDataCell from './TreeGridDataCell';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 /**
  * Ячейка футера узла в иерархической таблице
  */
-export default class TreeGridNodeFooterCell extends GridCell<null, TreeGridNodeFooterRow> {
+export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
     readonly '[Controls/treeGrid:TreeGridNodeFooterCell]': boolean;
 
     getTemplate(content?: TemplateFunction): TemplateFunction|string {

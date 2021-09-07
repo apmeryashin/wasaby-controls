@@ -110,7 +110,7 @@ import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scrol
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {ISiblingStrategy} from './interface/ISiblingStrategy';
 import {FlatSiblingStrategy} from './Strategies/FlatSiblingStrategy';
-import {Remove as RemoveAction, Move as MoveAction, IMoveActionOptions} from 'Controls/listActions';
+import {Remove as RemoveAction, Move as MoveAction, IMoveActionOptions} from 'Controls/listCommands';
 import {isLeftMouseButton} from 'Controls/popup';
 import {IMovableList} from './interface/IMovableList';
 import {saveConfig} from 'Controls/Application/SettingsController';
@@ -2267,6 +2267,12 @@ const _private = {
                     };
                 }
             }
+        } else {
+            if (result.newCollectionRenderedKeys?.length) {
+                self._doAfterDrawItems = () => {
+                    self._notify('preloadItemsByKeys', [result.newCollectionRenderedKeys], {bubbling: true});
+                };
+            }
         }
         if (result.triggerOffset) {
             self._indicatorsController.setLoadingTriggerOffset(result.triggerOffset);
@@ -2681,7 +2687,7 @@ const _private = {
         };
         return _private.getMoveAction(self).execute({
             selection,
-            providerName: 'Controls/listActions:MoveProviderDirection',
+            providerName: 'Controls/listCommands:MoveProviderDirection',
             direction
         }) as Promise<void>;
     },
@@ -3535,6 +3541,21 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._children.listView.getTopIndicator(),
                 this._children.listView.getBottomIndicator()
             );
+        }
+        // если элементов не хватает на всю страницу, то сразу же показываем ромашки и триггеры, чтобы догрузить данные
+        if (this._viewSize < this._viewportSize) {
+            // В первую очередь показываем нижний индикатор(он покажется в _beforeMount), но если данных вниз нет,
+            // то показываем верхний индикатор с триггером при наличии еще данных.
+            // Сделано так, чтобы не было сразу загрузки в обе стороны.
+            // Верхний индикатор нельзя показать в _beforeMount, т.к. мы не знаем хватит ли элементов на всю страницу
+            // и при показе верхнего индикатора нужно добавить отступ от триггера.
+            if (
+                !this._indicatorsController.shouldDisplayBottomIndicator() &&
+                this._indicatorsController.shouldDisplayTopIndicator()
+            ) {
+                // скроллить не нужно, т.к. не куда, ведь элементы не занимают весь вьюПорт
+                this._indicatorsController.displayTopIndicator(false);
+            }
         }
 
         _private.tryLoadToDirectionAgain(this);
@@ -4576,7 +4597,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        const filter: IHashMap<unknown> = cClone(cfg.filter);
         const resDeferred = new Deferred();
         const self = this;
 
@@ -4585,11 +4605,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (self._sourceController) {
             self._indicatorsController.endDisplayPortionedSearch();
             self._displayGlobalIndicator();
-
-            if (cfg.groupProperty) {
-                const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
-                GroupingController.prepareFilterCollapsedGroups(collapsedGroups, filter);
-            }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             _private.setReloadingState(self, true);
@@ -4597,9 +4612,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // Пока загружались данные - список мог уничтожится. Обрабатываем это.
                 // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
                 if (self._destroyed) {
-                    resDeferred.callback({
-                        data: null
-                    });
+                    resDeferred.callback(null);
                     return;
                 }
                 _private.doAfterUpdate(self, () => {
@@ -4639,13 +4652,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             self._shouldNotifyOnDrawItems = true;
                         }
                     } else {
-                        _private.initializeModel(self, cfg, list)
+                        _private.initializeModel(self, cfg, list);
                     }
                     _private.prepareFooter(self, self._options, self._sourceController);
 
-                    resDeferred.callback({
-                        data: list
-                    });
+                    resDeferred.callback(list);
 
                     self._recountIndicators('all', true);
                     _private.resetScrollAfterLoad(self);
@@ -4917,7 +4928,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // Если есть источник и сверху не пришел добавляемый итем, то выполним запрос на создание новой записи
             if (sourceController && !(addedItem instanceof Model)) {
                 return sourceController
-                    .create()
+                    .create(!this._isMounted ? params.options.filter : undefined)
                     .then((item) => {
                         if (item instanceof Model) {
                             return {item};
@@ -5130,7 +5141,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (editingConfig.autoAddOnInit && !!this._sourceController && !hasItems) {
             this._createEditInPlaceController(options);
-            return this._beginAdd({}, { addPosition: editingConfig.addPosition });
+            return this._beginAdd({ filter: options.filter }, { addPosition: editingConfig.addPosition });
         } else if (editingConfig.item) {
             this._createEditInPlaceController(options);
             if (this._items && this._items.getRecordById(editingConfig.item.getKey())) {
@@ -5678,7 +5689,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             filter: this._filter,
             targetKey,
             position,
-            providerName: 'Controls/listActions:MoveProvider'
+            providerName: 'Controls/listCommands:MoveProvider'
         }) as Promise<DataSet>;
     }
 
@@ -5706,7 +5717,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     removeItems(selection: ISelectionObject): Promise<string | void> {
         return _private
-            .removeItems(this, selection, 'Controls/listActions:RemoveProvider')
+            .removeItems(this, selection, 'Controls/listCommands:RemoveProvider')
             .catch((error) => process({error}));
     }
 

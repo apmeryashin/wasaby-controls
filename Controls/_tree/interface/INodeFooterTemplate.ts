@@ -2,13 +2,14 @@ import {INavigationButtonConfig, TNavigationButtonView} from 'Controls/interface
 
 /**
  * Шаблон подвала узлов
+ * @interface Controls/_tree/interface/INodeFooterTemplate
  * @public
- * @autor Аверкиев П.А.
+ * @author Панихин К.А.
  */
 export interface INodeFooterTemplate {
     /**
-     * Вид кнопки подгрузки данных
-     * @default default
+     * @cfg {Controls/interface:INavigation/TNavigationButtonView.typedef} Вид кнопки подгрузки данных.
+     * @default link
      */
     navigationButtonView?: TNavigationButtonView;
     /**

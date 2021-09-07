@@ -3,7 +3,8 @@
                               keyProperty="key"
                               parentProperty="parent"
                               nodeProperty="type"
-                              nodeHistoryId="NODE_HISTORY">
+                              nodeHistoryId="NODE_HISTORY"
+                              bind:expandedItems="_expandedItems">
         <div>
             <Controls.list:Container>
                 <Controls.treeGrid:View columns="{{ _columns }}"/>

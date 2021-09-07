@@ -76,6 +76,7 @@ export default class extends Control<IOperationsPanelOptions> {
 
     private _openCloud(options = this._options): void {
         const target = this._children.target;
+        this._operationsController.setOperationsPanelVisible(true);
         this._getDialogOpener().open({
             template: 'Controls/operationsPanel:Cloud',
             opener: this,

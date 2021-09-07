@@ -249,6 +249,80 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const newSelection = strategy.unselect({ selected: [null], excluded: [null] }, 21);
          assert.deepEqual(newSelection, {selected: [null], excluded: [null, 21]});
       });
+
+      it('search model', () => {
+         /*
+            node-1
+               leaf-11
+               leaf-12
+            node-2
+               leaf-21
+               leaf-22
+          */
+         const items = new RecordSet({
+            rawData: [{
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node1'
+            }, {
+               id: 11,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf11'
+            }, {
+               id: 12,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf12'
+            },
+            {
+               id: 2,
+               parent: null,
+               nodeType: true,
+               title: 'test_node2'
+            }, {
+               id: 21,
+               parent: 2,
+               nodeType: null,
+               title: 'test_leaf21'
+            }, {
+               id: 22,
+               parent: 2,
+               nodeType: null,
+               title: 'test_leaf22'
+            }],
+            keyProperty: 'id'
+         });
+
+         const searchModel = new SearchGridCollection({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: searchModel,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: null
+         });
+
+         let result = strategy.unselect({selected: [11], excluded: []}, 11);
+         assert.deepEqual(result, {selected: [], excluded: []});
+
+         result = strategy.unselect({selected: [1], excluded: []}, 1);
+         assert.deepEqual(result, {selected: [], excluded: []});
+
+         result = strategy.unselect({selected: [1], excluded: []}, 11);
+         assert.deepEqual(result, {selected: [1], excluded: [11]});
+      });
    });
 
    describe('selectAll', () => {
@@ -295,6 +369,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(selection.selected, [5]);
          assert.deepEqual(selection.excluded, [5]);
          strategy.reset();
+      });
+
+      it('with limit', () => {
+         let selection = { selected: [3], excluded: [] };
+         selection = strategy.selectAll(selection, 1);
+         assert.deepEqual(selection.selected, [3, null]);
+         assert.deepEqual(selection.excluded, [null]);
       });
    });
 
@@ -700,11 +781,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       });
 
       it('with limit', () => {
-         const selection = { selected: [null], excluded: [null] };
-         let res = strategy.getSelectionForModel(selection, 3);
+         let res = strategy.getSelectionForModel({ selected: [null], excluded: [null] }, 3);
          assert.deepEqual(toArrayKeys(res.get(true)), [1, 2, 3] );
          assert.deepEqual(toArrayKeys(res.get(null)), []);
          assert.deepEqual(toArrayKeys(res.get(false)), [4, 5, 6, 7]);
+
+         res = strategy.getSelectionForModel({ selected: [null, 5], excluded: [null] }, 3);
+         assert.deepEqual(toArrayKeys(res.get(true)), [1, 2, 3, 5] );
+         assert.deepEqual(toArrayKeys(res.get(null)), []);
+         assert.deepEqual(toArrayKeys(res.get(false)), [4, 6, 7]);
       });
 
       it('search model', () => {

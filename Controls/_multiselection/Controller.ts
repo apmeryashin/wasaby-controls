@@ -231,9 +231,6 @@ export class Controller {
 
       if (status === true || status === null) {
          newSelection = this._strategy.unselect(this._selection, key, this._searchValue);
-         if (this._limit) {
-            this._limit--;
-         }
       } else {
          if (this._limit) {
             newSelection = this._increaseLimit(key);
@@ -357,7 +354,7 @@ export class Controller {
       this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
    }
 
-   onCollectionMove() {
+   onCollectionMove(): void {
       // Если в дереве переместили записи в другой узел, то нужно обновить selection на модели, иначе на родителе
       // останется ненужная отметка, а на новом родителе не появится
       if (this._strategy instanceof TreeSelectionStrategy) {
@@ -455,7 +452,8 @@ export class Controller {
             const key = this._getKey(item);
             if (toggledItemKey === key) {
                selectedItemsCount++;
-               this._limit++;
+               // сохраняем отдельно выбранные элементы в selected, чтобы не потерять их
+               newSelection.selected.push(key);
                stopIncreasing = true;
             } else if (!newSelection.excluded.includes(key)) {
                newSelection.excluded.push(key);

@@ -67,7 +67,7 @@ const additionalColors = {
         {name: '--pale_contrast_background-color', S: 1.5, L: 1.25}, // FIXME коэффициенты
         {name: '--pale_hover_contrast_background-color', S: 1.6, L: 1.16}, // FIXME коэффициенты
         {name: '--pale_active_contrast_background-color', S: 1.92, L: 1.32}, // FIXME коэффициенты
-        {name: '--pale_border-color:', S: 1.05, L: 1.15} // FIXME коэффициенты
+        {name: '--pale_border-color', S: 1.05, L: 1.15} // FIXME коэффициенты
     ],
     '--unaccented_contrast_background-color': [
         {name: '--unaccented_hover_contrast_background-color', S: 1.067, L: 0.928},

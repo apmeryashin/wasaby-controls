@@ -12,7 +12,7 @@ export interface IMoveActionOptions extends IActionOptions, IMoveProviderOptions
 /**
  * Действие "перемещение записей"
  * @class Controls/_actions/Move
- * @implements Controls/listActions:IAction
+ * @implements Controls/listCommands:IAction
  * @public
  * @author Крайнов Д.О.
  */
@@ -33,7 +33,7 @@ export default class Move implements IAction {
         });
     }
 
-    private _getProvider(providerName: string = 'Controls/listActions:MoveProviderWithDialog'): Promise<IMoveProvider> {
+    private _getProvider(providerName: string = 'Controls/listCommands:MoveProviderWithDialog'): Promise<IMoveProvider> {
         return ModulesLoader.loadAsync(providerName).then((provider) => {
            return new provider();
         });
