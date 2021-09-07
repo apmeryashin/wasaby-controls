@@ -1,9 +1,10 @@
-const fs = require('fs');
+var fs = require('fs');
 
-const getFiles = (dir, result = []) => {
-    const files = fs.readdirSync(dir);
-    files.map((file) => {
-        const name = dir + '/' + file;
+var getFiles = function(dir, result) {
+    result = result || [];
+    var files = fs.readdirSync(dir);
+    files.map(function(file) {
+        var name = dir + '/' + file;
         if (fs.statSync(name).isDirectory()) {
             getFiles(name, result);
         } else {
@@ -13,34 +14,35 @@ const getFiles = (dir, result = []) => {
     return result;
 };
 
-const getFileData = (filePath) => {
-    return  fs.readFileSync(filePath, "utf8");
+var getFileData = function(filePath) {
+    return fs.readFileSync(filePath, "utf8");
 };
 
-const getFileJSONData = (fileContent) => {
-    let lines = fileContent.split('\n');
-    lines = lines.map((line) => {
+var getFileJSONData = function(fileContent) {
+    var lines = fileContent.split('\n');
+    lines = lines.map(function (line) {
         line = line.trim();
         if (line.includes('--')) {
-            const startIndexProperty = line.indexOf('-');
-            const endIndexProperty = line.indexOf(':');
-            const property = line.slice(startIndexProperty, endIndexProperty);
+            var startIndexProperty = line.indexOf('-');
+            var endIndexProperty = line.indexOf(':');
+            var property = line.slice(startIndexProperty, endIndexProperty);
 
-            const endIndexValue = line.indexOf(';');
-            let value = line.slice(endIndexProperty + 1, endIndexValue).trim();
+            var endIndexValue = line.indexOf(';');
+            var value = line.slice(endIndexProperty + 1, endIndexValue).trim();
 
             value = value.replace("\\e", "\\\\e");
-            return `  "${property}": "${value}",`;
+            return '  "' + property + '": "' + value + '",';
         }
-    }).filter((line) => line !== undefined);
+    }).filter(function(line) { return line !== undefined });
     return lines.join('\n');
 }
 
-const writeJSONData = (files = []) => {
-    let resultString = '{\n';
-    files.map((file, index) => {
-        const fileContent = getFileData(file);
-        const fileJSONContent = getFileJSONData(fileContent);
+var writeJSONData = function(files) {
+    files = files || [];
+    var resultString = '{\n';
+    files.map(function(file, index) {
+        var fileContent = getFileData(file);
+        var fileJSONContent = getFileJSONData(fileContent);
         if (index !== 0) {
             resultString += '\n\n';
         }
@@ -51,6 +53,6 @@ const writeJSONData = (files = []) => {
     fs.writeFileSync("fallback.json", resultString);
 };
 
-const lessFiles = getFiles('./variables');
+var lessFiles = getFiles('./variables');
 writeJSONData(lessFiles);
 console.log('success');
