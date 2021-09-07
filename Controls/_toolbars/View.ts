@@ -46,6 +46,7 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
 import {IoC} from 'Env/Env';
+import {IFieldOptions} from "Controls/_input/resources/Field";
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -220,8 +221,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IFilter]': boolean = true;
     private _sticky: StickyOpener;
 
-    constructor(...args) {
-        super(args);
+    constructor(cfg: IToolbarOptions, context?: object) {
+        super(cfg, context);
 
         this._resultHandler = this._resultHandler.bind(this);
         this._closeHandler = this._closeHandler.bind(this);
