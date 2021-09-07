@@ -4583,9 +4583,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // Пока загружались данные - список мог уничтожится. Обрабатываем это.
                 // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
                 if (self._destroyed) {
-                    resDeferred.callback({
-                        data: null
-                    });
+                    resDeferred.callback(null);
                     return;
                 }
                 _private.doAfterUpdate(self, () => {
@@ -4625,13 +4623,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                             self._shouldNotifyOnDrawItems = true;
                         }
                     } else {
-                        _private.initializeModel(self, cfg, list)
+                        _private.initializeModel(self, cfg, list);
                     }
                     _private.prepareFooter(self, self._options, self._sourceController);
 
-                    resDeferred.callback({
-                        data: list
-                    });
+                    resDeferred.callback(list);
 
                     self._recountIndicators('all', true);
                     _private.resetScrollAfterLoad(self);
