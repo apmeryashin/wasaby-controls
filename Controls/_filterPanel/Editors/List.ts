@@ -181,7 +181,7 @@ class ListEditor extends BaseEditor {
     protected _processPropertyValueChanged(value: string[] | number[], needCollapse: boolean): void {
         this._selectedKeys = value;
         this._setColumns(this._options, this._selectedKeys);
-        this._notifyPropertyValueChanged(needCollapse);
+        this._notify('propertyValueChanged', [this._getExtendedValue(needCollapse)], {bubbling: true});
     }
 
     protected _getExtendedValue(needCollapse?: boolean): object {

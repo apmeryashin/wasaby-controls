@@ -108,7 +108,7 @@ class NumberRangeEditor extends BaseEditor implements INumberRange {
 
     private _processPropertyValueChanged(event: SyntheticEvent, value: number[]): void {
         if (this._needNotifyChanges(value)) {
-            this._notifyPropertyValueChanged();
+            this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
         }
     }
 

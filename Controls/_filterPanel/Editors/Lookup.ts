@@ -60,7 +60,7 @@ class LookupEditor extends BaseEditor implements ILookup {
             value,
             textValue: this._textValue
         };
-        this._notifyPropertyValueChanged(extendedValue);
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
         this._showSelectorCaption = this._getShowSelectorCaption(value, this._options.maxVisibleItems);
     }
 

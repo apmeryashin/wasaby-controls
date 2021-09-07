@@ -1,7 +1,6 @@
-import {IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import DropdownTemplate = require('wml!Controls/_filterPanel/Editors/Dropdown');
-import {BaseEditor} from 'Controls/_filterPanel/Editors/Base';
 import 'css!Controls/filterPanel';
 
 interface IDropdownOptions extends IControlOptions {
@@ -21,7 +20,7 @@ interface IDropdown {
  * @public
  */
 
-class DropdownEditor extends BaseEditor implements IDropdown {
+class DropdownEditor extends Control implements IDropdown {
     readonly '[Controls/_filterPanel/Editors/Dropdown]': boolean = true;
     protected _template: TemplateFunction = DropdownTemplate;
     protected _textValue: string = '';
@@ -31,11 +30,11 @@ class DropdownEditor extends BaseEditor implements IDropdown {
             value,
             textValue: this._textValue
         };
-        this._notifyPropertyValueChanged(extendedValue);
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
     protected _extendedCaptionClickHandler(): void {
-        this._notifyPropertyValueChanged(this._options.value);
+        this._notify('propertyValueChanged', [this._options.value], {bubbling: true});
     }
 
     private _handleTextValueChanged(event: SyntheticEvent, value: string): void {
