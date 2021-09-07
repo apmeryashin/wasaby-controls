@@ -164,7 +164,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             });
             assert.isOk(collection.getGlobalIndicator());
 
-            controller.onCollectionReset({ up: false, down: false }, false);
+            controller.onCollectionReset();
             assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -179,7 +179,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             });
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
-            const changedResetTrigger = controller.onCollectionReset({ up: false, down: false }, true);
+            const changedResetTrigger = controller.onCollectionReset();
             assert.isFalse(changedResetTrigger);
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
