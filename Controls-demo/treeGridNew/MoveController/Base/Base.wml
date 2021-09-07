@@ -4,8 +4,11 @@
          <Controls.treeGrid:View
                  name="treeGrid"
                  multiSelectVisibility="visible"
-                 nodeProperty="type"
+                 parentProperty="{{_parentProperty}}"
+                 nodeProperty="{{_nodeProperty}}"
+                 itemsReadyCallback="{{_itemsReadyCallback}}"
                  itemActions="{{_itemActions}}"
+                 itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                  columns="{{_columns}}"/>
       </Controls.list:Container>
    </Controls.list:DataContainer>
