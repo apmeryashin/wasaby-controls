@@ -22,9 +22,7 @@ export default class TreeItem<T extends Model = Model>
     // region Classes
     getTreeWrapperClasses(): string {
         let classes = 'controls-Tree__itemContentTreeWrapper';
-        if (!this._isDefaultRenderMultiSelect()) {
-            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}`;
-        }
+        classes += super._getLeftSpacingContentClasses();
         return classes;
     }
 
