@@ -117,7 +117,8 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
-            const changedResetTrigger = controller.onCollectionReset({ up: true, down: true }, true);
+            controller.setHasMoreData(true, true);
+            const changedResetTrigger = controller.onCollectionReset();
             assert.isTrue(changedResetTrigger);
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
@@ -140,7 +141,8 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             const {collection, controller} = initTest([{id: 1}], options);
             assert.isFalse(collection.getTopIndicator().isDisplayed());
 
-            const changedResetTrigger = controller.onCollectionReset({ up: true, down: false }, false);
+            controller.setHasMoreData(true, true);
+            const changedResetTrigger = controller.onCollectionReset();
             assert.isTrue(changedResetTrigger);
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isFalse(collection.getTopLoadingTrigger().isDisplayed());
@@ -170,7 +172,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
         it('end portioned search', async () => {
             const {collection, controller} = initTest([{id: 1}], {});
-            controller.startPortionedSearch('bottom');
+            controller.startDisplayPortionedSearch('bottom');
             // ждем пока отобразится индикатор порционного поиска
             await new Promise((resolve) => {
                 setTimeout(() => resolve(null), 2001);
@@ -187,7 +189,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
         it('start portioned search', async () => {
             const {collection, controller} = initTest([{id: 1}], {}, {iterative: true});
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
-            controller.onCollectionReset({ up: false, down: true }, true);
+
+            controller.setHasMoreData(false, true);
+            controller.onCollectionReset();
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
@@ -213,7 +217,8 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             collection.setCollection(new RecordSet());
             const spySetOffsets = spy(collection, 'setLoadingTriggerOffset');
-            controller.onCollectionReset({ up: false, down: false }, false);
+            controller.setHasMoreData(false, false);
+            controller.onCollectionReset();
             assert.isTrue(spySetOffsets.withArgs({top: 0, bottom: 0}).called);
         });
     });

@@ -19,7 +19,7 @@ export interface IIndicatorsControllerOptions {
     hasHiddenItemsByVirtualScroll: (direction: 'up'|'down') => boolean;
     attachLoadTopTriggerToNull: boolean; // TODO LI переименовать
     attachLoadDownTriggerToNull: boolean; // TODO LI переименовать
-    stopPortionedSearchCallback: () => void;
+    stopDisplayPortionedSearchCallback: () => void;
 }
 
 const INDICATOR_DELAY = 2000;
@@ -115,22 +115,16 @@ export default class IndicatorsController {
         return changedResetTrigger;
     }
 
-    onCollectionReset(hasMoreData: { up: boolean, down: boolean }, hasSearchValue: boolean): boolean {
-        // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
-        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
-        this._options.hasMoreDataToTop = hasMoreData.up;
-        this._options.hasMoreDataToBottom = hasMoreData.down;
+    setHasMoreData(hasMoreToTop: boolean, hasMoreToBottom: boolean): void {
+        this._options.hasMoreDataToTop = hasMoreToTop;
+        this._options.hasMoreDataToBottom = hasMoreToBottom;
+    }
 
-        if (hasSearchValue) {
-            // Событие reset коллекции приводит к остановке активного порционного поиска.
-            // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
-            this.endPortionedSearch();
-        }
-
+    onCollectionReset(): boolean {
         let changedResetTrigger = false;
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
-            this.startPortionedSearch(direction);
+            this.startDisplayPortionedSearch(direction);
         } else {
             changedResetTrigger = this.recountIndicators('all', true);
         }
@@ -158,7 +152,7 @@ export default class IndicatorsController {
     }
 
     destroy(): void {
-        this.clearPortionedSearchTimer();
+        this.clearDisplayPortionedSearchTimer();
     }
 
     // region LoadingIndicator
@@ -452,11 +446,11 @@ export default class IndicatorsController {
 
     // region PortionedSearch
 
-    startPortionedSearch(direction: TPortionedSearchDirection): void {
+    startDisplayPortionedSearch(direction: TPortionedSearchDirection): void {
         const currentState = this._getSearchState();
         if (currentState === SEARCH_STATES.NOT_STARTED || currentState === SEARCH_STATES.ABORTED) {
             this._setSearchState(SEARCH_STATES.STARTED);
-            this._startPortionedSearchTimer(SEARCH_MAX_DURATION);
+            this._startDisplayPortionedSearchTimer(SEARCH_MAX_DURATION);
             this._portionedSearchDirection = direction;
 
             // скрываем индикатор, т.к. после начала порционного поиска индикатор долежн показаться через 2с,
@@ -475,51 +469,51 @@ export default class IndicatorsController {
      * или быстрее 2м(при последующних подгрузках)
      * @param pageLoaded Признак, который означает что загрузилась целая страница
      */
-    shouldStopPortionedSearch(pageLoaded: boolean): boolean {
+    shouldStopDisplayPortionedSearch(pageLoaded: boolean): boolean {
         return pageLoaded && this.isPortionedSearchInProgress() && !this._isSearchContinued();
     }
 
-    stopPortionedSearch(): void {
-        this.clearPortionedSearchTimer();
+    stopDisplayPortionedSearch(): void {
+        this.clearDisplayPortionedSearchTimer();
         this._setSearchState(SEARCH_STATES.STOPPED);
         this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.ContinueSearch);
-        this._options.stopPortionedSearchCallback();
+        this._options.stopDisplayPortionedSearchCallback();
     }
 
-    continuePortionedSearch(): void {
+    continueDisplayPortionedSearch(): void {
         this._setSearchState(SEARCH_STATES.CONTINUED);
-        this._startPortionedSearchTimer(SEARCH_CONTINUED_MAX_DURATION);
+        this._startDisplayPortionedSearchTimer(SEARCH_CONTINUED_MAX_DURATION);
         this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.PortionedSearch);
     }
 
-    abortPortionedSearch(): void {
+    abortDisplayPortionedSearch(): void {
         this._setSearchState(SEARCH_STATES.ABORTED);
-        this.clearPortionedSearchTimer();
+        this.clearDisplayPortionedSearchTimer();
         // скрываем все индикаторы, т.к. после abort никаких подгрузок не будет
         this._model.hideIndicator('top');
         this._model.hideIndicator('bottom');
         this._model.hideIndicator('global');
     }
 
-    endPortionedSearch(): void {
+    endDisplayPortionedSearch(): void {
         this._model.hideIndicator(this._portionedSearchDirection);
         this._portionedSearchDirection = null;
         this._setSearchState(SEARCH_STATES.NOT_STARTED);
-        this.clearPortionedSearchTimer();
+        this.clearDisplayPortionedSearchTimer();
     }
 
     /**
      * Нужно ли перезапустить таймер для показа индикатора порционного поиска
      * Перезапускаем, только если порционный поиск был начат, таймер запущен и еще не выполнился
      */
-    shouldResetShowPortionedSearchTimer(): boolean {
+    shouldResetDisplayPortionedSearchTimer(): boolean {
         return this.isPortionedSearchInProgress() && !!this._displayIndicatorTimer;
     }
 
     /**
      * Перезапускаем таймер для показа индикатора порционного поиска
      */
-    resetShowPortionedSearchTimer(): void {
+    resetDisplayPortionedSearchTimer(): void {
         this._clearDisplayIndicatorTimer();
         this._startDisplayIndicatorTimer(
             () => this._model.displayIndicator(
@@ -528,7 +522,7 @@ export default class IndicatorsController {
         );
     }
 
-    shouldContinuePortionedSearch(): boolean {
+    shouldContinueDisplayPortionedSearch(): boolean {
         // TODO LI точно ли нужна проверка на STOPPED
         return this._getSearchState() !== SEARCH_STATES.STOPPED && this._getSearchState() !== SEARCH_STATES.ABORTED;
     }
@@ -542,7 +536,7 @@ export default class IndicatorsController {
         return DIRECTION_COMPATIBILITY[this._portionedSearchDirection] as 'up'|'down';
     }
 
-    clearPortionedSearchTimer(): void {
+    clearDisplayPortionedSearchTimer(): void {
         this._clearDisplayIndicatorTimer();
         if (this._portionedSearchTimer) {
             clearTimeout(this._portionedSearchTimer);
@@ -550,9 +544,9 @@ export default class IndicatorsController {
         }
     }
 
-    private _startPortionedSearchTimer(duration: number): void {
+    private _startDisplayPortionedSearchTimer(duration: number): void {
         this._portionedSearchTimer = setTimeout(() => {
-            this.stopPortionedSearch();
+            this.stopDisplayPortionedSearch();
         }, duration);
     }
 
