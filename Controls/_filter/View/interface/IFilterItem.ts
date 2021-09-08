@@ -1,4 +1,4 @@
-import {ICrudPlus, QueryWhereExpression} from 'Types/source';
+import {ICrudPlus, ICrud, QueryWhereExpression} from 'Types/source';
 import {Source as HistorySource} from 'Controls/history';
 import {IPopupOptions} from 'Controls/popup';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
@@ -20,7 +20,7 @@ export type TKey = boolean | string | number;
  * @author Михайлов С.Е.
  */
 export interface IEditorOptions {
-    source?: ICrudPlus | HistorySource;
+    source?: ICrudPlus | ICrud & ICrudPlus | HistorySource;
     keyProperty?: string;
     /**
      * Имя свойства элемента, содержимое которого будет отображаться. Влияет только на значение при выборе.
