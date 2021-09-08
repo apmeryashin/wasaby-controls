@@ -45,6 +45,10 @@ export const DIRECTION_COMPATIBILITY = {
     down: 'bottom'
 };
 
+/**
+ * Контроллер, который управляет отображением индикаторов
+ * @author Панихин К.А.
+ */
 export default class IndicatorsController {
     private _options: IIndicatorsControllerOptions;
     private _model: Collection;
@@ -82,6 +86,12 @@ export default class IndicatorsController {
         }
     }
 
+    /**
+     * Обновляет опции и пересчитывает необходимые индикаторы.
+     * @param {IIndicatorsControllerOptions} options Опции контроллера
+     * @param {boolean} isLoading Флаг, означающий что в данный момент идет загрузка.
+     * @return {boolean} Возвращает флаг, что изменились значения сброса оффсета триггера
+     */
     updateOptions(options: IIndicatorsControllerOptions, isLoading: boolean): boolean {
         // во время загрузки sourceController всегда возвращает hasMore = false, а корректным значение будет
         // уже только после загрузки, поэтому hasMore обновим только после загрузки
@@ -115,11 +125,21 @@ export default class IndicatorsController {
         return changedResetTrigger;
     }
 
+    /**
+     * Обновляет значения опций, есть ли еще данные вверх или вниз.
+     * @param {boolean} hasMoreToTop Есть ли данные вверх
+     * @param {boolean} hasMoreToBottom Есть ли данные вниз
+     * @void
+     */
     setHasMoreData(hasMoreToTop: boolean, hasMoreToBottom: boolean): void {
         this._options.hasMoreDataToTop = hasMoreToTop;
         this._options.hasMoreDataToBottom = hasMoreToBottom;
     }
 
+    /**
+     * Обрабатывает пересоздание элементов в коллекции. (в частном случае подразумевает под этим перезагрзку списка)
+     * При необходимости пересчитываеет индикаторы, начинает порционный поиск, сбрасывает оффсет у триггеров
+     */
     onCollectionReset(): boolean {
         let changedResetTrigger = false;
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
@@ -144,6 +164,10 @@ export default class IndicatorsController {
         return changedResetTrigger;
     }
 
+    /**
+     * Обрабатывает добавление записей в коллекцию.
+     * При необходимости скрывает глобальный индикатор.
+     */
     onCollectionAdd(): void {
         const hasMoreInAnyDirection = this._options.hasMoreDataToTop || this._options.hasMoreDataToBottom;
         if (!hasMoreInAnyDirection && !this._isPortionedSearch()) {
@@ -151,17 +175,31 @@ export default class IndicatorsController {
         }
     }
 
+    /**
+     * Уничтожает состояние контроллера.
+     * Сбрасывает все таймеры.
+     */
     destroy(): void {
         this.clearDisplayPortionedSearchTimer();
     }
 
     // region LoadingIndicator
 
+    /**
+     * Проверяет, должен ли отображаться верхний индикатор.
+     * @return {boolean} Отображать ли верхний индикатор.
+     */
     shouldDisplayTopIndicator(): boolean {
         return this._options.attachLoadTopTriggerToNull && this._options.hasMoreDataToTop
             && this._shouldDisplayIndicator('up');
     }
 
+    /**
+     * Отображает верхний индикатор
+     * @param {boolean} scrollToFirstItem Нужно ли скроллить к первому элементу, чтобы добавить отступ под триггер
+     * @param onDrawItems // TODO удалить https://online.sbis.ru/opendoc.html?guid=e84068e3-0844-4930-89e3-1951efbaee25
+     * @void
+     */
     displayTopIndicator(scrollToFirstItem: boolean, onDrawItems?: boolean): void {
         const isDisplayedIndicator = this._model.getTopIndicator().isDisplayed();
         if (isDisplayedIndicator) {
@@ -178,11 +216,19 @@ export default class IndicatorsController {
         }
     }
 
+    /**
+     * Проверяет, должен ли отображаться нижний индикатор.
+     * @return {boolean} Отображать ли нижний индикатор.
+     */
     shouldDisplayBottomIndicator(): boolean {
         return this._options.attachLoadDownTriggerToNull && this._options.hasMoreDataToBottom
             && this._shouldDisplayIndicator('down');
     }
 
+    /**
+     * Отображает нижний индикатор
+     * @void
+     */
     displayBottomIndicator(): void {
         const isDisplayedIndicator = this._model.getBottomIndicator().isDisplayed();
         if (isDisplayedIndicator) {
@@ -193,6 +239,11 @@ export default class IndicatorsController {
         this._model.displayIndicator('bottom', indicatorState);
     }
 
+    /**
+     * Отображает глобальный индикатор загрузки.
+     * Отображает его с задержкой в 2с.
+     * @param {number} topOffset Отступ сверху для центрирования ромашки
+     */
     displayGlobalIndicator(topOffset: number): void {
         if (!this._displayIndicatorTimer) {
             this._startDisplayIndicatorTimer(
@@ -201,6 +252,9 @@ export default class IndicatorsController {
         }
     }
 
+    /**
+     * Скрывает глобальный индикатор загрузки
+     */
     hideGlobalIndicator(): void {
         // TODO LI кривые юниты нужно фиксить
         if (!this._model || this._model.destroyed) {
@@ -212,7 +266,9 @@ export default class IndicatorsController {
     }
 
     /**
-     * Отображает индикатор, который обозначает долгую отрисовку элементов
+     * Отображает индикатор долгой отрисовки элементов
+     * @param position Позиция индикатора
+     * @void
      */
     displayDrawingIndicator(position: 'top'|'bottom'): void {
         this._startDisplayIndicatorTimer(() => {
@@ -226,6 +282,10 @@ export default class IndicatorsController {
         });
     }
 
+    /**
+     * Скрывает индикатор долгой отрисовки элементов
+     * @param position Позиция индикатора
+     */
     hideDrawingIndicator(position: 'top'|'bottom'): void {
         this._clearDisplayIndicatorTimer();
         const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
@@ -234,11 +294,23 @@ export default class IndicatorsController {
         indicatorElement.style[position] = '';
     }
 
+    /**
+     * Устанавливает DOM элементы для верхнего и нижнего индикатора.
+     * Они нужны для отображения индкаторов долгой отрисовки элементов списка.
+     * @param {HTMLElement} topIndicator DOM элемент для верхнего индикатора
+     * @param {HTMLElement} bottomIndicator DOM элемент для нижнего индикатора
+     */
     setIndicatorElements(topIndicator: HTMLElement, bottomIndicator: HTMLElement): void {
         this._topIndicatorElement = topIndicator;
         this._bottomIndicatorElement = bottomIndicator;
     }
 
+    /**
+     * Пересчитывает индикаторы в заданном направлении
+     * @param direction Направление, для которого будут пересчитаны индикаторы. all - пересчет всех индикаторов.
+     * @param {boolean} scrollToFirstItem Нужно ли скроллить к первому элементу, чтобы добавить отступ под верхний триггер
+     * @return {boolean} Возвращает флаг, что изменились значения сброса оффсета триггера
+     */
     recountIndicators(direction: 'up'|'down'|'all', scrollToFirstItem: boolean = false): boolean {
         let changedResetTrigger = false;
 
@@ -272,6 +344,10 @@ export default class IndicatorsController {
         return changedResetTrigger;
     }
 
+    /**
+     * Определяет есть ли отображенные индикаторы.
+     * @return {boolean} Есть ли отображенные индикаторы.
+     */
     hasDisplayedIndicator(): boolean {
         return !!(
             this._model.hasIndicator('global') ||
@@ -353,7 +429,7 @@ export default class IndicatorsController {
     private _getLoadingIndicatorState(): TIndicatorState {
         let state = EIndicatorState.Loading;
 
-        if (this.isPortionedSearchInProgress()) {
+        if (this.isDisplayedPortionedSearch()) {
             state = EIndicatorState.PortionedSearch;
         }
         if (this._searchState === SEARCH_STATES.STOPPED) {
@@ -367,10 +443,18 @@ export default class IndicatorsController {
 
     // region Trigger
 
+    /**
+     * Определяет, нужно ли сбросить оффсет верхнего триггера.
+     * @return {boolean} Нужно ли сбросить оффсет верхнего триггера.
+     */
     isResetTopTriggerOffset(): boolean {
         return this._resetTopTriggerOffset;
     }
 
+    /**
+     * Определяет, нужно ли сбросить оффсет нижнего триггера.
+     * @return {boolean} Нужно ли сбросить оффсет нижнего триггера.
+     */
     isResetBottomTriggerOffset(): boolean {
         return this._resetBottomTriggerOffset;
     }
@@ -380,6 +464,7 @@ export default class IndicatorsController {
      * Если в параметры прокинули 'up'|'down', то сбрасываем соответствующий флаг resetOffset,
      * т.к. последующие подгрузки должны происходить заранее
      * @param directionOfLoadItems Направление подгрузки данных
+     * @return {boolean} Возвращает флаг, что изменились значения сброса оффсета триггера
      */
     recountResetTriggerOffsets(directionOfLoadItems?: 'up'|'down'): boolean {
         let changed = false;
@@ -410,6 +495,10 @@ export default class IndicatorsController {
         return changed;
     }
 
+    /**
+     * Устанавливает оффсет для триггеров
+     * @param offset Оффсет для триггеров
+     */
     setLoadingTriggerOffset(offset: ITriggerOffset): void {
         // TODO LI кривые юниты нужно фиксить
         if (!this._model || this._model.destroyed) {
@@ -446,6 +535,10 @@ export default class IndicatorsController {
 
     // region PortionedSearch
 
+    /**
+     * Начинает отображение индикатора порционного поиска. Индикатор позывается только через 2с.
+     * @param direction Направление, в котором будет отрисован индикатор
+     */
     startDisplayPortionedSearch(direction: TPortionedSearchDirection): void {
         const currentState = this._getSearchState();
         if (currentState === SEARCH_STATES.NOT_STARTED || currentState === SEARCH_STATES.ABORTED) {
@@ -464,16 +557,19 @@ export default class IndicatorsController {
     }
 
     /**
-     * Определяем, нужно ли приостанавливать поиск
+     * Определяет, нужно ли приостанавливать поиск
      * @remark
      * Поиск нужно приостановить если страница успела загрузиться быстрее 30с(при первой подгрузке)
      * или быстрее 2м(при последующних подгрузках)
      * @param pageLoaded Признак, который означает что загрузилась целая страница
      */
     shouldStopDisplayPortionedSearch(pageLoaded: boolean): boolean {
-        return pageLoaded && this.isPortionedSearchInProgress() && !this._isSearchContinued();
+        return pageLoaded && this.isDisplayedPortionedSearch() && !this._isSearchContinued();
     }
 
+    /**
+     * Приостанавливаем отображение порционного поиска.
+     */
     stopDisplayPortionedSearch(): void {
         this.clearDisplayPortionedSearchTimer();
         this._setSearchState(SEARCH_STATES.STOPPED);
@@ -481,12 +577,18 @@ export default class IndicatorsController {
         this._options.stopDisplayPortionedSearchCallback();
     }
 
+    /**
+     * Продолжаем отображение порционного поиска.
+     */
     continueDisplayPortionedSearch(): void {
         this._setSearchState(SEARCH_STATES.CONTINUED);
         this._startDisplayPortionedSearchTimer(SEARCH_CONTINUED_MAX_DURATION);
         this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.PortionedSearch);
     }
 
+    /**
+     * Прерываем отображение порционного поиска.
+     */
     abortDisplayPortionedSearch(): void {
         this._setSearchState(SEARCH_STATES.ABORTED);
         this.clearDisplayPortionedSearchTimer();
@@ -496,6 +598,9 @@ export default class IndicatorsController {
         this._model.hideIndicator('global');
     }
 
+    /**
+     * Заканчиваем отображение порционного поиска.
+     */
     endDisplayPortionedSearch(): void {
         this._model.hideIndicator(this._portionedSearchDirection);
         this._portionedSearchDirection = null;
@@ -508,7 +613,7 @@ export default class IndicatorsController {
      * Перезапускаем, только если порционный поиск был начат, таймер запущен и еще не выполнился
      */
     shouldResetDisplayPortionedSearchTimer(): boolean {
-        return this.isPortionedSearchInProgress() && !!this._displayIndicatorTimer;
+        return this.isDisplayedPortionedSearch() && !!this._displayIndicatorTimer;
     }
 
     /**
@@ -523,20 +628,34 @@ export default class IndicatorsController {
         );
     }
 
+    /**
+     * Определяет, можно ли продолжить отображать порционный поиск.
+     * @return {boolean} Можно ли продолжить отображать порционный поиск
+     */
     shouldContinueDisplayPortionedSearch(): boolean {
         // TODO LI точно ли нужна проверка на STOPPED
         return this._getSearchState() !== SEARCH_STATES.STOPPED && this._getSearchState() !== SEARCH_STATES.ABORTED;
     }
 
-    isPortionedSearchInProgress(): boolean {
+    /**
+     * Проверяет, отображается ли сейчас порционный поиск
+     * @return {boolean} Отображается ли сейчас порционный поиск
+     */
+    isDisplayedPortionedSearch(): boolean {
         return this._getSearchState() === SEARCH_STATES.STARTED || this._getSearchState() === SEARCH_STATES.CONTINUED;
     }
 
+    /**
+     * Возвращает направление порционного поиска.
+     */
     getPortionedSearchDirection(): 'up'|'down' {
         // Приводим новые названия направлений к старым
         return DIRECTION_COMPATIBILITY[this._portionedSearchDirection] as 'up'|'down';
     }
 
+    /**
+     * Прерывает таймеры отображения порционного поиска
+     */
     clearDisplayPortionedSearchTimer(): void {
         this._clearDisplayIndicatorTimer();
         if (this._portionedSearchTimer) {

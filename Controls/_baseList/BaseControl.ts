@@ -662,7 +662,7 @@ const _private = {
                 // После выполнения поиска мы должны поставить маркер.
                 // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
                 // то на событие reset список будет пустой и нам некуда будет ставить маркер.
-                if (_private.hasMarkerController(self) && self._indicatorsController.isPortionedSearchInProgress()) {
+                if (_private.hasMarkerController(self) && self._indicatorsController.isDisplayedPortionedSearch()) {
                     const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
                     self._changeMarkedKey(newMarkedKey);
                 }
