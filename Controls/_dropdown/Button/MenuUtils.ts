@@ -1,4 +1,6 @@
-   function getIconSize(options) {
+import {defaultHeight} from 'Controls/buttons';
+
+function getIconSize(options) {
       const sizes = ['small', 'medium', 'large'];
       let iconSize;
       if (options.iconSize) {
@@ -29,7 +31,7 @@
 
       if (!options.icon || options.viewMode === 'toolButton' || options.viewMode === 'onlinePageHeader'
           || options.viewMode === 'functionalButton' || options.viewMode === 'linkButton') {
-         const currentHeight = options.inlineHeight || options.fontSize;
+         const currentHeight = options.inlineHeight || defaultHeight(options.viewMode) || options.fontSize;
          offsetClassName += ('__' + currentHeight);
 
       } else if (options.icon) {
