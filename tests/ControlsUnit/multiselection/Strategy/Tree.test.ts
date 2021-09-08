@@ -163,7 +163,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          let selection = { selected: [3], excluded: [] };
          selection = strategy.unselect(selection, 2);
          assert.deepEqual(selection.selected, []);
-         assert.deepEqual(selection.excluded, [);
+         assert.deepEqual(selection.excluded, []);
       });
 
       it('with entry path', () => {
