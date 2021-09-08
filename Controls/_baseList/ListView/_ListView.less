@@ -503,7 +503,7 @@
 
 .controls-ListView__groupContent {
    display: flex;
-   align-items: baseline;
+   align-items: center;
    min-width: 0;
    flex-grow: 1;
    line-height: 1;
@@ -512,18 +512,14 @@
    //overflow: hidden;
 }
 
-// TODO необходимо разобраться с высотой групп.
-//  Базовая линия в группе сейчас должна быть 16px из-за expander.
-//  https://online.sbis.ru/opendoc.html?guid=6693d47c-515c-4751-949d-55be05fe124e
 .controls-ListView__groupContent_baseline_default:before {
    content: '\200b';
-   font-size: var(--grouping_expander_icon-size_list);
+   font-size: var(--font-size_2xl);
 }
 
 .controls-ListView__groupSeparator {
-   height: calc(var(--grouping_height_list) / 2 - var(--grouping_separator_thickness_list));
-   margin-bottom: calc(var(--grouping_height_list) / 2);
-   border-bottom: var(--grouping_separator_thickness_list) solid var(--grouping_separator_color_list);
+   height: var(--grouping_separator_thickness_list);
+   background-color: var(--grouping_separator_color_list);
    min-width: 10%;
    flex-grow: 1;
    flex-shrink: 1;
