@@ -3,19 +3,63 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Template = require('wml!Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs');
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {RecordSet} from 'Types/collection';
 
 class BreadCrumbs extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
-    protected items = null;
-    protected items1 = null;
-    protected items2 = null;
-    protected items3 = null;
-    protected items4 = null;
-    protected info = '';
-    protected _arrowActivated = false;
+    protected _recordItems: RecordSet = null;
+    protected _items: Model[] = null;
+    protected _items1: Model[] = null;
+    protected _items2: Model[] = null;
+    protected _items3: Model[] = null;
+    protected _items4: Model[] = null;
+    protected _containerWidth: number = 350;
+    protected info: string = '';
+    protected _arrowActivated: boolean = false;
 
     protected _beforeMount(): void {
-        this.items = [
+        this._recordItems = new RecordSet({
+            keyProperty: 'id',
+            rawData: [
+                {
+                    id: 1,
+                    title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+                    secondTitle: 'тест1',
+                    parent: null
+                },
+                {
+                    id: 2,
+                    title: 'Notebooks 2',
+                    secondTitle: 'тест2',
+                    parent: 1
+                },
+                {
+                    id: 3,
+                    title: 'Smartphones 3',
+                    secondTitle: 'тест3',
+                    parent: 2
+                },
+                {
+                    id: 4,
+                    title: 'Record1',
+                    secondTitle: 'тест4',
+                    parent: 3
+                },
+                {
+                    id: 5,
+                    title: 'Record2',
+                    secondTitle: 'тест5',
+                    parent: 4
+                },
+                {
+                    id: 6,
+                    title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+                    secondTitle: 'тест6',
+                    parent: 5
+                }
+            ]
+        });
+        this._items = [
             {
                 id: 1,
                 title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
@@ -58,7 +102,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 keyProperty: 'id'
             });
         });
-        this.items1 = [{
+        this._items1 = [{
             id: 1,
             title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
             secondTitle: 'тест1'
@@ -68,7 +112,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 keyProperty: 'id'
             });
         });
-        this.items2 = [{
+        this._items2 = [{
             id: 1,
             title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
             secondTitle: 'тест1'
@@ -82,7 +126,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 keyProperty: 'id'
             });
         });
-        this.items3 = [{id: 5, title: 'Recor'},
+        this._items3 = [{id: 5, title: 'Recor'},
             {
                 id: 6,
                 title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
@@ -93,7 +137,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 keyProperty: 'id'
             });
         });
-        this.items4 = [
+        this._items4 = [
             {
                 id: 1,
                 title: 'Record3eqweqweqeqweqweedsadeqweqewqeqwqewqeqweqweqw',
@@ -112,7 +156,7 @@ class BreadCrumbs extends Control<IControlOptions> {
     }
 
     private _resetCrumbs(): void {
-        this.items = [
+        this._items = [
             {
                 id: 1,
                 title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
