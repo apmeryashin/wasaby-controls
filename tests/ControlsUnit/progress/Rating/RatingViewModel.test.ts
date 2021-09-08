@@ -353,7 +353,7 @@ describe('Controls/progress:Rating', () => {
                 index: 2,
                 type: 'full',
                 icon: 'icon-Favorite',
-                iconStyle: 'b'
+                iconStyle: 'a'
             },
             {
                 index: 3,
