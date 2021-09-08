@@ -1,7 +1,7 @@
 <div class="controls-TileView__imageWrapper js-controls-ListView__measurableContainer">
-   <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (item.contentssHeight / width) * 100 + '%;'}}"></div>
-   <img class="controls-TileView__image controls-TileView__image_align_center" src="{{item.contents[itemData.imageProperty]}}"/>
-   <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+   <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (item.getTileHeight() / itemWidth) * 100 + '%;'}}"></div>
+   <img class="controls-TileView__image controls-TileView__image_align_center" src="{{item.contents[item.getImageProperty()]}}"/>
+   <ws:partial if="{{item.shouldDisplaySwipeTemplate()}}"
                template="{{swipeTemplate}}"
                scope="{{ _options }}"
                itemActionsTemplate="{{itemActionsTemplate}}"/>
