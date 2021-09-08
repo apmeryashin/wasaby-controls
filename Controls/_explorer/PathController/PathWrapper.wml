@@ -1,43 +1,58 @@
 <ws:template name="headingPath">
-   <Controls.Container.Async templateName="Controls/breadcrumbs:HeadingPath">
-      <ws:partial template="{{ content.resolvedTemplate }}"
-                  scope="{{_options}}"
-                  name="Path"
-                  items="{{_options.breadCrumbsItems}}"
-                  displayMode="{{_options.breadcrumbsDisplayMode}}"
+   <ws:if data="{{_needCrumbs}}">
+      <Controls.Container.Async templateName="Controls/breadcrumbs:HeadingPath">
+         <ws:partial template="{{ content.resolvedTemplate }}"
+                     scope="{{_options}}"
+                     name="Path"
+                     items="{{_options.breadCrumbsItems}}"
+                     displayMode="{{_options.breadcrumbsDisplayMode}}"
 
-                  withoutBackButton="{{_withoutBackButton}}"
-                  backButtonNewIcon="{{_options.backButtonNewIcon}}"
-                  backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
+                     withoutBackButton="{{_withoutBackButton}}"
+                     backButtonNewIcon="{{_options.backButtonNewIcon}}"
+                     backButtonBeforeCaptionTemplate="{{_options.backButtonBeforeCaptionTemplate}}"
 
-                  pathButtonSource="{{_options.source}}"
-                  pathButtonFilter="{{_options.filter}}"
-                  pathButtonKeyProperty="{{_options.keyProperty}}"
-                  pathButtonNodeProperty="{{_options.nodeProperty}}"
-                  pathButtonParentProperty="{{_options.parentProperty}}"
-                  pathButtonDisplayProperty="{{_options.displayProperty}}"
+                     pathButtonSource="{{_options.source}}"
+                     pathButtonFilter="{{_options.filter}}"
+                     pathButtonKeyProperty="{{_options.keyProperty}}"
+                     pathButtonNodeProperty="{{_options.nodeProperty}}"
+                     pathButtonParentProperty="{{_options.parentProperty}}"
+                     pathButtonDisplayProperty="{{_options.displayProperty}}"
 
-                  attr:class="controls-Explorer__Path"
-                  on:backButtonClick="_notifyHandler('backButtonClick')"
-                  on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                  on:arrowActivated="_notifyHandler('arrowActivated')"
-                  on:itemClick="_notifyHandler('itemClick')"
-                  on:itemMouseDown="_notifyHandler('itemMouseDown')"
-                  on:arrowClick="_notifyHandler('arrowClick')"/>
-   </Controls.Container.Async>
+                     attr:class="controls-Explorer__Path"
+                     on:backButtonClick="_notifyHandler('backButtonClick')"
+                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                     on:arrowActivated="_notifyHandler('arrowActivated')"
+                     on:itemClick="_notifyHandler('itemClick')"
+                     on:itemMouseDown="_notifyHandler('itemMouseDown')"
+                     on:arrowClick="_notifyHandler('arrowClick')"
+         />
+      </Controls.Container.Async>
+   </ws:if>
+
    <ws:if data="{{_options.afterBreadCrumbsTemplate}}">
-      <ws:partial attr:class="controls-Explorer__afterBreadCrumbsTemplate"  template="{{_options.afterBreadCrumbsTemplate}}"></ws:partial>
+      <ws:partial
+         template="{{_options.afterBreadCrumbsTemplate}}"
+         attr:class="
+            controls-Explorer__afterBreadCrumbsTemplate
+            {{!_needCrumbs ? 'controls-Explorer__afterBreadCrumbsTemplate_width_full'}}
+         "
+      />
    </ws:if>
 </ws:template>
 
-<ws:if data="{{_needCrumbs}}">
+<ws:if data="{{!_needCrumbs && !_options.afterBreadCrumbsTemplate}}">
+   <!-- нельзя использовать invisible-node. он ломает всплытие событий/-->
+   <div style="display: none"></div>
+</ws:if>
+<ws:else>
    <ws:if data="{{_options.stickyHeader}}">
       <Controls.scroll:StickyBlock
-              mode="stackable"
-              shadowVisibility="{{_options.needShadow ? 'lastVisible' : 'hidden'}}"
-              fixedZIndex="{{5}}"
-              backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
-              attr:class="controls-Explorer__HeadingPath-{{_options.style}}">
+         mode="stackable"
+         shadowVisibility="{{_options.needShadow ? 'lastVisible' : 'hidden'}}"
+         fixedZIndex="{{5}}"
+         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+         attr:class="controls-Explorer__HeadingPath-{{_options.style}}"
+      >
          <div class="controls-Explorer__PathWrapper">
             <ws:partial template="headingPath" />
          </div>
@@ -47,22 +62,5 @@
       <div class="controls-Explorer__PathWrapper">
          <ws:partial template="headingPath"/>
       </div>
-   </ws:else>
-</ws:if>
-<ws:else>
-   <ws:if data="{{_options.afterBreadCrumbsTemplate}}">
-      <div class="controls-Explorer__PathWrapper">
-         <ws:partial
-            attr:class="
-               controls-Explorer__afterBreadCrumbsTemplate
-               controls-Explorer__afterBreadCrumbsTemplate_width_full
-            "
-            template="{{_options.afterBreadCrumbsTemplate}}"
-         />
-      </div>
-   </ws:if>
-   <ws:else>
-   <!-- нельзя использовать invisible-node. он ломает всплытие событий/-->
-      <div style="display: none"></div>
    </ws:else>
 </ws:else>
