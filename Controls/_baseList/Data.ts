@@ -580,7 +580,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          }
       };
 
-      if (direction) {
+      if (direction && currentRoot === root) {
          errorConfig.templateOptions.action = () => {
             this._loadToDirectionRegister.start('down');
             return Promise.resolve();
