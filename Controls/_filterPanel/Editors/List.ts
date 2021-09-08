@@ -4,7 +4,6 @@ import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/List';
 import * as ColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/ColumnTemplate';
 import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
 import {StackOpener, DialogOpener} from 'Controls/popup';
-import {BaseEditor} from 'Controls/_filterPanel/Editors/Base';
 import {Model} from 'Types/entity';
 import {
     IFilterOptions,
@@ -68,7 +67,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
  * @default false
  */
 
-class ListEditor extends BaseEditor {
+class ListEditor extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
     protected _circleTemplate: TemplateFunction = MultiSelectCircleTemplate;
     protected _columns: object[] = null;
@@ -181,7 +180,7 @@ class ListEditor extends BaseEditor {
     protected _processPropertyValueChanged(value: string[] | number[], needCollapse: boolean): void {
         this._selectedKeys = value;
         this._setColumns(this._options, this._selectedKeys);
-        this._notifyPropertyValueChanged(needCollapse);
+        this._notify('propertyValueChanged', [this._getExtendedValue(needCollapse)], {bubbling: true});
     }
 
     protected _getExtendedValue(needCollapse?: boolean): object {

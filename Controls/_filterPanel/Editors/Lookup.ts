@@ -1,7 +1,6 @@
-import {IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import LookupTemplate = require('wml!Controls/_filterPanel/Editors/Lookup');
-import {BaseEditor} from 'Controls/_filterPanel/Editors/Base';
 import {Selector, showSelector} from 'Controls/lookup';
 import 'css!Controls/filterPanel';
 import * as rk from 'i18n!Controls';
@@ -27,7 +26,7 @@ interface ILookup {
 
 const MAX_VISIBLE_ITEMS = 7;
 
-class LookupEditor extends BaseEditor implements ILookup {
+class LookupEditor extends Control<ILookupOptions> implements ILookup {
     readonly '[Controls/_filterPanel/Editors/Lookup]': boolean = true;
     protected _template: TemplateFunction = LookupTemplate;
     protected _textValue: string = rk('Еще');
@@ -60,7 +59,7 @@ class LookupEditor extends BaseEditor implements ILookup {
             value,
             textValue: this._textValue
         };
-        this._notifyPropertyValueChanged(extendedValue);
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
         this._showSelectorCaption = this._getShowSelectorCaption(value, this._options.maxVisibleItems);
     }
 
