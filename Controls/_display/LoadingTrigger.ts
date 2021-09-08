@@ -23,7 +23,6 @@ export default class LoadingTrigger extends CollectionItem<null> {
     readonly DisplaySearchValue: boolean = false;
 
     protected _$position: TLoadingTriggerPosition;
-    protected _$offset: number;
     protected _$visible: boolean;
 
     constructor(options: IOptions) {
@@ -40,12 +39,6 @@ export default class LoadingTrigger extends CollectionItem<null> {
 
     getStyles(): string {
         let styles = '';
-
-        if (this.isTopTrigger()) {
-            styles += ` top: ${this._$offset}px;`;
-        } else if (this.isBottomTrigger()) {
-            styles += ` bottom: ${this._$offset}px;`;
-        }
 
         if (!this._$visible) {
             styles += ' display: none;';
@@ -64,15 +57,6 @@ export default class LoadingTrigger extends CollectionItem<null> {
 
     isBottomTrigger(): boolean {
         return this._$position === 'bottom';
-    }
-
-    setOffset(offset: number): boolean {
-        const changed = this._$offset !== offset;
-        if (changed) {
-            this._$offset = offset;
-            this._nextVersion();
-        }
-        return changed;
     }
 
     display(): boolean {
@@ -107,6 +91,5 @@ Object.assign(LoadingTrigger.prototype, {
     _moduleName: 'Controls/display:LoadingTrigger',
     _instancePrefix: 'loading-trigger-',
     _$position: null,
-    _$offset: 0,
     _$visible: false
 });

@@ -57,8 +57,6 @@ export default class IndicatorsController {
     private _portionedSearchTimer: number = null;
     private _searchState: SEARCH_STATES = 0;
 
-    private _topIndicatorElement: HTMLElement;
-    private _bottomIndicatorElement: HTMLElement;
     private _hasNotRenderedChanges: boolean = false;
 
     constructor(options: IIndicatorsControllerOptions) {
@@ -191,9 +189,8 @@ export default class IndicatorsController {
     /**
      * Отображает индикатор, который обозначает долгую отрисовку элементов
      */
-    displayDrawingIndicator(position: 'top'|'bottom'): void {
+    displayDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
         this._startDisplayIndicatorTimer(() => {
-            const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
             // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
             // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
             // скорее всего не выполнится
@@ -203,17 +200,11 @@ export default class IndicatorsController {
         });
     }
 
-    hideDrawingIndicator(position: 'top'|'bottom'): void {
+    hideDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
         this._clearDisplayIndicatorTimer();
-        const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
         indicatorElement.style.display = 'none';
         indicatorElement.style.position = '';
         indicatorElement.style[position] = '';
-    }
-
-    setIndicatorElements(topIndicator: HTMLElement, bottomIndicator: HTMLElement): void {
-        this._topIndicatorElement = topIndicator;
-        this._bottomIndicatorElement = bottomIndicator;
     }
 
     recountIndicators(direction: 'up'|'down'|'all', scrollToFirstItem: boolean = false): boolean {
@@ -389,14 +380,20 @@ export default class IndicatorsController {
         return changed;
     }
 
-    setLoadingTriggerOffset(offset: ITriggerOffset): void {
+    setLoadingTriggerOffset(
+        topTriggerElement: HTMLElement,
+        bottomTriggerElement: HTMLElement,
+        offset: ITriggerOffset
+    ): void {
         // TODO LI кривые юниты нужно фиксить
         if (!this._model || this._model.destroyed) {
             return;
         }
 
-        const newOffset = this._correctTriggerOffset(offset);
-        this._model.setLoadingTriggerOffset(newOffset);
+        const correctingOffset = this._correctTriggerOffset(offset);
+        // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишние перерисовки
+        topTriggerElement.style.top = `${correctingOffset.top}px`;
+        bottomTriggerElement.style.bottom = `${correctingOffset.bottom}px`;
     }
 
     onCollectionReset(hasSearchValue: boolean): void {
@@ -404,17 +401,6 @@ export default class IndicatorsController {
             // Событие reset коллекции приводит к остановке активного порционного поиска.
             // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
             this.endPortionedSearch();
-        }
-        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
-        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
-        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
-        // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
-        const hasItems = this._model && !this._model.destroyed && !!this._model.getCount();
-        if (!hasItems) {
-            this.setLoadingTriggerOffset({
-                top: 0,
-                bottom: 0
-            });
         }
     }
 

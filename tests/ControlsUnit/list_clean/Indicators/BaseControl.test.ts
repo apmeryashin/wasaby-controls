@@ -72,36 +72,6 @@ describe('Controls/list_clean/Indicators/BaseControl', () => {
             });
         });
 
-        it('set indicator dom elements', () => {
-            const options = {
-                navigation: {
-                    source: 'page',
-                    view: 'infinity',
-                    sourceConfig: {
-                        direction: 'bothways',
-                        pageSize: 1,
-                        page: 2,
-                        hasMore: false
-                    }
-                },
-                attachLoadTopTriggerToNull: true
-            };
-            const items = [ { id: 1 }, { id: 2 }, { id: 3 } ];
-            const baseControl = initTest(items, options);
-            const topIndicatorElement = {};
-            const bottomIndicatorElement = {};
-            baseControl._children = {
-                listView: {
-                    getTopIndicator: () => topIndicatorElement,
-                    getBottomIndicator: () => bottomIndicatorElement
-                }
-            };
-            const setIndicatorElementsSpy = spy(baseControl._indicatorsController, 'setIndicatorElements');
-
-            baseControl._afterMount();
-            assert.isTrue(setIndicatorElementsSpy.withArgs(topIndicatorElement, bottomIndicatorElement).called);
-        });
-
         describe('viewport is not filled by items', () => {
             it('has more to top', async () => {
                 const baseControlOptions = await getCorrectBaseControlConfigAsync({
