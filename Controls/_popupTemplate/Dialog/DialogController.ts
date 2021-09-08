@@ -262,8 +262,18 @@ class DialogController extends BaseController {
         // Для того, чтобы диалоговое окно не прыгало, когда задана позиция, удаляем 0 margin
         delete item.position.margin;
         // Диалог изначально должен позиционироваться вне экрана, если не задана позиция(например из propStorage)
-        item.position[verticalPositionProperty] = item.popupOptions[verticalPositionProperty] || defaultCoordinate;
-        item.position[horizontalPositionProperty] = item.popupOptions[horizontalPositionProperty] || defaultCoordinate;
+        if (item.popupOptions[verticalPositionProperty]) {
+            item.position[verticalPositionProperty] = item.popupOptions[verticalPositionProperty] +
+                (item.position.offset?.vertical || 0);
+        } else {
+            item.position[verticalPositionProperty] = defaultCoordinate;
+        }
+        if (item.popupOptions[horizontalPositionProperty]) {
+            item.position[horizontalPositionProperty] = item.popupOptions[horizontalPositionProperty] +
+                (item.position.offset?.horizontal || 0);
+        } else {
+            item.position[horizontalPositionProperty] = defaultCoordinate;
+        }
     }
 
     private _hasMaximizePopup(): boolean {

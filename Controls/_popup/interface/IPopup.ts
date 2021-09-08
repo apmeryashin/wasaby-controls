@@ -62,6 +62,10 @@ export interface IPopupPosition {
     hidden?: boolean;
     margin?: number;
     zoom?: number;
+    offset?: {
+        vertical: number;
+        horizontal: number;
+    }
 }
 
 export interface IEventHandlers {

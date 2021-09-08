@@ -19,6 +19,10 @@ interface IDialogPosition {
     bottom?: number;
     width: number;
     height: number;
+    offset?: {
+        vertical: number;
+        horizontal: number;
+    }
 }
 
 export class DialogStrategy {
@@ -60,7 +64,7 @@ export class DialogStrategy {
 
     private _resetMargins(item: IDialogItem, position: IDialogPosition): void {
         // Сбрасываю все отступы, которые заданы на css. Они уже учтены в позиции
-        if (item.targetCoords || item.margins?.top || item.margins?.left) {
+        if (item.targetCoords || position.offset.vertical || position.offset.horizontal) {
             position.margin = 0;
         }
     }
@@ -128,6 +132,11 @@ export class DialogStrategy {
             (popupItem.popupOptions.offset?.horizontal || 0);
         const top = (topCoordinate || 0) + topOffset;
         const horizontalPosition = (horizontalCoordinate || 0) + horizontalOffset;
+
+        position.offset = {
+            vertical: topOffset,
+            horizontal: horizontalOffset
+        }
 
         if (topCoordinate !== undefined) {
             position.top = top;
