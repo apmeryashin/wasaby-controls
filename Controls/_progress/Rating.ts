@@ -23,25 +23,30 @@ const DEFAULT_EMPTY_ICON_STYLE = 'readonly';
 interface IRatingOptions extends IControlOptions {
     /**
      * @name Controls/progress:IRating#value
-     * @cfg {Number} Количество заполненных звезд. Может быть дробным.
+     * @cfg {Number} Количество заполненных звезд
      * @remark
-     * В случае дробного значения, количество звезд округляется до половины в меньшую сторону. Например 3.2 окргулится до 3, а 3.6 до 3.5. Округление работает только при заданной опции presicion.
+     * Целое число от 1 до 5.
      */
     /*
      * @name Controls/progress:IRating#value
      * @cfg {Number} Number of highlighted stars
+     * @remark
+     * An integer from 1 to 5.
      */
     value: number;
     /**
      * @name Controls/progress:IRating#precision
      * @cfg {Number} Количество символов десятичной части, по умолчанию 0
      * @remark
-     * Если значение опции не задано или 0, то количество звезд всегда целое. Если значение опции >= 1, то количество звезд получается из опции value, округлением до половины в меньшую сторону. Например 3.2 окргулится до 3, а 3.6 до 3.5.
+     * Если десятичное значение precision больше половины целого значения, то показывается пол.звезды.
+     * 3,44 –3 звезды. 3,56 –3 с половиной здезды
      */
     /*
      * @name Controls/progress:IRating#precision
      * @cfg {Number} Number of decimal characters, default 0
      * @remark
+     * If the precision decimal value is greater than half an integer value, then half a star is displayed.
+     * 3,44 – 3 highlighted stars. 3,56 –3 with half highlighted stars
      */
     precision?: number;
     /**
