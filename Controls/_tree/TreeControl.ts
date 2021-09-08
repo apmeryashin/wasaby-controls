@@ -61,10 +61,6 @@ export interface ITreeControlOptions extends IBaseControlOptions, IHierarchyOpti
 }
 
 const _private = {
-    isExpandAll(expandedItems: TKey[]): boolean {
-        return expandedItems instanceof Array && expandedItems[0] === null;
-    },
-
     expandMarkedItem(self: TreeControl): void {
         const markerController = self._markerController;
         const markedKey = markerController?.getMarkedKey() || null;
@@ -428,7 +424,7 @@ const _private = {
 
     /**
      * Возвращает идентификаторы раскрытых узлов. В случае если переданные expandedItems не равны
-     * [null], то вернутся копия переданного массива. В противном случае вернутся идентификаторы
+     * [ALL_EXPANDED_VALUE], то вернутся копия переданного массива. В противном случае вернутся идентификаторы
      * всех узлов, присутствующих в указанных items
      */
     getExpandedItems(
@@ -443,7 +439,7 @@ const _private = {
         }
         let realExpandedItems;
 
-        if (_private.isExpandAll(expandedItems) && options.nodeProperty) {
+        if (self._expandController.isAllExpanded() && options.nodeProperty) {
             realExpandedItems = [];
             items.each((item) => {
                 if (item.get(options.nodeProperty) !== null) {
@@ -1075,44 +1071,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
     protected _afterCollectionRemove(removedItems: Array<CollectionItem<Model>>, removedItemsIndex: number): void {
         super._afterCollectionRemove(removedItems, removedItemsIndex);
-        if (this._options.expandedItems?.length || this._options.collapsedItems?.length) {
-            // обрабатываем только узлы
-            const items = removedItems.filter((it) => it['[Controls/_display/TreeItem]'] && it.isNode() !== null);
-            let removedKeys = items.map((it) => it.getContents().getKey());
-            // отфильтровываем скрытые записи
-            removedKeys = removedKeys.filter((it) => !this._items.getRecordById(it));
 
-            if (this._options.expandedItems?.length) {
-                const newExpandedItems = this._options.expandedItems.slice();
-                removedKeys.forEach((it) => {
-                    const expandedItemsIndex = newExpandedItems.indexOf(it);
-                    if (expandedItemsIndex !== -1) {
-                        newExpandedItems.splice(expandedItemsIndex, 1);
-                    }
-                });
-
-                if (!isEqual(newExpandedItems, this._options.expandedItems)) {
-                    this._expandController.setExpandedItems(newExpandedItems);
-                    this.getSourceController().setExpandedItems(newExpandedItems);
-
-                    this._notify('expandedItemsChanged', [newExpandedItems]);
-                }
-            }
-            if (this._options.collapsedItems?.length) {
-                const newCollapsedItems = this._options.collapsedItems.slice();
-                removedKeys.forEach((it) => {
-                    const collapsedItemsIndex = newCollapsedItems.indexOf(it);
-                    if (collapsedItemsIndex !== -1) {
-                        newCollapsedItems.splice(collapsedItemsIndex, 1);
-                    }
-                });
-
-                if (!isEqual(newCollapsedItems, this._options.collapsedItems)) {
-                    this._expandController.setCollapsedItems(newCollapsedItems);
-
-                    this._notify('collapsedItemsChanged', [newCollapsedItems]);
-                }
-            }
+        const result = this._expandController.onCollectionRemove(removedItems);
+        if (result.expandedItems) {
+            this.getSourceController().setExpandedItems(result.expandedItems);
+            this._notify('expandedItemsChanged', [result.expandedItems]);
+        }
+        if (result.collapsedItems) {
+            this._notify('collapsedItemsChanged', [result.collapsedItems]);
         }
     }
 
@@ -1450,7 +1416,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             dispItem?.isRoot() ||
             baseSourceController?.hasLoaded(nodeKey) ||
             !_private.shouldLoadChildren(this, nodeKey) ||
-            _private.isExpandAll(this._expandController.getExpandedItems())
+            this._expandController.isAllExpanded()
         ) {
             return;
         }
