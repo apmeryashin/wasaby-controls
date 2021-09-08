@@ -43,6 +43,11 @@ export default class Columns extends ListView {
     }
 
     protected _resizeHandler(): void {
+
+        // Список, скрыт на другой вкладке/панели. Не нужно обрабатывать такой ресайз (сейчас ширина 0)
+        if (this._container && this._container.closest && this._container.closest('.ws-hidden')) {
+            return;
+        }
         const itemsContainer = this.getItemsContainer();
         const currentWidth = itemsContainer.getBoundingClientRect().width;
         this._options.listModel.setCurrentWidth(currentWidth, this._options.columnMinWidth);
