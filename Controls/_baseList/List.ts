@@ -7,6 +7,7 @@ import {IRemovableList} from './interface/IRemovableList';
 import template = require('wml!Controls/_baseList/List');
 import viewName = require('Controls/_baseList/ListView');
 import {default as ListControl} from 'Controls/_baseList/BaseControl';
+import {default as Data} from 'Controls/_baseList/Data';
 import {ISelectionObject, IBaseSourceConfig} from 'Controls/interface';
 import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import 'css!Controls/baseList';
@@ -80,9 +81,12 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
     protected _viewName = viewName;
     protected _viewTemplate: unknown = ListControl;
     protected _viewModelConstructor = null;
-    protected _children: { listControl: ListControl };
+    protected _children: {
+        listControl: ListControl,
+        data: Data
+    };
 
-    protected _beforeMount(options) {
+    protected _beforeMount(options): void {
         this._viewModelConstructor = this._getModelConstructor();
     }
 
@@ -98,8 +102,13 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
         return 'Controls/display:Collection';
     }
 
-    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig) {
-        return this._children.listControl.reload(keepScroll, sourceConfig);
+    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|Error> {
+        // listControl будет не создан, если была ошибка загрузки
+        if (this._children.listControl) {
+            return this._children.listControl.reload(keepScroll, sourceConfig);
+        } else {
+            return this._children.data.reload(sourceConfig);
+        }
     }
 
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {

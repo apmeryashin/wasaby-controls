@@ -5,8 +5,15 @@
                 scope="{{ _options }}"
                 enabled="{{true}}">
         <ws:editorTemplate>
-            <Controls.input:Text contrastBackground="{{true}}" bind:value="item.contents[column.config.displayProperty || 'title']"
-                                 selectOnClick="{{ false }}" />
+            <Controls.validate:InputContainer name="InputValidate">
+                <ws:validators>
+                    <ws:Function value="{{ item.contents[column.config.displayProperty || 'title'] }}">Controls/validate:isRequired</ws:Function>
+                </ws:validators>
+                <ws:content>
+                    <Controls.input:Text contrastBackground="{{true}}" bind:value="item.contents[column.config.displayProperty || 'title']"
+                                         selectOnClick="{{ false }}" />
+                </ws:content>
+            </Controls.validate:InputContainer>
         </ws:editorTemplate>
     </ws:partial>
 </ws:contentTemplate>

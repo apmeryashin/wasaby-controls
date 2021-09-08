@@ -41,10 +41,11 @@ class BaseTemplate extends Control<IControlOptions> {
     }
     protected _saveClickHandler(): void {
         this._children.formController.update().then((result) => {
-            if (!result.hasErrors) {
-                this._notify('close', [], {bubbling: true});
-            }
-        });
+            this._notify('close', [], {bubbling: true});
+
+            // Т.к. FC при ошибках валидации кидает ошибку,
+            // то нужен как минимум заглушечный catch, чтобы не было ошибки в консоли
+        }).catch((error) => error);
     }
 }
 export default BaseTemplate;

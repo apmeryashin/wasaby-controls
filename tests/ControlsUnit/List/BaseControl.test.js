@@ -2981,15 +2981,21 @@ define([
             });
 
             it('should not cancel editing if the other group will be collapsed', () => {
+               const groupItem = ctrl.getViewModel().at(0);
+               const editingItem = ctrl.getViewModel().at(1);
+               editingItem.setEditing(true);
                ctrl._onGroupClick({}, 'gr1', {
                   target: {
                      closest: () => true
                   }
-               }, ctrl.getViewModel().at(0));
+               }, groupItem);
                assert.isFalse(cancelCalled);
             });
 
             it('should not cancel editing and toggle group if end edit canceled', () => {
+               const groupItem = ctrl.getViewModel().at(0);
+               const editingItem = ctrl.getViewModel().at(1);
+               editingItem.setEditing(true);
                ctrl._cancelEdit = () => {
                   cancelCalled = false;
                   return Promise.resolve({ canceled: true });
@@ -2998,7 +3004,7 @@ define([
                   target: {
                      closest: () => true
                   }
-               }, ctrl.getViewModel().at(0));
+               }, groupItem);
                assert.isFalse(cancelCalled);
             });
          });
@@ -3033,10 +3039,10 @@ define([
             ctrl.saveOptions(cfg);
          });
 
-         it('should call setCollapsedGroups', () => {
+         it('should call setCollapsedGroups', async () => {
             ctrl._beforeMount(cfg);
             const spySetCollapsedGroups = sinon.spy(ctrl.getViewModel(), 'setCollapsedGroups');
-            ctrl._onGroupClick({}, 0, {
+            await ctrl._onGroupClick({}, 0, {
                target: {
                   closest: () => true
                }
