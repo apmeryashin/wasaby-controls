@@ -26,13 +26,13 @@ import 'css!Controls/search';
    expanded?: boolean;
 
     /**
-     * @name Controls/_search/Input/ExpandableInput/ExpandableInput#inputContrastBackground
+     * @name Controls/_search/Input/ExpandableInput/ExpandableInput#searchInputContrastBackground
      * @cfg {Boolean} Определяет контрастность фона строки поиска.
      * @variant false Фон строки поиска неконтрастный.
      * @variant true Фон строки поиска контрастный.
      * @default false
      */
-    inputContrastBackground?: string;
+    searchInputContrastBackground?: string;
 }
 /**
  * Контрол "Разворачиваемый поиск". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
