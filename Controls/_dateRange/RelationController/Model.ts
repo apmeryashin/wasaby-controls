@@ -31,7 +31,7 @@ class ModuleClass {
     }
 
     updateRanges(start, end, changedRangeIndex, relationMode) {
-        if (start !== null && end !== null) {
+        if (this._rangeIsNotEmpty([start, end])) {
             let oldRelationMode;
             let newRanges;
 
@@ -142,10 +142,14 @@ class ModuleClass {
     private _updateSteps(dateRanges) {
         this._steps = [];
         for (const i = 0; i < dateRanges.length - 1; i++) {
-            if (dateRanges[i][0] !== null && dateRanges[i][0] !== null) {
+            if (this._rangeIsNotEmpty(dateRanges[i])) {
                 this._steps[i] = this._getMonthCount(dateRanges[i][0], dateRanges[i + 1][0]);
             }
         }
+    }
+
+    private _rangeIsNotEmpty(range: [Date | null, Date | null]): boolean {
+        return range[0] !== null && range[1] !== null;
     }
 
     private _resetSteps(step) {
@@ -208,8 +212,8 @@ class ModuleClass {
             periodType, periodLength, oldPeriodType, oldPeriodLength,
             step, capacityChanged, control, lastDate, i;
 
-        let getStep = (number) => {
-            let s;
+        const getStep = (number) => {
+            let newStep;
             if (selectionType === SLIDE_DATE_TYPE.days) {
                 return periodLength;
             }
@@ -217,19 +221,25 @@ class ModuleClass {
             // In the normal mode, if the capacity has changed and the step is not a multiple of the year
             // and the month of the periods differ or step is not aligned to the new capacity,
             // then we also set adjacent periods.
+            const isStepDivides = (stepLength: number) => {
+                return steps[number] % stepLength === 0;
+            };
+
+            const monthsAreEqual = start.getMonth() !== oldStart?.getMonth();
+            const monthsInYear = 12;
+
             if (!(this._periodTypeIsDay(periodType) && this._periodTypeIsYears(oldPeriodType)) &&
-                relationMode === 'byCapacity' ||
-                    (capacityChanged && steps[number] % 12 !== 0 && periodLength > oldPeriodLength &&
-                        (start.getMonth() !== oldStart?.getMonth() || steps[number] % periodLength !== 0))) {
-                s = periodLength;
+                relationMode === 'byCapacity' || (capacityChanged && !isStepDivides(monthsInYear) &&
+                    periodLength > oldPeriodLength &&  (!monthsAreEqual || !isStepDivides(periodLength)))) {
+                newStep = periodLength;
             } else {
-                s = steps[number] || periodLength;
+                newStep = steps[number] || periodLength;
             }
 
-            if (s < periodLength) {
-                s = periodLength;
+            if (newStep < periodLength) {
+                newStep = periodLength;
             }
-            return s;
+            return newStep;
         };
 
         if (!start || !end) {
