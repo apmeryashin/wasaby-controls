@@ -7,6 +7,7 @@
                              position="{{ _options.position }}"
                              bottomShadowVisibility="hidden"
                              topShadowVisibility="{{ _options.topShadowVisibility }}"
+                             shadowStyle="CompactDatePicker"
                              on:scroll="_scrollHandler()"
                              on:positionChanged="_positionChangedHandler()"
                              on:itemClick="_monthViewItemClickHandler()"

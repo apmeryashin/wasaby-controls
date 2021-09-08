@@ -1,4 +1,4 @@
-<div class="controls-CompactDatePicker controls_compactDatePicker_theme-{{ _options.theme }}">
+<div class="controls-CompactDatePicker controls_compactDatePicker_theme-{{ _options.theme }} controls_popupTemplate_theme-{{_options.theme}}">
     <div class="controls-CompactDatePicker__header controls-CompactDatePicker__header__border-{{ _topShadowVisibility === 'hidden' ? 'visible' : 'hidden' }}">
         <div class="controls-CompactDatePicker__header__top-layer">
             <div class="controls-CompactDatePicker__header__today controls-CompactDatePicker__header__today_{{ _todayIconVisible ? 'visible' : 'hidden'}}"
@@ -12,7 +12,7 @@
         </div>
         <div class="controls-CompactDatePicker__header__weekdays">
             <ws:for data="weekday in _weekdaysCaptions">
-                <span class="controls-CompactDatePicker__header__weekdays__{{ weekday.weekend ? 'weekend' : 'workday'}}">{{ weekday.caption }}</span>
+                <span class="controls-CompactDatePicker__header__weekdays__{{ weekday.weekend ? 'weekend' : 'workday'}}">{{ _formatDateCaption(weekday.caption) }}</span>
             </ws:for>
         </div>
     </div>

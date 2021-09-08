@@ -92,4 +92,8 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
     protected _proxyEvent(event: Event): void {
         this._notify(event.type, Array.prototype.slice.call(arguments, 1));
     }
+
+    protected _formatDateCaption(weekdayCaption: string): string {
+        return weekdayCaption[0].toUpperCase() + weekdayCaption.slice(1);
+    }
 }
