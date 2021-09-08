@@ -38,28 +38,29 @@
          "
       />
    </ws:if>
-
-   <ws:if data="{{!_needCrumbs && !_options.afterBreadCrumbsTemplate}}">
-      <!-- нельзя использовать invisible-node. он ломает всплытие событий/-->
-      <div style="display: none"></div>
-   </ws:if>
 </ws:template>
 
-<ws:if data="{{_options.stickyHeader}}">
-   <Controls.scroll:StickyBlock
-      mode="stackable"
-      shadowVisibility="{{_options.needShadow ? 'lastVisible' : 'hidden'}}"
-      fixedZIndex="{{5}}"
-      backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
-      attr:class="controls-Explorer__HeadingPath-{{_options.style}}"
-   >
-      <div class="controls-Explorer__PathWrapper">
-         <ws:partial template="headingPath" />
-      </div>
-   </Controls.scroll:StickyBlock>
+<ws:if data="{{!_needCrumbs && !_options.afterBreadCrumbsTemplate}}">
+   <!-- нельзя использовать invisible-node. он ломает всплытие событий/-->
+   <div style="display: none"></div>
 </ws:if>
 <ws:else>
-   <div class="controls-Explorer__PathWrapper">
-      <ws:partial template="headingPath"/>
-   </div>
+   <ws:if data="{{_options.stickyHeader}}">
+      <Controls.scroll:StickyBlock
+         mode="stackable"
+         shadowVisibility="{{_options.needShadow ? 'lastVisible' : 'hidden'}}"
+         fixedZIndex="{{5}}"
+         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+         attr:class="controls-Explorer__HeadingPath-{{_options.style}}"
+      >
+         <div class="controls-Explorer__PathWrapper">
+            <ws:partial template="headingPath" />
+         </div>
+      </Controls.scroll:StickyBlock>
+   </ws:if>
+   <ws:else>
+      <div class="controls-Explorer__PathWrapper">
+         <ws:partial template="headingPath"/>
+      </div>
+   </ws:else>
 </ws:else>
