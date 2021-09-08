@@ -4291,7 +4291,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // doAfterUpdate, чтобы не попасть в цикл синхронизации списка.
         // Другой порядок не даст нам таких гарантий,
         // и либо IO не отработает, либо попадаем в цикл синхронизации.
-        window?.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
             if (this._destroyed) {
                 return;
             }
