@@ -1349,7 +1349,7 @@ const _private = {
                     self._indicatorsController?.hideGlobalIndicator();
                 }
 
-                const changed = self._indicatorsController.recountResetTriggerOffsets(self._addItemsDirection || 'down');
+                const changed = self._indicatorsController?.recountResetTriggerOffsets(self._addItemsDirection || 'down');
                 if (changed) {
                     self._updateScrollController();
                 }
