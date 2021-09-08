@@ -30,7 +30,7 @@ const getMemorySource = (): Memory => {
    });
 };
 
-const getSourceController = (options: Partial<IControllerOptions>) => {
+const getSourceController = (options?: Partial<IControllerOptions>) => {
    return new SourceController({
       dataLoadErrback: () => null,
       parentProperty: null,
@@ -180,6 +180,24 @@ describe('Controls/search:ControllerClass', () => {
          assert.isTrue(loadSpy.withArgs(undefined, undefined, {
             payload: 'something'
          }).called);
+      });
+
+      it('filter with "Разворот"', async () => {
+         const sourceController = getSourceController();
+         const searchController = getSearchController({
+            parentProperty: 'Раздел',
+            sourceController
+         });
+
+         sourceController.setFilter({
+            Разворот: 'С разворотом'
+         });
+
+         await searchController.search('testSearchValue');
+         assert.ok(searchController.getFilter()['Разворот']);
+
+         const filter = searchController.reset(true);
+         assert.ok(filter['Разворот']);
       });
 
       describe('startingWith: root', () => {
