@@ -34,6 +34,13 @@ export interface IOptions {
     singleExpand?: boolean;
 }
 
+export interface IResult {
+    expandedItems?: TKey[];
+    collapsedItems?: TKey[];
+}
+
+export const ALL_EXPANDED_VALUE = null;
+
 /**
  * Класс контроллера, который реализует логику сворачивания/разворачивания итемов
  */
@@ -83,17 +90,17 @@ export class Controller {
     }
 
     /**
-     * Вернет true если expandedItems === [null]. Но это не значит что по факту
+     * Вернет true если expandedItems === [ALL_EXPANDED_VALUE]. Но это не значит что по факту
      * все записи развернуты, т.к. могут быть принудительно свернутые записи в
      * collapsedItems.
      */
     isAllExpanded(): boolean {
-        return this._expandedItems[0] === null;
+        return this._expandedItems[0] === ALL_EXPANDED_VALUE;
     }
 
     /**
      * Вернет true если итем с указанной id в текущий момент развернут.
-     * Итем считается развернутым если он есть в expanded или (expanded === [null]
+     * Итем считается развернутым если он есть в expanded или (expanded === [ALL_EXPANDED_VALUE]
      * и итема нет в collapsed)
      */
     isItemExpanded(itemId: TKey): boolean {
@@ -134,7 +141,7 @@ export class Controller {
         const newCollapsedItems = [...this._collapsedItems];
 
         removeKey(newCollapsedItems, itemId);
-        // Пушим в expandedItems только в том случае, если там не лежит null,
+        // Пушим в expandedItems только в том случае, если там не лежит ALL_EXPANDED_VALUE,
         // т.к. в этом случае и так все записи считаются развернутыми
         if (!this.isAllExpanded()) {
             pushKey(newExpandedItems, itemId);
@@ -218,6 +225,50 @@ export class Controller {
         this._model?.setExpandedItems(this._expandedItems);
     }
 
+    onCollectionRemove(removedItems: TreeItem[]): IResult {
+        const result: IResult = {};
+
+        if (this._model && (this._options.expandedItems?.length || this._options.collapsedItems?.length)) {
+            // обрабатываем только узлы
+            const items = removedItems.filter((it) => it['[Controls/_display/TreeItem]'] && it.isNode() !== null);
+            let removedKeys = items.map((it) => it.getContents().getKey());
+            // отфильтровываем скрытые записи
+            removedKeys = removedKeys.filter((it) => !this._model.getCollection().getRecordById(it) && it !== ALL_EXPANDED_VALUE);
+
+            if (this._options.expandedItems?.length) {
+                const newExpandedItems = this._options.expandedItems.slice();
+                removedKeys.forEach((it) => {
+                    const expandedItemsIndex = newExpandedItems.indexOf(it);
+                    if (expandedItemsIndex !== -1) {
+                        newExpandedItems.splice(expandedItemsIndex, 1);
+                    }
+                });
+
+                if (!isEqual(newExpandedItems, this._options.expandedItems)) {
+                    this.setExpandedItems(newExpandedItems);
+                    result.expandedItems = newExpandedItems;
+                }
+            }
+
+            if (this._options.collapsedItems?.length) {
+                const newCollapsedItems = this._options.collapsedItems.slice();
+                removedKeys.forEach((it) => {
+                    const collapsedItemsIndex = newCollapsedItems.indexOf(it);
+                    if (collapsedItemsIndex !== -1) {
+                        newCollapsedItems.splice(collapsedItemsIndex, 1);
+                    }
+                });
+
+                if (!isEqual(newCollapsedItems, this._options.collapsedItems)) {
+                    this.setCollapsedItems(newCollapsedItems);
+                    result.collapsedItems = newCollapsedItems;
+                }
+            }
+        }
+
+        return result;
+    }
+
     /**
      * Выполняет анализ и обработку переданных данных:
      * 1. Если опция singleExpand выставлена, то оставит только по одной id в expandedItems
@@ -253,7 +304,7 @@ export class Controller {
         const collapseDiff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, newCollapsedItems);
 
         expandDiff.removed.forEach((id) => {
-            if (id === null) {
+            if (id === ALL_EXPANDED_VALUE) {
                 return;
             }
 
@@ -281,8 +332,8 @@ export class Controller {
     private _applyExpandedItems(expandedItems: TKey[]): void | Promise<RecordSet[]> {
         const expandDiff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedItems);
 
-        // Если изменили с [...] на [null], то нужно загрузить все кроме явно схлопнутых
-        if (expandDiff.added[0] === null) {
+        // Если изменили с [...] на [ALL_EXPANDED_VALUE], то нужно загрузить все кроме явно схлопнутых
+        if (expandDiff.added[0] === ALL_EXPANDED_VALUE) {
             const results = [];
 
             // Пробежимся по итемам модели и развернем все для
@@ -345,7 +396,7 @@ export class Controller {
                 });
         }
 
-        // Если изменили с [null] на [...], то ничего грузить не надо, просто обновляем данные
+        // Если изменили с [ALL_EXPANDED_VALUE] на [...], то ничего грузить не надо, просто обновляем данные
         this._setExpandedItems(expandedItems);
         //endregion
     }
