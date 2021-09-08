@@ -1348,6 +1348,11 @@ const _private = {
                 if (!_private.hasMoreDataInAnyDirection(self) && !_private.isPortionedLoad(self)) {
                     self._indicatorsController?.hideGlobalIndicator();
                 }
+
+                const changed = self._indicatorsController.recountResetTriggerOffsets(self._addItemsDirection || 'down');
+                if (changed) {
+                    self._updateScrollController();
+                }
             }
 
             if (reason === 'assign' && self._options.itemsSetCallback) {
