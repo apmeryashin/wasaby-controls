@@ -4733,31 +4733,56 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return !!(this._sourceController && this._sourceController.hasMoreData(direction));
     }
 
+    private _commitEditInGroupBeforeCollapse(groupItem): TAsyncOperationResult {
+        if (!this.isEditing() || !groupItem.isExpanded()) {
+            return Promise.resolve();
+        }
+
+        const editingItem = this.getViewModel().getItems().find((item) => item.isEditing());
+        const groupId = this.getViewModel().getGroup()(editingItem.getContents());
+
+        if (groupId !== groupItem.getContents()) {
+            return Promise.resolve();
+        }
+
+        return this._commitEdit();
+    }
+
     _onGroupClick(e, groupId, baseEvent, dispItem) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
             const needExpandGroup = !dispItem.isExpanded();
-            dispItem.setExpanded(needExpandGroup);
 
-            // TODO временное решение для новой модели https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
-            const collapsedGroups = collection.getCollapsedGroups() || [];
-            const groupIndex = collapsedGroups.indexOf(groupId);
-            if (groupIndex === -1) {
-                if (!needExpandGroup) {
-                    collapsedGroups.push(groupId);
+            this._commitEditInGroupBeforeCollapse(dispItem).then((result) => {
+                if (result && result.canceled) {
+                    return result;
                 }
-            } else if (needExpandGroup) {
-                collapsedGroups.splice(groupIndex, 1);
-            }
-            const changes = {
-                changeType: needExpandGroup ? 'expand' : 'collapse',
-                group: groupId,
-                collapsedGroups
-            };
-            // При setExpanded() не обновляется collection.collapsedGroups, на основе которого стратегия
-            // определяет, какие группы надо создавать свёрнутыми. Поэтому обновляем его тут.
-            collection.setCollapsedGroups(collapsedGroups);
-            _private.groupsExpandChangeHandler(this, changes);
+                dispItem.setExpanded(needExpandGroup);
+
+                // TODO https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
+                // По задаче предлагается объединить collapsedGroups и collapsedItems.
+                // Сейчас collapsedGroups необходим стратегии группировки в модели при создании и перерисовке групп.
+                // Стратегия группировки всегда заново пересоздаёт группы и опирается на это свойство для получения
+                // информации о свёрнутости групп.
+                const collapsedGroups = collection.getCollapsedGroups() || [];
+                const groupIndex = collapsedGroups.indexOf(groupId);
+                if (groupIndex === -1) {
+                    if (!needExpandGroup) {
+                        collapsedGroups.push(groupId);
+                    }
+                } else if (needExpandGroup) {
+                    collapsedGroups.splice(groupIndex, 1);
+                }
+                const changes = {
+                    changeType: needExpandGroup ? 'expand' : 'collapse',
+                    group: groupId,
+                    collapsedGroups
+                };
+                // При setExpanded() не обновляется collection.collapsedGroups, на основе которого стратегия
+                // определяет, какие группы надо создавать свёрнутыми. Поэтому обновляем его тут.
+                collection.setCollapsedGroups(collapsedGroups);
+                _private.groupsExpandChangeHandler(this, changes);
+            });
         }
     }
 
