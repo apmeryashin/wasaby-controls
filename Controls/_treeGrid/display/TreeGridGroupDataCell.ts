@@ -27,7 +27,8 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
     }
 
     getTemplate(): TemplateFunction | string {
-        if (this._$column.groupNodeConfig) {
+        const isFirstDataColumn = this.getColumnIndex() === (this._$owner.hasMultiSelectColumn() ? 1 : 0);
+        if (this._$column.groupNodeConfig || isFirstDataColumn) {
             return GROUP_CELL_TEMPLATE;
         }
         return this._$column.template || this._defaultCellTemplate;

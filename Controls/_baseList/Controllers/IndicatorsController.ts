@@ -453,9 +453,10 @@ export default class IndicatorsController {
             this._startDisplayPortionedSearchTimer(SEARCH_MAX_DURATION);
             this._portionedSearchDirection = direction;
 
-            // скрываем индикатор, т.к. после начала порционного поиска индикатор долежн показаться через 2с,
-            // а на момент начала поиска может быть уже показан индикатор
-            this._model.hideIndicator(direction);
+            // скрываем оба индикатора, т.к. после начала порционного поиска индикатор
+            // должен показаться только в одну сторону и через 2с
+            this._model.hideIndicator('top');
+            this._model.hideIndicator('bottom');
             this._startDisplayIndicatorTimer(
                 () => this._model.displayIndicator(direction, EIndicatorState.PortionedSearch)
             );

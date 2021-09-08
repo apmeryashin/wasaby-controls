@@ -792,6 +792,34 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(toArrayKeys(res.get(false)), [4, 6, 7]);
       });
 
+      it('node is partially selected', () => {
+         const model = new TreeGridCollection({
+            collection: new RecordSet({
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
+            }),
+            root: 1,
+            keyProperty: ListData.KEY_PROPERTY,
+            parentProperty: ListData.PARENT_PROPERTY,
+            nodeProperty: ListData.NODE_PROPERTY,
+            hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY,
+            columns: []
+         });
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: 1,
+            model,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: null
+         });
+         const res = strategy.getSelectionForModel({ selected: [2], excluded: [2, 3] });
+         assert.deepEqual(toArrayKeys(res.get(true)), [] );
+         assert.deepEqual(toArrayKeys(res.get(null)), [2]);
+         assert.deepEqual(toArrayKeys(res.get(false)), [5]);
+      });
+
       it('search model', () => {
          /*
             node-1

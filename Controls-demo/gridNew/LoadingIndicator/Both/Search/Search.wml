@@ -1,14 +1,14 @@
 <div class="controlsDemo__cell">
   <div class="controlsDemo__default">
       <Controls.browser:Browser
-          keyProperty="id"
+          keyProperty="key"
           source="{{_viewSource}}"
           searchParam="title"
           minSearchLength="{{3}}"
           bind:filter="_filter"
       >
-        <ws:navigation source="page" view="infinity">
-          <ws:sourceConfig pageSize="{{20}}" page="{{1}}" hasMore="{{false}}"/>
+        <ws:navigation source="position" view="infinity">
+          <ws:sourceConfig field="key" position="{{_position}}" direction="bothways" limit="{{15}}"/>
         </ws:navigation>
 
         <ws:content>
