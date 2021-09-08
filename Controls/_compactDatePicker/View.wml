@@ -1,5 +1,5 @@
 <div class="controls-CompactDatePicker controls_compactDatePicker_theme-{{ _options.theme }}">
-    <div class="controls-CompactDatePicker__header">
+    <div class="controls-CompactDatePicker__header controls-CompactDatePicker__header__border-{{ _topShadowVisibility === 'hidden' ? 'visible' : 'hidden' }}">
         <div class="controls-CompactDatePicker__header__top-layer">
             <div class="controls-CompactDatePicker__header__today controls-CompactDatePicker__header__today_{{ _todayIconVisible ? 'visible' : 'hidden'}}"
                  on:click="_scrollToCurrentDate()">
@@ -39,7 +39,10 @@
                 rangeModel="{{ _rangeModel }}"
                 displayedRanges="{{ _options.displayedRanges }}"
                 selectionType="{{ _options.selectionType }}"
+                hoveredStartValue="{{ null }}"
+                hoveredEndValue="{{ null }}"
                 ranges="{{ _options.ranges }}"
+                bind:topShadowVisibility="_topShadowVisibility"
                 bind:position="_position"
                 bind:todayIconVisible="_todayIconVisible"
                 on:positionChanged="_positionChangedHandler()"

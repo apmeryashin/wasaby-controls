@@ -1,9 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_compactDatePicker/View';
 import {Date as WSDate} from 'Types/entity';
-import {date as formatDate} from 'Types/formatter';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import {Utils as DateControlsUtils, DateRangeModel} from 'Controls/dateRange';
+import {getFormattedCaption} from 'Controls/_compactDatePicker/Utils';
 import 'css!Controls/compactDatePicker';
 
 /**
@@ -32,10 +32,11 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
     protected _position: Date;
     protected _headerCaption: string;
     protected _weekdaysCaptions: string = DateControlsUtils.getWeekdaysCaptions();
-    protected _formatDate: Function = formatDate;
     protected _rangeModel: DateRangeModel;
     protected _todayIconVisible: boolean = true;
     protected _today: number = (new WSDate()).getDate();
+    protected _getFormattedCaption: Function = getFormattedCaption;
+    protected _topShadowVisibility: string = 'hidden';
 
     protected _beforeMount(options: ICompactDatePickerOptions): void {
         const getFormattedPosition = () => {
@@ -59,10 +60,6 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
 
     protected _positionChangedHandler(): void {
         this._headerCaption = this._getFormattedCaption(this._position);
-    }
-
-    protected _getFormattedCaption(date: Date): string {
-        return formatDate(date, formatDate.FULL_MONTH);
     }
 
     protected _scrollToCurrentDate(): void {
