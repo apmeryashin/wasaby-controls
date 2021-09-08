@@ -2,6 +2,7 @@ import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {Source as HistorySource} from 'Controls/history';
 import {IPopupOptions} from 'Controls/popup';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 
 export type TNavigation = INavigationOptionValue<INavigationSourceConfig>;
 
@@ -68,6 +69,7 @@ export interface IEditorOptions {
      * @see itemTemplate
      */
     itemTemplateProperty?: string;
+    sourceController?: SourceController;
 }
 
 /**
