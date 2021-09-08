@@ -115,24 +115,26 @@ describe('Controls/tree/TreeControl', () => {
         });
     });
 
-    it('toggleExpanded should be aborted if tree was destroyed', async () => {
-        const treeControl = createTreeControl();
+    describe('toggleExpanded', () => {
+        it('toggleExpanded should be aborted if tree was destroyed', async () => {
+            const treeControl = createTreeControl();
 
-        treeControl._notify = (eName) => eName === 'beforeItemExpand' ? new Promise((resolve) => {
-            setTimeout(resolve, 10);
-        }) : undefined;
+            treeControl._notify = (eName) => eName === 'beforeItemExpand' ? new Promise((resolve) => {
+                setTimeout(resolve, 10);
+            }) : undefined;
 
-        // Разворот узла
-        const togglePromise = treeControl.toggleExpanded(1) as Promise<void>;
+            // Разворот узла
+            const togglePromise = treeControl.toggleExpanded(1) as Promise<void>;
 
-        // Разрушение контрола
-        treeControl._beforeUnmount();
+            // Разрушение контрола
+            treeControl._beforeUnmount();
 
-        await new Promise((resolve) => {
-            togglePromise.then(() => resolve(true)).catch(() => resolve(false));
-        }).then(isToggledSuccess => {
-            assert.isFalse(isToggledSuccess);
-        })
+            await new Promise((resolve) => {
+                togglePromise.then(() => resolve(true)).catch(() => resolve(false));
+            }).then(isToggledSuccess => {
+                assert.isFalse(isToggledSuccess);
+            });
+        });
     });
 
     describe('.getMarkedNodeKey()', () => {
