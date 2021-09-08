@@ -1,0 +1,8 @@
+<tr style="{{ item.getStyles() }}" class="{{ item.getClasses() }}">
+    <td colspan="100">
+        <div name="{{item.isTopIndicator() ? 'topIndicator' : item.isBottomIndicator() ? 'bottomIndicator' }}"
+             data-qa="{{ item.getQAData() }}">
+            <ws:partial if="{{ item.getContentTemplate() }}" template="{{ item.getContentTemplate() }}"/>
+        </div>
+    </td>
+</tr>

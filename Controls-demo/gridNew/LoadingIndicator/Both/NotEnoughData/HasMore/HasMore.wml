@@ -9,7 +9,7 @@
                 columns="{{_columns}}"
                 source="{{_viewSource}}">
             <ws:navigation source="page" view="infinity">
-                <ws:sourceConfig pageSize="{{10}}" page="{{5}}" hasMore="{{false}}"/>
+                <ws:sourceConfig pageSize="{{5}}" page="{{5}}" hasMore="{{false}}"/>
             </ws:navigation>
         </Controls.grid:View>
     </Controls.scroll:Container>
