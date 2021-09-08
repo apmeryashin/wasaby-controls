@@ -259,6 +259,8 @@ class DialogController extends BaseController {
             item.position.invisible = true;
         }
 
+        // Для того, чтобы диалоговое окно не прыгало, когда задана позиция, удаляем 0 margin
+        delete item.position.margin;
         // Диалог изначально должен позиционироваться вне экрана, если не задана позиция(например из propStorage)
         item.position[verticalPositionProperty] = item.popupOptions[verticalPositionProperty] || defaultCoordinate;
         item.position[horizontalPositionProperty] = item.popupOptions[horizontalPositionProperty] || defaultCoordinate;

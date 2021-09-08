@@ -60,7 +60,7 @@ export class DialogStrategy {
 
     private _resetMargins(item: IDialogItem, position: IDialogPosition): void {
         // Сбрасываю все отступы, которые заданы на css. Они уже учтены в позиции
-        if (item.targetCoords) {
+        if (item.targetCoords || item.margins?.top || item.margins?.left) {
             position.margin = 0;
         }
     }
