@@ -389,11 +389,9 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         expanderClasses += ' js-controls-ListView__notEditable';
 
         if (expanderPosition === 'default') {
-            expanderClasses += ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')} `;
-        } else if (expanderPosition === 'right') {
-            expanderClasses += ' controls-TreeGrid__row_expander_position_right';
+            expanderClasses += ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')}`;
         }
-
+        expanderClasses += ` controls-TreeGrid__row_expander_position_${expanderPosition}`;
         expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${this.getOwner().getTopPadding()}`;
         expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${this.getOwner().getBottomPadding()}`;
 
