@@ -6,9 +6,8 @@ import {GroupItem, IItemPadding} from 'Controls/display';
 import {IFilterItem} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import {default as ViewModel} from './View/ViewModel';
-import {StickyOpener} from 'Controls/popup';
-import 'css!Controls/filterPanel';
 import Store from 'Controls/Store';
+import 'css!Controls/filterPanel';
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами".
@@ -55,15 +54,12 @@ export default class View extends Control<IViewPanelOptions> {
         bottom: 'null'
     };
     protected _viewModel: ViewModel = null;
-    protected _applyButtonSticky: StickyOpener;
     private _resetCallbackId: string;
 
     protected _beforeMount(options: IViewPanelOptions): void {
-        this._applyButtonSticky = new StickyOpener();
         this._viewModel = new ViewModel({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky,
             filterViewMode: options.viewMode
         });
     }
@@ -78,13 +74,11 @@ export default class View extends Control<IViewPanelOptions> {
         this._viewModel.update({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            applyButtonSticky: options.viewMode === 'default' && this._applyButtonSticky,
             filterViewMode: options.viewMode
         });
     }
 
     protected _beforeUnmount(): void {
-        this._applyButtonSticky.close();
         if (this._options.useStore) {
             Store.unsubscribe(this._resetCallbackId);
         }
