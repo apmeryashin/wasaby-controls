@@ -98,7 +98,7 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
  * <pre class="brush: js">
  * // TypeScript
  * import {scrollToElement} from 'Controls/scroll';
- * 
+ *
  * _onClick(): void {
  *    scrollToElement(this._children.child, true);
  * }
@@ -120,9 +120,21 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
       const promises: Promise<void>[] = [];
       for (const parent of scrollableParent) {
          const scrollContainer = getScrollContainerByElement(parent);
-         const headerControllerInited = scrollContainer.initHeaderController();
-         if (headerControllerInited != undefined ) {
-            promises.push(headerControllerInited);
+         // В начале дождемся полного маутинга скролл контейнера, чтобы рассчитался скроллСтейт и заголовки были
+         // добавлены в headersStack и была правильно посчитана их высота.
+         // Решаемый кейс: заголовки не добавляются в headersStack (а значит не учитывается их высота) из-за
+         // canScroll = false, который рассчитается только в afterMount скролл контейнера.
+         if (scrollContainer.containerLoaded === true) {
+            const headerControllerInited = scrollContainer.initHeaderController();
+            if (headerControllerInited !== undefined ) {
+               promises.push(headerControllerInited);
+            }
+         } else {
+            return new Promise(() => {
+               scrollContainer.containerLoaded.then(() => {
+                  scrollToElement(element, toBottomOrPosition, force, waitInitialization);
+               });
+            });
          }
       }
       if (promises.length) {

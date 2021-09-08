@@ -943,7 +943,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): void {
         event.stopPropagation();
-        scrollToElement(itemContainer, toBottom, force);
+        scrollToElement(itemContainer, toBottom, force, true);
         /**
          * Синхронно обновляем состояние скрол контейнера, что бы корректно работали другие синхронные вызовы api скролл контейнера которое зависят от текущего состояния.
          */
