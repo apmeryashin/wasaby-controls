@@ -130,13 +130,15 @@
 
 .controls-TreeGrid__row-expander_node_default::before,
 .controls-TreeGrid__row-expander_emptyNode_default::before,
-.controls-TreeGrid__row-expander_node_master::before {
+.controls-TreeGrid__row-expander_node_master_position_custom::before,
+.controls-TreeGrid__row-expander_node_master_position_right::before {
    position: relative;
    bottom: calc(-1 * var(--expander_padding_icon-treeGrid));
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_default::before,
-.controls-TreeGrid__row-expander_hiddenNode_master::before {
+.controls-TreeGrid__row-expander_hiddenNode_master_position_custom::before,
+.controls-TreeGrid__row-expander_hiddenNode_master_position_right::before {
    position: relative;
    bottom: calc(-1 * var(--expander_padding_icon-hidden-node-treeGrid));
 }
@@ -153,10 +155,9 @@
    padding-left: calc(@_expander_width_treeGrid - var(--master_hidden-node_expander_icon-size_treeGrid));
 }
 
-.controls-TreeGrid__row-expander_node_master.controls-TreeGrid__row_expander_position_default::before,
-.controls-TreeGrid__row-expander_hiddenNode_master.controls-TreeGrid__row_expander_position_default::before {
+.controls-TreeGrid__row-expander_node_master_position_default::before,
+.controls-TreeGrid__row-expander_hiddenNode_master_position_default::before {
    font-size: var(--master_node_expander_icon-size_treeGrid);
-   bottom: 0;
 }
 
 .controls-TreeGrid__row-expander::before {
