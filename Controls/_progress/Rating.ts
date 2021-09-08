@@ -8,14 +8,11 @@ import 'css!Controls/progress';
 type IconSize = 'default'|'2xs'|'xs'|'s'|'m'|'l';
 type IconStyle = 'warning'|'info'|'success'|'danger'|'secondary'|'primary'|'default'|'contrast'|'readonly';
 type IconPadding = 'null'|'3xs'|'2xs'|'xs'|'s'|'m'|'l'|'xl';
-type StarType = 'star'|'halfStar'|'emptyStar';
 
 const DEFAULT_ICON_SIZE = 's';
 const DEFAULT_ICON_PADDING = '3xs';
 const DEFAULT_ICON_STYLE = 'warning';
 const DEFAULT_EMPTY_ICON_STYLE = 'readonly';
-const HALF_OF_INTEGER = 50;
-const COUNT_STARS = 5;
 
 /**
  * Интерфейс опций для {@link Controls/progress:Rating}.
@@ -225,6 +222,7 @@ class Rating extends Control<IRatingOptions> {
 
         this._viewModel = new RatingViewModel({
             value: this._correctValue,
+            precision: this._correctPrecision,
             iconStyle: options.iconStyle,
             emptyIconStyle: options.emptyIconStyle
         });
@@ -247,7 +245,8 @@ class Rating extends Control<IRatingOptions> {
             || options.emptyIconStyle !== this._options.emptyIconStyle) {
 
             this._viewModel.setOptions({
-                value: options.value,
+                value: this._correctValue,
+                precision: this._correctPrecision,
                 iconStyle: options.iconStyle,
                 emptyIconStyle: options.emptyIconStyle
             });

@@ -9,6 +9,7 @@ interface IRatingItem {
 
 interface IRatingViewModelOptions {
     value: number;
+    precision: number;
     iconStyle: string;
     emptyIconStyle: string;
 }
@@ -19,11 +20,13 @@ class RatingViewModel {
     private _items: IRatingItem[] | null = null;
     private _iconStyle: string;
     private _emptyIconStyle: string;
+    private _precision: number;
 
     constructor(options: IRatingViewModelOptions) {
-        this._value = options.value;
+        this._value = options.precision ? options.value : Math.floor(options.value);
         this._iconStyle = options.iconStyle;
         this._emptyIconStyle = options.emptyIconStyle;
+        this._precision = options.precision;
     }
 
     getVersion(): number {
@@ -41,19 +44,24 @@ class RatingViewModel {
         return this._items;
     }
 
-    setOptions({value, emptyIconStyle, iconStyle}: IRatingViewModelOptions): void {
+    setOptions({value, precision, emptyIconStyle, iconStyle}: IRatingViewModelOptions): void {
+        if (precision !== this._precision) {
+            this._precision = precision;
+            this._items = null;
+        }
+
         if (value !== this._value) {
-            this._value = value;
+            this._value = this._precision ? value : Math.floor(value);
             this._items = null;
         }
 
         if (emptyIconStyle !== this._emptyIconStyle) {
-            this._value = value;
+            this._emptyIconStyle = emptyIconStyle;
             this._items = null;
         }
 
         if (iconStyle !== this._iconStyle) {
-            this._value = value;
+            this._iconStyle = iconStyle;
             this._items = null;
         }
         this._nextVersion();
@@ -61,7 +69,7 @@ class RatingViewModel {
 
     setValue(value: number): void {
         if (value !== this._value) {
-            this._value = value;
+            this._value = this._precision ? value : Math.floor(value);
             this._items = null;
         }
         this._nextVersion();
