@@ -334,10 +334,17 @@ abstract class BaseController implements IPopupController {
     }
 
     protected _getTargetNode(item: IPopupItem): HTMLElement {
+        let target;
         if (cInstance.instanceOfModule(item.popupOptions.target, 'UI/Base:Control')) {
-            return item.popupOptions.target._container;
+            target = item.popupOptions.target._container;
+        } else {
+            target = item.popupOptions.target || (constants.isBrowserPlatform && document.body);
         }
-        return item.popupOptions.target || (constants.isBrowserPlatform && document.body);
+        // На случай если попала нода jquery
+        if (target.jquery) {
+            target = target[0];
+        }
+        return target;
     }
 
     protected _getMargins(item: IPopupItem): {top: number, left: number} {
