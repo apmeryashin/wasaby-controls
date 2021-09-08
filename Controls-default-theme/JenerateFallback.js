@@ -107,10 +107,6 @@ var prepareValue = function (value, isRec, oldValue) {
     }
     oldValue = oldValue || value;
 
-    if (value.includes('calc(var(--inline_height_m-button) / 2)')) {
-        debugger;
-    }
-
     var calcIndex = value.lastIndexOf(CALC_PREFIX);
 
     if (calcIndex !== -1) {
