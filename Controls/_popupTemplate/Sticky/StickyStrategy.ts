@@ -41,6 +41,7 @@ export class StickyStrategy {
        targetElement: HTMLElement
    ): IPopupPosition {
       const position = {
+         zoom: this._getPopupZoom(targetCoords.zoom)
          // position: 'fixed'
       };
       this._prepareRestrictiveCoords(popupCfg, targetCoords);
@@ -48,6 +49,7 @@ export class StickyStrategy {
       cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'vertical', targetElement));
       this._setMaxSizes(popupCfg, position, targetElement);
       this._resetMargins(position);
+      this._scalePositionToZoom(position);
       return position;
    }
 
@@ -127,9 +129,10 @@ export class StickyStrategy {
          let coord: string = isHorizontal ? 'left' : 'top';
          if (popupCfg.direction[direction] === coord) {
             coord = isHorizontal ? 'right' : 'bottom';
-            const viewportOffset: number = this._getVisualViewport(targetElement)[isHorizontal ? 'offsetLeft' : 'offsetTop'];
-            const viewportPage: number = this._getVisualViewport(targetElement)[isHorizontal ? 'pageLeft' : 'pageTop'];
-            const viewportSize: number = this._getVisualViewport(targetElement)[isHorizontal ? 'width' : 'height'];
+            const visualViewport = this._getVisualViewport(targetElement);
+            const viewportOffset: number = visualViewport[isHorizontal ? 'offsetLeft' : 'offsetTop'];
+            const viewportPage: number = visualViewport[isHorizontal ? 'pageLeft' : 'pageTop'];
+            const viewportSize: number = visualViewport[isHorizontal ? 'width' : 'height'];
             const topSpacing: number = viewportSize + viewportPage + viewportOffset;
             const bottomSpacing: number = this._getBody()[isHorizontal ? 'width' : 'height'] - topSpacing;
             const targetCoord: number = this._getTargetCoords(popupCfg, targetCoords, coord, direction);
@@ -484,6 +487,33 @@ export class StickyStrategy {
 
    private _isPortrait(): boolean {
       return TouchKeyboardHelper.isPortrait();
+   }
+
+   /**
+    * Т.к. попап строится в боди, то на него будет накладываться zoom с body(zoom накладывается мультипликативно)
+    * Поэтому, чтобы при построении попапа построить его в зуме таргета нужно еще компенсировать на zoom body
+    * @param targetZoom
+    * @private
+    */
+   private _getPopupZoom(targetZoom: number = 1): number {
+      const bodyZoom = constants.isBrowserPlatform ? DimensionsMeasurer.getZoomValue() : 1;
+      return targetZoom / bodyZoom;
+   }
+
+   /**
+    * Т.к. Sticky по особому считает зум(он должен открываться в зуме таргета),
+    * то приходится дополнительно скалировать его
+    * @param position
+    * @private
+    */
+   private _scalePositionToZoom(position: IPopupPosition): void {
+      const POSITION_PROPERTIES = ['top', 'bottom', 'right', 'left'];
+      const zoomValue = position.zoom;
+      POSITION_PROPERTIES.forEach((property) => {
+         if (typeof position[property] === 'number') {
+            position[property] = position[property] / zoomValue;
+         }
+      });
    }
 
    private _fixBottomPositionForIos(position: IPopupPosition, targetCoords: ITargetCoords): void {
