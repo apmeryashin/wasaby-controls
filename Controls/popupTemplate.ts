@@ -10,7 +10,7 @@ export {default as Stack} from 'Controls/_popupTemplate/Stack/Template/Stack';
 export {default as StackPageWrapper} from 'Controls/_popupTemplate/Stack/Template/StackPageWrapper';
 export {default as StackController} from 'Controls/_popupTemplate/Stack/StackController';
 
-export {default as Dialog} from 'Controls/_popupTemplate/Dialog/Template/Dialog';
+export {default as Dialog, IDialogTemplateOptions} from 'Controls/_popupTemplate/Dialog/Template/Dialog';
 export {default as DialogController} from 'Controls/_popupTemplate/Dialog/DialogController';
 
 export {default as Sticky} from 'Controls/_popupTemplate/Sticky/Template/Sticky';
