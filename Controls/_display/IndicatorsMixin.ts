@@ -137,21 +137,6 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         }
     }
 
-    setLoadingTriggerOffset(offset: ITriggerOffset): void {
-        let changed = false;
-        if (this._topLoadingTrigger) {
-            const topOffsetChanged = this._topLoadingTrigger.setOffset(offset.top);
-            changed = changed || topOffsetChanged;
-        }
-        if (this._bottomLoadingTrigger) {
-            const bottomOffsetChanged = this._bottomLoadingTrigger.setOffset(offset.bottom);
-            changed = changed || bottomOffsetChanged;
-        }
-        if (changed) {
-            this._nextVersion();
-        }
-    }
-
     private _getLoadingTriggerName(position: TLoadingTriggerPosition): string {
         return `_${position}LoadingTrigger`;
     }

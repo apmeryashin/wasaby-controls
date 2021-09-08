@@ -43,7 +43,6 @@ import { Sticky } from 'Controls/popup';
 import { process } from 'Controls/error';
 
 // Utils imports
-import {getItemsBySelection} from 'Controls/_baseList/resources/utils/getItemsBySelection';
 import {EventUtils} from 'UI/Events';
 import {DimensionsMeasurer, getDimensions as uDimension} from 'Controls/sizeUtils';
 import {getItemsHeightsData} from 'Controls/_baseList/ScrollContainer/GetHeights';
@@ -1034,7 +1033,6 @@ const _private = {
             self._isScrollShown = true;
 
             self._viewSize = _private.getViewSize(this, true);
-            self._viewportRect = params.viewPortRect;
 
             self._updateHeights();
 
@@ -1332,6 +1330,19 @@ const _private = {
 
             if (action === IObservable.ACTION_RESET) {
                 self._indicatorsController.onCollectionReset(!!self._options.searchValue);
+
+                // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
+                // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
+                // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
+                // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
+                const hasItems = this._model && !this._model.destroyed && !!this._model.getCount();
+                if (!hasItems && self._children.listView) {
+                    self._indicatorsController.setLoadingTriggerOffset(
+                        self._children.listView.getTopLoadingTrigger(),
+                        self._children.listView.getBottomLoadingTrigger(),
+                        { top: 0, bottom: 0 }
+                    );
+                }
 
                 if (self._options.searchValue) {
                     _private.tryLoadToDirectionAgain(self);
@@ -2264,8 +2275,12 @@ const _private = {
                 };
             }
         }
-        if (result.triggerOffset) {
-            self._indicatorsController.setLoadingTriggerOffset(result.triggerOffset);
+        if (self._children.listView && result.triggerOffset) {
+            self._indicatorsController.setLoadingTriggerOffset(
+                self._children.listView.getTopLoadingTrigger(),
+                self._children.listView.getBottomLoadingTrigger(),
+                result.triggerOffset
+            );
         }
         if (result.shadowVisibility) {
             self._updateShadowModeHandler(result.shadowVisibility);
@@ -3307,7 +3322,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
-        this._viewportRect = viewportRect;
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
         }
@@ -3525,12 +3539,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // до моунта нельзя, т.к. нельзя будет проскроллить
         if (detection.isMobilePlatform && this._indicatorsController.shouldDisplayTopIndicator()) {
             this._indicatorsController.displayTopIndicator(true);
-        }
-        if (this._children.listView) {
-            this._indicatorsController.setIndicatorElements(
-                this._children.listView.getTopIndicator(),
-                this._children.listView.getBottomIndicator()
-            );
         }
         // если элементов не хватает на всю страницу, то сразу же показываем ромашки и триггеры, чтобы догрузить данные
         if (this._viewSize < this._viewportSize) {
@@ -4225,7 +4233,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._scrollController.setRendering(false);
 
             if (this._drawingIndicatorDirection) {
-                this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
+                this._indicatorsController.hideDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
                 this._drawingIndicatorDirection = null;
             }
 
@@ -4354,7 +4365,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.handleScrollControllerResult(this, result);
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
-                this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
+                this._indicatorsController.displayDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
                 resolver();
             } else {
                 if (this._shouldLoadOnScroll(direction)) {
@@ -6297,6 +6311,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _destroyIndicatorsController(): void {
         this._indicatorsController.destroy();
         this._indicatorsController = null;
+    }
+
+    private _getIndicatorDomElement(direction: 'top'|'bottom'): HTMLElement {
+        return direction === 'top'
+            ? this._children.listView.getTopIndicator()
+            : this._children.listView.getBottomIndicator();
     }
 
     private _countGlobalIndicatorPosition(): number {
