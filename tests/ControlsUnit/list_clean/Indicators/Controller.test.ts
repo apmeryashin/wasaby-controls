@@ -100,4 +100,53 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
         });
     });
+
+    describe('startDisplayPortionedSearch', () => {
+        it('display portioned search after 2s', async () => {
+            const {collection, controller} = initTest([{id: 1}], {}, {iterative: true});
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            controller.startPortionedSearch('bottom');
+
+            assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
+
+            // ждем пока отобразится индикатор порционного поиска
+            await new Promise((resolve) => {
+                setTimeout(() => resolve(null), 2001);
+            });
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('should hide all indicators and show needed indicator after 2s', async () => {
+            const options = {
+                isInfinityNavigation: true,
+                attachLoadTopTriggerToNull: true,
+                attachLoadDownTriggerToNull: true,
+                hasMoreDataToTop: true,
+                hasMoreDataToBottom: true,
+                hasHiddenItemsByVirtualScroll: () => false,
+                scrollToFirstItem: (afterScroll) => afterScroll()
+            } as unknown as IIndicatorsControllerOptions;
+            const {collection, controller} = initTest([{id: 1}], options, {iterative: true});
+            controller.displayTopIndicator(false);
+            assert.isTrue(collection.getTopIndicator().isDisplayed());
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.startPortionedSearch('bottom');
+
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            // ждем пока отобразится индикатор порционного поиска
+            await new Promise((resolve) => {
+                setTimeout(() => resolve(null), 2001);
+            });
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+    });
 });
