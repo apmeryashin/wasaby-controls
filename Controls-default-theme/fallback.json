@@ -1604,7 +1604,6 @@
   "--master_hidden-node_expander_hover_icon-color_treeGrid": "#0055bb",
   "--node-footer_min-height": "25px",
   "--node-footer_padding-top": "3px",
-  "--item_droppable_border_color_treeGrid": "var(--primary_border-color)",
   "--node_font-size_treeGrid": "var(--font-size_2xl)",
   "--search-separator_color_treeGrid": "#8991a9",
   "--search-separator_padding-top_treeGrid": "16px",
