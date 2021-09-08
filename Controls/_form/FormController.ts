@@ -445,7 +445,7 @@ class FormController extends ControllerBase<IFormController> {
         };
 
         // maybe anybody want to do custom update. check it.
-        const result = this._notify('requestCustomUpdate', [this._record]);
+        const result = this._notify('requestCustomUpdate', [this._record, config]);
 
         // pending waiting while update process finished
         this._updatePromise = new Deferred();
