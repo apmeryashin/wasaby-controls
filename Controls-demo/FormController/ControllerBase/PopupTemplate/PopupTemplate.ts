@@ -42,7 +42,7 @@ class BaseTemplate extends Control<IControlOptions> {
     protected _saveClickHandler(): void {
         this._children.formController.update().then((result) => {
             this._notify('close', [], {bubbling: true});
-        });
+        }).catch();
     }
 }
 export default BaseTemplate;
