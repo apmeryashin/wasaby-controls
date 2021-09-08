@@ -104,6 +104,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     private _wasMouseEnter: boolean = false;
     private _gridAutoShadows: boolean = true;
 
+    private _containerLoadedResolve: Function;
+    private _containerLoaded: Promise<void> | boolean;
+
+    get containerLoaded(): Promise<void> | boolean {
+        return this._containerLoaded;
+    }
+
     _beforeMount(options: IContainerOptions) {
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
         this._scrollbars = new ScrollbarsModel(options);
@@ -116,7 +123,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                 (options.shadowMode === SHADOW_MODE.MIXED &&
                     (options.topShadowVisibility === SHADOW_VISIBILITY.AUTO || options.bottomShadowVisibility === SHADOW_VISIBILITY.AUTO)));
         this._optimizeShadowClass = this._getOptimizeShadowClass(options);
-
+        this._containerLoaded = new Promise<void>((res) => {
+            this._containerLoadedResolve = res;
+        });
         super._beforeMount(...arguments);
     }
 
@@ -157,6 +166,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
         this._updateShadowsScrollState();
         this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
+        this._containerLoadedResolve();
+        this._containerLoaded = true;
     }
 
     protected _isPagingVisible(options: IContainerOptions): boolean {

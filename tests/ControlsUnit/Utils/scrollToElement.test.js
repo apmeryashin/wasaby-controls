@@ -45,6 +45,7 @@ define([
          mockDOM();
          let isInited = false;
          sinon.stub(NodeCollector, 'goUpByControlTree').returns([{
+            containerLoaded: true,
             initHeaderController: () => {
                let resp;
                if (!isInited) {
