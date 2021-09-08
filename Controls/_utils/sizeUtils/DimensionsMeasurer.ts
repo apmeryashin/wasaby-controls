@@ -124,7 +124,7 @@ class DimensionsMeasurer {
      * @param {HTMLElement} element Элемент относительно значения zoom которого считаются значения размеров window
      */
     getWindowDimensions(element?: HTMLElement): IWindowDimensions {
-        const zoom = this._getZoomValue(element as HTMLElement);
+        const zoom = this.getZoomValue(element as HTMLElement);
         if (zoom !== DEFAULT_ZOOM_VALUE) {
             return this._getScaledElementDimensions<IWindowDimensions>(window, WINDOW_DIMENSIONS_FIELDS, zoom);
         } else {
@@ -152,7 +152,7 @@ class DimensionsMeasurer {
      * @param {HTMLElement} element Элемент относительно значения zoom которого считаются значения размеров visualViewport
      */
     getVisualViewportDimensions(element?: HTMLElement): IVisualViewportDimensions {
-        const zoomValue = this._getZoomValue(element);
+        const zoomValue = this.getZoomValue(element);
         const visualViewport = this._getVisualViewport();
         if (zoomValue !== DEFAULT_ZOOM_VALUE) {
             return this._getScaledElementDimensions<IVisualViewportDimensions>(
@@ -218,7 +218,7 @@ class DimensionsMeasurer {
 
     protected _getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent, scaleToBodyZoom: boolean): IMouseCoords {
         const eventType = event.type;
-        const zoom = scaleToBodyZoom ? this._getMainZoom() : this._getZoomValue(event.target as HTMLElement);
+        const zoom = scaleToBodyZoom ? this._getMainZoom() : this.getZoomValue(event.target as HTMLElement);
         if (MOUSE_EVENTS.includes(eventType)) {
             return {
                 x: event.pageX / zoom,
@@ -246,7 +246,7 @@ class DimensionsMeasurer {
      */
     protected _getBoundingClientRect(element: HTMLElement, scaleToBodyZoom: boolean): DOMRect {
         const defaultDimensions = element.getBoundingClientRect();
-        const zoomValue = this._getZoomValue(element);
+        const zoomValue = this.getZoomValue(element);
         if (this._needScaleByZoom(element, zoomValue, scaleToBodyZoom)) {
             return this._getScaledElementDimensions<DOMRect>(
                 defaultDimensions,
@@ -265,7 +265,7 @@ class DimensionsMeasurer {
      * @protected
      */
     protected _getElementDimensions(element: HTMLElement, scaleToBodyZoom: boolean): IElementDimensions {
-        const zoomValue = this._getZoomValue(element);
+        const zoomValue = this.getZoomValue(element);
         if (this._needScaleByZoom(element, zoomValue, scaleToBodyZoom)) {
             return this._getScaledElementDimensions<IElementDimensions>(
                 element,
