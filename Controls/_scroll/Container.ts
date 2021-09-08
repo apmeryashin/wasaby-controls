@@ -743,6 +743,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @name Controls/_scroll/Container#backgroundStyle
  * @cfg {String} Определяет префикс стиля для настройки элементов, которые зависят от цвета фона.
  * @default default
+ * @remark При нестандартном цвете фона, будет виден лишний градиент от тени. Значение опции в том числе добавит
+ * постфикс к классу с css тенью. При этом нужно самим написать новый стиль для тени, либо можно воспользоваться
+ * готовыми значениями
+ * * master - значение для скролл контейнера контентом которого является masterDetail
+ * * unaccented - значение для скролл контейнера, к которого цвет фона контента unaccented
  * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
  * @see style
  */
