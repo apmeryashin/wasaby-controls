@@ -5,7 +5,7 @@ import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 import 'css!Controls/popupTemplate';
 
-export interface IRightPanelOption {
+export interface IRightPanelOptions {
     helpButtonItems: object[];
 }
 
@@ -20,7 +20,7 @@ export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOp
     stackMinWidth?: number;
     stackMinimizedWidth?: number;
     stackWidth?: number;
-    rightPanelOptions?: IRightPanelOption;
+    rightPanelOptions?: IRightPanelOptions;
 }
 
 const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
@@ -123,8 +123,8 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 });
 
 /**
- * @typedef {Object} Controls/_popupTemplate/Stack/RightPanelOption
- * @property {Array.<Hint/interface:IHelpButtonItem>} helpButtonItems Список пунктов меню помощи.
+ * @typedef {Object} Controls/_popupTemplate/Stack/RightPanelOptions
+ * @property {Array.<Hint/interface:HelpButtonItem.typedef>} helpButtonItems Список пунктов меню помощи.
  * @remark
  * Элементы по умолчанию:
  * - "База знаний";
@@ -202,7 +202,7 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 
 /**
  * @name Controls/_popupTemplate/Stack#rightPanelOptions
- * @cfg {Controls/_popupTemplate/Stack/RightPanelOption.typedef} Опции правой панели стековой панели.
+ * @cfg {Controls/_popupTemplate/Stack/RightPanelOptions.typedef} Опции правой панели стековой панели.
  */
 
 /**
