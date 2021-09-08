@@ -124,7 +124,7 @@ describe('Controls/progress:Rating', () => {
 
         vm = new RatingViewModel({
             value: 3,
-            precision: 1,
+            precision: 0.5,
             iconStyle: 'x',
             emptyIconStyle: 'y'
         });
@@ -202,7 +202,7 @@ describe('Controls/progress:Rating', () => {
 
         vm = new RatingViewModel({
             value: 3.2,
-            precision: 1,
+            precision: 0.5,
             iconStyle: 'x',
             emptyIconStyle: 'y'
         });
@@ -241,7 +241,7 @@ describe('Controls/progress:Rating', () => {
 
         vm = new RatingViewModel({
             value: 3.6,
-            precision: 1,
+            precision: 0.5,
             iconStyle: 'x',
             emptyIconStyle: 'y'
         });
@@ -284,7 +284,7 @@ describe('Controls/progress:Rating', () => {
 
         vm = new RatingViewModel({
             value: 3.6,
-            precision: 1,
+            precision: 0.5,
             iconStyle: 'x',
             emptyIconStyle: 'y'
         });
@@ -330,7 +330,7 @@ describe('Controls/progress:Rating', () => {
 
         vm = new RatingViewModel({
             value: 3.6,
-            precision: 1,
+            precision: 0.5,
             iconStyle: 'x',
             emptyIconStyle: 'y'
         });

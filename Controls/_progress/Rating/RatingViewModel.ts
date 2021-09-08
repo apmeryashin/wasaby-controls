@@ -23,7 +23,7 @@ class RatingViewModel {
     private _precision: number;
 
     constructor(options: IRatingViewModelOptions) {
-        this._value = options.precision ? options.value : Math.floor(options.value);
+        this._value = RatingViewModel._calcValue(options.value, options.precision);
         this._iconStyle = options.iconStyle;
         this._emptyIconStyle = options.emptyIconStyle;
         this._precision = options.precision;
@@ -51,7 +51,7 @@ class RatingViewModel {
         }
 
         if (value !== this._value) {
-            this._value = this._precision ? value : Math.floor(value);
+            this._value = RatingViewModel._calcValue(value, this._precision);
             this._items = null;
         }
 
@@ -69,22 +69,34 @@ class RatingViewModel {
 
     setValue(value: number): void {
         if (value !== this._value) {
-            this._value = this._precision ? value : Math.floor(value);
+            this._value = RatingViewModel._calcValue(value, this._precision);
             this._items = null;
         }
         this._nextVersion();
+    }
+
+    private static _calcValue(value: number, precision: number): number {
+        let calcValue;
+        if ((precision === 0.5) && (value >= Math.floor(value) + 0.5)) {
+            calcValue = Math.floor(value) + 0.5;
+        } else {
+            calcValue = Math.floor(value);
+        }
+
+        calcValue = Math.max(calcValue, 0);
+        calcValue = Math.min(calcValue, STARS_COUNT);
+        return calcValue;
     }
 
     private static _generateItems(value: number, iconStyle: string, emptyIconStyle: string): IRatingItem[] {
         const items: IRatingItem[] = [];
 
         const floor = Math.floor(value);
-        const round = Math.round(value);
 
         const lastFull = floor;
         let needHalf = false;
 
-        if (round > floor) {
+        if (value > floor) {
             needHalf = true;
         }
 

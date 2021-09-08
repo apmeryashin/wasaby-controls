@@ -214,7 +214,7 @@ class Rating extends Control<IRatingOptions> {
 
     protected _beforeMount(options: IRatingOptions): void {
         this._correctValue = options.value;
-        this._correctPrecision = options.precision ? 1 : 0;
+        this._correctPrecision = options.precision ? 0.5 : 0;
 
         if (this._correctPrecision) {
             this._correctValue += options.precision / 100;
@@ -233,7 +233,7 @@ class Rating extends Control<IRatingOptions> {
         const precisionChanged = this._options.precision !== options.precision;
         if (valueChanged || precisionChanged) {
             this._correctValue = options.value;
-            this._correctPrecision = options.precision ? 1 : 0;
+            this._correctPrecision = options.precision ? 0.5 : 0;
 
             if (this._correctPrecision) {
                 this._correctValue += options.precision / 100;
