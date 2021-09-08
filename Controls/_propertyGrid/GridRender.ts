@@ -68,11 +68,12 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     protected _getEditorStyles(item: PropertyGridItem<Model>, captionPosition: string, colspan?: boolean): string {
+        const needColspan = captionPosition === 'top' || !item.getContents().get('caption');
         const rowIndex = this._getRowIndex(item, captionPosition, 2);
-        const columnIndex = (this._isMultiSelect() ? 2 : 1) + (captionPosition === 'top' ? 0 : 1);
+        const columnIndex = (this._isMultiSelect() ? 2 : 1) + (needColspan ? 0 : 1);
         let colspanIndex;
-        if (colspan || captionPosition === 'top') {
-            colspanIndex = columnIndex + (captionPosition === 'top' ? 1 : 0);
+        if (colspan || needColspan) {
+            colspanIndex = columnIndex + (needColspan ? 1 : 0);
         }
         return this._getGridStyles(rowIndex, columnIndex, colspanIndex);
     }

@@ -43,7 +43,6 @@ function getSource(): IProperty[] {
             group: 'string'
         },
         {
-            caption: 'Источник видео',
             name: 'videoSource',
             group: 'string'
         },
