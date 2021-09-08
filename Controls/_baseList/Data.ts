@@ -563,6 +563,9 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    private _processAndShowError(config: ErrorViewConfig): Promise<unknown> {
       return this._processError(config).then((errorConfig) => {
+         if (config.templateOptions) {
+            errorConfig.options = {...errorConfig.options, ...config.templateOptions};
+         }
          if (errorConfig) {
             this._showError(errorConfig);
          }
@@ -578,7 +581,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          }
       };
 
-      if (direction) {
+      if (direction && currentRoot === root) {
          errorConfig.templateOptions.action = () => {
             this._loadToDirectionRegister.start('down');
             return Promise.resolve();
