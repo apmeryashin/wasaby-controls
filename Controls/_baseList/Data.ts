@@ -16,7 +16,8 @@ import {
    INavigationOptions,
    ISortingOptions,
    TKey,
-   Direction
+   Direction,
+   INavigationSourceConfig
 } from 'Controls/interface';
 import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions} from 'Controls/error';
 import {SyntheticEvent} from 'UI/Vdom';
@@ -467,12 +468,12 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       }
    }
 
-   private _reload(options: IDataOptions): Promise<RecordSet|Error> {
+   private _reload(options: IDataOptions, config?: INavigationSourceConfig): Promise<RecordSet|Error> {
       const currentRoot = this._sourceController.getRoot();
       this._fixRootForMemorySource(options);
 
       this._loading = true;
-      return this._sourceController.reload()
+      return this._sourceController.reload(config)
           .then((reloadResult) => {
              if (!options.hasOwnProperty('root')) {
                 this._sourceController.setRoot(currentRoot);
@@ -584,6 +585,10 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          };
       }
       return errorConfig;
+   }
+
+   reload(config?: INavigationSourceConfig): Promise<RecordSet|Error> {
+      return this._reload(this._options, config);
    }
 
    private static _getErrorViewMode(currentRoot?: TKey, root?: TKey, direction?: Direction): ErrorViewMode {
