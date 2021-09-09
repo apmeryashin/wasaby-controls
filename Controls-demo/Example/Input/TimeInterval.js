@@ -15,7 +15,7 @@ define('Controls-demo/Example/Input/TimeInterval',
          _template: template,
 
          constructor: function() {
-            TimeInterval.superclass.constructor.apply(this, ...arguments);
+            TimeInterval.superclass.constructor.apply(this, arguments);
 
             var fTimeInterval = entity.TimeInterval;
 

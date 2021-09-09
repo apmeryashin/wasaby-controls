@@ -16,7 +16,7 @@ define('Controls-demo/Calendar/MonthSlider', [
          _position: null,
 
          constructor: function() {
-            ModuleClass.superclass.constructor.apply(this, ...arguments);
+            ModuleClass.superclass.constructor.apply(this, arguments);
             this._month = new Date(2017, 0, 1);
             this._startValue = new Date(2017, 0, 1);
             this._endValue = new Date(2017, 0, 30);
