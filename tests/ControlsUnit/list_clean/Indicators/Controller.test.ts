@@ -5,11 +5,13 @@ import {RecordSet} from 'Types/collection';
 
 function initTest(
     items: object[],
-    options: Partial<IIndicatorsControllerOptions>
+    options: Partial<IIndicatorsControllerOptions>,
+    metaData?: object
 ): {collection: Collection, controller: IndicatorsController} {
     const recordSet = new RecordSet({
         rawData: items,
-        keyProperty: 'id'
+        keyProperty: 'id',
+        metaData
     });
     const collection = new Collection({
         collection: recordSet,
@@ -145,6 +147,118 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             });
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+    });
+
+    describe('shouldDisplayGlobalIndicator', () => {
+        it('not should display indicator if was started timer', () => {
+            const {controller} = initTest([{id: 1}], {});
+            // запустили таймер
+            controller.displayGlobalIndicator(0);
+            // олжно вернуть false, т.к. таймер уже запущен
+            assert.isFalse(controller.shouldDisplayGlobalIndicator());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('not should display indicator if portioned search', () => {
+            const {controller} = initTest([{id: 1}], {}, {iterative: true});
+            // олжно вернуть false, т.к. таймер уже запущен
+            assert.isFalse(controller.shouldDisplayGlobalIndicator());
+        });
+    });
+
+    describe('displayGlobalIndicator', () => {
+        it('should display after 2s', async () => {
+            const {collection, controller} = initTest([{id: 1}], {});
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.displayGlobalIndicator(0);
+
+            assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
+
+            // ждем пока отобразится индикатор
+            await new Promise((resolve) => {
+                setTimeout(() => resolve(null), 2001);
+            });
+            assert.isOk(collection.getGlobalIndicator());
+
+            controller.destroy(); // уничтожаем все таймеры
+        })
+    });
+
+    describe('shouldHideGlobalIndicator', () => {
+        it('should hide indicator if was started timer', () => {
+            const {controller} = initTest([{id: 1}], {});
+            // запустили таймер
+            controller.displayGlobalIndicator(0);
+            // олжно вернуть false, т.к. таймер уже запущен
+            assert.isTrue(controller.shouldHideGlobalIndicator());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('should hide indicator if it was displayed',async () => {
+            const {controller} = initTest([{id: 1}], {});
+            // запустили таймер
+            controller.displayGlobalIndicator(0);
+
+            // ждем пока отобразится индикатор порционного поиска
+            await new Promise((resolve) => {
+                setTimeout(() => resolve(null), 2001);
+            });
+
+            // олжно вернуть false, т.к. индикатор отображен
+            assert.isTrue(controller.shouldHideGlobalIndicator());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('not should hide indicator if portioned search', () => {
+            const {controller} = initTest([{id: 1}], {}, {iterative: true});
+            // олжно вернуть false, т.к. таймер уже запущен
+            assert.isFalse(controller.shouldHideGlobalIndicator());
+        });
+
+        it('not should hide indicator if timer not started and it not displayed', () => {
+            const {controller} = initTest([{id: 1}], {}, {iterative: true});
+            // олжно вернуть false, т.к. таймер уже запущен
+            assert.isFalse(controller.shouldHideGlobalIndicator());
+        });
+    });
+
+    describe('hideGlobalIndicator', () => {
+        it('should hide indicator', async () => {
+            const {collection, controller} = initTest([{id: 1}], {});
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.displayGlobalIndicator(0);
+            // ждем пока отобразится индикатор
+            await new Promise((resolve) => {
+                setTimeout(() => resolve(null), 2001);
+            });
+            assert.isOk(collection.getGlobalIndicator());
+
+            controller.hideGlobalIndicator();
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('should reset timer of display indicator', async() => {
+            const {collection, controller} = initTest([{id: 1}], {});
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.displayGlobalIndicator(0);
+            controller.hideGlobalIndicator(); // прерываем таймер
+
+            // дожидается 2с и убеждаемся что индикатор так и не показался
+            await new Promise((resolve) => {
+                setTimeout(() => resolve(null), 2001);
+            });
+            assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
         });

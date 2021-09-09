@@ -157,12 +157,18 @@ export default class IndicatorsController {
         this._model.displayIndicator('bottom', indicatorState);
     }
 
+    shouldDisplayGlobalIndicator(): boolean {
+        return !this._displayIndicatorTimer && !this._isPortionedSearch();
+    }
+
     displayGlobalIndicator(topOffset: number): void {
-        if (!this._displayIndicatorTimer) {
-            this._startDisplayIndicatorTimer(
-                () => this._model.displayIndicator('global', EIndicatorState.Loading, topOffset)
-            );
-        }
+        this._startDisplayIndicatorTimer(
+            () => this._model.displayIndicator('global', EIndicatorState.Loading, topOffset)
+        );
+    }
+
+    shouldHideGlobalIndicator(): boolean {
+        return !this._isPortionedSearch() && (!!this._displayIndicatorTimer || !!this._model.getGlobalIndicator())
     }
 
     hideGlobalIndicator(): void {

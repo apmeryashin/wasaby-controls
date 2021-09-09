@@ -1345,7 +1345,7 @@ const _private = {
             if (action === IObservable.ACTION_ADD) {
                 // на beforeUpdate ожем показать глоабльный индкатор по началу загрузки,
                 // после загрузки данных если их больше нет, то скрываем
-                if (!_private.hasMoreDataInAnyDirection(self) && !_private.isPortionedLoad(self)) {
+                if (!_private.hasMoreDataInAnyDirection(self) && self._indicatorsController?.shouldHideGlobalIndicator()) {
                     self._indicatorsController?.hideGlobalIndicator();
                 }
             }
@@ -1843,7 +1843,9 @@ const _private = {
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
-            this._indicatorsController.hideGlobalIndicator();
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
             return this.isEditing() && !isEndEditProcessing ?
                 this._cancelEdit(true) :
                 void 0;
@@ -1859,7 +1861,9 @@ const _private = {
         if (this._shouldEndPortionedSearch(items)) {
             this._indicatorsController.endPortionedSearch();
         }
-        this._indicatorsController.hideGlobalIndicator();
+        if (this._indicatorsController.shouldHideGlobalIndicator()) {
+            this._indicatorsController.hideGlobalIndicator();
+        }
 
         if (this._isMounted && this._scrollController) {
             _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
@@ -5182,7 +5186,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             return result;
         }).finally(() => {
-            this._indicatorsController.hideGlobalIndicator();
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
         });
     }
 
@@ -5208,7 +5214,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 controller.setSelection(controller.getSelection());
             }
         }).finally(() => {
-            this._indicatorsController.hideGlobalIndicator();
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
         });
     }
 
@@ -5222,7 +5230,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 const controller = _private.getSelectionController(this);
                 controller.setSelection(controller.getSelection());
             }
-            this._indicatorsController.hideGlobalIndicator();
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
         });
     }
 
@@ -5232,7 +5242,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._displayGlobalIndicator();
         return this._getEditInPlaceController().commit(commitStrategy).finally(() => {
-            this._indicatorsController.hideGlobalIndicator();
+            if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                this._indicatorsController.hideGlobalIndicator();
+            }
         });
     }
 
@@ -6304,7 +6316,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _displayGlobalIndicator(): void {
-        this._indicatorsController.displayGlobalIndicator(this._countGlobalIndicatorPosition());
+        if (this._indicatorsController.shouldDisplayGlobalIndicator()) {
+            this._indicatorsController.displayGlobalIndicator(this._countGlobalIndicatorPosition());
+        }
     }
 
     private _recountIndicators(
@@ -6687,7 +6701,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._displayGlobalIndicator();
                 dragEndResult.finally(() => {
                     endDrag();
-                    this._indicatorsController.hideGlobalIndicator();
+                    if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                        this._indicatorsController.hideGlobalIndicator();
+                    }
                 });
             } else {
                 endDrag();
