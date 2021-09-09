@@ -10,7 +10,7 @@ export interface IDefaultTemplateOptions {
     details?: string;
     image?: string;
     message?: string;
-    action: string | TemplateFunction | (new (args: unknown) => Control);
+    action?: string | TemplateFunction | (new (args: unknown) => Control);
 }
 
 /**
@@ -31,8 +31,6 @@ interface IBaseViewConfig<TOptions> {
     /**
      * @name Controls/_error/interface/ErrorViewConfig#options
      * @cfg {Object} Параметры построения шаблона ошибки.
-     * @remark
-     * This is remark
      */
     options: Partial<TOptions>;
 
@@ -90,6 +88,17 @@ export type ErrorViewConfig<TOptions = IDefaultTemplateOptions> = IBaseViewConfi
     IDialogViewConfig | IContainerViewConfig
 );
 
+/**
+ * @typedef ErrorViewConfig
+ * @description Данные для отображения сообщения об ошибке
+ * @property {Function | String} template Шаблон для отображения ошибки.
+ * @property {ErrorViewMode} mode Режим отображения ошибки.
+ * @property {ErrorType} type Если ошибка одна из стандартных, то это поле укажет на ее тип
+ * @property {IDefaultTemplateOptions} options Опции шаблона, возвращаемые стандартными обработчиками
+ * @property {HTTPStatus} status Код состояния HTTP, соответствующий ошибке
+ * @property {boolean} processed Обработана ли ошибка. Для обработанных ошибок сообщения не выводятся.
+ */
+
 export type ProcessedError = Error & { processed?: boolean; };
 
 export type CanceledError = Error & {
@@ -97,6 +106,17 @@ export type CanceledError = Error & {
     isCanceled?: boolean; // from PromiseCanceledError
 };
 
+/**
+ * @typedef {Enum} ErrorType
+ * @description Типы стандартных ошибок.
+ * @variant accessDenied Ошибка доступа.
+ * @variant connection Разрыв соединения
+ * @variant internal Внутренняя ошибка сервера
+ * @variant maintenance Техническое обслуживание
+ * @variant notFound Ошибка 404
+ * @variant require Ошибка загрузки ресурсов
+ * @variant rpc Ошибка БЛ
+ */
 export enum ErrorType {
     accessDenied = 'accessDenied',
     connection = 'connection',
