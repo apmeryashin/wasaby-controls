@@ -19,7 +19,7 @@ define('Controls-demo/List/Tree/TreeMemory', [
             var
                self = this,
                filter = query.getWhere(),
-               selection = filter.selection;
+               selection = filter.selection || filter.entries;
             query.where(function(item) {
                var itemKey = item.get('id');
                var folderId;
