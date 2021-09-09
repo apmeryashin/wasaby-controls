@@ -163,7 +163,8 @@ describe('Controls/_tile/TileView', () => {
                         },
                         classList: {
                             add: () => null,
-                            remove: () => null
+                            remove: () => null,
+                            contains: () => null
                         },
                         style: {}
                     };
