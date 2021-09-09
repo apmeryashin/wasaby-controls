@@ -219,6 +219,19 @@
    --offset_3xl: 28px;
 
 
+   // Линейка стандартных скруглений
+
+   --border-radius_3xs: 2px;
+   --border-radius_2xs: 4px;
+   --border-radius_xs: 6px;
+   --border-radius_s: 8px;
+   --border-radius_m: 12px;
+   --border-radius_l: 16px;
+   --border-radius_xl: 20px;
+   --border-radius_2xl: 24px;
+   --border-radius_3xl: 28px;
+
+
    // Толщина обводки контролов.
 
    --border-thickness: 1px;
@@ -245,8 +258,8 @@
 
    // Отображение картинок
 
-   --border-radius_s_image: 4px;
-   --border-radius_m_image: 8px;
+   --border-radius_s_image: var(--border-radius_2xs);
+   --border-radius_m_image: var(--border-radius_s);
 
    --size_xs_image: 16px;
    --size_s_image: 24px;
@@ -262,7 +275,7 @@
 
 
    // Блоки для нового дизайна
-   --border-radius_default_block: 8px;
+   --border-radius_default_block: var(--border-radius_s);
    --box-shadow-blur_block: 6px;
    --box-shadow_block: 0 0 var(--box-shadow-blur_block) rgba(0, 0, 0, 0.15);
    --offset_block: var(--offset_s);
