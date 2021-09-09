@@ -1358,6 +1358,15 @@ const _private = {
                         self._indicatorsController.onCollectionAdd();
                         break;
                 }
+
+                // При добавлении в список нужно отпустить триггер с нужной стороны,
+                // чтобы далее загрузка не требовала подскролла до ромашки
+                // TODO: https://online.sbis.ru/opendoc.html?guid=a6bc9564-4072-4bb6-b562-d98fa0282018
+                const collectionStartIndex = self._listViewModel.getStartIndex();
+                const changed = self._indicatorsController?.recountResetTriggerOffsets(newItemsIndex <= collectionStartIndex ? 'up' : 'down');
+                if (changed) {
+                    self._updateScrollController();
+                }
             }
 
             if (reason === 'assign' && self._options.itemsSetCallback) {
