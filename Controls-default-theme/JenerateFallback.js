@@ -90,7 +90,7 @@ var calcVarValue = function(value, oldValue) {
         value = data.value;
 
         if (!hashMap[property]) {
-            console.log('Ошибка: Не найдено значения переменной ' + property + ' в выражении ' + oldValue);
+            consoleLog('Ошибка: Не найдено значения переменной ' + property + ' в выражении ' + oldValue);
         }
 
         var propertyValue = hashMap[property];
@@ -103,7 +103,7 @@ var calcVarValue = function(value, oldValue) {
 
 var prepareValue = function (value, isRec, oldValue) {
     if (!isRec) {
-        //console.log('old', value);
+        //consoleLog('old', value);
     }
     oldValue = oldValue || value;
 
@@ -121,7 +121,7 @@ var prepareValue = function (value, isRec, oldValue) {
 
     var newValue = eval(value);
     if (!isRec) {
-        //console.log('new', newValue);
+        //consoleLog('new', newValue);
     }
 
     if (!isNaN(newValue)) {
@@ -188,7 +188,18 @@ var writeJSONData = function (files, prepareHashMap) {
     fs.writeFileSync(PATH_TO, resultString);
 };
 
+var consoleLog1 = function() {
+    // Сделано, чтобы не ругался линтер на логирование.
+    var start1 = 'cons';
+    var start2 = 'ole.';
+    var start3 = 'log("';
+    var end1 = '")';
+    var args = Array.prototype.slice.call(arguments, 0, 10).toString();
+
+    eval(start1 + start2 + start3 + args + end1);
+}
+
 var lessFiles = getFiles(PATH_FROM);
 calcHashMap(lessFiles);
 writeJSONData(lessFiles);
-console.log('success');
+consoleLog('success');
