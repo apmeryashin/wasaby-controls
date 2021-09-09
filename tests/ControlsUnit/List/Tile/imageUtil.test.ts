@@ -10,6 +10,9 @@ function mockHTMLElement(width, height) {
             },
             remove: function(className) {
                 this._classList.splice(this._classList.indexOf(className), 1);
+            },
+            contains: function(className) {
+                return this._classList.indexOf(className) >= 0;
             }
         },
         style: {},
@@ -109,19 +112,24 @@ describe('tileImageUtil', () => {
             });
         });
 
-        describe('getItemSize', function() {
-            const items = {
-                '.controls-TileView__itemContent': mockHTMLElement(100, 100),
-                '.controls-TileView__imageWrapper': mockHTMLElement(100, 75)
-            };
-            const item = {
-                querySelector: function(selector) {
-                    return items[selector];
-                }
-            } as HTMLElement;
+        describe('getItemSize', () => {
+            let items;
+            let item;
 
-            it('without imageWrapper', function() {
-                var hasError = false;
+            beforeEach(() => {
+                items = {
+                    '.controls-TileView__itemContent': mockHTMLElement(100, 100),
+                    '.controls-TileView__imageWrapper': mockHTMLElement(100, 75)
+                };
+                item = {
+                    querySelector: (selector) => {
+                        return items[selector];
+                    }
+                } as HTMLElement;
+            });
+
+            it('without imageWrapper', () => {
+                let hasError = false;
 
                 delete items['.controls-TileView__imageWrapper'];
 
@@ -132,6 +140,13 @@ describe('tileImageUtil', () => {
                 }
 
                 assert.isFalse(hasError);
+            });
+            it('do not change final classes', () => {
+
+                items['.controls-TileView__itemContent'].classList.add('controls-TileView__item_hovered');
+                getItemSize(item, 1, 'static');
+                assert.isTrue(items['.controls-TileView__itemContent'].classList.contains('controls-TileView__item_hovered'));
+                assert.isFalse(items['.controls-TileView__itemContent'].classList.contains('controls-TileView__item_unfixed'));
             });
         });
     });
