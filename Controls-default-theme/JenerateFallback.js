@@ -188,7 +188,7 @@ var writeJSONData = function (files, prepareHashMap) {
     fs.writeFileSync(PATH_TO, resultString);
 };
 
-var consoleLog1 = function() {
+var consoleLog = function() {
     // Сделано, чтобы не ругался линтер на логирование.
     var start1 = 'cons';
     var start2 = 'ole.';
