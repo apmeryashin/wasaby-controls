@@ -1660,15 +1660,11 @@
   "--header_height_compactDatePicker": "72px",
   "--header_caption_height_compactDatePicker": "46px",
   "--header_today_width_compactDatePicker": "20px",
-  "--header_margin_compactDatePicker": "0 23px",
   "--calendar_item-size_compactDatePicker": "32px",
   "--calendar_margin_compactDatePicker": "0 15px",
-  "--calendar_item_margin_compactDatePicker": "1px",
-  "--calendar_padding-top_compactDatePicker": "5px",
   "--calendar_today_background-color_compactDatePicker": "#f0f0f0",
   "--calendar_selected-day_background-color_compactDatePicker": "#eaeaea",
   "--calendar_selected-day-edge_background-color_compactDatePicker": "#333",
   "--calendar_item_hover_border-color_compactDatePicker":  "#333",
-  "--shadow_start-color_compactDatePicker": "rgba(0, 0, 0, 0.05)",
-  "--shadow_end-color_compactDatePicker": "rgba(255, 255, 255, 0)"
+  "--shadow_start-color_compactDatePicker": "rgba(0, 0, 0, 0.05)"
 }

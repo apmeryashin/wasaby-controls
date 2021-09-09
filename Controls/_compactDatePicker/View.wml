@@ -1,14 +1,18 @@
 <div class="controls-CompactDatePicker controls_compactDatePicker_theme-{{ _options.theme }} controls_popupTemplate_theme-{{_options.theme}}">
     <div class="controls-CompactDatePicker__header controls-CompactDatePicker__header__border-{{ _topShadowVisibility === 'hidden' ? 'visible' : 'hidden' }}">
         <div class="controls-CompactDatePicker__header__top-layer">
-            <div class="controls-CompactDatePicker__header__today controls-CompactDatePicker__header__today_{{ _todayIconVisible ? 'visible' : 'hidden'}}"
-                 on:click="_scrollToCurrentDate()">
-                {{ _today }}
+            <div class="controls-CompactDatePicker__header__today__container">
+                <div class="controls-CompactDatePicker__header__today controls-CompactDatePicker__header__today_{{ _todayIconVisible ? 'visible' : 'hidden'}}"
+                     on:click="_scrollToCurrentDate()">
+                    {{ _today }}
+                </div>
             </div>
             <div class="controls-CompactDatePicker__header__month">
                 {{ _headerCaption }}
             </div>
-            <Controls.popupTemplate:CloseButton attr:title="{[Закрыть]}" on:click="_closeClick()" viewMode="linkButton"/>
+            <div class="controls-CompactDatePicker__header__close-button__container">
+                <Controls.popupTemplate:CloseButton attr:title="{[Закрыть]}" on:click="_closeClick()" viewMode="linkButton"/>
+            </div>
         </div>
         <div class="controls-CompactDatePicker__header__weekdays">
             <ws:for data="weekday in _weekdaysCaptions">
