@@ -2,7 +2,7 @@
    <span attr:class="ws-flex-shrink-0 controls-icon controls-rating__star {{icon}}
          {{'controls-rating__star_padding-' + _options.iconPadding}}
          {{'controls-icon_size-' + _options.iconSize}}
-         {{'controls-icon_style-' + iconStyle}}"></span>
+         {{'controls-icon_style-' + iconStyle}}" attr:data-qa="rating__star"></span>
 </ws:template>
 
 
