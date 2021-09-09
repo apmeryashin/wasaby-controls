@@ -380,6 +380,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
         if (options.sourceController !== newOptions.sourceController) {
             this._dataLoader.setSourceController(id, newOptions.sourceController);
+            this._subscribeOnSourceControllerEvents();
             this._subscribeOnRootChanged();
             this._subscribeOnSortingChanged();
         }
@@ -548,9 +549,16 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _setItemsAndUpdateContext(): void {
         this._updateItemsOnState();
+        this._subscribeOnSourceControllerEvents();
         this._subscribeOnRootChanged();
         this._subscribeOnSortingChanged();
         this._updateContext();
+    }
+
+    private _subscribeOnSourceControllerEvents(): void {
+        const sourceController = this._getSourceController();
+        sourceController.subscribe('rootChanged', this._rootChanged.bind(this));
+        sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
     }
 
     private _subscribeOnRootChanged(): void {
@@ -627,6 +635,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _isSearchViewMode(): boolean {
         return this._viewMode === 'search';
+    }
+
+    protected _dataLoadStart(): void {
+        this._loading = true;
     }
 
     protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
@@ -1063,7 +1075,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _reload(options: IBrowserOptions, id?: string): Promise<RecordSet> {
         const sourceController = this._getSourceController(id);
 
-        this._loading = true;
         return sourceController.reload()
             .then((items) => {
                 this._updateItemsOnState();

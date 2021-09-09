@@ -877,6 +877,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
                 Promise.resolve(filter) :
                 this._prepareFilterForQuery(filter || this._filter, key, isFirstLoad, direction);
             this.cancelLoading();
+            this._notify('dataLoadStarted');
             this._prepareFilterPromise = new CancelablePromise(filterPromise);
             this._loadPromise = new CancelablePromise(
                 this._prepareFilterPromise.promise.then((preparedFilter: QueryWhereExpression<unknown>) => {

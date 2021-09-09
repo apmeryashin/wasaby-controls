@@ -1851,6 +1851,10 @@ const _private = {
     },
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        if (items.getCount()) {
+            this._loadedItems = items;
+        }
+
         if (!direction) {
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
@@ -1864,9 +1868,6 @@ const _private = {
                 void 0;
         }
 
-        if (items.getCount()) {
-            this._loadedItems = items;
-        }
         _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
 
         _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -4617,14 +4618,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const resDeferred = new Deferred();
         const self = this;
 
-        self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
-
         if (self._sourceController) {
             self._indicatorsController.endDisplayPortionedSearch();
-            self._displayGlobalIndicator();
-            // Need to create new Deffered, returned success result
-            // load() method may be fired with errback
-            _private.setReloadingState(self, true);
             self._sourceController.reload(sourceConfig).addCallback(function(list) {
                 // Пока загружались данные - список мог уничтожится. Обрабатываем это.
                 // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
@@ -4632,53 +4627,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     resDeferred.callback(null);
                     return;
                 }
-                _private.doAfterUpdate(self, () => {
-                    _private.setReloadingState(self, false);
 
-                    if (list.getCount()) {
-                        self._loadedItems = list;
-                    }
-                    if (self._pagingNavigation) {
-                        const hasMoreDataDown = list.getMetaData().more;
-                        _private.updatePagingData(self, hasMoreDataDown, self._options);
-                    }
-                    let listModel = self._listViewModel;
+                if (!self._shouldNotResetPagingCache) {
+                    self._cachedPagingState = false;
+                }
 
-                    if (!self._shouldNotResetPagingCache) {
-                        self._cachedPagingState = false;
-                    }
+                resDeferred.callback(list);
 
-                    if (listModel) {
-                        if (self._sourceController) {
-                            if (self._sourceController.getItems() !== self._items || !self._items) {
-                                // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
-                                // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
-                                // выполняется в колбеке после обновления (doAfterUpdate).
-                                _private.assignItemsToModel(self, list, self._options);
-                            } else if (cfg.itemsSetCallback) {
-                                cfg.itemsSetCallback(self._items);
-                            }
-                            _private.setHasMoreData(listModel, _private.getHasMoreData(self));
-                        }
-
-                        if (self._loadedItems) {
-                            self._shouldRestoreScrollPosition = true;
-                        }
-                        // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
-                        if (self._itemsChanged) {
-                            self._shouldNotifyOnDrawItems = true;
-                        }
-                    } else {
-                        _private.initializeModel(self, cfg, list);
-                    }
-                    _private.prepareFooter(self, self._options, self._sourceController);
-
-                    resDeferred.callback(list);
-
-                    self._recountIndicators('all', true);
-                    _private.resetScrollAfterLoad(self);
-                    _private.tryLoadToDirectionAgain(self, list);
-                });
+                self._recountIndicators('all', true);
             });
         } else {
             self._afterReloadCallback(cfg);
