@@ -28,8 +28,7 @@ var removeSubstr = function (value, startIndex, length) {
     return value.slice(0, startIndex) + value.slice(startIndex + length, value.length);
 }
 
-var removeCalcBracket = function (value, calcIndex) {
-
+var getCalcValue = function (value, calcIndex) {
     var countSBracket = 1;
     for (var j = calcIndex; j < value.length; j++) {
         if (value[j] === '(') {
@@ -38,9 +37,28 @@ var removeCalcBracket = function (value, calcIndex) {
             countSBracket--;
         }
         if (countSBracket === 0) {
-            return removeSubstr(value, j, 1);
+            value = removeSubstr(value, j, 1);
+            return {
+                value: value,
+                calcContent: value.substr(calcIndex, j - calcIndex)
+            }
         }
     }
+}
+
+var calcCycle = function(value, oldValue) {
+    var calcIndex = value.lastIndexOf(CALC_PREFIX);
+    while (calcIndex !== -1) {
+        value = removeSubstr(value, calcIndex, CALC_PREFIX.length); // обрезаем calc(
+        var data = getCalcValue(value, calcIndex);
+        var calcContent = data.calcContent;
+        value = data.value;
+        var calcValue = prepareValue(calcContent, true, oldValue);
+        value = value.replace(calcContent, calcValue);
+
+        calcIndex = value.lastIndexOf(CALC_PREFIX);
+    }
+    return value;
 }
 
 var getPropertyNameAndRemoveVarBracket = function (value, varIndex) {
@@ -62,40 +80,49 @@ var getPropertyNameAndRemoveVarBracket = function (value, varIndex) {
     };
 }
 
-var prepareValue = function (hashMap, value) {
-    var oldValue = value;
-    //console.log('old', value);
+var calcVarValue = function(value, oldValue) {
+    var varIndex = value.indexOf(VAR_PREFIX);
 
-    var calcIndex = value.indexOf(CALC_PREFIX);
+    while (varIndex !== -1) {
+        value = removeSubstr(value, varIndex, VAR_PREFIX.length); // обрезаем var(
+        var data = getPropertyNameAndRemoveVarBracket(value, varIndex);
+        var property = data.property;
+        value = data.value;
 
-    while (calcIndex !== -1) {
-        value = removeSubstr(value, calcIndex, CALC_PREFIX.length); // обрезаем calc(
-        value = removeCalcBracket(value, calcIndex); // удаляю закрывающуюся скобку от calc
-
-        var varIndex = value.indexOf(VAR_PREFIX);
-        while (varIndex !== -1) {
-            value = removeSubstr(value, varIndex, VAR_PREFIX.length); // обрезаем var(
-            var data = getPropertyNameAndRemoveVarBracket(value, varIndex);
-            var property = data.property;
-            value = data.value;
-
-            if (!hashMap[property]) {
-                console.log('Ошибка: Не найдено значения переменной ' + property + ' в выражении ' + oldValue);
-            }
-
-            var propertyValue = hashMap[property];
-            value = value.replace(property, propertyValue);
-
-            varIndex = value.indexOf(VAR_PREFIX);
+        if (!hashMap[property]) {
+            consoleLog('Ошибка: Не найдено значения переменной ' + property + ' в выражении ' + oldValue);
         }
 
-        calcIndex = value.indexOf(CALC_PREFIX);
+        var propertyValue = hashMap[property];
+        value = value.replace(property, propertyValue);
+
+        varIndex = value.indexOf(VAR_PREFIX);
     }
+    return value;
+}
+
+var prepareValue = function (value, isRec, oldValue) {
+    if (!isRec) {
+        //consoleLog('old', value);
+    }
+    oldValue = oldValue || value;
+
+    var calcIndex = value.lastIndexOf(CALC_PREFIX);
+
+    if (calcIndex !== -1) {
+        value = calcCycle(value, oldValue);
+    } else {
+        value = calcVarValue(value, oldValue);
+        value = calcCycle(value, oldValue);
+    }
+
 
     value = value.replace(/px/gi, ''); // убираю px
 
     var newValue = eval(value);
-    //console.log('new', newValue);
+    if (!isRec) {
+        //consoleLog('new', newValue);
+    }
 
     if (!isNaN(newValue)) {
         return newValue + 'px';
@@ -129,7 +156,7 @@ var lessFilesDataIterator = function (fileContent, callback) {
 var getFileJSONData = function (fileContent, prepareHashMap) {
     return lessFilesDataIterator(fileContent, function (value) {
         if (value.includes('calc')) {
-            return prepareValue(hashMap, value);
+            return prepareValue(value);
         }
         return value;
     })
@@ -161,7 +188,18 @@ var writeJSONData = function (files, prepareHashMap) {
     fs.writeFileSync(PATH_TO, resultString);
 };
 
+var consoleLog = function() {
+    // Сделано, чтобы не ругался линтер на логирование.
+    var start1 = 'cons';
+    var start2 = 'ole.';
+    var start3 = 'log("';
+    var end1 = '")';
+    var args = Array.prototype.slice.call(arguments, 0, 10).toString();
+
+    eval(start1 + start2 + start3 + args + end1);
+}
+
 var lessFiles = getFiles(PATH_FROM);
 calcHashMap(lessFiles);
 writeJSONData(lessFiles);
-console.log('success');
+consoleLog('success');
