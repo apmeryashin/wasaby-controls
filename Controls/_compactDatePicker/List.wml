@@ -5,55 +5,59 @@
                              _shouldUseScrollToItem="{{ true }}"
                              displayedRanges="{{ _options.displayedRanges }}"
                              position="{{ _options.position }}"
+                             bottomShadowVisibility="hidden"
+                             topShadowVisibility="{{ _options.topShadowVisibility }}"
+                             shadowStyle="CompactDatePicker"
+                             on:scroll="_scrollHandler()"
                              on:positionChanged="_positionChangedHandler()"
                              on:itemClick="_monthViewItemClickHandler()"
 >
-<ws:monthHeaderTemplate>
-    <div class="controls-CompactDatePicker__header__month">
-        {{ _getFormattedCaption(monthHeaderTemplate.date) }}
-    </div>
-</ws:monthHeaderTemplate>
 <ws:monthTemplate>
     <ws:partial template="Controls/calendar:MonthListMonthTemplate">
         <ws:bodyTemplate>
-            <Controls.calendar:MonthView
-                    monthViewModel="{{ _monthViewModel }}"
-                    isDayAvailable="{{ _options.isDayAvailable }}"
-                    attr:class="controls-CompactDatePicker__month-list__item"
-                    ranges="{{_options.ranges}}"
-                    showWeekdays="{{false}}"
-                    month="{{ monthTemplate.date }}"
-                    daysData="{{extData[monthTemplate.date.getMonth()]}}"
-                    selectionType="{{ _options.selectionType }}"
+            <div>
+                <Controls.calendar:MonthView
+                        monthViewModel="{{ _monthViewModel }}"
+                        isDayAvailable="{{ _options.isDayAvailable }}"
+                        attr:class="controls-CompactDatePicker__month-list__item"
+                        ranges="{{_options.ranges}}"
+                        showWeekdays="{{false}}"
+                        month="{{ monthTemplate.date }}"
+                        daysData="{{extData[monthTemplate.date.getMonth()]}}"
+                        selectionType="{{ _options.selectionType }}"
 
-                    startValue="{{ _options.rangeModel.startValue }}"
-                    endValue="{{ _options.rangeModel.endValue }}"
-                    newMode="{{true}}"
-                    selectionProcessing="{{_options.selectionProcessing}}"
-                    on:selectionProcessingChanged="_proxyEvent()"
-                    selectionBaseValue="{{_options.selectionBaseValue}}"
+                        startValue="{{ _options.rangeModel.startValue }}"
+                        endValue="{{ _options.rangeModel.endValue }}"
+                        newMode="{{true}}"
+                        selectionProcessing="{{_options.selectionProcessing}}"
+                        on:selectionProcessingChanged="_proxyEvent()"
+                        selectionBaseValue="{{_options.selectionBaseValue}}"
 
-                    hoveredStartValue="{{ null }}"
-                    hoveredEndValue="{{ null }}"
+                        hoveredStartValue="{{ null }}"
+                        hoveredEndValue="{{ null }}"
 
 
-                    on:monthClick="_proxyEvent()"
-                    on:fixedPeriodClick="_proxyEvent()"
-                    on:itemClick="_proxyEvent()"
-                    on:itemMouseEnter="_proxyEvent()"
-                    on:itemMouseLeave="_proxyEvent()"
-                    on:itemKeyDown="_proxyEvent()"
-            >
-                <ws:dayTemplate>
-                    <ws:partial
-                        template="{{ _dayTemplate }}"
-                        defaultDayTemplate="{{ _defaultDayTemplate }}"
-                        value="{{ dayTemplate.value }}"
-                        currentDayIntersectHandler="{{ _currentDayIntersectHandler }}"
-                        unregisterCurrentDayIntersectHandler="{{ _unregisterCurrentDayIntersectHandler }}"
-                    />
-                </ws:dayTemplate>
-            </Controls.calendar:MonthView>
+                        on:monthClick="_proxyEvent()"
+                        on:fixedPeriodClick="_proxyEvent()"
+                        on:itemClick="_proxyEvent()"
+                        on:itemMouseEnter="_proxyEvent()"
+                        on:itemMouseLeave="_proxyEvent()"
+                        on:itemKeyDown="_proxyEvent()"
+                >
+                    <ws:dayTemplate>
+                        <ws:partial
+                                template="{{ _dayTemplate }}"
+                                defaultDayTemplate="{{ _defaultDayTemplate }}"
+                                value="{{ dayTemplate.value }}"
+                        />
+                    </ws:dayTemplate>
+                </Controls.calendar:MonthView>
+                <ws:if data="{{ !_isLastMonth(bodyTemplate.date) }}">
+                    <div class="controls-CompactDatePicker__header__month">
+                        {{ _getFormattedCaption(bodyTemplate.date) }}
+                    </div>
+                </ws:if>
+            </div>
         </ws:bodyTemplate>
     </ws:partial>
 </ws:monthTemplate>

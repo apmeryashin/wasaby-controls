@@ -61,6 +61,7 @@ export interface IPopupPosition {
     invisible?: boolean;
     hidden?: boolean;
     margin?: number;
+    zoom?: number;
 }
 
 export interface IEventHandlers {

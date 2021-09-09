@@ -18,10 +18,6 @@ define('Controls-demo/Date/Month', [
       _startValueSelected: new Date(2017, 0, 5),
       _endValueSelected: new Date(2017, 0, 11),
 
-      constructor: function() {
-         ModuleClass.superclass.constructor.apply(this, arguments);
-      },
-
       _clickHandler: function(event, days) {
          this._startValue = new Date(this._startValue.getFullYear(), this._startValue.getMonth(),
             this._startValue.getDate() + days);

@@ -233,7 +233,7 @@ export default class TileView extends ListView {
                 templateOptions: menuOptions,
                 closeOnOutsideClick: true,
                 maxWidth: menuOptions.previewWidth + MENU_MAX_WIDTH,
-                target: this._targetItemRect ? {getBoundingClientRect: () => this._targetItemRect} : imageWrapper,
+                target: this._targetItemRect ? this._mockMenuTarget(this._targetItemRect) : imageWrapper,
                 className: `controls-TileView__itemActions_menu_popup
                             controls_popupTemplate_theme-${this._options.theme}
                             controls_list_theme-${this._options.theme}`,
@@ -252,6 +252,23 @@ export default class TileView extends ListView {
         } else {
             return null;
         }
+    }
+
+    /**
+     * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
+     * Поэтому мокаем объект с getBoundingClientRect так, чтобы он возвращал переданные координаты
+     * @param rect
+     */
+    private _mockMenuTarget(rect: ClientRect): HTMLElement {
+        return {
+            children: [],
+            getBoundingClientRect(): ClientRect {
+                return rect;
+            },
+            closest(): void {
+                return undefined;
+            }
+        } as undefined as HTMLElement;
     }
 
     private _shouldOpenExtendedMenu(isActionMenu: boolean): boolean {

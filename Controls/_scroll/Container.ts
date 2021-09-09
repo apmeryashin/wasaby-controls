@@ -105,6 +105,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     private _wasMouseEnter: boolean = false;
     private _gridAutoShadows: boolean = true;
 
+    private _containerLoadedResolve: Function;
+    private _containerLoaded: Promise<void> | boolean;
+
+    get containerLoaded(): Promise<void> | boolean {
+        return this._containerLoaded;
+    }
+
     _beforeMount(options: IContainerOptions) {
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
         this._scrollbars = new ScrollbarsModel(options);
@@ -120,7 +127,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                     (options.topShadowVisibility === SHADOW_VISIBILITY.AUTO ||
                         options.bottomShadowVisibility === SHADOW_VISIBILITY.AUTO)));
         this._optimizeShadowClass = this._getOptimizeShadowClass(options);
-
+        this._containerLoaded = new Promise<void>((res) => {
+            this._containerLoadedResolve = res;
+        });
         super._beforeMount(...arguments);
     }
 
@@ -161,6 +170,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
         this._updateShadowsScrollState();
         this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
+        this._containerLoadedResolve();
+        this._containerLoaded = true;
     }
 
     protected _isPagingVisible(options: IContainerOptions): boolean {
@@ -743,6 +754,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @name Controls/_scroll/Container#backgroundStyle
  * @cfg {String} Определяет префикс стиля для настройки элементов, которые зависят от цвета фона.
  * @default default
+ * @remark При нестандартном цвете фона, будет виден лишний градиент от тени. Значение опции в том числе добавит
+ * постфикс к классу с css тенью. При этом нужно самим написать новый стиль для тени, либо можно воспользоваться
+ * готовыми значениями
+ * * master - значение для скролл контейнера контентом которого является masterDetail
+ * * unaccented - значение для скролл контейнера, к которого цвет фона контента unaccented
  * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
  * @see style
  */

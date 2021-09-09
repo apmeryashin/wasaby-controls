@@ -6,6 +6,7 @@
                                    viewMode="filterPanelStack"
                                    collapsedGroups="{{_options.collapsedGroups}}"
                                    on:collapsedGroupsChanged="_collapsedGroupsChanged()"
-                                   on:filterApplied="_filterAppliedHandler()"/>
+                                   on:filterApplied="_filterAppliedHandler()"
+                                   attr:class="controls-FilterViewPanel__popup-content"/>
     </ws:bodyContentTemplate>
 </Controls.popupTemplate:Stack>

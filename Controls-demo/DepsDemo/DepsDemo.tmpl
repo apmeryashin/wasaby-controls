@@ -4,35 +4,7 @@
    </Controls.Container.Async>
    <Controls.buttons:Button attr:class="ControlsDemo-DepsDemo__button">
       <ws:caption>
-         <span attr:class="checkSpan">{{is_OK}}</span>
+         <span attr:class="checkSpan">{{ isOK ? 'ok' : 'Dependencies has not been preloaded. Check DepsDemo.tmpl' }}</span>
       </ws:caption>
    </Controls.buttons:Button>
-   <script>
-      function checkDebug(scripts) {
-         for (var i = 0; i < scripts.length; i++) {
-            if (/scripts_[0-9]+/g.test(scripts[i].attributes.key)) {
-               return false;
-            }
-         }
-         return true;
-      }
-      if (!window.once) {
-         window.once = true;
-         var arr = document.getElementsByTagName('script');
-         if (checkDebug(arr)) {
-            window.$is_OK$ = true;
-         } else {
-            var depArray = ['Controls/input:Text', 'Controls.buttons:Button'];
-            var depName;
-            var allDepsDefined = true;
-            for (var j = 0; j < depArray.length; j++) {
-               depName = depArray[j];
-               if (!require.defined(depName)) {
-                  allDepsDefined = false;
-               }
-            }
-            window.$is_OK$ = allDepsDefined || isDebug;
-         }
-      }
-   </script>
 </div>

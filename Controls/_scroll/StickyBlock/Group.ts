@@ -107,6 +107,16 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
+    getFixedGroupPosition(): string {
+        let fixedPosition = '';
+        for (const headerId of Object.keys(this._headers)) {
+            if (this._headers[headerId].inst.model) {
+                fixedPosition = this._headers[headerId].inst.model.fixedPosition || fixedPosition;
+            }
+        }
+        return fixedPosition;
+    }
+
     get height(): number {
         // Group can be with style display: content. Use the height of the first header as the height of the group.
         const headersIds: number[] = Object.keys(this._headers);

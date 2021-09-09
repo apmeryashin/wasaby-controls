@@ -7,12 +7,10 @@ import {VersionableMixin} from 'Types/entity';
 import {mixin} from 'Types/util';
 import {FilterUtils} from 'Controls/filter';
 import * as coreClone from 'Core/core-clone';
-import {StickyOpener} from 'Controls/popup';
 
 interface IFilterViewModelOptions {
     source: IFilterItem[];
     collapsedGroups: string[] | number[];
-    applyButtonSticky: StickyOpener;
     filterViewMode: string;
 }
 
@@ -63,7 +61,6 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 ...item.editorOptions,
                 ...{
                     viewMode: item.viewMode,
-                    applyButtonSticky: this._options.applyButtonSticky,
                     filterViewMode: this._options.filterViewMode,
                     name: item.name
                 }};
