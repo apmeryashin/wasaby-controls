@@ -251,10 +251,26 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         return result;
     }
 
+    protected _resetDisplayText(oldItems: IFilterItem[], newItems: IFilterItem[], displayText: IDisplayText): void {
+        factory(newItems).each((newItem) => {
+            const oldItem = this._getItemByName(oldItems, newItem[newItem.name]);
+            if (
+                (!oldItem ||
+                this._isFrequentItem(oldItem) &&
+                (oldItem.viewMode !== newItem.viewMode || !isEqual(oldItem.value, newItem.value))) &&
+                displayText[newItem.name]
+            ) {
+                displayText[newItem.name] = {};
+            }
+        });
+    }
+
     protected _beforeUpdate(newOptions: IFilterViewOptions): void {
         if (newOptions.source && newOptions.source !== this._options.source) {
             let resultDef;
             this._resolveItems(newOptions.source);
+            this._resetDisplayText(this._options.source, this._source, this._displayText);
+            this._displayText = {...this._displayText};
             this._detailPanelTemplateName = this._getDetailPanelTemplateName(newOptions);
             const itemsForReload = this._getItemsForReload(this._options.source, newOptions.source, this._configs);
             const hasAsyncRedraw = itemsForReload.length || !!this._loadPromise;
