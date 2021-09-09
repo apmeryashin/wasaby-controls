@@ -389,11 +389,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         expanderClasses += ' js-controls-ListView__notEditable';
 
         if (expanderPosition === 'default') {
-            expanderClasses += ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')} `;
+            expanderClasses += ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')}`;
         } else if (expanderPosition === 'right') {
             expanderClasses += ' controls-TreeGrid__row_expander_position_right';
         }
-
         expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${this.getOwner().getTopPadding()}`;
         expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${this.getOwner().getBottomPadding()}`;
 
@@ -401,13 +400,13 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         const iconStyle = this.getStyle() === 'master' && expanderPosition !== 'right' ? 'master' : 'default';
         const appliedIcon = expanderIcon && expanderIcon !== 'node' && expanderIcon !== 'hiddenNode' &&
             expanderIcon !== 'emptyNode';
+        const icon = expanderIcon || (this.isNode() ? 'node' : 'hiddenNode');
         if (appliedIcon) {
             expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
         } else {
-            const icon = expanderIcon || (this.isNode() ? 'node' : 'hiddenNode');
             expanderIconClass = ` controls-TreeGrid__row-expander_${icon}_${iconStyle}`;
         }
-
+        expanderClasses += ` controls-TreeGrid__row-expander_${icon}_${iconStyle}_position_${expanderPosition}`;
         expanderClasses += expanderIconClass;
 
         // добавляем класс свертнутости развернутости для тестов
