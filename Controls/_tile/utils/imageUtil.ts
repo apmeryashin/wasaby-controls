@@ -171,7 +171,9 @@ export function getImageRestrictions(
  */
 export function getItemSize(item: HTMLElement, zoomCoefficient: number, tileMode: TTileMode): IImageSize {
     const tileContent = item.querySelector('.controls-TileView__itemContent');
+    const isHovered = tileContent.classList.contains('controls-TileView__item_hovered');
     tileContent.classList.add('controls-TileView__item_hovered');
+    const isUnfixed = tileContent.classList.contains('controls-TileView__item_unfixed');
     tileContent.classList.remove('controls-TileView__item_unfixed');
     tileContent.style.width = tileContent.getBoundingClientRect().width * zoomCoefficient + 'px';
 
@@ -196,8 +198,12 @@ export function getItemSize(item: HTMLElement, zoomCoefficient: number, tileMode
         imageWrapper.style.height = imageWrapperRect.height + 'px';
     }
     tileContent.style.width = '';
-    tileContent.classList.remove('controls-TileView__item_hovered');
-    tileContent.classList.add('controls-TileView__item_unfixed');
+    if (!isHovered) {
+        tileContent.classList.remove('controls-TileView__item_hovered');
+    }
+    if (isUnfixed) {
+        tileContent.classList.add('controls-TileView__item_unfixed');
+    }
 
     return result;
 }
