@@ -363,6 +363,42 @@ define(
             assert.equal(item.position.left, -10000);
          });
 
+         it('dialog positioned for coordinate', () => {
+            let item = {
+               popupOptions: {
+                  maxWidth: 100,
+                  maxHeight: 100,
+                  minWidth: 10,
+                  minHeight: 10,
+                  top: 10,
+                  left: 10
+               }
+            };
+            DialogController.getDefaultConfig(item);
+            assert.equal(item.position.top, 10);
+            assert.equal(item.position.left, 10);
+         });
+
+         it('dialog positioned for coordinate and margin', () => {
+            let item = {
+               popupOptions: {
+                  maxWidth: 100,
+                  maxHeight: 100,
+                  minWidth: 10,
+                  minHeight: 10,
+                  top: 10,
+                  left: 10,
+                  offset: {
+                     horizontal: 10,
+                     vertical: 10
+                  }
+               }
+            };
+            DialogController.getDefaultConfig(item);
+            assert.equal(item.position.top, 20);
+            assert.equal(item.position.left, 20);
+         });
+
          it('dialog drag start', function() {
             let item = {
                position: {
