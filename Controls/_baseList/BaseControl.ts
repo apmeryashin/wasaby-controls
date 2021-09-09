@@ -2536,7 +2536,7 @@ const _private = {
             !self._options.readOnly && self._options.itemsDragNDrop
             && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, TouchDetect.getInstance().isTouch())
         ) {
-            const draggableKEy = draggableItem.getContents().getKey();
+            const draggableKey = draggableItem.getContents().getKey();
 
             // Перемещать с помощью массового выбора
             // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
@@ -2544,14 +2544,14 @@ const _private = {
                 selected: self._options.selectedKeys || [],
                 excluded: self._options.excludedKeys || []
             };
-            selection = DndController.getSelectionForDragNDrop(self._listViewModel, selection, draggableKEy);
+            selection = DndController.getSelectionForDragNDrop(self._listViewModel, selection, draggableKey);
 
             self._dndListController = _private.createDndListController(self._listViewModel, draggableItem, self._options);
             const options = self._getSourceControllerOptionsForGetDraggedItems();
             return self._dndListController.getDraggableKeys(selection, options).then((items) => {
-                let dragStartResult = self._notify('dragStart', [items, draggableKEy]);
+                let dragStartResult = self._notify('dragStart', [items, draggableKey]);
 
-                if (dragStartResult instanceof ItemsEntity && !_private.isValidDndItemsEntity(dragStartResult, draggableKEy)) {
+                if (dragStartResult instanceof ItemsEntity && !_private.isValidDndItemsEntity(dragStartResult, draggableKey)) {
                     // ничего не делаем, чтобы не блочилась страница.
                     return;
                 }
@@ -2567,7 +2567,7 @@ const _private = {
                     }
 
                     self._dragEntity = dragStartResult;
-                    self._draggedKey = draggableKEy;
+                    self._draggedKey = draggableKey;
                     self._startEvent = domEvent.nativeEvent;
 
                     _private.clearSelectedText(self._startEvent);

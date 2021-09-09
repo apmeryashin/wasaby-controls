@@ -65,20 +65,15 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
          parent = this.options.display.getRoot();
       } else if (targetItem.isNode()) {
          if (relativePosition === 'before' || relativePosition === 'after' && !targetItem.isExpanded()) {
-            parent = targetItem.getParent();
+            parent = this._getParentConsideringHiddenItems(targetItem, this.options.display.getItems());
          } else if (relativePosition === 'after' && targetItem.isExpanded()) {
             parent = targetItem;
          } else {
             // relativePosition = 'on'
-            parent = this.avatarItem.getParent();
+            parent = this._getParentConsideringHiddenItems(this.avatarItem, this.options.display.getItems());
          }
       } else {
-         parent = targetItem.getParent();
-      }
-
-      const correctingParent = this._getParentConsideringHiddenItems(parent, this.options.display.getItems());
-      if (correctingParent) {
-         parent = correctingParent;
+         parent = this._getParentConsideringHiddenItems(targetItem, this.options.display.getItems());
       }
 
       return parent;
