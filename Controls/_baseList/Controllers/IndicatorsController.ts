@@ -207,6 +207,10 @@ export default class IndicatorsController {
         }
     }
 
+    /**
+     * Проверяет, должен ли отображаться нижний индикатор.
+     * @return {boolean} Отображать ли нижний индикатор.
+     */
     hasNotRenderedChanges(): boolean {
         return this._hasNotRenderedChanges;
     }
