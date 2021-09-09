@@ -34,6 +34,63 @@ define([
          });
       });
 
+      describe('getFixedGroupPosition', function () {
+         it('should return top position even if one header is fixed', function () {
+            const component = createComponent(scroll.Group, options);
+            component._headers = {
+               0: {
+                  inst: {
+                     model: {
+                        fixedPosition: ''
+                     }
+                  }
+               },
+               1: {
+                  inst: {
+                     model: {
+                        fixedPosition: 'top'
+                     }
+                  }
+               },
+               2: {
+                  inst: {
+                     model: {
+                        fixedPosition: ''
+                     }
+                  }
+               },
+            };
+            assert.equal(component.getFixedGroupPosition(), 'top');
+         });
+         it('should return correct position', function () {
+            const component = createComponent(scroll.Group, options);
+            component._headers = {
+               0: {
+                  inst: {
+                     model: {
+                        fixedPosition: ''
+                     }
+                  }
+               },
+               1: {
+                  inst: {
+                     model: {
+                        fixedPosition: ''
+                     }
+                  }
+               },
+               2: {
+                  inst: {
+                     model: {
+                        fixedPosition: ''
+                     }
+                  }
+               },
+            };
+            assert.equal(component.getFixedGroupPosition(), '');
+         });
+      });
+
       describe('_fixedHandler', function() {
          const
             event = {stopImmediatePropagation: sinon.fake()};

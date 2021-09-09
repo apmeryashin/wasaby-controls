@@ -268,11 +268,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
                     // если были ошибки валидации, уведомим о них
                     const validationErrors = this._validateController.getValidationResult();
                     this._notify('validationFailed', [validationErrors]);
-                    return {
-                        data: {
-                            validationErrors: results
-                        }
-                    };
+                    throw new Error(rk('Некорректно заполнены обязательные поля'));
                 } else {
                     this._notify('validationSuccessed', []);
                     this._record.acceptChanges();

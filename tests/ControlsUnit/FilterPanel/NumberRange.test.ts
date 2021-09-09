@@ -78,8 +78,10 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
                 closest: () => {}
             }
         };
-        numberRangeEditor._notifyPropertyValueChanged = () => {
-            changesNotified = true;
+        numberRangeEditor._notify = (actionName: string) => {
+            if (actionName === 'propertyValueChanged') {
+                changesNotified = true;
+            }
         };
         it('minValue is bigger than maxValue', () => {
             numberRangeEditor._processPropertyValueChanged(event, [4, 3]);
@@ -112,7 +114,7 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
             const maxValue = 4;
             numberRangeEditor._handleMinValueChanged(null, minValue);
             numberRangeEditor._handleMaxValueChanged(null, maxValue);
-            numberRangeEditor._notifyPropertyValueChanged();
+            numberRangeEditor._processPropertyValueChanged(null, []);
             assert.deepEqual(value, [1, 4]);
         });
     });

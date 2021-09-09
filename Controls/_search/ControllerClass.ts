@@ -85,6 +85,7 @@ export default class ControllerClass {
    private _root: TKey = null;
    private _rootBeforeSearch: TKey = null;
    private _path: RecordSet = null;
+   private _hasHiearchyFilterBeforeSearch: boolean = false;
 
    private _viewMode: TViewMode;
    private _previousViewMode: TViewMode;
@@ -124,6 +125,9 @@ export default class ControllerClass {
    reset(dontLoad: boolean): QueryWhereExpression<unknown>;
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       this._checkSourceController();
+
+      let resetResult;
+
       this._searchValue = '';
       this._misspellValue = '';
       this._viewMode = this._previousViewMode;
@@ -138,10 +142,13 @@ export default class ControllerClass {
       const filter = this._getFilter();
 
       if (!dontLoad) {
-         return this._updateFilterAndLoad(filter, this._getRoot());
+         resetResult = this._updateFilterAndLoad(filter, this._getRoot());
+      } else {
+         resetResult = filter;
       }
+      this._hasHiearchyFilterBeforeSearch = false;
 
-      return filter;
+      return resetResult;
    }
 
    /**
@@ -155,6 +162,7 @@ export default class ControllerClass {
       if (this._viewMode !== 'search') {
          this._previousViewMode = this._viewMode;
          this._viewMode = 'search';
+         this._hasHiearchyFilterBeforeSearch = ControllerClass._hasHierarchyFilter(this._sourceController.getFilter());
       }
 
       if (this._searchValue !== newSearchValue || !this._searchPromise) {
@@ -373,7 +381,7 @@ export default class ControllerClass {
       const filter = {...this._sourceController.getFilter()};
       delete filter[this._options.searchParam];
 
-      if (this._options.parentProperty) {
+      if (this._options.parentProperty && !this._hasHiearchyFilterBeforeSearch) {
          for (const i in SERVICE_FILTERS.HIERARCHY) {
             if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
                delete filter[i];
@@ -445,6 +453,12 @@ export default class ControllerClass {
 
    private _isSearchMode(): boolean {
       return !!this._sourceController.getFilter()[this._options.searchParam];
+   }
+
+   private static _hasHierarchyFilter(filter: QueryWhereExpression<unknown>): boolean {
+      return !!Object.entries(SERVICE_FILTERS.HIERARCHY)[0].find((key) => {
+         return filter.hasOwnProperty(key);
+      })?.length;
    }
 
    private static _getPath(items: RecordSet): RecordSet {

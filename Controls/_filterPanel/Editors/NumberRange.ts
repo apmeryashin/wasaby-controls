@@ -1,7 +1,6 @@
-import {IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import DateRangeTemplate = require('wml!Controls/_filterPanel/Editors/NumberRange');
-import {BaseEditor} from 'Controls/_filterPanel/Editors/Base';
 import 'css!Controls/filterPanel';
 
 interface INumberRangeOptions extends IControlOptions {
@@ -58,7 +57,7 @@ interface INumberRange {
  * </pre>
  */
 
-class NumberRangeEditor extends BaseEditor implements INumberRange {
+class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberRange {
     readonly '[Controls/_filterPanel/Editors/NumberRange]': boolean = true;
     protected _template: TemplateFunction = DateRangeTemplate;
     protected _minValue: number|null = null;
@@ -108,7 +107,7 @@ class NumberRangeEditor extends BaseEditor implements INumberRange {
 
     private _processPropertyValueChanged(event: SyntheticEvent, value: number[]): void {
         if (this._needNotifyChanges(value)) {
-            this._notifyPropertyValueChanged();
+            this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
         }
     }
 

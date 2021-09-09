@@ -11,10 +11,6 @@ define('Controls-demo/Popup/PopupPageOld',
       var PopupPage = Base.Control.extend({
          _template: template,
 
-         constructor: function (cfg) {
-            PopupPage.superclass.constructor.call(this, cfg);
-         },
-
 
          openDialog: function () {
             this._children.dialog.open({

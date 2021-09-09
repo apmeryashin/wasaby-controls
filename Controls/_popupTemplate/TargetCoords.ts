@@ -4,6 +4,7 @@ export interface ITargetCoords extends ClientRect {
     topScroll: number;
     leftScroll: number;
     boundingClientRect?: ClientRect;
+    zoom: number;
 }
 export default function getTargetCoords(target: HTMLElement): ITargetCoords {
     if (!target) {
@@ -47,6 +48,7 @@ export default function getTargetCoords(target: HTMLElement): ITargetCoords {
         height: box.height,
         topScroll: fullTopOffset,
         leftScroll: fullLeftOffset,
-        boundingClientRect: box
+        boundingClientRect: box,
+        zoom: DimensionsMeasurer.getZoomValue(target)
     };
 }

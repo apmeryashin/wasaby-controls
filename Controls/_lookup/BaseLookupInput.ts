@@ -177,7 +177,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     protected _isEmpty(): boolean {
-        return !this._items || !this._items.getCount();
+        return !this._items.getCount();
     }
 
     protected _getInputValue(options: ILookupInputOptions): string {

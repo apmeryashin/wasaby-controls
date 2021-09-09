@@ -410,7 +410,7 @@ const _private = {
             self._hasMoreData('down');
     },
 
-    getHasMoreData(self): object {
+    getHasMoreData(self): {up: boolean, down: boolean} {
         return {
             up: self._hasMoreData('up'),
             down: self._hasMoreData('down')
@@ -639,7 +639,7 @@ const _private = {
         self._onFooterPrepared(options);
     },
 
-    loadToDirection(self: BaseControl, direction, receivedFilter?) {
+    loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet|void> | void {
         const changed = self._indicatorsController.recountResetTriggerOffsets(direction);
         if (changed) {
             self._updateScrollController();
@@ -647,8 +647,8 @@ const _private = {
 
         if (self._sourceController) {
             const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
-            if (self._shouldStartPortionedSearch()) {
-                self._startPortionedSearch(direction);
+            if (self._shouldStartDisplayPortionedSearch()) {
+                self._indicatorsController.startDisplayPortionedSearch(DIRECTION_COMPATIBILITY[direction] as 'top'|'bottom');
             } else {
                 self._recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
@@ -665,8 +665,8 @@ const _private = {
                     return;
                 }
 
-                if (self._indicatorsController.shouldResetShowPortionedSearchTimer()) {
-                    self._indicatorsController.resetShowPortionedSearchTimer();
+                if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer()) {
+                    self._indicatorsController.resetDisplayPortionedSearchTimer();
                 }
 
                 _private.tryLoadToDirectionAgain(self, addedItems);
@@ -679,7 +679,7 @@ const _private = {
                 // После выполнения поиска мы должны поставить маркер.
                 // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
                 // то на событие reset список будет пустой и нам некуда будет ставить маркер.
-                if (_private.hasMarkerController(self) && self._indicatorsController.isPortionedSearchInProgress()) {
+                if (_private.hasMarkerController(self) && self._indicatorsController.isDisplayedPortionedSearch()) {
                     const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
                     self._changeMarkedKey(newMarkedKey);
                 }
@@ -836,7 +836,7 @@ const _private = {
             !sourceController.isLoading();
         const allowLoadBySearch =
             !_private.isPortionedLoad(self) ||
-            self._indicatorsController.shouldContinuePortionedSearch();
+            self._indicatorsController.shouldContinueDisplayPortionedSearch();
         // Если перетаскиваю все записи, то не нужно подгружать данные, но если тащат несколько записей,
         // то данные подгружаем. Т.к. во время днд можно скроллить и пользователь может захотеть утащить записи
         // далеко вниз, где список еще не прогружен
@@ -1237,7 +1237,7 @@ const _private = {
     allowLoadMoreByPortionedSearch(self, direction: 'up'|'down'): boolean {
         let portionedSearchDirection = self._indicatorsController.getPortionedSearchDirection();
         return (!portionedSearchDirection || portionedSearchDirection !== direction) &&
-            self._indicatorsController.shouldContinuePortionedSearch();
+            self._indicatorsController.shouldContinueDisplayPortionedSearch();
     },
 
     updateShadowMode(self, shadowVisibility: {up: boolean, down: boolean}): void {
@@ -1346,36 +1346,55 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET) {
-                self._indicatorsController.onCollectionReset(!!self._options.searchValue);
+            if (self._indicatorsController) {
+                switch (action) {
+                    case IObservable.ACTION_RESET:
+                        // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
+                        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
+                        const hasMoreData = _private.getHasMoreData(self);
+                        self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
 
-                // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
-                // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
-                // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
-                // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
-                const hasItems = this._model && !this._model.destroyed && !!this._model.getCount();
-                if (!hasItems && self._children.listView) {
-                    self._indicatorsController.setLoadingTriggerOffset(
-                        self._children.listView.getTopLoadingTrigger(),
-                        self._children.listView.getBottomLoadingTrigger(),
-                        { top: 0, bottom: 0 }
-                    );
-                }
+                        // избавиться от возвращаемого значения и обновления скроллКонтроллера по задаче
+                        // https://online.sbis.ru/opendoc.html?guid=a793d8d7-354e-43d2-b091-a563080f3cc4
+                        const changedResetTrigger = self._indicatorsController.onCollectionReset();
+                        if (changedResetTrigger) {
+                            self._updateScrollController(self._options);
+                        }
 
-                if (self._options.searchValue) {
-                    _private.tryLoadToDirectionAgain(self);
-                }
-                if (self._shouldStartPortionedSearch()) {
-                    self._startPortionedSearch();
-                } else {
-                    self._recountIndicators('all', true);
-                }
-            }
-            if (action === IObservable.ACTION_ADD) {
-                // на beforeUpdate ожем показать глоабльный индкатор по началу загрузки,
-                // после загрузки данных если их больше нет, то скрываем
-                if (!_private.hasMoreDataInAnyDirection(self) && !_private.isPortionedLoad(self)) {
-                    self._indicatorsController?.hideGlobalIndicator();
+                        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
+                        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
+                        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
+                        // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
+                        const hasItems = this._model && !this._model.destroyed && !!this._model.getCount();
+                        if (!hasItems && self._children.listView) {
+                            self._indicatorsController.setLoadingTriggerOffset(
+                                self._children.listView.getTopLoadingTrigger(),
+                                self._children.listView.getBottomLoadingTrigger(),
+                                { top: 0, bottom: 0 }
+                            );
+                        }
+
+                        if (self._options.searchValue) {
+                            // Событие reset коллекции приводит к остановке активного порционного поиска.
+                            // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
+                            self._indicatorsController.endDisplayPortionedSearch();
+
+                            // после ресета пытаемся подгрузить данные, возможно вернули не целую страницу
+                            _private.tryLoadToDirectionAgain(self);
+                        }
+                        break;
+                    case IObservable.ACTION_ADD:
+                        self._indicatorsController.onCollectionAdd();
+
+                        // При добавлении в список нужно отпустить триггер с нужной стороны,
+                        // чтобы далее загрузка не требовала подскролла до ромашки
+                        // TODO: https://online.sbis.ru/opendoc.html?guid=a6bc9564-4072-4bb6-b562-d98fa0282018
+                        const collectionStartIndex = self._listViewModel.getStartIndex();
+                        const changed = self._indicatorsController?.recountResetTriggerOffsets(newItemsIndex <= collectionStartIndex ? 'up' : 'down');
+                        if (changed) {
+                            self._updateScrollController();
+                        }
+                        break;
                 }
             }
 
@@ -1885,8 +1904,8 @@ const _private = {
 
         _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
 
-        if (this._shouldEndPortionedSearch(items)) {
-            this._indicatorsController.endPortionedSearch();
+        if (this._shouldEndDisplayPortionedSearch(items)) {
+            this._indicatorsController.endDisplayPortionedSearch();
         }
         this._indicatorsController.hideGlobalIndicator();
 
@@ -3360,8 +3379,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         ) {
             // если загрузилась целая страница раньше чем прервался поиск, то приостанавливаем его
             // лучший способ узнать, что страница загрузилась - это скрылся триггер
-            if (this._indicatorsController.shouldStopPortionedSearch(true)) {
-                this._indicatorsController.stopPortionedSearch();
+            if (this._indicatorsController.shouldStopDisplayPortionedSearch(true)) {
+                this._indicatorsController.stopDisplayPortionedSearch();
             }
         }
 
@@ -3720,7 +3739,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
 
         if (this._options.searchValue  && !newOptions.searchValue) {
-            this._indicatorsController.endPortionedSearch();
+            this._indicatorsController.endDisplayPortionedSearch();
         }
 
         if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
@@ -4597,7 +4616,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
 
         if (self._sourceController) {
-            self._indicatorsController.endPortionedSearch();
+            self._indicatorsController.endDisplayPortionedSearch();
             self._displayGlobalIndicator();
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
@@ -6269,7 +6288,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _getIndicatorsControllerOptions(options: IBaseControlOptions): IIndicatorsControllerOptions {
-        const stopPortionedSearchCallback = () => {
+        const stopDisplayPortionedSearchCallback = () => {
             if (typeof this._sourceController.cancelLoading !== 'undefined') {
                 this._sourceController.cancelLoading();
             }
@@ -6290,7 +6309,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             hasHiddenItemsByVirtualScroll: this._hasHiddenItemsByVirtualScroll,
             attachLoadTopTriggerToNull: !!options.attachLoadTopTriggerToNull,
             attachLoadDownTriggerToNull: !!options.attachLoadDownTriggerToNull,
-            stopPortionedSearchCallback
+            stopDisplayPortionedSearchCallback
         }
     }
 
@@ -6357,12 +6376,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _onContinueSearchClick(): void {
-        this._indicatorsController.continuePortionedSearch();
+        this._indicatorsController.continueDisplayPortionedSearch();
         _private.loadToDirectionIfNeed(this, this._indicatorsController.getPortionedSearchDirection());
     }
 
     protected _onAbortSearchClick(): void {
-        this._indicatorsController.abortPortionedSearch();
+        this._indicatorsController.abortDisplayPortionedSearch();
         if (typeof this._sourceController.cancelLoading !== 'undefined') {
             this._sourceController.cancelLoading();
         }
@@ -6375,28 +6394,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._notify('iterativeSearchAborted', []);
     }
 
-    protected _shouldStartPortionedSearch(): boolean {
+    protected _shouldStartDisplayPortionedSearch(): boolean {
         return _private.isPortionedLoad(this);
     }
 
-    protected _startPortionedSearch(direction?: IDirection): void {
-        let newDirection = direction;
-
-        if (!direction) {
-            // если после прерывания порционного поиска нажимают на лупу, то сработает только событие
-            // onCollectionChanged(reset), в котором мы не знаем точно направление
-            newDirection = this._hasMoreData('down') ? 'down' : 'up';
-        }
-
-        newDirection = DIRECTION_COMPATIBILITY[newDirection] as IDirection;
-
-        this._indicatorsController.startPortionedSearch(newDirection as 'top'|'bottom');
-
-        // Нужно сбросить флаг, чтобы подгрузка по триггеру работала после порционного поиска.
-        this._handleLoadToDirection = false;
-    }
-
-    protected _shouldEndPortionedSearch(loadedItems?: RecordSet): boolean {
+    protected _shouldEndDisplayPortionedSearch(loadedItems?: RecordSet): boolean {
         const wasPortionedLoad = _private.isPortionedLoad(this);
         const isPortionedLoad = _private.isPortionedLoad(this, loadedItems);
         return wasPortionedLoad && (!_private.hasMoreDataInAnyDirection(this) || !isPortionedLoad);
