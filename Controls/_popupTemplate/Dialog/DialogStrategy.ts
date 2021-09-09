@@ -59,11 +59,8 @@ export class DialogStrategy {
     }
 
     private _resetMargins(item: IDialogItem, position: IDialogPosition): void {
-        const isRightCoordinate = typeof item.popupOptions.right !== 'undefined';
-        const coordinate = isRightCoordinate ? 'right' : 'left';
         const topOffset = (item.sizes?.margins?.top || 0) + (item.popupOptions?.offset?.vertical || 0);
-        const horizontalOffset = (item.sizes?.margins && item.sizes.margins[coordinate] || 0) +
-            (item.popupOptions?.offset?.horizontal || 0);
+        const horizontalOffset = (item.sizes?.margins?.left || 0) + (item.popupOptions.offset?.horizontal || 0);
         // Сбрасываю все отступы, которые заданы на css. Они уже учтены в позиции
         if (item.targetCoords || topOffset || horizontalOffset) {
             position.margin = 0;
@@ -129,8 +126,7 @@ export class DialogStrategy {
         }
 
         const topOffset = (popupItem.sizes?.margins?.top || 0) + (popupItem.popupOptions.offset?.vertical || 0);
-        const horizontalOffset = (popupItem.sizes?.margins && popupItem.sizes.margins[coordinate] || 0) +
-            (popupItem.popupOptions.offset?.horizontal || 0);
+        const horizontalOffset = (popupItem.sizes?.margins?.left || 0) + (popupItem.popupOptions.offset?.horizontal || 0);
         const top = (topCoordinate || 0) + topOffset;
         const horizontalPosition = (horizontalCoordinate || 0) + horizontalOffset;
 
