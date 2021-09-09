@@ -1342,6 +1342,9 @@ const _private = {
                     self._recountIndicators('all', true);
                 }
             }
+
+            const collectionStartIndex = self._listViewModel.getStartIndex();
+            const collectionStopIndex = self._listViewModel.getStopIndex();
             if (action === IObservable.ACTION_ADD) {
                 // на beforeUpdate ожем показать глоабльный индкатор по началу загрузки,
                 // после загрузки данных если их больше нет, то скрываем
@@ -1349,7 +1352,10 @@ const _private = {
                     self._indicatorsController?.hideGlobalIndicator();
                 }
 
-                const changed = self._indicatorsController?.recountResetTriggerOffsets(self._addItemsDirection || 'down');
+                // При добавлении в список нужно отпустить триггер с нужной стороны,
+                // чтобы далее загрузка не требовала подскролла до ромашки
+                // TODO: https://online.sbis.ru/opendoc.html?guid=a6bc9564-4072-4bb6-b562-d98fa0282018
+                const changed = self._indicatorsController?.recountResetTriggerOffsets(newItemsIndex <= collectionStartIndex ? 'up' : 'down');
                 if (changed) {
                     self._updateScrollController();
                 }
@@ -1368,8 +1374,6 @@ const _private = {
 
             if (self._scrollController) {
                 if (action) {
-                    const collectionStartIndex = self._listViewModel.getStartIndex();
-                    const collectionStopIndex = self._listViewModel.getStopIndex();
                     let result = null;
                     switch (action) {
                         case IObservable.ACTION_ADD:
