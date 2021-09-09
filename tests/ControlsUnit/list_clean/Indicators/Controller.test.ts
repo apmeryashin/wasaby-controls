@@ -202,25 +202,6 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.destroy(); // уничтожаем все таймеры
         });
-
-        it('reset trigger offsets', () => {
-            const options = {
-                isInfinityNavigation: true,
-                attachLoadTopTriggerToNull: true,
-                attachLoadDownTriggerToNull: true,
-                hasMoreDataToTop: true,
-                hasMoreDataToBottom: true,
-                hasHiddenItemsByVirtualScroll: () => false,
-                scrollToFirstItem: (afterScroll) => afterScroll()
-            } as unknown as IIndicatorsControllerOptions;
-            const {collection, controller} = initTest([{id: 1}], options);
-
-            collection.setCollection(new RecordSet());
-            const spySetOffsets = spy(collection, 'setLoadingTriggerOffset');
-            controller.setHasMoreData(false, false);
-            controller.onCollectionReset();
-            assert.isTrue(spySetOffsets.withArgs({top: 0, bottom: 0}).called);
-        });
     });
 
     describe('onCollectionAdd', () => {
