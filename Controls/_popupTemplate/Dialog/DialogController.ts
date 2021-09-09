@@ -260,16 +260,10 @@ class DialogController extends BaseController {
         }
 
         // Диалог изначально должен позиционироваться вне экрана, если не задана позиция(например из propStorage)
-        if (item.popupOptions[verticalPositionProperty]) {
-            item.position[verticalPositionProperty] = item.popupOptions[verticalPositionProperty] +
-                (item.position.offset?.vertical || 0);
-        } else {
+        if (!item.popupOptions[verticalPositionProperty]) {
             item.position[verticalPositionProperty] = defaultCoordinate;
         }
-        if (item.popupOptions[horizontalPositionProperty]) {
-            item.position[horizontalPositionProperty] = item.popupOptions[horizontalPositionProperty] +
-                (item.position.offset?.horizontal || 0);
-        } else {
+        if (!item.popupOptions[horizontalPositionProperty]) {
             item.position[horizontalPositionProperty] = defaultCoordinate;
         }
     }
