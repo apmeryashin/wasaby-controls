@@ -9,10 +9,6 @@ define('Controls-demo/Popup/Opener/Compatible/resources/dimensionNewPanel',
       var moduleClass = Base.Control.extend({
          _template: template,
 
-         constructor: function (cfg) {
-            moduleClass.superclass.constructor.call(this, cfg);
-         },
-
          _beforeMount: function(opt) {
 
          },

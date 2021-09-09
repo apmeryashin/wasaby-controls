@@ -19,10 +19,6 @@ define('Controls-demo/Date/MonthRelatedSelection', [
          _selectionBaseValue: null,
          _selectionHoveredValue: null,
 
-         constructor: function() {
-            ModuleClass.superclass.constructor.apply(this, arguments);
-         },
-
          _clickHandler: function(event, days) {
             this._startValue = new Date(this._startValue.getFullYear(), this._startValue.getMonth(), this._startValue.getDate() + days);
             this._forceUpdate();
