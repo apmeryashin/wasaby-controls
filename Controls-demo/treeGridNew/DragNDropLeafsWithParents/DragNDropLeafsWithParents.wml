@@ -1,21 +1,19 @@
 <div class="controlsDemo__wrapper">
-    <Controls.buttons:Button caption="Toggle multiselectVisibility" on:click="_onToggle()"/>
-    <Controls.list:DataContainer source="{{_viewSource}}"
-                                 keyProperty="key"
-                                 parentProperty="parent"
-                                 nodeProperty="type">
+    <Controls.list:DataContainer
+            source="{{_viewSource}}"
+            keyProperty="key"
+            parentProperty="parent"
+            nodeProperty="type">
         <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
             <div>
                 <Controls.list:Mover name="listMover"/>
                 <Controls.list:Container>
                     <Controls.treeGrid:View
-                            columns="{{_columns}}"
-                            on:dragStart="_dragStart()"
-                            on:dragEnd="_dragEnd()"
-                            multiSelectVisibility="{{_multiselect}}"
-                            itemsDragNDrop="{{true}}"
-                            itemsReadyCallback="{{_itemsReadyCallback}}"
-                            columns="{{_columns}}">
+                        columns="{{_columns}}"
+                        multiSelectVisibility="visible"
+                        itemsDragNDrop="{{true}}"
+                        on:dragEnd="_dragEnd()"
+                    >
                         <ws:draggingTemplate>
                             <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                         mainText="{{draggingTemplate.entity.getOptions().mainText}}"

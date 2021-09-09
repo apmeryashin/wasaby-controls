@@ -1,4 +1,4 @@
-import { GroupItem, IDragPosition } from 'Controls/display';
+import { IDragPosition } from 'Controls/display';
 import {
     BaseDragStrategy,
     IDraggableCollection,
@@ -6,6 +6,7 @@ import {
     IDragStrategyParams
 } from '../interface';
 import { Model } from 'Types/entity';
+import {CrudEntityKey} from 'Types/source';
 
 export interface IDraggableFlatCollection<T extends IDraggableItem = IDraggableItem> extends IDraggableCollection {
     getCount(): number;
@@ -68,7 +69,7 @@ export default class Flat<
         } else if (targetIndex < prevIndex) {
             position = 'before';
         } else if (targetIndex === prevIndex) {
-            position = currentPosition.position === 'after' ? 'before' : 'after';
+            position = currentPosition && currentPosition.position === 'after' ? 'before' : 'after';
         }
 
         // Логика для свернутых групп
@@ -84,6 +85,24 @@ export default class Flat<
             dispItem: targetItem,
             position
         };
+    }
+
+    /**
+     * Возвращает ключи перетаскиваемых записей.
+     * Отсеивает из selectedKeys ключи записей, которых нет в рекордсете
+     * @param {CrudEntityKey[]} selectedKeys Ключи выбранных записей
+     */
+    getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[] {
+        let selectedItems = [];
+
+        const items = this._model.getCollection();
+        selectedKeys.forEach((key) => {
+            if (items.getRecordById(key)) {
+                selectedItems.push(key);
+            }
+        });
+
+        return selectedItems;
     }
 
     protected _targetItemIsDraggable(targetItem: T): boolean {
