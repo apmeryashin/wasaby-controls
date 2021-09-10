@@ -33,7 +33,6 @@ import * as EmptyColumnTemplate from 'wml!Controls/_grid/Render/EmptyCellContent
 import * as ItemActionsCellContent from 'wml!Controls/_grid/Render/ItemActionsCellContent';
 import * as ItemEditorTemplate from 'wml!Controls/_grid/Render/ItemEditorTemplate';
 import * as TableIndicatorTemplate from 'wml!Controls/_grid/Render/TableIndicatorTemplate';
-import * as TableLoadingTriggerTemplate from 'wml!Controls/_grid/Render/TableLoadingTriggerTemplate';
 
 import * as MoneyTypeRender from 'wml!Controls/_grid/Render/types/money';
 import * as NumberTypeRender from 'wml!Controls/_grid/Render/types/number';
@@ -99,8 +98,7 @@ export {
     TableTemplate,
     SortingButton,
     SortingSelector,
-    TableIndicatorTemplate,
-    TableLoadingTriggerTemplate
+    TableIndicatorTemplate
 };
 
 import {
@@ -175,7 +173,6 @@ import {IDisplaySearchValueOptions, IDisplaySearchValue} from 'Controls/_grid/di
 import CheckboxCell from 'Controls/_grid/display/CheckboxCell';
 
 import Indicator from 'Controls/_grid/display/Indicator';
-import LoadingTrigger from 'Controls/_grid/display/LoadingTrigger';
 
 register('Controls/grid:GridCollection', GridCollection, {instantiate: false});
 register('Controls/grid:GridRow', GridRow, {instantiate: false});
@@ -195,7 +192,6 @@ register('Controls/display:GridGroupCell', GridGroupCell, {instantiate: false});
 register('Controls/grid:GridGroupCell', GridGroupCell, {instantiate: false});
 register('Controls/grid:GridGroupRow', GridGroupRow, {instantiate: false});
 register('Controls/grid:Indicator', Indicator, {instantiate: false});
-register('Controls/grid:LoadingTrigger', LoadingTrigger, {instantiate: false});
 
 export {
     GridCollection, IGridCollectionOptions,

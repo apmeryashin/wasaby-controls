@@ -12,8 +12,12 @@
                   item="{{_listModel.getTopIndicator()}}"
                   on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
       <!--Top loading trigger-->
-      <ws:partial template="{{_listModel.getTopLoadingTrigger().getTemplate()}}"
-                  item="{{_listModel.getTopLoadingTrigger()}}"/>
+      <!--Нельзя отображать триггер с помощю ws:partial, т.к. в этом случае при перерисовке он пропадает из _children и его нельзя получить.-->
+      <div name="topLoadingTrigger"
+           style="{{ _listModel.getTopLoadingTrigger().getStyles() }}"
+           class="{{ _listModel.getTopLoadingTrigger().getClasses() }}"
+           data-qa="{{ _listModel.getTopLoadingTrigger().getQAData() }}">
+      </div>
 
       <div name="itemsContainer" class="controls-ListViewV__itemsContainer">
          <ws:partial
@@ -48,8 +52,11 @@
       </ws:if>
 
       <!--Bottom loading trigger-->
-      <ws:partial template="{{_listModel.getBottomLoadingTrigger().getTemplate()}}"
-                  item="{{_listModel.getBottomLoadingTrigger()}}"/>
+      <div name="bottomLoadingTrigger"
+           style="{{ _listModel.getBottomLoadingTrigger().getStyles() }}"
+           class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}"
+           data-qa="{{ _listModel.getBottomLoadingTrigger().getQAData() }}">
+      </div>
       <!--Bottom loading indicator-->
       <ws:partial if="{{ _listModel.getBottomIndicator() }}"
                   template="{{_listModel.getBottomIndicator().getTemplate()}}"
