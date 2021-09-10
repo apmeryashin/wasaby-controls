@@ -339,7 +339,7 @@ define(
                let modifyItem = {
                   _buttonStyle: 'readonly',
                   _translucent: false,
-                  _caption: 'Связанные документы',
+                  _caption: undefined,
                   _captionPosition: 'right',
                   _contrastBackground: true,
                   _fontColorStyle: 'secondary',
@@ -351,7 +351,7 @@ define(
                   _iconSize: 'm',
                   _iconStyle: 'readonly',
                   _isSVGIcon: false,
-                  _stringCaption: true,
+                  _stringCaption: false,
                   _viewMode: 'toolButton',
                   readOnly: true
                };
