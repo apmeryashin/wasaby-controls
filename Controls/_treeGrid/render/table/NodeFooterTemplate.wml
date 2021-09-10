@@ -7,7 +7,8 @@
         <ws:for data="index,column in item.getColumns(colspan)">
             <td class="{{ column.getContentClasses(backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
                  attr:key="{{item.key}}_column_{{index}}"
-                 attr:colspan="{{ column.getColspan(colspan) }}">
+                 attr:colspan="{{ column.getColspan(colspan) }}"
+                 attr:data-qa="controls-TreeGrid__nodeFooterContent">
                 <div class="{{ column.getRelativeCellWrapperClasses() }}"
                      style="{{ column.getRelativeCellWrapperStyles() }}">
                     <ws:if data="{{ item.shouldDisplayContent(column) }}">

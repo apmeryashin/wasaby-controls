@@ -433,10 +433,6 @@ export default class Cell<
         return 'controls-Grid__row-cell';
     }
 
-    getContentQAData(): string {
-        return 'controls-Grid__row-cell__content';
-    }
-
     getZIndex(): number {
         return 2;
     }

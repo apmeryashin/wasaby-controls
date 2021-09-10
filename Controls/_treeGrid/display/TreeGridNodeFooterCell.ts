@@ -88,10 +88,6 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
 
         return 1;
     }
-
-    getContentQAData(): string {
-        return 'controls-TreeGrid__nodeFooterContent';
-    }
 }
 
 Object.assign(TreeGridNodeFooterCell.prototype, {

@@ -117,7 +117,8 @@
                                           fixedZIndex="{{ column.getZIndex()}}"
                                           attr:key="sticky_{{ column.getInstanceId() }}"
                                           attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
-                                          attr:style="{{ column.getWrapperStyles(containerSize) }}">
+                                          attr:style="{{ column.getWrapperStyles(containerSize) }}"
+                                          attr:data-qa="{{ column.getQAData() }}">
                <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
             </Controls.scroll:StickyBlock>
          </ws:for>

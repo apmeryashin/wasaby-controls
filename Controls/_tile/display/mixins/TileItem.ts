@@ -1426,6 +1426,10 @@ export default abstract class TileItem<T extends Model = Model> {
         return styles;
     }
 
+    getQAData(): string {
+        return 'controls-TileView__item';
+    }
+
     /**
      * Возвращает классы с отступами элемента
      */

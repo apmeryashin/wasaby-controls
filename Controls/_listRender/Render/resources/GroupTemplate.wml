@@ -11,7 +11,8 @@
             ' controls-ListView__groupExpander-iconSize_' + (itemData.iconSize || 'default') +
             (!item.isExpanded() ?
             ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?
-               ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'') }}">
+               ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'') }}"
+              attr:data-qa="{{expanderVisible !== false ? 'controls-ListView__groupExpander' : 'controls-ListView__groupContent-text' }}">
             <ws:if data="{{ !!contentTemplate }}">
                <ws:partial template="{{ contentTemplate }}" item="{{ item }}" />
             </ws:if>

@@ -1,6 +1,6 @@
 <div class="{{ (gridColumn || itemData).getContentClasses(backgroundColorStyle, cursor, highlightOnHover, editable) }}"
      style="{{ (gridColumn || itemData).getContentStyles() }}"
-     attr:data-qa="{{ (gridColumn || itemData).getContentQAData() }}">
+     attr:data-qa="controls-Grid__row-cell__content">
 
     <ws:partial if="{{ beforeContentTemplate }}"
                 template="{{ beforeContentTemplate }}"/>

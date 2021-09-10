@@ -7,7 +7,8 @@
         <ws:for data="index,column in item.getColumns(colspan)">
             <div class="{{ column.getContentClasses(backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
                  attr:key="{{item.key}}_column_{{index}}"
-                 style="{{ column.getColspanStyles(colspan)  }}">
+                 style="{{ column.getColspanStyles(colspan)  }}"
+                 attr:data-qa="controls-TreeGrid__nodeFooterContent">
                 <ws:if data="{{ item.shouldDisplayContent(column) }}">
                     <!-- Отступы для выравнивания с экспандером -->
                     <ws:if data="{{item.shouldDisplayExpanderBlock(column)}}">
