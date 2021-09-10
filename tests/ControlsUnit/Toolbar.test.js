@@ -339,7 +339,7 @@ define(
                let modifyItem = {
                   _buttonStyle: 'readonly',
                   _translucent: false,
-                  _caption: '',
+                  _caption: 'Связанные документы',
                   _captionPosition: 'right',
                   _contrastBackground: true,
                   _fontColorStyle: 'secondary',
