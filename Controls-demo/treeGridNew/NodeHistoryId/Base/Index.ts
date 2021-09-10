@@ -4,6 +4,9 @@ import {HierarchicalMemory, CrudEntityKey} from 'Types/source';
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeHistoryId/Base/Base';
 import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
 
+// Патч нужен, чтобы демка не выдавала ошибки
+import 'Controls-demo/Utils/WebApiScopePatch';
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
