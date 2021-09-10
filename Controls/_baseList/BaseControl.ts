@@ -4630,7 +4630,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     resolve(list);
                 });
             } else {
-                this._afterReloadCallback(cfg);
                 resolve(void 0);
                 Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
             }
