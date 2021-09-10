@@ -7,8 +7,11 @@
                         item="{{_listModel.getTopIndicator()}}"
                         on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
             <!--Top loading trigger-->
-            <ws:partial template="{{_listModel.getTopLoadingTrigger().getTemplate()}}"
-                        item="{{_listModel.getTopLoadingTrigger()}}"/>
+            <div name="topLoadingTrigger"
+                 style="{{ _listModel.getTopLoadingTrigger().getStyles() }}"
+                 class="{{ _listModel.getTopLoadingTrigger().getClasses() }}"
+                 data-qa="{{ _listModel.getTopLoadingTrigger().getQAData() }}">
+            </div>
 
             <ws:partial
                     template="Controls/baseList:ForTemplate"
@@ -31,8 +34,11 @@
             </ws:if>
 
             <!--Bottom loading trigger-->
-            <ws:partial template="{{_listModel.getBottomLoadingTrigger().getTemplate()}}"
-                        item="{{_listModel.getBottomLoadingTrigger()}}"/>
+            <div name="bottomLoadingTrigger"
+                 style="{{ _listModel.getBottomLoadingTrigger().getStyles() }}"
+                 class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}"
+                 data-qa="{{ _listModel.getBottomLoadingTrigger().getQAData() }}">
+            </div>
             <!--Bottom loading indicator-->
             <ws:partial if="{{ _listModel.getBottomIndicator() }}"
                         template="{{_listModel.getBottomIndicator().getTemplate()}}"

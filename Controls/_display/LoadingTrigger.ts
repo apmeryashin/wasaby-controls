@@ -1,5 +1,4 @@
-import CollectionItem, {IOptions as ICollectionOptions} from 'Controls/_display/CollectionItem';
-import { TemplateFunction } from 'UI/Base';
+import CollectionItem, { IOptions as ICollectionOptions } from 'Controls/_display/CollectionItem';
 
 export type TLoadingTriggerPosition = 'top'|'bottom';
 
@@ -31,10 +30,6 @@ export default class LoadingTrigger extends CollectionItem<null> {
 
     get key(): string {
         return this._instancePrefix + this._$position;
-    }
-
-    getTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction | string): TemplateFunction | string {
-        return 'Controls/baseList:LoadingTriggerItemTemplate';
     }
 
     getStyles(): string {
