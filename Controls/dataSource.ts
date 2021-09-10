@@ -1,6 +1,7 @@
 /// <amd-module name="Controls/dataSource" />
 /**
  * Библиотека компонентов для упрощения загрузки данных: формирования запросов, обработки ошибок.
+ * Если нужно обработать ошибки, то вместо этой библиотеки нужно использовать библиотеку {@link Controls/error}.
  * @library
  * @includes error Controls/dataSource:error
  * @includes requestDataUtil Controls/_dataSource/requestDataUtil

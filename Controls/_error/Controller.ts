@@ -46,6 +46,9 @@ const getApplicationHandlers = (configProp: string): string[] => {
     return handlers;
 };
 
+/**
+ * @public
+ */
 export interface IProcessConfig<TError extends ProcessedError = ProcessedError> {
     /**
      * Обрабатываемая ошибка.
@@ -58,8 +61,7 @@ export interface IProcessConfig<TError extends ProcessedError = ProcessedError> 
     mode?: ErrorViewMode;
 
     /**
-     * @name Controls/_dataSource/_error/IErrorHandlerConfig#theme
-     * @cfg {String} Тема для окон уведомлений, которые контроллер показывает, если не удалось распознать ошибку.
+     * Тема для окон уведомлений, которые контроллер показывает, если не удалось распознать ошибку
      */
     theme?: string;
 }
@@ -103,6 +105,9 @@ export default class ErrorController {
     private handlerIterator: HandlerIterator = new HandlerIterator();
     private onProcess: OnProcessCallback;
 
+    /**
+     * Конструктор контроллера
+     */
     constructor(
         options?: IControllerOptions
     ) {
