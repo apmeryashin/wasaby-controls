@@ -6202,8 +6202,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
-            const needShift = this._indicatorsController.shouldDisplayTopIndicator();
-            const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
+            const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, true);
             _private.handleScrollControllerResult(this, result);
         }
 
