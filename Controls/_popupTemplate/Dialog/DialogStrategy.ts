@@ -85,8 +85,8 @@ export class DialogStrategy {
             vertical: verticalPositionProperty
         } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
 
-        if (popupItem.dragged) {
-            return this._getPositionForDraggedDialog(
+        if (popupItem.fixPosition) {
+            return this._getPositionForFixPositionDialog(
                 popupItem.position,
                 windowData,
                 containerSizes,
@@ -224,7 +224,7 @@ export class DialogStrategy {
      * @return {IDialogPosition}
      * @private
      */
-    private _getPositionForDraggedDialog(
+    private _getPositionForFixPositionDialog(
         popupPosition: IPopupPosition = {},
         windowData: IPopupPosition,
         containerSizes: IPopupSizes,
@@ -334,7 +334,7 @@ export class DialogStrategy {
             return optionsPosition;
         }
         if (!width) {
-            return 0;
+            return;
         }
 
         const wWidth = windowData.width;
@@ -357,8 +357,11 @@ export class DialogStrategy {
             return optionsPosition;
         }
 
-        if (popupOptions.maximize || !height) {
+        if (popupOptions.maximize) {
             return 0;
+        }
+        if (!height) {
+            return;
         }
         const middleCoef = 2;
         const top = windowData.topScroll + windowData.top;

@@ -438,7 +438,7 @@ define(
             };
             let position = DialogStrategy.getPosition(windowData, sizes, {
                position: itemPosition,
-               dragged: true,
+               fixPosition: true,
                popupOptions: {
                   maxWidth: 100,
                   maxHeight: 100,
@@ -465,7 +465,7 @@ define(
             };
             position = DialogStrategy.getPosition(windowData, sizes, {
                position: itemPosition,
-               dragged: true,
+               fixPosition: true,
                popupOptions: {
                   maxWidth: 100,
                   maxHeight: 100,
@@ -499,7 +499,7 @@ define(
                   assert.strictEqual(item.position.left, 500);
                   assert.strictEqual(item.popupOptions.top, 200);
                   assert.strictEqual(item.popupOptions.left, 500);
-                  assert.strictEqual(item.dragged, true);
+                  assert.strictEqual(item.fixPosition, true);
                   done();
                } catch (e) {
                   done(e);
@@ -548,7 +548,7 @@ define(
                   height: 50
                },
                position: {},
-               dragged: false
+               fixPosition: false
             };
             const windowData = {
                width: 1920,
@@ -609,7 +609,7 @@ define(
                   height: 50
                },
                position: {},
-               dragged: false
+               fixPosition: false
             };
             const windowData = {
                width: 1920,
@@ -700,7 +700,7 @@ define(
                assert.equal(position.bottom, 410);
                DialogController._getRestrictiveContainerSize = getRestrictiveContainer;
                item.position = {};
-               item.dragged = false;
+               item.fixPosition = false;
                item.startPosition = null;
             });
 
@@ -726,7 +726,7 @@ define(
                assert.equal(position.bottom, 0);
                DialogController._getRestrictiveContainerSize = getRestrictiveContainer;
                item.position = {};
-               item.dragged = false;
+               item.fixPosition = false;
                item.startPosition = null;
             });
          });
