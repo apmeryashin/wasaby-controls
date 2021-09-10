@@ -45,6 +45,9 @@ export default class List extends Control<ICompactDatePickerOptions> {
         const displayedRanges = this._options.displayedRanges;
         const amountOfRanges = displayedRanges.length;
         const lastRange = this._options.displayedRanges[amountOfRanges - 1][1];
+        if (!lastRange) {
+            return false;
+        }
         return  lastRange.getFullYear() === date.getFullYear() && lastRange.getMonth() === date.getMonth();
     }
 
