@@ -1362,11 +1362,7 @@
   "--tick_thickness_slider": "1px",
   "--tooltip_box-shadow_slider": "0 0 6px 0 #999",
 
-  "--separator_thickness_AreaCut": "1px",
-  "--margin-horizontal_s_AreaCut": "8px",
   "--margin-horizontal_m_AreaCut": "10px",
-  "--margin-horizontal_l_AreaCut": "12px",
-  "--shadow_thickness_AreaCut": "5px",
   "--line-height_richEditor_inputArea": "21px",
 
   "--box-shadow-size_suggestSearch": "0 0 6px 0",
