@@ -57,7 +57,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
             'controls-Grid__row-cell',
             'controls-Grid__cell_default',
             'controls-Grid__row-cell_default',
-            'controls-Grid__row-cell_small_min_height',
+            'controls-ListView__group_min_height',
             'controls-Grid__no-rowSeparator',
             'controls-Grid__row-cell_withRowSeparator_size-null'
         ]);
