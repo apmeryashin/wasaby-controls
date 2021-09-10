@@ -3,7 +3,7 @@
          {{'controls-rating__star_padding-' + _options.iconPadding}}
          {{'controls-icon_size-' + _options.iconSize}}
          {{'controls-icon_style-' + iconStyle}}"
-         on:click="_clickStar()"></span>
+         on:click="_clickStar()" attr:data-qa="rating__star"></span>
 </ws:template>
 <div class="controls-rating ws-flexbox controls-rating-{{_options.readOnly? 'read-only' : 'active'}} controls_progress_theme-{{ _options.theme }}">
    <ws:for data="item in _stars">
