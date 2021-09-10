@@ -11,7 +11,7 @@ export interface IDialogItem extends IPopupItem {
     hasSavedPosition: boolean;
     popupOptions: IDialogPopupOptions;
     startPosition: IPopupPosition;
-    dragged: boolean;
+    fixPosition: boolean;
     targetCoords: object;
     contextIsTouch: boolean;
 }
@@ -114,7 +114,7 @@ class DialogController extends BaseController {
                 [verticalProperty]: item.position[verticalProperty]
             };
         }
-        item.dragged = true;
+        item.fixPosition = true;
         item.position[horizontalProperty] = item.startPosition[horizontalProperty] + horizontalOffset;
         item.position[verticalProperty] = item.startPosition[verticalProperty] + verticalOffset;
         const itemSizes: IPopupSizes = {...item.sizes, ...sizes};
@@ -165,7 +165,7 @@ class DialogController extends BaseController {
     dragNDropOnPage(item: IDialogItem, container: HTMLElement, isInsideDrag: boolean): boolean {
         if (item.popupOptions.target) {
             if (!isInsideDrag && !item.hasSavedPosition) {
-                item.dragged = false;
+                item.fixPosition = false;
                 this._prepareConfigWithSizes(item, container);
             }
         }
@@ -214,7 +214,7 @@ class DialogController extends BaseController {
                             item.popupOptions[verticalPositionProperty] = vertical;
                             item.popupOptions[horizontalPositionProperty] = horizontal;
                             // Если сохранена позиция, то считаем что окно уже перемещали.
-                            item.dragged = true;
+                            item.fixPosition = true;
                         }
                     }
                     resolve();
@@ -260,8 +260,12 @@ class DialogController extends BaseController {
         }
 
         // Диалог изначально должен позиционироваться вне экрана, если не задана позиция(например из propStorage)
-        item.position[verticalPositionProperty] = item.popupOptions[verticalPositionProperty] || defaultCoordinate;
-        item.position[horizontalPositionProperty] = item.popupOptions[horizontalPositionProperty] || defaultCoordinate;
+        if (typeof item.position[verticalPositionProperty] === 'undefined') {
+            item.position[verticalPositionProperty] = defaultCoordinate;
+        }
+        if (typeof item.position[horizontalPositionProperty] === 'undefined') {
+            item.position[horizontalPositionProperty] = defaultCoordinate;
+        }
     }
 
     private _hasMaximizePopup(): boolean {

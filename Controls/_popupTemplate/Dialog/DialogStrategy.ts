@@ -59,8 +59,10 @@ export class DialogStrategy {
     }
 
     private _resetMargins(item: IDialogItem, position: IDialogPosition): void {
+        const topOffset = (item.sizes?.margins?.top || 0) + (item.popupOptions?.offset?.vertical || 0);
+        const horizontalOffset = (item.sizes?.margins?.left || 0) + (item.popupOptions.offset?.horizontal || 0);
         // Сбрасываю все отступы, которые заданы на css. Они уже учтены в позиции
-        if (item.targetCoords) {
+        if (item.targetCoords || topOffset || horizontalOffset) {
             position.margin = 0;
         }
     }
@@ -83,11 +85,12 @@ export class DialogStrategy {
             vertical: verticalPositionProperty
         } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
 
-        if (popupItem.dragged) {
-            return this._getPositionForDraggedDialog(
+        if (popupItem.fixPosition) {
+            return this._getPositionForFixPositionDialog(
                 popupItem.position,
                 windowData,
                 containerSizes,
+                popupItem,
                 verticalPositionProperty,
                 horizontalPositionProperty
             );
@@ -124,8 +127,7 @@ export class DialogStrategy {
         }
 
         const topOffset = (popupItem.sizes?.margins?.top || 0) + (popupItem.popupOptions.offset?.vertical || 0);
-        const horizontalOffset = (popupItem.sizes?.margins && popupItem.sizes.margins[coordinate] || 0) +
-            (popupItem.popupOptions.offset?.horizontal || 0);
+        const horizontalOffset = (popupItem.sizes?.margins?.left || 0) + (popupItem.popupOptions.offset?.horizontal || 0);
         const top = (topCoordinate || 0) + topOffset;
         const horizontalPosition = (horizontalCoordinate || 0) + horizontalOffset;
 
@@ -215,38 +217,45 @@ export class DialogStrategy {
      * с учетом того что он не должен вылететь за родительский контейнер
      * @param {IPopupPosition} popupPosition
      * @param {IPopupPosition} windowData
+     * @param {IPopupSizes} containerSizes
+     * @param {IDialogItem} popupItem
      * @param {string} verticalPositionProperty
      * @param {string} horizontalPositionProperty
      * @return {IDialogPosition}
      * @private
      */
-    private _getPositionForDraggedDialog(
+    private _getPositionForFixPositionDialog(
         popupPosition: IPopupPosition = {},
         windowData: IPopupPosition,
         containerSizes: IPopupSizes,
+        popupItem: IDialogItem,
         verticalPositionProperty: string,
         horizontalPositionProperty: string
     ): IDialogPosition {
         const width = popupPosition.width;
         const height = popupPosition.height;
-        let horizontalValue = Math.max(0, popupPosition[horizontalPositionProperty]);
-        let verticalValue = Math.max(0, popupPosition[verticalPositionProperty]);
+        const horizontalPosition = typeof popupPosition[horizontalPositionProperty] !== 'undefined' ?
+            popupPosition[horizontalPositionProperty] : popupItem.popupOptions[horizontalPositionProperty];
+        const verticalPosition = typeof popupPosition[verticalPositionProperty] !== 'undefined' ?
+            popupPosition[verticalPositionProperty] : popupItem.popupOptions[verticalPositionProperty];
+        let horizontalValue = Math.max(0, horizontalPosition);
+        let verticalValue = Math.max(0, verticalPosition);
 
         let diff;
         // check overflowX
         const containerWidth = Math.min(containerSizes.width, width || containerSizes.width);
-        diff = (popupPosition[horizontalPositionProperty] + containerWidth) -
+        diff = (horizontalPosition + containerWidth) -
             (windowData.width + windowData.left);
-        horizontalValue -= Math.max(0, diff);
+        horizontalValue -= Math.max(0, diff || 0);
         if (horizontalValue < 0) {
             horizontalValue = 0;
         }
 
         // check overflowY
         const containerHeight = Math.min(containerSizes.height, height || containerSizes.height);
-        diff = (popupPosition[verticalPositionProperty] + containerHeight) -
+        diff = (verticalPosition + containerHeight) -
             (windowData.height + windowData.top);
-        verticalValue -= Math.max(0, diff);
+        verticalValue -= Math.max(0, diff || 0);
         if (verticalValue < 0) {
            verticalValue = 0;
         }
@@ -324,6 +333,9 @@ export class DialogStrategy {
         if (popupOptions[horizontalPositionProperty]) {
             return optionsPosition;
         }
+        if (!width) {
+            return;
+        }
 
         const wWidth = windowData.width;
         const windowOffset = (windowData.leftScroll + windowData.left) || 0;
@@ -347,6 +359,9 @@ export class DialogStrategy {
 
         if (popupOptions.maximize) {
             return 0;
+        }
+        if (!height) {
+            return;
         }
         const middleCoef = 2;
         const top = windowData.topScroll + windowData.top;
