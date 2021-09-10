@@ -1856,6 +1856,7 @@ const _private = {
         }
 
         if (!direction) {
+            this._loadedBySourceController = true;
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -3674,10 +3675,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let updateResult;
         let isItemsResetFromSourceController = false;
 
-        this._loadedBySourceController =
-            newOptions.sourceController &&
-            this._options.loading !== newOptions.loading && this._options.loading;
-
         const isSourceControllerLoadingNow =
             newOptions.sourceController &&
             newOptions.loading &&
@@ -3833,6 +3830,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
                 _private.initVisibleItemActions(this, newOptions);
                 this._updateScrollController(newOptions);
+
+                if (this._loadedBySourceController) {
+                    this._recountIndicators('all', true);
+                }
             }
 
             if (newOptions.sourceController) {
@@ -3843,6 +3844,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
                     if (this._listViewModel) {
                         this._listViewModel.setHasMoreData(_private.getHasMoreData(this));
+                    }
+                    if (!this._shouldNotResetPagingCache) {
+                        this._cachedPagingState = false;
                     }
                     _private.resetScrollAfterLoad(this);
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
@@ -3937,7 +3941,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
 
                     if (this._pagingNavigation &&
-                        !this._pagingNavigationVisible &&
                         this._items &&
                         this._loadedBySourceController) {
                         _private.updatePagingData(this, this._items.getMetaData().more, this._options);
@@ -4614,37 +4617,29 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        const resDeferred = new Deferred();
-        const self = this;
+    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|null|void> {
+        const loadPromise = new Promise((resolve) => {
+            if (this._sourceController) {
+                this._indicatorsController.endDisplayPortionedSearch();
+                this._sourceController.reload(sourceConfig).then((list) => {
+                    if (this._destroyed) {
+                        resolve(null);
+                        return;
+                    }
 
-        if (self._sourceController) {
-            self._indicatorsController.endDisplayPortionedSearch();
-            self._sourceController.reload(sourceConfig).addCallback(function(list) {
-                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
-                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
-                if (self._destroyed) {
-                    resDeferred.callback(null);
-                    return;
-                }
+                    resolve(list);
+                });
+            } else {
+                this._afterReloadCallback(cfg);
+                resolve(void 0);
+                Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
+            }
+        });
 
-                if (!self._shouldNotResetPagingCache) {
-                    self._cachedPagingState = false;
-                }
-
-                resDeferred.callback(list);
-
-                self._recountIndicators('all', true);
-            });
-        } else {
-            self._afterReloadCallback(cfg);
-            resDeferred.callback();
-            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
-        }
-        return resDeferred.addCallback((result) => {
-            if (self._isMounted && self._children.listView) {
-                self._children.listView.reset({
-                    keepScroll: self._keepScrollAfterReload
+        return loadPromise.then((result) => {
+            if (this._isMounted && this._children.listView) {
+                this._children.listView.reset({
+                    keepScroll: this._keepScrollAfterReload
                 });
             }
             return result;
