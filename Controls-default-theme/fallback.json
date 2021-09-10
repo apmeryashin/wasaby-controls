@@ -1580,7 +1580,6 @@
   "--background-color_tumbler": "#f2f2f2",
   "--button-hover_background-color_tumbler": "#eaeaea",
   "--button_offset_tumbler": "2px",
-  "--border-radius_tumbler-button": "undefined",
   "--border-radius_tumbler": "12px",
   "--counter_offset_tumbler": "4px",
 
