@@ -10,7 +10,6 @@ import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import {Record, Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
-import {dataConversion} from './resources/dataConversion';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/breadcrumbs';
 
@@ -47,12 +46,11 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
     protected _width: number = 0;
     protected _dotsWidth: number = 0;
     protected _indexEdge: number = 0;
-    protected _items: Record[];
+    protected _items: Record[] = [];
     private _isFontsLoaded: boolean = false;
     private _isPathMounted: boolean = false;
 
     protected _beforeMount(options?: IMultilinePathOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
-        this._items = dataConversion(options.items, this._moduleName);
         if (!options.containerWidth) {
             Logger.warn('Опция containerWidth не задана. Контрол может работать некорректно', this);
             loadFontWidthConstants().then((getTextWidth: Function) => {
@@ -93,7 +91,7 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
         const isFontSizeChanged = newOptions.fontSize !== this._options.fontSize;
         if (isItemsChanged) {
-            this._items = dataConversion(newOptions.items, this._moduleName);
+            this._items = newOptions.items;
         }
         if (isContainerWidthChanged) {
             this._width = newOptions.containerWidth;
@@ -103,13 +101,13 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
         }
         if (isItemsChanged || isContainerWidthChanged || isFontSizeChanged) {
             if (this._isPathMounted && this._isFontsLoaded) {
-                this._calculateBreadCrumbsToDraw(this._items, newOptions);
+                this._calculateBreadCrumbsToDraw(newOptions.items, newOptions);
             }
         }
     }
 
     private _loadFontsCallback(options: IMultilinePathOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
-        if (this._items && this._items.length > 0) {
+        if (options.items && options.items.length > 0) {
             this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
             this._prepareData(options, width, getTextWidth);
         }
@@ -117,9 +115,10 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
 
     // tslint:disable-next-line:max-line-length
     private _prepareData(options: IMultilinePathOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
-        if (this._items && this._items.length > 0) {
+        if (options.items && options.items.length > 0) {
+            this._items = options.items;
             this._width = width;
-            this._calculateBreadCrumbsToDraw(this._items, options, getTextWidth);
+            this._calculateBreadCrumbsToDraw(options.items, options, getTextWidth);
         }
     }
 

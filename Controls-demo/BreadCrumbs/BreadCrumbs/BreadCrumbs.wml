@@ -1,33 +1,20 @@
-<div attr:style="margin-left: 20px">
-    <h2>В качестве данных передан RecordSet</h2>
-    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{_recordItems}}" keyProperty="id" on:itemClick="_onItemClick()" />
+<div>
+    <h2>Много крошек</h2>
+    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{items}}" keyProperty="id" on:itemClick="_onItemClick()" />
     <h2>Одна крошка</h2>
-    <Controls.breadcrumbs:Path attr:id="oneCrumb" items="{{_items1}}" on:itemClick="_onItemClick()" keyProperty="id" />
+    <Controls.breadcrumbs:Path attr:id="oneCrumb" items="{{items1}}" on:itemClick="_onItemClick()" keyProperty="id" />
     <h2>Две крошки</h2>
-    <Controls.breadcrumbs:Path attr:id="twoCrumbs" items="{{_items2}}" on:itemClick="_onItemClick()" keyProperty="id" />
-    <h2>MultilinePath with RecordSet</h2>
-    <Controls.breadcrumbs:MultilinePath attr:id="double"
-                                        items="{{_recordItems}}"
-                                        parentProperty="parent"
-                                        containerWidth="{{_containerWidth}}"
-                                        keyProperty="id"/>
-    <h2>HeadingPath</h2>
+    <Controls.breadcrumbs:Path attr:id="twoCrumbs" items="{{items2}}" on:itemClick="_onItemClick()" keyProperty="id" />
+    <h2>Path</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="path"
-                                      items="{{_items}}"
-                                      parentProperty="parent"
-                                      keyProperty="id"
-                                      on:arrowActivated="_onArrowActivated()"
-                                      on:itemClick="_onItemClick()" />
-    <h2>HeadingPath with RecordSet</h2>
-    <Controls.breadcrumbs:HeadingPath attr:id="path"
-                                      items="{{_recordItems}}"
-                                      parentProperty="parent"
-                                      keyProperty="id"
-                                      on:arrowActivated="_onArrowActivated()"
-                                      on:itemClick="_onItemClick()" />
-    <h2>HeadingPath with content back button</h2>
+                               items="{{items}}"
+                               parentProperty="parent"
+                               keyProperty="id"
+                               on:arrowActivated="_onArrowActivated()"
+                               on:itemClick="_onItemClick()" />
+    <h2>Path with content back button</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="pathContent"
-                                      items="{{_items}}"
+                                      items="{{items}}"
                                       parentProperty="parent"
                                       keyProperty="id"
                                       on:itemClick="_onItemClick()">
@@ -37,7 +24,7 @@
     </Controls.breadcrumbs:HeadingPath>
     <h2>HeadingPath with heading only</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="pathHeadingOnly"
-                                      items="{{_items4}}"
+                                      items="{{items4}}"
                                       parentProperty="parent"
                                       keyProperty="id"
                                       on:arrowActivated="_onArrowActivated()"
