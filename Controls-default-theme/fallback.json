@@ -1448,11 +1448,6 @@
   "--icon_style_color_tile_dark_preview_tile": "#666666",
   "--item_actions_shadow_size_rich_tile": "0 2px 6px 0",
   "--item_actions_shadow_color_rich_tile": "rgba(0, 0, 0, 0.15)",
-  "--border_radius_3xs_tile": "2px",
-  "--border_radius_2xs_tile": "4px",
-  "--border_radius_xs_tile": "6px",
-  "--border_radius_s_tile": "8px",
-  "--border_radius_m_tile": "12px",
 
   "--icon-color_BigSeparator": "#aab0c1",
   "--hover_icon-color_BigSeparator": "var(--secondary_hover_icon-color)",
