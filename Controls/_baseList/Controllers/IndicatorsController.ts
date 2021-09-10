@@ -171,7 +171,7 @@ export default class IndicatorsController {
      */
     onCollectionAdd(): void {
         const hasMoreInAnyDirection = this._options.hasMoreDataToTop || this._options.hasMoreDataToBottom;
-        if (!hasMoreInAnyDirection && !this._isPortionedSearch()) {
+        if (!hasMoreInAnyDirection && this.shouldHideGlobalIndicator()) {
             this.hideGlobalIndicator();
         }
     }
@@ -252,17 +252,23 @@ export default class IndicatorsController {
         this._model.displayIndicator('bottom', indicatorState);
     }
 
+    shouldDisplayGlobalIndicator(): boolean {
+        return !this._displayIndicatorTimer && !this._isPortionedSearch();
+    }
+
     /**
      * Отображает глобальный индикатор загрузки.
      * Отображает его с задержкой в 2с.
      * @param {number} topOffset Отступ сверху для центрирования ромашки
      */
     displayGlobalIndicator(topOffset: number): void {
-        if (!this._displayIndicatorTimer) {
-            this._startDisplayIndicatorTimer(
-                () => this._model.displayIndicator('global', EIndicatorState.Loading, topOffset)
-            );
-        }
+        this._startDisplayIndicatorTimer(
+            () => this._model.displayIndicator('global', EIndicatorState.Loading, topOffset)
+        );
+    }
+
+    shouldHideGlobalIndicator(): boolean {
+        return !this._isPortionedSearch() && (!!this._displayIndicatorTimer || !!this._model.getGlobalIndicator())
     }
 
     /**

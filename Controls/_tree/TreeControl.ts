@@ -115,11 +115,15 @@ const _private = {
             self._displayGlobalIndicator();
             return eventResult.then(
                 () => {
-                    self._indicatorsController.hideGlobalIndicator();
+                    if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                        self._indicatorsController.hideGlobalIndicator();
+                    }
                     return _private.doExpand(self, dispItem).then(expandToFirstLeafIfNeed).catch((e) => e);
                 },
                 () => {
-                    self._indicatorsController.hideGlobalIndicator();
+                    if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                        self._indicatorsController.hideGlobalIndicator();
+                    }
                 }
             );
         } else {
@@ -262,7 +266,9 @@ const _private = {
                 return error;
             })
             .finally(() => {
-                self._indicatorsController.hideGlobalIndicator();
+                if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                    self._indicatorsController.hideGlobalIndicator();
+                }
             });
     },
 
@@ -1424,16 +1430,18 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return baseSourceController
             .load(undefined, nodeKey)
             .then((list) => {
-                this._indicatorsController.hideGlobalIndicator();
+                if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                    this._indicatorsController.hideGlobalIndicator();
+                }
                 return list as RecordSet;
             })
             .catch((error: Error) => {
                 if (error.isCanceled) {
                     return;
                 }
-
-                this._indicatorsController.hideGlobalIndicator();
-
+                if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                    this._indicatorsController.hideGlobalIndicator();
+                }
                 throw error;
             });
     }
