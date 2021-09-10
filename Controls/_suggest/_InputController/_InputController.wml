@@ -41,7 +41,7 @@
                 </Controls.LoadingIndicator>
             </ws:if>
             <ws:if data="{{_options.footerTemplate && !_errorConfig}}">
-                <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}" searchResult="{{_searchResult}}">
+                <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}" searchResult="{{_searchResult}}" attr:class="controls-Suggest__footer-padding">
                     <ws:showSelectorButtonTemplate>
                         <ws:if data="{{_options.footerTemplate.templateOptions.showSelectorButtonTemplate !== null}}">
                             <span class="controls-Suggest__showAllLink" on:click="_showAllClick()">
