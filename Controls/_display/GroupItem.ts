@@ -41,6 +41,10 @@ export default class GroupItem<T> extends mixin<
         return this._$contents;
     }
 
+    getQAData(): string {
+        return 'controls-ListView__group';
+    }
+
     isHiddenGroup(): boolean {
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }

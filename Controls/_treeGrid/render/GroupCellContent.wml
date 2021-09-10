@@ -5,7 +5,8 @@
         </ws:if>
         <ws:if data="{{ groupNodeConfig.textVisible !== false }}">
             <div class="{{ (gridColumn || itemData).getContentTextClasses(groupNodeConfig.separatorVisibility, groupNodeConfig.textAlign, fontSize) }}
-                    {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign) }}">
+                    {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign) }}"
+                 attr:data-qa="{{groupNodeConfig.expanderVisible ? 'controls-ListView__groupExpander' : 'controls-ListView__groupContent-text' }}">
                 <ws:if data="{{ groupNodeConfig.contentTemplate }}">
                     <ws:partial template="{{ groupNodeConfig.contentTemplate }}"
                                 item="{{ item || itemData }}"

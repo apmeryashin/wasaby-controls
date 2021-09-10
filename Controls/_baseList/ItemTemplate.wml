@@ -3,7 +3,7 @@
         <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
     </ws:if>
     <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
-        <div class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
+        <div attr:data-qa="controls-ListView__itemV_marker" class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
     </ws:if>
     <ws:if data="{{ contentTemplate }}">
         <div attr:class="{{ (item || itemData).getContentClasses() }}">
@@ -48,14 +48,14 @@
 <ws:if data="{{(item || itemData).isSticked(stickyCallback, item)}}">
     <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
     <Controls.scroll:StickyBlock
-       attr:data-qa="{{(item || itemData).getQAData(marker)}}"
+            attr:data-qa="{{(item || itemData).getQAData()}}"
             attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}"
-       position="{{item.getStickyHeaderPosition(stickyCallback)}}" backgroundStyle="{{style + '_sticked'}}" mode="replaceable">
+            position="{{item.getStickyHeaderPosition(stickyCallback)}}" backgroundStyle="{{style + '_sticked'}}" mode="replaceable">
         <ws:partial template="localItemTemplateContent"/>
     </Controls.scroll:StickyBlock>
 </ws:if>
 <ws:else>
-    <div attr:data-qa="{{(item || itemData).getQAData(marker)}}"
+    <div attr:data-qa="{{(item || itemData).getQAData()}}"
          attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}">
         <ws:partial template="localItemTemplateContent"/>
     </div>

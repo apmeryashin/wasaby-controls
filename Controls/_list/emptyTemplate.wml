@@ -1,6 +1,7 @@
 <div class="controls-ListView__empty
             controls-ListView__empty-textAlign_{{ align || 'center'}}
             controls-ListView__empty_topSpacing_{{topSpacing || 'l'}}
-            controls-ListView__empty_bottomSpacing_{{bottomSpacing || 'l'}}">
+            controls-ListView__empty_bottomSpacing_{{bottomSpacing || 'l'}}"
+    attr:data-qa="controls-ListView__empty">
     <ws:partial template="{{contentTemplate}}"/>
 </div>

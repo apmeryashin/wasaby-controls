@@ -744,12 +744,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._shadowVisibility;
     }
 
-    getQAData(marker: boolean): string {
-        let classes = '';
-        if (this.shouldDisplayMarker(marker)) {
-            classes += 'key-controls-list-marked-item';
-        }
-        return classes;
+    getQAData(): string {
+        return 'controls-ListView__itemV';
     }
 
     /**

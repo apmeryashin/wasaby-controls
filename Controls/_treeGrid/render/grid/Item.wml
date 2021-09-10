@@ -1,10 +1,12 @@
 <ws:template name="EXPANDER">
-   <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"></div>
+   <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
+        attr:data-qa="controls-TreeGrid__row-expander"></div>
 </ws:template>
 
 <ws:template name="COLUMN">
    <div if="{{ gridColumn.shouldDisplayMarker(marker) }}"
-        class="{{ gridColumn.getMarkerClasses(markerClassName, itemPadding) }}"></div>
+        class="{{ gridColumn.getMarkerClasses(markerClassName, itemPadding) }}"
+        attr:data-qa="controls-GridView__itemV_marker"></div>
 
    <ws:partial template="{{ gridColumn.getTemplate() }}"
                scope="{{ gridColumn.config.templateOptions }}"
@@ -100,7 +102,7 @@
 
 <ws:if data="{{ isSticked !== false && (item || itemData).isSticked(stickyCallback, item) }}">
    <Controls.scroll:Group>
-      <div attr:data-qa="{{(item || itemData).getQAData(marker)}}"
+      <div attr:data-qa="{{(item || itemData).getQAData()}}"
            attr:class="{{ (item || itemData).getItemClasses({
            'highlightOnHover': highlightOnHover,
            'cursor': cursor,
@@ -123,7 +125,7 @@
    </Controls.scroll:Group>
 </ws:if>
 <ws:else>
-   <div attr:data-qa="{{(item || itemData).getQAData(marker)}}"
+   <div attr:data-qa="{{(item || itemData).getQAData()}}"
         attr:class="{{ (item || itemData).getItemClasses({
            'highlightOnHover': highlightOnHover,
            'cursor': cursor,
@@ -132,7 +134,8 @@
        }) }}">
       <ws:for data="column in (item || itemData).getColumns()">
          <div class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
-              style="{{ column.getWrapperStyles(containerSize) }}">
+              style="{{ column.getWrapperStyles(containerSize) }}"
+              attr:data-qa="{{ column.getQAData() }}">
             <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
          </div>
       </ws:for>

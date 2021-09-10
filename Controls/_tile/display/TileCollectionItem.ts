@@ -38,6 +38,10 @@ export default class TileCollectionItem<T extends Model = Model>
 
         return classes;
     }
+
+    getQAData(): string {
+        return 'controls-TileView__item';
+    }
 }
 
 Object.assign(TileCollectionItem.prototype, {

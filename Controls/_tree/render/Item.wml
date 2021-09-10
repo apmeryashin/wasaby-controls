@@ -1,5 +1,6 @@
 <ws:template name="EXPANDER">
-   <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"></div>
+   <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
+        attr:data-qa="controls-TreeGrid__row-expander"></div>
 </ws:template>
 
 <ws:template name="localItemTemplateContent">
@@ -67,14 +68,14 @@
 <ws:if data="{{(item || itemData).isSticked(stickyCallback, item)}}">
 <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
 <Controls.scroll:StickyBlock
-        attr:data-qa="{{(item || itemData).getQAData(marker)}}"
+        attr:data-qa="{{(item || itemData).getQAData()}}"
         attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}"
         position="{{item.getStickyHeaderPosition(stickyCallback)}}" backgroundStyle="{{style + '_sticked'}}" mode="replaceable">
    <ws:partial template="localItemTemplateContent"/>
 </Controls.scroll:StickyBlock>
 </ws:if>
 <ws:else>
-<div attr:data-qa="{{(item || itemData).getQAData(marker)}}"
+<div attr:data-qa="{{(item || itemData).getQAData()}}"
      attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, cursor, backgroundColorStyle, showItemActionsOnHover) }}">
    <ws:partial template="localItemTemplateContent"/>
 </div>

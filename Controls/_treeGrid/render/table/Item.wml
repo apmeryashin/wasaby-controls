@@ -1,8 +1,9 @@
 <ws:template name="EXPANDER">
-    <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"></div>
+    <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
+         attr:data-qa="controls-TreeGrid__row-expander"></div>
 </ws:template>
 
-<tr attr:data-qa="{{item.getQAData(marker)}}"
+<tr attr:data-qa="{{item.getQAData()}}"
     attr:class="{{ item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'cursor': cursor,
@@ -13,11 +14,13 @@
         <td attr:class="{{ gridColumn.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
             attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
-            attr:rowspan="{{ gridColumn.getRowspan() }}">
+            attr:rowspan="{{ gridColumn.getRowspan() }}"
+            attr:data-qa="{{ gridColumn.getQAData() }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses() }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
-                     attr:class="{{ gridColumn.getMarkerClasses() }}"></div>
+                     attr:class="{{ gridColumn.getMarkerClasses() }}"
+                     attr:data-qa="controls-GridView__itemV_marker"></div>
 
                 <ws:partial template="{{ gridColumn.getTemplate() }}"
                             scope="{{ gridColumn.config.templateOptions }}"

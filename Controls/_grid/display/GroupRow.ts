@@ -91,6 +91,10 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
         return 'Controls/grid:ItemTemplate';
     }
 
+    getQAData(): string {
+        return 'controls-ListView__group';
+    }
+
     isSticked(): boolean {
         return this._$owner.isStickyGroup() && !this.isHiddenGroup();
     }

@@ -5,6 +5,7 @@
         <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
             <ws:partial template="{{content.resolvedTemplate}}"
                         attr:class="js-controls-BaseControl__NavigationButton"
+                        attr:data-qa="{{linkClass || 'controls-BaseControl__NavigationButton'}}"
                         value="{{value}}"
                         iconSize="{{buttonConfig && buttonConfig.size || 'm'}}"
                         contrastBackground="{{!buttonConfig || buttonConfig.contrastBackground !== false}}"/>
@@ -14,6 +15,7 @@
 <ws:else>
     <Controls.buttons:Button
             attr:class="js-controls-BaseControl__NavigationButton {{linkClass || ''}}"
+            attr:data-qa="{{linkClass || 'controls-BaseControl__NavigationButton'}}"
             viewMode="link"
             fontSize="{{linkFontSize}}"
             fontColorStyle="{{linkFontColorStyle}}"

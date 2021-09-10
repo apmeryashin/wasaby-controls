@@ -15,7 +15,7 @@
       <ws:partial template="{{_listModel.getTopLoadingTrigger().getTemplate()}}"
                   item="{{_listModel.getTopLoadingTrigger()}}"/>
 
-      <div name="itemsContainer" class="controls-ListViewV__itemsContainer">
+      <div name="itemsContainer" class="controls-ListViewV__itemsContainer" attr:data-qa="controls-ListViewV__itemsContainer">
          <ws:partial
              template="{{_forTemplate}}"
              collection="{{ _listModel }}"

@@ -193,6 +193,10 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
         return styles;
     }
 
+    getQAData(): string {
+        return 'controls-Grid__header-cell';
+    }
+
     getZIndex(): number {
         let zIndex;
         if (this._$owner.hasColumnScroll()) {

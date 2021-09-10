@@ -129,6 +129,10 @@ class ResultsCell extends Cell<null, ResultsRow> {
         return wrapperStyles;
     }
 
+    getQAData(): string {
+        return 'controls-Grid__results-cell';
+    }
+
     getZIndex(): number {
         let zIndex;
         if (this._$owner.hasColumnScroll()) {

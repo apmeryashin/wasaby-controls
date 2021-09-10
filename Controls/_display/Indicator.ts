@@ -131,7 +131,7 @@ export default class Indicator extends CollectionItem<null> {
         return this._$position === 'global';
     }
 
-    getQAData(marker?: boolean): string {
+    getQAData(): string {
         return this.key;
     }
 

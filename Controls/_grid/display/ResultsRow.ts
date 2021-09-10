@@ -48,6 +48,10 @@ class ResultsRow extends Row<null> {
         };
     }
 
+    getQAData(): string {
+        return 'controls-Grid__results';
+    }
+
     //endregion
 
     //region Аспект "Стилевое оформление"

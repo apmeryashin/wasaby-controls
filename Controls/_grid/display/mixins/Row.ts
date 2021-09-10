@@ -183,6 +183,10 @@ export default abstract class Row<T extends Model = Model> {
         return classes;
     }
 
+    getQAData(): string {
+        return 'controls-Grid__row';
+    }
+
     //endregion
 
     //region Аспект "Лесенка"
