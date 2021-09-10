@@ -533,8 +533,6 @@ define([
          it('get options for item with itemTemplateProperty and without caption', () => {
             const expectedOptions = getExpectedOptions();
             expectedOptions._hasIcon = false;
-            expectedOptions._caption = undefined;
-            expectedOptions._stringCaption = false;
             assert.deepEqual(
                WidthUtils._private.getButtonTemplateOptionsForItem(itemWithItemTemplatePropertyWithoutCaption, 'templateProperty'),
                expectedOptions
