@@ -5,4 +5,4 @@
  * @author Герасимов А.М.
  * @public
  */
-export {default as Browser, IBrowserOptions} from './_browser/Browser';
+export {default as Browser, IBrowserOptions, IListConfiguration} from './_browser/Browser';
