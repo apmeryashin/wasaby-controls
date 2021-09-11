@@ -1,4 +1,4 @@
-import {Browser, IBrowserOptions} from 'Controls/browser';
+import {Browser, IBrowserOptions, IListConfiguration} from 'Controls/browser';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
@@ -7,6 +7,8 @@ import * as sinon from 'sinon';
 import {adapter} from 'Types/entity';
 import {NewSourceController, getControllerState} from 'Controls/dataSource';
 import {ControllerClass as SearchController} from 'Controls/search';
+
+type TPartialListConfiguration = Partial<IListConfiguration>;
 
 const browserData = [
     {
@@ -79,6 +81,20 @@ async function getBrowserWithMountCall(options: object = {}): Promise<Browser> {
     await brow._beforeMount(options);
     brow.saveOptions(options);
     return brow;
+}
+
+function getListsOptions(): TPartialListConfiguration[] {
+    const browserOptions = getBrowserOptions();
+    return [
+        {
+            id: 'list',
+            ...browserOptions
+        },
+        {
+            id: 'list2',
+            ...browserOptions
+        }
+    ];
 }
 
 describe('Controls/browser:Browser', () => {
@@ -430,17 +446,8 @@ describe('Controls/browser:Browser', () => {
 
                 it('reset search with listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
-                    const listsOptions = [
-                        {
-                            id: 'list',
-                            ...browserOptions
-                        },
-                        {
-                            id: 'list2',
-                            ...browserOptions,
-                            searchParam: ''
-                        }
-                    ];
+                    const listsOptions = getListsOptions();
+                    listsOptions[1].searchParam = '';
                     const options = {
                         ...browserOptions,
                         listsOptions
@@ -981,6 +988,26 @@ describe('Controls/browser:Browser', () => {
                         testField: 'testValue',
                         filterField: ''
                     });
+                });
+
+                it('root changed with sourceController in listsOptions', async () => {
+                    const listsOptions = getListsOptions();
+                    let browserOptions = getBrowserOptions();
+                    const sourceController = new NewSourceController({
+                        source: browserOptions.source
+                    });
+                    listsOptions[1].sourceController = sourceController;
+                    browserOptions = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+
+                    const browser = getBrowser(browserOptions);
+                    await browser._beforeMount(browserOptions);
+                    browser.saveOptions(browserOptions);
+                    const notifyStub = sinon.stub(browser, '_notify');
+                    sourceController.setRoot('testRoot');
+                    assert.ok(notifyStub.withArgs('rootChanged', ['testRoot', 'list2']).calledOnce);
                 });
             });
         });
