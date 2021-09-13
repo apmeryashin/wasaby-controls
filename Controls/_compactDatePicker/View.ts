@@ -21,6 +21,30 @@ import 'css!Controls/compactDatePicker';
  *
  */
 
+/**
+ * @name Controls/compactDatePicker:View#isDayAvailable
+ * @cfg {Function} Коллбек-функция, которая определяет, может ли пользователь выбирать конкретный день.
+ * @remark
+ * Функция должна возвращать булевое значение.
+ * @param {Date} date - дата проверяемого дня
+ * @example
+ * <pre>
+ *     <Controls.compactDatePicker:View
+ *          bind:startValue="_value"
+ *          bind:endValue="_value"
+ *          selectionType="single"
+ *          isDayAvailable="{{ _isDayAvailable }}"
+ *     />
+ * </pre>
+ * <pre>
+ *     protected _isDayAvailable(date: Date): boolean {
+ *      // Заблокируем выбор всех понедельников и четвергов
+ *      return date.getDay() !== 1 && date.getDay() !== 4;
+ *  }
+ * </pre>
+ * @demo Controls-demo/CompactDatePicker/IsDayAvailable/Index
+ */
+
 interface ICompactDatePickerOptions extends IControlOptions {
     position: Date;
     startValue: Date | null;
