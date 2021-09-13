@@ -1387,8 +1387,8 @@ const _private = {
                         self._observersController.setResetTriggerOffsets(
                             !hasItems || self._hasMoreData('up'),
                             !hasItems || self._hasMoreData('down'),
-                            self._children.listView.getTopLoadingTrigger(),
-                            self._children.listView.getBottomLoadingTrigger(),
+                            self._children.listView?.getTopLoadingTrigger(),
+                            self._children.listView?.getBottomLoadingTrigger(),
                         );
                         break;
                     case IObservable.ACTION_ADD:
@@ -1398,8 +1398,8 @@ const _private = {
                         const direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
                         self._observersController.clearResetTriggerOffset(
                             direction,
-                            self._children.listView.getTopLoadingTrigger(),
-                            self._children.listView.getBottomLoadingTrigger(),
+                            self._children.listView?.getTopLoadingTrigger(),
+                            self._children.listView?.getBottomLoadingTrigger(),
                         );
                         break;
                 }
@@ -6406,11 +6406,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то не нужно скроллить к первому элементу
-                this._observersController.displayTopTrigger(this._children.listView.getTopLoadingTrigger());
+                this._observersController.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
             } else {
                 const scrollResult = this._scrollToFirstItem();
                 scrollResult.then(() => {
-                    this._observersController.displayTopTrigger(this._children.listView.getTopLoadingTrigger());
+                    this._observersController.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
                 });
             }
         };
