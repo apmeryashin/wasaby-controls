@@ -162,6 +162,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                             ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.2') :
                             ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
             '--icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--readonly_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--hover_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
         };
     }
