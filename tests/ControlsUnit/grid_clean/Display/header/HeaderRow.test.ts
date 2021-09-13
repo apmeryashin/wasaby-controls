@@ -9,12 +9,22 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
     const owner = {
         getStickyColumnsCount: () => 1,
         getGridColumnsConfig: () => columns,
-        hasMultiSelectColumn: () => false,
+        hasMultiSelectColumn: () => true,
         hasItemActionsSeparatedCell: () => false
     } as undefined as GridCollection<Model>;
 
     const headerModel = {
-        isMultiline: () => false
+        isMultiline: () => false,
+        getBounds: () => ({
+            column: {
+                start: 1,
+                end: 2
+            },
+            row: {
+                start: 1,
+                end: 2
+            }
+        })
     } as undefined as GridHeader<Model>;
 
     describe('_initializeColumns', () => {
@@ -24,8 +34,19 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
 
             function MockedFactory(): (options: any) => GridCell<any, any> {
                 return (options) => {
+                    const checkboxStandardOptions = {
+                        backgroundStyle: 'custom',
+                        column: {
+                            endColumn: 2,
+                            endRow: 2,
+                            startColumn: 1,
+                            startRow: 1
+                        },
+                        isFixed: true,
+                        shadowVisibility: 'lastVisible'
+                    };
                     const standardOptions = {
-                        column: {},
+                        column: columns[0],
                         isFixed: true,
                         sorting: undefined,
                         cellPadding: undefined,
@@ -35,7 +56,11 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
                     };
 
                     // assertion here
-                    assert.deepEqual(options, standardOptions);
+                    if (columns.includes(options.column)) {
+                        assert.deepEqual(options, standardOptions);
+                    } else {
+                        assert.deepEqual(options, checkboxStandardOptions);
+                    }
 
                     return {} as undefined as GridCell<any, GridRow<any>>;
                 };
@@ -47,14 +72,20 @@ describe('Controls/grid_clean/Display/header/HeaderRow', () => {
                 headerModel,
                 owner,
                 backgroundStyle: 'custom',
+                columnsConfig: columns,
+                gridColumnsConfig: columns.slice(),
                 style: 'default'
             } as undefined as IGridHeaderRowOptions<any>);
 
-            sandBox.replace(row, 'getColumnsFactory', MockedFactory);
+            const stubMockedFactory = sandBox.stub(row, 'getColumnsFactory');
+            stubMockedFactory.callsFake(MockedFactory);
 
             row.getColumns();
 
             // assertion inside MockedFactory above
+
+            // check call for column and for checkboxColumn
+            sandBox.assert.calledTwice(stubMockedFactory);
 
             sandBox.restore();
         });

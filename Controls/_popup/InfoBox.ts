@@ -5,6 +5,7 @@ import {IInfoBoxPopupOptions} from 'Controls/_popup/interface/IInfoBoxOpener';
 import { TouchDetect } from 'Env/Touch';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from 'Types/entity';
+import {goUpByControlTree} from 'UI/Focus';
 import * as getZIndex from 'Controls/Utils/getZIndex';
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
@@ -155,6 +156,13 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     protected _contentMouseleaveHandler(): void {
         if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
             this._openCalmTimer.stop();
+            this._mouseLeaveHandler();
+        }
+    }
+
+    private _mouseLeaveHandler(relatedTarget?: HTMLElement): void {
+        const upTree = relatedTarget ? goUpByControlTree(relatedTarget) : [];
+        if (!relatedTarget || !upTree.includes(this)) {
             this._closeCalmTimer.start(300);
         }
     }
@@ -167,7 +175,9 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
                 break;
             case 'mouseleave':
                 if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
-                    this._contentMouseleaveHandler();
+                    this._openCalmTimer.stop();
+                    const {relatedTarget} = event.nativeEvent;
+                    this._mouseLeaveHandler(relatedTarget);
                 }
                 break;
             case 'mousedown':

@@ -860,9 +860,12 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     // Необходимость в "фейковом" событии fixed описана в интерфейсе IFixedEventData (scroll/StickyBlock/Utils.ts)
     fakeFixedNotifier(isFixed: boolean): void {
-        const newPosition = isFixed ? this._model.fixedPosition : '';
-        const prevPosition = isFixed ? '' : this._model.fixedPosition;
-        this._fixedNotifier(newPosition, prevPosition, true);
+        // Модели может не быть, значит заголовок только что создан.
+        if (this._model) {
+            const newPosition = isFixed ? this._model.fixedPosition : '';
+            const prevPosition = isFixed ? '' : this._model.fixedPosition;
+            this._fixedNotifier(newPosition, prevPosition, true);
+        }
     }
 
     protected updateShadowVisible(ids: number[], needFakeFixedNotify: boolean = true): void {

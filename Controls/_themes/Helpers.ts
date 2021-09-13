@@ -75,6 +75,9 @@ const additionalColors = {
     ],
     '--unaccented_icon-color': [
         {name: '--unaccented_hover_icon-color', S: 1.333, L: 0.609}
+    ],
+    '--contrast_text-color': [
+        {name: '--contrast_icon-color', S: 1, L: 1}
     ]
 };
 const calculateColor = (clr: IHSLColor, desc: IColorDescriptor): IHSLColor => {

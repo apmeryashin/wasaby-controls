@@ -66,7 +66,7 @@ export class RemoveController {
     removeWithConfirmation(selection: ISelectionObject, filter: TFilterObject = {}, selectedKeysCount?: number): Promise<void> {
         return Confirmation.openPopup({
             type: 'yesno',
-            style: 'danger',
+            style: 'default',
             message: selectedKeysCount === 1 ? rk('Удалить выбранную запись?') : rk('Удалить выбранные записи?')
         }).then((result) => result ? this._removeFromSource(selection, filter) : Promise.reject());
     }

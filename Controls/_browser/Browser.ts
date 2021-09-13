@@ -44,17 +44,17 @@ type Key = string|number|null;
 
 type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
-interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
+export interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
     Required<IFilterOptions>, Required<IHierarchyOptions>, IHierarchySearchOptions,
     IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions {
-    searchNavigationMode: string;
-    groupHistoryId: string;
-    searchValue: string;
-    filterButtonSource: IFilterItem[];
+    searchNavigationMode?: string;
+    groupHistoryId?: string;
+    searchValue?: string;
+    filterButtonSource?: IFilterItem[];
     useStore?: boolean;
     dataLoadCallback?: Function;
     dataLoadErrback?: Function;
-    viewMode: TViewMode;
+    viewMode?: TViewMode;
     root?: Key;
     fastFilterSource?: unknown;
     historyItems?: IFilterItem[];
@@ -551,7 +551,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private _subscribeOnRootChanged(): void {
-        this._getSourceController().subscribe('rootChanged', this._rootChanged.bind(this));
+        this._dataLoader.each((config, id) => {
+            this._getSourceController(id).subscribe('rootChanged', this._rootChanged.bind(this));
+        });
     }
 
     private _updateItemsOnState(): void {

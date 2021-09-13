@@ -49,10 +49,40 @@ class Controller extends BaseController {
      * @private
      */
     private _updatePosition(item: ISlidingPanelItem, container: HTMLDivElement, resizeType?: ResizeType): void {
+        if (resizeType === ResizeType.outer) {
+            this._fixOuterResize(item, container);
+        }
         this._updatePopupSizes(item, container);
         item.position = SlidingPanelStrategy.getPosition(item, resizeType);
         item.popupOptions.workspaceWidth = item.position.width;
         this._fixIosBug(item, container);
+    }
+
+    /**
+     * Фиксим тут следующую историю:
+     * После открытия шторки/смены ориентации с портретной на альбомную восстановить высоту,
+     * которая была до изменения высоты окна.
+     * @param item
+     * @param container
+     */
+    _fixOuterResize(item: ISlidingPanelItem, container: HTMLDivElement): void {
+        const viewportHeight = window.visualViewport?.height;
+        if (item.heightForRestoreAfterResize && item.heightForRestoreAfterResize <= viewportHeight) {
+            const newHeight = item.heightForRestoreAfterResize;
+            item.position.height = newHeight;
+            container.style.height = newHeight + 'px';
+            let maxHeight = item.position.maxHeight;
+            if (maxHeight < newHeight) {
+                item.position.maxHeight = newHeight;
+                container.style.maxHeight = newHeight + 'px';
+            }
+            item.heightForRestoreAfterResize = null;
+        } else {
+            const oldHeight = item.sizes.height;
+            if (oldHeight > viewportHeight) {
+                item.heightForRestoreAfterResize = oldHeight;
+            }
+        }
     }
 
     _fixIosBug(item: ISlidingPanelItem, container: HTMLDivElement): void {
