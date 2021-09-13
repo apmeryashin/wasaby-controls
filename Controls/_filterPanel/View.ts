@@ -151,7 +151,8 @@ Object.defineProperty(View, 'defaultProps', {
     get(): Partial<IViewPanelOptions> {
         return {
             backgroundStyle: 'default',
-            viewMode: 'default'
+            viewMode: 'default',
+            style: 'default'
         };
     }
 });

@@ -17,7 +17,6 @@
       <ws:multiSelectTemplate>
          <ws:partial template="{{_circleTemplate}}"
                      style="{{_options.style}}"
-                     checkBoxRadius="{{_checkBoxRadius}}"
                      attr:class="controls-ListEditor__multiSelect"
                      on:click="_handleCheckBoxClick()"/>
       </ws:multiSelectTemplate>
@@ -43,7 +42,7 @@
    </ws:else>
 </ws:template>
 
-<div class="controls-FilterEditors__list controls-FilterEditors__list_style-{{_options.style}}">
+<div class="controls-FilterEditors__list_style-{{_options.style}}">
    <ws:if data="{{_options.multiSelect}}">
       <ws:partial template="listEditor" on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
    </ws:if>

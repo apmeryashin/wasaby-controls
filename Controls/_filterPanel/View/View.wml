@@ -44,8 +44,7 @@
                           controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
             <ws:itemTemplate>
                <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                           attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
-                                       controls-FilterViewPanel__propertyGrid_itemTemplate_style-{{_options.style}}"/>
+                           attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate_style-{{_options.style}}"/>
             </ws:itemTemplate>
             <ws:groupTemplate>
                <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate"

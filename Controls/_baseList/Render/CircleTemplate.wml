@@ -5,7 +5,7 @@
          viewBox="0 0 12 12">
         <circle xmlns="http://www.w3.org/2000/svg"
                 class="controls-ListView__multiSelect__borderCircle"
-                cx="6" cy="6" r="{{_options.checkBoxRadius || 5}}"/>
+                cx="6" cy="6" r="5"/>
         <rect xmlns="http://www.w3.org/2000/svg"
               class="controls-ListView__multiSelect__innerCircle
                   controls-ListView__multiSelect__innerCircle_{{_options.selected || item.isSelected() ? 'selected-' + (style || 'default') : 'unselected'}}"
