@@ -45,6 +45,8 @@ class Previewer extends Control<IControlOptions> {
             id: '1',
             icon: 'icon-Print icon-medium',
             title: 'Распечатать',
+            caption: 'Распечатать',
+            viewMode: 'link',
             '@parent': false,
             parent: null
          },
