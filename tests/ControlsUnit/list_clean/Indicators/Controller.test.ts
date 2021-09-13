@@ -403,4 +403,27 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.destroy(); // уничтожаем все таймеры
         });
     });
+
+    describe('redrawPortionedSearchIndicator', () => {
+        it('should up versions', async () => {
+            const {collection, controller} = initTest([{id: 1}], {}, {iterative: true});
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            controller.startDisplayPortionedSearch('bottom');
+
+            assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
+
+            // ждем пока отобразится индикатор порционного поиска
+            await new Promise((resolve) => {
+                setTimeout(() => resolve(null), 2001);
+            });
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.redrawPortionedSearchIndicator();
+            assert.equal(collection.getVersion(), 5);
+            assert.equal(collection.getBottomIndicator().getVersion(), 3);
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+    });
 });

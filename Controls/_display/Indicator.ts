@@ -138,6 +138,10 @@ export default class Indicator extends CollectionItem<null> {
     isDisplayed(): boolean {
         return this._$visible;
     }
+
+    redraw(): void {
+        this._nextVersion();
+    }
 }
 
 Object.assign(Indicator.prototype, {
