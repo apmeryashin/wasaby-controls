@@ -53,6 +53,10 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
     }
 
     protected _itemClickHandler(e: SyntheticEvent, item: Model): void {
+        const result = this._notify('breadCrumbsItemClick', [item.getKey(), item], {bubbling: true});
+        if (result === false) {
+            return;
+        }
         if (this._sourceController && this._options.sourceController) {
             this._sourceController.setExpandedItems([]);
             this._sourceController.setRoot(item.getKey());
@@ -60,7 +64,6 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
         } else {
             this._notify('rootChanged', [item.getKey()], {bubbling: true});
         }
-        this._notify('breadCrumbsItemClick', [item.getKey()], {bubbling: true});
     }
 
     protected _hoveredCrumbChanged(event: SyntheticEvent, item: Model): void {
