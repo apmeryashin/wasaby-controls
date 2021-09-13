@@ -188,6 +188,8 @@ export default class ErrorController {
 
                 if (!(config instanceof Error) && config.mode) {
                     viewConfig.mode = config.mode;
+                } else {
+                    viewConfig.mode = viewConfig.mode || ErrorViewMode.dialog;
                 }
 
                 if (typeof this.onProcess === 'function') {
