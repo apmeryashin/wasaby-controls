@@ -39,7 +39,9 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '3',
             icon: 'icon-Print',
+            viewMode: 'link',
             title: 'Распечатать',
+            caption: 'Распечатать',
             '@parent': false,
             parent: null
          },
@@ -74,6 +76,7 @@ class ToolbarVdom extends Control<IControlOptions> {
             id: '7',
             showType: showType.MENU_TOOLBAR,
             title: 'Проекту',
+            caption: 'Проекту',
             '@parent': false,
             parent: '4'
          },
@@ -107,6 +110,7 @@ class ToolbarVdom extends Control<IControlOptions> {
             iconStyle: 'secondary',
             contrastBackground: true,
             title: 'Обсудить',
+            caption: 'Обсудить',
             '@parent': true,
             parent: null,
             readOnly: true
@@ -151,6 +155,7 @@ class ToolbarVdom extends Control<IControlOptions> {
             id: '1',
             icon: 'icon-Print',
             title: 'Распечатать',
+            caption: 'Распечатать',
             readOnly: false,
             '@parent': false,
             parent: null
