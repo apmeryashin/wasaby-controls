@@ -2,5 +2,5 @@
     <Controls.dateRange:RangeShortSelector
             bind:startValue="_startValue"
             bind:endValue="_endValue"
-            monthTemplate="Controls-demo/ShortDatePicker/MonthTemplate/resources/MonthTemplate:MonthTemplate"/>
+            monthTemplate="Controls-demo/ShortDatePicker/MonthTemplate/resources/MonthTemplate"/>
 </div>
