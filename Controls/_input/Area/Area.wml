@@ -19,7 +19,7 @@
                         fontColorStyle="{{_options.fontColorStyle}}"
                         borderStyle="{{_options.borderStyle}}"
                         contrastBackground="{{_options.contrastBackground}}"
-                        horizontalPadding="{{_horizontalPadding}}"
+                        horizontalPadding="{{_options.horizontalPadding}}"
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
@@ -53,7 +53,6 @@
             <ws:partial options="{{_options}}"
                         scope="{{_readOnlyField.scope}}"
                         value="{{_viewModel.displayValue}}"
-                        horizontalPadding="{{_horizontalPadding}}"
                         template="{{_readOnlyField.template}}"/>
          </ws:if>
          <ws:else>
@@ -65,7 +64,6 @@
                         maxLines="{{_maxLines}}"
                         fieldName="{{_fieldName}}"
                         heightLine="{{_options.fontSize}}"
-                        horizontalPadding="{{_horizontalPadding}}"
                         template="{{_field.template}}"
                         wasActionUser="{{_wasActionUser}}"
                         value="{{_viewModel.displayValue}}"
