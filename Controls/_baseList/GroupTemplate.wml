@@ -1,37 +1,39 @@
 <ws:template name="localGroupTemplate">
-   <div attr:class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
-                    controls-ListView__groupContent_align-{{textAlign || 'left'}}
-                    {{(item || itemData).getGroupPaddingClasses('left')}}
-                    {{ !rightTemplate ? (item || itemData).getGroupPaddingClasses('right') }}">
-      <ws:if data="{{ separator !== false && textVisible !== false && separatorVisibility !== false && textAlign !== 'left' }}">
-         <div attr:class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
-      </ws:if>
-      <ws:if data="{{ textVisible !== false }}">
-         <div attr:class="controls-ListView__groupContent-text
-                       {{fontSize ? ' controls-fontsize-' + fontSize : ' controls-ListView__groupContent-text_default'}}
-                       {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander' +
-                       (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
-                       ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +
-                       (!(item || itemData).isExpanded() ?
-                       ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?
-                       ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'') }}"
-               attr:data-qa="{{expanderVisible !== false ? 'controls-ListView__groupExpander' : 'controls-ListView__groupContent-text' }}">
-            <ws:if data="{{ !!contentTemplate }}">
-               <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
-            </ws:if>
-            <ws:else>
-               {{ (item || itemData).getContents() }}
-            </ws:else>
-         </div>
-      </ws:if>
-      <ws:if data="{{ separator !== false && separatorVisibility !== false && (textAlign !== 'right' || textVisible === false) }}">
-         <div attr:class="controls-ListView__groupSeparator {{textVisible !== false ? 'controls-ListView__groupSeparator-right'}}">&nbsp;</div>
-      </ws:if>
-      <ws:if data="{{ !!rightTemplate }}">
-         <div class="controls-ListView__groupContent-rightTemplate {{ (item || itemData).getGroupPaddingClasses('right') }}">
-            <ws:partial template="{{ rightTemplate }}" item="{{ item || itemData }}" itemData="{{ itemData }}" />
-         </div>
-      </ws:if>
+   <div attr:class="controls-ListView__itemV {{ (item || itemData).isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
+      <div attr:class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
+                       controls-ListView__groupContent_align-{{textAlign || 'left'}}
+                       {{(item || itemData).getGroupPaddingClasses('left')}}
+                       {{ !rightTemplate ? (item || itemData).getGroupPaddingClasses('right') }}">
+         <ws:if data="{{ separator !== false && textVisible !== false && separatorVisibility !== false && textAlign !== 'left' }}">
+            <div attr:class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
+         </ws:if>
+         <ws:if data="{{ textVisible !== false }}">
+            <div attr:class="controls-ListView__groupContent-text
+                          {{fontSize ? ' controls-fontsize-' + fontSize : ' controls-ListView__groupContent-text_default'}}
+                          {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander' +
+                          (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
+                          ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +
+                          (!(item || itemData).isExpanded() ?
+                          ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?
+                          ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'') }}"
+                  attr:data-qa="{{expanderVisible !== false ? 'controls-ListView__groupExpander' : 'controls-ListView__groupContent-text' }}">
+               <ws:if data="{{ !!contentTemplate }}">
+                  <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
+               </ws:if>
+               <ws:else>
+                  {{ (item || itemData).getContents() }}
+               </ws:else>
+            </div>
+         </ws:if>
+         <ws:if data="{{ separator !== false && separatorVisibility !== false && (textAlign !== 'right' || textVisible === false) }}">
+            <div attr:class="controls-ListView__groupSeparator {{textVisible !== false ? 'controls-ListView__groupSeparator-right'}}">&nbsp;</div>
+         </ws:if>
+         <ws:if data="{{ !!rightTemplate }}">
+            <div class="controls-ListView__groupContent-rightTemplate {{ (item || itemData).getGroupPaddingClasses('right') }}">
+               <ws:partial template="{{ rightTemplate }}" item="{{ item || itemData }}" itemData="{{ itemData }}" />
+            </div>
+         </ws:if>
+      </div>
    </div>
 </ws:template>
 
@@ -43,8 +45,5 @@
    </Controls.scroll:StickyBlock>
 </ws:if>
 <ws:else>
-   <div attr:class="controls-ListView__itemV {{ (item || itemData).isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}"
-        attr:data-qa="{{ (item || itemData).getQAData() }}">
-      <ws:partial template="localGroupTemplate"/>
-   </div>
+   <ws:partial template="localGroupTemplate" attr:data-qa="{{ (item || itemData).getQAData() }}"/>
 </ws:else>
