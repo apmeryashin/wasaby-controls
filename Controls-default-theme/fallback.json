@@ -738,13 +738,6 @@
   "--primary_hover_text-color_heading": "var(--primary_hover_text-color)",
   "--secondary_text-color_heading": "var(--secondary_text-color)",
   "--secondary_hover_text-color_heading": "var(--secondary_hover_text-color)",
-  "--uppercase_letter-spacing_xs_heading": "1.25px",
-  "--uppercase_letter-spacing_s_heading": "1.25px",
-  "--uppercase_letter-spacing_m_heading": "1.25px",
-  "--uppercase_letter-spacing_l_heading": "1.5px",
-  "--uppercase_letter-spacing_xl_heading": "1.5px",
-  "--uppercase_letter-spacing_2xl_heading": "1.75px",
-  "--uppercase_letter-spacing_3xl_heading": "2px",
   "--primary_text-color_headingCounter": "var(--primary_text-color)",
   "--primary_hover_text-color_headingCounter": "var(--primary_hover_text-color)",
   "--secondary_text-color_headingCounter": "var(--secondary_text-color)",
@@ -1364,9 +1357,6 @@
 
   "--margin-horizontal_m_AreaCut": "10px",
   "--line-height_richEditor_inputArea": "21px",
-
-  "--box-shadow-size_suggestSearch": "0 0 6px 0",
-  "--tabs_offset-top_suggestSearch": "0",
 
   "--popup_border-color_suggest": "var(--border-color)",
   "--box-shadow-color_suggest": "rgba(0, 0, 0, 0.12)",
