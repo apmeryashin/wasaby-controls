@@ -14,7 +14,6 @@
       <!--Top loading trigger-->
       <!--Нельзя отображать триггер с помощю ws:partial, т.к. в этом случае при перерисовке он пропадает из _children и его нельзя получить.-->
       <div name="topLoadingTrigger"
-           style="{{ _listModel.getTopLoadingTrigger().getStyles() }}"
            class="{{ _listModel.getTopLoadingTrigger().getClasses() }}"
            data-qa="{{ _listModel.getTopLoadingTrigger().getQAData() }}">
       </div>
@@ -53,7 +52,6 @@
 
       <!--Bottom loading trigger-->
       <div name="bottomLoadingTrigger"
-           style="{{ _listModel.getBottomLoadingTrigger().getStyles() }}"
            class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}"
            data-qa="{{ _listModel.getBottomLoadingTrigger().getQAData() }}">
       </div>

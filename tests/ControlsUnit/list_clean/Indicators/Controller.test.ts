@@ -1,5 +1,4 @@
 import {assert} from 'chai';
-import {spy} from 'sinon';
 import {Collection, EIndicatorState} from 'Controls/display';
 import IndicatorsController, {IIndicatorsControllerOptions} from 'Controls/_baseList/Controllers/IndicatorsController';
 import {RecordSet} from 'Types/collection';
@@ -118,38 +117,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             controller.setHasMoreData(true, true);
-            const changedResetTrigger = controller.onCollectionReset();
-            assert.isTrue(changedResetTrigger);
+            controller.onCollectionReset();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
-        });
-
-        it('display top trigger only after scroll to first item', async () => {
-            let resolveScrollToFirstItemPromise;
-            let scrollToFirstItemPromise;
-            const scrollToFirstItem = (afterScrollCallback) => {
-                scrollToFirstItemPromise = new Promise((resolve) => {
-                    resolveScrollToFirstItemPromise = resolve;
-                }).then(afterScrollCallback);
-            };
-            const options = {
-                isInfinityNavigation: true,
-                attachLoadTopTriggerToNull: true,
-                hasHiddenItemsByVirtualScroll: () => false,
-                scrollToFirstItem
-            } as unknown as IIndicatorsControllerOptions;
-            const {collection, controller} = initTest([{id: 1}], options);
-            assert.isFalse(collection.getTopIndicator().isDisplayed());
-
-            controller.setHasMoreData(true, true);
-            const changedResetTrigger = controller.onCollectionReset();
-            assert.isTrue(changedResetTrigger);
-            assert.isTrue(collection.getTopIndicator().isDisplayed());
-            assert.isFalse(collection.getTopLoadingTrigger().isDisplayed());
-
-            resolveScrollToFirstItemPromise();
-            await scrollToFirstItemPromise;
-            assert.isTrue(collection.getTopLoadingTrigger().isDisplayed());
         });
 
         it('hide global indicator', async () => {
@@ -179,8 +149,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             });
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
-            const changedResetTrigger = controller.onCollectionReset();
-            assert.isFalse(changedResetTrigger);
+            controller.onCollectionReset();
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры

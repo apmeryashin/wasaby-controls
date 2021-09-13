@@ -20,13 +20,14 @@ import { getDimensions as uDimension } from '../sizeUtils';
 import { getStickyHeadersHeight } from '../scroll';
 import {IVirtualScrollConfig} from 'Controls/_baseList/interface/IVirtualScroll';
 
-const DEFAULT_TRIGGER_OFFSET = 0.3;
 export interface IScrollParams {
     clientHeight: number;
     scrollTop: number;
     scrollHeight: number;
     rect?: DOMRect;
     applyScrollTopCallback?: Function;
+    topTriggerOffset: number;
+    bottomTriggerOffset: number;
 }
 
 export interface IOptions extends IControlOptions {
@@ -35,11 +36,9 @@ export interface IOptions extends IControlOptions {
     needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
-    topTriggerOffsetCoefficient: number;
-    bottomTriggerOffsetCoefficient: number;
     forceInitVirtualScroll: boolean;
-    resetTopTriggerOffset: boolean;
-    resetBottomTriggerOffset: boolean;
+    topTriggerOffset: number;
+    bottomTriggerOffset: number;
 }
 
 /**
@@ -54,8 +53,6 @@ export default class ScrollController {
 
     private _viewHeight: number = 0;
     private _viewportHeight: number = 0;
-    private _topTriggerOffset: number = 0;
-    private _bottomTriggerOffset: number = 0;
     private _lastScrollTop: number = 0;
 
     private _triggerVisibility: ITriggerState = {up: false, down: false};
@@ -121,16 +118,10 @@ export default class ScrollController {
                 newParams.scroll = params.scrollHeight;
                 this._viewHeight = params.scrollHeight;
             }
-            const result = {
-                triggerOffset: this.getTriggerOffset(this._viewHeight,
-                                                     this._viewportHeight,
-                                                     this._lastScrollTop,
-                                                     this._options.resetTopTriggerOffset,
-                                                     this._options.resetBottomTriggerOffset)};
-            newParams.topTrigger = this._topTriggerOffset;
-            newParams.bottomTrigger = this._bottomTriggerOffset;
+            newParams.topTrigger = params.topTriggerOffset;
+            newParams.bottomTrigger = params.bottomTriggerOffset;
             this._virtualScroll.applyContainerHeightsData(newParams);
-            return result;
+            return {};
         } else {
             return {};
         }
@@ -152,18 +143,6 @@ export default class ScrollController {
                 result = this._initVirtualScroll(options);
                 this._options.collection = options.collection;
                 this._options.needScrollCalculation = options.needScrollCalculation;
-                this._isRendering = true;
-            }
-            if (options.resetTopTriggerOffset !== this._options.resetTopTriggerOffset || options.resetBottomTriggerOffset !== this._options.resetBottomTriggerOffset) {
-                this._options.resetTopTriggerOffset = options.resetTopTriggerOffset;
-                this._options.resetBottomTriggerOffset = options.resetBottomTriggerOffset;
-                if (!params) {
-                    result.triggerOffset = this.getTriggerOffset(this._viewHeight,
-                                                                 this._viewportHeight,
-                                                                 this._lastScrollTop,
-                                                                 this._options.resetTopTriggerOffset,
-                                                                 this._options.resetBottomTriggerOffset);
-                }
                 this._isRendering = true;
             }
 
@@ -371,8 +350,8 @@ export default class ScrollController {
                 {
                     viewport: this._viewportHeight,
                     scroll: this._viewHeight,
-                    topTrigger: this._topTriggerOffset,
-                    bottomTrigger: this._bottomTriggerOffset
+                    topTrigger: options.topTriggerOffset,
+                    bottomTrigger: options.bottomTriggerOffset
                 });
 
             let itemsHeights: Partial<IItemsHeights>;
@@ -755,23 +734,6 @@ export default class ScrollController {
         this._options.collection && this._options.collection.setIndexes(0, 0);
     }
 
-    private getTriggerOffset(scrollHeight: number, viewportHeight: number, scrollTop: number, resetTopTriggerOffset: boolean, resetBottomTriggerOffset: boolean):
-            {top: number, bottom: number} {
-
-        const scrollBottom = Math.max(scrollHeight - scrollTop - viewportHeight, 0);
-        const maxTopOffset = Math.min(scrollTop + viewportHeight / 2, scrollHeight / 2);
-        const maxBottomOffset =  Math.min(scrollBottom + viewportHeight / 2, scrollHeight / 2);
-
-        this._topTriggerOffset = Math.min((scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
-            (this._options.topTriggerOffsetCoefficient || DEFAULT_TRIGGER_OFFSET), maxTopOffset);
-        this._bottomTriggerOffset = Math.min((scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
-            (this._options.bottomTriggerOffsetCoefficient || DEFAULT_TRIGGER_OFFSET), maxBottomOffset);
-
-        const topTriggerOffset = resetTopTriggerOffset ? 0 : this._topTriggerOffset;
-        const bottomTriggerOffset = resetBottomTriggerOffset ? 0 : this._bottomTriggerOffset;
-        return {top: topTriggerOffset, bottom: bottomTriggerOffset};
-    }
-
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {
         switch (mode) {
             case 'hide':
@@ -792,8 +754,8 @@ export default class ScrollController {
             virtualScrollConfig: {
                 mode: 'remove'
             },
-            topTriggerOffsetCoefficient: DEFAULT_TRIGGER_OFFSET,
-            bottomTriggerOffsetCoefficient: DEFAULT_TRIGGER_OFFSET
+            topTriggerOffset: 0,
+            bottomTriggerOffset: 0
         };
     }
 }
