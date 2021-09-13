@@ -337,7 +337,7 @@ export default class ScrollController {
         }
     }
 
-    private _initVirtualScroll(options: IOptions, count?: number): IScrollControllerResult {
+    private _initVirtualScroll(options: IOptions, count?: number, initialStartIndex?: number): IScrollControllerResult {
         const virtualScrollConfig = !options.disableVirtualScroll && options.virtualScrollConfig || {};
         if (options.collection && (
             !virtualScrollConfig.pageSize ||
@@ -356,8 +356,8 @@ export default class ScrollController {
 
             let itemsHeights: Partial<IItemsHeights>;
 
-            let initialIndex = typeof options.activeElement !== 'undefined' ?
-                options.collection.getIndexByKey(options.activeElement) : 0;
+            let initialIndex = initialStartIndex || (typeof options.activeElement !== 'undefined' ?
+                options.collection.getIndexByKey(options.activeElement) : 0);
             if (this._resetInEnd) {
                 initialIndex = options.collection.getCount();
                 this._resetInEnd = false;
@@ -718,7 +718,12 @@ export default class ScrollController {
         }
     }
 
-    handleResetItems(): IScrollControllerResult {
+    handleResetItems(keepPosition: boolean = false): IScrollControllerResult {
+        if (keepPosition) {
+            return this._initVirtualScroll(this._options,
+                                           this._options.collection.getCount(),
+                                           this._virtualScroll.getRange().start);
+        }
         return this._initVirtualScroll(this._options);
     }
 

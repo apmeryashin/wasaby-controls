@@ -1444,13 +1444,7 @@ const _private = {
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
                         case IObservable.ACTION_RESET:
-
-                        // TODO: Нужно научить virtualScroll обрабатывать reset коллекции с сохранением положения скролла
-                        // Сейчас можем сохранить только если не поменялось количество записей.
-                        // Таких кейсов еще не было, но вообще могут появиться https://online.sbis.ru/opendoc.html?guid=1bff2e6e-d018-4ac9-be37-ca77cb0a8030
-                            if (!self._keepScrollAfterReload || newItems.length !== removedItems.length) {
-                                result = self._scrollController.handleResetItems();
-                            }
+                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
                             break;
                     }
                     if (result) {
@@ -4638,6 +4632,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
         if (keepScroll) {
             this._keepScrollAfterReload = true;
+            if (!sourceConfig) {
+                if (this._options.navigation?.source === 'position') {
+                    sourceConfig = {...(this._options.navigation.sourceConfig), limit: this._items.getCount()};
+                }
+                if (this._options.navigation?.source === 'page') {
+                    const navPageSize = this._options.navigation.sourceConfig.pageSize;
+                    const pageSize = Math.ceil(this._items.getCount() / navPageSize) * navPageSize;
+                    sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
+                }
+            }
         }
 
         // Вызов перезагрузки из публичного API должен завершать имеющееся редактирование по месту.
