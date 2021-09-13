@@ -379,6 +379,18 @@ define(
             menuOptions.multiSelect = true;
             rightSpacing = menuRender._getRightPadding(menuOptions, items);
             assert.equal(rightSpacing, 'menu-close-multiSelect');
+
+            menuOptions.itemPadding.right = 'menu-close';
+            menuOptions.itemAlign = 'left';
+            menuOptions.multiSelect = false;
+            rightSpacing = menuRender._getRightPadding(menuOptions, items);
+            assert.equal(rightSpacing, 'menu-close');
+
+            menuOptions.itemPadding.right = null;
+            menuOptions.itemAlign = 'left';
+            menuOptions.multiSelect = true;
+            rightSpacing = menuRender._getRightPadding(menuOptions, items);
+            assert.equal(rightSpacing, 'menu-multiSelect');
          });
 
          describe('_addEmptyItem', function() {

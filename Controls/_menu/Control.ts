@@ -854,18 +854,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getRightPadding(options: IMenuControlOptions, items: RecordSet): string {
         let rightSpacing = 'm';
-        if (options.itemAlign !== 'left') {
-            if (!options.itemPadding.right) {
-                if (options.multiSelect) {
-                    rightSpacing = 'menu-multiSelect';
-                } else if (MenuControl._hasNodesAtLevel(items, options)) {
-                    rightSpacing = 'menu-expander';
-                }
-            } else {
-                rightSpacing = options.itemPadding.right;
-                if (options.multiSelect) {
-                    rightSpacing += '-multiSelect';
-                }
+        if (!options.itemPadding.right) {
+            if (options.multiSelect) {
+                rightSpacing = 'menu-multiSelect';
+            } else if (options.itemAlign !== 'left' && MenuControl._hasNodesAtLevel(items, options)) {
+                rightSpacing = 'menu-expander';
+            }
+        } else {
+            rightSpacing = options.itemPadding.right;
+            if (options.multiSelect) {
+                rightSpacing += '-multiSelect';
             }
         }
         return rightSpacing;
