@@ -35,10 +35,8 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const iconStyle = item.get('iconStyle') || toolbarOptions.iconStyle || defaultOptions.iconStyle;
 
     let viewMode = isVerticalDirection ? 'toolButton' : item.get('viewMode');
-    let caption = '';
-    if (viewMode && viewMode !== 'toolButton') {
-        caption = item.get('caption');
-    } else if (item.get('title') && !viewMode) {
+    let caption = item.get('caption');
+    if (item.get('title') && !viewMode) {
         viewMode = 'link';
         caption = item.get('title');
     }
