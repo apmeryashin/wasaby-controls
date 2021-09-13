@@ -227,7 +227,9 @@ export default class ObserversController {
     }
 
     destroy(): void {
-        this._intersectionObserver.destroy();
+        if (this._intersectionObserver) {
+            this._intersectionObserver.destroy();
+        }
     }
 
     private _getOffset(): ITriggerOffset {

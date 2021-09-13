@@ -3007,7 +3007,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _isScrollShown = false;
     _needScrollCalculation = false;
-    _loadTriggerVisibility = null;
+    _loadTriggerVisibility = {};
     _checkTriggerVisibilityTimeout = null;
     _notifyPlaceholdersChanged = null;
     _viewSize = null;
@@ -3135,7 +3135,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-        this._loadTriggerVisibility = {};
 
         if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
             const shouldPrevent = newOptions.preventServerSideColumnScroll;
@@ -3779,6 +3778,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     newOptions.viewModelConstructor
                 );
             }
+            // observersController нужно обновить до скроллКонтроллера, т.к. scrollController получает опции из _observersController
+            this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
@@ -3791,6 +3792,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
         } else {
+            // observersController нужно обновить до скроллКонтроллера, т.к. scrollController получает опции из _observersController
+            this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
             this._updateScrollController(newOptions);
         }
 
@@ -3807,8 +3810,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         // endregion Indicators
-
-        this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
 
         if (_private.hasMarkerController(this) && this._listViewModel) {
             _private.getMarkerController(this).updateOptions({
@@ -4125,6 +4126,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
         this._destroyIndicatorsController();
+        this._observersController?.destroy();
+        this._observersController = null;
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -4169,10 +4172,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._validateController.destroy();
         this._validateController = null;
-        if (this._intersectionObserver) {
-            this._intersectionObserver.destroy();
-            this._intersectionObserver = null;
-        }
 
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
