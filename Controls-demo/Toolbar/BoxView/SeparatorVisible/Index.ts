@@ -14,6 +14,7 @@ class ToolbarBox extends Control<IControlOptions> {
                 id: '1',
                 caption: 'Конфигурация',
                 title: 'Конфигурация',
+                viewMode: 'link',
                 icon: 'icon-Settings',
                 iconStyle: 'secondary'
             }, {
