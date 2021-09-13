@@ -542,7 +542,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /**
  * @name Controls/_list/interface/IList#roundBorder
  * @cfg {Controls/_interface/IRoundBorder} Cкругление углов элемента списка.
- * В настоящий момент поддерживается для плоского списка поддерживается только для шаблона Controls/listTemplates:ListItemTemplate
+ * @description
+ * В настоящий момент поддерживается для плоского списка поддерживается только для шаблона Controls/listTemplates:ListItemTemplate.
+ * Также устанавливает скругление углов для блока операций над записью.
  */
 
 /**
