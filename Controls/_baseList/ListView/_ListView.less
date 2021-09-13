@@ -165,8 +165,15 @@
    display: inline-block;
    flex-shrink: 0;
    width: var(--icon-size_2xs);
-   padding-left: calc((var(--offset_xl) - var(--icon-size_2xs)) / 2);
    top: 0;
+}
+
+.controls-ListView__multiSelect__circle_style-default {
+   padding-left: calc((var(--offset_xl) - var(--icon-size_2xs)) / 2);
+}
+
+.controls-ListView__multiSelect__circle_style-master {
+   padding-left: calc((calc(var(--offset_xl) - var(--master_item_horizontal-offset_list)) - var(--icon-size_2xs)) / 2);
 }
 
 .controls-ListView__multiSelect__innerCircle_selected-default {
