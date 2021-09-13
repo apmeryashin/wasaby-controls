@@ -46,6 +46,7 @@ interface IViewPanelOptions {
     backgroundStyle: string;
     viewMode: string;
     useStore?: boolean;
+    style?: string;
 }
 
 export default class View extends Control<IViewPanelOptions> {
@@ -60,7 +61,8 @@ export default class View extends Control<IViewPanelOptions> {
         this._viewModel = new ViewModel({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            filterViewMode: options.viewMode
+            filterViewMode: options.viewMode,
+            style: options.style
         });
     }
 
@@ -74,7 +76,8 @@ export default class View extends Control<IViewPanelOptions> {
         this._viewModel.update({
             source: options.source,
             collapsedGroups: options.collapsedGroups,
-            filterViewMode: options.viewMode
+            filterViewMode: options.viewMode,
+            style: options.style
         });
     }
 
