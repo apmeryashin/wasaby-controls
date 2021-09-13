@@ -43,13 +43,16 @@
                  attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}
                           controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
             <ws:itemTemplate>
-               <ws:partial template="Controls/propertyGrid:ItemTemplate" attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate"/>
+               <ws:partial template="Controls/propertyGrid:ItemTemplate"
+                           attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
+                                       controls-FilterViewPanel__propertyGrid_itemTemplate_style-{{_options.style}}"/>
             </ws:itemTemplate>
             <ws:groupTemplate>
                <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate"
                            scope="{{groupTemplate}}"
                            viewMode="{{_options.viewMode}}"
                            resetCaption="{{_resetCaption}}"
+                           style="{{_options.style}}"
                            groupItems="{{_viewModel.getGroupItems()}}"/>
             </ws:groupTemplate>
          </Controls.propertyGrid:PropertyGrid>

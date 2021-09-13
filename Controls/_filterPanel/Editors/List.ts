@@ -78,6 +78,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _navigation: INavigationOptionValue<unknown> = null;
     protected _editorTarget: HTMLElement | EventTarget;
     private _itemsReadyCallback: Function = null;
+    private _checkBoxRadius: number = 4;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
