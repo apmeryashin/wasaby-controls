@@ -56,8 +56,8 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
     }
 
     /**
-     * Возвращает ключи перетаскиваемых записей.
-     * Добавляет в draggedKeys ключи детей перетаскиваемых узлов.
+     * Получаем ключи перетаскиваемых записей, включая детей всех перетаскиваемых узлов.
+     * Это нужно для того, чтобы скрыть все перетаскиваемый записи(за исключение draggableItem)
      * @param {CrudEntityKey[]} selectedKeys Ключи выбранных записей
      */
     getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[] {
@@ -75,7 +75,7 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
     }
 
     /**
-     * Получает рекурсивно всех детей переданного элемента коллекции.
+     * Получает рекурсивно всех детей переданного элемента коллекции, чтобы в коллекции скрыть этих детей при ДнД
      * @param parent
      * @private
      */
