@@ -2381,7 +2381,7 @@ describe('Controls/_display/Collection', () => {
             assert.strictEqual(display.getFirst(), display.at(0));
         });
 
-        it('should skip groups', () => {
+        it('should not skip groups', () => {
             const items = [1, 2];
             const list = new List({
                 items
@@ -2391,7 +2391,20 @@ describe('Controls/_display/Collection', () => {
                 group: (item) => item % 2
             });
 
-            assert.strictEqual(display.getFirst(), display.at(1));
+            assert.strictEqual(display.getFirst(), display.at(0));
+        });
+
+        it('should skip groups for editingItems', () => {
+            const items = [1, 2];
+            const list = new List({
+                items
+            });
+            const display = new CollectionDisplay({
+                collection: list,
+                group: (item) => item % 2
+            });
+
+            assert.strictEqual(display.getFirst('[Controls/_display/IEditableCollectionItem]'), display.at(1));
         });
     });
 
