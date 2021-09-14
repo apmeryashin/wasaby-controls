@@ -1017,32 +1017,6 @@ define([
          treeControl.reload();
          assert.deepEqual([2246, 452815, 457244, 471641], treeControl.getViewModel().getExpandedItems());
       });
-      it('Expand all', async function() {
-         const treeControlConfig = {
-            source: new sourceLib.Memory({
-               data: [
-                  { id: 1, type: true, parent: null },
-                  { id: 2, type: true, parent: null },
-                  { id: 11, type: null, parent: 1 }
-               ],
-               keyProperty: 'id'
-            }),
-                columns: [],
-                keyProperty: 'id',
-            parentProperty: 'parent',
-                nodeProperty: 'type',
-                expandedItems: [null]
-         };
-         const treeControl = await correctCreateTreeControlAsync(treeControlConfig);
-         const treeGridViewModel = treeControl.getViewModel();
-
-         assert.deepEqual([null], treeGridViewModel.getExpandedItems());
-         assert.deepEqual([], treeGridViewModel.getCollapsedItems());
-
-         treeGridViewModel.toggleExpanded(treeGridViewModel.at(0));
-         assert.deepEqual([null], treeGridViewModel.getExpandedItems());
-         assert.deepEqual([1], treeGridViewModel.getCollapsedItems());
-      });
 
       it('expandedItems binding 2', async function(){
          const _cfg = {

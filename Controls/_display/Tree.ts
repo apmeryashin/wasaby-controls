@@ -835,6 +835,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
         const diff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedKeys);
 
+        // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
+        const session = this._startUpdateSession();
+
         //region Добавленные ключи нужно развернуть
         if (diff.added[0] === null) {
             this._getItems().forEach((item) => {
@@ -842,20 +845,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                     return;
                 }
 
-                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                item.setExpanded(true);
+                item.setExpanded(true, true);
             });
-
-            // Если diff.added[0] === null, значит все записи развернуты,
-            // последующая обработка не требуется
-            this._expandedItems = [...expandedKeys];
-            return;
         } else {
             diff.added.forEach((id) => {
                 const item = this.getItemBySourceKey(id, false);
                 if (item && item['[Controls/_display/TreeItem]']) {
-                    // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                    item.setExpanded(true);
+                    item.setExpanded(true, true);
                 }
             });
         }
@@ -876,19 +872,22 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                     return;
                 }
 
-                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                item.setExpanded(false);
+                item.setExpanded(false, true);
             });
         } else {
             diff.removed.forEach((id) => {
                 const item = this.getItemBySourceKey(id, false);
                 if (item && item['[Controls/_display/TreeItem]']) {
-                    // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                    item.setExpanded(false);
+                    item.setExpanded(false, true);
                 }
             });
         }
         //endregion
+
+        this._reSort();
+        this._reFilter();
+
+        this._finishUpdateSession(session);
 
         this._expandedItems = [...expandedKeys];
         this._updateEdgeItems();
@@ -901,10 +900,14 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
         // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
         const diff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, collapsedKeys);
+
+        // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
+        const session = this._startUpdateSession();
+
         diff.removed.forEach((it) => {
             const item = this.getItemBySourceKey(it);
             if (item && item['[Controls/_display/TreeItem]']) {
-                item.setExpanded(true);
+                item.setExpanded(true, true);
             }
         });
 
@@ -913,36 +916,17 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item && item['[Controls/_display/TreeItem]']) {
-                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
                 this._collapseChilds(item);
-                item.setExpanded(false);
+                item.setExpanded(false, true);
             }
         });
+
+        this._reSort();
+        this._reFilter();
+
+        this._finishUpdateSession(session);
+
         this._updateEdgeItems();
-    }
-
-    toggleExpanded(item: T): void {
-        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
-        const newExpandedState = !item.isExpanded();
-        const itemKey = item.getContents().getKey();
-        item.setExpanded(newExpandedState);
-
-        if (newExpandedState) {
-            if (!this._expandedItems.includes(itemKey)) {
-                this._expandedItems.push(itemKey);
-            }
-            if (this._collapsedItems.includes(itemKey)) {
-                this._collapsedItems.splice(this._collapsedItems.indexOf(itemKey), 1);
-            }
-        } else {
-            if (this._expandedItems.includes(itemKey)) {
-                this._expandedItems.splice(this._expandedItems.indexOf(itemKey), 1);
-            }
-
-            if (!this._collapsedItems.includes(itemKey)) {
-                this._collapsedItems.push(itemKey);
-            }
-        }
     }
 
     private _collapseChilds(item: T): void {

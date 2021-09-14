@@ -1783,21 +1783,6 @@ describe('Controls/_display/Tree', () => {
             assert.equal(currentVersion, rsTree.getVersion());
         });
 
-        it('toggleItem will not change version for another items', () => {
-            const currentVersions = rsTree.getItems().map((it) => {
-                return {
-                    key: it.getContents().getKey(),
-                    version: it.getVersion()
-                };
-            });
-            rsTree.toggleExpanded(rsTree.getItemBySourceKey(1));
-            currentVersions.forEach((it) => {
-                if (it.key !== 1) {
-                    assert.equal(it.version, rsTree.getItemBySourceKey(it.key).getVersion());
-                }
-            });
-        });
-
         it('setCollapsedItems collapse childs', () => {
             rsTree.setExpandedItems([null]);
             assert.isTrue(rsTree.getItemBySourceKey(1).isExpanded());
@@ -2509,8 +2494,8 @@ describe('Controls/_display/Tree', () => {
             // вернули узел 1
             tree.setExpandedItems([2]);
 
-            // Должно быть только 2 события: узел свернулся, дети и футер удалились
-            assert.equal(onCollectionChange.args.length, 2);
+            // Должно быть только 1 событие: дети и футер удалились
+            assert.equal(onCollectionChange.args.length, 1);
 
             // берем аргументы события удаления узла
             let args = onCollectionChange.args[0] as Array<[]|string>;
@@ -2524,8 +2509,8 @@ describe('Controls/_display/Tree', () => {
             // развернули узел 1
             tree.setExpandedItems([1, 2]);
 
-            // Должно быть только 2 события: узел развернулся, дети и футер добавились
-            assert.equal(onCollectionChange.args.length, 2);
+            // Должно быть только 1 событие: дети и футер добавились
+            assert.equal(onCollectionChange.args.length, 1);
 
             // берем аргументы события удаления узла
             args = onCollectionChange.args[0];
