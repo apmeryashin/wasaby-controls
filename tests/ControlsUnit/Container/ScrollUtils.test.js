@@ -1,10 +1,9 @@
 define(
    [
       'Env/Env',
-      'Controls/_scroll/Scroll/ScrollWidthUtil',
       'Controls/_scroll/Scroll/ScrollHeightFixUtil'
    ],
-   function(Env, ScrollWidthUtil, ScrollHeightFixUtil) {
+   function(Env, ScrollHeightFixUtil) {
 
       'use strict';
 
@@ -23,7 +22,7 @@ define(
          oldEnvValue;
 
       describe('Controls.Container.Scroll.Utils', function() {
-         var detection, result;
+         let result;
 
          describe('calcOverflow', function() {
             var container;
@@ -59,29 +58,6 @@ define(
                   assert.equal(result, undefined);
                }
                restoreEnv('firefox');
-            });
-
-            it('calcStyleHideScrollbar', () => {
-               result = ScrollWidthUtil._private.calcStyleHideScrollbar(0, {}, {});
-               assert.equal(result, '');
-
-               result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'vertical', {}, {});
-               assert.equal(result, 'margin-right: -17px;');
-
-               result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'verticalHorizontal', {}, {});
-               assert.equal(result, 'margin-right: -17px;margin-bottom: -17px;');
-            });
-            it('calcStyleHideScrollbar with cached value', function() {
-               ScrollWidthUtil._private.styleHideScrollbar.vertical = 'margin-right: -17px;';
-               ScrollWidthUtil._private.styleHideScrollbar.verticalHorizontal = 'margin-right: -17px;margin-bottom: -17px;';
-
-               result = ScrollWidthUtil.calcStyleHideScrollbar('vertical');
-               assert.equal(result, 'margin-right: -17px;');
-               result = ScrollWidthUtil.calcStyleHideScrollbar('verticalHorizontal');
-               assert.equal(result, 'margin-right: -17px;margin-bottom: -17px;');
-
-               ScrollWidthUtil._private.styleHideScrollbar.vertical = null;
-               ScrollWidthUtil._private.styleHideScrollbar.verticalHorizontal = null;
             });
          });
       });

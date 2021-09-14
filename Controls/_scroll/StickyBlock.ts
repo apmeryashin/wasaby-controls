@@ -184,10 +184,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         return this._index;
     }
 
-    get model(): object {
-        return this._model;
-    }
-
     constructor(cfg: IStickyHeaderOptions, context?: object) {
         super(cfg, context);
         this._observeHandler = this._observeHandler.bind(this);
@@ -860,9 +856,12 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     // Необходимость в "фейковом" событии fixed описана в интерфейсе IFixedEventData (scroll/StickyBlock/Utils.ts)
     fakeFixedNotifier(isFixed: boolean): void {
-        const newPosition = isFixed ? this._model.fixedPosition : '';
-        const prevPosition = isFixed ? '' : this._model.fixedPosition;
-        this._fixedNotifier(newPosition, prevPosition, true);
+        // Модели может не быть, значит заголовок только что создан.
+        if (this._model) {
+            const newPosition = isFixed ? this._model.fixedPosition : '';
+            const prevPosition = isFixed ? '' : this._model.fixedPosition;
+            this._fixedNotifier(newPosition, prevPosition, true);
+        }
     }
 
     protected updateShadowVisible(ids: number[], needFakeFixedNotify: boolean = true): void {
@@ -932,16 +931,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
         const shadowEnabled: boolean = this._isShadowVisibleByScrollState(shadowPosition);
 
-        let modelFixedPosition;
-        if (this._model) {
-            modelFixedPosition = this._model.fixedPosition;
-            if (this.group) {
-                modelFixedPosition = this.group.getFixedGroupPosition();
-            }
-        }
-
         return !!(shadowEnabled &&
-            ((this._model && modelFixedPosition === fixedPosition) || (!this._model && this._isStickyShadowVisible)) &&
+            ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isStickyShadowVisible)) &&
             (shadowVisibility === SHADOW_VISIBILITY.visible ||
                 shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
                 shadowVisibility === SHADOW_VISIBILITY.initial) &&

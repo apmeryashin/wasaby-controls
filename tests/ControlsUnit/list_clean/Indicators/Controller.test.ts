@@ -2,6 +2,7 @@ import {assert} from 'chai';
 import {spy} from 'sinon';
 import {Collection, EIndicatorState} from 'Controls/display';
 import IndicatorsController, {IIndicatorsControllerOptions} from 'Controls/_baseList/Controllers/IndicatorsController';
+import sinon = require('sinon');
 import {RecordSet} from 'Types/collection';
 
 function initTest(
@@ -27,6 +28,16 @@ function initTest(
 }
 
 describe('Controls/list_clean/Indicators/Controller', () => {
+    let fakeTimer;
+
+    beforeEach(() => {
+        fakeTimer = sinon.useFakeTimers();
+    });
+
+    afterEach(() => {
+        fakeTimer.restore();
+    });
+
     describe('updateOptions', () => {
         it('changed items', () => {
             const {collection, controller} = initTest([{id: 1}], {});
@@ -159,9 +170,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionReset();
@@ -174,9 +183,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             const {collection, controller} = initTest([{id: 1}], {});
             controller.startDisplayPortionedSearch('bottom');
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             const changedResetTrigger = controller.onCollectionReset();
@@ -195,9 +202,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -231,9 +236,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionAdd();
@@ -253,9 +256,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -282,9 +283,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -320,9 +319,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -346,9 +343,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.displayGlobalIndicator(0);
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
 
             // олжно вернуть false, т.к. индикатор отображен
             assert.isTrue(controller.shouldHideGlobalIndicator());
@@ -376,9 +371,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.displayGlobalIndicator(0);
             // ждем пока отобразится индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.hideGlobalIndicator();
@@ -395,9 +388,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.hideGlobalIndicator(); // прерываем таймер
 
             // дожидается 2с и убеждаемся что индикатор так и не показался
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры

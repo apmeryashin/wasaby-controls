@@ -133,6 +133,10 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
         // for override
     }
 
+    getValue() {
+        // for override
+    }
+
     private _executeCommand(options): Promise<unknown> {
         if (this.commandName) {
             const commandOptions = this._getCommandOptions(options);
@@ -192,10 +196,16 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     }
 
     getState(): IToolBarItem {
-        const config = {id: this.id};
+        const config: IToolBarItem = {id: this.id};
         TOOLBAR_PROPS.forEach((prop) => {
             config[prop] = this[prop];
         });
+        const value = this.getValue();
+        if (value !== undefined) {
+            config.menuOptions = {
+                selectedKeys: value instanceof Array ? value : [value]
+            };
+        }
         return config;
     }
 

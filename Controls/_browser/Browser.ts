@@ -28,7 +28,7 @@ import {ErrorViewMode, ErrorViewConfig} from 'Controls/error';
 import Store from 'Controls/Store';
 import {SHADOW_VISIBILITY} from 'Controls/scroll';
 import {detection} from 'Env/Env';
-import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryWhereExpression} from 'Types/source';
+import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryWhereExpression, QueryOrderSelector} from 'Types/source';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
@@ -44,18 +44,19 @@ type Key = string|number|null;
 
 type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
-interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
+export interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
     Required<IFilterOptions>, Required<IHierarchyOptions>, IHierarchySearchOptions,
     IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions {
-    searchNavigationMode: string;
-    groupHistoryId: string;
-    searchValue: string;
-    filterButtonSource: IFilterItem[];
+    searchNavigationMode?: string;
+    groupHistoryId?: string;
+    searchValue?: string;
+    filterButtonSource?: IFilterItem[];
     useStore?: boolean;
     dataLoadCallback?: Function;
     dataLoadErrback?: Function;
-    viewMode: TViewMode;
+    viewMode?: TViewMode;
     root?: Key;
+    sorting?: QueryOrderSelector;
     fastFilterSource?: unknown;
     historyItems?: IFilterItem[];
     sourceController?: SourceController;
@@ -380,6 +381,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (options.sourceController !== newOptions.sourceController) {
             this._dataLoader.setSourceController(id, newOptions.sourceController);
             this._subscribeOnRootChanged();
+            this._subscribeOnSortingChanged();
         }
 
         if (sourceChanged) {
@@ -547,11 +549,18 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _setItemsAndUpdateContext(): void {
         this._updateItemsOnState();
         this._subscribeOnRootChanged();
+        this._subscribeOnSortingChanged();
         this._updateContext();
     }
 
     private _subscribeOnRootChanged(): void {
-        this._getSourceController().subscribe('rootChanged', this._rootChanged.bind(this));
+        this._dataLoader.each((config, id) => {
+            this._getSourceController(id).subscribe('rootChanged', this._rootChanged.bind(this));
+        });
+    }
+
+    private _subscribeOnSortingChanged(): void {
+        this._getSourceController().subscribe('sortingChanged', this._sortingChanged.bind(this));
     }
 
     private _updateItemsOnState(): void {
@@ -651,6 +660,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         } else {
             this._root = root;
         }
+    }
+
+    protected _sortingChanged(event: SyntheticEvent, sorting: Key, id?: string): void {
+        this._notify('sortingChanged', [sorting, id]);
     }
 
     protected _getListOptionsById(id: string): IBrowserOptions {
@@ -826,7 +839,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
             dataLoadErrback: this._dataLoadErrback,
             dataLoadCallback: this._dataLoadCallback,
-            root
+            root,
+            sorting: options.sorting
         };
     }
 

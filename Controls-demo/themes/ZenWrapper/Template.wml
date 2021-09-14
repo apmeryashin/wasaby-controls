@@ -10,7 +10,7 @@
     <div class="controlsDemo__wrapper controlsDemo_zen_light">
         <div class="controlsDemo__cell controlsDemo_fixedWidth500">
             <div class="controls-text-label">Light</div>
-            <Controls.themes:ZenWrapper brightness="light" complementaryColor="178, 35, 35" dominantColor="255, 255, 255">
+            <Controls.themes:ZenWrapper brightness="light" complementaryColor="#b22323" dominantColor="#fff">
                 <ws:partial template="Controls-demo/themes/ZenWrapper/resources/themedContent" />
             </Controls.themes:ZenWrapper>
         </div>

@@ -360,7 +360,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                     caption: item.get('title'),
                     iconSize: item.get('iconSize'),
                     iconStyle: item.get('iconStyle') || options.iconStyle
-                }
+                },
+                ...item.get('menuOptions')
             }
         };
     }

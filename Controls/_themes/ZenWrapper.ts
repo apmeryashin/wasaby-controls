@@ -1,6 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_themes/ZenWrapper/Template';
 import {IRgbColor} from 'Controls/_themes/interface/IColor';
+import {toRgb} from 'Controls/Utils/colorUtil';
 
 type TBrightness = 'dark' | 'light';
 
@@ -38,15 +39,16 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
     }
 
     static calculateRGB(color: string): IRgbColor {
-        if (/(\d+),\s*(\d+),\s*(\d+)/.test(color)) {
-            return {
-                r: parseInt(RegExp.$1, 10),
-                g: parseInt(RegExp.$2, 10),
-                b: parseInt(RegExp.$3, 10)
-            };
-        } else {
-            return { r: 255, g: 255, b: 255 };
+        let preparedColor = color;
+        if (/^(\d+),\s*(\d+),\s*(\d+)$/.test(color)) {
+            preparedColor = 'rgb(' + color + ')';
         }
+        const calculatedRGB = toRgb(preparedColor);
+        return calculatedRGB ? {
+            r: calculatedRGB.r,
+            g: calculatedRGB.g,
+            b: calculatedRGB.b
+        } :  { r: 255, g: 255, b: 255 };
     }
 
     static calculateVariables(dominantRGB: IRgbColor,
@@ -57,13 +59,17 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         const listsVars = ZenWrapper.calculateListsVariables(dominantRGB, complementaryRGB, brightness);
         const headingVars = ZenWrapper.calculateHeadingVariables(dominantRGB, complementaryRGB, brightness);
         const toggleVars = ZenWrapper.calculateToggleVariables(dominantRGB, complementaryRGB, brightness);
+        const inputVars = ZenWrapper.calculateInputVariables(dominantRGB, complementaryRGB, brightness);
         return {
+            '--dominant-color_zen': ZenWrapper.getColor(dominantRGB),
+            '--complementary-color_zen': ZenWrapper.getColor(complementaryRGB),
             ...baseVars,
             ...buttonsVars,
             ...decoratorsVars,
             ...listsVars,
             ...headingVars,
-            ...toggleVars
+            ...toggleVars,
+            ...inputVars
         };
     }
 
@@ -71,8 +77,10 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                                   complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--unaccented_background-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
             '--icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--link_text-color': ZenWrapper.getMonochromeColor(brightness),
             '--unaccented_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--unaccented_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--readonly_color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
@@ -82,7 +90,9 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--primary_border-color': ZenWrapper.getColor(complementaryRGB),
             '--secondary_text-color': ZenWrapper.getMonochromeColor(brightness),
             '--secondary_icon-color': ZenWrapper.getMonochromeColor(brightness),
+            '--link_text-color_inline': ZenWrapper.getMonochromeColor(brightness),
             '--link_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--link_hover_text-color_inline': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--pale_contrast_background-color': brightness === 'light' ?
@@ -90,7 +100,10 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                     ZenWrapper.getColorWithOpacity(dominantRGB, '0.6'),
             '--pale_border-color': 'transparent',
             '--pale_hover_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
-            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB)
+            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
+            '--hover_background-color': brightness === 'dark' ?
+                ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1') :
+                ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.05')
         };
     }
 
@@ -132,9 +145,6 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         return {
             '--node_expander_icon-color_treeGrid': ZenWrapper.getMonochromeColor(brightness),
             '--marker_color_list': ZenWrapper.getColor(complementaryRGB),
-            '--item_hover_background-color_list': brightness === 'dark' ?
-                ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1') :
-                ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.05'),
             '--item_shadow-color_columns': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.15'),
             '--item_hover_shadow-color_columns':  ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.45')
         };
@@ -155,7 +165,25 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                             ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.2') :
                             ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
             '--icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
-            '--hover_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
+            '--hover_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--secondary_contrast_hover_background-color_toggleButton_pushButton':
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.08')
+        };
+    }
+
+    static calculateInputVariables(dominantRGB: IRgbColor,
+                                   complementaryRGB: IRgbColor, brightness: TBrightness): object {
+        const borderTLR = ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1');
+        const borderB = ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3');
+
+        return {
+            '--border-color_inputText': borderTLR,
+            '--border-color_hover_inputText': [borderTLR, borderTLR, borderB, borderTLR].join(' '),
+            '--border-color_focus_inputText': [borderTLR, borderTLR, borderB, borderTLR].join(' '),
+            '--border-contrast-color_inputText': borderTLR,
+            '--border-contrast-color_hover_inputText': [borderTLR, borderTLR, borderB, borderTLR].join(' '),
+            '--border-contrast-color_focus_inputText': [borderTLR, borderTLR, borderB, borderTLR].join(' '),
+            '--placeholder-color_inputText': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.4')
         };
     }
 

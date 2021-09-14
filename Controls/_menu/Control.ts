@@ -854,18 +854,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getRightPadding(options: IMenuControlOptions, items: RecordSet): string {
         let rightSpacing = 'm';
-        if (options.itemAlign !== 'left') {
-            if (!options.itemPadding.right) {
-                if (options.multiSelect) {
-                    rightSpacing = 'menu-multiSelect';
-                } else if (MenuControl._hasNodesAtLevel(items, options)) {
-                    rightSpacing = 'menu-expander';
-                }
-            } else {
-                rightSpacing = options.itemPadding.right;
-                if (options.multiSelect) {
-                    rightSpacing += '-multiSelect';
-                }
+        if (!options.itemPadding.right) {
+            if (options.multiSelect) {
+                rightSpacing = 'menu-multiSelect';
+            } else if (options.itemAlign !== 'left' && MenuControl._hasNodesAtLevel(items, options)) {
+                rightSpacing = 'menu-expander';
+            }
+        } else {
+            rightSpacing = options.itemPadding.right;
+            if (options.multiSelect) {
+                rightSpacing += '-multiSelect';
             }
         }
         return rightSpacing;
@@ -1049,6 +1047,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 itemPadding: null,
                 source,
                 items: isLoadedChildItems ? this._options.items : null,
+                ...item.getContents().get('menuOptions'),
                 subMenuLevel: this._options.subMenuLevel ? this._options.subMenuLevel + 1 : 1,
                 iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
             };

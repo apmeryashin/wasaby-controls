@@ -22,7 +22,6 @@ interface IRawDataElem {
  * @extends UI/Base:Control
  * @author Герасимов А.М.
  * @demo Controls-demo/Container/Enum
- * 
  * @public
  */
 
@@ -37,7 +36,7 @@ interface IRawDataElem {
  * @public
  */ 
 
-class EnumAdapter extends Control {
+class EnumAdapter extends Control<IEnumAdapterOptions> {
 
    protected _template: TemplateFunction = EnumTemplate;
    protected _source: Memory = null;
@@ -50,7 +49,7 @@ class EnumAdapter extends Control {
          arr.push({
             title: item
          });
-      });
+      }, this, true);
       return arr;
    }
 
@@ -80,7 +79,7 @@ class EnumAdapter extends Control {
          this._enum = newOptions.enum;
          this._enumSubscribe(this._enum);
          this._source = this._getSourceFromEnum(newOptions.enum);
-         this._selectedKey = newOptions.enum.getAsValue();
+         this._selectedKey = newOptions.enum.getAsValue(true);
       }
    }
 
@@ -89,7 +88,7 @@ class EnumAdapter extends Control {
          this._enum = newOptions.enum;
          this._enumSubscribe(this._enum);
          this._source = this._getSourceFromEnum(newOptions.enum);
-         this._selectedKey = newOptions.enum.getAsValue();
+         this._selectedKey = newOptions.enum.getAsValue(true);
       }
    }
 
@@ -109,10 +108,16 @@ class EnumAdapter extends Control {
          resultKey = key;
       }
       if (this._enum) {
-         this._enum.setByValue(resultKey);
+         this._enum.setByValue(resultKey, true);
       }
    }
 
 }
 
 export default EnumAdapter;
+
+/**
+ * @name Controls/_source/Adapter/Enum#enum
+ * @cfg {Types/collection:Enum} Перечисляемая коллекция ключей и значений, один из которых может быть выбран или нет.
+ * @see Types/collection:Enum
+ */
