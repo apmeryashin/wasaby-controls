@@ -26,7 +26,7 @@ describe('Controls/scroll:Container', () => {
         it('should initialize by default', () => {
             const component = createComponent(Container, {});
 
-            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
+            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hideNativeScrollbar_ff-ie-edge controls-Scroll-ContainerBase__scroll_vertical');
         });
     });
 
@@ -236,7 +236,7 @@ describe('Controls/scroll:Container', () => {
                 }
             };
             component._updateState(state);
-            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
+            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hideNativeScrollbar_ff-ie-edge controls-Scroll-ContainerBase__scroll_vertical');
         });
         it('should update _scrollCssClass, scrollOrientation: "verticalHorizontal"', () => { // controls-Scroll-ContainerBase__scroll_vertical
             const component = createComponent(Container, {scrollOrientation: 'verticalHorizontal'});
@@ -258,7 +258,7 @@ describe('Controls/scroll:Container', () => {
                 }
             };
             component._updateState(state);
-            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_verticalHorizontal');
+            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hideNativeScrollbar_ff-ie-edge controls-Scroll-ContainerBase__scroll_verticalHorizontal');
         });
 
         describe('shadows', () => {
