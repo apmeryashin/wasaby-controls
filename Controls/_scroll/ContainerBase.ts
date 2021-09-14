@@ -478,6 +478,13 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
      * Прокручивает к верху контейнера.
      * @name Controls/_scroll/Container#scrollToTop
      * @function
+     * @param {Boolean} smooth - плавная прокрутка, по умолчанию false.
+     * @example
+     * <pre class="brush: js">
+     * _scrollToTop(): void {
+     *    this._children.scrollContainer.scrollToTop(true);
+     * }
+     * </pre>
      * @see scrollToBottom
      * @see scrollToLeft
      * @see scrollToRight
@@ -490,8 +497,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
      * @name Controls/_scroll/Container#scrollToTop
      * @function
      */
-    scrollToTop() {
-        this._setScrollTop(0);
+    scrollToTop(smooth: boolean): void {
+        this._setScrollTop(0, smooth);
     }
 
     /**
@@ -824,7 +831,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             } else if (scrollParam === 'pageDown') {
                 this._setScrollTop(currentScrollTop + clientHeight);
             } else if (typeof scrollParam === 'number') {
-                this._setScrollTop(scrollParam, isVirtual);
+                this._setScrollTop(scrollParam, false, isVirtual);
             }
         }
     }
@@ -1046,8 +1053,28 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    protected _setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
+    private _isScrollSmoothSupported(): boolean {
+        if (detection.chrome || detection.firefox || detection.isIE12) {
+            return true;
+        }
+        return false;
+    }
+
+    private _scrollTo(scrollTop: number, smoothSrc: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
+        const smooth = smoothSrc && this._isScrollSmoothSupported();
+
+        if (smooth) {
+            scrollContainer.scrollTo({
+                top: scrollTop,
+                behavior: 'smooth'
+            });
+        } else {
+            scrollContainer.scrollTop = scrollTop;
+        }
+    }
+
+    protected _setScrollTop(scrollTop: number, smooth: boolean = false, withoutPlaceholder?: boolean): void {
         if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
             const scrollState: IScrollState = this._scrollModel;
             const cachedScrollTop = scrollTop;
@@ -1057,10 +1084,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
                 // нужный scrollTop будет отличным от realScrollTop, если изменился _topPlaceholderSize.
                 // Вычисляем его по месту
-                scrollContainer.scrollTop = cachedScrollTop - this._topPlaceholderSize;
+                this._scrollTo(cachedScrollTop - this._topPlaceholderSize, smooth);
             };
             if (realScrollTop >= 0 && !scrollTopOverflow) {
-                scrollContainer.scrollTop = realScrollTop;
+                this._scrollTo(realScrollTop, smooth);
             } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow
                 && this._bottomPlaceholderSize === 0) {
                 applyScrollTop();
@@ -1083,7 +1110,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                     });
             }
         } else {
-            scrollContainer.scrollTop = scrollTop;
+            this._scrollTo(scrollTop, smooth);
             this._updateStateAndGenerateEvents({
                 scrollTop
             });
@@ -1124,7 +1151,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference - correctingHeight :
             this._savedScrollTop - heightDifference + correctingHeight;
 
-        this._setScrollTop(newPosition, true);
+        this._setScrollTop(newPosition, false, true);
     }
 
     _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {

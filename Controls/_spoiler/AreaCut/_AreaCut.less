@@ -11,7 +11,7 @@
    z-index: 1;
    width: 100%;
    position: absolute;
-   height: var(--shadow_thickness_AreaCut);
+   height: 5px;
 }
 
 .controls-AreaCut__shadow_background-default {
@@ -27,7 +27,7 @@
       content: "";
       position: absolute;
       left: 0;
-      height: var(--separator_thickness_AreaCut);
+      height: var(--border-thickness);    // это выводится вместо бордера поля ввода, значит можно сослать на бордер
       background: var(--border-color);
    }
 
@@ -35,18 +35,18 @@
       content: "";
       position: absolute;
       right: 0;
-      height: var(--separator_thickness_AreaCut);
+      height: var(--border-thickness);    // это выводится вместо бордера поля ввода, значит можно сослать на бордер
       background: var(--border-color);
    }
 
    .controls-CutButton__container_extended_size-s::before {
       top: calc(var(--icon_collapsed_height_s_BigSeparator) + var(--offset_3xs));
-      width: calc((100% - var(--width_s_BigSeparator)) / 2 - var(--margin-horizontal_s_AreaCut));
+      width: calc((100% - var(--width_s_BigSeparator)) / 2 - var(--offset_s));
    }
 
    .controls-CutButton__container_extended_size-s::after {
       top: calc(var(--icon_collapsed_height_s_BigSeparator) + var(--offset_3xs));
-      width: calc((100% - var(--width_s_BigSeparator)) / 2 - var(--margin-horizontal_s_AreaCut));
+      width: calc((100% - var(--width_s_BigSeparator)) / 2 - var(--offset_s));
    }
 
    .controls-CutButton__container_extended_size-m::before {
@@ -61,12 +61,12 @@
 
    .controls-CutButton__container_extended_size-l::before {
       top: calc(var(--icon_collapsed_height_l_BigSeparator) + var(--offset_xs));
-      width: calc((100% - var(--width_l_BigSeparator)) / 2 - var(--margin-horizontal_l_AreaCut));
+      width: calc((100% - var(--width_l_BigSeparator)) / 2 - var(--offset_m));
    }
 
    .controls-CutButton__container_extended_size-l::after {
       top: calc(var(--icon_collapsed_height_l_BigSeparator) + var(--offset_xs));
-      width: calc((100% - var(--width_l_BigSeparator)) / 2 - var(--margin-horizontal_l_AreaCut));
+      width: calc((100% - var(--width_l_BigSeparator)) / 2 - var(--offset_m));
    }
 }
 
