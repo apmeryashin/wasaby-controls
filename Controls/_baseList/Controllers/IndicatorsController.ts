@@ -615,11 +615,12 @@ export default class IndicatorsController {
     }
 
     /**
-     * Нужно ли перезапустить таймер для показа индикатора порционного поиска
+     * Нужно ли перезапустить таймер для показа индикатора порционного поиска.
      * Перезапускаем, только если порционный поиск был начат, таймер запущен и еще не выполнился
+     * и были подгруженны данные.
      */
-    shouldResetDisplayPortionedSearchTimer(): boolean {
-        return this.isDisplayedPortionedSearch() && !!this._displayIndicatorTimer;
+    shouldResetDisplayPortionedSearchTimer(loadedItems: RecordSet): boolean {
+        return loadedItems.getCount() && this.isDisplayedPortionedSearch() && !!this._displayIndicatorTimer;
     }
 
     /**
