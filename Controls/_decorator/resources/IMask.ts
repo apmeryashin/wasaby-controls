@@ -114,7 +114,7 @@ export interface IMaskOptions {
     /**
      * @name Controls/_decorator/resources/IMask#formatMaskChars
      * @cfg {Object} Объект, где ключи — символы маски, а значения — регулярные выражения, которые будут использоваться для фильтрации вводимых символов для соответствующих ключей.
-     *
+     * @demo Controls-demo/Input/Masks/FormatMaskChars/Index
      * @example
      * <pre class="brush: js">
      * // JavaScript
