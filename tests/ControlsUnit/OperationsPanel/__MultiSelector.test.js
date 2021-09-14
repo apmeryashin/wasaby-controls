@@ -338,7 +338,7 @@ define([
 
          it('_getCount returns promise<count>', () => {
             return new Promise((resolve) => {
-               instance._getCount(selection, null, selectionCountConfig).then((count) => {
+               instance._getCount(selection, null, { selectedCountConfig: selectionCountConfig }).then((count) => {
                   assert.equal(count, testSelectedItemsCount);
                   resolve();
                });
@@ -347,28 +347,28 @@ define([
 
          it('promise is canceled on second getCount call', () => {
             let isCountPromiseCanceled = false;
-            instance._getCount(selection, null, selectionCountConfig);
+            instance._getCount(selection, null, { selectedCountConfig: selectionCountConfig });
             instance._countPromise.cancel = () => {
                isCountPromiseCanceled = true;
             };
-            instance._getCount(selection, null, selectionCountConfig);
+            instance._getCount(selection, null, { selectedCountConfig: selectionCountConfig });
             assert.isTrue(isCountPromiseCanceled);
          });
 
          it('promise is canceled and reset', () => {
             let isCountPromiseCanceled = false;
-            instance._getCount(selection, null, selectionCountConfig);
+            instance._getCount(selection, null, { selectedCountConfig: selectionCountConfig });
             instance._countPromise.cancel = () => {
                isCountPromiseCanceled = true;
             };
-            instance._getCount(selection, 6, selectionCountConfig);
+            instance._getCount(selection, 6, { selectedCountConfig: selectionCountConfig });
             assert.isTrue(isCountPromiseCanceled);
             assert.isNull(instance._countPromise);
          });
 
          it('promise is canceled on _beforeUnmount', () => {
             let isCountPromiseCanceled = false;
-            instance._getCount(selection, null, selectionCountConfig);
+            instance._getCount(selection, null, { selectedCountConfig: selectionCountConfig });
             instance._countPromise.cancel = () => {
                isCountPromiseCanceled = true;
             };

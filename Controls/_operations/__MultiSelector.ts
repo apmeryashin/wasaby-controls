@@ -94,6 +94,7 @@ export interface IMultiSelectorOptions extends IControlOptions {
    isAllSelected?: boolean;
    selectionViewMode?: 'all'|'selected'|'partial';
    selectedCountConfig?: IGetCountCallParams;
+   parentProperty?: string;
 }
 
 /**
@@ -189,7 +190,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
          this._menuCaption = this._getMenuCaption(selection, count, isAllSelected);
          this._sizeChanged = true;
       };
-      const getCountResult = this._getCount(selection, count, options.selectedCountConfig);
+      const getCountResult = this._getCount(selection, count, options);
 
       // Если счётчик удаётся посчитать без вызова метода, то надо это делать синхронно,
       // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
@@ -229,14 +230,24 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    private _getCount(
        selection: ISelectionObject,
        count: TCount,
-       selectionCountConfig: IGetCountCallParams
+       {selectedCountConfig, parentProperty}: IMultiSelectorOptions
    ): Promise<TCount>|TCount {
       let countResult;
       this._cancelCountPromise();
-      if (!selectionCountConfig || this._isCorrectCount(count)) {
-         countResult = count === undefined ? selection.selected.length : count;
+      if (!selectedCountConfig || this._isCorrectCount(count)) {
+         const countBySelection = selection.selected.length;
+         if (count === undefined) {
+            // Для иерархических списков нельзя посчитать кол-во отмеченных записей по количеству ключей
+            if (!parentProperty) {
+               countResult = selection.selected.length;
+            } else if (countBySelection) {
+               countResult = null;
+            }
+         } else {
+            countResult = count;
+         }
       } else {
-         countResult = this._getCountBySourceCall(selection, selectionCountConfig);
+         countResult = this._getCountBySourceCall(selection, selectedCountConfig);
       }
       return countResult;
    }
