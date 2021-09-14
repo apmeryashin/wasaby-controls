@@ -143,6 +143,7 @@ export default class HeaderRow extends Row<null> {
                     startColumn: 1,
                     endColumn: 2
                 },
+                backgroundStyle: this._$backgroundStyle,
                 isFixed: true,
                 shadowVisibility: this.getShadowVisibility()
             }));

@@ -48,8 +48,7 @@
                     item="{{_listModel.getTopIndicator()}}"
                     on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
         <!--Top loading trigger-->
-        <tr style="{{ _listModel.getTopLoadingTrigger().getStyles() }}"
-            class="{{ _listModel.getTopLoadingTrigger().getClasses() }}">
+        <tr class="{{ _listModel.getTopLoadingTrigger().getClasses() }}">
             <td colspan="100">
                 <div name="topLoadingTrigger"
                      data-qa="{{ _listModel.getTopLoadingTrigger().getQAData() }}">
@@ -97,8 +96,7 @@
         </ws:if>
 
         <!--Bottom loading trigger-->
-        <tr style="{{ _listModel.getBottomLoadingTrigger().getStyles() }}"
-            class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}">
+        <tr class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}">
             <td colspan="100">
                 <div name="bottomLoadingTrigger"
                      data-qa="{{ _listModel.getBottomLoadingTrigger().getQAData() }}">

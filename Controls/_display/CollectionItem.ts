@@ -807,13 +807,20 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     // когда нигде точно не останется мест использования, надо будет избавиться от этих аргументов.
     // + здесь же, возможно, стоит вызывать описанный ниже метод getItemActionPositionClasses.
     getItemActionClasses(itemActionsPosition: string): string {
-        let itemActionClasses = `controls-itemActionsV_${itemActionsPosition}`;
+        let classes = `controls-itemActionsV_${itemActionsPosition}`;
         const rowSeparatorSize = this.isBottomSeparatorEnabled() && this.getRowSeparatorSize();
         if (itemActionsPosition === 'outside') {
-            itemActionClasses += ' controls-itemActionsV__outside_bottom_size-' +
+            classes += ' controls-itemActionsV__outside_bottom_size-' +
                 (rowSeparatorSize ? rowSeparatorSize : 'default');
+        } else {
+            if (this._$roundBorder) {
+                classes = ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
+                classes += ` controls-itemActionsV_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
+                classes += ` controls-itemActionsV_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
+                classes += ` controls-itemActionsV_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}`;
+            }
         }
-        return itemActionClasses;
+        return classes;
     }
 
     // region RoundBorder

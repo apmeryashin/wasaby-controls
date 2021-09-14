@@ -28,7 +28,7 @@ class PositionParamsCalculator implements IParamsCalculator {
         addParams.meta = {navigationType: QueryNavigationType.Position};
 
         const storeParams = store.getState();
-        addParams.limit = storeParams.limit;
+        addParams.limit = config.limit !== undefined ? config.limit : storeParams.limit;
 
         const queryField = PositionParamsCalculator._resolveField(storeParams.field);
 
@@ -68,7 +68,8 @@ class PositionParamsCalculator implements IParamsCalculator {
         if (paramsCallback) {
             paramsCallback({
                 position: queryPosition,
-                limit: storeParams.limit
+                limit: addParams.limit,
+                direction: queryDirection
             });
         }
         // TODO lastpage

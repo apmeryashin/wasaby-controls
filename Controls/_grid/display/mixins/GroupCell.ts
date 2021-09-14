@@ -64,7 +64,7 @@ export default abstract class GroupCell<T> {
         let classes = '';
         classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
         classes += ` controls-Grid__row-cell_${this.getStyle()}`;
-        classes += ' controls-Grid__row-cell_small_min_height ';
+        classes += ' controls-ListView__group_min_height ';
 
         return classes;
     }

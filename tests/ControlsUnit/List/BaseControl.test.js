@@ -2878,7 +2878,9 @@ define([
             await baseControl._beforeMount(cfg);
             baseControl._children.listView = {
                getTopIndicator: () => null,
-               getBottomIndicator: () => null
+               getBottomIndicator: () => null,
+               getTopLoadingTrigger: () => null,
+               getBottomLoadingTrigger: () => null
             };
             assert.isFalse(isRegistered);
 

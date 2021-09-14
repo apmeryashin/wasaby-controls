@@ -918,6 +918,7 @@ define([
                 },
                 _indicatorsController: {
                    displayGlobalIndicator: () => null,
+                   shouldHideGlobalIndicator: () => null,
                    hideGlobalIndicator: () => null
                 },
                 _displayGlobalIndicator: () => null,

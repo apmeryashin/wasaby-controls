@@ -115,11 +115,15 @@ const _private = {
             self._displayGlobalIndicator();
             return eventResult.then(
                 () => {
-                    self._indicatorsController.hideGlobalIndicator();
+                    if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                        self._indicatorsController.hideGlobalIndicator();
+                    }
                     return _private.doExpand(self, dispItem).then(expandToFirstLeafIfNeed).catch((e) => e);
                 },
                 () => {
-                    self._indicatorsController.hideGlobalIndicator();
+                    if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                        self._indicatorsController.hideGlobalIndicator();
+                    }
                 }
             );
         } else {
@@ -262,7 +266,9 @@ const _private = {
                 return error;
             })
             .finally(() => {
-                self._indicatorsController.hideGlobalIndicator();
+                if (self._indicatorsController.shouldHideGlobalIndicator()) {
+                    self._indicatorsController.hideGlobalIndicator();
+                }
             });
     },
 
@@ -1013,6 +1019,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     protected _afterReloadCallback(options: TOptions, loadedList?: RecordSet) {
         if (this._listViewModel) {
+            // На _beforeUpdate уже поздно обновлять контроллер, т.к. данный метод вызовется
+            // из BaseControl::_beforeUpdate до логики в TreeControl::_beforeUpdate
+            // и он заюзает expandController со старой моделью
+            // TODO удалить после https://online.sbis.ru/opendoc.html?guid=961081b9-a94d-4694-9165-cd56cc843ab2
+            this._expandController.updateOptions({model: this._listViewModel});
+
             const modelRoot = this._listViewModel.getRoot();
             const root = this._options.root !== undefined ? this._options.root : this._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
@@ -1424,16 +1436,18 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return baseSourceController
             .load(undefined, nodeKey)
             .then((list) => {
-                this._indicatorsController.hideGlobalIndicator();
+                if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                    this._indicatorsController.hideGlobalIndicator();
+                }
                 return list as RecordSet;
             })
             .catch((error: Error) => {
                 if (error.isCanceled) {
                     return;
                 }
-
-                this._indicatorsController.hideGlobalIndicator();
-
+                if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                    this._indicatorsController.hideGlobalIndicator();
+                }
                 throw error;
             });
     }

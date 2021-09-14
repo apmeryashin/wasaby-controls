@@ -60,14 +60,15 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
     }
 
     displayIndicator(position: TIndicatorPosition, state: TIndicatorState, topOffset?: number): void {
-        const indicator = this._getIndicator(position);
+        let indicator = this._getIndicator(position);
         if (indicator) {
             const changed = indicator.display(state, topOffset);
             if (changed) {
                 this._nextVersion();
             }
         } else {
-            this._createIndicator(position, state);
+            indicator = this._createIndicator(position, state);
+            indicator.display(state, topOffset);
             this._nextVersion();
         }
     }
@@ -94,7 +95,7 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         return this[indicatorName];
     }
 
-    private _createIndicator(position: TIndicatorPosition, state: TIndicatorState): void {
+    private _createIndicator(position: TIndicatorPosition, state: TIndicatorState): Indicator {
         const indicator = this.createItem({
             itemModule: this._indicatorModule,
             position,
@@ -103,10 +104,11 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
             visible: position === 'global',
             portionedSearchTemplate: this._$portionedSearchTemplate,
             continueSearchTemplate: this._$continueSearchTemplate
-        });
+        }) as unknown as Indicator;
 
         const indicatorName = this._getIndicatorName(position);
         this[indicatorName] = indicator;
+        return indicator;
     }
 
     // endregion Indicator
@@ -119,22 +121,6 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
 
     getBottomLoadingTrigger(): LoadingTrigger {
         return this._getLoadingTrigger('bottom');
-    }
-
-    displayLoadingTopTrigger(): void {
-        const trigger = this._getLoadingTrigger('top');
-        const changed = trigger.display();
-        if (changed) {
-            this._nextVersion();
-        }
-    }
-
-    hideLoadingTopTrigger(): void {
-        const trigger = this._getLoadingTrigger('top');
-        const changed = trigger.hide();
-        if (changed) {
-            this._nextVersion();
-        }
     }
 
     private _getLoadingTriggerName(position: TLoadingTriggerPosition): string {
@@ -153,21 +139,9 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
     }
 
     private _createLoadingTrigger(position: TLoadingTriggerPosition): void {
-        const isTopTrigger = position === 'top';
-        const visible = !isTopTrigger;
-
-        let offset = 0;
-        if (isTopTrigger && this.getTopIndicator().isDisplayed()) {
-            offset = DEFAULT_TOP_TRIGGER_OFFSET;
-        } else if (this.getBottomIndicator().isDisplayed()) {
-            offset = DEFAULT_BOTTOM_TRIGGER_OFFSET;
-        }
-
         const trigger = this.createItem({
             itemModule: this._triggerModule,
-            position,
-            offset,
-            visible
+            position
         });
 
         const triggerName = this._getLoadingTriggerName(position);

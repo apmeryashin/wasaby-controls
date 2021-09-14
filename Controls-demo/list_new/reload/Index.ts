@@ -32,15 +32,9 @@ export default class extends Control {
             });
         };
     }
-    protected _navigationParamsChanged(e, params) {
-        this._paramsForReload = {
-            page: 0,
-            pageSize: (params.page + 1) * params.pageSize
-        };
-    }
     protected _reload() {
         this._reloadsCount++;
-        this._children.list.reload(true, this._paramsForReload);
+        this._children.list.reload(true);
     }
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
