@@ -51,70 +51,72 @@
             <!-- beforeBeginEdit юзают для отмены редактирования узлов, нужна доработка списков
                  beforeEndEdit юзают для кастомной логики сохранения записи, т.к не хотят менять БЛ -->
             <Controls.list:Container id="detail">
-                <Controls.listTemplates:ImageDisplayContainer
-                    scope="{{_detailExplorerOptions}}"
-                    columns="{{_columns}}">
-                    <ws:content>
-                        <Controls.explorer:View
-                                attr:class="controls-newBrowser__detail-list"
-                                afterBreadCrumbsTemplate="{{_options.detail.afterBreadCrumbsTemplate}}"
-                                breadcrumbsVisibility="{{_getDetailBreadCrumbsVisibility(_options.detail)}}"
-                                loading="{{_detailLoading}}"
-                                name="detailList"
-                                searchValue="{{_options.searchValue}}"
-                                tileSize="{{_tileCfg.tileSize}}"
-                                viewMode="{{viewMode}}"
-                                on:actionClick="_notifyHandler('detailActionClick')"
-                                on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
-                                on:afterEndEdit="_notifyHandler('afterEndEdit')"
-                                on:arrowClick="_notifyHandler('detailArrowClick')"
-                                on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-                                on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-                                on:beforeItemsMove="_notifyHandler('detailBeforeItemsMove')"
-                                on:changeDragTarget="_notifyHandler('detailChangeDragTarget')"
-                                on:dragEnd="_notifyHandler('detailDragEnd')"
-                                on:dragEnter="_notifyHandler('detailDragEnter')"
-                                on:dragLeave="_notifyHandler('detailDragLeave')"
-                                on:dragMove="_notifyHandler('detailDragMove')"
-                                on:dragStart="_notifyHandler('detailDragStart')"
-                                on:drawItems="_notifyHandler('drawItems')"
-                                on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
-                                on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
-                                on:itemClick="_onExplorerItemClick(false)"
-                                on:itemMouseDown="_notifyHandler('detailItemMouseDown')"
-                                on:viewModeChanged="_onDetailExplorerChangedViewMode()"
-                        />
-                    </ws:content>
-                    <ws:itemTemplate>
-                        <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
-                        <ws:if data="{{_appliedViewMode === _viewModeEnum.table || _appliedViewMode === _viewModeEnum.search}}">
-                            <Controls.treeGrid:ItemTemplate
-                                    scope="{{itemTemplate}}"
-                                    listConfiguration="{{_listConfiguration}}"
+                <Controls.list:HotKeysContainer>
+                    <Controls.listTemplates:ImageDisplayContainer
+                        scope="{{_detailExplorerOptions}}"
+                        columns="{{_columns}}">
+                        <ws:content>
+                            <Controls.explorer:View
+                                    attr:class="controls-newBrowser__detail-list"
+                                    afterBreadCrumbsTemplate="{{_options.detail.afterBreadCrumbsTemplate}}"
+                                    breadcrumbsVisibility="{{_getDetailBreadCrumbsVisibility(_options.detail)}}"
+                                    loading="{{_detailLoading}}"
+                                    name="detailList"
+                                    searchValue="{{_options.searchValue}}"
+                                    tileSize="{{_tileCfg.tileSize}}"
+                                    viewMode="{{viewMode}}"
+                                    on:actionClick="_notifyHandler('detailActionClick')"
+                                    on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+                                    on:afterEndEdit="_notifyHandler('afterEndEdit')"
+                                    on:arrowClick="_notifyHandler('detailArrowClick')"
+                                    on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+                                    on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+                                    on:beforeItemsMove="_notifyHandler('detailBeforeItemsMove')"
+                                    on:changeDragTarget="_notifyHandler('detailChangeDragTarget')"
+                                    on:dragEnd="_notifyHandler('detailDragEnd')"
+                                    on:dragEnter="_notifyHandler('detailDragEnter')"
+                                    on:dragLeave="_notifyHandler('detailDragLeave')"
+                                    on:dragMove="_notifyHandler('detailDragMove')"
+                                    on:dragStart="_notifyHandler('detailDragStart')"
+                                    on:drawItems="_notifyHandler('drawItems')"
+                                    on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+                                    on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                                    on:itemClick="_onExplorerItemClick(false)"
+                                    on:itemMouseDown="_notifyHandler('detailItemMouseDown')"
+                                    on:viewModeChanged="_onDetailExplorerChangedViewMode()"
                             />
-                        </ws:if>
-                        <ws:else>
+                        </ws:content>
+                        <ws:itemTemplate>
+                            <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
+                            <ws:if data="{{_appliedViewMode === _viewModeEnum.table || _appliedViewMode === _viewModeEnum.search}}">
+                                <Controls.treeGrid:ItemTemplate
+                                        scope="{{itemTemplate}}"
+                                        listConfiguration="{{_listConfiguration}}"
+                                />
+                            </ws:if>
+                            <ws:else>
+                                <ws:partial
+                                        scope="{{tileItemTemplate}}"
+                                        template="{{_detailExplorerOptions.tileItemTemplate || _options.detail.tileItemTemplate || _defaultTileItemTemplate}}"
+                                        listConfiguration="{{_listConfiguration}}"
+                                        imageViewMode="{{itemTemplate.imageViewMode}}"
+                                        imagePosition="{{itemTemplate.imagePosition}}"
+                                        listCfg="{{_listCfg}}"
+                                />
+                            </ws:else>
+                        </ws:itemTemplate>
+                        <ws:tileItemTemplate>
                             <ws:partial
-                                    scope="{{itemTemplate}}"
-                                    template="{{_detailExplorerOptions.itemTemplate || _options.detail.itemTemplate || _defaultListItemTemplate}}"
+                                    scope="{{tileItemTemplate}}"
+                                    template="{{_detailExplorerOptions.tileItemTemplate || _options.detail.tileItemTemplate || _defaultTileItemTemplate}}"
                                     listConfiguration="{{_listConfiguration}}"
-                                    imageViewMode="{{itemTemplate.imageViewMode}}"
-                                    imagePosition="{{itemTemplate.imagePosition}}"
-                                    listCfg="{{_listCfg}}"
+                                    imageViewMode="{{tileItemTemplate.imageViewMode}}"
+                                    imagePosition="{{tileItemTemplate.imagePosition}}"
+                                    tileCfg="{{_tileCfg}}"
                             />
-                        </ws:else>
-                    </ws:itemTemplate>
-                    <ws:tileItemTemplate>
-                        <ws:partial
-                                scope="{{tileItemTemplate}}"
-                                template="{{_detailExplorerOptions.tileItemTemplate || _options.detail.tileItemTemplate || _defaultTileItemTemplate}}"
-                                listConfiguration="{{_listConfiguration}}"
-                                imageViewMode="{{tileItemTemplate.imageViewMode}}"
-                                imagePosition="{{tileItemTemplate.imagePosition}}"
-                                tileCfg="{{_tileCfg}}"
-                        />
-                    </ws:tileItemTemplate>
-                </Controls.listTemplates:ImageDisplayContainer>
+                        </ws:tileItemTemplate>
+                    </Controls.listTemplates:ImageDisplayContainer>
+                </Controls.list:HotKeysContainer>
             </Controls.list:Container>
         </ws:else>
         <ws:if data="{{_options.detailFooterTemplate}}">
@@ -147,9 +149,11 @@
 
     <ws:detail>
         <ws:if data="{{_options.wrapDetailInScroll}}">
-            <Controls.scroll:Container attr:class="controls-newBrowser__scroll">
-                <ws:partial template="detailTemplate"/>
-            </Controls.scroll:Container>
+            <Controls.scroll:HotKeysContainer>
+                <Controls.scroll:Container attr:class="controls-newBrowser__scroll">
+                    <ws:partial template="detailTemplate"/>
+                </Controls.scroll:Container>
+            </Controls.scroll:HotKeysContainer>
         </ws:if>
         <ws:else>
             <ws:partial template="detailTemplate"/>

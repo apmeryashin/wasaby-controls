@@ -14,6 +14,7 @@ export interface ISlidingPanelItem extends IPopupItem {
     dragStartHeight: number;
     dragOffset: IDragOffset;
     previousSizes: IPopupSizes;
+    heightForRestoreAfterResize: number;
 }
 
 export enum ResizeType {

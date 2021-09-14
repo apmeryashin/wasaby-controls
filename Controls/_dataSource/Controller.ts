@@ -248,6 +248,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
 
     private _parentProperty: string;
     private _root: TKey = null;
+    private _sorting: QueryOrderSelector = null;
     private _hierarchyRelation: relation.Hierarchy;
 
     private _expandedItems: TKey[];
@@ -267,6 +268,9 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
 
         if (cfg.root !== undefined) {
             this._setRoot(cfg.root);
+        }
+        if (cfg.sorting !== undefined) {
+            this._setSorting(cfg.sorting);
         }
         if (cfg.dataLoadCallback !== undefined) {
             this._setDataLoadCallbackFromOptions(cfg.dataLoadCallback);
@@ -393,7 +397,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     }
 
     getSorting(): unknown {
-        return this._options.sorting;
+        return this._sorting;
     }
 
     setNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): void {
@@ -422,6 +426,19 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     }
 
     /**
+     * Устанавливает сортировку
+     * @param {QueryOrderSelector} sorting
+     */
+    setSorting(sorting: QueryOrderSelector): void {
+        const currentSorting = this.getSorting();
+
+        if (sorting !== currentSorting) {
+            this._setSorting(sorting);
+            this._notify('sortingChanged', sorting);
+        }
+    }
+
+    /**
      * Возвращает узел, относительно которого будет производиться выборка данных списочным методом
      * @return {string|number} Идентификатор корня.
      */
@@ -436,16 +453,12 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     }
 
     updateOptions(newOptions: IControllerOptions): boolean {
-        const isFilterChanged =
-            !isEqual(newOptions.filter, this._options.filter) &&
-            !isEqual(newOptions.filter, this._filter);
+        const isFilterChanged = this._isOptionChanged('filter', newOptions);
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
-        const rootChanged =
-            newOptions.root !== undefined &&
-            newOptions.root !== this._options.root &&
-            newOptions.root !== this._root;
-        const isExpadedItemsChanged = !isEqual(this._options.expandedItems, newOptions.expandedItems);
+        const rootChanged = this._isOptionChanged('root', newOptions);
+        const sortingChanged = this._isOptionChanged('sorting', newOptions);
+        const isExpandedItemsChanged = !isEqual(this._options.expandedItems, newOptions.expandedItems);
         const dataLoadCallbackChanged =
             newOptions.dataLoadCallback !== undefined &&
             newOptions.dataLoadCallback !== this._options.dataLoadCallback;
@@ -467,11 +480,15 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             this.setRoot(newOptions.root);
         }
 
+        if (sortingChanged) {
+            this.setSorting(newOptions.sorting);
+        }
+
         if (dataLoadCallbackChanged) {
             this._setDataLoadCallbackFromOptions(newOptions.dataLoadCallback);
         }
 
-        if (newOptions.expandedItems !== undefined && isExpadedItemsChanged) {
+        if (newOptions.expandedItems !== undefined && isExpandedItemsChanged) {
             this.setExpandedItems(newOptions.expandedItems);
         }
 
@@ -499,7 +516,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             (this._parentProperty && rootChanged);
 
         const resetExpandedItemsOnDeepReload = newOptions.deepReload && !rootChanged;
-        if (isChanged && !(isExpadedItemsChanged || resetExpandedItemsOnDeepReload || this.isExpandAll())) {
+        if (isChanged && !(isExpandedItemsChanged || resetExpandedItemsOnDeepReload || this.isExpandAll())) {
             this.setExpandedItems([]);
         }
         this._options = newOptions;
@@ -670,6 +687,10 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
 
     private _setRoot(key: TKey): void {
         this._root = key;
+    }
+
+    private _setSorting(sorting: QueryOrderSelector): void {
+        this._sorting = sorting?.slice();
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
@@ -1205,6 +1226,12 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         groupUtil.restoreCollapsedGroups(groupHistoryId).then((restoredCollapsedGroups: TArrayGroupId) => {
             this._collapsedGroups = restoredCollapsedGroups || collapsedGroups;
         });
+    }
+
+    private _isOptionChanged(propertyName: string, newOptions: IControllerOptions): boolean {
+        return newOptions[propertyName] !== undefined &&
+            newOptions[propertyName] !== this._options[propertyName] &&
+            newOptions[propertyName] !== this[`_${propertyName}`];
     }
 
     private static _getSource(source: ICrud | ICrudPlus | PrefetchProxy): IData & ICrud {

@@ -6,7 +6,6 @@
             attr:class="controlsDemo_fixedWidth500 controlsDemo__maxWidth500 controlsDemo__height500 controlsDemo__mb1">
         <Controls.list:View
                 name="list"
-                on:navigationParamsChanged="_navigationParamsChanged()"
                 dataLoadCallback="{{_dataLoadCallback}}"
                 source="{{_source}}"
                 keyProperty="key">

@@ -489,10 +489,11 @@ describe('Controls/_source/NavigationController', () => {
                     {
                         direction: 'bothways',
                         field: 'id',
-                        limit: 3,
+                        limit: 5,
                         position: 'testPosition'
                     });
-                assert.equal('testPosition', params.filter['id~'], 'Wrong query params');
+                assert.equal(params.filter['id~'], 'testPosition', 'Wrong position in query params');
+                assert.equal(params.limit, 5, 'Wrong position in query params');
             });
 
             it('updateQueryProperties root', () => {
