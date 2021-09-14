@@ -887,7 +887,7 @@ const _private = {
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
             self._scrollController.setResetInEnd(direction === 'down');
-            self._reload(self._options, navigationQueryConfig).addCallback(() => {
+            self._reload(self._options, navigationQueryConfig).then(() => {
                 self._shouldNotResetPagingCache = false;
 
                 /**
@@ -914,7 +914,7 @@ const _private = {
                 } else {
                     scrollToEdgePromiseResolver();
                 }
-            });
+            }).catch((error) => error);
         } else if (direction === 'up') {
             self._scrollToFirstItem().then(() => {
                 self._notify('doScroll', ['top'], { bubbling: true });
@@ -3677,6 +3677,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const loadStarted = newOptions.loading && !this._options.loading;
+        const loadedBySourceController = this._loadedBySourceController;
         let updateResult;
         let isItemsResetFromSourceController = false;
 
@@ -3836,7 +3837,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.initVisibleItemActions(this, newOptions);
                 this._updateScrollController(newOptions);
 
-                if (this._loadedBySourceController) {
+                if (loadedBySourceController) {
                     this._recountIndicators('all', true);
                 }
             }
@@ -3846,7 +3847,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.executeAfterReloadCallbacks(this, this._items, newOptions);
                 }
 
-                if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
+                if (loadedBySourceController && !this._sourceController.getLoadError()) {
                     if (this._listViewModel) {
                         this._listViewModel.setHasMoreData(_private.getHasMoreData(this));
                     }
@@ -3947,7 +3948,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                     if (this._pagingNavigation &&
                         this._items &&
-                        this._loadedBySourceController) {
+                        loadedBySourceController) {
                         _private.updatePagingData(this, this._items.getMetaData().more, this._options);
                     }
                 }
@@ -4623,17 +4624,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|null|void> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             if (this._sourceController) {
                 this._indicatorsController.endDisplayPortionedSearch();
-                this._sourceController.reload(sourceConfig).then((list) => {
-                    if (this._destroyed) {
-                        resolve(null);
-                        return;
-                    }
+                this._sourceController.reload(sourceConfig)
+                    .then((list) => {
+                        if (this._destroyed) {
+                            resolve(null);
+                            return;
+                        }
 
-                    resolve(list as RecordSet);
-                });
+                        resolve(list as RecordSet);
+                    })
+                    .catch(reject);
             } else {
                 resolve(void 0);
                 Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
