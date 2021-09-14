@@ -1019,6 +1019,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     protected _afterReloadCallback(options: TOptions, loadedList?: RecordSet) {
         if (this._listViewModel) {
+            // На _beforeUpdate уже поздно обновлять контроллер, т.к. данный метод вызовется
+            // из BaseControl::_beforeUpdate до логики в TreeControl::_beforeUpdate
+            // и он заюзает expandController со старой моделью
+            // TODO удалить после https://online.sbis.ru/opendoc.html?guid=961081b9-a94d-4694-9165-cd56cc843ab2
+            this._expandController.updateOptions({model: this._listViewModel});
+
             const modelRoot = this._listViewModel.getRoot();
             const root = this._options.root !== undefined ? this._options.root : this._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;

@@ -6,6 +6,7 @@ import {_ContainerBase as ContainerBase} from 'Controls/scroll';
 import {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
+import * as Env from 'Env/Env';
 
 var global = (function() { return this || (0,eval)('this') })();
 
@@ -530,6 +531,24 @@ describe('Controls/scroll:ContainerBase', () => {
                assert.isFalse(control.canScrollTo(test.offset));
             }
          });
+      });
+   });
+
+   describe('Scroll Smooth', () => {
+      it('should instant scroll if browser is IE', () => {
+         const control = new ContainerBase(options);
+         const originalDetection = Env.detection.isIE11;
+         Env.detection.isIE11 = true;
+         const scrollToSpy = sinon.spy();
+         control._children = {
+            content: {
+               scrollTo: scrollToSpy
+            }
+         };
+
+         control._scrollTo(0, true);
+         sinon.assert.notCalled(scrollToSpy);
+         Env.detection.isIE11 = originalDetection;
       });
    });
 
