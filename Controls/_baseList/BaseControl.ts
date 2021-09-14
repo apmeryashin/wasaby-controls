@@ -6361,6 +6361,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то не нужно скроллить к первому элементу
+                // нужно подскроллить список на высоту ромашки, чтобы не было прыжка
+                // данный метод вызывается только, если будет показана ромашка
+                this._notify('doScroll', [this._scrollTop + INDICATOR_HEIGHT], { bubbling: true });
                 showTriggerCallback();
             } else {
                 const scrollResult = this._scrollToFirstItem();
