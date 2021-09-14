@@ -474,7 +474,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         const validatorArgs = {
             value: item.getPropertyValue(),
             item: item.getContents(),
-            items: item.getOwner().getCollection()
+            items: item.getOwner().getCollection(),
+            editingObject: this._editingObject
         };
         if (validators.length) {
             validators.some((validator) => {
