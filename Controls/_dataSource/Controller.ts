@@ -690,10 +690,12 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     }
 
     private _setSorting(sorting: QueryOrderSelector): void {
-        if (Array.isArray(sorting) || !sorting) {
-            this._sorting = sorting?.slice();
+        if (Array.isArray(sorting)) {
+            this._sorting = sorting.slice();
+        } else if (sorting instanceof Object) {
+            this._sorting = {...sorting};
         } else {
-            Logger.error('source/Controller: sorting must be array', this);
+            this._sorting = sorting;
         }
     }
 
