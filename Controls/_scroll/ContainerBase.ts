@@ -497,7 +497,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
      * @name Controls/_scroll/Container#scrollToTop
      * @function
      */
-    scrollToTop(smooth: boolean): void {
+    scrollToTop(smooth: boolean = false): void {
         this._setScrollTop(0, smooth);
     }
 
