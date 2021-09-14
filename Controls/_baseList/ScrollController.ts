@@ -118,8 +118,12 @@ export default class ScrollController {
                 newParams.scroll = params.scrollHeight;
                 this._viewHeight = params.scrollHeight;
             }
-            newParams.topTrigger = params.topTriggerOffset;
-            newParams.bottomTrigger = params.bottomTriggerOffset;
+            if (params.topTriggerOffset !== undefined) {
+                newParams.topTrigger = params.topTriggerOffset;
+            }
+            if (params.bottomTriggerOffset !== undefined) {
+                newParams.bottomTrigger = params.bottomTriggerOffset;
+            }
             this._virtualScroll.applyContainerHeightsData(newParams);
             return {};
         } else {
