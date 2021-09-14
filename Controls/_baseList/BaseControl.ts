@@ -6324,6 +6324,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // region Observers
 
     private _getObserversControllerOptions(options: IBaseControlOptions): IObserversControllerOptions {
+        const resetTopTriggerOffset = this._sourceController && this._sourceController.hasMoreData('up')
+            && !this._hasHiddenItemsByVirtualScroll('up');
+        const resetBottomTriggerOffset = this._sourceController && this._sourceController.hasMoreData('down')
+            && !this._hasHiddenItemsByVirtualScroll('down');
         return {
             model: this._listViewModel,
             viewHeight: this._viewSize,
@@ -6331,8 +6335,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             scrollTop: this._scrollTop,
             topTriggerOffsetCoefficient: this._options.topTriggerOffsetCoefficient,
             bottomTriggerOffsetCoefficient: this._options.bottomTriggerOffsetCoefficient,
-            resetTopTriggerOffset: this._sourceController && this._sourceController.hasMoreData('up'),
-            resetBottomTriggerOffset: this._sourceController && this._sourceController.hasMoreData('down'),
+            resetTopTriggerOffset,
+            resetBottomTriggerOffset,
             intersectionHandler: this._intersectionObserverHandler,
             viewElement: this,
             topTriggerElement: this._children.listView?.getTopLoadingTrigger(),

@@ -130,21 +130,6 @@ export default class ObserversController {
         return this._model && !this._intersectionObserver;
     }
 
-    /*recountTopTrigger(topTrigger: HTMLElement, scrollToFirstItem: boolean = false): void {
-        // attachLoadTopTriggerToNull поддерживается для календаря, пример:
-        // https://online.sbis.ru/opendoc.html?guid=b0a44d7f-4db7-41f4-8b42-6909704a6503
-        if (this._options.attachLoadTopTriggerToNull) {
-            // если нужно будет скроллить к первой записи, то значит что сверху записей нет
-            // и не нужно будет их сразу подгружать, поэтому скрываем триггер
-            const hasTopIndicator = this.shouldDisplayTopIndicator() || this._model.getTopIndicator().isDisplayed();
-            if (scrollToFirstItem && hasTopIndicator) {
-                this.hideTopTrigger(topTrigger);
-            } else if (this._options.hasHiddenItemsByVirtualScroll('up')) {
-                this.displayTopTrigger(topTrigger);
-            }
-        }
-    }*/
-
     displayTopTrigger(topTrigger: HTMLElement): void {
         if (topTrigger) {
             topTrigger.style.display = '';
