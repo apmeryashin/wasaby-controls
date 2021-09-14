@@ -1579,7 +1579,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 return titlePosition === 'underImage' || imageViewMode === 'none';
             case 'preview':
-                return !!this.getDisplayValue() && (this.isUnscaleable() || !this.canShowActions());
+                return !!this.getDisplayValue();
         }
     }
 
@@ -1737,10 +1737,13 @@ export default abstract class TileItem<T extends Model = Model> {
                     classes += ' controls-TileView__richTemplate_title-underImage';
                 }
                 if (titleLines === 1) {
-                    classes += ' controls-TileView__richTemplate_title-one_line'
+                    classes += ' controls-TileView__richTemplate_title-one_line';
                 }
                 break;
             case 'preview':
+                if (!this.isUnscaleable() && this.canShowActions()) {
+                    classes += ' ws-hidden ';
+                }
                 classes += ' controls-TileView__previewTemplate_title_text';
                 break;
         }
