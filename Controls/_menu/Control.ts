@@ -131,6 +131,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectedKeysChanged = this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys);
         let result;
 
+        if (newOptions.isDragging && this._options.isDragging !== newOptions.isDragging) {
+            this._closeSubMenu();
+        }
+
         if (newOptions.sourceController && newOptions.searchParam &&
             newOptions.searchValue && searchValueChanged) {
             this._notifyResizeAfterRender = true;
@@ -265,7 +269,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _itemClick(event: SyntheticEvent<MouseEvent>,
                          item: Model,
                          sourceEvent: SyntheticEvent<MouseEvent>): void {
-        if (item.get('readOnly')) {
+        if (item.get('readOnly') || this._options.isDragging) {
             return;
         }
         const key: string | number = item.getKey();
@@ -1045,6 +1049,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 additionalProperty: null,
                 searchParam: null,
                 itemPadding: null,
+                draggable: false,
                 source,
                 items: isLoadedChildItems ? this._options.items : null,
                 ...item.getContents().get('menuOptions'),

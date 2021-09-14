@@ -9,7 +9,16 @@ import {Logger} from 'UI/Utils';
 import {getScrollbarWidthByMeasuredBlock} from 'Controls/scroll';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 import {constants, detection} from 'Env/Env';
-import {IPopupItem, IPopupSizes, IStickyPopupOptions, IStickyPosition, Controller} from 'Controls/popup';
+import {
+    IPopupItem,
+    IPopupSizes,
+    IStickyPopupOptions,
+    IStickyPosition,
+    Controller,
+    IDragOffset,
+    IPopupPosition
+} from 'Controls/popup';
+import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
@@ -43,11 +52,15 @@ export interface IStickyPositionConfig {
     fittingMode: IStickyPosition;
     restrictiveContainerCoords?: ITargetCoords;
     sizes: IPopupSizes;
+    fixPosition?: boolean;
+    position: IPopupPosition;
 }
 
 export interface IStickyItem extends IPopupItem {
     popupOptions: IStickyPopupOptions;
     positionConfig: IStickyPositionConfig;
+    startPosition: IPopupPosition;
+    fixPosition: boolean;
 }
 
 const DEFAULT_OPTIONS = {
@@ -285,6 +298,31 @@ export class StickyController extends BaseController {
         this._prepareConfig(item, item.sizes);
     }
 
+    popupDragStart(item: IStickyItem, container: HTMLElement, offset: IDragOffset, sizes: IPopupSizes = {}): void {
+        const {
+            horizontal: horizontalProperty,
+            vertical: verticalProperty
+        } = getPositionProperties(item.popupOptions.resizeDirection);
+        const horizontalOffset = horizontalProperty === HORIZONTAL_DIRECTION.LEFT ? offset.x : -offset.x;
+        const verticalOffset = verticalProperty === VERTICAL_DIRECTION.TOP ? offset.y : -offset.y;
+        if (!item.startPosition) {
+            item.startPosition = {
+                [horizontalProperty]: item.position[horizontalProperty],
+                [verticalProperty]: item.position[verticalProperty]
+            };
+        }
+        item.fixPosition = true;
+        item.position[horizontalProperty] = item.startPosition[horizontalProperty] + horizontalOffset;
+        item.position[verticalProperty] = item.startPosition[verticalProperty] + verticalOffset;
+        const itemSizes: IPopupSizes = {...item.sizes, ...sizes};
+        // Take the size from cache, because they don't change when you move
+        this._prepareConfig(item, itemSizes);
+    }
+
+    popupDragEnd(item: IStickyItem, offset: number): void {
+        delete item.startPosition;
+    }
+
     _getPopupConfig(item: IStickyItem, sizes: IPopupSizes = {}): IStickyPositionConfig {
         const restrictiveContainerCoords = this._getRestrictiveContainerCoords(item);
         return {
@@ -301,7 +339,9 @@ export class StickyController extends BaseController {
                 maxHeight: item.popupOptions.maxHeight
             },
             sizes,
-            fittingMode: item.popupOptions.fittingMode as IStickyPosition
+            fittingMode: item.popupOptions.fittingMode as IStickyPosition,
+            fixPosition: item.fixPosition,
+            position: item.position
         };
     }
 
