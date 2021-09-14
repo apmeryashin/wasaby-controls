@@ -43,7 +43,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
 
     it('getContentClasses should return group cell content classes', () => {
         CssClassesAssert.include(getGroupCell().getContentClasses(), [
-            'controls-ListView__groupContent_baseline_default',
+            'controls-Grid__row-cell__content_baseline_default',
             'controls-ListView__groupContent']);
     });
 
@@ -57,7 +57,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
             'controls-Grid__row-cell',
             'controls-Grid__cell_default',
             'controls-Grid__row-cell_default',
-            'controls-Grid__row-cell_small_min_height',
+            'controls-ListView__group_min_height',
             'controls-Grid__no-rowSeparator',
             'controls-Grid__row-cell_withRowSeparator_size-null'
         ]);

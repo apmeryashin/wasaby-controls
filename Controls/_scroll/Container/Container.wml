@@ -7,9 +7,8 @@
                     _scrollCssClass="{{_scrollCssClass}}"
                     _contentWrapperCssClass="{{_contentWrapperCssClass}}"
                     _initialScrollPositionCssClass="{{_initialScrollPositionCssClass}}"
-                    attr:style="{{_scrollbars.scrollContainerStyles}}"
                     attr:class="controls-Scroll-Container__base controls-BlockLayout__blockGroup
-                    {{ _optimizeShadowClass }}{{ _scrollbars.scrollContainerStyles === undefined ? ' controls-Scroll-Container__content_hidden' }}"
+                    {{ _optimizeShadowClass }}"
                     on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"
                     on:intersectionObserverUnregister="_intersectionObserverUnregisterHandler()"
                     on:fixed="_stickyFixedHandler()"

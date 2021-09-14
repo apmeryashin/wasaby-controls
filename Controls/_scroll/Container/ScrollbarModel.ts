@@ -2,7 +2,6 @@ import {detection} from 'Env/Env';
 import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {canScrollByState, getContentSizeByState, getScrollPositionByState, SCROLL_DIRECTION} from '../Utils/Scroll';
-import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import {IScrollState} from '../Utils/ScrollState';
 import {IScrollbarsOptions} from './Interface/IScrollbars';
 
@@ -22,7 +21,6 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
     readonly '[Types/_entity/VersionableMixin]': true;
 
     private readonly _useNativeScrollbar: boolean;
-    private readonly _styleHideScrollbar: string;
     private readonly _direction: SCROLL_DIRECTION;
     private _options: IScrollbarsOptions;
     private _canScroll: boolean = false;
@@ -46,7 +44,6 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         this._options = options;
         // На мобильных устройствах используется нативный скролл, на других платформенный.
         this._useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid;
-        this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(direction);
         this._direction = direction;
     }
 
