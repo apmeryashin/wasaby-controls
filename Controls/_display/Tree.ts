@@ -1394,17 +1394,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._reBuildNodeFooters();
     }
 
-    protected _handleNotifyItemChangeRebuild(item: T, properties?: object|string): boolean {
-        let result = super._handleNotifyItemChangeRebuild(item, properties);
-
-        if (properties === 'expanded' || properties.hasOwnProperty('expanded')) {
-            this._reBuildNodeFooters();
-            result = true;
-        }
-
-        return result;
-    }
-
     // endregion ItemsChanges
 }
 
