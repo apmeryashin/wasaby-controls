@@ -451,8 +451,10 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       event.stopPropagation();
    }
 
-   private _dataLoadStart(): void {
-      this._loading = true;
+   private _dataLoadStart(event: SyntheticEvent, key: TKey, direction: Direction): void {
+      if (!direction) {
+         this._loading = true;
+      }
    }
 
    private _updateContext(sourceControllerState: ISourceControllerState): void {

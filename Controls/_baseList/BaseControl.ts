@@ -1857,6 +1857,11 @@ const _private = {
 
         if (!direction) {
             this._loadedBySourceController = true;
+            if (this._isMounted && this._children.listView) {
+                this._children.listView.reset({
+                    keepScroll: this._keepScrollAfterReload
+                });
+            }
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -4302,6 +4307,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.updateScrollPagingButtons(this, {...this._getScrollParams(), initial: !this._scrolled});
             }
         }
+        this._loadedBySourceController = false;
 
         if (this.callbackAfterRender) {
             this.callbackAfterRender.forEach((callback) => {
@@ -4409,7 +4415,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _afterUpdate(oldOptions): void {
-        this._loadedBySourceController = false;
         if (!this._sourceController?.getLoadError()) {
             if (!this._observerRegistered) {
                 this._registerObserver();
@@ -4618,7 +4623,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|null|void> {
-        const loadPromise = new Promise((resolve) => {
+        return new Promise((resolve) => {
             if (this._sourceController) {
                 this._indicatorsController.endDisplayPortionedSearch();
                 this._sourceController.reload(sourceConfig).then((list) => {
@@ -4627,21 +4632,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                         return;
                     }
 
-                    resolve(list);
+                    resolve(list as RecordSet);
                 });
             } else {
                 resolve(void 0);
                 Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
             }
-        });
-
-        return loadPromise.then((result) => {
-            if (this._isMounted && this._children.listView) {
-                this._children.listView.reset({
-                    keepScroll: this._keepScrollAfterReload
-                });
-            }
-            return result;
         });
     }
 

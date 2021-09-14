@@ -637,15 +637,19 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._viewMode === 'search';
     }
 
-    protected _dataLoadStart(): void {
-        this._loading = true;
+    protected _dataLoadStart(event: SyntheticEvent, key: TKey, direction: Direction): void {
+        if (!direction) {
+            this._loading = true;
+        }
     }
 
     protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
+
+        const listOptions = this._getListOptionsById(id);
         this._dataLoader.getFilterController()?.setFilter(filter);
-        if (this._listsOptions && id) {
-            this._getListOptionsById(id).filter = this._getListOptionsById(id).filter || filter;
+        if (listOptions && id) {
+            listOptions.filter = listOptions.filter || filter;
         }
         if (!Browser._hasInOptions(this._options, ['filter']) || !this._options.task1182865383) {
             this._filter = filter;
@@ -667,21 +671,22 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     protected _setRoot(root: Key, id?: string): void {
-        if (this._listsOptions && id) {
-            this._getListOptionsById(id).root = root;
+        const listOptions = this._getListOptionsById(id);
+        if (listOptions && id) {
+            listOptions.root = root;
         } else {
             this._root = root;
         }
     }
 
-    protected _sortingChanged(event: SyntheticEvent, sorting: Key, id?: string): void {
-        this._notify('sortingChanged', [sorting, id]);
-    }
-
-    protected _getListOptionsById(id: string): IBrowserOptions {
+    protected _getListOptionsById(id: string): IListConfiguration|void {
         return this._listsOptions.find((options: IBrowserOptions) => {
             return options.id === id;
-        }) || this._options;
+        });
+    }
+
+    protected _sortingChanged(event: SyntheticEvent, sorting: Key, id?: string): void {
+        this._notify('sortingChanged', [sorting, id]);
     }
 
     protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
