@@ -85,14 +85,6 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         }
     }
 
-    redrawIndicator(position: TIndicatorPosition): void {
-        const indicator = this._getIndicator(position);
-        if (indicator && indicator.isDisplayed()) {
-            indicator.redraw();
-            this._nextVersion();
-        }
-    }
-
     private _getIndicatorName(position: TIndicatorPosition): string {
         return `_${position}Indicator`;
     }

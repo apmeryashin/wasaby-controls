@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import {
     Abstract as Display,
     Collection as CollectionDisplay,
-    CollectionItem, groupConstants,
+    CollectionItem, EIndicatorState, groupConstants,
     GroupItem
 } from 'Controls/display';
 
@@ -4616,6 +4616,27 @@ describe('Controls/_display/Collection', () => {
                 stickyFooter: true
             });
             assert.isTrue(collection.getVersion() === collectionVersion, 'Версия не должна измениться');
+        });
+    });
+
+    describe('indicators', () => {
+        it('update version on change metaData', () => {
+            const items = new RecordSet({
+                rawData: [
+                    {id: 1},
+                    {id: 2}
+                ],
+                metaData: {}
+            });
+            const collection = new CollectionDisplay({
+                collection: items,
+                keyProperty: 'id'
+            });
+            collection.displayIndicator('bottom', EIndicatorState.PortionedSearch);
+
+            const version = collection.getVersion();
+            items.setMetaData({count: 10});
+            assert.isTrue(collection.getVersion() > version);
         });
     });
 });

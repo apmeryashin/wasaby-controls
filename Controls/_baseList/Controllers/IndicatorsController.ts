@@ -671,15 +671,6 @@ export default class IndicatorsController {
         }
     }
 
-    /**
-     * Вызываем перерисовку индикатора порционного поиска
-     */
-    redrawPortionedSearchIndicator(): void {
-        if (this._isPortionedSearch()) {
-            this._model.redrawIndicator(this._portionedSearchDirection);
-        }
-    }
-
     private _startDisplayPortionedSearchTimer(duration: number): void {
         this._portionedSearchTimer = setTimeout(() => {
             this.stopDisplayPortionedSearch();

@@ -648,8 +648,6 @@ const _private = {
                     return;
                 }
 
-                self._indicatorsController.redrawPortionedSearchIndicator();
-
                 if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer(addedItems)) {
                     self._indicatorsController.resetDisplayPortionedSearchTimer();
                 }

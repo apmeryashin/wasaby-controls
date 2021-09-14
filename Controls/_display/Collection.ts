@@ -439,12 +439,11 @@ function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boo
 
 function onCollectionPropertyChange(event: EventObject, values: {metaData: { results?: EntityModel }}): void {
     if (values && values.metaData) {
-        this._actualizeSubscriptionOnMetaResults(this._$metaResults, values.metaData.results);
-        this.setMetaResults(values.metaData.results);
+        this.setMetaData(values.metaData);
     }
 }
 
-function onMetaResultsChange(event: EventObject, values: Record<string, unknown>) {
+function onMetaResultsChange(event: EventObject, values: Record<string, unknown>): void {
     this.setMetaResults(this._$collection.getMetaData()?.results);
 }
 
@@ -2683,6 +2682,19 @@ export default class Collection<
 
     hasMoreDataDown(): boolean {
         return !!this._$hasMoreData?.down;
+    }
+
+    setMetaData(metaData: { results?: EntityModel }): void {
+        this._actualizeSubscriptionOnMetaResults(this._$metaResults, metaData.results);
+        this.setMetaResults(metaData.results);
+
+        // Поднимаем версию по результату индикаторов, чтобы не было лишних отрисовок.
+        // Т.к. данная отрисовка нужна только при порционном поиске, а об этом коллекция не знает.
+        let changed = this.getTopIndicator().setMetaData(metaData);
+        changed = this.getBottomIndicator().setMetaData(metaData) || changed;
+        if (changed) {
+            this._nextVersion();
+        }
     }
 
     setMetaResults(metaResults: EntityModel): void {
