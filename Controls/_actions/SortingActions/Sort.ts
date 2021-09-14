@@ -10,7 +10,7 @@ interface ISortingItem {
     id: string;
     title: string;
     value?: TOrder;
-    icon: string;
+    icon?: string;
 }
 
 interface ISortAction extends IBaseActionOptions {
@@ -67,6 +67,12 @@ export default class Sort extends BaseAction {
     }
 
     private _setItems(items: ISortingItem[]): void {
+        if (items[0] && items[0].id === undefined) {
+            items.forEach((item) => {
+                item.id = item.paramName;
+            });
+        }
+
         this._items = new RecordSet({
             rawData: items,
             keyProperty: 'id'
