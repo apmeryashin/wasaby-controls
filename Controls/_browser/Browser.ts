@@ -381,8 +381,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (options.sourceController !== newOptions.sourceController) {
             this._dataLoader.setSourceController(id, newOptions.sourceController);
             this._subscribeOnSourceControllerEvents();
-            this._subscribeOnRootChanged();
-            this._subscribeOnSortingChanged();
         }
 
         if (sourceChanged) {
@@ -550,25 +548,16 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _setItemsAndUpdateContext(): void {
         this._updateItemsOnState();
         this._subscribeOnSourceControllerEvents();
-        this._subscribeOnRootChanged();
-        this._subscribeOnSortingChanged();
         this._updateContext();
     }
 
     private _subscribeOnSourceControllerEvents(): void {
         const sourceController = this._getSourceController();
-        sourceController.subscribe('rootChanged', this._rootChanged.bind(this));
-        sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
-    }
-
-    private _subscribeOnRootChanged(): void {
         this._dataLoader.each((config, id) => {
             this._getSourceController(id).subscribe('rootChanged', this._rootChanged.bind(this));
         });
-    }
-
-    private _subscribeOnSortingChanged(): void {
-        this._getSourceController().subscribe('sortingChanged', this._sortingChanged.bind(this));
+        sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
+        sourceController.subscribe('sortingChanged', this._sortingChanged.bind(this));
     }
 
     private _updateItemsOnState(): void {
