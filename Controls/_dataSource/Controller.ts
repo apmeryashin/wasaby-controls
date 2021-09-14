@@ -690,7 +690,13 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     }
 
     private _setSorting(sorting: QueryOrderSelector): void {
-        this._sorting = sorting?.slice();
+        if (Array.isArray(sorting)) {
+            this._sorting = sorting.slice();
+        } else if (sorting instanceof Object) {
+            this._sorting = {...sorting};
+        } else {
+            this._sorting = sorting;
+        }
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
