@@ -4624,7 +4624,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|null|void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if (this._sourceController) {
                 this._indicatorsController.endDisplayPortionedSearch();
                 this._sourceController.reload(sourceConfig)
@@ -4636,7 +4636,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                         resolve(list as RecordSet);
                     })
-                    .catch(reject);
+                    .catch((error) => error);
             } else {
                 resolve(void 0);
                 Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
