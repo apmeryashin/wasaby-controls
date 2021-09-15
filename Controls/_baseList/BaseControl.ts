@@ -675,7 +675,7 @@ const _private = {
                     return;
                 }
 
-                if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer()) {
+                if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer(addedItems)) {
                     self._indicatorsController.resetDisplayPortionedSearchTimer();
                 }
 

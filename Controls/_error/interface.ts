@@ -80,16 +80,8 @@ interface IContainerViewConfig {
 }
 
 /**
- * Данные для отображения сообщения об ошибке.
- * @public
- * @author Кашин О.А.
- */
-export type ErrorViewConfig<TOptions = IDefaultTemplateOptions> = IBaseViewConfig<TOptions> & (
-    IDialogViewConfig | IContainerViewConfig
-);
-
-/**
  * @typedef ErrorViewConfig
+ * @author Кашин О.А.
  * @description Данные для отображения сообщения об ошибке
  * @property {Function | String} template Шаблон для отображения ошибки.
  * @property {ErrorViewMode} mode Режим отображения ошибки.
@@ -98,6 +90,9 @@ export type ErrorViewConfig<TOptions = IDefaultTemplateOptions> = IBaseViewConfi
  * @property {HTTPStatus} status Код состояния HTTP, соответствующий ошибке
  * @property {boolean} processed Обработана ли ошибка. Для обработанных ошибок сообщения не выводятся.
  */
+export type ErrorViewConfig<TOptions = IDefaultTemplateOptions> = IBaseViewConfig<TOptions> & (
+    IDialogViewConfig | IContainerViewConfig
+);
 
 export type ProcessedError = Error & { processed?: boolean; };
 
@@ -131,7 +126,6 @@ export enum ErrorType {
  * Тип функции-обработчика ошибки.
  * Анализирует ошибку и определяет, какой парковочный шаблон нужно отобразить.
  * Принимает объект с параметрами ошибки и возвращет ErrorViewConfig, если ошибка распознана.
- * @interface Controls/_dataSource/_error/ErrorHandler
  * @public
  * @author Кашин О.А.
  */

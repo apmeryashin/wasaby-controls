@@ -1,5 +1,7 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
-    <div class="controls_popupTemplate_theme-{{_options.theme}} controls-DialogTemplate {{!_options.maximize ? 'controls-DialogTemplate_minimize'}} controls-DialogTemplate_backgroundStyle-{{_options.backgroundStyle}}
+    <div class="controls_popupTemplate_theme-{{_options.theme}} controls-DialogTemplate
+                controls-DialogTemplate_backgroundStyle-{{_options.backgroundStyle}}
+                {{!_options.maximize ? 'controls-DialogTemplate__border-radius'}}
                 {{_options.draggable ? 'ws-window-draggable'}}" ws-tab-cycling="true">
         <ws:if data="{{_options.headingCaption || _options.headerContentTemplate }}">
             <ws:partial template="Controls/_popupTemplate/Dialog/Template/Header"
@@ -24,10 +26,14 @@
             </div>
         </ws:else>
         <ws:if data="{{ _options.bodyContentTemplate }}">
-            <div class="controls-DialogTemplate__content-area
-             {{!(_options.headingCaption || _options.headerContentTemplate) && !_options.footerContentTemplate
-                                                    && !_options.maximize ? 'controls-DialogTemplate_border-radius'}}">
+            <div class="controls-DialogTemplate__content-area">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
+                            attr:class="{{!(_options.headingCaption || _options.headerContentTemplate) && _options.footerContentTemplate
+                                                    && !_options.maximize ? 'controls-DialogTemplate__top-area_roundBorder'}}
+                                        {{!(_options.headingCaption || _options.headerContentTemplate) && !_options.footerContentTemplate
+                                                    && !_options.maximize ? 'controls-DialogTemplate__border-radius'}}
+                                        {{(_options.headingCaption || _options.headerContentTemplate) && !_options.footerContentTemplate
+                                                    && !_options.maximize ? 'controls-DialogTemplate__footer-area_roundBorder'}}"
                             scope="{{_options.contentAreaOptions}}"
                             bodyContentTemplate="{{null}}"
                             headerContentTemplate="{{null}}"
@@ -35,8 +41,9 @@
             </div>
         </ws:if>
         <ws:if data="{{ _options.footerContentTemplate }}">
-            <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__footer
-                                                                                   {{!_options.maximize ? 'controls-DialogTemplate_border-radius-footer'}}"></ws:partial>
+            <ws:partial template="{{ _options.footerContentTemplate}}"
+                        attr:class="controls-DialogTemplate__footer
+                                         {{!_options.maximize ? 'controls-DialogTemplate__footer-area_roundBorder'}}"/>
         </ws:if>
     </div>
 </Controls.dragnDrop:Container>
