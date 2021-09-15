@@ -2209,13 +2209,8 @@ export default class Collection<
         if ((isFiltered || isGrouped) && shouldRebuild) {
             const session = this._startUpdateSession();
 
-            const rebuild = this._handleNotifyItemChangeRebuild(item, properties);
-
             if (isGrouped) {
                 this._reGroup();
-            }
-
-            if (isGrouped || rebuild) {
                 this._reSort();
             }
 
@@ -4202,8 +4197,6 @@ export default class Collection<
     protected _handleCollectionChangeRemove(): void {}
 
     protected _handleCollectionChangeReplace(): void {}
-
-    protected _handleNotifyItemChangeRebuild(item: T, properties?: object|string): boolean { return false; }
 
     // endregion ItemsChanges
 

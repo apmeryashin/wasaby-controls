@@ -305,8 +305,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * @protected
      */
     protected _dragStrategy: StrategyConstructor<TreeDrag> = TreeDrag;
-    private _expandedItems: CrudEntityKey[] = [];
-    private _collapsedItems: CrudEntityKey[] = [];
+    private _$expandedItems: CrudEntityKey[];
+    private _$collapsedItems: CrudEntityKey[];
 
     protected _hierarchyRelation: relation.Hierarchy;
 
@@ -342,18 +342,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
         if (this._$childrenProperty) {
             this._setImportantProperty(this._$childrenProperty);
-        }
-
-        if (options.expandedItems instanceof Array) {
-            this.setExpandedItems(options.expandedItems);
-        }
-
-        if (options.collapsedItems instanceof Array) {
-            this.setCollapsedItems(options.collapsedItems);
-        }
-
-        if (options.expandedItems instanceof Array) {
-            this._reBuildNodeFooters(true);
         }
 
         if (this.getExpanderVisibility() === 'hasChildren') {
@@ -818,24 +806,23 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     // region Expanded/Collapsed
 
-    isExpandAll(): boolean {
-        return this._expandedItems[0] === null;
-    }
-
     getExpandedItems(): CrudEntityKey[] {
-        return this._expandedItems;
+        return this._$expandedItems || [];
     }
 
     getCollapsedItems(): CrudEntityKey[] {
-        return this._collapsedItems;
+        return this._$collapsedItems || [];
     }
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
-        if (isEqual(this._expandedItems, expandedKeys)) {
+        if (isEqual(this.getExpandedItems(), expandedKeys)) {
             return;
         }
 
-        const diff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedKeys);
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this.getExpandedItems(), expandedKeys);
+
+        // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
+        const session = this._startUpdateSession();
 
         //region Добавленные ключи нужно развернуть
         if (diff.added[0] === null) {
@@ -844,20 +831,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                     return;
                 }
 
-                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                item.setExpanded(true);
+                item.setExpanded(true, true);
             });
-
-            // Если diff.added[0] === null, значит все записи развернуты,
-            // последующая обработка не требуется
-            this._expandedItems = [...expandedKeys];
-            return;
         } else {
             diff.added.forEach((id) => {
                 const item = this.getItemBySourceKey(id, false);
                 if (item && item['[Controls/_display/TreeItem]']) {
-                    // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                    item.setExpanded(true);
+                    item.setExpanded(true, true);
                 }
             });
         }
@@ -878,80 +858,67 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                     return;
                 }
 
-                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                item.setExpanded(false);
+                item.setExpanded(false, true);
             });
         } else {
             diff.removed.forEach((id) => {
                 const item = this.getItemBySourceKey(id, false);
                 if (item && item['[Controls/_display/TreeItem]']) {
-                    // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                    item.setExpanded(false);
+                    item.setExpanded(false, true);
                 }
             });
         }
         //endregion
 
-        this._expandedItems = [...expandedKeys];
+        this._$expandedItems = [...expandedKeys];
+
+        // пересчитываем все один раз вместо множества пересчетов на каждое событие об изменении элемента
+        this._reBuildNodeFooters();
+        this._reSort();
+        this._reFilter();
+
+        this._finishUpdateSession(session);
+        this._nextVersion();
+
         this._updateEdgeItems();
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
-        if (isEqual(this._collapsedItems, collapsedKeys)) {
+        if (isEqual(this.getCollapsedItems(), collapsedKeys)) {
             return;
         }
 
         // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
-        const diff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, collapsedKeys);
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this.getCollapsedItems(), collapsedKeys);
+
+        // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
+        const session = this._startUpdateSession();
+
         diff.removed.forEach((it) => {
             const item = this.getItemBySourceKey(it);
             if (item && item['[Controls/_display/TreeItem]']) {
-                item.setExpanded(true);
+                item.setExpanded(true, true);
             }
         });
-
-        this._collapsedItems = [...collapsedKeys];
 
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item && item['[Controls/_display/TreeItem]']) {
-                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
-                this._collapseChilds(item);
-                item.setExpanded(false);
+                item.setExpanded(false, true);
             }
         });
+
+        this._$collapsedItems = [...collapsedKeys];
+
+        // пересчитываем все один раз вместо множества пересчетов на каждое событие об изменении элемента
+        this._reBuildNodeFooters();
+        this._reSort();
+        this._reFilter();
+
+        this._finishUpdateSession(session);
+        this._nextVersion();
+
         this._updateEdgeItems();
-    }
-
-    toggleExpanded(item: T): void {
-        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
-        const newExpandedState = !item.isExpanded();
-        const itemKey = item.getContents().getKey();
-        item.setExpanded(newExpandedState);
-
-        if (newExpandedState) {
-            if (!this._expandedItems.includes(itemKey)) {
-                this._expandedItems.push(itemKey);
-            }
-            if (this._collapsedItems.includes(itemKey)) {
-                this._collapsedItems.splice(this._collapsedItems.indexOf(itemKey), 1);
-            }
-        } else {
-            if (this._expandedItems.includes(itemKey)) {
-                this._expandedItems.splice(this._expandedItems.indexOf(itemKey), 1);
-            }
-
-            if (!this._collapsedItems.includes(itemKey)) {
-                this._collapsedItems.push(itemKey);
-            }
-        }
-    }
-
-    private _collapseChilds(item: T): void {
-        const childs = this.getChildren(item);
-        childs.forEach((it) => {
-            it.setExpanded(false);
-        });
     }
 
     // endregion Expanded/Collapsed
@@ -972,7 +939,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             options.displayExpanderPadding = this._displayExpanderPadding;
 
             const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
-            options.expanded = this._expandedItems?.includes(key) || this._expandedItems?.includes(null) && !this._collapsedItems?.includes(key);
+            options.expanded = this.getExpandedItems().includes(key) || this.getExpandedItems().includes(null) && !this.getCollapsedItems().includes(key);
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
@@ -1412,17 +1379,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._reBuildNodeFooters();
     }
 
-    protected _handleNotifyItemChangeRebuild(item: T, properties?: object|string): boolean {
-        let result = super._handleNotifyItemChangeRebuild(item, properties);
-
-        if (properties === 'expanded' || properties.hasOwnProperty('expanded')) {
-            this._reBuildNodeFooters();
-            result = true;
-        }
-
-        return result;
-    }
-
     // endregion ItemsChanges
 }
 
@@ -1446,5 +1402,7 @@ Object.assign(Tree.prototype, {
     _$nodeFooterTemplateMoreButton: null,
     _$moreFontColorStyle: null,
     _$hasMoreStorage: {},
+    _$collapsedItems: [],
+    _$expandedItems: [],
     _root: null
 });

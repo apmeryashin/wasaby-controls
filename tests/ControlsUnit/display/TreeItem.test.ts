@@ -111,9 +111,10 @@ describe('Controls/_display/TreeItem', () => {
     });
 
     describe('.isExpanded()', () => {
-        it('should return false by default', () => {
+        it('should return true by default', () => {
+            // мы всегда прокидываем значение, поэтому не важно какое оно по дефолту
             const item = new TreeItem();
-            assert.isFalse(item.isExpanded());
+            assert.isTrue(item.isExpanded());
         });
 
         it('should return value passed to the constructor', () => {
@@ -136,7 +137,8 @@ describe('Controls/_display/TreeItem', () => {
         it('should notify owner if changed', () => {
             const owner = getOwnerMock();
             const item = new TreeItem({
-                owner
+                owner,
+                expanded: false
             });
 
             item.setExpanded(true);
@@ -160,7 +162,7 @@ describe('Controls/_display/TreeItem', () => {
 
     describe('.toggleExpanded()', () => {
         it('should toggle the value', () => {
-            const item = new TreeItem();
+            const item = new TreeItem({expanded: false});
 
             item.toggleExpanded();
             assert.isTrue(item.isExpanded());
