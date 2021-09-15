@@ -10,6 +10,10 @@
    flex-grow: 1;
    flex-shrink: 1;
    min-height: 0;
+}
+
+// В IE некорректно растягивается элемент по высоте, если у родительского задан max-height.
+.ws-is-ie11 .controls-Scroll-Container__base {
    max-height: inherit;
 }
 
