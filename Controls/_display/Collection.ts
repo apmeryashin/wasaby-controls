@@ -1333,9 +1333,10 @@ export default class Collection<
 
     /**
      * Возвращает первый элемент
+     * @param conditionProperty свойство, по которому происходит отбор элементов.
      * @return {Controls/_display/CollectionItem}
      */
-    getFirst(): T {
+    getFirst(conditionProperty?: string): T {
         const enumerator = this._getUtilityEnumerator();
         if (enumerator.getCount() === 0) {
             return;
@@ -1344,12 +1345,12 @@ export default class Collection<
 
         const item = enumerator.getCurrent();
 
-        if (!(item as CollectionItem).EnumerableItem) {
+        if (conditionProperty && !item[conditionProperty]) {
             return this._getNearbyItem(
                 enumerator,
                 item,
                 true,
-                'EnumerableItem'
+                conditionProperty
             );
         }
 
@@ -2596,7 +2597,7 @@ export default class Collection<
     }
 
     protected _updateEdgeItems(force?: boolean, silent?: boolean): void {
-        const firstItem = this.getFirst();
+        const firstItem = this.getFirst('EdgeRowSeparatorItem');
         const lastItem = this.getLast('EdgeRowSeparatorItem');
         const navigation = this.getNavigation();
         const noMoreData = !navigation || navigation.view !== 'infinity' || !this.hasMoreData();
