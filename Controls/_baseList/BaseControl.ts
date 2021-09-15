@@ -3852,7 +3852,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._updateScrollController(newOptions);
 
                 if (loadedBySourceController) {
-                    this._recountIndicators('all', true);
+                    this._indicatorsController.recountIndicators('all', true);
                 }
             }
 
