@@ -30,6 +30,13 @@
    }
 }
 
+.controls-itemActionsV__action {
+  min-width: var(--item_icon-size_itemActions);
+  height: var(--item_icon-size_itemActions);
+  justify-content: center;
+  user-select: none;
+}
+
 .controls-itemActionsV_style_default {
    background-color: var(--item_hover_background-color_list);
 }
@@ -62,11 +69,6 @@
     left: calc(-1 * var(--corner_width_outside_itemActions));
   }
 
-  & .controls-itemActionsV__action-area_size {
-    width: calc(var(--item_area-size_outside_itemActions) + (var(--offset_xs) * 2));
-    height: var(--item_area-size_outside_itemActions);
-  }
-
   &.controls-itemActionsV_editingToolbarVisible {
     height: var(--height_editing_outside_itemActions);
   }
@@ -81,6 +83,12 @@
 
   &.controls-itemActionsV_editing:before {
      border-top-color: var(--item_editing_background-color_list);
+  }
+
+  & .controls-BaseButton__wrapper {
+    min-width: var(--item_area-size_outside_itemActions);
+    height: var(--item_area-size_outside_itemActions);
+    justify-content: center;
   }
 }
 
@@ -130,28 +138,6 @@
 .controls-itemActionsV_editingToolbarVisible {
   padding-right: 0;
 }
-// todo https://online.sbis.ru/opendoc.html?guid=803e1e7c-9e4d-4bc2-8627-0b732037d804
-.controls-itemActionsV__action .controls-itemActionsV__action_icon {
-  display: flex;
-}
-.controls-itemActionsV__action_icon {
-   width: var(--item_icon-size_itemActions);
-   height: var(--item_icon-size_itemActions);
-   justify-content: center;
-}
-.controls-itemActionsV__action {
-  cursor: pointer;
-  user-select: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  position: relative;
-  white-space: nowrap;
-  height: 100%;
-}
 
 .controls-itemActionsV__action_padding {
   padding: 0 var(--offset_xs);
@@ -161,39 +147,11 @@
    padding: 0;
 }
 
-.controls-action_iconStyle_secondary {
-  fill: var(--secondary_icon-color);
-  color: var(--secondary_icon-color);
-  &:hover {
+.ws-is-hover {
+  .controls-itemActionsV__action:hover .controls-icon_style-secondary {
     fill: var(--secondary_hover_icon-color);
     color: var(--secondary_hover_icon-color);
   }
-}
-
-.controls-itemActionsV__action_icon_size_m {
-   .icon(var(--item_icon-size_itemActions), var(--icon_font-family_m));
-   align-items: baseline;
-}
-
-.controls-itemActionsV__action_icon_size_s {
-  font-size: var(--item_icon-size_editing_itemActions);
-  font-family: var(--icon_font-family_s);
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  width: var(--item_icon-size_itemActions);
-  height: var(--item_icon-size_itemActions);
-  display: inline-flex;
-  align-items: center;
-}
-
-.controls-itemActionsV__action_title {
-   min-height: var(--item_caption_min-height_itemActions);
-   color: var(--item_text-color_itemActions);
-   font-size: var(--item_font-size_itemActions);
 }
 
 .controls-itemActionsV_swiped {
@@ -202,20 +160,9 @@
   opacity: 1;
 }
 
-.ws-is-hover {
-   .controls-itemActionsV__action:hover .controls-itemActionsV__action_title {
-      color: var(--item_hover_text-color_itemActions);
-      text-decoration: underline;
-   }
-}
-
 .controls-itemActionsV_columnScrollDraw {
    position: absolute;
    right: 0;
-}
-
-.controls-itemActionsV__icon-with-title {
-   padding-right: var(--offset_xs);
 }
 
 // убрать после https://online.sbis.ru/opendoc.html?guid=c558bf80-4cd1-4854-a963-4af211246111
@@ -243,15 +190,7 @@
    width: 100%;
    flex-shrink: 1;
    flex-grow: 1;
-}
-
-//todo change font icons to svg https://online.sbis.ru/opendoc.html?guid=90761cbd-04f8-4fad-be7d-8c1707bdd30e
-//icon-24 font has a problem with baseline in FF
-.ws-is-firefox {
-   .icon-SettingsNew.controls-itemActionsV__action_icon {
-      line-height: calc(var(--item_icon-size_itemActions) - 1px);
-      transform: rotate(360deg);
-   }
+   justify-content: center;
 }
 
 // region roundBorders

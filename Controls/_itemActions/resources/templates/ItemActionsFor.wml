@@ -1,11 +1,37 @@
-<ws:for data="action in showedActions">
+<ws:template name="itemAction">
     <ws:partial
-            template="wml!Controls/_itemActions/resources/templates/ItemAction"
-            itemData="{{itemData}}"
-            actionPadding="{{actionPadding}}"
-            actionStyle="{{actionStyle}}"
-            actionMode="{{actionMode}}"
-            iconStyle="{{iconStyle}}"
-            size="{{size}}"
-            action="{{action}}"/>
+            template="Controls/buttons:ButtonTemplate"
+            _viewMode="{{action.viewMode}}"
+            _buttonStyle="{{action.style || actionStyle || 'secondary'}}"
+            _fontSize="m"
+            _icon="{{action.icon}}"
+            _iconSize="{{action.iconSize}}"
+            _caption="{{action.showTitle ? action.title : null}}"
+            _fontColorStyle="link"
+            _hasIcon="{{action.showIcon}}"
+            _stringCaption="{{true}}"
+            _iconStyle="{{iconStyle || action.iconStyle}}"
+            _captionPosition="right"
+            attr:data-qa="controls-itemActionsV__action"
+            attr:class="controls-itemActionsV__action js-controls-ItemActions__ItemAction
+                        {{actionMode === 'adaptive' ? 'controls-itemActionsV_action_adaptive'}}"
+            attr:title="{{action.tooltip}}"
+            on:mousedown="_onItemActionMouseDown(action, item)"
+            on:mouseup="_onItemActionMouseUp(action, item)"
+            on:click="_onItemActionClick(action, item)"
+            attr:ws-no-focus="true"/>
+</ws:template>
+
+<ws:for data="action in showedActions">
+    <ws:if data="{{action.isMenu}}">
+        <ws:partial template="itemAction"
+                    item="{{item || itemData}}"
+                    on:mouseEnter="_handleMenuActionMouseEnter()"
+                    on:mouseLeave="_handleMenuActionMouseLeave()"/>
+    </ws:if>
+    <ws:else>
+        <ws:partial template="itemAction"
+                    item="{{item || itemData}}"
+                    attr:class="controls-itemActionsV__action_padding{{actionPadding ? '_' + actionPadding : ''}}"/>
+    </ws:else>
 </ws:for>

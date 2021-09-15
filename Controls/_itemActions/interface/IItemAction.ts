@@ -1,4 +1,13 @@
 import {Model} from 'Types/entity';
+import {IViewMode} from 'Controls/buttons';
+import {IIconSizeOptions} from 'Controls/interface';
+
+/**
+ * @typedef {String} TItemActionViewMode
+ * @description
+ * Допустимые значения для опции {@link viewMode}
+ */
+type TItemActionViewMode = Extract<IViewMode, 'link' | 'toolButton' | 'functionalButton'>;
 
 /**
  * @typedef {String} TItemActionShowType
@@ -107,7 +116,7 @@ export type TItemActionHandler = (item: Model) => void;
  * @public
  * @author Аверкиев П.А.
  */
-export interface IItemAction {
+export interface IItemAction extends IIconSizeOptions {
     /**
      * @name Controls/_itemActions/itemActions/interface/IItemAction#id
      * @cfg {String|Number} Идентификатор {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
@@ -163,7 +172,7 @@ export interface IItemAction {
      * @name Controls/_itemActions/interface/IItemAction#style
      * @cfg {TIconStyle} Стиль контейнера {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      * @remark
-     * Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
+     * Значение свойства преобразуется в CSS-класс вида "controls-Button_linkButton_style-<значение_свойства>".
      * Он будет установлен для html-контейнера самой опции записи,
      * и свойства класса будут применены как к {@link Controls/_itemActions/interface/IItemAction#title тексту}, так и к {@link Controls/_itemActions/interface/IItemAction#icon иконке}.
      */
@@ -187,6 +196,16 @@ export interface IItemAction {
      * @default secondary
      */
     iconStyle?: TIconStyle;
+
+    /**
+     * @name Controls/_itemActions/interface/IItemAction#viewMode
+     * @cfg {TItemActionViewMode} Режим отображения кнопки операции над записью.
+     * @variant link В виде гиперссылки.
+     * @variant toolButton В виде кнопки для панели инструментов.
+     * @variant functionalButton В виде кнопки выполняющей определенную функцию, например добавление или сохранение.
+     * @default link
+     */
+    viewMode?: TItemActionViewMode;
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#handler

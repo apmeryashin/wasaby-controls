@@ -587,7 +587,6 @@ export class Controller {
             style: options.style,
             editingStyle: (options.editingItem && options.editingStyle) || undefined,
             itemActionsClass: options.itemActionsClass,
-            size: this._iconSize,
             itemActionsPosition: this._itemActionsPosition,
             actionAlignment: this._actionsAlignment,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
@@ -717,9 +716,9 @@ export class Controller {
                     icon: 'icon-SettingsNew',
                     style: 'secondary',
                     iconStyle: 'secondary',
-                    size: this._menuIconSize,
+                    iconSize: this._menuIconSize,
                     isMenu: true
-                });
+                } as IShownItemAction);
             }
         } else {
             showed = visibleActions;
@@ -759,6 +758,7 @@ export class Controller {
         action.icon = Controller._fixActionIconClass(action.icon, this._theme);
         action.showIcon = Controller._needShowIcon(action);
         action.showTitle = Controller._needShowTitle(action);
+        action.title = action.showTitle ? action.title : null;
         return action;
     }
 
@@ -771,7 +771,19 @@ export class Controller {
         if (actionsObject.all && actionsObject.all.length) {
             actionsObject.all = actionsObject.all.map((action) => {
                 action.style = Utils.getStyle(action.style, 'itemActions/Controller');
+
+                // Это нужно чтобы не поддерживать старые стили типа icon-error и ховер по таким кнопкам.
+                action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon, 'itemActions/Controller');
                 action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+
+                if (['link', 'toolButton', 'functionalButton'].indexOf(action.viewMode) === -1) {
+                    Logger.error('Неподдерживаемый вид кнопки. Используйте viewMode, ' +
+                        'описанные в интерфейсе IItemAction', this);
+                }
+
+                action.viewMode = action.viewMode || 'link';
+                action.iconSize = action.iconSize || this._iconSize;
+
                 action.tooltip = Controller._getTooltip(action);
                 return action;
             });
