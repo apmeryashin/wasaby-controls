@@ -750,12 +750,7 @@ class StickyHeaderController {
                             // От текущего заголовка по стэку двигаемся к началу и ищем прямых родителей
                             for (let j = i; j >= 0; j--) {
                                 prevHeader = this._headers[this._headersStack[position][j]];
-                                let size: number;
-                                if (position === 'left' || position === 'right') {
-                                    size = header.inst.width + header.inst.offsetLeft;
-                                } else {
-                                    size = header.inst.height + header.inst.offsetTop;
-                                }
+                                let size = this._getHeaderSize(header, position);
                                 const generalParentNode = this._getGeneralParentNode(curHeader, prevHeader);
                                 if (generalParentNode !== document.body) {
                                     if (position === 'top' || position === 'bottom') {
@@ -764,10 +759,11 @@ class StickyHeaderController {
                                         this._sizeObserver.updateElementHeight(header.inst.getHeaderContainer(), size);
                                     }
                                     return offset + size;
-                                } else if (j > 0) {
+                                } else if (j > 0 && prevHeader.mode === 'stackable') {
                                     // Бывают ситуации, когда какие-то из предыдущих заголовков могут находиться
                                     // в контейнерах, которые не являются родительским для текущего.
                                     // Значит нужно их не учитывать в смещении.
+                                    size = this._getHeaderSize(prevHeader, position);
                                     offset -= size;
                                 }
                             }
@@ -789,6 +785,14 @@ class StickyHeaderController {
 
         this._updateTopBottomInitialized = false;
         return promise;
+    }
+
+    private _getHeaderSize(header: TRegisterEventData, position: POSITION): number {
+        if (position === POSITION.left || position === POSITION.right) {
+            return header.inst.width + header.inst.offsetLeft;
+        } else {
+            return header.inst.height + header.inst.offsetTop;
+        }
     }
 }
 
