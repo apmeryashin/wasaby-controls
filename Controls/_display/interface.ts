@@ -12,7 +12,7 @@ export interface IBaseCollection<S, T extends ICollectionItem> {
     nextVersion(): void;
     setEventRaising(enabled: boolean, analyze?: boolean): void;
     getCollection(): ISourceCollection<S>;
-    getFirst(): T;
+    getFirst(conditionProperty?: string): T;
     createItem(constructorOptions): T;
     getCount?(): number;
     getNext?(item: T): T;
