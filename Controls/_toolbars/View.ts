@@ -354,7 +354,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 root,
                 ...this._getMenuTemplateOptions(),
                 showHeader: item.get('showHeader'),
-                closeButtonVisibility: !item.get('showHeader'),
+                closeButtonVisibility: true,
                 headConfig: {
                     icon: item.get('icon'),
                     caption: item.get('title'),
