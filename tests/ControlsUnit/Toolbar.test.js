@@ -300,7 +300,7 @@ define(
                         itemTemplateProperty: 'myTemplate',
                         closeButtonViewMode: "link",
                         showHeader: true,
-                        closeButtonVisibility: false,
+                        closeButtonVisibility: true,
                         headConfig: {
                            icon: 'icon icon-size',
                            caption: 'title',
