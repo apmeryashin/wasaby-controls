@@ -48,10 +48,10 @@
                     item="{{_listModel.getTopIndicator()}}"
                     on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
         <!--Top loading trigger-->
-        <tr class="{{ _listModel.getTopLoadingTrigger().getClasses() }}">
+        <tr class="controls-BaseControl__loadingTrigger">
             <td colspan="100">
                 <div name="topLoadingTrigger"
-                     data-qa="{{ _listModel.getTopLoadingTrigger().getQAData() }}">
+                     data-qa="loading-trigger-top">
                 </div>
             </td>
         </tr>
@@ -96,10 +96,10 @@
         </ws:if>
 
         <!--Bottom loading trigger-->
-        <tr class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}">
+        <tr class="controls-BaseControl__loadingTrigger">
             <td colspan="100">
                 <div name="bottomLoadingTrigger"
-                     data-qa="{{ _listModel.getBottomLoadingTrigger().getQAData() }}">
+                     data-qa="loading-trigger-bottom">
                 </div>
             </td>
         </tr>

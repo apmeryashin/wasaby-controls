@@ -1,6 +1,10 @@
-import {Collection, DEFAULT_BOTTOM_TRIGGER_OFFSET, DEFAULT_TOP_TRIGGER_OFFSET, ITriggerOffset} from 'Controls/display';
+import {Collection, ITriggerOffset} from 'Controls/display';
 import {EdgeIntersectionObserver} from 'Controls/scroll';
 import {Control} from 'UI/Base';
+import {INDICATOR_HEIGHT} from 'Controls/_baseList/Controllers/IndicatorsController';
+
+const DEFAULT_TOP_TRIGGER_OFFSET = INDICATOR_HEIGHT - 1;
+const DEFAULT_BOTTOM_TRIGGER_OFFSET = INDICATOR_HEIGHT;
 
 export type TIntersectionEvent = 'bottomIn'|'bottomOut'|'topIn'|'topOut';
 

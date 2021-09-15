@@ -4,12 +4,6 @@ import Indicator, {
     TIndicatorPosition,
     TIndicatorState
 } from './Indicator';
-import LoadingTrigger, {
-    TLoadingTriggerPosition,
-    IOptions as ILoadingTriggerOptions,
-    DEFAULT_TOP_TRIGGER_OFFSET,
-    DEFAULT_BOTTOM_TRIGGER_OFFSET
-} from './LoadingTrigger';
 import {TemplateFunction} from 'UI/Base';
 
 export interface ITriggerOffset {
@@ -17,21 +11,15 @@ export interface ITriggerOffset {
     bottom: number;
 }
 
-export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
+export default abstract class IndicatorsMixin<T = Indicator> {
     private _indicatorModule: string;
-    private _triggerModule: string;
 
     protected _topIndicator: Indicator = null;
     protected _bottomIndicator: Indicator = null;
     protected _globalIndicator: Indicator = null;
 
-    protected _topLoadingTrigger: LoadingTrigger = null;
-    protected _bottomLoadingTrigger: LoadingTrigger = null;
-
     protected _$portionedSearchTemplate: TemplateFunction|string;
     protected _$continueSearchTemplate: TemplateFunction|string;
-
-    // region Indicator
 
     hasIndicator(position: TIndicatorPosition): boolean {
         return !!this._getIndicator(position);
@@ -111,58 +99,16 @@ export default abstract class IndicatorsMixin<T = Indicator|LoadingTrigger> {
         return indicator;
     }
 
-    // endregion Indicator
-
-    // region Trigger
-
-    getTopLoadingTrigger(): LoadingTrigger {
-        return this._getLoadingTrigger('top');
-    }
-
-    getBottomLoadingTrigger(): LoadingTrigger {
-        return this._getLoadingTrigger('bottom');
-    }
-
-    private _getLoadingTriggerName(position: TLoadingTriggerPosition): string {
-        return `_${position}LoadingTrigger`;
-    }
-
-    private _getLoadingTrigger(position: TLoadingTriggerPosition): LoadingTrigger {
-        const triggerName = this._getLoadingTriggerName(position);
-
-        let trigger = this[triggerName];
-
-        if (!trigger) {
-            this._createLoadingTrigger(position);
-        }
-        return this[triggerName];
-    }
-
-    private _createLoadingTrigger(position: TLoadingTriggerPosition): void {
-        const trigger = this.createItem({
-            itemModule: this._triggerModule,
-            position
-        });
-
-        const triggerName = this._getLoadingTriggerName(position);
-        this[triggerName] = trigger;
-    }
-
-    // endregion Trigger
-
-    abstract createItem(options: ILoadingIndicatorOptions|ILoadingTriggerOptions): T;
+    abstract createItem(options: ILoadingIndicatorOptions): T;
     protected abstract _nextVersion(): void;
 }
 
 Object.assign(IndicatorsMixin.prototype, {
     'Controls/display:IndicatorsMixin': true,
     _indicatorModule: 'Controls/display:Indicator',
-    _triggerModule: 'Controls/display:LoadingTrigger',
     _topIndicator: null,
     _bottomIndicator: null,
     _globalIndicator: null,
-    _topTrigger: null,
-    _bottomTrigger: null,
     _$portionedSearchTemplate: 'Controls/baseList:LoadingIndicatorTemplate',
     _$continueSearchTemplate: 'Controls/baseList:ContinueSearchTemplate'
 });
