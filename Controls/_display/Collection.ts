@@ -182,7 +182,6 @@ export type TArrayGroupKey = TGroupKey[];
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
     style?: string;
-    size?: string;
     itemActionsPosition?: string;
     actionAlignment?: string;
     actionCaptionPosition?: 'right'|'bottom'|'none';
@@ -2820,8 +2819,7 @@ export default class Collection<
         if (templateOptions && config) {
             if (templateOptions.actionStyle) {
                 config.actionStyle = templateOptions.actionStyle;
-            }
-            if (templateOptions.editingStyle) {
+            }            if (templateOptions.editingStyle) {
                 config.editingStyle = templateOptions.editingStyle;
             }
             if (templateOptions.actionPadding) {

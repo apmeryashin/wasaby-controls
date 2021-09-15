@@ -39,15 +39,6 @@ export interface IItemActionsTemplateConfig {
     style?: string;
 
     /**
-     * @cfg {String} Размер иконок опций записи
-     * @description Принимает значения 's' или 'm' в соответствии со стандартом
-     */
-    /*
-     * @cfg {String} Actions icon size
-     */
-    size?: string;
-
-    /**
      * @cfg {Controls/itemActions:TItemActionsPosition} Позиция опций записи
      */
     /*
