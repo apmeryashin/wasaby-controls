@@ -1,8 +1,0 @@
-<tr style="{{ item.getStyles() }}" class="{{ item.getClasses() }}">
-    <td colspan="100">
-        <div name="{{item.isTopTrigger() ? 'topLoadingTrigger' : 'bottomLoadingTrigger' }}"
-             data-qa="{{ item.getQAData() }}">
-        </div>
-    </td>
-</tr>
-

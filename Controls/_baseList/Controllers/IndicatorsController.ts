@@ -1,12 +1,6 @@
-import {
-    Collection,
-    DEFAULT_BOTTOM_TRIGGER_OFFSET,
-    DEFAULT_TOP_TRIGGER_OFFSET,
-    EIndicatorState,
-    ITriggerOffset
-} from 'Controls/display';
-import {RecordSet} from 'Types/collection';
-import {TIndicatorState} from 'Controls/_display/Indicator';
+import { Collection, EIndicatorState } from 'Controls/display';
+import { RecordSet } from 'Types/collection';
+import { TIndicatorState } from 'Controls/_display/Indicator';
 
 export interface IIndicatorsControllerOptions {
     model: Collection;
@@ -15,7 +9,7 @@ export interface IIndicatorsControllerOptions {
     hasMoreDataToTop: boolean;
     hasMoreDataToBottom: boolean;
     shouldShowEmptyTemplate: boolean;
-    scrollToFirstItem: (afterScrollCallback: () => void, onDrawItems?: boolean) => void;
+    scrollToFirstItem: (onDrawItems?: boolean) => void;
     hasHiddenItemsByVirtualScroll: (direction: 'up'|'down') => boolean;
     attachLoadTopTriggerToNull: boolean; // TODO LI переименовать
     attachLoadDownTriggerToNull: boolean; // TODO LI переименовать
@@ -53,33 +47,19 @@ export default class IndicatorsController {
     private _options: IIndicatorsControllerOptions;
     private _model: Collection;
 
-    private _resetTopTriggerOffset: boolean;
-    private _resetBottomTriggerOffset: boolean;
     private _displayIndicatorTimer: number;
 
     private _portionedSearchDirection: TPortionedSearchDirection;
     private _portionedSearchTimer: number = null;
     private _searchState: SEARCH_STATES = 0;
 
-    private _topIndicatorElement: HTMLElement;
-    private _bottomIndicatorElement: HTMLElement;
-
     constructor(options: IIndicatorsControllerOptions) {
         this._options = options;
         this._model = options.model;
 
         const hasItems = this._model && !!this._model.getCount();
-        const displayTopIndicator = this.shouldDisplayTopIndicator() && hasItems;
         const displayBottomIndicator = this.shouldDisplayBottomIndicator() && hasItems;
 
-        this._resetTopTriggerOffset = displayTopIndicator;
-        this._resetBottomTriggerOffset = displayBottomIndicator;
-
-        // Если верхний индикатор не будет показан, то сразу же показываем триггер,
-        // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
-        if (!displayTopIndicator && this._model) {
-            this._model.displayLoadingTopTrigger();
-        }
         // Нижний индикатор сразу же показываем, т.к. не нужно скроллить
         if (displayBottomIndicator) {
             this.displayBottomIndicator();
@@ -92,7 +72,7 @@ export default class IndicatorsController {
      * @param {boolean} isLoading Флаг, означающий что в данный момент идет загрузка.
      * @return {boolean} Возвращает флаг, что изменились значения сброса оффсета триггера
      */
-    updateOptions(options: IIndicatorsControllerOptions, isLoading: boolean): boolean {
+    updateOptions(options: IIndicatorsControllerOptions, isLoading: boolean): void {
         // во время загрузки sourceController всегда возвращает hasMore = false, а корректным значение будет
         // уже только после загрузки, поэтому hasMore обновим только после загрузки
         if (isLoading) {
@@ -110,19 +90,15 @@ export default class IndicatorsController {
         this._options = options;
         this._model = options.model;
 
-        let changedResetTrigger = false;
         if (shouldRecountAllIndicators) {
-            changedResetTrigger = this.recountIndicators('all', true);
+            this.recountIndicators('all', true);
         }
         if (shouldRecountTopIndicator) {
-            const changedResetTriggerByTop = this.recountIndicators('up', false);
-            changedResetTrigger = changedResetTrigger || changedResetTriggerByTop;
+            this.recountIndicators('up', false);
         }
         if (shouldRecountBottomIndicator) {
-            const changedResetTriggerByBottom = this.recountIndicators('down', false);
-            changedResetTrigger = changedResetTrigger || changedResetTriggerByBottom;
+            this.recountIndicators('down', false);
         }
-        return changedResetTrigger;
     }
 
     /**
@@ -140,28 +116,13 @@ export default class IndicatorsController {
      * Обрабатывает пересоздание элементов в коллекции. (в частном случае подразумевает под этим перезагрзку списка)
      * При необходимости пересчитываеет индикаторы, начинает порционный поиск, сбрасывает оффсет у триггеров
      */
-    onCollectionReset(): boolean {
-        let changedResetTrigger = false;
+    onCollectionReset(): void {
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
             this.startDisplayPortionedSearch(direction);
         } else {
-            changedResetTrigger = this.recountIndicators('all', true);
+            this.recountIndicators('all', true);
         }
-
-        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
-        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
-        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
-        // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
-        const hasItems = this._model && !this._model.destroyed && !!this._model.getCount();
-        if (!hasItems) {
-            this.setLoadingTriggerOffset({
-                top: 0,
-                bottom: 0
-            });
-        }
-
-        return changedResetTrigger;
     }
 
     /**
@@ -210,9 +171,7 @@ export default class IndicatorsController {
         this._model.displayIndicator('top', indicatorState);
 
         if (scrollToFirstItem) {
-            this._options.scrollToFirstItem(() => this._model.displayLoadingTopTrigger(), onDrawItems);
-        } else {
-            this._model.displayLoadingTopTrigger();
+            this._options.scrollToFirstItem(onDrawItems);
         }
     }
 
@@ -276,9 +235,8 @@ export default class IndicatorsController {
      * @param position Позиция индикатора
      * @void
      */
-    displayDrawingIndicator(position: 'top'|'bottom'): void {
+    displayDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
         this._startDisplayIndicatorTimer(() => {
-            const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
             // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
             // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
             // скорее всего не выполнится
@@ -290,64 +248,44 @@ export default class IndicatorsController {
 
     /**
      * Скрывает индикатор долгой отрисовки элементов
+     * @param indicatorElement DOM элемент индикатора
      * @param position Позиция индикатора
      */
-    hideDrawingIndicator(position: 'top'|'bottom'): void {
+    hideDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
         this._clearDisplayIndicatorTimer();
-        const indicatorElement = position === 'top' ? this._topIndicatorElement : this._bottomIndicatorElement;
         indicatorElement.style.display = 'none';
         indicatorElement.style.position = '';
         indicatorElement.style[position] = '';
     }
 
     /**
-     * Устанавливает DOM элементы для верхнего и нижнего индикатора.
-     * Они нужны для отображения индкаторов долгой отрисовки элементов списка.
-     * @param {HTMLElement} topIndicator DOM элемент для верхнего индикатора
-     * @param {HTMLElement} bottomIndicator DOM элемент для нижнего индикатора
-     */
-    setIndicatorElements(topIndicator: HTMLElement, bottomIndicator: HTMLElement): void {
-        this._topIndicatorElement = topIndicator;
-        this._bottomIndicatorElement = bottomIndicator;
-    }
-
-    /**
      * Пересчитывает индикаторы в заданном направлении
      * @param direction Направление, для которого будут пересчитаны индикаторы. all - пересчет всех индикаторов.
      * @param {boolean} scrollToFirstItem Нужно ли скроллить к первому элементу, чтобы добавить отступ под верхний триггер
-     * @return {boolean} Возвращает флаг, что изменились значения сброса оффсета триггера
      */
-    recountIndicators(direction: 'up'|'down'|'all', scrollToFirstItem: boolean = false): boolean {
-        let changedResetTrigger = false;
-
+    recountIndicators(direction: 'up'|'down'|'all', scrollToFirstItem: boolean = false): void {
         // если поиск был прерван, то ничего делать не нужно, т.к. ромашек теперь точно не будет
         if (this._getSearchState() === SEARCH_STATES.ABORTED) {
-            return changedResetTrigger;
+            return;
         }
 
         switch (direction) {
             case 'up':
                 this._recountTopIndicator(scrollToFirstItem);
-                this._recountTopTrigger(scrollToFirstItem);
                 break;
             case 'down':
                 this._recountBottomIndicator();
                 // Вместе с пересчетом нижнего индикатора нужно пересчитать верхний триггер, т.к. мог отработать
                 // виртуальный скролл и скрытый триггер нужно будет показать, пример:
                 // https://online.sbis.ru/opendoc.html?guid=947f8f71-f261-474f-9efd-74b1db1bc5b5
-                this._recountTopTrigger(scrollToFirstItem);
                 break;
             case 'all':
-                changedResetTrigger = this.recountResetTriggerOffsets();
                 this._recountTopIndicator(scrollToFirstItem);
-                this._recountTopTrigger(scrollToFirstItem);
                 this._recountBottomIndicator();
                 // после перезагрузки скрываем глобальный индикатор
                 this.hideGlobalIndicator();
                 break;
         }
-
-        return changedResetTrigger;
     }
 
     /**
@@ -362,20 +300,6 @@ export default class IndicatorsController {
         );
     }
 
-    private _recountTopTrigger(scrollToFirstItem: boolean = false): void {
-        // attachLoadTopTriggerToNull поддерживается для календаря, пример:
-        // https://online.sbis.ru/opendoc.html?guid=b0a44d7f-4db7-41f4-8b42-6909704a6503
-        if (this._options.attachLoadTopTriggerToNull) {
-            // если нужно будет скроллить к первой записи, то значит что сверху записей нет
-            // и не нужно будет их сразу подгружать, поэтому скрываем триггер
-            const hasTopIndicator = this.shouldDisplayTopIndicator() || this._model.getTopIndicator().isDisplayed();
-            if (scrollToFirstItem && hasTopIndicator) {
-                this._model.hideLoadingTopTrigger();
-            } else if (this._options.hasHiddenItemsByVirtualScroll('up')) {
-                this._model.displayLoadingTopTrigger();
-            }
-        }
-    }
 
     private _recountTopIndicator(scrollToFirstItem: boolean = false): void {
         // если сейчас порционный поиск и у нас еще не кончился таймер показа индикатора, то не нужно пересчитывать,
@@ -446,98 +370,6 @@ export default class IndicatorsController {
     }
 
     // endregion LoadingIndicator
-
-    // region Trigger
-
-    /**
-     * Определяет, нужно ли сбросить оффсет верхнего триггера.
-     * @return {boolean} Нужно ли сбросить оффсет верхнего триггера.
-     */
-    isResetTopTriggerOffset(): boolean {
-        return this._resetTopTriggerOffset;
-    }
-
-    /**
-     * Определяет, нужно ли сбросить оффсет нижнего триггера.
-     * @return {boolean} Нужно ли сбросить оффсет нижнего триггера.
-     */
-    isResetBottomTriggerOffset(): boolean {
-        return this._resetBottomTriggerOffset;
-    }
-
-    /**
-     * Сбрасывает флаг resetTriggerOffset для направления directionOfLoadItems
-     * Если в параметры прокинули 'up'|'down', то сбрасываем соответствующий флаг resetOffset,
-     * т.к. последующие подгрузки должны происходить заранее
-     * @param directionOfLoadItems Направление подгрузки данных
-     * @return {boolean} Возвращает флаг, что изменились значения сброса оффсета триггера
-     */
-    recountResetTriggerOffsets(directionOfLoadItems?: 'up'|'down'): boolean {
-        let changed = false;
-
-        if (directionOfLoadItems) {
-            // Последующие подгрузки должны происходить заранее, поэтому если произошла хоть одна подгрузка в сторону,
-            // то сбрасываем флаг в эту сторону
-            if (directionOfLoadItems === 'up' && this._resetTopTriggerOffset) {
-                this._resetTopTriggerOffset = false;
-                changed = true;
-            }
-            if (directionOfLoadItems === 'down' && this._resetBottomTriggerOffset) {
-                this._resetBottomTriggerOffset = false;
-                changed = true;
-            }
-        } else {
-            // триггер после перезагрузки сбрасываем только если нужно показывать индикатор
-            const newResetTopTriggerOffset = this.shouldDisplayTopIndicator();
-            const newResetBottomTriggerOffset = this.shouldDisplayBottomIndicator();
-
-            changed = changed || this._resetTopTriggerOffset !== newResetTopTriggerOffset;
-            this._resetTopTriggerOffset = newResetTopTriggerOffset;
-
-            changed = changed || this._resetBottomTriggerOffset !== newResetBottomTriggerOffset;
-            this._resetBottomTriggerOffset = newResetBottomTriggerOffset;
-        }
-
-        return changed;
-    }
-
-    /**
-     * Устанавливает оффсет для триггеров
-     * @param offset Оффсет для триггеров
-     */
-    setLoadingTriggerOffset(offset: ITriggerOffset): void {
-        // TODO LI кривые юниты нужно фиксить
-        if (!this._model || this._model.destroyed) {
-            return;
-        }
-
-        const newOffset = this._correctTriggerOffset(offset);
-        this._model.setLoadingTriggerOffset(newOffset);
-    }
-
-    /**
-     * Корректируем оффсет на высоту индикатора, т.к. триггер отображается абсолютно, то он рисуется от края вьюхи,
-     * а надо от края индикатора.
-     * Значение офссета = 0, нам не подходит, т.к. триггер находится за индикатором
-     * Поэтому дефолтный оффсет должен быть 48 для верхней ромашки и 47 для нижней.
-     * 47 - чтобы сразу же не срабатывала загрузка вверх, а только после скролла к ромашке.
-     * @param offset
-     * @private
-     */
-    private _correctTriggerOffset(offset: ITriggerOffset): ITriggerOffset {
-        const newOffset = {...offset};
-
-        if (this._model.getTopIndicator().isDisplayed()) {
-            newOffset.top = newOffset.top + DEFAULT_TOP_TRIGGER_OFFSET;
-        }
-        if (this._model.getBottomIndicator().isDisplayed()) {
-            newOffset.bottom = newOffset.bottom + DEFAULT_BOTTOM_TRIGGER_OFFSET;
-        }
-
-        return newOffset;
-    }
-
-    // endregion Trigger
 
     // region PortionedSearch
 
