@@ -325,6 +325,7 @@ export default class TileView extends ListView {
                 // canShowActions можно проставить без задержки, если они не будут пересчитаны
                 item.setCanShowActions(true);
             }
+            this._targetItemRect = null;
             return;
         }
 

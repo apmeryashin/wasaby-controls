@@ -577,6 +577,11 @@ describe('Controls/dataSource:SourceController', () => {
             controllerOptions = {...controllerOptions};
             controllerOptions.sorting = [{testField: 'ASC'}];
             ok(controller.updateOptions(controllerOptions));
+
+            // sorting is plain object
+            controllerOptions = {...controllerOptions};
+            controllerOptions.sorting = {testField: 'ASC'};
+            ok(controller.updateOptions(controllerOptions));
         });
     });
 

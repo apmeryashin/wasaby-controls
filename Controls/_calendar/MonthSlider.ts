@@ -40,14 +40,19 @@ export default class MonthSlider extends Control<IControlOptions> {
     _days: object[] = [];
     _formatDate: Date = formatDate;
 
+    protected _prevArrowButtonVisible: boolean;
+    protected _nextArrowButtonVisible: boolean;
+
     protected _beforeMount(options) {
         this._days = calendarUtils.getWeekdaysCaptions();
-        this._setMonth(options.month, true, options.dateConstructor);
+        this._setMonth(options.month, true, options.dateConstructor, options.displayedRanges);
+        this._updateArrowButtonVisible(options.displayedRanges, options.month);
     }
 
     protected _beforeUpdate(options) {
         this._days = calendarUtils.getWeekdaysCaptions();
-        this._setMonth(options.month, true, options.dateConstructor);
+        this._setMonth(options.month, true, options.dateConstructor, options.displayedRanges);
+        this._updateArrowButtonVisible(options.displayedRanges, options.month);
     }
 
     protected _wheelHandler(event) {
@@ -57,6 +62,19 @@ export default class MonthSlider extends Control<IControlOptions> {
         } else if (event.nativeEvent.deltaY > 0) {
             this._slideMonth(null, -1);
         }
+    }
+
+    protected _updateArrowButtonVisible(displayedRanges: Date[][], date: Date): void {
+        if (!displayedRanges) {
+            this._prevArrowButtonVisible = true;
+            this._nextArrowButtonVisible = true;
+            return;
+        }
+        const firstDate = displayedRanges[0][0];
+        const amountOfRanges = displayedRanges.length;
+        const lastDate = displayedRanges[amountOfRanges - 1][1];
+        this._prevArrowButtonVisible = firstDate < date || lastDate === null;
+        this._nextArrowButtonVisible = lastDate > date || lastDate === null;
     }
 
     protected _itemClickHandler(event, item): void {
@@ -90,16 +108,33 @@ export default class MonthSlider extends Control<IControlOptions> {
             false, this._options.dateConstructor);
     }
 
-    private _setMonth(month, silent, dateConstructor): void {
+    private _setMonth(month, silent, dateConstructor, displayedRanges?: Date[][]): void {
         if (DateUtil.isDatesEqual(month, this._month)) {
             return;
         }
         this._animation = month < this._month ? Slider.ANIMATIONS.slideRight : Slider.ANIMATIONS.slideLeft;
         this._month = month;
-        this._isHomeVisible = !DateUtil.isMonthsEqual(month, new dateConstructor());
+        this._isHomeVisible = this._getHomeVisible(month, dateConstructor,
+            displayedRanges || this._options.displayedRanges);
         if (!silent) {
             this._notify('monthChanged', [month]);
         }
+    }
+
+    private _getHomeVisible(month: Date, dateConstructor: Function, displayedRanges: Date[][]): boolean {
+        const currentDate = new dateConstructor();
+        const isCurrentMonth = DateUtil.isMonthsEqual(month, currentDate);
+        let canBeDisplayed = !displayedRanges;
+        if (displayedRanges) {
+            for (const range of displayedRanges) {
+                if (range[0] <= currentDate && currentDate <= range[1]) {
+                    canBeDisplayed = true;
+                    break;
+                }
+            }
+        }
+
+        return !isCurrentMonth && canBeDisplayed;
     }
 
     static getOptionTypes(): object {

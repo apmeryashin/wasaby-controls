@@ -91,5 +91,75 @@ define([
             assert.strictEqual(component._month, options.month);
          });
       });
+      describe('_updateArrowButtonVisible', () => {
+         [{
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 3)]],
+            date: new Date(2020, 1),
+            shouldShowPrevArrow: true,
+            shouldShowNextArrow: true
+         }, {
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 3)]],
+            date: new Date(2018, 1),
+            shouldShowPrevArrow: true,
+            shouldShowNextArrow: true
+         }, {
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 3)]],
+            date: new Date(2018, 0),
+            shouldShowPrevArrow: false,
+            shouldShowNextArrow: true
+         }, {
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 3)]],
+            date: new Date(2020, 3),
+            shouldShowPrevArrow: true,
+            shouldShowNextArrow: false
+         }, {
+            displayedRanges: [[new Date(2020, 1), new Date(2020, 1)]],
+            date: new Date(2020, 1),
+            shouldShowPrevArrow: false,
+            shouldShowNextArrow: false
+         }, {
+            displayedRanges: [[new Date(2020, 1), null]],
+            date: new Date(2021, 1),
+            shouldShowPrevArrow: true,
+            shouldShowNextArrow: true
+         }].forEach((test) => {
+            it('should set correctArrowButtonVisible', () => {
+               const component = calendarTestUtils.createComponent(MonthSlider);
+               component._updateArrowButtonVisible(test.displayedRanges, test.date);
+               assert.strictEqual(test.shouldShowPrevArrow, component._prevArrowButtonVisible);
+               assert.strictEqual(test.shouldShowNextArrow, component._nextArrowButtonVisible);
+            });
+         });
+      });
+
+      describe('_getHomeVisible', () => {
+         [{
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 3)]],
+            shouldShowHomeButton: false,
+            testName: 'should not show home if current date is out of range'
+         }, {
+            displayedRanges: [[new Date(2018, 0), new Date(2022, 3)]],
+            shouldShowHomeButton: true,
+            testName: 'should show home if current date is in range'
+         }].forEach((test) => {
+            it(test.testName, () => {
+               const component = calendarTestUtils.createComponent(MonthSlider);
+               const result = component._getHomeVisible(test.date, Date, test.displayedRanges);
+               assert.strictEqual(test.shouldShowHomeButton, result);
+            });
+         });
+         it('should show home button', () => {
+            const component = calendarTestUtils.createComponent(MonthSlider);
+            const date = new Date(2018, 2);
+            const result = component._getHomeVisible(date, Date);
+            assert.isTrue(result);
+         });
+         it('should not show home button', () => {
+            const component = calendarTestUtils.createComponent(MonthSlider);
+            const date = new Date();
+            const result = component._getHomeVisible(date, Date);
+            assert.isFalse(result);
+         });
+      });
    });
 });

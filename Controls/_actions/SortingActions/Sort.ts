@@ -10,7 +10,7 @@ interface ISortingItem {
     id: string;
     title: string;
     value?: TOrder;
-    icon: string;
+    icon?: string;
 }
 
 interface ISortAction extends IBaseActionOptions {
@@ -67,6 +67,12 @@ export default class Sort extends BaseAction {
     }
 
     private _setItems(items: ISortingItem[]): void {
+        if (items[0] && items[0].id === undefined) {
+            items.forEach((item) => {
+                item.id = item.paramName;
+            });
+        }
+
         this._items = new RecordSet({
             rawData: items,
             keyProperty: 'id'
@@ -87,7 +93,7 @@ export default class Sort extends BaseAction {
         this._order = item.get('value') || 'ASC';
         this._currentIcon = item.get('icon');
         this.icon = this._getIcon();
-        this.title = this.tooltip = item.get('title');
+        this.tooltip = item.get('title');
     }
 
     private _addField(name: string, type: string, items: RecordSet, value?: unknown): void {
@@ -100,8 +106,8 @@ export default class Sort extends BaseAction {
 
 Object.assign(Sort.prototype, {
     id: 'sort',
-    title: rk('Сортировать'),
-    tooltip: rk('Сортировать'),
+    title: rk('Сортировка'),
+    tooltip: rk('Сортировка'),
     icon: 'icon-TFDownload',
     iconStyle: 'secondary',
     'parent@': true
