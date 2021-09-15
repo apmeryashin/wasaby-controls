@@ -126,6 +126,9 @@ export enum ErrorType {
  * Тип функции-обработчика ошибки.
  * Анализирует ошибку и определяет, какой парковочный шаблон нужно отобразить.
  * Принимает объект с параметрами ошибки и возвращет ErrorViewConfig, если ошибка распознана.
+ * @function
+ * @param {IErrorHandlerConfig<TError>}
+ * @returns {ErrorViewConfig<TOptions> | void}
  * @public
  * @author Кашин О.А.
  */
