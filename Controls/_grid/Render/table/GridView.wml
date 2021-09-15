@@ -48,8 +48,13 @@
                     item="{{_listModel.getTopIndicator()}}"
                     on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
         <!--Top loading trigger-->
-        <ws:partial template="{{_listModel.getTopLoadingTrigger().getTemplate()}}"
-                    item="{{_listModel.getTopLoadingTrigger()}}"/>
+        <tr class="controls-BaseControl__loadingTrigger">
+            <td colspan="100">
+                <div name="topLoadingTrigger"
+                     data-qa="loading-trigger-top">
+                </div>
+            </td>
+        </tr>
 
         <!-- Items -->
         <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
@@ -91,8 +96,14 @@
         </ws:if>
 
         <!--Bottom loading trigger-->
-        <ws:partial template="{{_listModel.getBottomLoadingTrigger().getTemplate()}}"
-                    item="{{_listModel.getBottomLoadingTrigger()}}"/>
+        <tr class="controls-BaseControl__loadingTrigger">
+            <td colspan="100">
+                <div name="bottomLoadingTrigger"
+                     data-qa="loading-trigger-bottom">
+                </div>
+            </td>
+        </tr>
+
         <!--Bottom loading indicator-->
         <ws:partial if="{{ _listModel.getBottomIndicator() }}"
                     template="{{_listModel.getBottomIndicator().getTemplate()}}"
