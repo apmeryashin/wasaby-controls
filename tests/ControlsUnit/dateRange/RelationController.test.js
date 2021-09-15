@@ -477,5 +477,31 @@ define([
             });
          });
       });
+      describe('updateRanges', () => {
+         [{
+            start: new Date(2020, 0),
+            end: new Date(2020, 1),
+            changedRangeIndex: 1
+         }, {
+            start: new Date(2021, 0),
+            end: new Date(2023, 1),
+            changedRangeIndex: 0
+         }, {
+            start: null,
+            end: null,
+            changedRangeIndex: 1
+         }].forEach((test) => {
+            it('should change period correctly', () => {
+               const options = getOptions.apply(null, [new Date(2015, 0, 1), 1, {}, 2]);
+               const component = calendarTestUtils.createComponent(RelationController, options);
+               const oldRanges = component._model.ranges;
+               component._model.updateRanges(test.start, test.end, test.changedRangeIndex);
+               const newRanges = component._model.ranges;
+               assert.notDeepEqual(oldRanges, newRanges);
+               assert.deepEqual(newRanges[test.changedRangeIndex][0], test.start);
+               assert.deepEqual(newRanges[test.changedRangeIndex][1], test.end);
+            });
+         });
+      });
    });
 });

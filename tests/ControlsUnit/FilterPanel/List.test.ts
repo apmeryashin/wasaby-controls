@@ -223,5 +223,25 @@ describe('Controls/filterPanel:ListEditor', () => {
             listEditor._handleSelectorResult(result);
             assert.isNull(listEditor._navigation);
         });
+
+        it('filter collapsed', () => {
+            const listEditor = getEditor();
+            let collapsed = false;
+            const result = [
+                new Model({
+                    rawData: {
+                        id: 1,
+                        title: 'Test'
+                    },
+                    keyProperty: 'id'
+                })
+            ];
+
+            listEditor._processPropertyValueChanged = (selectedKeys, needCollapse) => {
+                collapsed = needCollapse;
+            };
+            listEditor._handleSelectorResult(result);
+            assert.isTrue(collapsed);
+        });
     });
 });

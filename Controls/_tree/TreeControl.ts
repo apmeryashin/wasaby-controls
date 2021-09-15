@@ -558,26 +558,27 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     /**
      * Проверяет, нужно ли подгружать данные при скролле для последнего раскрытого узла.
-     * Проверяем, что шаблон футера узла не задан,
+     * Проверяем, что в руте больше нет данных, что шаблон футера узла не задан,
      * последняя запись в списке - узел, и он раскрыт
      * @param direction
      * @param item
+     * @param parentKey
      * @private
      */
-    private _shouldLoadLastExpandedNodeData(direction: Direction, item: TreeItem): boolean {
+    private _shouldLoadLastExpandedNodeData(direction: Direction, item: TreeItem, parentKey: CrudEntityKey): boolean {
         // Иногда item это breadcrumbsItemRow, он не TreeItem
         if (!item || !item['[Controls/_display/TreeItem]'] || direction !== 'down') {
             return false;
         }
+        const hasMoreParentData = !!this._sourceController && this._sourceController.hasMoreData('down', parentKey);
         const hasNodeFooterTemplate: boolean = shouldDisplayNodeFooterTemplate(
             item, this._options.nodeFooterTemplate, this._options.nodeFooterVisibilityCallback
         );
-        return !hasNodeFooterTemplate && item.isNode() !== null && item.isExpanded();
+        return !hasMoreParentData && !hasNodeFooterTemplate && item.isNode() && item.isExpanded();
     }
 
     /**
      * Загружает рекурсивно данные последнего раскрытого узла
-     * Поднимается по всем последним развернутым узлам вверх по иерархии и подгружает первый, который имеет еще данные.
      * @param item
      * @private
      */
@@ -589,7 +590,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             return _private.loadNodeChildren(this, nodeKey);
         } else {
             const lastItem = this._getLastItem(item);
-            if (this._shouldLoadLastExpandedNodeData('down', lastItem)) {
+            if (this._shouldLoadLastExpandedNodeData('down', lastItem, nodeKey)) {
                 return this._loadNodeChildrenRecursive(lastItem);
             }
             return Promise.resolve();
@@ -605,7 +606,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
      */
     protected _loadMore(direction: Direction): Promise {
         const lastRootItem = this._getLastItem(this._listViewModel.getRoot());
-        if (this._shouldLoadLastExpandedNodeData(direction, lastRootItem)) {
+        if (this._shouldLoadLastExpandedNodeData(direction, lastRootItem, this._options.root)) {
             return this._loadNodeChildrenRecursive(lastRootItem);
 
         } else {
@@ -616,7 +617,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     protected _shouldLoadOnScroll(direction: string): boolean {
         const lastRootItem = this._getLastItem(this._listViewModel.getRoot());
-        return super._shouldLoadOnScroll() || this._shouldLoadLastExpandedNodeData(direction, lastRootItem);
+        return super._shouldLoadOnScroll() || this._shouldLoadLastExpandedNodeData(direction, lastRootItem, this._options.root);
     }
 
     private _updateTreeControlModel(newOptions): void {
@@ -1019,6 +1020,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     protected _afterReloadCallback(options: TOptions, loadedList?: RecordSet) {
         if (this._listViewModel) {
+            // На _beforeUpdate уже поздно обновлять контроллер, т.к. данный метод вызовется
+            // из BaseControl::_beforeUpdate до логики в TreeControl::_beforeUpdate
+            // и он заюзает expandController со старой моделью
+            // TODO удалить после https://online.sbis.ru/opendoc.html?guid=961081b9-a94d-4694-9165-cd56cc843ab2
+            this._expandController.updateOptions({model: this._listViewModel});
+
             const modelRoot = this._listViewModel.getRoot();
             const root = this._options.root !== undefined ? this._options.root : this._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;

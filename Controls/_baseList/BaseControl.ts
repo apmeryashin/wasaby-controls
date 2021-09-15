@@ -43,7 +43,6 @@ import { Sticky } from 'Controls/popup';
 import { process } from 'Controls/error';
 
 // Utils imports
-import {getItemsBySelection} from 'Controls/_baseList/resources/utils/getItemsBySelection';
 import {EventUtils} from 'UI/Events';
 import {DimensionsMeasurer, getDimensions as uDimension} from 'Controls/sizeUtils';
 import {getItemsHeightsData} from 'Controls/_baseList/ScrollContainer/GetHeights';
@@ -119,6 +118,11 @@ import IndicatorsController, {
     IIndicatorsControllerOptions,
     INDICATOR_HEIGHT
 } from './Controllers/IndicatorsController';
+import ObserversController, {
+    DEFAULT_TRIGGER_OFFSET,
+    IObserversControllerOptions,
+    TIntersectionEvent
+} from 'Controls/_baseList/Controllers/ObserversController';
 
 //#endregion
 
@@ -623,9 +627,14 @@ const _private = {
     },
 
     loadToDirection(self: BaseControl, direction: IDirection, receivedFilter?): Promise<RecordSet|void> | void {
-        const changed = self._indicatorsController.recountResetTriggerOffsets(direction);
-        if (changed) {
-            self._updateScrollController();
+        // Нужно сбросить сосояние resetTriggerOffset, чтобы последующие загрузки начинались заранее,
+        // а первая загрузка в сторону непосредственно при скролле к краю
+        if (self._observersController) {
+            self._observersController.clearResetTriggerOffset(
+                direction,
+                self._children.listView?.getTopLoadingTrigger(),
+                self._children.listView?.getBottomLoadingTrigger()
+            );
         }
 
         if (self._sourceController) {
@@ -633,7 +642,7 @@ const _private = {
             if (self._shouldStartDisplayPortionedSearch()) {
                 self._indicatorsController.startDisplayPortionedSearch(DIRECTION_COMPATIBILITY[direction] as 'top'|'bottom');
             } else {
-                self._recountIndicators(direction);
+                self._indicatorsController.recountIndicators(direction)
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
                     self._displayGlobalIndicator();
                 }
@@ -648,7 +657,7 @@ const _private = {
                     return;
                 }
 
-                if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer()) {
+                if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer(addedItems)) {
                     self._indicatorsController.resetDisplayPortionedSearchTimer();
                 }
 
@@ -670,12 +679,12 @@ const _private = {
                     self._updateShadowModeHandler(self._shadowVisibility);
                 }
 
-                // нужно пересчитать hasMoreData
-                self._updateIndicatorsController();
-                // Пересчитывать ромашки нужно сразу после загрузки, а не по событию add, т.к.
+                // Пересчитывать ромашки и обновить hasMore нужно сразу после загрузки, а не по событию add, т.к.
                 // например при порционном поиске последний запрос в сторону может подгрузить пустой список
                 // и событие add не сработает
-                self._recountIndicators(direction);
+                const hasMoreData = _private.getHasMoreData(self);
+                self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
+                self._indicatorsController.recountIndicators(direction);
 
                 return addedItems;
             }).addErrback((error: CancelableError) => {
@@ -691,7 +700,7 @@ const _private = {
 
                 if (hideIndicatorOnCancelQuery) {
                     // при пересчете скроем все ненужые индикаторы
-                    self._recountIndicators(direction);
+                    self._indicatorsController.recountIndicators(direction);
                 }
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
@@ -1034,7 +1043,6 @@ const _private = {
             self._isScrollShown = true;
 
             self._viewSize = _private.getViewSize(this, true);
-            self._viewportRect = params.viewPortRect;
 
             self._updateHeights();
 
@@ -1126,6 +1134,11 @@ const _private = {
                 self._notify('controlResize', [], { bubbling: true });
             }
             self._viewSize = container.clientHeight;
+            self._observersController?.setViewHeight(
+                self._viewSize,
+                self._children.listView?.getTopLoadingTrigger(),
+                self._children.listView?.getBottomLoadingTrigger()
+            );
         }
         return self._viewSize;
     },
@@ -1204,6 +1217,12 @@ const _private = {
                 _private.updateScrollPagingButtons(self, {...self._getScrollParams(), initial: !self._scrolled});
             }
         }
+
+        self._observersController?.setScrollTop(
+            self._scrollTop,
+            self._children.listView?.getTopLoadingTrigger(),
+            self._children.listView?.getBottomLoadingTrigger()
+        );
     },
 
     disablePagingNextButtons(self): void {
@@ -1338,12 +1357,7 @@ const _private = {
                         const hasMoreData = _private.getHasMoreData(self);
                         self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
 
-                        // избавиться от возвращаемого значения и обновления скроллКонтроллера по задаче
-                        // https://online.sbis.ru/opendoc.html?guid=a793d8d7-354e-43d2-b091-a563080f3cc4
-                        const changedResetTrigger = self._indicatorsController.onCollectionReset();
-                        if (changedResetTrigger) {
-                            self._updateScrollController(self._options);
-                        }
+                        self._indicatorsController.onCollectionReset();
 
                         if (self._options.searchValue) {
                             // Событие reset коллекции приводит к остановке активного порционного поиска.
@@ -1358,14 +1372,36 @@ const _private = {
                         self._indicatorsController.onCollectionAdd();
                         break;
                 }
+            }
 
-                // При добавлении в список нужно отпустить триггер с нужной стороны,
-                // чтобы далее загрузка не требовала подскролла до ромашки
-                // TODO: https://online.sbis.ru/opendoc.html?guid=a6bc9564-4072-4bb6-b562-d98fa0282018
-                const collectionStartIndex = self._listViewModel.getStartIndex();
-                const changed = self._indicatorsController?.recountResetTriggerOffsets(newItemsIndex <= collectionStartIndex ? 'up' : 'down');
-                if (changed) {
-                    self._updateScrollController();
+            if (self._observersController) {
+                switch (action) {
+                    case IObservable.ACTION_RESET:
+                        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
+                        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
+                        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
+                        // https://online.sbis.ru/opendoc.html?guid=2754d625-f6eb-469d-9fb5-3c86e88e793e
+                        // Также сбрасываем triggerOffset если после ресета в сторону есть данные, чтобы
+                        // первая подгрузка была только при скролле к самому краю
+                        const hasItems = self._listViewModel && !self._listViewModel.destroyed && !!self._listViewModel.getCount();
+                        self._observersController.setResetTriggerOffsets(
+                            !hasItems || self._hasMoreData('up'),
+                            !hasItems || self._hasMoreData('down'),
+                            self._children.listView?.getTopLoadingTrigger(),
+                            self._children.listView?.getBottomLoadingTrigger(),
+                        );
+                        break;
+                    case IObservable.ACTION_ADD:
+                        // При добавлении в список нужно отпустить триггер с нужной стороны,
+                        // чтобы далее загрузка не требовала подскролла до ромашки
+                        // TODO: https://online.sbis.ru/opendoc.html?guid=a6bc9564-4072-4bb6-b562-d98fa0282018
+                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                        self._observersController.clearResetTriggerOffset(
+                            direction,
+                            self._children.listView?.getTopLoadingTrigger(),
+                            self._children.listView?.getBottomLoadingTrigger(),
+                        );
+                        break;
                 }
             }
 
@@ -1408,13 +1444,7 @@ const _private = {
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
                         case IObservable.ACTION_RESET:
-
-                        // TODO: Нужно научить virtualScroll обрабатывать reset коллекции с сохранением положения скролла
-                        // Сейчас можем сохранить только если не поменялось количество записей.
-                        // Таких кейсов еще не было, но вообще могут появиться https://online.sbis.ru/opendoc.html?guid=1bff2e6e-d018-4ac9-be37-ca77cb0a8030
-                            if (!self._keepScrollAfterReload || newItems.length !== removedItems.length) {
-                                result = self._scrollController.handleResetItems();
-                            }
+                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
                             break;
                     }
                     if (result) {
@@ -2287,9 +2317,6 @@ const _private = {
                 };
             }
         }
-        if (result.triggerOffset) {
-            self._indicatorsController.setLoadingTriggerOffset(result.triggerOffset);
-        }
         if (result.shadowVisibility) {
             self._updateShadowModeHandler(result.shadowVisibility);
         }
@@ -2391,16 +2418,6 @@ const _private = {
     // endregion
 
     createScrollController(self: BaseControl, options: any): void {
-        // indicatorsController создается после scrollController, т.к. отображение ромашек зависит от скрыты ли элементы
-        // виртуальным скроллом. resetOffset при создании не важен, т.к. при создании мы не знаем высоту вьюхи
-        // и оффсеты всен равно будут 0
-        const resetTopTriggerOffset = self._indicatorsController
-            ? self._indicatorsController.isResetTopTriggerOffset()
-            : true;
-        const resetBottomTriggerOffset = self._indicatorsController
-            ? self._indicatorsController.isResetBottomTriggerOffset()
-            : true;
-
         self._scrollController = new ScrollController({
             disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -2408,10 +2425,6 @@ const _private = {
             collection: self._listViewModel,
             activeElement: options.activeElement,
             forceInitVirtualScroll: self._needScrollCalculation,
-            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
-            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
-            resetTopTriggerOffset,
-            resetBottomTriggerOffset,
             notifyKeyOnRender: options.notifyKeyOnRender
         });
         const result = self._scrollController.handleResetItems();
@@ -2960,6 +2973,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _handleLoadToDirection: boolean;
     private _drawingIndicatorDirection: 'top'|'bottom';
 
+    private _observersController: ObserversController;
+
     protected _listViewModel: Collection = null;
     _viewModelConstructor = null;
     protected _items: RecordSet;
@@ -2986,7 +3001,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _isScrollShown = false;
     _needScrollCalculation = false;
-    _loadTriggerVisibility = null;
+    _loadTriggerVisibility = {};
     _checkTriggerVisibilityTimeout = null;
     _notifyPlaceholdersChanged = null;
     _viewSize = null;
@@ -3087,6 +3102,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._onWindowResize = this._onWindowResize.bind(this);
         this._scrollToFirstItemAfterDisplayTopIndicator = this._scrollToFirstItemAfterDisplayTopIndicator.bind(this);
         this._hasHiddenItemsByVirtualScroll = this._hasHiddenItemsByVirtualScroll.bind(this);
+        this._intersectionObserverHandler = this._intersectionObserverHandler.bind(this);
     }
 
     /**
@@ -3113,7 +3129,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-        this._loadTriggerVisibility = {};
 
         if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
             const shouldPrevent = newOptions.preventServerSideColumnScroll;
@@ -3283,8 +3298,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.createScrollController(self, newOptions);
         self._createIndicatorsController(newOptions);
-        // обновляем флаги isResetTriggerOffset
-        self._updateScrollController(newOptions);
     }
 
     _initKeyProperty(options: TOptions): void {
@@ -3312,7 +3325,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.handleListScrollSync(this, params.scrollTop);
 
-        const result = this._scrollController?.scrollPositionChange(params);
+        const result = this._scrollController?.scrollPositionChange({
+            ...params,
+            topTriggerOffset: this._observersController?.getTriggerOffsets().top,
+            bottomTriggerOffset: this._observersController?.getTriggerOffsets().bottom
+        }, false);
         _private.handleScrollControllerResult(this, result);
     }
 
@@ -3330,9 +3347,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
-        this._viewportRect = viewportRect;
+        this._observersController?.setViewportHeight(
+            this._viewportSize,
+            this._children.listView?.getTopLoadingTrigger(),
+            this._children.listView?.getBottomLoadingTrigger()
+        );
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
+            this._observersController?.setScrollTop(
+                this._scrollTop,
+                this._children.listView?.getTopLoadingTrigger(),
+                this._children.listView?.getBottomLoadingTrigger()
+            );
         }
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateHeights(false);
@@ -3482,9 +3508,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         if (!this._sourceController?.getLoadError()) {
             this._registerObserver();
-            if (this._shouldRegisterIntersectionObserver()) {
-                this._registerIntersectionObserver();
-            }
         }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
@@ -3544,16 +3567,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.changeSelection(this, controller.getSelection());
         }
 
+        this._observersController = new ObserversController(this._getObserversControllerOptions(this._options));
+
+        // Если верхний индикатор не будет показан, то сразу же показываем триггер,
+        // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
+        if (!this._indicatorsController.shouldDisplayTopIndicator()) {
+            this._observersController.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
+        }
+
         // на мобильных устройствах не сработает mouseEnter, поэтому ромашку сверху добавляем сразу после моунта
         // до моунта нельзя, т.к. нельзя будет проскроллить
         if (detection.isMobilePlatform && this._indicatorsController.shouldDisplayTopIndicator()) {
             this._indicatorsController.displayTopIndicator(true);
-        }
-        if (this._children.listView) {
-            this._indicatorsController.setIndicatorElements(
-                this._children.listView.getTopIndicator(),
-                this._children.listView.getBottomIndicator()
-            );
         }
         // если элементов не хватает на всю страницу, то сразу же показываем ромашки и триггеры, чтобы догрузить данные
         if (this._viewSize < this._viewportSize) {
@@ -3568,6 +3593,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ) {
                 // скроллить не нужно, т.к. не куда, ведь элементы не занимают весь вьюПорт
                 this._indicatorsController.displayTopIndicator(false);
+                this._observersController.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
             }
         }
 
@@ -3581,11 +3607,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const result = this._scrollController.update({
                 options: {
                     ...options,
-                    resetTopTriggerOffset: this._indicatorsController.isResetTopTriggerOffset(),
-                    resetBottomTriggerOffset: this._indicatorsController.isResetBottomTriggerOffset(),
                     forceInitVirtualScroll: this._needScrollCalculation,
                     collection: this.getViewModel(),
-                    needScrollCalculation: this._needScrollCalculation
+                    needScrollCalculation: this._needScrollCalculation,
+                    topTriggerOffset: this._observersController?.getTriggerOffsets().top,
+                    bottomTriggerOffset: this._observersController?.getTriggerOffsets().bottom
+                },
+                params: {
+                    topTriggerOffset: this._observersController?.getTriggerOffsets().top,
+                    bottomTriggerOffset: this._observersController?.getTriggerOffsets().bottom
                 }
             });
             _private.handleScrollControllerResult(this, result);
@@ -3742,6 +3772,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     newOptions.viewModelConstructor
                 );
             }
+            // observersController нужно обновить до скроллКонтроллера, т.к. scrollController получает опции из _observersController
+            this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
@@ -3754,6 +3786,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
         } else {
+            // observersController нужно обновить до скроллКонтроллера, т.к. scrollController получает опции из _observersController
+            this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
             this._updateScrollController(newOptions);
         }
 
@@ -4086,6 +4120,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
         this._destroyIndicatorsController();
+        this._observersController?.destroy();
+        this._observersController = null;
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -4130,10 +4166,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._validateController.destroy();
         this._validateController = null;
-        if (this._intersectionObserver) {
-            this._intersectionObserver.destroy();
-            this._intersectionObserver = null;
-        }
 
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
@@ -4248,7 +4280,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._scrollController.setRendering(false);
 
             if (this._drawingIndicatorDirection) {
-                this._indicatorsController.hideDrawingIndicator(this._drawingIndicatorDirection);
+                this._indicatorsController.hideDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
                 this._drawingIndicatorDirection = null;
             }
 
@@ -4377,7 +4412,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.handleScrollControllerResult(this, result);
                 this._handleLoadToDirection = false;
                 this._drawingIndicatorDirection = DIRECTION_COMPATIBILITY[direction];
-                this._indicatorsController.displayDrawingIndicator(this._drawingIndicatorDirection);
+                this._indicatorsController.displayDrawingIndicator(
+                    this._getIndicatorDomElement(this._drawingIndicatorDirection),
+                    this._drawingIndicatorDirection
+                );
                 resolver();
             } else {
                 if (this._shouldLoadOnScroll(direction)) {
@@ -4416,8 +4454,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (!this._observerRegistered) {
                 this._registerObserver();
             }
-            if (this._shouldRegisterIntersectionObserver()) {
-                this._registerIntersectionObserver();
+            if (this._observersController?.shouldRegisterIntersectionObserver()) {
+                this._observersController.registerIntersectionObserver(
+                    this,
+                    this._children.listView?.getTopLoadingTrigger(),
+                    this._children.listView?.getBottomLoadingTrigger()
+                );
             }
         }
 
@@ -4590,6 +4632,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
         if (keepScroll) {
             this._keepScrollAfterReload = true;
+            if (!sourceConfig) {
+                if (this._options.navigation?.source === 'position') {
+                    sourceConfig = {...(this._options.navigation.sourceConfig), limit: this._items.getCount()};
+                }
+                if (this._options.navigation?.source === 'page') {
+                    const navPageSize = this._options.navigation.sourceConfig.pageSize;
+                    const pageSize = Math.ceil(this._items.getCount() / navPageSize) * navPageSize;
+                    sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
+                }
+            }
         }
 
         // Вызов перезагрузки из публичного API должен завершать имеющееся редактирование по месту.
@@ -4670,8 +4722,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.prepareFooter(self, self._options, self._sourceController);
 
                     resDeferred.callback(list);
-
-                    self._recountIndicators('all', true);
                     _private.resetScrollAfterLoad(self);
                     _private.tryLoadToDirectionAgain(self, list);
                 });
@@ -5893,9 +5943,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._dragEnter(this._getDragObject());
         }
 
-        // нужно всегда вызывать пересчет верхнего индикатора, он покажется только если нужен,
-        // но вместе с ним пересчитается и верхний триггер.
-        this._recountIndicators('up', true);
+        if (this._indicatorsController.shouldDisplayTopIndicator()) {
+            this._indicatorsController.displayTopIndicator(true);
+        } else {
+            this._observersController?.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
+        }
 
         if (!this._pagingVisible) {
             _private.initPaging(this);
@@ -6202,7 +6254,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
-            const needShift = this._indicatorsController.shouldDisplayTopIndicator();
+            const needShift = direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator() ||
+                              direction === 'down' && this._indicatorsController.shouldDisplayBottomIndicator();
             const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
             _private.handleScrollControllerResult(this, result);
         }
@@ -6219,22 +6272,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    private _registerIntersectionObserver(): void {
-        const topTrigger = this._children.listView.getTopLoadingTrigger();
-        const bottomTrigger = this._children.listView.getBottomLoadingTrigger();
-        this._intersectionObserver = new EdgeIntersectionObserver(
-            this as any,
-            this._intersectionObserverHandler.bind(this),
-            topTrigger,
-            bottomTrigger);
-    }
-
-    private _shouldRegisterIntersectionObserver(): boolean {
-        return document && this._isMounted && this._listViewModel
-            && !this._intersectionObserver;
-    }
-
-    _intersectionObserverHandler(eventName) {
+    _intersectionObserverHandler(eventName: TIntersectionEvent): void {
         switch (eventName) {
             case 'bottomIn':
                 this.triggerVisibilityChangedHandler('down', true);
@@ -6284,6 +6322,31 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
+    // region Observers
+
+    private _getObserversControllerOptions(options: IBaseControlOptions): IObserversControllerOptions {
+        const resetTopTriggerOffset = this._sourceController && this._sourceController.hasMoreData('up')
+            && !this._hasHiddenItemsByVirtualScroll('up');
+        const resetBottomTriggerOffset = this._sourceController && this._sourceController.hasMoreData('down')
+            && !this._hasHiddenItemsByVirtualScroll('down');
+        return {
+            model: this._listViewModel,
+            viewHeight: this._viewSize,
+            viewportHeight: this._viewportSize,
+            scrollTop: this._scrollTop,
+            topTriggerOffsetCoefficient: this._options.topTriggerOffsetCoefficient,
+            bottomTriggerOffsetCoefficient: this._options.bottomTriggerOffsetCoefficient,
+            resetTopTriggerOffset,
+            resetBottomTriggerOffset,
+            intersectionHandler: this._intersectionObserverHandler,
+            viewElement: this,
+            topTriggerElement: this._children.listView?.getTopLoadingTrigger(),
+            bottomTriggerElement: this._children.listView?.getBottomLoadingTrigger(),
+        }
+    }
+
+    // endregion Observers
+
     // region Indicators
 
     private _createIndicatorsController(options: IBaseControlOptions): void {
@@ -6293,10 +6356,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _updateIndicatorsController(newOptions?: IBaseControlOptions, isLoading: boolean = false): void {
         const options = newOptions || this._options;
         const controllerOptions = this._getIndicatorsControllerOptions(options);
-        const changedResetTrigger = this._indicatorsController.updateOptions(controllerOptions, isLoading);
-        if (changedResetTrigger) {
-            this._updateScrollController(newOptions);
-        }
+        this._indicatorsController.updateOptions(controllerOptions, isLoading);
     }
 
     private _getIndicatorsControllerOptions(options: IBaseControlOptions): IIndicatorsControllerOptions {
@@ -6330,6 +6390,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController = null;
     }
 
+    private _getIndicatorDomElement(direction: 'top'|'bottom'): HTMLElement {
+        return direction === 'top'
+            ? this._children.listView.getTopIndicator()
+            : this._children.listView.getBottomIndicator();
+    }
+
     private _countGlobalIndicatorPosition(): number {
         return this._scrollTop + (this._viewportSize || this._viewSize) / 2 - INDICATOR_HEIGHT / 2;
     }
@@ -6340,27 +6406,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    private _recountIndicators(
-        direction: 'up'|'down'|'all', scrollToFirstItem?: boolean, options?: IBaseControlOptions
-    ): void {
-        const changedResetTrigger = this._indicatorsController.recountIndicators(direction, scrollToFirstItem);
-        if (changedResetTrigger) {
-            this._updateScrollController(options);
-        }
-    }
-
     private _hasHiddenItemsByVirtualScroll(direction: 'up'|'down'): boolean {
         return this._scrollController && !this._scrollController.isRangeOnEdge(direction);
     }
 
-    private _scrollToFirstItemAfterDisplayTopIndicator(showTriggerCallback: () => void, onDrawItems: boolean = false): void {
+    private _scrollToFirstItemAfterDisplayTopIndicator(onDrawItems: boolean = false): void {
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то не нужно скроллить к первому элементу
-                showTriggerCallback();
+                this._observersController.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
             } else {
                 const scrollResult = this._scrollToFirstItem();
-                scrollResult.then(showTriggerCallback);
+                scrollResult.then(() => {
+                    this._observersController.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
+                });
             }
         };
 
@@ -6838,7 +6897,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // FIXME: https://online.sbis.ru/opendoc.html?guid=12b8b9b1-b9d2-4fda-85d6-f871ecc5474c
             stickyHeader: true,
             stickyColumnsCount: 1,
-            notifyKeyOnRender: false
+            notifyKeyOnRender: false,
+            topTriggerOffsetCoefficient: DEFAULT_TRIGGER_OFFSET,
+            bottomTriggerOffsetCoefficient: DEFAULT_TRIGGER_OFFSET,
         };
     }
 }

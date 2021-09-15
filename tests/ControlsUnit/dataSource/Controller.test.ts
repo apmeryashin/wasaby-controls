@@ -577,6 +577,27 @@ describe('Controls/dataSource:SourceController', () => {
             controllerOptions = {...controllerOptions};
             controllerOptions.sorting = [{testField: 'ASC'}];
             ok(controller.updateOptions(controllerOptions));
+
+            // sorting is plain object
+            controllerOptions = {...controllerOptions};
+            controllerOptions.sorting = {testField: 'ASC'};
+            ok(controller.updateOptions(controllerOptions));
+        });
+
+        it('updateOptions with new filter',  async () => {
+            let controllerOptions = getControllerOptions();
+            controllerOptions.filter = [{filed1: 'value1'}];
+            const controller = getController(controllerOptions);
+
+            // the same filter
+            controllerOptions = {...controllerOptions};
+            controllerOptions.filter = [{filed1: 'value1'}];
+            ok(!controller.updateOptions(controllerOptions));
+
+            // another filter
+            controllerOptions = {...controllerOptions};
+            controllerOptions.filter = [{field2: 'value2'}];
+            ok(controller.updateOptions(controllerOptions));
         });
     });
 

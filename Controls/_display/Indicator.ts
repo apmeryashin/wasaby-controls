@@ -1,5 +1,7 @@
 import CollectionItem, { IOptions as ICollectionOptions} from './CollectionItem';
 import { TemplateFunction } from 'UI/Base';
+import {Model} from 'Types/entity';
+import {isEqual} from 'Types/object';
 
 export type TIndicatorPosition = 'top'|'bottom'|'global';
 export type TIndicatorState = 'portioned-search'|'continue-search'|'loading';
@@ -36,6 +38,7 @@ export default class Indicator extends CollectionItem<null> {
 
     protected _$portionedSearchTemplate: TemplateFunction|string;
     protected _$continueSearchTemplate: TemplateFunction|string;
+    private _metaData: { results?: Model };
 
     get key(): string {
         return `${this._$state}-` + this._$position + this._instancePrefix;
@@ -137,6 +140,25 @@ export default class Indicator extends CollectionItem<null> {
 
     isDisplayed(): boolean {
         return this._$visible;
+    }
+
+    /**
+     * Перерисовывает индикатор.
+     * В темплейтах Порционного поиска и Продолжить поиск, могут задать footerTemplate, в котором выводят доп информацию.
+     * Обычно это используют для отрисовки кол-ва уже просмотренных данных, которые лежат в метаДанных.
+     * Поэтому нам нужно перерисоваться при изменении метаДанных.
+     * @return {boolean} Возвращает изменилось ли значение, чтобы при необходимости поднять версию модели
+     */
+    setMetaData(metaData: { results?: Model }): boolean {
+        let changed = false;
+        if (this.isDisplayed() && (this._$state === 'portioned-search' || this._$state === 'continue-search')) {
+            if (!isEqual(this._metaData, metaData)) {
+                this._metaData = metaData;
+                this._nextVersion();
+                changed = true;
+            }
+        }
+        return changed;
     }
 }
 

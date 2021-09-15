@@ -220,7 +220,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         const collection = this._options.collection;
 
         if (!fromItem) {
-            next = collection.getFirst();
+            next = collection.getFirst('[Controls/_display/IEditableCollectionItem]');
         } else {
             next = direction === 'after' ? collection.getNext(fromItem) :
                 collection.getPrevious(fromItem);

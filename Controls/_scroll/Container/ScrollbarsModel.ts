@@ -4,7 +4,6 @@ import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {SCROLL_DIRECTION} from '../Utils/Scroll';
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
-import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import {IScrollbarsOptions} from './Interface/IScrollbars';
 import ScrollbarModel, {Offsets} from './ScrollbarModel';
 import {IScrollState} from '../Utils/ScrollState';
@@ -33,7 +32,6 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     private _models: object = {};
     private _canScroll: boolean = false;
     private _overflowHidden: boolean;
-    private _styleHideScrollbar: string;
 
     private _newState: IScrollState;
     private _container: HTMLElement;
@@ -43,10 +41,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         super(options);
 
         this._options = options;
-        const scrollOrientationOption = options.scrollOrientation;
-
         this._overflowHidden = ScrollHeightFixUtil.calcHeightFix();
-        this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(scrollOrientationOption);
 
         // На мобильных устройствах используется нативный скролл, на других платформенный.
         this._useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid;
@@ -186,10 +181,6 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    get scrollContainerStyles() {
-        return !this._overflowHidden ? this._styleHideScrollbar : '';
-    }
-
     getScrollContainerClasses(): string {
         let css = '';
         if (this._useNativeScrollbar) {
@@ -209,14 +200,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     private _getHideNativeScrollbarCssClass(): string {
-        const css: string[] = [' controls-Scroll__content_hideNativeScrollbar'];
-        // На данный момент вертикальный скролбар скрывается костылями везде кроме chrome.
-        // Если вертикального скролбара нет, скрываем скролбары везде нативно.
-        // Если с этим решением проблем не будет, то надо быдет спилить костыли и для вертикального скролбара.
-        if (this._options.scrollOrientation === SCROLL_MODE.HORIZONTAL) {
-            css.push('controls-Scroll__content_hideNativeScrollbar_ff-ie-edge');
-        }
-        return css.join(' ');
+        return ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hideNativeScrollbar_ff-ie-edge';
     }
 
     private _getOverflowClass(): string {

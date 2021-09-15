@@ -1,7 +1,7 @@
 import {assert} from 'chai';
-import {spy} from 'sinon';
 import {Collection, EIndicatorState} from 'Controls/display';
 import IndicatorsController, {IIndicatorsControllerOptions} from 'Controls/_baseList/Controllers/IndicatorsController';
+import sinon = require('sinon');
 import {RecordSet} from 'Types/collection';
 
 function initTest(
@@ -27,6 +27,16 @@ function initTest(
 }
 
 describe('Controls/list_clean/Indicators/Controller', () => {
+    let fakeTimer;
+
+    beforeEach(() => {
+        fakeTimer = sinon.useFakeTimers();
+    });
+
+    afterEach(() => {
+        fakeTimer.restore();
+    });
+
     describe('updateOptions', () => {
         it('changed items', () => {
             const {collection, controller} = initTest([{id: 1}], {});
@@ -118,38 +128,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             controller.setHasMoreData(true, true);
-            const changedResetTrigger = controller.onCollectionReset();
-            assert.isTrue(changedResetTrigger);
+            controller.onCollectionReset();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
-        });
-
-        it('display top trigger only after scroll to first item', async () => {
-            let resolveScrollToFirstItemPromise;
-            let scrollToFirstItemPromise;
-            const scrollToFirstItem = (afterScrollCallback) => {
-                scrollToFirstItemPromise = new Promise((resolve) => {
-                    resolveScrollToFirstItemPromise = resolve;
-                }).then(afterScrollCallback);
-            };
-            const options = {
-                isInfinityNavigation: true,
-                attachLoadTopTriggerToNull: true,
-                hasHiddenItemsByVirtualScroll: () => false,
-                scrollToFirstItem
-            } as unknown as IIndicatorsControllerOptions;
-            const {collection, controller} = initTest([{id: 1}], options);
-            assert.isFalse(collection.getTopIndicator().isDisplayed());
-
-            controller.setHasMoreData(true, true);
-            const changedResetTrigger = controller.onCollectionReset();
-            assert.isTrue(changedResetTrigger);
-            assert.isTrue(collection.getTopIndicator().isDisplayed());
-            assert.isFalse(collection.getTopLoadingTrigger().isDisplayed());
-
-            resolveScrollToFirstItemPromise();
-            await scrollToFirstItemPromise;
-            assert.isTrue(collection.getTopLoadingTrigger().isDisplayed());
         });
 
         it('hide global indicator', async () => {
@@ -159,9 +140,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionReset();
@@ -174,13 +153,10 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             const {collection, controller} = initTest([{id: 1}], {});
             controller.startDisplayPortionedSearch('bottom');
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
-            const changedResetTrigger = controller.onCollectionReset();
-            assert.isFalse(changedResetTrigger);
+            controller.onCollectionReset();
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -195,31 +171,10 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
-        });
-
-        it('reset trigger offsets', () => {
-            const options = {
-                isInfinityNavigation: true,
-                attachLoadTopTriggerToNull: true,
-                attachLoadDownTriggerToNull: true,
-                hasMoreDataToTop: true,
-                hasMoreDataToBottom: true,
-                hasHiddenItemsByVirtualScroll: () => false,
-                scrollToFirstItem: (afterScroll) => afterScroll()
-            } as unknown as IIndicatorsControllerOptions;
-            const {collection, controller} = initTest([{id: 1}], options);
-
-            collection.setCollection(new RecordSet());
-            const spySetOffsets = spy(collection, 'setLoadingTriggerOffset');
-            controller.setHasMoreData(false, false);
-            controller.onCollectionReset();
-            assert.isTrue(spySetOffsets.withArgs({top: 0, bottom: 0}).called);
         });
     });
 
@@ -231,9 +186,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionAdd();
@@ -253,9 +206,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -282,9 +233,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -320,9 +269,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -346,9 +293,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.displayGlobalIndicator(0);
 
             // ждем пока отобразится индикатор порционного поиска
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
 
             // олжно вернуть false, т.к. индикатор отображен
             assert.isTrue(controller.shouldHideGlobalIndicator());
@@ -376,9 +321,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.displayGlobalIndicator(0);
             // ждем пока отобразится индикатор
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isOk(collection.getGlobalIndicator());
 
             controller.hideGlobalIndicator();
@@ -395,9 +338,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.hideGlobalIndicator(); // прерываем таймер
 
             // дожидается 2с и убеждаемся что индикатор так и не показался
-            await new Promise((resolve) => {
-                setTimeout(() => resolve(null), 2001);
-            });
+            fakeTimer.tick(2001)
             assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры

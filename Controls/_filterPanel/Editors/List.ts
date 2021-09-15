@@ -152,7 +152,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._setFilter(selectedKeys, this._options.filter, this._options.keyProperty);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
-        this._processPropertyValueChanged(selectedKeys, !this._options.multiSelect);
+        this._processPropertyValueChanged(selectedKeys, true);
     }
 
     protected _handleFooterClick(event: SyntheticEvent): void {

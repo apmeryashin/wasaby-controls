@@ -674,7 +674,6 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
 Object.assign(Grid.prototype, {
     '[Controls/_display/grid/mixins/Grid]': true,
     _indicatorModule: 'Controls/grid:Indicator',
-    _triggerModule: 'Controls/grid:LoadingTrigger',
     _$columns: null,
     _$header: null,
     _$headerVisibility: 'hasdata',

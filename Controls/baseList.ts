@@ -86,7 +86,6 @@ export {MoveController, IMoveControllerOptions}  from 'Controls/_baseList/Contro
 // region Indicators
 export * as IndicatorTemplate from 'wml!Controls/_baseList/indicators/IndicatorTemplate';
 export * as LoadingIndicatorItemTemplate from 'wml!Controls/_baseList/indicators/LoadingIndicatorTemplate';
-export * as LoadingTriggerItemTemplate from 'wml!Controls/_baseList/indicators/LoadingTriggerTemplate';
 export * as LoadingIndicatorTemplate from 'wml!Controls/_baseList/indicators/PortionedSearchTemplate';
 export * as ContinueSearchTemplate from 'wml!Controls/_baseList/indicators/ContinueSearchTemplate';
 // endregion Indicators

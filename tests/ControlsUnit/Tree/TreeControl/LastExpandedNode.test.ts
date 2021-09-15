@@ -13,7 +13,30 @@ register('Controls/searchBreadcrumbsGrid:SearchGridCollection', SearchGridCollec
 describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
     let source: HierarchicalMemory;
     let data = [];
-    let fakeSourceController;
+
+    const fakeSourceController = {
+        hasMoreData: (direction: string, root: string) => root !== null && root !== '3',
+        setDataLoadCallback: () => {},
+        getState: () => ({}),
+        getItems: () => new RecordSet({
+            keyProperty: 'id',
+            rawData: data
+        }),
+        getCollapsedGroups: () => {},
+        getLoadError: () => false,
+        updateOptions: () => {},
+        hasLoaded: (key: string) => true,
+        load: (direction: string, root: string) => {
+            const query = new Query().where({root});
+            return source.query(query);
+        },
+        setExpandedItems: () => {},
+        getExpandedItems: () => ([]),
+        isDeepReload: () => false,
+        setNodeDataMoreLoadCallback: () => false,
+        getRoot: () => undefined,
+        isLoading: () => false
+    };
 
     function initTreeControl(cfg: Partial<ITreeControlOptions> = {}): TreeControl {
         const config: ITreeControlOptions = {
@@ -64,30 +87,6 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
                 type: null
             }
         ];
-
-        fakeSourceController = {
-            hasMoreData: (direction: string, root: string) => root !== null && root !== '3',
-            setDataLoadCallback: () => {},
-            getState: () => ({}),
-            getItems: () => new RecordSet({
-                keyProperty: 'id',
-                rawData: data
-            }),
-            getCollapsedGroups: () => {},
-            getLoadError: () => false,
-            updateOptions: () => {},
-            hasLoaded: (key: string) => true,
-            load: (direction: string, root: string) => {
-                const query = new Query().where({root});
-                return source.query(query);
-            },
-            setExpandedItems: () => {},
-            getExpandedItems: () => ([]),
-            isDeepReload: () => false,
-            setNodeDataMoreLoadCallback: () => false,
-            getRoot: () => undefined,
-            isLoading: () => false
-        };
     });
 
     it ('should load from root when items are collapsed', async () => {
@@ -217,26 +216,5 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
         await treeControl.handleTriggerVisible('down');
         sinonAssert.notCalled(spyQuery);
         spyQuery.restore();
-    });
-
-    it('should load from last expanded node when root has more items', async () => {
-        source = new HierarchicalMemory({
-            keyProperty: 'id',
-            data
-        });
-        // Еще данные есть в корне и в последнем развернутом узле
-        fakeSourceController.hasMoreData = (direction: string, root: string) => root === null || root === '2';
-
-        const stubQuery = stub(source, 'query').callsFake((query: Query) => {
-            assert.equal(query.getWhere().root, 2);
-            return Promise.resolve();
-        });
-        const treeControl = initTreeControl();
-        await treeControl.toggleExpanded('2');
-
-        await treeControl.handleTriggerVisible('down');
-
-        sinonAssert.called(stubQuery);
-        stubQuery.restore();
     });
 });

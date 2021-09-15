@@ -2,7 +2,7 @@
     <ws:template name="button">
         <ws:partial template="Controls/buttons:ButtonTemplate"
                     attr:class="controls-ButtonGroup__button"
-                    _buttonStyle="{{buttonStyle}}"
+                    _buttonStyle="{{(_options.readOnly ? 'readOnly' :  '') + buttonStyle}}"
                     _viewMode="buttonGroup"
                     _fontSize="m"
                     _height="m"

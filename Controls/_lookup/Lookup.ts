@@ -62,6 +62,11 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @cfg {Function} Функция, которая вызывается каждый раз  для контрола автодоплнения непосредственно после загрузки данных из источника.
  */
 
+/**
+ * Открывает окно автодополнения.
+ * @function Controls/_interface/ILookup#openSuggest
+ */
+
 /*
  * “Lookup:Input” is an input field with auto-completion and the ability to select a value from the directory.
  * Сan be displayed in single-line and multi-line mode.

@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import {
     Abstract as Display,
     Collection as CollectionDisplay,
-    CollectionItem, groupConstants,
+    CollectionItem, EIndicatorState, groupConstants,
     GroupItem
 } from 'Controls/display';
 
@@ -2381,7 +2381,7 @@ describe('Controls/_display/Collection', () => {
             assert.strictEqual(display.getFirst(), display.at(0));
         });
 
-        it('should skip groups', () => {
+        it('should not skip groups', () => {
             const items = [1, 2];
             const list = new List({
                 items
@@ -2391,7 +2391,20 @@ describe('Controls/_display/Collection', () => {
                 group: (item) => item % 2
             });
 
-            assert.strictEqual(display.getFirst(), display.at(1));
+            assert.strictEqual(display.getFirst(), display.at(0));
+        });
+
+        it('should skip groups for editingItems', () => {
+            const items = [1, 2];
+            const list = new List({
+                items
+            });
+            const display = new CollectionDisplay({
+                collection: list,
+                group: (item) => item % 2
+            });
+
+            assert.strictEqual(display.getFirst('[Controls/_display/IEditableCollectionItem]'), display.at(1));
         });
     });
 
@@ -4616,6 +4629,27 @@ describe('Controls/_display/Collection', () => {
                 stickyFooter: true
             });
             assert.isTrue(collection.getVersion() === collectionVersion, 'Версия не должна измениться');
+        });
+    });
+
+    describe('indicators', () => {
+        it('update version on change metaData', () => {
+            const items = new RecordSet({
+                rawData: [
+                    {id: 1},
+                    {id: 2}
+                ],
+                metaData: {}
+            });
+            const collection = new CollectionDisplay({
+                collection: items,
+                keyProperty: 'id'
+            });
+            collection.displayIndicator('bottom', EIndicatorState.PortionedSearch);
+
+            const version = collection.getVersion();
+            items.setMetaData({count: 10});
+            assert.isTrue(collection.getVersion() > version);
         });
     });
 });

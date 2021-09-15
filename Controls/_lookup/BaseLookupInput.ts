@@ -418,6 +418,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         this._children.layout.closeSuggest();
     }
 
+    openSuggest(): void {
+        this._suggestState = true;
+    }
+
     paste(value: string): void {
         this._children.inputRender.paste(value);
     }

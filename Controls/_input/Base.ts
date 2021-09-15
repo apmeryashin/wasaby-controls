@@ -205,7 +205,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     protected _focusByMouseDown: boolean;
     protected _leftFieldWrapper: IFieldTemplate;
     protected _rightFieldWrapper: IFieldTemplate;
-    protected _horizontalPadding: string;
     private _isBrowserPlatform: boolean;
 
     constructor(...args) {
@@ -243,7 +242,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         );
         this._updateSelectionByOptions(options);
         this._initProperties(options);
-        this._updateHorizontalPadding(options);
 
         if (this._autoComplete !== 'off') {
             /**
@@ -282,7 +280,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         this._viewModel.displayValueBeforeUpdate = this._viewModel.displayValue;
         this._updateViewModel(newViewModelOptions, this._getValue(newOptions));
         this._updateSelectionByOptions(newOptions);
-        this._updateHorizontalPadding(newOptions);
         this._updatePlaceholderVisibility(newOptions);
         this._updatePlaceholderDisplay(newOptions);
     }
@@ -411,18 +408,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
          */
 
         this._calculateValueForTemplate();
-    }
-
-    private _updateHorizontalPadding(options: IBaseInputOptions): void {
-        let padding;
-        if (options.horizontalPadding) {
-            padding = options.horizontalPadding;
-        } else if (options.contrastBackground !== false) {
-            padding = 'xs';
-        } else {
-            padding = 'null';
-        }
-        this._horizontalPadding = padding;
     }
 
     /**
