@@ -225,7 +225,7 @@ class ModuleClass {
                 return steps[number] % stepLength === 0;
             };
 
-            const monthsAreEqual = start.getMonth() !== oldStart?.getMonth();
+            const monthsAreEqual = start.getMonth() === oldStart?.getMonth();
             const monthsInYear = 12;
 
             if (!(this._periodTypeIsDay(periodType) && this._periodTypeIsYears(oldPeriodType)) &&
