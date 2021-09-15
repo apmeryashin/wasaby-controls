@@ -268,10 +268,6 @@ export default class TreeGridCollection<
         this._nextVersion();
     }
 
-    setExpandedItems(expandedKeys: CrudEntityKey[]): void {
-        super.setExpandedItems(expandedKeys);
-    }
-
     protected _removeItems(start: number, count?: number): T[] {
         const result = super._removeItems(start, count);
 
@@ -286,7 +282,7 @@ export default class TreeGridCollection<
 
     // region HasNodeWithChildren
 
-    protected _setDisplayExpanderPadding(newValue: boolean) {
+    protected _setDisplayExpanderPadding(newValue: boolean): void {
         super._setDisplayExpanderPadding(newValue);
         if (this.getFooter()) {
             this.getFooter().setDisplayExpanderPadding(newValue);

@@ -467,7 +467,6 @@ Object.assign(TreeItem.prototype, {
     _moduleName: 'Controls/display:TreeItem',
     _$parent: undefined,
     _$node: null,
-    _$expanded: false,
     _$hasChildrenByRecordSet: false,
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
