@@ -2699,8 +2699,10 @@ export default class Collection<
     }
 
     setMetaResults(metaResults: EntityModel): void {
-        this._$metaResults = metaResults;
-        this._nextVersion();
+        if (!isEqual(this._$metaResults, metaResults)) {
+            this._$metaResults = metaResults;
+            this._nextVersion();
+        }
     }
 
     getMetaResults(): EntityModel {
