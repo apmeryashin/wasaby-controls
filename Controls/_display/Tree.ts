@@ -884,6 +884,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
         //endregion
 
+        // пересчитываем все один раз вместо множества пересчетов на каждое событие об изменении элемента
+        this._reBuildNodeFooters();
+        this._reGroup();
         this._reSort();
         this._reFilter();
 
@@ -921,6 +924,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
         });
 
+        // пересчитываем все один раз вместо множества пересчетов на каждое событие об изменении элемента
+        this._reBuildNodeFooters();
+        this._reGroup();
         this._reSort();
         this._reFilter();
 
