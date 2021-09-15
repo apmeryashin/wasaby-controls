@@ -299,7 +299,6 @@ define(
                         iconSize: 'm',
                         itemTemplateProperty: 'myTemplate',
                         closeButtonViewMode: 'link',
-                        itemPadding: {},
                         showHeader: true,
                         closeButtonVisibility: true,
                         headConfig: {
@@ -434,7 +433,6 @@ define(
                      groupProperty: undefined,
                      footerContentTemplate: undefined,
                      itemActions: undefined,
-                     itemPadding: {},
                      itemActionVisibilityCallback: undefined,
                      closeButtonVisibility: true,
                      dropdownClassName: 'controls-Toolbar-horizontal__dropdown'
