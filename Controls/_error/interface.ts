@@ -7,10 +7,15 @@ import ErrorController from './Controller';
  * @public
  */
 export interface IDefaultTemplateOptions {
+    action?: string | TemplateFunction | (new (args: unknown) => Control);
     details?: string;
     image?: string;
     message?: string;
-    action?: string | TemplateFunction | (new (args: unknown) => Control);
+    repeatConfig?: {
+        caption?: string;
+        display?: boolean;
+        function?: () => void;
+    };
 }
 
 /**
@@ -126,6 +131,9 @@ export enum ErrorType {
  * Тип функции-обработчика ошибки.
  * Анализирует ошибку и определяет, какой парковочный шаблон нужно отобразить.
  * Принимает объект с параметрами ошибки и возвращет ErrorViewConfig, если ошибка распознана.
+ * @function
+ * @param {IErrorHandlerConfig<TError>}
+ * @returns {ErrorViewConfig<TOptions> | void}
  * @public
  * @author Кашин О.А.
  */
