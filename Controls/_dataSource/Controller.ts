@@ -1242,8 +1242,8 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
 
     private _isOptionChanged(propertyName: string, newOptions: IControllerOptions): boolean {
         return newOptions[propertyName] !== undefined &&
-            newOptions[propertyName] !== this._options[propertyName] &&
-            newOptions[propertyName] !== this[`_${propertyName}`];
+            !isEqual(newOptions[propertyName], this._options[propertyName]) &&
+            !isEqual(newOptions[propertyName], this[`_${propertyName}`]);
     }
 
     private static _getSource(source: ICrud | ICrudPlus | PrefetchProxy): IData & ICrud {
