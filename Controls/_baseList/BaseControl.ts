@@ -907,6 +907,9 @@ const _private = {
                  */
                 if (!self._sourceController?.getLoadError()) {
                     if (direction === 'up') {
+                        if (_private.isPagingNavigation(self._options.navigation)) {
+                            self._currentPage = 1;
+                        }
                         self._finishScrollToEdgeOnDrawItems = function () {
                             self._currentPage = 1;
                             self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
@@ -914,6 +917,9 @@ const _private = {
                             scrollToEdgePromiseResolver();
                         };
                     } else {
+                        if (_private.isPagingNavigation(self._options.navigation)) {
+                            self._currentPage = self._knownPagesCount;
+                        }
                         self._finishScrollToEdgeOnDrawItems = () => {
                             _private.jumpToEnd(self).then(() => {
                                 scrollToEdgePromiseResolver();
