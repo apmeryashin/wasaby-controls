@@ -39,12 +39,12 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/SetExp
 
     it('setExpanded set expanded state to columns', () => {
         groupRow.getColumns().forEach((column: TreeGridGroupDataCell<Model>) => {
-            assert.isFalse(column.isExpanded());
+            assert.isTrue(column.isExpanded());
         });
 
-        groupRow.setExpanded(true);
+        groupRow.setExpanded(false);
         groupRow.getColumns().forEach((column: TreeGridGroupDataCell<Model>) => {
-            assert.isTrue(column.isExpanded());
+            assert.isFalse(column.isExpanded());
         });
     });
 });
