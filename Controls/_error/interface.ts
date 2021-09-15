@@ -7,15 +7,10 @@ import ErrorController from './Controller';
  * @public
  */
 export interface IDefaultTemplateOptions {
-    action?: string | TemplateFunction | (new (args: unknown) => Control);
     details?: string;
     image?: string;
     message?: string;
-    repeatConfig?: {
-        caption?: string;
-        display?: boolean;
-        function?: () => void;
-    };
+    action?: string | TemplateFunction | (new (args: unknown) => Control);
 }
 
 /**
