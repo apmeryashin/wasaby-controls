@@ -439,12 +439,11 @@ function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boo
 
 function onCollectionPropertyChange(event: EventObject, values: {metaData: { results?: EntityModel }}): void {
     if (values && values.metaData) {
-        this._actualizeSubscriptionOnMetaResults(this._$metaResults, values.metaData.results);
-        this.setMetaResults(values.metaData.results);
+        this.setMetaData(values.metaData);
     }
 }
 
-function onMetaResultsChange(event: EventObject, values: Record<string, unknown>) {
+function onMetaResultsChange(event: EventObject, values: Record<string, unknown>): void {
     this.setMetaResults(this._$collection.getMetaData()?.results);
 }
 
@@ -1334,9 +1333,10 @@ export default class Collection<
 
     /**
      * Возвращает первый элемент
+     * @param conditionProperty свойство, по которому происходит отбор элементов.
      * @return {Controls/_display/CollectionItem}
      */
-    getFirst(): T {
+    getFirst(conditionProperty?: string): T {
         const enumerator = this._getUtilityEnumerator();
         if (enumerator.getCount() === 0) {
             return;
@@ -1345,12 +1345,12 @@ export default class Collection<
 
         const item = enumerator.getCurrent();
 
-        if (!(item as CollectionItem).EnumerableItem) {
+        if (conditionProperty && !item[conditionProperty]) {
             return this._getNearbyItem(
                 enumerator,
                 item,
                 true,
-                'EnumerableItem'
+                conditionProperty
             );
         }
 
@@ -2597,7 +2597,7 @@ export default class Collection<
     }
 
     protected _updateEdgeItems(force?: boolean, silent?: boolean): void {
-        const firstItem = this.getFirst();
+        const firstItem = this.getFirst('EdgeRowSeparatorItem');
         const lastItem = this.getLast('EdgeRowSeparatorItem');
         const navigation = this.getNavigation();
         const noMoreData = !navigation || navigation.view !== 'infinity' || !this.hasMoreData();
@@ -2685,9 +2685,24 @@ export default class Collection<
         return !!this._$hasMoreData?.down;
     }
 
+    setMetaData(metaData: { results?: EntityModel }): void {
+        this._actualizeSubscriptionOnMetaResults(this._$metaResults, metaData.results);
+        this.setMetaResults(metaData.results);
+
+        // Поднимаем версию по результату индикаторов, чтобы не было лишних отрисовок.
+        // Т.к. данная отрисовка нужна только при порционном поиске, а об этом коллекция не знает.
+        let changed = this.getTopIndicator().setMetaData(metaData);
+        changed = this.getBottomIndicator().setMetaData(metaData) || changed;
+        if (changed) {
+            this._nextVersion();
+        }
+    }
+
     setMetaResults(metaResults: EntityModel): void {
-        this._$metaResults = metaResults;
-        this._nextVersion();
+        if (!isEqual(this._$metaResults, metaResults)) {
+            this._$metaResults = metaResults;
+            this._nextVersion();
+        }
     }
 
     getMetaResults(): EntityModel {

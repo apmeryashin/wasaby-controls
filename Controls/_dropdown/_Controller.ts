@@ -5,6 +5,7 @@ import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {isEmptyItem, prepareEmpty} from 'Controls/_dropdown/Util';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {process} from 'Controls/error';
+import {IndicatorOpener} from 'Controls/LoadingIndicator';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {descriptor, Model} from 'Types/entity';
@@ -344,7 +345,11 @@ export default class _Controller implements IDropdownController {
          this._source = this._options.source;
          this._resolveLoadedItems(this._options, this._preloadedItems);
       }
-      return this.loadDependencies(!this._preloadedItems, source, true).then(
+
+      const indicatorId = IndicatorOpener.show();
+      return this.loadDependencies(!this._preloadedItems, source).finally(() => {
+         IndicatorOpener.hide(indicatorId);
+      }).then(
           () => {
              const count = this._items.getCount();
              if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerContentTemplate)) {
