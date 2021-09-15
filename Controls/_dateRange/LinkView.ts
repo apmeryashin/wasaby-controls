@@ -136,11 +136,8 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
       const hasResetStartValue = options.resetStartValue || options.resetStartValue === null;
       const hasResetEndValue = options.resetEndValue || options.resetEndValue === null;
       this._resetButtonVisible = (hasResetStartValue &&
-          (!dateUtils.isDatesEqual(options.startValue, options.resetStartValue) ||
-              options.startValue !== options.resetStartValue)) ||
-          (hasResetEndValue &&
-              (!dateUtils.isDatesEqual(options.endValue, options.resetEndValue)
-                  || options.endValue !== options.resetEndValue));
+          !dateUtils.isDatesEqual(options.startValue, options.resetStartValue)) ||
+          (hasResetEndValue && !dateUtils.isDatesEqual(options.endValue, options.resetEndValue));
    }
 
    getPopupTarget() {

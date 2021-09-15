@@ -480,10 +480,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
         const hasResetEndValue = options.resetEndValue || options.resetEndValue === null;
 
         this._resetButtonVisible = (hasResetStartValue &&
-            (!dateUtils.isDatesEqual(this._rangeModel.startValue, options.resetStartValue) ||
-            this._rangeModel.startValue !== options.resetStartValue)) ||
-            (hasResetEndValue && (!dateUtils.isDatesEqual(this._rangeModel.endValue, options.resetEndValue)
-            || this._rangeModel.endValue !== options.resetEndValue));
+            !dateUtils.isDatesEqual(this._rangeModel.startValue, options.resetStartValue)) ||
+            hasResetEndValue && (!dateUtils.isDatesEqual(this._rangeModel.endValue, options.resetEndValue));
     }
 
     fixedPeriodClick(start: Date, end: Date): void {
