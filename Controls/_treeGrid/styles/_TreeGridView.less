@@ -215,7 +215,7 @@
 .controls-TreeGrid__nodeFooterContent {
    display: inline-flex;
    align-items: baseline;
-   min-height: var(--node-footer_min-height);
+   min-height: var(--inline_height_m);
    box-sizing: border-box;
    border-top-style: solid;
 }
@@ -242,22 +242,19 @@
 /* row separators for node */
 .controls-TreeGrid__nodeFooterContent_rowSeparatorSize-null {
    border-top-width: 0;
-   padding-top: var(--node-footer_padding-top);
 }
 
 .controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s {
    border-top: var(--item-separator_s_thickness_list) solid var(--item_separator_s_color_list);
-   padding-top: calc(var(--node-footer_padding-top) - var(--item-separator_s_thickness_list));
 }
 
 .controls-TreeGrid__nodeFooterContent_rowSeparatorSize-l {
    border-top: var(--item-separator_l_thickness_list) solid var(--item_separator_l_color_list);
-   padding-top: calc(var(--node-footer_padding-top) - var(--item-separator_l_thickness_list));
 }
 
 .controls-TreeGrid__nodeFooterContent::before {
    content: '\200b';
-   font-size: var(--font-size_m);
+   font-size: var(--font-size_2xl);
 }
 
 .controls-TreeGrid__row-levelPadding_size_default {
