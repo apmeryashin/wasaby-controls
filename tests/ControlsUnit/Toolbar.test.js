@@ -298,7 +298,10 @@ define(
                         nodeProperty: '@parent',
                         iconSize: 'm',
                         itemTemplateProperty: 'myTemplate',
-                        closeButtonViewMode: "link",
+                        closeButtonViewMode: 'link',
+                        itemPadding: {
+                           left: 'm'
+                        },
                         showHeader: true,
                         closeButtonVisibility: true,
                         headConfig: {
@@ -426,13 +429,16 @@ define(
                      parentProperty: 'parent',
                      source: recordForMenu,
                      additionalProperty: 'additional',
-                     closeButtonViewMode: "link",
+                     closeButtonViewMode: 'link',
                      itemTemplateProperty: 'itp',
                      groupTemplate: 'groupTemplate',
                      groupingKeyCallback: 'groupingKeyCallback',
                      groupProperty: undefined,
                      footerContentTemplate: undefined,
                      itemActions: undefined,
+                     itemPadding: {
+                        left: 'm'
+                     },
                      itemActionVisibilityCallback: undefined,
                      closeButtonVisibility: true,
                      dropdownClassName: 'controls-Toolbar-horizontal__dropdown'
