@@ -126,7 +126,7 @@ class StackController extends BaseController {
         }
     }
 
-    elementMaximized(item: IStackItem, container: HTMLElement, maximized: boolean): boolean {
+    elementMaximized(item: IStackItem, container?: HTMLElement, maximized?: boolean): boolean {
         const state = maximized !== undefined ? maximized : !this._getMaximizedState(item);
         this._setMaximizedState(item, state);
         const minWidth = item.minSavedWidth || item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
@@ -532,7 +532,7 @@ class StackController extends BaseController {
 
     private _savePopupWidth(item: IStackItem): void {
         const widthState = {
-            width: item.position.width,
+            width: item.position.width || item.popupOptions.width,
             minSavedWidth: item.minSavedWidth,
             maxSavedWidth: item.maxSavedWidth
         };
