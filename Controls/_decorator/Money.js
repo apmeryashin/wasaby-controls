@@ -5,7 +5,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
    var templateFunction = function Money_Template(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
       var key = thelpers.validateNodeKey(attr && attr.key);
 
-      var value = data.value || null;
+      var value = typeof data.value !== 'undefined' ? data.value : null;
       var useGrouping = data.useGrouping !== false;
       var abbreviationType = data.abbreviationType || 'none';
       var precision = data.precision === 0 ? 0 : 2;

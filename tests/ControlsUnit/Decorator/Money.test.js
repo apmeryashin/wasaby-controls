@@ -15,9 +15,9 @@ define(
          describe('parseNumber', function() {
             it('value: null, useGrouping: false', function() {
                assert.deepEqual(ctrl.calculateFormattedNumber(null, false, 'none', 2), {
-                  number: '0.00',
-                  integer: '0',
-                  fraction: '.00'
+                  number: '',
+                  integer: '',
+                  fraction: ''
                });
             });
             it('value: 0.035, useGrouping: false', function() {
