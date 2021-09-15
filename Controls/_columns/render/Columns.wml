@@ -7,8 +7,8 @@
                   on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
       <!--Top loading trigger-->
       <div name="topLoadingTrigger"
-           class="{{ _listModel.getTopLoadingTrigger().getClasses() }}"
-           data-qa="{{ _listModel.getTopLoadingTrigger().getQAData() }}">
+           class="controls-BaseControl__loadingTrigger"
+           data-qa="loading-trigger-top">
       </div>
 
       <div attr:class="controls-ColumnsView__itemsContainer" style="{{_getItemsContainerStyle()}}" name="itemsContainer">
@@ -35,8 +35,8 @@
 
       <!--Bottom loading trigger-->
       <div name="bottomLoadingTrigger"
-           class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}"
-           data-qa="{{ _listModel.getBottomLoadingTrigger().getQAData() }}">
+           class="controls-BaseControl__loadingTrigger"
+           data-qa="loading-trigger-bottom">
       </div>
       <!--Bottom loading indicator-->
       <ws:partial if="{{ _listModel.getBottomIndicator() }}"

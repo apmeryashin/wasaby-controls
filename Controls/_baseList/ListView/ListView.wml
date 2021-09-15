@@ -14,8 +14,8 @@
       <!--Top loading trigger-->
       <!--Нельзя отображать триггер с помощю ws:partial, т.к. в этом случае при перерисовке он пропадает из _children и его нельзя получить.-->
       <div name="topLoadingTrigger"
-           class="{{ _listModel.getTopLoadingTrigger().getClasses() }}"
-           data-qa="{{ _listModel.getTopLoadingTrigger().getQAData() }}">
+           class="controls-BaseControl__loadingTrigger"
+           data-qa="loading-trigger-top">
       </div>
 
       <div name="itemsContainer" class="controls-ListViewV__itemsContainer">
@@ -52,8 +52,8 @@
 
       <!--Bottom loading trigger-->
       <div name="bottomLoadingTrigger"
-           class="{{ _listModel.getBottomLoadingTrigger().getClasses() }}"
-           data-qa="{{ _listModel.getBottomLoadingTrigger().getQAData() }}">
+           class="controls-BaseControl__loadingTrigger"
+           data-qa="loading-trigger-bottom">
       </div>
       <!--Bottom loading indicator-->
       <ws:partial if="{{ _listModel.getBottomIndicator() }}"

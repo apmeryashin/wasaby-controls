@@ -98,14 +98,8 @@ import {Footer} from './_display/Footer';
 export {Footer};
 
 import Indicator from 'Controls/_display/Indicator';
-import LoadingTrigger from 'Controls/_display/LoadingTrigger';
 export {default as Indicator, EIndicatorState} from 'Controls/_display/Indicator';
 export {default as IndicatorsMixin, ITriggerOffset} from 'Controls/_display/IndicatorsMixin';
-export {
-    default as LoadingTrigger,
-    DEFAULT_TOP_TRIGGER_OFFSET,
-    DEFAULT_BOTTOM_TRIGGER_OFFSET
-} from 'Controls/_display/LoadingTrigger';
 
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
@@ -118,4 +112,3 @@ register('Controls/display:TreeItemDecorator', TreeItemDecorator, {instantiate: 
 register('Controls/display:Footer', Footer, {instantiate: false});
 
 register('Controls/display:Indicator', Indicator, {instantiate: false});
-register('Controls/display:LoadingTrigger', LoadingTrigger, {instantiate: false});
