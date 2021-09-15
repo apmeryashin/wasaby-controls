@@ -1,22 +1,21 @@
 import {Tree} from 'Controls/display';
 import {IOptions as ITreeCollectionOptions} from 'Controls/_display/Tree';
 import PropertyGridCollectionItem from 'Controls/_propertyGrid/PropertyGridCollectionItem';
-import {Model} from 'Types/entity';
 import {ItemsFactory} from 'Controls/_display/Collection';
 import PropertyGridGroupItem from 'Controls/_propertyGrid/PropertyGridGroupItem';
 import TToggledEditors from './PropertyGrid';
-import {TCaptionPosition} from 'Controls/_propertyGrid/IPropertyGrid';
+import {TCaptionPosition, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
 
 export interface IPropertyGridCollectionOptions<S, T> extends ITreeCollectionOptions<S, T> {
     toggledEditors?: TToggledEditors;
-    editingObject: Record<string, unknown> | Model | object;
+    editingObject: TEditingObject;
 }
 
 export default class PropertyGridCollection<S, T extends PropertyGridCollectionItem<S> = PropertyGridCollectionItem<S>>
     extends Tree<S, PropertyGridCollectionItem<S>> {
 
     protected _$toggledEditors: TToggledEditors;
-    protected _$editingObject: object | Model | Record<string, unknown>;
+    protected _$editingObject: TEditingObject;
     protected _$captionPosition: TCaptionPosition;
 
     constructor(options?: IPropertyGridCollectionOptions<S, T>) {
@@ -37,12 +36,16 @@ export default class PropertyGridCollection<S, T extends PropertyGridCollectionI
         return this._$toggledEditors;
     }
 
-    setEditingObject(editingObject: Object | Model | Record<string, any>): void {
+    setEditingObject(editingObject: TEditingObject): void {
         this._$editingObject = editingObject;
         this._updateItemsProperty('setPropertyValue',
             this._$editingObject,
             '[Controls/_propertyGrid/PropertyGridCollectionItem]');
         this.nextVersion();
+    }
+
+    getEditingObject(): TEditingObject {
+        return this._$editingObject;
     }
 
     setCaptionPosition(captionPosition: TCaptionPosition): void {

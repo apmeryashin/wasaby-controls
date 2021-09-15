@@ -65,6 +65,7 @@ export interface IPropertyGridColumnOptions {
      */
     compatibleWidth: string;
 }
+export type TEditingObject = Model | Record<string, unknown>;
 export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectableOptions {
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#editingObject
@@ -114,7 +115,7 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
      * @name Controls/_propertyGrid/IPropertyGrid#editingObject
      * @cfg {Object} data object that will be displayed as editors with values in _propertyGrid
      */
-    editingObject: Model | Record<string, any>;
+    editingObject: TEditingObject;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#typeDescription
      * @cfg {Controls/_propertyGrid/IProperty[]} Конфигурация свойств в PropertyGrid.
