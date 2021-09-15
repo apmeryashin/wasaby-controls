@@ -102,6 +102,10 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
         return true;
     }
 
+    getQAData(): string {
+        return 'controls-ListView__group';
+    }
+
     // endregion overrides
 }
 
