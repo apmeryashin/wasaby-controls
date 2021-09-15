@@ -43,5 +43,14 @@
         </Router.router:Reference>
         <Controls-demo.gridNew.LoadingIndicator.Both.HasHeaderAndResults.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/gridNew/LoadingIndicator/Both/Scrolled/Index' }}">
+            <a href="{{content.href}}">Сразу же проскроленный список</a>
+        </Router.router:Reference>
+        <Controls-demo.gridNew.LoadingIndicator.Both.Scrolled.Index/>
+    </div>
 </div>
 
