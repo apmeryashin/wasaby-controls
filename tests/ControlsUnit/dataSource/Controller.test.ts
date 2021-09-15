@@ -583,6 +583,22 @@ describe('Controls/dataSource:SourceController', () => {
             controllerOptions.sorting = {testField: 'ASC'};
             ok(controller.updateOptions(controllerOptions));
         });
+
+        it('updateOptions with new filter',  async () => {
+            let controllerOptions = getControllerOptions();
+            controllerOptions.filter = [{filed1: 'value1'}];
+            const controller = getController(controllerOptions);
+
+            // the same filter
+            controllerOptions = {...controllerOptions};
+            controllerOptions.filter = [{filed1: 'value1'}];
+            ok(!controller.updateOptions(controllerOptions));
+
+            // another filter
+            controllerOptions = {...controllerOptions};
+            controllerOptions.filter = [{field2: 'value2'}];
+            ok(controller.updateOptions(controllerOptions));
+        });
     });
 
     describe('expandedItems in options', () => {
