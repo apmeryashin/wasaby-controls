@@ -61,6 +61,8 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
         const toggleVars = ZenWrapper.calculateToggleVariables(dominantRGB, complementaryRGB, brightness);
         const inputVars = ZenWrapper.calculateInputVariables(dominantRGB, complementaryRGB, brightness);
         return {
+            '--dominant-color_zen': ZenWrapper.getColor(dominantRGB),
+            '--complementary-color_zen': ZenWrapper.getColor(complementaryRGB),
             ...baseVars,
             ...buttonsVars,
             ...decoratorsVars,
@@ -75,6 +77,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                                   complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--unaccented_background-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
             '--icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--link_text-color': ZenWrapper.getMonochromeColor(brightness),
@@ -162,6 +165,8 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                             ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.2') :
                             ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
             '--icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
+            '--secondary_contrast_hover_background-color_toggleButton_pushButton':
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.08'),
             '--hover_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
         };
     }

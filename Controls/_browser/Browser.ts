@@ -380,8 +380,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
         if (options.sourceController !== newOptions.sourceController) {
             this._dataLoader.setSourceController(id, newOptions.sourceController);
-            this._subscribeOnRootChanged();
-            this._subscribeOnSortingChanged();
+            this._subscribeOnSourceControllerEvents();
         }
 
         if (sourceChanged) {
@@ -548,19 +547,17 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _setItemsAndUpdateContext(): void {
         this._updateItemsOnState();
-        this._subscribeOnRootChanged();
-        this._subscribeOnSortingChanged();
+        this._subscribeOnSourceControllerEvents();
         this._updateContext();
     }
 
-    private _subscribeOnRootChanged(): void {
+    private _subscribeOnSourceControllerEvents(): void {
+        const sourceController = this._getSourceController();
         this._dataLoader.each((config, id) => {
             this._getSourceController(id).subscribe('rootChanged', this._rootChanged.bind(this));
         });
-    }
-
-    private _subscribeOnSortingChanged(): void {
-        this._getSourceController().subscribe('sortingChanged', this._sortingChanged.bind(this));
+        sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
+        sourceController.subscribe('sortingChanged', this._sortingChanged.bind(this));
     }
 
     private _updateItemsOnState(): void {
@@ -629,11 +626,19 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._viewMode === 'search';
     }
 
+    protected _dataLoadStart(event: SyntheticEvent, key: TKey, direction: Direction): void {
+        if (!direction) {
+            this._loading = true;
+        }
+    }
+
     protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
+
+        const listOptions = this._getListOptionsById(id);
         this._dataLoader.getFilterController()?.setFilter(filter);
-        if (this._listsOptions && id) {
-            this._getListOptionsById(id).filter = this._getListOptionsById(id).filter || filter;
+        if (listOptions && id) {
+            listOptions.filter = listOptions.filter || filter;
         }
         if (!Browser._hasInOptions(this._options, ['filter']) || !this._options.task1182865383) {
             this._filter = filter;
@@ -655,21 +660,22 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     protected _setRoot(root: Key, id?: string): void {
-        if (this._listsOptions && id) {
-            this._getListOptionsById(id).root = root;
+        const listOptions = this._getListOptionsById(id);
+        if (listOptions && id) {
+            listOptions.root = root;
         } else {
             this._root = root;
         }
     }
 
-    protected _sortingChanged(event: SyntheticEvent, sorting: Key, id?: string): void {
-        this._notify('sortingChanged', [sorting, id]);
-    }
-
-    protected _getListOptionsById(id: string): IBrowserOptions {
+    protected _getListOptionsById(id: string): IListConfiguration|void {
         return this._listsOptions.find((options: IBrowserOptions) => {
             return options.id === id;
-        }) || this._options;
+        });
+    }
+
+    protected _sortingChanged(event: SyntheticEvent, sorting: Key, id?: string): void {
+        this._notify('sortingChanged', [sorting, id]);
     }
 
     protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
@@ -1063,7 +1069,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _reload(options: IBrowserOptions, id?: string): Promise<RecordSet> {
         const sourceController = this._getSourceController(id);
 
-        this._loading = true;
         return sourceController.reload()
             .then((items) => {
                 this._updateItemsOnState();

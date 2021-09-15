@@ -423,53 +423,39 @@ define([
          assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
       });
 
-      it('save loaded items into the controls state', async function () {
-         var source = new sourceLib.Memory({});
-         var sourceController = new dataSource.NewSourceController({
+      it('save loaded items into the controls state', async function() {
+         const data = [
+            {
+               id: 1,
+               title: 'qwe'
+            }
+         ];
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data
+         });
+         const sourceController = new dataSource.NewSourceController({
             source: source,
             keyProperty: 'id'
          });
-         sourceController.setItems(new collection.RecordSet());
-         var
-             cfg = {
-                viewName: 'Controls/List/ListView',
-                items: new collection.RecordSet({
-                   keyProperty: 'id',
-                   rawData: [{ id: 2, title: 'abc' }]
-                }),
-                sourceController: sourceController,
-                viewModelConstructor: 'Controls/display:Collection',
-                keyProperty: 'id'
-             },
-             loadedItems = new collection.RecordSet({
-                keyProperty: 'id',
-                rawData: [
-                   {
-                      id: 1,
-                      title: 'qwe'
-                   }
-                ]
-             }),
-             ctrl = correctCreateBaseControl(cfg);
 
-         ctrl.saveOptions(cfg);
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            sourceController: sourceController,
+            viewModelConstructor: 'Controls/display:Collection',
+            keyProperty: 'id'
+         };
+         const ctrl = await correctCreateBaseControlAsync(cfg);
+
          await ctrl._beforeMount(cfg);
+         ctrl.saveOptions(cfg);
 
          // Empty list
          assert.isUndefined(ctrl._loadedItems);
-
-         ctrl._sourceController.reload = () => ({
-            addCallback(fn) {
-               fn(loadedItems);
-               return {
-                  addErrback: () => {}
-               };
-            }
-         });
-
          await ctrl.reload();
 
-         assert.deepEqual(ctrl._loadedItems, loadedItems);
+         assert.deepEqual(ctrl._loadedItems.getRawData(), data);
       });
 
       it('call itemsReadyCallback on recreation RS', async function () {
@@ -1864,41 +1850,25 @@ define([
       });
 
       it('reload with changing source/navig/filter should call scroll to start', async function() {
-         var
-             lnSource = new sourceLib.Memory({
-                keyProperty: 'id',
-                data: data
-             }),
-             lnSource2 = new sourceLib.Memory({
-                keyProperty: 'id',
-                data: [{
-                   id: 4,
-                   title: 'Четвертый',
-                   type: 1
-                },
-                   {
-                      id: 5,
-                      title: 'Пятый',
-                      type: 2
-                   }]
-             }),
-             lnSource3 = new sourceLib.Memory({
-                keyProperty: 'id',
-                data: []
-             }),
-             lnCfg = {
-                viewName: 'Controls/List/ListView',
-                source: lnSource,
-                keyProperty: 'id',
-                markedKey: 3,
-                viewModelConstructor: 'Controls/display:Collection'
-             },
-             lnBaseControl = correctCreateBaseControl(lnCfg);
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+         const baseControlOptions = {
+            viewName: 'Controls/List/ListView',
+            source,
+            keyProperty: 'id',
+            markedKey: 3,
+            viewModelConstructor: 'Controls/display:Collection'
+         };
+         const baseControl = await correctCreateBaseControlAsync(baseControlOptions);
 
-         lnBaseControl.saveOptions(lnCfg);
-         await lnBaseControl._beforeMount(lnCfg);
-         await lnBaseControl._reload(lnCfg);
-         assert.equal(lnBaseControl._shouldRestoreScrollPosition, true);
+         await baseControl._beforeMount(baseControlOptions);
+         baseControl.saveOptions(baseControlOptions);
+
+         await baseControl._reload(baseControlOptions);
+         await baseControl._beforeUpdate(baseControlOptions);
+         assert.ok(baseControl._shouldRestoreScrollPosition);
       });
 
       it('reload and restore model state', async function() {
