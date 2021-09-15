@@ -9,7 +9,7 @@ import { ItemsEntity } from 'Controls/dragnDrop';
 import { Collection } from 'Controls/display';
 
 describe('Controls/_listDragNDrop/Controller', () => {
-   let controller, model;
+   let model;
 
    const items = new RecordSet({
       rawData: [
@@ -26,24 +26,26 @@ describe('Controls/_listDragNDrop/Controller', () => {
 
    beforeEach(() => {
       model = new Collection(cfg);
-      controller = new DndController(model, FlatStrategy);
    });
 
    describe('startDrag', () => {
       it ('not pass draggedItem', () => {
          const modelSetDraggedItemsSpy = spy(model, 'setDraggedItems');
-         controller.startDrag(null, new ItemsEntity({items: [1]}));
+         let controller = new DndController(model, null, FlatStrategy);
+         controller.startDrag(new ItemsEntity({items: [1]}));
          assert.isTrue(modelSetDraggedItemsSpy.called);
          assert.isNotOk(controller.getDraggableItem());
 
          const item = model.getItemBySourceKey(1);
-         controller.startDrag(item, new ItemsEntity({items: [1]}));
+         controller = new DndController(model, item, FlatStrategy);
+         controller.startDrag(new ItemsEntity({items: [1]}));
          assert.equal(controller.getDraggableItem(), item);
       });
 
       it ('pass draggedItem', () => {
          const draggedItem = model.getItemBySourceKey(1);
          const entity = new ItemsEntity( { items: [1] } );
+         const controller = new DndController(model, draggedItem, FlatStrategy);
 
          let modelSetDraggedItemsCalled = false;
          model.setDraggedItems = (draggedItemKey, e) => {
@@ -52,7 +54,7 @@ describe('Controls/_listDragNDrop/Controller', () => {
             modelSetDraggedItemsCalled = true;
          };
 
-         controller.startDrag(draggedItem, entity);
+         controller.startDrag(entity);
 
          assert.isTrue(modelSetDraggedItemsCalled);
          assert.equal(controller.getDragEntity(), entity);
@@ -62,9 +64,8 @@ describe('Controls/_listDragNDrop/Controller', () => {
          const model = new Collection({
             collection: items
          });
-         const controller = new DndController(model, FlatStrategy);
-
          const draggedItem = model.getItemBySourceKey(1);
+         const controller = new DndController(model, draggedItem, FlatStrategy);
          const entity = new ItemsEntity( { items: [1] } );
 
          let modelSetDraggedItemsCalled = false;
@@ -74,7 +75,7 @@ describe('Controls/_listDragNDrop/Controller', () => {
             modelSetDraggedItemsCalled = true;
          };
 
-         controller.startDrag(draggedItem, entity);
+         controller.startDrag(entity);
 
          assert.isTrue(modelSetDraggedItemsCalled);
       });
@@ -85,6 +86,7 @@ describe('Controls/_listDragNDrop/Controller', () => {
          index: 0,
          position: 'before'
       };
+      const controller = new DndController(model, null, FlatStrategy);
 
       const modelSetDragPositionSpy = spy(model, 'setDragPosition');
 
@@ -98,19 +100,21 @@ describe('Controls/_listDragNDrop/Controller', () => {
 
    it('endDrag', () => {
       const modelResetDraggedItemsCalled = spy(model, 'resetDraggedItems');
+      const controller = new DndController(model, null, FlatStrategy);
 
       controller.endDrag();
 
       assert.isTrue(modelResetDraggedItemsCalled.calledOnce);
       assert.isNull(controller.getDragPosition());
       assert.isNull(controller.getDragEntity());
-      assert.isNull(controller._draggableItem);
    });
 
    describe('calculateDragPosition', () => {
+      let controller;
       beforeEach(() => {
          const entity = new ItemsEntity( { items: [1] } );
-         controller.startDrag(model.getItemBySourceKey(1), entity);
+         controller = new DndController(model, model.getItemBySourceKey(1), FlatStrategy);
+         controller.startDrag(entity);
       });
 
       it('hover on no draggable item', () => {

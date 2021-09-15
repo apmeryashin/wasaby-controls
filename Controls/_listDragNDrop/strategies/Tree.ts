@@ -1,7 +1,9 @@
 import Flat, { IDraggableFlatCollection} from './Flat';
-import { IDragPosition } from 'Controls/display';
+import { IDragPosition, TreeItem } from 'Controls/display';
 import { IDraggableItem, IDragStrategyParams, TPosition } from '../interface';
 import { List } from 'Types/collection';
+import {CrudEntityKey} from 'Types/source';
+import { addSubArray } from 'Controls/Utils/ArraySimpleValuesUtil';
 
 const DRAG_MAX_OFFSET = 0.3;
 
@@ -51,6 +53,46 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
         }
 
         return result;
+    }
+
+    /**
+     * Получаем ключи перетаскиваемых записей, включая детей всех перетаскиваемых узлов.
+     * Это нужно для того, чтобы скрыть все перетаскиваемый записи(за исключение draggableItem)
+     * @param {CrudEntityKey[]} selectedKeys Ключи выбранных записей
+     */
+    getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[] {
+        let draggedKeys = super.getDraggableKeys(selectedKeys);
+
+        draggedKeys.forEach((key) => {
+            const item = this._model.getItemBySourceKey(key) as TreeItem;
+            if (item.isNode() !== null) {
+                const childKeys = this._getChildKeys(item);
+                addSubArray(draggedKeys, childKeys);
+            }
+        });
+
+        return draggedKeys;
+    }
+
+    /**
+     * Получает рекурсивно всех детей переданного элемента коллекции, чтобы в коллекции скрыть этих детей при ДнД
+     * @param parent
+     * @private
+     */
+    private _getChildKeys(parent: TreeItem): CrudEntityKey[] {
+        const childKeys = [];
+
+        const childs = parent.getChildren();
+        childs.forEach((child) => {
+            const childKey = child.getContents().getKey();
+            childKeys.push(childKey);
+
+            if (child.isNode() !== null) {
+                addSubArray(childKeys, this._getChildKeys(child));
+            }
+        });
+
+        return childKeys;
     }
 
     private _calculatePositionRelativeNode(
