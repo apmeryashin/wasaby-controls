@@ -1783,15 +1783,6 @@ describe('Controls/_display/Tree', () => {
             assert.equal(currentVersion, rsTree.getVersion());
         });
 
-        it('setCollapsedItems collapse childs', () => {
-            rsTree.setExpandedItems([null]);
-            assert.isTrue(rsTree.getItemBySourceKey(1).isExpanded());
-            assert.isTrue(rsTree.getItemBySourceKey(11).isExpanded());
-            rsTree.setCollapsedItems([1]);
-            assert.isFalse(rsTree.getItemBySourceKey(1).isExpanded());
-            assert.isFalse(rsTree.getItemBySourceKey(11).isExpanded());
-        });
-
         it('empty model', () => {
             const rs = new RecordSet({
                 rawData: [],

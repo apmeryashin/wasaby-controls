@@ -188,8 +188,9 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
         const newNodeFooterContents = nodesWithFooters.map((it) => NodeFooter._getNodeFooterContent(it));
 
         // удаляем из текущего списка футеров уже не нужные футеры
-        nodeFooterContents.forEach((nodeFooterContent, index) => {
+        nodeFooterContents.forEach((nodeFooterContent) => {
             if (newNodeFooterContents.indexOf(nodeFooterContent) === -1) {
+                const index = options.nodeFooters.findIndex((it) => it.contents === nodeFooterContent);
                 const removedNodeFooter = options.nodeFooters.splice(index, 1)[0];
                 const node = removedNodeFooter.getNode();
                 node.setNodeFooter(null);

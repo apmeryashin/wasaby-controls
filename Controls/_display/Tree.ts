@@ -305,8 +305,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * @protected
      */
     protected _dragStrategy: StrategyConstructor<TreeDrag> = TreeDrag;
-    private _expandedItems: CrudEntityKey[] = [];
-    private _collapsedItems: CrudEntityKey[] = [];
+    private _$expandedItems: CrudEntityKey[];
+    private _$collapsedItems: CrudEntityKey[];
 
     private _hierarchyRelation: relation.Hierarchy;
 
@@ -342,18 +342,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
         if (this._$childrenProperty) {
             this._setImportantProperty(this._$childrenProperty);
-        }
-
-        if (options.expandedItems instanceof Array) {
-            this.setExpandedItems(options.expandedItems);
-        }
-
-        if (options.collapsedItems instanceof Array) {
-            this.setCollapsedItems(options.collapsedItems);
-        }
-
-        if (options.expandedItems instanceof Array) {
-            this._reBuildNodeFooters(true);
         }
 
         if (this.getExpanderVisibility() === 'hasChildren') {
@@ -816,24 +804,20 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     // region Expanded/Collapsed
 
-    isExpandAll(): boolean {
-        return this._expandedItems[0] === null;
-    }
-
     getExpandedItems(): CrudEntityKey[] {
-        return this._expandedItems;
+        return this._$expandedItems || [];
     }
 
     getCollapsedItems(): CrudEntityKey[] {
-        return this._collapsedItems;
+        return this._$collapsedItems || [];
     }
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
-        if (isEqual(this._expandedItems, expandedKeys)) {
+        if (isEqual(this.getExpandedItems(), expandedKeys)) {
             return;
         }
 
-        const diff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedKeys);
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this.getExpandedItems(), expandedKeys);
 
         // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
         const session = this._startUpdateSession();
@@ -884,25 +868,26 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
         //endregion
 
+        this._$expandedItems = [...expandedKeys];
+
         // пересчитываем все один раз вместо множества пересчетов на каждое событие об изменении элемента
         this._reBuildNodeFooters();
-        this._reGroup();
         this._reSort();
         this._reFilter();
 
         this._finishUpdateSession(session);
+        this._nextVersion();
 
-        this._expandedItems = [...expandedKeys];
         this._updateEdgeItems();
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
-        if (isEqual(this._collapsedItems, collapsedKeys)) {
+        if (isEqual(this.getCollapsedItems(), collapsedKeys)) {
             return;
         }
 
         // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
-        const diff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, collapsedKeys);
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this.getCollapsedItems(), collapsedKeys);
 
         // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
         const session = this._startUpdateSession();
@@ -914,32 +899,24 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
         });
 
-        this._collapsedItems = [...collapsedKeys];
-
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item && item['[Controls/_display/TreeItem]']) {
-                this._collapseChilds(item);
                 item.setExpanded(false, true);
             }
         });
 
+        this._$collapsedItems = [...collapsedKeys];
+
         // пересчитываем все один раз вместо множества пересчетов на каждое событие об изменении элемента
         this._reBuildNodeFooters();
-        this._reGroup();
         this._reSort();
         this._reFilter();
 
         this._finishUpdateSession(session);
+        this._nextVersion();
 
         this._updateEdgeItems();
-    }
-
-    private _collapseChilds(item: T): void {
-        const childs = this.getChildren(item);
-        childs.forEach((it) => {
-            it.setExpanded(false);
-        });
     }
 
     // endregion Expanded/Collapsed
@@ -960,7 +937,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             options.displayExpanderPadding = this._displayExpanderPadding;
 
             const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
-            options.expanded = this._expandedItems?.includes(key) || this._expandedItems?.includes(null) && !this._collapsedItems?.includes(key);
+            options.expanded = this.getExpandedItems().includes(key) || this.getExpandedItems().includes(null) && !this.getCollapsedItems().includes(key);
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
@@ -1423,5 +1400,7 @@ Object.assign(Tree.prototype, {
     _$nodeFooterTemplateMoreButton: null,
     _$moreFontColorStyle: null,
     _$hasMoreStorage: {},
+    _$collapsedItems: [],
+    _$expandedItems: [],
     _root: null
 });
