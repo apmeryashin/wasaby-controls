@@ -877,6 +877,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
                 Promise.resolve(filter) :
                 this._prepareFilterForQuery(filter || this._filter, key, isFirstLoad, direction);
             this.cancelLoading();
+            this._notifyLoadStarted(key, direction);
             this._prepareFilterPromise = new CancelablePromise(filterPromise);
             this._loadPromise = new CancelablePromise(
                 this._prepareFilterPromise.promise.then((preparedFilter: QueryWhereExpression<unknown>) => {
@@ -1083,7 +1084,6 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         return methodResult;
     }
 
-
     private _processQueryError(
         queryError: Error,
         key?: TKey,
@@ -1135,6 +1135,12 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
     private _unsubscribeBreadcrumbsChange(): void {
         if (this._breadcrumbsRecordSet) {
             this._breadcrumbsRecordSet.unsubscribe('onCollectionChange', this._onBreadcrumbsCollectionChanged);
+        }
+    }
+
+    private _notifyLoadStarted(key: TKey, direction: Direction): void {
+        if (key === this._root) {
+            this._notify('dataLoadStarted', direction);
         }
     }
 

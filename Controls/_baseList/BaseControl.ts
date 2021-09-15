@@ -666,7 +666,7 @@ const _private = {
                     return;
                 }
 
-                if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer()) {
+                if (self._indicatorsController.shouldResetDisplayPortionedSearchTimer(addedItems)) {
                     self._indicatorsController.resetDisplayPortionedSearchTimer();
                 }
 
@@ -905,7 +905,7 @@ const _private = {
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
             self._scrollController.setResetInEnd(direction === 'down');
-            self._reload(self._options, navigationQueryConfig).addCallback(() => {
+            self._reload(self._options, navigationQueryConfig).then(() => {
                 self._shouldNotResetPagingCache = false;
 
                 /**
@@ -932,7 +932,7 @@ const _private = {
                 } else {
                     scrollToEdgePromiseResolver();
                 }
-            });
+            }).catch((error) => error);
         } else if (direction === 'up') {
             self._scrollToFirstItem().then(() => {
                 self._notify('doScroll', ['top'], { bubbling: true });
@@ -1869,7 +1869,17 @@ const _private = {
     },
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        if (items.getCount()) {
+            this._loadedItems = items;
+        }
+
         if (!direction) {
+            this._loadedBySourceController = true;
+            if (this._isMounted && this._children.listView) {
+                this._children.listView.reset({
+                    keepScroll: this._keepScrollAfterReload
+                });
+            }
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -1882,9 +1892,6 @@ const _private = {
                 void 0;
         }
 
-        if (items.getCount()) {
-            this._loadedItems = items;
-        }
         _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
 
         _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -3653,12 +3660,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const loadStarted = newOptions.loading && !this._options.loading;
+        const loadedBySourceController = this._loadedBySourceController;
         let updateResult;
         let isItemsResetFromSourceController = false;
-
-        this._loadedBySourceController =
-            newOptions.sourceController &&
-            this._options.loading !== newOptions.loading && this._options.loading;
 
         const isSourceControllerLoadingNow =
             newOptions.sourceController &&
@@ -3805,6 +3809,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
                 _private.initVisibleItemActions(this, newOptions);
                 this._updateScrollController(newOptions);
+
+                if (loadedBySourceController) {
+                    this._recountIndicators('all', true);
+                }
             }
 
             if (newOptions.sourceController) {
@@ -3812,9 +3820,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.executeAfterReloadCallbacks(this, this._items, newOptions);
                 }
 
-                if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
+                if (loadedBySourceController && !this._sourceController.getLoadError()) {
                     if (this._listViewModel) {
                         this._listViewModel.setHasMoreData(_private.getHasMoreData(this));
+                    }
+                    if (!this._shouldNotResetPagingCache) {
+                        this._cachedPagingState = false;
                     }
                     _private.resetScrollAfterLoad(this);
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
@@ -3909,9 +3920,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
 
                     if (this._pagingNavigation &&
-                        !this._pagingNavigationVisible &&
                         this._items &&
-                        this._loadedBySourceController) {
+                        loadedBySourceController) {
                         _private.updatePagingData(this, this._items.getMetaData().more, this._options);
                     }
                 }
@@ -4288,6 +4298,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.updateScrollPagingButtons(this, {...this._getScrollParams(), initial: !this._scrolled});
             }
         }
+        this._loadedBySourceController = false;
 
         if (this.callbackAfterRender) {
             this.callbackAfterRender.forEach((callback) => {
@@ -4395,7 +4406,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _afterUpdate(oldOptions): void {
-        this._loadedBySourceController = false;
         if (!this._sourceController?.getLoadError()) {
             if (!this._observerRegistered) {
                 this._registerObserver();
@@ -4603,85 +4613,24 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        const resDeferred = new Deferred();
-        const self = this;
-
-        self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
-
-        if (self._sourceController) {
-            self._indicatorsController.endDisplayPortionedSearch();
-            self._displayGlobalIndicator();
-            // Need to create new Deffered, returned success result
-            // load() method may be fired with errback
-            _private.setReloadingState(self, true);
-            self._sourceController.reload(sourceConfig).addCallback(function(list) {
-                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
-                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
-                if (self._destroyed) {
-                    resDeferred.callback(null);
-                    return;
-                }
-                _private.doAfterUpdate(self, () => {
-                    _private.setReloadingState(self, false);
-
-                    if (list.getCount()) {
-                        self._loadedItems = list;
-                    }
-                    if (self._pagingNavigation) {
-                        const hasMoreDataDown = list.getMetaData().more;
-                        _private.updatePagingData(self, hasMoreDataDown, self._options);
-                    }
-                    let listModel = self._listViewModel;
-
-                    if (!self._shouldNotResetPagingCache) {
-                        self._cachedPagingState = false;
-                    }
-
-                    if (listModel) {
-                        if (self._sourceController) {
-                            if (self._sourceController.getItems() !== self._items || !self._items) {
-                                // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
-                                // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
-                                // выполняется в колбеке после обновления (doAfterUpdate).
-                                _private.assignItemsToModel(self, list, self._options);
-                            } else if (cfg.itemsSetCallback) {
-                                cfg.itemsSetCallback(self._items);
-                            }
-                            _private.setHasMoreData(listModel, _private.getHasMoreData(self));
+    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|null|void> {
+        return new Promise((resolve) => {
+            if (this._sourceController) {
+                this._indicatorsController.endDisplayPortionedSearch();
+                this._sourceController.reload(sourceConfig)
+                    .then((list) => {
+                        if (this._destroyed) {
+                            resolve(null);
+                            return;
                         }
 
-                        if (self._loadedItems) {
-                            self._shouldRestoreScrollPosition = true;
-                        }
-                        // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
-                        if (self._itemsChanged) {
-                            self._shouldNotifyOnDrawItems = true;
-                        }
-                    } else {
-                        _private.initializeModel(self, cfg, list);
-                    }
-                    _private.prepareFooter(self, self._options, self._sourceController);
-
-                    resDeferred.callback(list);
-
-                    self._recountIndicators('all', true);
-                    _private.resetScrollAfterLoad(self);
-                    _private.tryLoadToDirectionAgain(self, list);
-                });
-            });
-        } else {
-            self._afterReloadCallback(cfg);
-            resDeferred.callback();
-            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
-        }
-        return resDeferred.addCallback((result) => {
-            if (self._isMounted && self._children.listView) {
-                self._children.listView.reset({
-                    keepScroll: self._keepScrollAfterReload
-                });
+                        resolve(list as RecordSet);
+                    })
+                    .catch((error) => error);
+            } else {
+                resolve(void 0);
+                Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
             }
-            return result;
         });
     }
 
