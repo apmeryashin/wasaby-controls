@@ -222,21 +222,30 @@ export default class ObserversController {
     }
 
     private _getOffset(): ITriggerOffset {
-        const scrollBottom = Math.max(this._viewHeight - this._scrollTop - this._viewportHeight, 0);
-        const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, this._viewHeight / 2);
-        const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, this._viewHeight / 2);
+        let topTriggerOffset;
+        let bottomTriggerOffset;
 
-        let topTriggerOffset = Math.min(
-            (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._topTriggerOffsetCoefficient,
-            maxTopOffset
-        );
-        let bottomTriggerOffset = Math.min(
-            (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._bottomTriggerOffsetCoefficient,
-            maxBottomOffset
-        );
+        if (this._resetTopTriggerOffset || !this._model.getCount()) {
+            topTriggerOffset = 0;
+        } else {
+            const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, this._viewHeight / 2);
+            topTriggerOffset = Math.min(
+                (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._topTriggerOffsetCoefficient,
+                maxTopOffset
+            );
+        }
 
-        topTriggerOffset = this._resetTopTriggerOffset ? 0 : topTriggerOffset;
-        bottomTriggerOffset = this._resetBottomTriggerOffset ? 0 : bottomTriggerOffset;
+        if (this._resetBottomTriggerOffset || !this._model.getCount()) {
+            bottomTriggerOffset = 0;
+        } else {
+            const scrollBottom = Math.max(this._viewHeight - this._scrollTop - this._viewportHeight, 0);
+            const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, this._viewHeight / 2);
+
+            bottomTriggerOffset = Math.min(
+                (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._bottomTriggerOffsetCoefficient,
+                maxBottomOffset
+            );
+        }
 
         /*
          * Корректируем оффсет на высоту индикатора, т.к. триггер отображается абсолютно, то он рисуется от края вьюхи,
@@ -245,11 +254,13 @@ export default class ObserversController {
          * Поэтому дефолтный оффсет должен быть 47 для верхней ромашки и 48 для нижней.
          * 47 - чтобы сразу же не срабатывала загрузка вверх, а только после скролла к ромашке.
          */
-        if (this._model.getTopIndicator().isDisplayed()) {
-            topTriggerOffset += DEFAULT_TOP_TRIGGER_OFFSET;
-        }
-        if (this._model.getBottomIndicator().isDisplayed()) {
-            bottomTriggerOffset += DEFAULT_BOTTOM_TRIGGER_OFFSET;
+        if (this._model.getCount()) {
+            if (this._model.getTopIndicator().isDisplayed()) {
+                topTriggerOffset += DEFAULT_TOP_TRIGGER_OFFSET;
+            }
+            if (this._model.getBottomIndicator().isDisplayed()) {
+                bottomTriggerOffset += DEFAULT_BOTTOM_TRIGGER_OFFSET;
+            }
         }
 
         return {top: topTriggerOffset, bottom: bottomTriggerOffset};
