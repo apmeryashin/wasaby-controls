@@ -1,18 +1,24 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
-        <Router.router:Reference attr:class="controls-text-label"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/explorerNew/ItemActions/Base/Index' }}">
-            <a href="{{content.href}}">Базовая настройка ItemActions</a>
-        </Router.router:Reference>
-        <Controls-demo.explorerNew.ItemActions.Base.Index/>
-    </div>
-    <div class="controlsDemo__cell">
-        <Router.router:Reference attr:class="controls-text-label"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/explorerNew/ItemActions/OutsideWithBreadCrumbs/Index' }}">
-            <a href="{{content.href}}">ItemActions вне записи в списке с хлебными крошками</a>
-        </Router.router:Reference>
-        <Controls-demo.explorerNew.ItemActions.OutsideWithBreadCrumbs.Index/>
-    </div>
+    <Controls.browser:Browser source="{{_viewSource}}" keyProperty="id" bind:filter="_filter"
+                              searchParam="title" minSearchLength="{{3}}" searchStartingWith="{{_searchStartingWith}}">
+        <div class="ws-fragment">
+            <Controls.search:InputContainer>
+                    <Controls.search:Input/>
+            </Controls.search:InputContainer>
+            <Controls.list:Container>
+                <Controls.explorer:View
+                    source="{{_viewSource}}"
+                    itemActions="{{_itemActions}}"
+                    bind:root="_root"
+                    attr:class="demo-Explorer ControlsDemo-Explorer"
+                    keyProperty="id"
+                    displayProperty="title"
+                    parentProperty="parent"
+                    nodeProperty="parent@"
+                    columns="{{_columns}}">
+                </Controls.explorer:View>
+            </Controls.list:Container>
+        </div>
+    </Controls.browser:Browser>
 </div>
+
