@@ -3,7 +3,7 @@
          attr:data-qa="controls-TreeGrid__row-expander"></div>
 </ws:template>
 
-<tr attr:data-qa="{{item.getQAData()}}"
+<tr attr:data-qa="{{item.getQAData('controls-Grid__row')}}"
     attr:class="{{ item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'cursor': cursor,

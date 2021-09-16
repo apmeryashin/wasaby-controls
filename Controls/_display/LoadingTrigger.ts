@@ -97,7 +97,7 @@ export default class LoadingTrigger extends CollectionItem<null> {
         return this._$visible;
     }
 
-    getQAData(): string {
+    getQAData(templateQAData?: string): string {
         return this.key;
     }
 }

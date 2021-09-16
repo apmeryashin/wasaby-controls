@@ -91,7 +91,7 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
         return 'Controls/grid:ItemTemplate';
     }
 
-    getQAData(): string {
+    getQAData(templateQAData?: string): string {
         return 'controls-ListView__group';
     }
 

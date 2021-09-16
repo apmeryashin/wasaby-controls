@@ -744,8 +744,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._shadowVisibility;
     }
 
-    getQAData(): string {
-        return 'controls-ListView__itemV';
+    getQAData(templateQAData?: string): string {
+        return templateQAData;
     }
 
     /**

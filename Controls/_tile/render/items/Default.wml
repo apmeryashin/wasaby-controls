@@ -2,7 +2,7 @@
    <ws:partial template="wml!Controls/_tile/render/items/Invisible" scope="{{_options}}"/>
 </ws:if>
 <ws:else>
-   <div data-qa="{{(item || itemData).getQAData()}}"
+   <div data-qa="{{(item || itemData).getQAData('controls-TileView__item')}}"
         attr:class="{{ (item || itemData).getItemClasses((item || itemData).getItemType(itemType, nodeContentTemplate), clickable, hasTitle, cursor, marker, shadowVisibility, border) }}"
         attr:style="{{ (item || itemData).getItemStyles((item || itemData).getItemType(itemType, nodeContentTemplate), width || itemWidth, staticHeight, imagePosition, imageViewMode) }}"
    >

@@ -102,7 +102,7 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
         return true;
     }
 
-    getQAData(): string {
+    getQAData(templateQAData?: string): string {
         return 'controls-ListView__group';
     }
 

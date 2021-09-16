@@ -48,7 +48,7 @@ class ResultsRow extends Row<null> {
         };
     }
 
-    getQAData(): string {
+    getQAData(templateQAData?: string): string {
         return 'controls-Grid__results';
     }
 

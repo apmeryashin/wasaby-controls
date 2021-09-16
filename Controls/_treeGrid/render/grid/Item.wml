@@ -102,7 +102,7 @@
 
 <ws:if data="{{ isSticked !== false && (item || itemData).isSticked(stickyCallback, item) }}">
    <Controls.scroll:Group>
-      <div attr:data-qa="{{(item || itemData).getQAData()}}"
+      <div attr:data-qa="{{(item || itemData).getQAData('controls-Grid__row')}}"
            attr:class="{{ (item || itemData).getItemClasses({
            'highlightOnHover': highlightOnHover,
            'cursor': cursor,
@@ -126,7 +126,7 @@
    </Controls.scroll:Group>
 </ws:if>
 <ws:else>
-   <div attr:data-qa="{{(item || itemData).getQAData()}}"
+   <div attr:data-qa="{{(item || itemData).getQAData('controls-Grid__row')}}"
         attr:class="{{ (item || itemData).getItemClasses({
            'highlightOnHover': highlightOnHover,
            'cursor': cursor,

@@ -41,7 +41,7 @@ export default class GroupItem<T> extends mixin<
         return this._$contents;
     }
 
-    getQAData(): string {
+    getQAData(templateQAData?: string): string {
         return 'controls-ListView__group';
     }
 
