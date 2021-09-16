@@ -70,11 +70,12 @@ export default class MonthSlider extends Control<IControlOptions> {
             this._nextArrowButtonVisible = true;
             return;
         }
+        const normalizedDate = DateUtil.getStartOfMonth(date);
         const firstDate = displayedRanges[0][0];
         const amountOfRanges = displayedRanges.length;
         const lastDate = displayedRanges[amountOfRanges - 1][1];
-        this._prevArrowButtonVisible = firstDate < date || lastDate === null;
-        this._nextArrowButtonVisible = lastDate > date || lastDate === null;
+        this._prevArrowButtonVisible = firstDate < normalizedDate || firstDate === null;
+        this._nextArrowButtonVisible = lastDate > normalizedDate || lastDate === null;
     }
 
     protected _itemClickHandler(event, item): void {

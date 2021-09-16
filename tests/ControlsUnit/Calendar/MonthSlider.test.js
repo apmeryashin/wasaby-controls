@@ -104,12 +104,12 @@ define([
             shouldShowNextArrow: true
          }, {
             displayedRanges: [[new Date(2018, 0), new Date(2020, 3)]],
-            date: new Date(2018, 0),
+            date: new Date(2018, 0, 15),
             shouldShowPrevArrow: false,
             shouldShowNextArrow: true
          }, {
             displayedRanges: [[new Date(2018, 0), new Date(2020, 3)]],
-            date: new Date(2020, 3),
+            date: new Date(2020, 3, 11),
             shouldShowPrevArrow: true,
             shouldShowNextArrow: false
          }, {
