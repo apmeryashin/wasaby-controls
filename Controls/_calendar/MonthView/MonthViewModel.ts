@@ -78,14 +78,19 @@ export default class MonthViewModel extends VersionableMixin {
                     css.push('controls-MonthView__fontWeight');
                 }
             }
-            if (scope.selectionProcessing) {
-                if (scope.selectedStart && scope.selectedEnd) {
-                    backgroundColorClass += '-startend-unfinished';
-                } else if (scope.selectedStart) {
-                    backgroundColorClass += '-start-unfinished';
-                } else if (scope.selectedEnd) {
-                    backgroundColorClass += '-end-unfinished';
-                }
+
+            if (scope.selectedStart && scope.selectedEnd) {
+                backgroundColorClass += '-startend';
+            } else if (scope.selectionBase) {
+                backgroundColorClass += '-base';
+            } else if (scope.selectedStart) {
+                backgroundColorClass += '-start';
+            } else if (scope.selectedEnd) {
+                backgroundColorClass += '-end';
+            }
+
+            if (scope.selectionProcessing && !scope.selectionBase && (scope.selectedEnd || scope.selectedStart)) {
+                backgroundColorClass += '-unfinished';
             }
 
             let borderColorClass = 'controls-MonthViewVDOM__item-border';
@@ -260,6 +265,7 @@ export default class MonthViewModel extends VersionableMixin {
         if (state.daysData) {
             obj.extData = state.daysData.at ? state.daysData.at(obj.day - 1) : state.daysData[obj.day - 1];
         }
+        obj.selectionBase = DateUtil.isDatesEqual(date, state.selectionBaseValue);
 
         return obj;
     }

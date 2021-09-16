@@ -57,7 +57,7 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
     protected _headerCaption: string;
     protected _weekdaysCaptions: string = DateControlsUtils.getWeekdaysCaptions();
     protected _rangeModel: DateRangeModel;
-    protected _todayIconVisible: boolean = true;
+    protected _todayIconVisible: boolean = false;
     protected _today: number = (new WSDate()).getDate();
     protected _getFormattedCaption: Function = getFormattedCaption;
     protected _topShadowVisibility: string = 'hidden';
@@ -76,6 +76,13 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
         this._headerCaption = this._getFormattedCaption(this._position);
         this._rangeModel = new DateRangeModel();
         this._rangeModel.update(options);
+        // В случае, если при маунте мы находимся не на текущем месяце, IntersectionObserver, находящийся на текущем
+        // дне, не инициализируется. В таком случае мы не будем знать, нужно ли показывать кнопку 'Домой'. Сами
+        // посчитаем видимость кнопки
+        if (this._position.getFullYear() !== new WSDate().getFullYear() ||
+            this._position.getMonth() !== new WSDate().getMonth()) {
+            this._todayIconVisible = true;
+        }
     }
 
     protected _beforeUnmount(): void {
