@@ -9,7 +9,6 @@
                 <Controls.list:Mover name="listMover"/>
                 <Controls.list:Container>
                     <Controls.treeGrid:View
-                            columns="{{_columns}}"
                             on:dragStart="_dragStart()"
                             on:dragEnd="_dragEnd()"
                             multiSelectVisibility="{{_multiselect}}"
