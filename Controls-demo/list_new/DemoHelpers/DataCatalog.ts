@@ -1,4 +1,5 @@
 import {showType} from 'Controls/toolbars';
+import {Memory} from 'Types/source';
 
 const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nulla ex, consectetur lacinia odio blandit sit amet.';
 
@@ -390,6 +391,18 @@ const changeSourceData = (): IChangeSource => ({
         }]
 });
 
+const slowDownSource = (source: Memory, timeMs: number): void => {
+    const originalQuery = source.query;
+
+    source.query = (...args) => {
+        return new Promise((success) => {
+            setTimeout(() => {
+                success(originalQuery.apply(source, args));
+            }, timeMs);
+        });
+    };
+};
+
 export {
     getContactsCatalog,
     getContactsCatalogWithActions,
@@ -398,5 +411,6 @@ export {
     getEditableCatalog,
     generateData,
     getDataForComplexScroll,
-    changeSourceData
+    changeSourceData,
+    slowDownSource
 };
