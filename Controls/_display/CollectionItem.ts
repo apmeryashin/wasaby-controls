@@ -796,10 +796,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return wrapperClasses;
     }
 
-    // Вроде как isLastRow лишняя проверка и она только для старой модели grid.
-    // аргумент rowSeparatorSize тоже только для старой модели.
-    // когда нигде точно не останется мест использования, надо будет избавиться от этих аргументов.
-    // + здесь же, возможно, стоит вызывать описанный ниже метод getItemActionPositionClasses.
+    /**
+     * CSS классы для блока операций над записью
+     * @param itemActionsPosition
+     * здесь же, возможно, стоит вызывать описанный ниже метод getItemActionPositionClasses.
+     */
     getItemActionClasses(itemActionsPosition: string): string {
         let classes = `controls-itemActionsV_${itemActionsPosition}`;
         const rowSeparatorSize = this.isBottomSeparatorEnabled() && this.getRowSeparatorSize();

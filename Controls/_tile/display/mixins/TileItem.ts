@@ -603,6 +603,14 @@ export default abstract class TileItem<T extends Model = Model> {
     }
 
     /**
+     * CSS классы для блока операций над записью
+     * @param itemActionsPosition
+     */
+    getItemActionClasses(itemActionsPosition: string): string {
+        return `controls-itemActionsV_${itemActionsPosition}`;
+    }
+
+    /**
      * Возвращает режим отображения операций над записью
      * @param {TTileItem} itemType Тип элемента
      * @return {string}
