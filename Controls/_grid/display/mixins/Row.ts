@@ -187,7 +187,7 @@ export default abstract class Row<T extends Model = Model> {
 
     //region Аспект "Лесенка"
     getStickyLadderCellsCount(): number {
-        const stickyProperties = this.getStickyLadderProperties(this._$columnsConfig[0]);
+        const stickyProperties = this.getStickyLadderProperties(this._$gridColumnsConfig[0]);
         return stickyProperties ? stickyProperties.length : 0;
     }
 
@@ -467,9 +467,10 @@ export default abstract class Row<T extends Model = Model> {
             if (this.hasMultiSelectColumn() && shouldColspanWithMultiselect) {
                 colspan++;
             }
-            if ((shouldColspanWithStickyLadderCells || colspan > 1 && columnIndex === 0)  && this.isFullGridSupport()) {
+            let stickyLadderCellsCount = 0;
+            if (((shouldColspanWithStickyLadderCells || colspan > 1) && columnIndex === 0)  && this.isFullGridSupport()) {
                 const stickyLadderProperties = this.getStickyLadderProperties(this.getGridColumnsConfig()[0]);
-                const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
+                stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
                 colspan += stickyLadderCellsCount;
             }
             if (skipColumns) {
@@ -477,7 +478,7 @@ export default abstract class Row<T extends Model = Model> {
                     colspan = 0;
                 }
                 if (colspan) {
-                    columnIndex += colspan - 1;
+                    columnIndex += colspan - 1 - stickyLadderCellsCount;
                 }
             } else {
                 colspan = (colspan || 1);
