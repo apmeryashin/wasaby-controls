@@ -3,7 +3,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroupBase';
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
-import {IItemTemplateOptions} from 'Controls/interface';
+import {IItemTemplateOptions, IHeightOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
 
 interface IBackgroundPosition {
@@ -16,7 +16,7 @@ interface IBackgroundPositionData {
     left: number;
 }
 
-interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
+interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHeightOptions {}
 
 /**
  * @name Controls/_toggle/Tumbler#keyProperty
@@ -230,6 +230,7 @@ class Tumbler extends ButtonGroupBase {
     static getDefaultOptions(): ITumblerOptions {
         return {
             keyProperty: 'id',
+            inlineHeight: 'm',
             itemTemplate: ItemTemplate
         };
     }
