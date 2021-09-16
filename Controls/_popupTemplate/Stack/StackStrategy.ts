@@ -74,8 +74,10 @@ export class StackStrategy {
     private _getPanelWidth(item: IPopupItem, tCoords, maxPanelWidth: number): number {
         let panelWidth;
         const maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
-        const minRightSpace = getRightPanelWidth();
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
+        const rightPanelWidth = getRightPanelWidth();
+        const minRightSpace = tCoords.right - (minWidth - maxPanelWidthWithOffset);
+        const rightCoord = Math.max(minRightSpace, rightPanelWidth);
         const maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
         // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
@@ -97,7 +99,7 @@ export class StackStrategy {
                 minWidth = item.popupOptions.minimizedWidth;
             }
             if (minWidth > maxPanelWidthWithOffset) {
-                tCoords.right = minRightSpace;
+                tCoords.right = rightCoord;
             }
             panelWidth = minWidth;
         }
@@ -110,8 +112,8 @@ export class StackStrategy {
         // Если родитель не уместился по ширине и спозиционировался по правому краю экрана -
         // все дети тоже должны быть по правому краю, не зависимо от своих размеров
         const parentPosition = this._getParentPosition(item);
-        if (parentPosition?.right === minRightSpace) {
-            tCoords.right = minRightSpace;
+        if (parentPosition?.right === rightCoord) {
+            tCoords.right = rightCoord;
         }
         return panelWidth;
     }

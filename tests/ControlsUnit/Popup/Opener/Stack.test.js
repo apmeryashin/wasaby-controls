@@ -605,13 +605,15 @@ define(
             }, item);
             assert.equal(position.width, item.popupOptions.minWidth);
             assert.isTrue(position.top === 0);
-            assert.isTrue(position.right === 54);
+            // maxPanelWidthWithOffset = 600
+            assert.isTrue(position.right === 200);
          });
 
          it('stack width', () => {
+            const minWidth = 800;
             let item = {
                popupOptions: {
-                  minWidth: 800,
+                  minWidth,
                   width: 900,
                   maxWidth: 1200
                }
@@ -620,16 +622,17 @@ define(
                top: 0,
                right: 400
             }, item);
-            assert.equal(position.width, 900);
+            assert.equal(position.width, minWidth);
 
             item.popupOptions.width = 1200;
             position = StackStrategy.getPosition({
                top: 0,
                right: 400
             }, item);
-            assert.equal(position.maxWidth, 946); //В тесте getMaxPanelWidth === 1000 - 52 rightPanel
-            assert.equal(position.width, 946);
-            assert.equal(position.right, 54);
+            assert.equal(position.maxWidth, minWidth);
+            assert.equal(position.width, minWidth);
+            // maxPanelWidthWithOffset = 600
+            assert.equal(position.right, 200);
          });
 
          it('stack max width', () => {
