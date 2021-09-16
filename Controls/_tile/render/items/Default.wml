@@ -10,9 +10,9 @@
          <div style="{{ (item || itemData).getAutoResizerStyles((item || itemData).getItemType(itemType, nodeContentTemplate), width || itemWidth, imageProportion, imagePosition, imageViewMode) }}"></div>
       </ws:if>
 
-         <div attr:class="{{ (item || itemData).getWrapperClasses((item || itemData).getItemType(itemType, nodeContentTemplate), shadowVisibility, marker, highlightOnHover, backgroundColorStyle, height, border, titleStyle) }}"
-             attr:style="{{ (item || itemData).getWrapperStyles((item || itemData).getItemType(itemType, nodeContentTemplate)) }}"
-         >
+      <div attr:class="{{ (item || itemData).getWrapperClasses((item || itemData).getItemType(itemType, nodeContentTemplate), shadowVisibility, marker, highlightOnHover, backgroundColorStyle, height, border, titleStyle) }}"
+           attr:style="{{ (item || itemData).getWrapperStyles((item || itemData).getItemType(itemType, nodeContentTemplate)) }}"
+           attr:data-qa="{{ (item || itemData).getWrapperQAData(marker) }}">
 
          <ws:partial if="{{ (item || itemData).shouldDisplayMultiSelectTemplate() }}"
                      template="{{ (item || itemData).getMultiSelectTemplate() }}"

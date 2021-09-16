@@ -1430,6 +1430,14 @@ export default abstract class TileItem<T extends Model = Model> {
         return templateQAData;
     }
 
+    getWrapperQAData(marker?: boolean): string {
+        let qaData = '';
+        if (this.shouldDisplayMarker(marker)) {
+            qaData += 'controls-TileView__item_withMarker';
+        }
+        return qaData;
+    }
+
     /**
      * Возвращает классы с отступами элемента
      */
