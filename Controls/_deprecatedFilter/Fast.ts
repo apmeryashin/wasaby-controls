@@ -481,7 +481,7 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
          dropdownClassName: `controls-FastFilter_width-popup controls_popupTemplate_theme-${this._options.theme} controls_filterPopup_theme-${this._options.theme} controls_dropdownPopup_theme-${this._options.theme}`
       };
       const className = (this._options.popupClassName || (this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup')) +
-          ` controls_popupTemplate_theme-${this._options.theme} controls_dropdownPopup_theme-${this._options.theme}`;
+          ` controls_popupTemplate_theme-${this._options.theme} controls_dropdownPopup_theme-${this._options.theme} controls_filter_theme-${this._options.theme}`;
       var config = {
          templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
          className,
