@@ -115,5 +115,46 @@ define([
             assert.notEqual(component._caption, caption);
          });
       });
+      describe('_updateResetButtonVisible', function () {
+         [{
+            options: {
+               startValue: new Date(2020, 5, 4),
+               endValue: new Date(2022, 3, 7),
+               resetStartValue: new Date(2020, 5, 4),
+               resetEndValue: new Date(2022, 3, 7),
+            },
+            result: false
+         }, {
+            options: {
+               startValue: new Date(2020, 5, 4),
+               endValue: new Date(2029, 3, 7),
+               resetStartValue: new Date(2020, 5, 4),
+               resetEndValue: new Date(2022, 3, 7),
+            },
+            result: true
+         }, {
+            options: {
+               startValue: new Date(2021, 5, 4),
+               endValue: new Date(2022, 3, 7),
+               resetStartValue: new Date(2020, 5, 4),
+               resetEndValue: new Date(2022, 3, 7),
+            },
+            result: true
+         }, {
+            options: {
+               startValue: new Date(2021, 5, 4),
+               endValue: new Date(2029, 3, 7),
+               resetStartValue: new Date(2020, 5, 4),
+               resetEndValue: new Date(2022, 3, 7),
+            },
+            result: true
+         }].forEach((test) => {
+            it('should set correct reset button visible state ', () => {
+               const component = calendarTestUtils.createComponent(dateRange.LinkView);
+               component._updateResetButtonVisible(test.options);
+               assert.equal(test.result, component._resetButtonVisible);
+            });
+         });
+      });
    });
 });
