@@ -144,7 +144,7 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHe
  * @variant l
  * @variant xl
  * @variant default
- * @default m
+ * @default default
  *
  * @example
  * Пример описания.
@@ -249,7 +249,7 @@ class Tumbler extends ButtonGroupBase {
     static getDefaultOptions(): ITumblerOptions {
         return {
             keyProperty: 'id',
-            inlineHeight: 'm',
+            inlineHeight: 'default',
             itemTemplate: ItemTemplate
         };
     }
