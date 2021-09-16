@@ -1,5 +1,6 @@
 import {compare} from 'Types/entity';
 import {isValidDateRange} from 'Controls/validate';
+import {isDatesEqual} from 'Controls/_utils/dateUtils/Date';
 
 /**
  * Утилиты для работы с периодами дат.
@@ -117,4 +118,13 @@ export function getPeriodLengthInDays(start: Date, end: Date): number {
 //кривое название метода используется в прикладных репозиториях
 export function gePeriodLengthInDays(start: Date, end: Date): number {
     return getPeriodLengthInDays(start, end);
+}
+
+export function getResetButtonVisible(startValue: Date, endValue: Date, resetStartValue: Date,
+                                      resetEndValue: Date): boolean {
+    const hasResetStartValue = resetStartValue || resetStartValue === null;
+    const hasResetEndValue = resetEndValue || resetEndValue === null;
+
+    return (hasResetStartValue && !isDatesEqual(startValue, resetStartValue)) ||
+        (hasResetEndValue && !isDatesEqual(endValue, resetEndValue));
 }

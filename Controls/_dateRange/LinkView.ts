@@ -13,7 +13,7 @@ import {isLeftMouseButton} from 'Controls/popup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from "Types/entity";
 import dateControlsUtils from "./Utils";
-import {Base as dateUtils} from 'Controls/dateUtils';
+import {Range as dateRangeUtils} from 'Controls/dateUtils';
 import * as itemTemplate from 'wml!Controls/_dateRange/LinkView/itemTemplate';
 import 'css!Controls/dateRange';
 import 'css!Controls/CommonClasses';
@@ -133,11 +133,8 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    }
 
    _updateResetButtonVisible(options): void {
-      const hasResetStartValue = options.resetStartValue || options.resetStartValue === null;
-      const hasResetEndValue = options.resetEndValue || options.resetEndValue === null;
-      this._resetButtonVisible = (hasResetStartValue &&
-          !dateUtils.isDatesEqual(options.startValue, options.resetStartValue)) ||
-          (hasResetEndValue && !dateUtils.isDatesEqual(options.endValue, options.resetEndValue));
+      this._resetButtonVisible = dateRangeUtils.getResetButtonVisible(options.startValue, options.endValue,
+          options.resetStartValue, options.resetEndValue);
    }
 
    getPopupTarget() {
