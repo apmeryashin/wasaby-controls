@@ -239,6 +239,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _pendingViewMode: TExplorerViewMode;
 
     private _items: RecordSet;
+    // Флаг идентифицирует что идет проваливание в папку. Именно проваливание, а не возврат по крошкам
     private _isGoingFront: boolean;
     //endregion
 
@@ -972,8 +973,8 @@ export default class Explorer extends Control<IExplorerOptions> {
             // [ ключ папки -> обновление бинда -> цикл -> treeControl: ключ null (itemsSetCallback) ->
             // baseControl: ключ по бинду ]
 
-            // https://online.sbis.ru/opendoc.html?guid=fe8dec0c-8396-45d3-9609-6163eee40346
-            // this._children.treeControl.setMarkedKey(null);
+            // При проваливании в папку маркер нужно сбрасывать
+            this._children.treeControl.setMarkedKey(null);
 
             // После перехода на наследование, между обновлением treeControl и baseControl разрыва нет, более того,
             // поменялся порядок апдейтов контролов. После перевода на наследование сначала обновляется BaseControl.
