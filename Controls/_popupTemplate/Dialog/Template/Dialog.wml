@@ -1,6 +1,5 @@
 <Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
     <div class="controls_popupTemplate_theme-{{_options.theme}} controls-DialogTemplate
-                controls-DialogTemplate_backgroundStyle-{{_options.backgroundStyle}}
                 {{!_options.maximize ? 'controls-DialogTemplate__border-radius'}}
                 {{_options.draggable ? 'ws-window-draggable'}}" ws-tab-cycling="true">
         <ws:if data="{{_options.headingCaption || _options.headerContentTemplate }}">
@@ -26,14 +25,14 @@
             </div>
         </ws:else>
         <ws:if data="{{ _options.bodyContentTemplate }}">
-            <div class="controls-DialogTemplate__content-area">
+            <div class="controls-DialogTemplate__content-area controls-background-{{_options.backgroundStyle}}
+                        {{!(_options.headingCaption || _options.headerContentTemplate) && _options.footerContentTemplate
+                                         && !_options.maximize ? 'controls-DialogTemplate__top-area_roundBorder'}}
+                        {{!(_options.headingCaption || _options.headerContentTemplate) && !_options.footerContentTemplate
+                                         && !_options.maximize ? 'controls-DialogTemplate__border-radius'}}
+                        {{(_options.headingCaption || _options.headerContentTemplate) && !_options.footerContentTemplate
+                                         && !_options.maximize ? 'controls-DialogTemplate__footer-area_roundBorder'}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
-                            attr:class="{{!(_options.headingCaption || _options.headerContentTemplate) && _options.footerContentTemplate
-                                                    && !_options.maximize ? 'controls-DialogTemplate__top-area_roundBorder'}}
-                                        {{!(_options.headingCaption || _options.headerContentTemplate) && !_options.footerContentTemplate
-                                                    && !_options.maximize ? 'controls-DialogTemplate__border-radius'}}
-                                        {{(_options.headingCaption || _options.headerContentTemplate) && !_options.footerContentTemplate
-                                                    && !_options.maximize ? 'controls-DialogTemplate__footer-area_roundBorder'}}"
                             scope="{{_options.contentAreaOptions}}"
                             bodyContentTemplate="{{null}}"
                             headerContentTemplate="{{null}}"

@@ -17,6 +17,7 @@ const MIN_RIGHT_OFFSET = 30;
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
     stickyPosition?: object;
+    headerBackgroundStyle?: string;
 }
 
 /**
@@ -98,6 +99,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             closeButtonVisibility: true,
             shadowVisible: false,
             backgroundStyle: 'default',
+            headerBackgroundStyle: 'default',
             closeButtonViewMode: 'link'
         };
     }
@@ -128,5 +130,35 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#headingFontSize
  * @cfg {String}
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#backgroundStyle
+ * @cfg {String} Цвет фона окна.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Sticky/backgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#headerBackgroundStyle
+ * @cfg {String} Цвет фона шапки.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Sticky/backgroundStyle/Index
  */
 export default StickyTemplate;

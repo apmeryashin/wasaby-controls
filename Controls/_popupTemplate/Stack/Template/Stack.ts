@@ -10,7 +10,8 @@ export interface IRightPanelOptions {
 }
 
 export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOptions {
-    headerBackgroundStyle: string;
+    headerBackgroundStyle?: string;
+    backgroundStyle?: string;
     maximizeButtonVisibility?: boolean;
     workspaceWidth?: number;
     headerBorderVisible?: boolean;
@@ -103,6 +104,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
         return {
             headingFontSize: '3xl',
             headerBackgroundStyle: 'unaccented',
+            backgroundStyle: 'default',
             headingFontColorStyle: 'secondary',
             closeButtonVisibility: true,
             closeButtonViewMode: 'toolButton',
@@ -137,12 +139,29 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
  * @cfg {String} Определяет цвет фона шапки стекового окна.
  * @variant default
  * @variant unaccented
- * @variant success
+ * @variant secondary
+ * @variant primary
  * @variant danger
+ * @variant warning
+ * @variant danger
+ * @variant info
  * @default unaccented
- * @demo Controls-demo/PopupTemplate/Stack/headerBackgroundStyle/Index
- * @remark Данная опция определяет префикс стиля для настройки фона шапки стекового окна.
- * На шапку будет установлен класс **.controls-StackTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}**, который следует определить у себя в стилях.
+ * @demo Controls-demo/PopupTemplate/Stack/backgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Stack#backgroundStyle
+ * @cfg {String} Определяет цвет фона стекового окна.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant danger
+ * @variant info
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Stack/backgroundStyle/Index
  */
 
 /**
