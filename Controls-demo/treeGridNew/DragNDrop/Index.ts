@@ -14,7 +14,6 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
     protected _columns: IColumn[] = Flat.getColumns();
-    protected _viewMode: string = 'table';
     protected _root: TRoot = null;
     protected _selectedKeys: Number[] = [];
     protected _itemsReadyCallback: TItemsReadyCallback = this._itemsReady.bind(this);

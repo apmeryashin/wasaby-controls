@@ -68,9 +68,13 @@
    flex-shrink: 1;
    min-width: 0;
    height: 100%;
-   align-self: center;
    align-items: center;
    margin-right: var(--header-content_padding-right_dialog);
+
+   &::before {
+      content: '\200b';
+      line-height: var(--header-min-height_dialog);
+   }
 }
 
 .controls-DialogTemplate__top-area-content {

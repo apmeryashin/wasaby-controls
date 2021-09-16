@@ -4,6 +4,10 @@
       <Controls.decorator:Money value="{{null}}"/>
    </div>
    <div class="controlsDemo__cell">
+      <div class="controls-text-label">value = 0</div>
+      <Controls.decorator:Money value="{{0}}"/>
+   </div>
+   <div class="controlsDemo__cell">
       <div class="controls-text-label">value = 10</div>
       <Controls.decorator:Money value="{{10}}"/>
    </div>

@@ -1,7 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Stack/Template/StackPageWrapper/StackPageWrapper';
-import {getPopupWidth, savePopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
+import {getPopupWidth, IStackSavedConfig} from 'Controls/_popupTemplate/Util/PopupWidthSettings';
 import {RIGHT_PANEL_WIDTH} from 'Controls/_popupTemplate/BaseController';
+import StackController from 'Controls/_popupTemplate/Stack/StackController';
 import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 import {RegisterClass} from 'Controls/event';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -14,6 +15,8 @@ interface IPageTemplate extends IControlOptions, IPropStorageOptions {
 
 interface IReceivedState {
     width?: number;
+    maxSavedWidth?: number;
+    minSavedWidth?: number;
 }
 
 /**
@@ -38,26 +41,32 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     protected _minWidth: number;
     private _resizeRegister: RegisterClass;
     private _offsetChanged: boolean;
+    private _minSavedWidth: number;
+    private _maxSavedWidth: number;
 
     protected _beforeMount(options?: IPageTemplate, context?: object,
                            receivedState?: IReceivedState): void | Promise<IReceivedState> {
         this._setWorkSpaceWidth(receivedState?.width || options.workspaceWidth);
+        this._setSavedSizes(receivedState);
         this._updateOffset(options);
         this._updateProperties(options);
         this._resizeRegister = new RegisterClass({register: 'controlResize'});
         if (!receivedState && options.propStorageId) {
             return new Promise((resolve) => {
                 getPopupWidth(options.propStorageId).then((data?: number | IStackSavedConfig) => {
-                    let width = data as number;
+                    let resultData = data as IStackSavedConfig;
                     if (data) {
                         // Обратная совместимость со старой историей. Стали сохранять объект с настройками.
-                        if (typeof data === 'object') {
-                            width = data.width as number;
+                        if (typeof data === 'number') {
+                            resultData = {
+                                width: data
+                            };
                         }
-                        this._setWorkSpaceWidth(width);
+                        this._setWorkSpaceWidth(resultData.width);
+                        this._setSavedSizes(resultData);
                     }
                     this._updateProperties(options);
-                    resolve({width});
+                    resolve(resultData);
                 });
             });
         }
@@ -81,17 +90,44 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
 
     protected _offsetHandler(event: Event, offset: number): void {
         const newWidth = this._workspaceWidth + offset;
+
+        const item = this._generateControllerItem();
+        StackController.popupResizingLine(item, offset);
+        this._minSavedWidth = item.minSavedWidth;
+        this._maxSavedWidth = item.maxSavedWidth;
+
         this._setWorkSpaceWidth(newWidth);
         // offsetChanged нужно только в 4100, пока в ЭДО полностью не перейдут на работу через нашу обертку.
         this._notify('offsetChanged', [offset]);
         const data = {
             width: this._workspaceWidth
         };
-        savePopupWidth(this._options.propStorageId, data);
         this._updateOffset();
         this._offsetChanged = true;
         // Так же как в реестрах, сообщаем про смену размеров рабочей области.
         this._notify('workspaceResize', [this._workspaceWidth], {bubbling: true});
+    }
+
+    protected _maximizeHandler(): void {
+        const item = this._generateControllerItem();
+        StackController.elementMaximized(item);
+        this._setWorkSpaceWidth(item.popupOptions.width);
+        this._updateOffset();
+    }
+
+    private _generateControllerItem(): object {
+        return {
+            minSavedWidth: this._minSavedWidth,
+            maxSavedWidth: this._maxSavedWidth,
+            popupOptions: {
+                minWidth: this._options.minWidth,
+                maxWidth: this._options.maxWidth,
+                stackWidth: this._workspaceWidth,
+                propStorageId: this._options.propStorageId,
+                templateOptions: {}
+            },
+            position: {}
+        };
     }
 
     private _updateProperties(options: IPageTemplate): void {
@@ -114,6 +150,11 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._workspaceWidth = width;
         // ширина прикладного шаблона без учета ширины правой панели
         this._templateWorkSpaceWidth = width ? (width - RIGHT_PANEL_WIDTH) : undefined;
+    }
+
+    private _setSavedSizes(receivedState: IReceivedState = {}): void {
+        this._maxSavedWidth = receivedState.maxSavedWidth;
+        this._minSavedWidth = receivedState.minSavedWidth;
     }
 
     private static _canResize(propStorageId: string, width: number, minWidth: number, maxWidth: number): boolean {

@@ -3,7 +3,7 @@
 }
 
 .controls-RadioGroup_defaultItem_horizontal {
-   padding-left: var(--item_offset-horizontal_radioGroup);
+   padding-right: var(--item_offset-horizontal_radioGroup);
 }
 
 .controls-RadioGroup_defaultItem_vertical {
@@ -50,7 +50,8 @@
 
 .controls-RadioGroup__wrapper_horizontal {
    .inline-flexbox();
-   .flex-direction(row);
+
+   flex-flow: row wrap;
 }
 
 .controls-RadioGroup__wrapper_vertical {

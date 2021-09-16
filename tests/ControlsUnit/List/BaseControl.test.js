@@ -2848,7 +2848,9 @@ define([
             await baseControl._beforeMount(cfg);
             baseControl._children.listView = {
                getTopIndicator: () => null,
-               getBottomIndicator: () => null
+               getBottomIndicator: () => null,
+               getTopLoadingTrigger: () => null,
+               getBottomLoadingTrigger: () => null
             };
             assert.isFalse(isRegistered);
 
@@ -3081,44 +3083,6 @@ define([
          assert.isTrue(notifyCalled);
          assert.isTrue(setDragPositionCalled);
          assert.isNull(ctrl._unprocessedDragEnteredItem);
-      });
-
-      it('_dragEnter only works with ItemsEntity', function() {
-         const ctrl = new lists.BaseControl({});
-
-         ctrl._listViewModel = {
-            getDragEntity: () => null,
-            setDragOutsideList: () => null
-         };
-
-         let
-            notifiedEvent = '_removeDraggingTemplate',
-            notifiedEntity = null;
-
-         ctrl._notify = function(eventName, dragEntity) {
-            notifiedEvent = eventName;
-            notifiedEntity = dragEntity && dragEntity[0];
-         };
-
-         ctrl._documentDragging = true;
-
-         assert.isNull(ctrl._dndListController);
-         ctrl._dragEnter({}, undefined);
-         assert.equal(notifiedEvent, '_removeDraggingTemplate');
-         assert.isNotNull(ctrl._dndListController);
-
-         const badDragObject = { entity: {} };
-         ctrl._dragEnter({}, badDragObject);
-         assert.equal(notifiedEvent, '_removeDraggingTemplate');
-
-         const goodDragObject = {
-            entity: {
-               '[Controls/dragnDrop:ItemsEntity]': true
-            }
-         };
-         ctrl._dragEnter(goodDragObject);
-         assert.strictEqual(notifiedEvent, 'dragEnter');
-         assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
 
       it('native drag prevent only by native "dragstart" event', async function() {
@@ -5886,25 +5850,6 @@ define([
             assert.isFalse(baseControl._documentDragging);
          });
 
-         it('drag start', () => {
-            baseControl._dragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) }, 1);
-            assert.isNotNull(baseControl._dndListController);
-            assert.isNotNull(baseControl._dndListController.getDragEntity());
-         });
-
-         it('_documentDragStart', () => {
-            baseControl._insideDragging = true;
-
-            baseControl.saveOptions({...cfg, itemsDragNDrop: false});
-            baseControl._documentDragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) });
-            assert.isNull(baseControl._dndListController);
-
-            baseControl.saveOptions({...cfg, itemsDragNDrop: true});
-            baseControl._documentDragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) });
-            assert.isNotNull(baseControl._dndListController);
-            assert.isNotNull(baseControl._dndListController.getDragEntity());
-         });
-
          it('drag leave', () => {
             const newPos = {};
             baseControl._dndListController = {
@@ -6145,15 +6090,6 @@ define([
             assert.isTrue(baseControl.getViewModel().isDragOutsideList());
             return timeout;
          });
-
-         it('_beforeUnmount should hide dragging template', () => {
-            baseControl._dragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) }, 1);
-            baseControl._container = {
-               removeEventListener: () => null
-            };
-            baseControl._beforeUnmount();
-            assert.isTrue(notifySpy.withArgs('_removeDraggingTemplate').called);
-         });
       });
 
       // region HoverFreeze
@@ -6200,12 +6136,6 @@ define([
             baseControl._children.itemActionsOutsideStyle = {innerHTML: ''};
             baseControl._container = {innerHTML: ''};
             lists.BaseControl._private.initHoverFreezeController(baseControl);
-         });
-
-         it('should unfreeze on drag start', () => {
-            const spyHoverHontrollerUnfreeze = sandBox.spy(baseControl._hoverFreezeController, 'unfreezeHover');
-            baseControl._dragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) }, 1);
-            sinon.assert.called(spyHoverHontrollerUnfreeze);
          });
       });
 

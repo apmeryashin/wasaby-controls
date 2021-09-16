@@ -25,13 +25,13 @@ import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {IDragObject} from 'Controls/_dragnDrop/Container';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
     collapseMarkedItem: constants.key.left
 };
 
-const DRAG_MAX_OFFSET = 0.3;
 const EXPAND_ON_DRAG_DELAY = 1000;
 const DEFAULT_COLUMNS_VALUE = [];
 
@@ -865,6 +865,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return result;
     }
 
+    // region Drag
+
     protected _draggingItemMouseMove(itemData: TreeItem, event: SyntheticEvent<MouseEvent>): void {
         super._draggingItemMouseMove(itemData, event);
 
@@ -873,7 +875,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const targetIsNotDraggableItem = dndListController.getDraggableItem()?.getContents() !== dispItem.getContents();
         if (dispItem['[Controls/_display/TreeItem]'] && dispItem.isNode() !== null && targetIsNotDraggableItem) {
             const targetElement = _private.getTargetRow(this, event);
-            const mouseOffsetInTargetItem = this._calculateOffset(event, targetElement);
+            const mouseOffsetInTargetItem = this._calculateMouseOffsetInItem(event, targetElement);
             const dragTargetPosition = dndListController.calculateDragPosition({
                 targetItem: dispItem,
                 mouseOffsetInTargetItem
@@ -903,6 +905,23 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
+    protected _beforeStartDrag(draggedKey: CrudEntityKey): void {
+        super._beforeStartDrag(draggedKey);
+        const draggedItem = this._listViewModel.getItemBySourceKey(draggedKey);
+        // сворачиваем перетаскиваемый узел
+        if (draggedItem && draggedItem.isNode() !== null) {
+            this._expandController.collapseItem(draggedKey);
+
+            if (this._options.expandedItems && !isEqual(this._options.expandedItems, this._expandController.getExpandedItems())) {
+                this._notify('expandedItemsChanged', [this._expandController.getExpandedItems()]);
+            }
+            if (this._options.collapsedItems && !isEqual(this._options.collapsedItems, this._expandController.getCollapsedItems())) {
+                this._notify('collapsedItemsChanged', [this._expandController.getCollapsedItems()]);
+            }
+            this._expandController.applyStateToModel();
+        }
+    }
+
     protected _dragLeave(): void {
         super._dragLeave();
         this._clearTimeoutForExpandOnDrag();
@@ -926,6 +945,52 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
         return options;
     }
+
+    private _startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
+        if (!this._itemOnWhichStartCountDown && item.isNode()) {
+            this._itemOnWhichStartCountDown = item;
+            this._setTimeoutForExpandOnDrag(item, expandNode);
+        }
+    }
+
+    private _clearTimeoutForExpandOnDrag(): void {
+        if (this._timeoutForExpandOnDrag) {
+            clearTimeout(this._timeoutForExpandOnDrag);
+            this._timeoutForExpandOnDrag = null;
+            this._itemOnWhichStartCountDown = null;
+        }
+    }
+
+    private _setTimeoutForExpandOnDrag(item: TreeItem<Model>, expandNode: Function): void {
+        this._timeoutForExpandOnDrag = setTimeout(() => {
+            expandNode(item);
+        }, EXPAND_ON_DRAG_DELAY);
+    }
+
+    private _calculateMouseOffsetInItem(event: SyntheticEvent<MouseEvent>, targetElement: Element): {top: number, bottom: number} {
+        let result = null;
+
+        if (targetElement) {
+            const dragTargetRect = targetElement.getBoundingClientRect();
+
+            result = { top: null, bottom: null };
+
+            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
+
+            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+            if (this._listViewModel['[Controls/_tile/Tile]']) {
+                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
+            } else {
+                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
+            }
+        }
+
+        return result;
+    }
+
+    // endregion Drag
 
     protected _notifyItemClick([e, item, originalEvent, columnIndex]: [SyntheticEvent, Model, SyntheticEvent, number?], returnExpandResult: boolean /* for tests */) {
         if (originalEvent.target.closest('.js-controls-Tree__row-expander')) {
@@ -1119,49 +1184,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 this._applyMarkedLeaf(current.getKey(), model, markerController);
             }
         }
-    }
-    private _startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
-        if (!this._itemOnWhichStartCountDown && item.isNode()) {
-            this._itemOnWhichStartCountDown = item;
-            this._setTimeoutForExpandOnDrag(item, expandNode);
-        }
-    }
-
-    private _clearTimeoutForExpandOnDrag(): void {
-        if (this._timeoutForExpandOnDrag) {
-            clearTimeout(this._timeoutForExpandOnDrag);
-            this._timeoutForExpandOnDrag = null;
-            this._itemOnWhichStartCountDown = null;
-        }
-    }
-
-    private _setTimeoutForExpandOnDrag(item: TreeItem<Model>, expandNode: Function): void {
-        this._timeoutForExpandOnDrag = setTimeout(() => {
-            expandNode(item);
-        }, EXPAND_ON_DRAG_DELAY);
-    }
-
-    private _calculateOffset(event: SyntheticEvent<MouseEvent>, targetElement: Element): {top: number, bottom: number} {
-        let result = null;
-
-        if (targetElement) {
-            const dragTargetRect = targetElement.getBoundingClientRect();
-
-            result = { top: null, bottom: null };
-
-            const mouseCoords = DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent);
-
-            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
-            if (this._listViewModel['[Controls/_tile/Tile]']) {
-                result.top = (mouseCoords.x - dragTargetRect.left) / dragTargetRect.width;
-                result.bottom = (dragTargetRect.right - mouseCoords.x) / dragTargetRect.width;
-            } else {
-                result.top = (mouseCoords.y - dragTargetRect.top) / dragTargetRect.height;
-                result.bottom = (dragTargetRect.top + dragTargetRect.height - mouseCoords.y) / dragTargetRect.height;
-            }
-        }
-
-        return result;
     }
 
     // раскрытие узлов будет отрефакторено по задаче https://online.sbis.ru/opendoc.html?guid=2a2d9bc6-86e0-43fa-9bea-b636c45c0767

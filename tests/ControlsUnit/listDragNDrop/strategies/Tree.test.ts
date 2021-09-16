@@ -372,4 +372,14 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
          });
       });
    });
+
+   describe('getDraggableKeys', () => {
+      it('should return all child keys', () => {
+         model.setExpandedItems([null]);
+         const item = model.getItemBySourceKey(2);
+         strategy = new TreeStrategy(model, item);
+         const result = strategy.getDraggableKeys([1, 2]);
+         assert.deepEqual(result, [1, 2, 4, 3]);
+      });
+   });
 });

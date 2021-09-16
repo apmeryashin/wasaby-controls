@@ -102,4 +102,17 @@ describe('Controls/_display/itemsStrategy/TreeDrag', () => {
       strategy.setPosition({index: 1, position: 'before', dispItem: display.getItemBySourceKey(222)});
       assert.equal(strategy.avatarItem.getParent(), display.getRoot());
    });
+
+   it('should be corrected parent of draggable item after hide it parent', () => {
+      strategy = new TreeDrag({
+         source,
+         display,
+         draggableItem: display.getItemBySourceKey(3),
+         draggedItemsKeys: [2, 3, 4],
+         targetIndex: 2
+      });
+
+      strategy.items;
+      assert.equal(strategy.avatarItem.getParent(), display.getItemBySourceKey(1));
+   })
 });

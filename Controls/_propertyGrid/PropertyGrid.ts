@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
-import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
+import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
 import {Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
@@ -84,7 +84,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _itemActionsController: ItemActionsController;
     private _itemActionSticky: StickyOpener;
     private _collapsedGroupsChanged: boolean = false;
-    private _editingObject: Record<string, unknown> | entityRecord = null;
+    private _editingObject: TEditingObject = null;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         this._collapsedGroups = this._getCollapsedGroups(options.collapsedGroups);
@@ -204,7 +204,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _updatePropertyValue(
-        editingObject: Record<string, unknown> | entityRecord,
+        editingObject: TEditingObject,
         name: string,
         value: unknown
     ): Record<string, unknown> | entityRecord {
@@ -474,7 +474,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         const validatorArgs = {
             value: item.getPropertyValue(),
             item: item.getContents(),
-            items: item.getOwner().getCollection()
+            items: item.getOwner().getCollection(),
+            editingObject: item.getOwner().getEditingObject()
         };
         if (validators.length) {
             validators.some((validator) => {

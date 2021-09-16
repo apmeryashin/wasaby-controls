@@ -29,22 +29,21 @@ export default class Controller<P> {
    private _dragPosition: P;
    private _entity: ItemsEntity;
 
-   constructor(model: IDraggableCollection<P>, strategyConstructor: StrategyConstructor<P>) {
+   constructor(model: IDraggableCollection<P>, draggableItem: IDraggableItem, strategyConstructor: StrategyConstructor<P>) {
       this._model = model;
       this._strategyConstructor = strategyConstructor;
+      this._draggableItem = draggableItem;
+      this._strategy = new this._strategyConstructor(this._model, this._draggableItem);
    }
 
    /**
     * Запускает отображение в списке начала драг н дропа.
     * Позволяет отобразить перетаскиеваемый элемент особым образом, отличным от остальных элементов.
-    * @param {IDraggableItem} draggableItem - запись, за которую осуществляется перетаскивание
     * @param {ItemsEntity} entity - сущность перемещения, содержит весь список перемещаемых записей
     */
-   startDrag(draggableItem: IDraggableItem, entity: ItemsEntity): void {
+   startDrag(entity: ItemsEntity): void {
       this._entity = entity;
-      this._draggableItem = draggableItem;
-      this._model.setDraggedItems(draggableItem, entity.getItems());
-      this._strategy = new this._strategyConstructor(this._model, draggableItem);
+      this._model.setDraggedItems(this._draggableItem, entity.getItems());
    }
 
    /**
@@ -114,6 +113,31 @@ export default class Controller<P> {
    }
 
    /**
+    * Возвращает ключи всех перетаскиваемых записей.
+    * @remark
+    * Если в selection лежат записи, которых нет в RecordSet, то за ними выполняется запрос на БЛ.
+    * @param selection
+    * @param items
+    * @param options
+    */
+   getDraggableKeys(
+       selection: ISelectionObject,
+       options: ISourceControllerOptions
+   ): Promise<CrudEntityKey[]> {
+
+      const draggedKeys = this._strategy.getDraggableKeys(selection.selected);
+      // Не выполянем запрос, если все выбранные записи уже есть в рекордсете
+      if (draggedKeys.length >= selection.selected.length && !selection.excluded.length) {
+         return Promise.resolve(draggedKeys);
+      }
+
+      const controller = new NewSourceController(options);
+      return controller.reload()
+          .then((list) => factory(list).toArray().map((it: Model) => it.getKey()))
+          .catch((error) => process({error}).then(() => []));
+   }
+
+   /**
     * Проверяет можно ли начать перетаскивание
     * @param canStartDragNDropOption
     * @param event
@@ -128,38 +152,6 @@ export default class Controller<P> {
           && !event.nativeEvent.button
           && !(event.target as Element).closest('.controls-List_DragNDrop__notDraggable')
           && !isTouch;
-   }
-
-   /**
-    * Возвращает ключи всех перетаскиваемых записей.
-    * @remark
-    * Если в selection лежат записи, которых нет в RecordSet, то за ними выполняется запрос на БЛ.
-    * @param selection
-    * @param items
-    * @param options
-    */
-   static getDraggedItemsKeys(
-       selection: ISelectionObject,
-       items: RecordSet,
-       options: ISourceControllerOptions
-   ): Promise<CrudEntityKey[]> {
-      let selectedItems = [];
-
-      selection.selected.forEach((key) => {
-         if (items.getRecordById(key)) {
-            selectedItems.push(key);
-         }
-      });
-
-      // Не выполянем запрос, если все выбранные записи уже есть в рекордсете
-      if (selectedItems.length === selection.selected.length && !selection.excluded.length) {
-         return Promise.resolve(selectedItems);
-      }
-
-      const controller = new NewSourceController(options);
-      return controller.reload()
-          .then((list) => factory(list).toArray().map((it: Model) => it.getKey()))
-          .catch((error) => process({error}).then(() => []));
    }
 
    /**

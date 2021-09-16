@@ -1,6 +1,6 @@
 import { CrudEntityKey } from 'Types/source';
 import { Model } from 'Types/entity';
-import { IDragPosition } from 'Controls/display';
+import {IBaseCollection, ICollectionItem, IDragPosition} from 'Controls/display';
 import { IOffset } from '../_scroll/StickyBlock/Utils';
 
 /**
@@ -33,7 +33,7 @@ export interface IDraggableItem<S extends Model = Model> {
  * @public
  * @author Панихин К.А.
  */
-export interface IDraggableCollection<P = IDragPosition<IDraggableItem>> {
+export interface IDraggableCollection<P = IDragPosition<IDraggableItem>> extends IBaseCollection<Model, ICollectionItem> {
    setDragPosition(position: P): void;
    setDraggedItems(draggableItem: IDraggableItem, draggedItemKeys: CrudEntityKey[]): void;
    resetDraggedItems(): void;
@@ -62,6 +62,7 @@ export interface IDragStrategyParams<P, T extends IDraggableItem = IDraggableIte
  */
 export interface IDragStrategy<P> {
    calculatePosition(params: IDragStrategyParams<P>): P;
+   getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[];
 }
 
 /**
@@ -89,4 +90,6 @@ export abstract class BaseDragStrategy<
    }
 
    abstract calculatePosition(params: IDragStrategyParams<P>): P;
+
+   abstract getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[]
 }

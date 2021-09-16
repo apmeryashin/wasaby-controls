@@ -122,4 +122,10 @@ describe('Controls/_listDragNDrop/strategies/FlatStrategy', () => {
             );
         });
     });
+
+    it('getDraggableKeys', () => {
+        // проверяем что остались только ключи записей, которые есть в списке
+        const result = strategy.getDraggableKeys([1, 2, 5, 6]);
+        assert.deepEqual(result, [1, 2]);
+    });
 });

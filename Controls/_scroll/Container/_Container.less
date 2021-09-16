@@ -10,6 +10,10 @@
    flex-grow: 1;
    flex-shrink: 1;
    min-height: 0;
+}
+
+// В IE некорректно растягивается элемент по высоте, если у родительского задан max-height.
+.ws-is-ie11 .controls-Scroll-Container__base {
    max-height: inherit;
 }
 
@@ -119,8 +123,8 @@
 
 .controls-InfoBoxTemplate__content {
   .controls-Scroll__background-Shadow_style-default {
-      background-image: linear-gradient(var(--background-color_infobox) 25%, transparent),
-                        linear-gradient(transparent, var(--background-color_infobox) 75%),
+      background-image: linear-gradient(var(--background-color_infobox) 25%, rgba(255, 255, 255, 0)),
+                        linear-gradient(rgba(255, 255, 255, 0), var(--background-color_infobox) 75%),
                         linear-gradient(to bottom, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)),
                         linear-gradient(to top, var(--shadow_start-color_scroll), var(--shadow_end-color_scroll));
    }
