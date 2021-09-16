@@ -38,7 +38,7 @@ define('Controls-demo/List/Tree/TreeMemory', [
                   } else {
                      correct = item.get('Раздел') === folderId;
                   }
-                  if (selection) {
+                  if (selection && folderId === null) {
                      correct = itemIsSelected(self, itemKey, selection.get('marked'), selection.get('excluded'));
                   }
 
