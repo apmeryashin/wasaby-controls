@@ -323,6 +323,10 @@ export default class Area extends BaseText<IAreaOptions> {
          * Так как размеры textarea зависят от fakeField, поэтому их значения на момент перерисовки страници должны быть одинаковыми. Иначе
          * возникают проблемы 1-2. Чтобы избежать проблем меняем значение fakeField в обработчике.
          */
+        // под реактом патчить DOM на beforeUpdate нельзя, т.к. реакт не сможет удалить дочерний DOM элемент при синхронизации
+        if (this.UNSAFE_isReact) {
+            return;
+        }
         if (!this._options.readOnly && (detection.isMacOSDesktop || detection.chrome)) {
             this._children.fakeField.innerText = this._viewModel.displayValue + this._field.scope.emptySymbol;
         }
