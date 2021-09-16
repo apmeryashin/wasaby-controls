@@ -152,7 +152,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._templateWorkSpaceWidth = width ? (width - RIGHT_PANEL_WIDTH) : undefined;
     }
 
-    private _setSavedSizes(receivedState: IReceivedState): void {
+    private _setSavedSizes(receivedState: IReceivedState = {}): void {
         this._maxSavedWidth = receivedState.maxSavedWidth;
         this._minSavedWidth = receivedState.minSavedWidth;
     }

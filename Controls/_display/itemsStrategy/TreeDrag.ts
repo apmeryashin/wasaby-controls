@@ -16,12 +16,42 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
       }
    }
 
+   /**
+    * После создания элементов, нужно выставить правильного родителя у avatarItem.
+    * Делать это нужно именно в этот момент, т.к. тут мы скрываем перетаскиваемые записи и создаем avatarItem.
+    * @protected
+    */
+   protected _createItems(): T[] {
+      const newItems = super._createItems();
+
+      const parent = this._getParentConsideringHiddenItems(this.avatarItem, newItems);
+      if (parent) {
+         this.avatarItem.setParent(parent);
+      }
+
+      return newItems;
+   }
+
    protected _createItem(protoItem: T): T {
       const item = super._createItem(protoItem);
       if (item && protoItem) {
          item.setParent(protoItem.getParent());
       }
       return item;
+   }
+
+   /**
+    * Получаем родителя элемента учитывая скрытые(перетаскиваемые) записи
+    * @param item Элемент, для которого считаем родителя
+    * @param items Текущие элементы списка
+    * @private
+    */
+   private _getParentConsideringHiddenItems(item: T, items: T[]): T {
+      let parent = item.getParent() as T;
+      while (parent && !parent.isRoot() && !items.includes(parent)) {
+         parent = parent.getParent() as T;
+      }
+      return parent;
    }
 
    private _getParentForDraggableItem(newPosition: IDragPosition<T>): T {
@@ -35,15 +65,15 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
          parent = this.options.display.getRoot();
       } else if (targetItem.isNode()) {
          if (relativePosition === 'before' || relativePosition === 'after' && !targetItem.isExpanded()) {
-            parent = targetItem.getParent();
+            parent = this._getParentConsideringHiddenItems(targetItem, this.options.display.getItems());
          } else if (relativePosition === 'after' && targetItem.isExpanded()) {
             parent = targetItem;
          } else {
             // relativePosition = 'on'
-            parent = this.avatarItem.getParent();
+            parent = this._getParentConsideringHiddenItems(this.avatarItem, this.options.display.getItems());
          }
       } else {
-         parent = targetItem.getParent();
+         parent = this._getParentConsideringHiddenItems(targetItem, this.options.display.getItems());
       }
 
       return parent;

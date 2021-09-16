@@ -48,7 +48,7 @@ import {DimensionsMeasurer, getDimensions as uDimension} from 'Controls/sizeUtil
 import {getItemsHeightsData} from 'Controls/_baseList/ScrollContainer/GetHeights';
 import {
     Collection,
-    CollectionItem,
+    CollectionItem, IDragPosition,
     IEditableCollectionItem,
     TItemKey,
     TreeItem
@@ -106,7 +106,7 @@ import 'wml!Controls/_baseList/BaseControl/NavigationButton';
 import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scroll';
-import { ItemsEntity } from 'Controls/dragnDrop';
+import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {ISiblingStrategy} from './interface/ISiblingStrategy';
 import {FlatSiblingStrategy} from './Strategies/FlatSiblingStrategy';
 import {Remove as RemoveAction, Move as MoveAction, IMoveActionOptions} from 'Controls/listCommands';
@@ -1895,6 +1895,10 @@ const _private = {
             if (this._indicatorsController.shouldHideGlobalIndicator()) {
                 this._indicatorsController.hideGlobalIndicator();
             }
+            // Принудительно прекращаем заморозку ховера
+            if (_private.hasHoverFreezeController(this)) {
+                this._hoverFreezeController.unfreezeHover();
+            }
             return this.isEditing() && !isEndEditProcessing ?
                 this._cancelEdit(true) :
                 void 0;
@@ -2552,7 +2556,7 @@ const _private = {
 
     // region Drag-N-Drop
 
-    isValidDNDItemsEntity(dragStartResult: ItemsEntity, dragItemKey: CrudEntityKey): boolean {
+    isValidDndItemsEntity(dragStartResult: ItemsEntity, dragItemKey: CrudEntityKey): boolean {
         let isValid = true;
         if (!dragStartResult.getItems()
             .every((item) => typeof item === 'string' || typeof item === 'number')) {
@@ -2567,12 +2571,12 @@ const _private = {
     },
 
     // возвращаем промис для юнитов
-    startDragNDrop(self, domEvent, item): Promise<void> {
+    startDragNDrop(self: BaseControl, domEvent: SyntheticEvent, draggableItem: CollectionItem): Promise<void> {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
             && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, TouchDetect.getInstance().isTouch())
         ) {
-            const key = item.getContents().getKey();
+            const draggableKey = draggableItem.getContents().getKey();
 
             // Перемещать с помощью массового выбора
             // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
@@ -2580,13 +2584,14 @@ const _private = {
                 selected: self._options.selectedKeys || [],
                 excluded: self._options.excludedKeys || []
             };
-            selection = DndController.getSelectionForDragNDrop(self._listViewModel, selection, key);
+            selection = DndController.getSelectionForDragNDrop(self._listViewModel, selection, draggableKey);
 
+            self._dndListController = _private.createDndListController(self._listViewModel, draggableItem, self._options);
             const options = self._getSourceControllerOptionsForGetDraggedItems();
-            return DndController.getDraggedItemsKeys(selection, self._items, options).then((items) => {
-                let dragStartResult = self._notify('dragStart', [items, key]);
+            return self._dndListController.getDraggableKeys(selection, options).then((items) => {
+                let dragStartResult = self._notify('dragStart', [items, draggableKey]);
 
-                if (dragStartResult instanceof ItemsEntity && !_private.isValidDNDItemsEntity(dragStartResult, key)) {
+                if (dragStartResult instanceof ItemsEntity && !_private.isValidDndItemsEntity(dragStartResult, draggableKey)) {
                     // ничего не делаем, чтобы не блочилась страница.
                     return;
                 }
@@ -2602,7 +2607,7 @@ const _private = {
                     }
 
                     self._dragEntity = dragStartResult;
-                    self._draggedKey = key;
+                    self._draggedKey = draggableKey;
                     self._startEvent = domEvent.nativeEvent;
 
                     _private.clearSelectedText(self._startEvent);
@@ -2619,14 +2624,18 @@ const _private = {
     },
 
     // TODO dnd когда будет наследование TreeControl <- BaseControl, правильно указать тип параметров
-    createDndListController(model: any, options: any): DndController<IDragStrategyParams> {
+    createDndListController(
+        model: Collection,
+        draggableItem: CollectionItem,
+        options: any
+    ): DndController<IDragStrategyParams> {
         let strategy;
         if (options.parentProperty) {
             strategy = TreeStrategy;
         } else {
             strategy = FlatStrategy;
         }
-        return new DndController(model, strategy);
+        return new DndController(model, draggableItem, strategy);
     },
 
     getPageXY(event): object {
@@ -6414,6 +6423,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то не нужно скроллить к первому элементу
+                // нужно подскроллить список на высоту ромашки, чтобы не было прыжка
+                // данный метод вызывается только, если будет показана ромашка
+                this._notify('doScroll', [this._scrollTop + INDICATOR_HEIGHT], { bubbling: true });
                 this._observersController.displayTopTrigger(this._children.listView?.getTopLoadingTrigger());
             } else {
                 const scrollResult = this._scrollToFirstItem();
@@ -6572,7 +6584,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _documentDragStart(dragObject): void {
+    _documentDragStart(dragObject: IDragObject): void {
         if (this._options.readOnly || !this._options.itemsDragNDrop || !(dragObject && dragObject.entity)) {
             return;
         }
@@ -6585,16 +6597,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._documentDragging = true;
     }
 
-    _dragStart(dragObject, draggedKey): void {
+    _dragStart(dragObject: IDragObject, draggedKey: CrudEntityKey): void {
+        this._beforeStartDrag(draggedKey);
+
         if (_private.hasHoverFreezeController(this)) {
             this._hoverFreezeController.unfreezeHover();
         }
-        if (!this._dndListController) {
-            this._dndListController = _private.createDndListController(this._listViewModel, this._options);
-        }
 
-        const draggedItem = this._listViewModel.getItemBySourceKey(draggedKey);
-        this._dndListController.startDrag(draggedItem, dragObject.entity);
+        this._dndListController.startDrag(dragObject.entity);
 
         // Cобытие mouseEnter на записи может сработать до dragStart.
         // И тогда перемещение при наведении не будет обработано.
@@ -6609,6 +6619,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._options.draggingTemplate && (this._listViewModel.isDragOutsideList() || hasSorting)) {
             this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
         }
+    }
+
+    _beforeStartDrag(draggedKey: CrudEntityKey): void {
+        // переопределяем в TreeControl
     }
 
     _dragLeave(): void {
@@ -6630,7 +6644,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _dragEnter(dragObject): void {
+    _dragEnter(dragObject: IDragObject): void {
         this._insideDragging = true;
         const hasSorting = this._options.sorting && this._options.sorting.length;
         if (!hasSorting) {
@@ -6646,16 +6660,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (this._documentDragging) {
-            // если мы утащим в другой список, то в нем нужно создать контроллер
-            if (!this._dndListController) {
-                this._dndListController = _private.createDndListController(this._listViewModel, this._options);
-            }
             if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
                 const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
                 if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                    const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
-                    this._dndListController.startDrag(draggingItemProjection, dragObject.entity);
+                    // Создаем перетаскиваемый элемент, т.к. в другом списке его нет.
+                    const draggableItem = this._listViewModel.createItem({contents: dragEnterResult});
+                    // если мы утащим в другой список, то в нем нужно создать контроллер
+                    this._dndListController = _private.createDndListController(this._listViewModel, draggableItem, this._options);
+                    this._dndListController.startDrag(dragObject.entity);
 
                     let startPosition;
                     if (this._listViewModel.getCount()) {
@@ -6668,7 +6681,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     } else {
                         startPosition = {
                             index: 0,
-                            dispItem: draggingItemProjection,
+                            dispItem: draggableItem,
                             position: 'before'
                         };
                     }
@@ -6676,7 +6689,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     // задаем изначальную позицию в другом списке
                     this._dndListController.setDragPosition(startPosition);
                 } else if (dragEnterResult === true) {
-                    this._dndListController.startDrag(null, dragObject.entity);
+                    this._dndListController = _private.createDndListController(this._listViewModel, null, this._options);
+                    this._dndListController.startDrag(dragObject.entity);
                 }
             }
         }
@@ -6698,7 +6712,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _notifyDragEnd(dragObject, targetPosition) {
+    _notifyDragEnd(dragObject: IDragObject, targetPosition: IDragPosition<CollectionItem>) {
         return this._notify('dragEnd', [
             dragObject.entity,
             targetPosition.dispItem.getContents(),
@@ -6706,7 +6720,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         ]);
     }
 
-    _documentDragEnd(dragObject): void {
+    _documentDragEnd(dragObject: IDragObject): void {
         // Флаг _documentDragging проставляется во всех списках, он говорит что где-то началось перетаскивание записи
         // и при mouseEnter возможно придется начать днд. Поэтому сбрасываем флаг не зависимо от isDragging
         this._documentDragging = false;
@@ -6776,8 +6790,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._listViewModel.setDragOutsideList(false);
     }
 
-    _getDragObject(mouseEvent?, startEvent?): object {
-        const result = {
+    _getDragObject(mouseEvent?, startEvent?): IDragObject {
+        const result: IDragObject = {
             entity: this._dragEntity
         };
         if (mouseEvent && startEvent) {
