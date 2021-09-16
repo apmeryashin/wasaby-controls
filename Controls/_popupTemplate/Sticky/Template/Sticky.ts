@@ -3,7 +3,9 @@ import * as template from 'wml!Controls/_popupTemplate/Sticky/Template/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplateBase} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 import { IPopupTemplateOptions } from 'Controls/_popupTemplate/interface/IPopupTemplate';
-import IBackgroundStyle, {IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
+import {IBackgroundStyle, IBackgroundStyleOptions} from 'Controls/interface';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {IDragObject} from 'Controls/dragnDrop';
 import 'css!Controls/popupTemplate';
 
 const enum POSITION {
@@ -46,6 +48,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
     protected _template: TemplateFunction = template;
     protected _headerTheme: string;
     protected _closeBtnPosition: POSITION = POSITION.DEFAULT;
+    protected _dragging: boolean = false;
 
     protected _beforeMount(options: IPopupTemplateOptions): void {
         this._headerTheme = StickyTemplate._getTheme();
@@ -73,6 +76,39 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
                 this._closeBtnPosition = isReverted || isOutside ? POSITION.LEFT : POSITION.RIGHT;
             }
         }
+    }
+
+    protected _onDragEnd(): void {
+        this._notify('popupDragEnd', [], {bubbling: true});
+    }
+
+    protected _onDragMove(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
+        this._dragging = true;
+        this._notify('popupDragStart', [dragObject.offset], {bubbling: true});
+    }
+
+    protected _onMouseDown(event: SyntheticEvent<MouseEvent>): void {
+        if (this._needStartDrag(event)) {
+            this._startDragNDrop(event);
+        }
+    }
+
+    protected _click(): void {
+        this._dragging = false;
+    }
+
+    protected _mouseOut(): void {
+        this._dragging = false;
+    }
+
+    private _needStartDrag(event: SyntheticEvent<MouseEvent>): boolean {
+        const {target} = event;
+        const isEventProcessed = event.nativeEvent.processed;
+        return this._options.draggable && (target as HTMLElement).tagName !== 'INPUT' && !isEventProcessed;
+    }
+
+    private _startDragNDrop(event: SyntheticEvent<Event>): void {
+        this._children.dragNDrop.startDragNDrop(null, event);
     }
 
     private getWindowInnerWidth(): number {
@@ -111,6 +147,12 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
       return StickyTemplate.getDefaultOptions();
    }
 });
+
+/**
+ * @name Controls/_popupTemplate/Sticky#draggable
+ * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью {@link /doc/platform/developmentapl/interface-development/controls/drag-n-drop/ d'n'd}.
+ * @default false
+ */
 
 /**
  * @name Controls/_popupTemplate/Sticky#shadowVisible

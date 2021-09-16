@@ -38,6 +38,17 @@ export default interface IBaseDropdown {
 }
 
 /**
+ * @name Controls/_dropdown/interface/IBaseDropdown#menuDraggable
+ * @cfg {Boolean} Определяет, может ли меню перемещаться с помощью {@link /doc/platform/developmentapl/interface-development/controls/drag-n-drop/ d'n'd}.
+ * @demo Controls-demo/dropdown_new/Button/DragNDrop/Index
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Button menuDraggable="{{true}}"/>
+ * </pre>
+ */
+
+/**
  * @name Controls/_dropdown/interface/IBaseDropdown#historyId
  * @cfg {String} Уникальный идентификатор для сохранения истории выбора записей.
  * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/input-elements/dropdown-menu/item-config/#history здесь}.

@@ -1,6 +1,6 @@
 import {detection} from 'Env/Env';
 import {IDialogPopupOptions, IPopupPosition, IPopupSizes} from 'Controls/popup';
-import {getPositionProperties, VERTICAL_DIRECTION} from './DirectionUtil';
+import {getPositionProperties, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 import {IDialogItem} from 'Controls/_popupTemplate/Dialog/DialogController';
 
 interface ILimitingSizes {

@@ -5,7 +5,7 @@ import {List} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import DialogStrategy from 'Controls/_popupTemplate/Dialog/DialogStrategy';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
-import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from './DirectionUtil';
+import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 
 export interface IDialogItem extends IPopupItem {
     hasSavedPosition: boolean;

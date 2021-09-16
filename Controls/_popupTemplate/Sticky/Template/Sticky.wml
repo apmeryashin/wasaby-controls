@@ -1,40 +1,48 @@
-<div class="controls_popupTemplate_theme-{{_options.theme}}
-            controls-StickyTemplate
-            {{_options.roundBorder !== false ? 'controls-StickyTemplate_roundBorder'}}
-            controls-StickyTemplate-background-{{_options.backgroundStyle}}
-             {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}"
-     ws-tab-cycling="true">
-    <ws:if data="{{_options.headingCaption || _options.headerContentTemplate}}">
-        <ws:partial template="Controls/_popupTemplate/Sticky/Template/Header"
-                    scope="{{_options}}"
-                    close="{{close}}"
-                    theme="{{_headerTheme}}"
-                    closeBtnPosition="{{_closeBtnPosition}}"
-                    stickyOptions="{{_options}}"
-                    attr:class="{{_headerTheme && (_options.theme !== _headerTheme) ?
-                                   'controls_popupTemplate_theme-' + _headerTheme}}"
-                    on:click="_proxyEvent('headerClick')"/>
-    </ws:if>
-    <ws:else>
-        <ws:if data="{{_options.closeButtonVisibility}}">
-            <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
-            controls-StickyTemplate__close_button_position-{{_closeBtnPosition}}
-            controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header"
-                                                 viewMode="{{_options.closeButtonViewMode}}"
-                                                 on:click="close()"/>
+<Controls.dragnDrop:Container name="dragNDrop" on:dragmove="_onDragMove()" on:documentdragend="_onDragEnd()">
+    <div class="controls_popupTemplate_theme-{{_options.theme}}
+                controls-StickyTemplate
+                {{_options.roundBorder !== false ? 'controls-StickyTemplate_roundBorder'}}
+                controls-StickyTemplate-background-{{_options.backgroundStyle}}
+                {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}
+                {{_options.draggable ? 'ws-window-draggable'}}"
+         on:mousedown="_onMouseDown()"
+         on:touchstart="_onMouseDown()"
+         on:mouseout="_mouseOut()"
+         on:click="_click()"
+         ws-tab-cycling="true">
+        <ws:if data="{{_options.headingCaption || _options.headerContentTemplate}}">
+            <ws:partial template="Controls/_popupTemplate/Sticky/Template/Header"
+                        scope="{{_options}}"
+                        close="{{close}}"
+                        theme="{{_headerTheme}}"
+                        closeBtnPosition="{{_closeBtnPosition}}"
+                        stickyOptions="{{_options}}"
+                        attr:class="{{_headerTheme && (_options.theme !== _headerTheme) ?
+                                       'controls_popupTemplate_theme-' + _headerTheme}}"
+                        on:click="_proxyEvent('headerClick')"/>
         </ws:if>
-    </ws:else>
-    <ws:if data="{{_options.bodyContentTemplate}}">
-        <div class="controls-StickyTemplate__content-area">
-            <ws:partial template="{{_options.bodyContentTemplate}}"
-                        attr:class="{{!_options.footerContentTemplate ? 'controls-StickyTemplate__bottom_roundBorder'}}"
-                        scope="{{_options}}"></ws:partial>
-        </div>
-    </ws:if>
-    <ws:if data="{{_options.footerContentTemplate}}">
-        <ws:partial template="{{_options.footerContentTemplate}}"
-                    scope="{{_options}}"
-                    attr:class="controls-StickyTemplate__footer controls-StickyTemplate__bottom_roundBorder"
-                    on:click="_proxyEvent('footerClick')"></ws:partial>
-    </ws:if>
-</div>
+        <ws:else>
+            <ws:if data="{{_options.closeButtonVisibility}}">
+                <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
+                controls-StickyTemplate__close_button_position-{{_closeBtnPosition}}
+                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header"
+                                                     viewMode="{{_options.closeButtonViewMode}}"
+                                                     on:click="close()"/>
+            </ws:if>
+        </ws:else>
+        <ws:if data="{{_options.bodyContentTemplate}}">
+            <div class="controls-StickyTemplate__content-area">
+                <ws:partial template="{{_options.bodyContentTemplate}}"
+                            attr:class="{{!_options.footerContentTemplate ? 'controls-StickyTemplate__bottom_roundBorder'}}"
+                            isDragging="{{_dragging}}"
+                            scope="{{_options}}"></ws:partial>
+            </div>
+        </ws:if>
+        <ws:if data="{{_options.footerContentTemplate}}">
+            <ws:partial template="{{_options.footerContentTemplate}}"
+                        scope="{{_options}}"
+                        attr:class="controls-StickyTemplate__footer controls-StickyTemplate__bottom_roundBorder"
+                        on:click="_proxyEvent('footerClick')"></ws:partial>
+        </ws:if>
+    </div>
+</Controls.dragnDrop:Container>

@@ -145,7 +145,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     }
 
     protected _headerClick(): void {
-        if (!this._options.searchParam) {
+        if (!this._options.searchParam && !this._options.draggable) {
             this._notify('close', [], {bubbling: true});
         }
     }

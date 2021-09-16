@@ -1,4 +1,5 @@
 import {IBasePopupOptions, IOpener} from 'Controls/_popup/interface/IBaseOpener';
+import {IResizeDirection} from 'Controls/_popup/interface/IDialog';
 import {Control} from 'UI/Base';
 import {IBackgroundStyleOptions} from 'Controls/interface';
 
@@ -26,6 +27,7 @@ export interface IStickyPopupOptions extends IBasePopupOptions, IBackgroundStyle
     direction?: IStickyPosition;
     offset?: IStickyPositionOffset;
     fittingMode?: string | IStickyPosition;
+    resizeDirection?: IResizeDirection;
 }
 
 export interface IStickyPosition {
