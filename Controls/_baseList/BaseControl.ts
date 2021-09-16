@@ -1923,6 +1923,10 @@ const _private = {
             if (this._indicatorsController.shouldHideGlobalIndicator()) {
                 this._indicatorsController.hideGlobalIndicator();
             }
+            // Принудительно прекращаем заморозку ховера
+            if (_private.hasHoverFreezeController(this)) {
+                this._hoverFreezeController.unfreezeHover();
+            }
             return this.isEditing() && !isEndEditProcessing ?
                 this._cancelEdit(true) :
                 void 0;

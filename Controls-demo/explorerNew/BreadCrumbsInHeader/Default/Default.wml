@@ -3,6 +3,8 @@
             source="{{_viewSource}}"
             bind:root="_root"
             attr:class="demo-Explorer ControlsDemo-Explorer"
+            itemActions="{{_itemActions}}"
+            itemActionsPosition="outside"
             keyProperty="id"
             displayProperty="title"
             parentProperty="parent"
