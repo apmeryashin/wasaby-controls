@@ -117,7 +117,10 @@ export class StickyStrategy {
    ): IPopupPosition {
       const position = {};
       const isHorizontal = direction === 'horizontal';
-      if (popupCfg.direction[direction] === 'center') {
+      if (popupCfg.fixPosition) {
+         const coord: string = isHorizontal ? 'left' : 'top';
+         position[coord] = popupCfg.position[coord];
+      } else if (popupCfg.direction[direction] === 'center') {
          const coord: string = isHorizontal ? 'left' : 'top';
          const targetCoord: number = targetCoords[coord];
          const targetSize: number = targetCoords[isHorizontal ? 'width' : 'height'];

@@ -4,7 +4,7 @@ define(
       'Controls/popup',
       'Controls/Application/SettingsController',
       'Controls/_popupTemplate/Dialog/DialogStrategy',
-      'Controls/_popupTemplate/Dialog/DirectionUtil'
+      'Controls/_popupTemplate/Util/DirectionUtil'
    ],
    (
       popupTemplate,
