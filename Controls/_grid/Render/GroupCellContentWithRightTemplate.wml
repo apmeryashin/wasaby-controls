@@ -10,7 +10,7 @@ TODO Нужно удалить этот шаблон, когда починим 
     <ws:if data="{{ textVisible !== false && (gridColumn || itemData).isContentCell() }}">
         <div class="{{ (gridColumn || itemData).getContentTextClasses(separatorVisibility, textAlign, fontSize) }}
                     {{ (gridColumn || itemData).getExpanderClasses(expanderVisible, expanderAlign) }}"
-             attr:data-qa="{{expanderVisible ? 'controls-ListView__groupExpander' : 'controls-ListView__groupContent-text' }}">
+             attr:data-qa="controls-ListView__groupExpander">
             <ws:if data="{{ contentTemplate }}">
                 <ws:partial template="{{ contentTemplate }}"
                             item="{{ item || itemData }}"

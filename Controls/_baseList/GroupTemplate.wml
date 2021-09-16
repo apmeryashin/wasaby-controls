@@ -16,7 +16,7 @@
                           (!(item || itemData).isExpanded() ?
                           ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?
                           ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'') }}"
-                  attr:data-qa="{{expanderVisible !== false ? 'controls-ListView__groupExpander' : 'controls-ListView__groupContent-text' }}">
+                  attr:data-qa="controls-ListView__groupExpander">
                <ws:if data="{{ !!contentTemplate }}">
                   <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
                </ws:if>

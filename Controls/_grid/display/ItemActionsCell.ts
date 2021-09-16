@@ -44,6 +44,10 @@ export default class ItemActionsCell extends Cell<null, Row<null>> implements II
         return styles;
     }
 
+    getQAData(): string {
+        return 'controls-itemActionsV__container';
+    }
+
     shouldDisplayItemActions(): boolean {
         return !!this._$owner.DisplayItemActions && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
     }
