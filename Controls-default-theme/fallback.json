@@ -1375,8 +1375,8 @@
   "--misspell_padding-horizontal_suggest": "var(--offset_m)",
   "--spinner_offset_suggest": "var(--offset_2xs)",
 
-  "--item_height_tabs": "32px",
-  "--item_height_l_tabs": "36px",
+  "--item_height_tabs": "30px",
+  "--item_height_l_tabs": "34px",
   "--padding-horizontal_tabs": "var(--offset_m)",
   "--item_offset_tabs": "0",
   "--item_font-size_tabs": "var(--font-size_l)",
