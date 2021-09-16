@@ -187,17 +187,6 @@ class FormController extends Control<IControlOptions> {
     _delete() {
         return this._children.formControllerInst.delete();
     }
-
-    _readSuccessedHandler(event, record) {
-        this._record = record;
-    }
-
-    _createSuccessedHandler(event, record) {
-        this._record = record;
-    }
-    _updateSuccessedHandler(event, record) {
-        this._record = record;
-    }
     _errorHandler(event, error) {
         let cfg = {
             message: event.type,

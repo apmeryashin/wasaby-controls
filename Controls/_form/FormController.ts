@@ -616,9 +616,18 @@ class FormController extends ControllerBase<IFormController> {
             [CRUD_EVENTS.UPDATE_FAILED]: this._getUpdateFailedData
         };
         const handler = handlers[eventName.toLowerCase()];
+        const eventUpdateRecord: string[] = [
+            CRUD_EVENTS.CREATE_SUCCESSED,
+            CRUD_EVENTS.READ_SUCCESSED,
+            CRUD_EVENTS.UPDATE_SUCCESSED,
+            CRUD_EVENTS.DELETE_SUCCESSED
+        ];
         if (handler) {
             const resultData = handler.apply(this, args);
             this._notify('sendResult', [resultData], {bubbling: true});
+            if (eventUpdateRecord.includes(eventName.toLowerCase())) {
+                this._notify('recordChanged', args, {bubbling: true});
+            }
         }
     }
 

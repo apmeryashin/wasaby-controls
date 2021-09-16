@@ -273,6 +273,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
                     this._notify('validationSuccessed', []);
                     this._record.acceptChanges();
                     this._notify('updateSuccessed', [this._record]);
+                    this._notify('recordChanged', [this._record]);
                     return results;
                 }
             });

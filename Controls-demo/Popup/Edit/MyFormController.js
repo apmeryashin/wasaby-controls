@@ -88,15 +88,7 @@ define('Controls-demo/Popup/Edit/MyFormController',
                this._deleteState = true;
             }
          },
-         _readSuccessedHandler: function (event, record) {
-            this._record = record;
-         },
-
-         _createSuccessedHandler: function (event, record) {
-            this._record = record;
-         },
          _updateSuccessedHandler: function (event, record) {
-            this._record = record;
             this._notify('close', [], {bubbling: true});
          },
          _deleteSuccessedHandler: function (record) {
