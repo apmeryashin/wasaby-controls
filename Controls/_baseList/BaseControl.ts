@@ -3064,7 +3064,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _resetScrollAfterReload = false;
     _scrollPageLocked = false;
 
-    _itemReloaded = false;
     _modelRecreated = false;
     _viewReady = false;
 
@@ -4460,7 +4459,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (!this._observerRegistered) {
                 this._registerObserver();
             }
-            if (this._observersController?.shouldRegisterIntersectionObserver()) {
+            if (this._observersController?.shouldRegisterIntersectionObserver(this._modelRecreated)) {
                 this._observersController.registerIntersectionObserver(
                     this,
                     this._children.listView?.getTopLoadingTrigger(),
@@ -4476,12 +4475,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._isPendingDeferSubmit = false;
         }
 
-        // After update the reloaded items have been redrawn, clear
-        // the marks in the model
-        if (this._itemReloaded) {
-            this._listViewModel.clearReloadedMarks();
-            this._itemReloaded = false;
-        }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
         this._modelRecreated = false;
