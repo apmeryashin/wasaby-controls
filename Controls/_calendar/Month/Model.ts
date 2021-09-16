@@ -13,6 +13,7 @@ export default class MonthModel extends MonthViewModel {
         const nState = super._normalizeState(state);
         nState.selectionProcessing = state.selectionProcessing;
         nState.selectionType = state.selectionType;
+        nState.selectionBaseValue = state.selectionBaseValue;
         nState.hoveredEndValue = state.hoveredEndValue;
         nState.hoveredStartValue = state.hoveredStartValue;
         nState.startValue = DateUtil.normalizeDate(state.startValue);
