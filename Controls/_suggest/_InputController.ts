@@ -847,7 +847,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const scopeOptions = options ?? this._options;
 
       return this._getSourceController(scopeOptions).load().then((recordSet) => {
-         if ((this._inputActive || this._tabsSelectedKey !== null)) {
+         this._hideIndicator();
+         if (this._inputActive || this._tabsSelectedKey !== null) {
             this._loadEnd(recordSet);
 
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
