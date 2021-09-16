@@ -9,12 +9,14 @@
    <ws:bodyContentTemplate>
       <div>
          <Controls.form:Controller name="formControllerInst" source="{{ _dataSource }}"
-                                        bind:record="_record" key="{{ _options.key }}"
+                                        record="{{ _record }}" key="{{ _options.key }}"
                                         initializingWay="{{_options.initializingWay}}"
                                         on:updateFailed="_errorHandler()"
                                         on:createFailed="_errorHandler()"
                                         on:readFailed="_errorHandler()"
                                         on:deleteFailed="_errorHandler()"
+                                        on:createSuccessed="_createSuccessedHandler()"
+                                        on:readSuccessed="_readSuccessedHandler()"
                                         on:updateSuccessed="_updateSuccessedHandler()"
                                         on:deleteSuccessed="_deleteSuccessedHandler()">
             <div>
