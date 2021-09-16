@@ -61,7 +61,6 @@
                                         caption="{{rk('Сбросить все')}}"
                                         fontColorStyle="link"
                                         fontSize="m"
-                                        attr:class="controls-FilterViewPanel__applyButton"
                                         on:click="_resetFilter()"/>
             </Controls.scroll:StickyHeader>
          </ws:if>
