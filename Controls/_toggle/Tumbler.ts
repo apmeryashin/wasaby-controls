@@ -3,7 +3,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroupBase';
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
-import {IItemTemplateOptions} from 'Controls/interface';
+import {IItemTemplateOptions, IHeightOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
 
 interface IBackgroundPosition {
@@ -16,7 +16,7 @@ interface IBackgroundPositionData {
     left: number;
 }
 
-interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
+interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHeightOptions {}
 
 /**
  * @name Controls/_toggle/Tumbler#keyProperty
@@ -137,6 +137,25 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  */
 
 /**
+ * @name Controls/_toggle/Tumbler#inlineHeight
+ * @cfg {String} Высота контрола.
+ * @variant s
+ * @variant m
+ * @variant l
+ * @variant xl
+ * @variant default
+ * @default default
+ *
+ * @example
+ * Пример описания.
+ * <pre>
+ *    <Controls.toggle:Tumbler inlineHeight="xl" items="{{_items1}}" bind:selectedKey="_selectedKey1"/>
+ * </pre>
+ *
+ * @demo Controls-demo/toggle/Tumbler/inlineHeight/Index
+ */
+
+/**
  * @name Controls/_toggle/Tumbler#displayProperty
  * @cfg {String} Имя поля элемента, значение которого будет отображаться в названии кнопок тумблера.
  *
@@ -230,6 +249,7 @@ class Tumbler extends ButtonGroupBase {
     static getDefaultOptions(): ITumblerOptions {
         return {
             keyProperty: 'id',
+            inlineHeight: 'default',
             itemTemplate: ItemTemplate
         };
     }
