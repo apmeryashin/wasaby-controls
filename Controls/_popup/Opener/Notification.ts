@@ -179,7 +179,9 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
             // if popups are linked, then notification must be higher then parent
             const isMaximize: boolean = popupItems.at(i).popupOptions.maximize;
             const isModal: boolean = popupItems.at(i).popupOptions.modal;
-            if ((isMaximize || isModal) && !isLinkedPopup(popupItems, popupItems.at(i), item)) {
+            const isChild = isLinkedPopup(popupItems, popupItems.at(i), item);
+            const isParent = isLinkedPopup(popupItems, item, popupItems.at(i));
+            if ((isMaximize || isModal) && !isChild && !isParent) {
                 const maximizedPopupZIndex = (i + 1) * zIndexStep;
                 return maximizedPopupZIndex - 1;
             }
