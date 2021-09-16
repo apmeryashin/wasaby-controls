@@ -137,6 +137,25 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHe
  */
 
 /**
+ * @name Controls/_toggle/Tumbler#inlineHeight
+ * @cfg {String} Высота контрола.
+ * @variant s
+ * @variant m
+ * @variant l
+ * @variant xl
+ * @variant default
+ * @default m
+ *
+ * @example
+ * Пример описания.
+ * <pre>
+ *    <Controls.toggle:Tumbler inlineHeight="xl" items="{{_items1}}" bind:selectedKey="_selectedKey1"/>
+ * </pre>
+ *
+ * @demo Controls-demo/toggle/Tumbler/inlineHeight/Index
+ */
+
+/**
  * @name Controls/_toggle/Tumbler#displayProperty
  * @cfg {String} Имя поля элемента, значение которого будет отображаться в названии кнопок тумблера.
  *
