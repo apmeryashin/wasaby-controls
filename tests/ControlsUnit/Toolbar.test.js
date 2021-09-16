@@ -298,7 +298,7 @@ define(
                         nodeProperty: '@parent',
                         iconSize: 'm',
                         itemTemplateProperty: 'myTemplate',
-                        closeButtonViewMode: "link",
+                        closeButtonViewMode: 'link',
                         showHeader: true,
                         closeButtonVisibility: true,
                         headConfig: {
@@ -426,7 +426,7 @@ define(
                      parentProperty: 'parent',
                      source: recordForMenu,
                      additionalProperty: 'additional',
-                     closeButtonViewMode: "link",
+                     closeButtonViewMode: 'link',
                      itemTemplateProperty: 'itp',
                      groupTemplate: 'groupTemplate',
                      groupingKeyCallback: 'groupingKeyCallback',
