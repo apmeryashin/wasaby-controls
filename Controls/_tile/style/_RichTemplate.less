@@ -17,10 +17,6 @@
    flex-direction: column;
 }
 
-.controls-TileView__richTemplate_imagePosition_bottom {
-   flex-direction: column-reverse;
-}
-
 .controls-TileView__richTemplate_itemContent {
    display: flex;
    flex-direction: column;
@@ -143,16 +139,16 @@
    @variants: 3xs, 2xs, xs, s, m;
    .for(@variants, {
       &_bottomLeft_@{_item} {
-         border-bottom-left-radius: ~"var(--border-radius_@{_item})";
+         border-bottom-left-radius: ~"var(--border_radius_@{_item}_tile)";
       }
       &_bottomRight_@{_item} {
-         border-bottom-right-radius: ~"var(--border-radius_@{_item})";
+         border-bottom-right-radius: ~"var(--border_radius_@{_item}_tile)";
       }
       &_topLeft_@{_item} {
-         border-top-left-radius: ~"var(--border-radius_@{_item})";
+         border-top-left-radius: ~"var(--border_radius_@{_item}_tile)";
       }
       &_topRight_@{_item} {
-         border-top-right-radius: ~"var(--border-radius_@{_item})";
+         border-top-right-radius: ~"var(--border_radius_@{_item}_tile)";
       }
    });
 }
@@ -245,17 +241,14 @@
    right: var(--offset_m);
 }
 
-.controls-TileView__richTemplate_image_size_s_position_bottom_viewMode_rectangle,
 .controls-TileView__richTemplate_image_size_s_position_top_viewMode_rectangle {
    height: var(--image_height_s_position_top_rich_tile);
 }
 
-.controls-TileView__richTemplate_image_size_m_position_bottom_viewMode_rectangle,
 .controls-TileView__richTemplate_image_size_m_position_top_viewMode_rectangle {
    height: var(--image_height_m_position_top_rich_tile);
 }
 
-.controls-TileView__richTemplate_image_size_l_position_bottom_viewMode_rectangle,
 .controls-TileView__richTemplate_image_size_l_position_top_viewMode_rectangle {
    height: var(--image_height_l_position_top_rich_tile);
 }
@@ -280,15 +273,15 @@
 
 // поддержка старой плитки
 .controls-TileView_old {
-   .controls-TileView__richTemplate_image_size_s_position_vertical {
+   .controls-TileView__richTemplate_image_size_s_position_top {
       height: var(--image_height_s_position_top_rich_tile);
    }
 
-   .controls-TileView__richTemplate_image_size_m_position_vertical {
+   .controls-TileView__richTemplate_image_size_m_position_top {
       height: var(--image_height_m_position_top_rich_tile);
    }
 
-   .controls-TileView__richTemplate_image_size_l_position_vertical {
+   .controls-TileView__richTemplate_image_size_l_position_top {
       height: var(--image_height_l_position_top_rich_tile);
    }
 

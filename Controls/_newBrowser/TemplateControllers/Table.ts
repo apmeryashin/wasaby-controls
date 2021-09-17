@@ -12,6 +12,10 @@ export default class ListController extends BaseController<ITableConfig, TreeIte
     }
 
     get imageViewMode(): string {
-        return this._viewModeConfig.leaf.imageViewMode;
+        if (this.getImageVisibility() === 'hidden') {
+            return 'none';
+        } else {
+            return this._viewModeConfig.leaf.imageViewMode;
+        }
     }
 }

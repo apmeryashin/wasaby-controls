@@ -684,16 +684,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         return this._children.content.scrollTop;
     }
 
-    /**
-     * Включает логированние событий изменения положения скролла.
-     * Можно включить логирование из консоли браузера выполнив команду
-     * require(['Controls/scroll'], (scroll) => {scroll.Container.setDebug(true)})
-     * @param debug
-     */
-    static setDebug(debug: boolean): void {
-        ContainerBase.setDebug(debug);
-    }
-
     static _isCssShadowsSupported(): boolean {
         // Ie и Edge неправильно позиционируют фон со стилями
         // background-position: bottom и background-attachment: local

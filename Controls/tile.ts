@@ -61,12 +61,11 @@ export {
     getItemSize
 };
 
-export {TImagePosition} from 'Controls/_tile/interface/IRichTemplate';
-
 export {
     TTileItem,
     TActionMode,
     TGradientType,
+    TImagePosition,
     TTitlePosition,
     TImageViewMode,
     TShadowVisibility,
