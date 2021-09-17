@@ -13,7 +13,7 @@ export default class extends Control {
 
     protected _longLoad: boolean = false;
     protected _fastLoad: boolean = false;
-    protected _lotDataOnLoad: boolean = false;
+    protected _moreDataOnLoad: boolean = false;
 
     protected _beforeMount(): void {
         this._viewSource = new PortionedSearchMemory({keyProperty: 'key'});
@@ -40,13 +40,13 @@ export default class extends Control {
     protected _longLoadChangedHandler(event: SyntheticEvent, newValue: boolean): void {
         this._viewSource.setLongLoad(newValue);
         this._fastLoad = false;
-        this._lotDataOnLoad = false;
+        this._moreDataOnLoad = false;
     }
 
     protected _fastLoadChangedHandler(event: SyntheticEvent, newValue: boolean): void {
         this._viewSource.setFastLoad(newValue);
         this._longLoad = false;
-        this._lotDataOnLoad = false;
+        this._moreDataOnLoad = false;
     }
 
     protected _moreDataOnLoadChangedHandler(event: SyntheticEvent, newValue: boolean): void {
