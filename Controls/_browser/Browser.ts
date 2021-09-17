@@ -260,13 +260,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
     }
 
-    protected _operationPanelItemClick(
-        event: SyntheticEvent,
-        action: IBaseAction,
-        toolbarItem,
-        clickEvent: SyntheticEvent
-    ): void {
-        event.stopImmediatePropagation();
+    private _executeOperation(action: IBaseAction, toolbarItem, clickEvent: SyntheticEvent): void {
         this._getOperationsController().executeAction({
             action,
             toolbarItem,
@@ -282,8 +276,18 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             nodeProperty: this._options.nodeProperty,
             sourceController: this._getSourceController(),
             operationsController: this._operationsController,
-            selectedKeysCount: this._selectedKeysCount
+            selectedKeysCount: this._getOperationsController().getSelectedKeysCount() || this._selectedKeysCount
         });
+    }
+
+    protected _operationPanelItemClick(
+        event: SyntheticEvent,
+        action: IBaseAction,
+        toolbarItem,
+        clickEvent: SyntheticEvent
+    ): void {
+        event.stopImmediatePropagation();
+        this._executeOperation(action, toolbarItem, clickEvent);
     }
 
     protected _createNewStoreObservers(): string[] {
@@ -304,22 +308,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 }
            });
         const executeOperation = Store.onPropertyChanged('executeOperation', ({action, clickEvent, toolbarItem}) => {
-            this._getOperationsController().executeAction({
-                action,
-                toolbarItem,
-                source: this._source,
-                target: clickEvent,
-                selection: {
-                    selected: this._options.selectedKeys,
-                    excluded: this._options.excludedKeys
-                },
-                filter: this._filter,
-                keyProperty: this._getSourceController().getKeyProperty(),
-                parentProperty: this._getSourceController().getParentProperty(),
-                nodeProperty: this._options.nodeProperty,
-                sourceController: this._getSourceController(),
-                operationsController: this._operationsController
-            });
+            this._executeOperation(action, toolbarItem, clickEvent);
         });
         return [
             sourceCallbackId,
