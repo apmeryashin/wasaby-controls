@@ -2,7 +2,11 @@
    <span attr:class="controls-Back__caption controls-fontsize-{{_options.fontSize}} controls-Back__caption_style-{{_options.fontColorStyle}}">{{_options.caption}}</span>
 </ws:template>
 <span attr:title="{{_options.tooltip}}" class="controls-Back">
-   <span class="controls-Back__wrapper controls-Back__wrapper_{{_options.fontSize}}">
+   <span class="
+      controls-Back__wrapper
+      controls-fontsize-{{_options.fontSize}}
+      controls-Back__wrapper_{{_options.fontSize}}
+   ">
       <ws:if data="{{ _options.newIcon }}">
          <svg
             version="1.1"
@@ -17,11 +21,10 @@
             class="
                controls-Back_arrow
                controls-Back_new-icon
-               controls-Back_new-icon_size-{{_options.fontSize}}
                controls-Back__icon_style-{{_options.iconStyle}}_modified
             "
          >
-            <polygon points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
+            <polygon transform="matrix(0.7,0,0,0.7,0,5)" points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
          </svg>
       </ws:if>
       <ws:else>

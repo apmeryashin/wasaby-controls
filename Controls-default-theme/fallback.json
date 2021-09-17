@@ -779,8 +779,6 @@
   "--icon_s_height_headingBack": "11px",
   "--icon_m_height_headingBack": "12px",
   "--icon_l_height_headingBack": "14px",
-  "--new-icon_5xl_width_headingBack": "10px",
-  "--new-icon_5xl_height_headingBack": "16px",
 
   "--font-size_xs_input": "var(--font-size_xs)",
   "--font-size_s_input": "var(--font-size_s)",
