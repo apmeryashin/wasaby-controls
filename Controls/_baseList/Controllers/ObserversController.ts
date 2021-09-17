@@ -130,8 +130,11 @@ export default class ObserversController {
         );
     }
 
-    shouldRegisterIntersectionObserver(): boolean {
-        return this._model && !this._intersectionObserver;
+    shouldRegisterIntersectionObserver(modelRecreated: boolean): boolean {
+        // Если пересоздалась модель, нужно заново зарегистрировать observer,
+        // т.к. перерисуется вьюха и ссылки на триггер будут не актуальны.
+        // В updateOptions это сделать нельзя, т.к. триггеры еще не перерисуются на _beforeUpdate
+        return this._model && (!this._intersectionObserver || modelRecreated);
     }
 
     displayTopTrigger(topTrigger: HTMLElement): void {
