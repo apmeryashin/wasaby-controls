@@ -479,7 +479,7 @@ export class StickyStrategy {
 
    private _getScrollContainer(target: HTMLElement): HTMLElement {
       let parent = target?.parentElement;
-      while (parent || parent !== document.body) {
+      while (parent && parent !== document.body) {
          const parentStyle = window.getComputedStyle(parent);
          if ((parentStyle.overflowY === 'auto'
              || parentStyle.overflowY === 'scroll'
