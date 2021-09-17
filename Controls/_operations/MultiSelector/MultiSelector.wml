@@ -8,6 +8,7 @@
                                           excludedKeys="{{ _options.excludedKeys }}"
                                           selectedKeysCount="{{ _options.selectedKeysCount }}"
                                           selectedCountConfig="{{ _options.selectedCountConfig }}"
+                                          operationsController="{{_options.operationsController}}"
                                           size="{{_options.size}}"
                                           viewMode="{{_options.viewMode}}"
                                           fontColorStyle="{{_options.fontColorStyle}}"

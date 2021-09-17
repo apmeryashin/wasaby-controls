@@ -165,10 +165,6 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         });
     }
 
-    private _isListAction(item: IAction): boolean {
-        return this._options.listActions.includes(item);
-    }
-
     private _updateToolbarItems(): void {
         this._toolbarItems = this._getToolbarItemsByActions(this._actions.concat(this._listActions));
     }
