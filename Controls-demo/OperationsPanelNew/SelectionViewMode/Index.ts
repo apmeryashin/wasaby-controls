@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/OperationsPanelNew/SelectionViewMode/SelectionViewMode';
-import TreeMemory = require('Controls-demo/List/Tree/TreeMemory');
+import TreeMemory from 'Controls-demo/OperationsPanelNew/SelectionViewMode/TreeMemory';
 import {getListData} from 'Controls-demo/OperationsPanelNew/DemoHelpers/DataCatalog';
 import 'wml!Controls-demo/operations/SelectionViewMode/resources/PersonInfo';
 
