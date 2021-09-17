@@ -1,4 +1,4 @@
-<Controls._breadcrumbs.View items="{{_options.items}}"
+<Controls._breadcrumbs.View items="{{_items}}"
                       visibleItems="{{_visibleItems}}"
                       backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                       keyProperty="{{_options.keyProperty}}"

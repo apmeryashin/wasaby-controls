@@ -9,18 +9,19 @@ export default class extends Control {
 
     protected _beforeMount(): void {
         this._filterSource = [{
-            name: 'city',
-            value: ['Yaroslavl'],
+            name: 'Ответственный',
+            value: null,
+            resetValue: null,
             editorOptions: {
                 source: new Memory({
                     keyProperty: 'id',
                     data: [
-                        { id: 'Yaroslavl', city: 'Yaroslavl' },
-                        { id: 'Moscow', city: 'Moscow' },
-                        { id: 'Kazan', city: 'Kazan' }
+                        { id: 'Новиков Д.В.', title: 'Новиков Д.В.' },
+                        { id: 'Кошелев А.Е.', title: 'Кошелев А.Е.' },
+                        { id: 'Субботин А.В.', title: 'Субботин А.В.' }
                     ]
                 }),
-                displayProperty: 'city',
+                displayProperty: 'title',
                 keyProperty: 'id'
             },
             viewMode: 'frequent'

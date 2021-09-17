@@ -304,7 +304,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     private _$expandedItems: CrudEntityKey[];
     private _$collapsedItems: CrudEntityKey[];
 
-    private _hierarchyRelation: relation.Hierarchy;
+    protected _hierarchyRelation: relation.Hierarchy;
 
     /**
      * Признак, означающий что есть узел с детьми
@@ -601,13 +601,15 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * Устанавливает название свойства, содержащего идентификатор родительского узла
      */
     setParentProperty(name: string): void {
-        this._unsetImportantProperty(this._$parentProperty);
-        this._$parentProperty = name;
-        this._hierarchyRelation.setParentProperty(name);
+        if (this._$parentProperty !== name) {
+            this._unsetImportantProperty(this._$parentProperty);
+            this._$parentProperty = name;
+            this._hierarchyRelation.setParentProperty(name);
 
-        this._resetItemsStrategy();
-        this._setImportantProperty(name);
-        this._reBuild(true);
+            this._resetItemsStrategy();
+            this._setImportantProperty(name);
+            this._reBuild(true);
+        }
     }
 
     /**

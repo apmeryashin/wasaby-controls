@@ -135,23 +135,25 @@ export function calculateFormattedNumber(
 }
 
 function toFormat(value: string, precision: number): string {
-    const dotPosition = value.indexOf('.');
+    if (value) {
+        const dotPosition = value.indexOf('.');
 
-    if (dotPosition === -1) {
-        return value + (precision ? '.00' : '');
-    }
+        if (dotPosition === -1) {
+            return value + (precision ? '.00' : '');
+        }
 
-    if (!precision) {
-        return value.substr(0, dotPosition);
-    }
+        if (!precision) {
+            return value.substr(0, dotPosition);
+        }
 
-    const fractionLength = value.length - dotPosition - 1;
-    if (fractionLength < precision) {
-        return value + '0'.repeat(precision - fractionLength);
-    }
+        const fractionLength = value.length - dotPosition - 1;
+        if (fractionLength < precision) {
+            return value + '0'.repeat(precision - fractionLength);
+        }
 
-    if (fractionLength > precision) {
-        return value.substr(0, dotPosition + precision + 1);
+        if (fractionLength > precision) {
+            return value.substr(0, dotPosition + precision + 1);
+        }
     }
 
     return value;
@@ -159,7 +161,7 @@ function toFormat(value: string, precision: number): string {
 
 function toString(value: TValue, precision: number): string {
     if (value === null) {
-        return '0' + (precision ? '.00' : '');
+        return '';
     }
     if (typeof value === 'number') {
         return numberToString(value);

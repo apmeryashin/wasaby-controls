@@ -15,10 +15,13 @@ describe('Controls/themes:ZenWrapper', () => {
         let result: IRgb;
         const emptyResult: IRgb = { r: 255, g: 255, b: 255 };
 
-        result = ZenWrapper.calculateRGB('(45,45,45)');
+        result = ZenWrapper.calculateRGB('45,45,45');
         assert.deepEqual({ r: 45, g: 45, b: 45}, result, 'Wrong calculated color');
 
-        result = ZenWrapper.calculateRGB('(45, 45, 45)');
+        result = ZenWrapper.calculateRGB('45, 45, 45');
+        assert.deepEqual({ r: 45, g: 45, b: 45}, result, 'Wrong calculated color');
+
+        result = ZenWrapper.calculateRGB('rgb(45, 45, 45)');
         assert.deepEqual({ r: 45, g: 45, b: 45}, result, 'Wrong calculated color');
 
         result = ZenWrapper.calculateRGB('(45,  45)');
@@ -28,7 +31,7 @@ describe('Controls/themes:ZenWrapper', () => {
         assert.deepEqual(emptyResult, result, 'Wrong calculated color');
 
         result = ZenWrapper.calculateRGB('#ccc');
-        assert.deepEqual(emptyResult, result, 'Wrong calculated color');
+        assert.deepEqual({ r: 204, g: 204, b: 204 }, result, 'Wrong calculated color');
     });
 
     it('getMonochromeColor', () => {
