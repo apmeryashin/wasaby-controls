@@ -1797,6 +1797,15 @@ describe('Controls/_display/Tree', () => {
             assert.deepEqual(tree.getCollapsedItems(), [1, 2, 3]);
         });
 
+        it('not collapse item when expand all items', () => {
+            assert.isFalse(rsTree.getItemBySourceKey(1).isExpanded());
+            rsTree.setExpandedItems([1]);
+            assert.isTrue(rsTree.getItemBySourceKey(1).isExpanded());
+
+            rsTree.setExpandedItems([null]);
+            assert.isTrue(rsTree.getItemBySourceKey(1).isExpanded());
+        });
+
         describe('create item with right expanded state', () => {
             it('all expandable', () => {
                 rsTree.setExpandedItems([null]);
