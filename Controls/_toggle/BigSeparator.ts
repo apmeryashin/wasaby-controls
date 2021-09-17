@@ -58,9 +58,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
    protected _template: TemplateFunction = BigSeparatorTemplate;
 
    protected _clickHandler(): void {
-      if (!this._options.readOnly) {
-         this._notify('valueChanged', [!this._options.value]);
-      }
+      this._notify('valueChanged', [!this._options.value]);
    }
 
    static getDefaultOptions(): IBigSeparatorOptions {

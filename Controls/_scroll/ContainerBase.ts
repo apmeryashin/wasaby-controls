@@ -18,7 +18,6 @@ import {isHidden} from './StickyBlock/Utils';
 import {getHeadersHeight} from './StickyBlock/Utils/getHeadersHeight';
 import {location} from 'Application/Env';
 import {Entity} from 'Controls/dragnDrop';
-import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
 
 
@@ -113,10 +112,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     private _isUnmounted: boolean = false;
 
     private _scrollMoveTimer: number;
-
-    // Состояние для логирования сохраняем отдельно, т.к. состояние положения скрола в некоторых сценариях
-    // обновляется синхронно, и невозможно узнать старое состояние в обработчике.
-    private _lastLogState: {top: number, left: number} = { top: 0, left: 0 };
 
     _beforeMount(options: IContainerBaseOptions, context?, receivedState?) {
         this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
@@ -334,18 +329,13 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     protected _scrollHandler(e: SyntheticEvent): void {
-        const scrollTop: number = e.currentTarget.scrollTop;
-        const scrollLeft: number = e.currentTarget.scrollLeft;
-
-        this._logScrollPosition(scrollTop, scrollLeft);
-
         if (this._scrollLockedPosition !== null) {
             this._children.content.scrollTop = this._scrollLockedPosition;
             return;
         }
         this.onScrollContainer({
-            scrollTop: scrollTop,
-            scrollLeft: scrollLeft
+            scrollTop: e.currentTarget.scrollTop,
+            scrollLeft: e.currentTarget.scrollLeft
         });
     }
 
@@ -478,13 +468,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
      * Прокручивает к верху контейнера.
      * @name Controls/_scroll/Container#scrollToTop
      * @function
-     * @param {Boolean} smooth - плавная прокрутка, по умолчанию false.
-     * @example
-     * <pre class="brush: js">
-     * _scrollToTop(): void {
-     *    this._children.scrollContainer.scrollToTop(true);
-     * }
-     * </pre>
      * @see scrollToBottom
      * @see scrollToLeft
      * @see scrollToRight
@@ -497,8 +480,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
      * @name Controls/_scroll/Container#scrollToTop
      * @function
      */
-    scrollToTop(smooth: boolean = false): void {
-        this._setScrollTop(0, smooth);
+    scrollToTop() {
+        this._setScrollTop(0);
     }
 
     /**
@@ -591,7 +574,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         const scrollState = this._scrollModel.clone();
         const oldScrollState = this._oldScrollState.clone();
         if (isStateUpdated) {
-            this._logSizes(scrollState, oldScrollState);
             // Новое событие
             this._generateEvent('scrollStateChanged', [scrollState, oldScrollState]);
 
@@ -809,12 +791,12 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         }, KEYBOARD_SHOWING_DURATION);
     }
 
-    protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number|string, isVirtual: boolean): void {
-        this._doScroll(scrollParam, isVirtual);
+    protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number): void {
+        this._doScroll(scrollParam);
         e.stopPropagation();
     }
 
-    protected _doScroll(scrollParam, isVirtual) {
+    protected _doScroll(scrollParam) {
         if (scrollParam === 'top') {
             this._setScrollTop(0);
         } else {
@@ -831,7 +813,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             } else if (scrollParam === 'pageDown') {
                 this._setScrollTop(currentScrollTop + clientHeight);
             } else if (typeof scrollParam === 'number') {
-                this._setScrollTop(scrollParam, false, isVirtual);
+                this._setScrollTop(scrollParam);
             }
         }
     }
@@ -1053,28 +1035,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    private _isScrollSmoothSupported(): boolean {
-        if (detection.chrome || detection.firefox || detection.isIE12) {
-            return true;
-        }
-        return false;
-    }
-
-    private _scrollTo(scrollTop: number, smoothSrc: boolean): void {
+    protected _setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
-        const smooth = smoothSrc && this._isScrollSmoothSupported();
-
-        if (smooth) {
-            scrollContainer.scrollTo({
-                top: scrollTop,
-                behavior: 'smooth'
-            });
-        } else {
-            scrollContainer.scrollTop = scrollTop;
-        }
-    }
-
-    protected _setScrollTop(scrollTop: number, smooth: boolean = false, withoutPlaceholder?: boolean): void {
         if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
             const scrollState: IScrollState = this._scrollModel;
             const cachedScrollTop = scrollTop;
@@ -1084,10 +1046,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
                 // нужный scrollTop будет отличным от realScrollTop, если изменился _topPlaceholderSize.
                 // Вычисляем его по месту
-                this._scrollTo(cachedScrollTop - this._topPlaceholderSize, smooth);
+                scrollContainer.scrollTop = cachedScrollTop - this._topPlaceholderSize;
             };
             if (realScrollTop >= 0 && !scrollTopOverflow) {
-                this._scrollTo(realScrollTop, smooth);
+                scrollContainer.scrollTop = realScrollTop;
             } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow
                 && this._bottomPlaceholderSize === 0) {
                 applyScrollTop();
@@ -1110,7 +1072,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                     });
             }
         } else {
-            this._scrollTo(scrollTop, smooth);
+            scrollContainer.scrollTop = scrollTop;
             this._updateStateAndGenerateEvents({
                 scrollTop
             });
@@ -1151,7 +1113,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference - correctingHeight :
             this._savedScrollTop - heightDifference + correctingHeight;
 
-        this._setScrollTop(newPosition, false, true);
+        this._setScrollTop(newPosition, true);
     }
 
     _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
@@ -1182,45 +1144,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         if (!event.propagating()) {
             return this._notify(eventName, args) || event.result;
         }
-    }
-
-    private _logScrollPosition(scrollTop: number, scrollLeft: number): void {
-        if (ContainerBase._debug) {
-            let msg:string = `Controls/scroll:ContainerBase: изменение положения скролла.`;
-
-            if (this._lastLogState.top !== scrollTop) {
-                msg += ` По вертикали: новое ${scrollTop}, старое ${this._lastLogState.top}.`;
-            }
-            if (this._lastLogState.left !== scrollLeft) {
-                msg += ` По горизонтали: новое ${scrollLeft}, старое ${this._lastLogState.left}.`;
-            }
-
-            this._lastLogState.top = scrollTop;
-            this._lastLogState.left = scrollLeft;
-
-            Logger.warn(msg, this);
-        }
-    }
-
-    private _logSizes(state:IScrollState, oldState: IScrollState): void {
-        if (ContainerBase._debug) {
-            let msg:string = '';
-
-            for (const field of ['clientHeight', 'scrollHeight', 'clientWidth', 'scrollWidth']) {
-                if (state[field] !== oldState[field]) {
-                    msg += ` ${field}: новое ${state[field]}, старое ${oldState[field]}.`;
-                }
-            }
-            if (msg) {
-                Logger.warn(`Controls/scroll:ContainerBase: изменение размеров. ${msg}`, this);
-            }
-        }
-    }
-
-    static _debug: boolean = false;
-
-    static setDebug(debug: boolean): void {
-        ContainerBase._debug = debug;
     }
 
 

@@ -11,7 +11,6 @@ import {
 } from 'Types/entity';
 import {IList} from 'Types/collection';
 import {mixin, object} from 'Types/util';
-import {isEqual} from 'Types/object';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection, IItemPadding} from './interface/ICollection';
@@ -21,9 +20,10 @@ import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from 
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
+import {TRoundBorder} from "Controls/_tile/display/mixins/Tile";
+import {isEqual} from "Types/object";
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -188,8 +188,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     protected _$isFirstStickedItem: boolean;
 
     protected _instancePrefix: string;
-
-    protected _$roundBorder: IRoundBorder;
 
     /**
      * Индекс содержимого элемента в коллекции (используется для сериализации)
@@ -795,10 +793,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             wrapperClasses += ' controls-ListView__item_active';
         }
 
-        if (this._$roundBorder) {
-            wrapperClasses += ' ' + this.getRoundBorderClasses();
-        }
-
         return wrapperClasses;
     }
 
@@ -825,7 +819,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // region RoundBorder
 
-    setRoundBorder(roundBorder: IRoundBorder): void {
+    setRoundBorder(roundBorder: TRoundBorder): void {
         if (!isEqual(this._$roundBorder, roundBorder)) {
             this._$roundBorder = roundBorder;
             this._nextVersion();

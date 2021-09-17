@@ -426,21 +426,20 @@ define(
             });
          });
 
-         it('update source', async function() {
+         it('update source', function(done) {
             const config = {source: source, keyProperty: 'id'};
             const data = getDataWithConfig(config);
 
-            await data._beforeMount(config);
-            const contextSource = data._contextState.source;
-            const newOptions = {
-               source: new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: sourceDataEdited
-               }),
-               keyProperty: 'id'
-            };
-            await data._beforeUpdate(newOptions);
-            assert.isTrue(contextSource !== data._contextState.source);
+            data._beforeMount(config).addCallback(function() {
+               const contextSource = data._contextState.source;
+               data._beforeUpdate({source: new sourceLib.Memory({
+                     keyProperty: 'id',
+                     data: sourceDataEdited
+                  }), keyProperty: 'id'}).addCallback(function() {
+                  assert.isTrue(contextSource !== data._contextState.source);
+                  done();
+               });
+            });
          });
 
          it('sourceController is null in _beforeUpdate', async function() {

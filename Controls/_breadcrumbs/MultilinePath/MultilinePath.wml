@@ -17,7 +17,7 @@
                     displayMode="multiline"
                     fontSize="{{_options.fontSize}}"
                     fontColorStyle="{{_options.fontColorStyle}}"
-                    items="{{_items}}"
+                    items="{{_options.items}}"
                     displayProperty="{{_options.displayProperty}}"
                     on:itemClick="_itemClickHandler()"/>
         </ws:if>
