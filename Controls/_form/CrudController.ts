@@ -15,9 +15,10 @@ export const enum CRUD_EVENTS {
     UPDATE_FAILED = 'updatefailed',
     DELETE_STARTED = 'deletestarted',
     DELETE_SUCCESSED = 'deletesuccessed',
-    DELETE_FAILED = 'deletefailed',
-    RECORD_CHANGED = 'recordChanged'
+    DELETE_FAILED = 'deletefailed'
 }
+
+const RECORD_CHANGED = 'recordChanged';
 
 export interface ICrudConfig {
     showLoadingIndicator: boolean;
@@ -68,7 +69,7 @@ export default class CrudController {
         return new Promise((res, rej) => {
             promise.then((record: Model) => {
                 this._crudOperationFinished(CRUD_EVENTS.CREATE_SUCCESSED, [record]);
-                this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                this._notifyRegister(RECORD_CHANGED, [record]);
                 res(record);
             }, (e: Error) => {
                 this._crudOperationFinished(CRUD_EVENTS.CREATE_FAILED, [e]);
@@ -87,7 +88,7 @@ export default class CrudController {
         const promise: Promise<Model> = new Promise((res, rej) => {
             readWithAdditionalFields(this._dataSource, key, readMetaData).then((record: Model) => {
                 this._crudOperationFinished(CRUD_EVENTS.READ_SUCCESSED, [record]);
-                this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                this._notifyRegister(RECORD_CHANGED, [record]);
                 res(record);
             }, (e: Error) => {
                 this._crudOperationFinished(CRUD_EVENTS.READ_FAILED, [e]);
@@ -111,7 +112,7 @@ export default class CrudController {
             return new Promise((res, rej) => {
                 resultUpdate.then((key) => {
                     this._crudOperationFinished(CRUD_EVENTS.UPDATE_SUCCESSED, [record, key, config]);
-                    this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                    this._notifyRegister(RECORD_CHANGED, [record]);
                     res(key);
                 }).catch((e: Error) => {
                     this._crudOperationFinished(CRUD_EVENTS.UPDATE_FAILED, [e, record]);
@@ -136,7 +137,7 @@ export default class CrudController {
         return new Promise((res, rej) => {
             promise.then(() => {
                 this._crudOperationFinished(CRUD_EVENTS.DELETE_SUCCESSED, [record]);
-                this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                this._notifyRegister(RECORD_CHANGED, [record]);
                 res();
             }, (e: Error) => {
                 this._crudOperationFinished(CRUD_EVENTS.DELETE_FAILED, [e]);
