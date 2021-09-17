@@ -79,40 +79,40 @@ define([
          });
 
          it('sets new viewConfig when it comes', () => {
-            instance.__viewConfig = null;
+            instance._viewConfig = null;
             instance._options.viewConfig = null;
 
             instance._beforeUpdate({ viewConfig });
 
-            assert.isNotNull(instance.__viewConfig);
+            assert.isNotNull(instance._viewConfig);
          });
 
          it('sets new viewConfig when it comes (deep comparison)', () => {
-            instance.__viewConfig = null;
+            instance._viewConfig = null;
             instance._options.viewConfig = viewConfig;
 
             const newConfig = getViewConfig('include', { image: '42' });
             instance._beforeUpdate({ viewConfig: newConfig });
 
-            assert.isNotNull(instance.__viewConfig);
-            assert.strictEqual(instance.__viewConfig.options.image, '42');
+            assert.isNotNull(instance._viewConfig);
+            assert.strictEqual(instance._viewConfig.options.image, '42');
          });
 
          it('resets viewConfig', () => {
-            instance.__viewConfig = viewConfig;
+            instance._viewConfig = viewConfig;
             instance._options.viewConfig = viewConfig;
 
             instance._beforeUpdate({ viewConfig: undefined });
 
-            assert.isNull(instance.__viewConfig);
+            assert.isNull(instance._viewConfig);
          });
 
          it('does not set new viewConfig when options.viewConfig are equal', () => {
-            instance.__viewConfig = null;
+            instance._viewConfig = null;
             instance._options.viewConfig = viewConfig;
             instance._beforeUpdate({ viewConfig });
 
-            assert.isNull(instance.__viewConfig);
+            assert.isNull(instance._viewConfig);
          });
 
          // it('resets new viewConfig when options.viewConfig mode is dialog', () => {
@@ -133,7 +133,7 @@ define([
             const options = { viewConfig };
             viewConfig.mode = 'inlist';
             instance._beforeUpdate(options);
-            assert.strictEqual(instance.__viewConfig.options.listOptions, options);
+            assert.strictEqual(instance._viewConfig.options.listOptions, options);
          });
 
          it('inlist mode: sets new list options when options viewConfig are equal', () => {
@@ -142,12 +142,12 @@ define([
                someListsOptions: 42
             };
 
-            instance.__viewConfig = viewConfig;
+            instance._viewConfig = viewConfig;
             instance._options.viewConfig = viewConfig;
 
             instance._beforeUpdate(options);
 
-            assert.strictEqual(instance.__viewConfig.options.listOptions, options);
+            assert.strictEqual(instance._viewConfig.options.listOptions, options);
          });
       });
 
@@ -159,22 +159,22 @@ define([
             createInstance();
             viewConfig = getViewConfig('inlist', {});
             options = {};
-            instance.__viewConfig = viewConfig;
+            instance._viewConfig = viewConfig;
          });
 
          it('updates viewConfig options object', () => {
-            const oldViewConfigOptions = instance.__viewConfig.options;
+            const oldViewConfigOptions = instance._viewConfig.options;
             instance._updateInlistOptions(options);
-            assert.notStrictEqual(instance.__viewConfig.options, oldViewConfigOptions);
+            assert.notStrictEqual(instance._viewConfig.options, oldViewConfigOptions);
          });
 
          it('sets viewConfig options as passed options', () => {
             instance._updateInlistOptions(options);
-            assert.strictEqual(instance.__viewConfig.options.listOptions, options);
+            assert.strictEqual(instance._viewConfig.options.listOptions, options);
          });
       });
 
-      describe('__updateConfig()', () => {
+      describe('_updateConfig()', () => {
          let viewConfig;
          let options;
 
@@ -182,15 +182,15 @@ define([
             createInstance();
             viewConfig = getViewConfig('include', {});
             options = { viewConfig };
-            instance.__viewConfig = null;
+            instance._viewConfig = null;
          });
 
          it('sets new viewConfig from passed options', () => {
-            instance.__updateConfig(options);
-            assert.isDefined(instance.__viewConfig);
+            instance._updateConfig(options.viewConfig);
+            assert.isDefined(instance._viewConfig);
          });
 
-         it('sets correct showed flag for viewConfig', () => {
+         it('sets correct shown flag for viewConfig', () => {
             [
                [true, 'include', true],
                [true, 'dialog', true],
@@ -199,14 +199,14 @@ define([
             ].forEach(([isShown, mode, result]) => {
                viewConfig.isShown = isShown;
                viewConfig.mode = mode;
-               instance.__updateConfig({ viewConfig });
-               assert.strictEqual(instance.__viewConfig.isShown, result);
+               instance._updateConfig(viewConfig);
+               assert.strictEqual(instance._viewConfig.isShown, result);
             });
          });
 
          it('does not update list options in non-inlist mode', () => {
-            instance.__updateConfig(options);
-            assert.isUndefined(instance.__viewConfig.options.listOptions);
+            instance._updateConfig(options.viewConfig);
+            assert.isUndefined(instance._viewConfig.options.listOptions);
          });
       });
    });

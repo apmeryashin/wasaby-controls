@@ -135,15 +135,15 @@ extends Control<TOptions, TState> {
         });
     }
 
-    private _updateConfig(viewConfig?: ErrorViewConfig): void {
+    private _updateConfig(viewConfig?: ContainerViewConfig): void {
         if (!viewConfig) {
             this._viewConfig = null;
             return;
         }
 
         this._viewConfig = {
-            isShown: viewConfig.mode !== ErrorViewMode.dialog,
             ...viewConfig,
+            isShown: viewConfig.isShown || viewConfig.mode !== ErrorViewMode.dialog,
             templateName: typeof viewConfig.template === 'string'
                 ? viewConfig.template
                 : undefined
