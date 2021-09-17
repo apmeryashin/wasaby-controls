@@ -1,6 +1,7 @@
 import {Model} from 'Types/entity';
 import {CrudEntityKey} from 'Types/source';
 import {Control, IControlOptions} from 'UI/Base';
+import {dataConversion} from '../resources/dataConversion';
 
 /**
  * На основании переданного значения root и keyProperty собирает Model хлебной крошки
@@ -27,7 +28,7 @@ interface IBreadcrumbsControlOptions extends IControlOptions {
  */
 function onBackButtonClick(this: Control<IBreadcrumbsControlOptions>, e: Event, itemsProperty: string = 'items'): void {
    let item;
-   const items = this._options[itemsProperty];
+   const items = dataConversion(this._options[itemsProperty]);
 
    if (items.length > 1) {
       item = items[items.length - 2];

@@ -21,6 +21,7 @@ export interface IStackTemplateOptions extends IControlOptions, IPopupTemplateOp
     stackMinimizedWidth?: number;
     stackWidth?: number;
     rightPanelOptions?: IRightPanelOptions;
+    toolbarContentTemplate?: Function | string;
 }
 
 const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
@@ -54,7 +55,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
 
     protected _beforeMount(options: IStackTemplateOptions): void {
         this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть', 'окно')}`;
-        this._hasRightPanel = ManagerController.hasRightPanel();
+        this._hasRightPanel = options.toolbarContentTemplate !== undefined || ManagerController.hasRightPanel();
         this._updateMaximizeButton(options);
         this._prepareTheme();
         this._maximizeButtonClickCallback = this.changeMaximizedState.bind(this);

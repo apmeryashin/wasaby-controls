@@ -3,6 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/LoadingIndicator/Middle/Col
 import {Memory} from 'Types/source';
 import { IColumn, IHeaderCell } from 'Controls/grid';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
+import {slowDownSource} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -119,20 +120,8 @@ export default class extends Control {
     }
 
     protected _reloadList(): void {
-        this._slowDownSource(this._viewSource, 4000);
+        slowDownSource(this._viewSource, 4000);
         this._children.list.reload();
-    }
-
-    private _slowDownSource(source: Memory, timeMs: number): void {
-        const originalQuery = source.query;
-
-        source.query = (...args) => {
-            return new Promise((success) => {
-                setTimeout(() => {
-                    success(originalQuery.apply(source, args));
-                }, timeMs);
-            });
-        };
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

@@ -45,6 +45,7 @@ export {
     TKeySelection,
     TKeysSelection
 } from './_interface/ISelectionType';
+export {ITileRoundBorder} from './_interface/ITileRoundBorder';
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions, TFilter} from './_interface/IFilter';
@@ -87,4 +88,5 @@ export {IInputPlaceholder, IInputPlaceholderOptions} from './_interface/IInputPl
 export {IInputTag, IInputTagOptions} from './_interface/IInputTag';
 export {default as ITextValue} from './_interface/ITextValue';
 export {default as ISelectField, ISelectFieldsOptions} from './_interface/ISelectFields';
+export {IRoundBorder} from 'Controls/_interface/IRoundBorder';
 export {TPaddingSize} from 'Controls/_interface/TPaddingSize';

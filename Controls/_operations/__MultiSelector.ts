@@ -9,6 +9,7 @@ import {default as getCountUtil, IGetCountCallParams} from 'Controls/_operations
 import {LoadingIndicator} from 'Controls/LoadingIndicator';
 import {isEqual} from 'Types/object';
 import 'css!Controls/operations';
+import {ControllerClass as OperationsController} from '../_operations/ControllerClass';
 
 const DEFAULT_CAPTION = rk('Отметить');
 const DEFAULT_ITEMS = [
@@ -95,6 +96,7 @@ export interface IMultiSelectorOptions extends IControlOptions {
    selectionViewMode?: 'all'|'selected'|'partial';
    selectedCountConfig?: IGetCountCallParams;
    parentProperty?: string;
+   operationsController?: OperationsController;
 }
 
 /**
@@ -189,6 +191,9 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       const getCountCallback = (count, isAllSelected) => {
          this._menuCaption = this._getMenuCaption(selection, count, isAllSelected);
          this._sizeChanged = true;
+         if (options.operationsController) {
+            options.operationsController.setSelectedKeysCount(count);
+         }
       };
       const getCountResult = this._getCount(selection, count, options);
 

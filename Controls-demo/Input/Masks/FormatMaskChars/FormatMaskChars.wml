@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">GUID mask=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx, где formatMaskChars={x: '[A-Fa-f0-9]'}</div>
+        <Controls.input:Mask replacer=" " mask="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" bind:value="_value1" formatMaskChars="{{ _formatMaskChars }}" attr:class="ControlsDemo-MaskInput_phoneField"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">Binary mask=yyyy, где formatMaskChars={y: '[0-1]'}</div>
+        <Controls.input:Mask replacer=" " mask="yyyy" bind:value="_value2" formatMaskChars="{{ _formatMaskChars }}" attr:class="ControlsDemo-MaskInput_phoneField"/>
+    </div>
+</div>

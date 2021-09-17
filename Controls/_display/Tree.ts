@@ -111,14 +111,10 @@ function onCollectionChange<T>(
         this.instance.resetHasNode();
     }
 
-    if (action == IObservable.ACTION_CHANGE) {
+    if (action === IObservable.ACTION_CHANGE) {
         if (this.instance._isChangedValueInParentProperty(oldItems, newItems)) {
             this.instance._reCountHierarchy();
         }
-    }
-
-    if (action === IObservable.ACTION_RESET) {
-        this.instance.setExpandedItems(this.instance.getExpandedItems());
     }
 }
 
@@ -308,7 +304,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     private _$expandedItems: CrudEntityKey[];
     private _$collapsedItems: CrudEntityKey[];
 
-    private _hierarchyRelation: relation.Hierarchy;
+    protected _hierarchyRelation: relation.Hierarchy;
 
     /**
      * Признак, означающий что есть узел с детьми
@@ -376,6 +372,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             fromSuper.call(this);
         };
     }
+    //endregion
 
     // region Collection
 
@@ -604,13 +601,15 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * Устанавливает название свойства, содержащего идентификатор родительского узла
      */
     setParentProperty(name: string): void {
-        this._unsetImportantProperty(this._$parentProperty);
-        this._$parentProperty = name;
-        this._hierarchyRelation.setParentProperty(name);
+        if (this._$parentProperty !== name) {
+            this._unsetImportantProperty(this._$parentProperty);
+            this._$parentProperty = name;
+            this._hierarchyRelation.setParentProperty(name);
 
-        this._resetItemsStrategy();
-        this._setImportantProperty(name);
-        this._reBuild(true);
+            this._resetItemsStrategy();
+            this._setImportantProperty(name);
+            this._reBuild(true);
+        }
     }
 
     /**
@@ -818,12 +817,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
 
         const diff = ArraySimpleValuesUtil.getArrayDifference(this.getExpandedItems(), expandedKeys);
+        const expandAll = diff.added[0] === null;
 
         // запоминаем все изменения и отправляем их за один раз. Вместо множества событий от каждого элемента
         const session = this._startUpdateSession();
 
         //region Добавленные ключи нужно развернуть
-        if (diff.added[0] === null) {
+        if (expandAll) {
             this._getItems().forEach((item) => {
                 if (!item['[Controls/_display/TreeItem]'] || item.isNode() === null) {
                     return;
@@ -842,29 +842,32 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         //endregion
 
         //region Удаленные ключи нужно свернуть
-        if (diff.removed[0] === null) {
-            this._getItems().forEach((item) => {
-                // TODO: не должен общий модуль знать про конкретную реализацию TreeGridNodeFooterRow
-                //  getContents() у TreeGridNodeFooterRow должен придерживаться контракта и возвращать
-                //  Model а не строку
-                if (!item['[Controls/_display/TreeItem]'] || item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
-                    return;
-                }
+        // удаленные ключи сворачиваем только, если не развернули все узлы
+        if (!expandAll) {
+            if (diff.removed[0] === null) {
+                this._getItems().forEach((item) => {
+                    // TODO: не должен общий модуль знать про конкретную реализацию TreeGridNodeFooterRow
+                    //  getContents() у TreeGridNodeFooterRow должен придерживаться контракта и возвращать
+                    //  Model а не строку
+                    if (!item['[Controls/_display/TreeItem]'] || item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+                        return;
+                    }
 
-                const id = item.getContents().getKey();
-                if (id && diff.added.includes(id)) {
-                    return;
-                }
+                    const id = item.getContents().getKey();
+                    if (id && diff.added.includes(id)) {
+                        return;
+                    }
 
-                item.setExpanded(false, true);
-            });
-        } else {
-            diff.removed.forEach((id) => {
-                const item = this.getItemBySourceKey(id, false);
-                if (item && item['[Controls/_display/TreeItem]']) {
                     item.setExpanded(false, true);
-                }
-            });
+                });
+            } else {
+                diff.removed.forEach((id) => {
+                    const item = this.getItemBySourceKey(id, false);
+                    if (item && item['[Controls/_display/TreeItem]']) {
+                        item.setExpanded(false, true);
+                    }
+                });
+            }
         }
         //endregion
 

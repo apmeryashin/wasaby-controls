@@ -1,7 +1,8 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">viewMode='linkButton'</div>
         <Controls.grid:SortingSelector
+                attr:data-qa="controlsDemo_SortingSelector__linkButton"
                 sortingParams="{{_sortingParams}}"
                 viewMode="linkButton"
                 bind:value="_sorting">
@@ -10,6 +11,7 @@
     <div class="controlsDemo__cell">
         <div class="controls-text-label">viewMode='toolButton'</div>
         <Controls.grid:SortingSelector
+                attr:data-qa="controlsDemo_SortingSelector__toolButton"
                 sortingParams="{{_sortingParams}}"
                 viewMode="toolButton"
                 bind:value="_sorting">

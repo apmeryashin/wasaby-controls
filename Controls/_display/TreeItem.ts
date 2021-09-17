@@ -266,6 +266,14 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return this.getOwner().getChildren(this, withFilter);
     }
 
+    /**
+     * Возвращает последний дочерний элемент для текущего
+     */
+    getLastChildItem(): TreeItem<T> {
+        const children = this.getChildren();
+        return children.at(children.getCount() - 1);
+    }
+
     hasMoreStorage(): boolean {
         return this._$hasMore;
     }
@@ -289,6 +297,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
     getNodeFooter(): TreeItem {
         return this._nodeFooter;
+    }
+
+    getNodeFooterTemplate(): TemplateFunction {
+        return this.getOwner().getNodeFooterTemplate();
     }
 
     // TODO есть ExpandableMixin, иконку тоже наверное нужно туда перенести

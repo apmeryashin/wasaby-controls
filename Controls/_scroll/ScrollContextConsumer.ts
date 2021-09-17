@@ -104,6 +104,16 @@ export default class ScrollContextConsumer extends Control {
    ): ReturnType<ScrollContainer['getScrollTop']> {
       return this._children.scrollContainer.getScrollTop(...args);
    }
+
+   /**
+    * Включает логированние событий изменения положения скролла.
+    * Можно включить логирование из консоли браузера выполнив команду
+    * require(['Controls/scroll'], (scroll) => {scroll.Container.setDebug(true)})
+    * @param debug
+    */
+   static setDebug(debug: boolean): void {
+       ScrollContainer.setDebug(debug);
+   }
 }
 
 /**

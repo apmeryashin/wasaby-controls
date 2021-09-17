@@ -175,11 +175,11 @@
    color: var(--text-color);
 }
 
+// region "<" icon size
 .controls-Back_size-l {
    width: var(--icon_l_width_headingBack);
    height: var(--icon_l_height_headingBack);
    padding-right: var(--offset_3xs);
-
 }
 
 .controls-Back_size-m {
@@ -188,23 +188,31 @@
    padding-right: var(--icon_m_offset_headingBack);
 }
 
-.controls-Back_size-s {
+.controls-Back_size-s,
+.controls-Back_new-icon {
    width: var(--icon_s_width_headingBack);
    height: var(--icon_s_height_headingBack);
    padding-right: var(--icon_s_offset_headingBack);
 }
 
-.controls-Back_size-l:before {
+.controls-Back_new-icon_size-5xl {
+   width: var(--new-icon_5xl_width_headingBack);
+   height: var(--new-icon_5xl_height_headingBack);
+   padding-right: var(--offset_3xs);
+}
+
+.controls-Back_size-l::before {
    background-size: var(--icon_l_width_headingBack) var(--icon_l_height_headingBack);
 }
 
-.controls-Back_size-m:before {
+.controls-Back_size-m::before {
    background-size: var(--icon_m_width_headingBack) var(--icon_m_height_headingBack);
 }
 
-.controls-Back_size-s:before {
+.controls-Back_size-s::before {
    background-size: var(--icon_s_width_headingBack) var(--icon_s_height_headingBack);
 }
+//endregion
 
 .controls-Back__wrapper {
    &:before {

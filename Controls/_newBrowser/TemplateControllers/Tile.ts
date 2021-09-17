@@ -51,13 +51,9 @@ export default class TileController extends BaseController<ITileConfig, TreeItem
     }
 
     getImageViewMode(item: TreeItem): string {
-        if (this.getImageVisibility() === 'hidden') {
-            return 'none';
-        } else {
-            return this._isNode(item)
-                ? this._viewModeConfig.node.imageViewMode
-                : this._viewModeConfig.leaf.imageViewMode;
-        }
+        return this._isNode(item)
+            ? this._viewModeConfig.node.imageViewMode
+            : this._viewModeConfig.leaf.imageViewMode;
     }
 
     getImageProportion(item: TreeItem): string {

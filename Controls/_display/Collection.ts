@@ -35,9 +35,8 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
-import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {TRoundBorder} from "Controls/_display/interface/ICollection";
-import {Footer} from 'Controls/_display/Footer';
+import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder} from 'Controls/interface';
+import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
 
@@ -99,6 +98,13 @@ export type ItemsFactory<T> = (options: object) => T;
 
 export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
 
+export enum MoreButtonVisibility {
+    // Кнопка "Еще" видна всегда
+    visible = 'visible',
+    // Кнопка "Ещё" должна быть скрыта в узле дерева если он является последним в коллекции
+    exceptLastNode = 'exceptLastNode'
+}
+
 export type StrategyConstructor<
    F extends IItemsStrategy<S, T>,
    S extends EntityModel = EntityModel,
@@ -155,6 +161,8 @@ export interface IOptions<
     footerTemplate?: TemplateFunction | string;
     stickyFooter?: boolean;
     stickyGroup?: boolean;
+    // Регулирует видимость кнопки "Еще"
+    moreButtonVisibility?: MoreButtonVisibility;
 }
 
 export interface ICollectionCounters {
@@ -705,7 +713,7 @@ export default class Collection<
 
     protected _$bottomPadding: string;
 
-    protected _$roundBorder: TRoundBorder;
+    protected _$roundBorder: IRoundBorder;
 
     protected _$emptyTemplate: TemplateFunction;
 
@@ -768,6 +776,11 @@ export default class Collection<
      * группировки.
      */
     protected _$importantItemProperties: string[];
+
+    /**
+     * Режим отображения кнопки "Ещё"
+     */
+    protected _$moreButtonVisibility: MoreButtonVisibility;
 
     /**
      * Возвращать локализованные значения для типов, поддерживающих локализацию
@@ -2371,7 +2384,7 @@ export default class Collection<
         return this._$stickyFooter;
     }
 
-    setRoundBorder(roundBorder: TRoundBorder): void {
+    setRoundBorder(roundBorder: IRoundBorder): void {
         if (!isEqual(this._$roundBorder, roundBorder)) {
             this._$roundBorder = roundBorder;
             this._updateItemsProperty('setRoundBorder', this._$roundBorder, 'setRoundBorder');
@@ -2654,6 +2667,10 @@ export default class Collection<
 
     protected _shouldAddEdgeSeparator(): boolean {
         return !this._$newDesign || !!this.getFooter();
+    }
+
+    getMoreButtonVisibility(): MoreButtonVisibility {
+        return this._$moreButtonVisibility;
     }
 
     getHasMoreData(): IHasMoreData {
@@ -3357,13 +3374,17 @@ export default class Collection<
             return;
         }
 
-        return new Footer({
+        return new Footer(this._getFooterOptions(options));
+    }
+
+    protected _getFooterOptions(options: IOptions): IFooterOptions {
+        return {
             owner: this,
             sticky: options.stickyFooter,
             contentTemplate: options.footerTemplate,
             style: this.getStyle(),
             theme: this.getTheme()
-        });
+        }
     }
     //endregion
 
@@ -4240,6 +4261,7 @@ Object.assign(Collection.prototype, {
     _$hiddenGroupPosition: 'first',
     _$footerTemplate: null,
     _$stickyFooter: false,
+    _$moreButtonVisibility: MoreButtonVisibility.visible,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
