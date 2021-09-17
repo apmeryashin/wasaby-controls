@@ -4319,7 +4319,6 @@ define([
             baseCtrl.reloadItem(1).addCallback((item) => {
                assert.equal(item.get('id'), 1);
                assert.equal(item.get('title'), 'Первый');
-               assert.isFalse(baseCtrl._itemReloaded);
                resolve();
             });
          });
