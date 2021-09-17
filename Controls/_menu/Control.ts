@@ -1026,6 +1026,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getTemplateOptions(item: CollectionItem<Model>): Promise<object> {
         const root: TKey = item.getContents().get(this._options.keyProperty);
+        const headerCaption = item.getContents().get(this._options.headerCaptionProperty);
         const isLoadedChildItems = this._isLoadedChildItems(root);
         const sourcePropertyConfig = item.getContents().get(this._options.sourceProperty);
         const dataLoadCallback = !isLoadedChildItems &&
@@ -1035,6 +1036,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 root: sourcePropertyConfig ? null : root,
                 bodyContentTemplate: 'Controls/_menu/Control',
                 dataLoadCallback,
+                headingCaption: headerCaption,
                 footerContentTemplate: this._options.nodeFooterTemplate,
                 footerItemData: {
                     key: root,
@@ -1044,7 +1046,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 emptyText: null,
                 showClose: false,
                 showHeader: false,
-                headerTemplate: null,
+                headerTemplate: headerCaption ? 'Controls/dropdown:HeaderTemplate' : null,
                 headerContentTemplate: null,
                 additionalProperty: null,
                 searchParam: null,

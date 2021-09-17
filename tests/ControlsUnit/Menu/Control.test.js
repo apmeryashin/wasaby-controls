@@ -819,6 +819,8 @@ define(
                }
             });
             expectedOptions.footerContentTemplate = defaultOptions.nodeFooterTemplate;
+            expectedOptions.headerTemplate = null;
+            expectedOptions.headingCaption = defaultOptions.headerCaption;
             expectedOptions.footerItemData = {
                item: item.getContents(),
                key: expectedOptions.root
@@ -827,7 +829,6 @@ define(
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showClose = false;
             expectedOptions.showHeader = false;
-            expectedOptions.headerTemplate = null;
             expectedOptions.headerContentTemplate = null;
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;

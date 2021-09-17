@@ -33,6 +33,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         multiSelect: options.multiSelect,
         typeShadow: options.typeShadow,
         selectorTemplate: options.selectorTemplate,
+        headerCaptionProperty: options.headerCaptionProperty,
         headerContentTemplate: options.headerContentTemplate,
         footerContentTemplate: options.footerContentTemplate || options.footerTemplate,
         footerItemData: options.footerItemData,
