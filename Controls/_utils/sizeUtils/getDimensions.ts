@@ -18,6 +18,66 @@ function getVisibleChildren(element: HTMLElement): Array<HTMLElement> {
     });
 }
 
+interface IVerticalDimensions {
+    height: number;
+    top: number;
+    bottom: number;
+}
+
+function getOrdinaryVerticalDimensions(element: HTMLElement, clear?: boolean): IVerticalDimensions {
+    const rect = getBoundingClientRect(element, clear);
+    return {
+        height: rect.height,
+        top: rect.top,
+        bottom: rect.bottom
+    };
+}
+
+function getContentsVerticalDimensions(element: HTMLElement, clear?: boolean): IVerticalDimensions {
+    if (element.children.length === 0) {
+        return {
+            height: 0,
+            top: 0,
+            bottom: 0
+        };
+    }
+    const children = element.children;
+    if (children.length === 1) {
+        const firstChild = children[0] as HTMLElement;
+        if (window.getComputedStyle(firstChild).display !== 'contents') {
+            return getOrdinaryVerticalDimensions(firstChild, clear);
+        } else {
+            return getContentsVerticalDimensions(firstChild, clear);
+        }
+    } else {
+        let topItem = children[0] as HTMLElement;
+        let bottomItem = children[children.length - 1] as HTMLElement;
+        if (window.getComputedStyle(topItem).display === 'contents') {
+            topItem = getVisibleChildren(topItem)[0];
+        }
+        const top = getOffsetTop(topItem);
+
+        if (window.getComputedStyle(bottomItem).display === 'contents') {
+            bottomItem = getVisibleChildren(bottomItem)[0];
+        }
+
+        const bottom = getOffsetTop(bottomItem) + getBoundingClientRect(bottomItem, clear).height;
+        return {
+            height: bottom - top,
+            top: top,
+            bottom: bottom
+        };
+    }
+}
+
+function getVerticalDimensions(element: HTMLElement, clear?: boolean): IVerticalDimensions {
+    if (window.getComputedStyle(element).display !== 'contents') {
+        return getOrdinaryVerticalDimensions(element, clear);
+    }
+
+    return getContentsVerticalDimensions(element, clear);
+}
+
 function getBoundingClientRect(element: HTMLElement, clear?: boolean, canUseGetDimensions?: boolean): ClientRect {
     let position;
 
@@ -72,4 +132,43 @@ export default function getDimensions(element: HTMLElement, clear?: boolean): Cl
     };
 
     return dimensions;
+}
+
+export function getDimensionsByRelativeParent(element: HTMLElement, clear?: boolean): ClientRect {
+    let dimensions: ClientRect = getBoundingClientRect(element, clear);
+
+    if (dimensions.width !== 0 || dimensions.height !== 0) {
+        return dimensions;
+    }
+
+    const visibleChildren = getVisibleChildren(element);
+
+    if (visibleChildren.length === 0) {
+        return dimensions;
+    }
+
+    const firstChildDimensions = getBoundingClientRect(visibleChildren[0], clear, true);
+    const lastChildDimensions = getBoundingClientRect(visibleChildren[visibleChildren.length - 1], clear, true);
+    const verticalDimensions = getVerticalDimensions(element, clear);
+
+    dimensions = {
+        width: lastChildDimensions.right - firstChildDimensions.left,
+        height: verticalDimensions.height,
+        top: verticalDimensions.top,
+        right: lastChildDimensions.right,
+        bottom: verticalDimensions.bottom,
+        left: firstChildDimensions.left
+    };
+
+    return dimensions;
+}
+
+export function getOffsetTop(element: HTMLElement): number {
+    if (window.getComputedStyle(element).display !== 'contents') {
+        return element.offsetTop;
+    }
+
+    const visibleChildren = getVisibleChildren(element);
+
+    return visibleChildren.length ? visibleChildren[0].offsetTop : 0;
 }

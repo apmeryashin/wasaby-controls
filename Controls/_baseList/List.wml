@@ -3,6 +3,7 @@
         name="listControl"
         template="{{_viewTemplate}}"
         viewName="{{_viewName}}"
+        itemsSelector="{{_itemsSelector}}"
         markerStrategy="{{_markerStrategy}}"
         plainItemsContainer="{{_plainItemsContainer}}"
         itemContainerGetter="{{_itemContainerGetter}}"

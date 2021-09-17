@@ -3,7 +3,7 @@
    width: var(--width_draggingTemplate);
    background: var(--background-color);
    border: var(--border-thickness) solid var(--border-color);
-   border-radius: var(--border-radius_draggingTemplate);
+   border-radius: var(--border-radius_s);
    box-shadow: var(--box-shadow_draggingTemplate);
    pointer-events: none;
    position: relative; // Для позиционирования draggingTemplate-text::after
@@ -11,9 +11,9 @@
 
 .controls-DragNDrop__draggingTemplate-icon {
    color: var(--unaccented_icon-color);
-   width: var(--image_width_draggingTemplate);
-   height: var(--image_height_draggingTemplate);
-   border-radius: var(--image_border-radius_draggingTemplate);
+   width: var(--size_l_image);
+   height: var(--size_l_image);
+   border-radius: var(--border-radius_m_image);
    margin: var(--offset_2xs) var(--offset_xs) var(--offset_2xs) var(--offset_2xs);
    opacity: var(--opacity_draggingTemplate);
    display: flex;
@@ -46,7 +46,7 @@
    position: absolute;
    right: 0;
    top: 0;
-   border-radius: 0 var(--border-radius_draggingTemplate) var(--border-radius_draggingTemplate) 0;
+   border-radius: 0 var(--border-radius_s) var(--border-radius_s) 0;
    background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--background-color_draggingTemplate));
 }
 

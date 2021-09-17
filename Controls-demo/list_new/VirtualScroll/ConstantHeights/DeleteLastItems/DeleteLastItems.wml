@@ -1,12 +1,13 @@
 <div class="controlsDemo__wrapper">
     <span class="controls-text-label controlsDemo__mb1">Удаление последних десяти записей, pageSize 100, virtualPageSize не задан, показ с конца</span>
-    <Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index totalCount="{{_itemsCount}}" pageSize="{{25}}" page="{{40}}" direction="backward">
+    <Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index totalCount="{{_itemsCount}}" pageSize="{{25}}" page="{{39}}" direction="backward">
         <ws:content>
             <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo__height500">
                 <Controls.list:View source="{{_viewSource}}"
                                     name="list"
                                     keyProperty="key"
-                                    navigation="{{_options.navigation}}">
+                                    on:drawItems="_drawItems()"
+                                    navigation="{{content.navigation}}">
                     <ws:virtualScrollConfig pageSize="{{40}}"/>
                 </Controls.list:View>
             </Controls.scroll:Container>

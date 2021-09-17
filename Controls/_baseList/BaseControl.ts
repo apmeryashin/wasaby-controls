@@ -370,11 +370,29 @@ const _private = {
         }
     },
 
-    initializeModel(self, options, list): void {
+    initializeModel(self: BaseControl, options: IBaseControlOptions, data: RecordSet): void {
         // Модели могло изначально не создаться (не передали receivedState и source)
         // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
-        if (!self._destroyed && list) {
-            self._initNewModel(options, list, options);
+        if (!self._destroyed && data) {
+            self._items = data;
+
+            self._onItemsReady(options, data);
+            if (options.collection) {
+                self._listViewModel = options.collection;
+            } else {
+                self._listViewModel = self._createNewModel(
+                    data,
+                    options,
+                    options.viewModelConstructor
+                );
+            }
+            self._afterItemsSet(options);
+
+            if (self._listViewModel) {
+                _private.initListViewModelHandler(self, self._listViewModel);
+            }
+            _private.prepareFooter(self, options, self._sourceController);
+
             self._shouldNotifyOnDrawItems = true;
         }
     },
@@ -897,7 +915,7 @@ const _private = {
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
             self._scrollController.setResetInEnd(direction === 'down');
-            self._reload(self._options, navigationQueryConfig).addCallback(() => {
+            self._reload(self._options, navigationQueryConfig).then(() => {
                 self._shouldNotResetPagingCache = false;
 
                 /**
@@ -924,7 +942,7 @@ const _private = {
                 } else {
                     scrollToEdgePromiseResolver();
                 }
-            });
+            }).catch((error) => error);
         } else if (direction === 'up') {
             self._scrollToFirstItem().then(() => {
                 self._notify('doScroll', ['top'], { bubbling: true });
@@ -1888,7 +1906,17 @@ const _private = {
     },
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        if (items.getCount()) {
+            this._loadedItems = items;
+        }
+
         if (!direction) {
+            this._loadedBySourceController = true;
+            if (this._isMounted && this._children.listView) {
+                this._children.listView.reset({
+                    keepScroll: this._keepScrollAfterReload
+                });
+            }
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -1905,9 +1933,6 @@ const _private = {
                 void 0;
         }
 
-        if (items.getCount()) {
-            this._loadedItems = items;
-        }
         _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
 
         _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -2430,6 +2455,7 @@ const _private = {
             collection: self._listViewModel,
             activeElement: options.activeElement,
             forceInitVirtualScroll: self._needScrollCalculation,
+            itemsSelector: options.itemsSelector,
             notifyKeyOnRender: options.notifyKeyOnRender
         });
         const result = self._scrollController.handleResetItems();
@@ -2948,6 +2974,7 @@ export interface IBaseControlOptions extends IControlOptions, ISourceOptions, II
     sourceController?: SourceController;
     items?: RecordSet;
     searchValue?: string;
+    hasItemWithImage: boolean;
 }
 
 export default class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions>
@@ -2964,6 +2991,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _markedKeyForRestoredScroll = null;
 
     _updateInProgress = false;
+
+    _hasItemWithImageChanged = false;
 
     _isMounted = false;
 
@@ -2986,7 +3015,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _observersController: ObserversController;
 
     protected _listViewModel: Collection = null;
-    _viewModelConstructor = null;
     protected _items: RecordSet;
 
     _loadMoreCaption = null;
@@ -3198,24 +3226,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return state === 'sync' ? void 0 : result;
     }
 
-    _initNewModel(cfg, data, viewModelConfig) {
-        this._items = data;
-
-        this._onItemsReady(cfg, data);
-        this._listViewModel = this._createNewModel(
-            data,
-            viewModelConfig,
-            cfg.viewModelConstructor
-        );
-        this._afterItemsSet(cfg);
-
-        if (this._listViewModel) {
-            _private.initListViewModelHandler(this, this._listViewModel);
-        }
-        this._shouldNotifyOnDrawItems = true;
-        _private.prepareFooter(this, cfg, this._sourceController);
-    }
-
     protected _onItemsReady(options, items): void {
         if (options.itemsReadyCallback) {
             options.itemsReadyCallback(items);
@@ -3266,28 +3276,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             collapsedGroups: collapsedGroups || newOptions.collapsedGroups
         };
 
-        self._viewModelConstructor = newOptions.viewModelConstructor;
-        if (items) {
-            self._onItemsReady(newOptions, items);
-            self._listViewModel = self._createNewModel(
-                items,
-                viewModelConfig,
-                newOptions.viewModelConstructor
-            );
-            self._afterItemsSet(newOptions);
-        } else {
-            const emptyItems = new RecordSet();
-            self._listViewModel = self._createNewModel(
-                emptyItems,
-                viewModelConfig,
-                newOptions.viewModelConstructor
-            );
-        }
-
-        if (self._listViewModel) {
-            self._shouldNotifyOnDrawItems = true;
-            _private.initListViewModelHandler(self, self._listViewModel);
-        }
+        _private.initializeModel(self, viewModelConfig, items || new RecordSet());
 
         if (items) {
             _private.setHasMoreData(self._listViewModel, _private.getHasMoreData(self), true);
@@ -3453,7 +3442,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
-                    _private.doAfterUpdate(this, () => {if (this._scrollController?.getParamsToRestoreScrollPosition()) {
+                _private.doAfterUpdate(this, () => {
+                    if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                         return;
                     }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
@@ -3587,7 +3577,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // на мобильных устройствах не сработает mouseEnter, поэтому ромашку сверху добавляем сразу после моунта
         // до моунта нельзя, т.к. нельзя будет проскроллить
         if (detection.isMobilePlatform && this._indicatorsController.shouldDisplayTopIndicator()) {
-            this._indicatorsController.displayTopIndicator(true);
+            this._indicatorsController.displayTopIndicator(true, false, false);
         }
         // если элементов не хватает на всю страницу, то сразу же показываем ромашки и триггеры, чтобы догрузить данные
         if (this._viewSize < this._viewportSize) {
@@ -3715,12 +3705,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const loadStarted = newOptions.loading && !this._options.loading;
+        const loadedBySourceController = this._loadedBySourceController;
         let updateResult;
         let isItemsResetFromSourceController = false;
-
-        this._loadedBySourceController =
-            newOptions.sourceController &&
-            this._options.loading !== newOptions.loading && this._options.loading;
 
         const isSourceControllerLoadingNow =
             newOptions.sourceController &&
@@ -3741,7 +3728,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = newOptions.viewModelConstructor !== this._viewModelConstructor ||
+        const oldViewModelConstructorChanged = newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
         if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
@@ -3766,21 +3753,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if ((oldViewModelConstructorChanged || !!newOptions._recreateCollection) && this._listViewModel) {
-            this._viewModelConstructor = newOptions.viewModelConstructor;
+        if (newOptions.viewModelConstructor && (oldViewModelConstructorChanged || !!newOptions._recreateCollection) && this._listViewModel) {
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
             this._listViewModel.destroy();
 
             this._noDataBeforeReload = !(items && items.getCount());
-            if (newOptions.viewModelConstructor) {
-                this._listViewModel = this._createNewModel(
-                    items,
-                    {...newOptions, keyProperty: this._keyProperty},
-                    newOptions.viewModelConstructor
-                );
-            }
+            _private.initializeModel(this, {...newOptions, keyProperty: this._keyProperty}, items);
+
             // observersController нужно обновить до скроллКонтроллера, т.к. scrollController получает опции из _observersController
             this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
@@ -3788,10 +3769,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
 
-            _private.initListViewModelHandler(this, this._listViewModel);
             this._modelRecreated = true;
-            this._onItemsReady(newOptions, items);
-            this._shouldNotifyOnDrawItems = true;
 
             _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
         } else {
@@ -3881,6 +3859,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
                 _private.initVisibleItemActions(this, newOptions);
                 this._updateScrollController(newOptions);
+
+                if (loadedBySourceController) {
+                    this._indicatorsController.recountIndicators('all', true);
+                }
             }
 
             if (newOptions.sourceController) {
@@ -3888,9 +3870,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.executeAfterReloadCallbacks(this, this._items, newOptions);
                 }
 
-                if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
+                if (loadedBySourceController && !this._sourceController.getLoadError()) {
                     if (this._listViewModel) {
                         this._listViewModel.setHasMoreData(_private.getHasMoreData(this));
+                    }
+                    if (!this._shouldNotResetPagingCache) {
+                        this._cachedPagingState = false;
                     }
                     _private.resetScrollAfterLoad(this);
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
@@ -3985,9 +3970,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.setHasMoreData(this._listViewModel, _private.getHasMoreData(this));
 
                     if (this._pagingNavigation &&
-                        !this._pagingNavigationVisible &&
                         this._items &&
-                        this._loadedBySourceController) {
+                        loadedBySourceController) {
                         _private.updatePagingData(this, this._items.getMetaData().more, this._options);
                     }
                 }
@@ -4005,6 +3989,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // Если поменялись ItemActions, то закрываем свайп
         if (newOptions.itemActions !== this._options.itemActions) {
             _private.closeSwipe(this);
+        }
+
+        if (newOptions.hasItemWithImage !== this._options.hasItemWithImage) {
+            this._hasItemWithImageChanged = true;
         }
 
         /*
@@ -4223,8 +4211,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        if (this._scrollController && this._scrollController.getParamsToRestoreScrollPosition()) {
-            this._notify('saveScrollPosition', [], {bubbling: true});
+        // save scroll
+        let directionToRestoreScroll = this._scrollController &&
+            this._scrollController.getParamsToRestoreScrollPosition();
+        if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+            directionToRestoreScroll = 'up';
+        }
+        if (directionToRestoreScroll) {
+            this._scrollController.saveEdgeItem(directionToRestoreScroll, this._getItemsContainer());
         }
     }
 
@@ -4296,13 +4290,20 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._drawingIndicatorDirection = null;
             }
 
-            const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
-            if (paramsToRestoreScroll) {
-                this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition',
-                             [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
-                             {bubbling: true});
+            // restore scroll
+            let directionToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
+            if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+                directionToRestoreScroll = 'up';
             }
+            if (directionToRestoreScroll) {
+                const newScrollTop = this._scrollController.getScrollTopToEdgeItem(directionToRestoreScroll,
+                    this._getItemsContainer());
+                this._scrollController.beforeRestoreScrollPosition();
+                this._hasItemWithImageChanged = false;
+                this._notify('doScroll', [newScrollTop, true], { bubbling: true });
+            }
+
+            this._indicatorsController.afterRenderCallback();
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4314,7 +4315,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             const scrollToItemContinued = this._scrollController.continueScrollToItemIfNeed();
             const virtualScrollCompleted = this._scrollController.completeVirtualScrollIfNeed();
-            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || paramsToRestoreScroll;
+            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || directionToRestoreScroll;
 
             if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
@@ -4348,6 +4349,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 _private.updateScrollPagingButtons(this, {...this._getScrollParams(), initial: !this._scrolled});
             }
         }
+        this._loadedBySourceController = false;
 
         if (this.callbackAfterRender) {
             this.callbackAfterRender.forEach((callback) => {
@@ -4461,7 +4463,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _afterUpdate(oldOptions): void {
-        this._loadedBySourceController = false;
         if (!this._sourceController?.getLoadError()) {
             if (!this._observerRegistered) {
                 this._registerObserver();
@@ -4667,83 +4668,24 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        const resDeferred = new Deferred();
-        const self = this;
-
-        self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
-
-        if (self._sourceController) {
-            self._indicatorsController.endDisplayPortionedSearch();
-            self._displayGlobalIndicator();
-            // Need to create new Deffered, returned success result
-            // load() method may be fired with errback
-            _private.setReloadingState(self, true);
-            self._sourceController.reload(sourceConfig).addCallback(function(list) {
-                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
-                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
-                if (self._destroyed) {
-                    resDeferred.callback(null);
-                    return;
-                }
-                _private.doAfterUpdate(self, () => {
-                    _private.setReloadingState(self, false);
-
-                    if (list.getCount()) {
-                        self._loadedItems = list;
-                    }
-                    if (self._pagingNavigation) {
-                        const hasMoreDataDown = list.getMetaData().more;
-                        _private.updatePagingData(self, hasMoreDataDown, self._options);
-                    }
-                    let listModel = self._listViewModel;
-
-                    if (!self._shouldNotResetPagingCache) {
-                        self._cachedPagingState = false;
-                    }
-
-                    if (listModel) {
-                        if (self._sourceController) {
-                            if (self._sourceController.getItems() !== self._items || !self._items) {
-                                // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
-                                // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
-                                // выполняется в колбеке после обновления (doAfterUpdate).
-                                _private.assignItemsToModel(self, list, self._options);
-                            } else if (cfg.itemsSetCallback) {
-                                cfg.itemsSetCallback(self._items);
-                            }
-                            _private.setHasMoreData(listModel, _private.getHasMoreData(self));
+    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<RecordSet|null|void> {
+        return new Promise((resolve) => {
+            if (this._sourceController) {
+                this._indicatorsController.endDisplayPortionedSearch();
+                this._sourceController.reload(sourceConfig)
+                    .then((list) => {
+                        if (this._destroyed) {
+                            resolve(null);
+                            return;
                         }
 
-                        if (self._loadedItems) {
-                            self._shouldRestoreScrollPosition = true;
-                        }
-                        // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
-                        if (self._itemsChanged) {
-                            self._shouldNotifyOnDrawItems = true;
-                        }
-                    } else {
-                        _private.initializeModel(self, cfg, list);
-                    }
-                    _private.prepareFooter(self, self._options, self._sourceController);
-
-                    resDeferred.callback(list);
-                    _private.resetScrollAfterLoad(self);
-                    _private.tryLoadToDirectionAgain(self, list);
-                });
-            });
-        } else {
-            self._afterReloadCallback(cfg);
-            resDeferred.callback();
-            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
-        }
-        return resDeferred.addCallback((result) => {
-            if (self._isMounted && self._children.listView) {
-                self._children.listView.reset({
-                    keepScroll: self._keepScrollAfterReload
-                });
+                        resolve(list as RecordSet);
+                    })
+                    .catch((error) => error);
+            } else {
+                resolve(void 0);
+                Logger.error('BaseControl: Source option is undefined. Can\'t load data', this);
             }
-            return result;
         });
     }
 
@@ -6177,7 +6119,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _createNewModel(items, modelConfig, modelName): void {
+    _createNewModel(items, modelConfig, modelName): Collection {
         return diCreate(modelName, {
             ...modelConfig,
             collection: items,
@@ -6221,7 +6163,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     // Уйдет когда будем наследоваться от baseControl
-    protected _getItemsContainer() {}
+    protected _getItemsContainer(): HTMLElement {}
     getItemsContainer() {
         return this._getItemsContainer();
     }
@@ -6306,33 +6248,29 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _observeScrollHandler(_: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         if (this._needScrollCalculation) {
             switch (eventName) {
-                case 'scrollMoveSync':
-                    this.scrollMoveSyncHandler(params);
-                    break;
-                case 'viewportResize':
-                    this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
-                    break;
                 case 'virtualScrollMove':
                     _private.throttledVirtualScrollPositionChanged(this, params);
                     break;
                 case 'canScroll':
                     this.canScrollHandler(params);
                     break;
-                case 'scrollMove':
-                    this.scrollMoveHandler(params);
-                    break;
                 case 'cantScroll':
                     this.cantScrollHandler(params);
                     break;
             }
-        } else {
-            switch (eventName) {
-                case 'viewportResize':
-                    // размеры вью порта нужно знать всегда, независимо от navigation,
-                    // т.к. по ним рисуется глобальная ромашка
-                    this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
-                    break;
-            }
+        }
+        switch (eventName) {
+            case 'scrollMove':
+                this.scrollMoveHandler(params);
+                break;
+            case 'scrollMoveSync':
+                this.scrollMoveSyncHandler(params);
+                break;
+            case 'viewportResize':
+                // размеры вью порта нужно знать всегда, независимо от navigation,
+                // т.к. по ним рисуется глобальная ромашка
+                this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
+                break;
         }
     }
 

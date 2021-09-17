@@ -4,10 +4,8 @@ import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
 import {mixin} from 'Types/util';
 import {TreeItem} from 'Controls/display';
 
-export type TImageVisibility = 'hidden' | 'visible';
 export interface ITemplateControllerOptions {
     listConfiguration: IBrowserViewConfig;
-    imageVisibility: TImageVisibility;
     browserOptions: IOptions;
 }
 
@@ -17,7 +15,6 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
         OptionsToPropertyMixin
 ) {
     protected _$listConfiguration: IBrowserViewConfig = null;
-    protected _$imageVisibility: TImageVisibility = null;
     protected _$browserOptions: IOptions = null;
     protected _viewModeConfig: T;
 
@@ -30,17 +27,6 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
 
     get imageProperty(): string {
         return this._$browserOptions.detail.imageProperty;
-    }
-
-    getImageVisibility(): TImageVisibility {
-        return this._$imageVisibility;
-    }
-
-    setImageVisibility(visibility: TImageVisibility): void {
-        if (this.getImageVisibility() !== visibility) {
-            this._$imageVisibility = visibility;
-            this._nextVersion();
-        }
     }
 
     getDescription(item: TreeItem): string {

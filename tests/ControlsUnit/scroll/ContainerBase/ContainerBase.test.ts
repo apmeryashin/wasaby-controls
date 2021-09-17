@@ -1,10 +1,12 @@
 import { assert } from 'chai';
 import {fake, assert as sinonAssert} from 'sinon';
 
+import {Logger} from 'UICommon/Utils';
 import {_ContainerBase as ContainerBase} from 'Controls/scroll';
 import {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
+import * as Env from 'Env/Env';
 
 var global = (function() { return this || (0,eval)('this') })();
 
@@ -532,6 +534,24 @@ describe('Controls/scroll:ContainerBase', () => {
       });
    });
 
+   describe('Scroll Smooth', () => {
+      it('should instant scroll if browser is IE', () => {
+         const control = new ContainerBase(options);
+         const originalDetection = Env.detection.isIE11;
+         Env.detection.isIE11 = true;
+         const scrollToSpy = sinon.spy();
+         control._children = {
+            content: {
+               scrollTo: scrollToSpy
+            }
+         };
+
+         control._scrollTo(0, true);
+         sinon.assert.notCalled(scrollToSpy);
+         Env.detection.isIE11 = originalDetection;
+      });
+   });
+
    describe('horizontalScrollTo', () => {
       it('should scroll', () => {
          const control: ContainerBase = new ContainerBase(options);
@@ -795,4 +815,30 @@ describe('Controls/scroll:ContainerBase', () => {
       })
    });
 
+   describe('_logScrollPosition', () => {
+      it('не логирует положение скролла если логирование выключено', () => {
+         const control: ContainerBase = new ContainerBase(options);
+         sinon.stub(Logger, 'warn');
+
+         control._logScrollPosition(10, 10);
+
+         sinonAssert.notCalled(Logger.warn);
+         sinon.restore();
+      });
+
+      it('логирует положение скролла если логирование включено', () => {
+         const control: ContainerBase = new ContainerBase(options);
+         ContainerBase.setDebug(true);
+
+         sinon.stub(Logger, 'warn');
+
+         control._logScrollPosition(10, 10);
+
+         sinonAssert.calledWith(
+             Logger.warn,
+             'Controls/scroll:ContainerBase: изменение положения скролла. ' +
+             'По вертикали: новое 10, старое 0. По горизонтали: новое 10, старое 0.');
+         sinon.restore();
+      });
+   });
 });

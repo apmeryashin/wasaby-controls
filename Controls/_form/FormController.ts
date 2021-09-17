@@ -111,7 +111,7 @@ class FormController extends ControllerBase<IFormController> {
     ): Promise<ICrudResult> | void {
         this._errorController = options.errorController || new ErrorController({});
         this._crudController = new CrudController(options.source, this._notifyHandler.bind(this),
-            this.registerPendingNotifier.bind(this));
+            this.registerPendingNotifier.bind(this), this._notify.bind(this));
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
