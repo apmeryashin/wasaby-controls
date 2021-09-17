@@ -53,6 +53,7 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     private _savedListMarkedKey: TKey = null;
     private _isOperationsPanelVisible: boolean = false;
     private _selectedTypeRegister: RegisterClass = null;
+    private _selectedKeysCount: number = null;
     private _selectedKeysByList: IKeysByList = {};
     private _excludedKeysByList: IKeysByList = {};
     private _selectedKeysCountByList: ISelectedKeysCountByList = {};
@@ -164,6 +165,14 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
             excluded: this._$excludedKeys
         });
         return result;
+    }
+
+    setSelectedKeysCount(count: number): void {
+        this._selectedKeysCount = count;
+    }
+
+    getSelectedKeysCount(): number {
+        return this._selectedKeysCount;
     }
 
     getOperationsPanelVisible(): boolean {

@@ -186,10 +186,12 @@ export default class OperationsPanel extends Control<IOperationsPanelOptions> {
    }
 
    protected _itemClickHandler(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent): void {
-      this._notify('itemClick', [item, nativeEvent, {
+      const selectedKeysCount = this._options.operationsController?.getSelectedKeysCount();
+      const selection = {
          selected: this._options.selectedKeys,
          excluded: this._options.excludedKeys
-      }]);
+      };
+      this._notify('itemClick', [item, nativeEvent, selection, selectedKeysCount]);
    }
 }
 
