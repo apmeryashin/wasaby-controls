@@ -123,6 +123,7 @@ import ObserversController, {
     IObserversControllerOptions,
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
+import {MoreButtonVisibility} from 'Controls/_display/Collection';
 
 //#endregion
 
@@ -3404,7 +3405,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     // TODO Необходимо провести рефакторинг механизма подгрузки данных по задаче
     //  https://online.sbis.ru/opendoc.html?guid=8a5f7598-c7c2-4f3e-905f-9b2430c0b996
-    protected _loadMore(direction: IDirection): void {
+    protected _loadMore(direction: IDirection): Promise<RecordSet|void> | void {
         if (_private.isInfinityNavigation(this._options?.navigation) || _private.isDemandNavigation(this._options?.navigation)) {
             return _private.loadToDirectionIfNeed(this, direction, this._options.filter);
         }
@@ -4405,6 +4406,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
+    /**
+     * На основании настроек навигации определяет нужна ли подгрузка данных при скроле
+     */
     protected _shouldLoadOnScroll(direction: string): boolean {
         return _private.isInfinityNavigation(this._options.navigation);
     }
@@ -6187,6 +6191,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             unique: true,
             emptyTemplateOptions: {items, filter: modelConfig.filter},
             hasMoreData: _private.getHasMoreData(this),
+            // Если навигация по скролу то для дерева нужно скрывать кнопку "Ещё" для узла являющегося
+            // последней записью коллекции. Т.к. в этом случае подгрузка осуществляется по скролу.
+            // На самом деле условие показа кнопки более сложное, но здесь нам нужно на преобразовать
+            // информацию о навигации в информацию о режиме отображения кнопки, т.к. коллекция про навигацию
+            // знать не должна
+            moreButtonVisibility: _private.isInfinityNavigation(modelConfig.navigation)
+                ? MoreButtonVisibility.exceptLastNode
+                : MoreButtonVisibility.visible,
             // TODO LI нужно переименовать в portionedSearchTemplate, но нужно переименовывать и у прикладников
             portionedSearchTemplate: modelConfig.loadingIndicatorTemplate
         });

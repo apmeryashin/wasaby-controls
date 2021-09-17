@@ -376,6 +376,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             fromSuper.call(this);
         };
     }
+    //endregion
 
     // region Collection
 
