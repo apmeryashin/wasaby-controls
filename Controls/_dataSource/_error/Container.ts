@@ -1,9 +1,10 @@
-import { Control, TemplateFunction } from 'UI/Base';
+import { Control, IControlOptions, TemplateFunction } from 'UI/Base';
+import { TIState } from 'UICommon/interfaces';
 import * as template from 'wml!Controls/_dataSource/_error/Container';
 import { constants } from 'Env/Env';
 import { ErrorViewMode, Popup, ErrorViewConfig } from 'Controls/error';
 import { isEqual } from 'Types/object';
-import { default as IContainer, IContainerConfig } from './IContainer';
+import { Logger } from 'UI/Utils';
 /**
  * Нужно загружать стили для показа диалога сразу.
  * При возникновении ошибки они могут не загрузиться (нет связи или сервис недоступен).
@@ -20,6 +21,24 @@ type ContainerViewConfig<OptionsType = object> =
     ({ templateName?: string; } | { template?: TemplateFunction; });
 
 /**
+ * @interface Controls/_dataSource/_error/IErrorContainerOptions
+ * @author Северьянов А.А.
+ */
+interface IErrorContainerOptions extends IControlOptions {
+    /**
+     * @name Controls/_dataSource/_error/Container#viewConfig
+     * @cfg {Controls/error:ErrorViewConfig} Данные для отображения сообщения об ошибке.
+     */
+    viewConfig?: ErrorViewConfig;
+
+    /**
+     * @name Controls/_dataSource/_error/Container#isModalDialog
+     * @cfg {Controls/error:ErrorViewConfig} Открывать ли диалог модальным, если ошибка отобразится в диалоговом окне.
+     */
+    isModalDialog?: boolean;
+}
+
+/**
  * Компонент для отображения сообщения об ошибки на основе данных, полученных от контроллера {@link Controls/_dataSource/_error/Controller}.
  * Может отображать сообщение об ошибке разными способами:
  * - в диалоговом окне;
@@ -31,9 +50,10 @@ type ContainerViewConfig<OptionsType = object> =
  * @author Северьянов А.А.
  *
  */
-export default class Container extends Control<IContainerConfig> implements IContainer {
-    private _isUnmounted: boolean = false;
-    private __viewConfig: ContainerViewConfig; // tslint:disable-line:variable-name
+export default class Container
+    <TOptions extends IErrorContainerOptions, TState extends TIState>
+extends Control<TOptions, TState> {
+    private _viewConfig: ContainerViewConfig;
     private _popupHelper: Popup = new Popup();
     protected _template: TemplateFunction = template;
 
@@ -43,85 +63,50 @@ export default class Container extends Control<IContainerConfig> implements ICon
     private _popupId: string;
 
     /**
-     * Скрыть сообщение об ошибке.
+     * @deprecated
      * @function
      * @public
      */
     hide(): void {
-        if (this._isUnmounted) {
-            return;
-        }
-
-        const mode = this.__viewConfig.mode;
-        this.__setConfig(null);
-        if (mode === ErrorViewMode.dialog) {
-            return;
-        }
-        this._forceUpdate();
+        Logger.warn('Метод hide будет удален в 21.6100. Вместо него следует использовать опцию viewConfig', this);
     }
 
     /**
-     * Показать сообщение об ошибке.
+     * @deprecated
      * @param {Controls/_dataSource/_error/ViewConfig} viewConfig
      * @function
      * @public
      */
     show(viewConfig: ErrorViewConfig): void {
-        if (this._isUnmounted) {
-            return;
-        }
-
-        if (!this._openDialog(viewConfig)) {
-            return;
-        }
-
-        this.__setConfig(viewConfig);
-        this._forceUpdate();
+        Logger.warn('Метод show будет удален в 21.6100. Вместо него следует использовать опцию viewConfig', this);
     }
 
-    protected _beforeMount(options: IContainerConfig): void {
-        this.__updateConfig(options);
+    protected _beforeMount(options: IErrorContainerOptions): Promise<void> | void {
+        this._updateConfig(options.viewConfig);
     }
 
-    protected _beforeUpdate(options: IContainerConfig): void {
+    protected _beforeUpdate(options: IErrorContainerOptions): void {
         if (isEqual(this._options.viewConfig, options.viewConfig)) {
             return;
         }
 
-        this.__updateConfig(options);
-        this._openDialog(this.__viewConfig);
+        this._updateConfig(options.viewConfig);
+        this._openDialog(this._viewConfig);
 
         // обновляем опции списка, чтобы он корректно обновлялся
-        if (this.__viewConfig?.mode === ErrorViewMode.inlist) {
+        if (this._viewConfig?.mode === ErrorViewMode.inlist) {
             this._updateInlistOptions(options);
         }
     }
 
     protected _afterMount(): void {
-        this._openDialog(this.__viewConfig);
-    }
-
-    protected _beforeUnmount(): void {
-        this._closeDialog();
-        this._isUnmounted = true;
-    }
-
-    /**
-     * Закрыть ранее открытый диалог.
-     */
-    private _closeDialog(): void {
-        this._popupHelper.closeDialog(this._popupId);
-        this._popupId = null;
+        this._openDialog(this._viewConfig);
     }
 
     /**
      * Обработчик закрытия диалога.
      */
     private _onDialogClosed(): void {
-        if (this._isUnmounted) {
-            return;
-        }
-
         this._notify('dialogClosed', []);
         this._popupId = null;
     }
@@ -150,33 +135,25 @@ export default class Container extends Control<IContainerConfig> implements ICon
         });
     }
 
-    private __updateConfig(options: IContainerConfig): void {
-        this.__setConfig(options.viewConfig);
-
-        if (this.__viewConfig) {
-            this.__viewConfig.isShown = this.__viewConfig.isShown || this.__viewConfig.mode !== ErrorViewMode.dialog;
-        }
-    }
-
-    private __setConfig(viewConfig?: ErrorViewConfig): void {
+    private _updateConfig(viewConfig?: ContainerViewConfig): void {
         if (!viewConfig) {
-            this.__viewConfig = null;
+            this._viewConfig = null;
             return;
         }
-        let templateName: string;
-        if (typeof viewConfig.template === 'string') {
-            templateName = viewConfig.template;
-        }
-        this.__viewConfig = {
+
+        this._viewConfig = {
             ...viewConfig,
-            templateName
+            isShown: viewConfig.isShown || viewConfig.mode !== ErrorViewMode.dialog,
+            templateName: typeof viewConfig.template === 'string'
+                ? viewConfig.template
+                : undefined
         };
     }
 
-    private _updateInlistOptions(options: IContainerConfig): void {
-        this.__viewConfig.options = {
-            ...this.__viewConfig.options
+    private _updateInlistOptions(options: IErrorContainerOptions): void {
+        this._viewConfig.options = {
+            ...this._viewConfig.options
         };
-        (this.__viewConfig as ContainerViewConfig<IInlistTemplateOptions>).options.listOptions = options;
+        (this._viewConfig as ContainerViewConfig<IInlistTemplateOptions>).options.listOptions = options;
     }
 }

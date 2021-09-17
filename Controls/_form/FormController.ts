@@ -1,5 +1,5 @@
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import { TemplateFunction } from 'UI/Base';
+import { TemplateFunction, Control } from 'UI/Base';
 import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
 import { error as dataSourceError } from 'Controls/dataSource';
@@ -89,7 +89,7 @@ export const enum INITIALIZING_WAY {
 
 class FormController extends ControllerBase<IFormController> {
     protected _template: TemplateFunction = tmpl;
-    protected _errorContainer: dataSourceError.IContainerConstructor = dataSourceError.Container;
+    protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
     private _errorController: ErrorController;
