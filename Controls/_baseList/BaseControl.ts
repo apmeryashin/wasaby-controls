@@ -4327,15 +4327,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.activateEditingRow(this);
         }
 
-        // если загрузилась целая страница раньше чем прервался порционный поиск, то приостанавливаем его
-        // по стандарту в этом кейсе под страницей понимается viewport
-        // проверять по скрытию триггера загрузку страницы не лучшая идея, т.к. изначально может быть много данных,
-        // а первая порционная подгрузка тоже загрузит много данных => события скрытия триггера не будет.
-        const viewportFilled = this._viewSize > this._viewportSize;
-        if (this._indicatorsController.shouldStopDisplayPortionedSearch(viewportFilled)) {
-            this._indicatorsController.stopDisplayPortionedSearch();
-        }
-
         this._updateInProgress = false;
         if (this._finishScrollToEdgeOnDrawItems && this._shouldNotifyOnDrawItems) {
             this._finishScrollToEdgeOnDrawItems();
@@ -4355,6 +4346,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 callback();
             });
             this.callbackAfterRender = null;
+        }
+
+        // если загрузилась целая страница раньше чем прервался порционный поиск, то приостанавливаем его
+        // по стандарту в этом кейсе под страницей понимается viewport
+        // проверять по скрытию триггера загрузку страницы не лучшая идея, т.к. изначально может быть много данных,
+        // а первая порционная подгрузка тоже загрузит много данных => события скрытия триггера не будет.
+        const viewportFilled = this._viewSize > this._viewportSize;
+        if (this._indicatorsController.shouldStopDisplayPortionedSearch(viewportFilled)) {
+            this._indicatorsController.stopDisplayPortionedSearch();
         }
     }
 
