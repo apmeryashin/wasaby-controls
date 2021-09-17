@@ -12,8 +12,8 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
 import {Direction, IBaseSourceConfig, IHierarchyOptions, TKey} from 'Controls/interface';
-import {BaseControl, IBaseControlOptions, ISiblingStrategy} from 'Controls/baseList';
-import {Collection, CollectionItem, shouldDisplayNodeFooterTemplate, Tree, TreeItem} from 'Controls/display';
+import {BaseControl, IBaseControlOptions, IReloadItemOptions, ISiblingStrategy} from 'Controls/baseList';
+import {Collection, CollectionItem, Tree, TreeItem} from 'Controls/display';
 import { selectionToRecord } from 'Controls/operations';
 import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
 import { MouseButtons, MouseUp } from 'Controls/popup';
@@ -25,7 +25,7 @@ import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {IDragObject} from 'Controls/_dragnDrop/Container';
+import {convertReloadItemArgs} from 'Controls/baseList';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -273,7 +273,7 @@ const _private = {
     },
 
     resetExpandedItems(self: TreeControl): void {
-        const viewModel = self.getViewModel();
+        const viewModel = self.getViewModel() as Tree;
         const reset = () => {
             viewModel.setHasMoreStorage({});
             self._expandController.resetExpandedItems();
@@ -314,43 +314,93 @@ const _private = {
         self._expandController.applyStateToModel();
     },
 
-    reloadItem(self: TreeControl, key: TKey) {
+    /**
+     * Выполняет запрос на перезагрузку указанной записи, всех её родительских и развернутых дочерних узлов.
+     */
+    reloadItem(self: TreeControl, key: TKey): Promise<RecordSet> {
+        const ops = self._options;
+        const filter = cClone(ops.filter);
+        const viewModel = self.getViewModel() as Tree;
         const baseSourceController = self.getSourceController();
-        const viewModel = self._listViewModel;
-        const filter = cClone(self._options.filter);
-        const nodes = [key !== undefined ? key : null];
-        const nodeProperty = self._options.nodeProperty;
 
-        filter[self._options.parentProperty] =
-            nodes.concat(_private.getReloadableNodes(viewModel, key, self._keyProperty, nodeProperty));
+        filter[ops.parentProperty] = _private.getReloadableNodes(self, viewModel, key);
 
-        return baseSourceController.load(undefined, key, filter).addCallback((result) => {
-            _private.applyReloadedNodes(self, viewModel, key, self._keyProperty, nodeProperty, result);
-            viewModel.setHasMoreStorage(
-                _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
-            );
-            return result;
-        });
+        return baseSourceController
+            .load(undefined, key, filter)
+            .addCallback((result) => {
+                _private.applyReloadedNodes(self, viewModel, key, self._keyProperty, result);
+
+                const meta = result.getMetaData();
+                if (meta.results) {
+                    viewModel.setMetaResults(meta.results);
+                }
+
+                viewModel.setHasMoreStorage(
+                    _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
+                );
+                return result;
+            });
     },
 
-    getReloadableNodes(viewModel, nodeKey, keyProp, nodeProp) {
-        var nodes = [];
-        _private.nodeChildsIterator(viewModel, nodeKey, nodeProp, function(elem) {
-            nodes.push(elem.get(keyProp));
+    /**
+     * Относительно переданного nodeKey собирает идентификаторы родительских и дочерних раскрытых узлов.
+     */
+    getReloadableNodes(self: TreeControl, viewModel: Tree, nodeKey: TKey): TKey[] {
+        // Условие про undefined не понятное, просто оставил как было
+        const nodes = [nodeKey !== undefined ? nodeKey : null];
+        const item = viewModel.getItemBySourceKey(nodeKey);
+
+        if (!item) {
+            return nodes;
+        }
+
+        //region Собираем идентификаторы родительских узлов
+        let parent = item.getParent();
+        const root = viewModel.getRoot();
+
+        // Добавляем идентификаторы родительских узлов
+        while (parent !== root) {
+            nodes.unshift(parent.getContents().getKey());
+            parent = parent.getParent();
+        }
+
+        // Добавляем идентификатор корня
+        nodes.unshift(root.getContents());
+        //endregion
+
+        // Собираем идентификаторы дочерних раскрытых узлов
+        _private.nodeChildrenIterator(viewModel, nodeKey, (elem) => {
+            const key = elem.getKey();
+
+            // Не добавляем узел если он свернут, т.к. если данных не было то и незачем их обновлять
+            if (self._expandController.isItemExpanded(key)) {
+                nodes.push(key);
+            }
         });
+
         return nodes;
     },
 
-    applyReloadedNodes(self: TreeControl, viewModel, nodeKey, keyProp, nodeProp, newItems) {
-        var itemsToRemove = [];
-        var items = viewModel.getCollection();
-        var checkItemForRemove = function(item) {
+    /**
+     * После перезагрузки записи, её родительских в дочерних узлов удаляет удаляет из коллекции записи, отсутствующие
+     * в новом наборе.
+     */
+    applyReloadedNodes(
+        self: TreeControl,
+        viewModel: Tree,
+        nodeKey: TKey,
+        keyProp: string,
+        newItems: RecordSet
+    ): void {
+        const itemsToRemove = [];
+        const items = viewModel.getCollection() as unknown as RecordSet;
+        const checkItemForRemove = (item) => {
             if (newItems.getIndexByValue(keyProp, item.get(keyProp)) === -1) {
                 itemsToRemove.push(item);
             }
         };
 
-        _private.nodeChildsIterator(viewModel, nodeKey, nodeProp, checkItemForRemove, checkItemForRemove);
+        _private.nodeChildrenIterator(viewModel, nodeKey, checkItemForRemove, checkItemForRemove);
 
         items.setEventRaising(false, true);
 
@@ -361,24 +411,41 @@ const _private = {
         items.setEventRaising(true, true);
     },
 
-    nodeChildsIterator(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
-        var findChildNodesRecursive = function(key) {
-            const item = viewModel.getItemBySourceKey(key);
-            if (item) {
-                viewModel.getChildren(item).forEach(function(elem) {
-                    if (elem.isNode() !== null) {
-                        if (nodeCallback) {
-                            nodeCallback(elem.getContents());
-                        }
-                        findChildNodesRecursive(elem.getContents().get(nodeProp));
-                    } else if (leafCallback) {
+    /**
+     * Рекурсивно итерируется по всем дочерним записям и для каждой записи вызывает либо nodeCallback либо leafCallback.
+     * @param viewModel - коллекция по которой итерируемся
+     * @param nodeKey - идентификатор узла с дочерних записей которого начинаем перебор
+     * @param nodeCallback - ф-ия обратного вызова, которая будет вызвана для все дочерних узлов
+     * @param leafCallback - ф-ия обратного вызова, которая будет вызвана для все дочерних листов
+     */
+    nodeChildrenIterator(
+        viewModel: Tree,
+        nodeKey: TKey,
+        nodeCallback: (item: Model) => void,
+        leafCallback?: (item: Model) => void
+    ): void {
+        const item = viewModel.getItemBySourceKey(nodeKey);
+
+        if (!item) {
+            return;
+        }
+
+        viewModel
+            .getChildren(item)
+            .forEach((elem) => {
+                if (elem.isNode() === null) {
+                    if (leafCallback) {
                         leafCallback(elem.getContents());
                     }
-                });
-            }
-        };
+                    return;
+                }
 
-        findChildNodesRecursive(nodeKey);
+                if (nodeCallback) {
+                    nodeCallback(elem.getContents());
+                }
+
+                _private.nodeChildrenIterator(viewModel, elem.getContents().getKey(), nodeCallback, leafCallback);
+            });
     },
 
     getOriginalSource(source) {
@@ -846,16 +913,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return super.reload(keepScroll, sourceConfig);
     }
 
-    protected reloadItem(key, readMeta, direction): Promise<unknown> {
-        let result;
+    reloadItem(key: TKey, options: IReloadItemOptions): Promise<Model> {
+        const newArgs = convertReloadItemArgs(...arguments);
 
-        if (direction === 'depth') {
-            result = _private.reloadItem(this, key);
-        } else {
-            result = super.reloadItem.apply(this, arguments);
-        }
-
-        return result;
+        return newArgs.options.hierarchyReload
+            ? _private.reloadItem(this, key)
+            : super.reloadItem.apply(this, [newArgs.key, newArgs.options]);
     }
 
     // region Drag
