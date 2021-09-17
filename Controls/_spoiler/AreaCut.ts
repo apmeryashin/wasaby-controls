@@ -37,6 +37,7 @@ class AreaCut extends Cut {
     }
 
     protected _beforeUpdate(options: IAreaCutOptions): void {
+        this._value = options.value;
         if (!options.readOnly && !this._firstEditPassed) {
             this._expanded = true;
         }
