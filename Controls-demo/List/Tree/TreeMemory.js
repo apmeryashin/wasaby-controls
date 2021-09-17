@@ -19,7 +19,7 @@ define('Controls-demo/List/Tree/TreeMemory', [
             var
                self = this,
                filter = query.getWhere(),
-               selection = filter.selection || filter.entries;
+                selection = filter.selection;
             query.where(function(item) {
                var itemKey = item.get('id');
                var folderId;
@@ -38,7 +38,7 @@ define('Controls-demo/List/Tree/TreeMemory', [
                   } else {
                      correct = item.get('Раздел') === folderId;
                   }
-                  if (selection && folderId === null) {
+                  if (selection) {
                      correct = itemIsSelected(self, itemKey, selection.get('marked'), selection.get('excluded'));
                   }
 
