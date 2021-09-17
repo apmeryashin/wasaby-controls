@@ -95,12 +95,10 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--link_hover_text-color_inline': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_hover_icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
-            '--pale_contrast_background-color': brightness === 'light' ?
-                    ZenWrapper.getColorWithOpacity(complementaryRGB, '0.2') :
-                    ZenWrapper.getColorWithOpacity(dominantRGB, '0.6'),
+            '--pale_contrast_background-color': ZenWrapper.getColorWithOpacity(dominantRGB, '0.6'),
             '--pale_border-color': 'transparent',
-            '--pale_hover_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
-            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
+            '--pale_hover_contrast_background-color': ZenWrapper.getColorWithOpacity(dominantRGB, '0.8'),
+            '--pale_active_contrast_background-color': ZenWrapper.getColorWithOpacity(dominantRGB, '1'),
             '--hover_background-color': brightness === 'dark' ?
                 ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1') :
                 ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.05')
@@ -123,7 +121,6 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
             '--readonly_border-color_button_functionalButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
             '--background-color_button_toolButton': ZenWrapper.getColor(dominantRGB),
             '--background-color_hover_button_toolButton': ZenWrapper.getColor(complementaryRGB),
-            '--pale_active_contrast_background-color': ZenWrapper.getColor(complementaryRGB),
             '--readonly_border-color_button_toolButton': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3')
         };
     }

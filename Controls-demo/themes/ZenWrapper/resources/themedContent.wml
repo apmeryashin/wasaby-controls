@@ -79,6 +79,7 @@
             <Controls.buttons:Button contrastBackground="{{true}}" viewMode="functionalButton" icon="icon-EmptyMessage" translucent="{{true}}" iconSize="s" iconStyle="contrast" buttonStyle="pale"></Controls.buttons:Button>
         </div>
         <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
+            <Controls.buttons:Button contrastBackground="{{true}}" viewMode="functionalButton" icon="icon-EmptyMessage"  iconSize="s" iconStyle="primary" buttonStyle="pale"></Controls.buttons:Button>
         </div>
     </div>
 
