@@ -33,7 +33,7 @@ describe('Controls/filter:ControllerClass', () => {
                 filter: {test: '123'},
                 prefetchParams: { PrefetchSessionId: 'test' }
             });
-            assert.deepEqual(filterController._filter, {
+            assert.deepEqual(filterController._$filter, {
                 test: '123',
                 PrefetchSessionId: 'test'
             });
@@ -164,7 +164,7 @@ describe('Controls/filter:ControllerClass', () => {
         sandbox.replace(controller, '_getHistoryByItems', () => historyItems);
 
         controller.handleDataError();
-        assert.deepEqual(controller._filter, {PrefetchSessionId: 'test'});
+        assert.deepEqual(controller._$filter, {PrefetchSessionId: 'test'});
   });
 
     it('resetPrefetch', () => {
@@ -176,12 +176,12 @@ describe('Controls/filter:ControllerClass', () => {
         });
 
          controller.resetPrefetch();
-         assert.deepEqual(controller._filter, {testField: 'testValue'});
+         assert.deepEqual(controller._$filter, {testField: 'testValue'});
     });
 
     it('updateFilterItems', () => {
         const filterController = new ControllerClass({});
-        filterController._filterButtonItems = getFilterButtonItems();
+        filterController._$filterButtonItems = getFilterButtonItems();
         const newFilterItems = [
             {
                 id: 'testId1',
@@ -293,7 +293,7 @@ describe('Controls/filter:ControllerClass', () => {
             filterController._options.filter = {
                 title: 'test2'
             };
-            filterController._filter = null;
+            filterController._$filter = null;
             // filter options is not changed
             filterController.update({
                 filter: {
