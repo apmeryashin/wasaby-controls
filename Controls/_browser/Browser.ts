@@ -455,7 +455,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
 
         if ((hasSearchValueInOptions && searchValueOptionsChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
-            if (!methodResult) {
+            if (!methodResult && newOptions.searchParam) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
                     return error;
