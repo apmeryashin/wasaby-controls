@@ -49,11 +49,11 @@ class Store implements IStore {
      * Получение значения из текущего стейта
      * @param propertyName название поля в стейте
      */
-    get<T>(propertyName: string): T | unknown {
+    get<T = unknown>(propertyName: string): T {
         const state = Store._getState()[Store._getActiveContext()] || {};
 
-        return state.hasOwnProperty(propertyName) ? state[propertyName] :
-            (Store._getState()[GLOBAL_CONTEXT_NAME] || {})[propertyName];
+        return (state.hasOwnProperty(propertyName) ? state[propertyName] :
+            (Store._getState()[GLOBAL_CONTEXT_NAME] || {})[propertyName]) as unknown as T;
     }
 
     /**
