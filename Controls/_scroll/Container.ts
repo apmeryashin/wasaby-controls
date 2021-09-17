@@ -687,7 +687,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     static _isCssShadowsSupported(): boolean {
         // Ie и Edge неправильно позиционируют фон со стилями
         // background-position: bottom и background-attachment: local
-        return !detection.isMobileIOS && !detection.isIE;
+        return !detection.isMobileIOS && !detection.isIE && !detection.isMobileAndroid;
     }
 
     static getOptionTypes(): object {
