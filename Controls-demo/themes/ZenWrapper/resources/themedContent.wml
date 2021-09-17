@@ -5,7 +5,6 @@
             <span class="controls-text-primary">controls-text-primary</span>
             <span class="controls-text-secondary">controls-text-secondary</span>
             <span class="controls-text-label">controls-text-label</span>
-            <span class="controls-text-link">controls-text-link</span>
             <span class="controls-text-unaccented">controls-text-unaccented</span>
             <span class="controls-text-readonly">controls-text-readonly</span>
         </div>
@@ -79,17 +78,9 @@
             <Controls.buttons:Button contrastBackground="{{true}}" viewMode="functionalButton" icon="icon-EmptyMessage" translucent="{{true}}" iconSize="s" iconStyle="contrast" buttonStyle="pale"></Controls.buttons:Button>
         </div>
         <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
-            <Controls.buttons:Button contrastBackground="{{true}}" viewMode="functionalButton" icon="icon-EmptyMessage"  iconSize="s" iconStyle="primary" buttonStyle="pale"></Controls.buttons:Button>
         </div>
     </div>
 
-    <div class="ws-flexbox controls-padding_top-l">
-        <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">
-            <Controls.input:Text placeholder="Placeholder" borderVisibility="visible"/>
-        </div>
-        <div class="ws-flexbox ws-flex-column ws-align-items-start controls-padding_left-l">
-        </div>
-    </div>
 
     <div class="ws-flexbox controls-padding_top-l">
         <div class="ws-flexbox ws-flex-column ws-align-items-start" style="width: 50%">

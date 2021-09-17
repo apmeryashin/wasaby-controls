@@ -318,7 +318,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _getMenuTemplateOptions(): IStickyPopupOptions {
         const options = this._options;
         const isVertical = options.direction === 'vertical';
-        const menuTemplateOptions: IStickyPopupOptions = {
+        return {
             groupTemplate: options.groupTemplate,
             groupProperty: options.groupProperty,
             groupingKeyCallback: options.groupingKeyCallback,
@@ -330,14 +330,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             itemTemplateProperty: options.itemTemplateProperty,
             closeButtonViewMode: isVertical ? 'external' : 'link',
         };
-
-        if (isVertical) {
-           menuTemplateOptions.itemPadding = {
-               left: 's'
-           };
-        }
-
-        return menuTemplateOptions;
     }
 
     private _getMenuConfigByItem(item: TItem, source: ICrudPlus, root: number, items: RecordSet): IStickyPopupOptions {

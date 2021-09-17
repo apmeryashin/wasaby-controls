@@ -1,11 +1,7 @@
 <Controls.buttons:Button
    iconSize="s"
    icon="icon-Burger"
-
-   inlineHeight="m"
-
-   buttonStyle="pale"
-   viewMode="functionalButton"
+   viewMode="toolButton"
 
    on:click="_openMenu()"
 />
