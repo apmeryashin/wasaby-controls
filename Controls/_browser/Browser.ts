@@ -1080,7 +1080,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 }
             })
             .then((result) => {
-                if (!this._destroyed) {
+                if (!this._destroyed && options.searchParam) {
                     return this._updateSearchController(options).then(() => result);
                 }
             });
