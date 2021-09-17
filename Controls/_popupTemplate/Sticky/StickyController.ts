@@ -385,7 +385,14 @@ export class StickyController extends BaseController {
     private _updateClasses(item: IStickyItem, popupCfg: IStickyPositionConfig): void {
         // Remove the previous classes of direction and add new ones
         this._removeOrientationClasses(item);
-        item.popupOptions.className = (item.popupOptions.className || '') + ' ' + this._getOrientationClasses(popupCfg);
+        if (item.popupOptions.className) {
+            item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');
+        }
+        item.popupOptions.className = (item.popupOptions.className || '') + ' controls-StickyTemplate-visibility' +
+            ' ' + this._getOrientationClasses(popupCfg);
+        if (item.popupOptions.actionOnScroll === 'track' && StickyStrategy.isVisibleTarget(item.popupOptions.target)) {
+            item.popupOptions.className += ' controls-StickyTemplate-visibility-hidden';
+        }
     }
 
     private _updateSizes(positionCfg: IStickyPositionConfig, popupOptions: IStickyPopupOptions): void {

@@ -6,7 +6,7 @@ import {detection, constants} from 'Env/Env';
 import {IPopupPosition} from 'Controls/popup';
 import {IStickyPositionConfig} from 'Controls/_popupTemplate/Sticky/StickyController';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
-import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {DimensionsMeasurer, getDimensions} from 'Controls/sizeUtils';
 
 let TouchKeyboardHelper = {};
 
@@ -463,6 +463,33 @@ export class StickyStrategy {
          scrollHeight: bodyDimensions.scrollHeight,
          width: bodyDimensions.clientWidth
       };
+   }
+
+   isVisibleTarget(target: HTMLElement): boolean {
+      const scrollContainer = this._getScrollContainer(target);
+      if (scrollContainer) {
+         const targetDimensions = getDimensions(target);
+         const scrollDimensions = getDimensions(scrollContainer);
+         if (targetDimensions.top < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   private _getScrollContainer(target: HTMLElement): HTMLElement {
+      let parent = target?.parentElement;
+      while (parent || parent !== document.body) {
+         const parentStyle = window.getComputedStyle(parent);
+         if ((parentStyle.overflowY === 'auto'
+             || parentStyle.overflowY === 'scroll'
+             || parent.className.indexOf('controls-Scroll__content_hidden') >= 0)
+             && (parent.scrollHeight > parent.clientHeight)) {
+            return parent;
+         }
+         parent = parent.parentElement;
+      }
+      return null;
    }
 
    private _getViewportHeight(element: HTMLElement): number {
