@@ -121,8 +121,9 @@ export class DialogStrategy {
         const isRightCoordinate = typeof popupItem.popupOptions.right !== 'undefined';
         const coordinate = isRightCoordinate ? 'right' : 'left';
         const horizontalCoordinate = this._getCoordinate(popupItem, coordinate);
+        const isMaximizePopup = popupItem.popupOptions.maximize;
 
-        if (topCoordinate === undefined && horizontalCoordinate === undefined) {
+        if ((topCoordinate === undefined && horizontalCoordinate === undefined) || isMaximizePopup) {
             return;
         }
 
