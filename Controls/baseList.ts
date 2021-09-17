@@ -9,7 +9,7 @@
  */
 
 //region interfaces
-export {IList} from './_baseList/interface/IList';
+export {IList, IReloadItemOptions} from './_baseList/interface/IList';
 export * from './_baseList/interface/IEditableList';
 export * from 'Controls/_baseList/interface/IMovableList';
 export {IVirtualScrollConfig} from './_baseList/interface/IVirtualScroll';
@@ -71,6 +71,7 @@ export {
 //endregion
 
 //region utils
+export * from './_baseList/resources/utils/helpers';
 export {getItemsBySelection} from './_baseList/resources/utils/getItemsBySelection';
 export {default as InertialScrolling} from './_baseList/resources/utils/InertialScrolling';
 export {CssClassList, createClassListCollection} from './_baseList/resources/utils/CssClassList';
