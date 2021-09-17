@@ -162,13 +162,16 @@
    margin-left: calc(var(--padding-horizontal_inputText) / (-1));
 }
 
-// Нельзя перебить стили из -internal-autofill-selected, поэтому задаем большой transition
+// Нельзя перебить стили из -internal-autofill-selected, поэтому задаем большой transition и тень с background-color
+// Задавать большой transition решает проблему до тех пор, пока не задан ws-hidden, если его задать и убрать, то заливка появляется.
+// Поэтому оставляем большой transition, и добавляем отображение тень, но на отражение тени также задаем большой transition
 // https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied
 /* stylelint-disable selector-max-pseudo-class */
 .controls-Field:-webkit-autofill,
 .controls-Field:-webkit-autofill:focus,
 .ws-is-hover .controls-Field:-webkit-autofill:hover {
-   transition: background-color 2147483647s ease-in-out 0s;
+   transition: background-color 2147483647s ease-in-out, color 2147483647s ease-in-out, box-shadow 2147483647s ease-in-out
+   box-shadow: inset 0 0 1000px var(--background-color);
 }
 
 .controls-InputBase__placeholder_readOnly {
