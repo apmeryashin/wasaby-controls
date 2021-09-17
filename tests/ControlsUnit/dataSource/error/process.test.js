@@ -98,27 +98,27 @@ define([
          });
       });
 
-      it('calls beforeOpenDialogCallback', () => {
+      it('calls onProcess', () => {
          const error = new Error();
          const viewConfig = {
             template: {},
             options: {}
          };
-         const beforeOpenDialogCallback = sinon.stub();
+         const onProcess = sinon.stub();
 
          return process({
             error,
             handlers: [() => viewConfig],
-            beforeOpenDialogCallback,
+            onProcess,
             _popupHelper
          }).then(() => {
-            assert.isTrue(beforeOpenDialogCallback.calledOnce, 'callback called');
+            assert.isTrue(onProcess.calledOnce, 'callback called');
 
-            const result = beforeOpenDialogCallback.getCall(0).args[0];
+            const result = onProcess.getCall(0).args[0];
             assert.deepEqual(result.template, viewConfig.template, 'callback called with viewConfig');
             assert.deepEqual(result.options, viewConfig.options, 'callback called with viewConfig');
             assert.isTrue(
-               beforeOpenDialogCallback.calledBefore(_popupHelper.openDialog),
+               onProcess.calledBefore(_popupHelper.openDialog),
                'callback called before openDialog');
          });
       });

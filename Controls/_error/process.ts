@@ -34,12 +34,12 @@ export interface IProcessOptions {
     postHandlers?: ErrorHandler[];
 
     /**
-     * @name Controls/_error/IProcess
+     * @name Controls/_error/IProcess#onProcess
      * @function
      * Функция, в которую передаётся конфиг для показа ошибки.
      * Функция вызывается перед показом диалога, в ней можно поменять конфигурацию для показа ошибки.
      */
-    beforeOpenDialogCallback?: (viewConfig: ErrorViewConfig) => void;
+    onProcess?: (viewConfig: ErrorViewConfig) => void;
     _popupHelper?: IPopupHelper;
 }
 
@@ -54,7 +54,7 @@ export interface IProcessOptions {
  * - handlers: Function[] - необязательный; массив дополнительных обработчиков ошибки, которые вызываются перед платформенными.
  * - postHandlers: Function[] - необязательный; массив дополнительных обработчиков ошибки, которые вызываются после платформенных.
  * - dialogOptions: {@link Controls/_popup/interface/IBaseOpener} - необязательный; параметры открываемого диалогового окна.
- * - beforeOpenDialogCallback: Function - необязательный; функция, в которую передаётся конфиг для показа ошибки.
+ * - onProcess: Function - необязательный; функция, в которую передаётся конфиг для показа ошибки.
  *
  * В случае обрыва соединения или недоступности сервисов ресурсы, необходимые для показа диалогового окна, могут
  * не загрузиться, в этом случае платформенное диалоговое окно открыть не получится и будет показан браузерный alert.
@@ -88,7 +88,7 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
         dialogEventHandlers,
         dialogOptions = {},
         postHandlers = [],
-        beforeOpenDialogCallback,
+        onProcess,
         _popupHelper = new Popup()
     } = options;
 
@@ -103,8 +103,8 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
             return;
         }
 
-        if (typeof beforeOpenDialogCallback === 'function') {
-            beforeOpenDialogCallback(viewConfig);
+        if (typeof onProcess === 'function') {
+            onProcess(viewConfig);
         }
 
         if (constants.isServerSide) {
