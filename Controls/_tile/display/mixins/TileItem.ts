@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
-import {ICollectionItemOptions} from 'Controls/display';
+import {ICollectionItemOptions, TRoundBorder} from 'Controls/display';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tile/utils/imageUtil';
 import * as ImageTemplate from 'wml!Controls/_tile/render/Image';
 import * as DefaultContent from 'wml!Controls/_tile/render/itemsContent/Default';
@@ -17,11 +17,9 @@ import Tile, {
     TImageUrlResolver, TTileMode, TTileScalingMode, TTileSize
 } from './Tile';
 import { TItemActionsPosition } from 'Controls/itemActions';
-import {ITileRoundBorder} from 'Controls/interface';
 import {TBackgroundColorStyle, TCursor } from 'Controls/list';
 import {toRgb, rgbaToString, rgbToRgba} from 'Controls/Utils/colorUtil';
 import {TPaddingSize} from 'Controls/interface';
-import {TImagePosition} from 'Controls/_tile/interface/IRichTemplate';
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 const DEFAULT_ITEM_IMAGE_FIT = 'none';
@@ -30,7 +28,7 @@ const DEFAULT_RICH_ITEM_IMAGE_FIT = 'cover';
 export type TTileItem = 'default'|'invisible'|'medium'|'preview'|'rich'|'small';
 export type TTitlePosition = 'underImage'|'onImage';
 export type TImageViewMode = 'rectangle'|'circle'|'ellipse'|'none';
-
+export type TImagePosition = 'top'|'left'|'right';
 export type TShadowVisibility = 'visible'|'hidden'|'onhover';
 export type TItemActionsPlace = 'wrapper'|'title';
 export type TImageSize = 's'|'m'|'l';
@@ -83,7 +81,7 @@ export interface IOptions<S extends Model = Model> extends ICollectionItemOption
     tileHeight: number;
     tileWidth: number;
     tileWidthProperty: string;
-    roundBorder: ITileRoundBorder;
+    roundBorder: TRoundBorder;
     imageProperty: string;
     imageFit: TImageFit;
     imageHeightProperty: string;
@@ -108,7 +106,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
     protected _$canShowActions: boolean;
 
-    protected _$roundBorder: ITileRoundBorder;
+    protected _$roundBorder: TRoundBorder;
 
     // region TileOptions
 
@@ -312,9 +310,8 @@ export default abstract class TileItem<T extends Model = Model> {
         }
 
         const sizeParams = object.clone(TILE_SIZES[this.getTileSize()]);
-        const isVertical = imagePosition === 'top' || imagePosition === 'bottom';
-        const tileSizes: ITileSize = sizeParams[isVertical ? 'vertical' : 'horizontal'];
-        if (isVertical) {
+        const tileSizes: ITileSize = sizeParams[imagePosition === 'top' ? 'vertical' : 'horizontal'];
+        if (imagePosition === 'top') {
             tileSizes.imageWidth = null;
             if (imageViewMode !== 'rectangle') {
                 tileSizes.imageHeight = null;
@@ -366,8 +363,7 @@ export default abstract class TileItem<T extends Model = Model> {
         imageProportion?: number
     ): boolean {
         if (itemType === 'rich') {
-            const isVertical = imagePosition === 'top' || imagePosition === 'bottom';
-            return isVertical && imageViewMode === 'rectangle' && !!imageProportion;
+            return imagePosition === 'top' && imageViewMode === 'rectangle' && !!imageProportion;
         } else {
             return !staticHeight && this.getTileMode() !== 'dynamic';
         }
@@ -907,6 +903,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
                 classes += getImageClasses(this.getImageFit(imageFit) || this.getDefaultImageFit(itemType));
 
+
                 // При установке отступа для изображений в виде прямоугольника
                 // к изображению применяется скругление углов.
                 if (contentPadding !== 'default' && contentPadding !== 'null' && imageViewMode === 'rectangle') {
@@ -973,12 +970,11 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes = ' controls-TileView__richTemplate_imageWrapper';
                 classes += this._getImageSpacingClasses(imageViewMode, imagePosition, contentPadding);
 
-                const isVertical = imagePosition === 'top' || imagePosition === 'bottom';
-                if (!imageProportionOnItem || imageViewMode !== 'rectangle' || !isVertical) {
-                    classes += ' controls-TileView__richTemplate_image_size_' +
+                if (!imageProportionOnItem || imageViewMode !== 'rectangle' || imagePosition !== 'top') {
+                    classes += ` controls-TileView__richTemplate_image_size_` +
                         `${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}`;
-                    classes += ' controls-TileView__richTemplate_image_size_' +
-                        `${imageSize}_position_${isVertical ? 'vertical' : 'horizontal'}`;
+                    classes += ` controls-TileView__richTemplate_image_size_` +
+                        `${imageSize}_position_${imagePosition !== 'top' ? 'horizontal' : 'top'}`;
                 }
                 break;
             case 'preview':
@@ -1860,12 +1856,8 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      * @param {string} description Описание
      * @param {number} descriptionLines Кол-во строк в описании
-     * @param {TImagePosition} imagePosition Позиция изображения
      */
-    shouldDisplayDescription(itemType: TTileItem = 'default',
-                             description: string,
-                             descriptionLines: number,
-                             imagePosition: TImagePosition): boolean {
+    shouldDisplayDescription(itemType: TTileItem = 'default', description: string, descriptionLines: number): boolean {
         switch (itemType) {
             case 'default':
             case 'small':
@@ -1873,7 +1865,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'preview':
                 return false;
             case 'rich':
-                return imagePosition !== 'bottom' && description && descriptionLines !== 0;
+                return description && descriptionLines !== 0;
         }
     }
 
@@ -1943,10 +1935,10 @@ export default abstract class TileItem<T extends Model = Model> {
 
     /**
      * Устанавливает скругление углов элемента
-     * @param {ITileRoundBorder} roundBorder Скругление углов элемента
+     * @param {TRoundBorder} roundBorder Скругление углов элемента
      * @void
      */
-    setRoundBorder(roundBorder: ITileRoundBorder): void {
+    setRoundBorder(roundBorder: TRoundBorder): void {
         if (!isEqual(this._$roundBorder, roundBorder)) {
             this._$roundBorder = roundBorder;
             this._nextVersion();

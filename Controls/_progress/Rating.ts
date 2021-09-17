@@ -2,17 +2,19 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_progress/Rating/Rating';
 import {detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import RatingViewModel from './Rating/RatingViewModel';
 import 'css!Controls/progress';
 
 type IconSize = 'default'|'2xs'|'xs'|'s'|'m'|'l';
 type IconStyle = 'warning'|'info'|'success'|'danger'|'secondary'|'primary'|'default'|'contrast'|'readonly';
 type IconPadding = 'null'|'3xs'|'2xs'|'xs'|'s'|'m'|'l'|'xl';
+type StarType = 'star'|'halfStar'|'emptyStar';
 
 const DEFAULT_ICON_SIZE = 's';
 const DEFAULT_ICON_PADDING = '3xs';
 const DEFAULT_ICON_STYLE = 'warning';
 const DEFAULT_EMPTY_ICON_STYLE = 'readonly';
+const HALF_OF_INTEGER = 50;
+const COUNT_STARS = 5;
 
 /**
  * Интерфейс опций для {@link Controls/progress:Rating}.
@@ -182,6 +184,63 @@ interface IRatingOptions extends IControlOptions {
     emptyIconStyle?: IconStyle;
 }
 
+interface IStar {
+    id: number;
+    type: StarType;
+    icon: string;
+}
+
+const _private = {
+    resolveStars(options: IRatingOptions, selectedStars?: number, halfStar?: boolean): void {
+        this._stars = [];
+        const selectStars = typeof selectedStars === 'number' ? selectedStars : this._selectStars;
+        const isHalfStar = typeof halfStar === 'boolean' ? halfStar : this._isHalfStar;
+        for (let i = 0; i < COUNT_STARS; i++) {
+            let type; let icon; let iconStyle;
+            if (i < selectStars) {
+                type = 'star';
+                icon = 'icon-Favorite';
+                iconStyle = options.iconStyle;
+            } else if (isHalfStar && i === selectStars) {
+                type = 'halfStar';
+                icon = 'icon-FavoriteHalf';
+                iconStyle = options.iconStyle;
+            } else {
+                type = 'emptyStar';
+                icon = 'icon-Unfavorite';
+                iconStyle = options.emptyIconStyle;
+            }
+            this._stars.push({
+                id: i,
+                type,
+                icon,
+                iconStyle
+            });
+        }
+    },
+    updateCountStars(event: SyntheticEvent<Event>, onlyVisibility: boolean): void {
+        const starId = event.target?.getAttribute('id');
+        if (starId) {
+            const idValue = starId.split('_')[0];
+            const newSelectStars = parseInt(idValue, 10) + 1;
+            if (newSelectStars) {
+                if (onlyVisibility) {
+                    _private.resolveStars.call(this, this._options, newSelectStars, false);
+                } else {
+                    this._selectStars = newSelectStars;
+                    if (this._isHalfStar !== null) {
+                        this._isHalfStar = false;
+                    }
+                    _private.resolveStars.call(this, this._options);
+                }
+            }
+        }
+    },
+    getHalfStar(precision: number): boolean {
+        return precision >= HALF_OF_INTEGER;
+    }
+};
+
 /**
  * Базовый компонент оценок
  * Отображает выделенные звезды в зависимости от оценки
@@ -208,68 +267,54 @@ interface IRatingOptions extends IControlOptions {
  */
 class Rating extends Control<IRatingOptions> {
     protected _template: TemplateFunction = template;
-    protected _viewModel: RatingViewModel;
-    protected _correctValue: number;                //TODO precision сделан неправильно, надо править прикладников
-    protected _correctPrecision: number;            //TODO precision сделан неправильно, надо править прикладников
+    protected _selectStars: number;
+    protected _isHalfStar: boolean;
+    protected _stars: IStar[];
 
     protected _beforeMount(options: IRatingOptions): void {
-        this._correctValue = options.value;
-        this._correctPrecision = options.precision ? 0.5 : 0;
-
-        if (this._correctPrecision) {
-            this._correctValue += options.precision / 100;
-        }
-
-        this._viewModel = new RatingViewModel({
-            value: this._correctValue,
-            precision: this._correctPrecision,
-            iconStyle: options.iconStyle,
-            emptyIconStyle: options.emptyIconStyle
-        });
+        this._selectStars = options.value;
+        this._isHalfStar = _private.getHalfStar(options.precision);
+        _private.resolveStars.call(this, options);
     }
 
     protected _beforeUpdate(options: IRatingOptions): void {
-        const valueChanged = this._options.value !== options.value;
+        const valueChanged = this._selectStars !== options.value;
         const precisionChanged = this._options.precision !== options.precision;
-        if (valueChanged || precisionChanged) {
-            this._correctValue = options.value;
-            this._correctPrecision = options.precision ? 0.5 : 0;
-
-            if (this._correctPrecision) {
-                this._correctValue += options.precision / 100;
-            }
+        if (valueChanged) {
+            this._selectStars = options.value;
         }
-
-        if (valueChanged || precisionChanged
-            || options.iconStyle !== this._options.iconStyle
+        if (precisionChanged) {
+            this._isHalfStar = _private.getHalfStar(options.precision);
+        }
+        if (valueChanged || precisionChanged || options.iconStyle !== this._options.iconStyle
             || options.emptyIconStyle !== this._options.emptyIconStyle) {
-
-            this._viewModel.setOptions({
-                value: this._correctValue,
-                precision: this._correctPrecision,
-                iconStyle: options.iconStyle,
-                emptyIconStyle: options.emptyIconStyle
-            });
+            _private.resolveStars.call(this, options);
         }
     }
 
-    private _onHoverStar(event: SyntheticEvent<Event>, id: number): void {
+    private _onHoverStar(event: SyntheticEvent<Event>): void {
         if (!this._options.readOnly && !detection.isMobilePlatform) {
-            this._viewModel.setValue(id);
+            _private.updateCountStars.call(this, event, true);
         }
     }
 
     private _onHoverOutStar(): void {
         if (!this._options.readOnly && !detection.isMobilePlatform) {
-            this._viewModel.setValue(this._correctValue);
+            this._selectStars = this._options.value;
+            if (this._isHalfStar !== null) {
+                this._isHalfStar = _private.getHalfStar(this._options.precision);
+            }
+            _private.resolveStars.call(this, this._options);
         }
     }
 
-    private _clickStar(event: SyntheticEvent<Event>, id: number): void {
+    private _clickStar(event: SyntheticEvent<Event>): void {
         if (!this._options.readOnly) {
-            if (this._options.value !== id) {
-                this._notify('valueChanged', [id]);
+            _private.updateCountStars.call(this, event);
+            if (this._selectStars !== this._options.value) {
+                this._notify('valueChanged', [this._selectStars]);
             }
+            this._isHalfStar = null;
             this._notify('precisionChanged', [0]);
         }
     }

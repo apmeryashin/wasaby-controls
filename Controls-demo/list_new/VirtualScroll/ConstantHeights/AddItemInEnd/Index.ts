@@ -15,15 +15,8 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
     private _itemsCount: number = 1000;
-    private _itemsReadyCallback: Function;
-    private _items = null;
-    private _scrollToLastItem: boolean = true;
 
-    protected _itemsReadyCallbackFn(items): void {
-        this._items = items;
-    }
-
-    private get _page(): number {
+    protected get _page(): number {
         // tslint:disable-next-line
         return Math.ceil(this._itemsCount / 100 );
     }
@@ -36,7 +29,7 @@ export default class extends Control {
         }
     });
 
-    private _addItem(): void {
+    protected _addItem(): void {
         this._viewSource.update(new RecordSet({
             rawData: [{
                 key: ++this._itemsCount,
@@ -44,27 +37,14 @@ export default class extends Control {
             }]
         }));
 
-        this._children.list.reload(true, {
-            page: 3,
-            pageSize: 300
-        }).then(() => {
-            this._scrollToLastItem = true;
-        });
+        this._children.list.reload();
     }
 
     protected _beforeMount(): void {
-        this._itemsReadyCallback = this._itemsReadyCallbackFn.bind(this);
         this._viewSource = new Memory({
             keyProperty: 'key',
             data: this.dataArray
         });
-    }
-
-    private _drawItems() {
-        if (this._scrollToLastItem) {
-            this._children.list.scrollToItem(this._items.at(this._items.getCount() - 1).getKey());
-            this._scrollToLastItem = false;
-        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

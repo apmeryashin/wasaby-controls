@@ -17,15 +17,6 @@ interface ICharacteristicsItem {
 }
 
 /**
- * @typedef {String} TImagePosition
- * @variant top Изображение отображается сверху.
- * @variant right Изображение отображается справа.
- * @variant bottom Изображение отображается снизу.
- * @variant left Изображение отображается слева.
- */
-export type TImagePosition = 'top'|'right'|'bottom'|'left';
-
-/**
  * "Богатый" шаблон отображения элементов в {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/IRichTemplate
  * @implements Controls/tile:ItemTemplate
@@ -77,13 +68,19 @@ export default interface IRichTemplateOptions {
     imageSize?: 's' | 'm' | 'l' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 
     /**
-     * @cfg {TImagePosition} Положение изображения.
+     * @typedef {String} ImagePosition
+     * @variant top Изображение отображается сверху.
+     * @variant left Изображение отображается слева.
+     * @variant right Изображение отображается справа.
+     */
+    /**
+     * @cfg {ImagePosition} Положение изображения.
      * @see imageSize
      * @see imageViewMode
      * @see nodesScaleSize
      * @see imageEffect
      */
-    imagePosition?: 'top' | 'right' | 'bottom' | 'left';
+    imagePosition?: 'top' | 'left' | 'right';
 
     /**
      * @typedef {String} TitlePosition
