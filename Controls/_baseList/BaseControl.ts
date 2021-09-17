@@ -845,9 +845,12 @@ const _private = {
             sourceController &&
             hasMoreData &&
             !sourceController.isLoading();
+        // в итеративном поиске подгрузка может быть в обе стороны, но мы ее не поддерживаем в данный момент полноценно,
+        // т.к. нет стандарта на это. Но во вторую сторону мы должны уметь грузить по скроллу.
         const allowLoadBySearch =
             !_private.isPortionedLoad(self) ||
-            self._indicatorsController.shouldContinueDisplayPortionedSearch();
+            self._indicatorsController.shouldContinueDisplayPortionedSearch(direction) ||
+            direction !== self._indicatorsController.getPortionedSearchDirection();
         // Если перетаскиваю все записи, то не нужно подгружать данные, но если тащат несколько записей,
         // то данные подгружаем. Т.к. во время днд можно скроллить и пользователь может захотеть утащить записи
         // далеко вниз, где список еще не прогружен
@@ -1158,6 +1161,7 @@ const _private = {
                 self._children.listView?.getTopLoadingTrigger(),
                 self._children.listView?.getBottomLoadingTrigger()
             );
+            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize);
         }
         return self._viewSize;
     },
@@ -1407,18 +1411,23 @@ const _private = {
                             !hasItems || self._hasMoreData('up'),
                             !hasItems || self._hasMoreData('down'),
                             self._children.listView?.getTopLoadingTrigger(),
-                            self._children.listView?.getBottomLoadingTrigger(),
+                            self._children.listView?.getBottomLoadingTrigger()
                         );
+                        if (self._hasMoreData('up')) {
+                            self._observersController.hideTopTrigger(self._children.listView?.getTopLoadingTrigger());
+                        }
                         break;
                     case IObservable.ACTION_ADD:
                         // При добавлении в список нужно отпустить триггер с нужной стороны,
                         // чтобы далее загрузка не требовала подскролла до ромашки
                         // TODO: https://online.sbis.ru/opendoc.html?guid=a6bc9564-4072-4bb6-b562-d98fa0282018
-                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                        // Вверх вставляют данные, только если список не пустой, т.к. в пустой список можно вставить только вниз
+                        const isEmpty = self._listViewModel.getCount() - newItems.length;
+                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() && isEmpty ? 'up' : 'down';
                         self._observersController.clearResetTriggerOffset(
                             direction,
                             self._children.listView?.getTopLoadingTrigger(),
-                            self._children.listView?.getBottomLoadingTrigger(),
+                            self._children.listView?.getBottomLoadingTrigger()
                         );
                         break;
                 }
@@ -3350,6 +3359,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._children.listView?.getTopLoadingTrigger(),
             this._children.listView?.getBottomLoadingTrigger()
         );
+        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
             this._observersController?.setScrollTop(
@@ -4350,12 +4360,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this.callbackAfterRender = null;
         }
 
-        // если загрузилась целая страница раньше чем прервался порционный поиск, то приостанавливаем его
-        // по стандарту в этом кейсе под страницей понимается viewport
-        // проверять по скрытию триггера загрузку страницы не лучшая идея, т.к. изначально может быть много данных,
-        // а первая порционная подгрузка тоже загрузит много данных => события скрытия триггера не будет.
-        const viewportFilled = this._viewSize > this._viewportSize;
-        if (this._indicatorsController.shouldStopDisplayPortionedSearch(viewportFilled)) {
+        // это нужно делать после вызова всех колбэков, т.к. остановка порционного поиска по необходимости
+        // может вызвать отрисовку верхней ромашки. Эта отрисовка юзает колбэки выше, но мы должны попасть через них
+        // в следующую отрисовку, чтобы ромашка уже была точно отрисована.
+        if (this._indicatorsController.shouldStopDisplayPortionedSearch()) {
             this._indicatorsController.stopDisplayPortionedSearch();
         }
     }
@@ -5887,7 +5895,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _mouseEnter(event): void {
+    _mouseEnter(event: SyntheticEvent<MouseEvent>): void {
         if (this._listViewModel) {
             this._dragEnter(this._getDragObject());
         }
@@ -6321,6 +6329,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             if (this._isScrollShown) {
                 _private.updateShadowMode(this, this._shadowVisibility);
             }
+
+            // Порционная подгрузка поддержана только в одну сторону, поэтому после приостановки порционного поиска,
+            // возможно можно грузить в другую сторону, сразу же показываем ромашку для отступа и триггера
+            if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                this._indicatorsController.displayTopIndicator(true);
+            }
         };
 
         return {
@@ -6335,7 +6349,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             attachLoadTopTriggerToNull: !!options.attachLoadTopTriggerToNull,
             attachLoadDownTriggerToNull: !!options.attachLoadDownTriggerToNull,
             stopDisplayPortionedSearchCallback
-        }
+        };
     }
 
     private _destroyIndicatorsController(): void {
