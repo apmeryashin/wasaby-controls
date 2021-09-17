@@ -68,6 +68,22 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         }
     }
 
+    protected _getRoundClass(): string {
+        if (!this._options.maximize) {
+            if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
+                if (this._options.footerContentTemplate) {
+                    return 'controls-DialogTemplate__top-area_roundBorder';
+                } else {
+                    return 'controls-DialogTemplate__border-radius';
+                }
+            } else {
+                if (!this._options.footerContentTemplate) {
+                    return 'controls-DialogTemplate__footer-area_roundBorder';
+                }
+            }
+        }
+    }
+
     private _needStartDrag(event: SyntheticEvent<MouseEvent>): boolean {
         const {target} = event;
         const isEventProcessed = event.nativeEvent.processed;
@@ -119,10 +135,14 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
  * @cfg {String} Цвет фона шапки диалогового окна.
  * @variant default
  * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
  * @default default
- * @demo Controls-demo/PopupTemplate/Dialog/headerBackgroundStyle/Index
- * @remark Данная опция определяет префикс стиля для настройки фона шапки диалогового окна.
- * На шапку будет установлен класс **.controls-DialogTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}**, который следует определить у себя в стилях.
+ * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
  * @see backgroundStyle
  */
 
@@ -131,10 +151,14 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
  * @cfg {String} Цвет фона диалогового окна.
  * @variant default
  * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
  * @default default
  * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
- * @remark Данная опция определяет префикс стиля для настройки фона диалогового окна.
- * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-@{headerBackgroundStyle}**, который следует определить у себя в стилях.
  * @see headerBackgroundStyle
  */
 

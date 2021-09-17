@@ -123,6 +123,20 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         this._notify(eventName, [event]);
     }
 
+    protected _getRoundClass(): string {
+        if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
+            if (this._options.footerContentTemplate) {
+                return 'controls-StickyTemplate__top-area_roundBorder';
+            } else {
+                return 'controls-StickyTemplate_roundBorder';
+            }
+        } else {
+            if (!this._options.footerContentTemplate) {
+                return 'controls-StickyTemplate__bottom_roundBorder';
+            }
+        }
+    }
+
     private static _getTheme(): string {
         return ManagerController.getPopupHeaderTheme();
     }
@@ -170,5 +184,35 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#headingFontSize
  * @cfg {String}
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#backgroundStyle
+ * @cfg {String} Цвет фона окна.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Sticky/backgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#headerBackgroundStyle
+ * @cfg {String} Цвет фона шапки.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Sticky/backgroundStyle/Index
  */
 export default StickyTemplate;
