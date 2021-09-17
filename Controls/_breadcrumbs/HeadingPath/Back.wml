@@ -22,15 +22,32 @@
                                       fontColorStyle="unaccented"/>
         </ws:if>
         <ws:if data="{{ _options.showActionButton }}">
-            <div class="controls-BreadCrumbsPath__backButtonArrow-container
+            <div
+               class="
+                  controls-BreadCrumbsPath__backButtonArrow-container
+                  controls-BreadCrumbsPath__backButtonArrow-container_size-{{_options.backButtonFontSize}}
                   {{_options.showArrowOutsideOfBackButton || _options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__backButtonArrow-container__only'}}
                   controls-background-{{_options.backgroundStyle || 'default'}}
                   {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly'}}
-                  js-BreadCrumbsPath__backButtonArrow"
-                 title="{[Подробнее]}"
-                 on:click="_onArrowClick()">
-                <div class="controls-BreadCrumbsPath__backButtonArrow">
-                    <svg attr:class="controls-BreadCrumbsPath__backButtonArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9,9.94l-6,6v-2l4-4-4-4v-2Zm5,0-6,6v-2l4-4-4-4v-2Z"/></svg>
+                  js-BreadCrumbsPath__backButtonArrow
+               "
+               title="{[Подробнее]}"
+               on:click="_onArrowClick()"
+            >
+                <div class="
+                  controls-BreadCrumbsPath__backButtonArrow
+                  controls-BreadCrumbsPath__backButtonArrow_size-{{_options.backButtonFontSize || 'm'}}
+               ">
+                    <svg
+                       attr:class="
+                           controls-BreadCrumbsPath__backButtonArrow
+                           controls-BreadCrumbsPath__backButtonArrow_size-{{_options.backButtonFontSize || 'm'}}
+                       "
+                       xmlns="http://www.w3.org/2000/svg"
+                       viewBox="0 0 16 16"
+                    >
+                       <path d="M10,8l-8,8v-3l5-5-5-5v-3Zm6,0-8,8v-3l5-5-5-5v-3Z"/>
+                    </svg>
                 </div>
             </div>
         </ws:if>

@@ -1,0 +1,17 @@
+<ws:partial template="{{_options.content}}"
+            scope="{{_options}}"
+            hasItemWithImage="{{_hasItemWithImage}}"
+            itemsReadyCallback="{{_itemsReadyCallback}}"
+            dataLoadCallback="{{_dataLoadCallback}}"
+            columns="{{_columns}}">
+   <ws:itemTemplate>
+      <ws:partial template="{{_itemTemplate}}"
+                  imageViewMode="{{_getImageViewMode(itemTemplate.imageViewMode)}}"
+                  imagePosition="{{_getImagePosition(itemTemplate.imagePosition)}}"/>
+   </ws:itemTemplate>
+   <ws:tileItemTemplate>
+      <ws:partial template="{{_tileItemTemplate}}"
+                  imageViewMode="{{_getImageViewMode(tileItemTemplate.imageViewMode)}}"
+                  imagePosition="{{_getImagePosition(tileItemTemplate.imagePosition)}}"/>
+   </ws:tileItemTemplate>
+</ws:partial>

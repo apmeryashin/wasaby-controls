@@ -416,7 +416,11 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
             }
         } else if (item[options.keyProperty] === options.selectedKey) {
             classes.push(`controls-Tabs_style_${style}__item_state_selected`);
-            classes.push('controls-Tabs__item_view_selected');
+            if (style === 'unaccented') {
+                classes.push('controls-Tabs__item_view_selected_style_unaccented');
+            } else {
+                classes.push('controls-Tabs__item_view_selected');
+            }
             classes.push('controls-Tabs__item_state_selected ');
         } else {
             classes.push('controls-Tabs__item_state_default');
