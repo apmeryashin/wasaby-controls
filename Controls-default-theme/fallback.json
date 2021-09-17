@@ -1588,8 +1588,8 @@
   "--master_hidden-node_expander_icon-size_treeGrid": "12px",
   "--master_node_expander_hover_icon-color_treeGrid": "#313e78",
   "--master_hidden-node_expander_hover_icon-color_treeGrid": "#0055bb",
-  "--node-footer_height_treeGrid": "var(--inline_height_m)",
   "--node_font-size_treeGrid": "var(--font-size_2xl)",
+  "--node-footer_height_treeGrid": "var(--inline_height_m)",
   "--search-separator_color_treeGrid": "#8991a9",
   "--search-separator_padding-top_treeGrid": "16px",
   "--search-separator_padding-bottom_treeGrid": "8px"
