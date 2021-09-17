@@ -36,14 +36,17 @@ export interface ICrudConfig {
 export default class CrudController {
     private readonly _crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void = null;
     private readonly _notifyRegisterPending: (args: [Promise<Model>, object]) => void = null;
+    private readonly _notifyRegister: (eventName: string, args: [Model]) => void = null;
 
     private _dataSource: Memory | SbisService = null;
 
     constructor(dataSource: Memory | SbisService, crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void,
-                notifyRegisterPending: (args: [Promise<Model>, object]) => void = null) {
+                notifyRegisterPending: (args: [Promise<Model>, object]) => void = null,
+                notifyRegister: (eventName: string, args: [Model]) => void = null) {
         this._dataSource = dataSource;
         this._crudOperationFinished = crudOperationFinished;
         this._notifyRegisterPending = notifyRegisterPending;
+        this._notifyRegister = notifyRegister;
     }
 
     setDataSource(newDataSource: Memory | SbisService): void {
@@ -65,7 +68,7 @@ export default class CrudController {
         return new Promise((res, rej) => {
             promise.then((record: Model) => {
                 this._crudOperationFinished(CRUD_EVENTS.CREATE_SUCCESSED, [record]);
-                this._crudOperationFinished(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
                 res(record);
             }, (e: Error) => {
                 this._crudOperationFinished(CRUD_EVENTS.CREATE_FAILED, [e]);
@@ -84,7 +87,7 @@ export default class CrudController {
         const promise: Promise<Model> = new Promise((res, rej) => {
             readWithAdditionalFields(this._dataSource, key, readMetaData).then((record: Model) => {
                 this._crudOperationFinished(CRUD_EVENTS.READ_SUCCESSED, [record]);
-                this._crudOperationFinished(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
                 res(record);
             }, (e: Error) => {
                 this._crudOperationFinished(CRUD_EVENTS.READ_FAILED, [e]);
@@ -108,7 +111,7 @@ export default class CrudController {
             return new Promise((res, rej) => {
                 resultUpdate.then((key) => {
                     this._crudOperationFinished(CRUD_EVENTS.UPDATE_SUCCESSED, [record, key, config]);
-                    this._crudOperationFinished(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                    this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
                     res(key);
                 }).catch((e: Error) => {
                     this._crudOperationFinished(CRUD_EVENTS.UPDATE_FAILED, [e, record]);
@@ -133,7 +136,7 @@ export default class CrudController {
         return new Promise((res, rej) => {
             promise.then(() => {
                 this._crudOperationFinished(CRUD_EVENTS.DELETE_SUCCESSED, [record]);
-                this._crudOperationFinished(CRUD_EVENTS.RECORD_CHANGED, [record]);
+                this._notifyRegister(CRUD_EVENTS.RECORD_CHANGED, [record]);
                 res();
             }, (e: Error) => {
                 this._crudOperationFinished(CRUD_EVENTS.DELETE_FAILED, [e]);
