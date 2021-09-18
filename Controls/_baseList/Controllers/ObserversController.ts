@@ -138,13 +138,13 @@ export default class ObserversController {
     }
 
     displayTopTrigger(topTrigger: HTMLElement): void {
-        if (topTrigger) {
+        if (topTrigger && topTrigger.style.display === 'none') {
             topTrigger.style.display = '';
         }
     }
 
     hideTopTrigger(topTrigger: HTMLElement): void {
-        if (topTrigger) {
+        if (topTrigger && topTrigger.style.display !== 'none') {
             topTrigger.style.display = 'none';
         }
     }
