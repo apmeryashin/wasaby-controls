@@ -128,6 +128,7 @@ export default class IndicatorsController {
      * При необходимости пересчитываеет индикаторы, начинает порционный поиск, сбрасывает оффсет у триггеров
      */
     onCollectionReset(): void {
+        this._setSearchState(SEARCH_STATES.NOT_STARTED);
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
             this.startDisplayPortionedSearch(direction);
