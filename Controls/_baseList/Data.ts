@@ -275,13 +275,10 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
                 {error, ...this._getErrorConfig(sourceController.getRoot(), root, direction)}
             );
          }
-         this._loading = false;
       });
-      sourceController.subscribe('dataLoad', () => {
+      this._sourceController.subscribe('dataLoad', () => {
          this._hideError();
-         this._loading = false;
       });
-      sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
    }
 
    _updateWithoutSourceControllerInOptions(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
@@ -451,12 +448,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       event.stopPropagation();
    }
 
-   private _dataLoadStart(event: SyntheticEvent, key: TKey, direction: Direction): void {
-      if (!direction) {
-         this._loading = true;
-      }
-   }
-
    private _updateContext(sourceControllerState: ISourceControllerState): void {
       this._contextState = {
          ...sourceControllerState
@@ -481,6 +472,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       const currentRoot = this._sourceController.getRoot();
       this._fixRootForMemorySource(options);
 
+      this._loading = true;
       return this._sourceController.reload(config)
           .then((reloadResult) => {
              if (!options.hasOwnProperty('root')) {

@@ -4,7 +4,6 @@
 
    viewName="{{_viewName}}"
    viewModelConstructor="{{_viewModelConstructor}}"
-   itemsSelector="{{_itemsSelector}}"
 
    on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
 />

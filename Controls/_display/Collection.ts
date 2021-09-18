@@ -35,8 +35,9 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
-import {INavigationOptionValue, INavigationSourceConfig, IRoundBorder} from 'Controls/interface';
-import {Footer, IOptions as IFooterOptions} from 'Controls/_display/Footer';
+import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import {TRoundBorder} from "Controls/_display/interface/ICollection";
+import {Footer} from 'Controls/_display/Footer';
 import IndicatorsMixin from './IndicatorsMixin';
 import {Logger} from 'UI/Utils';
 
@@ -713,7 +714,7 @@ export default class Collection<
 
     protected _$bottomPadding: string;
 
-    protected _$roundBorder: IRoundBorder;
+    protected _$roundBorder: TRoundBorder;
 
     protected _$emptyTemplate: TemplateFunction;
 
@@ -2384,7 +2385,7 @@ export default class Collection<
         return this._$stickyFooter;
     }
 
-    setRoundBorder(roundBorder: IRoundBorder): void {
+    setRoundBorder(roundBorder: TRoundBorder): void {
         if (!isEqual(this._$roundBorder, roundBorder)) {
             this._$roundBorder = roundBorder;
             this._updateItemsProperty('setRoundBorder', this._$roundBorder, 'setRoundBorder');
@@ -3374,17 +3375,13 @@ export default class Collection<
             return;
         }
 
-        return new Footer(this._getFooterOptions(options));
-    }
-
-    protected _getFooterOptions(options: IOptions): IFooterOptions {
-        return {
+        return new Footer({
             owner: this,
             sticky: options.stickyFooter,
             contentTemplate: options.footerTemplate,
             style: this.getStyle(),
             theme: this.getTheme()
-        }
+        });
     }
     //endregion
 

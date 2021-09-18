@@ -69,4 +69,9 @@ export interface IShadowVisibility {
     down: boolean;
 }
 
+export interface IScrollRestoreParams {
+    direction: IDirection;
+    heightDifference: number;
+}
+
 export type IDirection = 'up' | 'down';
