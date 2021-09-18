@@ -9,7 +9,6 @@ import 'css!Controls/heading';
 import 'css!Controls/breadcrumbs';
 import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
-import {dataConversion} from './resources/dataConversion';
 import {Model, Record} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -63,7 +62,6 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _backButtonItem: Record = null;
     protected _visibleItems: Record[] = null;
     protected _breadCrumbsItems: Record[] = null;
-    protected _items: Record[] = null;
     protected _backButtonClass: string = '';
     protected _breadCrumbsClass: string = '';
     protected _notifyHandler: Function = EventUtils.tmplNotify;
@@ -71,6 +69,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _getRootModel: Function = Common.getRootModel;
     protected _dotsWidth: number = 0;
     protected _indexEdge: number = 0;
+    protected _items: Record[] = [];
     protected _isHomeVisible: boolean = false;
     protected calculateBreadcrumbsUtil: object;
     protected _arrowWidth: number;
@@ -80,8 +79,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _beforeMount(options?: IHeadingPath,
                            contexts?: object,
                            receivedState?: IReceivedState): Promise<IReceivedState> | void {
-        this._items = dataConversion(options.items, this._moduleName);
         this._prepareItems(options);
+
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
             this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
@@ -102,7 +101,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
                     this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth as Function);
                     this._prepareData(options, getTextWidth as Function);
                     return {
-                        items: this._breadCrumbsItems
+                        items: options.items
                     };
                 }
             });
@@ -114,7 +113,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
         const isFontSizeChanged = newOptions.fontSize !== this._options.fontSize;
         if (isItemsChanged) {
-            this._items = dataConversion(newOptions.items, this._moduleName);
+            this._items = newOptions.items;
         }
         if (isFontSizeChanged) {
             this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
@@ -145,7 +144,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         return this._arrowWidth + dotsWidth;
     }
     private _prepareData(options: IHeadingPath, getTextWidth: Function = this._getTextWidth): void {
-        if (this._items && this._items.length > 1) {
+        if (options.items && options.items.length > 1) {
             this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, options, getTextWidth);
         }
     }
@@ -202,15 +201,15 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             this._isHomeVisible = false;
         };
 
-        if (this._items?.length > 0) {
-            const lastItem = this._items[this._items.length - 1];
+        if (options.items?.length > 0) {
+            const lastItem = options.items[options.items.length - 1];
 
             this._backButtonItem = lastItem;
             this._backButtonCaption = lastItem.get(options.displayProperty);
 
             // containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
-            if (this._items?.length > 1) {
-                this._breadCrumbsItems = this._items.slice(0, this._items.length - 1);
+            if (options.items.length > 1) {
+                this._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
                 this._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
                 this._isHomeVisible = true;
             } else {

@@ -1,8 +1,7 @@
 import {Model} from 'Types/entity';
 import TileItem, { IOptions as ITileItemOptions } from 'Controls/_tile/display/mixins/TileItem';
 import {isEqual} from 'Types/object';
-import {IViewIterator, IItemPadding, IItemActionsTemplateConfig} from 'Controls/display';
-import {ITileRoundBorder} from 'Controls/interface';
+import {TRoundBorder, IViewIterator, IItemPadding, IItemActionsTemplateConfig} from 'Controls/display';
 import {createPositionInBounds} from 'Controls/_tile/utils/createPosition';
 
 export const DEFAULT_TILE_HEIGHT = 200;
@@ -56,7 +55,7 @@ export default abstract class Tile<
 
     protected _$itemsContainerPadding: IItemPadding;
 
-    protected _$roundBorder: ITileRoundBorder;
+    protected _$roundBorder: TRoundBorder;
 
     protected _$imageProperty: string;
 
@@ -358,18 +357,18 @@ export default abstract class Tile<
 
     /**
      * Возвращает скругление углов элемента
-     * @return {ITileRoundBorder} Cкругление углов элемента плитки
+     * @return {TRoundBorder} Cкругление углов элемента плитки
      */
-    getRoundBorder(): ITileRoundBorder {
+    getRoundBorder(): TRoundBorder {
         return this._$roundBorder;
     }
 
     /**
      * Устанавливает скругление углов элемента
-     * @param {ITileRoundBorder} roundBorder Скругление углов элемента плитки
+     * @param {TRoundBorder} roundBorder Скругление углов элемента плитки
      * @void
      */
-    setRoundBorder(roundBorder: ITileRoundBorder): void {
+    setRoundBorder(roundBorder: TRoundBorder): void {
         if (!isEqual(this._$roundBorder, roundBorder)) {
             this._$roundBorder = roundBorder;
             this._updateItemsProperty(

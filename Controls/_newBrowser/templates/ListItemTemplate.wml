@@ -1,5 +1,7 @@
 <Controls.Container.Async templateName="Controls/listTemplates:ListItemTemplate">
     <ws:partial template="{{content.resolvedTemplate}}"
                 scope="{{_options}}"
+                imagePosition="{{listCfg.imagePosition}}"
+                imageViewMode="{{listCfg.imageViewMode}}"
                 imageProperty="{{listCfg.imageProperty}}"/>
 </Controls.Container.Async>
