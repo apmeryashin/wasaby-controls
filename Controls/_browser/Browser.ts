@@ -443,7 +443,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
 
         if ((hasSearchValueInOptions && searchValueOptionsChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
-            if (!methodResult) {
+            if (!methodResult && newOptions.searchParam) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
                     return error;
@@ -1074,7 +1074,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 }
             })
             .then((result) => {
-                if (!this._destroyed) {
+                if (!this._destroyed && options.searchParam) {
                     return this._updateSearchController(options).then(() => result);
                 }
             });
