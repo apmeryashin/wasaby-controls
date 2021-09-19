@@ -162,9 +162,10 @@
    margin-left: calc(var(--padding-horizontal_inputText) / (-1));
 }
 
-// Нельзя перебить стили из -internal-autofill-selected, поэтому задаем большой transition и тень с background-color
-// Задавать большой transition решает проблему до тех пор, пока не задан ws-hidden, если его задать и убрать, то заливка появляется.
-// Поэтому оставляем большой transition, и добавляем отображение тень, но на отражение тени также задаем большой transition
+// Нельзя перебить стили из -internal-autofill-selected, поэтому задаем большой transition и внутреннюю тень с background-color
+// Если просто задавать большое transition, то проблема уходит до тех пор, пока не скрыть поле ввода, и не отобразить его заново.
+// Например навесить класс ws-hidden и убрать. В таком случае, у поля ввода появляется заливка.
+// Поэтому, для таких случаев, задаем box-shadow с большой задержкой
 // https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied
 /* stylelint-disable selector-max-pseudo-class */
 .controls-Field:-webkit-autofill,
