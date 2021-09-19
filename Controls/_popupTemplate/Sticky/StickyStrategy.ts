@@ -465,19 +465,7 @@ export class StickyStrategy {
       };
    }
 
-   isVisibleTarget(target: HTMLElement): boolean {
-      const scrollContainer = this._getScrollContainer(target);
-      if (scrollContainer) {
-         const targetDimensions = getDimensions(target);
-         const scrollDimensions = getDimensions(scrollContainer);
-         if (targetDimensions.top < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   private _getScrollContainer(target: HTMLElement): HTMLElement {
+   getScrollContainer(target: HTMLElement): HTMLElement {
       let parent = target?.parentElement;
       while (parent && parent !== document.body) {
          const parentStyle = window.getComputedStyle(parent);

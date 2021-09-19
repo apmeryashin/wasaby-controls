@@ -20,7 +20,7 @@ import {
 } from 'Controls/popup';
 import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
-import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {DimensionsMeasurer, getDimensions} from 'Controls/sizeUtils';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -91,6 +91,7 @@ const DEFAULT_OPTIONS = {
 export class StickyController extends BaseController {
     TYPE: string = 'Sticky';
     _bodyOverflow: string;
+    private _scrollContainer: HTMLElement;
 
     elementCreated(item: IStickyItem, container: HTMLElement): boolean {
         if (this._isTargetVisible(item)) {
@@ -117,6 +118,14 @@ export class StickyController extends BaseController {
 
             item.position = StickyStrategy.getPosition(item.positionConfig, targetCoords, this._getTargetNode(item));
 
+            if (item.popupOptions.className) {
+                item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');
+            }
+            item.popupOptions.className += 'controls-StickyTemplate-visibility';
+            if (item.popupOptions.actionOnScroll === 'track' && this._isVisibleTarget(item.popupOptions.target)) {
+                item.popupOptions.className += ' controls-StickyTemplate-visibility-hidden';
+            }
+
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
             // Open Windows are not placed in the workspace and chrome scrollit body.
             if (detection.isMobileAndroid) {
@@ -135,6 +144,20 @@ export class StickyController extends BaseController {
             this._printTargetRemovedWarn();
         }
         return true;
+    }
+
+    private _isVisibleTarget(target: HTMLElement): boolean {
+        if (!this._scrollContainer) {
+            this._scrollContainer = StickyStrategy.getScrollContainer(target);
+        }
+        if (this._scrollContainer) {
+            const targetDimensions = getDimensions(target);
+            const scrollDimensions = getDimensions(this._scrollContainer);
+            if (targetDimensions.top < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
+                return true;
+            }
+        }
+        return false;
     }
 
     elementAfterUpdated(item: IStickyItem, container: HTMLElement): boolean {
@@ -385,14 +408,7 @@ export class StickyController extends BaseController {
     private _updateClasses(item: IStickyItem, popupCfg: IStickyPositionConfig): void {
         // Remove the previous classes of direction and add new ones
         this._removeOrientationClasses(item);
-        if (item.popupOptions.className) {
-            item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');
-        }
-        item.popupOptions.className = (item.popupOptions.className || '') + ' controls-StickyTemplate-visibility' +
-            ' ' + this._getOrientationClasses(popupCfg);
-        if (item.popupOptions.actionOnScroll === 'track' && StickyStrategy.isVisibleTarget(item.popupOptions.target)) {
-            item.popupOptions.className += ' controls-StickyTemplate-visibility-hidden';
-        }
+        item.popupOptions.className = (item.popupOptions.className || '') + ' ' + this._getOrientationClasses(popupCfg);
     }
 
     private _updateSizes(positionCfg: IStickyPositionConfig, popupOptions: IStickyPopupOptions): void {
