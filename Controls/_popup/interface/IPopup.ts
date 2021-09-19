@@ -133,7 +133,7 @@ export interface IPopupController {
 
     resizeInner(item: IPopupItem, container: HTMLElement): boolean;
 
-    dragNDropOnPage(item: IPopupItem, container: HTMLElement, isInsideDrag: boolean): boolean;
+    dragNDropOnPage(item: IPopupItem, container: HTMLElement, isInsideDrag: boolean, type: string): boolean;
 
     popupResizingLine(item: IPopupItem, offset: number): boolean;
 

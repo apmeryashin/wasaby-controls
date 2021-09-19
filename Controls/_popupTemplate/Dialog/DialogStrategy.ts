@@ -1,6 +1,6 @@
 import {detection} from 'Env/Env';
 import {IDialogPopupOptions, IPopupPosition, IPopupSizes} from 'Controls/popup';
-import {getPositionProperties, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
+import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 import {IDialogItem} from 'Controls/_popupTemplate/Dialog/DialogController';
 
 interface ILimitingSizes {
@@ -86,13 +86,15 @@ export class DialogStrategy {
         } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
 
         if (popupItem.fixPosition) {
+            const horizontalProperty = popupItem.position.left !== undefined ? HORIZONTAL_DIRECTION.LEFT : HORIZONTAL_DIRECTION.RIGHT;
+            const verticalProperty = popupItem.position.top !== undefined ? VERTICAL_DIRECTION.TOP : VERTICAL_DIRECTION.BOTTOM;
             return this._getPositionForFixPositionDialog(
                 popupItem.position,
                 windowData,
                 containerSizes,
                 popupItem,
-                verticalPositionProperty,
-                horizontalPositionProperty
+                verticalProperty,
+                horizontalProperty
             );
         } else {
             const position: IDialogPosition = this._getDefaultPosition(
