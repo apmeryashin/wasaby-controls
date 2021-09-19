@@ -121,7 +121,7 @@ export class StickyController extends BaseController {
             if (item.popupOptions.className) {
                 item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');
             }
-            item.popupOptions.className += 'controls-StickyTemplate-visibility';
+            item.popupOptions.className += ' controls-StickyTemplate-visibility';
             if (item.popupOptions.actionOnScroll === 'track' && this._isVisibleTarget(item.popupOptions.target)) {
                 item.popupOptions.className += ' controls-StickyTemplate-visibility-hidden';
             }
