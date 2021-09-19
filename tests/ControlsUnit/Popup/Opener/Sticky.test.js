@@ -135,7 +135,7 @@ define(
             StickyController.elementCreated(item, container);
             assert.equal(typeof item.positionConfig, 'object'); // Конфиг сохранился
             assert.equal(item.sizes.width, 100); // Конфиг сохранился
-            var classes = item.popupOptions.className;
+            var classes = item.popupOptions.className + ' controls-StickyTemplate-visibility';
 
             StickyController.elementUpdated(item, container);
             assert.equal(item.popupOptions.className, classes); // Классы не поменялись
