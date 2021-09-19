@@ -1,10 +1,9 @@
 <div class="controlsDemo__wrapper">
-    <Controls.browser:Browser filterButtonSource="{{_filterButtonData}}"
+    <Controls.browser:Browser filterButtonSource="{{_filterSource}}"
                               source="{{_source}}" keyProperty="id">
         <div>
             <Controls.filter:ViewContainer>
-                <Controls.filter:View source="{{_filterSource}}"
-                                      alignment="left"
+                <Controls.filter:View alignment="left"
                                       detailPanelOpenMode="stack" />
             </Controls.filter:ViewContainer>
             <Controls.list:Container>
