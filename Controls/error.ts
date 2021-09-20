@@ -12,6 +12,7 @@ import {
     IErrorHandlerConfig,
     ErrorType,
     ErrorViewMode,
+    ErrorViewSize,
     IErrorControllerOptions,
     IDefaultTemplateOptions
 } from './_error/interface';
@@ -32,6 +33,7 @@ export {
     ErrorViewConfig as ViewConfig, // для совместимости
     ErrorViewMode as Mode, // для совместимости
     ErrorViewMode,
+    ErrorViewSize,
     IControllerOptions,
     IDefaultTemplateOptions,
     IErrorControllerOptions,

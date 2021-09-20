@@ -3,6 +3,23 @@ import { Control, TemplateFunction } from 'UI/Base';
 import ErrorController from './Controller';
 
 /**
+ * @typedef {Enum} Size
+ * @description Перечень размеров для отображения дружелюбной ошибки
+ * @property {String} large Большие размеры (ширина области > 500 px)
+ * @property {String} medium Средние размеры (ширина области 275 - 500 px)
+ * @property {String} normal Нормальные размеры (ширина области 166 - 274 px)
+ * @property {String} small Маленькие размеры (ширина области < 166 px)
+ * @property {String} dialog Размер диалогового окна
+ */
+export enum ErrorViewSize {
+    large = 'large',
+    medium = 'medium',
+    normal = 'normal',
+    small = 'small',
+    dialog = 'dialog'
+}
+
+/**
  * Опции шаблона для {@link Controls/_error/interface/ErrorViewConfig}, возвращаемые стандартными обработчиками
  * @public
  */
@@ -11,6 +28,7 @@ export interface IDefaultTemplateOptions {
     image?: string;
     message?: string;
     action?: string | TemplateFunction | (new (args: unknown) => Control);
+    size?: ErrorViewSize | string;
 }
 
 /**
@@ -127,7 +145,7 @@ export enum ErrorType {
  * Анализирует ошибку и определяет, какой парковочный шаблон нужно отобразить.
  * Принимает объект с параметрами ошибки и возвращет ErrorViewConfig, если ошибка распознана.
  * @function
- * @param {IErrorHandlerConfig<TError>}
+ * @param {IErrorHandlerConfig<TError>} config
  * @returns {ErrorViewConfig<TOptions> | void}
  * @public
  * @author Кашин О.А.
