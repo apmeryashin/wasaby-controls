@@ -24,9 +24,12 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
    protected _createItems(): T[] {
       const newItems = super._createItems();
 
-      const parent = this._getParentConsideringHiddenItems(this.avatarItem, newItems);
-      if (parent) {
-         this.avatarItem.setParent(parent);
+      // avatarItem может не создасться, например когда тащат запись в мастер
+      if (this.avatarItem) {
+         const parent = this._getParentConsideringHiddenItems(this.avatarItem, newItems);
+         if (parent) {
+            this.avatarItem.setParent(parent);
+         }
       }
 
       return newItems;
