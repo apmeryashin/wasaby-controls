@@ -34,7 +34,7 @@ export default class extends Control {
         },
         {
             displayProperty: 'country',
-            width: '120px'
+            width: 'max-content'
         },
         {
             displayProperty: 'rating',
