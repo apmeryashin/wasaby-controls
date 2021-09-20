@@ -405,6 +405,10 @@ export default class ColumnScrollController {
         // Не скроллируем зафиксированные элементы
         newTransformHTML += `.${transformSelector} .${JS_SELECTORS.FIXED_ELEMENT} {transform: translateX(${position}px);}`;
 
+        // скроллируем индикаторы загрузки
+        const indicatorPosition = position + this._fixedColumnsWidth + (this._scrollWidth / 2);
+        newTransformHTML += `.${transformSelector} .controls-BaseControl__loadingIndicator {width: fit-content; transform: translateX(${indicatorPosition}px);}`;
+
         // Не скроллируем операции над записью
         if (isFullGridSupport) {
             // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При

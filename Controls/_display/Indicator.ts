@@ -89,19 +89,18 @@ export default class Indicator extends CollectionItem<null> {
     }
 
     getClasses(): string {
-        let classes = '';
+        let classes = 'controls-BaseControl__loadingIndicator';
 
         switch (this._$state) {
             case 'loading':
-                classes += ' controls-BaseControl__loadingIndicator';
                 classes += ` controls-BaseControl__loadingIndicator__state-${this._$position}`;
                 break;
             case 'portioned-search':
-                classes += ' controls-BaseControl__loadingIndicator controls-BaseControl__portionedSearch';
+                classes += ' controls-BaseControl__portionedSearch';
                 classes += ` controls-BaseControl__portionedSearch__state-${this._$position}`;
                 break;
             case 'continue-search':
-                classes += ' controls-BaseControl__continueSearch ws-justify-content-center';
+                classes += ' controls-BaseControl__continueSearch';
                 break;
         }
 
