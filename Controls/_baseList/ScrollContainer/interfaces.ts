@@ -1,5 +1,5 @@
 import { ITriggerOffset } from 'Controls/display';
-import { TItemKey } from 'Controls/_display/interface';
+import { CrudEntityKey } from 'Types/source';
 
 export interface IRange {
     // стартовый индекс отображения
@@ -17,7 +17,7 @@ export interface IScrollControllerResult {
     newCollectionRenderedKeys?: string[] | void;
     placeholders?: IPlaceholders;
     triggerOffset?: ITriggerOffset;
-    activeElement?: TItemKey;
+    activeElement?: CrudEntityKey;
     scrollToActiveElement?: boolean;
     shadowVisibility?: IShadowVisibility;
 }

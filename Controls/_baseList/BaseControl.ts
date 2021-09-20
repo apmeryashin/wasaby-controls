@@ -51,7 +51,8 @@ import {
     CollectionItem, IDragPosition,
     IEditableCollectionItem,
     TItemKey,
-    TreeItem
+    TreeItem,
+    MoreButtonVisibility
 } from 'Controls/display';
 
 import {default as ItemContainerGetter} from 'Controls/_baseList/itemsStrategy/getItemContainerByIndex';
@@ -123,7 +124,6 @@ import ObserversController, {
     IObserversControllerOptions,
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
-import {MoreButtonVisibility} from 'Controls/_display/Collection';
 
 //#endregion
 
