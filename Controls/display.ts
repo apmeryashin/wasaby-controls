@@ -89,6 +89,8 @@ export {groupConstants} from './_display/itemsStrategy/Group';
 export {IHiddenGroupPosition} from './_display/itemsStrategy/Group';
 export {MultiSelectAccessibility} from './_display/Collection';
 export {IHasMoreData} from './_display/Collection';
+export {MoreButtonVisibility} from './_display/Collection';
+export {TItemActionsPosition} from './_display/Collection';
 
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_display/IItemsStrategy';
 import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
@@ -98,7 +100,7 @@ import {Footer, IOptions as IFooterOptions} from './_display/Footer';
 export {Footer, IFooterOptions};
 
 import Indicator from 'Controls/_display/Indicator';
-export {default as Indicator, EIndicatorState} from 'Controls/_display/Indicator';
+export {default as Indicator, EIndicatorState, TIndicatorState} from 'Controls/_display/Indicator';
 export {default as IndicatorsMixin, ITriggerOffset} from 'Controls/_display/IndicatorsMixin';
 
 register('Controls/display:Collection', Collection, {instantiate: false});
