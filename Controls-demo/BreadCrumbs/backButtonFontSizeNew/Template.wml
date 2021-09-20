@@ -1,0 +1,45 @@
+<div>
+    <div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
+        <h3>HeadingPath</h3>
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label">backButtonFontSize=s</div>
+            <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="s" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label">backButtonFontSize=m</div>
+            <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="m" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label">backButtonFontSize=l</div>
+            <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="l" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+           <div class="controls-text-label">backButtonFontSize=l</div>
+          <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="xl" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+           <div class="controls-text-label">backButtonFontSize=l</div>
+           <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="2xl" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label">backButtonFontSize=3xl</div>
+            <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="3xl" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+           <div class="controls-text-label">backButtonFontSize=3xl</div>
+           <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="4xl" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+           <div class="controls-text-label">backButtonFontSize=3xl</div>
+           <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="5xl" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+           <div class="controls-text-label">backButtonFontSize=3xl</div>
+           <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="6xl" feature1182709671="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell">
+           <div class="controls-text-label">backButtonFontSize=3xl</div>
+           <Controls.breadcrumbs:HeadingPath keyProperty="id" items="{{_items}}" backButtonFontSize="7xl" feature1182709671="{{true}}"/>
+        </div>
+    </div>
+</div>
