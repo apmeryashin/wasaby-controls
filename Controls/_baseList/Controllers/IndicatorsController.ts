@@ -1,6 +1,5 @@
-import { Collection, EIndicatorState } from 'Controls/display';
+import { Collection, EIndicatorState, TIndicatorState } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
-import { TIndicatorState } from 'Controls/_display/Indicator';
 
 export interface IIndicatorsControllerOptions {
     model: Collection;
