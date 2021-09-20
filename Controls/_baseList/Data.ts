@@ -149,6 +149,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
+      this._onDataLoad = this._onDataLoad.bind(this);
       this._errorController = options.errorController || new ErrorController({});
       this._loadToDirectionRegister = new RegisterClass({register: 'loadToDirection'});
 
@@ -277,10 +278,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          }
          this._loading = false;
       });
-      sourceController.subscribe('dataLoad', () => {
-         this._hideError();
-         this._loading = false;
-      });
+      sourceController.subscribe('dataLoad', this._onDataLoad);
       sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
    }
 
@@ -394,6 +392,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          this._loadToDirectionRegister = null;
       }
       if (this._sourceController) {
+         this._sourceController.unsubscribe('dataLoad', this._onDataLoad);
          if (!this._options.sourceController) {
             this._sourceController.destroy();
          }
@@ -551,6 +550,11 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          error: errorConfig.error,
          mode: errorConfig.mode || ErrorViewMode.dialog
       });
+   }
+
+   private _onDataLoad(): void {
+      this._loading = false;
+      this._hideError();
    }
 
    private _showError(errorConfig: ErrorViewConfig): void {
