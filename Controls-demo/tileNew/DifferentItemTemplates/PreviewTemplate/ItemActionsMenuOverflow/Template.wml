@@ -16,6 +16,8 @@
               imageProperty="image"
               keyProperty="id"
               itemTemplate="Controls/tile:PreviewTemplate"
-              source="{{_viewSource}}"/>
+              source="{{_viewSource}}"
+              on:itemClick="_itemClick()"/>
    </Controls.scroll:Container>
+   <span>itemClick на записи с ключом: </span><span data-qa="itemClick-log">{{_clickedItem}}</span>
 </div>
