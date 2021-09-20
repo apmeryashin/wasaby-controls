@@ -19,7 +19,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @remark
  *
  * Полезные ссылки:
- * * {@link https://github.com/saby/wasaby-controls/blob/6156a9009ee88d96bf73c8b1200e197f9db1c3c8/Controls-default-theme/variables/_dateRange.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_dateRange.less переменные тем оформления}
  *
  * @class Controls/_dateRange/RangeSelector
  * @extends UI/Base:Control
