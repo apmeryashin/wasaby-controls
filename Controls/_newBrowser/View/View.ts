@@ -191,8 +191,10 @@ export default class View extends Control<IOptions, IReceivedState> {
         // Не обрабатываем последующие загрузки страниц. Нас интересует только
         // загрузка первой страницы
         const rootChanged = this._dataContext.listsConfigs.detail.root !== this._detailDataSource.getRoot();
+        const searchController = this._dataContext.listsConfigs.detail.searchController;
+        const needApplyConfiguration = !direction && (!searchController || !searchController.isSearchInProcess());
         const imageProperty = this._detailExplorerOptions.imageProperty;
-        if (!direction) {
+        if (needApplyConfiguration) {
             this._processItemsMetadata(items);
         }
         if (this._masterDataLoadResolver) {
@@ -227,7 +229,6 @@ export default class View extends Control<IOptions, IReceivedState> {
         if (this._detailExplorerOptions.dataLoadCallback) {
             this._detailExplorerOptions.dataLoadCallback(items, direction, 'detail');
         }
-        this._processItemsMetadata(items);
     }
 
     protected _updateContextVersion(context: typeof dataContext): boolean {
