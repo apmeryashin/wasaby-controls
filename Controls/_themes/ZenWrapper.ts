@@ -163,7 +163,9 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                             ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
             '--icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.5'),
             '--secondary_contrast_hover_background-color_toggleButton_pushButton':
-                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.08'),
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.3'),
+            '--secondary_contrast_toggled_background-color_toggleButton_pushButton':
+                            ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.2'),
             '--hover_icon-color_BigSeparator': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8')
         };
     }
