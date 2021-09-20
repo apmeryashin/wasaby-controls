@@ -12,6 +12,7 @@ interface IFilterViewModelOptions {
     source: IFilterItem[];
     collapsedGroups: string[] | number[];
     filterViewMode: string;
+    style?: string;
 }
 
 interface IFilterGroup {
@@ -62,7 +63,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 ...{
                     viewMode: item.viewMode,
                     filterViewMode: this._options.filterViewMode,
-                    name: item.name
+                    name: item.name,
+                    style: this._options.style
                 }};
             newSource.push({...item, ...{editorOptions}});
         });

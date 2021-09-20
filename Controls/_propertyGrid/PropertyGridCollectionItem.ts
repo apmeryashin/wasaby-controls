@@ -5,7 +5,7 @@ import {Enum} from 'Types/collection';
 import * as getType from 'Core/helpers/getType';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
-import {IOptions} from 'Controls/_display/grid/Collection';
+import {IGridCollectionOptions} from 'Controls/grid';
 
 /**
  * Элемент коллеции propertyGrid
@@ -29,7 +29,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
      */
     protected _$keyProperty: string;
 
-    constructor(options?: IOptions<T>) {
+    constructor(options?: IGridCollectionOptions) {
         super(options);
         this._$keyProperty = options.keyProperty;
         this.setPropertyValue(options.editingObject);

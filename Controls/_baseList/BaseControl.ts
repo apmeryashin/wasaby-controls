@@ -51,7 +51,8 @@ import {
     CollectionItem, IDragPosition,
     IEditableCollectionItem,
     TItemKey,
-    TreeItem
+    TreeItem,
+    MoreButtonVisibility
 } from 'Controls/display';
 
 import {default as ItemContainerGetter} from 'Controls/_baseList/itemsStrategy/getItemContainerByIndex';
@@ -123,7 +124,6 @@ import ObserversController, {
     IObserversControllerOptions,
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
-import {MoreButtonVisibility} from 'Controls/_display/Collection';
 
 //#endregion
 
@@ -653,7 +653,7 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
 
-            return self._sourceController.load(direction, self._options.task1182244668 ? void 0 : self._options.root).addCallback((addedItems) => {
+            return self._sourceController.load(direction).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
@@ -3470,14 +3470,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _getScrollParams(): IScrollParams {
-        let headersHeight = 0;
+        let stickyElementsHeight = 0;
         if (detection.isBrowserEnv) {
-            headersHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+            stickyElementsHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+            stickyElementsHeight += getStickyHeadersHeight(this._container, 'bottom', 'allFixed') || 0;
         }
+        const pagingPadding = this._isPagingPadding() ? PAGING_PADDING : 0;
         const scrollParams = {
             scrollTop: this._scrollTop,
-            scrollHeight: _private.getViewSize(this, true),
-            clientHeight: this._viewportSize - headersHeight
+            scrollHeight: _private.getViewSize(this, true) + pagingPadding - stickyElementsHeight,
+            clientHeight: this._viewportSize - stickyElementsHeight
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
@@ -6512,13 +6514,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _isPagingPaddingFromOptions(): boolean {
-        return !(this._options.navigation &&
+        return this._options.navigation &&
             this._options.navigation.viewConfig &&
-            (this._options.navigation.viewConfig.pagingMode === 'end' ||
+            !(this._options.navigation.viewConfig.pagingMode === 'end' ||
                 this._options.navigation.viewConfig.pagingPadding === 'null' ||
                 this._options.navigation.viewConfig.pagingPadding === null
-            )
-        );
+            );
     }
 
     /**
@@ -6531,7 +6532,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _isPagingPadding(): boolean {
-        return !(detection.isMobileIOS || !this._isPagingPaddingFromOptions());
+        return !detection.isMobileIOS && this._isPagingPaddingFromOptions();
     }
 
     /**
