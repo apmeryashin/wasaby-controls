@@ -12,7 +12,7 @@
                        footerTemplate="{{footerTemplate}}"
                        multiSelectVisibility="onhover"
                        itemsReadyCallback="{{_itemsReadyCallback}}"
-                       attr:class="controls_toggle_theme-{{_options.theme}}"
+                       attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
                        on:itemClick="_handleItemClick()">
       <ws:multiSelectTemplate>
          <ws:partial template="{{_circleTemplate}}"
@@ -42,7 +42,7 @@
    </ws:else>
 </ws:template>
 
-<div class="controls-FilterEditors__list">
+<div class="controls-FilterEditors__list_style-{{_options.style}}">
    <ws:if data="{{_options.multiSelect}}">
       <ws:partial template="listEditor" on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
    </ws:if>
