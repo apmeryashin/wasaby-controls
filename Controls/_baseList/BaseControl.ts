@@ -3460,14 +3460,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _getScrollParams(): IScrollParams {
-        let headersHeight = 0;
+        let stickyElementsHeight = 0;
         if (detection.isBrowserEnv) {
-            headersHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+            stickyElementsHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+            stickyElementsHeight += getStickyHeadersHeight(this._container, 'bottom', 'allFixed') || 0;
         }
+        const pagingPadding = this._isPagingPadding() ? PAGING_PADDING : 0;
         const scrollParams = {
             scrollTop: this._scrollTop,
-            scrollHeight: _private.getViewSize(this, true),
-            clientHeight: this._viewportSize - headersHeight
+            scrollHeight: _private.getViewSize(this, true) + pagingPadding - stickyElementsHeight,
+            clientHeight: this._viewportSize - stickyElementsHeight
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
@@ -6498,13 +6500,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _isPagingPaddingFromOptions(): boolean {
-        return !(this._options.navigation &&
+        return this._options.navigation &&
             this._options.navigation.viewConfig &&
-            (this._options.navigation.viewConfig.pagingMode === 'end' ||
+            !(this._options.navigation.viewConfig.pagingMode === 'end' ||
                 this._options.navigation.viewConfig.pagingPadding === 'null' ||
                 this._options.navigation.viewConfig.pagingPadding === null
-            )
-        );
+            );
     }
 
     /**
@@ -6517,7 +6518,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _isPagingPadding(): boolean {
-        return !(detection.isMobileIOS || !this._isPagingPaddingFromOptions());
+        return !detection.isMobileIOS && this._isPagingPaddingFromOptions();
     }
 
     /**
