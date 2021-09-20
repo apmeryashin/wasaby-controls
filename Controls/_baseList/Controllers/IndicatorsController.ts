@@ -250,18 +250,26 @@ export default class IndicatorsController {
 
     /**
      * Отображает индикатор долгой отрисовки элементов
+     * @param indicatorElement DOM элемент индикатора
      * @param position Позиция индикатора
      * @void
      */
     displayDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
-        this._startDisplayIndicatorTimer(() => {
-            // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
-            // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
-            // скорее всего не выполнится
-            indicatorElement.style.display = '';
-            indicatorElement.style.position = 'sticky';
-            indicatorElement.style[position] = '0';
-        });
+        // Этими опциями в календаре полностью отключены ромашки, т.к. там не может быть долгой подгрузки.
+        // И в IE из-за его медленной работы индикаторы вызывают прыжки
+        if (
+            this._options.attachLoadTopTriggerToNull && position === 'top' ||
+            this._options.attachLoadDownTriggerToNull && position === 'bottom'
+        ) {
+            this._startDisplayIndicatorTimer(() => {
+                // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
+                // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
+                // скорее всего не выполнится
+                indicatorElement.style.display = '';
+                indicatorElement.style.position = 'sticky';
+                indicatorElement.style[position] = '0';
+            });
+        }
     }
 
     /**
