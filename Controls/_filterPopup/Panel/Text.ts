@@ -8,7 +8,7 @@ import 'css!Controls/filterPopup';
  *
  * @remark
  * Полезные ссылки:
- * * {@link https://github.com/saby/wasaby-controls/blob/rc-21.4000/Controls-default-theme/variables/_filterPopup.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_filterPopup.less переменные тем оформления}
  *
  * @class Controls/_filterPopup/Panel/Text
  * @extends UI/Base:Control
