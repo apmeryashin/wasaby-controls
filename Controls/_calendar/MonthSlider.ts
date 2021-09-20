@@ -22,6 +22,7 @@ import 'css!Controls/calendar';
  * @mixes Controls/calendar:IMonth
  * @mixes Controls/dateRange:IRangeSelectable
  * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDateRange
  * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/interface:IDisplayedRanges
  * @public
@@ -88,6 +89,10 @@ export default class MonthSlider extends Control<IControlOptions> {
 
     protected _onEndValueChanged(event, value): void {
         this._notify('endValueChanged', [value]);
+    }
+
+    protected _rangeChangedHandler(event: Date, startValue: Date, endValue: Date): void {
+        this._notify('rangeChanged', [startValue, endValue]);
     }
 
     private _slideMonth(event, delta): void {
