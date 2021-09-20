@@ -169,7 +169,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @example
  * Чекбокс, регулирующий тему в контроле.
  * <pre>
- *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+ *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="_darkThemeSwitched()"/>
  * </pre>
  * <pre>
  *   class MyControl extends Control<IControlOptions> {
@@ -210,7 +210,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @example
  * Checkbox regulate theme in control.
  * <pre>
- *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+ *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="_darkThemeSwitched()"/>
  * </pre>
  * <pre>
  *    class MyControl extends Control<IControlOptions> {
