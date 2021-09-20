@@ -21,7 +21,7 @@ import {detection} from 'Env/Env';
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FInfoBox%2FOpener%2FInfoBox демо-пример}
  * * {@link /doc/platform/developmentapl/interface-development/controls/openers/infobox/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
  *
  * @mixes Controls/popup:IInfoBox
  * @public
