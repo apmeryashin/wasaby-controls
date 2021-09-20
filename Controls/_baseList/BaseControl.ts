@@ -3417,14 +3417,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._scrollController?.update({ params: this._getScrollParams()});
         if (state) {
             this.handleTriggerVisible(direction);
-        } else if (
-            _private.isPortionedLoad(this) && direction === this._indicatorsController.getPortionedSearchDirection()
-        ) {
-            // если загрузилась целая страница раньше чем прервался поиск, то приостанавливаем его
-            // лучший способ узнать, что страница загрузилась - это скрылся триггер
-            if (this._indicatorsController.shouldStopDisplayPortionedSearch(true)) {
-                this._indicatorsController.stopDisplayPortionedSearch();
-            }
         }
 
         if (detection.isMobilePlatform) {
@@ -4354,6 +4346,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 callback();
             });
             this.callbackAfterRender = null;
+        }
+
+        // если загрузилась целая страница раньше чем прервался порционный поиск, то приостанавливаем его
+        // по стандарту в этом кейсе под страницей понимается viewport
+        // проверять по скрытию триггера загрузку страницы не лучшая идея, т.к. изначально может быть много данных,
+        // а первая порционная подгрузка тоже загрузит много данных => события скрытия триггера не будет.
+        const viewportFilled = this._viewSize > this._viewportSize;
+        if (this._indicatorsController.shouldStopDisplayPortionedSearch(viewportFilled)) {
+            this._indicatorsController.stopDisplayPortionedSearch();
         }
     }
 
