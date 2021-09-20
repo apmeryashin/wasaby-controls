@@ -86,8 +86,10 @@ export class DialogStrategy {
         } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
 
         if (popupItem.fixPosition) {
-            const horizontalProperty = popupItem.position.left !== undefined ? HORIZONTAL_DIRECTION.LEFT : HORIZONTAL_DIRECTION.RIGHT;
-            const verticalProperty = popupItem.position.top !== undefined ? VERTICAL_DIRECTION.TOP : VERTICAL_DIRECTION.BOTTOM;
+            const horizontalProperty = popupItem?.position?.right !== undefined ?
+                HORIZONTAL_DIRECTION.RIGHT : HORIZONTAL_DIRECTION.LEFT;
+            const verticalProperty = popupItem?.position?.bottom !== undefined ?
+                VERTICAL_DIRECTION.BOTTOM : VERTICAL_DIRECTION.TOP;
             return this._getPositionForFixPositionDialog(
                 popupItem.position,
                 windowData,
