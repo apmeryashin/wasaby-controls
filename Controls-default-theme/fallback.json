@@ -1653,7 +1653,6 @@
   "--width_compactDatePicker": "270px",
   "--max-height_compactDatePicker": "400px",
   "--border-radius_compactDatePicker": "8px",
-  "--padding-bottom_compactDatePicker": "10px",
   "--header_height_compactDatePicker": "72px",
   "--header_caption_height_compactDatePicker": "46px",
   "--header_today_width_compactDatePicker": "20px",
