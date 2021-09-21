@@ -72,15 +72,6 @@ describe('Controls/filterPanel:ListEditor', () => {
             assert.deepEqual(listEditor._filter, {});
         });
 
-        it('filter updated after propertyValue changed', () => {
-            const newPropertyValue = [2];
-            const listEditor = getEditor();
-            const options = getEditorOptions();
-            options.propertyValue = newPropertyValue;
-            listEditor._beforeUpdate(options);
-            assert.deepEqual(listEditor._filter[options.keyProperty], newPropertyValue);
-        });
-
         it('propertyValue changed with multiSelect', () => {
             const listEditor = getEditor();
             const newPropertyValue = [1];
@@ -222,26 +213,6 @@ describe('Controls/filterPanel:ListEditor', () => {
             ];
             listEditor._handleSelectorResult(result);
             assert.isNull(listEditor._navigation);
-        });
-
-        it('filter collapsed', () => {
-            const listEditor = getEditor();
-            let collapsed = false;
-            const result = [
-                new Model({
-                    rawData: {
-                        id: 1,
-                        title: 'Test'
-                    },
-                    keyProperty: 'id'
-                })
-            ];
-
-            listEditor._processPropertyValueChanged = (selectedKeys, needCollapse) => {
-                collapsed = needCollapse;
-            };
-            listEditor._handleSelectorResult(result);
-            assert.isTrue(collapsed);
         });
     });
 });

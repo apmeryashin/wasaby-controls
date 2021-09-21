@@ -101,7 +101,6 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _applyFilter(editorGroup: string): void {
         this._notifyChanges();
-        this._viewModel.collapseGroup(editorGroup);
         this._notify('filterApplied');
     }
 
