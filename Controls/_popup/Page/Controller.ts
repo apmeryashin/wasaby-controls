@@ -12,7 +12,7 @@ interface IPageTemplateOptions {
 }
 
 interface IPagePopupOptions extends IBasePopupOptions {
-    templateOptions?: IPagePopupOptions;
+    templateOptions?: IPageTemplateOptions;
 }
 
 class PageController {
@@ -23,7 +23,7 @@ class PageController {
      * @param pageId
      * @param popupOptions
      */
-    getPagePopupOptions(pageId: string, popupOptions: IBasePopupOptions): Promise<unknown> {
+    getPagePopupOptions(pageId: string, popupOptions: IBasePopupOptions): Promise<IPagePopupOptions> {
         const resultPopupOptions = {...popupOptions};
         if (!this._pageTemplate) {
             throw new Error('На приложении не задан шаблон отображения страницы в окне');
