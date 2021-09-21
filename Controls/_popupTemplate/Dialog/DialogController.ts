@@ -190,7 +190,7 @@ class DialogController extends BaseController {
         if (!item.sizes) {
             item.sizes = {};
         }
-
+        item.sizes.margins = this._getMargins(item);
         // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
         if (item.popupOptions.target && !item.fixPosition) {
             const targetCoords = this._getTargetCoords(item, sizes);
@@ -198,7 +198,6 @@ class DialogController extends BaseController {
             item.position = StickyStrategy.getPosition(popupConfig, targetCoords, this._getTargetNode(item));
         } else {
             const windowData = this._getRestrictiveContainerSize(item);
-            item.sizes.margins = this._getMargins(item);
             item.position = DialogStrategy.getPosition(windowData, sizes, item);
         }
     }
