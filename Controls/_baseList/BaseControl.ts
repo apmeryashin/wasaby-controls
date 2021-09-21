@@ -1876,18 +1876,24 @@ const _private = {
 
     needBottomPadding(self: BaseControl, options: IItemActionsOptions): boolean {
         const listViewModel = self._listViewModel;
-
-        const isEditing = !!listViewModel?.isEditing();
-        const hasVisibleItems = !!listViewModel?.getCount();
-        const footer = listViewModel?.getFooter();
-        const results = typeof listViewModel?.getResults === 'function' ? listViewModel.getResults() : false;
+        if (!listViewModel) {
+            return false;
+        }
+        const isEditing = !!listViewModel.isEditing();
+        const itemsCount = listViewModel.getCount();
+        const footer = listViewModel.getFooter();
+        const results = typeof listViewModel.getResults === 'function' ? listViewModel.getResults() : false;
+        const hasMoreDown = self._hasMoreData('down');
+        const hasHiddenItemsDown = listViewModel.getStopIndex() < itemsCount;
 
         return (
-            (hasVisibleItems || isEditing) &&
+            (itemsCount || isEditing) &&
             options.itemActionsPosition === 'outside' &&
             !footer &&
-            (!results || listViewModel?.getResultsPosition() !== 'bottom') &&
-            !(self._shouldDrawNavigationButton && _private.isDemandNavigation(options.navigation))
+            (!results || listViewModel.getResultsPosition() !== 'bottom') &&
+            !(self._shouldDrawNavigationButton && _private.isDemandNavigation(options.navigation)) &&
+            !hasHiddenItemsDown &&
+            !hasMoreDown
         );
     },
 

@@ -1547,6 +1547,8 @@ describe('Controls/list_clean/BaseControl', () => {
     it('needFooterPadding', () => {
         let editing = false;
         let count = 10;
+        let stopIndex = 10;
+        let hasMore = false;
         let footer = false;
         let results = false;
         let resultsPosition = '';
@@ -1557,9 +1559,11 @@ describe('Controls/list_clean/BaseControl', () => {
                 getCount: () => count,
                 getFooter: () => footer,
                 getResults: () => results,
-                getResultsPosition: () => resultsPosition
+                getResultsPosition: () => resultsPosition,
+                getStopIndex: () => stopIndex
             },
-            _shouldDrawNavigationButton: false
+            _shouldDrawNavigationButton: false,
+            _hasMoreData: () => hasMore
         } as unknown as BaseControl;
 
         assert.isFalse(
@@ -1615,5 +1619,19 @@ describe('Controls/list_clean/BaseControl', () => {
             'itemActionsPosition is outside, empty items, run editing in place padding is needed'
         );
         editing = false;
+
+        count = 10;
+        hasMore = true;
+        assert.isFalse(
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
+            'itemActionsPosition is outside, hasMoreData, padding is not needed'
+        );
+
+        hasMore = false;
+        stopIndex = 5;
+        assert.isFalse(
+            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
+            'itemActionsPosition is outside, has hidden items at bottom, padding is not needed'
+        );
     });
 });
