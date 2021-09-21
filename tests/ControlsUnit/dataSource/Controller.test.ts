@@ -356,7 +356,7 @@ describe('Controls/dataSource:SourceController', () => {
             ok(controller.getItems().getCount() === pageSize);
         });
 
-        it('load with multiNavigation and without extendedItems',  async () => {
+        it('load with multiNavigation and without expandedItems',  async () => {
             const pageSize = 3;
             const navigation = getPagingNavigation(false, pageSize);
             navigation.sourceConfig.multiNavigation = true;
@@ -364,6 +364,17 @@ describe('Controls/dataSource:SourceController', () => {
             const loadedItems = await controller.reload();
             ok((loadedItems as RecordSet).getCount() === pageSize);
             ok(controller.hasMoreData('down'));
+        });
+
+        it('load with multiNavigation, parentProperty, expandedItems as [null]',  async () => {
+            const pageSize = 3;
+            const navigation = getPagingNavigation(false, pageSize);
+            navigation.sourceConfig.multiNavigation = true;
+            const controller = getControllerWithHierarchy({navigation, expandedItems: [null]});
+            const loadedItems = await controller.reload();
+            ok((loadedItems as RecordSet).getCount() === pageSize);
+            await controller.reload();
+            ok(controller.getItems().getCount() === pageSize);
         });
 
         it('load with dataLoadCallback in options',  async () => {
