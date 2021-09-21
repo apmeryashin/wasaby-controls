@@ -258,7 +258,7 @@ export class StickyController extends BaseController {
         const {
             horizontal: horizontalProperty,
             vertical: verticalProperty
-        } = getPositionProperties(item.popupOptions.resizeDirection);
+        } = getPositionProperties(item.popupOptions.direction);
         const horizontalOffset = horizontalProperty === HORIZONTAL_DIRECTION.LEFT ? offset.x : -offset.x;
         const verticalOffset = verticalProperty === VERTICAL_DIRECTION.TOP ? offset.y : -offset.y;
         if (!item.startPosition) {
