@@ -5533,7 +5533,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * @private
      */
     _onItemActionsMenuResult(eventName: string, actionModel: Model, clickEvent: SyntheticEvent<MouseEvent>): void {
-        if (eventName === 'itemClick') {
+        if (eventName === 'click') {
+            const item = _private.getItemActionsController(this, this._options).getActiveItem();
+            if (item) {
+                this._notifyItemClick([clickEvent, item.contents, clickEvent]);
+            }
+        } else if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action) {
                 const item = _private.getItemActionsController(this, this._options).getActiveItem();
