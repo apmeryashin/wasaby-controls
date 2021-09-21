@@ -718,6 +718,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getDraggedItemsCount();
     }
 
+    getDraggedItemsCountString(): string {
+        const count = this.getDraggedItemsCount();
+        // В днд мы можем получить максимум 100 записей, для производительности,
+        // поэтому если записей больше 99 пишем 99+
+        return count > 99 ? '99+' : String(count);
+    }
+
     // endregion Drag-n-drop
 
     isSticked(stickyCallback: Function, item: CollectionItem): boolean {

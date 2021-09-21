@@ -60,7 +60,7 @@
       </ws:else>
    </ws:if>
    <ws:if data="{{ (item || itemData).shouldDisplayDraggingCounter() }}">
-      <span class="controls-ListView__item-dragging-counter">{{(item || itemData).getDraggedItemsCount()}}</span>
+      <span class="controls-ListView__item-dragging-counter">{{(item || itemData).getDraggedItemsCountString()}}</span>
    </ws:if>
 </ws:template>
 
