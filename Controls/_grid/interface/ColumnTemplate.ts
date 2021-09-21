@@ -171,7 +171,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     *                      <div title="{{contentTemplate.item.contents.name}}">
     *                         {{contentTemplate.item.contents.name}}
     *                      </div>
-    *                      <ws:partial template="{{contentTemplate.editArrowTemplate}}"/>
+    *                      <ws:partial template="{{ template.expanderTemplate }}" />
     *                   </ws:contentTemplate>
     *                </ws:partial>
     *             </ws:template>
