@@ -86,7 +86,11 @@ extends Control<TOptions, TState> {
     }
 
     protected _beforeUpdate(options: IErrorContainerOptions): void {
-        if (isEqual(this._options.viewConfig, options.viewConfig)) {
+        if (
+            options.viewConfig &&
+            options.viewConfig.mode !== ErrorViewMode.dialog &&
+            isEqual(this._options.viewConfig, options.viewConfig)
+        ) {
             return;
         }
 
