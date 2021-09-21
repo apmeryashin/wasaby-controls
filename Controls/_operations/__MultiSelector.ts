@@ -10,6 +10,7 @@ import {LoadingIndicator} from 'Controls/LoadingIndicator';
 import {isEqual} from 'Types/object';
 import 'css!Controls/operations';
 import {ControllerClass as OperationsController} from '../_operations/ControllerClass';
+import {process} from 'Controls/error';
 
 const DEFAULT_CAPTION = rk('Отметить');
 const DEFAULT_ITEMS = [
@@ -271,15 +272,20 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       this._resetCountPromise();
    }
 
-   private _getCountBySourceCall(selection, selectionCountConfig): CountPromise {
+   private _getCountBySourceCall(selection, selectionCountConfig): Promise<number> {
       this._children.countIndicator?.show();
       this._countPromise = new CancelablePromise(getCountUtil.getCount(selection, selectionCountConfig));
-      return this._countPromise.promise.then(
-          (result: number): number => {
+      return this._countPromise.promise
+          .then((result: number): number => {
              this._resetCountPromise();
              return result;
-          }
-      );
+          })
+          .catch((error) => {
+             if (!error.isCanceled) {
+                process({error});
+             }
+             return Promise.reject(error);
+          });
    }
 
    private _getSelection(selectedKeys: TKeysSelection, excludedKeys: TKeysSelection): ISelectionObject {

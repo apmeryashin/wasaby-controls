@@ -50,10 +50,19 @@ var _private = {
       };
    },
 
-   getSelectedKeys: function(options) {
-      const selectedItems = _private.getSelectedItems(options);
-      const items = _private.getFilteredItems(selectedItems, _private.getFilterFunction(options.selectionFilter));
-      return _private.getKeysByItems(items, options._dataOptionsValue.keyProperty);
+   getSelectedKeys: function(options): TKey[] {
+       let selectedKeys;
+
+       if (options.selectedItems && options.selectedItems.getCount()) {
+           const selectedItems = _private.getSelectedItems(options);
+           const items = _private.getFilteredItems(selectedItems, _private.getFilterFunction(options.selectionFilter));
+           selectedKeys = _private.getKeysByItems(items, options._dataOptionsValue.keyProperty);
+       } else if (options.selectedKeys) {
+           selectedKeys = [...options.selectedKeys];
+       } else {
+           selectedKeys = [];
+       }
+      return selectedKeys;
    },
 
    // TODO: вообще не уверен что это нужно, но я побоялся трогать
