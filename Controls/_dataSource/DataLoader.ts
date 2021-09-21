@@ -1,290 +1,43 @@
 import {default as NewSourceController, IControllerState} from 'Controls/_dataSource/Controller';
-import {getState} from 'Controls/_dataSource/Controller/State';
-import {IFilterItem, ControllerClass as FilterController, IFilterControllerOptions} from 'Controls/filter';
-import {
-    ISourceOptions,
-    ISortingOptions,
-    TSortingOptionValue,
-    INavigationOptions,
-    INavigationSourceConfig,
-    TFilter,
-    TKey
-} from 'Controls/interface';
-import {RecordSet} from 'Types/collection';
-import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
-import {ControllerClass as OperationsController} from 'Controls/operations';
+import {ControllerClass as FilterController} from 'Controls/filter';
 import {Logger} from 'UI/Utils';
-import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {loadAsync, loadSync, isLoaded} from 'WasabyLoader/ModulesLoader';
 import {Guid} from 'Types/entity';
 import {ControllerClass as SearchController} from 'Controls/search';
-import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
-import {TArrayGroupId} from 'Controls/list';
 import {constants} from 'Env/Constants';
-import {PrefetchProxy} from 'Types/source';
-import PageController from 'Controls/_dataSource/PageController';
+import ListProvider, {
+    ILoadDataResult,
+    ILoadDataConfig
+} from 'Controls/_dataSource/DataLoader/ListProvider';
+import CustomProvider, {
+    ILoadDataCustomConfig,
+    TCustomResult
+} from 'Controls/_dataSource/DataLoader/CustomProvider';
+import Storage from 'Controls/_dataSource/DataLoader/Storage';
 
-const QUERY_PARAMS_LOAD_TIMEOUT = 5000;
 const DEFAULT_LOAD_TIMEOUT = 10000;
 const DEBUG_DEFAULT_LOAD_TIMEOUT = 30000;
-
-interface IFilterHistoryLoaderResult {
-    filterButtonSource: IFilterItem[];
-    filter: TFilter;
-    historyItems: IFilterItem[];
-}
-interface IFilterResult {
-    historyItems: IFilterItem[];
-    controller: FilterController;
-}
-
-interface IBaseLoadDataConfig {
-    afterLoadCallback?: string;
-}
-
-interface IPrefetchConfig {
-    configLoaderArguments: unknown;
-    pageId?: string;
-}
-
-export interface ILoadDataConfig extends
-    IBaseLoadDataConfig,
-    ISourceOptions,
-    INavigationOptions<INavigationSourceConfig> {
-    id?: string;
-    type?: 'list';
-    sorting?: TSortingOptionValue;
-    sourceController?: NewSourceController;
-    filterController?: FilterController;
-    filter?: TFilter;
-    filterButtonSource?: IFilterItem[];
-    fastFilterSource?: object[];
-    historyId?: string;
-    groupHistoryId?: string;
-    nodeHistoryId?: string;
-    historyItems?: IFilterItem[];
-    propStorageId?: string;
-    stateStorageId?: string;
-    root?: string;
-    parentProperty?: string;
-    expandedItems?: TKey[];
-    searchParam?: string;
-    searchValue?: string;
-    filterHistoryLoader?: (filterButtonSource: object[], historyId: string) => Promise<IFilterHistoryLoaderResult>;
-    error?: Error;
-    historySaveCallback?: (historyData: Record<string, unknown>, filterButtonItems: IFilterItem[]) => void;
-    minSearchLength?: number;
-    searchDelay?: number;
-    items?: RecordSet;
-    loadTimeout?: number;
-}
-
-export interface ILoadDataCustomConfig extends IBaseLoadDataConfig {
-    id?: string;
-    type: 'custom';
-    loadDataMethod: Function;
-    loadDataMethodArguments?: object;
-    dependencies?: string[];
-}
-
-export interface ILoadDataAdditionalDepsConfig extends IBaseLoadDataConfig {
-    id?: string;
-    type: 'additionalDependencies';
-    loadDataMethod: Function;
-    loadDataMethodArguments?: object;
-    dependencies?: string[];
-}
+const DATA_PROVIDERS_BY_TYPE = {
+    list: ListProvider,
+    custom: CustomProvider
+};
 
 export interface IDataLoaderOptions {
     loadDataConfigs?: ILoadDataConfig[];
 }
-
-export interface ILoadDataResult extends ILoadDataConfig {
-    data: RecordSet;
-    error: Error;
-    sourceController: NewSourceController;
-    filterController?: FilterController;
-    searchController?: SearchController;
-    collapsedGroups?: TArrayGroupId;
-    source: PrefetchProxy;
-    operationsController?: OperationsController;
-}
 export type TLoadersConfigsMap = Record<string, TLoadConfig>;
-type TLoadedConfigs = Map<string, ILoadDataResult|ILoadDataConfig>;
-type TLoadConfig = ILoadDataConfig|ILoadDataCustomConfig|ILoadDataAdditionalDepsConfig;
-type TLoadResult = ILoadDataResult|ILoadDataCustomConfig|boolean;
+type TLoadConfig = ILoadDataConfig|ILoadDataCustomConfig;
+type TLoadResult = ILoadDataResult|TCustomResult|boolean;
 type TLoadPromiseResult = Promise<TLoadResult>;
 type TLoadPromiseResultMap = Record<string, Promise<TLoadResult>>;
-type TLoadResultMap = Record<string, TLoadResult>;
+export type TLoadResultMap = Record<string, TLoadResult>;
 
-function isNeedPrepareFilter(loadDataConfig: ILoadDataConfig): boolean {
-    return !!(loadDataConfig.filterButtonSource || loadDataConfig.fastFilterSource || loadDataConfig.searchValue);
-}
-
-function getFilterController(options: IFilterControllerOptions): FilterController {
-    const controllerClass = loadSync<typeof import('Controls/filter')>('Controls/filter').ControllerClass;
-    return new controllerClass({...options});
-}
-
-function getSourceController(options: ILoadDataConfig): NewSourceController {
-    let sourceController;
-
-    if (options.sourceController) {
-        sourceController = options.sourceController;
-        sourceController.updateOptions(options);
-    } else {
-        sourceController = new NewSourceController(options);
-    }
-
-    return sourceController;
-}
-
-function getFilterControllerWithHistoryFromLoader(loadConfig: ILoadDataConfig): Promise<IFilterResult> {
-    return loadConfig.filterHistoryLoader(loadConfig.filterButtonSource, loadConfig.historyId)
-        .then((result: IFilterHistoryLoaderResult) => {
-            const controller = getFilterController({
-                ...loadConfig,
-                ...result
-            } as IFilterControllerOptions);
-
-            if (result.historyItems) {
-                controller.setFilterItems(result.historyItems);
-            }
-            return {
-                controller,
-                ...result
-            };
-        });
-}
-
-function getFilterControllerWithFilterHistory(loadConfig: ILoadDataConfig): Promise<IFilterResult> {
-    const controller = getFilterController(loadConfig as IFilterControllerOptions);
-    return Promise.resolve(loadConfig.historyItems || controller.loadFilterItemsFromHistory()).then((historyItems) => {
-        controller.setFilterItems(historyItems);
-        return {
-            controller,
-            historyItems: historyItems.items || historyItems
-        };
-    });
-}
-
-function getLoadResult(
-    loadConfig: ILoadDataConfig,
-    sourceController: NewSourceController,
-    filterController: FilterController,
-    historyItems?: IFilterItem[],
-    operationsController?: OperationsController,
-    listConfigStoreId?: string
-): ILoadDataResult {
-    return {
-        ...loadConfig,
-        sourceController,
-        filterController,
-        historyItems,
-        filterButtonSource: filterController?.getFilterButtonItems(),
-        source: loadConfig.source ? new PrefetchProxy({
-            target: loadConfig.source,
-            data: {
-                query: sourceController.getLoadError() || sourceController.getItems()
-            }
-        }) : undefined,
-        data: sourceController.getItems(),
-        error: sourceController.getLoadError(),
-        filter: sourceController.getFilter(),
-        sorting:  sourceController.getSorting() as TSortingOptionValue,
-        collapsedGroups: sourceController.getCollapsedGroups(),
-        operationsController
-    };
-}
-
-function loadDataByConfig(
-    loadConfig: ILoadDataConfig,
-    loadTimeout?: number,
-    listConfigStoreId?: string
-): Promise<ILoadDataResult> {
-    const loadDataTimeout = loadTimeout || getLoadTimeout(loadConfig);
-    let filterController: FilterController;
-    let operationsPromise;
-    let filterHistoryItems;
-    let sortingPromise;
-    let filterPromise;
-
-    if (listConfigStoreId) {
-        Object.assign(loadConfig, getState(listConfigStoreId));
-    }
-
-    if (isNeedPrepareFilter(loadConfig)) {
-        if (loadConfig.filterHistoryLoader instanceof Function) {
-            filterPromise  = getFilterControllerWithHistoryFromLoader(loadConfig);
-        } else {
-            if (isLoaded('Controls/filter')) {
-                filterPromise = getFilterControllerWithFilterHistory(loadConfig);
-            } else {
-                filterPromise = loadAsync('Controls/filter').then(() => {
-                    return getFilterControllerWithFilterHistory(loadConfig);
-                });
-            }
-        }
-
-        filterPromise
-            .then(({controller, historyItems}) => {
-                filterController = loadConfig.filterController = controller;
-                filterHistoryItems = historyItems;
-            })
-            .catch(() => {
-                filterController = getFilterController(loadConfig as IFilterControllerOptions);
-            });
-        filterPromise = wrapTimeout(filterPromise, QUERY_PARAMS_LOAD_TIMEOUT).catch(() => {
-            Logger.info('Controls/dataSource:loadData: Данные фильтрации не загрузились за 1 секунду');
-        });
-    }
-
-    if (loadConfig.propStorageId) {
-        sortingPromise = loadSavedConfig(loadConfig.propStorageId, ['sorting']);
-        sortingPromise = wrapTimeout(sortingPromise, QUERY_PARAMS_LOAD_TIMEOUT).catch(() => {
-            Logger.info('Controls/dataSource:loadData: Данные сортировки не загрузились за 1 секунду');
-        });
-    }
-
-    if (loadConfig.actions) {
-        operationsPromise = loadAsync('Controls/operations').then((operations) => {
-            return new operations.ControllerClass({});
-        });
-    }
-
-    return Promise.all([
-        filterPromise,
-        sortingPromise,
-        operationsPromise
-    ]).then(([, sortingPromiseResult, operationsController]: [TFilter, ISortingOptions, any]) => {
-        const sorting = sortingPromiseResult ? sortingPromiseResult.sorting : loadConfig.sorting;
-        const sourceController = getSourceController({
-            ...loadConfig,
-            sorting,
-            filter: filterController ? filterController.getFilter() : loadConfig.filter,
-            loadTimeout: loadDataTimeout
-        });
-
-        return new Promise((resolve) => {
-            if (loadConfig.source) {
-                sourceController.reload(undefined, true)
-                    .catch((error) => error)
-                    .finally(() => {
-                        resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems, operationsController));
-                    });
-            } else {
-                resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems, operationsController));
-            }
-        });
-    });
-}
-
-function getLoadTimeout(loadConfig: ILoadDataConfig): Number {
+function getLoadTimeout(loadConfig: ILoadDataConfig): number {
     return loadConfig?.loadTimeout || (constants.isProduction ? DEFAULT_LOAD_TIMEOUT : DEBUG_DEFAULT_LOAD_TIMEOUT);
 }
 
 export default class DataLoader {
-    private _loadedConfigStorage: TLoadedConfigs = new Map();
+    private _loadedConfigStorage: Storage = new Storage();
     private _loadDataConfigs: TLoadConfig[] | TLoadersConfigsMap;
     private _originLoadDataConfigs: TLoadConfig[];
 
@@ -294,12 +47,12 @@ export default class DataLoader {
             this._loadDataConfigs = this._getConfigsWithKeys(this._originLoadDataConfigs);
             this._loadDataConfigs.forEach((config, index) => {
                 // Сеттим оригинальные конфиги, чтобы в SourceController не попал id, если его не задавали
-                this._setDataToConfigStorage(this._originLoadDataConfigs[index], config.id);
+                this._loadedConfigStorage.set(this._originLoadDataConfigs[index], config.id);
             });
         } else {
             this._loadDataConfigs = options.loadDataConfigs || {};
             Object.keys(this._loadDataConfigs).forEach((key) => {
-                this._setDataToConfigStorage(this._loadDataConfigs[key], key);
+                this._loadedConfigStorage.set(this._loadDataConfigs[key], key);
             });
         }
     }
@@ -331,24 +84,17 @@ export default class DataLoader {
     loadEvery<T extends ILoadDataConfig|ILoadDataCustomConfig>(
         sourceConfigs: TLoadConfig[] | TLoadersConfigsMap = this._loadDataConfigs,
         loadTimeout?: number,
-        prefetchConfig?: IPrefetchConfig
+        listConfigStoreId?: string
     ): TLoadPromiseResult[] | TLoadPromiseResultMap {
-        // TODO для совместимости добросок, чтобы не ломать тесты. можно удалить как смержат в sabyPage
-        if (typeof prefetchConfig === 'string') {
-            prefetchConfig = {
-                pageId: prefetchConfig,
-                configLoaderArguments: {}
-            };
-        }
         if (sourceConfigs instanceof Array) {
             const configsWithKeys = this._getConfigsWithKeys(sourceConfigs);
             const loadersMap = this._getLoadersMap(
                 configsWithKeys,
                 sourceConfigs ? sourceConfigs as TLoadConfig[] : this._originLoadDataConfigs
             );
-            return this._loadLoadersArray(configsWithKeys, loadersMap, loadTimeout, prefetchConfig);
+            return this._loadLoadersArray(configsWithKeys, loadersMap, loadTimeout, listConfigStoreId);
         } else {
-            return this._loadLoadersMap(sourceConfigs, loadTimeout, prefetchConfig);
+            return this._loadLoadersMap(sourceConfigs, loadTimeout, listConfigStoreId);
         }
     }
 
@@ -371,128 +117,58 @@ export default class DataLoader {
     }
 
     getSourceController(id?: string): NewSourceController {
-        const config = this._getConfig(id);
-        let {sourceController} = config;
-        const {items, filterButtonSource, fastFilterSource} = config;
-
-        if (!sourceController) {
-            sourceController = config.sourceController = getSourceController(config);
-
-            if (items) {
-                sourceController.setItems(items);
-            }
-
-            if (filterButtonSource || fastFilterSource) {
-                sourceController.setFilter(this.getFilterController(id).getFilter());
-            }
-        }
-
-        return sourceController;
+        return this._loadedConfigStorage.getSourceController(id);
     }
 
     setSourceController(id: string, sourceController: NewSourceController): void {
-        this._getConfig(id).sourceController = sourceController;
+        return this._loadedConfigStorage.setSourceController(id, sourceController);
     }
 
     getFilterController(id?: string): FilterController {
-        const config = this._getConfig(id);
-        let {filterController} = config;
-        const {historyItems} = config;
-
-        if (!filterController) {
-            if (isLoaded('Controls/filter')) {
-                filterController = config.filterController = getFilterController(config as IFilterControllerOptions);
-
-                if (historyItems) {
-                    filterController.setFilterItems(config.historyItems);
-                }
-            }
-        }
-        return filterController;
+        return this._loadedConfigStorage.getFilterController(id);
     }
 
     getSearchController(id?: string): Promise<SearchController> {
-        const config = this._getConfig(id);
-        if (!config.searchController) {
-            if (!config.searchControllerCreatePromise) {
-                config.searchControllerCreatePromise = import('Controls/search').then((result) => {
-                    config.searchController = new result.ControllerClass(
-                        {...config} as ISearchControllerOptions
-                    );
-
-                    return config.searchController;
-                });
-            }
-            return config.searchControllerCreatePromise;
-        }
-
-        return Promise.resolve(config.searchController);
+        return this._loadedConfigStorage.getSearchController(id);
     }
 
     getSearchControllerSync(id?: string): SearchController {
-        const config = this._getConfig(id);
-
-        if (!config?.searchController && config?.searchParam && config?.sourceController && isLoaded('Controls/search')) {
-            const searchControllerClass = loadSync<typeof import('Controls/search')>('Controls/search').ControllerClass;
-            config.searchController = new searchControllerClass(
-                {...config} as ISearchControllerOptions
-            );
-        }
-        return config?.searchController;
+        return this._loadedConfigStorage.getSearchControllerSync(id);
     }
 
     getState(): Record<string, IControllerState> {
         const state = {};
-        this.each((config, id) => {
+        this._loadedConfigStorage.each((config, id) => {
             state[id] = {...config, ...this.getSourceController(id).getState()};
         });
         return state;
     }
 
     destroy(): void {
-        this.each(({sourceController}) => {
-            sourceController?.destroy();
-        });
-        this._loadedConfigStorage.clear();
+        this._loadedConfigStorage.destroy();
     }
 
     each(callback: Function): void {
-        this._loadedConfigStorage.forEach((config: ILoadDataResult, id) => {
+        this._loadedConfigStorage.each((config: ILoadDataResult, id) => {
             callback(config, id);
         });
     }
 
-    private _setDataToConfigStorage(
-        data: TLoadConfig|ILoadDataResult,
-        id?: string
-    ): void {
-        this._loadedConfigStorage.set(id || Guid.create(), data);
-    }
-
-    private _getConfig(id?: string): ILoadDataResult {
-        let config;
-
-        if (!id) {
-            config = this._loadedConfigStorage.entries().next().value[1];
-        } else if (id) {
-            config = this._loadedConfigStorage.get(id);
-        } else {
-            Logger.error('Controls/dataSource:loadData: ????');
-        }
-
-        return config;
+    getStorage(): Storage {
+        return this._loadedConfigStorage;
     }
 
     /**
      * Запускает лоадеры, конфиг которых задан в виде объекта
      * @param sourceConfigs
      * @param loadTimeout
+     * @param listConfigStoreId
      * @private
      */
     private _loadLoadersMap(
         sourceConfigs?: TLoadersConfigsMap,
         loadTimeout?: number,
-        prefetchConfig?: IPrefetchConfig
+        listConfigStoreId?: string
     ): TLoadPromiseResultMap {
         const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
         const loadResult = {};
@@ -503,7 +179,7 @@ export default class DataLoader {
             } else {
                 loadPromise =
                     this._callLoaderWithDependencies(loaderKey, sourceConfigs, startedLoaders,
-                        loadTimeout, prefetchConfig);
+                        loadTimeout, listConfigStoreId);
             }
             loadResult[loaderKey] = loadPromise;
         });
@@ -515,13 +191,14 @@ export default class DataLoader {
      * @param sourceConfigs
      * @param loadersMap
      * @param loadTimeout
+     * @param listConfigStoreId
      * @private
      */
     private _loadLoadersArray(
         sourceConfigs: TLoadConfig[],
         loadersMap: TLoadersConfigsMap,
         loadTimeout?: number,
-        prefetchConfig?: IPrefetchConfig
+        listConfigStoreId?: string
     ): TLoadPromiseResult[] {
         const loadDataPromises = [];
         const startedLoaders: {[loaderKey: string]: TLoadPromiseResult} = {};
@@ -532,7 +209,7 @@ export default class DataLoader {
             } else {
                 loadDataPromises.push(
                     this._callLoaderWithDependencies(loadConfig.id, loadersMap, startedLoaders,
-                        loadTimeout, prefetchConfig)
+                        loadTimeout, listConfigStoreId)
                 );
             }
         });
@@ -547,6 +224,7 @@ export default class DataLoader {
      * @param loadersMap мапа лоадеров id -> конфиг
      * @param startedLoaders мапа из промисов запущенных лоадеров
      * @param loadTimeout
+     * @param listConfigStoreId
      * @private
      */
     private _callLoaderWithDependencies(
@@ -554,7 +232,7 @@ export default class DataLoader {
         loadersMap: TLoadersConfigsMap,
         startedLoaders: Record<string, TLoadPromiseResult>,
         loadTimeout?: number,
-        prefetchConfig?: IPrefetchConfig
+        listConfigStoreId?: string
     ): TLoadPromiseResult {
         const loadConfig = loadersMap[id];
         let loadPromise;
@@ -571,11 +249,11 @@ export default class DataLoader {
                 loadPromise = Promise.all(
                     this._loadDependencies(loadersMap, startedLoaders, dependencies, loadTimeout)
                 ).then((results) => {
-                    return this._callLoader(id, loadConfig, loadTimeout, results, prefetchConfig);
+                    return this._callLoader(id, loadConfig, loadTimeout, results, listConfigStoreId);
                 });
             }
         } else {
-            loadPromise = this._callLoader(id, loadConfig, loadTimeout, void 0, prefetchConfig);
+            loadPromise = this._callLoader(id, loadConfig, loadTimeout, void 0, listConfigStoreId);
         }
         startedLoaders[id] = loadPromise;
         return loadPromise;
@@ -587,6 +265,7 @@ export default class DataLoader {
      * @param loaderConfig
      * @param loadTimeout
      * @param dependencies
+     * @param listConfigStoreId
      * @private
      */
     private _callLoader(
@@ -594,28 +273,11 @@ export default class DataLoader {
         loaderConfig: TLoadConfig,
         loadTimeout?: number,
         dependencies?: TLoadResult[],
-        prefetchConfig?: IPrefetchConfig
+        listConfigStoreId?: string
     ): TLoadPromiseResult {
-        let loadPromise;
-        if (loaderConfig.type === 'custom') {
-            const customPromise = loaderConfig.loadDataMethod(
-                loaderConfig.loadDataMethodArguments,
-                dependencies
-            );
-            loadPromise = wrapTimeout(
-                customPromise, loadTimeout || getLoadTimeout(loaderConfig)
-            ).catch((error) => error);
-        } else if (loaderConfig.type === 'additionalDependencies') {
-            loadPromise = this._loadAdditionalDependencies(loaderConfig, dependencies, prefetchConfig?.configLoaderArguments);
-        } else {
-            loadPromise = loadDataByConfig(loaderConfig, loadTimeout, prefetchConfig?.pageId);
-        }
-        Promise.resolve(loadPromise).then((result) => {
-            if (loaderConfig.type === 'list' && !result.source && result.historyItems) {
-                result.sourceController.setFilter(result.filter);
-            }
-            return result;
-        });
+        const dataLoadTimeout = loadTimeout || getLoadTimeout(loaderConfig);
+        const Loader = DATA_PROVIDERS_BY_TYPE[loaderConfig.type] || DATA_PROVIDERS_BY_TYPE.list;
+        const loadPromise = new Loader().load(loaderConfig, dataLoadTimeout, listConfigStoreId, dependencies);
         if (loaderConfig.afterLoadCallback) {
             const afterReloadCallbackLoadPromise = loadAsync(loaderConfig.afterLoadCallback);
             loadPromise.then((result) => {
@@ -631,7 +293,7 @@ export default class DataLoader {
             });
         }
         return loadPromise.then((result) => {
-            this._setDataToConfigStorage(result, id);
+            this._loadedConfigStorage.set(result, id);
             return result;
         });
     }
@@ -684,56 +346,5 @@ export default class DataLoader {
                 Обнаружены циклические зависимости с загрузчиками с ключами ${circularDependencies.join(', ')}`);
         }
         return errors;
-    }
-
-    /**
-     * Метод загрузки лоадера с типом 'additionalDependencies'
-     * Этот лоадер возвращает список идентификаторов страниц,
-     * данные для которых нужно дополнительно загрузить вместе с данными основной страницы.
-     * @param config
-     * @param dependencies
-     * @private
-     */
-    private _loadAdditionalDependencies(
-        config: ILoadDataAdditionalDepsConfig,
-        dependencies?: TLoadResult[],
-        listConfigArguments?: object
-    ): Promise<Record<string, unknown>> {
-        return Promise.resolve(config.loadDataMethod(config.loadDataMethodArguments, dependencies))
-            .then((pageKeys: string[], loadDataMethodArguments: Record<string, unknown> = {}) => {
-                const args = {...loadDataMethodArguments, ...listConfigArguments};
-                return this._loadDepsData(pageKeys, args);
-            })
-            .catch((error) => error);
-    }
-
-    /**
-     * Загружает данные для списка страниц из additionalDependencies, по итогу возвращает объект с ключами -
-     * идентификаторами страниц и значениями - результатами загрузки
-     * @param pagesKeys
-     * @param loadDataMethodArguments
-     * @private
-     */
-    private _loadDepsData(
-        pagesKeys: string[],
-        loadDataMethodArguments: Record<string, unknown>
-    ): Promise<{[pageId: string]: unknown}> {
-        const result = {
-            /*
-               FIXME EXPERIMENT
-               Для того, чтобы пока это эксперимент можно было понять,
-               что это подгруженные данные страниц и обработать на уровне попапа
-             */
-            _isAdditionalDependencies: true
-        };
-        return new Promise((resolve) => {
-            Promise.all(pagesKeys.map((key) => {
-                return PageController.getPageConfig(key).then((pageConfig) => {
-                    return PageController.loadData(pageConfig, loadDataMethodArguments).then((pageLoadedData) => {
-                        result[key] = pageLoadedData;
-                    });
-                }).catch((error) => resolve(error));
-            })).then(() => resolve(result)).catch((error) => resolve(error));
-        });
     }
 }
