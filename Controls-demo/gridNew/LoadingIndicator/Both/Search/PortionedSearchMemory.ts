@@ -28,14 +28,16 @@ export default class PositionSourceMemory extends Memory {
         }
 
         if (isSearch) {
-            const limit = this._littleData ? 5 : 100;
+            const limit = this._littleData ? 5 : 20;
+            const iterative =  position > -60 || position < limit;
+            const hasMore = isPrepend ? position > -60 : position < limit;
             return this._getSearchItems(position)
                 .then((items) => this._prepareQueryResult({
                         items,
                         meta: {
-                            total: isPosition ? {before: true, after: !this._littleData} : position < limit,
-                            more: isPosition ? {before: true, after: !this._littleData} : position < limit,
-                            iterative: position < limit // находим всего 100 записей
+                            total: iterative,
+                            more: isPosition ? {before: true, after: !this._littleData} : hasMore,
+                            iterative
                         }
                     }, null)
                 );
