@@ -815,6 +815,8 @@
   "--height_filterButton_filterView": "var(--icon-size_m)",
   "--background-color_filterButton_filterView": "transparent",
   "--box-shadow_filterButton_filterView": "none",
+  "--reset-button_icon-color_filterView": "var(--reset-button_color)",
+  "--reset-button_hover_icon-color_filterView": "var(--reset-button_icon-color_filterView)",
   "--background-color_hover_filterButton_filterView": "var(--background-color_filterButton_filterView)",
 
   "--icon_font-family_filterButton_filterView": "var(--icon_font-family_m)",

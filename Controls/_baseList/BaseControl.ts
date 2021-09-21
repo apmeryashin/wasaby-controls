@@ -1469,11 +1469,15 @@ const _private = {
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
             // Поэтому это должно быть после обработки изменений коллекции scrollController'ом, чтобы итератор
             // вызывался с актуальными индексами
-            if ((action === IObservable.ACTION_REMOVE ||
+            if (action === IObservable.ACTION_REMOVE ||
                 action === IObservable.ACTION_REPLACE ||
-                action === IObservable.ACTION_RESET) &&
-                self._itemActionsMenuId) {
-                _private.closeItemActionsMenuForActiveItem(self, removedItems);
+                action === IObservable.ACTION_RESET) {
+                if (_private.hasHoverFreezeController(self)) {
+                    self._hoverFreezeController.unfreezeHover();
+                }
+                if (self._itemActionsMenuId) {
+                    _private.closeItemActionsMenuForActiveItem(self, removedItems);
+                }
             }
 
             // Изначально могло не создаться selectionController (не был задан source), но в целом работа с выделением

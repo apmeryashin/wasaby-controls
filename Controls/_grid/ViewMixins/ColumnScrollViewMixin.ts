@@ -82,21 +82,29 @@ const getViewHeader = (self) => {
     return header;
 };
 
-const hasCheckboxColumn = (options: IAbstractViewOptions): boolean => {
+const hasCheckboxColumn = (options: Partial<IAbstractViewOptions>): boolean => {
     return options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 };
 
-const isSizeAffectsOptionsChanged = (newOptions: IAbstractViewOptions, oldOptions: IAbstractViewOptions): boolean => {
+export const isSizeAffectsOptionsChanged = (newOptions: Partial<IAbstractViewOptions>, oldOptions: Partial<IAbstractViewOptions>): boolean => {
     const changedOptions = _Options.getChangedOptions(newOptions, oldOptions);
+
+    // Если ничего не изменилось, то утилита вернет null
+    if (!changedOptions) {
+        return false;
+    }
 
     return Boolean(
         changedOptions.hasOwnProperty('columns') ||
         changedOptions.hasOwnProperty('header') ||
         changedOptions.hasOwnProperty('breadCrumbsMode') ||
+        changedOptions.hasOwnProperty('collapsedItems') ||
+        changedOptions.hasOwnProperty('expandedItems') ||
         changedOptions.hasOwnProperty('sorting') ||
         changedOptions.hasOwnProperty('source') ||
         changedOptions.hasOwnProperty('stickyColumnsCount') ||
-        (hasCheckboxColumn(oldOptions) !== hasCheckboxColumn(newOptions))
+        (hasCheckboxColumn(oldOptions) !== hasCheckboxColumn(newOptions)) ||
+        (changedOptions.hasOwnProperty('items') && !oldOptions.items.isEqual(newOptions.items))
     );
 };
 

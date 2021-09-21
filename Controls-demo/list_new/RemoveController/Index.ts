@@ -43,6 +43,10 @@ const data: Array<{key: number, title: string}> = [
    {
       key: 7,
       title: 'Долгое удаление записи'
+   },
+   {
+      key: 8,
+      title: 'Удаление последней записи'
    }
 ];
 

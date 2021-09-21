@@ -466,22 +466,6 @@ define(
             assert.equal(Object.keys(position).length, 7);
          });
 
-         it('Sticky fittingMode', () => {
-            let cfg = getPositionConfig();
-            cfg.fittingMode = {
-               vertical : 'fixed',
-            };
-            cfg.sizes.height = 400;
-            assert.equal(StickyController._prepareOriginPoint(cfg).fittingMode.horizontal, 'adaptive');
-
-
-            cfg = getPositionConfig();
-            cfg.fittingMode = 'fixed';
-            cfg.sizes.height = 400;
-            assert.equal(StickyController._prepareOriginPoint(cfg).fittingMode.vertical, 'fixed');
-            assert.equal(StickyController._prepareOriginPoint(cfg).fittingMode.horizontal, 'fixed');
-         });
-
          it('Sticky check overflow', () => {
             StickyStrategy._getWindowSizes = () => ({
                width: 1920,
