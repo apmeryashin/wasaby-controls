@@ -329,6 +329,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             iconStyle: options.iconStyle,
             itemTemplateProperty: options.itemTemplateProperty,
             closeButtonViewMode: isVertical ? 'external' : 'link',
+            draggable: options.menuDraggable
         };
 
         if (isVertical) {

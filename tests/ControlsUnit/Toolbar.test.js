@@ -435,7 +435,8 @@ define(
                      itemActions: undefined,
                      itemActionVisibilityCallback: undefined,
                      closeButtonVisibility: true,
-                     dropdownClassName: 'controls-Toolbar-horizontal__dropdown'
+                     dropdownClassName: 'controls-Toolbar-horizontal__dropdown',
+                     draggable: undefined
                   };
                const toolbar = new toolbars.View();
                const config = toolbar._getMenuConfig.call(testSelf);
