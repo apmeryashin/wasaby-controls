@@ -125,7 +125,7 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 
 /**
  * @typedef {Object} Controls/_popupTemplate/Stack/RightPanelOptions
- * @property {Array.<Hint/interface:HelpButtonItem.typedef>} helpButtonItems Список пунктов меню помощи.
+ * @property {Array.<Hint/interface:IHelpButtonItem>} helpButtonItems Список пунктов меню помощи.
  * @remark
  * Элементы по умолчанию:
  * - "База знаний";
