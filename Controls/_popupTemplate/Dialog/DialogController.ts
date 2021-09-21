@@ -4,6 +4,8 @@ import {detection} from 'Env/Env';
 import {List} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import DialogStrategy from 'Controls/_popupTemplate/Dialog/DialogStrategy';
+import StickyStrategy from 'Controls/_popupTemplate/Sticky/StickyStrategy';
+import {getStickyConfig, getStickyDefaultPosition} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 
@@ -102,10 +104,9 @@ class DialogController extends BaseController {
     }
 
     popupDragStart(item: IDialogItem, container: HTMLElement, offset: IDragOffset, sizes: IPopupSizes = {}): void {
-        const {
-            horizontal: horizontalProperty,
-            vertical: verticalProperty
-        } = getPositionProperties(item.popupOptions.resizeDirection);
+        const horizontalProperty = item.position.left !== undefined ? HORIZONTAL_DIRECTION.LEFT : HORIZONTAL_DIRECTION.RIGHT;
+        const verticalProperty = item.position.top !== undefined ? VERTICAL_DIRECTION.TOP : VERTICAL_DIRECTION.BOTTOM;
+
         const horizontalOffset = horizontalProperty === HORIZONTAL_DIRECTION.LEFT ? offset.x : -offset.x;
         const verticalOffset = verticalProperty === VERTICAL_DIRECTION.TOP ? offset.y : -offset.y;
         if (!item.startPosition) {
@@ -162,9 +163,9 @@ class DialogController extends BaseController {
         return true;
     }
 
-    dragNDropOnPage(item: IDialogItem, container: HTMLElement, isInsideDrag: boolean): boolean {
+    dragNDropOnPage(item: IDialogItem, container: HTMLElement, isInsideDrag: boolean, type: string): boolean {
         if (item.popupOptions.target) {
-            if (!isInsideDrag && !item.hasSavedPosition) {
+            if (!isInsideDrag && !item.hasSavedPosition && type === 'dragStart') {
                 item.fixPosition = false;
                 this._prepareConfigWithSizes(item, container);
             }
@@ -186,15 +187,20 @@ class DialogController extends BaseController {
         // After popup will be transferred to the synchronous change of coordinates,
         // we need to return the calculation of the position with the keyboard.
         // Positioning relative to body
-        if (item.popupOptions.target) {
-            item.targetCoords = this._getTargetCoords(item);
-        }
-        const windowData = this._getRestrictiveContainerSize(item);
         if (!item.sizes) {
             item.sizes = {};
         }
-        item.sizes.margins = this._getMargins(item);
-        item.position = DialogStrategy.getPosition(windowData, sizes, item);
+
+        // Если есть таргет и не было смещения через dnd, то позиционируемся через стики стратегию
+        if (item.popupOptions.target && !item.fixPosition) {
+            const targetCoords = this._getTargetCoords(item, sizes);
+            const popupConfig = getStickyConfig(item, sizes);
+            item.position = StickyStrategy.getPosition(popupConfig, targetCoords, this._getTargetNode(item));
+        } else {
+            const windowData = this._getRestrictiveContainerSize(item);
+            item.sizes.margins = this._getMargins(item);
+            item.position = DialogStrategy.getPosition(windowData, sizes, item);
+        }
     }
 
     private _getPopupCoords(
@@ -244,6 +250,13 @@ class DialogController extends BaseController {
         horizontalPositionProperty: string,
         verticalPositionProperty: string
     ): void {
+        // Если нет сохраненной позиции и есть таргет - работаем через стики.
+        if (item.popupOptions.target && !item.hasSavedPosition) {
+            const target = this._getTargetNode(item);
+            item.position = getStickyDefaultPosition(item, target);
+            return;
+        }
+
         // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
         const sizes: IPopupSizes = {
             width: 0,
