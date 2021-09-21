@@ -118,7 +118,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
     }
 
     openPopup(event: SyntheticEvent): void {
-        let className = `controls_popupTemplate_theme-${this._options.theme}`;
+        let className = `controls_popupTemplate_theme-${this._options.theme} `;
         if (this._options.datePopupType === 'datePicker') {
             className += `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme}`;
         } else {

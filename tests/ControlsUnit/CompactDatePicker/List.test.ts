@@ -40,4 +40,24 @@ describe('Controls/_compactDatePicker/List', () => {
         });
     });
 
+    describe('_getFormattedCaption', () => {
+        it('should return correct caption in not current year', () => {
+            const component = new List();
+            const date = new Date(2020,  2, 1);
+            const month = "Апрель'20";
+            const result = component._getFormattedCaption(date);
+            assert.equal(month, result);
+        });
+
+        it('should return correct caption in current year', () => {
+            const component = new List();
+            const clock = sinon.useFakeTimers(new Date(2020, 1).getTime(), 'Date');
+            const date = new Date(2020,  2, 1);
+            const month = 'Апрель';
+            const result = component._getFormattedCaption(date);
+            assert.equal(month, result);
+            clock.restore();
+        });
+    });
+
 });
