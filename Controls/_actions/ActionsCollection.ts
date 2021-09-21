@@ -96,9 +96,10 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
             return action;
         } else {
             const parentKey = item.get('parent');
-            const parentItem = Object.values(this._childItems).find((childs) => {
+            const parentRS = Object.values(this._childItems).find((childs) => {
                 return childs.getRecordById(parentKey);
             });
+            const parentItem = parentRS?.getRecordById(parentKey);
             if (!parentItem) {
                 return this.getActionById(parentKey);
             } else {
