@@ -513,18 +513,21 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    removeItems(selection: ISelectionObject): Promise<void | string> {
+    removeItems(selection: ISelectionObject, removeConfirmationText?: string): Promise<void | string> {
         const resultSelection = {
             selected: selection.selected || [],
             excluded: selection.excluded || []
         };
 
         // Будет поправлено по: https://online.sbis.ru/opendoc.html?guid=3fa1742e-6d85-4689-b7d1-c08d7923a15a
-        return Confirmation.openPopup({
-            type: 'yesno',
-            style: 'default',
-            message: this._options.removeConfirmationText
-        }).then((result) => result && this._getRemoveViewCommand(resultSelection).execute({}));
+        if (removeConfirmationText) {
+            return Confirmation.openPopup({
+                type: 'yesno',
+                style: 'default',
+                message: removeConfirmationText
+            }).then((result) => result && this._getRemoveViewCommand(resultSelection).execute({}));
+        }
+        return this._getRemoveViewCommand(resultSelection).execute({});
     }
 
     moveItemUp(key: TKey): void {

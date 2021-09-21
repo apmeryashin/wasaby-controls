@@ -305,7 +305,6 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
      */
     multiSelectTemplate?: Function;
     captionPosition?: TCaptionPosition;
-    removeConfirmationText?: string;
 }
 
 /**
