@@ -73,7 +73,7 @@ export class StickyStrategy {
          if (popupCfg.fittingMode[direction] === 'fixed') {
             resultPosition = this._calculateFixedModePosition(popupCfg, property, targetCoords,
                                                               position, positionOverflow);
-         } else if (popupCfg.fittingMode[direction] === 'overflow') {
+         } else if (popupCfg.fittingMode[direction] === 'overflow' || popupCfg.fixPosition) {
             resultPosition = this._calculateOverflowModePosition(popupCfg, property, targetCoords,
                                                                  position, positionOverflow, direction);
          } else {
@@ -118,7 +118,10 @@ export class StickyStrategy {
       const position = {};
       const isHorizontal = direction === 'horizontal';
       if (popupCfg.fixPosition) {
-         const coord: string = isHorizontal ? 'left' : 'top';
+         let coord: string = isHorizontal ? 'left' : 'top';
+         if (popupCfg.direction[direction] === coord) {
+            coord = isHorizontal ? 'right' : 'bottom';
+         }
          position[coord] = popupCfg.position[coord];
       } else if (popupCfg.direction[direction] === 'center') {
          const coord: string = isHorizontal ? 'left' : 'top';
@@ -166,7 +169,7 @@ export class StickyStrategy {
       const restrictiveContainerPosition = popupCfg.restrictiveContainerCoords;
       const restrictiveContainerCoord = restrictiveContainerPosition?.[popupDirection] || 0;
 
-      if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
+      if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom') && !popupCfg.fixPosition) {
          if (position[isHorizontal ? 'right' : 'bottom'] < 0) {
             return -(position[isHorizontal ? 'right' : 'bottom']);
          }
@@ -205,7 +208,12 @@ export class StickyStrategy {
       const viewportOffset: number = isHorizontal ?
           0 : visualViewport.offsetTop || visualViewport.pageTop;
 
-      const positionValue: number = position[isHorizontal ? 'left' : 'top'];
+      let positionValue: number;
+      if (popupCfg.fixPosition) {
+         positionValue = position[isHorizontal ? 'left' : 'top'] || position[isHorizontal ? 'right' : 'bottom'];
+      } else {
+         positionValue = position[isHorizontal ? 'left' : 'top'];
+      }
       const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
       const windowSize = this._getWindowSizes(targetElement)[isHorizontal ? 'width' : 'height'];
       // Размер restrictiveContainer не больше размера экрана
