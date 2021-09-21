@@ -83,6 +83,7 @@ class ListEditor extends Control<IListEditorOptions> {
         this._selectedKeys = options.propertyValue;
         this._setColumns(options, options.propertyValue);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
+        this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
     }
 
@@ -104,6 +105,9 @@ class ListEditor extends Control<IListEditorOptions> {
             this._selectedKeys = options.propertyValue;
             this._setColumns(options, options.propertyValue);
             this._navigation = this._getNavigation(options);
+        }
+        if (filterChanged || valueChanged) {
+            this._setFilter(this._selectedKeys, options);
         }
     }
 
@@ -209,13 +213,20 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
+    private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
+        this._filter = {...options.filter};
+        if (selectedKeys && selectedKeys.length && options.filterViewMode !== 'default') {
+            this._filter[options.keyProperty] = selectedKeys;
+        }
+    }
+
     private _getEditorTarget(event: SyntheticEvent): HTMLElement | EventTarget {
         return event.target.closest('.controls-Grid__row').lastChild;
     }
 
     private _getNavigation(options: IListEditorOptions, selectedKeys?: string[]): INavigationOptionValue<unknown> {
         const selectedKeysArray = selectedKeys || this._selectedKeys;
-        return selectedKeysArray?.length ? null : options.navigation;
+        return selectedKeysArray?.length && options.filterViewMode !== 'default' ? null : options.navigation;
     }
 
     private _getSelectedItems(): List<Model> {
