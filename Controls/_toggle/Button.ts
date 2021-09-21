@@ -144,11 +144,11 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
 
         const buttonStyles = newOptions.buttonStyles || [newOptions.buttonStyle];
         const buttonStyle = (!value && buttonStyles[1] ? buttonStyles[1] : buttonStyles[0]);
-        this._buttonStyle = newOptions.readOnly ? 'readonly' : buttonStyle;
+        this._buttonStyle = (newOptions.readOnly ? 'readonly' : buttonStyle) || this._buttonStyle;
 
         const fontColorStyles = newOptions.fontColorStyles || [newOptions.fontColorStyle];
         const fontColorStyle = (!value && fontColorStyles[1] ? fontColorStyles[1] : fontColorStyles[0]);
-        this._fontColorStyle = newOptions.readOnly ? 'readonly' : fontColorStyle;
+        this._fontColorStyle = (newOptions.readOnly ? 'readonly' : fontColorStyle) || this._fontColorStyle;
 
         if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
             this._hoverIcon = !newOptions.value;
