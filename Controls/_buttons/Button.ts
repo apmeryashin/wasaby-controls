@@ -17,6 +17,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
+import {getTextWidth} from 'Controls/sizeUtils';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
@@ -161,6 +162,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _hoverIcon: boolean = true;
     protected _isSVGIcon: boolean = false;
     protected _textAlign: string;
+    protected _tooltip: string;
 
     protected _beforeMount(options: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, options);
@@ -179,6 +181,21 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _clickHandler(e: SyntheticEvent<MouseEvent>): void {
         if (this._options.readOnly) {
             e.stopPropagation();
+        }
+    }
+
+    protected _onMouseEnterHandler(): void {
+        if (!this._options.readOnly) {
+            if (this._options.tooltip) {
+                this._tooltip = this._options.tooltip;
+            } else {
+                if (typeof this._options.caption === 'string' && this._tooltip !== this._options.caption) {
+                    const captionWidth = getTextWidth(this._options.caption);
+                    if (captionWidth > this._container.clientWidth) {
+                        this._tooltip = this._options.caption;
+                    }
+                }
+            }
         }
     }
 

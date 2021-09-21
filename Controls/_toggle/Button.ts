@@ -36,6 +36,8 @@ export interface IToggleButtonOptions extends
     captions?: string[];
     viewMode?: 'button' | 'link' | 'toolButton' | 'pushButton';
     iconStyles?: string[];
+    buttonStyles?: string[];
+    fontColorStyles?: string[];
     // deprecated options
     icon?: string;
 }
@@ -140,6 +142,14 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         this._iconStyle = this._icon ? ActualApi.iconStyle(iconStyle, this._icon,
             newOptions.readOnly, false) : '';
 
+        const buttonStyles = newOptions.buttonStyles || [newOptions.buttonStyle];
+        const buttonStyle = (!value && buttonStyles[1] ? buttonStyles[1] : buttonStyles[0]);
+        this._buttonStyle = newOptions.readOnly ? 'readonly' : buttonStyle;
+
+        const fontColorStyles = newOptions.fontColorStyles || [newOptions.fontColorStyle];
+        const fontColorStyle = (!value && fontColorStyles[1] ? fontColorStyles[1] : fontColorStyles[0]);
+        this._fontColorStyle = newOptions.readOnly ? 'readonly' : fontColorStyle;
+
         if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
             this._hoverIcon = !newOptions.value;
         } else {
@@ -226,6 +236,20 @@ Object.defineProperty(ToggleButton, 'defaultProps', {
 /**
  * @name Controls/_toggle/Button#iconStyles
  * @cfg {Array} Пара стилей для иконок.
+ * Первый стиль отображается, когда переключатель выключен.
+ * Второй стиль отображается, когда переключатель включен.
+ */
+
+/**
+ * @name Controls/_toggle/Button#buttonStyles
+ * @cfg {Array} Пара стилей для отображения кнопки.
+ * Первый стиль отображается, когда переключатель выключен.
+ * Второй стиль отображается, когда переключатель включен.
+ */
+
+/**
+ * @name Controls/_toggle/Button#fontColorStyles
+ * @cfg {Array} Пара стилей для заголовков.
  * Первый стиль отображается, когда переключатель выключен.
  * Второй стиль отображается, когда переключатель включен.
  */
