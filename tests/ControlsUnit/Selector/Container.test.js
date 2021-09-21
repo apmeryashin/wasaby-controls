@@ -98,9 +98,13 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             }
          };
 
-         options.selectedItems = getItems();
-         options.selectedItems[0].set('id', 'testId');
+         options.selectedItems = new collection.List({items: getItems()});
+         options.selectedItems.at(0).set('id', 'testId');
          assert.deepEqual(LookupPopupContainer._private.getSelectedKeys(options), ['testId', 2, 4]);
+
+         options.selectedItems = null;
+         options.selectedKeys = ['testId'];
+         assert.deepEqual(LookupPopupContainer._private.getSelectedKeys(options), ['testId']);
       });
 
       describe('prepareFilter', () => {
