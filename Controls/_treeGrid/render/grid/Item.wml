@@ -68,7 +68,7 @@
          </div>
 
           <!-- Экспандер узлов дерева выводится после контентом ячейки. -->
-          <ws:if data="{{ item.shouldDisplayExpanderBlock(gridColumn) && item.shouldDisplayExpander(afterContentTemplate.expanderIcon, 'right') }}">
+          <ws:if data="{{ item.shouldDisplayExpanderBlock(gridColumn) && item.shouldDisplayExpander(expanderIcon, 'right') }}">
             <ws:partial template="EXPANDER" item="{{ (item || itemData) }}"/>
          </ws:if>
       </ws:afterContentTemplate>
