@@ -1378,6 +1378,10 @@ const _private = {
                         self._indicatorsController.onCollectionReset();
 
                         if (self._options.searchValue) {
+                            // Событие reset коллекции приводит к остановке активного порционного поиска.
+                            // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
+                            self._indicatorsController.endDisplayPortionedSearch();
+
                             // после ресета пытаемся подгрузить данные, возможно вернули не целую страницу
                             _private.tryLoadToDirectionAgain(self);
                         }
@@ -1415,7 +1419,7 @@ const _private = {
                         // TODO: https://online.sbis.ru/opendoc.html?guid=a6bc9564-4072-4bb6-b562-d98fa0282018
                         // Вверх вставляют данные, только если список не пустой, т.к. в пустой список можно вставить только вниз
                         const isEmpty = self._listViewModel.getCount() - newItems.length;
-                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() && isEmpty ? 'up' : 'down';
+                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() && !isEmpty ? 'up' : 'down';
                         self._observersController.clearResetTriggerOffset(
                             direction,
                             self._children.listView?.getTopLoadingTrigger(),
