@@ -1892,8 +1892,7 @@ const _private = {
             !footer &&
             (!results || listViewModel.getResultsPosition() !== 'bottom') &&
             !(self._shouldDrawNavigationButton && _private.isDemandNavigation(options.navigation)) &&
-            !hasHiddenItemsDown &&
-            !hasMoreDown
+            (!hasHiddenItemsDown && !hasMoreDown || !_private.isInfinityNavigation(options.navigation))
         );
     },
 

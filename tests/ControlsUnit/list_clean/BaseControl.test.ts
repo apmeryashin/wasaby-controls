@@ -1623,14 +1623,14 @@ describe('Controls/list_clean/BaseControl', () => {
         count = 10;
         hasMore = true;
         assert.isFalse(
-            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
+            BaseControl._private.needBottomPadding(fakeInstance, {navigation: { view: 'infinity' }, itemActionsPosition: 'outside'}),
             'itemActionsPosition is outside, hasMoreData, padding is not needed'
         );
 
         hasMore = false;
         stopIndex = 5;
         assert.isFalse(
-            BaseControl._private.needBottomPadding(fakeInstance, {itemActionsPosition: 'outside'}),
+            BaseControl._private.needBottomPadding(fakeInstance, {navigation: { view: 'infinity' }, itemActionsPosition: 'outside'}),
             'itemActionsPosition is outside, has hidden items at bottom, padding is not needed'
         );
     });
