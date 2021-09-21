@@ -816,7 +816,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                 (rowSeparatorSize ? rowSeparatorSize : 'default');
         } else {
             if (this._$roundBorder) {
-                classes = ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
+                classes += ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}`;
