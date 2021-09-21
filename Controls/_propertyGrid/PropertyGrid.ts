@@ -20,7 +20,7 @@ import {groupConstants as constView} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
 import PropertyGridCollectionItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
-import {StickyOpener} from 'Controls/popup';
+import {Confirmation, StickyOpener} from 'Controls/popup';
 import 'css!Controls/itemActions';
 import 'css!Controls/propertyGrid';
 import {
@@ -518,7 +518,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             selected: selection.selected || [],
             excluded: selection.excluded || []
         };
-        return this._getRemoveViewCommand(resultSelection).execute({});
+
+        // Будет поправлено по: https://online.sbis.ru/opendoc.html?guid=3fa1742e-6d85-4689-b7d1-c08d7923a15a
+        return Confirmation.openPopup({
+            type: 'yesno',
+            style: 'default',
+            message: this._options.removeConfirmationText
+        }).then((result) => result && this._getRemoveViewCommand(resultSelection).execute({}));
     }
 
     moveItemUp(key: TKey): void {
