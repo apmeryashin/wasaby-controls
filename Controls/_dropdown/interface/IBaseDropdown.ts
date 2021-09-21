@@ -38,6 +38,18 @@ export default interface IBaseDropdown {
 }
 
 /**
+ * @name Controls/_dropdown/interface/IBaseDropdown#searchPlaceholder
+ * @cfg {String} Текст, который отображается в пустом поле поиска.
+ * @demo Controls-demo/dropdown_new/Search/SearchPlaceholder/Index
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Button searchPlaceholder="search placeholder" />
+ * </pre>
+ * @see searchParam
+ */
+
+/**
  * @name Controls/_dropdown/interface/IBaseDropdown#menuDraggable
  * @cfg {Boolean} Определяет, может ли меню перемещаться с помощью {@link /doc/platform/developmentapl/interface-development/controls/drag-n-drop/ d'n'd}.
  * @demo Controls-demo/dropdown_new/Button/DragNDrop/Index

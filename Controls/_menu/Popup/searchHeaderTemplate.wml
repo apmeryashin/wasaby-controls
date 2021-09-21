@@ -5,7 +5,7 @@
                            controls-Menu__popup_header_search_width_{{_options.searchWidth || 's'}}
                            {{_options.multiSelect ? 'controls-Menu__popup_headerSearch-multiSelect'}}">
       <ws:partial template="{{'Controls/search:Input'}}"
-                  placeholder="{{searchPlaceholder}}"
+                  placeholder="{{_options.searchPlaceholder}}"
                   contrastBackground="{{true}}"
                   theme="{{_options.searchHeaderTheme}}"
                   name="menuSearch" />
