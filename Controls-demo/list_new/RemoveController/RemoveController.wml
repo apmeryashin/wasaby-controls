@@ -11,6 +11,7 @@
                         name="list"
                         itemActionVisibilityCallback="{{_itemActionsVisibilityCallback}}"
                         itemActions="{{_itemActions}}"
+                        itemActionsPosition="outside"
                         multiSelectVisibility="visible"
                         bind:markedKey="_markedKey"/>
             </Controls.list:Container>

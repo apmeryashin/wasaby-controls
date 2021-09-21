@@ -114,5 +114,17 @@ describe('Controls/_display/itemsStrategy/TreeDrag', () => {
 
       strategy.items;
       assert.equal(strategy.avatarItem.getParent(), display.getItemBySourceKey(1));
-   })
+   });
+
+   it('drag without avatar item', () => {
+      strategy = new TreeDrag({
+         source,
+         display,
+         draggedItemsKeys: [1234],
+         targetIndex: 0
+      });
+
+      assert.equal(strategy.items.length, 9);
+      assert.isNotOk(strategy.avatarItem);
+   });
 });
