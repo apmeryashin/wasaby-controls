@@ -14,7 +14,6 @@
 .controls-ColumnsView__itemV {
    user-select: none;
    box-sizing: border-box;
-   box-shadow: var(--item_shadow-size_columns) var(--item_shadow-color_columns);
    display: inline-block;
    margin: var(--offset_2xs) 0;
    overflow: hidden;
@@ -22,12 +21,16 @@
    width: 100%;
 }
 
+.controls-ColumnsView__item_shadow {
+   box-shadow: var(--item_shadow-size_columns) var(--item_shadow-color_columns);
+}
+
 .controls-ColumnsView__itemActionsV_inside {
    padding-right: var(--offset-right_itemActions);
    height: var(--height_itemActions_columns);
 }
 
-.ws-is-hover .controls-ColumnsView__item_hovering:hover {
+.ws-is-hover .controls-ColumnsView__item_shadow.controls-ColumnsView__item_hovering:hover {
    box-shadow: var(--item_shadow-size_columns) var(--item_hover_shadow-color_columns);
 }
 
