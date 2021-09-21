@@ -222,7 +222,9 @@ export class StickyStrategy {
       popupCfg.targetPoint[direction] = INVERTING_CONST[popupCfg.targetPoint[direction]];
       popupCfg.direction[direction] = INVERTING_CONST[popupCfg.direction[direction]];
       popupCfg.offset[direction] *= -1;
-      popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
+      if (popupCfg.sizes.margins) {
+         popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
+      }
    }
 
    private _moveContainer(popupCfg: IStickyPositionConfig, position: IPopupPosition,
@@ -421,7 +423,9 @@ export class StickyStrategy {
    }
 
    private _getMargins(popupCfg: IStickyPositionConfig, direction: TDirection): number {
-      return popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] + popupCfg.offset[direction];
+      const margins = popupCfg.sizes.margins && popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] || 0;
+      const offset = popupCfg.offset[direction] || 0;
+      return margins + offset;
    }
 
    private _getWindow(): Window {

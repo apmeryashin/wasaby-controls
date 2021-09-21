@@ -4,6 +4,8 @@ import * as Deferred from 'Core/Deferred';
 import * as cMerge from 'Core/core-merge';
 import StickyStrategy from 'Controls/_popupTemplate/Sticky/StickyStrategy';
 import {IPopupItem, IPopupSizes, IPopupPosition, Controller} from 'Controls/popup';
+import {getStickyConfig} from 'Controls/_popupTemplate/Util/PopupConfigUtil';
+
 import {constants} from 'Env/Env';
 import {Controller as ManagerController} from 'Controls/popup';
 
@@ -157,7 +159,7 @@ class InfoBoxController extends StickyController {
                 const config = this._prepareInfoboxConfig(item.popupOptions.position, item.popupOptions.target);
                 cMerge(item.popupOptions, config);
                 const sizes: IPopupSizes = {width: themeConstants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
-                const popupConfig = this._getPopupConfig(item, sizes);
+                const popupConfig = getStickyConfig(item, sizes);
                 const position: IPopupPosition = StickyStrategy.getPosition(
                     popupConfig,
                     this._getTargetCoords(item),

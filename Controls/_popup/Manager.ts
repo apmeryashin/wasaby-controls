@@ -274,11 +274,14 @@ class Manager {
     private _subscribeToPageDragNDrop(): void {
         // Подписка и на платформенное перемещение, и на нативное, т.к. перемещение файлов из ОС тоже нужно отследить.
         const handler = (...args) => {
-            const [, ...preparedArgs] = args;
-            this.eventHandler('pageDragnDropHandler', preparedArgs);
+            this.eventHandler('pageDragnDropHandler', args);
         };
-        EventBus.channel('dragnDrop').subscribe('documentDragStart', handler);
-        EventBus.channel('dragnDrop').subscribe('documentDragEnd', handler);
+        EventBus.channel('dragnDrop').subscribe('documentDragStart', (event, eventObject) => {
+            handler('dragStart', eventObject);
+        });
+        EventBus.channel('dragnDrop').subscribe('documentDragEnd', (event, eventObject) => {
+            handler('dragEnd', eventObject);
+        });
         if (document) {
             document.addEventListener('dragenter', handler);
         }
@@ -902,7 +905,7 @@ class Manager {
         }
     }
 
-    protected _pageDragnDropHandler(dragEvent: object = {}): boolean {
+    protected _pageDragnDropHandler(type: string, dragEvent: object = {}): boolean {
         const {domEvent} = dragEvent;
         const delay = 10;
         if (this._dragTimer) {
@@ -924,7 +927,7 @@ class Manager {
             this._popupItems.each((item) => {
                 const popupContainer = this._getItemContainer(item.id);
                 const isInsideDrag = popupNode === popupContainer;
-                if (item.controller.dragNDropOnPage(item, popupContainer, isInsideDrag)) {
+                if (item.controller.dragNDropOnPage(item, popupContainer, isInsideDrag, type)) {
                     this.remove(item.id);
                 }
                 this._redrawItems();
