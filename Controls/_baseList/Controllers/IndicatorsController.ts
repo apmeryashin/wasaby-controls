@@ -246,7 +246,7 @@ export default class IndicatorsController {
     }
 
     shouldHideGlobalIndicator(): boolean {
-        return !this._isPortionedSearch() && (!!this._displayIndicatorTimer || !!this._model.getGlobalIndicator())
+        return !this._isPortionedSearch() && (!!this._displayIndicatorTimer || !!this._model.getGlobalIndicator());
     }
 
     /**
@@ -339,7 +339,6 @@ export default class IndicatorsController {
             this._model.getBottomIndicator().isDisplayed()
         );
     }
-
 
     private _recountTopIndicator(scrollToFirstItem: boolean = false): void {
         // если сейчас порционный поиск и у нас еще не кончился таймер показа индикатора, то не нужно пересчитывать,
@@ -464,9 +463,12 @@ export default class IndicatorsController {
 
     /**
      * Продолжаем отображение порционного поиска.
+     * @param direction Новое направление порционного поиска. Оно может смениться, если сперва поиск шел вниз,
+     * а после полной загрузки вниз, стали грузить вверх.
      */
-    continueDisplayPortionedSearch(): void {
+    continueDisplayPortionedSearch(direction: TPortionedSearchDirection = this._portionedSearchDirection): void {
         this._setSearchState(SEARCH_STATES.CONTINUED);
+        this._portionedSearchDirection = direction;
         this._startDisplayPortionedSearchTimer(SEARCH_CONTINUED_MAX_DURATION);
         this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.PortionedSearch);
     }
@@ -519,7 +521,6 @@ export default class IndicatorsController {
      * @return {boolean} Можно ли продолжить отображать порционный поиск
      */
     shouldContinueDisplayPortionedSearch(): boolean {
-        // TODO LI точно ли нужна проверка на STOPPED
         return this._getSearchState() !== SEARCH_STATES.STOPPED && this._getSearchState() !== SEARCH_STATES.ABORTED;
     }
 

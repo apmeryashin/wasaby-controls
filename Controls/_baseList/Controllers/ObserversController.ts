@@ -54,7 +54,7 @@ export default class ObserversController {
         this._resetBottomTriggerOffset = options.resetBottomTriggerOffset;
 
         // изначально скрываем верхний триггер, чтобы не произошло лишних подгрузок. Покажем по необходимости.
-        this.hideTopTrigger(options.topTriggerElement);
+        this.hideTrigger(options.topTriggerElement);
 
         if (options.topTriggerElement && options.bottomTriggerElement) {
             this.applyTriggerOffsets(options.topTriggerElement, options.bottomTriggerElement);
@@ -87,7 +87,7 @@ export default class ObserversController {
         this._bottomTriggerOffsetCoefficient = options.bottomTriggerOffsetCoefficient;
 
         if (willBeReload) {
-            this.hideTopTrigger(options.topTriggerElement);
+            this.hideTrigger(options.topTriggerElement);
             this.setResetTriggerOffsets(
                 true,
                 true,
@@ -137,15 +137,15 @@ export default class ObserversController {
         return this._model && (!this._intersectionObserver || modelRecreated);
     }
 
-    displayTopTrigger(topTrigger: HTMLElement): void {
-        if (topTrigger && topTrigger.style.display === 'none') {
-            topTrigger.style.display = '';
+    displayTrigger(trigger: HTMLElement): void {
+        if (trigger && trigger.style.display === 'none') {
+            trigger.style.display = '';
         }
     }
 
-    hideTopTrigger(topTrigger: HTMLElement): void {
-        if (topTrigger && topTrigger.style.display !== 'none') {
-            topTrigger.style.display = 'none';
+    hideTrigger(trigger: HTMLElement): void {
+        if (trigger && trigger.style.display !== 'none') {
+            trigger.style.display = 'none';
         }
     }
 
