@@ -19,7 +19,7 @@ import {
    Direction,
    INavigationSourceConfig
 } from 'Controls/interface';
-import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions} from 'Controls/error';
+import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions, process} from 'Controls/error';
 import {SyntheticEvent} from 'UI/Vdom';
 import {isEqual} from 'Types/object';
 
@@ -545,14 +545,13 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._hideError();
    }
 
-   private _onDataLoadError(event: SyntheticEvent, error: ErrorViewConfig, root: TKey, direction: Direction): void {
+   private _onDataLoadError(event: SyntheticEvent, error: Error, root: TKey, direction: Direction): void {
       if (this._isMounted) {
          const currentRoot = this._sourceController.getRoot();
-         const errorConfig = {error, ...this._getErrorConfig(currentRoot, root, direction)};
          if (root === currentRoot) {
-            this._processAndShowError(errorConfig);
+            this._processAndShowError({error, ...this._getErrorConfig(currentRoot, root, direction)});
          } else {
-            this._processError(errorConfig);
+            process({error});
          }
       }
    }
