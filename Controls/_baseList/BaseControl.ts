@@ -30,7 +30,6 @@ import {
     isEqualItems,
     ISourceControllerOptions
 } from 'Controls/dataSource';
-import * as operations from 'Controls/operations';
 import {
     INavigationOptionValue,
     INavigationSourceConfig,
@@ -125,6 +124,7 @@ import ObserversController, {
     IObserversControllerOptions,
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
+import { selectionToRecord } from './resources/utils/getItemsBySelection';
 
 //#endregion
 
@@ -6049,10 +6049,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         const newFilter = cClone(options.filter) || {};
         if (this._selectionController) {
-            newFilter.selection = operations.selectionToRecord({
+            newFilter.selection = selectionToRecord({
                 selected: this._selectionController.getSelection().selected,
                 excluded: this._selectionController.getSelection().excluded
-            }, 'adapter.sbis');
+            }, 'adapter.sbis', this._options.selectionType);
         }
         options.filter = newFilter;
 
