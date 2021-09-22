@@ -3,7 +3,6 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
    var thelpers = Executor.TClosure;
 
    var templateFunction = function MoneyTemplate(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
-
       var key = thelpers.validateNodeKey(attr && attr.key);
       var value = data.value || null;
       var useGrouping = data.useGrouping !== false;
