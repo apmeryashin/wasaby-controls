@@ -30,6 +30,7 @@ interface IHistoryData {
 
 const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 const HISTORY_UPDATE_RECENT_DELAY = 50;
+const COPY_ORIG_ID = 'copyOriginalId';
 
 /**
  * Источник, который возвращает из исходного источника отсортированные данные с учётом истории.
@@ -228,9 +229,11 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     }
 
     private _resetHistoryFields(item: Model, keyProperty: string): Model {
-        if (item.has('copyOriginalId')) {
+        if (item.has(COPY_ORIG_ID)) {
             const origItem = item.clone();
-            origItem.removeField('copyOriginalId');
+            if (origItem.getFormat().getFieldIndex(COPY_ORIG_ID) !== -1) {
+                origItem.removeField(COPY_ORIG_ID);
+            }
             origItem.setKeyProperty(keyProperty);
             return origItem;
         } else {
@@ -284,7 +287,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
 
         // keyProperty для выпадающих списков с историей.
         // История должна работать даже если оригинальный ключ - целочисленный.
-        this._addProperty(items, 'copyOriginalId', 'string', '');
+        this._addProperty(items, COPY_ORIG_ID, 'string', '');
 
         this._fillItems(filteredHistory, 'pinned', oldItems, items);
         this._fillFrequentItems(filteredHistory, oldItems, items);
@@ -308,9 +311,9 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                     filteredHistory.recent.indexOf(id) !== -1 ||
                     filteredHistory.frequent.indexOf(id) !== -1
                 ) {
-                    this._setHistoryFields(newItem, 'copyOriginalId', id);
+                    this._setHistoryFields(newItem, COPY_ORIG_ID, id);
                 } else {
-                    newItem.set('copyOriginalId', id);
+                    newItem.set(COPY_ORIG_ID, id);
                 }
                 items.add(newItem);
             }
@@ -343,7 +346,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                 //removing group allows items to be shown in history items
                 this._prepareHistoryItem(item, historyType);
                 item.set('HistoryId', historyId);
-                item.set('copyOriginalId', String(historyItem.getId()));
+                item.set(COPY_ORIG_ID, String(historyItem.getId()));
                 items.add(item);
             } else if (this._$unpinIfNotExist) {
                 this._itemNotExist(id, historyType);
