@@ -1,6 +1,6 @@
 <div class="controls-StackTemplate__top-area
             {{_options.headerBorderVisible ? 'controls-StackTemplate__top-area-border'}}
-            controls-StackTemplate__top-area_{{_options.headerBackgroundStyle}}">
+            controls-background-{{_options.headerBackgroundStyle}}">
    <div class="controls-StackTemplate__top-area-content">
       <ws:if data="{{_options.headingCaption}}">
          <div class="controls-StackTemplate__caption">
