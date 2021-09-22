@@ -124,6 +124,7 @@ import ObserversController, {
     IObserversControllerOptions,
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
+import { selectionToRecord } from './resources/utils/getItemsBySelection';
 
 //#endregion
 
@@ -6085,10 +6086,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         options.dataLoadCallback = null;
         options.dataLoadErrback = null;
         options.navigationParamsChangedCallback = null;
+
+        const newFilter = cClone(options.filter) || {};
         if (this._selectionController) {
-            options.selectedKeys = this._selectionController.getSelection().selected;
-            options.excludedKeys = this._selectionController.getSelection().excluded;
+            newFilter.selection = selectionToRecord({
+                selected: this._selectionController.getSelection().selected,
+                excluded: this._selectionController.getSelection().excluded
+            }, 'adapter.sbis', this._options.selectionType);
         }
+        options.filter = newFilter;
 
         if (options.navigation) {
             const newNavigation = cClone(options.navigation);
