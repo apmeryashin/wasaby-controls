@@ -540,10 +540,15 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    private _onDataError(event: SyntheticEvent, errorConfig: ErrorViewConfig): void {
       event?.stopPropagation();
-      this._processAndShowError({
-         error: errorConfig.error,
-         mode: errorConfig.mode || ErrorViewMode.dialog
-      });
+
+      if (errorConfig?.mode) {
+         this._processAndShowError({
+            error: errorConfig.error,
+            mode: errorConfig.mode || ErrorViewMode.dialog
+         });
+      } else {
+         process(errorConfig);
+      }
    }
 
    private _onDataLoad(): void {
