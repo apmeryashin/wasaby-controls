@@ -27,9 +27,9 @@ export interface IOptions {
 }
 
 export class ViewModel extends BaseViewModel {
-    autoComplete(): boolean {
+    autoComplete(shouldNotRemoveStartZeros: boolean): boolean {
         if (this.value !== null && this.value.toString() !== ViewModel._zeroFormat) {
-            this.displayValue = this._convertToDisplayValue(this.value);
+            this.displayValue = this._convertToDisplayValue(this.value, shouldNotRemoveStartZeros);
 
             return true;
         }
@@ -56,7 +56,7 @@ export class ViewModel extends BaseViewModel {
         return this._valueToTimeIntervalConverter(displayValue);
     }
 
-    protected _convertToDisplayValue(value) {
+    protected _convertToDisplayValue(value, shouldNotRemoveStartZeros) {
         let preResult: string;
 
         if (value === null) {
@@ -78,8 +78,9 @@ export class ViewModel extends BaseViewModel {
             value: clearResult.value,
             carriagePosition: 0
         }).value;
-
-        result = ViewModel._removeStartZeros(result);
+        if (!shouldNotRemoveStartZeros) {
+            result = ViewModel._removeStartZeros(result);
+        }
         return result;
     }
 
@@ -239,6 +240,6 @@ export class ViewModel extends BaseViewModel {
             const count = zerosMatch[1].length
             result = ViewModel._replacer.repeat(count) + str.slice(count);
         }
-        return result
+        return result;
     }
 }

@@ -21,7 +21,7 @@ type IOptions = IModelOptions;
  *
  * @ignoreoptions Controls/input:Base#value
  * @ignoreoptions Controls/input:Base#placeholder
- * 
+ *
  * @public
  * @demo Controls-demo/Input/TimeInterval/Base/Index
  *
@@ -46,7 +46,8 @@ class TimeInterval extends Base {
     }
 
     protected _notifyInputCompleted() {
-        if (this._viewModel.autoComplete()) {
+        // TODO: https://online.sbis.ru/opendoc.html?guid=113cc3d3-c046-453e-a29a-87e3b2ec772c
+        if (this._viewModel.autoComplete(this._options.shouldNotRemoveStartZeros)) {
             this._notifyValueChanged();
         }
 
