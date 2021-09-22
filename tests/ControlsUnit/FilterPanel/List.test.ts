@@ -213,6 +213,7 @@ describe('Controls/filterPanel:ListEditor', () => {
             ];
             listEditor._handleSelectorResult(result);
             assert.isNull(listEditor._navigation);
+            assert.deepEqual(listEditor._filter, {id: [1]});
         });
     });
 });

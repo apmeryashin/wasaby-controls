@@ -149,6 +149,7 @@ class ListEditor extends Control<IListEditorOptions> {
         });
         if (selectedKeys.length) {
             this._items.assign(result);
+            this._setFilter(selectedKeys, this._options);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
         this._processPropertyValueChanged(selectedKeys);

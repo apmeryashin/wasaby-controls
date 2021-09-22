@@ -8,9 +8,11 @@ import {Popup as PopupUtil, Base as dateUtils} from 'Controls/dateUtils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import * as monthCaptionTemplate from 'wml!Controls/_dateRange/DateSelector/monthCaptionTemplate';
+import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
+import getPopupName from 'Controls/_dateRange/Utils/getPopupName';
 import 'css!Controls/dateRange';
 
-interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelectorOptions {
+interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelectorOptions, IDatePopupTypeOptions {
 }
 /**
  * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре.
@@ -38,6 +40,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @implements Controls/interface:IDateRangeValidators
  * @implements Controls/interface:IMonthCaptionTemplate
  * @implements Controls/interface:IDateConstructor
+ * @implements Controls/dateRange:IDatePopupType
  *
  * @public
  * @author Красильников А.С.
@@ -129,15 +132,21 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     protected _getPopupOptions(): IStickyPopupOptions {
         const container = this._children.linkView.getPopupTarget();
         const ranges = this._options.ranges;
-        let className = `controls_datePicker_theme-${ this._options.theme } controls-DatePopup__selector-marginTop_fontSize-${this._getFontSizeClass()}`;
+        let className = '';
         if (this._options.popupClassName) {
             className += `${this._options.popupClassName} `;
         }
-        if ((ranges && ('days' in ranges || 'weeks' in ranges)) ||
-            ((!ranges || isEmpty(ranges)) && this._options.minRange === 'day')) {
-            className += ' controls-DatePopup__selector-marginLeft';
+        if (this._options.datePopupType === 'datePicker') {
+            className += `controls_datePicker_theme-${ this._options.theme } controls-DatePopup__selector-marginTop_fontSize-${this._getFontSizeClass()}`;
+            if ((ranges && ('days' in ranges || 'weeks' in ranges)) ||
+                ((!ranges || isEmpty(ranges)) && this._options.minRange === 'day')) {
+                className += ' controls-DatePopup__selector-marginLeft';
+            } else {
+                className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
+            }
         } else {
-            className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
+            className += `controls_compactDatePicker_theme-${ this._options.theme } ` +
+                'controls-CompactDatePicker__selector-margin';
         }
         let value = {};
         if (this._options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
@@ -146,7 +155,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         return {
             ...PopupUtil.getCommonOptions(this),
             target: container,
-            template: 'Controls/datePopup',
+            template: getPopupName(this._options.datePopupType),
             className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
@@ -194,7 +203,8 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         return {
             minRange: 'day',
             ...ILinkView.getDefaultOptions(),
-            ...IDateRangeSelectable.getDefaultOptions()
+            ...IDateRangeSelectable.getDefaultOptions(),
+            datePopupType: 'datePicker'
         };
     }
 
