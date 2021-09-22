@@ -84,11 +84,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        if (
-            options.viewConfig &&
-            options.viewConfig.mode !== ErrorViewMode.dialog &&
-            isEqual(this._options.viewConfig, options.viewConfig)
-        ) {
+        if (isEqual(this._options.viewConfig, options.viewConfig)) {
             return;
         }
 

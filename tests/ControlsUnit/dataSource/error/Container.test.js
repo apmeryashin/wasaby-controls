@@ -1,21 +1,10 @@
 /* global define, beforeEach, afterEach, describe, it, assert, sinon */
 define([
-   'Controls/dataSource',
-   'Env/Env'
-], function(dataSource, Env) {
+   'Controls/dataSource'
+], function(dataSource) {
    describe('Controls/dataSource:error.Container', function() {
       const Container = dataSource.error.Container;
       let instance;
-      let isBrowserPlatform;
-
-      function setBrowserPlatform() {
-         isBrowserPlatform = Env.constants.isBrowserPlatform;
-         Env.constants.isBrowserPlatform = true;
-      }
-
-      function restoreBrowserPlatform() {
-         Env.constants.isBrowserPlatform = isBrowserPlatform;
-      }
 
       function mockPopupHelper(popupId) {
          instance._popupHelper = {
@@ -29,8 +18,6 @@ define([
                }
             }
          };
-
-         sinon.spy(instance._popupHelper);
       }
 
       function createInstance() {
@@ -63,30 +50,25 @@ define([
          assert.instanceOf(instance, Container);
       });
 
-      describe('_openDialog()', function() {
-         beforeEach(() => {
-            createInstance();
-         });
-
-         it('notifies "dialogClosed" on closing opened dialog', function() {
-            const popupId = String(Date.now());
-            const config = { mode: 'dialog' };
-            mockPopupHelper(popupId);
-            setBrowserPlatform();
-
-            const openDialogPromise = instance._openDialog(config).then(() => {
-               assert.strictEqual(instance._popupId, popupId, 'saves popupId');
-
-               // Диалог открылся. Теперь эмулируем закрытие диалога.
-               instance._popupHelper.closeDialog(popupId);
-               assert.isNotOk(instance._popupId, 'clears popupId');
-               assert.isTrue(instance._notify.calledOnceWith('dialogClosed', []), 'notifies "dialogClosed"');
-            });
-
-            restoreBrowserPlatform();
-            return openDialogPromise;
-         });
-      });
+      // describe('_openDialog()', function() {
+      //    beforeEach(() => {
+      //       createInstance();
+      //    });
+      //
+      //    it('notifies "dialogClosed" on closing opened dialog', function() {
+      //       const popupId = String(Date.now());
+      //       const config = {};
+      //       mockPopupHelper(popupId);
+      //       return instance._openDialog(config).then(() => {
+      //          assert.strictEqual(instance._popupId, popupId, 'saves popupId');
+      //
+      //          // Диалог открылся. Теперь эмулируем закрытие диалога.
+      //          instance._popupHelper.closeDialog(popupId);
+      //          assert.isNotOk(instance._popupId, 'clears popupId');
+      //          assert.isTrue(instance._notify.calledOnceWith('dialogClosed', []), 'notifies "dialogClosed"');
+      //       });
+      //    });
+      // });
 
       describe('_beforeUpdate()', () => {
          let viewConfig;
@@ -133,21 +115,19 @@ define([
             assert.isNull(instance.__viewConfig);
          });
 
-         it('always shows dialog with viewConfig', () => {
-            setBrowserPlatform();
-
-            instance._beforeUpdate({ viewConfig });
-            assert.isFalse(instance._popupHelper.openDialog.called);
-
-            viewConfig.mode = 'dialog';
-            instance._beforeUpdate({ viewConfig });
-            assert.isTrue(instance._popupHelper.openDialog.calledOnce);
-
-            instance._beforeUpdate({ viewConfig });
-            assert.isTrue(instance._popupHelper.openDialog.calledTwice);
-
-            restoreBrowserPlatform();
-         });
+         // it('resets new viewConfig when options.viewConfig mode is dialog', () => {
+         //    instance.__viewConfig = {};
+         //    viewConfig.mode = 'include';
+         //    instance._options.viewConfig = viewConfig;
+         //    instance._beforeUpdate({ viewConfig });
+         //
+         //    assert.isNotNull(instance.__viewConfig);
+         //
+         //    viewConfig.mode = 'dialog';
+         //    instance._beforeUpdate({ viewConfig });
+         //
+         //    assert.isNull(instance.__viewConfig);
+         // });
 
          it('updates list options in inlist mode', () => {
             const options = { viewConfig };
@@ -210,7 +190,7 @@ define([
             assert.isDefined(instance.__viewConfig);
          });
 
-         it('sets correct shown flag for viewConfig', () => {
+         it('sets correct showed flag for viewConfig', () => {
             [
                [true, 'include', true],
                [true, 'dialog', true],
