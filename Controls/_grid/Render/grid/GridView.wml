@@ -143,6 +143,15 @@
         <Controls.event:Listener event="controlResize" on:controlResize="_onColumnScrollViewResized()"/>
     </ws:if>
 
+    <!--Этот gridView перезатирает _children не правильными элементами.-->
+    <!--Если его отобразить до настоящего gridView, то в _children будут правильные элементы-->
+    <ws:if data="{{ _$columnScrollUseFakeRender }}">
+        <div class="controls-Grid__ColumnScroll__fakeScrollablePartWrapper">
+            <!-- На фейке отключены стики шабки, имена всех детей имеют префикс _fake -->
+            <ws:partial template="gridView" columnScrollPartName="scrollable"/>
+        </div>
+    </ws:if>
+
     <!-- Контент таблицы -->
     <ws:partial template="gridView"
                 attr:name="grid"
@@ -153,11 +162,4 @@
                 on:touchmove="_onColumnScrollDragScrolling('touch')"
                 on:mouseup="_onColumnScrollStopDragScrolling('mouse')"
                 on:touchend="_onColumnScrollStopDragScrolling('touch')"/>
-
-    <ws:if data="{{ _$columnScrollUseFakeRender }}">
-        <div class="controls-Grid__ColumnScroll__fakeScrollablePartWrapper">
-            <!-- На фейке отключены стики шабки, имена всех детей имеют префикс _fake -->
-            <ws:partial template="gridView" columnScrollPartName="scrollable"/>
-        </div>
-    </ws:if>
 </div>
