@@ -56,7 +56,7 @@ export class ViewModel extends BaseViewModel {
         return this._valueToTimeIntervalConverter(displayValue);
     }
 
-    protected _convertToDisplayValue(value, shouldNotRemoveStartZeros) {
+    protected _convertToDisplayValue(value, shouldNotRemoveStartZeros: boolean) {
         let preResult: string;
 
         if (value === null) {
