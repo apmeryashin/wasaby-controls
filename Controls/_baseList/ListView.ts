@@ -173,7 +173,7 @@ const ListView = Control.extend(
 
         _beforeUnmount: function() {
             if (this._listModel && !this._listModel.destroyed) {
-                this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
+                this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
             }
         },
 
@@ -181,8 +181,11 @@ const ListView = Control.extend(
             this._updateInProgress = true;
             this._waitingComponentDidUpdate = true;
             if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
+                if (this._listModel) {
+                    this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
+                }
                 this._listModel = newOptions.listModel;
-                this._listModel.subscribe('onListChange', this._onListChangeFnc);
+                this._listModel.subscribe('onCollectionChange', this._onListChangeFnc);
             }
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
