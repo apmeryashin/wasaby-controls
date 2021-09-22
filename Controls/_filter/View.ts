@@ -258,7 +258,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
     protected _resetDisplayText(oldItems: IFilterItem[], newItems: IFilterItem[], displayText: IDisplayText): void {
         factory(newItems).each((newItem) => {
-            const oldItem = this._getItemByName(oldItems, newItem[newItem.name]);
+            const oldItem = this._getItemByName(oldItems, newItem.name);
             if (
                 (!oldItem ||
                 this._isFrequentItem(oldItem) &&
