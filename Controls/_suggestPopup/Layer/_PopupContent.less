@@ -7,6 +7,14 @@
     overflow: hidden;
 }
 
+//в safari не работает overflow:hidden с заданным border-radius
+.ws-is-desktop-safari,
+.ws-is-mobile-safari {
+  .controls-Suggest__suggestionsContainer_popup {
+      transform: translateZ(0);
+  }
+}
+
 .controls-Suggest__tabs_PopupLayer {
    margin-top: var(--tabs_offset-top_suggest);
 }
