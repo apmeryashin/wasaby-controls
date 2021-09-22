@@ -110,10 +110,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    selectAll(selection: ISelection, limit?: number): ISelection {
       const initSelection = this._rootChanged ? {selected: [], excluded: []} : selection;
       const newSelection = this.select(initSelection, this._rootId);
-      if (limit) {
-         // Если есть лимит, то сохраняем отдельно выбранные элементы, чтобы при выборе пачки с них не слетел выбор.
-         newSelection.selected = ArraySimpleValuesUtil.addSubArray(newSelection.selected, initSelection.selected);
-      } else {
+      if (!limit) {
          this._removeChildes(newSelection, this._getRoot());
       }
 
@@ -329,12 +326,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
       if (limit) {
          const countItems = this._model.getCount();
-         // limit задает только кол-во выбранных записей пачкой, а еще могут быть выбраны записи отдельно,
-         // они находятся в selectedKeys. -1 т.к. одно значение это обязательно будет корень
-         const itemsSeparatedSelectedCount = selection.selected.length - 1;
-         return !hasMoreData && limit > countItems
-             ? countItems
-             : limit + itemsSeparatedSelectedCount;
+         return !hasMoreData && limit > countItems ? countItems : limit;
       }
 
       let countItemsSelected: number|null = 0;
