@@ -68,7 +68,7 @@ define([
             component.openPopup();
             sinon.assert.called(component._children.opener.open);
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-PeriodDialog__picker controls_datePicker_theme-default controls_popupTemplate_theme-default',
+               className: 'controls_popupTemplate_theme-default controls-PeriodDialog__picker controls_datePicker_theme-default',
                templateOptions: {
                   startValue: extOptions.startValue,
                   endValue: extOptions.endValue,
