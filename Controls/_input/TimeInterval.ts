@@ -21,13 +21,18 @@ type IOptions = IModelOptions;
  *
  * @ignoreoptions Controls/input:Base#value
  * @ignoreoptions Controls/input:Base#placeholder
- * 
+ *
  * @public
  * @demo Controls-demo/Input/TimeInterval/Base/Index
  *
  * @author Красильников А.С.
  */
 // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
+
+/* @name Controls/_input/TimeInterval#shouldNotRemoveStartZeros
+ * @cfg {Boolean} Определяет, будут ли обрезаться лидирующие нули в поле ввода.
+ * @ignore
+ */
 
 class TimeInterval extends Base {
     protected _autoWidth: boolean = true;
@@ -46,7 +51,7 @@ class TimeInterval extends Base {
     }
 
     protected _notifyInputCompleted() {
-        if (this._viewModel.autoComplete()) {
+        if (this._viewModel.autoComplete(this._options.shouldNotRemoveStartZeros)) {
             this._notifyValueChanged();
         }
 
