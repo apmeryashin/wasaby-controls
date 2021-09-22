@@ -4673,11 +4673,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._keepScrollAfterReload = true;
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
-                    sourceConfig = {...(this._options.navigation.sourceConfig), limit: this._items.getCount()};
+                    const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());
+                    sourceConfig = {...(this._options.navigation.sourceConfig), limit: maxLimit};
                 }
                 if (this._options.navigation?.source === 'page') {
                     const navPageSize = this._options.navigation.sourceConfig.pageSize;
-                    const pageSize = Math.ceil(this._items.getCount() / navPageSize) * navPageSize;
+                    const pageSize = Math.max(Math.ceil(this._items.getCount() / navPageSize) * navPageSize, navPageSize);
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
             }
