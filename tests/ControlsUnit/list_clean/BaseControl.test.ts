@@ -731,25 +731,31 @@ describe('Controls/list_clean/BaseControl', () => {
                 scrollHeight: 1200,
                 clientHeight: 400
             };
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            const clearScrollParams = {
+                scrollTop: 0,
+                scrollHeight: 1000,
+                clientHeight: 400
+            };
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(true), clearScrollParams);
             scrollParams.scrollTop = 500;
             baseControl.scrollMoveSyncHandler({scrollTop: 400});
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
             scrollParams.scrollTop = 0;
             scrollParams.scrollHeight = 1000;
 
             baseControl.scrollMoveSyncHandler({scrollTop: scrollParams.scrollTop});
             baseControl.__onPagingArrowClick(null, '');
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
 
             scrollParams.scrollTop = 100;
             scrollParams.scrollHeight = 1200;
             baseControl.scrollMoveSyncHandler({scrollTop: 0});
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
             baseControl.scrollMoveSyncHandler({scrollTop: 400});
             scrollParams.scrollTop = 500;
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
         });
     });
     describe('beforeUnmount', () => {
