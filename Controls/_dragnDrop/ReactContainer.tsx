@@ -11,7 +11,7 @@ import 'css!Controls/dragnDrop';
 interface IReactContainerProps {
     resetTextSelection?: boolean;
     draggingTemplateOffset?: number;
-    draggingTemplate: React.Component;
+    draggingTemplate?: React.Component;
     registerMouseMove: (onMouseMove: Function, onTouchMove: Function, container: object) => void;
     unregisterMouseMove: (container: object) => void;
     registerMouseUp: (onMouseUp: Function, container: object) => void;
