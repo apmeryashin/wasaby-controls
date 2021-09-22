@@ -34,7 +34,7 @@ describe('Controls/_baseList/ObserversController', () => {
 
         it('empty model', () => {
             const {controller} = initTest([], {scrollTop: 100, viewHeight: 1000, viewportHeight: 500});
-            assert.deepEqual(controller.getTriggerOffsets(), {top: 0, bottom: 0});
+            assert.deepEqual(controller.getTriggerOffsets(), {top: 1, bottom: 1});
         });
     });
 });
