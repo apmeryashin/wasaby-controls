@@ -729,7 +729,8 @@ const _private = {
 
                 const hideIndicatorOnCancelQuery =
                     (error.isCanceled || error.canceled) &&
-                    !self._sourceController?.isLoading();
+                    !self._sourceController?.isLoading() &&
+                    !_private.isPortionedLoad(self);
 
                 if (hideIndicatorOnCancelQuery) {
                     // при пересчете скроем все ненужые индикаторы

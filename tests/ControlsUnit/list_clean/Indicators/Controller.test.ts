@@ -26,6 +26,17 @@ function initTest(
     return {collection, controller};
 }
 
+function getMockedIndicatorElement(): HTMLElement {
+    return {
+        style: {
+            display: '',
+            position: '',
+            top: '',
+            bottom: ''
+        }
+    } as HTMLElement;
+}
+
 describe('Controls/list_clean/Indicators/Controller', () => {
     let fakeTimer;
 
@@ -343,6 +354,70 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
+        });
+    });
+
+    describe('displayDrawingIndicator', () => {
+        it('should display', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, 'sticky');
+            assert.equal(mockedIndicatorElement.style.top, '0');
+        });
+
+        it('not should display by portioned search', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true}, {iterative: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+
+        it('not should display by options', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: false});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+    });
+
+    describe('hideDrawingIndicator', () => {
+        it('should hide', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, 'none');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+
+        it('not should hide by portioned search', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true}, {iterative: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+
+        it('not should hide by options', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: false});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
         });
     });
 });
