@@ -4,6 +4,7 @@ import {descriptor} from 'Types/entity';
 import {detection} from 'Env/Env';
 import {Bus as EventBus} from 'Env/Event';
 import ControllerClass from 'Controls/_dragnDrop/ControllerClass';
+
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as template from 'wml!Controls/_dragnDrop/Container/Container';
