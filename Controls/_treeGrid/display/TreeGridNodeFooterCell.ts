@@ -28,10 +28,6 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
             ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}` +
             ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
 
-        if (this.getOwner().isFullGridSupport()) {
-            classes += ' controls-TreeGrid__nodeFooterContent__baseline';
-        }
-
         if (colspan !== false) {
             classes += ' controls-TreeGrid__nodeFooterContent_colspaned';
         }
@@ -88,10 +84,6 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
         }
 
         return 1;
-    }
-
-    getRelativeCellWrapperClasses(): string {
-        return super.getRelativeCellWrapperClasses() + ' controls-TreeGrid__nodeFooterContent__baseline';
     }
 }
 
