@@ -128,6 +128,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             controller.setHasMoreData(true, true);
+            controller.setViewportFilled(true);
             controller.onCollectionReset();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());

@@ -8,6 +8,12 @@ interface IItem {
 const SEARCH_DELAY = 2500;
 
 export default class PositionSourceMemory extends Memory {
+    private _littleData: boolean = false;
+
+    setLittleData(newValue: boolean): void {
+        this._littleData = newValue;
+    }
+
     query(query?: Query<unknown>): Promise<DataSet> {
         const filter = query.getWhere();
         let limit = query.getLimit();
@@ -22,13 +28,16 @@ export default class PositionSourceMemory extends Memory {
         }
 
         if (isSearch) {
+            const limit = this._littleData ? 5 : 20;
+            const iterative =  position > -60 || position < limit;
+            const hasMore = isPrepend ? position > -60 : position < limit;
             return this._getSearchItems(position)
                 .then((items) => this._prepareQueryResult({
                         items,
                         meta: {
-                            total: isPosition ? {before: false, after: true} : position < 100,
-                            more: isPosition ? {before: false, after: true} : position < 100,
-                            iterative: position < 100 // находим всего 100 записей
+                            total: iterative,
+                            more: isPosition ? {before: true, after: !this._littleData} : hasMore,
+                            iterative
                         }
                     }, null)
                 );
@@ -60,7 +69,7 @@ export default class PositionSourceMemory extends Memory {
     private _getSearchItems(position: number): Promise<IItem[]> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const items = this._getItems(position, 3);
+                const items = this._getItems(position, 5);
                 resolve(items);
             }, SEARCH_DELAY);
         });
