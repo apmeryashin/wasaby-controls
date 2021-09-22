@@ -1,7 +1,7 @@
 <ws:template name="COLUMN">
     <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
          class="{{ gridColumn.getMarkerClasses(markerClassName, itemPadding) }}"
-         attr:data-qa="controls-GridView__itemV_marker"></div>
+         attr:data-qa="controls-TreeGrid__row_marker"></div>
     <!-- TODO избавиться от прокидывания _onBreadcrumbClick https://online.sbis.ru/doc/0649e69a-d507-4024-9f99-c70205f535ef-->
     <ws:partial template="{{ gridColumn.getTemplate() }}"
                 scope="{{ gridColumn.config.templateOptions }}"

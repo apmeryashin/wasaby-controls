@@ -20,7 +20,7 @@
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
                      attr:class="{{ gridColumn.getMarkerClasses() }}"
-                     attr:data-qa="controls-GridView__itemV_marker"></div>
+                     attr:data-qa="controls-Grid__row_marker"></div>
 
                 <ws:partial template="{{ gridColumn.getTemplate() }}"
                             scope="{{ gridColumn.config.templateOptions }}"

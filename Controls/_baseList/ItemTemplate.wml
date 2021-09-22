@@ -3,7 +3,7 @@
         <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
     </ws:if>
     <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
-        <div attr:data-qa="controls-ListView__itemV_marker" class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
+        <div attr:data-qa="controls-List__item_marker" class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
     </ws:if>
     <ws:if data="{{ contentTemplate }}">
         <div attr:class="{{ (item || itemData).getContentClasses() }}">

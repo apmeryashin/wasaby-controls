@@ -15,7 +15,7 @@ export default class FooterRow extends mixin<Row<null>, Footer>(Row, Footer) {
     private _actionsTemplateConfig: IItemActionsTemplateConfig;
     protected _$shouldAddFooterPadding: boolean;
 
-    readonly listInstanceName: string = 'controls-Grid__footer-row';
+    readonly listInstanceName: string = 'controls-Grid__footer';
 
     getContents(): string {
         return 'footer';
