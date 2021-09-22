@@ -612,6 +612,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         this._nextVersion();
     }
 
+    getIndicatorColspan(): number {
+        return this.getGridColumnsConfig().length + +(this.hasMultiSelectColumn());
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;
