@@ -47,7 +47,7 @@ interface IDragObject<T = object> {
     draggingTemplateOffset: number;
 }
 
-class RectContainer extends React.Component<IReactContainerProps> {
+class ReactContainer extends React.Component<IReactContainerProps> {
     /**
      * Хранит список перетаскиваемых элементов и ключ элемента, за который потащили (draggedKey)
      */
@@ -123,7 +123,7 @@ class RectContainer extends React.Component<IReactContainerProps> {
         if (!event.nativeEvent.buttons && !this._endDragNDropTimer) {
             this._endDragNDropTimer = setTimeout(() => {
                 this._dragNDropEnded(event);
-            }, RectContainer.IE_MOUSEMOVE_FIX_DELAY);
+            }, ReactContainer.IE_MOUSEMOVE_FIX_DELAY);
         } else {
             clearTimeout(this._endDragNDropTimer);
             this._endDragNDropTimer = null;
@@ -143,7 +143,7 @@ class RectContainer extends React.Component<IReactContainerProps> {
     private _onMove(nativeEvent: MouseEvent): void {
         if (this._startEvent) {
             const dragObject: IDragObject = this._getDragObject(nativeEvent, this._startEvent);
-            const dragStarted: boolean = RectContainer._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
+            const dragStarted: boolean = ReactContainer._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
             if (!this._documentDragging && dragStarted) {
                 this._insideDragging = true;
                 this.props.documentDragStart(dragObject);
@@ -204,8 +204,8 @@ class RectContainer extends React.Component<IReactContainerProps> {
         };
         if (mouseEvent && startEvent) {
             dragObject.domEvent = mouseEvent;
-            dragObject.position = RectContainer._getPageXY(mouseEvent);
-            dragObject.offset = RectContainer._getDragOffset(mouseEvent, startEvent);
+            dragObject.position = ReactContainer._getPageXY(mouseEvent);
+            dragObject.offset = ReactContainer._getDragOffset(mouseEvent, startEvent);
             dragObject.draggingTemplateOffset = this.props.draggingTemplateOffset;
         }
         return dragObject;
@@ -282,7 +282,7 @@ class RectContainer extends React.Component<IReactContainerProps> {
         this._startImmediately = options.immediately;
 
         if (this.props.resetTextSelection) {
-            RectContainer._clearSelection(this._startEvent);
+            ReactContainer._clearSelection(this._startEvent);
         }
 
         const target: Element = this._startEvent.target as Element;
@@ -306,8 +306,8 @@ class RectContainer extends React.Component<IReactContainerProps> {
             return true;
         }
 
-        const offset: ICords = RectContainer._getDragOffset(moveEvent, startEvent);
-        return Math.abs(offset.x) > RectContainer.SHIFT_LIMIT || Math.abs(offset.y) > RectContainer.SHIFT_LIMIT;
+        const offset: ICords = ReactContainer._getDragOffset(moveEvent, startEvent);
+        return Math.abs(offset.x) > ReactContainer.SHIFT_LIMIT || Math.abs(offset.y) > ReactContainer.SHIFT_LIMIT;
     }
 
     private static _getSelection(): Selection {
@@ -319,7 +319,7 @@ class RectContainer extends React.Component<IReactContainerProps> {
             /**
              * Снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
              */
-            const selection = RectContainer._getSelection();
+            const selection = ReactContainer._getSelection();
             if (selection.removeAllRanges) {
                 selection.removeAllRanges();
             } else if (selection.empty) {
@@ -333,8 +333,8 @@ class RectContainer extends React.Component<IReactContainerProps> {
     }
 
     private static _getDragOffset(moveEvent: MouseEvent, startEvent: MouseEvent): ICords {
-        const moveEventXY = RectContainer._getPageXY(moveEvent);
-        const startEventXY = RectContainer._getPageXY(startEvent);
+        const moveEventXY = ReactContainer._getPageXY(moveEvent);
+        const startEventXY = ReactContainer._getPageXY(startEvent);
 
         return {
             y: moveEventXY.y - startEventXY.y,
@@ -360,13 +360,13 @@ class RectContainer extends React.Component<IReactContainerProps> {
     }
 }
 
-Object.defineProperty(RectContainer, 'defaultProps', {
+Object.defineProperty(ReactContainer, 'defaultProps', {
    enumerable: true,
    configurable: true,
 
    get(): object {
-      return RectContainer.getDefaultOptions();
+      return ReactContainer.getDefaultOptions();
    }
 });
 
-export default RectContainer;
+export default ReactContainer;
