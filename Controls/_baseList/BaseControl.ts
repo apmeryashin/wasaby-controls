@@ -3429,9 +3429,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
         this._scrollController?.setTriggerVisibility(direction, state);
-        this._scrollController?.update({ params: { clientHeight: this._viewportSize,
-                                                                 scrollHeight: this._viewSize,
-                                                                 scrollTop: this._scrollTop}});
+        this._scrollController?.update({ params: this._getScrollParams(true)});
         if (state) {
             this.handleTriggerVisible(direction);
         }
@@ -3476,7 +3474,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.closeActionsMenu(this);
     }
 
-    _getScrollParams(): IScrollParams {
+    _getScrollParams(clear: boolean = false): IScrollParams {
+        if (clear) {
+            return {
+                clientHeight: this._viewportSize,
+                scrollHeight: this._viewSize,
+                scrollTop: this._scrollTop
+            };
+        }
         let stickyElementsHeight = 0;
         if (detection.isBrowserEnv) {
             stickyElementsHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
