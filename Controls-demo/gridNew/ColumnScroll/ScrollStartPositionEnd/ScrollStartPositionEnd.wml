@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <Controls.buttons:Button on:click="_onClickAdd()" caption="Добавить длинную записи" />
+    <Controls.buttons:Button on:click="_onClickAdd()" caption="Добавить длинную запись" />
     <Controls.scroll:Container attr:style="width: 600px; height: 400px">
         <Controls.grid:View
                 keyProperty="key"
