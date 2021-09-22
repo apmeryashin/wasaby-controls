@@ -29,7 +29,7 @@
                     item="{{_listModel.getTopIndicator()}}"
                     on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
         <!--Top loading trigger-->
-        <div name="topLoadingTrigger"
+        <div name="topLoadingTrigger{{columnScrollPartName === 'scrollable' ? '_fake'}}"
              class="controls-BaseControl__loadingTrigger"
              data-qa="loading-trigger-top">
         </div>
@@ -85,7 +85,7 @@
         </ws:if>
 
         <!--Bottom loading trigger-->
-        <div name="bottomLoadingTrigger"
+        <div name="bottomLoadingTrigger{{columnScrollPartName === 'scrollable' ? '_fake'}}"
              class="controls-BaseControl__loadingTrigger"
              data-qa="loading-trigger-bottom">
         </div>
