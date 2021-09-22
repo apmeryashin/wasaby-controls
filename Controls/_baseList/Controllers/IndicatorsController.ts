@@ -236,21 +236,18 @@ export default class IndicatorsController {
      * @void
      */
     displayDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
-        // Этими опциями в календаре полностью отключены ромашки, т.к. там не может быть долгой подгрузки.
-        // И в IE из-за его медленной работы индикаторы вызывают прыжки
-        if (
-            this._options.attachLoadTopTriggerToNull && position === 'top' ||
-            this._options.attachLoadDownTriggerToNull && position === 'bottom'
-        ) {
-            this._startDisplayIndicatorTimer(() => {
-                // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
-                // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
-                // скорее всего не выполнится
-                indicatorElement.style.display = '';
-                indicatorElement.style.position = 'sticky';
-                indicatorElement.style[position] = '0';
-            });
+        if (!this._shouldHandleDrawingIndicator(position)) {
+            return;
         }
+
+        this._startDisplayIndicatorTimer(() => {
+            // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
+            // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
+            // скорее всего не выполнится
+            indicatorElement.style.display = '';
+            indicatorElement.style.position = 'sticky';
+            indicatorElement.style[position] = '0';
+        });
     }
 
     /**
@@ -259,6 +256,10 @@ export default class IndicatorsController {
      * @param position Позиция индикатора
      */
     hideDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
+        if (!this._shouldHandleDrawingIndicator(position)) {
+            return;
+        }
+
         this._clearDisplayIndicatorTimer();
         indicatorElement.style.display = 'none';
         indicatorElement.style.position = '';
@@ -374,6 +375,15 @@ export default class IndicatorsController {
         }
 
         return state;
+    }
+
+    private _shouldHandleDrawingIndicator(position: 'top'|'bottom'): boolean {
+        // Этими опциями в календаре полностью отключены ромашки, т.к. там не может быть долгой подгрузки.
+        // И в IE из-за его медленной работы индикаторы вызывают прыжки
+        const allowByOptions = this._options.attachLoadTopTriggerToNull && position === 'top' ||
+            this._options.attachLoadDownTriggerToNull && position === 'bottom';
+        // при порционном поиске индикатор всегда отрисовать и поэтому индикатор отрисовки не нужен
+        return !this._isPortionedSearch() && allowByOptions;
     }
 
     // endregion LoadingIndicator
