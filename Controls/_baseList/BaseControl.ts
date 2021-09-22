@@ -1512,7 +1512,7 @@ const _private = {
                 let newSelection;
                 switch (action) {
                     case IObservable.ACTION_ADD:
-                        selectionController.onCollectionAdd(newItems);
+                        newSelection = selectionController.onCollectionAdd(newItems, newItemsIndex);
                         self._notify('listSelectedKeysCountChanged', [selectionController.getCountOfSelected(), selectionController.isAllSelected()], {bubbling: true});
                         break;
                     case IObservable.ACTION_RESET:
@@ -2206,20 +2206,16 @@ const _private = {
                 result = selectionController.toggleAll();
                 break;
             case 'count-10':
-                selectionController.increaseLimitByCount(10);
-                result = selectionController.selectAll();
+                result = selectionController.selectAll(10);
                 break;
             case 'count-25':
-                selectionController.increaseLimitByCount(25);
-                result = selectionController.selectAll();
+                result = selectionController.selectAll(25);
                 break;
             case 'count-50':
-                selectionController.increaseLimitByCount(50);
-                result = selectionController.selectAll();
+                result = selectionController.selectAll(50);
                 break;
             case 'count-100':
-                selectionController.increaseLimitByCount(100);
-                result = selectionController.selectAll();
+                result = selectionController.selectAll(100);
                 break;
         }
 
