@@ -3808,7 +3808,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
 
-        if (this._options.searchValue  && !newOptions.searchValue) {
+        // При смене searchValue завeршаем порционный поиск и потом в нужном месте его запустим(reset или loadToDirection)
+        if (this._options.searchValue !== newOptions.searchValue) {
             this._indicatorsController.endDisplayPortionedSearch();
         }
 
