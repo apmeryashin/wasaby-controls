@@ -189,7 +189,7 @@ export default class ObserversController {
                     this._resetTopTriggerOffset = false;
                     this.applyTriggerOffsets(topTrigger, bottomTrigger);
                 }
-                break
+                break;
             case 'down':
                 if (this._resetBottomTriggerOffset) {
                     this._resetBottomTriggerOffset = false;
@@ -228,8 +228,12 @@ export default class ObserversController {
         let topTriggerOffset;
         let bottomTriggerOffset;
 
+        const topIndicatorDisplayed = this._model.getTopIndicator().isDisplayed();
+        const bottomIndicatorDisplayed = this._model.getBottomIndicator().isDisplayed();
+
         if (this._resetTopTriggerOffset || !this._model.getCount()) {
-            topTriggerOffset = 0;
+            // 1px чтобы не было проблем с подгрузками при измененном масштабе
+            topTriggerOffset = topIndicatorDisplayed ? 0 : 1;
         } else {
             const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, this._viewHeight / 2);
             topTriggerOffset = Math.min(
@@ -239,7 +243,8 @@ export default class ObserversController {
         }
 
         if (this._resetBottomTriggerOffset || !this._model.getCount()) {
-            bottomTriggerOffset = 0;
+            // 1px чтобы не было проблем с подгрузками при измененном масштабе
+            bottomTriggerOffset = bottomIndicatorDisplayed ? 0 : 1;
         } else {
             const scrollBottom = Math.max(this._viewHeight - this._scrollTop - this._viewportHeight, 0);
             const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, this._viewHeight / 2);
@@ -258,10 +263,10 @@ export default class ObserversController {
          * 47 - чтобы сразу же не срабатывала загрузка вверх, а только после скролла к ромашке.
          */
         if (this._model.getCount()) {
-            if (this._model.getTopIndicator().isDisplayed()) {
+            if (topIndicatorDisplayed) {
                 topTriggerOffset += DEFAULT_TOP_TRIGGER_OFFSET;
             }
-            if (this._model.getBottomIndicator().isDisplayed()) {
+            if (bottomIndicatorDisplayed) {
                 bottomTriggerOffset += DEFAULT_BOTTOM_TRIGGER_OFFSET;
             }
         }
