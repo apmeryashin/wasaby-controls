@@ -198,7 +198,7 @@ export default class Render extends Control<IRenderOptions> {
             if (
                 e.nativeEvent.keyCode === constants.key.esc ||
                 (
-                    !e.target.closest('.richEditor_TinyMCE') &&
+                    !e.target.closest('.ws-dont-stop-native-event') &&
                     e.nativeEvent.keyCode !== constants.key.tab
                 )
             ) {
