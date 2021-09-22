@@ -206,9 +206,15 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
     }
 
     static getDerivedStateFromProps(options: IZenWrapperOptions): object {
+        let complementaryColor = options.complementaryColor;
+        if (!complementaryColor) {
+            // TODO зашиваем primary цвет. Нужно для совешаний. Возможно есть решение лучше.
+            // https://online.sbis.ru/opendoc.html?guid=f454befd-5404-4081-b54d-0ce5579d58f1
+            complementaryColor = '246, 115, 60';
+        }
         return ZenWrapper.calculateVariables(
             ZenWrapper.calculateRGB(options.dominantColor),
-            ZenWrapper.calculateRGB(options.complementaryColor),
+            ZenWrapper.calculateRGB(complementaryColor),
             options.brightness
         );
     }
