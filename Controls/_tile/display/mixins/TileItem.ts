@@ -1596,6 +1596,10 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TImagePosition} imagePosition Позиция изображения
      * @param {TImageViewMode} imageViewMode Режим отображения изображения,
      * @param {TPaddingSize} contentPadding: Отступ от края плитки до контента внутри неё
+     * @param {TemplateFunction} footerTemplate:  Темплейт футера
+     * @param {string} description: Описание
+     * @param {number} descriptionLines: Отступ от края плитки до контента внутри неё
+     * @param {TTitlePosition} titlePosition: Отступ от края плитки до контента внутри неё
      */
     getTitleWrapperClasses(
         itemType: TTileItem = 'default',
@@ -1603,7 +1607,12 @@ export default abstract class TileItem<T extends Model = Model> {
         gradientType: TGradientType = 'dark',
         titleStyle: TTitleStyle = 'light',
         imagePosition: TImagePosition = 'top',
-        contentPadding: TPaddingSize = 'default'
+        imageViewMode: TImageViewMode = 'none',
+        contentPadding: TPaddingSize = 'default',
+        footerTemplate: TemplateFunction = null,
+        description: string = '',
+        descriptionLines: number = 0,
+        titlePosition: TTitlePosition = 'underImage'
     ): string {
         let classes = '';
 
@@ -1616,7 +1625,13 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'rich':
                 classes += 'controls-TileView__richTemplate_itemContent ws-ellipsis';
-                classes += this._getContentSpacingClasses(imagePosition, contentPadding);
+
+                if (!(titlePosition === 'onImage' &&
+                      imageViewMode === 'rectangle' &&
+                      !footerTemplate &&
+                      (!description || !descriptionLines))) {
+                    classes += this._getContentSpacingClasses(imagePosition, contentPadding);
+                }
                 break;
             case 'preview':
                 classes += 'controls-TileView__previewTemplate_title';
