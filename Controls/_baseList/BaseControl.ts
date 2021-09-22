@@ -1402,7 +1402,7 @@ const _private = {
 
                         self._indicatorsController.onCollectionReset();
 
-                        if (self._options.searchValue) {
+                        if (_private.isPortionedLoad(self)) {
                             // Событие reset коллекции приводит к остановке активного порционного поиска.
                             // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
                             self._indicatorsController.endDisplayPortionedSearch();
@@ -3815,10 +3815,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // region Indicators
 
         this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
-
-        if (this._options.searchValue  && !newOptions.searchValue) {
-            this._indicatorsController.endDisplayPortionedSearch();
-        }
 
         if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
             this._displayGlobalIndicator();
