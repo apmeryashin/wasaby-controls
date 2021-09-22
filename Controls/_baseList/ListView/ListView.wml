@@ -66,6 +66,7 @@
             template="{{_listModel.getFooter().getTemplate()}}"
             item="{{_listModel.getFooter()}}"
             attr:class="{{_getFooterClasses()}}"
+            attr:data-qa="controls-List__footer"
          />
       </ws:if>
 

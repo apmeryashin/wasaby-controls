@@ -20,6 +20,8 @@ export default class TreeGridHeaderCell extends GridHeaderCell<null> {
      */
     protected _$expanderSize: string;
 
+    readonly listInstanceName: string =  'controls-TreeGrid__header-cell';
+
     // region DisplayExpanderPadding
 
     setDisplayExpanderPadding(displayExpanderPadding: boolean): void {

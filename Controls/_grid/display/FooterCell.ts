@@ -12,6 +12,8 @@ class FooterCell<TOwner extends FooterRow> extends Cell<null, FooterRow> {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:FooterColumnTemplate';
     protected _$shouldAddFooterPadding: boolean;
 
+    readonly listInstanceName: string = 'controls-Grid__footer-cell';
+
     //region Аспект "Стилевое оформление"
     getWrapperClasses(
         backgroundColorStyle: string,

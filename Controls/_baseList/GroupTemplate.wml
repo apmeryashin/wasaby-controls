@@ -40,10 +40,10 @@
 <ws:if data="{{(item || itemData).isSticked()}}">
    <Controls.scroll:StickyBlock backgroundStyle="{{ backgroundStyle }}"
                                 attr:class="controls-ListView__group"
-                                attr:data-qa="{{ (item || itemData).getQAData() }}">
+                                attr:data-qa="{{ (item || itemData).listInstanceName }}">
       <ws:partial template="localGroupTemplate" attr:class="controls-ListView__stickyGroup_{{ style }}"/>
    </Controls.scroll:StickyBlock>
 </ws:if>
 <ws:else>
-   <ws:partial template="localGroupTemplate" attr:data-qa="{{ (item || itemData).getQAData() }}"/>
+   <ws:partial template="localGroupTemplate" attr:data-qa="{{ (item || itemData).listInstanceName }}"/>
 </ws:else>

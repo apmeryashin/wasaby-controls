@@ -72,7 +72,7 @@
 
 <ws:if data="{{ isSticked !== false && (item || itemData).isSticked(stickyCallback, item) }}">
     <Controls.scroll:Group>
-        <div attr:data-qa="{{(item || itemData).getQAData('controls-Grid__row')}}"
+        <div attr:data-qa="{{ (item || itemData).listInstanceName }}"
              attr:class="{{ (item || itemData).getItemClasses({
                 'highlightOnHover': highlightOnHover,
                 'cursor': cursor,
@@ -88,7 +88,7 @@
                                               attr:key="sticky_{{ column.getInstanceId() }}"
                                               attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
                                               attr:style="{{ column.getWrapperStyles(containerSize) }}"
-                                              attr:data-qa="{{ column.getQAData() }}">
+                                              attr:data-qa="{{ column.listInstanceName }}">
                     <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
                 </Controls.scroll:StickyBlock>
             </ws:for>
@@ -96,7 +96,7 @@
     </Controls.scroll:Group>
 </ws:if>
 <ws:else>
-    <div attr:data-qa="{{(item || itemData).getQAData('controls-Grid__row')}}"
+    <div attr:data-qa="{{ (item || itemData).listInstanceName }}"
          attr:class="{{ (item || itemData).getItemClasses({
                 'highlightOnHover': highlightOnHover,
                 'cursor': cursor,
@@ -106,7 +106,7 @@
         <ws:for data="column in (item || itemData).getColumns()">
             <div class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
                  style="{{ column.getWrapperStyles(containerSize) }}"
-                 attr:data-qa="{{ column.getQAData() }}">
+                 attr:data-qa="{{ column.listInstanceName }}">
                 <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
             </div>
         </ws:for>

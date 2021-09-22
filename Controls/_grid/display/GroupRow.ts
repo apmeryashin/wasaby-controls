@@ -53,6 +53,8 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
     protected _$metaResults: EntityModel;
     protected _$colspanGroup: boolean;
 
+    readonly listInstanceName: string = 'controls-Grid__group';
+
     constructor(options?: IOptions<TContents>) {
         super(options);
         ExpandableMixin.call(this);
@@ -89,10 +91,6 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
             this._groupTemplate = null;
         }
         return 'Controls/grid:ItemTemplate';
-    }
-
-    getQAData(templateQAData?: string): string {
-        return 'controls-ListView__group';
     }
 
     isSticked(): boolean {

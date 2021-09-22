@@ -8,6 +8,8 @@ import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/col
 export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
     readonly '[Controls/treeGrid:TreeGridNodeFooterCell]': boolean;
 
+    readonly listInstanceName: string =  'controls-TreeGrid__node-footer-cell';
+
     getTemplate(content?: TemplateFunction): TemplateFunction|string {
         const nav = this.getOwner().getOwner().getNavigation();
         const isInfinityNav = nav?.view === 'infinity';

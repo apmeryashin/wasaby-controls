@@ -12,6 +12,7 @@ const DEFAULT_CELL_CONTENT = 'Controls/grid:ItemActionsCellContent';
  */
 export default class ItemActionsCell extends Cell<null, Row<null>> implements IItemActionsCell {
     readonly ItemActionsCell = true;
+    readonly listInstanceName: string =  'controls-Grid__actions-cell';
 
     getTemplate(): string {
         return DEFAULT_CELL_CONTENT;
@@ -42,10 +43,6 @@ export default class ItemActionsCell extends Cell<null, Row<null>> implements II
             styles += ` grid-row: 1 / ${1 + this._$rowspan};`;
         }
         return styles;
-    }
-
-    getQAData(): string {
-        return 'controls-itemActionsV__container';
     }
 
     shouldDisplayItemActions(): boolean {

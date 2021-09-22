@@ -1,6 +1,5 @@
 <div class="{{ (gridColumn || emptyViewColumn).getContentClasses(topSpacing, bottomSpacing, align) }}"
-     style="{{ (gridColumn || emptyViewColumn).getContentStyles(containerSize) }}"
-     attr:data-qa="controls-ListView__empty">
+     style="{{ (gridColumn || emptyViewColumn).getContentStyles(containerSize) }}">
 
     <ws:if data="{{ !!(contentTemplate || content) }}">
         <!-- Прикладной контент -->

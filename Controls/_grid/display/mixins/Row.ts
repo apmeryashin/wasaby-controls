@@ -183,10 +183,6 @@ export default abstract class Row<T extends Model = Model> {
         return classes;
     }
 
-    getQAData(templateQAData?: string): string {
-        return templateQAData;
-    }
-
     //endregion
 
     //region Аспект "Лесенка"

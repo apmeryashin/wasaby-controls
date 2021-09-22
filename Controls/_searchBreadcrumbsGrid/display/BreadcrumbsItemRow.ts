@@ -38,6 +38,8 @@ export default class BreadcrumbsItemRow<T extends Model = Model> extends GridDat
 
     protected _$parent: SearchGridDataRow<T>;
 
+    readonly listInstanceName: string =  'controls-BreadcrumbsGrid__row';
+
     protected get _first(): SearchGridDataRow<T> {
         const root = this._$owner ? this._$owner.getRoot() : {};
         let current = this._$last;

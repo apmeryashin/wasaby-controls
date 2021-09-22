@@ -32,6 +32,8 @@ export default class GroupItem<T> extends mixin<
 
     protected _$multiSelectVisibility: string;
 
+    readonly listInstanceName: string = 'controls-List__group';
+
     constructor(options?: IOptions<T>) {
         super(options);
         ExpandableMixin.call(this);
@@ -39,10 +41,6 @@ export default class GroupItem<T> extends mixin<
 
     get key(): T {
         return this._$contents;
-    }
-
-    getQAData(templateQAData?: string): string {
-        return 'controls-ListView__group';
     }
 
     isHiddenGroup(): boolean {

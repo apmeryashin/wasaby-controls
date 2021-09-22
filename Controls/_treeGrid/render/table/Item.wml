@@ -3,7 +3,7 @@
          attr:data-qa="controls-TreeGrid__row-expander"></div>
 </ws:template>
 
-<tr attr:data-qa="{{item.getQAData('controls-Grid__row')}}"
+<tr attr:data-qa="{{ item.listInstanceName }}"
     attr:class="{{ item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'cursor': cursor,
@@ -15,7 +15,7 @@
             attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}"
-            attr:data-qa="{{ gridColumn.getQAData() }}">
+            attr:data-qa="{{ gridColumn.listInstanceName }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses() }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"

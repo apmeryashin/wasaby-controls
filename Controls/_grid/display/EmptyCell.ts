@@ -14,6 +14,8 @@ class EmptyCell extends mixin<
 >(Cell, CellCompatibility) {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:EmptyColumnTemplate';
 
+    readonly listInstanceName: string = 'controls-Grid__empty-cell';
+
     //region Аспект "Стилевое оформление"
     getWrapperClasses(backgroundColorStyle: string = 'default', highlightOnHover?: boolean): string {
         let classes;

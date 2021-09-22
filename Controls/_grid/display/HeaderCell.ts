@@ -48,6 +48,8 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
     protected _$sorting: string;
     protected _$contentOrientation?: ICellContentOrientation;
 
+    readonly listInstanceName: string =  'controls-Grid__header-cell';
+
     get backgroundStyle(): string {
         return this._$backgroundStyle;
     }
@@ -191,10 +193,6 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
         }
         styles += ` z-index: ${this.getZIndex()};`;
         return styles;
-    }
-
-    getQAData(): string {
-        return 'controls-Grid__header-cell';
     }
 
     getZIndex(): number {

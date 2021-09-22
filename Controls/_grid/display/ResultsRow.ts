@@ -22,6 +22,8 @@ class ResultsRow extends Row<null> {
     protected _$metaResults: EntityModel;
     protected _$resultsPosition: TResultsPosition;
 
+    readonly listInstanceName: string =  'controls-Grid__results';
+
     constructor(options?: IResultsRowOptions) {
         super({
             ...options,
@@ -46,10 +48,6 @@ class ResultsRow extends Row<null> {
         return {
             vertical: this._$resultsPosition
         };
-    }
-
-    getQAData(templateQAData?: string): string {
-        return 'controls-Grid__results';
     }
 
     //endregion

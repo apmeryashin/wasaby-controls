@@ -25,6 +25,8 @@ export default class HeaderRow extends Row<null> {
     protected _$headerModel: Header;
     protected _$sorting: ISortItem[];
 
+    readonly listInstanceName: string = 'controls-Grid__header';
+
     constructor(options?: IOptions) {
         super(options);
 

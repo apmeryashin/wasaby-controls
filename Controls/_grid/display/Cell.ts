@@ -88,6 +88,8 @@ export default class Cell<
     protected _$isTopSeparatorEnabled?: string;
     protected _$isBottomSeparatorEnabled?: string;
 
+    readonly listInstanceName: string = 'controls-Grid__row-cell';
+
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
@@ -427,10 +429,6 @@ export default class Cell<
 
     getContentStyles(): string {
         return '';
-    }
-
-    getQAData(): string {
-        return 'controls-Grid__row-cell';
     }
 
     getZIndex(): number {

@@ -20,6 +20,8 @@ class ResultsCell extends Cell<null, ResultsRow> {
     protected _data: string | number;
     protected _format: string;
 
+    readonly listInstanceName: string = 'controls-Grid__results-cell';
+
     constructor(options?: IResultsCellOptions) {
         super(options);
         this._prepareDataAndFormat();
@@ -127,10 +129,6 @@ class ResultsCell extends Cell<null, ResultsRow> {
         }
 
         return wrapperStyles;
-    }
-
-    getQAData(): string {
-        return 'controls-Grid__results-cell';
     }
 
     getZIndex(): number {

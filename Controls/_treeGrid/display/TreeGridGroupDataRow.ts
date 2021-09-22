@@ -21,6 +21,8 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
 
     protected _$isHiddenGroup: boolean;
 
+    readonly listInstanceName: string =  'controls-TreeGrid__group';
+
     constructor(options: IOptions<T>) {
         super(options);
     }
@@ -100,10 +102,6 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
 
     isGroupNode(): boolean {
         return true;
-    }
-
-    getQAData(templateQAData?: string): string {
-        return 'controls-ListView__group';
     }
 
     // endregion overrides

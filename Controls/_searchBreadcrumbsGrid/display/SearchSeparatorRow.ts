@@ -5,6 +5,8 @@ export default class SearchSeparatorRow extends GridRow<string> {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
     readonly '[Controls/_itemActions/interface/IItemActionsItem]': boolean = false;
 
+    readonly listInstanceName: string =  'controls-BreadcrumbsGrid__separator';
+
     readonly Markable: boolean = false;
 
     protected _$owner: SearchGridCollection;

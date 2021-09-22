@@ -115,6 +115,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     getInstanceId: () => string;
 
     /**
+     * Имя сущности для идентификации в списке.
+     */
+    readonly listInstanceName: string = 'controls-List__item';
+
+    /**
      * Коллекция, которой принадлежит элемент
      */
     protected _$owner: Collection;
@@ -742,10 +747,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     getShadowVisibility(): string {
         return this._shadowVisibility;
-    }
-
-    getQAData(templateQAData?: string): string {
-        return templateQAData;
     }
 
     /**

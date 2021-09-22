@@ -1426,10 +1426,6 @@ export default abstract class TileItem<T extends Model = Model> {
         return styles;
     }
 
-    getQAData(templateQAData?: string): string {
-        return templateQAData;
-    }
-
     getWrapperQAData(marker?: boolean): string {
         let qaData = '';
         if (this.shouldDisplayMarker(marker)) {
