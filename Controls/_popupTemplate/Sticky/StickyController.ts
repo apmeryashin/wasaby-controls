@@ -69,7 +69,6 @@ export interface IStickyItem extends IPopupItem {
 export class StickyController extends BaseController {
     TYPE: string = 'Sticky';
     _bodyOverflow: string;
-    private _scrollContainer: HTMLElement;
 
     elementCreated(item: IStickyItem, container: HTMLElement): boolean {
         if (this._isTargetVisible(item)) {
@@ -100,7 +99,7 @@ export class StickyController extends BaseController {
                 item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');
             }
             item.popupOptions.className += ' controls-StickyTemplate-visibility';
-            if (item.popupOptions.actionOnScroll === 'track' && this._isVisibleTarget(item.popupOptions.target)) {
+            if (item.popupOptions.actionOnScroll === 'track' && !this._isVisibleTarget(item.popupOptions.target)) {
                 item.popupOptions.className += ' controls-StickyTemplate-visibility-hidden';
             }
 
@@ -125,17 +124,15 @@ export class StickyController extends BaseController {
     }
 
     private _isVisibleTarget(target: HTMLElement): boolean {
-        if (!this._scrollContainer) {
-            this._scrollContainer = StickyStrategy.getScrollContainer(target);
-        }
-        if (this._scrollContainer) {
+        const scrollContainer = StickyStrategy.getScrollContainer(target);
+        if (scrollContainer) {
             const targetDimensions = getDimensions(target);
-            const scrollDimensions = getDimensions(this._scrollContainer);
+            const scrollDimensions = getDimensions(scrollContainer);
             if (targetDimensions.top < scrollDimensions.top || targetDimensions.top > scrollDimensions.bottom) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     elementAfterUpdated(item: IStickyItem, container: HTMLElement): boolean {
