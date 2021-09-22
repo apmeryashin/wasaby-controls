@@ -824,6 +824,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (options.nodeProperty) {
             data[options.nodeProperty] = false;
         }
+        for (let field in data) {
+            this._addField(field, emptyItem, emptyItem.getFormat());
+        }
         emptyItem.set(data);
         items.prepend([emptyItem]);
     }
@@ -1102,16 +1105,21 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _subMenuDataLoadCallback(items: RecordSet): void {
         const origCollectionFormat = this._listModel.getCollection().getFormat();
+        const collection = this._listModel.getCollection();
         items.getFormat().forEach((field) => {
             const name = field.getName();
-            if (origCollectionFormat.getFieldIndex(name) === -1) {
-                this._listModel.getCollection().addField({
-                    name,
-                    type: 'string'
-                });
-            }
+            this._addField(name, collection, origCollectionFormat);
         });
         this._listModel.getCollection().append(items);
+    }
+
+    private _addField(name: string, items, format): void {
+        if (format.getFieldIndex(name) === -1) {
+            items.addField({
+                name,
+                type: 'string'
+            });
+        }
     }
 
     private _updateItemActions(listModel: Collection<Model>, options: IMenuControlOptions): void {
