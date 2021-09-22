@@ -4,7 +4,6 @@ import {descriptor} from 'Types/entity';
 import {detection} from 'Env/Env';
 import {Bus as EventBus} from 'Env/Event';
 import ControllerClass from 'Controls/_dragnDrop/ControllerClass';
-import ReactContainer from './ReactContainer';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as template from 'wml!Controls/_dragnDrop/Container/Container';
@@ -111,12 +110,10 @@ class Container extends Control<IContainerOptions> {
     private _insideDragging: boolean = false;
     private _endDragNDropTimer: number = null;
     private _draggedKey: string = null;
-    private _reactContainer = ReactContainer;
 
     protected _template: TemplateFunction = template;
 
     private _registerMouseMove(): void {
-        console.log(this._reactContainer);
         this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
         this._notify('register', ['touchmove', this, this._onTouchMove], {bubbling: true});
     }
