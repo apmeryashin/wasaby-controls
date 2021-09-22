@@ -38,6 +38,7 @@ class AreaCut extends Cut {
 
     protected _beforeUpdate(options: IAreaCutOptions): void {
         if (options.value !== undefined && this._value !== options.value) {
+            this._firstEditPassed = true;
             this._value = options.value;
         }
         if (!options.readOnly && !this._firstEditPassed) {
@@ -106,9 +107,7 @@ class AreaCut extends Cut {
     protected _onExpandedChangedHandler(event: Event, expanded: boolean): void {
         if (this._expanded !== expanded) {
             this._expanded = expanded;
-            if (!this._expanded) {
-                this._shouldUpdateCutButtonVisibility = true;
-            }
+            this._cutButtonVisibility = true;
             this._notify('expandedChanged', [this._expanded]);
         }
     }
