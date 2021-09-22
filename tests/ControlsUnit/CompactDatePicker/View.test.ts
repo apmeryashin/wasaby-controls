@@ -31,12 +31,12 @@ describe('Controls/_compactDatePicker/View', () => {
             clock.restore();
         });
 
-        it('should set _todayIconVisible to false', () => {
+        it('should set _todayIconVisible to true', () => {
             const component = new View();
             const clock = sinon.useFakeTimers(new Date(2020, 1).getTime(), 'Date');
             const startValue = new Date(2020, 2);
             component._beforeMount({startValue});
-            assert.isFalse(component._todayIconVisible);
+            assert.isTrue(component._todayIconVisible);
             clock.restore();
         });
     });
