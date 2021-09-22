@@ -11,7 +11,7 @@
   "--separator_color": "#eaeaea",
   "--readonly_marker-color": "#313e78",
   "--text-color": "#333",
-  "--contrast_text-color": "var(--background-color)",
+  "--contrast_text-color": "#fff",
   "--link_text-color": "#05b",
   "--link_hover_text-color": "#313e78",
   "--label_text-color": "#8991a9",
