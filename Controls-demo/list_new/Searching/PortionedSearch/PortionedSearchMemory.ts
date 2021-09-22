@@ -12,13 +12,18 @@ const LONG_SEARCH_DELAY = 10000;
 export default class PositionSourceMemory extends Memory {
     private _longLoad: boolean = false;
     private _fastLoad: boolean = false;
+    private _moreDataOnLoad: boolean = false;
 
-    setLongLoad(longLoad: boolean) {
+    setLongLoad(longLoad: boolean): void {
         this._longLoad = longLoad;
     }
 
-    setFastLoad(fastLoad: boolean) {
+    setFastLoad(fastLoad: boolean): void {
         this._fastLoad = fastLoad;
+    }
+
+    setMoreDataOnLoad(newValue: boolean): void {
+        this._moreDataOnLoad = newValue;
     }
 
     query(query?: Query<unknown>): Promise<DataSet> {
@@ -89,9 +94,10 @@ export default class PositionSourceMemory extends Memory {
             delay = LONG_SEARCH_DELAY;
         }
 
+        const countItems = this._moreDataOnLoad ? 30 : 3;
         return new Promise((resolve) => {
             setTimeout(() => {
-                const items = this._getItems(position, 3);
+                const items = this._getItems(position, countItems);
                 resolve(items);
             }, delay);
         });

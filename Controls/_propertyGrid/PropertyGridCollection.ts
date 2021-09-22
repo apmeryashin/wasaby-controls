@@ -1,7 +1,5 @@
-import {Tree} from 'Controls/display';
-import {IOptions as ITreeCollectionOptions} from 'Controls/_display/Tree';
+import {ItemsFactory, ITreeCollectionOptions, Tree} from 'Controls/display';
 import PropertyGridCollectionItem from 'Controls/_propertyGrid/PropertyGridCollectionItem';
-import {ItemsFactory} from 'Controls/_display/Collection';
 import PropertyGridGroupItem from 'Controls/_propertyGrid/PropertyGridGroupItem';
 import TToggledEditors from './PropertyGrid';
 import {TCaptionPosition, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';

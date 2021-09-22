@@ -1,7 +1,8 @@
 <ws:if data="{{item.isVisibleCheckbox()}}">
     <svg xmlns="http://www.w3.org/2000/svg"
          id="Слой_1"
-         attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(backgroundColorStyle, cursor, highlightOnHover) }} controls-ListView__multiSelect__circle"
+         attr:class="{{ multiSelectClasses || item.getMultiSelectClasses(backgroundColorStyle, cursor, highlightOnHover) }}
+                     controls-ListView__multiSelect__circle controls-ListView__multiSelect__circle_style-{{style}}"
          viewBox="0 0 12 12">
         <circle xmlns="http://www.w3.org/2000/svg"
                 class="controls-ListView__multiSelect__borderCircle"

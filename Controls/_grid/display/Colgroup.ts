@@ -62,6 +62,7 @@ export default class Colgroup<T extends Model = Model> extends mixin<
 
     setGridColumnsConfig(newColumns: TColumns): void {
         // TODO: Можно переделать на чесное обновление, не критично.
+        this._$gridColumnsConfig = newColumns;
         this.reBuild();
     }
 

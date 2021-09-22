@@ -249,16 +249,16 @@ define([
          instance.saveOptions({ ...newOptions });
 
          isMenuUpdated = false;
-         instance._beforeUpdate(instance._options);
+         await instance._beforeUpdate(instance._options);
          assert.isFalse(isMenuUpdated);
 
          newOptions.isAllSelected = true;
          newOptions.selectedKeys = [1, 2];
          newOptions.selectedKeysCount = 0;
          newOptions.selectedCountConfig = selectionCountConfig;
-         instance._beforeUpdate(instance._options);
+         await instance._beforeUpdate(instance._options);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
-         instance._beforeUpdate(instance._options);
+         await instance._beforeUpdate(instance._options);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
       });
 

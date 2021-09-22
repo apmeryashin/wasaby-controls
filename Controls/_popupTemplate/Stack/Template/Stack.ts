@@ -32,7 +32,7 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
  *
  * @class Controls/_popupTemplate/Stack
  * @extends UI/Base:Control
@@ -55,7 +55,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
 
     protected _beforeMount(options: IStackTemplateOptions): void {
         this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть', 'окно')}`;
-        this._hasRightPanel = options.toolbarContentTemplate !== undefined || ManagerController.hasRightPanel();
+        this._hasRightPanel = ManagerController.hasRightPanel();
         this._updateMaximizeButton(options);
         this._prepareTheme();
         this._maximizeButtonClickCallback = this.changeMaximizedState.bind(this);
@@ -125,7 +125,7 @@ Object.defineProperty(StackTemplate, 'defaultProps', {
 
 /**
  * @typedef {Object} Controls/_popupTemplate/Stack/RightPanelOptions
- * @property {Array.<Hint/interface:HelpButtonItem.typedef>} helpButtonItems Список пунктов меню помощи.
+ * @property {Array.<Hint/interface:IHelpButtonItem>} helpButtonItems Список пунктов меню помощи.
  * @remark
  * Элементы по умолчанию:
  * - "База знаний";

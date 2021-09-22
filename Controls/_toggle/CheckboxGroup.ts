@@ -26,7 +26,7 @@ export interface ICheckboxGroupOptions extends IControlOptions,
  * @remark
  * Для того, чтобы убрать отступ у контролла, нужно навесить CSS-класс **controls-Input_negativeOffset**
  * Полезные ссылки:
- * * {@link https://github.com/saby/wasaby-controls/blob/69b02f939005820476d32a184ca50b72f9533076/Controls-default-theme/variables/_toggle.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_toggle.less переменные тем оформления}
  *
  * @class Controls/_toggle/CheckboxGroup
  * @extends UI/Base:Control

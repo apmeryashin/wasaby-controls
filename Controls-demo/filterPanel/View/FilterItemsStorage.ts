@@ -5,8 +5,7 @@ import {object} from 'Types/util';
 const historyItemsValues = {
     owner: {
         value: ['Кошелев А.Е.', 'Новиков Д.В.'],
-        textValue: 'Кошелев, Новиков',
-        needCollapse: true
+        textValue: 'Кошелев, Новиков'
     },
     amount: {
         value: [11 , 30],

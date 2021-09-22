@@ -1,9 +1,8 @@
 import {TemplateFunction} from 'UI/Base';
-import {TreeItem} from 'Controls/display';
+import {TreeItem, MoreButtonVisibility} from 'Controls/display';
 import {Model} from 'Types/entity';
 import TreeGridDataRow from './TreeGridDataRow';
 import {GridCell, GridCell as Cell, IColumn, TColspanCallbackResult} from 'Controls/grid';
-import {MoreButtonVisibility} from 'Controls/_display/Collection';
 
 /**
  * Футер узла в иерархической таблице

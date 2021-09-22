@@ -46,11 +46,9 @@ export default class History extends Control<IHistoryOptions> {
             const name = getPropValue(elem, 'name');
             const textValue = getPropValue(elem, 'textValue');
             const value = getPropValue(elem, 'value');
-            const needCollapse = getPropValue(elem, 'needCollapse');
             const editorValue = {
                 value,
-                textValue,
-                needCollapse
+                textValue
             };
 
             this._notify('historyItemClick', [{editorValue, name}]);

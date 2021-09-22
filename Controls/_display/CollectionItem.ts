@@ -720,6 +720,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getDraggedItemsCount();
     }
 
+    getDraggedItemsCountString(): string {
+        const count = this.getDraggedItemsCount();
+        // В днд мы можем получить максимум 100 записей, для производительности,
+        // поэтому если записей больше 99 пишем 99+
+        return count > 99 ? '99+' : String(count);
+    }
+
     // endregion Drag-n-drop
 
     isSticked(stickyCallback: Function, item: CollectionItem): boolean {
@@ -802,10 +809,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return wrapperClasses;
     }
 
-    // Вроде как isLastRow лишняя проверка и она только для старой модели grid.
-    // аргумент rowSeparatorSize тоже только для старой модели.
-    // когда нигде точно не останется мест использования, надо будет избавиться от этих аргументов.
-    // + здесь же, возможно, стоит вызывать описанный ниже метод getItemActionPositionClasses.
+    /**
+     * CSS классы для блока операций над записью
+     * @param itemActionsPosition
+     * здесь же, возможно, стоит вызывать описанный ниже метод getItemActionPositionClasses.
+     */
     getItemActionClasses(itemActionsPosition: string): string {
         let classes = `controls-itemActionsV_${itemActionsPosition}`;
         const rowSeparatorSize = this.isBottomSeparatorEnabled() && this.getRowSeparatorSize();
@@ -814,7 +822,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                 (rowSeparatorSize ? rowSeparatorSize : 'default');
         } else {
             if (this._$roundBorder) {
-                classes = ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
+                classes += ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}`;

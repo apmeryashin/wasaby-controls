@@ -23,7 +23,7 @@ const mapBoolState = {true: false, false: true, null: true};
  * Для того, чтобы убрать отступ у контролла, нужно навесить CSS-класс **controls-Input_negativeOffset**
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2Ftoggle%2FCheckbox%2FIndex демо-пример}
- * * {@link https://github.com/saby/wasaby-controls/blob/69b02f939005820476d32a184ca50b72f9533076/Controls-default-theme/variables/_toggle.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_toggle.less переменные тем оформления}
  *
  *
  * @class Controls/_toggle/Checkbox
@@ -169,7 +169,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @example
  * Чекбокс, регулирующий тему в контроле.
  * <pre>
- *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+ *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="_darkThemeSwitched()"/>
  * </pre>
  * <pre>
  *   class MyControl extends Control<IControlOptions> {
@@ -210,7 +210,7 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @example
  * Checkbox regulate theme in control.
  * <pre>
- *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+ *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="_darkThemeSwitched()"/>
  * </pre>
  * <pre>
  *    class MyControl extends Control<IControlOptions> {
