@@ -12,7 +12,7 @@
 
       <div attr:class="{{ (item || itemData).getWrapperClasses((item || itemData).getItemType(itemType, nodeContentTemplate), shadowVisibility, marker, highlightOnHover, backgroundColorStyle, height, border, titleStyle) }}"
            attr:style="{{ (item || itemData).getWrapperStyles((item || itemData).getItemType(itemType, nodeContentTemplate)) }}"
-           attr:data-qa="{{ (item || itemData).getWrapperQAData(marker) }}">
+           attr:data-qa="{{  (item || itemData).shouldDisplayMarker(marker) ? 'controls-TileView__item_withMarker' : '' }}">
 
          <ws:partial if="{{ (item || itemData).shouldDisplayMultiSelectTemplate() }}"
                      template="{{ (item || itemData).getMultiSelectTemplate() }}"
