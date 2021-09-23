@@ -9,6 +9,7 @@ import {Model} from 'Types/entity';
  * @variant MENU показывать опцию только в дополнительном меню
  * @variant MENU_TOOLBAR показывать опцию в дополнительном меню и тулбаре
  * @variant TOOLBAR показывать опцию только в тулбаре
+ * @variant FIXED Показывать фиксированно перед кнопкой меню
  */
 export enum TItemActionShowType {
     // show only in Menu
@@ -16,7 +17,9 @@ export enum TItemActionShowType {
     // show in Menu and Toolbar
     MENU_TOOLBAR,
     // show only in Toolbar
-    TOOLBAR
+    TOOLBAR,
+    // fixed position
+    FIXED
 }
 
 /**

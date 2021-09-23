@@ -694,13 +694,8 @@ export class Controller {
 
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
-            showed = visibleActions.filter((action) =>
-                !action.parent &&
-                (
-                    action.showType === TItemActionShowType.TOOLBAR ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR
-                )
-            );
+            showed = this._filterToolbarActions(visibleActions);
+            showed = this._sortToolbarActions(showed);
             if (this._isMenuButtonRequired(visibleActions)) {
                 showed.push({
                     id: null,
@@ -721,6 +716,32 @@ export class Controller {
         return itemActions.filter((action) =>
             this._itemActionVisibilityCallback(action, contents, isEditing)
         );
+    }
+
+    /**
+     * Отфильтровывает ItemActions по признаку нет родителя и по showType.
+     * @param itemActions
+     * @private
+     */
+    private _filterToolbarActions(itemActions: IItemAction[]): IItemAction[] {
+        return itemActions.filter((action) =>
+            !action.parent &&
+            (
+                action.showType === TItemActionShowType.TOOLBAR ||
+                action.showType === TItemActionShowType.MENU_TOOLBAR
+            )
+        );
+    }
+
+    /**
+     * Сортирует ItemActions так, что FIXED будет в самом конце
+     * @param itemActions
+     * @private
+     */
+    private _sortToolbarActions(itemActions: IItemAction[]): IItemAction[] {
+        return itemActions.sort((actionA, actionB) => (
+            1
+        ));
     }
 
     /**
