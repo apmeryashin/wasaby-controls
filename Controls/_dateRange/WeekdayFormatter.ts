@@ -5,7 +5,7 @@ import 'css!Controls/dateRange';
 
 /**
  * Контрол - день недели. Преобразует дату в день недели. Контрол используется для отображения для недели по
- * стандарту внутри шаблона {@link Controls/_dateRange/interfaces/IInput#rightFieldTemplate rightFieldTemplate}
+ * стандарту внутри шаблона {@link Controls/_dateRange/Input#rightFieldTemplate rightFieldTemplate}
  *
  * @class Controls/_dateRange/WeekdayFormatter
  * @public
