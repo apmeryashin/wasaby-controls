@@ -6266,8 +6266,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
-            const needShift = direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator() ||
-                              direction === 'down' && this._indicatorsController.shouldDisplayBottomIndicator();
+
+            // Если в направлении загрузки видна ромашка, то сразу сдвигаем диапазон, чтобы не было скачка после скрытия ромашки
+            // Если происходит порционный поиск, то не нужно сдвигать, так как ромашка не занимает места, и скачка не будет
+            const needShift = (direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator() ||
+                              direction === 'down' && this._indicatorsController.shouldDisplayBottomIndicator()) &&
+                              !this._indicatorsController._isPortionedSearch();
             const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
             _private.handleScrollControllerResult(this, result);
         }
