@@ -214,7 +214,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
         this._filter = {...options.filter};
-        if (selectedKeys && selectedKeys.length && options.filterViewMode !== 'default') {
+        if (selectedKeys && selectedKeys.length) {
             this._filter[options.keyProperty] = selectedKeys;
         }
     }
@@ -225,7 +225,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _getNavigation(options: IListEditorOptions, selectedKeys?: string[]): INavigationOptionValue<unknown> {
         const selectedKeysArray = selectedKeys || this._selectedKeys;
-        return selectedKeysArray?.length && options.filterViewMode !== 'default' ? null : options.navigation;
+        return selectedKeysArray?.length ? null : options.navigation;
     }
 
     private _getSelectedItems(): List<Model> {
