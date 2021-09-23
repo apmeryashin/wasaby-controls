@@ -1486,7 +1486,9 @@ const _private = {
                     }
 
                     // TODO: уйдет после перехода на новую модель
-                    self._scrollController.setIndicesAfterCollectionChange();
+                    if (action !== 'indexesChanged') {
+                        self._scrollController.setIndicesAfterCollectionChange();
+                    }
                 }
             }
 
