@@ -42,7 +42,8 @@ class TimeInterval extends Base {
 
     protected _getViewModelOptions(options: IOptions): IModelOptions {
         return {
-            mask: options.mask
+            mask: options.mask,
+            shouldNotRemoveStartZeros: options.shouldNotRemoveStartZeros
         };
     }
 
@@ -51,7 +52,7 @@ class TimeInterval extends Base {
     }
 
     protected _notifyInputCompleted() {
-        if (this._viewModel.autoComplete(this._options.shouldNotRemoveStartZeros)) {
+        if (this._viewModel.autoComplete()) {
             this._notifyValueChanged();
         }
 
