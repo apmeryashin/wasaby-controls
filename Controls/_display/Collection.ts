@@ -2786,6 +2786,7 @@ export default class Collection<
 
     setIndexes(start: number, stop: number): void {
         this.getViewIterator().setIndices(start, stop);
+        this._notify('indexesChanged');
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');
