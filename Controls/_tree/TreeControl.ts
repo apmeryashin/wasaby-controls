@@ -1346,12 +1346,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (typeof markedKey !== 'undefined') {
             const markedRecord = this.getViewModel().getItemBySourceKey(markedKey);
 
-            if (markedRecord.isExpanded()) {
-                // Узел раскрыт.
-                return markedRecord.contents.getKey();
-            } else if (!markedRecord.getParent().isRoot()) {
-                // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
-                return markedRecord.getParent().contents.getKey();
+            if (markedRecord) {
+                if (markedRecord.isExpanded()) {
+                    // Узел раскрыт.
+                    return markedRecord.contents.getKey();
+                } else if (!markedRecord.getParent().isRoot()) {
+                    // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
+                    return markedRecord.getParent().contents.getKey();
+                }
             }
         }
 
