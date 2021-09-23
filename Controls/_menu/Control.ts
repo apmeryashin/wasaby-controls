@@ -219,6 +219,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
         // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
         if (item.getContents() instanceof Model && !this._isTouch() &&
+            !this._options.isDragging &&
             sourceEvent.target.closest('.controls-menu') === this._container) {
             this._clearClosingTimout();
             this._setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
