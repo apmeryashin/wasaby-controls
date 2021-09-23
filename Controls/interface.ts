@@ -13,7 +13,7 @@ import {INavigationSourceConfig} from './_interface/INavigation';
 
 export {default as ITooltip, ITooltipOptions} from './_interface/ITooltip';
 export {default as IItemTemplate, IItemTemplateOptions} from './_interface/IItemTemplate';
-export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle';
+export {default as IIconStyle, IIconStyleOptions, TIconStyle} from './_interface/IIconStyle';
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
 export {default as IIcon, IIconOptions} from './_interface/IIcon';
 export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';

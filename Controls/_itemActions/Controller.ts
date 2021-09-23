@@ -132,6 +132,13 @@ export interface IControllerOptions {
      * @cfg {Controls/_itemActions/interface/IItemActionsOptions/TItemActionsVisibility.typedef} Отображение опций записи с задержкой или без.
      */
     itemActionsVisibility: TItemActionsVisibility;
+
+    /**
+     * Временная опция для реверсного вывода операций над записью
+     * @description
+     * https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
+     */
+    feature1183020440: boolean;
 }
 
 /**
@@ -175,7 +182,13 @@ export class Controller {
     // Видимость опций записи
     private _itemActionsVisibility: TItemActionsVisibility;
 
+    // Сохранённые операции над записью для восстановления при переключении между свайпом и
+    // отображением ItemActionsVisibility="visible"
     private _savedItemActions: IItemActionsObject;
+
+    // Временная опция для реверсного вывода операций над записью
+    // https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
+    private _feature1183020440: boolean;
 
     /**
      * Метод инициализации и обновления параметров.
@@ -197,6 +210,7 @@ export class Controller {
         this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
         this._collection = options.collection;
         this._itemActionsVisibility = options.itemActionsVisibility;
+        this._feature1183020440 = options.feature1183020440;
         this._updateActionsTemplateConfig(options);
 
         if (!options.itemActions ||
@@ -354,7 +368,7 @@ export class Controller {
         }
     }
 
-        /**
+    /**
      * Возвращает текущий активный Item
      */
     getActiveItem(): IItemActionsItem {
@@ -720,6 +734,9 @@ export class Controller {
                     isMenu: true
                 } as IShownItemAction);
             }
+            if (this._feature1183020440) {
+                showed.reverse();
+            }
         } else {
             showed = visibleActions;
         }
@@ -750,16 +767,19 @@ export class Controller {
 
     /**
      * Настройка параметров отображения для опций записи, которые показываются
-     * при наведении на запись или при свайпе и itemActionsPosition === 'outside'
+     * при наведении на запись или при свайпе и itemActionsPosition === 'outside'.
+     * ItemAction  с этими опциями передаётся в шаблон без дальнейших изменений.
      * @param action
      * @private
      */
     private _fixShownActionOptions(action: IShownItemAction): IShownItemAction {
-        action.icon = Controller._fixActionIconClass(action.icon, this._theme);
-        action.showIcon = Controller._needShowIcon(action);
-        action.showTitle = Controller._needShowTitle(action);
-        action.title = action.showTitle ? action.title : null;
-        return action;
+        const hasIcon = Controller._needShowIcon(action);
+        return {
+            ...action,
+            hasIcon,
+            icon: hasIcon ? action.icon : null,
+            caption: Controller._needShowTitle(action) ? action.title : null
+        };
     }
 
     /**
@@ -776,7 +796,7 @@ export class Controller {
                 action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon, 'itemActions/Controller');
                 action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
 
-                if (['link', 'toolButton', 'functionalButton'].indexOf(action.viewMode) === -1) {
+                if (action.viewMode && action.viewMode !== 'link' && action.viewMode !== 'functionalButton') {
                     Logger.error('Неподдерживаемый вид кнопки. Используйте viewMode, ' +
                         'описанные в интерфейсе IItemAction', this);
                 }
@@ -790,7 +810,7 @@ export class Controller {
         }
         if (actionsObject.showed && actionsObject.showed.length) {
             const fixShowOptionsBind = this._fixShownActionOptions.bind(this);
-            actionsObject.showed = clone(actionsObject.showed).map(fixShowOptionsBind);
+            actionsObject.showed = actionsObject.showed.map(fixShowOptionsBind);
         }
         return actionsObject;
     }
@@ -811,7 +831,7 @@ export class Controller {
     }
 
     /**
-     * Рассчитывает значение для флага showIcon операции с записью
+     * Рассчитывает значение для флага hasIcon операции над записью
      * @param action
      * @private
      */
@@ -820,7 +840,7 @@ export class Controller {
     }
 
     /**
-     * Рассчитывает значение для флага showTitle операции с записью
+     * Рассчитывает значение для значения caption операции над записью
      * @param action
      * @private
      */
@@ -901,17 +921,6 @@ export class Controller {
             actionsObject.showed?.length === 1 &&
             actionsObject.all?.length > 1
         );
-    }
-
-    private static _fixActionIconClass(icon: string, theme: string): string {
-        if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
-            return icon;
-        }
-        return `${icon} ${this._resolveItemActionClass(theme)}`;
-    }
-
-    private static _resolveItemActionClass(theme: string): string {
-        return 'controls-itemActionsV__action_icon';
     }
 
     private static _isMatchingActionLists(

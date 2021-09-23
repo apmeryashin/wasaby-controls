@@ -2820,7 +2820,8 @@ export default class Collection<
         if (templateOptions && config) {
             if (templateOptions.actionStyle) {
                 config.actionStyle = templateOptions.actionStyle;
-            }            if (templateOptions.editingStyle) {
+            }
+            if (templateOptions.editingStyle) {
                 config.editingStyle = templateOptions.editingStyle;
             }
             if (templateOptions.actionPadding) {

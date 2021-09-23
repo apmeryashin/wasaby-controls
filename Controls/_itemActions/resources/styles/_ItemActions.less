@@ -22,19 +22,46 @@
 
 .controls-itemActionsV_inside {
    padding-right: var(--offset-right_itemActions);
-   height: var(--height_itemActions);
+   min-height: var(--height_itemActions);
    overflow: hidden;
+   line-height: calc(var(--inline_height_m) - 2 * var(--border-thickness_button));
 
    &.controls-itemActionsV_editingToolbarVisible {
-       height: var(--height_editing_itemActions);
+      height: var(--height_editing_itemActions);
    }
 }
 
 .controls-itemActionsV__action {
-  min-width: var(--item_icon-size_itemActions);
-  height: var(--item_icon-size_itemActions);
-  justify-content: center;
-  user-select: none;
+   justify-content: center;
+   user-select: none;
+   display: flex;
+   align-items: center;
+}
+
+.controls-itemActionsV__action_iconSize_s,
+.controls-itemActionsV__action_iconSize_m {
+   min-width: var(--item_icon-size_itemActions);
+   height: var(--item_icon-size_itemActions);
+}
+
+.controls-itemActionsV__Button_iconSize_s {
+   height: var(--icon-size_s);
+   line-height: var(--icon-size_s);
+}
+
+.controls-itemActionsV__Button_iconSize_m {
+   height: var(--icon-size_m);
+   line-height: var(--icon-size_m);
+}
+
+.controls-itemActionsV__Button_iconSize_s {
+   height: var(--icon-size_s);
+   line-height: var(--icon-size_s);
+}
+
+.controls-itemActionsV__Button_iconSize_m {
+   height: var(--icon-size_m);
+   line-height: var(--icon-size_m);
 }
 
 .controls-itemActionsV_style_default {
@@ -46,7 +73,7 @@
 }
 
 .controls-itemActionsV_style_master {
-  border-radius: var(--master_item_border-radius_list);
+   border-radius: var(--master_item_border-radius_list);
    background-color: var(--master_item_hover_background-color_list);
 }
 
@@ -85,11 +112,10 @@
      border-top-color: var(--item_editing_background-color_list);
   }
 
-  & .controls-BaseButton__wrapper {
-    min-width: var(--item_area-size_outside_itemActions);
-    height: var(--item_area-size_outside_itemActions);
-    justify-content: center;
-  }
+   & .controls-itemActionsV__action_iconSize_s {
+      min-width: var(--item_area-size_outside_itemActions);
+      height: var(--item_area-size_outside_itemActions);
+   }
 }
 
 .controls-itemActionsV__outside_bottom_size-default {

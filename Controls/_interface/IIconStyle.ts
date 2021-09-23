@@ -1,3 +1,19 @@
+/**
+ * @typedef {String} TIconStyle
+ * @description Значения для стиля отображаения иконки.
+ * @variant primary
+ * @variant secondary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @variant info
+ * @variant label
+ * @variant default
+ * @variant contrast
+ * @variant unaccented
+ */
+export type TIconStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'label' | 'default' | 'contrast' | 'unaccented';
+
 export interface IIconStyleOptions {
    iconStyle?: string;
 }
@@ -18,7 +34,7 @@ export default interface IIconStyle {
 }
 /**
  * @name Controls/_interface/IIconStyle#iconStyle
- * @cfg {Enum} Стиль отображения иконки.
+ * @cfg {TIconStyle} Стиль отображения иконки.
  * @variant primary
  * @variant secondary
  * @variant success
@@ -49,7 +65,7 @@ export default interface IIconStyle {
 
 /*
  * @name Controls/_interface/IIconStyle#iconStyle
- * @cfg {Enum} Icon display style.
+ * @cfg {TIconStyle} Icon display style.
  * @variant primary
  * @variant secondary
  * @variant success

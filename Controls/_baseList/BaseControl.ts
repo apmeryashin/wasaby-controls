@@ -2565,7 +2565,8 @@ const _private = {
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig,
-            itemActionsVisibility: options.itemActionsVisibility
+            itemActionsVisibility: options.itemActionsVisibility,
+            feature1183020440: options.feature1183020440
         });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
