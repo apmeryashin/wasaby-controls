@@ -3,6 +3,8 @@
             source="{{_viewSource}}"
             keyProperty="key"
             bind:filter="_filter">
-        <Controls.list:View/>
+        <Controls.list:Container>
+            <Controls.list:View/>
+        </Controls.list:Container>
     </Controls.browser:Browser>
 </div>
