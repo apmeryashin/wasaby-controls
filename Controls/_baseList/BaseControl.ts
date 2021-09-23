@@ -838,7 +838,7 @@ const _private = {
     loadToDirectionIfNeed(self, direction, filter) {
         const sourceController = self._sourceController;
         const hasMoreData = self._hasMoreData(direction);
-        const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
+        const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig) ?
             !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
             true;
         const allowLoadBySource =
@@ -1286,10 +1286,10 @@ const _private = {
         }], {bubbling: true});
     },
 
-    needScrollCalculation(navigationOpt) {
+    needScrollCalculation(navigationOpt, virtualScrollConfig) {
         // Виртуальный скролл должен работать, даже если у списка не настроена навигация.
         // https://online.sbis.ru/opendoc.html?guid=a83180cf-3e02-4d5d-b632-3d03442ceaa9
-        return !navigationOpt || (navigationOpt && navigationOpt.view === 'infinity');
+        return !navigationOpt || (navigationOpt && navigationOpt.view === 'infinity' || !!virtualScrollConfig?.pageSize);
     },
 
     needScrollPaging(navigationOpt) {
@@ -2027,7 +2027,7 @@ const _private = {
     },
 
     initializeNavigation(self, cfg) {
-        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
+        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation, cfg.virtualScrollConfig);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
         // Кнопка Еще в футере рисуется по навигации, ее пересчет происходит и в onCollectionChanged,
         // который может вызваться до Control::saveOptions и пересчет будет с устаревшей навигацией
@@ -4458,7 +4458,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
-        this._handleLoadToDirection = this._needScrollCalculation && !!this._sourceController && this._sourceController.hasMoreData(direction);
+        this._handleLoadToDirection = _private.isInfinityNavigation(this._options.navigation) &&
+                                      !!this._sourceController &&
+                                      this._sourceController.hasMoreData(direction);
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
