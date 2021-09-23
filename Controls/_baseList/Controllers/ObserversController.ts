@@ -231,13 +231,24 @@ export default class ObserversController {
         const topIndicatorDisplayed = this._model.getTopIndicator().isDisplayed();
         const bottomIndicatorDisplayed = this._model.getBottomIndicator().isDisplayed();
 
+        // из высоты вьюхи вычитаем высоту индикаторов, чтобы правлиьно посчиталась формула. Высоту индикаторов
+        // мы прибавим после полностью(из высоты индикаторов не нужно высчитывать 1/3).
+        // А от вьюхи мы должны взять 1/3 и высота индикаторов при небольших значениях viewHeight сильно на это влияет.
+        let viewHeight = this._viewHeight;
+        if (topIndicatorDisplayed) {
+            viewHeight -= INDICATOR_HEIGHT;
+        }
+        if (bottomIndicatorDisplayed) {
+            viewHeight -= INDICATOR_HEIGHT;
+        }
+
         if (this._resetTopTriggerOffset || !this._model.getCount()) {
             // 1px чтобы не было проблем с подгрузками при измененном масштабе
             topTriggerOffset = topIndicatorDisplayed ? 0 : 1;
         } else {
-            const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, this._viewHeight / 2);
+            const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, viewHeight / 2);
             topTriggerOffset = Math.min(
-                (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._topTriggerOffsetCoefficient,
+                (viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0) * this._topTriggerOffsetCoefficient,
                 maxTopOffset
             );
         }
@@ -246,11 +257,11 @@ export default class ObserversController {
             // 1px чтобы не было проблем с подгрузками при измененном масштабе
             bottomTriggerOffset = bottomIndicatorDisplayed ? 0 : 1;
         } else {
-            const scrollBottom = Math.max(this._viewHeight - this._scrollTop - this._viewportHeight, 0);
-            const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, this._viewHeight / 2);
+            const scrollBottom = Math.max(viewHeight - this._scrollTop - this._viewportHeight, 0);
+            const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, viewHeight / 2);
 
             bottomTriggerOffset = Math.min(
-                (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._bottomTriggerOffsetCoefficient,
+                (viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0) * this._bottomTriggerOffsetCoefficient,
                 maxBottomOffset
             );
         }
