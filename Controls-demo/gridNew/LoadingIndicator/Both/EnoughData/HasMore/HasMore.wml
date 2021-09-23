@@ -3,14 +3,16 @@
         <Controls.buttons:Button caption="Reload" on:click="_onReload()"/>
     </div>
     <Controls.scroll:Container attr:class="controlsDemo__height400" attr:style="max-width: 700px">
-        <Controls.grid:View
-                name="list"
-                keyProperty="key"
-                columns="{{_columns}}"
-                source="{{_viewSource}}">
+        <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="key">
             <ws:navigation source="page" view="infinity">
                 <ws:sourceConfig pageSize="{{20}}" page="{{5}}" hasMore="{{false}}"/>
             </ws:navigation>
-        </Controls.grid:View>
+            <ws:content>
+                <Controls.grid:View
+                        name="list"
+                        columns="{{_columns}}">
+                </Controls.grid:View>
+            </ws:content>
+        </Controls.list:DataContainer>
     </Controls.scroll:Container>
 </div>
