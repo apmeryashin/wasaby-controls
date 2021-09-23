@@ -10,15 +10,25 @@ export default class extends Control {
     private _dataArray: unknown = generateData({count: 200, entityTemplate: {title: 'lorem'}});
 
     protected _beforeMount(): void {
+        this.initSource();
+    }
+
+    protected initSource(newItems: boolean = false): void {
         this._viewSource = new Memory({
             keyProperty: 'key',
-            data: this._dataArray
+            data: newItems ? generateData({
+                    count: 200,
+                    entityTemplate: {title: 'lorem'},
+                    beforeCreateItemCallback: (item) => {
+                        item.new = true;
+                    }
+            }) : this._dataArray
         });
         slowDownSource(this._viewSource, 2000);
     }
 
     protected _onReload(): void {
-        this._children.list.reload();
+        this.initSource(true);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
