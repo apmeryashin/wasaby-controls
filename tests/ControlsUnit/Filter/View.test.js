@@ -1169,7 +1169,7 @@ define(
                assert.deepStrictEqual(view._source[1].viewMode, 'extended');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
                assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
-               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: 'new document', title: ''}});
+               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: 'new document', title: 'new document'}});
                assert.isTrue(historyEventFired);
             });
 
@@ -1581,6 +1581,28 @@ define(
                      assert.isTrue(!!view2._configs.document, 'data loaded');
                      done();
                   });
+               });
+            });
+
+            describe('_resetDisplayText', () => {
+               it('change viewMode', () => {
+                  const oldSource = [{
+                     name: 'frequent',
+                     viewMode: 'frequent'
+                  }];
+                  const newSource = [{
+                     name: 'frequent',
+                     viewMode: 'extended'
+                  }];
+                  const control = getView({source: []});
+                  const displayText = {
+                     frequent: {text: 'filter'}
+                  };
+
+                  control._resetDisplayText(oldSource, newSource, displayText);
+                  assert.deepEqual({
+                     frequent: {}
+                  }, displayText);
                });
             });
             afterEach(function() {

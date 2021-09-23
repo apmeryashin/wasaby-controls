@@ -731,17 +731,26 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         return selection.length > 1 ? ', ' + rk('еще') + ' ' + (selection.length - 1) : '';
     }
 
+    private _getTextFromItems(items: RecordSet, selectedKeys: string[], config: IFilterItemConfig): string[] {
+        const text = [];
+        factory(selectedKeys).each((key) => {
+            const selectedItem = config.items.at(config.items.getIndexByValue(config.keyProperty, key));
+            if (selectedItem) {
+                text.push(object.getPropertyValue(selectedItem, config.displayProperty));
+            }
+        });
+        return text;
+    }
+
     private _getFastText(config: IFilterItemConfig, selectedKeys: string[], item?: IFilterItem): IDisplayText {
-        const textArr = [];
+        let textArr = [];
         if (selectedKeys[0] === config.emptyKey && config.emptyText) {
             textArr.push(config.emptyText);
         } else if (config.items) {
-            factory(selectedKeys).each((key) => {
-                const selectedItem = config.items.at(config.items.getIndexByValue(config.keyProperty, key));
-                if (selectedItem) {
-                    textArr.push(object.getPropertyValue(selectedItem, config.displayProperty));
-                }
-            });
+            textArr = this._getTextFromItems(config.items, selectedKeys, config);
+            if (!textArr.length && item?.textValue) {
+                textArr.push(item.textValue);
+            }
         } else if (item?.textValue) {
             textArr.push(item.textValue);
         }
