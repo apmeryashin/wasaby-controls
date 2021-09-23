@@ -303,9 +303,6 @@ export default class IndicatorsController {
                 break;
             case 'down':
                 this._recountBottomIndicator();
-                // Вместе с пересчетом нижнего индикатора нужно пересчитать верхний триггер, т.к. мог отработать
-                // виртуальный скролл и скрытый триггер нужно будет показать, пример:
-                // https://online.sbis.ru/opendoc.html?guid=947f8f71-f261-474f-9efd-74b1db1bc5b5
                 break;
             case 'all':
                 this._recountTopIndicator(scrollToFirstItem);
@@ -361,7 +358,9 @@ export default class IndicatorsController {
     }
 
     private _shouldDisplayIndicator(direction: 'up'|'down'): boolean {
-        return this._options.isInfinityNavigation && !this._options.hasHiddenItemsByVirtualScroll(direction)
+        // порционынй поиск может быть включен не только в infinity навигации.
+        const allowByNavigation = this._options.isInfinityNavigation || this._isPortionedSearch();
+        return allowByNavigation && !this._options.hasHiddenItemsByVirtualScroll(direction)
             && !this._options.shouldShowEmptyTemplate;
     }
 
