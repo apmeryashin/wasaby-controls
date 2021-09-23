@@ -112,9 +112,7 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
-        if (!this._items) {
-            this._items = items;
-        }
+        this._items = items;
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
