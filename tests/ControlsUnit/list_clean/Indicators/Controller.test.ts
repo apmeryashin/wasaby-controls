@@ -255,6 +255,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
         it('display portioned search in not infinity navigation', () => {
             const {collection, controller} = initTest([{id: 1}], {
                 isInfinityNavigation: false,
+                attachLoadDownTriggerToNull: true,
                 hasMoreDataToBottom: true,
                 hasHiddenItemsByVirtualScroll: () => false
             });
