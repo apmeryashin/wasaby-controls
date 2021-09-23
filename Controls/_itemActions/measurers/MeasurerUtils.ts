@@ -1,4 +1,4 @@
-import { TItemActionShowType } from '../interface/IItemAction';
+import {IItemAction, TItemActionShowType} from '../interface/IItemAction';
 import { IShownItemAction } from '../interface/IItemActionsObject';
 
 /**
@@ -16,5 +16,16 @@ export class MeasurerUtils {
             (action2.showType || TItemActionShowType.MENU) - (action1.showType || TItemActionShowType.MENU)
         ));
         return itemActions;
+    }
+
+    /**
+     * Перемещает FIXED опервции над записью в конец массива.
+     * @param itemActions
+     * @param sliceLength
+     */
+    static resortFixedActions(itemActions: IItemAction[], sliceLength?: number): IShownItemAction[] {
+        const fixedActions = itemActions.filter((action) => action.showType === TItemActionShowType.FIXED);
+        const shownActions = itemActions.slice(fixedActions.length, sliceLength);
+        return shownActions.concat(fixedActions);
     }
 }

@@ -1,4 +1,4 @@
-import {TItemActionsSize} from '../interface/IItemAction';
+import {IItemAction, TItemActionShowType, TItemActionsSize} from '../interface/IItemAction';
 import {MeasurerUtils} from './MeasurerUtils';
 import {IItemActionsObject} from '../interface/IItemActionsObject';
 
@@ -24,6 +24,12 @@ export function getAvailableActionsCount(iconSize: TItemActionsSize, availableSi
     return Math.floor(availableSize / itemActionSize);
 }
 
+function _sortFixedActions(itemActions: IItemAction[], sliceLength: number) {
+    const fixedActions = itemActions.filter((action) => action.showType === TItemActionShowType.FIXED);
+    const showedActions = itemActions.slice(fixedActions.length, sliceLength);
+    return showedActions.concat(fixedActions);
+}
+
 export function getActions(
     actions: IItemActionsObject,
     iconSize: TItemActionsSize,
@@ -35,7 +41,7 @@ export function getActions(
     const rootActions = allActions.filter((action) => !action['parent@']);
     const availableActionsCount = getAvailableActionsCount(iconSize, containerSize);
     if (rootActions.length > availableActionsCount || rootActions.length < allActions.length) {
-        showedActions = rootActions.slice(0, availableActionsCount - 1);
+        showedActions = MeasurerUtils.resortFixedActions(rootActions, availableActionsCount - 1);
         showedActions.push({
             id: null,
             icon: 'icon-SettingsNew',
@@ -44,7 +50,7 @@ export function getActions(
             isMenu: true
         });
     } else {
-        showedActions = rootActions;
+        showedActions = MeasurerUtils.resortFixedActions(rootActions);
     }
     return {
         all: actions.all,

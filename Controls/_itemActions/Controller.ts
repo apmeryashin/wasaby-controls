@@ -728,7 +728,8 @@ export class Controller {
             !action.parent &&
             (
                 action.showType === TItemActionShowType.TOOLBAR ||
-                action.showType === TItemActionShowType.MENU_TOOLBAR
+                action.showType === TItemActionShowType.MENU_TOOLBAR ||
+                action.showType === TItemActionShowType.FIXED
             )
         );
     }
@@ -739,9 +740,15 @@ export class Controller {
      * @private
      */
     private _sortToolbarActions(itemActions: IItemAction[]): IItemAction[] {
-        return itemActions.sort((actionA, actionB) => (
-            1
-        ));
+        return itemActions.sort((actionA, actionB) => {
+            if (actionA.showType === TItemActionShowType.FIXED) {
+                return 1;
+            }
+            if (actionB.showType === TItemActionShowType.FIXED) {
+                return -1;
+            }
+            return 0;
+        });
     }
 
     /**
