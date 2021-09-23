@@ -47,12 +47,16 @@
             <ws:partial if="{{ _listModel.getTopIndicator() }}"
                         template="{{_listModel.getTopIndicator().getTemplate()}}"
                         item="{{_listModel.getTopIndicator()}}"
+                        colspan="{{ _listModel.getIndicatorColspan() }}"
                         on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
             <!--Top loading trigger-->
-            <tr class="controls-BaseControl__loadingTrigger">
-                <td colspan="100">
-                    <div name="topLoadingTrigger"
-                         data-qa="loading-trigger-top">
+            <tr>
+                <td colspan="{{ _listModel.getIndicatorColspan() }}">
+                    <div class="controls-BaseControl__loadingTrigger">
+                        <div name="topLoadingTrigger"
+                             class="controls-GridView__loadingTrigger_notFullGridSupport"
+                             data-qa="loading-trigger-top">
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -98,10 +102,13 @@
 
         <!--Bottom loading trigger-->
         <tbody>
-            <tr class="controls-BaseControl__loadingTrigger">
-                <td colspan="100">
-                    <div name="bottomLoadingTrigger"
-                         data-qa="loading-trigger-bottom">
+            <tr>
+                <td colspan="{{ _listModel.getIndicatorColspan() }}">
+                    <div class="controls-BaseControl__loadingTrigger">
+                        <div name="bottomLoadingTrigger"
+                             class="controls-GridView__loadingTrigger_notFullGridSupport"
+                             data-qa="loading-trigger-bottom">
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -110,6 +117,7 @@
             <ws:partial if="{{ _listModel.getBottomIndicator() }}"
                         template="{{_listModel.getBottomIndicator().getTemplate()}}"
                         item="{{_listModel.getBottomIndicator()}}"
+                        colspan="{{ _listModel.getIndicatorColspan() }}"
                         on:click="_onIndicatorClick(_listModel.getBottomIndicator())"/>
         </tbody>
 
