@@ -67,10 +67,11 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
 /**
  * @name Controls/_dateRange/Input#rightFieldTemplate
  * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться справа
- * от поле ввода.
+ * от поля ввода.
  * @remark
  * В опцию будут переданы поля:
- * *
+ * * value - значение в поле ввода
+ * * inputPosition - расположение инпута. В зависимости от расположения, значение может быть либо 'left' либо 'right'
  * @demo Controls-demo/dateRange/Input/RightFieldTemplate/Index
  */
 
