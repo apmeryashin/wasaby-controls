@@ -213,7 +213,7 @@ export class StickyController extends BaseController {
 
     dragNDropOnPage(item: IStickyItem, container: HTMLDivElement, isInsideDrag: boolean): boolean {
         const hasChilds = !!item.childs.length;
-        const needClose = !isInsideDrag && item.popupOptions.closeOnOutsideClick && !hasChilds;
+        const needClose = !item.fixPosition && !isInsideDrag && item.popupOptions.closeOnOutsideClick && !hasChilds;
         if (needClose) {
             return true;
         }
