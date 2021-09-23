@@ -4654,24 +4654,24 @@ describe('Controls/_display/Collection', () => {
     });
 
     describe('setIndexes', () => {
-        const items = new RecordSet({
-            rawData: [
-                {id: 1},
-                {id: 2}
-            ],
-            metaData: {}
-        });
-        const collection = new CollectionDisplay({
-            collection: items,
-            keyProperty: 'id'
-        });
-        let indexesChangedFired = false;
-        collection.subscribe('onCollectionChange', (event, type) => {
-            if (type = 'indexesChanged') {
+        it('event fires', () => {
+            const items = new RecordSet({
+                rawData: [
+                    {id: 1},
+                    {id: 2}
+                ],
+                metaData: {}
+            });
+            const collection = new CollectionDisplay({
+                collection: items,
+                keyProperty: 'id'
+            });
+            let indexesChangedFired = false;
+            collection.subscribe('indexesChanged', () => {
                 indexesChangedFired = true;
-            }
+            });
+            collection.setIndexes(0, 1);
+            assert.isTrue(indexesChangedFired);
         });
-        collection.setIndexes({start: 0, stop: 1});
-        assert.isTrue(indexesChangedFired);
     });
 });
