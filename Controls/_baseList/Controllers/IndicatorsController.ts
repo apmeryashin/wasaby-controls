@@ -64,6 +64,11 @@ export default class IndicatorsController {
         if (displayBottomIndicator) {
             this.displayBottomIndicator();
         }
+
+        if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
+            const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
+            this.startDisplayPortionedSearch(direction);
+        }
     }
 
     /**

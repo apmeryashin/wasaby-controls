@@ -48,6 +48,19 @@ describe('Controls/list_clean/Indicators/Controller', () => {
         fakeTimer.restore();
     });
 
+    describe('constructor', () => {
+        it('should start portioned search', () => {
+            const {collection, controller} = initTest([{id: 1}], {hasMoreDataToBottom: true}, {iterative: true});
+            assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
+
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+    });
+
     describe('updateOptions', () => {
         it('changed items', () => {
             const {collection, controller} = initTest([{id: 1}], {});
@@ -234,18 +247,19 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 hasHiddenItemsByVirtualScroll: () => false,
                 scrollToFirstItem: (afterScroll) => afterScroll()
             } as unknown as IIndicatorsControllerOptions;
-            const {collection, controller} = initTest([{id: 1}], options, {iterative: true});
+            const {collection, controller} = initTest([{id: 1}], options);
             controller.displayTopIndicator(false);
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
+            collection.getCollection().setMetaData({iterative: true});
             controller.startDisplayPortionedSearch('bottom');
 
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
