@@ -15,17 +15,17 @@ import {IItemAction} from './IItemAction';
  */
 export interface IShownItemAction extends IItemAction {
     /**
-     * Показывать текст операции
+     * Текст кнопки операции над записью
      */
-    showTitle?: boolean;
+    caption?: string;
 
     /**
-     * Показывать иконку операции
+     * Флаг определяющий, надо ли показывать иконку кнопки операции над записью
      */
-    showIcon?: boolean;
+    hasIcon?: boolean;
 
     /**
-     * Флаг опция вызова меню
+     * Флаг определяющий, является ли текущая кнопка операции над записью кнопкой вызова меню (Кнопка с тремя точками)
      */
     isMenu?: boolean;
 }

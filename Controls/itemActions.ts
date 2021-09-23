@@ -20,6 +20,8 @@ export {
     TItemActionsPosition,
     TActionCaptionPosition,
     TActionDisplayMode,
+    TItemActionViewMode,
+    TItemActionsSize,
     TIconStyle,
     IItemAction
 } from './_itemActions/interface/IItemAction';

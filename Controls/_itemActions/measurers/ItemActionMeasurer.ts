@@ -41,6 +41,7 @@ export function getActions(
             icon: 'icon-SettingsNew',
             style: 'secondary',
             iconStyle: 'secondary',
+            iconSize,
             isMenu: true
         });
     } else {

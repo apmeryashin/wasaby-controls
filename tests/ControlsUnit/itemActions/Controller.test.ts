@@ -23,55 +23,55 @@ import {DOMUtil} from 'Controls/sizeUtils';
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
     {
-        id: 1,
+        id: 'phone',
         icon: 'icon-PhoneNull',
         title: 'phone',
         showType: TItemActionShowType.MENU
     },
     {
-        id: 2,
+        id: 'message',
         icon: 'icon-EmptyMessage',
         title: 'message',
         showType: TItemActionShowType.MENU_TOOLBAR
     },
     {
-        id: 3,
+        id: 'profile',
         icon: 'icon-Profile',
         title: 'Profile',
         tooltip: 'This is awesome Profile you\'ve never seen',
         showType: TItemActionShowType.TOOLBAR
     },
     {
-        id: 4,
+        id: 'timeManagement',
         icon: 'icon-Time',
         title: 'Time management',
         showType: TItemActionShowType.TOOLBAR,
         'parent@': true
     },
     {
-        id: 5,
+        id: 'documentation',
         title: 'Documentation',
         showType: TItemActionShowType.TOOLBAR,
-        parent: 4
+        parent: 'timeManagement'
     },
     {
-        id: 6,
+        id: 'development',
         title: 'Development',
         showType: TItemActionShowType.MENU_TOOLBAR,
-        parent: 4
+        parent: 'timeManagement'
     },
     {
-        id: 7,
+        id: 'exploitation',
         title: 'Exploitation',
         showType: TItemActionShowType.MENU,
-        parent: 4,
+        parent: 'timeManagement',
         'parent@': true
     },
     {
-        id: 8,
+        id: 'approval',
         title: 'Approval',
         showType: TItemActionShowType.MENU,
-        parent: 7,
+        parent: 'exploitation',
         'parent@': true
     }
 ];
@@ -79,7 +79,7 @@ const itemActions: IItemAction[] = [
 // Нет опций для контекстного меню
 const flatItemActions: IItemAction[] = [
     {
-        id: 1,
+        id: 'phone',
         icon: 'icon-PhoneNull',
         title: 'phone',
         showType: TItemActionShowType.TOOLBAR
@@ -89,7 +89,7 @@ const flatItemActions: IItemAction[] = [
 // Нет опций для контекстного меню
 const onlyOneItemActions: IItemAction[] = [
     {
-        id: 1,
+        id: 'phone',
         icon: 'icon-PhoneNull',
         title: 'phone',
         showType: TItemActionShowType.MENU
@@ -99,13 +99,13 @@ const onlyOneItemActions: IItemAction[] = [
 // Только одна опция в тулбаре, одна - в контекстном меню
 const horizontalOnlyItemActions: IItemAction[] = [
     {
-        id: 1,
+        id: 'phone',
         icon: 'icon-PhoneNull',
         title: 'phone',
         showType: TItemActionShowType.TOOLBAR
     },
     {
-        id: 2,
+        id: 'message',
         icon: 'icon-EmptyMessage',
         title: 'message',
         showType: TItemActionShowType.MENU
@@ -115,28 +115,28 @@ const horizontalOnlyItemActions: IItemAction[] = [
 // Варианты отображением иконки и текста
 const displayModeItemActions: IItemAction[] = [
     {
-        id: 1,
+        id: 'phone',
         icon: 'icon-PhoneNull',
         title: 'phone',
         showType: TItemActionShowType.TOOLBAR,
         displayMode: TActionDisplayMode.ICON
     },
     {
-        id: 2,
+        id: 'message',
         icon: 'icon-EmptyMessage',
         title: 'message',
         showType: TItemActionShowType.TOOLBAR,
         displayMode: TActionDisplayMode.TITLE
     },
     {
-        id: 3,
+        id: 'profile',
         icon: 'icon-Profile',
         title: 'Profile',
         showType: TItemActionShowType.TOOLBAR,
         displayMode: TActionDisplayMode.BOTH
     },
     {
-        id: 4,
+        id: 'timeManagement',
         icon: 'icon-Time',
         title: 'Time management',
         showType: TItemActionShowType.TOOLBAR,
@@ -248,9 +248,9 @@ describe('Controls/_itemActions/Controller', () => {
             const actionsOf5 = collection.getItemBySourceKey(5).getActions();
             assert.isNotNull(actionsOf1, 'actions were not set to item 1');
             assert.isNotNull(actionsOf5, 'actions were not set to item 5');
-            assert.equal(actionsOf1.showed[0].title, 'message',
+            assert.equal(actionsOf1.showed[0].id, 'message',
                 'first action of item 1 should be \'message\'');
-            assert.equal(actionsOf5.showed[0].title, 'message',
+            assert.equal(actionsOf5.showed[0].id, 'message',
                 'first action of item 5 should be \'message\'');
         });
 
@@ -264,7 +264,7 @@ describe('Controls/_itemActions/Controller', () => {
             collection.getItemBySourceKey(1).setActive(true);
             const actionsOf1 = collection.getItemBySourceKey(1).getActions();
             assert.isNotNull(actionsOf1, 'actions were not set to item 1');
-            assert.equal(actionsOf1.showed[0].title, 'message', 'first action of item 1 should be \'message\'');
+            assert.equal(actionsOf1.showed[0].id, 'message', 'first action of item 1 should be \'message\'');
         });
 
         // T1.2.  В коллекции происходит набор конфигурации для шаблона ItemActions.
@@ -281,7 +281,7 @@ describe('Controls/_itemActions/Controller', () => {
                 itemActions,
                 theme: 'default',
                 visibilityCallback: (action: IItemAction, item: Record) => {
-                    if (item.getKey() === 4 && action.id === 2) {
+                    if (item.getKey() === 4 && action.id === 'message') {
                         return false;
                     }
                     return true;
@@ -291,9 +291,9 @@ describe('Controls/_itemActions/Controller', () => {
             const actionsOf5 = collection.getItemBySourceKey(5).getActions();
             assert.isNotNull(actionsOf4, 'actions were not set to item 4');
             assert.isNotNull(actionsOf5, 'actions were not set to item 5');
-            assert.notExists(actionsOf4.showed.find((action) => action.title === 'message'),
+            assert.notExists(actionsOf4.showed.find((action) => action.id === 'message'),
                 'item 4 should not display \'message\' action');
-            assert.exists(actionsOf5.showed.find((action) => action.title === 'message'),
+            assert.exists(actionsOf5.showed.find((action) => action.id === 'message'),
                 'item 5 should display \'message\' action');
         });
 
@@ -311,7 +311,7 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isNotNull(actionsOf1, 'actions were not set to item 1');
             assert.isNotNull(actionsOf2, 'actions were not set to item 2');
             assert.isEmpty(actionsOf1.showed, 'What the hell any actions appeared for item 1?');
-            assert.equal(actionsOf2.showed[0].title, 'valar morghulis');
+            assert.equal(actionsOf2.showed[0].id, 1);
         });
 
         // Случай, когда указан itemActionsProperty, но Record.get(itemActionsProperty) === undefined
@@ -367,7 +367,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should add to "showed" item actions only actions with showType TOOLBAR or MENU_TOOLBAR, w/o parent', () => {
             const actionsOf4 = collection.getItemBySourceKey(4).getActions();
             assert.isNotNull(actionsOf4, 'actions were not set to item 4');
-            assert.notEqual(actionsOf4.showed[0].title, 'phone',
+            assert.notEqual(actionsOf4.showed[0].id, 'phone',
                 'What the hell \'phone\' action is in \'showed\' array?');
         });
 
@@ -386,17 +386,6 @@ describe('Controls/_itemActions/Controller', () => {
                 'It seems, that sly menu button came here!');
             assert.equal(actionsOf1.showed[actionsOf1.showed.length - 1].showType, TItemActionShowType.MENU,
                 'something strange happened to lonely item action...');
-        });
-
-        // T1.9. После установки набора операций, операции с иконками содержат в поле icon CSS класс
-        // “controls-itemActionsV__action_icon icon-size” (оч сомнительный тест)
-        // TODO Возможно, установка этого класса переедет в шаблон
-        it('should set "controls-itemActionsV__action_icon" CSS class for' +
-            'shown item actions icons', () => {
-            const actionsOf5 = collection.getItemBySourceKey(5).getActions();
-            assert.exists(actionsOf5, 'actions were not set to item 5');
-            assert.notEqual(actionsOf5.showed[0].icon.indexOf('controls-itemActionsV__action_icon'), -1,
-                'Css class \'controls-itemActionsV__action_icon\' should be added to item');
         });
 
         // T1.10. При реальной смене у операций элементов настроек all/showed должна изменяться версия модели
@@ -450,29 +439,29 @@ describe('Controls/_itemActions/Controller', () => {
             // T1.14.1. Должны учитываться расчёты отображения icon при displayMode=icon
             it('should consider showIcon calculations when displayMode=icon', () => {
                 const actionsOf1 = collection.getItemBySourceKey(1).getActions();
-                assert.isTrue(actionsOf1.showed[0].showIcon, 'we expected to see icon here');
-                assert.isNotTrue(actionsOf1.showed[0].showTitle, 'we didn\'t expect to see title here');
+                assert.isTrue(actionsOf1.showed[0].hasIcon, 'we expected to see icon here');
+                assert.isNull(actionsOf1.showed[0].caption, 'we didn\'t expect to see title here');
             });
 
             // T1.14.2. Должны учитываться расчёты отображения title при displayMode=title
             it('should consider showTitle calculations when displayMode=title', () => {
                 const actionsOf1 = collection.getItemBySourceKey(1).getActions();
-                assert.isTrue(actionsOf1.showed[1].showTitle, 'we expected to see title here');
-                assert.isNotTrue(actionsOf1.showed[1].showIcon, 'we didn\'t expect to see icon here');
+                assert.isNotNull(actionsOf1.showed[1].caption, 'we expected to see title here');
+                assert.isNotTrue(actionsOf1.showed[1].hasIcon, 'we didn\'t expect to see icon here');
             });
 
             // T1.14.3. Должны учитываться расчёты отображения title и icon при displayMode=both
             it('should consider showTitle calculations when displayMode=both', () => {
                 const actionsOf1 = collection.getItemBySourceKey(1).getActions();
-                assert.isTrue(actionsOf1.showed[2].showTitle, 'we expected to see title here');
-                assert.isTrue(actionsOf1.showed[2].showIcon, 'we expected to see icon here');
+                assert.isNotNull(actionsOf1.showed[2].caption, 'we expected to see title here');
+                assert.isTrue(actionsOf1.showed[2].hasIcon, 'we expected to see icon here');
             });
 
             // T1.14.4. Должны учитываться расчёты отображения title и icon при displayMode=auto
             it('should consider showTitle calculations when displayMode=auto', () => {
                 const actionsOf1 = collection.getItemBySourceKey(1).getActions();
-                assert.isTrue(actionsOf1.showed[3].showIcon, 'we expected to see icon here');
-                assert.isNotTrue(actionsOf1.showed[3].showTitle, 'we didn\'t expect to see title here');
+                assert.isNull(actionsOf1.showed[3].caption, 'we didn\'t expect to see title here');
+                assert.isTrue(actionsOf1.showed[3].hasIcon, 'we expected to see icon here');
             });
         });
 
@@ -566,7 +555,7 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(3, 100, 50);
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration for inside positioned actions');
-            assert.equal(config.itemActions.showed[0].title, 'Profile', 'First item should be \'message\'');
+            assert.equal(config.itemActions.showed[0].id, 'profile', 'First item should be \'message\'');
         });
 
         // T2.2. В коллекции не происходит набор конфигурации для Swipe, если позиция itemActions outside
@@ -858,13 +847,13 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(1, 100, 50);
             config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration after swipe activation');
-            assert.equal(config.itemActions.showed[1].title, 'Time management', 'First action should be \'message\'');
+            assert.equal(config.itemActions.showed[1].id, 'timeManagement', 'First action should be \'message\'');
 
             visibilityCallbackResult = true;
             // @ts-ignore
             itemActionsController.update(initializeControllerOptions(controllerConfig));
             config = collection.getSwipeConfig();
-            assert.equal(config.itemActions.showed[1].title, 'Super puper', 'First action should be \'Super puper\'');
+            assert.equal(config.itemActions.showed[1].id, 9, 'First action should be \'Super puper\'');
         });
 
         // Необходимо запоминать предыдущие itemActions, если режим отображения itemActionsVisibility='visible'

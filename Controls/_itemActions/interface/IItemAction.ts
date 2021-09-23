@@ -1,13 +1,13 @@
 import {Model} from 'Types/entity';
-import {IViewMode} from 'Controls/buttons';
-import {IIconSizeOptions} from 'Controls/interface';
+import {TButtonStyle, IViewMode} from 'Controls/buttons';
+import {TIconStyle} from 'Controls/interface';
 
 /**
  * @typedef {String} TItemActionViewMode
  * @description
  * Допустимые значения для опции {@link viewMode}
  */
-type TItemActionViewMode = Extract<IViewMode, 'link' | 'toolButton' | 'functionalButton'>;
+export type TItemActionViewMode = Extract<IViewMode, 'link' | 'functionalButton'>;
 
 /**
  * @typedef {String} TItemActionShowType
@@ -44,16 +44,6 @@ export enum TActionDisplayMode {
     BOTH = 'both',
     AUTO = 'auto'
 }
-
-/**
- * @typedef {String} TIconStyle
- * @description Допустимые значения для опции {@link style}.
- * @variant secondary
- * @variant warning
- * @variant danger
- * @variant success
- */
-export type TIconStyle = 'secondary' | 'warning' | 'danger' | 'success';
 
 /**
  * @typedef {String} TActionCaptionPosition
@@ -116,7 +106,7 @@ export type TItemActionHandler = (item: Model) => void;
  * @public
  * @author Аверкиев П.А.
  */
-export interface IItemAction extends IIconSizeOptions {
+export interface IItemAction {
     /**
      * @name Controls/_itemActions/itemActions/interface/IItemAction#id
      * @cfg {String|Number} Идентификатор {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
@@ -170,7 +160,7 @@ export interface IItemAction extends IIconSizeOptions {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#style
-     * @cfg {TIconStyle} Стиль контейнера {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
+     * @cfg {TButtonStyle} Стиль контейнера {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      * @remark
      * Значение свойства преобразуется в CSS-класс вида "controls-Button_linkButton_style-<значение_свойства>".
      * Он будет установлен для html-контейнера самой опции записи,
@@ -178,9 +168,9 @@ export interface IItemAction extends IIconSizeOptions {
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#style
-     * @cfg {TIconStyle} Operation style. (secondary | warning | danger | success).
+     * @cfg {TButtonStyle} Operation style. (secondary | warning | danger | success).
      */
-    style?: TIconStyle;
+    style?: TButtonStyle;
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#iconStyle
@@ -198,11 +188,21 @@ export interface IItemAction extends IIconSizeOptions {
     iconStyle?: TIconStyle;
 
     /**
+     * @name Controls/_itemActions/interface/IItemAction#iconSize
+     * @cfg {TItemActionsSize} Размер иконки.
+     * @variant s малый
+     * @variant m средний
+     * @default m
+     * @remark
+     * Размер l намеренно не поддерживается. Контейнер ItemActions не может вместить по высоте иконки размера l.
+     */
+    iconSize?: TItemActionsSize;
+
+    /**
      * @name Controls/_itemActions/interface/IItemAction#viewMode
      * @cfg {TItemActionViewMode} Режим отображения кнопки операции над записью.
      * @variant link В виде гиперссылки.
-     * @variant toolButton В виде кнопки для панели инструментов.
-     * @variant functionalButton В виде кнопки выполняющей определенную функцию, например добавление или сохранение.
+     * @variant functionalButton В виде кнопки с круглой подложкой
      * @default link
      */
     viewMode?: TItemActionViewMode;

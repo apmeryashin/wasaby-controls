@@ -10,6 +10,6 @@ export {default as Button, simpleCssStyleGeneration, defaultHeight, defaultFontC
 export {default as ArrowButton, IArrowButtonOptions} from './_buttons/ArrowButton';
 export {default as ActualApi} from './_buttons/ActualApi';
 export {IClick as IClick} from './_buttons/interface/IClick';
-export {IButton as IButton, IViewMode} from './_buttons/interface/IButton';
+export {IButton as IButton, IViewMode, TButtonStyle} from './_buttons/interface/IButton';
 export {IButtonOptions as IButtonOptions} from './_buttons/interface/IButton';
 export {ButtonTemplate};
