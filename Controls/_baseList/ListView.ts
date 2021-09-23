@@ -180,7 +180,7 @@ const ListView = Control.extend(
             this._updateInProgress = true;
             this._waitingComponentDidUpdate = true;
             if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
-                if (this._listModel) {
+                if (this._listModel && !this._listModel.destroyed) {
                     this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
                 }
                 this._listModel = newOptions.listModel;
