@@ -1419,7 +1419,7 @@ const _private = {
                             self._children.listView?.getBottomLoadingTrigger()
                         );
                         // если есть данные и вверх и вниз, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
-                        if (self._hasMoreData('up') && self._hasMoreData('down')) {
+                        if (self._hasMoreData('up') && self._hasMoreData('down') && self._options.attachLoadTopTriggerToNull) {
                             self._observersController.hideTrigger(self._children.listView?.getTopLoadingTrigger());
                         }
                         break;
