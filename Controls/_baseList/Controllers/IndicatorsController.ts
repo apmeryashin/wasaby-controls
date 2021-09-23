@@ -81,7 +81,7 @@ export default class IndicatorsController {
         }
         const navigationChanged = this._options.isInfinityNavigation !== options.isInfinityNavigation;
 
-        const shouldRecountAllIndicators = options.items && this._options.items !== options.items;
+        const shouldRecountAllIndicators = options.model && this._model !== options.model;
         const shouldRecountBottomIndicator = !shouldRecountAllIndicators &&
             (this._options.hasMoreDataToBottom !== options.hasMoreDataToBottom || navigationChanged);
         const shouldRecountTopIndicator = !shouldRecountAllIndicators &&

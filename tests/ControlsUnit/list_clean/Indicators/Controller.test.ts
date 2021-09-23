@@ -49,22 +49,18 @@ describe('Controls/list_clean/Indicators/Controller', () => {
     });
 
     describe('updateOptions', () => {
-        it('changed items', () => {
+        it('changed model', () => {
             const {collection, controller} = initTest([{id: 1}], {});
+            const newCollection = initTest([{id: 1}], {}).collection;
 
             // через контроллер нужно дожидаться таймера
             collection.displayIndicator('global', EIndicatorState.Loading, 100);
             assert.isTrue(collection.hasIndicator('global'));
 
-            const newItems = new RecordSet({
-                rawData: [{id: 1}, {id: 2}],
-                keyProperty: 'id'
-            });
             controller.updateOptions({
-                items: newItems,
-                model: collection
+                model: newCollection
             } as IIndicatorsControllerOptions, false);
-            assert.isFalse(collection.hasIndicator('global'));
+            assert.isFalse(newCollection.hasIndicator('global'));
         });
 
         it('changed navigation', () => {
