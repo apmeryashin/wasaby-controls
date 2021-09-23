@@ -2,7 +2,7 @@ import {BaseController, IDragOffset} from 'Controls/popupTemplate';
 import {Controller as PopupController, ISlidingPanelPopupOptions} from 'Controls/popup';
 import * as PopupContent from 'wml!Controls/_popupSliding/SlidingPanelContent';
 import SlidingPanelStrategy, {AnimationState, ISlidingPanelItem, ResizeType} from './Strategy';
-import {constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 
 /**
  * SlidingPanel Popup Controller
@@ -36,7 +36,7 @@ class Controller extends BaseController {
         if (!this._isTopPopup(item) && !isOrientationChanging) {
             return false;
         }
-        this._updatePosition(item, container, isOrientationChanging);
+        this._updatePosition(item, container, isOrientationChanging ? ResizeType.orientationChange : null);
         return true;
     }
 
@@ -49,13 +49,24 @@ class Controller extends BaseController {
      * @private
      */
     private _updatePosition(item: ISlidingPanelItem, container: HTMLDivElement, resizeType?: ResizeType): void {
-        if (resizeType === ResizeType.outer) {
+        if (resizeType === ResizeType.outer || resizeType === ResizeType.orientationChange) {
             this._fixOuterResize(item, container);
         }
         this._updatePopupSizes(item, container);
         item.position = SlidingPanelStrategy.getPosition(item, resizeType);
         item.popupOptions.workspaceWidth = item.position.width;
-        this._fixIosBug(item, container);
+
+        /* При смене ориентации в Application выполняется костыль, который ломает любое перепозиционирование
+         * Он на 500мс делает body нефиксированной высоты,
+         * в этот момент попапы перепозиционируются и неправильно считают координаты
+         * Т.к. функция фиксит открытие клавиатуры, то её не нужно выполнять в случае смены ориентации,
+         * сломается только кейс со сменой ориентации при открытой клаве, это более редкий кейс, ждет версию
+         * TODO: https://online.sbis.ru/opendoc.html?guid=f8eb89f4-5bfe-44d2-95ca-485571580dc2
+         * нужно в 6100 решить эту проблему, с вводом IoS 15 костыль скорее всего не актуален
+         */
+        if (resizeType !== ResizeType.orientationChange || !detection.isMobileSafari) {
+            this._fixIosBug(item, container);
+        }
     }
 
     /**
