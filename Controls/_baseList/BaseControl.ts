@@ -1378,13 +1378,8 @@ const _private = {
             if (self._indicatorsController) {
                 switch (action) {
                     case IObservable.ACTION_RESET:
-                        // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
-                        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
-                        const hasMoreData = _private.getHasMoreData(self);
-                        self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
-
-                        self._indicatorsController.onCollectionReset();
-
+                        // прерывать поиск нужнно до вызова onCollectionReset.
+                        // onCollectionReset при необходимости запустит порционный поиск.
                         if (_private.isPortionedLoad(self)) {
                             // Событие reset коллекции приводит к остановке активного порционного поиска.
                             // В дальнейшем (по необходимости) он будет перезапущен в нужных входных точках.
@@ -1393,6 +1388,13 @@ const _private = {
                             // после ресета пытаемся подгрузить данные, возможно вернули не целую страницу
                             _private.tryLoadToDirectionAgain(self);
                         }
+
+                        // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
+                        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
+                        const hasMoreData = _private.getHasMoreData(self);
+                        self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
+
+                        self._indicatorsController.onCollectionReset();
                         break;
                     case IObservable.ACTION_ADD:
                         self._indicatorsController.onCollectionAdd();
