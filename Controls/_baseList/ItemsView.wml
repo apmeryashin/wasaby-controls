@@ -1,6 +1,8 @@
 <ws:partial
    scope="{{_options}}"
    template="{{_viewTemplate}}"
+   attachLoadTopTriggerToNull="{{ false }}"
+   attachLoadBottomTriggerToNull="{{ false }}"
 
    viewName="{{_viewName}}"
    viewModelConstructor="{{_viewModelConstructor}}"
