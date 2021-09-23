@@ -711,7 +711,8 @@ const _private = {
 
                 const hideIndicatorOnCancelQuery =
                     (error.isCanceled || error.canceled) &&
-                    !self._sourceController?.isLoading();
+                    !self._sourceController?.isLoading() &&
+                    !_private.isPortionedLoad(self);
 
                 if (hideIndicatorOnCancelQuery) {
                     // при пересчете скроем все ненужые индикаторы
@@ -3450,7 +3451,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
         this._scrollController?.setTriggerVisibility(direction, state);
-        this._scrollController?.update({ params: this._getScrollParams()});
+        this._scrollController?.update({ params: this._getScrollParams(true)});
         if (state) {
             this.handleTriggerVisible(direction);
         }
@@ -3495,7 +3496,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.closeActionsMenu(this);
     }
 
-    _getScrollParams(): IScrollParams {
+    _getScrollParams(clear: boolean = false): IScrollParams {
+        if (clear) {
+            return {
+                clientHeight: this._viewportSize,
+                scrollHeight: this._viewSize,
+                scrollTop: this._scrollTop
+            };
+        }
         let stickyElementsHeight = 0;
         if (detection.isBrowserEnv) {
             stickyElementsHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
@@ -4673,11 +4681,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._keepScrollAfterReload = true;
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
-                    sourceConfig = {...(this._options.navigation.sourceConfig), limit: this._items.getCount()};
+                    const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());
+                    sourceConfig = {...(this._options.navigation.sourceConfig), limit: maxLimit};
                 }
                 if (this._options.navigation?.source === 'page') {
                     const navPageSize = this._options.navigation.sourceConfig.pageSize;
-                    const pageSize = Math.ceil(this._items.getCount() / navPageSize) * navPageSize;
+                    const pageSize = Math.max(Math.ceil(this._items.getCount() / navPageSize) * navPageSize, navPageSize);
                     sourceConfig = {...(this._options.navigation.sourceConfig), page: 0, pageSize};
                 }
             }
