@@ -194,9 +194,7 @@ export default class IndicatorsController {
      * @return {boolean} Отображать ли нижний индикатор.
      */
     shouldDisplayBottomIndicator(): boolean {
-        // порционынй поиск может быть включен не только в infinity навигации.
-        const allowByNavigation = this._options.isInfinityNavigation || this._isPortionedSearch();
-        return allowByNavigation && this._options.hasMoreDataToBottom
+        return this._options.attachLoadDownTriggerToNull && this._options.hasMoreDataToBottom
             && this._shouldDisplayIndicator('down');
     }
 
