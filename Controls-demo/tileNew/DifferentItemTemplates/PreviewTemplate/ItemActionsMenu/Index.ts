@@ -17,6 +17,7 @@ const ACTIONS = [
     {
         id: 11,
         icon: 'icon-Erase',
+        iconStyle: 'danger',
         title: 'remove',
         showType: TItemActionShowType.FIXED
     },
