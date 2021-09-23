@@ -63,11 +63,6 @@ define(['Controls/buttons', 'UI/Utils'], function(buttons, {Logger}) {
             assert.equal('button', cfg.viewMode, 'wrong cfg');
             assert.equal('secondary', cfg.style, 'wrong cfg');
          });
-         it('style buttonAdd', function() {
-            let cfg = actualAPI.styleToViewMode('buttonAdd');
-            assert.equal('button', cfg.viewMode, 'wrong cfg');
-            assert.equal('primary', cfg.style, 'wrong cfg');
-         });
          it('style toolButton', function() {
             let cfg = actualAPI.styleToViewMode('toolButton');
             assert.equal('', cfg.viewMode, 'wrong cfg');
@@ -180,9 +175,9 @@ define(['Controls/buttons', 'UI/Utils'], function(buttons, {Logger}) {
             const cfg = actualAPI.iconStyle('success', 'icon-done icon-Author', true, false);
             assert.equal('readonly', cfg, 'wrong cfg');
          });
-         it('buttonAdd', function() {
+         it('translucent', function() {
             const cfg = actualAPI.iconStyle('success', 'icon-done icon-Author', false, true);
-            assert.equal('default', cfg, 'wrong cfg');
+            assert.equal('forTranslucent', cfg, 'wrong cfg');
          });
          it('iconStyle success', function() {
             const cfg = actualAPI.iconStyle('success', 'icon-done icon-Author', false, false);

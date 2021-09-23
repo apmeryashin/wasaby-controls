@@ -237,11 +237,11 @@ const ActualApi = {
          }
       }
    },
-   iconStyle(iconStyle: string, icon: string, readonly: boolean, buttonAdd: boolean): string {
+   iconStyle(iconStyle: string, icon: string, readonly: boolean, translucent: boolean): string {
       if (readonly) {
          return 'readonly';
-      } else if (buttonAdd) {
-         return 'default';
+      } else if (translucent) {
+         return 'forTranslucent';
       } else {
          if (iconStyle) {
             return this.iconStyleTransformation(iconStyle, true);
