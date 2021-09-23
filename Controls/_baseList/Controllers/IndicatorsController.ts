@@ -355,11 +355,9 @@ export default class IndicatorsController {
 
         const isTopIndicatorDisplayed = this._model.getTopIndicator().isDisplayed();
 
-        if (this._options.attachLoadTopTriggerToNull) {
-            // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
-            // и так был показан, подскроллить к нему.
-            this._model.hideIndicator('top');
-        }
+        // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
+        // и так был показан, подскроллить к нему.
+        this._model.hideIndicator('top');
 
         if (this.shouldDisplayTopIndicator()) {
             this.displayTopIndicator(scrollToFirstItem, false, isTopIndicatorDisplayed);
