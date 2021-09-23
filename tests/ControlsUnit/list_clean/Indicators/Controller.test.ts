@@ -201,6 +201,25 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.destroy(); // уничтожаем все таймеры
         });
+
+        it('hide portioned search indicator', () => {
+            const {collection, controller} = initTest([{id: 1}], {});
+
+            controller.setHasMoreData(true, false);
+            collection.getCollection().setMetaData({iterative: true});
+            controller.startDisplayPortionedSearch('top');
+            assert.isFalse(collection.getTopIndicator().isDisplayed()); // индикатор покажется только через 2с
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getTopIndicator().isDisplayed());
+
+            controller.setHasMoreData(false, false);
+            collection.getCollection().setMetaData({iterative: true});
+            controller.onCollectionReset();
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
     });
 
     describe('onCollectionAdd', () => {
