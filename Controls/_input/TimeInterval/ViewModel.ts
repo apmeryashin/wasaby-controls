@@ -27,9 +27,9 @@ export interface IOptions {
 }
 
 export class ViewModel extends BaseViewModel {
-    autoComplete(shouldNotRemoveStartZeros: boolean): boolean {
+    autoComplete(): boolean {
         if (this.value !== null && this.value.toString() !== ViewModel._zeroFormat) {
-            this.displayValue = this._convertToDisplayValue(this.value, shouldNotRemoveStartZeros);
+            this.displayValue = this._convertToDisplayValue(this.value);
 
             return true;
         }
@@ -56,7 +56,7 @@ export class ViewModel extends BaseViewModel {
         return this._valueToTimeIntervalConverter(displayValue);
     }
 
-    protected _convertToDisplayValue(value, shouldNotRemoveStartZeros: boolean) {
+    protected _convertToDisplayValue(value) {
         let preResult: string;
 
         if (value === null) {
@@ -78,7 +78,7 @@ export class ViewModel extends BaseViewModel {
             value: clearResult.value,
             carriagePosition: 0
         }).value;
-        if (!shouldNotRemoveStartZeros) {
+        if (!this._options.shouldNotRemoveStartZeros) {
             result = ViewModel._removeStartZeros(result);
         }
         return result;
