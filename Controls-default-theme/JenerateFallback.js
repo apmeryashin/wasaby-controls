@@ -143,6 +143,10 @@ var lessFilesDataIterator = function (fileContent, callback) {
             var value = line.slice(endIndexProperty + 1, endIndexValue).trim();
 
             value = value.replace("\\e", "\\\\e");
+            var imgDir = '../img';
+            if (value.indexOf(imgDir) !== -1) {
+                value = value.replace(imgDir, '../Controls-default-theme/img');
+            }
             value = callback(value, property);
 
             return '  "' + property + '": "' + value + '",';
