@@ -552,3 +552,11 @@ Object.defineProperty(TileView, 'defaultProps', {
       return TileView.getDefaultOptions();
    }
 });
+
+/**
+ * Имя сущности для идентификации списка.
+ */
+Object.defineProperty(TileView.prototype, 'listInstanceName', {
+    value: 'controls-Tile',
+    writable: false
+});

@@ -491,7 +491,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
 /**
  * Имя сущности для идентификации списка.
  */
-Object.defineProperty(GridView, 'listInstanceName', {
+Object.defineProperty(GridView.prototype, 'listInstanceName', {
     value: 'controls-Grid',
     writable: false
 });

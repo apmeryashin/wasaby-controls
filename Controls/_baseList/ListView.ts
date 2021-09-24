@@ -478,7 +478,7 @@ Object.defineProperty(ListView, 'defaultProps', {
 /**
  * Имя сущности для идентификации списка.
  */
-Object.defineProperty(ListView, 'listInstanceName', {
+Object.defineProperty(ListView.prototype, 'listInstanceName', {
     value: 'controls-List',
     writable: false
 });
