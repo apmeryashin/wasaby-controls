@@ -22,8 +22,8 @@ export default class extends Control {
                 name: 'isDevelopment',
                 editorTemplateName: 'Controls/filterPanel:TextEditor',
                 resetValue: false,
-                viewMode: 'basic',
-                value: true,
+                viewMode: 'extended',
+                value: false,
                 editorOptions: {
                     value: true,
                     extendedCaption: 'Разработка'
