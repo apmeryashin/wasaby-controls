@@ -6,18 +6,7 @@
                 <Controls.filterPanel:View/>
             </Controls.filterPanel:Container>
             <Controls.list:Container>
-                <Controls.list:View>
-                    <ws:itemTemplate>
-                        <ws:partial template="Controls/list:ItemTemplate">
-                            <ws:contentTemplate>
-                                <div class="demo-FilterSearch__listItem-wrapper">
-                                    <span class="demo-FilterSearch__department"> {{itemTemplate.item.contents.get('department')}} </span>
-                                    <span> ({{itemTemplate.item.contents.get('amount')}})</span>
-                                </div>
-                            </ws:contentTemplate>
-                        </ws:partial>
-                    </ws:itemTemplate>
-                </Controls.list:View>
+                <Controls.grid:View columns="{{_gridColumns}}"/>
             </Controls.list:Container>
         </div>
     </Controls.browser:Browser>

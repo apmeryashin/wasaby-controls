@@ -6,6 +6,13 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _filterButtonSource: object[] = [];
     protected _source: Memory = null;
+    protected _gridColumns: object[] = [
+        {
+            displayProperty: 'title'
+        }, {
+            displayProperty: 'amount'
+        }
+    ];
 
     protected _beforeMount(): void {
         const data = [
