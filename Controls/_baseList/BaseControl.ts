@@ -659,9 +659,14 @@ const _private = {
 
         if (self._sourceController) {
             const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
-            if (_private.isPortionedLoad(self) && direction === 'up') {
-                // После того как закончились данные вниз, мы можем по скроллу начать подгрузку данных уже вверх.
-                self._indicatorsController.continueDisplayPortionedSearch('top');
+            if (_private.isPortionedLoad(self)) {
+                const portionedSearchDirection = self._indicatorsController.getPortionedSearchDirection();
+                if (direction === 'up' && portionedSearchDirection !== 'up' && !self._hasMoreData('down')) {
+                    // Если включен порицонный поиск в обе стороны, то мы в первую очередь грузим данные вниз
+                    // до самого конца. После этого показываем индикатор и триггер сверху. И по скроллу, если больше
+                    // нет данных вниз и порционный поиск уже не идет вверх, продолжаем искать данные вверх.
+                    self._indicatorsController.continueDisplayPortionedSearch('top');
+                }
             } else {
                 self._indicatorsController.recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
@@ -705,18 +710,21 @@ const _private = {
                 // и событие add не сработает
                 const hasMoreData = _private.getHasMoreData(self);
                 self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
-                self._indicatorsController.recountIndicators(direction);
 
-                if (_private.isPortionedLoad(self, addedItems) && !hasMoreData.down && !hasMoreData.up) {
-                    self._indicatorsController.endDisplayPortionedSearch();
-                } else {
-                    const searchDirection = self._indicatorsController.getPortionedSearchDirection();
-                    if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
-                        // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
-                        // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                if (_private.isPortionedLoad(self, addedItems)) {
+                    if (!hasMoreData.down && !hasMoreData.up) {
                         self._indicatorsController.endDisplayPortionedSearch();
-                        self._indicatorsController.displayTopIndicator(true);
+                    } else {
+                        const searchDirection = self._indicatorsController.getPortionedSearchDirection();
+                        if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
+                            // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
+                            // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                            self._indicatorsController.endDisplayPortionedSearch();
+                            self._indicatorsController.displayTopIndicator(true);
+                        }
                     }
+                } else {
+                    self._indicatorsController.recountIndicators(direction);
                 }
 
                 return addedItems;
