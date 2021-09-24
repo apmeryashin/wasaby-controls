@@ -10,21 +10,16 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._source = new Memory({
             data: [
-                {department: 'Разработка', title: 'Разработка'},
-                {department: 'Продвижение СБИС', title: 'Продвижение СБИС'},
-                {department: 'Федеральная клиентская служка', title: 'Федеральная клиентская служка'}
+                {department: 'Разработка', title: 'Разработка', isDeveloping: true},
+                {department: 'Продвижение СБИС', title: 'Продвижение СБИС', isDeveloping: false},
+                {department: 'Федеральная клиентская служка', title: 'Федеральная клиентская служка', isDeveloping: false}
             ],
-            keyProperty: 'department',
-            filter: (item, queryFilter) => {
-                const filterValue = queryFilter.hasOwnProperty('booleanEditor') && queryFilter.booleanEditor;
-                const itemTitle = item.get('title');
-                return filterValue ? itemTitle === 'Разработка' : true;
-            }
+            keyProperty: 'department'
         });
         this._filterButtonSource = [
             {
                 caption: '',
-                name: 'booleanEditor',
+                name: 'isDeveloping',
                 editorTemplateName: 'Controls/filterPanel:TextEditor',
                 resetValue: false,
                 viewMode: 'basic',
