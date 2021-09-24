@@ -1,6 +1,6 @@
 <ws:template name="EXPANDER">
     <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
-         attr:data-qa="controls-TreeGrid__row-expander"></div>
+         attr:data-qa="{{ item.listInstanceName }}-expander"></div>
 </ws:template>
 
 <tr attr:data-qa="{{ item.listInstanceName }}"
@@ -20,7 +20,7 @@
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
                      attr:class="{{ gridColumn.getMarkerClasses() }}"
-                     attr:data-qa="controls-Grid__row_marker"></div>
+                     attr:data-qa="{{ gridColumn.listInstanceName }}_marker"></div>
 
                 <ws:partial template="{{ gridColumn.getTemplate() }}"
                             scope="{{ gridColumn.config.templateOptions }}"

@@ -488,4 +488,12 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     }
 });
 
+/**
+ * Имя сущности для идентификации списка.
+ */
+Object.defineProperty(GridView, 'listInstanceName', {
+    value: 'controls-Grid',
+    writable: false
+});
+
 export default GridView;

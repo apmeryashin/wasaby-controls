@@ -1,6 +1,6 @@
 <ws:template name="EXPANDER">
    <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
-        attr:data-qa="controls-TreeGrid__row-expander"></div>
+        attr:data-qa="{{ item.listInstanceName }}-expander"></div>
 </ws:template>
 
 <ws:template name="localItemTemplateContent">

@@ -18,7 +18,7 @@
            data-qa="loading-trigger-top">
       </div>
 
-      <div name="itemsContainer" class="controls-ListViewV__itemsContainer" attr:data-qa="controls-List__itemsContainer">
+      <div name="itemsContainer" class="controls-ListViewV__itemsContainer" attr:data-qa="{{listInstanceName}}__items-container">
          <ws:partial
              template="{{_forTemplate}}"
              collection="{{ _listModel }}"
@@ -47,7 +47,7 @@
       </div>
 
       <ws:if data="{{_options.emptyTemplate}}">
-         <ws:partial template="{{_options.emptyTemplate}}"/>
+         <ws:partial template="{{_options.emptyTemplate}}" attr:data-qa="{{ listInstanceName }}__empty"/>
       </ws:if>
 
       <!--Bottom loading trigger-->
@@ -66,7 +66,7 @@
             template="{{_listModel.getFooter().getTemplate()}}"
             item="{{_listModel.getFooter()}}"
             attr:class="{{_getFooterClasses()}}"
-            attr:data-qa="controls-List__footer"
+            attr:data-qa="{{listInstanceName}}__footer"
          />
       </ws:if>
 
