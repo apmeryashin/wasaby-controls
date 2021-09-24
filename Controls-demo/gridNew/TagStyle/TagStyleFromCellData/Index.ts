@@ -24,8 +24,8 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     // Значение выбранной колонки
     protected _currentValue: string;
 
-    constructor(cfg: IControlOptions) {
-        super(cfg);
+    constructor(cfg: IControlOptions, context?: object) {
+        super(cfg, context);
         this._tagStyleProperty = 'customProperty';
         this._columns = TagStyle.getColumns();
     }
