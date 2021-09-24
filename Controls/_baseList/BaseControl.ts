@@ -3867,19 +3867,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             });
         }
 
-        if (_private.hasSelectionController(this)) {
-            _private.updateSelectionController(this, newOptions);
-
-            const selectionController = _private.getSelectionController(this, newOptions);
-            const allowClearSelectionBySelectionViewMode =
-                this._options.selectionViewMode === newOptions.selectionViewMode ||
-                newOptions.selectionViewMode !== 'selected';
-            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
-            if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
-                _private.changeSelection(this, { selected: [], excluded: [] });
-            }
-        }
-
         if (newOptions.sourceController || newOptions.items) {
             const items = newOptions.sourceController?.getItems() || newOptions.items;
             const sourceControllerChanged = this._options.sourceController !== newOptions.sourceController;
@@ -3940,6 +3927,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
                     _private.prepareFooter(this, newOptions, this._sourceController);
                 }
+            }
+        }
+
+        if (_private.hasSelectionController(this)) {
+            _private.updateSelectionController(this, newOptions);
+
+            const selectionController = _private.getSelectionController(this, newOptions);
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
+                _private.changeSelection(this, { selected: [], excluded: [] });
             }
         }
 
