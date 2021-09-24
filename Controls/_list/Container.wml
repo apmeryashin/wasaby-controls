@@ -20,4 +20,5 @@
             parentProperty="{{_options.id ? _dataOptions.parentProperty : _options.parentProperty}}"
             nodeProperty="{{_dataOptions.nodeProperty !== undefined ? _dataOptions.nodeProperty : _options.nodeProperty}}"
             groupProperty="{{_dataOptions.groupProperty}}"
+            dragControlId="{{_dataOptions.dragControlId || _options.dragControlId}}"
 />
