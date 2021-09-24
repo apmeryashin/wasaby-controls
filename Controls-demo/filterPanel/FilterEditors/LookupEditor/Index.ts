@@ -39,9 +39,9 @@ export default class extends Control {
                 editorTemplateName: 'Controls/filterPanel:LookupEditor',
                 resetValue: [],
                 caption: '',
-                value: [],
+                value: ['1'],
                 textValue: '',
-                viewMode: 'extended',
+                viewMode: 'basic',
                 editorOptions: {
                     source: new Memory({
                         keyProperty: 'id',
