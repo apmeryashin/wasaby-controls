@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Buttons/CaptionPositionFull/CaptionPosition');
+import controlTemplate = require('wml!Controls-demo/Buttons/TextAlignFull/TextAlignFull');
 
 class CaptionPosition extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;

@@ -10,10 +10,9 @@
  * @variant link
  * @variant label
  * @variant info
- * @variant contrast
  * @variant default
  */
-export type TFontColorStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'unaccented' | 'link' | 'label' | 'info' | 'contrast' | 'default'  | string;
+export type TFontColorStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'unaccented' | 'link' | 'label' | 'info' | 'default'  | string;
 
 export interface IFontColorStyleOptions {
    /**

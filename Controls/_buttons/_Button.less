@@ -34,6 +34,7 @@
    .button-wrapper-default-style();
    &:before {
       content: "\200b";
+      order: 1;
    }
 }
 
@@ -42,10 +43,6 @@
 
    .controls-BaseButton__icon {
       align-self: center;
-   }
-
-   .controls-Button__icon_position-right {
-      margin-left: auto;
    }
 }
 
@@ -166,6 +163,15 @@
 
    &.controls-Button_textAlign-right {
       justify-content: flex-end;
+   }
+
+   &.controls-Button_textAlign-justify {
+      justify-content: space-between;
+
+      // При выравнивании через space-between, также учитывается и before, поэтому задаем ему order в середине
+      &.controls-BaseButton__wrapper_captionPosition_right::before {
+         order: 2;
+      }
    }
 }
 
