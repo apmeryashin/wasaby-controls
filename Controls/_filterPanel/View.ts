@@ -115,6 +115,9 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _propertyValueChanged(event: SyntheticEvent, filterItem: IFilterItem, itemValue: object): void {
         this._viewModel.setEditingObjectValue(filterItem.name, itemValue);
+        if (this._options.viewMode === 'default') {
+            this._notifyChanges();
+        }
     }
 
     protected _groupClick(e: SyntheticEvent, dispItem: GroupItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
