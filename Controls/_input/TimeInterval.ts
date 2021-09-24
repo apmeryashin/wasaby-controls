@@ -114,3 +114,28 @@ Object.defineProperty(TimeInterval, 'defaultProps', {
 });
 
 export default TimeInterval;
+
+/**
+ * @name Controls/_input/TimeInterval#inputCompleted
+ * @event Происходит при завершении ввода. Завершение ввода — это контрол потерял фокус, или пользователь нажал клавишу "Enter".
+ * @param {Types/entity:applied.TimeInterval} value Значение контрола ввода.
+ * @param {String} displayValue Отображаемое значение контрола ввода.
+ * @remark
+ * Событие используется в качестве реакции на завершение ввода пользователем. Например, проверка на валидность введенных данных или отправка данных в другой контрол.
+ * @example
+ * Подписываемся на событие inputCompleted и сохраняем значение поля в базе данных.
+ * <pre class="brush: html">
+ * <Controls.input:TimeInterval on:inputCompleted="_inputCompletedHandler()"/>
+ * </pre>
+ * <pre class="brush: js">
+ * export class Form extends Control<IControlOptions, void> {
+ *    ...
+ *    private _inputCompletedHandler(event, value) {
+ *        this._saveEnteredValueToDatabase(value);
+ *    }
+ *    ...
+ * }
+ * </pre>
+ * @see value
+ * @see valueChanged
+ */

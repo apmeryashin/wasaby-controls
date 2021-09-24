@@ -45,8 +45,8 @@ export interface IInputDateTimeOptions {
  * Оба поля в этом примере будут иметь одинаковое поведение.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.input:DateTime value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()"/>
- * <Controls.input:DateTime bind:value="_anotherFieldValue"/>
+ * <Controls.date:InputTime value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()"/>
+ * <Controls.date:InputTime bind:value="_anotherFieldValue"/>
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
