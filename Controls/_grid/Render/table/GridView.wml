@@ -43,19 +43,24 @@
         </Controls.scroll:VirtualScrollContainer>
 
         <!--Top loading indicator-->
-        <ws:partial if="{{ _listModel.getTopIndicator() }}"
-                    template="{{_listModel.getTopIndicator().getTemplate()}}"
-                    item="{{_listModel.getTopIndicator()}}"
-                    on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
-        <!--Top loading trigger-->
-        <tr class="controls-BaseControl__loadingTrigger">
-            <td colspan="100">
-                <div name="topLoadingTrigger"
-                     data-qa="loading-trigger-top">
-                </div>
-            </td>
-        </tr>
-
+        <tbody>
+            <ws:partial if="{{ _listModel.getTopIndicator() }}"
+                        template="{{_listModel.getTopIndicator().getTemplate()}}"
+                        item="{{_listModel.getTopIndicator()}}"
+                        colspan="{{ _listModel.getIndicatorColspan() }}"
+                        on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
+            <!--Top loading trigger-->
+            <tr>
+                <td colspan="{{ _listModel.getIndicatorColspan() }}">
+                    <div class="controls-BaseControl__loadingTrigger">
+                        <div name="topLoadingTrigger"
+                             class="controls-GridView__loadingTrigger_notFullGridSupport"
+                             data-qa="loading-trigger-top">
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
         <!-- Items -->
         <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
 
@@ -96,19 +101,25 @@
         </ws:if>
 
         <!--Bottom loading trigger-->
-        <tr class="controls-BaseControl__loadingTrigger">
-            <td colspan="100">
-                <div name="bottomLoadingTrigger"
-                     data-qa="loading-trigger-bottom">
-                </div>
-            </td>
-        </tr>
+        <tbody>
+            <tr>
+                <td colspan="{{ _listModel.getIndicatorColspan() }}">
+                    <div class="controls-BaseControl__loadingTrigger">
+                        <div name="bottomLoadingTrigger"
+                             class="controls-GridView__loadingTrigger_notFullGridSupport"
+                             data-qa="loading-trigger-bottom">
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
-        <!--Bottom loading indicator-->
-        <ws:partial if="{{ _listModel.getBottomIndicator() }}"
-                    template="{{_listModel.getBottomIndicator().getTemplate()}}"
-                    item="{{_listModel.getBottomIndicator()}}"
-                    on:click="_onIndicatorClick(_listModel.getBottomIndicator())"/>
+            <!--Bottom loading indicator-->
+            <ws:partial if="{{ _listModel.getBottomIndicator() }}"
+                        template="{{_listModel.getBottomIndicator().getTemplate()}}"
+                        item="{{_listModel.getBottomIndicator()}}"
+                        colspan="{{ _listModel.getIndicatorColspan() }}"
+                        on:click="_onIndicatorClick(_listModel.getBottomIndicator())"/>
+        </tbody>
 
         <!-- Results (bottom) -->
         <Controls.scroll:VirtualScrollContainer if="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'bottom' }}" position="top">

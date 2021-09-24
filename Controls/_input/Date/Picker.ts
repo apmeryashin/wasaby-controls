@@ -30,6 +30,7 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * @mixes Controls/input:IValueValidators
  * @implements Controls/interface:IOpenPopup
  * @mixes Controls/input:IInputDisplayValueValidators
+ * @implements Controls/dateRange:IDatePopupType
  *
  * @public
  * @demo Controls-demo/Input/Date/Picker
@@ -47,12 +48,27 @@ class Picker extends Control<IControlOptions> {
     }
 
     openPopup(event: SyntheticEvent<MouseEvent>): void {
+        // TODO: Перевести на улититу, после того как переведем контрол в либу _date. Сейчас появляется
+        //  циклическая зависимость.
+        const getPopupName = (datePopupType: string) => {
+            if (datePopupType === 'compactDatePicker') {
+                return 'Controls/compactDatePicker:View';
+            }
+            return 'Controls/datePopup';
+        };
         const value = PopupUtil.getFormattedSingleSelectionValue(this._options.value);
+        let className;
+        if (this._options.datePopupType === 'datePicker') {
+            className = `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme}`;
+        } else {
+            className = `controls-CompactDatePicker__selector-margin
+            controls_compactDatePicker_theme-${this._options.theme}`;
+        }
         const cfg = {
             ...PopupUtil.getCommonOptions(this),
             target: this._container,
-            template: 'Controls/datePopup',
-            className: `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme}`,
+            template: getPopupName(this._options.datePopupType),
+            className,
             templateOptions: {
                 ...PopupUtil.getTemplateOptions(this),
                 ...value,
@@ -105,7 +121,8 @@ class Picker extends Control<IControlOptions> {
     static getDefaultOptions(): object {
         return {
             ...IDateTimeMask.getDefaultOptions(),
-            valueValidators: []
+            valueValidators: [],
+            datePopupType: 'datePicker'
         };
     }
 

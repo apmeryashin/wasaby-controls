@@ -128,7 +128,7 @@ export default interface IDateRangeValidators {
  *
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.input:Date validateByFocusOut="{{false}}"/>
+ * <Controls.date:Input validateByFocusOut="{{false}}"/>
  * </pre>
  * @demo Controls-demo/dateRange/Input/Validators/Index
  *

@@ -54,7 +54,7 @@ export default class ObserversController {
         this._resetBottomTriggerOffset = options.resetBottomTriggerOffset;
 
         // изначально скрываем верхний триггер, чтобы не произошло лишних подгрузок. Покажем по необходимости.
-        this.hideTopTrigger(options.topTriggerElement);
+        this.hideTrigger(options.topTriggerElement);
 
         if (options.topTriggerElement && options.bottomTriggerElement) {
             this.applyTriggerOffsets(options.topTriggerElement, options.bottomTriggerElement);
@@ -87,7 +87,7 @@ export default class ObserversController {
         this._bottomTriggerOffsetCoefficient = options.bottomTriggerOffsetCoefficient;
 
         if (willBeReload) {
-            this.hideTopTrigger(options.topTriggerElement);
+            this.hideTrigger(options.topTriggerElement);
             this.setResetTriggerOffsets(
                 true,
                 true,
@@ -137,15 +137,15 @@ export default class ObserversController {
         return this._model && (!this._intersectionObserver || modelRecreated);
     }
 
-    displayTopTrigger(topTrigger: HTMLElement): void {
-        if (topTrigger) {
-            topTrigger.style.display = '';
+    displayTrigger(trigger: HTMLElement): void {
+        if (trigger && trigger.style.display === 'none') {
+            trigger.style.display = '';
         }
     }
 
-    hideTopTrigger(topTrigger: HTMLElement): void {
-        if (topTrigger) {
-            topTrigger.style.display = 'none';
+    hideTrigger(trigger: HTMLElement): void {
+        if (trigger && trigger.style.display !== 'none') {
+            trigger.style.display = 'none';
         }
     }
 
@@ -189,7 +189,7 @@ export default class ObserversController {
                     this._resetTopTriggerOffset = false;
                     this.applyTriggerOffsets(topTrigger, bottomTrigger);
                 }
-                break
+                break;
             case 'down':
                 if (this._resetBottomTriggerOffset) {
                     this._resetBottomTriggerOffset = false;
@@ -228,24 +228,40 @@ export default class ObserversController {
         let topTriggerOffset;
         let bottomTriggerOffset;
 
+        const topIndicatorDisplayed = this._model.getTopIndicator().isDisplayed();
+        const bottomIndicatorDisplayed = this._model.getBottomIndicator().isDisplayed();
+
+        // из высоты вьюхи вычитаем высоту индикаторов, чтобы правлиьно посчиталась формула. Высоту индикаторов
+        // мы прибавим после полностью(из высоты индикаторов не нужно высчитывать 1/3).
+        // А от вьюхи мы должны взять 1/3 и высота индикаторов при небольших значениях viewHeight сильно на это влияет.
+        let viewHeight = this._viewHeight;
+        if (topIndicatorDisplayed) {
+            viewHeight -= INDICATOR_HEIGHT;
+        }
+        if (bottomIndicatorDisplayed) {
+            viewHeight -= INDICATOR_HEIGHT;
+        }
+
         if (this._resetTopTriggerOffset || !this._model.getCount()) {
-            topTriggerOffset = 0;
+            // 1px чтобы не было проблем с подгрузками при измененном масштабе
+            topTriggerOffset = topIndicatorDisplayed ? 0 : 1;
         } else {
-            const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, this._viewHeight / 2);
+            const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, viewHeight / 2);
             topTriggerOffset = Math.min(
-                (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._topTriggerOffsetCoefficient,
+                (viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0) * this._topTriggerOffsetCoefficient,
                 maxTopOffset
             );
         }
 
         if (this._resetBottomTriggerOffset || !this._model.getCount()) {
-            bottomTriggerOffset = 0;
+            // 1px чтобы не было проблем с подгрузками при измененном масштабе
+            bottomTriggerOffset = bottomIndicatorDisplayed ? 0 : 1;
         } else {
-            const scrollBottom = Math.max(this._viewHeight - this._scrollTop - this._viewportHeight, 0);
-            const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, this._viewHeight / 2);
+            const scrollBottom = Math.max(viewHeight - this._scrollTop - this._viewportHeight, 0);
+            const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, viewHeight / 2);
 
             bottomTriggerOffset = Math.min(
-                (this._viewHeight && this._viewportHeight ? Math.min(this._viewHeight, this._viewportHeight) : 0) * this._bottomTriggerOffsetCoefficient,
+                (viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0) * this._bottomTriggerOffsetCoefficient,
                 maxBottomOffset
             );
         }
@@ -258,10 +274,10 @@ export default class ObserversController {
          * 47 - чтобы сразу же не срабатывала загрузка вверх, а только после скролла к ромашке.
          */
         if (this._model.getCount()) {
-            if (this._model.getTopIndicator().isDisplayed()) {
+            if (topIndicatorDisplayed) {
                 topTriggerOffset += DEFAULT_TOP_TRIGGER_OFFSET;
             }
-            if (this._model.getBottomIndicator().isDisplayed()) {
+            if (bottomIndicatorDisplayed) {
                 bottomTriggerOffset += DEFAULT_BOTTOM_TRIGGER_OFFSET;
             }
         }

@@ -1,3 +1,7 @@
+.controls-CompactDatePicker__container {
+   padding-bottom: var(--offset_m);
+}
+
 .controls-CompactDatePicker {
    box-shadow: var(--box-shadow_dialog);
    width: var(--width_compactDatePicker);
@@ -73,13 +77,15 @@
 }
 
 .controls-CompactDatePicker__month-list {
+   background: var(--background-color);
    width: 100%;
    height: 100%;
 }
 
 .controls-CompactDatePicker__month-list__item {
    margin: var(--calendar_margin_compactDatePicker);
-   padding-top: var(--offset_xs);
+   padding-top: var(--offset_2xs);
+   padding-bottom: var(--offset_m);
 }
 
 .controls-MonthViewVDOM__item_style-CompactDatePickerItem {
@@ -201,4 +207,9 @@
 .controls-Scroll__shadow_top_style-CompactDatePicker {
    // Нам нужен градиент переходящий в прозрачный цвет, поэтому переменная не нужна
    background: linear-gradient(to bottom, var(--shadow_start-color_compactDatePicker), rgba(255, 255, 255, 0));
+}
+
+.controls-CompactDatePicker__selector-margin {
+   margin-top: calc(-1 * var(--offset_s));
+   margin-left: calc(-1 * var(--width_compactDatePicker) / 3);
 }

@@ -198,6 +198,15 @@ describe('Controls/search:ControllerClass', () => {
 
          const filter = searchController.reset(true);
          assert.ok(filter['Разворот']);
+         assert.ok(filter['usePages']);
+
+         sourceController.setFilter({
+            Разворот: 'Без разворота'
+         });
+
+         await searchController.search('testSearchValue');
+         const filter = searchController.reset(true);
+         assert.ok(!filter['usePages']);
       });
 
       describe('startingWith: root', () => {

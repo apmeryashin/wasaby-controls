@@ -77,6 +77,8 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                                   complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
+            '--contrast_text-color': brightness === 'light' ? '#fff' : '#000',
+            '--contrast_icon-color': brightness === 'light' ? '#fff' : '#000',
             '--unaccented_background-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.1'),
             '--icon-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
             '--label_text-color': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.8'),
@@ -109,7 +111,6 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                                      complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--text-color_button': ZenWrapper.getMonochromeColor(brightness),
-            '--text-contrast-color_button': brightness === 'light' ? '#fff' : '#000',
             '--primary_background-color_button': 'transparent',
             '--primary_hover_same_background-color': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.3'),
             '--primary_active_same_background-color': ZenWrapper.getColorWithOpacity(complementaryRGB, '0.6'),
@@ -205,9 +206,15 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
     }
 
     static getDerivedStateFromProps(options: IZenWrapperOptions): object {
+        let complementaryColor = options.complementaryColor;
+        if (!complementaryColor) {
+            // TODO зашиваем primary цвет. Нужно для совешаний. Возможно есть решение лучше.
+            // https://online.sbis.ru/opendoc.html?guid=f454befd-5404-4081-b54d-0ce5579d58f1
+            complementaryColor = '246, 115, 60';
+        }
         return ZenWrapper.calculateVariables(
             ZenWrapper.calculateRGB(options.dominantColor),
-            ZenWrapper.calculateRGB(options.complementaryColor),
+            ZenWrapper.calculateRGB(complementaryColor),
             options.brightness
         );
     }

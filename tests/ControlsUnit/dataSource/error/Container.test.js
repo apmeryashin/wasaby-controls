@@ -190,7 +190,7 @@ define([
             assert.isDefined(instance._viewConfig);
          });
 
-         it('sets correct shown flag for viewConfig', () => {
+         it('sets correct showed flag for viewConfig', () => {
             [
                [true, 'include', true],
                [true, 'dialog', true],

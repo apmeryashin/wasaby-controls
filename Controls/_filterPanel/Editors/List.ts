@@ -112,9 +112,7 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
-        if (!this._items) {
-            this._items = items;
-        }
+        this._items = items;
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
@@ -149,6 +147,7 @@ class ListEditor extends Control<IListEditorOptions> {
         });
         if (selectedKeys.length) {
             this._items.assign(result);
+            this._setFilter(selectedKeys, this._options);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
         this._processPropertyValueChanged(selectedKeys);
@@ -215,7 +214,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
         this._filter = {...options.filter};
-        if (selectedKeys && selectedKeys.length && options.filterViewMode !== 'default') {
+        if (selectedKeys && selectedKeys.length) {
             this._filter[options.keyProperty] = selectedKeys;
         }
     }
@@ -226,7 +225,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _getNavigation(options: IListEditorOptions, selectedKeys?: string[]): INavigationOptionValue<unknown> {
         const selectedKeysArray = selectedKeys || this._selectedKeys;
-        return selectedKeysArray?.length && options.filterViewMode !== 'default' ? null : options.navigation;
+        return selectedKeysArray?.length ? null : options.navigation;
     }
 
     private _getSelectedItems(): List<Model> {

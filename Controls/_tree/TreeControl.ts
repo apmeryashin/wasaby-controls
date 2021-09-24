@@ -665,14 +665,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     protected _beforeUpdate(newOptions: TOptions) {
-        super._beforeUpdate(...arguments);
-
-        const viewModel = this.getViewModel();
         const sourceController = this.getSourceController();
-        const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
-        const isSourceControllerLoading = sourceController && sourceController.isLoading();
         let updateSourceController = false;
-        this._plainItemsContainer = newOptions.plainItemsContainer;
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
@@ -708,6 +702,13 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 this.cancelEdit();
             }
         }
+
+        super._beforeUpdate(...arguments);
+
+        const viewModel = this.getViewModel();
+        const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
+        const isSourceControllerLoading = sourceController && sourceController.isLoading();
+        this._plainItemsContainer = newOptions.plainItemsContainer;
 
         this._expandController.updateOptions({
             model: viewModel,
@@ -1346,12 +1347,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (typeof markedKey !== 'undefined') {
             const markedRecord = this.getViewModel().getItemBySourceKey(markedKey);
 
-            if (markedRecord.isExpanded()) {
-                // Узел раскрыт.
-                return markedRecord.contents.getKey();
-            } else if (!markedRecord.getParent().isRoot()) {
-                // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
-                return markedRecord.getParent().contents.getKey();
+            if (markedRecord) {
+                if (markedRecord.isExpanded()) {
+                    // Узел раскрыт.
+                    return markedRecord.contents.getKey();
+                } else if (!markedRecord.getParent().isRoot()) {
+                    // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
+                    return markedRecord.getParent().contents.getKey();
+                }
             }
         }
 

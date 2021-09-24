@@ -1,4 +1,4 @@
-import { Collection, EIndicatorState, TIndicatorState } from 'Controls/display';
+import { Collection, EIndicatorState, TIndicatorPosition, TIndicatorState } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
 
 export interface IIndicatorsControllerOptions {
@@ -45,6 +45,7 @@ export const DIRECTION_COMPATIBILITY = {
 export default class IndicatorsController {
     private _options: IIndicatorsControllerOptions;
     private _model: Collection;
+    private _viewportFilled: boolean = false;
 
     private _displayIndicatorTimer: number;
 
@@ -65,6 +66,11 @@ export default class IndicatorsController {
         if (displayBottomIndicator) {
             this.displayBottomIndicator();
         }
+
+        if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
+            const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
+            this.startDisplayPortionedSearch(direction);
+        }
     }
 
     /**
@@ -82,7 +88,7 @@ export default class IndicatorsController {
         }
         const navigationChanged = this._options.isInfinityNavigation !== options.isInfinityNavigation;
 
-        const shouldRecountAllIndicators = options.items && this._options.items !== options.items;
+        const shouldRecountAllIndicators = options.model && this._model !== options.model;
         const shouldRecountBottomIndicator = !shouldRecountAllIndicators &&
             (this._options.hasMoreDataToBottom !== options.hasMoreDataToBottom || navigationChanged);
         const shouldRecountTopIndicator = !shouldRecountAllIndicators &&
@@ -114,10 +120,21 @@ export default class IndicatorsController {
     }
 
     /**
+     * Устанавливает значение флага, viewportFilled. Который означает, что у нас заполненн весь вьюпорт.
+     * Это нужно для правильного отображения верхней ромашки. Т.к. подгрузка должна идти только в одну сторону
+     * и в первую очередь вниз, и пока данные не занимают весь вьюпорт мы грузим(и отображаем ромашку) только вниз
+     * @param value
+     */
+    setViewportFilled(value: boolean): void {
+        this._viewportFilled = value;
+    }
+
+    /**
      * Обрабатывает пересоздание элементов в коллекции. (в частном случае подразумевает под этим перезагрзку списка)
      * При необходимости пересчитываеет индикаторы, начинает порционный поиск, сбрасывает оффсет у триггеров
      */
     onCollectionReset(): void {
+        this._setSearchState(SEARCH_STATES.NOT_STARTED);
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
             this.startDisplayPortionedSearch(direction);
@@ -152,7 +169,10 @@ export default class IndicatorsController {
      * @return {boolean} Отображать ли верхний индикатор.
      */
     shouldDisplayTopIndicator(): boolean {
-        return this._options.attachLoadTopTriggerToNull && this._options.hasMoreDataToTop
+        // верхний индикатор покажем только если заполнен вьюпорт, т.к. загрузка в первую очередь идет вниз
+        // или сразу же покажем если вниз грузить нечего
+        const allowByViewport = this._viewportFilled || !this._options.hasMoreDataToBottom;
+        return allowByViewport && this._options.attachLoadTopTriggerToNull && this._options.hasMoreDataToTop
             && this._shouldDisplayIndicator('up');
     }
 
@@ -172,7 +192,7 @@ export default class IndicatorsController {
             this._hasNotRenderedChanges = true;
         }
 
-        const indicatorState = this._getLoadingIndicatorState();
+        const indicatorState = this._getLoadingIndicatorState('top');
         this._model.displayIndicator('top', indicatorState);
 
         if (scrollToFirstItem) {
@@ -188,7 +208,7 @@ export default class IndicatorsController {
         return this._hasNotRenderedChanges;
     }
 
-    afterRenderCallback() {
+    afterRenderCallback(): void {
         this._hasNotRenderedChanges = false;
     }
 
@@ -211,7 +231,7 @@ export default class IndicatorsController {
             return;
         }
 
-        const indicatorState = this._getLoadingIndicatorState();
+        const indicatorState = this._getLoadingIndicatorState('bottom');
         this._model.displayIndicator('bottom', indicatorState);
     }
 
@@ -231,7 +251,7 @@ export default class IndicatorsController {
     }
 
     shouldHideGlobalIndicator(): boolean {
-        return !this._isPortionedSearch() && (!!this._displayIndicatorTimer || !!this._model.getGlobalIndicator())
+        return !this._isPortionedSearch() && (!!this._displayIndicatorTimer || !!this._model.getGlobalIndicator());
     }
 
     /**
@@ -254,21 +274,18 @@ export default class IndicatorsController {
      * @void
      */
     displayDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
-        // Этими опциями в календаре полностью отключены ромашки, т.к. там не может быть долгой подгрузки.
-        // И в IE из-за его медленной работы индикаторы вызывают прыжки
-        if (
-            this._options.attachLoadTopTriggerToNull && position === 'top' ||
-            this._options.attachLoadDownTriggerToNull && position === 'bottom'
-        ) {
-            this._startDisplayIndicatorTimer(() => {
-                // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
-                // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
-                // скорее всего не выполнится
-                indicatorElement.style.display = '';
-                indicatorElement.style.position = 'sticky';
-                indicatorElement.style[position] = '0';
-            });
+        if (!this._shouldHandleDrawingIndicator(position)) {
+            return;
         }
+
+        this._startDisplayIndicatorTimer(() => {
+            // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации,
+            // т.к. долгая отрисовка равноценна медленному компьютеру и еще один цикл синхронизации
+            // скорее всего не выполнится
+            indicatorElement.style.display = '';
+            indicatorElement.style.position = 'sticky';
+            indicatorElement.style[position] = '0';
+        });
     }
 
     /**
@@ -277,6 +294,10 @@ export default class IndicatorsController {
      * @param position Позиция индикатора
      */
     hideDrawingIndicator(indicatorElement: HTMLElement, position: 'top'|'bottom'): void {
+        if (!this._shouldHandleDrawingIndicator(position)) {
+            return;
+        }
+
         this._clearDisplayIndicatorTimer();
         indicatorElement.style.display = 'none';
         indicatorElement.style.position = '';
@@ -300,9 +321,6 @@ export default class IndicatorsController {
                 break;
             case 'down':
                 this._recountBottomIndicator();
-                // Вместе с пересчетом нижнего индикатора нужно пересчитать верхний триггер, т.к. мог отработать
-                // виртуальный скролл и скрытый триггер нужно будет показать, пример:
-                // https://online.sbis.ru/opendoc.html?guid=947f8f71-f261-474f-9efd-74b1db1bc5b5
                 break;
             case 'all':
                 this._recountTopIndicator(scrollToFirstItem);
@@ -325,7 +343,6 @@ export default class IndicatorsController {
         );
     }
 
-
     private _recountTopIndicator(scrollToFirstItem: boolean = false): void {
         // если сейчас порционный поиск и у нас еще не кончился таймер показа индикатора, то не нужно пересчитывать,
         // т.к. при порционном поиске индикатор покажется с задержкой в 2с, дожидаемся её
@@ -335,11 +352,9 @@ export default class IndicatorsController {
 
         const isTopIndicatorDisplayed = this._model.getTopIndicator().isDisplayed();
 
-        if (this._options.attachLoadTopTriggerToNull) {
-            // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
-            // и так был показан, подскроллить к нему.
-            this._model.hideIndicator('top');
-        }
+        // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
+        // и так был показан, подскроллить к нему.
+        this._model.hideIndicator('top');
 
         if (this.shouldDisplayTopIndicator()) {
             this.displayTopIndicator(scrollToFirstItem, false, isTopIndicatorDisplayed);
@@ -361,7 +376,9 @@ export default class IndicatorsController {
     }
 
     private _shouldDisplayIndicator(direction: 'up'|'down'): boolean {
-        return this._options.isInfinityNavigation && !this._options.hasHiddenItemsByVirtualScroll(direction)
+        // порционынй поиск может быть включен не только в infinity навигации.
+        const allowByNavigation = this._options.isInfinityNavigation || this._isPortionedSearch();
+        return allowByNavigation && !this._options.hasHiddenItemsByVirtualScroll(direction)
             && !this._options.shouldShowEmptyTemplate;
     }
 
@@ -383,17 +400,28 @@ export default class IndicatorsController {
         }
     }
 
-    private _getLoadingIndicatorState(): TIndicatorState {
+    private _getLoadingIndicatorState(direction: TIndicatorPosition): TIndicatorState {
         let state = EIndicatorState.Loading;
 
-        if (this.isDisplayedPortionedSearch()) {
-            state = EIndicatorState.PortionedSearch;
-        }
-        if (this._searchState === SEARCH_STATES.STOPPED) {
-            state = EIndicatorState.ContinueSearch;
+        if (this._portionedSearchDirection === direction) {
+            if (this.isDisplayedPortionedSearch()) {
+                state = EIndicatorState.PortionedSearch;
+            }
+            if (this._searchState === SEARCH_STATES.STOPPED) {
+                state = EIndicatorState.ContinueSearch;
+            }
         }
 
         return state;
+    }
+
+    private _shouldHandleDrawingIndicator(position: 'top'|'bottom'): boolean {
+        // Этими опциями в календаре полностью отключены ромашки, т.к. там не может быть долгой подгрузки.
+        // И в IE из-за его медленной работы индикаторы вызывают прыжки
+        const allowByOptions = this._options.attachLoadTopTriggerToNull && position === 'top' ||
+            this._options.attachLoadDownTriggerToNull && position === 'bottom';
+        // при порционном поиске индикатор всегда отрисовать и поэтому индикатор отрисовки не нужен
+        return !this._isPortionedSearch() && allowByOptions;
     }
 
     // endregion LoadingIndicator
@@ -426,10 +454,13 @@ export default class IndicatorsController {
      * @remark
      * Поиск нужно приостановить если страница успела загрузиться быстрее 30с(при первой подгрузке)
      * или быстрее 2м(при последующних подгрузках)
-     * @param pageLoaded Признак, который означает что загрузилась целая страница
      */
-    shouldStopDisplayPortionedSearch(pageLoaded: boolean): boolean {
-        return pageLoaded && this.isDisplayedPortionedSearch() && !this._isSearchContinued();
+    shouldStopDisplayPortionedSearch(): boolean {
+        // если загрузилась целая страница раньше чем прервался порционный поиск, то приостанавливаем его
+        // по стандарту в этом кейсе под страницей понимается viewport
+        // проверять по скрытию триггера загрузку страницы не лучшая идея, т.к. изначально может быть много данных,
+        // а первая порционная подгрузка тоже загрузит много данных => события скрытия триггера не будет.
+        return this._viewportFilled && this.isDisplayedPortionedSearch() && !this._isSearchContinued();
     }
 
     /**
@@ -444,9 +475,12 @@ export default class IndicatorsController {
 
     /**
      * Продолжаем отображение порционного поиска.
+     * @param direction Новое направление порционного поиска. Оно может смениться, если сперва поиск шел вниз,
+     * а после полной загрузки вниз, стали грузить вверх.
      */
-    continueDisplayPortionedSearch(): void {
+    continueDisplayPortionedSearch(direction: TPortionedSearchDirection = this._portionedSearchDirection): void {
         this._setSearchState(SEARCH_STATES.CONTINUED);
+        this._portionedSearchDirection = direction;
         this._startDisplayPortionedSearchTimer(SEARCH_CONTINUED_MAX_DURATION);
         this._model.displayIndicator(this._portionedSearchDirection, EIndicatorState.PortionedSearch);
     }
@@ -499,7 +533,6 @@ export default class IndicatorsController {
      * @return {boolean} Можно ли продолжить отображать порционный поиск
      */
     shouldContinueDisplayPortionedSearch(): boolean {
-        // TODO LI точно ли нужна проверка на STOPPED
         return this._getSearchState() !== SEARCH_STATES.STOPPED && this._getSearchState() !== SEARCH_STATES.ABORTED;
     }
 

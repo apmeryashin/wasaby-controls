@@ -720,6 +720,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getDraggedItemsCount();
     }
 
+    getDraggedItemsCountString(): string {
+        const count = this.getDraggedItemsCount();
+        // В днд мы можем получить максимум 100 записей, для производительности,
+        // поэтому если записей больше 99 пишем 99+
+        return count > 99 ? '99+' : String(count);
+    }
+
     // endregion Drag-n-drop
 
     isSticked(stickyCallback: Function, item: CollectionItem): boolean {
@@ -815,7 +822,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                 (rowSeparatorSize ? rowSeparatorSize : 'default');
         } else {
             if (this._$roundBorder) {
-                classes = ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
+                classes += ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}`;

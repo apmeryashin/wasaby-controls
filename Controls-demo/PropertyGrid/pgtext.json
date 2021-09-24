@@ -260,13 +260,13 @@
       }
     }
   },
-  "Controls/input:DateBase": {
-    "name": "Controls/input:DateBase",
+  "Controls/date:BaseInput": {
+    "name": "Controls/date:BaseInput",
     "title": "Input for entering date or/and time.",
-    "className": "Controls/input:DateBase",
+    "className": "Controls/date:BaseInput",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/input:DateBase",
+    "fullname": "Controls/date:BaseInput",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -342,13 +342,13 @@
       }
     }
   },
-  "Controls/input:Date": {
-    "name": "Controls/input:Date",
+  "Controls/date:Input": {
+    "name": "Controls/date:Input",
     "title": "Input for entering date.",
-    "className": "Controls/input:Date",
+    "className": "Controls/date:Input",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/input:Date",
+    "fullname": "Controls/date:Input",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

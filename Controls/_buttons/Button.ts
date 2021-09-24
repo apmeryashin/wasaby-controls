@@ -66,7 +66,7 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
         if (options.readOnly) {
             this._iconStyle = 'readonly';
         } else {
-            this._iconStyle =  options.buttonAdd ? 'default' : options.iconStyle;
+            this._iconStyle =  options.translucent ? 'forTranslucent' : options.iconStyle;
         }
     }
     if (this._viewMode === 'linkButton') {

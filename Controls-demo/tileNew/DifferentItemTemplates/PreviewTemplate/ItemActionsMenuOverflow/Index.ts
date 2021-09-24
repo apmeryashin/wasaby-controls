@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ItemActionsMenuOverflow/Template';
 import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from 'Controls-demo/tileNew/DataHelpers/DataCatalog';
+import {Model} from 'Types/entity';
 
 const DATA = Gadgets.getPreviewItems();
 
@@ -48,6 +49,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory = null;
     protected _actions: any[] = ACTIONS;
+    protected _clickedItem: string;
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
@@ -55,6 +57,10 @@ export default class extends Control {
             parentProperty: 'parent',
             data: DATA
         });
+    }
+
+    protected _itemClick(event: Event, item: Model): void {
+        this._clickedItem = item.getKey();
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/tileNew/TileScalingMode/style'];

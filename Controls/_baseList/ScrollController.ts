@@ -25,8 +25,8 @@ export interface IScrollParams {
     scrollHeight: number;
     rect?: DOMRect;
     applyScrollTopCallback?: Function;
-    topTriggerOffset: number;
-    bottomTriggerOffset: number;
+    topTriggerOffset?: number;
+    bottomTriggerOffset?: number;
 }
 
 export interface IOptions extends IControlOptions {

@@ -51,9 +51,11 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const iconSize = isVerticalDirection ? 'm' :
         (item.get('iconSize') || (viewMode === 'functionalButton' ? 's' : toolbarOptions.iconSize || 'm'));
 
+    const translucent = toolbarOptions.translucent || false;
+
     cfg._hoverIcon = true;
     cfg._buttonStyle = readOnly ? 'readonly' : buttonStyle;
-    cfg._translucent = toolbarOptions.translucent || false;
+    cfg._translucent = translucent;
     cfg._contrastBackground = item.get('contrastBackground');
     cfg._viewMode = viewMode;
     cfg._height = inlineHeight;
@@ -66,7 +68,7 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     cfg._icon = icon;
     cfg._isSVGIcon = isSVG;
     cfg._iconSize = iconSize;
-    cfg._iconStyle = readOnly ? 'readonly' : iconStyle;
+    cfg._iconStyle = readOnly ? 'readonly' : translucent ? 'forTranslucent' : iconStyle;
     cfg.readOnly = readOnly;
 
     return cfg;
