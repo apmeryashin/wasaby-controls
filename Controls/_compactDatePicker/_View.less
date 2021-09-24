@@ -38,7 +38,7 @@
    justify-content: center;
    align-items: center;
    flex-basis: 0;
-   flex-grow: 8;
+   flex-grow: 10;
 }
 
 .controls-CompactDatePicker__header__close-button__container,
@@ -64,7 +64,6 @@
 .controls-CompactDatePicker__header__weekdays {
    display: flex;
    justify-content: space-around;
-   font-size: var(--font-size_l);
    margin: var(--calendar_margin_compactDatePicker);
 }
 
@@ -84,7 +83,7 @@
 
 .controls-CompactDatePicker__month-list__item {
    margin: var(--calendar_margin_compactDatePicker);
-   padding-top: var(--offset_2xs);
+   padding-top: var(--offset_s);
    padding-bottom: var(--offset_m);
 }
 
@@ -106,7 +105,7 @@
    left: 0;
    right: 0;
    border-radius: 50%;
-   background: var(--calendar_today_background-color_compactDatePicker);
+   background: var(--unaccented_same_background-color);
 }
 
 .controls-MonthView__textColor-currentMonthDay-today_style-CompactDatePickerItem {
@@ -128,7 +127,7 @@
 .controls-MonthView__backgroundColor-currentMonthDay-selected-start_style-CompactDatePickerItem,
 .controls-MonthView__backgroundColor-currentMonthDay-selected-end-unfinished_style-CompactDatePickerItem,
 .controls-MonthView__backgroundColor-currentMonthDay-selected-start-unfinished_style-CompactDatePickerItem {
-   background: var(--calendar_selected-day_background-color_compactDatePicker);
+   background: var(--unaccented_contrast_background-color);
 }
 
 .controls-MonthView__backgroundColor-currentMonthDay-selected-start-unfinished_style-CompactDatePickerItem::before,
@@ -159,7 +158,7 @@
    right: var(--border-thickness);
    border-radius: 50%;
    color: var(--contrast_text-color);
-   background: var(--calendar_selected-day-edge_background-color_compactDatePicker);
+   background: var(--item_selected_color);
    display: flex;
    justify-content: center;
    align-items: center;
@@ -186,7 +185,7 @@
 }
 
 .controls-MonthView__border-hover_style-CompactDatePickerItem {
-   border: 1px solid var(--calendar_item_hover_border-color_compactDatePicker);
+   border: 1px solid var(--item_selected_color);
    border-radius: 50%;
 }
 
@@ -195,7 +194,7 @@
 }
 
 .controls-MonthView__border-currentMonthDay-unselected_style-CompactDatePickerItem:hover {
-   border: 1px solid var(--calendar_item_hover_border-color_compactDatePicker);
+   border: 1px solid var(--item_selected_color);
 }
 
 .controls-MonthView__textColor-currentMonthDay-today-readOnly_style-CompactDatePickerItem,
