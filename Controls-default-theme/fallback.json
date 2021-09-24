@@ -170,6 +170,7 @@
   "--offset_2xs": "4px",
   "--offset_xs": "6px",
   "--offset_s": "8px",
+  "--offset_st": "10px",
   "--offset_m": "12px",
   "--offset_l": "16px",
   "--offset_xl": "20px",
@@ -751,7 +752,6 @@
   "--unaccented_text-color_headingCounter": "var(--unaccented_text-color)",
   "--width_headingSeparator": "6px",
   "--height_headingSeparator": "10px",
-  "--padding-left_headingSeparator": "10px",
   "--primary_icon-color_headingSeparator": "#729EE6",
   "--secondary_icon-color_headingSeparator": "#729EE6",
   "--inline-height_headingBack": "var(--inline_height_default)",
@@ -1358,8 +1358,7 @@
   "--tick_height_slider": "4px",
   "--tick_thickness_slider": "1px",
   "--tooltip_box-shadow_slider": "0 0 6px 0 #999",
-
-  "--margin-horizontal_m_AreaCut": "10px",
+  
   "--line-height_richEditor_inputArea": "21px",
 
   "--popup_border-color_suggest": "var(--border-color)",
