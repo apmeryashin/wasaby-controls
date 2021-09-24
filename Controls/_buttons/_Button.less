@@ -6,7 +6,8 @@
 }
 
 //root tag "a" should be without underline
-.controls-BaseButton:hover, .controls-BaseButton:active {
+.controls-BaseButton:hover,
+.controls-BaseButton:active {
    text-decoration: none;
 }
 
@@ -32,9 +33,9 @@
 
 .controls-BaseButton__wrapper {
    .button-wrapper-default-style();
-   &:before {
+
+   &::before {
       content: "\200b";
-      order: 1;
    }
 }
 
@@ -102,43 +103,43 @@
    margin-left: var(--offset_m);
 }
 
-.controls-Button__wrapper_button_xs:before {
+.controls-Button__wrapper_button_xs::before {
    line-height: calc(var(--inline_height_xs) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_s:before {
+.controls-Button__wrapper_button_s::before {
    line-height: calc(var(--inline_height_s) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_m:before {
+.controls-Button__wrapper_button_m::before {
    line-height: calc(var(--inline_height_m) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_l:before {
+.controls-Button__wrapper_button_l::before {
    line-height: calc(var(--inline_height_l) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_xl:before {
+.controls-Button__wrapper_button_xl::before {
    line-height: calc(var(--inline_height_xl) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_2xl:before {
+.controls-Button__wrapper_button_2xl::before {
    line-height: calc(var(--inline_height_2xl) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_3xl:before {
+.controls-Button__wrapper_button_3xl::before {
    line-height: calc(var(--inline_height_3xl) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_4xl:before {
+.controls-Button__wrapper_button_4xl::before {
    line-height: calc(var(--inline_height_4xl) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_5xl:before {
+.controls-Button__wrapper_button_5xl::before {
    line-height: calc(var(--inline_height_5xl) - 2 * var(--border-thickness_button));
 }
 
-.controls-Button__wrapper_button_default:before {
+.controls-Button__wrapper_button_default::before {
    line-height: calc(var(--inline_height_m) - 2 * var(--border-thickness_button));
 }
 
@@ -150,6 +151,7 @@
       -ms-flex-negative: 1;
    }
 }
+
 .controls-Button__wrapper_viewMode-button,
 .controls-Button__wrapper_viewMode-toolButton,
 .controls-Button__wrapper_viewMode-functionalButton {
@@ -169,6 +171,10 @@
       justify-content: space-between;
 
       // При выравнивании через space-between, также учитывается и before, поэтому задаем ему order в середине
+      &.controls-BaseButton__wrapper::before {
+         order: 1;
+      }
+
       &.controls-BaseButton__wrapper_captionPosition_right::before {
          order: 2;
       }
@@ -254,7 +260,8 @@
    }
 }
 
-.ws-is-no-touch, .ws-is-touch {
+.ws-is-no-touch,
+.ws-is-touch {
    .controls-BaseButton:active .controls-text-link {
       color: var(--link_hover_text-color);
    }
@@ -421,14 +428,17 @@
       border-color: var(--success_hover_border-color_button_functionalButton);
       background: var(--success_hover_background-color_button_functionalButton);
    }
+
    .controls-Button_functionalButton_style-danger:hover {
       border-color: var(--danger_hover_contrast_background-color);
       background: var(--danger_hover_contrast_background-color);
    }
+
    .controls-Button_functionalButton_style-secondary:hover {
       border-color: var(--secondary_hover_contrast_background-color);
       background: var(--secondary_hover_contrast_background-color);
    }
+
    .controls-Button_functionalButton_style-unaccented:hover {
       border-color: var(--unaccented_hover_contrast_background-color);
       background: var(--unaccented_hover_contrast_background-color);
@@ -469,14 +479,17 @@
       border-color: var(--success_active_contrast_background-color);
       background: var(--success_active_background-color_button_functionalButton);
    }
+
    .controls-Button_functionalButton_style-danger:active {
       border-color: var(--danger_active_contrast_background-color);
       background: var(--danger_active_contrast_background-color);
    }
+
    .controls-Button_functionalButton_style-secondary:active {
       border-color: var(--secondary_active_contrast_background-color);
       background: var(--secondary_active_contrast_background-color);
    }
+
    .controls-Button_functionalButton_style-unaccented:active {
       border-color: var(--unaccented_active_contrast_background-color);
       background: var(--unaccented_active_contrast_background-color);
@@ -547,6 +560,7 @@
 .controls-Button_button_style-default.controls-Button_bg-contrast {
    border-color: var(--default_contrast_background-color_button);
    background: var(--default_contrast_background-color_button);
+
    .controls-Button__text_clickable_bg-contrast {
       color: var(--text-color_button);
    }
@@ -555,6 +569,7 @@
 .controls-Button_button_style-pale.controls-Button_bg-contrast {
    background: var(--pale_contrast_background-color);
    border-color: var(--pale_border-color);
+
    .controls-Button__text_clickable_bg-contrast {
       color: var(--text-color_button);
    }
@@ -587,7 +602,8 @@
    }
 }
 
-.ws-is-no-touch, .ws-is-touch {
+.ws-is-no-touch,
+.ws-is-touch {
    .for(@button_styles, {
       .controls-Button_button_style-@{_item}:active {
          background: ~"var(--@{_item}_active_same_background-color)";
@@ -609,6 +625,7 @@
    .controls-Button_button_style-pale:active {
       background: var(--pale_active_contrast_background-color);
    }
+
    .controls-Button_button_style-default:active {
       border-color: var(--default_active_border-color_button);
       background: var(--default_active_background-color_button);
@@ -623,43 +640,53 @@
 }
 
 //this is square buttons, that's why width is equal to height
-.controls-Button_toolButton_xs, .controls-Button_functionalButton_xs {
+.controls-Button_toolButton_xs,
+.controls-Button_functionalButton_xs {
    min-width: var(--inline_height_xs);
 }
 
-.controls-Button_toolButton_s, .controls-Button_functionalButton_s {
+.controls-Button_toolButton_s,
+.controls-Button_functionalButton_s {
    min-width: var(--inline_height_s);
 }
 
-.controls-Button_toolButton_m, .controls-Button_functionalButton_m {
+.controls-Button_toolButton_m,
+.controls-Button_functionalButton_m {
    min-width: var(--inline_height_m);
 }
 
-.controls-Button_toolButton_l, .controls-Button_functionalButton_l {
+.controls-Button_toolButton_l,
+.controls-Button_functionalButton_l {
    min-width: var(--inline_height_l);
 }
 
-.controls-Button_toolButton_xl, .controls-Button_functionalButton_xl {
+.controls-Button_toolButton_xl,
+.controls-Button_functionalButton_xl {
    min-width: var(--inline_height_xl);
 }
 
-.controls-Button_toolButton_2xl, .controls-Button_functionalButton_2xl {
+.controls-Button_toolButton_2xl,
+.controls-Button_functionalButton_2xl {
    min-width: var(--inline_height_2xl);
 }
 
-.controls-Button_toolButton_3xl, .controls-Button_functionalButton_3xl {
+.controls-Button_toolButton_3xl,
+.controls-Button_functionalButton_3xl {
    min-width: var(--inline_height_3xl);
 }
 
-.controls-Button_toolButton_4xl, .controls-Button_functionalButton_4xl {
+.controls-Button_toolButton_4xl,
+.controls-Button_functionalButton_4xl {
    min-width: var(--inline_height_4xl);
 }
 
-.controls-Button_toolButton_5xl, .controls-Button_functionalButton_5xl {
+.controls-Button_toolButton_5xl,
+.controls-Button_functionalButton_5xl {
    min-width: var(--inline_height_5xl);
 }
 
-.controls-Button_toolButton_default, .controls-Button_functionalButton_default {
+.controls-Button_toolButton_default,
+.controls-Button_functionalButton_default {
    min-width: var(--inline_height_default);
 }
 
@@ -896,8 +923,4 @@
 
 .controls-text-danger.controls-Button__text-danger_viewMode-link {
    color: var(--danger_text-color);
-}
-
-.controls-text-secondary.controls-Button__text-secondary_viewMode-link {
-   color: var(--secondary_text-color);
 }
