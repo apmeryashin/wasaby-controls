@@ -1415,6 +1415,10 @@ const _private = {
                             _private.tryLoadToDirectionAgain(self);
                         }
 
+                        if (!_private.isPortionedLoad(self) && self._indicatorsController.isDisplayedPortionedSearch()) {
+                            self._indicatorsController.endDisplayPortionedSearch();
+                        }
+
                         // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
                         // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
                         const hasMoreData = _private.getHasMoreData(self);
