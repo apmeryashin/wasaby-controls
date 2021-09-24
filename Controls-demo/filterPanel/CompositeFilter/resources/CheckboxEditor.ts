@@ -6,7 +6,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
 
     protected _handleValueChanged(event: SyntheticEvent, value: boolean): void {
-        this._notify('propertyValueChanged', [value], {bubbling: true});
+        this._notify('propertyValueChanged', [value]);
     }
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/filterPanel/Index'];
 }
