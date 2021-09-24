@@ -28,8 +28,9 @@
                         multiSelectVisibility="{{_multiselect}}"
                         dedicatedItemProperty="{{_dedicatedItemProperty}}"
                         columns="{{_columns}}"
-                        searchStartingWith="{{_startingWith}}">
-                </Controls.explorer:View>
+                        searchStartingWith="{{_startingWith}}"
+                        rowSeparatorSize="s"
+                />
             </Controls.list:Container>
         </div>
     </Controls.browser:Browser>
