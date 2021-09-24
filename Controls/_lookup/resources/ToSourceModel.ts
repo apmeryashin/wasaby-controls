@@ -21,6 +21,8 @@ function getSourceModel(source: IData|PrefetchProxy): Model|string {
     return model;
 }
 
+type ToSourceModelResult = RecordSet|List<Model>|List<void>;
+
 /**
  * Приводит записи к модели источника данных
  * @param {Types/collection:IList|Array} items массив записей
@@ -28,11 +30,11 @@ function getSourceModel(source: IData|PrefetchProxy): Model|string {
  * @param {String} idProperty поле элемента коллекции, которое является идентификатором записи.
  * @returns {Types/collection:IList|undefined|Array}
  */
-export function ToSourceModel(
-    items: RecordSet,
+export function ToSourceModel<T extends ToSourceModelResult>(
+    items: T,
     dataSource: IData&ICrud,
     idProperty: string
-): RecordSet|List<Model>|List<void> {
+): T {
     let dataSourceModel;
     let dataSourceModelInstance;
     let newRec;
