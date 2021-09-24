@@ -34,6 +34,8 @@ class EmptyCell extends mixin<
                 + ' controls-Grid__row-cell-background-editing_default';
         }
 
+        classes += ' ' + this._getColumnSeparatorClasses();
+
         return classes;
     }
 
