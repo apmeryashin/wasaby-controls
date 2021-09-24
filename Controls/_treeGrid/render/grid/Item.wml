@@ -22,8 +22,8 @@
                itemActionsTemplate="{{ itemActionsTemplate }}"
                itemActionsClass="{{ itemActionsClass }}"
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
-               tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
-               tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
+               tagTemplate="{{ gridColumn.TagCell ? tagTemplate : undefined }}"
+               tagStyle="{{ gridColumn.TagCell ? tagStyle : undefined }}"
                editArrowTemplate="{{ editArrowTemplate }}">
       <ws:ladderWrapper>
          <ws:partial template="{{ladderWrapper.content}}"
