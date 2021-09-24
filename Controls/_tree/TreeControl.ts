@@ -670,10 +670,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const viewModelConstructorChanged = newOptions.viewModelConstructor !== this._viewModelConstructor ||
             (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-        if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root && !viewModelConstructorChanged) {
+        if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
 
-            if (this._listViewModel) {
+            if (this._listViewModel && !viewModelConstructorChanged) {
                 this._listViewModel.setRoot(this._root);
             }
 
