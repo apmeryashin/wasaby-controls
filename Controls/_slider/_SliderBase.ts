@@ -101,7 +101,9 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
             scaleStep: undefined,
             precision: 0,
             scaleFontSize: 'm',
-            tooltipFontSize: 'l'
+            tooltipFontSize: 'l',
+            markerVisibility: true,
+            roundedEdges: false
         };
 
     }
