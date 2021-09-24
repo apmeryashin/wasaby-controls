@@ -52,9 +52,17 @@
         </div>
     </div>
     <div class="controlsDemo__cell">
-        <div attr:class="controls-text-label">controls-top-m controls-right-l controls-bottom-2xl controls-left-3xl</div>
+        <div attr:class="controls-text-label">controls-top-l controls-right-xl controls-bottom-2xl controls-left-3xl</div>
         <div class="background inline relative size_abs2">
-            <div class="controls-top-m controls-right-l controls-bottom-2xl controls-left-3xl border absolute">
+            <div class="controls-top-l controls-right-xl controls-bottom-2xl controls-left-3xl border absolute">
+
+            </div>
+        </div>
+    </div>
+    <div class="controlsDemo__cell">
+        <div attr:class="controls-text-label">controls-top-m controls-right-m controls-bottom-m controls-left-m</div>
+        <div class="background inline relative size_abs2">
+            <div class="controls-top-m controls-right-m controls-bottom-m controls-left-m border absolute">
 
             </div>
         </div>
