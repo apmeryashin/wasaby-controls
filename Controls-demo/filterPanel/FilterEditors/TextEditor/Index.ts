@@ -10,16 +10,16 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._source = new Memory({
             data: [
-                {department: 'Разработка', title: 'Разработка', isDeveloping: true},
-                {department: 'Продвижение СБИС', title: 'Продвижение СБИС', isDeveloping: false},
-                {department: 'Федеральная клиентская служка', title: 'Федеральная клиентская служка', isDeveloping: false}
+                {department: 'Разработка', title: 'Разработка', isDevelopment: true},
+                {department: 'Продвижение СБИС', title: 'Продвижение СБИС', isDevelopment: false},
+                {department: 'Федеральная клиентская служка', title: 'Федеральная клиентская служка', isDevelopment: false}
             ],
             keyProperty: 'department'
         });
         this._filterButtonSource = [
             {
                 caption: '',
-                name: 'isDeveloping',
+                name: 'isDevelopment',
                 editorTemplateName: 'Controls/filterPanel:TextEditor',
                 resetValue: false,
                 viewMode: 'basic',
