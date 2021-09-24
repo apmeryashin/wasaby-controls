@@ -16,51 +16,25 @@ export default class extends Control {
 
     protected _beforeMount(): void {
         const data = [
-            {department: 'Разработка', title: 'Разработка', amount: 10},
-            {department: 'Продвижение СБИС', title: 'Продвижение СБИС', amount: 3},
-            {department: 'Федеральная клиентская служка', title: 'Федеральная клиентская служка', amount: 30}
+            {department: 'Разработка', title: 'Разработка', isDevelopment: true},
+            {department: 'Продвижение СБИС', title: 'Продвижение СБИС', isDevelopment: false},
+            {department: 'Федеральная клиентская служка', title: 'Федеральная клиентская служка', isDevelopment: false}
         ];
         this._source = new Memory({
             data,
-            keyProperty: 'department',
-            filter: (item, queryFilter) => {
-                let addToData = true;
-                for (const filterField in queryFilter) {
-                    if (queryFilter.hasOwnProperty(filterField) && item.get(filterField) && addToData) {
-                        const filterValue = queryFilter[filterField];
-                        const itemValue = item.get(filterField);
-                        const itemValueIsNumber = typeof itemValue === 'number';
-                        addToData = ((itemValue >= filterValue[0] || !filterValue[0]) &&
-                            (itemValue <= filterValue[1] || !filterValue[1])) && itemValueIsNumber || (filterValue.includes(itemValue) || !filterValue.length);
-                    }
-                }
-                return addToData;
-            }
+            keyProperty: 'department'
         });
         this._filterButtonSource = [
             {
-                group: 'Количество сотрудников',
-                name: 'amount',
-                editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
-                resetValue: [],
+                group: 'Разработка',
+                name: 'isDevelopment',
+                editorTemplateName: 'Controls-demo/filterPanel/CompositeFilter/resources/CheckboxEditor',
+                resetValue: false,
                 caption: '',
-                value: [],
-                textValue: ''
-            }, {
-                group: 'Отдел',
-                name: 'department',
-                resetValue: [],
-                caption: '',
-                value: [],
+                value: true,
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
-                    keyProperty: 'department',
-                    displayProperty: 'title',
-                    source: new Memory({
-                        data,
-                        keyProperty: 'department'
-                    })
+                    caption: 'Разработка'
                 }
             }
         ];
