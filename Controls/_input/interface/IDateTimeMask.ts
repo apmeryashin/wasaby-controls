@@ -62,7 +62,7 @@ export interface IDateTimeMask {
  * В этом примере маска задана таким образом, что в поле ввода можно ввести только время.
  * После ввода пользователем “09:30”, значение _inputValue будет равно 01.01.1904 09:30.000.
  * <pre>
- *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
+ *    <Controls.date:BaseInput bind:value="_inputValue" mask=”HH:mm”/>
  * </pre>
  * <pre>
  *    class DateControl extends Control<IControlOptions> {
@@ -72,7 +72,7 @@ export interface IDateTimeMask {
  * </pre>
  * В следующем примере после ввода пользователем “09:30”, значение _inputValue будет равно 10.03.2018 09:30.000
  * <pre>
- *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
+ *    <Controls.date:BaseInput bind:value="_inputValue" mask=”HH:mm”/>
  * </pre>
  * <pre>
  *    class DateControl extends Control<IControlOptions> {

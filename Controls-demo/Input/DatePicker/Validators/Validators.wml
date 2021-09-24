@@ -1,12 +1,12 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">Поле обязательное для заполнения</div>
-        <Controls.input:Date bind:value="_value">
+        <Controls.date:Input bind:value="_value">
             <ws:valueValidators>
                 <ws:Array>
                     <ws:Function>Controls/validate:isRequired</ws:Function>
                 </ws:Array>
             </ws:valueValidators>
-        </Controls.input:Date>
+        </Controls.date:Input>
     </div>
 </div>

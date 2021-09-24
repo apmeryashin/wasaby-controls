@@ -34,7 +34,7 @@ export interface IInputDisplayValue {
  * @example
  * В этом примере дата задается текстом. Изменение даты отслеживается с помощью события {@link Controls/_input/interface/IInputDateTime#valueChanged valueChanged}.
  * <pre>
- *    <Controls.input:DateBase displayValue="{{_displayValue}}" inputMode="partial" on:valueChanged="_onValueChanged()"/>
+ *    <Controls.date:BaseInput displayValue="{{_displayValue}}" inputMode="partial" on:valueChanged="_onValueChanged()"/>
  * </pre>
  * <pre>
  *    protected _displayValue: string = '  .  .21';
@@ -56,7 +56,7 @@ export interface IInputDisplayValue {
  * В этом случае получается не срабатывает автоподстановка и валидация. Но дата получается невалидная.
  * По этому работаем с ее текстовым представленем через опцию displayValue.
  * <pre>
- *    <Controls.input:DateBase displayValue="{{_displayValue}}" inputMode="partial" on:valueChanged="_onValueChanged()"/>
+ *    <Controls.date:BaseInput displayValue="{{_displayValue}}" inputMode="partial" on:valueChanged="_onValueChanged()"/>
  * </pre>
  * <pre>
  *    protected _displayValue: string = '  .  .21';
