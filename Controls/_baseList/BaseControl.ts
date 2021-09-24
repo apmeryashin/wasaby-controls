@@ -642,8 +642,11 @@ const _private = {
         if (self._sourceController) {
             const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
             if (_private.isPortionedLoad(self)) {
-                if (direction === 'up' && self._indicatorsController.getPortionedSearchDirection() !== 'up') {
-                    // После того как закончились данные вниз, мы можем по скроллу начать подгрузку данных уже вверх.
+                const portionedSearchDirection = self._indicatorsController.getPortionedSearchDirection();
+                if (direction === 'up' && portionedSearchDirection !== 'up' && !self._hasMoreData('down')) {
+                    // Если включен порицонный поиск в обе стороны, то мы в первую очередь грузим данные вниз
+                    // до самого конца. После этого показываем индикатор и триггер сверху. И по скроллу, если больше
+                    // нет данных вниз и порционный поиск уже не идет вверх, продолжаем искать данные вверх.
                     self._indicatorsController.continueDisplayPortionedSearch('top');
                 }
             } else {
