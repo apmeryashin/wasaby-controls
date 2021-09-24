@@ -1,6 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import TreeGridDataCell from './TreeGridDataCell';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
+import TreeGridNodeFooterRow from 'Controls/_treeGrid/display/TreeGridNodeFooterRow';
 
 /**
  * Ячейка футера узла в иерархической таблице
@@ -11,13 +12,9 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
     readonly listInstanceName: string =  'controls-TreeGrid__node-footer-cell';
 
     getTemplate(content?: TemplateFunction): TemplateFunction|string {
-        const nav = this.getOwner().getOwner().getNavigation();
-        const isInfinityNav = nav?.view === 'infinity';
-
-        // Если подгрузка данных осуществляется по скролу, то нет смысла выводить кнопку "Ещё".
         // TODO: Возвращать шаблон кнопки "Ещё".
         //  https://online.sbis.ru/opendoc.html?guid=15b9412b-159f-463c-9f4e-fa15a64fda4b
-        return !isInfinityNav && this._$owner.hasMoreStorage() ? null : content;
+        return (this.getOwner() as TreeGridNodeFooterRow).needMoreButton() ? null : content;
     }
 
     getContentClasses(
@@ -32,6 +29,10 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
             'controls-TreeGrid__nodeFooterContent' +
             ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}` +
             ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+
+        if (this.getOwner().isFullGridSupport()) {
+            classes += ' controls-TreeGrid__nodeFooterContent__baseline';
+        }
 
         if (colspan !== false) {
             classes += ' controls-TreeGrid__nodeFooterContent_colspaned';
@@ -89,6 +90,10 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
         }
 
         return 1;
+    }
+
+    getRelativeCellWrapperClasses(): string {
+        return super.getRelativeCellWrapperClasses() + ' controls-TreeGrid__nodeFooterContent__baseline';
     }
 }
 

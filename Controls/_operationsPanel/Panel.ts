@@ -36,15 +36,14 @@ export default class extends Control<IOperationsPanelOptions> {
     }
 
     protected _beforeUpdate(options: IOperationsPanelOptions): void {
-        if (this._shouldOpenMenu(options)) {
-            this._operationsController.setOperationsMenuVisible(true);
-        }
-
         if (this._options.selectedKeys !== options.selectedKeys ||
             this._options.excludedKeys !== options.excludedKeys ||
             this._options.selectedKeysCount !== options.selectedKeysCount
         ) {
             this._openCloud(options);
+            if (this._shouldOpenMenu(options)) {
+                this._operationsController.setOperationsMenuVisible(true);
+            }
         }
     }
 
@@ -87,7 +86,8 @@ export default class extends Control<IOperationsPanelOptions> {
                 excludedKeys: options.excludedKeys,
                 selectedKeysCount: options.selectedKeysCount,
                 isAllSelected: options.isAllSelected,
-                selectedCountConfig: options.selectedCountConfig
+                selectedCountConfig: options.selectedCountConfig,
+                operationsController: this._operationsController
             },
             eventHandlers: {
                 onClose: () => {

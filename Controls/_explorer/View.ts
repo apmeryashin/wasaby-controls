@@ -239,6 +239,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     private _pendingViewMode: TExplorerViewMode;
 
     private _items: RecordSet;
+    // Флаг идентифицирует что идет проваливание в папку. Именно проваливание, а не возврат по крошкам
     private _isGoingFront: boolean;
     //endregion
 
@@ -972,8 +973,8 @@ export default class Explorer extends Control<IExplorerOptions> {
             // [ ключ папки -> обновление бинда -> цикл -> treeControl: ключ null (itemsSetCallback) ->
             // baseControl: ключ по бинду ]
 
-            // https://online.sbis.ru/opendoc.html?guid=fe8dec0c-8396-45d3-9609-6163eee40346
-            // this._children.treeControl.setMarkedKey(null);
+            // При проваливании в папку маркер нужно сбрасывать
+            this._children.treeControl.setMarkedKey(null);
 
             // После перехода на наследование, между обновлением treeControl и baseControl разрыва нет, более того,
             // поменялся порядок апдейтов контролов. После перевода на наследование сначала обновляется BaseControl.
@@ -1300,8 +1301,8 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_explorer.less переменные тем оформления explorer}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_list.less переменные тем оформления list}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_explorer.less переменные тем оформления explorer}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_list.less переменные тем оформления list}
  *
  * @demo Controls-demo/Explorer/Explorer
  * @demo Controls-demo/Explorer/Search

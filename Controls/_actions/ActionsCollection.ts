@@ -51,6 +51,10 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         this._updateToolbarItems();
     }
 
+    filterChanged(filter: object): void {
+        this._callChangeAction('filterChanged', [filter]);
+    }
+
     private _initActions(options: IActionsCollectionOptions): void {
         this._childItems = {};
         const listActions = this._prepareActionsShowType(options.listActions);
@@ -96,9 +100,10 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
             return action;
         } else {
             const parentKey = item.get('parent');
-            const parentItem = Object.values(this._childItems).find((childs) => {
+            const parentRS = Object.values(this._childItems).find((childs) => {
                 return childs.getRecordById(parentKey);
             });
+            const parentItem = parentRS?.getRecordById(parentKey);
             if (!parentItem) {
                 return this.getActionById(parentKey);
             } else {
@@ -116,11 +121,11 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     }
 
     collectionChange(items: RecordSet, selection: ISelectionObject): void {
-        this._callChangeAction('onCollectionChanged', items, selection);
+        this._callChangeAction('onCollectionChanged', [items, selection]);
     }
 
     selectionChange(items: RecordSet, selection: ISelectionObject): void {
-        this._callChangeAction('onSelectionChanged', items, selection);
+        this._callChangeAction('onSelectionChanged', [items, selection]);
     }
 
     setOperationsPanelVisible(state: boolean): void {
@@ -128,10 +133,10 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         this._notifyConfigChanged();
     }
 
-    private _callChangeAction(methodName: string, items: RecordSet, selection?: ISelectionObject): void {
+    private _callChangeAction(methodName: string, changedArgs: unknown[]): void {
         this._listActions.forEach((action) => {
             if (action[methodName]) {
-                action[methodName].call(action, items, selection);
+                action[methodName].apply(action, changedArgs);
             }
         });
     }
@@ -163,10 +168,6 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
         }).sort((operationFirst, operationSecond) => {
             return operationFirst.order - operationSecond.order;
         });
-    }
-
-    private _isListAction(item: IAction): boolean {
-        return this._options.listActions.includes(item);
     }
 
     private _updateToolbarItems(): void {

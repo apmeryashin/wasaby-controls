@@ -19,7 +19,7 @@ import {
    Direction,
    INavigationSourceConfig
 } from 'Controls/interface';
-import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions} from 'Controls/error';
+import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions, process} from 'Controls/error';
 import {SyntheticEvent} from 'UI/Vdom';
 import {isEqual} from 'Types/object';
 
@@ -66,7 +66,7 @@ interface IReceivedState {
  *
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch демо-пример}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_list.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_list.less переменные тем оформления}
  * * {@link Controls/list:Container}
  *
  * @class Controls/_list/Data
@@ -149,6 +149,8 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
+      this._onDataLoad = this._onDataLoad.bind(this);
+      this._onDataLoadError = this._onDataLoadError.bind(this);
       this._errorController = options.errorController || new ErrorController({});
       this._loadToDirectionRegister = new RegisterClass({register: 'loadToDirection'});
 
@@ -269,18 +271,8 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       sourceController.subscribe('breadcrumbsDataChanged', () => {
          this._updateBreadcrumbsFromSourceController();
       });
-      sourceController.subscribe('dataLoadError', (event, error, root, direction) => {
-         if (this._isMounted) {
-            this._processAndShowError(
-                {error, ...this._getErrorConfig(sourceController.getRoot(), root, direction)}
-            );
-         }
-         this._loading = false;
-      });
-      sourceController.subscribe('dataLoad', () => {
-         this._hideError();
-         this._loading = false;
-      });
+      sourceController.subscribe('dataLoadError', this._onDataLoadError);
+      sourceController.subscribe('dataLoad', this._onDataLoad);
       sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
    }
 
@@ -394,6 +386,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          this._loadToDirectionRegister = null;
       }
       if (this._sourceController) {
+         this._sourceController.unsubscribe('dataLoad', this._onDataLoad);
          if (!this._options.sourceController) {
             this._sourceController.destroy();
          }
@@ -547,10 +540,32 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    private _onDataError(event: SyntheticEvent, errorConfig: ErrorViewConfig): void {
       event?.stopPropagation();
-      this._processAndShowError({
-         error: errorConfig.error,
-         mode: errorConfig.mode || ErrorViewMode.dialog
-      });
+
+      if (errorConfig?.mode) {
+         this._processAndShowError({
+            error: errorConfig.error,
+            mode: errorConfig.mode || ErrorViewMode.dialog
+         });
+      } else {
+         process(errorConfig);
+      }
+   }
+
+   private _onDataLoad(): void {
+      this._loading = false;
+      this._hideError();
+   }
+
+   private _onDataLoadError(event: SyntheticEvent, error: Error, root: TKey, direction: Direction): void {
+      if (this._isMounted) {
+         const currentRoot = this._sourceController.getRoot();
+         if (root === currentRoot) {
+            this._processAndShowError({error, ...this._getErrorConfig(currentRoot, root, direction)});
+         } else {
+            process({error});
+         }
+         this._loading = false;
+      }
    }
 
    private _showError(errorConfig: ErrorViewConfig): void {

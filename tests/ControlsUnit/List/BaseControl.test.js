@@ -235,55 +235,6 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
       });
 
-      it('_private::needLoadNextPageAfterLoad', function() {
-         let list = new collection.RecordSet({
-            rawData: [
-               {
-                  id: 0,
-                  title: 'test'
-               }
-            ]
-         });
-         let emptyList = new collection.RecordSet({});
-         let metaMore = {
-            more: true
-         };
-         let infinityNavigation = {
-            view: 'infinity',
-            viewConfig: {}
-         };
-         let maxCountNaviation = {
-            view: 'maxCount',
-            viewConfig: {
-               maxCountValue: 10
-            }
-         };
-         let itemsCount = 1;
-         let listViewModel = {
-            getCount: () => itemsCount
-         };
-         emptyList.setMetaData(metaMore);
-         list.setMetaData(metaMore);
-
-         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, infinityNavigation));
-         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, maxCountNaviation));
-
-         assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, infinityNavigation));
-         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, maxCountNaviation));
-
-
-         itemsCount = 20;
-         assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, infinityNavigation));
-         assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, maxCountNaviation));
-
-         metaMore = {
-            more: true,
-            iterative: true
-         };
-         emptyList.setMetaData(metaMore);
-         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, infinityNavigation));
-      });
-
       describe('_private::loadToDirectionIfNeed', () => {
          const getInstanceMock = function() {
             return {
@@ -4289,7 +4240,6 @@ define([
             baseCtrl.reloadItem(1).addCallback((item) => {
                assert.equal(item.get('id'), 1);
                assert.equal(item.get('title'), 'Первый');
-               assert.isFalse(baseCtrl._itemReloaded);
                resolve();
             });
          });

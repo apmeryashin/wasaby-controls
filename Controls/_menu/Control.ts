@@ -131,6 +131,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectedKeysChanged = this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys);
         let result;
 
+        if (newOptions.isDragging && this._options.isDragging !== newOptions.isDragging) {
+            this._closeSubMenu();
+        }
+
         if (newOptions.sourceController && newOptions.searchParam &&
             newOptions.searchValue && searchValueChanged) {
             this._notifyResizeAfterRender = true;
@@ -215,6 +219,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
         // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
         if (item.getContents() instanceof Model && !this._isTouch() &&
+            !this._options.isDragging &&
             sourceEvent.target.closest('.controls-menu') === this._container) {
             this._clearClosingTimout();
             this._setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
@@ -265,7 +270,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _itemClick(event: SyntheticEvent<MouseEvent>,
                          item: Model,
                          sourceEvent: SyntheticEvent<MouseEvent>): void {
-        if (item.get('readOnly')) {
+        if (item.get('readOnly') || this._options.isDragging) {
             return;
         }
         const key: string | number = item.getKey();
@@ -820,6 +825,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (options.nodeProperty) {
             data[options.nodeProperty] = false;
         }
+        for (let field in data) {
+            this._addField(field, emptyItem, emptyItem.getFormat());
+        }
         emptyItem.set(data);
         items.prepend([emptyItem]);
     }
@@ -1045,6 +1053,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 additionalProperty: null,
                 searchParam: null,
                 itemPadding: null,
+                draggable: false,
                 source,
                 items: isLoadedChildItems ? this._options.items : null,
                 ...item.getContents().get('menuOptions'),
@@ -1097,16 +1106,21 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _subMenuDataLoadCallback(items: RecordSet): void {
         const origCollectionFormat = this._listModel.getCollection().getFormat();
+        const collection = this._listModel.getCollection();
         items.getFormat().forEach((field) => {
             const name = field.getName();
-            if (origCollectionFormat.getFieldIndex(name) === -1) {
-                this._listModel.getCollection().addField({
-                    name,
-                    type: 'string'
-                });
-            }
+            this._addField(name, collection, origCollectionFormat);
         });
         this._listModel.getCollection().append(items);
+    }
+
+    private _addField(name: string, items, format): void {
+        if (format.getFieldIndex(name) === -1) {
+            items.addField({
+                name,
+                type: 'string'
+            });
+        }
     }
 
     private _updateItemActions(listModel: Collection<Model>, options: IMenuControlOptions): void {

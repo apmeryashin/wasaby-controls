@@ -49,6 +49,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         targetPoint: options.targetPoint,
         menuPopupOptions: options.menuPopupOptions,
         closeMenuOnOutsideClick: options.closeMenuOnOutsideClick,
+        menuDraggable: options.menuDraggable,
         additionalProperty: options.additionalProperty,
         groupingKeyCallback: options.groupingKeyCallback,
         parentProperty: options.parentProperty,
@@ -67,6 +68,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         minSearchLength: options.minSearchLength,
         searchDelay: options.searchDelay,
         searchValueTrim: options.searchValueTrim,
+        searchPlaceholder: options.searchPlaceholder,
         subMenuDirection: options.subMenuDirection
     };
     return dropdownOptions;

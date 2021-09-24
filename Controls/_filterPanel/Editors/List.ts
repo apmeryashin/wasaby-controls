@@ -83,7 +83,7 @@ class ListEditor extends Control<IListEditorOptions> {
         this._selectedKeys = options.propertyValue;
         this._setColumns(options, options.propertyValue);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
-        this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
+        this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
     }
 
@@ -107,14 +107,12 @@ class ListEditor extends Control<IListEditorOptions> {
             this._navigation = this._getNavigation(options);
         }
         if (filterChanged || valueChanged) {
-            this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
+            this._setFilter(this._selectedKeys, options);
         }
     }
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
-        if (!this._items) {
-            this._items = items;
-        }
+        this._items = items;
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
@@ -126,12 +124,12 @@ class ListEditor extends Control<IListEditorOptions> {
                 selectedKeysArray.unshift(item.get(this._options.keyProperty));
             }
             this._editorTarget = this._getEditorTarget(nativeEvent);
-            this._processPropertyValueChanged(selectedKeysArray, selectedKeysArray.length === 1);
+            this._processPropertyValueChanged(selectedKeysArray);
         }
     }
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: string[]|number[]): void {
-        this._processPropertyValueChanged(keys, !this._options.multiSelect);
+        this._processPropertyValueChanged(keys);
     }
 
     protected _handleCheckBoxClick(event: SyntheticEvent, keys: string[]|number[]): void {
@@ -139,7 +137,7 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _handleSelectedKeyChanged(event: SyntheticEvent, key: string|number): void {
-        this._processPropertyValueChanged([key], !this._options.multiSelect);
+        this._processPropertyValueChanged([key]);
     }
 
     protected _handleSelectorResult(result: Model[]): void {
@@ -149,10 +147,10 @@ class ListEditor extends Control<IListEditorOptions> {
         });
         if (selectedKeys.length) {
             this._items.assign(result);
-            this._setFilter(selectedKeys, this._options.filter, this._options.keyProperty);
+            this._setFilter(selectedKeys, this._options);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
-        this._processPropertyValueChanged(selectedKeys, true);
+        this._processPropertyValueChanged(selectedKeys);
     }
 
     protected _handleFooterClick(event: SyntheticEvent): void {
@@ -177,17 +175,16 @@ class ListEditor extends Control<IListEditorOptions> {
         });
     }
 
-    protected _processPropertyValueChanged(value: string[] | number[], needCollapse: boolean): void {
+    protected _processPropertyValueChanged(value: string[] | number[]): void {
         this._selectedKeys = value;
         this._setColumns(this._options, this._selectedKeys);
-        this._notify('propertyValueChanged', [this._getExtendedValue(needCollapse)], {bubbling: true});
+        this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
     }
 
-    protected _getExtendedValue(needCollapse?: boolean): object {
+    protected _getExtendedValue(): object {
         return {
             value: this._selectedKeys,
-            textValue: this._getTextValue(this._selectedKeys),
-            needCollapse
+            textValue: this._getTextValue(this._selectedKeys)
         };
     }
 
@@ -215,10 +212,10 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    private _setFilter(selectedKeys: string[]|number[], filter: object, keyProperty: string): void {
-        this._filter = {...filter};
+    private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
+        this._filter = {...options.filter};
         if (selectedKeys && selectedKeys.length) {
-            this._filter[keyProperty] = selectedKeys;
+            this._filter[options.keyProperty] = selectedKeys;
         }
     }
 

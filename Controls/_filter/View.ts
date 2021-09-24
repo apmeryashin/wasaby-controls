@@ -92,8 +92,8 @@ const FILTER_PANEL_POPUP = 'Controls/filterPanelPopup';
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter/filter-view/ руководство разработчика по работе с контролом}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_filter.less переменные тем оформления filter}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_filterPopup.less переменные тем оформления filterPopup}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_filter.less переменные тем оформления filter}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_filterPopup.less переменные тем оформления filterPopup}
  *
  * @public
  * @author Михайлов С.Е.
@@ -258,7 +258,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
     protected _resetDisplayText(oldItems: IFilterItem[], newItems: IFilterItem[], displayText: IDisplayText): void {
         factory(newItems).each((newItem) => {
-            const oldItem = this._getItemByName(oldItems, newItem[newItem.name]);
+            const oldItem = this._getItemByName(oldItems, newItem.name);
             if (
                 (!oldItem ||
                 this._isFrequentItem(oldItem) &&
@@ -731,17 +731,26 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         return selection.length > 1 ? ', ' + rk('еще') + ' ' + (selection.length - 1) : '';
     }
 
+    private _getTextFromItems(items: RecordSet, selectedKeys: string[], config: IFilterItemConfig): string[] {
+        const text = [];
+        factory(selectedKeys).each((key) => {
+            const selectedItem = config.items.at(config.items.getIndexByValue(config.keyProperty, key));
+            if (selectedItem) {
+                text.push(object.getPropertyValue(selectedItem, config.displayProperty));
+            }
+        });
+        return text;
+    }
+
     private _getFastText(config: IFilterItemConfig, selectedKeys: string[], item?: IFilterItem): IDisplayText {
-        const textArr = [];
+        let textArr = [];
         if (selectedKeys[0] === config.emptyKey && config.emptyText) {
             textArr.push(config.emptyText);
         } else if (config.items) {
-            factory(selectedKeys).each((key) => {
-                const selectedItem = config.items.at(config.items.getIndexByValue(config.keyProperty, key));
-                if (selectedItem) {
-                    textArr.push(object.getPropertyValue(selectedItem, config.displayProperty));
-                }
-            });
+            textArr = this._getTextFromItems(config.items, selectedKeys, config);
+            if (!textArr.length && item?.textValue) {
+                textArr.push(item.textValue);
+            }
         } else if (item?.textValue) {
             textArr.push(item.textValue);
         }

@@ -73,7 +73,7 @@ export class StickyStrategy {
          if (popupCfg.fittingMode[direction] === 'fixed') {
             resultPosition = this._calculateFixedModePosition(popupCfg, property, targetCoords,
                                                               position, positionOverflow);
-         } else if (popupCfg.fittingMode[direction] === 'overflow') {
+         } else if (popupCfg.fittingMode[direction] === 'overflow' || popupCfg.fixPosition) {
             resultPosition = this._calculateOverflowModePosition(popupCfg, property, targetCoords,
                                                                  position, positionOverflow, direction);
          } else {
@@ -117,7 +117,13 @@ export class StickyStrategy {
    ): IPopupPosition {
       const position = {};
       const isHorizontal = direction === 'horizontal';
-      if (popupCfg.direction[direction] === 'center') {
+      if (popupCfg.fixPosition) {
+         let coord: string = isHorizontal ? 'left' : 'top';
+         if (popupCfg.direction[direction] === coord) {
+            coord = isHorizontal ? 'right' : 'bottom';
+         }
+         position[coord] = popupCfg.position[coord];
+      } else if (popupCfg.direction[direction] === 'center') {
          const coord: string = isHorizontal ? 'left' : 'top';
          const targetCoord: number = targetCoords[coord];
          const targetSize: number = targetCoords[isHorizontal ? 'width' : 'height'];
@@ -163,7 +169,7 @@ export class StickyStrategy {
       const restrictiveContainerPosition = popupCfg.restrictiveContainerCoords;
       const restrictiveContainerCoord = restrictiveContainerPosition?.[popupDirection] || 0;
 
-      if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
+      if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom') && !popupCfg.fixPosition) {
          if (position[isHorizontal ? 'right' : 'bottom'] < 0) {
             return -(position[isHorizontal ? 'right' : 'bottom']);
          }
@@ -202,7 +208,12 @@ export class StickyStrategy {
       const viewportOffset: number = isHorizontal ?
           0 : visualViewport.offsetTop || visualViewport.pageTop;
 
-      const positionValue: number = position[isHorizontal ? 'left' : 'top'];
+      let positionValue: number;
+      if (popupCfg.fixPosition) {
+         positionValue = position[isHorizontal ? 'left' : 'top'] || position[isHorizontal ? 'right' : 'bottom'];
+      } else {
+         positionValue = position[isHorizontal ? 'left' : 'top'];
+      }
       const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
       const windowSize = this._getWindowSizes(targetElement)[isHorizontal ? 'width' : 'height'];
       // Размер restrictiveContainer не больше размера экрана
@@ -219,7 +230,9 @@ export class StickyStrategy {
       popupCfg.targetPoint[direction] = INVERTING_CONST[popupCfg.targetPoint[direction]];
       popupCfg.direction[direction] = INVERTING_CONST[popupCfg.direction[direction]];
       popupCfg.offset[direction] *= -1;
-      popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
+      if (popupCfg.sizes.margins) {
+         popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
+      }
    }
 
    private _moveContainer(popupCfg: IStickyPositionConfig, position: IPopupPosition,
@@ -418,7 +431,9 @@ export class StickyStrategy {
    }
 
    private _getMargins(popupCfg: IStickyPositionConfig, direction: TDirection): number {
-      return popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] + popupCfg.offset[direction];
+      const margins = popupCfg.sizes.margins && popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] || 0;
+      const offset = popupCfg.offset[direction] || 0;
+      return margins + offset;
    }
 
    private _getWindow(): Window {

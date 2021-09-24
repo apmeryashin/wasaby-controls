@@ -19,6 +19,11 @@ export interface ITileMenuActionsOptions extends IControlOptions {
  */
 export default class extends Control <ITileMenuActionsOptions> {
     protected _template: TemplateFunction = template;
+
+    protected _itemClick(event: Event) {
+        this._notify('sendResult', ['click', null, event], {bubbling: true});
+    }
+
     protected _sendResult(
         event: SyntheticEvent<MouseEvent>,
         action: string,

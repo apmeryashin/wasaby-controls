@@ -5,6 +5,7 @@ import coreMerge = require('Core/core-merge');
 import {descriptor, Date as WSDate} from 'Types/entity';
 import {IRangeSelectable} from 'Controls/dateRange';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
+import {getResetButtonVisible} from 'Controls/dateRange';
 import {Range, Base as dateUtils} from 'Controls/dateUtils';
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
 import periodDialogUtils from './_datePopup/Utils';
@@ -476,14 +477,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     _updateResetButtonVisible(options): void {
-        const hasResetStartValue = options.resetStartValue || options.resetStartValue === null;
-        const hasResetEndValue = options.resetEndValue || options.resetEndValue === null;
-
-        this._resetButtonVisible = (hasResetStartValue &&
-            (!dateUtils.isDatesEqual(this._rangeModel.startValue, options.resetStartValue) ||
-            this._rangeModel.startValue !== options.resetStartValue)) ||
-            (hasResetEndValue && (!dateUtils.isDatesEqual(this._rangeModel.endValue, options.resetEndValue)
-            || this._rangeModel.endValue !== options.resetEndValue));
+        this._resetButtonVisible = Range.getResetButtonVisible(this._rangeModel.startValue, this._rangeModel.endValue,
+            options.resetStartValue, options.resetEndValue);
     }
 
     fixedPeriodClick(start: Date, end: Date): void {

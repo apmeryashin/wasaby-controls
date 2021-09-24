@@ -17,12 +17,12 @@
               on:click="_resetButtonClickHandler()"></span>
     </ws:if>
     <ws:if data="{{ _options.prevArrowVisibility && !_options.readOnly}}">
-        <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-prev"
+        <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow controls-RangeShortSelectorLink__arrow-prev"
                                       direction="left"
                                       on:click="shiftBack()"/>
     </ws:if>
     <ws:if data="{{ _options.nextArrowVisibility && !_options.readOnly}}">
-        <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-next"
+        <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow controls-RangeShortSelectorLink__arrow-next"
                                       direction="right"
                                       on:click="shiftForward()"/>
     </ws:if>

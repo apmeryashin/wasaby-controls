@@ -69,6 +69,11 @@ export default class HeaderRow extends Row<null> {
         return superIndex - ladderCells;
     }
 
+    getStickyHeaderPosition(): {} {
+        return {
+            vertical: 'top'
+        };
+    }
 
     protected _processStickyLadderCells(): void {
         // todo Множественный stickyProperties можно поддержать здесь:

@@ -142,8 +142,10 @@ class ModuleClass {
     private _updateSteps(dateRanges) {
         this._steps = [];
         for (const i = 0; i < dateRanges.length - 1; i++) {
-            if (this._rangeIsNotEmpty(dateRanges[i])) {
-                this._steps[i] = this._getMonthCount(dateRanges[i][0], dateRanges[i + 1][0]);
+            const currentRange = dateRanges[i];
+            const nextRange = dateRanges[i + 1];
+            if (this._rangeIsNotEmpty(currentRange) && this._rangeIsNotEmpty(nextRange)) {
+                this._steps[i] = this._getMonthCount(currentRange[0], nextRange[0]);
             }
         }
     }

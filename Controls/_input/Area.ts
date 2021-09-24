@@ -26,7 +26,7 @@ import 'css!Controls/input';
  *
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/input/text/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_input.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
  * @class Controls/_input/Area
  * @extends Controls/input:BaseText
@@ -323,6 +323,10 @@ export default class Area extends BaseText<IAreaOptions> {
          * Так как размеры textarea зависят от fakeField, поэтому их значения на момент перерисовки страници должны быть одинаковыми. Иначе
          * возникают проблемы 1-2. Чтобы избежать проблем меняем значение fakeField в обработчике.
          */
+        // под реактом патчить DOM на beforeUpdate нельзя, т.к. реакт не сможет удалить дочерний DOM элемент при синхронизации
+        if (this.UNSAFE_isReact) {
+            return;
+        }
         if (!this._options.readOnly && (detection.isMacOSDesktop || detection.chrome)) {
             this._children.fakeField.innerText = this._viewModel.displayValue + this._field.scope.emptySymbol;
         }

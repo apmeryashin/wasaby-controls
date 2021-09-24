@@ -5,8 +5,10 @@ import {
     DragScrollController,
     StyleContainers
 } from 'Controls/columnScroll';
+import {TKey} from 'Controls/interface';
 import {SyntheticEvent} from 'UI/Vdom';
 import {DestroyableMixin} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
 
 interface IColumnScrollMixinOptions {
     columnScroll?: boolean;
@@ -20,8 +22,11 @@ interface IColumnScrollMixinOptions {
 interface IViewOptions extends IControlOptions, IColumnScrollMixinOptions {
     columns: Object[];
     header: Object[];
+    items: RecordSet;
     backgroundStyle?: string;
     needShowEmptyTemplate?: boolean;
+    expandedItems?: TKey[];
+    collapsedItems?: TKey[];
     itemsDragNDrop?: boolean;
     headerVisibility?: string;
     headerInEmptyListVisible?: boolean;

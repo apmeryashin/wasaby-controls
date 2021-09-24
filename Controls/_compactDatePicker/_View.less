@@ -1,3 +1,7 @@
+.controls-CompactDatePicker__container {
+   padding-bottom: var(--offset_m);
+}
+
 .controls-CompactDatePicker {
    box-shadow: var(--box-shadow_dialog);
    width: var(--width_compactDatePicker);
@@ -73,13 +77,15 @@
 }
 
 .controls-CompactDatePicker__month-list {
+   background: var(--background-color);
    width: 100%;
    height: 100%;
 }
 
 .controls-CompactDatePicker__month-list__item {
    margin: var(--calendar_margin_compactDatePicker);
-   padding-top: var(--offset_xs);
+   padding-top: var(--offset_2xs);
+   padding-bottom: var(--offset_m);
 }
 
 .controls-MonthViewVDOM__item_style-CompactDatePickerItem {
@@ -107,24 +113,44 @@
    font-weight: bold;
 }
 
-.controls-MonthView__backgroundColor-currentMonthDay-selected_style-CompactDatePickerItem {
-   background: var(--calendar_selected-day_background-color_compactDatePicker);
-   width: calc(var(--calendar_item-size_compactDatePicker) + 2 * var(--border-thickness));
-   margin-left: 0;
-   margin-right: 0;
-}
-
+.controls-MonthView__backgroundColor-currentMonthDay-selected_style-CompactDatePickerItem,
 .controls-MonthView__item-border-start_style-CompactDatePickerItem,
-.controls-MonthView__item-border-end_style-CompactDatePickerItem {
-   background: var(--calendar_selected-day_background-color_compactDatePicker);
+.controls-MonthView__item-border-end_style-CompactDatePickerItem,
+.controls-MonthView__item-border-start-end_style-CompactDatePickerItem {
    width: calc(var(--calendar_item-size_compactDatePicker) + 2 * var(--border-thickness));
    margin-left: 0;
    margin-right: 0;
 }
 
-.controls-MonthView__item-border-start-end_style-CompactDatePickerItem::before,
-.controls-MonthView__item-border-start_style-CompactDatePickerItem::before,
-.controls-MonthView__item-border-end_style-CompactDatePickerItem::before {
+.controls-MonthView__backgroundColor-currentMonthDay-selected_style-CompactDatePickerItem,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-base_style-CompactDatePickerItem,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-end_style-CompactDatePickerItem,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-start_style-CompactDatePickerItem,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-end-unfinished_style-CompactDatePickerItem,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-start-unfinished_style-CompactDatePickerItem {
+   background: var(--calendar_selected-day_background-color_compactDatePicker);
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-selected-start-unfinished_style-CompactDatePickerItem::before,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-end-unfinished_style-CompactDatePickerItem::before {
+   content: "";
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: var(--border-thickness);
+   right: var(--border-thickness);
+   border-radius: 50%;
+   border: 1px solid #000;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-selected-base_style-CompactDatePickerItem::before,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-start_style-CompactDatePickerItem::before,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-end_style-CompactDatePickerItem::before,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-startend-unfinished_style-CompactDatePickerItem::before,
+.controls-MonthView__backgroundColor-currentMonthDay-selected-startend_style-CompactDatePickerItem::before {
    content: attr(date);
    position: absolute;
    top: 0;
@@ -181,4 +207,9 @@
 .controls-Scroll__shadow_top_style-CompactDatePicker {
    // Нам нужен градиент переходящий в прозрачный цвет, поэтому переменная не нужна
    background: linear-gradient(to bottom, var(--shadow_start-color_compactDatePicker), rgba(255, 255, 255, 0));
+}
+
+.controls-CompactDatePicker__selector-margin {
+   margin-top: calc(-1 * var(--offset_s));
+   margin-left: calc(-1 * var(--width_compactDatePicker) / 3);
 }

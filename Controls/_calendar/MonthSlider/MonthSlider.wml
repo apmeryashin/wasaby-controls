@@ -29,6 +29,7 @@
          bind:selectionProcessing="selectionProcessing"
          bind:selectionBaseValue="selectionBaseValue"
          bind:selectionHoveredValue="selectionHoveredValue"
+         on:rangeChanged="_rangeChangedHandler()"
          ranges="{{_options.ranges}}"
          selectionType="{{_options.selectionType}}"
 

@@ -46,7 +46,7 @@ export interface IToggleButtonOptions extends
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex демо-пример}
- * * {@link https://github.com/saby/wasaby-controls/blob/69b02f939005820476d32a184ca50b72f9533076/Controls-default-theme/variables/_toggle.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_toggle.less переменные тем оформления}
  *
  *
  * @class Controls/_toggle/Button
@@ -138,7 +138,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         const iconStyles = newOptions.iconStyles || [newOptions.iconStyle];
         const iconStyle = (!value && iconStyles[1] ? iconStyles[1] : iconStyles[0]);
         this._iconStyle = this._icon ? ActualApi.iconStyle(iconStyle, this._icon,
-            newOptions.readOnly, false) : '';
+            newOptions.readOnly, this._options.translucent) : '';
 
         if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
             this._hoverIcon = !newOptions.value;

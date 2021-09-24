@@ -1,4 +1,4 @@
-import { IContainerConstructor } from 'Controls/_dataSource/error';
+import { Control } from 'UI/Base';
 import IControllerBase from 'Controls/_form/interface/IControllerBase';
 import {ErrorController} from 'Controls/error';
 import {Memory, SbisService} from 'Types/source';
@@ -55,11 +55,11 @@ export default interface IFormController extends IControllerBase {
     updateMetaData?: object;
     /**
      * @name Controls/form:IFormController#errorContainer
-     * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения ошибки, он оборачивает весь контент формы.
+     * @cfg {Controls/dataSource:error.Container} Компонент для отображения ошибки, он оборачивает весь контент формы.
      * Способ отображения ошибки (диалог, вместо контента или во всю страницу) настраивается через переопределение {@link errorController}.
      * Данную опцию следует определять, если нужно как-то изменить раскладку контента в случае ошибки, если раскладка контрола {@link Controls/_dataSource/_error/Container}, который используется по умолчанию, не устраивает.
      */
-    errorContainer?: IContainerConstructor;
+    errorContainer?: typeof Control;
     /**
      * @name Controls/form:IFormController#errorController
      * @cfg {Controls/error:ErrorController} Компонент для обработки ошибки.

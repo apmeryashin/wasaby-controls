@@ -8,9 +8,9 @@ import {
     IViewIterator,
     GridLadderUtil,
     ILadderObject,
-    IBaseCollection,
     isFullGridSupport,
-    ICollectionOptions
+    ICollectionOptions,
+    TItemActionsPosition
 } from 'Controls/display';
 
 import Header from '../Header';
@@ -26,7 +26,6 @@ import EmptyRow from '../EmptyRow';
 import {EnumeratorCallback, RecordSet} from 'Types/collection';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {create} from 'Types/di';
-import {TItemActionsPosition} from 'Controls/_display/Collection';
 
 type THeaderVisibility = 'visible' | 'hasdata';
 type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
@@ -611,6 +610,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             }
         });
         this._nextVersion();
+    }
+
+    getIndicatorColspan(): number {
+        return this.getGridColumnsConfig().length + +(this.hasMultiSelectColumn());
     }
 
     // region Controls/_display/CollectionItem

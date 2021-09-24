@@ -7,6 +7,7 @@ import * as sinon from 'sinon';
 import {adapter} from 'Types/entity';
 import {NewSourceController, getControllerState} from 'Controls/dataSource';
 import {ControllerClass as SearchController} from 'Controls/search';
+import * as clone from 'Core/core-clone';
 
 type TPartialListConfiguration = Partial<IListConfiguration>;
 
@@ -1008,6 +1009,35 @@ describe('Controls/browser:Browser', () => {
                     const notifyStub = sinon.stub(browser, '_notify');
                     sourceController.setRoot('testRoot');
                     assert.ok(notifyStub.withArgs('rootChanged', ['testRoot', 'list2']).calledOnce);
+                });
+
+                it('filter changed in listsOptions', async () => {
+                    const listsOptions = getListsOptions();
+                    let browserOptions = getBrowserOptions();
+                    const sourceController1 = new NewSourceController({
+                        source: browserOptions.source
+                    });
+                    const sourceController2 = new NewSourceController({
+                        source: browserOptions.source
+                    });
+                    listsOptions[0].sourceController = sourceController1;
+                    listsOptions[1].searchParam = '';
+                    listsOptions[1].sourceController = sourceController2;
+                    browserOptions = {
+                        ...browserOptions,
+                        listsOptions
+                    };
+
+                    const browser = getBrowser(browserOptions);
+                    await browser._beforeMount(browserOptions);
+                    browser.saveOptions(browserOptions);
+
+                    browserOptions = clone(browserOptions);
+                    browserOptions.listsOptions[0].filter = {testField: 'testValue'};
+                    browserOptions.listsOptions[1].filter = {testField1: 'testValue1'};
+                    await browser._beforeUpdate(browserOptions);
+                    assert.deepStrictEqual(sourceController1.getFilter(), {testField: 'testValue'});
+                    assert.deepStrictEqual(sourceController2.getFilter(), {testField1: 'testValue1'});
                 });
             });
         });

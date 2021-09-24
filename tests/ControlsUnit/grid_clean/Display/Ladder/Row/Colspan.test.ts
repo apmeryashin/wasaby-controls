@@ -58,7 +58,7 @@ describe('Controls/grid_clean/Display/Ladder/Row/Colspan', () => {
             assert.equal(gridRow.getColumns().length, 4);
         });
 
-        it('with Colspan', () => {
+        it('with Colspan end', () => {
             const columnsConfig = [
                 {
                     displayProperty: 'first',
@@ -81,6 +81,34 @@ describe('Controls/grid_clean/Display/Ladder/Row/Colspan', () => {
             gridRow.updateLadder({}, { prop1: { headingStyle: 'style'}, prop2: {headingStyle: 'style'}});
             assert.isArray(gridRow.getColumns());
             assert.equal(gridRow.getColumns().length, 1);
+        });
+
+        it('with Colspan ', () => {
+            const columnsConfig = [
+                {
+                    displayProperty: 'first',
+                    stickyProperties: ['prop1']
+                },
+                {
+                    displayProperty: 'second'
+                },
+                {
+                    displayProperty: 'third'
+                }
+            ];
+            const gridRow = new GridDataRow({
+                owner: {
+                    ...mockedCollection,
+                    getGridColumnsConfig: () => columnsConfig
+                },
+                colspanCallback: () => 2,
+                columnsConfig: columnsConfig,
+                gridColumnsConfig: columnsConfig,
+                contents: record
+            });
+            gridRow.updateLadder({}, { prop1: { headingStyle: 'style'}});
+            assert.isArray(gridRow.getColumns());
+            assert.equal(gridRow.getColumns().length, 2);
         });
     });
 });

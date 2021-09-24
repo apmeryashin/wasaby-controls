@@ -98,6 +98,13 @@ export type ItemsFactory<T> = (options: object) => T;
 
 export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
 
+export enum MoreButtonVisibility {
+    // Кнопка "Еще" видна всегда
+    visible = 'visible',
+    // Кнопка "Ещё" должна быть скрыта в узле дерева если он является последним в коллекции
+    exceptLastNode = 'exceptLastNode'
+}
+
 export type StrategyConstructor<
    F extends IItemsStrategy<S, T>,
    S extends EntityModel = EntityModel,
@@ -154,6 +161,8 @@ export interface IOptions<
     footerTemplate?: TemplateFunction | string;
     stickyFooter?: boolean;
     stickyGroup?: boolean;
+    // Регулирует видимость кнопки "Еще"
+    moreButtonVisibility?: MoreButtonVisibility;
 }
 
 export interface ICollectionCounters {
@@ -767,6 +776,11 @@ export default class Collection<
      * группировки.
      */
     protected _$importantItemProperties: string[];
+
+    /**
+     * Режим отображения кнопки "Ещё"
+     */
+    protected _$moreButtonVisibility: MoreButtonVisibility;
 
     /**
      * Возвращать локализованные значения для типов, поддерживающих локализацию
@@ -2655,6 +2669,10 @@ export default class Collection<
         return !this._$newDesign || !!this.getFooter();
     }
 
+    getMoreButtonVisibility(): MoreButtonVisibility {
+        return this._$moreButtonVisibility;
+    }
+
     getHasMoreData(): IHasMoreData {
         return this._$hasMoreData;
     }
@@ -2767,6 +2785,7 @@ export default class Collection<
 
     setIndexes(start: number, stop: number): void {
         this.getViewIterator().setIndices(start, stop);
+        this._notify('indexesChanged');
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');
@@ -4243,6 +4262,7 @@ Object.assign(Collection.prototype, {
     _$hiddenGroupPosition: 'first',
     _$footerTemplate: null,
     _$stickyFooter: false,
+    _$moreButtonVisibility: MoreButtonVisibility.visible,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,

@@ -66,7 +66,7 @@ const getCompatibleConfig = (BaseOpenerCompat: any, config: INotificationPopupOp
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FPopup%2FNotification%2FIndex демо-пример}
  * * {@link /doc/platform/developmentapl/interface-development/controls/openers/notification/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
  *
  * @extends Controls/_popup/Opener/BaseOpener
  * @public
@@ -179,7 +179,9 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
             // if popups are linked, then notification must be higher then parent
             const isMaximize: boolean = popupItems.at(i).popupOptions.maximize;
             const isModal: boolean = popupItems.at(i).popupOptions.modal;
-            if ((isMaximize || isModal) && !isLinkedPopup(popupItems, popupItems.at(i), item)) {
+            const isChild = isLinkedPopup(popupItems, popupItems.at(i), item);
+            const isParent = isLinkedPopup(popupItems, item, popupItems.at(i));
+            if ((isMaximize || isModal) && !isChild && !isParent) {
                 const maximizedPopupZIndex = (i + 1) * zIndexStep;
                 return maximizedPopupZIndex - 1;
             }

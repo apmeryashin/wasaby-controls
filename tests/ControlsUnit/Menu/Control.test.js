@@ -833,6 +833,7 @@ define(
             expectedOptions.itemPadding = null;
             expectedOptions.searchParam = null;
             expectedOptions.subMenuLevel = 1;
+            expectedOptions.draggable = false;
             expectedOptions.iWantBeWS3 = false;
 
             let resultOptions = await menuControl._getTemplateOptions(item);

@@ -26,13 +26,13 @@ const maxPercentValue = 100;
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex демо-пример}
- * * {@link https://github.com/saby/wasaby-controls/blob/69b02f939005820476d32a184ca50b72f9533076/Controls-default-theme/variables/_slider.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_slider.less переменные тем оформления}
  *
  * @public
  * @extends UI/Base:Control
  * @class Controls/_slider/Base
  * @mixes Controls/slider:ISlider
- * @author Красильников А.С.
+ * @author Мочалов М.А.
  * @demo Controls-demo/Slider/Base/Base/Index
  */
 

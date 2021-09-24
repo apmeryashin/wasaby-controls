@@ -65,7 +65,7 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
         if (options.readOnly) {
             this._iconStyle = 'readonly';
         } else {
-            this._iconStyle =  options.buttonAdd ? 'default' : options.iconStyle;
+            this._iconStyle =  options.translucent ? 'forTranslucent' : options.iconStyle;
         }
     }
     if (this._viewMode === 'linkButton') {
@@ -97,7 +97,7 @@ export function getDefaultOptions(): object {
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex демо-пример}
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/buttons-switches/buttons-links/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/6156a9009ee88d96bf73c8b1200e197f9db1c3c8/Controls-default-theme/variables/_buttons.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_buttons.less переменные тем оформления}
  *
  * @extends UI/Base:Control
  * @implements Controls/interface:IHref
@@ -302,6 +302,7 @@ Object.defineProperty(Button, 'defaultProps', {
  * @name Controls/_buttons/Button#fontSize
  * @cfg
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
+ * @default m
  * @example
  * <pre class="brush: html">
  * <Controls.buttons:Button icon="icon-Add" fontSize="xl" viewMode="button"/>

@@ -26,6 +26,17 @@ function initTest(
     return {collection, controller};
 }
 
+function getMockedIndicatorElement(): HTMLElement {
+    return {
+        style: {
+            display: '',
+            position: '',
+            top: '',
+            bottom: ''
+        }
+    } as HTMLElement;
+}
+
 describe('Controls/list_clean/Indicators/Controller', () => {
     let fakeTimer;
 
@@ -37,23 +48,32 @@ describe('Controls/list_clean/Indicators/Controller', () => {
         fakeTimer.restore();
     });
 
+    describe('constructor', () => {
+        it('should start portioned search', () => {
+            const {collection, controller} = initTest([{id: 1}], {hasMoreDataToBottom: true}, {iterative: true});
+            assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
+
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+    });
+
     describe('updateOptions', () => {
-        it('changed items', () => {
+        it('changed model', () => {
             const {collection, controller} = initTest([{id: 1}], {});
+            const newCollection = initTest([{id: 1}], {}).collection;
 
             // через контроллер нужно дожидаться таймера
             collection.displayIndicator('global', EIndicatorState.Loading, 100);
             assert.isTrue(collection.hasIndicator('global'));
 
-            const newItems = new RecordSet({
-                rawData: [{id: 1}, {id: 2}],
-                keyProperty: 'id'
-            });
             controller.updateOptions({
-                items: newItems,
-                model: collection
+                model: newCollection
             } as IIndicatorsControllerOptions, false);
-            assert.isFalse(collection.hasIndicator('global'));
+            assert.isFalse(newCollection.hasIndicator('global'));
         });
 
         it('changed navigation', () => {
@@ -128,6 +148,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             controller.setHasMoreData(true, true);
+            controller.setViewportFilled(true);
             controller.onCollectionReset();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
@@ -173,6 +194,25 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             // ждем пока отобразится индикатор порционного поиска
             fakeTimer.tick(2001)
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('hide portioned search indicator', () => {
+            const {collection, controller} = initTest([{id: 1}], {});
+
+            controller.setHasMoreData(true, false);
+            collection.getCollection().setMetaData({iterative: true});
+            controller.startDisplayPortionedSearch('top');
+            assert.isFalse(collection.getTopIndicator().isDisplayed()); // индикатор покажется только через 2с
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getTopIndicator().isDisplayed());
+
+            controller.setHasMoreData(false, false);
+            collection.getCollection().setMetaData({iterative: true});
+            controller.onCollectionReset();
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
         });
@@ -222,19 +262,42 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 hasHiddenItemsByVirtualScroll: () => false,
                 scrollToFirstItem: (afterScroll) => afterScroll()
             } as unknown as IIndicatorsControllerOptions;
-            const {collection, controller} = initTest([{id: 1}], options, {iterative: true});
+            const {collection, controller} = initTest([{id: 1}], options);
             controller.displayTopIndicator(false);
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
+            collection.getCollection().setMetaData({iterative: true});
             controller.startDisplayPortionedSearch('bottom');
 
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('display portioned search in not infinity navigation', () => {
+            const {collection, controller} = initTest([{id: 1}], {
+                isInfinityNavigation: false,
+                attachLoadDownTriggerToNull: true,
+                hasMoreDataToBottom: true,
+                hasHiddenItemsByVirtualScroll: () => false
+            });
+
+            collection.getCollection().setMetaData({iterative: true});
+            controller.startDisplayPortionedSearch('bottom');
+
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            // не должны скрыть индикатор порционного индикатора
+            controller.recountIndicators('down');
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -342,6 +405,70 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
+        });
+    });
+
+    describe('displayDrawingIndicator', () => {
+        it('should display', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, 'sticky');
+            assert.equal(mockedIndicatorElement.style.top, '0');
+        });
+
+        it('not should display by portioned search', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true}, {iterative: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+
+        it('not should display by options', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: false});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.displayDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+    });
+
+    describe('hideDrawingIndicator', () => {
+        it('should hide', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, 'none');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+
+        it('not should hide by portioned search', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: true}, {iterative: true});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
+        });
+
+        it('not should hide by options', () => {
+            const {controller} = initTest([{id: 1}], {attachLoadTopTriggerToNull: false});
+            const mockedIndicatorElement = getMockedIndicatorElement();
+            controller.hideDrawingIndicator(mockedIndicatorElement, 'top');
+            fakeTimer.tick(2001);
+            assert.equal(mockedIndicatorElement.style.display, '');
+            assert.equal(mockedIndicatorElement.style.position, '');
+            assert.equal(mockedIndicatorElement.style.top, '');
         });
     });
 });

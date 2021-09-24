@@ -9,9 +9,6 @@
  * @includes Mode Controls/_dataSource/_error/Mode
  * @includes Handler Controls/_dataSource/_error/Handler
  * @includes ViewConfig Controls/_dataSource/_error/ViewConfig
- * @includes IContainer Controls/_dataSource/_error/IContainer
- * @includes IContainerConfig Controls/_dataSource/_error/IContainerConfig
- * @includes IContainerConstructor Controls/_dataSource/_error/IContainerConstructor
  * @public
  * @author Северьянов А.А.
  */
@@ -28,8 +25,3 @@ export {
 } from 'Controls/error';
 export { default as Container } from './_error/Container';
 export { default as DataLoader } from './_error/DataLoader';
-export {
-    default as IContainer,
-    IContainerConfig,
-    IContainerConstructor
-} from './_error/IContainer';

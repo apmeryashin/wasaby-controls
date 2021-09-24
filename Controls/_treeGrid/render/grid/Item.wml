@@ -70,7 +70,7 @@
          </div>
 
           <!-- Экспандер узлов дерева выводится после контентом ячейки. -->
-          <ws:if data="{{ item.shouldDisplayExpanderBlock(gridColumn) && item.shouldDisplayExpander(afterContentTemplate.expanderIcon, 'right') }}">
+          <ws:if data="{{ item.shouldDisplayExpanderBlock(gridColumn) && item.shouldDisplayExpander(expanderIcon, 'right') }}">
             <ws:partial template="EXPANDER" item="{{ (item || itemData) }}"/>
          </ws:if>
       </ws:afterContentTemplate>
@@ -95,7 +95,7 @@
    </ws:if>
 
    <ws:if data="{{ (gridColumn || itemData).Draggable && (gridColumn || itemData).shouldDisplayDraggingCounter() }}">
-      <span class="controls-ListView__item-dragging-counter">{{ (item || itemData).getDraggedItemsCount() }}</span>
+      <span class="controls-ListView__item-dragging-counter">{{ (item || itemData).getDraggedItemsCountString() }}</span>
    </ws:if>
 </ws:template>
 

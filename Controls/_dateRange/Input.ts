@@ -6,13 +6,16 @@ import {EventUtils} from 'UI/Events';
 import DateRangeModel from './DateRangeModel';
 import {Range, Popup as PopupUtil} from 'Controls/dateUtils';
 import {StringValueConverter, IDateTimeMask, ISelection} from 'Controls/input';
+import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
+import getPopupName from 'Controls/_dateRange/Utils/getPopupName';
 import template = require('wml!Controls/_dateRange/Input/Input');
 import {DependencyTimer} from 'Controls/popup';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/dateRange';
 import 'css!Controls/CommonClasses';
 
-interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOptions, IDateRangeOptions {
+interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOptions,
+    IDateRangeOptions, IDatePopupTypeOptions {
     calendarButtonVisible: boolean;
 }
 
@@ -23,7 +26,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FdateRange%2FInput%2FIndex демо-пример}
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/date-time/date/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/6156a9009ee88d96bf73c8b1200e197f9db1c3c8/Controls-default-theme/variables/_dateRange.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_dateRange.less переменные тем оформления}
  * @class Controls/_dateRange/Input
  * @extends UI/Base:Control
  * @mixes Controls/input:IBase
@@ -53,6 +56,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * @mixes Controls/dateRange:IRangeInputTag
  * @implements Controls/interface:IDateMask
  * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDatePopupType
  *
  *
  * @public
@@ -114,11 +118,18 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
     }
 
     openPopup(event: SyntheticEvent): void {
+        let className = `controls_popupTemplate_theme-${this._options.theme} `;
+        if (this._options.datePopupType === 'datePicker') {
+            className += `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme}`;
+        } else {
+            className += `controls-CompactDatePicker__selector-margin
+            controls_compactDatePicker_theme-${this._options.theme}`;
+        }
         const cfg = {
             ...PopupUtil.getCommonOptions(this),
             target: this._container,
-            template: 'Controls/datePopup',
-            className: `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme} controls_popupTemplate_theme-${this._options.theme}`,
+            template: getPopupName(this._options.datePopupType),
+            className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
                 _date: this._options._date,
@@ -272,7 +283,8 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             validateByFocusOut: true,
             startValue: null,
             endValue: null,
-            calendarButtonVisible: true
+            calendarButtonVisible: true,
+            datePopupType: 'datePicker'
         };
     }
 

@@ -12,6 +12,7 @@ interface IFilterViewModelOptions {
     source: IFilterItem[];
     collapsedGroups: string[] | number[];
     filterViewMode: string;
+    style?: string;
 }
 
 interface IFilterGroup {
@@ -62,7 +63,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                 ...{
                     viewMode: item.viewMode,
                     filterViewMode: this._options.filterViewMode,
-                    name: item.name
+                    name: item.name,
+                    style: this._options.style
                 }};
             newSource.push({...item, ...{editorOptions}});
         });
@@ -102,9 +104,6 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
         if (editorValue?.textValue !== undefined) {
             item.textValue = editorValue.textValue;
         }
-        if (editorValue?.needCollapse !== undefined) {
-            item.needCollapse = editorValue.needCollapse;
-        }
     }
 
     private _resetSourceViewMode(): void {
@@ -135,9 +134,6 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
         this._source.forEach((item) => {
             const editingItemProperty = editingObject[item.name];
             this._setValueToSourceItem(item, editingItemProperty);
-            if (editingItemProperty?.needCollapse) {
-                this.collapseGroup(item.group);
-            }
             const newViewMode = editingItemProperty?.viewMode;
             const viewModeChanged = newViewMode && newViewMode !== item.viewMode;
             if (viewModeChanged) {
@@ -163,9 +159,6 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             item.viewMode = 'basic';
         }
         this._setValueToSourceItem(item, editorValue);
-        if (item.needCollapse) {
-            this.collapseGroup(item.group);
-        }
         this._source = this._getSource(source);
         this._editingObject = this._getEditingObjectBySource(this._source);
         this._nextVersion();

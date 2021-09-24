@@ -15,13 +15,14 @@ import 'css!Controls/calendar';
  *
  * @remark
  * Полезные ссылки:
- * * {@link https://github.com/saby/wasaby-controls/blob/6156a9009ee88d96bf73c8b1200e197f9db1c3c8/Controls-default-theme/variables/_calendar.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_calendar.less переменные тем оформления}
  *
  * @class Controls/_calendar/MonthSlider
  * @extends UI/Base:Control
  * @mixes Controls/calendar:IMonth
  * @mixes Controls/dateRange:IRangeSelectable
  * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDateRange
  * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/interface:IDisplayedRanges
  * @public
@@ -70,11 +71,12 @@ export default class MonthSlider extends Control<IControlOptions> {
             this._nextArrowButtonVisible = true;
             return;
         }
+        const normalizedDate = DateUtil.getStartOfMonth(date);
         const firstDate = displayedRanges[0][0];
         const amountOfRanges = displayedRanges.length;
         const lastDate = displayedRanges[amountOfRanges - 1][1];
-        this._prevArrowButtonVisible = firstDate < date || lastDate === null;
-        this._nextArrowButtonVisible = lastDate > date || lastDate === null;
+        this._prevArrowButtonVisible = firstDate < normalizedDate || firstDate === null;
+        this._nextArrowButtonVisible = lastDate > normalizedDate || lastDate === null;
     }
 
     protected _itemClickHandler(event, item): void {
@@ -87,6 +89,10 @@ export default class MonthSlider extends Control<IControlOptions> {
 
     protected _onEndValueChanged(event, value): void {
         this._notify('endValueChanged', [value]);
+    }
+
+    protected _rangeChangedHandler(event: Date, startValue: Date, endValue: Date): void {
+        this._notify('rangeChanged', [startValue, endValue]);
     }
 
     private _slideMonth(event, delta): void {

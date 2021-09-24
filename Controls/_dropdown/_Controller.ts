@@ -483,8 +483,10 @@ export default class _Controller implements IDropdownController {
           return sourceController.load().then((items) => {
              return this._resolveLoadedItems(options, items);
           }, (error) => {
-             this._loadError(error);
-             return Promise.reject(error);
+             if (!error.isCanceled) {
+                this._loadError(error);
+                return Promise.reject(error);
+             }
           });
        });
    }
@@ -608,11 +610,6 @@ export default class _Controller implements IDropdownController {
 
    private _prepareItem(item, keyProperty, source): Model {
       if (this._isHistoryMenu()) {
-         // В историческом меню в emptyItem ключ пишется в поле copyOriginalId.
-         // Поле keyProperty заполняется значением по умолчанию, которое может не совпадать с emptyKey.
-         if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty(), this._options.emptyKey)) {
-            item.set(keyProperty, item.getKey());
-         }
          return source.resetHistoryFields(item, keyProperty);
       } else {
          return item;
@@ -735,7 +732,8 @@ export default class _Controller implements IDropdownController {
          width: this._options.width !== undefined ?
              (this.target[0] || this.target).offsetWidth :
              undefined,
-         hasMoreButton: this._sourceController.hasMoreData('down')
+         hasMoreButton: this._sourceController.hasMoreData('down'),
+         draggable: this._options.menuDraggable
       };
       const config = {
          templateOptions: Object.assign(baseConfig, templateOptions),

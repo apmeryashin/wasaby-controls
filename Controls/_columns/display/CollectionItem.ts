@@ -35,12 +35,18 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
         return this.getOwner().getIndex(this);
     }
 
-    getWrapperClasses(templateHighlightOnHover: boolean = true, theme?: 'string', cursor: string | boolean = 'pointer'): string {
+    getWrapperClasses(templateHighlightOnHover: boolean = true,
+                      cursor: string | boolean = 'pointer',
+                      shadowVisibility: 'visible'|'hidden'): string {
         let result: string = super.getWrapperClasses.apply(this, arguments);
         result += ' controls-ColumnsView__itemV';
 
         if (cursor === true || cursor === 'pointer') {
             result += ' controls-ListView__itemV_cursor-pointer';
+        }
+
+        if (shadowVisibility !== 'hidden') {
+            result += ' controls-ColumnsView__item_shadow';
         }
 
         // При днд отключаем стиль ховера, т.к. он тоже рисуется тенями

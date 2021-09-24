@@ -23,7 +23,9 @@
               closeButtonVisibility="{{_closeButtonVisibility}}"
               closeButtonViewMode="{{_options.closeButtonViewMode}}"
               stickyPosition="{{_options.stickyPosition}}"
+              draggable="{{_options.draggable}}"
               backgroundStyle="transparent"
+              searchPlaceholder="{{_options.searchPlaceholder}}"
               on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">
@@ -60,6 +62,7 @@
                <Controls._menu.Control
                        name="menuControl"
                        attr:class="controls-Menu__popup-list controls-Menu__popup-list-padding-{{_verticalDirection}}"
+                       isDragging="{{_options.isDragging}}"
                        dropdownClassName="{{_options.dropdownClassName}}"
                        selectorOpenCallback="{{_options.selectorOpenCallback}}"
                        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"

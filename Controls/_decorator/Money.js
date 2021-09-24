@@ -1,16 +1,15 @@
 define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resources/Money'], function(Executor, Money) {
    var filename = 'Controls/_decorator/Money';
    var thelpers = Executor.TClosure;
-   // tslint:disable-next-line
-   var templateFunction = function Money_Template(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
-      var key = thelpers.validateNodeKey(attr && attr.key);
 
+   var templateFunction = function MoneyTemplate(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
+      var key = thelpers.validateNodeKey(attr && attr.key);
       var value = typeof data.value !== 'undefined' ? data.value : null;
       var useGrouping = data.useGrouping !== false;
       var abbreviationType = data.abbreviationType || 'none';
       var precision = data.precision === 0 ? 0 : 2;
       var formattedNumber = Money.calculateFormattedNumber(value, useGrouping, abbreviationType,
-                              precision, data.onlyPositive);
+         precision, data.onlyPositive);
       var stroked = data.stroked || false;
       var fontColorStyle = Money.calculateFontColorStyle(stroked, data) || 'default';
       var fontSize = data.fontSize || 'm';
@@ -28,25 +27,28 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
       var calculateCurrencyClass = Money.calculateCurrencyClass(currencySize, fontColorStyle, fontWeight);
       var strokedClass = Money.calculateStrokedClass(stroked);
       var integerClass = Money.calculateIntegerClass(fontSize, fontColorStyle, fontWeight, data.currency,
-                           currencyPosition, isDisplayFractionPath);
+         currencyPosition, isDisplayFractionPath);
       var fractionClass = Money.calculateFractionClass(formattedNumber.fraction, fontColorStyle,
-                           fractionFontSize, data.currency, currencyPosition);
+         fractionFontSize, data.currency, currencyPosition);
+      var isForceCompatible = forceCompatible;
 
       var defCollection = {
          id: [],
          def: undefined
       };
+
       // tslint:disable-next-line
-      var viewController = thelpers.calcParent(this, typeof currentPropertyName === 'undefined' ? undefined : currentPropertyName, data);
-      if (typeof forceCompatible === 'undefined') {
-         // tslint:disable-next-line
-         forceCompatible = false;
+      // @ts-ignore
+      var viewController = thelpers.calcParent(this, undefined, data);
+      if (typeof isForceCompatible === 'undefined') {
+         isForceCompatible = false;
       }
-      var markupGenerator = thelpers.createGenerator(isVdom, forceCompatible, generatorConfig);
-      // tslint:disable-next-line
-      var funcContext = thelpers.getContext(this);
+      var markupGenerator = thelpers.createGenerator(isVdom, isForceCompatible, generatorConfig);
+
+      thelpers.getContext(this);
+      var out = null;
       try {
-         var out = markupGenerator.joinElements([markupGenerator.createTag('span', {
+         out = markupGenerator.joinElements([markupGenerator.createTag('span', {
             'attributes': {
                'class': mainClass,
                'title': tooltip
@@ -105,7 +107,6 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
       } catch (e) {
          thelpers.templateError(filename, e, data);
       }
-      // tslint:disable-next-line
       return out || markupGenerator.createText('');
    };
    templateFunction.stable = true;
@@ -120,7 +121,7 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
  *
  * @remark
  * Полезные ссылки:
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_decorator.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_decorator.less переменные тем оформления}
  *
  * @class Controls/_decorator/Money
  * @extends UI/Base:Control

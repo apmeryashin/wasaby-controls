@@ -1,6 +1,6 @@
 import {detection} from 'Env/Env';
 import {IDialogPopupOptions, IPopupPosition, IPopupSizes} from 'Controls/popup';
-import {getPositionProperties, VERTICAL_DIRECTION} from './DirectionUtil';
+import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 import {IDialogItem} from 'Controls/_popupTemplate/Dialog/DialogController';
 
 interface ILimitingSizes {
@@ -86,13 +86,17 @@ export class DialogStrategy {
         } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
 
         if (popupItem.fixPosition) {
+            const horizontalProperty = popupItem?.position?.right !== undefined ?
+                HORIZONTAL_DIRECTION.RIGHT : HORIZONTAL_DIRECTION.LEFT;
+            const verticalProperty = popupItem?.position?.bottom !== undefined ?
+                VERTICAL_DIRECTION.BOTTOM : VERTICAL_DIRECTION.TOP;
             return this._getPositionForFixPositionDialog(
                 popupItem.position,
                 windowData,
                 containerSizes,
                 popupItem,
-                verticalPositionProperty,
-                horizontalPositionProperty
+                verticalProperty,
+                horizontalProperty
             );
         } else {
             const position: IDialogPosition = this._getDefaultPosition(
@@ -121,8 +125,9 @@ export class DialogStrategy {
         const isRightCoordinate = typeof popupItem.popupOptions.right !== 'undefined';
         const coordinate = isRightCoordinate ? 'right' : 'left';
         const horizontalCoordinate = this._getCoordinate(popupItem, coordinate);
+        const isMaximizePopup = popupItem.popupOptions.maximize;
 
-        if (topCoordinate === undefined && horizontalCoordinate === undefined) {
+        if ((topCoordinate === undefined && horizontalCoordinate === undefined) || isMaximizePopup) {
             return;
         }
 

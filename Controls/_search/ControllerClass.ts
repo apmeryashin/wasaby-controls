@@ -457,7 +457,7 @@ export default class ControllerClass {
 
    private static _hasHierarchyFilter(filter: QueryWhereExpression<unknown>): boolean {
       return !!Object.entries(SERVICE_FILTERS.HIERARCHY)[0].find((key) => {
-         return filter.hasOwnProperty(key);
+         return filter.hasOwnProperty(key) && filter[key] === SERVICE_FILTERS.HIERARCHY[key];
       })?.length;
    }
 

@@ -3,7 +3,7 @@
         <ws:partial template="{{ tag }}"
                     attr:style="{{ itemType === 'rich' ? item.getBigGradientStyles(itemType, gradientStartColor, gradientStopColor, gradientDirection ) }}"
                     attr:class="{{ (item || itemData).getImageClasses(itemType, width || itemWidth, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem, contentPadding) }}"
-                    attr:src="{{(item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode)}}"
+                    attr:src="{{(item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode, fallbackImage)}}"
                     attr:data-qa="controls-TileView__image"
         />
     </div>
@@ -12,8 +12,8 @@
 <ws:template name="imageTpl">
    <ws:partial template="innerImageTpl">
        <ws:tag>
-           <img if="{{ (item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode) }}"/>
-           <div if="{{ !((item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode)) }}"></div>
+           <img if="{{ (item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode, fallbackImage) }}"/>
+           <div if="{{ !((item || itemData).getImageUrl(width || itemWidth, imagePosition, imageViewMode, fallbackImage)) }}"></div>
        </ws:tag>
    </ws:partial>
 </ws:template>

@@ -16,6 +16,7 @@ export interface IMenuPopupOptions extends IMenuControlOptions, ISearchOptions {
     closeButtonVisibility?: boolean;
     footerItemData?: IFooterItemData;
     trigger: 'click' | 'hover';
+    draggable: boolean;
 }
 
 /**

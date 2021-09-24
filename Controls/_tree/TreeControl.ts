@@ -254,7 +254,7 @@ const _private = {
         return entriesRecord;
     },
 
-    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<object> {
+    loadNodeChildren(self: TreeControl, nodeKey: CrudEntityKey): Promise<RecordSet> {
         const sourceController = self.getSourceController();
 
         self._displayGlobalIndicator();
@@ -493,6 +493,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _mouseDownExpanderKey: TKey;
     private _expandedItemsToNotify: TKey[];
 
+    protected _listViewModel: Tree = null;
+
     constructor(options: TOptions, context?: object) {
         super(options, context);
         this._expandNodeOnDrag = this._expandNodeOnDrag.bind(this);
@@ -548,33 +550,26 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     /**
-     * Ищет последний элемент в дереве
+     * Проверяет можно ли для переданного узла загрузить его данные автоматически.
+     * Можно загружать если direction === 'down' и item это раскрытый узел в котором есть не загруженные данные
+     * и не задан футер списка и нет данных для загрузки в дочернем узле
+     * @param {Direction} direction - текущее направление подгрузки
+     * @param {TreeItem} item - проверяемая запись
+     * @param {CrudEntityKey} parentKey - идентификатор родительского узла (TODO зачем его передавать если он есть в item?)
      * @private
      */
-    private _getLastItem(item: TreeItem): TreeItem {
-        const rootItems = this._listViewModel.getChildren(item);
-        return rootItems.at(rootItems.getCount() - 1);
-    }
-
-    /**
-     * Проверяет, нужно ли подгружать данные при скролле для последнего раскрытого узла.
-     * Проверяем, что в руте больше нет данных, что шаблон футера узла не задан,
-     * последняя запись в списке - узел, и он раскрыт
-     * @param direction
-     * @param item
-     * @param parentKey
-     * @private
-     */
-    private _shouldLoadLastExpandedNodeData(direction: Direction, item: TreeItem, parentKey: CrudEntityKey): boolean {
+    private _canLoadNodeDataOnScroll(direction: Direction, item: TreeItem, parentKey: CrudEntityKey): boolean {
         // Иногда item это breadcrumbsItemRow, он не TreeItem
         if (!item || !item['[Controls/_display/TreeItem]'] || direction !== 'down') {
             return false;
         }
+
         const hasMoreParentData = !!this._sourceController && this._sourceController.hasMoreData('down', parentKey);
-        const hasNodeFooterTemplate: boolean = shouldDisplayNodeFooterTemplate(
-            item, this._options.nodeFooterTemplate, this._options.nodeFooterVisibilityCallback
-        );
-        return !hasMoreParentData && !hasNodeFooterTemplate && item.isNode() && item.isExpanded();
+
+        // Можно грузить если это раскрытый узел в котором есть не загруженные данные и не задан футер списка и нет
+        // данных для загрузки в дочернем узле
+        return item.isNode() !== null && item.isExpanded() && item.hasMoreStorage() &&
+            !this._options.footerTemplate && !hasMoreParentData;
     }
 
     /**
@@ -582,42 +577,46 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
      * @param item
      * @private
      */
-    private _loadNodeChildrenRecursive(item: TreeItem): Promise {
+    private _loadNodeChildrenRecursive(item: TreeItem): Promise<RecordSet|void> {
         const nodeKey = item.getContents().getKey();
-        const hasMoreData = this._sourceController && this._sourceController.hasMoreData('down', nodeKey);
+        const hasMoreData = this._sourceController?.hasMoreData('down', nodeKey);
+
         if (hasMoreData) {
             // Вызов метода, который подгружает дочерние записи узла
             return _private.loadNodeChildren(this, nodeKey);
         } else {
-            const lastItem = this._getLastItem(item);
-            if (this._shouldLoadLastExpandedNodeData('down', lastItem, nodeKey)) {
+            const lastItem = item.getLastChildItem();
+            if (this._canLoadNodeDataOnScroll('down', lastItem, nodeKey)) {
                 return this._loadNodeChildrenRecursive(lastItem);
             }
+
             return Promise.resolve();
         }
     }
 
     /**
-     * Метод, вызываемый после срабатывания триггера подгрузки данных
+     * Метод, вызываемый после срабатывания триггера подгрузки данных.
+     *
+     * В случае если последняя корневая запись это раскрытый узел у которого есть данные для подгрузки,
+     * то загружаются его дочерние элементы. В противном случае вызываем загрузку корневых итемов.
+     *
      * TODO Необходимо провести рефакторинг механизма подгрузки данных по задаче
      *  https://online.sbis.ru/opendoc.html?guid=8a5f7598-c7c2-4f3e-905f-9b2430c0b996
-     * @param direction
+     *
+     * @param {Direction} direction - текущее направление подгрузки
      * @private
      */
-    protected _loadMore(direction: Direction): Promise {
-        const lastRootItem = this._getLastItem(this._listViewModel.getRoot());
-        if (this._shouldLoadLastExpandedNodeData(direction, lastRootItem, this._options.root)) {
-            return this._loadNodeChildrenRecursive(lastRootItem);
+    protected _loadMore(direction: Direction): void | Promise<RecordSet|void> {
+        const lastRootItem = this._listViewModel.getRoot().getLastChildItem();
 
+        // Если последняя корневая запись это раскрытый узел у которого есть данные для подгрузки,
+        // то загружаем его дочерние элементы
+        if (this._canLoadNodeDataOnScroll(direction, lastRootItem, this._options.root)) {
+            return this._loadNodeChildrenRecursive(lastRootItem);
         } else {
             // Вызов метода подгрузки данных по умолчанию (по сути - loadToDirectionIfNeed).
             return super._loadMore(direction);
         }
-    }
-
-    protected _shouldLoadOnScroll(direction: string): boolean {
-        const lastRootItem = this._getLastItem(this._listViewModel.getRoot());
-        return super._shouldLoadOnScroll() || this._shouldLoadLastExpandedNodeData(direction, lastRootItem, this._options.root);
     }
 
     private _updateTreeControlModel(newOptions): void {
@@ -666,29 +665,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     protected _beforeUpdate(newOptions: TOptions) {
-        super._beforeUpdate(...arguments);
-
-        const viewModel = this.getViewModel();
         const sourceController = this.getSourceController();
-        const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
-        const isSourceControllerLoading = sourceController && sourceController.isLoading();
         let updateSourceController = false;
-        this._plainItemsContainer = newOptions.plainItemsContainer;
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
 
             if (this._listViewModel) {
                 this._listViewModel.setRoot(this._root);
-            }
-
-            // При смене рута надо здесь вызвать onCollectionReset у markerController, т.к. сейчас
-            // загрузкой данных занимается Browser и коллекция меняется раньше чем мы изменим в ней
-            // root. И из-за это функционал простановки маркера отработает не корректно т.к. в коллекции
-            // уже будут данные нового рута а рут еще старый и она скажет что в ней ничего нет.
-            const newMarkedKey = this.getMarkerController()?.onCollectionReset();
-            if (newMarkedKey) {
-                this._changeMarkedKey(newMarkedKey, true);
             }
 
             if (this._options.itemsSetCallback) {
@@ -718,6 +702,13 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 this.cancelEdit();
             }
         }
+
+        super._beforeUpdate(...arguments);
+
+        const viewModel = this.getViewModel();
+        const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
+        const isSourceControllerLoading = sourceController && sourceController.isLoading();
+        this._plainItemsContainer = newOptions.plainItemsContainer;
 
         this._expandController.updateOptions({
             model: viewModel,
@@ -1356,12 +1347,14 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (typeof markedKey !== 'undefined') {
             const markedRecord = this.getViewModel().getItemBySourceKey(markedKey);
 
-            if (markedRecord.isExpanded()) {
-                // Узел раскрыт.
-                return markedRecord.contents.getKey();
-            } else if (!markedRecord.getParent().isRoot()) {
-                // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
-                return markedRecord.getParent().contents.getKey();
+            if (markedRecord) {
+                if (markedRecord.isExpanded()) {
+                    // Узел раскрыт.
+                    return markedRecord.contents.getKey();
+                } else if (!markedRecord.getParent().isRoot()) {
+                    // Если запись вложена, то добавлять нужно в родителя, т.к. он - развернутый узел.
+                    return markedRecord.getParent().contents.getKey();
+                }
             }
         }
 
