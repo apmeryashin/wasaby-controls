@@ -179,14 +179,13 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       if (opts.scale <= 0 || opts.scale > maxPercentValue) {
          correctScale = defaultScaleValue;
       }
-      sectorSize = Math.floor(correctScale);
       for (let i = 0; i < Math.min(opts.data.length); i++) {
          // do not draw more colors, than we know
          if (i < _colors.length) {
             // convert to number, ignore negative ones
             itemValue = Math.max(0, + opts.data[i].value || 0);
-            itemNumSectors = Math.floor(itemValue / sectorSize);
-            const percentageDeviation = itemValue - sectorSize * itemNumSectors;
+            itemNumSectors = Math.floor(itemValue / correctScale);
+            const percentageDeviation = itemValue - correctScale * itemNumSectors;
             this._percentageDifferences.push(percentageDeviation);
             if (itemValue > 0 && itemNumSectors === 0) {
                // if state value is positive and corresponding sector number is 0, increase it by 1 (look specification)
@@ -217,7 +216,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
             const maxDeviationIndex = this._getMaxPercentageDeviationIndex();
             colorValues.splice(colorValues.indexOf(maxDeviationIndex + 1), 0,  maxDeviationIndex + 1);
             totalSectorsUsed++;
-            this._percentageDifferences[maxDeviationIndex] -= sectorSize;
+            this._percentageDifferences[maxDeviationIndex] -= correctScale;
          }
       }
       return colorValues;
