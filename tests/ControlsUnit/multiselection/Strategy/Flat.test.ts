@@ -219,6 +219,12 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
          const count = strategy.getCount(selection, true, 4);
          assert.equal(count, 4);
       });
+
+      it('limit, one separated selected, hasMoreData', () => {
+         const selection = { selected: [null], excluded: [3] };
+         const count = strategy.getCount(selection, true, 1);
+         assert.equal(count, 2);
+      });
    });
 
    describe('isAllSelected', () => {
