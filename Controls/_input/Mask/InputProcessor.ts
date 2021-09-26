@@ -1,4 +1,4 @@
-import {Formatter} from 'Controls/decorator';
+import {FormatBuilder, Formatter} from 'Controls/decorator';
 
 
 
@@ -188,9 +188,34 @@ import {Formatter} from 'Controls/decorator';
              * @param newFormat данные маски, на которую будет проецироваться разбитое значение.
              * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            input: function(splitValue, inputType, replacer, oldFormat, newFormat) {
-               var value = splitValue.before + splitValue.delete + splitValue.after;
+            input: function(splitValue, inputType, replacer, oldFormat, newFormat, value1: string) {
+               let value = splitValue.before + splitValue.delete + splitValue.after;
+               //TODO попробовать value1 подогнать под маску
+               if (value1) {
+                  const isMatch = value.match(oldFormat.searchingGroups);
+                  if (!isMatch) {
+                     const formatData = Formatter.formatData(oldFormat, {value: value1, carriagePosition: 0});
+                     if (formatData && splitValue.delete === '') {
+                        if (splitValue.after === '') {
+                           splitValue.before = formatData.value;
+                        }
+                        value = formatData.value;
+                     }
+                  }
+               }
                var clearData = Formatter.clearData(oldFormat, value);
+               // Только при добавлении (insert'е) будет пересчитывать clearData, иначе получается, что при удалении
+               // мы в других масках не знаем, на каких местах находились удаленные символы.
+               if (!clearData) {
+                  if (splitValue.delete === '') {
+                     clearData = Formatter.clearData(oldFormat, value1);
+                     if (!clearData) {
+                        return;
+                     }
+                  } else {
+                     return;
+                  }
+               }
                var clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData);
                var result;
 
