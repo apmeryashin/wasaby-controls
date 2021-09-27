@@ -288,6 +288,7 @@
   "--unaccented_active_same_background-color": "#e3e5e8",
   "--unaccented_border-color": "#ccc",
   "--unaccented_hover_border-color": "#aab0c1",
+  "--item_selected_color": "#05121e",
   "--default_contrast_background-color_button": "#fff",
   "--default_border-color_button": "#ccc",
   "--default_hover_border-color_button": "#aab0c1",
@@ -1659,10 +1660,7 @@
   "--header_caption_height_compactDatePicker": "46px",
   "--header_today_width_compactDatePicker": "20px",
   "--calendar_item-size_compactDatePicker": "32px",
+  "--calendar_selected-day_background-color_compactDatePicker": "#dbdbdb",
   "--calendar_margin_compactDatePicker": "0 15px",
-  "--calendar_today_background-color_compactDatePicker": "#f0f0f0",
-  "--calendar_selected-day_background-color_compactDatePicker": "#eaeaea",
-  "--calendar_selected-day-edge_background-color_compactDatePicker": "#333",
-  "--calendar_item_hover_border-color_compactDatePicker":  "#333",
   "--shadow_start-color_compactDatePicker": "rgba(0, 0, 0, 0.05)"
 }
