@@ -5,10 +5,16 @@ import {mixin} from 'Types/util';
 import {TreeItem} from 'Controls/display';
 
 export type TImageVisibility = 'hidden' | 'visible';
+
+export interface ITemplateProperties {
+    descriptionProperty: string;
+    gradientColorProperty: string;
+    imageProperty: string;
+}
 export interface ITemplateControllerOptions {
     listConfiguration: IBrowserViewConfig;
     imageVisibility: TImageVisibility;
-    browserOptions: IOptions;
+    templateProperties: ITemplateProperties;
 }
 
 export default abstract class BaseTemplateController<T, V extends TreeItem = TreeItem> extends
@@ -18,7 +24,7 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
 ) {
     protected _$listConfiguration: IBrowserViewConfig = null;
     protected _$imageVisibility: TImageVisibility = null;
-    protected _$browserOptions: IOptions = null;
+    protected _$templateProperties: ITemplateProperties = null;
     protected _viewModeConfig: T;
 
     constructor(options: ITemplateControllerOptions) {
@@ -29,7 +35,7 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
     }
 
     get imageProperty(): string {
-        return this._$browserOptions.detail.imageProperty;
+        return this._$templateProperties.imageProperty;
     }
 
     getImageVisibility(): TImageVisibility {
@@ -53,7 +59,7 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
     }
 
     getDescriptionProperty(item: TreeItem): string {
-        return this._$browserOptions.detail.descriptionProperty;
+        return this._$templateProperties.descriptionProperty;
     }
 
     protected _isNode(item: V): boolean {
