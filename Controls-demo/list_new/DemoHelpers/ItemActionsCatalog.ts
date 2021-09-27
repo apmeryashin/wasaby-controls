@@ -113,8 +113,8 @@ function getActionsWithViewMode(): IItemAction[] {
             title: 'Перевести',
             showType: TItemActionShowType.TOOLBAR,
             viewMode: 'functionalButton',
-            iconStyle: 'contrast',
-            style: 'danger'
+            iconStyle: 'secondary',
+            style: 'pale'
         },
         {
             id: 'profile',
