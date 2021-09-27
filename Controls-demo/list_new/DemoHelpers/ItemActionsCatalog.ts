@@ -114,7 +114,7 @@ function getActionsWithViewMode(): IItemAction[] {
             showType: TItemActionShowType.TOOLBAR,
             viewMode: 'functionalButton',
             iconStyle: 'contrast',
-            style: 'danger'
+            style: 'pale'
         },
         {
             id: 'profile',
