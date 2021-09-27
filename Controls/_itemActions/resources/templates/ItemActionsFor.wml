@@ -9,7 +9,7 @@
             template="Controls/buttons:ButtonTemplate"
             _viewMode="{{ action.viewMode }}"
             _buttonStyle="{{ actionStyle || action.style }}"
-            _fontSize="m"
+            _fontSize="{{ action.fontSize }}"
             _icon="{{ action.icon }}"
             _iconSize="{{ action.iconSize }}"
             _caption="{{ action.caption }}"

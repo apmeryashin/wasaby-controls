@@ -111,7 +111,7 @@ function getActionsWithViewMode(): IItemAction[] {
             id: 'redirect',
             icon: 'icon-Redirect',
             title: 'Перевести',
-            showType: TItemActionShowType.TOOLBAR,
+            showType: TItemActionShowType.MENU_TOOLBAR,
             viewMode: 'functionalButton',
             iconStyle: 'secondary',
             style: 'pale'
@@ -119,8 +119,8 @@ function getActionsWithViewMode(): IItemAction[] {
         {
             id: 'redirect',
             icon: 'icon-Close',
-            title: 'Перевести',
-            showType: TItemActionShowType.TOOLBAR,
+            title: 'Красная кнопка',
+            showType: TItemActionShowType.MENU_TOOLBAR,
             viewMode: 'functionalButton',
             iconStyle: 'contrast',
             style: 'danger'
@@ -129,7 +129,7 @@ function getActionsWithViewMode(): IItemAction[] {
             id: 'profile',
             icon: 'icon-Profile',
             title: 'Профиль пользователя',
-            showType: TItemActionShowType.TOOLBAR,
+            showType: TItemActionShowType.MENU_TOOLBAR,
             iconStyle: 'secondary',
             viewMode: 'link'
         },
@@ -137,7 +137,7 @@ function getActionsWithViewMode(): IItemAction[] {
             id: 'email',
             icon: 'icon-Email',
             title: 'Email',
-            showType: TItemActionShowType.TOOLBAR,
+            showType: TItemActionShowType.MENU_TOOLBAR,
             iconStyle: 'secondary',
             viewMode: 'link',
             displayMode: TActionDisplayMode.BOTH
@@ -146,7 +146,7 @@ function getActionsWithViewMode(): IItemAction[] {
             id: 'phoneCell',
             icon: 'icon-PhoneCell',
             title: 'Звонок',
-            showType: TItemActionShowType.TOOLBAR,
+            showType: TItemActionShowType.MENU_TOOLBAR,
             viewMode: 'link',
             displayMode: TActionDisplayMode.TITLE
         }

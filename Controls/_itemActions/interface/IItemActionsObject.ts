@@ -33,6 +33,11 @@ export interface IShownItemAction extends IItemAction {
      * Высота базовой линии для равнивания иконки внутри кнопки
      */
     inlineHeight?: string;
+
+    /**
+     * Размер шрифта для выравнивания иконки
+     */
+    fontSize?: string;
 }
 
 export interface IItemActionsObject {

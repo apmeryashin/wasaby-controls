@@ -767,6 +767,7 @@ export class Controller {
         const shownAction: IShownItemAction = {
             ...action,
             hasIcon,
+            fontSize: 'm',
             icon: hasIcon ? action.icon : null,
             caption: Controller._needShowTitle(action) ? action.title : null
         };
@@ -777,6 +778,7 @@ export class Controller {
                 case 's':
                     shownAction.iconSize = 'xs';
                     shownAction.inlineHeight = 'xs';
+                    shownAction.fontSize = '2xs';
                     break;
                 case 'm':
                 default:
