@@ -1172,7 +1172,7 @@ const _private = {
                 self._children.listView?.getTopLoadingTrigger(),
                 self._children.listView?.getBottomLoadingTrigger()
             );
-            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize);
+            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize && self._viewportSize);
         }
         return self._viewSize;
     },
@@ -3411,7 +3411,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._children.listView?.getTopLoadingTrigger(),
             this._children.listView?.getBottomLoadingTrigger()
         );
-        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize);
+        // viewSize обновляется раньше чем viewportSize, поэтому проверяем что viewportSize уже есть
+        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
             this._observersController?.setScrollTop(
