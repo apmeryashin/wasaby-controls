@@ -145,6 +145,7 @@ class Manager {
                 if (this.find(options.id)) {
                     this.update(options.id, options);
                 } else {
+                    this._registerPopupLink(item);
                     this._addElement(item);
                 }
                 this._redrawItems();
@@ -152,6 +153,7 @@ class Manager {
         } else if (defaultConfigResult === false) {
             this._fireEventHandler(item, 'onClose');
         } else {
+            this._registerPopupLink(item);
             this._addElement(item);
             this._redrawItems();
         }
@@ -329,7 +331,7 @@ class Manager {
 
     private _createItemConfig(options: IPopupOptions, controller: IPopupController): IPopupItem {
         const popupId: string = options.id || randomId('popup-');
-        const popupConfig: IPopupItem = {
+        return {
             id: popupId,
             modal: options.modal,
             controller,
@@ -339,10 +341,7 @@ class Manager {
             activeNodeAfterDestroy: this._getActiveElement(), // TODO: COMPATIBLE
             popupState: controller.POPUP_STATE_INITIALIZING,
             childs: []
-        };
-
-        this._registerPopupLink(popupConfig);
-        return popupConfig;
+        } as IPopupItem;
     }
 
     // Register the relationship between the parent and child popup
