@@ -23,7 +23,6 @@
                 feature1183020440="{{true}}"
                 itemActionsProperty="itemActions"
                 itemActionsPosition="outside"
-                hoverBackgroundStyle="equal-to-list"
                 on:actionClick="_onActionClick()"/>
     </div>
 </div>

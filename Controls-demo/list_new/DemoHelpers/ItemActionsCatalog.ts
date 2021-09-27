@@ -117,6 +117,15 @@ function getActionsWithViewMode(): IItemAction[] {
             style: 'pale'
         },
         {
+            id: 'redirect',
+            icon: 'icon-Close',
+            title: 'Перевести',
+            showType: TItemActionShowType.TOOLBAR,
+            viewMode: 'functionalButton',
+            iconStyle: 'contrast',
+            style: 'danger'
+        },
+        {
             id: 'profile',
             icon: 'icon-Profile',
             title: 'Профиль пользователя',
