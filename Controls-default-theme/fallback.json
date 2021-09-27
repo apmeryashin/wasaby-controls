@@ -130,6 +130,7 @@
   "--pale_border-color": "#ebedf0",
   "--pale_hover_contrast_background-color": "#ebedf0",
   "--pale_active_contrast_background-color": "#d9dbde",
+  "--item_selected_color": "#05121e",
   "--font-size_3xs": "10px",
   "--font-size_2xs": "11px",
   "--font-size_xs": "12px",
@@ -377,7 +378,7 @@
   "--calendar_item-size_compactDatePicker": "32px",
   "--calendar_margin_compactDatePicker": "0 15px",
   "--calendar_today_background-color_compactDatePicker": "#f0f0f0",
-  "--calendar_selected-day_background-color_compactDatePicker": "#eaeaea",
+  "--calendar_selected-day_background-color_compactDatePicker": "#dbdbdb",
   "--calendar_selected-day-edge_background-color_compactDatePicker": "#333",
   "--calendar_item_hover_border-color_compactDatePicker": "#333",
   "--shadow_start-color_compactDatePicker": "rgba(0, 0, 0, 0.05)",
@@ -1358,7 +1359,7 @@
   "--tick_height_slider": "4px",
   "--tick_thickness_slider": "1px",
   "--tooltip_box-shadow_slider": "0 0 6px 0 #999",
-  
+
   "--line-height_richEditor_inputArea": "21px",
 
   "--popup_border-color_suggest": "var(--border-color)",
