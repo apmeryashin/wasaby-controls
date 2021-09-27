@@ -1402,7 +1402,7 @@ const _private = {
                         }
 
                         // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
-                        // т.к. успеет сработать intersectionObserver и произойдет лишняя подsetгрузка
+                        // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
                         const hasMoreData = _private.getHasMoreData(self);
                         self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
 
