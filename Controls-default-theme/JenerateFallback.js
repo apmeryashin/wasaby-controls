@@ -143,6 +143,15 @@ var lessFilesDataIterator = function (fileContent, callback) {
             var value = line.slice(endIndexProperty + 1, endIndexValue).trim();
 
             value = value.replace("\\e", "\\\\e");
+            /**
+             * IE иначе работает определение пути. Из-за чего путь ../img/test.png ссылается на несуществующий файл
+             * Из-за чего изображение не отобразится
+             * Поэтому добавляем к пути Controls-default-theme, для корректной работы
+             */
+            var imgDir = '../img';
+            if (value.indexOf(imgDir) !== -1) {
+                value = value.replace(imgDir, '../Controls-default-theme/img');
+            }
             value = callback(value, property);
 
             return '  "' + property + '": "' + value + '",';
