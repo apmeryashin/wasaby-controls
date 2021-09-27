@@ -26,15 +26,18 @@
    }
 }
 
-// Понять, зачем это
-//.controls-itemActionsV__action {
-//   //min-width: var(--item_icon-size_itemActions);
-//   //height: var(--item_icon-size_itemActions);
-//   justify-content: center;
-//   user-select: none;
-//   display: flex;
-//   align-items: center;
-//}
+// 1. Когда иконки размера s, они должны выравниваться по центру по вертикали и горизонтали внутри блока с размером строки m.
+// 2. ItemAction без иконки должен выравниваться по вертикали по центру блока.
+// 3. ItemAction без иконки не должны выделяться при выделении текста записи. (в buttons это работает только для button, tool, functional)
+// 4. В плитке иконки должны выравниваться по центру
+.controls-itemActionsV__action {
+   min-width: var(--icon-size_m);
+   height: var(--icon-size_m);
+   justify-content: center;
+   user-select: none;
+   display: flex;
+   align-items: center;
+}
 
 .controls-itemActionsV_style_default {
    background-color: var(--item_hover_background-color_list);
