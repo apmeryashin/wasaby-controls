@@ -196,8 +196,7 @@ class HorizontalMeasurer implements IMeasurer {
     * @param maxWidth
     * @private
     */
-   private static _fillVisibleActions(itemActions: IItemAction[], itemActionsSizes: number[], maxWidth: number)
-       : IItemAction[] {
+   private static _fillVisibleActions(itemActions: IItemAction[], itemActionsSizes: number[], maxWidth: number): IItemAction[] {
       const visibleActions: IItemAction[] = [];
       let currentWidth: number = maxWidth;
       itemActions.every((action, index) => {
@@ -208,6 +207,34 @@ class HorizontalMeasurer implements IMeasurer {
          visibleActions.push(action);
          return true;
       });
+
+      // 1. Проверяем, есть ли FIXED среди остатка, если да, узнаём их размеры.
+      // 2. Проверяем, есть ли FIXED в visible, если да, узнаём их размеры.
+      // 3. Берём все sliced.FIXED, заменяем visible, смещая visible.FIXED
+      // 4. Заново отрезаем их по width проверку как они умещаются в width. (Попробовать реверснуть массив ???).
+      //    Надо, чтобы FIXED были видимые в приоритете.
+
+      // if (visibleActions.length < itemActions.length && MeasurerUtils.getFixedActions(itemActions)) {
+      //    const slicedFixedActions = MeasurerUtils.getFixedActions(itemActions.slice(visibleActions.length));
+      //    const slicedFixedActionsSizes = slicedFixedActions.map();
+      //    const visibleFixedActions = MeasurerUtils.getFixedActions(visibleActions);
+      //    const visibleFixedActionsSizes = MeasurerUtils.getFixedActions(visibleActions);
+      //
+      //    if (visibleFixedActions.length) {
+      //       let lastVisibleFixedAction = visibleFixedActions.pop();
+      //       const delta = visibleActions.length - slicedFixedActions.length;
+      //       while (lastVisibleFixedAction && delta <= visibleActions.indexOf(lastVisibleFixedAction)) {
+      //          slicedFixedActions.unshift(lastVisibleFixedAction);
+      //          lastVisibleFixedAction = visibleFixedActions.pop();
+      //       }
+      //    }
+      //    // Заменяем с конца видимые записи на FIXED из остатка
+      //    if (slicedFixedActions.length) {
+      //       visibleActions
+      //           .splice(-slicedFixedActions.length, slicedFixedActions.length, ...slicedFixedActions);
+      //    }
+      // }
+
       return visibleActions;
    }
 

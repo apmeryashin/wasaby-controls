@@ -100,7 +100,7 @@ export const verticalMeasurer: IMeasurer = {
          columnsCount = 2;
       }
       if (columnsCount * countOfActionsInColumn !== actions.length || menuButtonVisibility === 'visible') {
-         itemActions = itemActions.slice(0, columnsCount * countOfActionsInColumn - 1);
+         MeasurerUtils.sliceAndFixActions(itemActions, columnsCount * countOfActionsInColumn - 1);
          itemActions.push({
             id: null,
             icon: 'icon-SwipeMenu',

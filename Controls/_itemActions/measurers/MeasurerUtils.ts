@@ -44,7 +44,7 @@ export class MeasurerUtils {
             const visibleFixedActions = this.getFixedActions(visibleActions);
             // Если в видимых записях были FIXED, то следующий алгоритм смещает положение видимых FIXED так,
             // чтобы FIXED, добавленные из остатка не перекрывали их
-            if (visibleFixedActions) {
+            if (visibleFixedActions.length) {
                 let lastVisibleFixedAction = visibleFixedActions.pop();
                 const delta = visibleActions.length - slicedFixedActions.length;
                 while (lastVisibleFixedAction && delta <= visibleActions.indexOf(lastVisibleFixedAction)) {
