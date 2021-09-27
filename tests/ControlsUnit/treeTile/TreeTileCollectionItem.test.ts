@@ -37,6 +37,17 @@ describe('Controls/_treeTile/display/TreeTileCollectionItem', () => {
             assert.equal(item.getItemStyles('default', 300, true), '-ms-flex-preferred-size: 300px; flex-basis: 300px; height: 100px;');
         });
     });
+    describe('.getTileHeight', () => {
+        it('node', () => {
+            const item = new TreeTileCollectionItem({node: true, nodesHeight: 100, tileHeight: 200});
+            assert.equal(item.getTileHeight(), 100);
+        });
+
+        it('not node', () => {
+            const item = new TreeTileCollectionItem({node: null, nodesHeight: 100, tileHeight: 200});
+            assert.equal(item.getTileHeight(), 200);
+        });
+    });
 
     describe('getTitleWrapperClasses', () => {
         it('small', () => {
