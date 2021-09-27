@@ -4,6 +4,7 @@ import {Model, OptionsToPropertyMixin, SerializableMixin, ObservableMixin} from 
 import {ISelectionObject, TKey, ISourceOptions, INavigationSourceConfig} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {isEqual} from 'Types/object';
 import {mixin} from 'Types/util';
 
 interface IKeysByList {
@@ -68,6 +69,7 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
         this._$selectedKeys = options.selectedKeys?.slice() || [];
         this._$excludedKeys = options.excludedKeys?.slice() || [];
         this._$root = OperationsController._getRoot(options);
+        this._options = options;
     }
 
     destroy(): void {
@@ -78,10 +80,19 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     }
 
     update(options: IOperationsControllerOptions): void {
+        const selectedKeysChanged = !isEqual(options.selectedKeys, this._options.selectedKeys);
+        const excludedKeysChanged = !isEqual(options.excludedKeys, this._options.excludedKeys);
+        if (selectedKeysChanged || excludedKeysChanged) {
+            this._$selectedKeys = options.selectedKeys;
+            this._$excludedKeys = options.excludedKeys;
+            this._notify('selectionChanged', {
+                selected: this._$selectedKeys,
+                excluded: this._$excludedKeys
+            });
+        }
         this._$root = OperationsController._getRoot(options);
-        this._$selectedKeys = options.selectedKeys;
-        this._$excludedKeys = options.excludedKeys;
         this._$selectionViewMode = options.selectionViewMode;
+        this._options = options;
     }
 
     setListMarkedKey(key: TKey): TKey {
@@ -160,10 +171,6 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
             result = [null];
         }
         this._$selectedKeys = result;
-        this._notify('selectionChanged', {
-            selected: this._$selectedKeys,
-            excluded: this._$excludedKeys
-        });
         return result;
     }
 
@@ -193,10 +200,6 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
             result = [];
         }
         this._$excludedKeys = result;
-        this._notify('selectionChanged', {
-            selected: this._$selectedKeys,
-            excluded: this._$excludedKeys
-        });
         return result;
     }
 
