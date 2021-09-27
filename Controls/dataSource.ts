@@ -12,7 +12,8 @@ import * as error from 'Controls/_dataSource/error';
 import requestDataUtil from 'Controls/_dataSource/requestDataUtil';
 import {nodeHistoryUtil} from 'Controls/_dataSource/nodeHistoryUtil';
 import groupUtil from 'Controls/_dataSource/GroupUtil';
-import {ILoadDataConfig, ILoadDataResult, IDataLoaderOptions} from './_dataSource/DataLoader';
+import {IDataLoaderOptions} from './_dataSource/DataLoader';
+import {ILoadDataConfig, ILoadDataResult} from './_dataSource/DataLoader/ListProvider';
 
 export {
     error,
@@ -35,8 +36,10 @@ export {default as calculatePath, Path} from 'Controls/_dataSource/calculatePath
 export {isEqualItems} from './_dataSource/Controller';
 export {default as NavigationController} from './_dataSource/NavigationController';
 export {
-    default as DataLoader,
     ILoadDataCustomConfig,
+} from './_dataSource/DataLoader/CustomProvider';
+export {
+    default as DataLoader,
     TLoadersConfigsMap as TLoadConfig,
     TLoadResultMap
 } from './_dataSource/DataLoader';
