@@ -17,6 +17,7 @@
             _hasIcon="{{ action.hasIcon }}"
             _stringCaption="{{ true }}"
             _iconStyle="{{ iconStyle || action.iconStyle }}"
+            _height="{{ action.inlineHeight }}"
             _captionPosition="right"
             attr:class="controls-itemActionsV__Button_iconSize_{{ action.iconSize }}"
             on:mousedown="_onItemActionMouseDown(action, item)"

@@ -764,12 +764,27 @@ export class Controller {
      */
     private _fixShownActionOptions(action: IShownItemAction): IShownItemAction {
         const hasIcon = Controller._needShowIcon(action);
-        return {
+        const shownAction: IShownItemAction = {
             ...action,
             hasIcon,
             icon: hasIcon ? action.icon : null,
             caption: Controller._needShowTitle(action) ? action.title : null
         };
+        // ItemActions настраиваются одним размером iconSize, а functionalButton - двумя iconSize + inlineHeight.
+        // Конверитруем размеры для functionalButton, подстраивая общий размер кнопки под размеры itemActions.
+        if (shownAction.viewMode === 'functionalButton') {
+            switch (shownAction.iconSize) {
+                case 's':
+                    shownAction.iconSize = 'xs';
+                    shownAction.inlineHeight = 'xs';
+                    break;
+                case 'm':
+                default:
+                    shownAction.iconSize = 's';
+                    shownAction.inlineHeight = 'm';
+            }
+        }
+        return shownAction;
     }
 
     /**

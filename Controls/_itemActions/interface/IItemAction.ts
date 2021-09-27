@@ -66,9 +66,8 @@ export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
  * Размер иконок опций записи
  * @variant s Маленькая.
  * @variant m Средняя.
- * @variant l Крупная.
  */
-export type TItemActionsSize = 's' | 'm' | 'l';
+export type TItemActionsSize = 's' | 'm';
 
 /**
  * @typedef {String} TMenuButtonVisibility

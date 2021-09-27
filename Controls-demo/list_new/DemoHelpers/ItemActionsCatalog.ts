@@ -1,10 +1,4 @@
-import {
-    IItemAction,
-    TActionDisplayMode,
-    TItemActionShowType,
-    TItemActionsSize,
-    TItemActionViewMode
-} from 'Controls/itemActions';
+import {IItemAction, TActionDisplayMode, TItemActionShowType} from 'Controls/itemActions';
 
 function getActionsForContacts(): IItemAction[] {
     return [
@@ -114,42 +108,38 @@ function getMoreActions(): IItemAction[] {
 function getActionsWithViewMode(): IItemAction[] {
     return [
         {
-            id: 2,
+            id: 'redirect',
             icon: 'icon-Redirect',
             title: 'Перевести',
             showType: TItemActionShowType.TOOLBAR,
             viewMode: 'functionalButton',
-            iconStyle: 'secondary',
-            style: 'pale',
-            iconSize: 's'
+            iconStyle: 'contrast',
+            style: 'danger'
         },
         {
-            id: 3,
-            icon: 'icon-Redirect',
-            title: 'Перевести',
-            showType: TItemActionShowType.TOOLBAR,
-            viewMode: 'functionalButton',
-            iconStyle: 'secondary',
-            style: 'pale',
-            iconSize: 'm'
-        },
-        {
-            id: 5,
-            icon: 'icon-Email',
-            title: 'Email',
-            showType: TItemActionShowType.TOOLBAR,
-            viewMode: 'link',
-            iconStyle: 'success',
-            iconSize: 's'
-        },
-        {
-            id: 6,
+            id: 'profile',
             icon: 'icon-Profile',
             title: 'Профиль пользователя',
             showType: TItemActionShowType.TOOLBAR,
-            viewMode: 'link',
             iconStyle: 'secondary',
-            iconSize: 'm'
+            viewMode: 'link'
+        },
+        {
+            id: 'email',
+            icon: 'icon-Email',
+            title: 'Email',
+            showType: TItemActionShowType.TOOLBAR,
+            iconStyle: 'secondary',
+            viewMode: 'link',
+            displayMode: TActionDisplayMode.BOTH
+        },
+        {
+            id: 'phoneCell',
+            icon: 'icon-PhoneCell',
+            title: 'Звонок',
+            showType: TItemActionShowType.TOOLBAR,
+            viewMode: 'link',
+            displayMode: TActionDisplayMode.TITLE
         }
     ];
 }
