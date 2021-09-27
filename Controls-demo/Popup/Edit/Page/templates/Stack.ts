@@ -17,13 +17,13 @@ export default class Stack extends Control<IStackOptions> {
     protected _indicatorState: boolean = false;
     protected _record: object;
     protected _isNewRecord: boolean;
-    protected _source: RecordSet;
+    protected _listSource: RecordSet;
 
     protected _beforeMount(options?: IStackOptions): void {
         this._dataSource = options.viewSource;
         this._isNewRecord = !options.record;
         this._record = options.record;
-        this._source = options.source;
+        this._listSource = options.listSource;
     }
 
     protected _afterMount(): void {

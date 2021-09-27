@@ -87,7 +87,7 @@
                             <div class="controls-MyFormController__row controls-demo-page__title">Наличие в магазинах:</div>
                             <div>
                                 <Controls.list:ItemsView
-                                        items="{{_source}}"
+                                        items="{{_listSource}}"
                                         name="list"
                                         keyProperty="id">
                                     <ws:editingConfig editOnClick="{{true}}"/>
