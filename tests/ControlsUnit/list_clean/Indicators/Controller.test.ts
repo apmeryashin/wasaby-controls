@@ -62,22 +62,18 @@ describe('Controls/list_clean/Indicators/Controller', () => {
     });
 
     describe('updateOptions', () => {
-        it('changed items', () => {
+        it('changed model', () => {
             const {collection, controller} = initTest([{id: 1}], {});
+            const newCollection = initTest([{id: 1}], {}).collection;
 
             // через контроллер нужно дожидаться таймера
             collection.displayIndicator('global', EIndicatorState.Loading, 100);
             assert.isTrue(collection.hasIndicator('global'));
 
-            const newItems = new RecordSet({
-                rawData: [{id: 1}, {id: 2}],
-                keyProperty: 'id'
-            });
             controller.updateOptions({
-                items: newItems,
-                model: collection
+                model: newCollection
             } as IIndicatorsControllerOptions, false);
-            assert.isFalse(collection.hasIndicator('global'));
+            assert.isFalse(newCollection.hasIndicator('global'));
         });
 
         it('changed navigation', () => {
@@ -201,6 +197,25 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.destroy(); // уничтожаем все таймеры
         });
+
+        it('hide portioned search indicator', () => {
+            const {collection, controller} = initTest([{id: 1}], {});
+
+            controller.setHasMoreData(true, false);
+            collection.getCollection().setMetaData({iterative: true});
+            controller.startDisplayPortionedSearch('top');
+            assert.isFalse(collection.getTopIndicator().isDisplayed()); // индикатор покажется только через 2с
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getTopIndicator().isDisplayed());
+
+            controller.setHasMoreData(false, false);
+            collection.getCollection().setMetaData({iterative: true});
+            controller.onCollectionReset();
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
     });
 
     describe('onCollectionAdd', () => {
@@ -261,6 +276,28 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             // ждем пока отобразится индикатор порционного поиска
             fakeTimer.tick(2001);
             assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('display portioned search in not infinity navigation', () => {
+            const {collection, controller} = initTest([{id: 1}], {
+                isInfinityNavigation: false,
+                attachLoadDownTriggerToNull: true,
+                hasMoreDataToBottom: true,
+                hasHiddenItemsByVirtualScroll: () => false
+            });
+
+            collection.getCollection().setMetaData({iterative: true});
+            controller.startDisplayPortionedSearch('bottom');
+
+            // ждем пока отобразится индикатор порционного поиска
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            // не должны скрыть индикатор порционного индикатора
+            controller.recountIndicators('down');
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры

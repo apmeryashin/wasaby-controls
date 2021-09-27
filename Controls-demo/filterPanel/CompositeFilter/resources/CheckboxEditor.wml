@@ -1,0 +1,3 @@
+<Controls.toggle:Checkbox scope="{{_options}}"
+                          value="{{_options.propertyValue}}"
+                          on:valueChanged="_handleValueChanged()"/>

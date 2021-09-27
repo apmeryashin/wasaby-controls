@@ -88,7 +88,7 @@ export default class IndicatorsController {
         }
         const navigationChanged = this._options.isInfinityNavigation !== options.isInfinityNavigation;
 
-        const shouldRecountAllIndicators = options.items && this._options.items !== options.items;
+        const shouldRecountAllIndicators = options.model && this._model !== options.model;
         const shouldRecountBottomIndicator = !shouldRecountAllIndicators &&
             (this._options.hasMoreDataToBottom !== options.hasMoreDataToBottom || navigationChanged);
         const shouldRecountTopIndicator = !shouldRecountAllIndicators &&
@@ -321,9 +321,6 @@ export default class IndicatorsController {
                 break;
             case 'down':
                 this._recountBottomIndicator();
-                // Вместе с пересчетом нижнего индикатора нужно пересчитать верхний триггер, т.к. мог отработать
-                // виртуальный скролл и скрытый триггер нужно будет показать, пример:
-                // https://online.sbis.ru/opendoc.html?guid=947f8f71-f261-474f-9efd-74b1db1bc5b5
                 break;
             case 'all':
                 this._recountTopIndicator(scrollToFirstItem);
@@ -355,11 +352,9 @@ export default class IndicatorsController {
 
         const isTopIndicatorDisplayed = this._model.getTopIndicator().isDisplayed();
 
-        if (this._options.attachLoadTopTriggerToNull) {
-            // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
-            // и так был показан, подскроллить к нему.
-            this._model.hideIndicator('top');
-        }
+        // всегда скрываем индикатор и если нужно, то мы его покажем. Сделано так, чтобы если индикатор
+        // и так был показан, подскроллить к нему.
+        this._model.hideIndicator('top');
 
         if (this.shouldDisplayTopIndicator()) {
             this.displayTopIndicator(scrollToFirstItem, false, isTopIndicatorDisplayed);
@@ -381,7 +376,9 @@ export default class IndicatorsController {
     }
 
     private _shouldDisplayIndicator(direction: 'up'|'down'): boolean {
-        return this._options.isInfinityNavigation && !this._options.hasHiddenItemsByVirtualScroll(direction)
+        // порционынй поиск может быть включен не только в infinity навигации.
+        const allowByNavigation = this._options.isInfinityNavigation || this._isPortionedSearch();
+        return allowByNavigation && !this._options.hasHiddenItemsByVirtualScroll(direction)
             && !this._options.shouldShowEmptyTemplate;
     }
 

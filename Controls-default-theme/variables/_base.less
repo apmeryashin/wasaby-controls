@@ -1,9 +1,8 @@
+/* stylelint-disable saby/non-theme-colors -- это и есть источник цветов */
 .controls_theme-@{themeName} {
-
    // Цвета
    //
    // Общие цвета
-
    --background-color: #fff;
    --unaccented_background-color: #f8f8f8;
    --hover_background-color: #f0f5fb;
@@ -17,10 +16,8 @@
    --readonly_marker-color: #313e78;
 
    // Цвета текста
-
    --text-color: #333;
    --contrast_text-color: #fff;
-
    --link_text-color: #05b;
    --link_hover_text-color: #313e78;
    --label_text-color: #8991a9;
@@ -30,13 +27,11 @@
    --link_hover_text-color_inline: var(--link_text-color);
 
    // Цвета иконок
-
    --icon-color: #333;
    --contrast_icon-color: #fff;
    --unaccented_icon-color: #ccc;
    --unaccented_hover_icon-color: #999;
    --label_hover_icon-color: #313e78;
-
 
    // Новая палитра
    --primary_color: #ff7033;          // для совместимости. цвет должен быть такой как у текста.
@@ -45,7 +40,7 @@
    --primary_icon-color: #f47843;
    --primary_hover_icon-color: #db4200;
    --primary_border-color: #ff621f;
-   --primary_hover_border-color: #F1A17E;
+   --primary_hover_border-color: #f1a17e;
    --primary_background-color: #fff8f5;
    --primary_hover_background-color: #fff1eb;
    --primary_active_background-color: #ffe6db;
@@ -55,14 +50,13 @@
    --primary_contrast_background-color: #f6733c;
    --primary_hover_contrast_background-color: #e4662f;
    --primary_active_contrast_background-color: #d6551f;
-
    --secondary_color: #587ab0;     // для совместимости. цвет должен быть такой как у текста.
    --secondary_text-color: #313e78;
    --secondary_hover_text-color: #2f5b8e;
    --secondary_icon-color: #656c87;
    --secondary_hover_icon-color: #153f6f;
    --secondary_border-color: #1b579d;
-   --secondary_hover_border-color: #7D99BA;
+   --secondary_hover_border-color: #7d99ba;
    --secondary_background-color: #f5faff;
    --secondary_hover_background-color: #ebf4ff;
    --secondary_active_background-color: #dbecff;
@@ -72,14 +66,13 @@
    --secondary_contrast_background-color: #265fa1;
    --secondary_hover_contrast_background-color: #2b5688;
    --secondary_active_contrast_background-color: #274c77;
-
    --danger_color: #d04d4d;     // для совместимости. цвет должен быть такой как у текста.
    --danger_text-color: #c2140a;
    --danger_hover_text-color: #e50c00;
    --danger_icon-color: #c2140a;
    --danger_hover_icon-color: #e50c00;
    --danger_border-color: #e50c00;
-   --danger_hover_border-color: #E07B76;
+   --danger_hover_border-color: #e07b76;
    --danger_background-color: #fff7f7;
    --danger_hover_background-color: #ffeceb;
    --danger_active_background-color: #ffdddb;
@@ -89,14 +82,13 @@
    --danger_contrast_background-color: #dc2219;
    --danger_hover_contrast_background-color: #c22219;
    --danger_active_contrast_background-color: #aa2018;
-
    --success_color: #069922;           // для совместимости. цвет должен быть такой как у текста.
    --success_text-color: #298e3c;
    --success_hover_text-color: #28bd44;
    --success_icon-color: #298e3c;
    --success_hover_icon-color: #28bd44;
    --success_border-color: #00a31f;
-   --success_hover_border-color: #47C25F;
+   --success_hover_border-color: #47c25f;
    --success_background-color: #f7fff8;
    --success_hover_background-color: #ebffee;
    --success_active_background-color: #dbffe2;
@@ -106,14 +98,13 @@
    --success_contrast_background-color: #12a12c;
    --success_hover_contrast_background-color: #128c29;
    --success_active_contrast_background-color: #127d26;
-
    --warning_color: #fec63f;     // для совместимости. цвет должен быть такой как у текста.
    --warning_text-color: #e6a119;
    --warning_hover_text-color: #f6c055;
    --warning_icon-color: #e6a119;
    --warning_hover_icon-color: #f6c055;
    --warning_border-color: #ffb92e;
-   --warning_hover_border-color: #E49B0C;
+   --warning_hover_border-color: #e49b0c;
    --warning_background-color: #fffcf7;
    --warning_hover_background-color: #fff8eb;
    --warning_active_background-color: #fff3db;
@@ -123,13 +114,12 @@
    --warning_contrast_background-color: #ecb956;
    --warning_hover_contrast_background-color: #e5ab38;
    --warning_active_contrast_background-color: #df9f20;
-
    --info_text-color: #5a49ab;
    --info_hover_text-color: #7e70c2;
    --info_icon-color: #5a49ab;
    --info_hover_icon-color: #7e70c2;
    --info_border-color: #513bbf;
-   --info_hover_border-color: #9188BF;
+   --info_hover_border-color: #9188bf;
    --info_background-color: #f8f7ff;
    --info_hover_background-color: #eeebff;
    --info_active_background-color: #e1dbff;
@@ -139,18 +129,16 @@
    --info_contrast_background-color: #6757b7;
    --info_hover_contrast_background-color: #5949a7;
    --info_active_contrast_background-color: #504294;
-
-   --unaccented_contrast_background-color: #9cb3c9;
-   --unaccented_hover_contrast_background-color: #8099b2;
-   --unaccented_active_contrast_background-color: #758fa9;
+   --unaccented_contrast_background-color: #dbdbdb;
+   --unaccented_hover_contrast_background-color: #ccc;
+   --unaccented_active_contrast_background-color: #d4d4d4;
    --unaccented_hover_same_background-color: #ebedf0;
    --unaccented_active_same_background-color: #e3e5e8;
-   --unaccented_border-color: #ccc;
+   --unaccented_border-color: var(--border-color);
    --unaccented_hover_border-color: #aab0c1;
-
    --pale_contrast_background-color: #f2f3f3;
-   --pale_border-color: #EBEDF0;
-   --pale_hover_contrast_background-color: #EBEDF0;
+   --pale_border-color: #ebedf0;
+   --pale_hover_contrast_background-color: #ebedf0;
    --pale_active_contrast_background-color: #d9dbde;
 
    // Шрифты
@@ -172,12 +160,10 @@
    --font-size_default: var(--font-size_m);
 
    // Жирность шрифта
-
    --font-weight: normal;
 
    // Начертание шрифта
    --font-family: 'TensorFont', sans-serif;
-
 
    // Высоты элементов
    //
@@ -185,6 +171,7 @@
    --inline_height_xs: 16px;
    --inline_height_s: 20px;
    --inline_height_m: 24px;
+   --inline_height_mt: 26px;
    --inline_height_l: 28px;
    --inline_height_xl: 32px;
    --inline_height_2xl: 36px;
@@ -192,7 +179,6 @@
    --inline_height_4xl: 44px;
    --inline_height_5xl: 48px;
    --inline_height_default: var(--inline_height_m);
-
 
    // Иконки
    //
@@ -210,23 +196,19 @@
    --icon-size_m: 24px;
    --icon-size_l: 32px;
 
-
    // Линейка стандартных отступов
-   // Примечание: на эти переменные лучше делать ссылки из других переменных, а не ссылаться из стилей
-
    --offset_3xs: 2px;
    --offset_2xs: 4px;
    --offset_xs: 6px;
    --offset_s: 8px;
+   --offset_st: 10px;
    --offset_m: 12px;
    --offset_l: 16px;
    --offset_xl: 20px;
    --offset_2xl: 24px;
    --offset_3xl: 28px;
 
-
    // Линейка стандартных скруглений
-
    --border-radius_3xs: 2px;
    --border-radius_2xs: 4px;
    --border-radius_xs: 6px;
@@ -237,22 +219,16 @@
    --border-radius_2xl: 24px;
    --border-radius_3xl: 28px;
 
-
    // Толщина обводки контролов.
-
    --border-thickness: 1px;
-
 
    // Валидация
    //
    // отступ от контрола до обводки валидации сверху и снизу
-
    --invalid_padding-vertical: var(--offset_3xs);
 
    // отступ от контрола до обводки валидации справа и слева
-
    --invalid_padding-horizontal: var(--offset_2xs);
-
 
    //Размер тэга.
    //Примечание: тэг - это цветной индикатор, использующийся для информации о состоянии поля.
@@ -263,10 +239,8 @@
    --reset-button_color: var(--unaccented_icon-color);
 
    // Отображение картинок
-
    --border-radius_s_image: var(--border-radius_2xs);
    --border-radius_m_image: var(--border-radius_s);
-
    --size_xs_image: 16px;
    --size_s_image: 24px;
    --size_m_image: 32px;
@@ -278,7 +252,6 @@
    --size_5xl_image: 144px;
    --size_6xl_image: 190px;
    --size_7xl_image: 300px;
-
 
    // Блоки для нового дизайна
    --border-radius_default_block: var(--border-radius_s);

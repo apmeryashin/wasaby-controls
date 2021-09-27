@@ -931,7 +931,8 @@ describe('Controls/browser:Browser', () => {
                 it('sourceController on listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
                     const sourceController = new NewSourceController({
-                        source: browserOptions.source
+                        source: browserOptions.source,
+                        id: 'list'
                     });
                     let listsOptions = [
                         {
@@ -949,6 +950,9 @@ describe('Controls/browser:Browser', () => {
                     browser.saveOptions(options);
 
                     assert.ok(browser._getSourceController() === sourceController);
+
+                    sourceController.setRoot('testRoot');
+                    assert.ok(listsOptions[0].root === 'testRoot');
                 });
                 it('filterButtonSource in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();

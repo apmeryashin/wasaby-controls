@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">set tooltip</div>
+        <Controls.buttons:Button attr:class="controlsDemo_fixedWidth100" caption="Very long long caption" buttonStyle="primary" tooltip="Button"/>{{' '}}
+        <Controls.buttons:Button attr:class="controlsDemo_fixedWidth100" caption="Caption" buttonStyle="secondary" tooltip="Button"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">auto tooltip</div>
+        <Controls.buttons:Button attr:class="controlsDemo_fixedWidth100" caption="Very long long caption" buttonStyle="primary"/>{{' '}}
+        <Controls.buttons:Button attr:class="controlsDemo_fixedWidth100" caption="Caption" buttonStyle="secondary"/>
+    </div>
+</div>

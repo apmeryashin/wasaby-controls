@@ -1,5 +1,5 @@
 <div class="controlsDemo-Input-DateTime">
-    <h1>Controls.input:DateBase</h1>
+    <h1>Controls.date:BaseInput</h1>
     <div class="controlsDemo-Input-DateTime__content">
         <ws:for data="masksGroup in _masks">
             <h3>{{masksGroup.title}}</h3>
@@ -9,13 +9,13 @@
                         {{mask}}
                     </div>
                     <div class="controlsDemo-Input-DateTime__row-item">
-                        <Controls.input:DateBase
+                        <Controls.date:BaseInput
                                 value="{{null}}"
                                 mask="{{mask}}"
                                 readOnly="{{_inputReadOnly}}"/>
                     </div>
                     <div class="controlsDemo-Input-DateTime__row-item">
-                        <Controls.input:DateBase
+                        <Controls.date:BaseInput
                                 bind:value="_date"
                                 mask="{{mask}}"
                                 readOnly="{{_inputReadOnly}}"/>
@@ -30,12 +30,12 @@
                 Two time fields
             </div>
             <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
-                <Controls.input:DateBase
+                <Controls.date:BaseInput
                         bind:value="_startTime"
                         mask="HH:mm"
                         readOnly="{{_inputReadOnly}}"/>
                 -
-                <Controls.input:DateBase
+                <Controls.date:BaseInput
                         bind:value="_endTime"
                         mask="HH:mm"
                         readOnly="{{_inputReadOnly}}"/>
@@ -48,7 +48,7 @@
                 Text:
             </div>
             <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
-                <Controls.input:DateBase
+                <Controls.date:BaseInput
                         value="{{_date}}"
                         mask="{{mask}}"
                         tagStyle="{{'primary'}}"

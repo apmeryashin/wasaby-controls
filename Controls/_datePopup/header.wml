@@ -34,7 +34,7 @@
              class="controls-PeriodDialog__header-period"
              on:focusout="_inputFocusOutHandler()">
             <div class="controls-PeriodDialog__header_inputs">
-                <Controls.input:DateBase
+                <Controls.date:BaseInput
                         horizontalPadding="null"
                         contrastBackground="{{ false }}"
                         borderVisibility="partial"
@@ -62,7 +62,7 @@
             <ws:if data="{{_options.selectionType !== 'single'}}">
                 <div class="controls-PeriodDialog__header-rangeDash"></div>
                 <div class="controls-PeriodDialog__header_inputs">
-                    <Controls.input:DateBase
+                    <Controls.date:BaseInput
                             horizontalPadding="null"
                             contrastBackground="{{ false }}"
                             borderVisibility="partial"

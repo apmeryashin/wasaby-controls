@@ -19,7 +19,8 @@ export interface ISlidingPanelItem extends IPopupItem {
 
 export enum ResizeType {
     inner = 'inner',
-    outer = 'outer'
+    outer = 'outer',
+    orientationChange = 'orientationChange'
 }
 
 const INVERTED_POSITION_MAP = {

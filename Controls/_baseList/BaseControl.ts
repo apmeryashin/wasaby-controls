@@ -659,9 +659,14 @@ const _private = {
 
         if (self._sourceController) {
             const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
-            if (_private.isPortionedLoad(self) && direction === 'up') {
-                // После того как закончились данные вниз, мы можем по скроллу начать подгрузку данных уже вверх.
-                self._indicatorsController.continueDisplayPortionedSearch('top');
+            if (_private.isPortionedLoad(self)) {
+                const portionedSearchDirection = self._indicatorsController.getPortionedSearchDirection();
+                if (direction === 'up' && portionedSearchDirection !== 'up' && !self._hasMoreData('down')) {
+                    // Если включен порицонный поиск в обе стороны, то мы в первую очередь грузим данные вниз
+                    // до самого конца. После этого показываем индикатор и триггер сверху. И по скроллу, если больше
+                    // нет данных вниз и порционный поиск уже не идет вверх, продолжаем искать данные вверх.
+                    self._indicatorsController.continueDisplayPortionedSearch('top');
+                }
             } else {
                 self._indicatorsController.recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
@@ -705,18 +710,21 @@ const _private = {
                 // и событие add не сработает
                 const hasMoreData = _private.getHasMoreData(self);
                 self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
-                self._indicatorsController.recountIndicators(direction);
 
-                if (_private.isPortionedLoad(self, addedItems) && !hasMoreData.down && !hasMoreData.up) {
-                    self._indicatorsController.endDisplayPortionedSearch();
-                } else {
-                    const searchDirection = self._indicatorsController.getPortionedSearchDirection();
-                    if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
-                        // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
-                        // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                if (_private.isPortionedLoad(self, addedItems)) {
+                    if (!hasMoreData.down && !hasMoreData.up) {
                         self._indicatorsController.endDisplayPortionedSearch();
-                        self._indicatorsController.displayTopIndicator(true);
+                    } else {
+                        const searchDirection = self._indicatorsController.getPortionedSearchDirection();
+                        if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
+                            // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
+                            // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                            self._indicatorsController.endDisplayPortionedSearch();
+                            self._indicatorsController.displayTopIndicator(true);
+                        }
                     }
+                } else {
+                    self._indicatorsController.recountIndicators(direction);
                 }
 
                 return addedItems;
@@ -856,7 +864,7 @@ const _private = {
     loadToDirectionIfNeed(self, direction, filter) {
         const sourceController = self._sourceController;
         const hasMoreData = self._hasMoreData(direction);
-        const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
+        const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig) ?
             !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
             true;
         const allowLoadBySource =
@@ -1182,7 +1190,7 @@ const _private = {
                 self._children.listView?.getTopLoadingTrigger(),
                 self._children.listView?.getBottomLoadingTrigger()
             );
-            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize);
+            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize && self._viewportSize);
         }
         return self._viewSize;
     },
@@ -1304,10 +1312,10 @@ const _private = {
         }], {bubbling: true});
     },
 
-    needScrollCalculation(navigationOpt) {
+    needScrollCalculation(navigationOpt, virtualScrollConfig) {
         // Виртуальный скролл должен работать, даже если у списка не настроена навигация.
         // https://online.sbis.ru/opendoc.html?guid=a83180cf-3e02-4d5d-b632-3d03442ceaa9
-        return !navigationOpt || (navigationOpt && navigationOpt.view === 'infinity');
+        return !navigationOpt || (navigationOpt && navigationOpt.view === 'infinity' || !!virtualScrollConfig?.pageSize);
     },
 
     needScrollPaging(navigationOpt) {
@@ -1407,6 +1415,10 @@ const _private = {
                             _private.tryLoadToDirectionAgain(self);
                         }
 
+                        if (!_private.isPortionedLoad(self) && self._indicatorsController.isDisplayedPortionedSearch()) {
+                            self._indicatorsController.endDisplayPortionedSearch();
+                        }
+
                         // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
                         // т.к. успеет сработать intersectionObserver и произойдет лишняя подгрузка
                         const hasMoreData = _private.getHasMoreData(self);
@@ -1437,7 +1449,7 @@ const _private = {
                             self._children.listView?.getBottomLoadingTrigger()
                         );
                         // если есть данные и вверх и вниз, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
-                        if (self._hasMoreData('up') && self._hasMoreData('down')) {
+                        if (self._hasMoreData('up') && self._hasMoreData('down') && self._options.attachLoadTopTriggerToNull) {
                             self._observersController.hideTrigger(self._children.listView?.getTopLoadingTrigger());
                         }
                         break;
@@ -2052,7 +2064,7 @@ const _private = {
     },
 
     initializeNavigation(self, cfg) {
-        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
+        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation, cfg.virtualScrollConfig);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
         // Кнопка Еще в футере рисуется по навигации, ее пересчет происходит и в onCollectionChanged,
         // который может вызваться до Control::saveOptions и пересчет будет с устаревшей навигацией
@@ -3389,7 +3401,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._children.listView?.getTopLoadingTrigger(),
             this._children.listView?.getBottomLoadingTrigger()
         );
-        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize);
+        // viewSize обновляется раньше чем viewportSize, поэтому проверяем что viewportSize уже есть
+        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
             this._observersController?.setScrollTop(
@@ -3838,19 +3851,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             });
         }
 
-        if (_private.hasSelectionController(this)) {
-            _private.updateSelectionController(this, newOptions);
-
-            const selectionController = _private.getSelectionController(this, newOptions);
-            const allowClearSelectionBySelectionViewMode =
-                this._options.selectionViewMode === newOptions.selectionViewMode ||
-                newOptions.selectionViewMode !== 'selected';
-            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
-            if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
-                _private.changeSelection(this, { selected: [], excluded: [] });
-            }
-        }
-
         if (newOptions.sourceController || newOptions.items) {
             const items = newOptions.sourceController?.getItems() || newOptions.items;
             const sourceControllerChanged = this._options.sourceController !== newOptions.sourceController;
@@ -3918,6 +3918,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
                     _private.prepareFooter(this, newOptions, this._sourceController);
                 }
+            }
+        }
+
+        if (_private.hasSelectionController(this)) {
+            _private.updateSelectionController(this, newOptions);
+
+            const selectionController = _private.getSelectionController(this, newOptions);
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
+                _private.changeSelection(this, { selected: [], excluded: [] });
             }
         }
 
@@ -4461,7 +4474,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _shiftToDirection(direction): Promise {
         let resolver;
         const shiftPromise = new Promise((res) => { resolver = res; });
-        this._handleLoadToDirection = this._needScrollCalculation && !!this._sourceController && this._sourceController.hasMoreData(direction);
+        this._handleLoadToDirection = _private.isInfinityNavigation(this._options.navigation) &&
+                                      !!this._sourceController &&
+                                      this._sourceController.hasMoreData(direction);
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (this._destroyed) {
                 return;
@@ -6267,8 +6282,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
-            const needShift = direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator() ||
-                              direction === 'down' && this._indicatorsController.shouldDisplayBottomIndicator();
+
+            // Если в направлении загрузки видна ромашка, то сразу сдвигаем диапазон, чтобы не было скачка после скрытия ромашки
+            // Если происходит порционный поиск, то не нужно сдвигать, так как ромашка не занимает места, и скачка не будет
+            const needShift = (direction === 'up' && this._indicatorsController.shouldDisplayTopIndicator() ||
+                              direction === 'down' && this._indicatorsController.shouldDisplayBottomIndicator()) &&
+                              !this._indicatorsController._isPortionedSearch();
             const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
             _private.handleScrollControllerResult(this, result);
         }

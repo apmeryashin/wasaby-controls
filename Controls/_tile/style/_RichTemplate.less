@@ -123,6 +123,15 @@
    border-radius: 60px;
 }
 
+/* Временный фикс для айпада. Перестала работать clip-path маска, изображения пропадают.
+ Ошибка https://online.sbis.ru/opendoc.html?guid=9553ecf3-76a6-4fc6-8fe4-79421763c95f
+ Сейчас сделал как в ie, чтобы изображения хотя бы были видны.
+ */
+.ws-is-mobile-safari .controls-TileView__richTemplate_image_viewMode_ellipse {
+   border-radius: 60px;
+   clip-path: none;
+}
+
 .controls-TileView__richTemplate_image {
    width: 100%;
    height: 100%;

@@ -1,6 +1,6 @@
 <div attr:class="controls-Input-DateRange">
    <div class="controls-Input-DateRange__inputs">
-      <Controls.input:DateBase
+      <Controls.date:BaseInput
               name="startValueField"
               class="controls-Input-DateRange_startValue"
               bind:value="_rangeModel.startValue"
@@ -24,7 +24,7 @@
               on:inputCompleted="_inputCompletedHandler()"
               on:tagClick="_proxyEvent('startTagClick')"
               on:tagHover="_proxyEvent('startTagHover')">
-      </Controls.input:DateBase>
+      </Controls.date:BaseInput>
       <ws:if data="{{ _options.rightFieldTemplate }}">
          <ws:partial
                  template="{{ _options.rightFieldTemplate }}"
@@ -35,7 +35,7 @@
    </div>
    <div class="controls-Input-DateRange__dash"></div>
    <div class="controls-Input-DateRange__inputs">
-      <Controls.input:DateBase
+      <Controls.date:BaseInput
               name="endValueField"
               class="controls-Input-DateRange_endValue"
               bind:value="_rangeModel.endValue"
@@ -61,7 +61,7 @@
               on:inputCompleted="_inputCompletedHandler()"
               on:tagClick="_proxyEvent('endTagClick')"
               on:tagHover="_proxyEvent('endTagHover')">
-      </Controls.input:DateBase>
+      </Controls.date:BaseInput>
       <ws:if data="{{ _options.rightFieldTemplate }}">
          <ws:partial
                  template="{{ _options.rightFieldTemplate }}"

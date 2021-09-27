@@ -175,20 +175,50 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         });
     }
 
+    protected _isDisplayItem(item, draggedItemsKeys): boolean {
+        const itemKey = item.getContents().getKey();
+        // признак того, что item входит в список перемещаемых записей
+        const isDraggableItem = this._options.draggedItemsKeys.includes(itemKey);
+
+        if (isDraggableItem) {
+            return false;
+        }
+
+        return true;
+    }
+
     protected _createItems(): T[] {
         this._hiddenIndexes = [];
         const filteredItems = this.source.items.filter((item, index) => {
             if (!item.DraggableItem) {
                 return true;
             }
-            const key = item.getContents().getKey();
+            const isDisplayItem = this._isDisplayItem(item, this._options.draggedItemsKeys);
+
+            if (!isDisplayItem) {
+                const itemKey = item.getContents().getKey();
+                // item, за который начали перемещение
+                const startingDraggableItem = this._options.draggableItem;
+
+                if (startingDraggableItem) {
+                    const startingDraggableItemKey = startingDraggableItem.getContents().getKey();
+
+                    // если item перемещается, но перемещение начали не за него, то запоминаем его индекс в наборе скрытых элементов
+                    if (itemKey !== startingDraggableItemKey) {
+                        this._hiddenIndexes.push(index);
+                    }
+                }
+            }
+            return isDisplayItem;
+
+            /*const key = item.getContents().getKey();
             const filtered = !this._options.draggedItemsKeys.includes(key);
             const draggableItem = this._options.draggableItem;
             // запоминаем индексы всех скрытых элементов
             if (!filtered && (!draggableItem || draggableItem.getContents().getKey() !== key)) {
                 this._hiddenIndexes.push(index);
             }
-            return filtered;
+            return filtered;*/
         });
         // Если не передали перетаскиваемый элемент, то не нужно создавать "призрачный" элемент
         if (!this._avatarItem && this._options.draggableItem) {
