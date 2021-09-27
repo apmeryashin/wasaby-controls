@@ -4,7 +4,6 @@ import * as Template from 'wml!Controls-demo/progress/Rating/Base/Template';
 class Rating extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected _value: number = 3.56;
-    protected _value2: number = 3.56;
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
