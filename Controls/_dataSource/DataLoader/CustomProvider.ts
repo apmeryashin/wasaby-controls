@@ -3,8 +3,8 @@ import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 
 export interface ILoadDataCustomConfig extends IBaseLoadDataConfig {
     id?: string;
-    type: 'custom';
-    loadDataMethod: Function;
+    type?: 'custom';
+    loadDataMethod?: Function;
     loadDataMethodArguments?: object;
     dependencies?: string[];
 }

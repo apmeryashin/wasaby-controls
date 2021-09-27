@@ -67,9 +67,9 @@ export interface ILoadDataConfig extends
 }
 
 export interface ILoadDataResult extends ILoadDataConfig {
-    data: RecordSet;
-    error: Error;
-    sourceController: NewSourceController;
+    data?: RecordSet;
+    error?: Error;
+    sourceController?: NewSourceController;
     filterController?: FilterController;
     searchController?: SearchController;
     collapsedGroups?: TArrayGroupId;
