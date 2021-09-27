@@ -772,6 +772,7 @@ export class Controller {
             caption: Controller._needShowTitle(action) ? action.title : null
         };
         // ItemActions настраиваются одним размером iconSize, а functionalButton - двумя iconSize + inlineHeight.
+        // Gри этом размеры s и xs отличаются для кнопок и для операций над записью/
         // Конверитруем размеры для functionalButton, подстраивая общий размер кнопки под размеры itemActions.
         if (shownAction.viewMode === 'functionalButton') {
             switch (shownAction.iconSize) {
