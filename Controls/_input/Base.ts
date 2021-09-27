@@ -555,7 +555,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
             }
         } else if (typeof this._options.placeholder === 'string') {
             const placeholderWidth = this._getTextWidth(this._options.placeholder);
-            hasFieldHorizontalScroll = this._getField()._container.clientWidth < placeholderWidth;
+            hasFieldHorizontalScroll = this._getField()?._container?.clientWidth < placeholderWidth;
             tooltip = this._options.placeholder;
         }
 
