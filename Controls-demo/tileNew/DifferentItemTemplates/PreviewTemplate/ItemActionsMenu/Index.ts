@@ -15,13 +15,6 @@ const ACTIONS = [
         showType: TItemActionShowType.MENU
     },
     {
-        id: 11,
-        icon: 'icon-Erase',
-        iconStyle: 'danger',
-        title: 'remove',
-        showType: TItemActionShowType.FIXED
-    },
-    {
         id: 2,
         icon: 'icon-Signature',
         title: 'signature',
@@ -31,13 +24,21 @@ const ACTIONS = [
         id: 3,
         icon: 'icon-Print',
         title: 'print',
-        showType: TItemActionShowType.MENU
+        iconStyle: 'warning',
+        showType: TItemActionShowType.FIXED
     },
     {
         id: 4,
         icon: 'icon-Link',
         title: 'link',
         showType: TItemActionShowType.MENU
+    },
+    {
+        id: 41,
+        icon: 'icon-Erase',
+        iconStyle: 'danger',
+        title: 'remove',
+        showType: TItemActionShowType.FIXED
     },
     {
         id: 5,
@@ -71,7 +72,21 @@ const ACTIONS = [
     }
 ];
 
-const ACTIONS_FEW = ACTIONS.slice(0, 2);
+const ACTIONS_FEW = [
+    {
+        id: 1,
+        icon: 'icon-DownloadNew',
+        title: 'download',
+        showType: TItemActionShowType.MENU
+    },
+    {
+        id: 41,
+        icon: 'icon-Erase',
+        iconStyle: 'danger',
+        title: 'remove',
+        showType: TItemActionShowType.FIXED
+    }
+];
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
