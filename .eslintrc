@@ -1,1 +1,3 @@
-C:/wasaby-controls/node_modules/saby-typescript/eslint/index.json
+{
+   "extends": "@tensor-corp"
+}
