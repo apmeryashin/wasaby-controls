@@ -1,0 +1,4 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500 ws-flexbox">
+    <Controls-demo.toggle.MoreButton.Base.Index/>
+    <Controls-demo.toggle.MoreButton.ContrastBackground.Index/>
+</div>

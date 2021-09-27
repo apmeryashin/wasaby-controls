@@ -11,6 +11,7 @@
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
+ * @includes BigSeparator Controls/_toggle/MoreButton
  * @includes CheckboxItemTemplate Controls/_toggle/CheckboxGroup/resources/ItemTemplate
  * @includes ICheckable Controls/_toggle/interface/ICheckable
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
@@ -47,6 +48,7 @@ export {default as Checkbox} from './_toggle/Checkbox';
 export {default as CheckboxMarker} from './_toggle/Checkbox/resources/CheckboxMarker';
 export {default as Separator} from './_toggle/Separator';
 export {default as BigSeparator} from './_toggle/BigSeparator';
+export {default as MoreButton} from './_toggle/MoreButton';
 export {IToggleGroupOptions, IToggleGroup} from './_toggle/interface/IToggleGroup';
 export {default as RadioGroup} from './_toggle/RadioGroup';
 export {default as ButtonGroup} from './_toggle/ButtonGroup';
