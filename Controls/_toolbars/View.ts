@@ -337,18 +337,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         const options = this._options;
         const beforeMenuOpenResult = this._notify('beforeMenuOpen', [item], {bubbling: true});
         const popupOptions = beforeMenuOpenResult?.popupOptions || {};
-        return {
+        const isVerticalDirection = options.direction === 'vertical';
+        const className = isVerticalDirection ? `controls-Toolbar-${options.direction}__popup__list` :
+            `controls-Toolbar__popup__${Toolbar._typeItem(item)} ${Toolbar._menuItemClassName(item)} controls_popupTemplate_theme-${options.theme} controls_dropdownPopup_theme-${options.theme}`;
+        const config = {
             ...this._getMenuOptions(),
             ...popupOptions,
             opener: this,
-            className: `controls-Toolbar__popup__${Toolbar._typeItem(item)} ${Toolbar._menuItemClassName(item)} controls_popupTemplate_theme-${options.theme} controls_dropdownPopup_theme-${options.theme}`,
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'left'
-            },
-            direction: {
-                horizontal: 'right'
-            },
+            className,
             templateOptions: {
                 source,
                 items,
@@ -365,6 +361,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 ...item.get('menuOptions')
             }
         };
+        if (!isVerticalDirection) {
+            config.targetPoint = {
+                vertical: 'top',
+                    horizontal: 'left'
+            };
+            config.direction = {
+                horizontal: 'right'
+            };
+        }
+        return config;
     }
 
     private _getMenuOptions(): IMenuOptions {
