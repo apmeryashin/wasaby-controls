@@ -24,6 +24,10 @@ export class MeasurerUtils {
         return itemActions;
     }
 
+    static getFixedActions(itemActions: IItemAction[]): IItemAction[] {
+        return itemActions.filter((action) => action.showType === TItemActionShowType.FIXED);
+    }
+
     /**
      * Отрезает ItemActions, которые не уместились.
      * Перемещает FIXED ItemActions в конец массива, заменяя видимые элементы, если FIXED вдруг оказались отрезаны.
@@ -35,11 +39,9 @@ export class MeasurerUtils {
         const visibleActions = itemActions.slice(0, sliceLength);
         if (sliceLength) {
             // Смотрим, осталось ли что-то в остатке
-            const slicedFixedActions = itemActions.slice(sliceLength)
-                .filter((action) => action.showType === TItemActionShowType.FIXED);
+            const slicedFixedActions = this.getFixedActions(itemActions.slice(sliceLength));
             // Смотрим ещё, были ли в видимых записях FIXED
-            const visibleFixedActions = visibleActions
-                .filter((action) => action.showType === TItemActionShowType.FIXED);
+            const visibleFixedActions = this.getFixedActions(visibleActions);
             // Если в видимых записях были FIXED, то следующий алгоритм смещает положение видимых FIXED так,
             // чтобы FIXED, добавленные из остатка не перекрывали их
             if (visibleFixedActions) {
