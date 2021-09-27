@@ -82,6 +82,32 @@
                                 </div>
                             </div>
                         </ws:if>
+
+                        <div class="controls-MyFormController__block">
+                            <div class="controls-MyFormController__row controls-demo-page__title">Наличие в магазинах:</div>
+                            <div>
+                                <Controls.list:ItemsView
+                                        items="{{_source}}"
+                                        name="list"
+                                        keyProperty="id">
+                                    <ws:editingConfig editOnClick="{{true}}"/>
+                                    <ws:itemTemplate>
+                                        <ws:partial template="Controls/list:ItemTemplate">
+                                            <ws:contentTemplate>
+                                                <ws:partial template="Controls/list:EditingTemplate"
+                                                            value="{{itemTemplate.item.contents.caption}}"
+                                                            enabled="{{true}}">
+                                                    <ws:editorTemplate>
+                                                        <Controls.input:Text contrastBackground="{{true}}"
+                                                                             bind:value="itemTemplate.item.contents.caption"/>
+                                                    </ws:editorTemplate>
+                                                </ws:partial>
+                                            </ws:contentTemplate>
+                                        </ws:partial>
+                                    </ws:itemTemplate>
+                                </Controls.list:ItemsView>
+                            </div>
+                        </div>
                     </div>
                 </Controls.form:Controller>
             </div>

@@ -2,6 +2,7 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import template = require('wml!Controls-demo/Popup/Edit/Page/templates/Stack');
+import {RecordSet} from 'Types/collection';
 import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/Popup/Edit/Page/templates/Stack';
 
@@ -16,11 +17,13 @@ export default class Stack extends Control<IStackOptions> {
     protected _indicatorState: boolean = false;
     protected _record: object;
     protected _isNewRecord: boolean;
+    protected _source: RecordSet;
 
     protected _beforeMount(options?: IStackOptions): void {
         this._dataSource = options.viewSource;
         this._isNewRecord = !options.record;
         this._record = options.record;
+        this._source = options.source;
     }
 
     protected _afterMount(): void {
