@@ -92,4 +92,22 @@ describe('Controls/operations:ControllerClass', () => {
             );
         });
     });
+
+    describe('update', () => {
+        it('notify selection changed', () => {
+            let resultSelection = [];
+            controller._notify = (e, selection) => {
+                resultSelection = selection;
+            };
+            const expectedSelection = {
+                selected: [1],
+                excluded: [2]
+            };
+            controller.update({
+                selectedKeys: expectedSelection.selected,
+                excludedKeys: expectedSelection.excluded
+            });
+            deepStrictEqual(resultSelection, expectedSelection);
+        });
+    });
 });
