@@ -402,20 +402,25 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _createTemplateControllers(cfg: IBrowserViewConfig, options: IOptions): void {
         this._listConfiguration = cfg;
         const imageVisibility = this._hasImageInItems ? 'visible' : 'hidden';
+        const templateProperties = {
+            imageProperty: options.detail.imageProperty,
+            gradientColorProperty: options.detail.gradientColorProperty,
+            descriptionProperty: options.detail.descriptionProperty
+        }
         this._tileCfg = new TileController({
             listConfiguration: this._listConfiguration,
             imageVisibility,
-            browserOptions: options
+            templateProperties
         });
         this._listCfg = new ListController({
             listConfiguration: this._listConfiguration,
             imageVisibility,
-            browserOptions: options
+            templateProperties
         });
         this._tableCfg = new TableController({
             listConfiguration: this._listConfiguration,
             imageVisibility,
-            browserOptions: options
+            templateProperties
         });
         this._columns = this._getPatchedColumns(this._columns);
     }
