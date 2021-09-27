@@ -543,16 +543,23 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      */
     _getTooltip(): string {
         let hasFieldHorizontalScroll: boolean = false;
-        const field = this._getField();
-        const readOnlyField: HTMLElement | void = this._getReadOnlyField();
+        let tooltip = this._viewModel.displayValue;
+        if (this._viewModel.displayValue) {
+            const field = this._getField();
+            const readOnlyField: HTMLElement | void = this._getReadOnlyField();
 
-        if (field) {
-            hasFieldHorizontalScroll = field.hasHorizontalScroll();
-        } else if (readOnlyField) {
-            hasFieldHorizontalScroll = this._hasHorizontalScroll(readOnlyField);
+            if (field) {
+                hasFieldHorizontalScroll = field.hasHorizontalScroll();
+            } else if (readOnlyField) {
+                hasFieldHorizontalScroll = this._hasHorizontalScroll(readOnlyField);
+            }
+        } else if (typeof this._options.placeholder === 'string') {
+            const placeholderWidth = this._getTextWidth(this._options.placeholder);
+            hasFieldHorizontalScroll = this._getField()._container.clientWidth < placeholderWidth;
+            tooltip = this._options.placeholder;
         }
 
-        return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
+        return hasFieldHorizontalScroll ? tooltip : this._options.tooltip;
     }
 
     private _calculateValueForTemplate(): string {
