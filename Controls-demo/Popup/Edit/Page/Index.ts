@@ -177,7 +177,7 @@ class Demo extends Control<IControlOptions> {
             templateOptions: {
                 record: this._createRecord(record),
                 viewSource: this._viewSource,
-                listSource: this._source
+                source: this._source
             },
             eventHandlers: {
                 onResult: this._resultHandler

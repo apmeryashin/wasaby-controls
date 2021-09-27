@@ -23,7 +23,7 @@ export default class Stack extends Control<IStackOptions> {
         this._dataSource = options.viewSource;
         this._isNewRecord = !options.record;
         this._record = options.record;
-        this._listSource = options.listSource;
+        this._listSource = options.source;
     }
 
     protected _afterMount(): void {
