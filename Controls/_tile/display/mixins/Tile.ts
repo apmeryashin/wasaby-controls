@@ -518,6 +518,7 @@ export default abstract class Tile<
         params.tileSize = this.getTileSize();
         params.tileHeight = this.getTileHeight();
         params.tileWidth = this.getTileWidth();
+        params.tileFitProperty = this.getTileFitProperty();
         params.tileWidthProperty = this.getTileWidthProperty();
         params.roundBorder = this.getRoundBorder();
         params.imageProperty = this.getImageProperty();
