@@ -179,6 +179,41 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
                return _private.getDataBySplitValue(format, newClearSplitValue);
             },
 
+            _getNewSplitValue(oldSplitValue: object, value: string): object {
+               const re = /[^A-Za-z0-9]+/g;
+               let afterCharCount = oldSplitValue.after.replace(re, '').length;
+               let beforeCharCount = oldSplitValue.before.replace(re, '').length;
+               let after;
+               let before;
+
+               for (let i = (value.length - 1); i >= 0; i--) {
+                  if (afterCharCount === 0) {
+                     after = value.substring(i + 1, value.length);
+                     break;
+                  }
+                  if (/^[0-9A-Za-z]$/g.test(value[i])) {
+                     afterCharCount--;
+                  }
+               }
+
+               for (let j = 0; j <= value.length; j++) {
+                  if (beforeCharCount === 0) {
+                     before = value.substring(0, j);
+                     break;
+                  }
+                  if (/^[0-9A-Za-z]$/g.test(value[j])) {
+                     beforeCharCount--;
+                  }
+               }
+
+               return {
+                  before,
+                  after,
+                  insert: oldSplitValue.insert,
+                  delete: oldSplitValue.delete
+               };
+            },
+
             /**
              * Ввод.
              * @param splitValue значение разбитое на части before, insert, after, delete.
@@ -188,37 +223,35 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
              * @param newFormat данные маски, на которую будет проецироваться разбитое значение.
              * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            input: function(splitValue, inputType, replacer, oldFormat, newFormat, value1: string) {
+            input(splitValue: object, inputType: string, replacer: string, oldFormat: object, newFormat: object, curDisplayValue: string): object {
                let value = splitValue.before + splitValue.delete + splitValue.after;
-               //TODO попробовать value1 подогнать под маску
-               if (value1) {
+               let newSplit;
+
+               if (curDisplayValue) {
                   const isMatch = value.match(oldFormat.searchingGroups);
                   if (!isMatch) {
-                     const formatData = Formatter.formatData(oldFormat, {value: value1, carriagePosition: 0});
-                     if (formatData && splitValue.delete === '') {
-                        if (splitValue.after === '') {
-                           splitValue.before = formatData.value;
-                        }
+                     curDisplayValue = curDisplayValue.replace(/[^A-Za-z0-9]+/g, '');
+                     const formatData = Formatter.formatData(oldFormat, {value: curDisplayValue, carriagePosition: 0});
+                     if (formatData) {
+                        newSplit = this._getNewSplitValue(splitValue, formatData.value);
+                        splitValue.before = newSplit.before;
+                        splitValue.after = newSplit.after;
                         value = formatData.value;
                      }
                   }
                }
-               var clearData = Formatter.clearData(oldFormat, value);
-               // Только при добавлении (insert'е) будет пересчитывать clearData, иначе получается, что при удалении
-               // мы в других масках не знаем, на каких местах находились удаленные символы.
+
+               let clearData = Formatter.clearData(oldFormat, value);
                if (!clearData) {
-                  if (splitValue.delete === '') {
-                     clearData = Formatter.clearData(oldFormat, value1);
-                     if (!clearData) {
-                        return;
-                     }
-                  } else {
+                  clearData = Formatter.clearData(oldFormat, curDisplayValue);
+                  if (!clearData) {
                      return;
                   }
                }
-               var clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData);
-               var result;
 
+               const clearSplitValue = newSplit ? newSplit : InputProcessor.getClearSplitValue(splitValue, clearData);
+
+               let result;
                switch (inputType) {
                   case 'insert':
                      result = InputProcessor.insert(newFormat, clearSplitValue, replacer);

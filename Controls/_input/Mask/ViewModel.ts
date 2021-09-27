@@ -50,32 +50,12 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
             }
 
             return value || '';
-            // this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
-            // const value = Formatter.clearData(this._format, displayValue)?.value || '';
-            // return value;
          }
 
          _getValue(displayValue, mask): string {
             this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
             const value = Formatter.clearData(this._format, displayValue)?.value || '';
             return value;
-         }
-
-         _getMask(value: string): string {
-            let mask;
-            if (Array.isArray(this._options.mask)) {
-               this._options.mask.some((curMask) => {
-                  const maskValid = isMaskFormatValid(value, curMask);
-                  if (maskValid) {
-                     mask = curMask;
-                  }
-                  return maskValid;
-               });
-               mask = mask || this._options.mask[0];
-            } else {
-               mask = this._options.mask;
-            }
-            return mask;
          }
 
          _convertToDisplayValue(value) {
@@ -95,68 +75,100 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
             }
          }
 
-         private _getMask1(): string {
-            if (Array.isArray(this.options.mask)) {
-               
+         private _getMask(value: string): string {
+            if (!value) {
+               let resMask = this._options.mask;
+               if (Array.isArray(this._options.mask)) {
+                  resMask = this._options.mask[0];
+               }
+               return resMask;
             }
-            const maskValid = isMaskFormatValid(value, curMask);
+
+            const value = value.replace(/[^A-Za-z0-9]+/g, '');
+            let mask;
+            if (Array.isArray(this._options.mask)) {
+               this._options.mask.some((curMask) => {
+                  const maskValid = isMaskFormatValid(value, curMask);
+                  if (maskValid) {
+                     mask = curMask;
+                  }
+                  return maskValid;
+               });
+               mask = mask || this._options.mask[0];
+            } else {
+               mask = this._options.mask;
+            }
+            return mask;
+         }
+
+         private _getFormattedValue(): string {
+            const mask = this._getMask(this.newValue);
+            const re = /[^A-Za-z0-9]+/g;
+
+            const value = this.newValue.replace(re, '');
+            const format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
+            const formatData = Formatter.formatData(format, {value, carriagePosition: 0});
+            return formatData?.value;
          }
 
          handleInput(splitValue: object, inputType: string): boolean {
             const results = [];
             let result;
+            let resValue;
             if (Array.isArray(this.options.mask)) {
+               resValue = this._getFormattedValue();
                this.options.mask.forEach((curMask) => {
                   result = this._checkMask(splitValue, inputType, curMask);
                   results.push(result);
                });
-               // const result = this.options.mask.some((mask) => {
-               //    return this._checkMask(splitValue, inputType, mask);
-               // });
-               // return result;
-
-               //const value = splitValue.before + splitValue.delete
-
-
             } else {
                result = this._checkMask(splitValue, inputType, this.options.mask);
                results.push(result);
             }
 
-            const matchResult = this._getMatchResult(results);
+            const matchResult = this._getMatchResult(results, resValue);
             return super.handleInput.call(this, _private.prepareSplitValue(matchResult));
-            //return true;
          }
 
-         private _getMatchResult(results: object[]): object {
-            const valuesLength = [];
-            results.forEach((res) => {
+         private _getMatchResult(results: object[], resValue: string): object {
+            const index = results.map((res) => {
                if (res) {
-                  valuesLength.push((res.value.replaceAll(/[^A-Za-z0-9]+/g, '').length);
+                  return res.value;
                }
-            });
-            const maxValueLength = Math.max(...valuesLength);
-            return results[results.findIndex((res) => {
-               if (res) {
-                  return (res.value.replaceAll(/[^A-Za-z0-9]+/g, '').length === maxValueLength;
-               } else {
-                  return;
-               }
-            })];
+            }).indexOf(resValue);
+
+            // Если ничего не нашли, то будем считать до символам (буквам, цифрам). Не найтись маска может, например,
+            // в таком случае: L 123 [тут каретка]2, нажали backspace, то удалится только пробел, а нужно будет
+            // удалить 3.
+            // Почему не подходит подсчет только по кол-ву символов: Задано значение L 123, выделяем цифры и
+            // пишем букву s. В masks задано ['L ddd', 'xxxxxx']. Ожидаем получить значение Ls, но значением не
+            // поменяется т.к по первой маске введенный символ не пройдет, символов будет больше и выберется L ddd маска
+            if (index === -1 || resValue === undefined) {
+               const valuesLength = [];
+               results.forEach((res) => {
+                  if (res) {
+                     valuesLength.push((res.value.replace(/[^A-Za-z0-9]+/g, '').length));
+                  }
+               });
+               const maxValueLength = Math.max(...valuesLength);
+               return results[results.findIndex((res) => {
+                  if (res) {
+                     return (res.value.replace(/[^A-Za-z0-9]+/g, '').length === maxValueLength);
+                  } else {
+                     return;
+                  }
+               })];
+            } else {
+               return results[index];
+            }
          }
 
          private _checkMask(splitValue: object, inputType: string, mask: string): boolean {
             this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format, this._value);
+            const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format, this.newValue);
             return result;
-
-
-            // if (!result) {
-            //    return false;
-            // }
-            // return super.handleInput.call(this, _private.prepareSplitValue(result));
          }
 
          setCarriageDefaultPosition(currentPosition?: number) {

@@ -90,9 +90,13 @@ class Mask extends Base {
 
     private static _validateReplacer(replacer, mask): boolean {
         let resValidate = true;
-        if (Array.isArray(mask)) {
+        if (mask === undefined) {
+            Logger.error('Mask', 'Обязательная опция mask не определена.');
+            resValidate = false;
+        } else if (Array.isArray(mask)) {
             resValidate = mask.every((curMask) => {
-                if (replacer && regExpQuantifiers.test(curMask)) {
+                if (replacer || regExpQuantifiers.test(curMask)) {
+                    // TODO обновить автодоку.
                     Logger.error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/_input/Mask/options/replacer/');
                     return false;
                 }
@@ -132,7 +136,6 @@ class Mask extends Base {
     static getOptionTypes() {
         const optionTypes = Base.getOptionTypes();
 
-        //optionTypes.mask = descriptor(String).required() || descriptor(Array).required();
         return optionTypes;
     }
 }
