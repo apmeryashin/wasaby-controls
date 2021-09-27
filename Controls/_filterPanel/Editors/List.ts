@@ -19,6 +19,7 @@ import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import * as Clone from 'Core/core-clone';
+import { TItemActionShowType } from 'Controls/itemActions';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 
@@ -28,6 +29,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
     additionalTextProperty: string;
     imageProperty?: string;
     multiSelect: boolean;
+    historyId?: string;
 }
 
 /**
@@ -77,6 +79,7 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _filter: object = {};
     protected _navigation: INavigationOptionValue<unknown> = null;
     protected _editorTarget: HTMLElement | EventTarget;
+    protected _historyService: unknown;
     private _itemsReadyCallback: Function = null;
 
     protected _beforeMount(options: IListEditorOptions): void {
@@ -113,6 +116,9 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
         this._items = items;
+        this._items.each((item) => {
+            this._setItemActions(item);
+        });
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
@@ -146,6 +152,9 @@ class ListEditor extends Control<IListEditorOptions> {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
         if (selectedKeys.length) {
+            result.forEach((item) => {
+                this._setItemActions(item);
+            });
             this._items.assign(result);
             this._setFilter(selectedKeys, this._options);
         }
@@ -212,10 +221,27 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
+    private _setItemActions(item: Model, pinned?: boolean): void {
+        if (this._options.historyId) {
+            item.set('itemActions', [
+                {
+                    id: 'action',
+                    icon: pinned ? 'icon-PinOff' : 'icon-PinNull',
+                    size: 's',
+                    showType: TItemActionShowType.TOOLBAR,
+                    handler: this._handlePinClick.bind(this)
+                }
+            ]);
+        }
+    }
+
     private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
         this._filter = {...options.filter};
         if (selectedKeys && selectedKeys.length) {
             this._filter[options.keyProperty] = selectedKeys;
+        }
+        if (options.historyId) {
+            this._filter.historyId = options.historyId;
         }
     }
 
@@ -239,6 +265,29 @@ class ListEditor extends Control<IListEditorOptions> {
         return new List({
             items: selectedItems
         });
+    }
+
+    private _handlePinClick(item: Model): void {
+        this._setItemActions(item, !item.get('pinned'));
+        this._getHistoryService().then((historyService) => {
+            historyService.update(item, {$_pinned: !item.get('pinned')}).then(() => {
+                this._children.gridView.reload();
+            });
+            return historyService;
+        });
+    }
+
+    private _getHistoryService(): Promise<unknown> {
+        if (!this._historyService) {
+             return import('Controls/history').then((history) => {
+                 this._historyService = new history.Service({
+                    historyId: this._options.historyId,
+                     pinned: true
+                });
+                 return this._historyService;
+            });
+        }
+        return Promise.resolve(this._historyService);
     }
 
     private _getTextValue(selectedKeys: number[]|string[]|Model[]): string {

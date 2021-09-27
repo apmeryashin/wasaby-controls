@@ -1,5 +1,6 @@
 <ws:template name="listBase">
-   <Controls.grid:View source="{{_options.source}}"
+   <Controls.grid:View name="gridView"
+                       source="{{_options.source}}"
                        columns="{{_columns}}"
                        filter="{{_filter}}"
                        keyProperty="{{_options.keyProperty}}"
