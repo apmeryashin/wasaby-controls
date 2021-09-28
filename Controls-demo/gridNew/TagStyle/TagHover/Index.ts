@@ -12,8 +12,8 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     protected _viewSource: Memory;
     protected _columns: IColumn[];
 
-    constructor(cfg: IControlOptions) {
-        super(cfg);
+    constructor(cfg: IControlOptions, context?: object) {
+        super(cfg, context);
         this._columns = TagStyle.getColumns();
     }
 
