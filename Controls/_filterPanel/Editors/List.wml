@@ -13,6 +13,8 @@
                        footerTemplate="{{footerTemplate}}"
                        multiSelectVisibility="onhover"
                        itemsReadyCallback="{{_itemsReadyCallback}}"
+                       itemActions="{{_itemActions}}"
+                       itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                        attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
                        on:itemClick="_handleItemClick()">
       <ws:multiSelectTemplate>
