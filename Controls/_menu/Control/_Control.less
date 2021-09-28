@@ -27,8 +27,11 @@
 .controls-Menu__row {
    position: relative;
    display: flex;
-   align-items: center;
    overflow: hidden;
+}
+
+.controls-Menu__row_align_center {
+   align-items: center;
 }
 
 .controls-Menu__row_roundBorder {
@@ -66,11 +69,6 @@
    align-items: baseline;
    left: var(--offset_2xs);
 
-   // FIXME https://online.sbis.ru/opendoc.html?guid=7201da12-e34b-432f-b949-7ca6af6573e6
-   &.controls-Menu__row_selected_iconSize_m::before {
-      line-height: var(--icon-size_m);
-   }
-
    &::before {
       content: '\200b';
       font-size: inherit;
@@ -83,6 +81,12 @@
       width: var(--marker_width_menu);
       border-radius: var(--border-radius_default_block);
    }
+}
+
+.controls-Menu__row_selected_padding {
+   top: 0;
+   padding-top: var(--item_padding-top_menu);
+   padding-bottom: var(--item_padding-bottom_menu);
 }
 
 .controls-Menu__row_selected_markerSize_default::after {

@@ -2,6 +2,7 @@
 <div attr:class="controls-Menu__row
                  {{roundBorder !== false ? 'controls-Menu__row_roundBorder'}}
                  {{rightTemplate ? 'controls-Menu__row-rightPadding_menu-rightTemplate'}}
+                 {{additionalTextTemplate ? 'controls-Menu__row-additionalTextTemplate' : 'controls-Menu__row_align_center'}}
                  controls-ListView__itemV js-controls-ListView__measurableContainer
                  {{itemData.itemClassList}}
                  controls-Menu__row_{{multiLine ? 'multiLine' : 'singleLine'}}">
@@ -16,18 +17,17 @@
    </ws:if>
 
    <ws:else>
-      <div class="controls-Menu__content_baseline"
-           style="width: {{_options.roundBorder !== false && _options.width ? _options.width + 'px'}};
-                  max-width: {{_options.roundBorder !== false && _options.width ? _options.width + 'px'}}">
       <!--Проверка isSelected будет удалена после: https://online.sbis.ru/opendoc.html?guid=dbaef61b-7b5e-4f78-9ab8-04188f3cc94e-->
       <ws:if data="{{marker !== false && (treeItem.isMarked ? treeItem.isMarked() : treeItem.isSelected())
                && (!itemData.multiSelect || itemData.isEmptyItem || itemData.isFixedItem)}}">
          <div class="controls-Menu__row_selected
-                     {{treeItem.getContents().get('icon') && !contentTemplate ? 'controls-Menu__row_selected_iconSize_' + (iconPadding || itemData.iconPadding)}}
                      controls-Menu__row_selected_markerSize_{{markerSize || 'default'}}
                         {{_options.multiLine ? 'controls-Menu__row_selected-multiLine'}}
-                        {{additionalTextTemplate ? 'controls-Menu__content_padding'}}"></div>
+                        {{additionalTextTemplate ? 'controls-Menu__row_selected_padding'}}"></div>
       </ws:if>
+      <div class="controls-Menu__content_baseline"
+           style="width: {{_options.roundBorder !== false && _options.width ? _options.width + 'px'}};
+                  max-width: {{_options.roundBorder !== false && _options.width ? _options.width + 'px'}}">
       <ws:if data="{{(multiSelectTpl || itemData.multiSelectTpl) && (itemData.multiSelect || multiSelect) && !itemData.isFixedItem}}">
          <ws:partial template="{{multiSelectTpl || itemData.multiSelectTpl}}" scope="{{_options}}" class="{{itemData.isEmptyItem ? 'controls-Menu__row-checkbox_invisible'}}"/>
       </ws:if>
