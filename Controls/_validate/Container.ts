@@ -288,7 +288,6 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         if (!this._destroyed) {
             this._clearCloseId();
             if (this._validationResult && this._validationResult.length && !this._isOpened) {
-                this._isOpened = true;
                 const cfg = {
                     target: this._container,
                     validationStatus: 'invalid',
@@ -388,13 +387,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         this._isOpened = false;
     }
 
-    // В случае если открытие вызвано во время закрытия предыдущего инфобокса
-    // может сломаться флаг isOpened closeHandler'ом предыдущего инфобокса
-    // Взводим флаг после открытия, чтобы при ситуации выше он не оказался false при открытом инфобоксе
-    // https://online.sbis.ru/opendoc.html?guid=0499d9f9-a540-4ff6-8164-d2d7c945f569
-    // Надо разобраться, _isOpened должен по идее взводиться только тогда, когда инфобокс по факту открылся
-    // Сейчас взводится синхронно перед открытием
-    private _onOpenHandler(): void {
+    protected _onOpenHandler(): void {
         this._isOpened = true;
     }
 
