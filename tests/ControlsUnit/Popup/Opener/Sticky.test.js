@@ -2,15 +2,34 @@ define(
    [
       'Controls/_popupTemplate/Sticky/StickyStrategy',
       'Controls/_popupTemplate/Sticky/StickyController',
+      'Controls/_popupTemplate/Util/PopupConfigUtil',
       'Controls/popup',
       'UI/Base',
       'Core/core-clone'
    ],
-   (StickyStrategy, StickyController, popupLib, UIBase, cClone) => {
+   (StickyStrategy, StickyController, PopupUtilConfig, popupLib, UIBase, cClone) => {
       'use strict';
 
       StickyController = StickyController.default;
       StickyStrategy = StickyStrategy.default;
+
+      describe('Sticky Utils', () => {
+         it('preparePercentSizes', () => {
+            PopupUtilConfig._getWindowWidth = () => 2000;
+            PopupUtilConfig._getWindowHeight = () => 1000;
+
+            const item = {
+               popupOptions: {
+                  width: '40%',
+                  height: '10%'
+               }
+            };
+
+            const stickyConfig = PopupUtilConfig.getStickyConfig(item);
+            assert.equal(stickyConfig.config.width, 800);
+            assert.equal(stickyConfig.config.height, 100);
+         });
+      });
 
       describe('Controls/_popup/Opener/Sticky', () => {
          var targetCoords = {
