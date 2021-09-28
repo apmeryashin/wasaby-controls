@@ -61,6 +61,7 @@ describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
     });
 
     describe('sliceAndFixActions', () => {
+        // FIXED был отрезан. Должен встать в конце
         it('Fixed Action is sliced. Should replace visible from end', () => {
             const actions: IItemAction[] = [
                 {
@@ -87,6 +88,7 @@ describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
             assert.equal(result[1], actions[2]);
         });
 
+        // FIXED был не отрезан. Должен остаться на своём месте
         it('Fixed Action is not sliced, not last. Should not change position', () => {
             const actions: IItemAction[] = [
                 {
@@ -119,6 +121,7 @@ describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
             assert.equal(result[2], actions[2]);
         });
 
+        // Один FIXED был отрезан, а второй нет, но последний видимый. Последний видимый должен сдвинуться
         it('Fixed Action is both sliced and not sliced, but last. Should change position of last', () => {
             const actions: IItemAction[] = [
                 {
@@ -152,8 +155,8 @@ describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
                 }
             ];
             const result = MeasurerUtils.sliceAndFixActions(actions, 3);
-            assert.equal(result[1], actions[3]);
-            assert.equal(result[2], actions[5]);
+            assert.equal(result[1], actions[2]);
+            assert.equal(result[2], actions[4]);
         });
     });
 });

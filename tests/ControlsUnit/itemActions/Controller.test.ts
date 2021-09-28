@@ -368,13 +368,13 @@ describe('Controls/_itemActions/Controller', () => {
                 'What the hell menu button appeared for item?');
         });
 
-        // T1.8. В список showed операций изначально попадают операции с showType TOOLBAR, MENU_TOOLBAR и FIXED,
-        // и у которых нет родителя
+        // T1.8. В список showed операций изначально попадают операции, у которых нет родителя
+        // с showType TOOLBAR, MENU_TOOLBAR и FIXED
         it('"showed" contains actions.showType===TOOLBAR|MENU_TOOLBAR|FIXED, w/o parent', () => {
             const actionsOf4 = collection.getItemBySourceKey(4).getActions();
             assert.isNotNull(actionsOf4, 'actions were not set to item 4');
-            assert.notEqual(actionsOf4.showed[0].title, 'phone',
-                'What the hell \'phone\' action is in \'showed\' array?');
+            assert.notEqual(actionsOf4.showed[0].title, 'phone');
+            assert.notEqual(actionsOf4.showed[3].title, 'Time management');
         });
 
         // T1.8.1 При установке только одной опции нужно игнорировать showType и всё показывать как TOOLBAR
