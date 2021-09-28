@@ -1,22 +1,21 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {ICheckable, ICheckableOptions} from './interface/ICheckable';
-import Template = require('wml!Controls/_toggle/MoreButton/MoreButton');
+import Template = require('wml!Controls/_buttons/MoreButton/MoreButton');
 import {IFontSize, IFontSizeOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import 'css!Controls/toggle';
+import 'css!Controls/buttons';
 
-export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions, IFontSizeOptions {
+export interface IBigSeparatorOptions extends IControlOptions, IFontSizeOptions {
     /**
      * Определяет контрастность фона кнопки по отношению к ее окружению.
      * @default true
-     * @demo Controls-demo/toggle/MoreButton/ContrastBackground/Index
+     * @demo Controls-demo/Buttons/MoreButton/ContrastBackground/Index
      */
     contrastBackground?: boolean;
     /**
      * Значение счетчика.
-     * @demo Controls-demo/toggle/MoreButton/Base/Index
+     * @demo Controls-demo/Buttons/MoreButton/Base/Index
      */
-    moreCount?: number;
+    count?: number;
 }
 
 /**
@@ -24,21 +23,19 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  *
  * @remark
  * Полезные ссылки:
- * * {@link /materials/Controls-demo/app/Controls-demo%2Ftoggle%2FMoreButton%2FIndex демо-пример}
- * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_toggle.less переменные тем оформления}
+ * * {@link /materials/Controls-demo/app/Controls-demo%2FButtons%2FMoreButton%2FIndex демо-пример}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_buttons.less переменные тем оформления}
  *
- * @class Controls/_toggle/MoreButton
+ * @class Controls/_buttons/MoreButton
  * @extends UI/Base:Control
  *
  * @public
  * @author Красильников А.С.
- * @implements Controls/toggle:ICheckable
  *
- * @demo Controls-demo/toggle/MoreButton/Index
+ * @demo Controls-demo/Buttons/MoreButton/Index
  */
 
-class MoreButton extends Control<IBigSeparatorOptions> implements ICheckable, IFontSize {
-   readonly '[Controls/_toggle/interface/ICheckable]': boolean = true;
+class MoreButton extends Control<IBigSeparatorOptions> implements IFontSize {
    readonly '[Controls/_interface/IFontSize]': boolean = true;
 
    protected _template: TemplateFunction = Template;

@@ -1,9 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/toggle/MoreButton/Index');
+import controlTemplate = require('wml!Controls-demo/Buttons/MoreButton/Base/Index');
 
-class Index extends Control<IControlOptions> {
+class Base extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
-export default Index;
+export default Base;

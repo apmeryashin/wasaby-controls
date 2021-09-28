@@ -8,6 +8,7 @@ import * as ButtonTemplate from 'wml!Controls/_buttons/ButtonBase';
 
 export {default as Button, simpleCssStyleGeneration, defaultHeight, defaultFontColorStyle, getDefaultOptions} from './_buttons/Button';
 export {default as ArrowButton, IArrowButtonOptions} from './_buttons/ArrowButton';
+export {default as MoreButton} from './_buttons/MoreButton';
 export {default as ActualApi} from './_buttons/ActualApi';
 export {IClick as IClick} from './_buttons/interface/IClick';
 export {IButton as IButton, IViewMode} from './_buttons/interface/IButton';

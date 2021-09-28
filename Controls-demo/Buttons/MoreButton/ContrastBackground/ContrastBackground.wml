@@ -1,12 +1,12 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <div class="controlsDemo__cell demo-BigSeparator__contrastBackgroundTrue">
         <div class="controls-text-label controls-text-label">contrastBackground = true</div>
-        <Controls.toggle:MoreButton moreCount="17"
+        <Controls.buttons:MoreButton moreCount="17"
                                       contrastBackground="{{true}}"/>
     </div>
     <div class="controlsDemo__cell controlsDemo__background demo-BigSeparator__contrastBackgroundFalse">
         <div class="controls-text-label controls-text-label">contrastBackground = false</div>
-        <Controls.toggle:MoreButton moreCount="17"
+        <Controls.buttons:MoreButton moreCount="17"
                                       contrastBackground="{{false}}"/>
     </div>
 </div>
