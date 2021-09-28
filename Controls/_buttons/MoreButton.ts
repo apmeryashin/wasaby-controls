@@ -4,7 +4,7 @@ import {IFontSize, IFontSizeOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/buttons';
 
-export interface IBigSeparatorOptions extends IControlOptions, IFontSizeOptions {
+export interface IMoreButtonOptions extends IControlOptions, IFontSizeOptions {
     /**
      * Определяет контрастность фона кнопки по отношению к ее окружению.
      * @default true
@@ -35,7 +35,7 @@ export interface IBigSeparatorOptions extends IControlOptions, IFontSizeOptions 
  * @demo Controls-demo/Buttons/MoreButton/Index
  */
 
-class MoreButton extends Control<IBigSeparatorOptions> implements IFontSize {
+class MoreButton extends Control<IMoreButtonOptions> implements IFontSize {
    readonly '[Controls/_interface/IFontSize]': boolean = true;
 
    protected _template: TemplateFunction = Template;
@@ -46,7 +46,7 @@ class MoreButton extends Control<IBigSeparatorOptions> implements IFontSize {
       }
    }
 
-   static getDefaultOptions(): IBigSeparatorOptions {
+   static getDefaultOptions(): IMoreButtonOptions {
       return {
          contrastBackground: true,
          fontSize: 'm'
