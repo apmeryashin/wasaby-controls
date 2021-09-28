@@ -26,6 +26,7 @@
               draggable="{{_options.draggable}}"
               backgroundStyle="transparent"
               searchPlaceholder="{{_options.searchPlaceholder}}"
+              headerBackgroundStyle="transparent"
               on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">

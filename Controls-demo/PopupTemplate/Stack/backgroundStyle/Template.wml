@@ -1,0 +1,80 @@
+<div class="controlsDemo__PopupTemplate__demoWrapper controlsDemo_fixedWidth800">
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=default"
+                                  headerBackgroundStyle="default"
+                                  backgroundStyle="default"
+                                  attr:style="margin-bottom:20px;">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label">backgroundStyle="default"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=unaccented"
+                                  backgroundStyle="unaccented"
+                                  attr:style="margin-bottom:20px;">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label}">backgroundStyle="unaccented"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=success"
+                                  headerBackgroundStyle="success"
+                                  backgroundStyle="success"
+                                  attr:style="margin-bottom:20px;">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label">backgroundStyle="success"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=danger"
+                                  backgroundStyle="danger"
+                                  headerBackgroundStyle="danger"
+                                  attr:style="margin-bottom:20px;">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label}">backgroundStyle="danger"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=secondary"
+                                  backgroundStyle="secondary"
+                                  headerBackgroundStyle="secondary"
+                                  attr:style="margin-bottom:20px;">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label">backgroundStyle="secondary"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=primary"
+                                  backgroundStyle="primary"
+                                  headerBackgroundStyle="primary"
+                                  attr:style="margin-bottom:20px;">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label}">backgroundStyle="primary"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=warning"
+                                  backgroundStyle="warning"
+                                  headerBackgroundStyle="warning"
+                                  attr:style="margin-bottom:20px;">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label">backgroundStyle="warning"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+    <Controls.popupTemplate:Stack headingCaption="headerBackgroundStyle=info"
+                                  backgroundStyle="info"
+                                  headerBackgroundStyle="info">
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="controlsDemo__ml1 controls-text-label">backgroundStyle="info"</div>
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.popupTemplate:Stack>
+</div>
