@@ -73,26 +73,52 @@ const getRestrictiveContainerCoords = (item: IStickyItem): ITargetCoords => {
     }
 };
 
+export const _getWindowWidth = (element?: HTMLElement): number => {
+    return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions(element).innerWidth;
+};
+
+export const _getWindowHeight = (element?: HTMLElement): number => {
+    return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions(element).innerHeight;
+};
+
+
+const calcSizes = (params = {}): object => {
+    const isPercentValue = (value) => (typeof value === 'string') && value.includes('%');
+    const calcPercent = (windowSize, percent) => windowSize * percent / 100;
+
+    if (isPercentValue(params.height)) {
+        const percent = parseInt(params.height, 10);
+        params.height = calcPercent(_getWindowHeight(), percent);
+    }
+
+    if (isPercentValue(params.width)) {
+        const percent = parseInt(params.width, 10);
+        params.width = calcPercent(_getWindowWidth(), percent);
+    }
+    return params;
+};
+
 export function getStickyConfig(item: IStickyItem, sizes: IPopupSizes = {}): IStickyPositionConfig {
     item.popupOptions = prepareOriginPoint(item.popupOptions);
     const restrictiveContainerCoords = getRestrictiveContainerCoords(item);
+    const config = {
+        width: item.popupOptions.width,
+        height: item.popupOptions.height,
+        minWidth: item.popupOptions.minWidth,
+        minHeight: item.popupOptions.minHeight,
+        maxWidth: item.popupOptions.maxWidth,
+        maxHeight: item.popupOptions.maxHeight
+    };
     return {
         targetPoint: cMerge(cClone(DEFAULT_OPTIONS.targetPoint), item.popupOptions.targetPoint || {}),
         restrictiveContainerCoords,
         direction: cMerge(cClone(DEFAULT_OPTIONS.direction), item.popupOptions.direction || {}),
         offset: cMerge(cClone(DEFAULT_OPTIONS.offset), item.popupOptions.offset || {}),
-        config: {
-            width: item.popupOptions.width,
-            height: item.popupOptions.height,
-            minWidth: item.popupOptions.minWidth,
-            minHeight: item.popupOptions.minHeight,
-            maxWidth: item.popupOptions.maxWidth,
-            maxHeight: item.popupOptions.maxHeight
-        },
-        sizes,
+        config: calcSizes(config),
+        sizes: calcSizes(sizes),
         fittingMode: item.popupOptions.fittingMode as IStickyPosition,
         fixPosition: item.fixPosition,
-        position: item.position
+        position: calcSizes(item.position)
     };
 }
 
@@ -121,11 +147,3 @@ export function getStickyDefaultPosition(item, target) {
 
     return position;
 }
-
-export const _getWindowWidth = (element: HTMLElement) => {
-    return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions(element).innerWidth;
-};
-
-export const _getWindowHeight = (element: HTMLElement) => {
-    return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions(element).innerHeight;
-};

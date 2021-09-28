@@ -101,6 +101,12 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
         if (this._options.targetPoint) {
             config.targetPoint = this._options.targetPoint;
         }
+        if (this._options.width) {
+            config.width = this._options.width;
+        }
+        if (this._options.height) {
+            config.height = this._options.height;
+        }
         if (this._options.direction) {
             config.direction = this._options.direction;
         }
