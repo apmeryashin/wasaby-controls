@@ -4,15 +4,10 @@
         <ws:partial attr:class="controls-EditingTemplateText__editor" template="{{editorTemplate}}" />
     </ws:if>
     <ws:else>
-        <div attr:title="{{ value }}" class="controls-EditingTemplateText
-                controls-EditingTemplateText_border-partial
-                {{ !((editableTarget || column || item || itemData) && (editableTarget || column || item || itemData).getEditingConfig().mode === 'cell') ||
-                    ((editableTarget || column || item || itemData) && (editableTarget || column || item || itemData)['[Controls/_display/grid/EmptyCell]']) ?
-                   'controls-EditingTemplateText_withPadding' }}
-                {{enabled ? 'controls-EditingTemplateText_enabled'}}
-                controls-EditingTemplateText_size_{{size ? size : 'default'}}
-                controls-EditingTemplateText_style_{{style ? style : 'default'}}
-                {{(editableTarget || column || item || itemData) && (editableTarget || column || item || itemData).isActive() ? 'controls-EditingTemplateText_active'}}">
+        <div attr:title="{{ value }}"
+             class="{{
+             (editableTarget || column || item || itemData) && (editableTarget || column || item || itemData).getEditorViewTemplateClasses({'enabled': enabled, 'size': size, 'style': style })
+             }}">
             <div class="controls-EditingTemplateText__inner">
                 <ws:partial template="{{ viewTemplate }}"/>
             </div>

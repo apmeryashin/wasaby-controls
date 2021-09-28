@@ -69,7 +69,11 @@ export default class PositionSourceMemory extends Memory {
                     total: isPosition ? {before: true, after: true} : true
                 }
             }, null);
-            return Promise.resolve(result);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(result);
+                }, 2000);
+            });
         }
     }
 

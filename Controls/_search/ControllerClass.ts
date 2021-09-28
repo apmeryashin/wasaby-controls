@@ -200,9 +200,8 @@ export default class ControllerClass {
     *    }).then((result) => {...});
     * </pre>
     */
-   update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> | QueryWhereExpression<unknown> {
-      let updateResult: void | Promise<RecordSet|Error> | QueryWhereExpression<unknown>;
-      let needLoad = false;
+   update(options: Partial<ISearchControllerOptions>): boolean {
+      let updateResult = false;
       const searchValue = options.hasOwnProperty('searchValue') ? options.searchValue : this._options.searchValue;
 
       if (this._options.root !== options.root) {
@@ -214,19 +213,12 @@ export default class ControllerClass {
 
       if (options.sourceController && options.sourceController !== this._sourceController) {
          this._sourceController = options.sourceController;
-         needLoad = true;
+         updateResult = true;
       }
 
       if (options.hasOwnProperty('searchValue')) {
          if (searchValue !== this._searchValue) {
-            needLoad = true;
-         }
-      }
-      if (needLoad) {
-         if (searchValue) {
-            updateResult = this.search(searchValue);
-         } else if (this._searchValue) {
-            updateResult = this.reset();
+            updateResult = true;
          }
       }
       // TODO: Должны ли использоваться новые опции в reset или search?

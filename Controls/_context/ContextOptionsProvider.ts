@@ -23,7 +23,8 @@ const CONTEXT_FIELDS: ReadonlyArray<keyof IContextOptionsValue> = [
     'groupProperty',
     'parentProperty',
     'operationsController',
-    'expandedItems'
+    'expandedItems',
+    'dragControlId'
 ];
 
 export default class ControllerContextProvider extends Control<IOptions> {

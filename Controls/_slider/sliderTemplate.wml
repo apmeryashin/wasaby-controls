@@ -16,6 +16,7 @@
          <ws:for data="key, point in _pointData">
             <ws:if data="{{point.name=='tooltip' && (_tooltipValue || _tooltipValue==0) && !_options.readOnly || point.name!='tooltip'}}">
                <div class="controls-Slider__point
+                          {{!_options.markerVisibility ? 'controls-Slider__point-hidden'}}
                           controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}
                           controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_{{_options.direction}}
                           controls-Slider__point{{_options.readOnly ? '_disabled' : '_enabled'}}{{_viewMode}}
@@ -47,12 +48,14 @@
                <div class="controls-Slider__line_{{_options.direction}}{{_viewMode}} controls-Slider__line
                              controls-Slider__line_{{_options.size}}_{{_options.direction}}{{_viewMode}}
                              controls-Slider__line__empty_{{_options.readOnly ? 'disabled' : 'enabled'}}{{_viewMode}}
+                             {{_options.roundedEdges ? 'controls-Slider__line-roundedEdges'}}
                              controls-Slider__line__empty">
                </div>
                <div class="controls-Slider__line_{{_options.direction}}{{_viewMode}}
                            controls-Slider__line controls-Slider__line_{{_options.size}}_{{_options.direction}}{{_viewMode}}
                            controls-Slider__line__full
-                           controls-Slider__line__full_{{_options.readOnly ? 'disabled' : 'enabled'}}{{_viewMode}}"
+                           controls-Slider__line__full_{{_options.readOnly ? 'disabled' : 'enabled'}}{{_viewMode}}
+                           {{_options.roundedEdges ? 'controls-Slider__line-roundedEdges'}}"
                     style="left: {{_options.direction === 'horizontal' ? _lineData.position + '%'}};
                         width: {{_options.direction === 'horizontal' ? _lineData.width + '%'}};
                         bottom: {{_options.direction === 'vertical' ? _lineData.position + '%'}};

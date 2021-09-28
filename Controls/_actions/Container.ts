@@ -41,8 +41,8 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     private _operationsController: OperationsController =  null;
     private _filterController: FilterController = null;
 
-    constructor() {
-        super();
+    constructor(cfg: IControlOptions, context?: object) {
+        super(cfg, context);
         this._updateActions = this._updateActions.bind(this);
         this._operationsPanelVisibleChanged = this._operationsPanelVisibleChanged.bind(this);
         this._operationsMenuVisibleChanged = this._operationsMenuVisibleChanged.bind(this);

@@ -539,6 +539,32 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._$editingColumnIndex;
     }
 
+    getEditorViewTemplateClasses(params: {
+        enabled?: boolean;
+        size?: string;
+        style?: string;
+        withPadding?: boolean;
+    } = {}): string {
+        let classes = 'controls-EditingTemplateText';
+        classes += ' controls-EditingTemplateText_border-partial';
+        classes += ` controls-EditingTemplateText_size_${params.size || 'default'}`;
+        classes += ` controls-EditingTemplateText_style_${params.style || 'default'}`;
+
+        if (params.withPadding || this.getEditingConfig().mode !== 'cell') {
+            classes += ' controls-EditingTemplateText_withPadding';
+        }
+
+        if (params.enabled) {
+            classes += ' controls-EditingTemplateText_enabled';
+        }
+
+        if (this.isActive()) {
+            classes += ' controls-EditingTemplateText_active';
+        }
+
+        return classes;
+    }
+
     acceptChanges(): void {
         (this._$contents as unknown as Model).acceptChanges();
 

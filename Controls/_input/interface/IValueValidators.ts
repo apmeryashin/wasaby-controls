@@ -48,18 +48,18 @@ export default interface IValueValidators {
  * Поле ввода даты с валидатором, который проверяет, что в поле введено значение. Так же этот валидатор устанавливается
  * в поле ввода в диалоге выбора даты, который открывается по клику на кнопку рядом с полем ввода.
  * <pre>
- * <Controls.input:DateBase>
+ * <Controls.date:BaseInput>
  *     <ws:valueValidators>
  *         <ws:Array>
  *             <ws:Function>Controls/validate:isRequired</ws:Function>
  *         </ws:Array>
  *     </ws:valueValidators>
- * </Controls.input:DateBase>
+ * </Controls.date:BaseInput>
  * </pre>
  * Поле ввода с прикладным валидатором, который проверяет, что введенное значение лежит в интервале между _startValue
  * и _endValue.
  * <pre>
- * <Controls.input:DateBase>
+ * <Controls.date:BaseInput>
  *     <ws:valueValidators>
  *         <ws:Array>
  *             <ws:Object>
@@ -70,7 +70,7 @@ export default interface IValueValidators {
  *             </ws:Object>
  *         </ws:Array>
  *     </ws:valueValidators>
- * </Controls.input:DateBase>
+ * </Controls.date:BaseInput>
  * </pre>
  *
  * @see Controls/_input/interface/IValueValidators#validateByFocusOut
@@ -83,7 +83,7 @@ export default interface IValueValidators {
  *
  * @example
  * Включаем срабатывание валидации только по внешнему тригеру. Например при валидации формы.
- * <Controls.input:Date validateByFocusOut="{{false}}"/>
+ * <Controls.date:Input validateByFocusOut="{{false}}"/>
  *
  * @see Controls/_input/interface/IValueValidators#valueValidators
  */

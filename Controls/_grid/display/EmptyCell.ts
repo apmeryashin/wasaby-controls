@@ -72,6 +72,13 @@ class EmptyCell extends mixin<
         return '';
     }
 
+    getEditorViewTemplateClasses(params): string {
+        return this.getOwner().getEditorViewTemplateClasses({
+            ...params,
+            withPadding: true
+        });
+    }
+
     //endregion
 }
 
