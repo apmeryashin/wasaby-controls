@@ -544,19 +544,20 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     _getTooltip(): string {
         let hasFieldHorizontalScroll: boolean = false;
         let tooltip = this._viewModel.displayValue;
-        if (this._viewModel.displayValue) {
-            const field = this._getField();
-            const readOnlyField: HTMLElement | void = this._getReadOnlyField();
-
-            if (field) {
-                hasFieldHorizontalScroll = field.hasHorizontalScroll();
-            } else if (readOnlyField) {
-                hasFieldHorizontalScroll = this._hasHorizontalScroll(readOnlyField);
-            }
-        } else if (typeof this._options.placeholder === 'string') {
-            const placeholderWidth = this._getTextWidth(this._options.placeholder);
-            hasFieldHorizontalScroll = this._getField()?._container?.clientWidth < placeholderWidth;
+        if (!tooltip && typeof this._options.placeholder === 'string') {
             tooltip = this._options.placeholder;
+        }
+        const field = this._getField();
+        const readOnlyField: HTMLElement | void = this._getReadOnlyField();
+
+        if (field) {
+            if (this._getField()._container) {
+                const tooltipWidth = this._getTextWidth(tooltip);
+                const computedStyle = getComputedStyle(this._getField()?._container);
+                hasFieldHorizontalScroll = parseFloat(computedStyle.width) < tooltipWidth;
+            }
+        } else if (readOnlyField) {
+            hasFieldHorizontalScroll = this._hasHorizontalScroll(readOnlyField);
         }
 
         return hasFieldHorizontalScroll ? tooltip : this._options.tooltip;
