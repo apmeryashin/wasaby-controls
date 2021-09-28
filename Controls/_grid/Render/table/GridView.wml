@@ -19,6 +19,13 @@
             </tr>
         </thead>
 
+        <!-- Контрол строит наиболее полный набор колонок таблицы. Подробное описание в контроле. -->
+        <Controls.columnScroll:RelativeColumns
+                if="{{ _options.columnScroll }}"
+                isFullGridSupport="{{ false }}"
+                bind:relativeCellContainers="_$relativeCellContainers"
+                viewColumns="{{ _getViewColumns(_options) }}"/>
+
         <!-- Header -->
         <Controls.scroll:VirtualScrollContainer if="{{ _listModel.getHeader() }}" position="top">
             <thead attr:name="header" class="{{ _listModel.getHeader().getBodyClasses() }}">
