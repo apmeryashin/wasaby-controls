@@ -7,9 +7,9 @@
    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition !== 'custom' }}">
       <ws:partial template="{{ (item || itemData).getMultiSelectTemplate() }}" item="{{ (item || itemData) }}" />
    </ws:if>
-   <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
-      <div class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
-   </ws:if>
+   <div if="{{ (item || itemData).shouldDisplayMarker(marker) }}"
+        class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"
+        attr:data-qa="{{ (item || itemData).listInstanceName }}_marker"></div>
    <div class="{{ (item || itemData).getTreeWrapperClasses() }}">
       <ws:if data="{{(item || itemData).shouldDisplayExpanderBlock()}}">
          <ws:if data="{{ (item || itemData).shouldDisplayLevelPadding(withoutLevelPadding) }}">
