@@ -73,9 +73,11 @@ class AreaCut extends Cut {
 
     protected _valueChangedHandler(event: Event, value: string): void {
         this._value = value;
-        this._expanded = true;
         this._notify('valueChanged', [value]);
-        this._notify('expandedChanged', [this._expanded]);
+        if (!this._expanded) {
+            this._expanded = true;
+            this._notify('expandedChanged', [this._expanded]);
+        }
     }
 
     protected _mousedownHandler(event: Event): void {
