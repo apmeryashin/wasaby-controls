@@ -695,7 +695,6 @@ export class Controller {
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
             showed = this._filterToolbarActions(visibleActions);
-            showed = this._sortToolbarActions(showed);
             if (this._isMenuButtonRequired(visibleActions)) {
                 showed.push({
                     id: null,
@@ -732,23 +731,6 @@ export class Controller {
                 action.showType === TItemActionShowType.FIXED
             )
         );
-    }
-
-    /**
-     * Сортирует ItemActions так, что FIXED будет в самом конце
-     * @param itemActions
-     * @private
-     */
-    private _sortToolbarActions(itemActions: IItemAction[]): IItemAction[] {
-        return itemActions.sort((actionA, actionB) => {
-            if (actionA.showType === TItemActionShowType.FIXED) {
-                return 1;
-            }
-            if (actionB.showType === TItemActionShowType.FIXED) {
-                return -1;
-            }
-            return 0;
-        });
     }
 
     /**

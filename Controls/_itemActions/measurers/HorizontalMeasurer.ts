@@ -190,15 +190,45 @@ class HorizontalMeasurer implements IMeasurer {
    }
 
    /**
-    * Вычисляет на основе горизонтальных размеров видимые опции свайпа
+    * Заполняет указанную ширину операциями над записью, с учётом FIXED.
     * @param itemActions
     * @param itemActionsSizes
-    * @param maxWidth
+    * @param containerWidth
     * @private
     */
-   private static _fillVisibleActions(itemActions: IItemAction[], itemActionsSizes: number[], maxWidth: number): IItemAction[] {
+   private static _fillVisibleActions(itemActions: IItemAction[],
+                                      itemActionsSizes: number[],
+                                      containerWidth: number): IItemAction[] {
+      // Считаем, какие операции над записью влезли в контейнер. Без учёта Fixed
+      let visibleActions: IItemAction[] =
+          this._calculateVisibleActionsInContainer(itemActions, itemActionsSizes, containerWidth);
+
+      if (visibleActions.length === itemActions.length || MeasurerUtils.getFixedActions(itemActions).length === 0) {
+         return visibleActions;
+      }
+
+      // Считаем видимые с учётом FIXED
+      visibleActions = MeasurerUtils.sliceAndFixActions(itemActions, visibleActions.length);
+      const visibleActionsSizes = visibleActions.map((itemAction) => (
+          itemActionsSizes[itemActions.indexOf(itemAction)]
+      ));
+
+      // Заново пересчитываем, какие операции над записью влезли в контейнер, уже с учётом FIXED
+      return this._calculateVisibleActionsInContainer(visibleActions, visibleActionsSizes, containerWidth);
+   }
+
+   /**
+    * Вычисляет на основе горизонтальных размеров видимые в указанной ширине контейнера операции над записью.
+    * @param itemActions
+    * @param itemActionsSizes
+    * @param containerWidth
+    * @private
+    */
+   private static _calculateVisibleActionsInContainer(itemActions: IItemAction[],
+                                                      itemActionsSizes: number[],
+                                                      containerWidth: number): IItemAction[] {
       const visibleActions: IItemAction[] = [];
-      let currentWidth: number = maxWidth;
+      let currentWidth: number = containerWidth;
       itemActions.every((action, index) => {
          currentWidth -= itemActionsSizes[index];
          if (currentWidth < 0) {
@@ -207,33 +237,6 @@ class HorizontalMeasurer implements IMeasurer {
          visibleActions.push(action);
          return true;
       });
-
-      // 1. Проверяем, есть ли FIXED среди остатка, если да, узнаём их размеры.
-      // 2. Проверяем, есть ли FIXED в visible, если да, узнаём их размеры.
-      // 3. Берём все sliced.FIXED, заменяем visible, смещая visible.FIXED
-      // 4. Заново отрезаем их по width проверку как они умещаются в width. (Попробовать реверснуть массив ???).
-      //    Надо, чтобы FIXED были видимые в приоритете.
-
-      // if (visibleActions.length < itemActions.length && MeasurerUtils.getFixedActions(itemActions)) {
-      //    const slicedFixedActions = MeasurerUtils.getFixedActions(itemActions.slice(visibleActions.length));
-      //    const slicedFixedActionsSizes = slicedFixedActions.map();
-      //    const visibleFixedActions = MeasurerUtils.getFixedActions(visibleActions);
-      //    const visibleFixedActionsSizes = MeasurerUtils.getFixedActions(visibleActions);
-      //
-      //    if (visibleFixedActions.length) {
-      //       let lastVisibleFixedAction = visibleFixedActions.pop();
-      //       const delta = visibleActions.length - slicedFixedActions.length;
-      //       while (lastVisibleFixedAction && delta <= visibleActions.indexOf(lastVisibleFixedAction)) {
-      //          slicedFixedActions.unshift(lastVisibleFixedAction);
-      //          lastVisibleFixedAction = visibleFixedActions.pop();
-      //       }
-      //    }
-      //    // Заменяем с конца видимые записи на FIXED из остатка
-      //    if (slicedFixedActions.length) {
-      //       visibleActions
-      //           .splice(-slicedFixedActions.length, slicedFixedActions.length, ...slicedFixedActions);
-      //    }
-      // }
 
       return visibleActions;
    }
