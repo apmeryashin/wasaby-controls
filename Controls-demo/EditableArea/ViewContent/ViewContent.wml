@@ -16,7 +16,7 @@
          editObject="{{_editObjectRange}}">
          <Controls.editableArea:DateTime bind:value="content.editObject.date">
             <ws:editorTemplate>
-               <Controls.input:DateBase contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
+               <Controls.date:BaseInput contrastBackground="{{true}}" attr:class="controls-Input_negativeOffset"/>
             </ws:editorTemplate>
          </Controls.editableArea:DateTime>
       </Controls.editableArea:View>

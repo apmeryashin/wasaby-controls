@@ -39,6 +39,7 @@ const PAGE_CONFIGS = {
 class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _viewSource: Memory;
+    protected _source: RecordSet;
     protected _gridColumns: object[];
     protected _gridHeader: object[];
     protected _items: RecordSet = null;
@@ -49,6 +50,37 @@ class Demo extends Control<IControlOptions> {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: data.default.catalog
+        });
+        this._source = new RecordSet({
+            rawData: [
+                {
+                    id: '1',
+                    caption: 'Metro'
+                },
+                {
+                    id: '2',
+                    caption: 'Lenta'
+                },
+                {
+                    id: '3',
+                    caption: 'AzbukaVkusa'
+                },
+                {
+                    id: '4',
+                    caption: 'VkusVill'
+                }
+            ],
+            format: [
+                {
+                    name: 'id',
+                    type: 'string'
+                },
+                {
+                    name: 'caption',
+                    type: 'string'
+                }
+            ],
+            keyProperty: 'id'
         });
         this._gridColumns = [
             {
@@ -144,7 +176,8 @@ class Demo extends Control<IControlOptions> {
             width: 400,
             templateOptions: {
                 record: this._createRecord(record),
-                viewSource: this._viewSource
+                viewSource: this._viewSource,
+                source: this._source
             },
             eventHandlers: {
                 onResult: this._resultHandler

@@ -1,3 +1,5 @@
+import { TemplateFunction } from "UI/Base";
+
 export interface IDraggableOptions {
     itemsDragNDrop?: boolean;
     draggingTemplate?: Function;
@@ -20,6 +22,8 @@ export interface IDraggableOptions {
  */
 export default interface IDraggable {
     readonly '[Controls/_interface/IDraggable]': boolean;
+    itemsDragNDrop: boolean;
+    draggingTemplate: TemplateFunction;
 }
 
 /**

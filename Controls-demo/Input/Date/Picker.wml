@@ -1,5 +1,5 @@
 <div class="controlsDemo-Input-DatePicker">
-   <h1>Controls.input:Date</h1>
+   <h1>Controls.date:Input</h1>
    <div class="controlsDemo-Input-DatePicker__content">
       <ws:for data="mask in _masks">
          <div class="controlsDemo-Input-DatePicker__row">
@@ -7,12 +7,12 @@
                {{mask}}
             </div>
             <div class="controlsDemo-Input-DatePicker__row-item">
-               <Controls.input:Date
+               <Controls.date:Input
                        bind:value="_emptyDate"
                        mask="{{mask}}"/>
             </div>
             <div class="controlsDemo-Input-DatePicker__row-item">
-               <Controls.input:Date
+               <Controls.date:Input
                        bind:value="_date"
                        mask="{{mask}}"/>
             </div>
@@ -22,18 +22,18 @@
       <h3>Baseline with inline blocks</h3>
       <div>
          Text:
-         <Controls.input:Date
+         <Controls.date:Input
                  value="{{_date}}"
                  mask="{{mask}}"/>
       </div>
 
       <h3>Demo with tagStyle</h3>
       <div>
-         <Controls.input:Date
+         <Controls.date:Input
                  value="{{_date}}"
                  mask="{{mask}}"
                  tagStyle="{{'primary'}}"/>
-         <Controls.input:Date
+         <Controls.date:Input
                  value="{{_date}}"
                  mask="{{mask}}"
                  tagStyle="{{'info'}}"/>
@@ -42,7 +42,7 @@
       <h3>With custom day renderer</h3>
       <div>
          Text:
-         <Controls.input:Date
+         <Controls.date:Input
                  value="{{_date}}"
                  mask="{{mask}}"
                  calendarSource="{{_source}}">
@@ -55,7 +55,7 @@
                   </ws:contentTemplate>
                </ws:partial>
             </ws:dayTemplate>
-         </Controls.input:Date>
+         </Controls.date:Input>
       </div>
    </div>
 </div>

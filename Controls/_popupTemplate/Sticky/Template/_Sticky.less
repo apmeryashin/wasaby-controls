@@ -27,10 +27,6 @@
    box-shadow: var(--box-shadow_sticky);
 }
 
-.controls-StickyTemplate-background-default {
-    background-color: var(--background-color_sticky);
-}
-
 .controls-StickyTemplate__top-area {
    display: flex;
    align-items: center;
@@ -114,4 +110,14 @@
    display: flex;
    align-items: center;
    flex-shrink: 0;
+}
+
+.controls-StickyTemplate-visibility {
+   opacity: 1;
+   transition: opacity 0.3s;
+}
+
+.controls-StickyTemplate-visibility-hidden {
+   opacity: 0;
+   pointer-events: none;
 }

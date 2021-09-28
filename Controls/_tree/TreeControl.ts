@@ -667,11 +667,13 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     protected _beforeUpdate(newOptions: TOptions) {
         const sourceController = this.getSourceController();
         let updateSourceController = false;
+        const viewModelConstructorChanged = newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+            (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
 
-            if (this._listViewModel) {
+            if (this._listViewModel && !viewModelConstructorChanged) {
                 this._listViewModel.setRoot(this._root);
             }
 

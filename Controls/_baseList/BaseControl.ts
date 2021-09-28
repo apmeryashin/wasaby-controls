@@ -659,9 +659,14 @@ const _private = {
 
         if (self._sourceController) {
             const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
-            if (_private.isPortionedLoad(self) && direction === 'up') {
-                // После того как закончились данные вниз, мы можем по скроллу начать подгрузку данных уже вверх.
-                self._indicatorsController.continueDisplayPortionedSearch('top');
+            if (_private.isPortionedLoad(self)) {
+                const portionedSearchDirection = self._indicatorsController.getPortionedSearchDirection();
+                if (direction === 'up' && portionedSearchDirection !== 'up' && !self._hasMoreData('down')) {
+                    // Если включен порицонный поиск в обе стороны, то мы в первую очередь грузим данные вниз
+                    // до самого конца. После этого показываем индикатор и триггер сверху. И по скроллу, если больше
+                    // нет данных вниз и порционный поиск уже не идет вверх, продолжаем искать данные вверх.
+                    self._indicatorsController.continueDisplayPortionedSearch('top');
+                }
             } else {
                 self._indicatorsController.recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
@@ -705,18 +710,21 @@ const _private = {
                 // и событие add не сработает
                 const hasMoreData = _private.getHasMoreData(self);
                 self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
-                self._indicatorsController.recountIndicators(direction);
 
-                if (_private.isPortionedLoad(self, addedItems) && !hasMoreData.down && !hasMoreData.up) {
-                    self._indicatorsController.endDisplayPortionedSearch();
-                } else {
-                    const searchDirection = self._indicatorsController.getPortionedSearchDirection();
-                    if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
-                        // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
-                        // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                if (_private.isPortionedLoad(self, addedItems)) {
+                    if (!hasMoreData.down && !hasMoreData.up) {
                         self._indicatorsController.endDisplayPortionedSearch();
-                        self._indicatorsController.displayTopIndicator(true);
+                    } else {
+                        const searchDirection = self._indicatorsController.getPortionedSearchDirection();
+                        if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
+                            // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
+                            // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                            self._indicatorsController.endDisplayPortionedSearch();
+                            self._indicatorsController.displayTopIndicator(true);
+                        }
                     }
+                } else {
+                    self._indicatorsController.recountIndicators(direction);
                 }
 
                 return addedItems;
@@ -1182,7 +1190,7 @@ const _private = {
                 self._children.listView?.getTopLoadingTrigger(),
                 self._children.listView?.getBottomLoadingTrigger()
             );
-            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize);
+            self._indicatorsController?.setViewportFilled(self._viewSize > self._viewportSize && self._viewportSize);
         }
         return self._viewSize;
     },
@@ -1405,6 +1413,10 @@ const _private = {
 
                             // после ресета пытаемся подгрузить данные, возможно вернули не целую страницу
                             _private.tryLoadToDirectionAgain(self);
+                        }
+
+                        if (!_private.isPortionedLoad(self) && self._indicatorsController.isDisplayedPortionedSearch()) {
+                            self._indicatorsController.endDisplayPortionedSearch();
                         }
 
                         // Нужно обновить hasMoreData. Когда произойдет _beforeUpdate уже будет поздно,
@@ -3388,7 +3400,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._children.listView?.getTopLoadingTrigger(),
             this._children.listView?.getBottomLoadingTrigger()
         );
-        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize);
+        // viewSize обновляется раньше чем viewportSize, поэтому проверяем что viewportSize уже есть
+        this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
             this._observersController?.setScrollTop(
@@ -3837,19 +3850,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             });
         }
 
-        if (_private.hasSelectionController(this)) {
-            _private.updateSelectionController(this, newOptions);
-
-            const selectionController = _private.getSelectionController(this, newOptions);
-            const allowClearSelectionBySelectionViewMode =
-                this._options.selectionViewMode === newOptions.selectionViewMode ||
-                newOptions.selectionViewMode !== 'selected';
-            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
-            if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
-                _private.changeSelection(this, { selected: [], excluded: [] });
-            }
-        }
-
         if (newOptions.sourceController || newOptions.items) {
             const items = newOptions.sourceController?.getItems() || newOptions.items;
             const sourceControllerChanged = this._options.sourceController !== newOptions.sourceController;
@@ -3917,6 +3917,19 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     _private.tryLoadToDirectionAgain(this, null, newOptions);
                     _private.prepareFooter(this, newOptions, this._sourceController);
                 }
+            }
+        }
+
+        if (_private.hasSelectionController(this)) {
+            _private.updateSelectionController(this, newOptions);
+
+            const selectionController = _private.getSelectionController(this, newOptions);
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
+                _private.changeSelection(this, { selected: [], excluded: [] });
             }
         }
 

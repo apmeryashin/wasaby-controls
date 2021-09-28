@@ -2,7 +2,6 @@
     <div class="controls_popupTemplate_theme-{{_options.theme}}
                 controls-StickyTemplate
                 {{_options.roundBorder !== false ? 'controls-StickyTemplate_roundBorder'}}
-                controls-StickyTemplate-background-{{_options.backgroundStyle}}
                 {{_options.shadowVisible ? 'controls-StickyTemplate-shadow'}}
                 {{_options.draggable ? 'ws-window-draggable'}}"
          on:mousedown="_onMouseDown()"
@@ -31,9 +30,9 @@
             </ws:if>
         </ws:else>
         <ws:if data="{{_options.bodyContentTemplate}}">
-            <div class="controls-StickyTemplate__content-area">
+            <div class="controls-StickyTemplate__content-area controls-background-{{_options.backgroundStyle}} {{_getRoundClass()}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
-                            attr:class="{{!_options.footerContentTemplate ? 'controls-StickyTemplate__bottom_roundBorder'}}"
+                            attr:class="{{_getRoundClass()}}"
                             isDragging="{{_dragging}}"
                             scope="{{_options}}"></ws:partial>
             </div>

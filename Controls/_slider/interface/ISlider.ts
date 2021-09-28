@@ -15,13 +15,15 @@ export interface ISliderOptions {
     viewMode?: string;
     tooltipFontSize?: TFontSize;
     scaleFontSize?: TFontSize;
+    markerVisibility?: boolean;
+    roundedEdges?: boolean;
 }
 /**
  * Интерфейс для контрола Слайдер.
  *
  * @interface Controls/_slider/interface/ISlider
  * @public
- * @author Колесова П.C.
+ * @author Мочалов М.А.
  */
 
 /*
@@ -194,4 +196,18 @@ export interface ISlider {
  * @cfg {TFontSize} Задает размер шрифта шкалы.
  * @demo Controls-demo/Slider/Base/FontSize/Index
  * @default m
+ */
+
+/**
+ * @name Controls/_slider/interface/ISlider#markerVisibility
+ * @cfg {boolean} Определяет видимость макркера и тултипа.
+ * @demo Controls-demo/Slider/Base/markerVisibility/Index
+ * @default true
+ */
+
+/**
+ * @name Controls/_slider/interface/ISlider#roundedEdges
+ * @cfg {boolean} Определяет скругление углов линии слайдера.
+ * @demo Controls-demo/Slider/Base/roundedEdges/Index
+ * @default false
  */

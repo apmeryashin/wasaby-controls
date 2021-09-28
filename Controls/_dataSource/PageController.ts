@@ -1,4 +1,5 @@
 import {isLoaded, loadSync, loadAsync} from 'WasabyLoader/ModulesLoader';
+import {TLoadResultMap} from 'Controls/dataSource';
 
 export interface IPageConfig {
     templateOptions?: IPageContentConfig;
@@ -19,9 +20,14 @@ interface IWorkspaceConfig {
     templateOptions?: Record<string, unknown>;
 }
 
-type TLoadResult = Record<string, unknown>;
-interface ILoaderResult {
-    prefetchResult: unknown;
+interface IPrefetchData {
+    configError: Error;
+    data: {
+        [key: string]: {
+            prefetchData: unknown;
+            prefetchPromise: unknown;
+        }
+    }
 }
 
 /**
@@ -92,9 +98,12 @@ class PageController {
                             ...additionalOptions
                         }
                     };
-                    DataLoader.loadData(prefetchConfig).then((result) => {
-                        resolve(result.configError || this._getPreparedLoadResult(result.data));
-                    }, reject).catch((err) => reject(err));
+                    DataLoader.loadData(prefetchConfig).then((prefetch) => {
+                        if (prefetch.configError) {
+                            throw new Error(prefetch.configError);
+                        }
+                        resolve(prefetch.data);
+                    }).catch(reject);
                 } else {
                     reject();
                 }
@@ -102,10 +111,24 @@ class PageController {
         });
     }
 
-    private _getPreparedLoadResult(prefetchResult: Record<string, ILoaderResult>): TLoadResult {
+    /**
+     * Возвращает из формата предзагрузки объект с результатами
+     * @param loadResult
+     */
+    awaitLoadResult(loadResult: Promise<object>): Promise<TLoadResultMap> {
+        return loadResult.then((prefetchResult) => {
+            return this.prepareLoadResult(prefetchResult);
+        });
+    }
+
+    /**
+     * Преобразует предзагруженные данные из формата SabyPage в конечный формат, который приходит в прикладные контролы
+     * @param preloadData
+     */
+    prepareLoadResult(preloadData: IPrefetchData): TLoadResultMap {
         const result = {};
-        Object.keys(prefetchResult).forEach((key) => {
-            result[key] = prefetchResult[key].prefetchResult;
+        Object.keys(preloadData).forEach((key) => {
+            result[key] = preloadData[key].prefetchResult;
         });
         return result;
     }

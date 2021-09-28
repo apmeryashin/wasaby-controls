@@ -2,15 +2,34 @@ define(
    [
       'Controls/_popupTemplate/Sticky/StickyStrategy',
       'Controls/_popupTemplate/Sticky/StickyController',
+      'Controls/_popupTemplate/Util/PopupConfigUtil',
       'Controls/popup',
       'UI/Base',
       'Core/core-clone'
    ],
-   (StickyStrategy, StickyController, popupLib, UIBase, cClone) => {
+   (StickyStrategy, StickyController, PopupUtilConfig, popupLib, UIBase, cClone) => {
       'use strict';
 
       StickyController = StickyController.default;
       StickyStrategy = StickyStrategy.default;
+
+      describe('Sticky Utils', () => {
+         it('preparePercentSizes', () => {
+            PopupUtilConfig._getWindowWidth = () => 2000;
+            PopupUtilConfig._getWindowHeight = () => 1000;
+
+            const item = {
+               popupOptions: {
+                  width: '40%',
+                  height: '10%'
+               }
+            };
+
+            const stickyConfig = PopupUtilConfig.getStickyConfig(item);
+            assert.equal(stickyConfig.config.width, 800);
+            assert.equal(stickyConfig.config.height, 100);
+         });
+      });
 
       describe('Controls/_popup/Opener/Sticky', () => {
          var targetCoords = {
@@ -135,7 +154,7 @@ define(
             StickyController.elementCreated(item, container);
             assert.equal(typeof item.positionConfig, 'object'); // Конфиг сохранился
             assert.equal(item.sizes.width, 100); // Конфиг сохранился
-            var classes = item.popupOptions.className;
+            var classes = item.popupOptions.className + ' controls-StickyTemplate-visibility';
 
             StickyController.elementUpdated(item, container);
             assert.equal(item.popupOptions.className, classes); // Классы не поменялись

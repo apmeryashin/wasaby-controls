@@ -17,5 +17,7 @@
             _isSVGIcon="{{_isSVGIcon}}"
             _textAlign="{{_textAlign}}"
             _translucent="{{_options.translucent}}"
+            _tooltip="{{_tooltip}}"
             on:click="_clickHandler()"
+            on:mouseenter="_onMouseEnterHandler()"
             on:keypress="_keyUpHandler()"/>

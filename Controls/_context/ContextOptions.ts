@@ -36,6 +36,7 @@ export interface IContextOptionsValue extends ISortingOptions {
    parentProperty?: string;
    operationsController: OperationsController;
    expandedItems: CrudEntityKey[];
+   dragControlId: string;
 }
 
 const Context = DataContext.extend({
