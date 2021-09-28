@@ -2,9 +2,9 @@ import tmpl = require('wml!Controls/_form/FormController/FormController');
 import { TemplateFunction, Control } from 'UI/Base';
 import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
-import { error as dataSourceError } from 'Controls/dataSource';
-import { ErrorViewMode, ErrorViewConfig, ErrorController, DialogOpener } from 'Controls/error';
-import { Model } from 'Types/entity';
+import {error as dataSourceError} from 'Controls/dataSource';
+import {DialogOpener, ErrorController, ErrorViewConfig, ErrorViewMode} from 'Controls/error';
+import {Model} from 'Types/entity';
 import {CRUD_EVENTS, default as CrudController, ICrudConfig} from 'Controls/_form/CrudController';
 import ControllerBase from 'Controls/_form/ControllerBase';
 import {default as IFormController} from 'Controls/_form/interface/IFormController';
@@ -52,6 +52,12 @@ export const enum INITIALIZING_WAY {
     DELAYED_READ = 'delayedRead',
     DELAYED_CREATE = 'delayedCreate'
 }
+
+const DELAYED_INITIALIZING_WAYS = [
+    INITIALIZING_WAY.DELAYED_CREATE,
+    INITIALIZING_WAY.DELAYED_READ,
+    INITIALIZING_WAY.PRELOAD
+];
 
 /**
  * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью.
@@ -241,7 +247,7 @@ class FormController extends ControllerBase<IFormController> {
         Для корректной работы требуется передать опцию ${requiredOptionName}, либо изменить значение initializingWay`);
     }
 
-    private _calcInitializingWay(options: IFormController): string {
+    private _calcInitializingWay(options: IFormController): INITIALIZING_WAY {
         if (options.initializingWay) {
             return options.initializingWay;
         }
@@ -551,7 +557,7 @@ class FormController extends ControllerBase<IFormController> {
         return this._errorController.process({
             error,
             theme: this._options.theme,
-            mode: mode || ErrorViewMode.include
+            mode: mode || this._getErrorProcessingMode()
         }).then((errorConfig: ErrorViewConfig) => {
             if (errorConfig) {
                 this._showError(errorConfig);
@@ -562,6 +568,16 @@ class FormController extends ControllerBase<IFormController> {
                 errorConfig
             };
         });
+    }
+
+    /**
+     * Если выбран способ инициализации с дфухфазной отрисовкой, то показываем ошибку в диалоге,
+     * т.к. мы уже показали какой-то контент и не логично его затирать ошибкой
+     * @private
+     */
+    private _getErrorProcessingMode(): ErrorViewMode {
+        const initializingWay = this._calcInitializingWay(this._options);
+        return DELAYED_INITIALIZING_WAYS.includes(initializingWay) ? ErrorViewMode.dialog : ErrorViewMode.include;
     }
 
     /**
