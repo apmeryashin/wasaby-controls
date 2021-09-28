@@ -3,7 +3,7 @@
  * Шаблон-обертка для валидации контролов, не имеющих собственной обводки
  *
  * @class Controls/validate:Highlighter
- * @author Колесова П.С.
+ * @author Онищук Д.В.
  * @example
  * В следующем примере показано, как добавить
  * <pre class="brush: html">
