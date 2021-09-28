@@ -33,7 +33,7 @@ class SubMenuDirection extends Control<IControlOptions> {
             { id: 10, title: 'Coordination of change prices', parent: 4 },
             { id: 11, title: 'Matching new dish', parent: 4 }
          ]
-      }),
+      });
       this._sourceWithIcons = new Memory({
           keyProperty: 'key',
           data: [
