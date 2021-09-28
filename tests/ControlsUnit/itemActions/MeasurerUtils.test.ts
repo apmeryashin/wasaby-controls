@@ -1,7 +1,6 @@
-import { assert } from 'chai';
-import { stub, SinonStub, mock } from 'sinon';
-import { MeasurerUtils } from 'Controls/_itemActions/measurers/MeasurerUtils';
-import { IItemAction } from 'Controls/_itemActions/interface/IItemAction';
+import {assert} from 'chai';
+import {MeasurerUtils} from 'Controls/_itemActions/measurers/MeasurerUtils';
+import {IItemAction, TItemActionShowType} from 'Controls/_itemActions/interface/IItemAction';
 
 describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
     it('getActualActions', () => {
@@ -12,7 +11,8 @@ describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
             },
             {
                 id: 2,
-                icon: 'icon-Erase'
+                icon: 'icon-Erase',
+                showType: TItemActionShowType.TOOLBAR
             },
             {
                 id: 3,
@@ -27,35 +27,133 @@ describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
             {
                 id: 5,
                 icon: 'icon-Erase',
-                showType: 2
+                showType: TItemActionShowType.FIXED
             },
             {
                 id: 6,
                 icon: 'icon-EmptyMessage',
-                showType: 0
+                showType: TItemActionShowType.MENU
             }
         ];
         const actual: IItemAction[] = [
             {
-                id: 5,
+                id: 2,
                 icon: 'icon-Erase',
-                showType: 2
+                showType: TItemActionShowType.TOOLBAR
             },
             {
                 id: 1,
                 icon: 'icon-PhoneNull'
             },
             {
-                id: 2,
-                icon: 'icon-Erase'
+                id: 5,
+                icon: 'icon-Erase',
+                showType: TItemActionShowType.FIXED
             },
             {
                 id: 6,
                 icon: 'icon-EmptyMessage',
-                showType: 0
+                showType: TItemActionShowType.MENU
             }
         ];
         const result = MeasurerUtils.getActualActions(actions);
         assert.deepEqual(actual, result);
+    });
+
+    describe('sliceAndFixActions', () => {
+        it('Fixed Action is sliced. Should replace visible from end', () => {
+            const actions: IItemAction[] = [
+                {
+                    id: 2,
+                    icon: 'icon-Erase',
+                    showType: TItemActionShowType.TOOLBAR
+                },
+                {
+                    id: 1,
+                    icon: 'icon-PhoneNull'
+                },
+                {
+                    id: 5,
+                    icon: 'icon-Erase',
+                    showType: TItemActionShowType.FIXED
+                },
+                {
+                    id: 6,
+                    icon: 'icon-EmptyMessage',
+                    showType: TItemActionShowType.MENU
+                }
+            ];
+            const result = MeasurerUtils.sliceAndFixActions(actions, 2);
+            assert.equal(result[1], actions[2]);
+        });
+
+        it('Fixed Action is not sliced, not last. Should not change position', () => {
+            const actions: IItemAction[] = [
+                {
+                    id: 2,
+                    icon: 'icon-Erase',
+                    showType: TItemActionShowType.TOOLBAR
+                },
+                {
+                    id: 5,
+                    icon: 'icon-Erase',
+                    showType: TItemActionShowType.FIXED
+                },
+                {
+                    id: 3,
+                    icon: 'icon-EmptyMessage',
+                    showType: TItemActionShowType.TOOLBAR
+                },
+                {
+                    id: 1,
+                    icon: 'icon-PhoneNull'
+                },
+                {
+                    id: 6,
+                    icon: 'icon-EmptyMessage',
+                    showType: TItemActionShowType.MENU
+                }
+            ];
+            const result = MeasurerUtils.sliceAndFixActions(actions, 3);
+            assert.equal(result[1], actions[1]);
+            assert.equal(result[2], actions[2]);
+        });
+
+        it('Fixed Action is both sliced and not sliced, but last. Should change position of last', () => {
+            const actions: IItemAction[] = [
+                {
+                    id: 1,
+                    icon: 'icon-PhoneNull'
+                },
+                {
+                    id: 2,
+                    icon: 'icon-Erase',
+                    showType: TItemActionShowType.TOOLBAR
+                },
+                {
+                    id: 3,
+                    icon: 'icon-EmptyMessage',
+                    showType: TItemActionShowType.FIXED
+                },
+                {
+                    id: 4,
+                    icon: 'icon-PhoneNull',
+                    showType: TItemActionShowType.TOOLBAR
+                },
+                {
+                    id: 5,
+                    icon: 'icon-Erase',
+                    showType: TItemActionShowType.FIXED
+                },
+                {
+                    id: 6,
+                    icon: 'icon-EmptyMessage',
+                    showType: TItemActionShowType.MENU
+                }
+            ];
+            const result = MeasurerUtils.sliceAndFixActions(actions, 3);
+            assert.equal(result[1], actions[3]);
+            assert.equal(result[2], actions[5]);
+        });
     });
 });
