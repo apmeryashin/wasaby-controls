@@ -161,8 +161,8 @@ class HorizontalMeasurer implements IMeasurer {
 
       // По стандарту, показываем не более трёх опций в свайпе.
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
-      const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
-      const itemActionsContainerWidth = DOMUtil.getWidthForCssClass(`controls-Swipe_horizontal`);
+      const itemActions = MeasurerUtils.sliceAndFixActions(actions, MAX_ACTIONS_COUNT);
+      const itemActionsContainerWidth = DOMUtil.getWidthForCssClass('controls-Swipe_horizontal');
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
       let availableWidth = rowWidth - itemActionsContainerWidth;
       let menuItemAction: IItemAction;
@@ -190,7 +190,7 @@ class HorizontalMeasurer implements IMeasurer {
    }
 
    /**
-    * Заполняет указанную ширину операциями над записью, с учётом FIXED.
+    * Вычисляет на основе горизонтальных размеров видимые операции над записью.
     * @param itemActions
     * @param itemActionsSizes
     * @param containerWidth
@@ -199,34 +199,6 @@ class HorizontalMeasurer implements IMeasurer {
    private static _fillVisibleActions(itemActions: IItemAction[],
                                       itemActionsSizes: number[],
                                       containerWidth: number): IItemAction[] {
-      // Считаем, какие операции над записью влезли в контейнер. Без учёта Fixed
-      let visibleActions: IItemAction[] =
-          this._calculateVisibleActionsInContainer(itemActions, itemActionsSizes, containerWidth);
-
-      if (visibleActions.length === itemActions.length || MeasurerUtils.getFixedActions(itemActions).length === 0) {
-         return visibleActions;
-      }
-
-      // Считаем видимые с учётом FIXED
-      visibleActions = MeasurerUtils.sliceAndFixActions(itemActions, visibleActions.length);
-      const visibleActionsSizes = visibleActions.map((itemAction) => (
-          itemActionsSizes[itemActions.indexOf(itemAction)]
-      ));
-
-      // Заново пересчитываем, какие операции над записью влезли в контейнер, уже с учётом FIXED
-      return this._calculateVisibleActionsInContainer(visibleActions, visibleActionsSizes, containerWidth);
-   }
-
-   /**
-    * Вычисляет на основе горизонтальных размеров видимые в указанной ширине контейнера операции над записью.
-    * @param itemActions
-    * @param itemActionsSizes
-    * @param containerWidth
-    * @private
-    */
-   private static _calculateVisibleActionsInContainer(itemActions: IItemAction[],
-                                                      itemActionsSizes: number[],
-                                                      containerWidth: number): IItemAction[] {
       const visibleActions: IItemAction[] = [];
       let currentWidth: number = containerWidth;
       itemActions.every((action, index) => {
