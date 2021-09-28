@@ -180,6 +180,8 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
             },
 
             _getNewSplitValue(oldSplitValue: object, value: string): object {
+               // Разобьем новое отформатированное значение, before и after нового value посчитаем по кол-ву букв/цифр
+               // исходного splitValue.
                const re = /[^A-Za-z0-9]+/g;
                let afterCharCount = oldSplitValue.after.replace(re, '').length;
                let beforeCharCount = oldSplitValue.before.replace(re, '').length;
@@ -214,6 +216,27 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
                };
             },
 
+            _getDataByCurDisplayValue(oldValue: string,
+                                      oldSplitValue: object,
+                                      oldFormat: object,
+                                      curDisplayValue: string): object {
+               let newSplit;
+               if (curDisplayValue) {
+                  const isMatch = oldValue.match(oldFormat.searchingGroups);
+                  if (!isMatch) {
+                     curDisplayValue = curDisplayValue.replace(/[^A-Za-z0-9]+/g, '');
+                     const formatData = Formatter.formatData(oldFormat, {value: curDisplayValue, carriagePosition: 0});
+                     if (formatData) {
+                        newSplit = this._getNewSplitValue(oldSplitValue, formatData.value);
+                        return {
+                           splitValue: newSplit,
+                           value: formatData.value
+                        };
+                     }
+                  }
+               }
+            },
+
             /**
              * Ввод.
              * @param splitValue значение разбитое на части before, insert, after, delete.
@@ -223,22 +246,20 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
              * @param newFormat данные маски, на которую будет проецироваться разбитое значение.
              * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            input(splitValue: object, inputType: string, replacer: string, oldFormat: object, newFormat: object, curDisplayValue: string): object {
+            input(splitValueSrc: object, inputType: string, replacer: string, oldFormat: object, newFormat: object,
+                  curDisplayValue: string): object {
+               const splitValue = { ...splitValueSrc };
                let value = splitValue.before + splitValue.delete + splitValue.after;
-               let newSplit;
 
-               if (curDisplayValue) {
-                  const isMatch = value.match(oldFormat.searchingGroups);
-                  if (!isMatch) {
-                     curDisplayValue = curDisplayValue.replace(/[^A-Za-z0-9]+/g, '');
-                     const formatData = Formatter.formatData(oldFormat, {value: curDisplayValue, carriagePosition: 0});
-                     if (formatData) {
-                        newSplit = this._getNewSplitValue(splitValue, formatData.value);
-                        splitValue.before = newSplit.before;
-                        splitValue.after = newSplit.after;
-                        value = formatData.value;
-                     }
-                  }
+               const dataCurDisplayValue = this._getDataByCurDisplayValue(
+                   value,
+                   splitValue,
+                   oldFormat,
+                   curDisplayValue);
+               if (dataCurDisplayValue) {
+                  splitValue.before = dataCurDisplayValue.splitValue.before;
+                  splitValue.after = dataCurDisplayValue.splitValue.after;
+                  value = dataCurDisplayValue.value;
                }
 
                let clearData = Formatter.clearData(oldFormat, value);
@@ -249,7 +270,9 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
                   }
                }
 
-               const clearSplitValue = newSplit ? newSplit : InputProcessor.getClearSplitValue(splitValue, clearData);
+               const clearSplitValue = dataCurDisplayValue ?
+                   dataCurDisplayValue.splitValue :
+                   InputProcessor.getClearSplitValue(splitValue, clearData);
 
                let result;
                switch (inputType) {
@@ -273,7 +296,7 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
                } else {
                   // Return old value
                   result = {
-                     value: value,
+                     value,
                      position: splitValue.before.length + splitValue.delete.length,
                      format: oldFormat
                   };
@@ -286,4 +309,3 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
       InputProcessor._private = _private;
 
       export = InputProcessor;
-

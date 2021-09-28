@@ -114,32 +114,32 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
          handleInput(splitValue: object, inputType: string): boolean {
             const results = [];
             let result;
-            let resValue;
+            let formattedValue;
             if (Array.isArray(this.options.mask)) {
-               resValue = this._getFormattedValue();
+               formattedValue = this._getFormattedValue();
                this.options.mask.forEach((curMask) => {
-                  result = this._checkMask(splitValue, inputType, curMask);
+                  result = this._getInputProcessorResult(splitValue, inputType, curMask);
                   results.push(result);
                });
             } else {
-               result = this._checkMask(splitValue, inputType, this.options.mask);
+               result = this._getInputProcessorResult(splitValue, inputType, this.options.mask);
                results.push(result);
             }
 
-            const matchResult = this._getMatchResult(results, resValue);
+            const matchResult = this._getBestMatchResult(results, formattedValue);
             return super.handleInput.call(this, _private.prepareSplitValue(matchResult));
          }
 
-         private _getMatchResult(results: object[], resValue: string): object {
+         private _getBestMatchResult(results: object[], resValue: string): object {
             const index = results.map((res) => {
                if (res) {
                   return res.value;
                }
             }).indexOf(resValue);
 
-            // Если ничего не нашли, то будем считать до символам (буквам, цифрам). Не найтись маска может, например,
-            // в таком случае: L 123 [тут каретка]2, нажали backspace, то удалится только пробел, а нужно будет
-            // удалить 3.
+            // Если ничего не нашли, то будем считать по кол-ву символов (буквам, цифрам). Не найтись маска может,
+            // в таком случае: L 123 [тут каретка]2, нажали backspace, то удалится только пробел, а нужно
+            // будет удалить 3.
             // Почему не подходит подсчет только по кол-ву символов: Задано значение L 123, выделяем цифры и
             // пишем букву s. В masks задано ['L ddd', 'xxxxxx']. Ожидаем получить значение Ls, но значением не
             // поменяется т.к по первой маске введенный символ не пройдет, символов будет больше и выберется L ddd маска
@@ -163,7 +163,7 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
             }
          }
 
-         private _checkMask(splitValue: object, inputType: string, mask: string): boolean {
+         private _getInputProcessorResult(splitValue: object, inputType: string, mask: string): boolean {
             this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);

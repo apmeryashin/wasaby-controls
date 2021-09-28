@@ -321,8 +321,6 @@ class Field<Value, ModelOptions>
         const newValue = data.newValue;
         const selection = data.oldSelection;
         const position = data.newPosition;
-
-        // TODO линтер
         model.newValue = newValue;
 
         const text: IText = {
