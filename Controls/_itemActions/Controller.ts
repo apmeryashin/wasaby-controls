@@ -600,7 +600,7 @@ export class Controller {
             return;
         }
         const contents = Controller._getItemContents(item);
-        const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
+        const menuButtonVisibility = this._menuHasHeaderOrFooter() ? 'visible' : 'adaptive';
         this._actionsWidth = actionsContainerWidth;
         this._actionsHeight = actionsContainerHeight;
         const actions = this._filterVisibleActions(item.getActions().all, contents, item.isEditing());
@@ -672,13 +672,31 @@ export class Controller {
     }
 
     /**
-     * Возвращает значение видимоси кнопки "Ещё" для свайпа
-     * @param contextMenuConfig
+     * Проверяет, есть ли Header или Footer в настройках меню.
      * @private
      */
-    private _getSwipeMenuButtonVisibility(contextMenuConfig: IContextMenuConfig): TMenuButtonVisibility {
-        return (contextMenuConfig && (contextMenuConfig.footerTemplate
-            || contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
+    private _menuHasHeaderOrFooter(): boolean {
+        return this._contextMenuConfig &&
+            !!(this._contextMenuConfig.footerTemplate || this._contextMenuConfig.headerTemplate);
+    }
+
+    /**
+     * Проверяет, нужна ли кнопка меню.
+     * Кнопка нужна:
+     * 1. Если в меню настроен шаблон футера или заголовка.
+     * 2. В списке операций присутствуют те, которые должны отображаться только в меню или в меню и тулбаре,
+     * и у которых нет родительской операции
+     * @param actions
+     * @private
+     */
+    private _isMenuButtonRequired(actions: IItemAction[]): boolean {
+        return this._menuHasHeaderOrFooter() || actions.some(
+            (action) =>
+                !action.parent && (
+                    !action.showType ||
+                    action.showType === TItemActionShowType.MENU ||
+                    action.showType === TItemActionShowType.MENU_TOOLBAR)
+        );
     }
 
     /**
@@ -730,22 +748,6 @@ export class Controller {
     private _filterVisibleActions(itemActions: IItemAction[], contents: Model, isEditing: boolean): IItemAction[] {
         return itemActions.filter((action) =>
             this._itemActionVisibilityCallback(action, contents, isEditing)
-        );
-    }
-
-    /**
-     * Ищет операции, которые должны отображаться только в меню или в меню и тулбаре,
-     * и у которых нет родительской операции
-     * @param actions
-     * @private
-     */
-    private _isMenuButtonRequired(actions: IItemAction[]): boolean {
-        return actions.some(
-            (action) =>
-                !action.parent &&
-                (!action.showType ||
-                    action.showType === TItemActionShowType.MENU ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
     }
 
