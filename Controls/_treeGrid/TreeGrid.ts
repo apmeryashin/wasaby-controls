@@ -109,7 +109,8 @@ export default class TreeGrid extends Grid implements ITreeGrid {
  * объединяет изменения в текущих данных и отображает элемент.
  * @name Controls/_treeGrid/TreeGrid#reloadItem
  * @function
- * @param {String|Number} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
- * @param {Controls/_list/interface/IReloadItemOptions} options настройки перезагрузки итема.
- * @see Controls/_list/interface/IReloadItemOptions#hierarchyReload
+ * @param {String} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
+ * @param {Object} readMeta Метаинформация, которая будет передана методу запроса/чтения.
+ * @param {String} direction Если аргумент установлен в значение "depth", то перезагрузка происходит с сохранением загруженных записей,
+ * т.е. они остаются в списке на клиенте.
  */
