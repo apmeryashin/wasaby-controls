@@ -76,26 +76,6 @@ const itemActions: IItemAction[] = [
     }
 ];
 
-// Нет опций для контекстного меню
-const flatItemActions: IItemAction[] = [
-    {
-        id: 1,
-        icon: 'icon-PhoneNull',
-        title: 'phone',
-        showType: TItemActionShowType.TOOLBAR
-    }
-];
-
-// Нет опций для контекстного меню
-const onlyOneItemActions: IItemAction[] = [
-    {
-        id: 1,
-        icon: 'icon-PhoneNull',
-        title: 'phone',
-        showType: TItemActionShowType.MENU
-    }
-];
-
 // Только одна опция в тулбаре, одна - в контекстном меню
 const horizontalOnlyItemActions: IItemAction[] = [
     {
@@ -340,28 +320,6 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isTrue(collection.isActionsAssigned());
         });
 
-        // T1.7. Если требуется добавить кнопку меню, то она добавляется в список showed операций
-        it('should append menu button to item actions when it necessary', () => {
-            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
-            assert.isNotNull(actionsOf1, 'actions were not set to item 1');
-            assert.isTrue(actionsOf1.showed[actionsOf1.showed.length - 1].isMenu,
-                'Menu button has not been appended to actions array');
-        });
-
-        // T1.7. Если не требуется добавить кнопку меню, то она не добавляется в список showed операций
-        it('should not append menu button to item actions when it not necessary', () => {
-            // @ts-ignore
-            itemActionsController.update(initializeControllerOptions({
-                collection,
-                itemActions: flatItemActions,
-                theme: 'default'
-            }));
-            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
-            assert.isNotNull(actionsOf1, 'actions were not set to item 1');
-            assert.isNotTrue(actionsOf1.showed[actionsOf1.showed.length - 1].isMenu,
-                'What the hell menu button appeared for item?');
-        });
-
         // T1.8. В список showed операций изначально попадают операции с showType TOOLBAR или MENU_TOOLBAR,
         // и у которых нет родителя
         it('should add to "showed" item actions only actions with showType TOOLBAR or MENU_TOOLBAR, w/o parent', () => {
@@ -369,23 +327,6 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isNotNull(actionsOf4, 'actions were not set to item 4');
             assert.notEqual(actionsOf4.showed[0].title, 'phone',
                 'What the hell \'phone\' action is in \'showed\' array?');
-        });
-
-        // T1.8.1 При установке только одной опции нужно игнорировать showType и всё показывать как TOOLBAR
-        it('should ignore showType and show action as its showType was TOOLBAR when it is ' +
-            ' the only action in list', () => {
-            // @ts-ignore
-            itemActionsController.update(initializeControllerOptions({
-                collection,
-                itemActions: onlyOneItemActions,
-                theme: 'default'
-            }));
-            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
-            assert.isNotNull(actionsOf1, 'actions were not set to item 1');
-            assert.isNotTrue(actionsOf1.showed[actionsOf1.showed.length - 1].isMenu,
-                'It seems, that sly menu button came here!');
-            assert.equal(actionsOf1.showed[actionsOf1.showed.length - 1].showType, TItemActionShowType.MENU,
-                'something strange happened to lonely item action...');
         });
 
         // T1.9. После установки набора операций, операции с иконками содержат в поле icon CSS класс
@@ -595,44 +536,6 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(3, 100, 50);
             const config = collection.getSwipeConfig();
             assert.isUndefined(config.twoColumns);
-        });
-
-        // T2.3.1. Если при инициализации в конфиге контекстного меню передан footerTemplate нужно принудительно
-        // показывать кнопку "ещё"
-        it('should add menu button for horizontal swipe when contextMenu.footerTemplate is passed', () => {
-            // @ts-ignore
-            itemActionsController.update(initializeControllerOptions({
-                collection,
-                itemActions: horizontalOnlyItemActions,
-                theme: 'default',
-                actionAlignment: 'horizontal',
-                contextMenuConfig: {
-                    footerTemplate: 'template'
-                }
-            }));
-            itemActionsController.activateSwipe(3, 100, 50);
-            const config = collection.getSwipeConfig();
-            assert.exists(config, 'Swipe activation should make configuration');
-            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length -1].isMenu, 'menu button was not added');
-        });
-
-        // T2.3.2. Если при инициализации в конфиге контекстного меню передан headerTemplate нужно принудительно
-        // показывать кнопку "ещё"
-        it('should add menu button for horizontal swipe when contextMenu.headerTemplate is passed', () => {
-            // @ts-ignore
-            itemActionsController.update(initializeControllerOptions({
-                collection,
-                itemActions: horizontalOnlyItemActions,
-                theme: 'default',
-                actionAlignment: 'horizontal',
-                contextMenuConfig: {
-                    headerTemplate: 'template'
-                }
-            }));
-            itemActionsController.activateSwipe(3, 100, 50);
-            const config = collection.getSwipeConfig();
-            assert.exists(config, 'Swipe activation should make configuration');
-            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length - 1].isMenu, 'menu button was not added');
         });
 
         // T2.3. В зависимости от actionAlignment, для получения конфигурации используется правильный measurer
