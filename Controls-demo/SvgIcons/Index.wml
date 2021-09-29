@@ -1,9 +1,9 @@
 <div style="margin: 25px;">
 
-   <div class="controls-demo_button_wrapper">
       <Controls.buttons:Button caption="load svg" viewMode="link" on:click="_attachIcon()"/>
+   <div class="controls-demo_button_wrapper">
       <div class="ws-flexbox ws-align-items-baseline controls-demo-svg_container">
-         <div>baseline</div><div class="controls-demo_svg-icon"></div>
+         <div>baseline</div><div class="controls-demo_svg-icon"></div><div>baseline</div>
       </div>
    </div>
 
