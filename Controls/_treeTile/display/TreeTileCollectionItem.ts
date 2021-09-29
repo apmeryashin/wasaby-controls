@@ -47,6 +47,10 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         return this._$nodesHeight;
     }
 
+    getTileHeight(): number {
+        return this.isNode() && this.getNodesHeight() || super.getTileHeight();
+    }
+
     setNodesHeight(nodesHeight: number): void {
         if (this._$nodesHeight !== nodesHeight) {
             this._$nodesHeight = nodesHeight;
