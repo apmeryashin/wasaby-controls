@@ -551,10 +551,12 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         const readOnlyField: HTMLElement | void = this._getReadOnlyField();
 
         if (field) {
-            if (this._getField()._container) {
+            if (field._container) {
                 const tooltipWidth = this._getTextWidth(tooltip);
-                const computedStyle = getComputedStyle(this._getField()?._container);
+                const computedStyle = getComputedStyle(field._container);
                 hasFieldHorizontalScroll = parseFloat(computedStyle.width) < tooltipWidth;
+            } else {
+                hasFieldHorizontalScroll = field.hasHorizontalScroll();
             }
         } else if (readOnlyField) {
             hasFieldHorizontalScroll = this._hasHorizontalScroll(readOnlyField);
