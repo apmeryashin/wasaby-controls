@@ -98,7 +98,7 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
      * $6 - Closing delimiter.
      * @private
      */
-    private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file|Notes):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
+    private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file|Notes|notes):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
 
     private static mapExec: IMap = {
         result: 0,
