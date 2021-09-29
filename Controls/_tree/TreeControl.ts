@@ -6,17 +6,23 @@ import {EventUtils} from 'UI/Events';
 
 import {constants} from 'Env/Env';
 
-import {CrudEntityKey} from 'Types/source';
+import {CrudEntityKey, QueryWhereExpression} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
-import {Direction, IBaseSourceConfig, IHierarchyOptions, TKey} from 'Controls/interface';
-import {BaseControl, IBaseControlOptions, ISiblingStrategy} from 'Controls/baseList';
-import {Collection, CollectionItem, shouldDisplayNodeFooterTemplate, Tree, TreeItem} from 'Controls/display';
-import { selectionToRecord } from 'Controls/operations';
+import {Direction, IBaseSourceConfig, IFilterOptions, IHierarchyOptions, TKey} from 'Controls/interface';
+import {
+    BaseControl,
+    convertReloadItemArgs,
+    IBaseControlOptions,
+    IReloadItemOptions,
+    ISiblingStrategy
+} from 'Controls/baseList';
+import {Collection, CollectionItem, Tree, TreeItem} from 'Controls/display';
+import {selectionToRecord} from 'Controls/operations';
 import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
-import { MouseButtons, MouseUp } from 'Controls/popup';
+import {MouseButtons, MouseUp} from 'Controls/popup';
 import 'css!Controls/list';
 import 'css!Controls/itemActions';
 import 'css!Controls/CommonClasses';
@@ -25,7 +31,7 @@ import {TreeSiblingStrategy} from './Strategies/TreeSiblingStrategy';
 import {ExpandController} from 'Controls/expandCollapse';
 import {Logger} from 'UI/Utils';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
-import {IDragObject} from 'Controls/_dragnDrop/Container';
+import {applyReloadedNodes, getRootsForHierarchyReload} from 'Controls/_tree/utils';
 
 const HOT_KEYS = {
     expandMarkedItem: constants.key.right,
@@ -38,10 +44,10 @@ const DEFAULT_COLUMNS_VALUE = [];
 type TNodeFooterVisibilityCallback = (item: Model) => boolean;
 type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
 
-export interface ITreeControlOptions extends IBaseControlOptions, IHierarchyOptions {
+export interface ITreeControlOptions extends IBaseControlOptions, IHierarchyOptions, IFilterOptions {
     parentProperty: string;
-    markerMoveMode?;
-    root?;
+    markerMoveMode?: string;
+    root?: TKey;
     expandByItemClick?: boolean;
     expandedItems?: Array<number | string>;
     collapsedItems?: Array<number | string>;
@@ -273,7 +279,7 @@ const _private = {
     },
 
     resetExpandedItems(self: TreeControl): void {
-        const viewModel = self.getViewModel();
+        const viewModel = self.getViewModel() as Tree;
         const reset = () => {
             viewModel.setHasMoreStorage({});
             self._expandController.resetExpandedItems();
@@ -314,75 +320,43 @@ const _private = {
         self._expandController.applyStateToModel();
     },
 
-    reloadItem(self: TreeControl, key: TKey) {
-        const baseSourceController = self.getSourceController();
-        const viewModel = self._listViewModel;
-        const filter = cClone(self._options.filter);
-        const nodes = [key !== undefined ? key : null];
-        const nodeProperty = self._options.nodeProperty;
+    /**
+     * Выполняет запрос на перезагрузку указанной записи, всех её родительских и развернутых дочерних узлов.
+     * @param {TKey} key - id перезагружаемой записи
+     * @param {Tree} collection - коллекция к которой принадлежит перезагружаемый итем
+     * @param {QueryWhereExpression<unknown>} filter - фильтр с которым будет выполнен запрос на перезагрузку
+     * @param {NewSourceController} sourceController - sourceController через который будет выполнен запрос на
+     * перезагрузку
+     */
+    reloadItem(
+        key: TKey,
+        collection: Tree,
+        filter: QueryWhereExpression<unknown>,
+        sourceController: NewSourceController
+    ): Promise<RecordSet | Error> {
+        const reloadFilter = cClone(filter);
+        reloadFilter[collection.getParentProperty()] = getRootsForHierarchyReload(collection, key);
 
-        filter[self._options.parentProperty] =
-            nodes.concat(_private.getReloadableNodes(viewModel, key, self._keyProperty, nodeProperty));
+        return sourceController
+            .load(undefined, key, reloadFilter)
+            .then((items: RecordSet) => {
+                applyReloadedNodes(collection, key, items);
 
-        return baseSourceController.load(undefined, key, filter).addCallback((result) => {
-            _private.applyReloadedNodes(self, viewModel, key, self._keyProperty, nodeProperty, result);
-            viewModel.setHasMoreStorage(
-                _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
-            );
-            return result;
-        });
-    },
+                const meta = items.getMetaData();
+                if (meta.results) {
+                    collection.setMetaResults(meta.results);
+                }
 
-    getReloadableNodes(viewModel, nodeKey, keyProp, nodeProp) {
-        var nodes = [];
-        _private.nodeChildsIterator(viewModel, nodeKey, nodeProp, function(elem) {
-            nodes.push(elem.get(keyProp));
-        });
-        return nodes;
-    },
+                collection.setHasMoreStorage(
+                    _private.prepareHasMoreStorage(sourceController, collection.getExpandedItems())
+                );
 
-    applyReloadedNodes(self: TreeControl, viewModel, nodeKey, keyProp, nodeProp, newItems) {
-        var itemsToRemove = [];
-        var items = viewModel.getCollection();
-        var checkItemForRemove = function(item) {
-            if (newItems.getIndexByValue(keyProp, item.get(keyProp)) === -1) {
-                itemsToRemove.push(item);
-            }
-        };
-
-        _private.nodeChildsIterator(viewModel, nodeKey, nodeProp, checkItemForRemove, checkItemForRemove);
-
-        items.setEventRaising(false, true);
-
-        itemsToRemove.forEach((item) => {
-            items.remove(item);
-        });
-
-        items.setEventRaising(true, true);
-    },
-
-    nodeChildsIterator(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
-        var findChildNodesRecursive = function(key) {
-            const item = viewModel.getItemBySourceKey(key);
-            if (item) {
-                viewModel.getChildren(item).forEach(function(elem) {
-                    if (elem.isNode() !== null) {
-                        if (nodeCallback) {
-                            nodeCallback(elem.getContents());
-                        }
-                        findChildNodesRecursive(elem.getContents().get(nodeProp));
-                    } else if (leafCallback) {
-                        leafCallback(elem.getContents());
-                    }
-                });
-            }
-        };
-
-        findChildNodesRecursive(nodeKey);
+                return items;
+            });
     },
 
     getOriginalSource(source) {
-        while(source.getOriginal) {
+        while (source.getOriginal) {
             source = source.getOriginal();
         }
 
@@ -486,7 +460,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
     private _itemOnWhichStartCountDown = null;
     private _timeoutForExpandOnDrag = null;
-    private _deepReload;
     private _loadedRoot: TKey;
 
     _expandController: ExpandController;
@@ -501,9 +474,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         this._nodeDataMoreLoadCallback = this._nodeDataMoreLoadCallback.bind(this);
         if (typeof options.root !== 'undefined') {
             this._root = options.root;
-        }
-        if (options.expandedItems && options.expandedItems.length > 0) {
-            this._deepReload = true;
         }
     }
 
@@ -839,23 +809,15 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<unknown> {
-        // deep reload is needed only if reload was called from public API.
-        // otherwise, option changing will work incorrect.
-        // option changing may be caused by search or filtering
-        this._deepReload = true;
         return super.reload(keepScroll, sourceConfig);
     }
 
-    protected reloadItem(key, readMeta, direction): Promise<unknown> {
-        let result;
+    reloadItem(key: TKey, options: IReloadItemOptions): Promise<Model> {
+        const newArgs = convertReloadItemArgs(...arguments);
 
-        if (direction === 'depth') {
-            result = _private.reloadItem(this, key);
-        } else {
-            result = super.reloadItem.apply(this, arguments);
-        }
-
-        return result;
+        return newArgs.options.hierarchyReload
+            ? _private.reloadItem(key, this.getViewModel() as Tree, this._options.filter, this.getSourceController())
+            : super.reloadItem.apply(this, [newArgs.key, newArgs.options]);
     }
 
     // region Drag
@@ -1123,8 +1085,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
             this._loadedRoot = sourceController?.getRoot();
         }
-        // reset deepReload after loading data (see reload method or constructor)
-        this._deepReload = false;
     }
 
     protected _afterItemsSet(options): void {
