@@ -105,6 +105,7 @@ class Container extends Control<IControlOptions> {
                     historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
                 }
                 this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
+                Store.dispatch('filterSource', this._source);
             } else {
                 this._source = null;
             }
