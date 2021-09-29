@@ -19,6 +19,7 @@ import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import * as Clone from 'Core/core-clone';
+import { TItemActionShowType, IItemAction } from 'Controls/itemActions';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 
@@ -28,6 +29,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
     additionalTextProperty: string;
     imageProperty?: string;
     multiSelect: boolean;
+    historyId?: string;
 }
 
 /**
@@ -77,6 +79,8 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _filter: object = {};
     protected _navigation: INavigationOptionValue<unknown> = null;
     protected _editorTarget: HTMLElement | EventTarget;
+    protected _historyService: unknown;
+    protected _itemActions: IItemAction[];
     private _itemsReadyCallback: Function = null;
 
     protected _beforeMount(options: IListEditorOptions): void {
@@ -85,6 +89,8 @@ class ListEditor extends Control<IListEditorOptions> {
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
         this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
+        this._itemActions = this._getItemActions(options.historyId);
+        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
     }
 
     protected _afterMount(): void {
@@ -109,6 +115,13 @@ class ListEditor extends Control<IListEditorOptions> {
         if (filterChanged || valueChanged) {
             this._setFilter(this._selectedKeys, options);
         }
+    }
+
+    protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {
+        if (item.get('pinned')) {
+            return action.id === 'PinOff';
+        }
+        return action.id === 'PinNull';
     }
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
@@ -212,10 +225,34 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
+    private _getItemActions(historyId?: string): IItemAction[] {
+        if (historyId) {
+            return [
+                {
+                    id: 'PinOff',
+                    icon: 'icon-PinOff',
+                    size: 's',
+                    showType: TItemActionShowType.TOOLBAR,
+                    handler: this._handlePinClick.bind(this)
+                }, {
+                    id: 'PinNull',
+                    icon: 'icon-PinNull',
+                    size: 's',
+                    showType: TItemActionShowType.TOOLBAR,
+                    handler: this._handlePinClick.bind(this)
+                }
+            ];
+        }
+        return [];
+    }
+
     private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
         this._filter = {...options.filter};
         if (selectedKeys && selectedKeys.length) {
             this._filter[options.keyProperty] = selectedKeys;
+        }
+        if (options.historyId) {
+            this._filter.historyId = options.historyId;
         }
     }
 
@@ -239,6 +276,28 @@ class ListEditor extends Control<IListEditorOptions> {
         return new List({
             items: selectedItems
         });
+    }
+
+    private _handlePinClick(item: Model): void {
+        this._getHistoryService().then((historyService) => {
+            historyService.update(item, {$_pinned: !item.get('pinned')}).then(() => {
+                this._children.gridView.reload();
+            });
+            return historyService;
+        });
+    }
+
+    private _getHistoryService(): Promise<unknown> {
+        if (!this._historyService) {
+             return import('Controls/history').then((history) => {
+                 this._historyService = new history.Service({
+                    historyId: this._options.historyId,
+                     pinned: true
+                });
+                 return this._historyService;
+            });
+        }
+        return Promise.resolve(this._historyService);
     }
 
     private _getTextValue(selectedKeys: number[]|string[]|Model[]): string {
