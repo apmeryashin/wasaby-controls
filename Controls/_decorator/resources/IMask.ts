@@ -5,7 +5,7 @@ export interface IFormatMaskChars {
 export interface IMaskOptions {
     /**
      * @name Controls/_decorator/resources/IMask#mask
-     * @cfg {String} Устанавливает маску в поле ввода.
+     * @cfg {String | String[]} Устанавливает маску или массив масок в поле ввода.
      * @remark
      * Маска состоит из статических и {@link formatMaskChars динамических символов}.
      * Статический символ - символ для форматирования значения, введенного пользователем. Он всегда будет присутствовать в полностью заполненном поле в независимости от того, что ввел пользователь.
@@ -24,6 +24,8 @@ export interface IMaskOptions {
      * Логические символы могут применяться к ключам.
      * Формат записи данных схож с регулярными выражениями.
      *
+     * Массив масок <b>не работает</b> с квантификаторами и {@link replacer реплейсерами}.
+     *
      * @example
      * Маска времени:
      * <pre class="brush: html">
@@ -40,6 +42,10 @@ export interface IMaskOptions {
      * Маска для ввода бесконечного количества цифр.
      * <pre class="brush: html">
      * <Controls.input:Mask mask="d\*"/>
+     * </pre>
+     * Массив масок.
+     * <pre class="brush: html">
+     * <Controls.input:Mask mask="['dd dd', 'ddd ddd']"/>
      * </pre>
      * @see formatMaskChars
      */

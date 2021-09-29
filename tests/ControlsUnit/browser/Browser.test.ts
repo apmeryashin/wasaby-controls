@@ -1286,28 +1286,31 @@ describe('Controls/browser:Browser', () => {
 
     describe('_updateSearchController', () => {
        it('filter changed if search was reset', async () => {
-           let options = getBrowserOptions();
-           options = {
-               ...options,
-               searchParam: 'param',
+           let options = {
+               ...getBrowserOptions(),
                searchValue: 'testSearchValue',
                filter: {
                    payload: 'something'
                }
            };
-           const browser = getBrowser(options);
-           await browser._beforeMount(options);
-           browser.saveOptions(options);
+           let sourceController = new NewSourceController(options);
+           let browserOptions = {
+               ...options,
+               sourceController
+           };
+           const browser = getBrowser(browserOptions);
+           await browser._beforeMount(browserOptions);
+           browser.saveOptions(browserOptions);
 
            let filter;
            browser._notify = (event, args) => {
-               filter = args[0];
+               if (event === 'filterChanged') {
+                   filter = args[0];
+               }
            };
-
-           options = {...options};
-           options.searchValue = '';
-           options.searchParam = 'param';
-           await browser._updateSearchController(options);
+           browserOptions = {...options};
+           browserOptions.searchValue = '';
+           await browser._updateSearchController(browserOptions);
 
            assert.deepStrictEqual(filter, {payload: 'something'});
            assert.equal(browser._searchValue, '');
@@ -1351,14 +1354,14 @@ describe('Controls/browser:Browser', () => {
             options.searchValue = 'Sash';
             const browser = await getBrowserWithMountCall(options);
 
-            browser._viewMode = 'search';
+            assert.ok(browser._viewMode === 'search');
             assert.ok(browser._searchValue === 'Sash');
 
             options = {...options};
             options.searchValue = '';
             await browser._beforeUpdate(options);
             assert.ok(browser._searchValue === '');
-            assert.isUndefined(browser._viewMode);
+            assert.isUndefined(browser._getSearchControllerSync().getViewMode());
             assert.ok(browser._misspellValue === '');
         });
 

@@ -827,8 +827,9 @@ define(
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showClose = false;
             expectedOptions.showHeader = false;
-            expectedOptions.headerTemplate = null;
             expectedOptions.headerContentTemplate = null;
+            expectedOptions.headerTemplate = null;
+            expectedOptions.headingCaption = defaultOptions.headingCaption;
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;
             expectedOptions.searchParam = null;

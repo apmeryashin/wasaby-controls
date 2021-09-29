@@ -4,9 +4,15 @@ import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
 import {mixin} from 'Types/util';
 import {TreeItem} from 'Controls/display';
 
+
+export interface ITemplateProperties {
+    descriptionProperty: string;
+    gradientColorProperty: string;
+    imageProperty: string;
+}
 export interface ITemplateControllerOptions {
     listConfiguration: IBrowserViewConfig;
-    browserOptions: IOptions;
+    templateProperties: ITemplateProperties;
 }
 
 export default abstract class BaseTemplateController<T, V extends TreeItem = TreeItem> extends
@@ -15,7 +21,7 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
         OptionsToPropertyMixin
 ) {
     protected _$listConfiguration: IBrowserViewConfig = null;
-    protected _$browserOptions: IOptions = null;
+    protected _$templateProperties: ITemplateProperties = null;
     protected _viewModeConfig: T;
 
     constructor(options: ITemplateControllerOptions) {
@@ -26,7 +32,7 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
     }
 
     get imageProperty(): string {
-        return this._$browserOptions.detail.imageProperty;
+        return this._$templateProperties.imageProperty;
     }
 
     getDescription(item: TreeItem): string {
@@ -39,7 +45,7 @@ export default abstract class BaseTemplateController<T, V extends TreeItem = Tre
     }
 
     getDescriptionProperty(item: TreeItem): string {
-        return this._$browserOptions.detail.descriptionProperty;
+        return this._$templateProperties.descriptionProperty;
     }
 
     protected _isNode(item: V): boolean {

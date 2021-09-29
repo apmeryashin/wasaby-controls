@@ -186,9 +186,9 @@ class ReactContainer extends React.Component<IReactContainerProps> {
 
     private _notifyDragEvent(eventName: string, args: unknown[]): void {
         if (eventName === 'documentDragEnd' && this.props.onDocumentDragEnd) {
-            this.props.onDocumentDragEnd(eventName, args);
+            this.props.onDocumentDragEnd(eventName, ...args);
         } else if (this.props.onDocumentDragStart) {
-            this.props.onDocumentDragStart(eventName, args);
+            this.props.onDocumentDragStart(eventName, ...args);
         }
         
         EventBus.channel('dragnDrop').notify(eventName, ...args);

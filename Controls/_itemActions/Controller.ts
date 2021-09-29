@@ -260,6 +260,16 @@ export class Controller {
     }
 
     /**
+     * Получить состояние флага "Опции записи заданы для элементов коллекции"
+     * @function
+     * @public
+     * @return {Boolean} Состояние флага "Опции записи заданы для элементов коллекции"
+     */
+    isActionsAssigned(): boolean {
+        return this._collection.isActionsAssigned();
+    }
+
+    /**
      * Деактивирует Swipe для меню операций с записью
      */
     deactivateSwipe(resetActiveItem: boolean = true): void {

@@ -30,8 +30,8 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     // Раскрытые элементы дерева
     protected _expandedItems: any[] = [1];
 
-    constructor(cfg: IControlOptions) {
-        super(cfg);
+    constructor(cfg: IControlOptions, context?: object) {
+        super(cfg, context);
         this._tagStyleProperty = 'customProperty';
         this._columns = [
             {

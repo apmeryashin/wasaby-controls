@@ -2710,7 +2710,7 @@ export default class Collection<
     }
 
     setMetaResults(metaResults: EntityModel): void {
-        if (!isEqual(this._$metaResults, metaResults)) {
+        if (!isEqual(this._$metaResults, metaResults) || this._$metaResults !== metaResults) {
             this._$metaResults = metaResults;
             this._nextVersion();
         }

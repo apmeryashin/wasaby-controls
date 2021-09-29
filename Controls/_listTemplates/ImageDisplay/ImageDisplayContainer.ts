@@ -128,6 +128,9 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     }
 
     private _dataLoadCallback(items: RecordSet, direction): void {
+        if (!this._items) {
+            this._items = items;
+        }
         this._updateDisplayImage(this._items, this._options.imageProperty);
         if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback(items, direction);
