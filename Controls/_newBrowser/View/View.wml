@@ -96,8 +96,8 @@
                             </ws:if>
                             <ws:else>
                                 <ws:partial
-                                        scope="{{tileItemTemplate}}"
-                                        template="{{_detailExplorerOptions.tileItemTemplate || _options.detail.tileItemTemplate || _defaultTileItemTemplate}}"
+                                        scope="{{itemTemplate}}"
+                                        template="{{_detailExplorerOptions.itemTemplate || _options.detail.itemTemplate || _defaultItemTemplate}}"
                                         listConfiguration="{{_listConfiguration}}"
                                         imageViewMode="{{itemTemplate.imageViewMode}}"
                                         imagePosition="{{itemTemplate.imagePosition}}"
