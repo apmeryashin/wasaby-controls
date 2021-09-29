@@ -19,6 +19,7 @@ import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import * as Clone from 'Core/core-clone';
+import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 
@@ -28,6 +29,10 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
     additionalTextProperty: string;
     imageProperty?: string;
     multiSelect: boolean;
+    emptyKey: string;
+    emptyText?: string;
+    selectAllKey: string;
+    selectAllText?: string;
 }
 
 /**
@@ -113,6 +118,13 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
         this._items = items;
+        if (this._options.emptyText && !items.getRecordById(this._options.emptyKey)) {
+            this._addEmptyItem(this._items, this._options);
+        }
+
+        if (this._options.selectAllText && !items.getRecordById(this._options.selectAllKey)) {
+            this._addSelectAllItem(this._items, this._options);
+        }
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
@@ -182,10 +194,19 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _getExtendedValue(): object {
+        const value = this._getValue(this._selectedKeys);
         return {
-            value: this._selectedKeys,
+            value,
             textValue: this._getTextValue(this._selectedKeys)
         };
+    }
+
+    private _getValue(value: string[] | number[]): string[] | number[] {
+        return this._isEmptyKeySelected(value) ? [] : value;
+    }
+
+    private _isEmptyKeySelected(value: string[] | number[]): boolean {
+        return value.includes(this._options.emptyKey);
     }
 
     protected _setColumns(options: IListEditorOptions, propertyValue: string[]|number[]): void {
@@ -210,6 +231,40 @@ class ListEditor extends Control<IListEditorOptions> {
         if (this._popupOpener) {
             this._popupOpener.destroy();
         }
+    }
+
+    private _getItemModel(items: RecordSet, keyProperty: string): Model {
+        const model = items.getModel();
+        const modelConfig = {
+            keyProperty,
+            format: items.getFormat(),
+            adapter: items.getAdapter()
+        };
+        if (typeof model === 'string') {
+            return DiCreate(model, modelConfig);
+        } else {
+            return new model(modelConfig);
+        }
+    }
+
+    private _addEmptyItem(items: RecordSet, options: IListEditorOptions): void {
+        const emptyItem = this._getItemModel(items, options.keyProperty);
+
+        const data = {};
+        data[options.keyProperty] = options.emptyKey;
+        data[options.displayProperty] = options.emptyText;
+        emptyItem.set(data);
+        items.prepend([emptyItem]);
+    }
+
+    private _addSelectAllItem(items: RecordSet, options: IListEditorOptions): void {
+        const emptyItem = this._getItemModel(items, options.keyProperty);
+
+        const data = {};
+        data[options.keyProperty] = options.selectAllKey;
+        data[options.displayProperty] = options.selectAllText;
+        emptyItem.set(data);
+        items.prepend([emptyItem]);
     }
 
     private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
@@ -267,7 +322,9 @@ class ListEditor extends Control<IListEditorOptions> {
             style: 'default',
             itemPadding: {
                 right: 'm'
-            }
+            },
+            emptyKey: null,
+            selectAllKey: 'all'
         };
     }
 }

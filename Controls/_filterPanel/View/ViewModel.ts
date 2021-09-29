@@ -64,7 +64,11 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                     viewMode: item.viewMode,
                     filterViewMode: this._options.filterViewMode,
                     name: item.name,
-                    style: this._options.style
+                    style: this._options.style,
+                    emptyText: item.emptyText,
+                    emptyKey: item.emptyKey,
+                    selectAllText: item.selectAllText,
+                    selectAllKey: item.selectAllKey
                 }};
             newSource.push({...item, ...{editorOptions}});
         });
@@ -159,6 +163,9 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             item.viewMode = 'basic';
         }
         this._setValueToSourceItem(item, editorValue);
+        if (item.needCollapse) {
+            this.collapseGroup(item.group);
+        }
         this._source = this._getSource(source);
         this._editingObject = this._getEditingObjectBySource(this._source);
         this._nextVersion();
