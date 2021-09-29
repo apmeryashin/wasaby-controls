@@ -24,28 +24,34 @@
 }
 
 .controls-CompactDatePicker__header__top-layer {
-   margin: var(--calendar_margin_compactDatePicker);
-   height: var(--header_caption_height_compactDatePicker);
+   margin-right: var(--offset_s);
+   margin-left: var(--offset_2xl);
+   margin-top: var(--offset_m);
+   margin-bottom: var(--offset_s);
+   height: var(--header_layer_height_compactDatePicker);
    display: flex;
    justify-content: space-between;
    align-items: center;
 }
 
+.controls-CompactDatePicker__month-list__item__header,
 .controls-CompactDatePicker__header__month {
    font-weight: bold;
    font-size: var(--font-size_2xl);
    display: flex;
    justify-content: center;
    align-items: center;
-   flex-basis: 0;
-   flex-grow: 10;
+}
+
+.controls-CompactDatePicker__header__month {
+   // Центрируем заголовок в шпаке
+   margin-right: calc(var(--offset_2xl) - var(--offset_s) - (var(--width_closeButton_link) - var(--header_today_width_compactDatePicker)));
 }
 
 .controls-CompactDatePicker__header__close-button__container,
 .controls-CompactDatePicker__header__today__container {
    display: flex;
    justify-content: center;
-   flex-grow: 1;
 }
 
 .controls-CompactDatePicker__header__today {
@@ -62,9 +68,13 @@
 }
 
 .controls-CompactDatePicker__header__weekdays {
+   height: var(--header_layer_height_compactDatePicker);
+   margin-left: var(--offset_2xl);
+   margin-right: var(--offset_2xl);
    display: flex;
-   justify-content: space-around;
-   margin: var(--calendar_margin_compactDatePicker);
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: var(--offset_2xs);
 }
 
 .controls-CompactDatePicker__header__weekdays__weekend {
@@ -82,7 +92,7 @@
 }
 
 .controls-CompactDatePicker__month-list__item {
-   margin: var(--calendar_margin_compactDatePicker);
+   margin-left: var(--offset_l);
    padding-top: var(--offset_s);
    padding-bottom: var(--offset_m);
 }
