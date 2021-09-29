@@ -653,17 +653,24 @@ export interface IGridControl extends IList {
  */
 
 /**
- * @typedef {String} Controls/_grid/display/interface/IGridControl/ColumnScrollPosition
- * @description Допустимые значения для параметра, переданного в метод {@link setColumnScrollPosition}.
- * @variant start Позиция горизонтального скрола, при котором колонки таблицы проскролены в начало.
- * @variant end Позиция горизонтального скрола, при котором колонки таблицы проскролены в конец.
+ * Устанавливает положение горизонтального скролла в крайнее левое положение, в начало таблицы.
+ * @function
+ * @name Controls/_grid/display/interface/IGridControl#scrollToLeft
+ * @returns {void}
  */
 
 /**
- * Сбрасывает положение горизонтального скролла.
+ * Устанавливает положение горизонтального скролла в крайнее правое положение, в конец таблицы.
  * @function
- * @name Controls/_grid/display/interface/IGridControl#setColumnScrollPosition
- * @param {Controls/_grid/display/interface/IGridControl/ColumnScrollPosition.typedef} [position=start] Позиция к которой сбрасывается горизонтальный скролл.
+ * @name Controls/_grid/display/interface/IGridControl#scrollToRight
+ * @returns {void}
+ */
+
+/**
+ * Проскролливает к колонке с заданным индексом.
+ * @function
+ * @name Controls/_grid/display/interface/IGridControl#scrollToColumn
+ * @param {Number} [columnIndex] Индекс колонки к которой необходимо проскролить.
  * @returns {void}
  */
 

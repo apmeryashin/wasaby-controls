@@ -52,6 +52,8 @@ export default class extends Control {
     private _columnScrollStartPosition: undefined | 'end' = 'end';
     private _currentHeaderName: 'default' | 'colspan' | 'multiDefault' | 'multiColspan' = 'default';
     private _itemsDragNDrop: boolean = false;
+    private _scrollToColumnIdx?: number;
+    private _multiSelectVisibility: 'visible' | 'hidden' = 'hidden';
 
     protected _beforeMount(): void {
         this._columns[2].width = '1fr';
@@ -185,6 +187,22 @@ export default class extends Control {
                     break;
             }
         }
+    }
+
+    protected _toggleCheckbox(): void {
+        this._multiSelectVisibility = this._multiSelectVisibility === 'visible' ? 'hidden' : 'visible';
+    }
+
+    protected _scrollToColumn(): void {
+        this._children.grid.scrollToColumn(+this._scrollToColumnIdx);
+    }
+
+    protected _scrollToLeft(): void {
+        this._children.grid.scrollToLeft();
+    }
+
+    protected _scrollToRight(): void {
+        this._children.grid.scrollToRight();
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

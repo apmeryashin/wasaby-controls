@@ -18,7 +18,11 @@ export default class extends Control {
     }
 
     protected _setScrollPosition(e, position): void {
-        this._children.grid.setColumnScrollPosition(position);
+        if (position === 'start') {
+            this._children.grid.scrollToLeft();
+        } else {
+            this._children.grid.scrollToRight();
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
