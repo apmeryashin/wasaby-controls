@@ -11,7 +11,6 @@
                 source="{{_viewSource}}"
                 feature1183020440="{{true}}"
                 itemActionsProperty="itemActions"
-                hoverBackgroundStyle="equal-to-list"
                 on:actionClick="_onActionClick()"/>
     </div>
 

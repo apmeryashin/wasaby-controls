@@ -37,5 +37,5 @@ export default class extends Control {
         this._clickedAction = action.title;
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/list_new/ItemActions/viewMode/viewMode'];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
