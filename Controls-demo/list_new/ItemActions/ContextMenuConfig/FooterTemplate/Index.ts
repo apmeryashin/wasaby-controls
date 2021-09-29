@@ -14,15 +14,6 @@ interface ISrcData {
 
 const itemActions: IItemAction[] = [
    {
-      id: 1,
-      icon: 'icon-DownloadNew',
-      title: 'Download',
-      showType: TItemActionShowType.MENU_TOOLBAR,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action download Click');
-      }
-   },
-   {
       id: 'delete',
       icon: 'icon-Erase',
       iconStyle: 'danger',
