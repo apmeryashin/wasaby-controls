@@ -20,7 +20,6 @@
  * @includes IBaseGroupTemplate Controls/_list/interface/IBaseGroupTemplate
  * @includes IItemPadding Controls/_display/interface/ICollection/IItemPadding
  * @includes IList Controls/_list/interface/IList
- * @includes IReloadItemOptions Controls/_list/interface/IReloadItemOptions
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IMovableList Controls/_baseList/interface/IMovableList
  * @includes IMoveDialogTemplate Controls/_baseList/interface/IMovableList

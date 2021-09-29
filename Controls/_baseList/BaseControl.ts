@@ -37,7 +37,7 @@ import {
     Direction,
     ISelectionObject,
     TNavigationButtonView,
-    ISourceOptions, TKey
+    ISourceOptions
 } from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 import { process } from 'Controls/error';
@@ -104,9 +104,9 @@ import {
 import BaseControlTpl = require('wml!Controls/_baseList/BaseControl/BaseControl');
 import 'wml!Controls/_baseList/BaseControl/NavigationButton';
 
-import {IList, IReloadItemOptions} from './interface/IList';
+import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
-import { getStickyHeadersHeight } from 'Controls/scroll';
+import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scroll';
 import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {ISiblingStrategy} from './interface/ISiblingStrategy';
 import {FlatSiblingStrategy} from './Strategies/FlatSiblingStrategy';
@@ -125,7 +125,6 @@ import ObserversController, {
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
-import {convertReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
 
 //#endregion
 
@@ -4082,11 +4081,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return updateResult;
     }
 
-    reloadItem(key: TKey, options: IReloadItemOptions): Promise<Model> {
-        const newArgs = convertReloadItemArgs(...arguments);
-
+    reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
         const items = this._listViewModel.getCollection();
-        const currentItemIndex = items.getIndexByValue(this._keyProperty, newArgs.key);
+        const currentItemIndex = items.getIndexByValue(this._keyProperty, key);
         const sourceController = _private.getSourceController(this, {...this._options, items: null});
 
         let reloadItemDeferred;
@@ -4094,7 +4091,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let itemsCount;
 
         const loadCallback = (item): void => {
-            if (newArgs.options.replace) {
+            if (replaceItem) {
                 items.replace(item, currentItemIndex);
             } else {
                 items.at(currentItemIndex).merge(item);
@@ -4102,12 +4099,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         };
 
         if (currentItemIndex === -1) {
-            throw new Error('BaseControl::reloadItem no item with key ' + newArgs.key);
+            throw new Error('BaseControl::reloadItem no item with key ' + key);
         }
 
-        if (newArgs.options.method === 'query') {
+        if (reloadType === 'query') {
             filter = cClone(this._options.filter);
-            filter[this._keyProperty] = [newArgs.key];
+            filter[this._keyProperty] = [key];
             sourceController.setFilter(filter);
             reloadItemDeferred = sourceController.load().then((items) => {
                 if (items instanceof RecordSet) {
@@ -4116,7 +4113,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (itemsCount === 1) {
                         loadCallback(items.at(0));
                     } else if (itemsCount > 1) {
-                        Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + newArgs.key);
+                        Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                     } else {
                         Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
                     }
@@ -4124,7 +4121,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 return items;
             });
         } else {
-            reloadItemDeferred = sourceController.read(newArgs.key, newArgs.options.readMeta).then((item) => {
+            reloadItemDeferred = sourceController.read(key, readMeta).then((item) => {
                 if (item) {
                     loadCallback(item);
                 } else {
