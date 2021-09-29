@@ -96,7 +96,7 @@ define(
             assert.equal(validateReplacer('', 'd\\*'), true);
             assert.equal(message, '');
             assert.equal(validateReplacer(' ', 'd\\*'), false);
-            assert.equal(message, 'Mask: Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/_input/Mask/options/replacer/');
+            assert.equal(message, 'Mask: Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/input/Mask/options/replacer/');
 
             UIUtils.Logger.error = error;
          });
