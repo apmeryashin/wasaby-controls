@@ -113,17 +113,7 @@ function getActionsWithViewMode(): IItemAction[] {
             title: 'Перевести',
             showType: TItemActionShowType.MENU_TOOLBAR,
             viewMode: 'functionalButton',
-            iconStyle: 'secondary',
-            style: 'pale'
-        },
-        {
-            id: 'redirect',
-            icon: 'icon-Close',
-            title: 'Красная кнопка',
-            showType: TItemActionShowType.MENU_TOOLBAR,
-            viewMode: 'functionalButton',
-            iconStyle: 'contrast',
-            style: 'danger'
+            iconStyle: 'secondary'
         },
         {
             id: 'profile',

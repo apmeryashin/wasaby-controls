@@ -783,8 +783,10 @@ export class Controller {
         };
         // ItemActions настраиваются одним размером iconSize, а functionalButton - двумя iconSize + inlineHeight.
         // При этом размеры s и xs отличаются для кнопок и для операций над записью.
-        // Конвертируем размеры для functionalButton, подстраивая общий размер кнопки под размеры itemActions.
+        // Конвертируем параметры для functionalButton, подстраивая общий размер кнопки под размеры itemActions.
+        // Для functionalButton в ItemActions стандартный цвет "pale". Другие цвета не поддерживаются.
         if (shownAction.viewMode === 'functionalButton') {
+            shownAction.style = 'pale';
             switch (shownAction.iconSize) {
                 case 's':
                     shownAction.iconSize = 'xs';

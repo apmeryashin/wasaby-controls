@@ -27,7 +27,7 @@ export type TextAlign = 'left' | 'right' | 'center';
  * @variant default
  * @variant pale
  */
-export type TButtonStyle = 'primary' | 'secondary' | 'success' | 'danger' | 'info' | 'unaccented' |'default' | 'pale';
+export type TButtonStyle = 'primary' | 'secondary' | 'success' | 'danger' | 'info' | 'unaccented' | 'default' | 'pale';
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions, IIconStyleOptions,
     IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
