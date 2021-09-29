@@ -44,6 +44,8 @@ export default class Indicator extends CollectionItem<null> {
         return `${this._$state}-` + this._$position + this._instancePrefix;
     }
 
+    readonly listInstanceName: string = 'controls-List__indicator';
+
     display(state: TIndicatorState, topOffset?: number): boolean {
         const isHidden = !this._$visible;
         if (isHidden) {
@@ -121,6 +123,14 @@ export default class Indicator extends CollectionItem<null> {
         return styles;
     }
 
+    getState(): TIndicatorState {
+        return this._$state;
+    }
+
+    getPosition(): TIndicatorPosition {
+        return this._$position;
+    }
+
     isTopIndicator(): boolean {
         return this._$position === 'top';
     }
@@ -131,10 +141,6 @@ export default class Indicator extends CollectionItem<null> {
 
     isGlobalIndicator(): boolean {
         return this._$position === 'global';
-    }
-
-    getQAData(marker?: boolean): string {
-        return this.key;
     }
 
     isDisplayed(): boolean {

@@ -16,6 +16,8 @@ export default class TreeGridFooterRow extends GridFooterRow {
     */
    protected _$displayExpanderPadding: boolean;
 
+   readonly listInstanceName: string =  'controls-TreeGrid__footer';
+
    getExpanderSize(): string {
       return this.getOwner().getExpanderSize();
    }

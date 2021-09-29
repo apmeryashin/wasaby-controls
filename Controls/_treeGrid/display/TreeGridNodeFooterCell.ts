@@ -9,6 +9,8 @@ import TreeGridNodeFooterRow from 'Controls/_treeGrid/display/TreeGridNodeFooter
 export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
     readonly '[Controls/treeGrid:TreeGridNodeFooterCell]': boolean;
 
+    readonly listInstanceName: string =  'controls-TreeGrid__node-footer-cell';
+
     getTemplate(content?: TemplateFunction): TemplateFunction|string {
         // TODO: Возвращать шаблон кнопки "Ещё".
         //  https://online.sbis.ru/opendoc.html?guid=15b9412b-159f-463c-9f4e-fa15a64fda4b

@@ -112,3 +112,11 @@ Object.defineProperty(Columns, 'defaultProps', {
       return Columns.getDefaultOptions();
    }
 });
+
+/**
+ * Имя сущности для идентификации списка.
+ */
+Object.defineProperty(Columns.prototype, 'listInstanceName', {
+    value: 'controls-Columns',
+    writable: false
+});
