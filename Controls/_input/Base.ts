@@ -553,8 +553,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         if (field) {
             if (field._container) {
                 const tooltipWidth = this._getTextWidth(tooltip);
-                const computedStyle = getComputedStyle(field._container);
-                hasFieldHorizontalScroll = parseFloat(computedStyle.width) < tooltipWidth;
+                hasFieldHorizontalScroll = field._container.scrollWidth >= tooltipWidth;
             } else {
                 hasFieldHorizontalScroll = field.hasHorizontalScroll();
             }
