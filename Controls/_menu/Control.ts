@@ -1009,11 +1009,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             vertical: subMenuDirection === 'bottom' ? 'bottom' : 'top',
             horizontal: subMenuDirection === 'bottom' ? 'left' : this._options.itemAlign
         };
-        const className = 'controls-Menu__subMenu controls-Menu__subMenu_margin' +
+        let className = 'controls-Menu__subMenu' +
             ` controls_popupTemplate_theme-${this._options.theme}` +
             this._getMenuPopupOffsetClass(item, this._options);
 
         return this._getTemplateOptions(item).then((templateOptions) => {
+            className += templateOptions.headingCaption ? ' controls-Menu__subMenu_withHeader_margin' : ' controls-Menu__subMenu_margin';
             return {
                 templateOptions,
                 target,
