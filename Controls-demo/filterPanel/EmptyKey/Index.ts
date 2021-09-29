@@ -56,6 +56,7 @@ export default class extends Control {
                 value: [],
                 textValue: '',
                 emptyText: 'Все сотрудники',
+                emptyKey: null,
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
                     multiSelect: true,

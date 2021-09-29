@@ -74,6 +74,28 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
  * @default false
  */
 
+/**
+ * @name Controls/_filterPanel/Editors/List#emptyKey
+ * @cfg {string} Первичный ключ для пункта списка, который создаётся при установке опции emptyText.
+ * @demo Controls-demo/filterPanel/EmptyKey/Index
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#emptyText
+ * @cfg {string} Добавляет пустой пункт в список с заданным текстом.
+ * @demo Controls-demo/filterPanel/EmptyKey/Index
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#selectAllKey
+ * @cfg {string} Ключ для пункта списка, который создаётся при установке опции selectAllText.
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#selectAllText
+ * @cfg {string} Добавляет пункт списка с заданным текстом для выбора всех элементов.
+ */
+
 class ListEditor extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
     protected _circleTemplate: TemplateFunction = MultiSelectCircleTemplate;
@@ -132,11 +154,11 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _handleItemsReadyCallback(items: RecordSet): void {
         this._items = items;
         if (this._options.emptyText && !items.getRecordById(this._options.emptyKey)) {
-            this._addEmptyItem(this._items, this._options);
+            this._addFilterItem(this._options.emptyText, this._options.emptyKey);
         }
 
         if (this._options.selectAllText && !items.getRecordById(this._options.selectAllKey)) {
-            this._addSelectAllItem(this._items, this._options);
+            this._addFilterItem(this._options.selectAllText, this._options.selectAllKey);
         }
     }
 
@@ -281,24 +303,14 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    private _addEmptyItem(items: RecordSet, options: IListEditorOptions): void {
-        const emptyItem = this._getItemModel(items, options.keyProperty);
+    private _addFilterItem(additionalText: string, additionalKey: string): void {
+        const emptyItem = this._getItemModel(this._items, this._options.keyProperty);
 
         const data = {};
-        data[options.keyProperty] = options.emptyKey;
-        data[options.displayProperty] = options.emptyText;
+        data[this._options.keyProperty] = additionalKey;
+        data[this._options.displayProperty] = additionalText;
         emptyItem.set(data);
-        items.prepend([emptyItem]);
-    }
-
-    private _addSelectAllItem(items: RecordSet, options: IListEditorOptions): void {
-        const emptyItem = this._getItemModel(items, options.keyProperty);
-
-        const data = {};
-        data[options.keyProperty] = options.selectAllKey;
-        data[options.displayProperty] = options.selectAllText;
-        emptyItem.set(data);
-        items.prepend([emptyItem]);
+        this._items.prepend([emptyItem]);
     }
 
     private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
@@ -381,9 +393,7 @@ class ListEditor extends Control<IListEditorOptions> {
             style: 'default',
             itemPadding: {
                 right: 'm'
-            },
-            emptyKey: null,
-            selectAllKey: 'all'
+            }
         };
     }
 }
