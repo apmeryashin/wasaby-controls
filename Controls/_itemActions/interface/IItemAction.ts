@@ -6,6 +6,8 @@ import {TIconStyle} from 'Controls/interface';
  * @typedef {String} TItemActionViewMode
  * @description
  * Допустимые значения для опции {@link viewMode}
+ * @variant link В виде гиперссылки с возможностью отображения иконки.
+ * @variant functionalButton В виде кнопки с круглой подложкой. Цвет подложки фиксирован и имеет значение "pale".
  */
 export type TItemActionViewMode = Extract<IViewMode, 'link' | 'functionalButton'>;
 
@@ -66,9 +68,8 @@ export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
  * Размер иконок опций записи
  * @variant s Маленькая.
  * @variant m Средняя.
- * @variant l Крупная.
  */
-export type TItemActionsSize = 's' | 'm' | 'l';
+export type TItemActionsSize = 's' | 'm';
 
 /**
  * @typedef {String} TMenuButtonVisibility
@@ -201,8 +202,8 @@ export interface IItemAction {
     /**
      * @name Controls/_itemActions/interface/IItemAction#viewMode
      * @cfg {TItemActionViewMode} Режим отображения кнопки операции над записью.
-     * @variant link В виде гиперссылки.
-     * @variant functionalButton В виде кнопки с круглой подложкой
+     * @variant link В виде гиперссылки с возможностью отображения иконки.
+     * @variant functionalButton В виде кнопки с круглой подложкой. Цвет подложки фиксирован и имеет значение "pale".
      * @default link
      */
     viewMode?: TItemActionViewMode;

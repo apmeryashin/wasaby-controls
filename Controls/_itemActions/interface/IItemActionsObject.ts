@@ -28,6 +28,16 @@ export interface IShownItemAction extends IItemAction {
      * Флаг определяющий, является ли текущая кнопка операции над записью кнопкой вызова меню (Кнопка с тремя точками)
      */
     isMenu?: boolean;
+
+    /**
+     * Высота базовой линии для равнивания иконки внутри кнопки
+     */
+    inlineHeight?: string;
+
+    /**
+     * Размер шрифта для выравнивания иконки
+     */
+    fontSize?: string;
 }
 
 export interface IItemActionsObject {

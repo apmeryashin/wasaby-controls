@@ -774,12 +774,32 @@ export class Controller {
      */
     private _fixShownActionOptions(action: IShownItemAction): IShownItemAction {
         const hasIcon = Controller._needShowIcon(action);
-        return {
+        const shownAction: IShownItemAction = {
             ...action,
             hasIcon,
+            fontSize: 'm',
             icon: hasIcon ? action.icon : null,
             caption: Controller._needShowTitle(action) ? action.title : null
         };
+        // ItemActions настраиваются одним размером iconSize, а functionalButton - двумя iconSize + inlineHeight.
+        // При этом размеры s и xs отличаются для кнопок и для операций над записью.
+        // Конвертируем параметры для functionalButton, подстраивая общий размер кнопки под размеры itemActions.
+        // Для functionalButton в ItemActions стандартный цвет "pale". Другие цвета не поддерживаются.
+        if (shownAction.viewMode === 'functionalButton') {
+            shownAction.style = 'pale';
+            switch (shownAction.iconSize) {
+                case 's':
+                    shownAction.iconSize = 'xs';
+                    shownAction.inlineHeight = 'xs';
+                    shownAction.fontSize = '2xs';
+                    break;
+                case 'm':
+                default:
+                    shownAction.iconSize = 's';
+                    shownAction.inlineHeight = 'm';
+            }
+        }
+        return shownAction;
     }
 
     /**

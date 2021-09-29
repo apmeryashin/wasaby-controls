@@ -1,6 +1,6 @@
 .controls-itemActionsV {
   align-items: center;
-  display: inline-block;
+  display: inline-flex;
   opacity: 0;
   position: absolute;
   visibility: hidden;
@@ -16,52 +16,27 @@
   padding-left: var(--offset_xs);
 }
 
-.controls-itemActionsV_visible {
-   display: inline-block;
-}
-
 .controls-itemActionsV_inside {
    padding-right: var(--offset-right_itemActions);
    min-height: var(--height_itemActions);
    overflow: hidden;
-   line-height: calc(var(--inline_height_m) - 2 * var(--border-thickness_button));
 
    &.controls-itemActionsV_editingToolbarVisible {
       height: var(--height_editing_itemActions);
    }
 }
 
+// 1. Когда иконки размера s, они должны выравниваться по центру по вертикали и горизонтали внутри блока с размером строки m.
+// 2. ItemAction без иконки должен выравниваться по вертикали по центру блока.
+// 3. ItemAction без иконки не должны выделяться при выделении текста записи. (в buttons это работает только для button, tool, functional)
+// 4. В плитке иконки должны выравниваться по центру
 .controls-itemActionsV__action {
+   min-width: var(--icon-size_m);
+   height: var(--icon-size_m);
    justify-content: center;
    user-select: none;
    display: flex;
    align-items: center;
-}
-
-.controls-itemActionsV__action_iconSize_s,
-.controls-itemActionsV__action_iconSize_m {
-   min-width: var(--item_icon-size_itemActions);
-   height: var(--item_icon-size_itemActions);
-}
-
-.controls-itemActionsV__Button_iconSize_s {
-   height: var(--icon-size_s);
-   line-height: var(--icon-size_s);
-}
-
-.controls-itemActionsV__Button_iconSize_m {
-   height: var(--icon-size_m);
-   line-height: var(--icon-size_m);
-}
-
-.controls-itemActionsV__Button_iconSize_s {
-   height: var(--icon-size_s);
-   line-height: var(--icon-size_s);
-}
-
-.controls-itemActionsV__Button_iconSize_m {
-   height: var(--icon-size_m);
-   line-height: var(--icon-size_m);
 }
 
 .controls-itemActionsV_style_default {
