@@ -36,6 +36,8 @@ class EmptyCell extends mixin<
                 + ' controls-Grid__row-cell-background-editing_default';
         }
 
+        classes += ' ' + this._getColumnSeparatorClasses();
+
         return classes;
     }
 
@@ -70,6 +72,13 @@ class EmptyCell extends mixin<
             return `width: ${containerSize}px;`;
         }
         return '';
+    }
+
+    getEditorViewTemplateClasses(params): string {
+        return this.getOwner().getEditorViewTemplateClasses({
+            ...params,
+            withPadding: true
+        });
     }
 
     //endregion
