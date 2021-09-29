@@ -23,6 +23,7 @@ const protocolNames = [
     'file:(?://|\\\\\\\\)',
     'smb:(?://|\\\\\\\\)',
     'Notes:(?://|\\\\\\\\)',
+    'notes:(?://|\\\\\\\\)'
 ];
 const correctTopLevelDomainNames = [
     'ru',
