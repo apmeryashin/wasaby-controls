@@ -220,7 +220,7 @@ define(
 
                menuRender._options.multiSelect = true;
                actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
-               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
             });
 
             it('pinned', function() {

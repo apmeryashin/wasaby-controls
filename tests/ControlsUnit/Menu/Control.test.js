@@ -421,20 +421,20 @@ define(
             });
 
             it('check items count', function() {
-               menuRender._addEmptyItem(items, menuOptions);
+               menuRender._addSingleSelectionItem('Not selected', null, items, menuOptions);
                assert.equal(items.getCount(), 1);
                assert.equal(items.at(0).get('title'), 'Not selected');
                assert.equal(items.at(0).get('id'), null);
             });
 
             it('check parentProperty', function() {
-               menuRender._addEmptyItem(items, {...menuOptions, parentProperty: 'parent', root: null});
+               menuRender._addSingleSelectionItem('text', null, items, {...menuOptions, parentProperty: 'parent', root: null});
                assert.equal(items.getCount(), 1);
                assert.equal(items.at(0).get('parent'), null);
             });
 
             it('check nodeProperty', function() {
-               menuRender._addEmptyItem(items, {...menuOptions, nodeProperty: 'node'});
+               menuRender._addSingleSelectionItem('text', null, items, {...menuOptions, nodeProperty: 'node'});
                assert.equal(items.at(0).get('node'), false);
             });
 
@@ -451,7 +451,7 @@ define(
                   keyProperty: 'id'
                });
 
-               menuRender._addEmptyItem(items, menuOptions);
+               menuRender._addSingleSelectionItem('emptyText', null, items, menuOptions);
                assert.equal(items.at(0).get('id'), null);
                assert.isTrue(isCreatedModel);
                sandbox.restore();
@@ -922,22 +922,24 @@ define(
             );
 
             // empty item
-            let result = menuControl._getMarkedKey([], 'emptyKey', true);
+            let result = menuControl._getMarkedKey([],
+               {emptyKey: 'emptyKey', multiSelect: true, emptyText: 'emptyText'});
             assert.equal(result, 'emptyKey');
 
             // fixed item
-            result = menuControl._getMarkedKey([2], 'emptyKey', true);
+            result = menuControl._getMarkedKey([2], {emptyKey: 'emptyKey', multiSelect: true});
             assert.equal(result, 2);
 
             // item out of list
-            result = menuControl._getMarkedKey([123], 'emptyKey', true);
+            result = menuControl._getMarkedKey([123], {emptyKey: 'emptyKey', multiSelect: true});
             assert.isUndefined(result);
 
             // single selection
-            result = menuControl._getMarkedKey([1, 2], 'emptyKey');
+            result = menuControl._getMarkedKey([1, 2], {emptyKey: 'emptyKey', multiSelect: false});
             assert.equal(result, 1);
 
-            result = menuControl._getMarkedKey([], 'emptyKey');
+            result = menuControl._getMarkedKey([],
+               {emptyKey: 'emptyKey', multiSelect: false, emptyText: 'emptyText'});
             assert.equal(result, 'emptyKey');
          });
 

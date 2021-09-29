@@ -3,7 +3,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet, List} from 'Types/collection';
-import {ICrudPlus, PrefetchProxy, QueryWhere} from 'Types/source';
+import {ICrudPlus, PrefetchProxy} from 'Types/source';
 import {Collection, CollectionItem, Search} from 'Controls/display';
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -40,6 +40,7 @@ interface ISourcePropertyConfig {
 const SUB_DROPDOWN_DELAY = 400;
 
 const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
+
 /**
  * Контрол меню.
  * @public
@@ -282,7 +283,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._rightTemplateClick(event, item);
         } else {
             if (this._options.multiSelect && this._selectionChanged &&
-                !this._isEmptyItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
+                !this._isSingleSelectionItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key);
 
                 this._notify('selectedKeysChanged', [this._getSelectedKeys()]);
@@ -326,8 +327,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _updateMakerController(newOptions: IMenuControlOptions): void {
         this._getMarkerController(newOptions).updateOptions(this._getMarkerControllerConfig(newOptions));
-        const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey,
-            newOptions.multiSelect);
+        const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions);
         this._markerController.setMarkedKey(markedKey);
     }
 
@@ -422,8 +422,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         config.overlay = 'none';
     }
 
-    protected _isEmptyItem(item: Model): boolean {
-        return this._options.emptyText && item.getKey() === this._options.emptyKey;
+    protected _isSingleSelectionItem(item: Model): boolean {
+        const key = item.getKey();
+        const isAllSelectedItem = this._options.selectedAllText && key === this._options.selectedAllKey;
+        const isEmptyItem = this._options.emptyText && key === this._options.emptyKey;
+        return isAllSelectedItem || isEmptyItem;
     }
 
     protected _openSelectorDialog(): void {
@@ -434,7 +437,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else {
             selectedItems = new List<Model>({
                 items: this._getSelectedItems().filter((item: Model): boolean => {
-                    return !this._isEmptyItem(item);
+                    return !this._isSingleSelectionItem(item);
                 }) as Model[]
             });
         }
@@ -624,7 +627,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const markedKey = markerController.getMarkedKey();
         const selectedItem = this._listModel.getItemBySourceKey(markedKey);
         if (selectedItem &&
-            (MenuControl._isFixedItem(selectedItem.getContents()) || this._isEmptyItem(selectedItem.getContents()))) {
+            (MenuControl._isFixedItem(selectedItem.getContents()) || this._isSingleSelectionItem(selectedItem.getContents()))) {
             markerController.setMarkedKey(undefined);
         }
         const selection = selectionController.toggleItem(key);
@@ -632,8 +635,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._listModel.nextVersion();
 
         const isEmptySelected = this._options.emptyText && !selection.selected.length;
+        const isAllItemSelected = this._options.selectedAllText && !selection.selected.length;
         if (isEmptySelected) {
             this._getMarkerController(this._options).setMarkedKey(this._options.emptyKey);
+        } else if (isAllItemSelected) {
+            this._getMarkerController(this._options).setMarkedKey(this._options.selectedAllKey);
         }
     }
 
@@ -685,19 +691,24 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getMarkerController(options: IMenuControlOptions): MarkerController {
         if (!this._markerController) {
-            const markedKey = this._getMarkedKey(options.selectedKeys, options.emptyKey, options.multiSelect);
+            const markedKey = this._getMarkedKey(options.selectedKeys, options);
             this._markerController = new MarkerController(this._getMarkerControllerConfig(options, markedKey));
         }
         return this._markerController;
     }
 
     private _getMarkedKey(selectedKeys: TSelectedKeys,
-                          emptyKey?: string|number,
-                          multiSelect?: boolean): string|number|undefined {
+                          {emptyKey,
+                           selectedAllKey,
+                          multiSelect,
+                          selectedAllText,
+                          emptyText}: Partial<IMenuControlOptions>): string|number|undefined {
         let markedKey;
         if (multiSelect) {
-            if (!selectedKeys.length || selectedKeys.includes(emptyKey)) {
+            if ((!selectedKeys.length || selectedKeys.includes(emptyKey)) && emptyText) {
                 markedKey = emptyKey;
+            } else if (selectedKeys.includes(selectedAllKey) && selectedAllText) {
+                markedKey = selectedAllKey;
             } else {
                 const item = this._listModel.getItemBySourceKey(selectedKeys[0]);
                 if (item && MenuControl._isFixedItem(item.getContents())) {
@@ -727,8 +738,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectedItems = this._getSelectionController().getSelectedItems().map((item) => {
             return item.getContents();
         }).reverse();
-        if (!selectedItems.length && this._options.emptyText) {
-            selectedItems.push(this._listModel.getItemBySourceKey(this._options.emptyKey).getContents());
+        if (!selectedItems.length) {
+            let key;
+            if (this._options.selectedAllText) {
+                key = this._options.selectedAllKey;
+            } else if (this._options.emptyText) {
+                key = this._options.emptyKey;
+            }
+            if (key !== undefined) {
+                selectedItems.push(this._listModel.getItemBySourceKey(key).getContents());
+            }
         }
         return selectedItems;
     }
@@ -766,8 +785,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getCollection(items: RecordSet<Model>, options: IMenuControlOptions): Collection<Model> {
-        if (!options.searchValue && options.emptyText && !items.getRecordById(options.emptyKey)) {
-            this._addEmptyItem(items, options);
+        if (!options.searchValue && !items.getRecordById(options.emptyKey)) {
+            if (options.emptyText) {
+                this._addSingleSelectionItem(options.emptyText, options.emptyKey, items, options);
+            } else if (options.selectedAllText) {
+                this._addSingleSelectionItem(options.selectedAllText, options.selectedAllKey, items, options);
+            }
         }
         const collectionConfig: object = {
             collection: items,
@@ -812,12 +835,15 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return listModel;
     }
 
-    private _addEmptyItem(items: RecordSet, options: IMenuControlOptions): void {
+    private _addSingleSelectionItem(itemText: string,
+                                    key: string,
+                                    items: RecordSet,
+                                    options: IMenuControlOptions): void {
         const emptyItem = this._getItemModel(items, options.keyProperty);
 
         const data = {};
-        data[options.keyProperty] = options.emptyKey;
-        data[options.displayProperty] = options.emptyText;
+        data[options.keyProperty] = key;
+        data[options.displayProperty] = itemText;
 
         if (options.parentProperty) {
             data[options.parentProperty] = options.root;

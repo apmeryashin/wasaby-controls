@@ -76,6 +76,8 @@
                        itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
                        keyProperty="{{_options.keyProperty}}"
                        displayProperty="{{_options.displayProperty}}"
+                       selectedAllText="{{_options.selectedAllText}}"
+                       selectedAllKey="{{_options.selectedAllKey}}"
                        emptyText="{{_options.emptyText}}"
                        emptyKey="{{_options.emptyKey}}"
                        searchParam="{{_options.searchParam}}"
