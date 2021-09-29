@@ -35,6 +35,7 @@ export interface IBasePopupOptions {
      * @variant delayedRemote Диалог открывается сразу, предзагруженные данные после окончания запроса придут в опцию prefetchData шаблона окна.
      * @variant remote Диалог откроется только по кончании запроса. Данные придут в _beforeMount шаблона в опции prefetchData
      * @default delayedRemote
+     * @demo Controls-demo/Popup/Loader/Index
      */
     initializingWay?: InitializingWay;
     /**
