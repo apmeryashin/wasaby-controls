@@ -600,7 +600,7 @@ export class Controller {
             return;
         }
         const contents = Controller._getItemContents(item);
-        const menuButtonVisibility = this._menuHasHeaderOrFooter() ? 'visible' : 'adaptive';
+        const menuButtonVisibility = this._hasMenuHeaderOrFooter() ? 'visible' : 'adaptive';
         this._actionsWidth = actionsContainerWidth;
         this._actionsHeight = actionsContainerHeight;
         const actions = this._filterVisibleActions(item.getActions().all, contents, item.isEditing());
@@ -675,28 +675,39 @@ export class Controller {
      * Проверяет, есть ли Header или Footer в настройках меню.
      * @private
      */
-    private _menuHasHeaderOrFooter(): boolean {
+    private _hasMenuHeaderOrFooter(): boolean {
         return this._contextMenuConfig &&
             !!(this._contextMenuConfig.footerTemplate || this._contextMenuConfig.headerTemplate);
     }
 
     /**
-     * Проверяет, нужна ли кнопка меню.
-     * Кнопка нужна:
-     * 1. Если в меню настроен шаблон футера или заголовка.
-     * 2. В списке операций присутствуют те, которые должны отображаться только в меню или в меню и тулбаре,
-     * и у которых нет родительской операции
+     * Определяет есть операции, которые надо показывать в меню по ховеру.
      * @param actions
      * @private
      */
-    private _isMenuButtonRequired(actions: IItemAction[]): boolean {
-        return this._menuHasHeaderOrFooter() || actions.some(
+    private _hasMenuActions(actions: IItemAction[]): boolean {
+        return actions.some(
             (action) =>
                 !action.parent && (
                     !action.showType ||
                     action.showType === TItemActionShowType.MENU ||
                     action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
+    }
+
+    /**
+     * Возвращает конфиг кнопки операции открытия меню.
+     * @private
+     */
+    private _getMenuItemAction(): IShownItemAction {
+        return {
+            id: null,
+            icon: 'icon-SettingsNew',
+            style: 'secondary',
+            iconStyle: 'secondary',
+            size: this._menuIconSize,
+            isMenu: true
+        };
     }
 
     /**
@@ -729,18 +740,14 @@ export class Controller {
                     action.showType === TItemActionShowType.MENU_TOOLBAR
                 )
             );
-            if (this._isMenuButtonRequired(visibleActions)) {
-                showed.push({
-                    id: null,
-                    icon: 'icon-SettingsNew',
-                    style: 'secondary',
-                    iconStyle: 'secondary',
-                    size: this._menuIconSize,
-                    isMenu: true
-                });
+            if (this._hasMenuActions(visibleActions) || this._hasMenuHeaderOrFooter()) {
+                showed.push(this._getMenuItemAction());
             }
         } else {
             showed = visibleActions;
+            if (this._hasMenuHeaderOrFooter()) {
+                showed.push(this._getMenuItemAction());
+            }
         }
         return { all, showed };
     }
