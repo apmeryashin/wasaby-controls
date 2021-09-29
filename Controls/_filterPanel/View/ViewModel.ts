@@ -163,9 +163,6 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
             item.viewMode = 'basic';
         }
         this._setValueToSourceItem(item, editorValue);
-        if (item.needCollapse) {
-            this.collapseGroup(item.group);
-        }
         this._source = this._getSource(source);
         this._editingObject = this._getEditingObjectBySource(this._source);
         this._nextVersion();
