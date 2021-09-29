@@ -36,7 +36,7 @@ const itemActions: IItemAction[] = [
 const data: ISrcData[] = [
    {
       key: 1,
-      title: 'Кнопка "Ещё" по свайпу будет показана, т.к. указан headerTemplate'
+      title: 'Кнопка меню будет показана, т.к. указан headerTemplate'
    }
 ];
 
