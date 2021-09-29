@@ -544,16 +544,20 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     _getTooltip(): string {
         let hasFieldHorizontalScroll: boolean = false;
         let tooltip = this._viewModel.displayValue;
-        if (!tooltip && typeof this._options.placeholder === 'string') {
-            tooltip = this._options.placeholder;
-        }
         const field = this._getField();
         const readOnlyField: HTMLElement | void = this._getReadOnlyField();
 
         if (field) {
-            if (field._container) {
-                const tooltipWidth = this._getTextWidth(tooltip);
-                hasFieldHorizontalScroll = field._container.scrollWidth >= tooltipWidth;
+            // Если ничего не введено в поле ввода, то вычисляем размеры placeholder, и если он больше ширины поля ввода, добавляем tooltip
+            // Сейчас нельзя использовать одинаковую логику для определения необходимости отображения tooltip,
+            // так как при введенном значении, происходит поиск наличия скролла, а для placeholder, текс обрезается через overflow
+            if (!tooltip && typeof this._options.placeholder === 'string') {
+                if (field._container) {
+                    tooltip = this._options.placeholder;
+                    const tooltipWidth = this._getTextWidth(tooltip);
+                    const computedStyle = getComputedStyle(field._container);
+                    hasFieldHorizontalScroll = parseFloat(computedStyle.width) < tooltipWidth;
+                }
             } else {
                 hasFieldHorizontalScroll = field.hasHorizontalScroll();
             }
