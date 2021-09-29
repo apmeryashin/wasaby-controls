@@ -55,6 +55,7 @@
                     <ws:partial
                             template="{{ rightFieldTemplate }}"
                             value="{{ rangeModel.startValue }}"
+                            datePopupHeader="{{ true }}"
                             inputPosition="left"
                     />
                 </ws:if>
@@ -82,6 +83,7 @@
                         <ws:partial
                                 template="{{ rightFieldTemplate }}"
                                 value="{{ rangeModel.endValue }}"
+                                datePopupHeader="{{ true }}"
                                 inputPosition="right"
                         />
                     </ws:if>
