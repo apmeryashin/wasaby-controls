@@ -12,6 +12,8 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
     protected _$column: number = 0;
     protected _$owner: Collection<T>;
 
+    readonly listInstanceName: string =  'controls-Columns__item';
+
     constructor(options?: IOptions<T>) {
         super(options);
         this._$column = options?.column || 0;

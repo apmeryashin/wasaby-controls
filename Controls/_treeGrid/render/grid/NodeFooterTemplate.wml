@@ -3,11 +3,14 @@
         'highlightOnHover': highlightOnHover,
         'cursor': cursor,
         'clickable': clickable
-    })}}" attr:key="{{item.key}}">
+    })}}"
+         attr:key="{{item.key}}"
+         attr:data-qa="{{ item.listInstanceName }}">
         <ws:for data="index,column in item.getColumns(colspan)">
             <div class="{{ column.getContentClasses(backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}"
                  attr:key="{{item.key}}_column_{{index}}"
-                 style="{{ column.getColspanStyles(colspan)  }}">
+                 style="{{ column.getColspanStyles(colspan)  }}"
+                 attr:data-qa="{{ column.listInstanceName }}_content">
                 <ws:if data="{{ item.shouldDisplayContent(column) }}">
                     <!-- Отступы для выравнивания с экспандером -->
                     <ws:if data="{{item.shouldDisplayExpanderBlock(column)}}">

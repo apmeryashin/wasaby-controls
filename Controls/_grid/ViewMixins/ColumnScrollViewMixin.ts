@@ -7,6 +7,8 @@ import {
 } from 'Controls/columnScroll';
 import {_Options, SyntheticEvent} from 'UI/Vdom';
 import {Logger} from 'UI/Utils';
+import {IOptions as IGridOptions} from 'Controls/_grid/display/mixins/Grid';
+import {GridLadderUtil} from 'Controls/display';
 
 const ERROR_MESSAGES = {
     MISSING_HEADER: 'Невозможно отобразить горизонтальны скролл без заголовков или результатов сверху!',
@@ -356,6 +358,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
     _$pendingMouseEnterForActivate: false,
     _$oldOptionsForPendingUpdate: null,
 
+    _$relativeCellContainers: null,
+
     //#region IFreezable
 
     _freezeColumnScroll(): void {
@@ -508,10 +512,28 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         return !!this._$columnScrollController;
     },
 
-    setColumnScrollPosition(position: 'start' | IAbstractViewOptions['columnScrollStartPosition']): void {
+    scrollToLeft(): void {
         this._doAfterReload(() => {
             this._doOnComponentDidUpdate(() => {
-                this._resetColumnScroll(position);
+                    this._resetColumnScroll();
+            });
+        });
+    },
+
+    scrollToRight(): void {
+        this._doAfterReload(() => {
+            this._doOnComponentDidUpdate(() => {
+                this._resetColumnScroll('end');
+            });
+        });
+    },
+
+    scrollToColumn(columnIndex: number): void {
+        this._doAfterReload(() => {
+            this._doOnComponentDidUpdate(() => {
+                if (this._$relativeCellContainers[columnIndex]) {
+                    this._columnScrollScrollIntoView(this._$relativeCellContainers[columnIndex]);
+                }
             });
         });
     },
@@ -601,6 +623,46 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
                 setScrollPosition(this, newScrollPosition, true);
             }
         }
+    },
+
+    /**
+     * Возвращает наиболее полный набор колонок таблицы, включая дополнительные ячейки(например, лесенка) и без учета колспана.
+     * Необходим для корректного подскрола к колонке при лююбой верной конфигурации таблицы.
+     * Например, в шапке может не быть ячейки данной колонки, ровно как и в первых N записях.
+     * Для избежания поиска строки с нужной нам ячейкой, при горизонтальном скролле выводится фейковая строка нулевой высоты
+     * со всеми ячейками без колспанов.
+     * @param options
+     * @private
+     */
+    _getViewColumns(options: IGridOptions): number {
+        const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
+        let ladderCellsIndexes = [];
+
+        if (options.isFullGridSupport) {
+            const columns = this.getListModel() ? this.getListModel().getGridColumnsConfig() : options.columns;
+            const ladderStickyColumn = GridLadderUtil.getStickyColumn({ columns });
+
+            // Во время днд отключаем лесенку, а контент отображаем принудительно с помощью visibility: visible
+            if (ladderStickyColumn && !this.getListModel().isDragging()) {
+                ladderCellsIndexes.push(0);
+                if (ladderStickyColumn.property.length === 2) {
+                    ladderCellsIndexes.push(1);
+                }
+                if (hasMultiSelect) {
+                    ladderCellsIndexes = ladderCellsIndexes.map((idx) => ++idx);
+                }
+            }
+        }
+
+        return this._getGridTemplateColumnsWidth(options).map((item, idx, arr) => {
+            if (idx === 0 && hasMultiSelect) {
+                return {type: 'CHECKBOX'};
+            } else if (this._hasItemActionsCell(options) && (idx === arr.length - 1)) {
+                return {type: 'ITEM_ACTIONS'};
+            } else {
+                return {type: ladderCellsIndexes.indexOf(idx) !== -1 ? 'LADDER' : 'DATA'};
+            }
+        });
     },
     //#endregion
 

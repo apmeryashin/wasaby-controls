@@ -181,8 +181,8 @@ export function getItemSize(item: HTMLElement, zoomCoefficient: number, tileMode
     let imageWrapperRect;
     //Плитка с динамической шириной не увеличивается по высоте, при изменении ширины.
     //Поэтому при расчете размеров увеличенного элемента, сами увеличим высоту плитки.
-    if (tileMode === 'dynamic') {
-        imageWrapper = item.querySelector('.controls-TileView__imageWrapper');
+    imageWrapper = item.querySelector('.controls-TileView__imageWrapper');
+    if (tileMode === 'dynamic' && imageWrapper) {
         imageWrapperRect = imageWrapper.getBoundingClientRect();
         imageWrapper.style.height = imageWrapperRect.height * zoomCoefficient + 'px';
     }
@@ -194,7 +194,7 @@ export function getItemSize(item: HTMLElement, zoomCoefficient: number, tileMode
         height: rectAfterZoom.height
     };
 
-    if (tileMode === 'dynamic') {
+    if (tileMode === 'dynamic' && imageWrapper) {
         imageWrapper.style.height = imageWrapperRect.height + 'px';
     }
     tileContent.style.width = '';

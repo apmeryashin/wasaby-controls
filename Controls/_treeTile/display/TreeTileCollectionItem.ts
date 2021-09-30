@@ -30,6 +30,8 @@ export interface ITreeTileCollectionItemOptions<S extends Model = Model>
 export default class TreeTileCollectionItem<T extends Model = Model>
     extends mixin<TreeItem, TileItemMixin>(TreeItem, TileItemMixin) {
 
+    readonly listInstanceName: string =  'controls-TreeTile__item';
+
     protected _$nodesHeight: number;
 
     protected _$folderWidth: number;

@@ -39,7 +39,7 @@ interface IRatingOptions extends IControlOptions {
     value: number;
     /**
      * @name Controls/progress:IRating#precision
-     * @cfg {Number} Десятичная часть в виде целого числа
+     * @cfg {Number} Точность рейтинга
      * @variable 0 - отображение полностью закрашенных звезд
      * @variable 0.5 - отображение закрашенных на половину звезд
      * @default 0
@@ -49,7 +49,7 @@ interface IRatingOptions extends IControlOptions {
      */
     /*
      * @name Controls/progress:IRating#precision
-     * @cfg {Number} Decimal part as an integer
+     * @cfg {Number} precision rating
      * @variable 0 - displays fully filled stars
      * @variable 0.5 - display half-filled stars
      * @ default 0

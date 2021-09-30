@@ -22,6 +22,8 @@ class ResultsRow extends Row<null> {
     protected _$metaResults: EntityModel;
     protected _$resultsPosition: TResultsPosition;
 
+    readonly listInstanceName: string =  'controls-Grid__results';
+
     constructor(options?: IResultsRowOptions) {
         super({
             ...options,

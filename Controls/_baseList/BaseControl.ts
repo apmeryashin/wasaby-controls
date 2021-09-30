@@ -37,7 +37,7 @@ import {
     Direction,
     ISelectionObject,
     TNavigationButtonView,
-    ISourceOptions
+    ISourceOptions, TKey
 } from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 import { process } from 'Controls/error';
@@ -104,9 +104,9 @@ import {
 import BaseControlTpl = require('wml!Controls/_baseList/BaseControl/BaseControl');
 import 'wml!Controls/_baseList/BaseControl/NavigationButton';
 
-import {IList} from './interface/IList';
+import {IList, IReloadItemOptions} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
-import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scroll';
+import { getStickyHeadersHeight } from 'Controls/scroll';
 import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
 import {ISiblingStrategy} from './interface/ISiblingStrategy';
 import {FlatSiblingStrategy} from './Strategies/FlatSiblingStrategy';
@@ -125,6 +125,7 @@ import ObserversController, {
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
+import {convertReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
 
 //#endregion
 
@@ -1401,6 +1402,48 @@ const _private = {
                 }
             }
 
+            // scrollController должен пересчитываться до indicatorsController, т.к. индикаторы зависят от виртуального скролла
+            if (self._scrollController) {
+                if (action) {
+                    const collectionStartIndex = self._listViewModel.getStartIndex();
+                    const collectionStopIndex = self._listViewModel.getStopIndex();
+                    let result = null;
+                    switch (action) {
+                        case IObservable.ACTION_ADD:
+                            // TODO: this._batcher.addItems(newItemsIndex, newItems)
+                            if (self._addItemsDirection) {
+                                self._addItems.push(...newItems);
+                                self._addItemsIndex = newItemsIndex;
+                            } else {
+                                let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
+                                    : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
+                                if (self._listViewModel.getCount() === newItems.length) {
+                                    direction = undefined;
+                                }
+                                result = self._scrollController.handleAddItems(newItemsIndex, newItems, direction);
+                            }
+                            break;
+                        case IObservable.ACTION_MOVE:
+                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
+                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                            break;
+                        case IObservable.ACTION_REMOVE:
+                            result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
+                            break;
+                        case IObservable.ACTION_RESET:
+                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
+                            break;
+                    }
+                    if (result) {
+                        _private.handleScrollControllerResult(self, result);
+                    }
+
+                    // TODO: уйдет после перехода на новую модель
+                    self._scrollController.setIndicesAfterCollectionChange();
+                }
+            }
+
+            // indicatorsController должен пересчитываться до observersController, т.к. отступ триггера зависит от ромашки
             if (self._indicatorsController) {
                 switch (action) {
                     case IObservable.ACTION_RESET:
@@ -1478,46 +1521,6 @@ const _private = {
                     self._scrollPagingCtr = null;
                 }
                 self._resetPagingOnResetItems = true;
-            }
-
-            if (self._scrollController) {
-                if (action) {
-                    const collectionStartIndex = self._listViewModel.getStartIndex();
-                    const collectionStopIndex = self._listViewModel.getStopIndex();
-                    let result = null;
-                    switch (action) {
-                        case IObservable.ACTION_ADD:
-                            // TODO: this._batcher.addItems(newItemsIndex, newItems)
-                            if (self._addItemsDirection) {
-                                self._addItems.push(...newItems);
-                                self._addItemsIndex = newItemsIndex;
-                            } else {
-                                let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
-                                if (self._listViewModel.getCount() === newItems.length) {
-                                    direction = undefined;
-                                }
-                                result = self._scrollController.handleAddItems(newItemsIndex, newItems, direction);
-                            }
-                            break;
-                        case IObservable.ACTION_MOVE:
-                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
-                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
-                            break;
-                        case IObservable.ACTION_REMOVE:
-                            result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
-                            break;
-                        case IObservable.ACTION_RESET:
-                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
-                            break;
-                    }
-                    if (result) {
-                        _private.handleScrollControllerResult(self, result);
-                    }
-
-                    // TODO: уйдет после перехода на новую модель
-                    self._scrollController.setIndicesAfterCollectionChange();
-                }
             }
 
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
@@ -4081,9 +4084,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return updateResult;
     }
 
-    reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
-        const items = this._listViewModel.getCollection();
-        const currentItemIndex = items.getIndexByValue(this._keyProperty, key);
+    reloadItem(
+        key: TKey,
+        options: object | IReloadItemOptions,
+        replaceItem?: boolean,
+        reloadType: string = 'read'
+    ): Promise<Model> {
+        const newArgs = convertReloadItemArgs(...arguments);
+
+        const items = this._listViewModel.getCollection() as unknown as RecordSet;
+        const currentItemIndex = items.getIndexByValue(this._keyProperty, newArgs.key);
         const sourceController = _private.getSourceController(this, {...this._options, items: null});
 
         let reloadItemDeferred;
@@ -4091,7 +4101,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         let itemsCount;
 
         const loadCallback = (item): void => {
-            if (replaceItem) {
+            if (newArgs.options.replace) {
                 items.replace(item, currentItemIndex);
             } else {
                 items.at(currentItemIndex).merge(item);
@@ -4099,12 +4109,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         };
 
         if (currentItemIndex === -1) {
-            throw new Error('BaseControl::reloadItem no item with key ' + key);
+            throw new Error('BaseControl::reloadItem no item with key ' + newArgs.key);
         }
 
-        if (reloadType === 'query') {
+        if (newArgs.options.method === 'query') {
             filter = cClone(this._options.filter);
-            filter[this._keyProperty] = [key];
+            filter[this._keyProperty] = [newArgs.key];
             sourceController.setFilter(filter);
             reloadItemDeferred = sourceController.load().then((items) => {
                 if (items instanceof RecordSet) {
@@ -4113,7 +4123,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                     if (itemsCount === 1) {
                         loadCallback(items.at(0));
                     } else if (itemsCount > 1) {
-                        Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
+                        Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + newArgs.key);
                     } else {
                         Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
                     }
@@ -4121,7 +4131,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 return items;
             });
         } else {
-            reloadItemDeferred = sourceController.read(key, readMeta).then((item) => {
+            reloadItemDeferred = sourceController.read(newArgs.key, newArgs.options.readMeta).then((item) => {
                 if (item) {
                     loadCallback(item);
                 } else {
@@ -6888,9 +6898,21 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._isColumnScrollVisible;
     }
 
-    setColumnScrollPosition(position: 'start' | 'end'): void {
-        if (this._children.listView.setColumnScrollPosition) {
-            this._children.listView.setColumnScrollPosition(position);
+    scrollToLeft(): void {
+        if (this._children.listView.scrollToLeft) {
+            this._children.listView.scrollToLeft();
+        }
+    }
+
+    scrollToRight(): void {
+        if (this._children.listView.scrollToRight) {
+            this._children.listView.scrollToRight();
+        }
+    }
+
+    scrollToColumn(columnIndex: number): void {
+        if (this._children.listView.scrollToColumn) {
+            this._children.listView.scrollToColumn(columnIndex);
         }
     }
 

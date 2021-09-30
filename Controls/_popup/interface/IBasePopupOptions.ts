@@ -4,6 +4,11 @@ import {ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILo
 import {List} from 'Types/collection';
 import {IDataLoader} from 'Controls/_popup/interface/IBaseOpener';
 
+export enum InitializingWay {
+    remote = 'remote',
+    delayedRemote = 'delayedRemote'
+}
+
 /**
  * Интерфейс базовых опций окна.
  * @interface Controls/_popup/interface/IBasePopupOptions
@@ -24,6 +29,15 @@ export interface IBasePopupOptions {
      */
     template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     pageId?: string;
+    /**
+     * @cfg Определяет способ открытия при работе с предзагруженными данными.
+     * Внимание: опция работает только в паре с опцией {@link dataLoaders}
+     * @variant delayedRemote Диалог открывается сразу, предзагруженные данные после окончания запроса придут в опцию prefetchData шаблона окна.
+     * @variant remote Диалог откроется только по кончании запроса. Данные придут в _beforeMount шаблона в опции prefetchData
+     * @default delayedRemote
+     * @demo Controls-demo/Popup/Loader/Index
+     */
+    initializingWay?: InitializingWay;
     /**
      * @cfg Определяет возможность закрытия окна по клику вне.
      * @default false
