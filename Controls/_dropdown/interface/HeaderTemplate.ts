@@ -12,7 +12,7 @@
  * <!-- WML -->
  * <Controls.dropdown:Button
  *    keyProperty="id"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    tooltip="Add">
  *    <ws:headerTemplate>
  *        <ws:partial template="Controls/dropdown:HeaderTemplate" caption="Add"/>

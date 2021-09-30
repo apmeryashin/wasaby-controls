@@ -330,7 +330,7 @@ export default class Selector extends BaseDropdown {
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="key"
  *    displayProperty="title"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    multiSelect="{{true}}"
  *    maxVisibleItems="{{null}}">
  * </Controls.dropdown:Selector>
@@ -370,7 +370,7 @@ export default class Selector extends BaseDropdown {
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Selector>
  * </pre>
@@ -404,7 +404,7 @@ export default class Selector extends BaseDropdown {
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Selector>
  * </pre>
