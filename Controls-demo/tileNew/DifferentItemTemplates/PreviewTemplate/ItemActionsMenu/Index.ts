@@ -2,6 +2,8 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/tileNew/DifferentItemTemplates/PreviewTemplate/ItemActionsMenu/Template';
 import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from 'Controls-demo/tileNew/DataHelpers/DataCatalog';
+import {TItemActionShowType} from 'Controls/itemActions';
+
 
 const DATA = Gadgets.getPreviewItems();
 
@@ -10,59 +12,81 @@ const ACTIONS = [
         id: 1,
         icon: 'icon-DownloadNew',
         title: 'download',
-        showType: 0
+        showType: TItemActionShowType.MENU
     },
     {
         id: 2,
         icon: 'icon-Signature',
         title: 'signature',
-        showType: 0
+        showType: TItemActionShowType.MENU
     },
     {
         id: 3,
         icon: 'icon-Print',
         title: 'print',
-        showType: 0
+        iconStyle: 'warning',
+        showType: TItemActionShowType.FIXED
     },
     {
         id: 4,
         icon: 'icon-Link',
         title: 'link',
-        showType: 0
+        showType: TItemActionShowType.MENU
+    },
+    {
+        id: 41,
+        icon: 'icon-Erase',
+        iconStyle: 'danger',
+        title: 'remove',
+        showType: TItemActionShowType.FIXED
     },
     {
         id: 5,
         icon: 'icon-Edit',
         title: 'edit',
-        showType: 0
+        showType: TItemActionShowType.MENU
     },
     {
         id: 6,
         icon: 'icon-Copy',
         title: 'copy',
-        showType: 0
+        showType: TItemActionShowType.MENU
     },
     {
         id: 7,
         icon: 'icon-Paste',
         title: 'phone',
-        showType: 0
+        showType: TItemActionShowType.MENU
     },
     {
         id: 8,
         icon: 'icon-EmptyMessage',
         title: 'message',
-        showType: 0
+        showType: TItemActionShowType.MENU
     },
     {
         id: 9,
         icon: 'icon-PhoneNull',
         title: 'phone',
-        showType: 0
+        showType: TItemActionShowType.MENU
     }
 ];
 
-const ACTIONS_FEW = ACTIONS.slice(0, 2);
+const ACTIONS_FEW = [
+    {
+        id: 1,
+        icon: 'icon-DownloadNew',
+        title: 'download',
+        showType: TItemActionShowType.MENU
+    },
+    {
+        id: 41,
+        icon: 'icon-Erase',
+        iconStyle: 'danger',
+        title: 'remove',
+        showType: TItemActionShowType.FIXED
+    }
+];
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

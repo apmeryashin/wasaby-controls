@@ -3,7 +3,7 @@
             {{!action.isMenu ? 'controls-itemActionsV__action_padding' + (actionPadding && '_' + actionPadding || '') : ''}}
             controls-itemActionsV__action_style_{{actionStyle || action.style || 'secondary'}}
             {{((iconStyle || action.iconStyle || 'secondary') !== 'secondary') ?
-            ('controls-icon_style-' + (iconStyle || action.iconStyle)) : ('controls-action_iconStyle_secondary')}}
+            ('controls-icon_style-' + (action.showType === 3 ? action.iconStyle : iconStyle || action.iconStyle)) : ('controls-action_iconStyle_secondary')}}
             {{((action.showIcon && !action.showTitle) ? ('controls-itemActionsV__action-area_size') : '')}}
             {{actionMode === 'adaptive' ? 'controls-itemActionsV_action_adaptive'}}"
           attr:title="{{action.tooltip}}"
