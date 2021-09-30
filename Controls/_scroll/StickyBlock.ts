@@ -178,6 +178,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     private _isHidden: boolean = false;
 
+    protected _gapFixClass: string = '';
+
     group: Group;
 
     get index(): number {
@@ -801,14 +803,21 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
                     if (borderWidth) {
                         this._reverseOffsetStyle = 'border-' + position + '-width:' + (borderWidth + offset) + 'px;';
+                        this._resetGapFixClass();
                     } else {
                         const padding = parseInt(styles['padding-' + position], 10);
                         this._reverseOffsetStyle = 'padding-' + position + ':' + (padding + offset) + 'px;';
+
+                        // Для исправления бага Safari, из-за которого position: absolute элементы, не сдвигаются
+                        // padding'ами внешнего блока (маркер в Grid, List).
+                        this._gapFixClass = 'controls-StickyBlock_gapFix';
                     }
                 }
 
                 style += this._reverseOffsetStyle;
                 style += 'margin-' + position + ': -' + offset + 'px;';
+            } else {
+                this._resetGapFixClass();
             }
 
             style += 'z-index: ' + fixedZIndex + ';';
@@ -822,6 +831,12 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         }
 
         return style;
+    }
+
+    private _resetGapFixClass(): void {
+        if (this._gapFixClass !== '') {
+            this._gapFixClass = '';
+        }
     }
 
     private _updateObserversStyles(offsetTop: number, shadowVisibility: SHADOW_VISIBILITY): void {
