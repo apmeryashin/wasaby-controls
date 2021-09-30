@@ -14,7 +14,7 @@ export default class ItemActionsCell extends Cell<null, Row<null>> implements II
     readonly ItemActionsCell = true;
     readonly listInstanceName: string =  'controls-Grid__actions';
 
-    readonly listElementName: string = 'action-cell';
+    readonly listElementName: string = 'actions-cell';
 
     getTemplate(): string {
         return DEFAULT_CELL_CONTENT;
