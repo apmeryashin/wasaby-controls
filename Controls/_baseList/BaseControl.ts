@@ -1383,6 +1383,48 @@ const _private = {
                 }
             }
 
+            // scrollController должен пересчитываться до indicatorsController, т.к. индикаторы зависят от виртуального скролла
+            if (self._scrollController) {
+                if (action) {
+                    const collectionStartIndex = self._listViewModel.getStartIndex();
+                    const collectionStopIndex = self._listViewModel.getStopIndex();
+                    let result = null;
+                    switch (action) {
+                        case IObservable.ACTION_ADD:
+                            // TODO: this._batcher.addItems(newItemsIndex, newItems)
+                            if (self._addItemsDirection) {
+                                self._addItems.push(...newItems);
+                                self._addItemsIndex = newItemsIndex;
+                            } else {
+                                let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
+                                    : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
+                                if (self._listViewModel.getCount() === newItems.length) {
+                                    direction = undefined;
+                                }
+                                result = self._scrollController.handleAddItems(newItemsIndex, newItems, direction);
+                            }
+                            break;
+                        case IObservable.ACTION_MOVE:
+                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
+                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                            break;
+                        case IObservable.ACTION_REMOVE:
+                            result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
+                            break;
+                        case IObservable.ACTION_RESET:
+                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
+                            break;
+                    }
+                    if (result) {
+                        _private.handleScrollControllerResult(self, result);
+                    }
+
+                    // TODO: уйдет после перехода на новую модель
+                    self._scrollController.setIndicesAfterCollectionChange();
+                }
+            }
+
+            // indicatorsController должен пересчитываться до observersController, т.к. отступ триггера зависит от ромашки
             if (self._indicatorsController) {
                 switch (action) {
                     case IObservable.ACTION_RESET:
@@ -1460,46 +1502,6 @@ const _private = {
                     self._scrollPagingCtr = null;
                 }
                 self._resetPagingOnResetItems = true;
-            }
-
-            if (self._scrollController) {
-                if (action) {
-                    const collectionStartIndex = self._listViewModel.getStartIndex();
-                    const collectionStopIndex = self._listViewModel.getStopIndex();
-                    let result = null;
-                    switch (action) {
-                        case IObservable.ACTION_ADD:
-                            // TODO: this._batcher.addItems(newItemsIndex, newItems)
-                            if (self._addItemsDirection) {
-                                self._addItems.push(...newItems);
-                                self._addItemsIndex = newItemsIndex;
-                            } else {
-                                let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
-                                if (self._listViewModel.getCount() === newItems.length) {
-                                    direction = undefined;
-                                }
-                                result = self._scrollController.handleAddItems(newItemsIndex, newItems, direction);
-                            }
-                            break;
-                        case IObservable.ACTION_MOVE:
-                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
-                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
-                            break;
-                        case IObservable.ACTION_REMOVE:
-                            result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
-                            break;
-                        case IObservable.ACTION_RESET:
-                            result = self._scrollController.handleResetItems(self._keepScrollAfterReload);
-                            break;
-                    }
-                    if (result) {
-                        _private.handleScrollControllerResult(self, result);
-                    }
-
-                    // TODO: уйдет после перехода на новую модель
-                    self._scrollController.setIndicesAfterCollectionChange();
-                }
             }
 
             // Тут вызывается nextVersion на коллекции, и это приводит к вызову итератора.
