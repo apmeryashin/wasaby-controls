@@ -4,7 +4,7 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/ItemActions/ContextMenuConfig/FooterTemplate/Index' }}">
-            <a href="{{content.href}}">Отображение кнопки "Ещё" при указанном footerTemplate</a>
+            <a href="{{content.href}}">Указан footerTemplate. Кнопка меню отображается</a>
         </Router.router:Reference>
         <Controls-demo.list_new.ItemActions.ContextMenuConfig.FooterTemplate.Index/>
     </div>
@@ -13,7 +13,7 @@
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/ItemActions/ContextMenuConfig/HeaderTemplate/Index' }}">
-            <a href="{{content.href}}">Отображение кнопки "Ещё" при указанном headerTemplate</a>
+            <a href="{{content.href}}">Указан headerTemplate. Кнопка меню отображается</a>
         </Router.router:Reference>
         <Controls-demo.list_new.ItemActions.ContextMenuConfig.HeaderTemplate.Index/>
     </div>
