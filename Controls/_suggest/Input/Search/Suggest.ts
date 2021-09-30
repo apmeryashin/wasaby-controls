@@ -15,7 +15,7 @@ import 'Controls/search';
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_suggest.less переменные тем оформления}
  * * {@link http://axure.tensor.ru/StandardsV8/автодополнение.html Спецификация Axure}
- * 
+ *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
  * @implements Controls/interface:ISearch
@@ -86,7 +86,7 @@ var Suggest = Control.extend({
       this._markedKeyChanged = key !== null;
    },
 
-   _searchClick: function(event: SyntheticEvent, nativeEvent: Event) {
+   searchClick: function(event: SyntheticEvent, nativeEvent: Event) {
       if (!this._markedKeyChanged || nativeEvent.which !== constants.key.enter) {
          const eventResult = this._notify('searchClick');
 
