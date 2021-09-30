@@ -73,7 +73,7 @@ export default interface IMenuBase {
  *    <Controls.menu:Control
  *          keyProperty="id"
  *          displayProperty="title"
- *          source="{{_source)}}"
+ *          source="{{_source}}"
  *          itemTemplateProperty="myTemplate"/>
  * </pre>
  * myItemTemplate.wml

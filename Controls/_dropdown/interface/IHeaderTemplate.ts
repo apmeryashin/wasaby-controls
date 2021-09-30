@@ -32,7 +32,7 @@
  * <Controls.dropdown:Button
  *    keyProperty="id"
  *    icon="icon-medium icon-AddButtonNew"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    tooltip="Add">
  *    <ws:headerTemplate>
  *       <ws:partial template="Controls/dropdown:HeaderTemplate" scope="{{ headTemplate }}" caption="Add"/>
@@ -73,7 +73,7 @@
 *    <Controls.Button.Menu
 *          keyProperty="id"
 *          icon="icon-medium icon-AddButtonNew"
-*          source="{{_source)}}"
+*          source="{{_source}}"
 *          tooltip="Add">
 *       <ws:headerTemplate>
 *          <ws:partial template="Controls/dropdown:HeaderTemplate" scope="{{ headTemplate }}" caption="Add"/>
