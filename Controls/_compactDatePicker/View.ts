@@ -15,6 +15,13 @@ import 'css!Controls/compactDatePicker';
  * @implements Controls/dateRange:IDateRange
  * @implements Controls/interface:IDisplayedRanges
  *
+ * @remark
+ *
+ * Полезные ссылки:
+ * * {@link /materials/Controls-demo/app/Controls-demo%2FCompactDatePicker%2FFullDemo%2FIndex демо-пример}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-21.6000/Controls-default-theme/variables/_compactDatePicker.less переменные тем оформления}
+ *
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/CompactDatePicker/Index

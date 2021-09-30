@@ -2,7 +2,7 @@ import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
 import { IItemPadding } from 'Controls/display';
-import {Direction, IFontColorStyle, IItemTemplateOptions} from 'Controls/interface';
+import {Direction, IFontColorStyle, IItemTemplateOptions, TKey} from 'Controls/interface';
 import {IMovableOptions} from './IMovableList';
 import {RecordSet} from 'Types/collection';
 
@@ -47,6 +47,40 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
     moreFontColorStyle?: IFontColorStyle;
     stickyHeader?: boolean;
     stickyGroup?: boolean;
+}
+
+/**
+ * Интерфейс описывает структуру объекта конфигурации логики перезагрузки записи списка.
+ * Который задается 2м аргументом в ф-ии {@link Controls/_list/interface/IList#reloadItem reloadItem} списков.
+ *
+ * @interface Controls/_list/interface/IReloadItemOptions
+ * @public
+ * @author Уфимцев Д.Ю.
+ */
+export interface IReloadItemOptions {
+    /**
+     * Метод с помощью которого будут запрошены данные с БЛ.
+     */
+    method?: 'read' | 'query';
+
+    /**
+     * Объект с метаданными, которые будут переданы в запросе к БЛ. Актуально указывать только в том случае если {@link Controls/_list/interface/IReloadItemOptions#method method} === 'read'.
+     */
+    readMeta?: object;
+
+    /**
+     * Определяет, как загруженный элемент будет применяться к коллекции.
+     * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
+     * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
+     */
+    replace?: boolean;
+
+    /**
+     * Определяет каким образом производить обновление записи в иерархических списках.
+     * Если указано true, то будет отправлен запрос методом query на обновление всей иерархии которой принадлежит обновляемая запись.
+     * В противном случае будет обновлена лишь сама запись.
+     */
+    hierarchyReload?: boolean;
 }
 
 /**
@@ -355,12 +389,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /**
  * Загружает модель из {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}, объединяет изменения в текущих данных и отображает элемент.
  * @function Controls/_list/interface/IList#reloadItem
- * @param {String} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
- * @param {Object} readMeta Метаинформация, которая будет передана методу запроса/чтения.
- * @param {Boolean} replaceItem Определяет, как загруженный элемент будет применяться к коллекции.
- * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
- * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
- * @param {Controls/_list/interface/IList/ReloadType.typedef} [reloadType=read] Определяет, как будет загружен элемент.
+ * @param {String|Number} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
+ * @param {Controls/_list/interface/IReloadItemOptions} options Настройки перезагрузки итема.
  * @returns {Promise<Model>} В случае успешной загрузки, Promise вернет список отображаемых дочерних элементов для загруженного узла.
  * @example
  * <pre class="brush: js">
@@ -403,12 +433,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /*ENG
  * Loads model from data source, merges changes into the current data and renders the item.
  * @function Controls/_list/interface/IList#reloadItem
- * @param {String} key Identifier of the collection item, that should be reloaded from source.
- * @param {Object} readMeta Meta information, that which will be passed to the query/read method.
- * @param {Boolean} replaceItem Determine, how the loaded item will be applied to collection.
- * If the parameter is set to true, item from collection will replaced with loaded item.
- * if the parameter is set to false (by default), loaded item will merged to item from collection.
- * @param {reloadType} Determine how the item will be reloaded.
+ * @param {String|Number} key Identifier of the collection item, that should be reloaded from source.
+ * @param {Controls/_list/interface/IReloadItemOptions} options reload config.
  * @example
  * <pre class="brush: js">
  * _buttonClick: function() {

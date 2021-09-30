@@ -202,7 +202,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         return GridItem;
     },
 
-    _getGridTemplateColumnsWidth(options: IGridOptions): string {
+    _getGridTemplateColumnsWidth(options: IGridOptions): string[] {
         // todo Вынести расчёт на viewModel:
         //  https://online.sbis.ru/opendoc.html?guid=09307163-7edb-4423-999d-525271e05586
         // тогда метод можно покрыть нормально юнитом и проблемы с актуализацией колонок на самом grid-элементе не будет
@@ -486,6 +486,14 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
     beforeRowActivated(target: HTMLElement): void {
         this._columnScrollScrollIntoView(target);
     }
+});
+
+/**
+ * Имя сущности для идентификации списка.
+ */
+Object.defineProperty(GridView.prototype, 'listInstanceName', {
+    value: 'controls-Grid',
+    writable: false
 });
 
 export default GridView;

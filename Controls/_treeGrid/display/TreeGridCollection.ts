@@ -20,7 +20,6 @@ import TreeGridFooterRow from './TreeGridFooterRow';
 import {default as TreeGridGroupDataRow, IOptions as ITreeGridGroupDataRowOptions} from './TreeGridGroupDataRow';
 import {Model as EntityModel, Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
-import {CrudEntityKey} from 'Types/source';
 import {TGroupNodeVisibility} from '../interface/ITreeGrid';
 import {ITreeGridOptions} from '../TreeGridView';
 
@@ -328,8 +327,11 @@ export default class TreeGridCollection<
 
     protected _hasItemsToCreateResults(): boolean {
         let rootItems = this.getChildrenByRecordSet(this.getRoot().getContents());
-        // Если единственный узел в списке - группа, показываем строку итогов в зависимости от наличия его дочерних узлов
-        if (rootItems.length === 1 && this._$nodeTypeProperty && rootItems[0].get(this._$nodeTypeProperty) === 'group') {
+        // Если единственный узел в списке - группа, показываем строку итогов
+        // в зависимости от наличия его дочерних узлов
+        if (rootItems.length === 1 &&
+            this._$nodeTypeProperty &&
+            rootItems[0].get(this._$nodeTypeProperty) === 'group') {
             return this.getChildrenByRecordSet(rootItems[0]).length > 1;
         }
         return rootItems.length > 1;

@@ -6,7 +6,7 @@ class Range extends Control<IControlOptions> {
     protected _startDate: Date = new Date(2021, 1, 1);
     protected _endDate: Date = new Date(2021, 1, 29);
 
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/dateRange/Input/RightFieldTemplate/RightFieldTemplate'];
 }
 
 export default Range;

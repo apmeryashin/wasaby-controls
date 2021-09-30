@@ -241,6 +241,10 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
       if (this._options.sourceController !== newOptions.sourceController) {
          this._sourceController = newOptions.sourceController;
+
+         if (newOptions.sourceController) {
+            this._initSourceController(newOptions);
+         }
       }
 
       if (this._sourceController && (this._sourceController.getItems() !== this._items)) {
@@ -262,7 +266,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       return updateResult;
    }
 
-   private _initSourceController(options: IDataOptions, receivedState: IReceivedState): void {
+   private _initSourceController(options: IDataOptions, receivedState?: IReceivedState): void {
       const sourceController = options.sourceController || this._getSourceController(options, receivedState);
       this._sourceController = sourceController;
       this._fixRootForMemorySource(options);

@@ -13,6 +13,8 @@ export default class TreeGridFooterCell<TOwner extends TreeGridFooterRow> extend
     */
    protected _$displayExpanderPadding: boolean;
 
+    readonly listInstanceName: string =  'controls-TreeGrid__footer-cell';
+
    getWrapperClasses(
       backgroundColorStyle: string,
       templateHighlightOnHover: boolean

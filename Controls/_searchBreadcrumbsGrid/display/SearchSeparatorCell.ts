@@ -2,6 +2,9 @@ import { GridCell } from 'Controls/grid';
 import SearchSeparatorRow from 'Controls/_searchBreadcrumbsGrid/display/SearchSeparatorRow';
 
 export default class SearchSeparatorCell extends GridCell<string, SearchSeparatorRow> {
+
+   readonly listInstanceName: string = 'controls-TreeGrid__separator-cell';
+
    getTemplate(): string {
       if (this._$isFirstDataCell) {
          return 'Controls/searchBreadcrumbsGrid:SearchSeparatorTemplate';

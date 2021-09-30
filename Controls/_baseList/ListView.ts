@@ -475,4 +475,12 @@ Object.defineProperty(ListView, 'defaultProps', {
    }
 });
 
+/**
+ * Имя сущности для идентификации списка.
+ */
+Object.defineProperty(ListView.prototype, 'listInstanceName', {
+    value: 'controls-List',
+    writable: false
+});
+
 export = ListView;

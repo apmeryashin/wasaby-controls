@@ -1,0 +1,6 @@
+<div class="controlsDemo__wrapper">
+    <Controls.dateRange:RangeSelector
+        datePopupType="compactDatePicker"
+        bind:startValue="_startValue"
+        bind:endValue="_endValue"/>
+</div>

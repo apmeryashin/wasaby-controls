@@ -78,6 +78,28 @@
             <button on:click="_reload()" style="padding: 3px;">Перезагрузить</button>
         </div>
 
+        <div class="controlsDemo__mr2 controlsDemo__mb2" style="max-width: 300px;">
+            <h4 class="controlsDemo__mb1">Проскролить</h4>
+            <button on:click="_scrollToLeft()" style="padding: 3px;">В начало</button>
+            <button on:click="_scrollToRight()" style="padding: 3px;">В конец</button>
+        </div>
+
+        <div class="controlsDemo__mr2 controlsDemo__mb2" style="max-width: 300px;">
+            <h4 class="controlsDemo__mb1">Перезагрузка</h4>
+            <button on:click="_reload()" style="padding: 3px;">Перезагрузить</button>
+        </div>
+
+        <div class="controlsDemo__mr2 controlsDemo__mb2" style="max-width: 300px;">
+            <h4 class="controlsDemo__mb1">Проскролить к колонке</h4>
+            <Controls.input:Text bind:value="_scrollToColumnIdx" attr:style="width: 100px;" placeholder="Номер колонки(с 0)"/>
+            <button on:click="_scrollToColumn()" style="padding: 3px;">Проскролить</button>
+        </div>
+
+        <div class="controlsDemo__mr2 controlsDemo__mb2" style="max-width: 300px;">
+            <h4 class="controlsDemo__mb1">Вкл/Выкл множественный выбор</h4>
+            <button on:click="_toggleCheckbox()" style="padding: 3px;">Переключить</button>
+        </div>
+
     </div>
 
     <Controls.event:Register name="resizeDetect" register="controlResize">
@@ -94,6 +116,7 @@
                             columnScroll="{{ _columnScroll }}"
                             itemActions="{{ _itemActions }}"
                             dragScrolling="{{ _dragScrolling }}"
+                            multiSelectVisibility="{{ _multiSelectVisibility }}"
                             stickyColumnsCount="{{ _stickyColumnsCount }}"
                             columnScrollStartPosition="{{ _columnScrollStartPosition }}"
                             itemsDragNDrop="{{ _itemsDragNDrop }}"

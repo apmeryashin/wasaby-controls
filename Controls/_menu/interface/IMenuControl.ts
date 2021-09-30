@@ -36,6 +36,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     historyRoot?: string;
     subMenuDirection?: TSubMenuDirection;
     itemAlign?: TItemAlign;
+    headingCaptionProperty?: string;
 }
 
 /**

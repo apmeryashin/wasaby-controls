@@ -4,7 +4,7 @@
    <div class="controls-StickyHeader controls_scroll_theme-{{ _options.theme }}
    controls-background-{{ _options.backgroundStyle }}
    controls-StickyHeader_position
-   controls-StickyBlock_{{_model.fixedPosition === '' ? 'unfixed' : 'fixed'}}"
+   controls-StickyBlock_{{ (_model && _model.fixedPosition !== '') ? 'fixed' : 'unfixed' }}"
         style="{{_style + (_options.style || '')}}"
         name="content">
       <ws:if data="{{_canShadowVisible.top}}">

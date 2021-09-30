@@ -89,11 +89,21 @@ class Mask extends Base {
     }
 
     private static _validateReplacer(replacer, mask): boolean {
-        if (replacer && regExpQuantifiers.test(mask)) {
-            Logger.error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/_input/Mask/options/replacer/');
-            return false;
+        let resValidate = true;
+        if (Array.isArray(mask)) {
+            resValidate = mask.every((curMask) => {
+                if (replacer || regExpQuantifiers.test(curMask)) {
+                    Logger.error('Mask', 'Маска, заданная массивом, не работает с квантификаторами и опцией replacer.' +
+                        ' Больше информации на https://wi.sbis.ru/docs/js/Controls/input/Mask/options/mask/');
+                    return false;
+                }
+                return true;
+            });
+        } else if (replacer && regExpQuantifiers.test(mask)) {
+            Logger.error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/input/Mask/options/replacer/');
+            resValidate = false;
         }
-        return true;
+        return resValidate;
     }
     private static _calcReplacer(replacer, mask): string {
         const value = Mask._validateReplacer(replacer, mask) ? replacer : '';
@@ -123,7 +133,7 @@ class Mask extends Base {
     static getOptionTypes() {
         const optionTypes = Base.getOptionTypes();
 
-        optionTypes.mask = descriptor(String).required();
+        optionTypes.mask = descriptor(String, Array).required();
         return optionTypes;
     }
 }

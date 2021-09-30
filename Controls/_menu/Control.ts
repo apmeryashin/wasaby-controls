@@ -1009,11 +1009,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             vertical: subMenuDirection === 'bottom' ? 'bottom' : 'top',
             horizontal: subMenuDirection === 'bottom' ? 'left' : this._options.itemAlign
         };
-        const className = 'controls-Menu__subMenu controls-Menu__subMenu_margin' +
+        let className = 'controls-Menu__subMenu' +
             ` controls_popupTemplate_theme-${this._options.theme}` +
             this._getMenuPopupOffsetClass(item, this._options);
 
         return this._getTemplateOptions(item).then((templateOptions) => {
+            className += templateOptions.headingCaption ? ' controls-Menu__subMenu_withHeader_margin' : ' controls-Menu__subMenu_margin';
             return {
                 templateOptions,
                 target,
@@ -1030,6 +1031,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getTemplateOptions(item: CollectionItem<Model>): Promise<object> {
         const root: TKey = item.getContents().get(this._options.keyProperty);
+        const headingCaption = item.getContents().get(this._options.headingCaptionProperty);
         const isLoadedChildItems = this._isLoadedChildItems(root);
         const sourcePropertyConfig = item.getContents().get(this._options.sourceProperty);
         const dataLoadCallback = !isLoadedChildItems &&
@@ -1039,6 +1041,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 root: sourcePropertyConfig ? null : root,
                 bodyContentTemplate: 'Controls/_menu/Control',
                 dataLoadCallback,
+                headingCaption,
                 footerContentTemplate: this._options.nodeFooterTemplate,
                 footerItemData: {
                     key: root,
@@ -1048,7 +1051,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 emptyText: null,
                 showClose: false,
                 showHeader: false,
-                headerTemplate: null,
+                headerTemplate: headingCaption ? 'Controls/dropdown:HeaderTemplate' : null,
                 headerContentTemplate: null,
                 additionalProperty: null,
                 searchParam: null,
