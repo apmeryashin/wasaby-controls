@@ -1,3 +1,4 @@
 <span attr:class="controls-HeaderCounter
                   controls-fontsize-{{_options.fontSize}}
-                  controls-HeaderCounter_style-{{_options.fontColorStyle}}{{_options.readOnly ? '':'_hovered'}}">{{_options.caption}}</span>
+                  {{!_options.readOnly ? 'controls-HeaderCounter_hovered'}}
+                  controls-HeaderCounter_style-{{_options.fontColorStyle}}">{{_options.caption}}</span>
