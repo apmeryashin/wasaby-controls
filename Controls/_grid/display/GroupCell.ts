@@ -37,8 +37,6 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
 
     readonly listInstanceName: string = 'controls-Grid__group';
 
-    readonly listElementName: string = 'cell';
-
     constructor(options?: IOptions<TContents>) {
         super(options);
         OptionsToPropertyMixin.call(this, options);

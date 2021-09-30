@@ -16,8 +16,6 @@ class EmptyCell extends mixin<
 
     readonly listInstanceName: string = 'controls-Grid__empty';
 
-    readonly listElementName: string = 'cell';
-
     //region Аспект "Стилевое оформление"
     getWrapperClasses(backgroundColorStyle: string = 'default', highlightOnHover?: boolean): string {
         let classes;
