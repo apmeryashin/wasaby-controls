@@ -76,24 +76,30 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
 
 /**
  * @name Controls/_filterPanel/Editors/List#emptyKey
- * @cfg {string} Первичный ключ для пункта списка, который создаётся при установке опции emptyText.
+ * @cfg {string} Ключ для пункта списка, который используется для сброса параметра фильтрации.
+ * @see emptyText
  * @demo Controls-demo/filterPanel/EmptyKey/Index
  */
 
 /**
  * @name Controls/_filterPanel/Editors/List#emptyText
- * @cfg {string} Добавляет пустой пункт в список с заданным текстом.
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для сброса параметра фильтрации, когда в панели фильтров отключено отображение кнопки "Сбросить".
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
  * @demo Controls-demo/filterPanel/EmptyKey/Index
  */
 
 /**
  * @name Controls/_filterPanel/Editors/List#selectAllKey
- * @cfg {string} Ключ для пункта списка, который создаётся при установке опции selectAllText.
+ * @cfg {string} Ключ для пункта списка, который используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @see selectAllText
  */
 
 /**
  * @name Controls/_filterPanel/Editors/List#selectAllText
- * @cfg {string} Добавляет пункт списка с заданным текстом для выбора всех элементов.
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
  */
 
 class ListEditor extends Control<IListEditorOptions> {
