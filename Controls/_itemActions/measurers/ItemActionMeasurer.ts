@@ -1,4 +1,4 @@
-import {TItemActionsSize} from '../interface/IItemAction';
+import {IItemAction, TItemActionShowType, TItemActionsSize} from '../interface/IItemAction';
 import {MeasurerUtils} from './MeasurerUtils';
 import {IItemActionsObject} from '../interface/IItemActionsObject';
 
@@ -35,7 +35,7 @@ export function getActions(
     const rootActions = allActions.filter((action) => !action['parent@']);
     const availableActionsCount = getAvailableActionsCount(iconSize, containerSize);
     if (rootActions.length > availableActionsCount || rootActions.length < allActions.length) {
-        showedActions = rootActions.slice(0, availableActionsCount - 1);
+        showedActions = MeasurerUtils.sliceAndFixActions(rootActions, availableActionsCount - 1);
         showedActions.push({
             id: null,
             icon: 'icon-SettingsNew',
@@ -45,7 +45,7 @@ export function getActions(
             isMenu: true
         });
     } else {
-        showedActions = rootActions;
+        showedActions = MeasurerUtils.sliceAndFixActions(rootActions);
     }
     return {
         all: actions.all,

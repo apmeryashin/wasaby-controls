@@ -210,16 +210,13 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             this._container.style.top = '';
             this._container.style.bottom = '';
         }
-        if (!this._isStickyEnabled(options)) {
-            return;
-        }
-        this._register();
     }
 
     protected _afterMount(options: IStickyHeaderOptions): void {
         if (!this._isStickyEnabled(options)) {
             return;
         }
+        this._register();
         this._init();
     }
 

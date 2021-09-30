@@ -4,6 +4,11 @@ import {ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILo
 import {List} from 'Types/collection';
 import {IDataLoader} from 'Controls/_popup/interface/IBaseOpener';
 
+export enum InitializingWay {
+    remote = 'remote',
+    delayedRemote = 'delayedRemote'
+}
+
 /**
  * Интерфейс базовых опций окна.
  * @interface Controls/_popup/interface/IBasePopupOptions
@@ -24,6 +29,15 @@ export interface IBasePopupOptions {
      */
     template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     pageId?: string;
+    /**
+     * @cfg Определяет способ открытия при работе с предзагруженными данными.
+     * Внимание: опция работает только в паре с опцией {@link dataLoaders}
+     * @variant delayedRemote Диалог открывается сразу, предзагруженные данные после окончания запроса придут в опцию prefetchData шаблона окна.
+     * @variant remote Диалог откроется только по кончании запроса. Данные придут в _beforeMount шаблона в опции prefetchData
+     * @default delayedRemote
+     * @demo Controls-demo/Popup/Loader/Index
+     */
+    initializingWay?: InitializingWay;
     /**
      * @cfg Определяет возможность закрытия окна по клику вне.
      * @default false
@@ -157,7 +171,7 @@ export interface IBasePopupOptions {
      * Полученные данные будут переданы в опцию <b>prefetchData</b>.
      * В рамках переходного этапа, для определения наличия предзагрузки данных используйте опцию <b>isPrefetchDataMode</b>. См. примеры.
      * @remark
-     * **Обратите внимение: модуль загрузчика данных - синглтон.**
+     * **Обратите внимание: модуль загрузчика данных — синглтон.**
      * **Внимание. Функционал является экспериментальным и не должен использоваться повсеместно.**
      * **Перед использованием проконсультируйтесь с ответственным за функционал.**
      * @example
@@ -272,8 +286,8 @@ export interface IBasePopupOptions {
      * @remark
      * На вход принимает параметры:
      * 
-     * * currentItem - конфигурация текущего окна, для которого высчитывается z-index.
-     * * popupList - Список с конфигурацией открытых на данный момент окон.
+     * * currentItem — конфигурация текущего окна, для которого высчитывается z-index.
+     * * popupList — Список с конфигурацией открытых на данный момент окон.
      * 
      * Функция позволяет решить нетривиальные сценарии взаимодействия окон и не должна использоваться повсеместно.
      * Для большинства сценариев должно быть достаточно базового механизма простановки z-index.
@@ -423,7 +437,7 @@ export interface IBasePopupOptions {
  * @property {String} module Имя модуля загрузчика, который реализует метод loadData.
  * @property {String} key Имя загрузчика. По умолчанию имя загрузчика берется из поля module.
  * @property {String[]} dependencies Массив ключей загрузчиков, от которых зависит данный.
- * Он будет вызван только после того, как отработают загрузичики из данного списка.
+ * Он будет вызван только после того, как отработают загрузчики из данного списка.
  * Их результаты придут в функцию загрузчика вторым аргументом.
  * Загрузчики из данного списка должны идти по порядку раньше текущего.
  * @property {Object} params Параметры, передающиеся в метод loadData.

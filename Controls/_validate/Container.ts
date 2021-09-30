@@ -45,7 +45,6 @@ type ValidResult = boolean|null|Promise<boolean>|string[];
 class ValidateContainer extends Control<IValidateContainerOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
-    _openingInProcess: boolean = false;
     _contentActive: boolean = false;
     _validationStatus: string = 'valid';
     _currentValue: any;
@@ -289,8 +288,6 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         if (!this._destroyed) {
             this._clearCloseId();
             if (this._validationResult && this._validationResult.length && !this._isOpened) {
-                this._isOpened = true;
-                this._openingInProcess = true;
                 const cfg = {
                     target: this._container,
                     validationStatus: 'invalid',
@@ -387,16 +384,11 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     }
 
     private _closeHandler(): void {
-        // В случае если открытие вызвано во время закрытия предыдущего инфобокса не надо ломать флаг isOpened
-        // https://online.sbis.ru/opendoc.html?guid=0499d9f9-a540-4ff6-8164-d2d7c945f569
-        // Надо разобраться, _isOpened должен по идее взводиться только тогда, когда инфобокс по факту открылся
-        if (!this._openingInProcess) {
-            this._isOpened = false;
-        }
+        this._isOpened = false;
     }
 
-    private _onOpenHandler(): void {
-        this._openingInProcess = false;
+    protected _onOpenHandler(): void {
+        this._isOpened = true;
     }
 
     private _hoverInfoboxHandler(): void {

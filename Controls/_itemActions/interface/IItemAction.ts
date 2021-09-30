@@ -17,9 +17,12 @@ export type TItemActionViewMode = Extract<IViewMode, 'link' | 'functionalButton'
  * Позволяет настроить, какие опции записи будут показаны по ховеру, а какие - в доп.меню.
  * Влияет на порядок отображения опций записи по свайпу.
  * Экспортируемый enum: Controls/itemActions:TItemActionShowType
- * @variant MENU показывать опцию только в дополнительном меню
- * @variant MENU_TOOLBAR показывать опцию в дополнительном меню и тулбаре
- * @variant TOOLBAR показывать опцию только в тулбаре
+ * @variant MENU показывать кнопку операции только в дополнительном меню
+ * @variant MENU_TOOLBAR показывать кнопку операции в дополнительном меню и тулбаре
+ * @variant TOOLBAR показывать кнопку операции только в тулбаре
+ * @variant FIXED Показывать кнопку операции в фиксированном положении или перед кнопкой меню.
+ * Для зафиксированной таким образом операций над записью iconStyle, указанный в её настройках всегда имеет наибольший
+ * приоритет.
  */
 export enum TItemActionShowType {
     // show only in Menu
@@ -27,7 +30,9 @@ export enum TItemActionShowType {
     // show in Menu and Toolbar
     MENU_TOOLBAR,
     // show only in Toolbar
-    TOOLBAR
+    TOOLBAR,
+    // fixed position
+    FIXED
 }
 
 /**

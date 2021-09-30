@@ -19,6 +19,13 @@
             </tr>
         </thead>
 
+        <!-- Контрол строит наиболее полный набор колонок таблицы. Подробное описание в контроле. -->
+        <Controls.columnScroll:RelativeColumns
+                if="{{ _options.columnScroll }}"
+                isFullGridSupport="{{ false }}"
+                bind:relativeCellContainers="_$relativeCellContainers"
+                viewColumns="{{ _getViewColumns(_options) }}"/>
+
         <!-- Header -->
         <Controls.scroll:VirtualScrollContainer if="{{ _listModel.getHeader() }}" position="top">
             <thead attr:name="header" class="{{ _listModel.getHeader().getBodyClasses() }}">
@@ -62,7 +69,7 @@
             </tr>
         </tbody>
         <!-- Items -->
-        <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
+        <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer" attr:data-qa="{{ listInstanceName }}__items-container">
 
         <!-- TODO избавиться от прокидывания _onBreadcrumbClick https://online.sbis.ru/doc/0649e69a-d507-4024-9f99-c70205f535ef-->
         <ws:partial

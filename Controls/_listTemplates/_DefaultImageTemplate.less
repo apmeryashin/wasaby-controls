@@ -32,15 +32,18 @@
    border-radius: 60px;
 }
 
-/* Временный фикс для айпада. Перестала работать clip-path маска, изображения пропадают.
- Ошибка https://online.sbis.ru/opendoc.html?guid=9553ecf3-76a6-4fc6-8fe4-79421763c95f
- Сейчас сделал как в ie, чтобы изображения хотя бы были видны.
+/*
+ overflow: hidden ломает clip-path в safari
+ Cделал как в ie, чтобы изображения хотя бы были видны.
+ https://online.sbis.ru/opendoc.html?guid=6a5a49c0-1274-46a4-a4d6-a514bac5838c
  */
-.ws-is-mobile-safari .controls-listTemplates__imageTemplate_image_viewMode-ellipse {
-   border-radius: 60px;
-   clip-path: none;
+.ws-is-desktop-safari,
+.ws-is-mobile-safari {
+   .controls-listTemplates__imageTemplate_image_viewMode-ellipse {
+      border-radius: 60px;
+      clip-path: none;
+   }
 }
-
 .controls-listTemplates__imageTemplate::after {
    content: "";
    display: block;

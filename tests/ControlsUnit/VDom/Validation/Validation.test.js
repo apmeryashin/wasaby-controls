@@ -52,6 +52,8 @@ define([
          validCtrl._isOpened = false;
          validCtrl._validationResult = 'error';
          validCtrl._openInfoBox(validCtrl);
+         validCtrl._openInfoBox(validCtrl);
+         validCtrl._onOpenHandler();
          validCtrl._mouseInfoboxHandler({type: 'mouseenter'});
          assert.deepEqual(validCtrl._isOpened, true);
          validCtrl._mouseInfoboxHandler({type: 'close'});
@@ -79,6 +81,7 @@ define([
          };
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404');
+         validCtrl._onOpenHandler();
          assert.deepEqual(validCtrl._isOpened, true);
 
          // вызов с hideInfobox = true не закрывает инфобокс

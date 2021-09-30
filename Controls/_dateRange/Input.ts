@@ -63,6 +63,18 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * @demo Controls-demo/dateRange/Input/Default/Index
  * @author Красильников А.С.
  */
+
+/**
+ * @name Controls/_dateRange/Input#rightFieldTemplate
+ * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться справа
+ * от поля ввода.
+ * @remark
+ * В опцию будут переданы поля:
+ * * value - значение в поле ввода
+ * * inputPosition - расположение инпута. В зависимости от расположения, значение может быть либо 'left' либо 'right'
+ * @demo Controls-demo/dateRange/Input/RightFieldTemplate/Index
+ */
+
 export default class DateRangeInput extends Control<IDateRangeInputOptions> implements
         IDateRangeValidators {
     readonly '[Controls/_interface/IDateRangeValidators]': boolean = true;

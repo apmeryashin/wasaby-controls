@@ -39,6 +39,8 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
 
     protected _$searchValue: string;
 
+    readonly listInstanceName: string = 'controls-Grid__row-cell';
+
     get ladder(): TLadderElement<ILadderConfig> {
         return this.getOwner().getLadder();
     }
@@ -222,6 +224,10 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
         } else {
             return this.getOwner().isEditing();
         }
+    }
+
+    getEditorViewTemplateClasses(params): string {
+        return this.getOwner().getEditorViewTemplateClasses(params);
     }
 
     // endregion

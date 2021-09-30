@@ -14,6 +14,8 @@ class EmptyCell extends mixin<
 >(Cell, CellCompatibility) {
     protected readonly _defaultCellTemplate: string = 'Controls/grid:EmptyColumnTemplate';
 
+    readonly listInstanceName: string = 'controls-Grid__empty-cell';
+
     //region Аспект "Стилевое оформление"
     getWrapperClasses(backgroundColorStyle: string = 'default', highlightOnHover?: boolean): string {
         let classes;
@@ -33,6 +35,8 @@ class EmptyCell extends mixin<
             classes = super.getWrapperClasses(backgroundColorStyle, highlightOnHover)
                 + ' controls-Grid__row-cell-background-editing_default';
         }
+
+        classes += ' ' + this._getColumnSeparatorClasses();
 
         return classes;
     }
@@ -68,6 +72,13 @@ class EmptyCell extends mixin<
             return `width: ${containerSize}px;`;
         }
         return '';
+    }
+
+    getEditorViewTemplateClasses(params): string {
+        return this.getOwner().getEditorViewTemplateClasses({
+            ...params,
+            withPadding: true
+        });
     }
 
     //endregion

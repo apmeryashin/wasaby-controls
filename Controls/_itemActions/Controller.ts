@@ -717,13 +717,7 @@ export class Controller {
 
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
-            showed = visibleActions.filter((action) =>
-                !action.parent &&
-                (
-                    action.showType === TItemActionShowType.TOOLBAR ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR
-                )
-            );
+            showed = this._filterToolbarActions(visibleActions);
             if (this._isMenuButtonRequired(visibleActions)) {
                 showed.push({
                     id: null,
@@ -746,6 +740,22 @@ export class Controller {
     private _filterVisibleActions(itemActions: IItemAction[], contents: Model, isEditing: boolean): IItemAction[] {
         return itemActions.filter((action) =>
             this._itemActionVisibilityCallback(action, contents, isEditing)
+        );
+    }
+
+    /**
+     * Отфильтровывает ItemActions по признаку нет родителя и по showType.
+     * @param itemActions
+     * @private
+     */
+    private _filterToolbarActions(itemActions: IItemAction[]): IItemAction[] {
+        return itemActions.filter((action) =>
+            !action.parent &&
+            (
+                action.showType === TItemActionShowType.TOOLBAR ||
+                action.showType === TItemActionShowType.MENU_TOOLBAR ||
+                action.showType === TItemActionShowType.FIXED
+            )
         );
     }
 
