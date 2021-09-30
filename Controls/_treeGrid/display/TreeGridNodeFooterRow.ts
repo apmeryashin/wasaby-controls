@@ -18,8 +18,6 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     protected _$moreFontColorStyle: string;
 
-    readonly listInstanceName: string =  'controls-TreeGrid';
-
     readonly listElementName: string = 'node-footer';
 
     // TODO нужно удалить, когда перепишем колспан для футеров узлов

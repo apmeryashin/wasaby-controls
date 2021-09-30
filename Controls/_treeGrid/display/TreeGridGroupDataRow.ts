@@ -24,8 +24,6 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
 
     protected _$isHiddenGroup: boolean;
 
-    readonly listInstanceName: string =  'controls-TreeGrid';
-
     readonly listElementName: string = 'group';
 
     constructor(options: IOptions<T>) {

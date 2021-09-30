@@ -24,8 +24,6 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
 
     readonly listInstanceName: string =  'controls-TreeGrid__group';
 
-    readonly listElementName: string = 'cell';
-
     constructor(options?: IGridRowOptions<T>) {
         super(options);
     }
