@@ -14,12 +14,14 @@ import CustomProvider, {
     TCustomResult
 } from 'Controls/_dataSource/DataLoader/CustomProvider';
 import Storage from 'Controls/_dataSource/DataLoader/Storage';
+import PropertyGridProvider from 'Controls/_dataSource/DataLoader/PropertyGridProvider';
 
 const DEFAULT_LOAD_TIMEOUT = 10000;
 const DEBUG_DEFAULT_LOAD_TIMEOUT = 30000;
 const DATA_PROVIDERS_BY_TYPE = {
     list: ListProvider,
-    custom: CustomProvider
+    custom: CustomProvider,
+    propertyGrid: PropertyGridProvider
 };
 
 export interface IDataLoaderOptions {

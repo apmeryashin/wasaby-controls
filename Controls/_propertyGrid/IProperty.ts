@@ -1,6 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 import {ILabelOptions} from 'Controls/input';
-type TProperty = 'string' | 'boolean' | 'number' | 'date' | 'enum' | 'text';
+type TProperty = 'string' | 'boolean' | 'number' | 'date' | 'enum' | 'text' | 'list' | 'propertyGrid';
 
 /**
  * Интерфейс опций для {@link Controls/propertyGrid:PropertyGrid}.
@@ -183,7 +183,7 @@ export default interface IProperty {
      * </pre>
      * @see editorTemplateName
      */
-    editorOptions?: object;
+    editorOptions?: Record<string, any>;
     editorClass?: string;
     /**
      * @cfg {String} Тип свойства.
