@@ -833,6 +833,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             this._items = items;
         }
 
+        this._unsubscribeBreadcrumbsChange();
         this._breadcrumbsRecordSet = this._items instanceof RecordSet ? this._items.getMetaData().path : null;
         this._subscribeBreadcrumbsChange(this._breadcrumbsRecordSet);
         this._updateBreadcrumbsData();
@@ -1127,7 +1128,6 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
      * Обновляет подписку на изменение данных хлебных крошек
      */
     private _subscribeBreadcrumbsChange(breadcrumbs: RecordSet): void {
-        this._unsubscribeBreadcrumbsChange();
         if (breadcrumbs) {
             breadcrumbs.subscribe('onCollectionChange', this._onBreadcrumbsCollectionChanged);
         }
