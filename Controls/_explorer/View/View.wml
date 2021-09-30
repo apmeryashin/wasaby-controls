@@ -52,6 +52,7 @@
                                           root="{{content._options.root}}"
                                           searchValue="{{_searchValue}}"
                                           _initBreadCrumbsMode="{{_searchInitialBreadCrumbsMode}}"
+                                          itemsSelector="{{_itemsSelector}}"
                                           on:itemClick="_onItemClick()"
                                           on:itemMouseDown="_notifyHandler('itemMouseDown')"
                                           on:checkboxClick="_notifyHandler('checkboxClick')"
