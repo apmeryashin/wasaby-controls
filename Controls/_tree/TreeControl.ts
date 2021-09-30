@@ -812,7 +812,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return super.reload(keepScroll, sourceConfig);
     }
 
-    reloadItem(key: TKey, options: IReloadItemOptions): Promise<Model> {
+    reloadItem(key: TKey, options: IReloadItemOptions | object, direction?: boolean | string): Promise<Model> {
         const newArgs = convertReloadItemArgs(...arguments);
 
         return newArgs.options.hierarchyReload

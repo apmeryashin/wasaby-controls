@@ -113,7 +113,12 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
         }
     }
 
-    reloadItem(key: TKey, options: IReloadItemOptions): Promise<Model> {
+    reloadItem(
+        key: TKey,
+        options: object | IReloadItemOptions,
+        replaceItem?: boolean,
+        reloadType: string = 'read'
+    ): Promise<Model> {
         const listControl = this._children.listControl;
         return listControl.reloadItem.apply(listControl, arguments);
     }

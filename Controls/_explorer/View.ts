@@ -713,7 +713,7 @@ export default class Explorer extends Control<IExplorerOptions> {
         return this._children.treeControl.getLastVisibleItemKey();
     }
 
-    reloadItem(key: TKey, options: IReloadItemOptions): Promise<Model> {
+    reloadItem(): Promise<unknown> {
         const treeControl = this._children.treeControl;
         return treeControl.reloadItem.apply(treeControl, arguments);
     }

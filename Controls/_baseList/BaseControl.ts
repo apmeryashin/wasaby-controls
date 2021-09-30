@@ -4082,10 +4082,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return updateResult;
     }
 
-    reloadItem(key: TKey, options: IReloadItemOptions): Promise<Model> {
+    reloadItem(
+        key: TKey,
+        options: object | IReloadItemOptions,
+        replaceItem?: boolean,
+        reloadType: string = 'read'
+    ): Promise<Model> {
         const newArgs = convertReloadItemArgs(...arguments);
 
-        const items = this._listViewModel.getCollection();
+        const items = this._listViewModel.getCollection() as unknown as RecordSet;
         const currentItemIndex = items.getIndexByValue(this._keyProperty, newArgs.key);
         const sourceController = _private.getSourceController(this, {...this._options, items: null});
 
