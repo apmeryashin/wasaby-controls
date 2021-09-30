@@ -13,7 +13,9 @@ export default class TreeGridFooterCell<TOwner extends TreeGridFooterRow> extend
     */
    protected _$displayExpanderPadding: boolean;
 
-    readonly listInstanceName: string =  'controls-TreeGrid__footer-cell';
+    readonly listInstanceName: string =  'controls-TreeGrid';
+
+    readonly listElementName: string = 'footer-cell';
 
    getWrapperClasses(
       backgroundColorStyle: string,

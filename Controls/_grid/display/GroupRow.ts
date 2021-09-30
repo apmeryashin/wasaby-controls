@@ -53,7 +53,9 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
     protected _$metaResults: EntityModel;
     protected _$colspanGroup: boolean;
 
-    readonly listInstanceName: string = 'controls-Grid__group';
+    readonly listInstanceName: string = 'controls-Grid';
+
+    readonly listElementName: string = 'group';
 
     constructor(options?: IOptions<TContents>) {
         super(options);

@@ -48,7 +48,9 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
     protected _$sorting: string;
     protected _$contentOrientation?: ICellContentOrientation;
 
-    readonly listInstanceName: string =  'controls-Grid__header-cell';
+    readonly listInstanceName: string =  'controls-Grid';
+
+    readonly listElementName: string = 'header-cell';
 
     get backgroundStyle(): string {
         return this._$backgroundStyle;

@@ -13,7 +13,9 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
 
     protected _$moreFontColorStyle: string;
 
-    readonly listInstanceName: string =  'controls-Tree__node-footer';
+    readonly listInstanceName: string =  'controls-Tree';
+
+    readonly listElementName: string = 'node-footer';
 
     get node(): TreeItem<Model> {
         return this.getNode();

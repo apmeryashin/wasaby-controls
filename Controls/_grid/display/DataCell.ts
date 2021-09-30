@@ -39,7 +39,9 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
 
     protected _$searchValue: string;
 
-    readonly listInstanceName: string = 'controls-Grid__row-cell';
+    readonly listInstanceName: string = 'controls-Grid';
+
+    readonly listElementName: string =  'cell';
 
     get ladder(): TLadderElement<ILadderConfig> {
         return this.getOwner().getLadder();

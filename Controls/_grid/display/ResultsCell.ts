@@ -20,7 +20,9 @@ class ResultsCell extends Cell<null, ResultsRow> {
     protected _data: string | number;
     protected _format: string;
 
-    readonly listInstanceName: string = 'controls-Grid__results-cell';
+    readonly listInstanceName: string = 'controls-Grid';
+
+    readonly listElementName: string = 'results-cell';
 
     constructor(options?: IResultsCellOptions) {
         super(options);

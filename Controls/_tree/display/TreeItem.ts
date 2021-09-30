@@ -19,7 +19,9 @@ export default class TreeItem<T extends Model = Model>
     readonly EdgeRowSeparatorItem: boolean = true;
     readonly DraggableItem: boolean = true;
 
-    readonly listInstanceName: string =  'controls-Tree__item';
+    readonly listInstanceName: string =  'controls-Tree';
+
+    readonly listElementName: string = 'item';
 
     // region Classes
     getTreeWrapperClasses(): string {

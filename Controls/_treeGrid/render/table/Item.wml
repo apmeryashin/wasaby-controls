@@ -1,9 +1,9 @@
 <ws:template name="EXPANDER">
     <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
-         attr:data-qa="{{ item.listInstanceName }}-expander"></div>
+         attr:data-qa="{{ item.listElementName }}-expander"></div>
 </ws:template>
 
-<tr attr:data-qa="{{ item.listInstanceName }}"
+<tr attr:data-qa="{{ item.listElementName }}"
     attr:class="{{ item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'cursor': cursor,
@@ -15,12 +15,12 @@
             attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}"
-            attr:data-qa="{{ gridColumn.listInstanceName }}">
+            attr:data-qa="{{ gridColumn.listElementName }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses() }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
                      attr:class="{{ gridColumn.getMarkerClasses() }}"
-                     attr:data-qa="{{ gridColumn.listInstanceName }}_marker"></div>
+                     attr:data-qa="marker"></div>
 
                 <ws:partial template="{{ gridColumn.getTemplate() }}"
                             scope="{{ gridColumn.config.templateOptions }}"

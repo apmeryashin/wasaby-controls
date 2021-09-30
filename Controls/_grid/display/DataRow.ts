@@ -35,7 +35,9 @@ export default class DataRow<T extends Model = Model> extends Row<T> implements
     private _$editingColumnIndex: number;
     protected _$hasStickyGroup: boolean;
 
-    readonly listInstanceName: string = 'controls-Grid__row';
+    readonly listInstanceName: string = 'controls-Grid';
+
+    readonly listElementName: string =  'row';
 
     constructor(options?: IOptions<T>) {
         super(options);

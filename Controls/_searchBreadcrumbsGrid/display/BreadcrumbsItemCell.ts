@@ -11,7 +11,9 @@ export interface IOptions<T> extends IDataCellOptions<T> {
 export default class BreadcrumbsItemCell<S extends Model, TOwner extends BreadcrumbsItemRow<S>> extends GridDataCell<any, any> {
    protected _$breadCrumbsMode: 'row' | 'cell';
 
-   readonly listInstanceName: string = 'controls-TreeGrid_breadcrumb-cell';
+   readonly listInstanceName: string = 'controls-SearchBreadcrumbsGrid';
+
+   readonly listElementName: string = 'cell';
 
    getTemplate(): TemplateFunction|string {
       // Только в первой ячейке отображаем хлебную крошку

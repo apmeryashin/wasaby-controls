@@ -17,7 +17,9 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
 
     private _$isDragTargetNode: boolean;
 
-    readonly listInstanceName: string =  'controls-TreeGrid__row-cell';
+    readonly listInstanceName: string =  'controls-TreeGrid';
+
+    readonly listElementName: string = 'cell';
 
     getWrapperClasses(
         backgroundColorStyle: string,
