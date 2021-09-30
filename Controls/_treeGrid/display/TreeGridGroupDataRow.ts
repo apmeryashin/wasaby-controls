@@ -8,6 +8,9 @@ export interface IOptions<T extends Model> extends ITreeGridDataRowOptions<T> {
     isHiddenGroup: boolean;
 }
 
+/**
+ * Строка с данными, которая отображается в виде группы
+ */
 export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeGridDataRow<T> implements IGroupNode {
     '[Controls/treeGrid:TreeGridGroupDataRow]': boolean = true;
     readonly Markable: boolean = false;
