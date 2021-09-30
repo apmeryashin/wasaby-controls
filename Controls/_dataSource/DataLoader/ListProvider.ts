@@ -115,8 +115,9 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
                     filterController = loadConfig.filterController = controller;
                     filterHistoryItems = historyItems;
                 })
-                .catch(() => {
+                .catch((error) => {
                     filterController = ListProvider.getFilterController(loadConfig as IFilterControllerOptions);
+                    Logger.error('DataLoader: ошибка при подготовке фильтра для запроса', this, error);
                 });
             filterPromise = wrapTimeout(filterPromise, QUERY_PARAMS_LOAD_TIMEOUT).catch(() => {
                 Logger.info('Controls/dataSource:loadData: Данные фильтрации не загрузились за 1 секунду');
