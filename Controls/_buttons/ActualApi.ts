@@ -199,8 +199,10 @@ const ActualApi = {
          }
       }
    },
-   fontColorStyle(calcStyle: string, calcViewMode: string, optionFontColorStyle: string): string {
-      if (optionFontColorStyle) {
+   fontColorStyle(calcStyle: string, calcViewMode: string, optionFontColorStyle: string, translucent: boolean): string {
+      if (translucent) {
+         return 'forTranslucent';
+      } else if (optionFontColorStyle) {
          return optionFontColorStyle;
       } else {
          // для ссылок старое значение опции style влияло на цвет текста
