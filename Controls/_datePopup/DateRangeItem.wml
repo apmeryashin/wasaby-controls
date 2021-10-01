@@ -25,7 +25,7 @@
         <div class="controls-PeriodDialog-DateRangeItem__monthList_title
                      {{_options.monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable
                      controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
-             on:click="_options.monthCaptionClick(_options.monthDate, _options.monthDate.getMonth())">
+             on:click="_monthCaptionClick(_options.monthDate, _options.monthDate.getMonth())">
             {{ _options.formatMonth(_options.monthDate.getMonth()) }}
         </div>
     </ws:captionTemplate>

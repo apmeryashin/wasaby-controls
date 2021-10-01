@@ -40,4 +40,8 @@ export default class DateRangeItem extends Control<IControlOptions> {
     protected _proxyEvent(event: Event): void {
         this._notify(event.type, Array.prototype.slice.call(arguments, 1));
     }
+
+    protected _monthCaptionClick(event: Event, date: Date): void {
+        this._notify('monthCaptionClick', [date]);
+    }
 }
