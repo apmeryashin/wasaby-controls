@@ -2,6 +2,6 @@
             controls-ListView__empty-textAlign_{{ align || 'center'}}
             controls-ListView__empty_topSpacing_{{topSpacing || 'l'}}
             controls-ListView__empty_bottomSpacing_{{bottomSpacing || 'l'}}"
-    attr:data-qa="controls-List__empty">
+    attr:data-qa="empty">
     <ws:partial template="{{contentTemplate}}"/>
 </div>

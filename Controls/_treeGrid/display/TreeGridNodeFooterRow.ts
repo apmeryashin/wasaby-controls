@@ -20,6 +20,8 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     readonly listInstanceName: string =  'controls-TreeGrid__node-footer';
 
+    readonly listElementName: string = 'row';
+
     // TODO нужно удалить, когда перепишем колспан для футеров узлов
     //  https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
     // Храним колспан, чтобы правильно определять индекс столбца.

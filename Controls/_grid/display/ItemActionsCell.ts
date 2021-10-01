@@ -12,7 +12,9 @@ const DEFAULT_CELL_CONTENT = 'Controls/grid:ItemActionsCellContent';
  */
 export default class ItemActionsCell extends Cell<null, Row<null>> implements IItemActionsCell {
     readonly ItemActionsCell = true;
-    readonly listInstanceName: string =  'controls-Grid__actions-cell';
+    readonly listInstanceName: string =  'controls-Grid__actions';
+
+    readonly listElementName: string = 'actions-cell';
 
     getTemplate(): string {
         return DEFAULT_CELL_CONTENT;

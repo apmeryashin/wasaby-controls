@@ -9,7 +9,9 @@ export default class SearchSeparatorRow extends GridRow<string> {
 
     protected _$owner: SearchGridCollection;
 
-    readonly listInstanceName: string = 'controls-TreeGrid__separator';
+    readonly listInstanceName: string = 'controls-SearchBreadcrumbsGrid';
+
+    readonly listElementName: string = 'row';
 
     getContents(): string {
         return 'search-separator';

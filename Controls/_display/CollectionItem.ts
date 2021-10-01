@@ -117,7 +117,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Имя сущности для идентификации в списке.
      */
-    readonly listInstanceName: string = 'controls-List__item';
+    readonly listInstanceName: string = 'controls-List';
+
+    readonly listElementName: string =  'item';
 
     /**
      * Коллекция, которой принадлежит элемент

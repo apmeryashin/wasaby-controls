@@ -35,7 +35,7 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
     protected _$metaResults: EntityModel;
     protected _$colspanGroup: EntityModel;
 
-    readonly listInstanceName: string = 'controls-Grid__group-cell';
+    readonly listInstanceName: string = 'controls-Grid__group';
 
     constructor(options?: IOptions<TContents>) {
         super(options);

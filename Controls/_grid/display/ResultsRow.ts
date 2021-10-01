@@ -22,7 +22,7 @@ class ResultsRow extends Row<null> {
     protected _$metaResults: EntityModel;
     protected _$resultsPosition: TResultsPosition;
 
-    readonly listInstanceName: string =  'controls-Grid__results';
+    readonly listElementName: string = 'results';
 
     constructor(options?: IResultsRowOptions) {
         super({

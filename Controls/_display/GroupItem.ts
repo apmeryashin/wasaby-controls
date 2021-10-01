@@ -32,7 +32,7 @@ export default class GroupItem<T> extends mixin<
 
     protected _$multiSelectVisibility: string;
 
-    readonly listInstanceName: string = 'controls-List__group';
+    readonly listElementName: string =  'group';
 
     constructor(options?: IOptions<T>) {
         super(options);

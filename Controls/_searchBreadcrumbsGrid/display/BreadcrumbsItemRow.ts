@@ -38,7 +38,9 @@ export default class BreadcrumbsItemRow<T extends Model = Model> extends GridDat
 
     protected _$parent: SearchGridDataRow<T>;
 
-    readonly listInstanceName: string = 'controls-TreeGrid_breadcrumb';
+    readonly listInstanceName: string = 'controls-SearchBreadcrumbsGrid';
+
+    readonly listElementName: string = 'row';
 
     protected get _first(): SearchGridDataRow<T> {
         const root = this._$owner ? this._$owner.getRoot() : {};

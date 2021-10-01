@@ -44,7 +44,7 @@ export default class Indicator extends CollectionItem<null> {
         return `${this._$state}-` + this._$position + this._instancePrefix;
     }
 
-    readonly listInstanceName: string = 'controls-List__indicator';
+    readonly listElementName: string =  'indicator';
 
     display(state: TIndicatorState, topOffset?: number): boolean {
         const isHidden = !this._$visible;

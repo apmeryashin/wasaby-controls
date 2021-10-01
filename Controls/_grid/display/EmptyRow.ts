@@ -8,7 +8,7 @@ import {TColspanCallbackResult} from './mixins/Grid';
  */
 class EmptyRow extends Row<null> {
 
-    readonly listInstanceName: string = 'controls-Grid__empty';
+    readonly listElementName: string = 'empty';
 
     getContents(): string {
         return 'emptyRow';
