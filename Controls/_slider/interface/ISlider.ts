@@ -200,7 +200,7 @@ export interface ISlider {
 
 /**
  * @name Controls/_slider/interface/ISlider#markerVisibility
- * @cfg {boolean} Определяет видимость макркера и тултипа.
+ * @cfg {boolean} Определяет видимость маркера и тултипа.
  * @demo Controls-demo/Slider/Base/markerVisibility/Index
  * @default true
  */

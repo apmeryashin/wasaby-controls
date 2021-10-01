@@ -20,6 +20,7 @@ import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import * as Clone from 'Core/core-clone';
 import { TItemActionShowType, IItemAction } from 'Controls/itemActions';
+import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 
@@ -30,6 +31,10 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
     imageProperty?: string;
     multiSelect: boolean;
     historyId?: string;
+    emptyKey: string;
+    emptyText?: string;
+    selectAllKey: string;
+    selectAllText?: string;
 }
 
 /**
@@ -67,6 +72,34 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
  * @cfg {boolean} Определяет, установлен ли множественный выбор.
  * @demo Controls-demo/filterPanel/ListEditor/MultiSelect/Index
  * @default false
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#emptyKey
+ * @cfg {string} Ключ для пункта списка, который используется для сброса параметра фильтрации.
+ * @see emptyText
+ * @demo Controls-demo/filterPanel/EmptyKey/Index
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#emptyText
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для сброса параметра фильтрации, когда в панели фильтров отключено отображение кнопки "Сбросить".
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
+ * @demo Controls-demo/filterPanel/EmptyKey/Index
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#selectAllKey
+ * @cfg {string} Ключ для пункта списка, который используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @see selectAllText
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#selectAllText
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
  */
 
 class ListEditor extends Control<IListEditorOptions> {
@@ -126,6 +159,13 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
         this._items = items;
+        if (this._options.emptyText && !items.getRecordById(this._options.emptyKey)) {
+            this._addFilterItem(this._options.emptyText, this._options.emptyKey);
+        }
+
+        if (this._options.selectAllText && !items.getRecordById(this._options.selectAllKey)) {
+            this._addFilterItem(this._options.selectAllText, this._options.selectAllKey);
+        }
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
@@ -195,10 +235,19 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _getExtendedValue(): object {
+        const value = this._getValue(this._selectedKeys);
         return {
-            value: this._selectedKeys,
+            value,
             textValue: this._getTextValue(this._selectedKeys)
         };
+    }
+
+    private _getValue(value: string[] | number[]): string[] | number[] {
+        return this._isEmptyKeySelected(value) ? [] : value;
+    }
+
+    private _isEmptyKeySelected(value: string[] | number[]): boolean {
+        return value.includes(this._options.emptyKey);
     }
 
     protected _setColumns(options: IListEditorOptions, propertyValue: string[]|number[]): void {
@@ -244,6 +293,30 @@ class ListEditor extends Control<IListEditorOptions> {
             ];
         }
         return [];
+    }
+
+    private _getItemModel(items: RecordSet, keyProperty: string): Model {
+        const model = items.getModel();
+        const modelConfig = {
+            keyProperty,
+            format: items.getFormat(),
+            adapter: items.getAdapter()
+        };
+        if (typeof model === 'string') {
+            return DiCreate(model, modelConfig);
+        } else {
+            return new model(modelConfig);
+        }
+    }
+
+    private _addFilterItem(additionalText: string, additionalKey: string): void {
+        const emptyItem = this._getItemModel(this._items, this._options.keyProperty);
+
+        const data = {};
+        data[this._options.keyProperty] = additionalKey;
+        data[this._options.displayProperty] = additionalText;
+        emptyItem.set(data);
+        this._items.prepend([emptyItem]);
     }
 
     private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {

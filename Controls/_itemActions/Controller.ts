@@ -613,7 +613,7 @@ export class Controller {
             return;
         }
         const contents = Controller._getItemContents(item);
-        const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
+        const menuButtonVisibility = this._hasMenuHeaderOrFooter() ? 'visible' : 'adaptive';
         this._actionsWidth = actionsContainerWidth;
         this._actionsHeight = actionsContainerHeight;
         const actions = this._filterVisibleActions(item.getActions().all, contents, item.isEditing());
@@ -685,13 +685,42 @@ export class Controller {
     }
 
     /**
-     * Возвращает значение видимоси кнопки "Ещё" для свайпа
-     * @param contextMenuConfig
+     * Проверяет, есть ли Header или Footer в настройках меню.
      * @private
      */
-    private _getSwipeMenuButtonVisibility(contextMenuConfig: IContextMenuConfig): TMenuButtonVisibility {
-        return (contextMenuConfig && (contextMenuConfig.footerTemplate
-            || contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
+    private _hasMenuHeaderOrFooter(): boolean {
+        return this._contextMenuConfig &&
+            !!(this._contextMenuConfig.footerTemplate || this._contextMenuConfig.headerTemplate);
+    }
+
+    /**
+     * Определяет есть операции, которые надо показывать в меню по ховеру.
+     * @param actions
+     * @private
+     */
+    private _hasMenuActions(actions: IItemAction[]): boolean {
+        return actions.some(
+            (action) =>
+                !action.parent && (
+                    !action.showType ||
+                    action.showType === TItemActionShowType.MENU ||
+                    action.showType === TItemActionShowType.MENU_TOOLBAR)
+        );
+    }
+
+    /**
+     * Возвращает конфиг кнопки операции открытия меню.
+     * @private
+     */
+    private _getMenuItemAction(): IShownItemAction {
+        return {
+           id: null,
+           icon: 'icon-SettingsNew',
+           style: 'secondary',
+           iconStyle: 'secondary',
+           iconSize: this._menuIconSize,
+           isMenu: true
+        };
     }
 
     /**
@@ -718,21 +747,17 @@ export class Controller {
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
             showed = this._filterToolbarActions(visibleActions);
-            if (this._isMenuButtonRequired(visibleActions)) {
-                showed.push({
-                    id: null,
-                    icon: 'icon-SettingsNew',
-                    style: 'secondary',
-                    iconStyle: 'secondary',
-                    iconSize: this._menuIconSize,
-                    isMenu: true
-                } as IShownItemAction);
+            if (this._hasMenuActions(visibleActions) || this._hasMenuHeaderOrFooter()) {
+                showed.push(this._getMenuItemAction());
             }
             if (this._feature1183020440) {
                 showed.reverse();
             }
         } else {
             showed = visibleActions;
+            if (this._hasMenuHeaderOrFooter()) {
+                showed.push(this._getMenuItemAction());
+            }
         }
         return { all, showed };
     }
@@ -756,22 +781,6 @@ export class Controller {
                 action.showType === TItemActionShowType.MENU_TOOLBAR ||
                 action.showType === TItemActionShowType.FIXED
             )
-        );
-    }
-
-    /**
-     * Ищет операции, которые должны отображаться только в меню или в меню и тулбаре,
-     * и у которых нет родительской операции
-     * @param actions
-     * @private
-     */
-    private _isMenuButtonRequired(actions: IItemAction[]): boolean {
-        return actions.some(
-            (action) =>
-                !action.parent &&
-                (!action.showType ||
-                    action.showType === TItemActionShowType.MENU ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
     }
 

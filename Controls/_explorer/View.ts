@@ -209,6 +209,8 @@ export default class Explorer extends Control<IExplorerOptions> {
         treeControl: TreeControl,
         pathController: PathController
     };
+
+    protected _itemsSelector: string = '.controls-ListView__itemV';
     //endregion
 
     //region private fields
