@@ -139,8 +139,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // Таким образом пользователи без колесика мышки смогут скроллить контент.
         // Если пользователь использовал колесико мышки - записываем это в localstorage
         WheelEventSettings.getWheelEventSettingPromise().then((data) => {
-            ScrollbarsModel.wheelEventHappened = data;
-            this._scrollbars.updateOptions(options);
+            if (ScrollbarsModel.wheelEventHappened !== data) {
+                ScrollbarsModel.wheelEventHappened = data;
+                this._scrollbars.updateOptions(options);
+            }
         });
 
         if (this._isPagingVisible(this._options)) {
