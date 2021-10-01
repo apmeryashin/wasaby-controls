@@ -71,7 +71,7 @@ define([
             sandbox.stub(component, '_notify');
             component._monthCaptionClick(null, new Date(2019, 0));
             sinon.assert.calledWith(
-               component._notify, 'fixedPeriodClick', [new entity.applied.Date(2019, 0, 1), new entity.applied.Date(2019, 0, 30)]);
+               component._notify, 'fixedPeriodClick', [new entity.applied.Date(2019, 0, 1), new entity.applied.Date(2019, 0, 31)]);
          });
          it('should not notify event if month selection disabled.', function() {
             const component = calendarTestUtils.createComponent(
