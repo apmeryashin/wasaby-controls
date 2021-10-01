@@ -140,6 +140,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // Если пользователь использовал колесико мышки - записываем это в localstorage
         WheelEventSettings.getWheelEventSettingPromise().then((data) => {
             ScrollbarsModel.wheelEventHappened = data;
+            this._scrollbars.updateOptions(options);
         });
 
         if (this._isPagingVisible(this._options)) {

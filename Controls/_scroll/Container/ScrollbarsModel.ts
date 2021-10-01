@@ -75,6 +75,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             this._models[scrollbar].updateOptions({
                 ...options, scrollbarVisible: options.scrollbarVisible || (!ScrollbarsModel.wheelEventHappened && !this._useNativeScrollbar)
             });
+            this._nextVersion();
         }
     }
 
