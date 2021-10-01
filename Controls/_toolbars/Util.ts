@@ -39,7 +39,7 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const caption = item.get('caption');
 
     if (!icon && !caption) {
-        Logger.warn('Не задана 1 из опций "icon" или "caption". Контрол может работать некорректно');
+        Logger.warn('Не задана опция "icon" или "caption". Контрол может работать некорректно');
     }
 
     const buttonStyle = (viewMode === 'toolButton' ? 'default' : (item.get('buttonStyle') || defaultOptions.buttonStyle));
