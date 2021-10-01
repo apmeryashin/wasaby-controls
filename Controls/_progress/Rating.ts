@@ -114,7 +114,8 @@ class Rating extends Control<IRatingOptions> {
             iconPadding: DEFAULT_ICON_PADDING,
             iconSize: DEFAULT_ICON_SIZE,
             iconStyle: DEFAULT_ICON_STYLE,
-            emptyIconStyle: DEFAULT_EMPTY_ICON_STYLE
+            emptyIconStyle: DEFAULT_EMPTY_ICON_STYLE,
+            emptyIconFill: 'none'
         };
     }
     static getOptionTypes(): object {
