@@ -479,14 +479,6 @@ define([
                viewMode: 'button'
             }
          });
-         let itemWithItemTemplatePropertyWithoutCaption = new entity.Model({
-            keyProperty: 'id',
-            rawData: {
-               id: 'testId',
-               templateProperty: 'testTemplateProperty',
-               viewMode: 'button'
-            }
-         });
          let getExpectedOptions = () => {
             return {
                _hoverIcon: true,
@@ -528,18 +520,6 @@ define([
                expectedOptions
             );
             assert.isTrue(Logger.error.notCalled);
-         });
-
-         it('get options for item with itemTemplateProperty and without caption', () => {
-            const expectedOptions = getExpectedOptions();
-            expectedOptions._hasIcon = false;
-            expectedOptions._caption = undefined;
-            expectedOptions._stringCaption = false;
-            assert.deepEqual(
-               WidthUtils._private.getButtonTemplateOptionsForItem(itemWithItemTemplatePropertyWithoutCaption, 'templateProperty'),
-               expectedOptions
-            );
-            assert.isTrue(Logger.error.calledOnce);
          });
 
          it('get options for item with caption, icon and itemTemplateProperty', () => {
