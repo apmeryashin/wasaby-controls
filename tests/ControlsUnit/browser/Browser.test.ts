@@ -81,6 +81,7 @@ async function getBrowserWithMountCall(options: object = {}): Promise<Browser> {
     const brow = getBrowser(options);
     await brow._beforeMount(options);
     brow.saveOptions(options);
+    brow._afterMount(options);
     return brow;
 }
 
@@ -1007,9 +1008,7 @@ describe('Controls/browser:Browser', () => {
                         listsOptions
                     };
 
-                    const browser = getBrowser(browserOptions);
-                    await browser._beforeMount(browserOptions);
-                    browser.saveOptions(browserOptions);
+                    const browser = await getBrowserWithMountCall(browserOptions);
                     const notifyStub = sinon.stub(browser, '_notify');
                     sourceController.setRoot('testRoot');
                     assert.ok(notifyStub.withArgs('rootChanged', ['testRoot', 'list2']).calledOnce);
