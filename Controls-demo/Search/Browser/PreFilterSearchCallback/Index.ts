@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as controlTemplate from 'wml!Controls-demo/Search/Browser/PreFilterSearchCallback/Index';
+import * as controlTemplate from 'wml!Controls-demo/Search/Browser/PrefilterOnSearchCallback/Index';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 
@@ -50,10 +50,10 @@ export default class Index extends Control<IControlOptions> {
                 hasMore: false
             }
         };
-        this._preFilterSearchCallback = this._preFilterSearchCallback.bind(this);
+        this._filterOnSearchCallback = this._filterOnSearchCallback.bind(this);
     }
 
-    protected _preFilterSearchCallback(searchValue: string, item: Model): boolean {
+    protected _prefilterOnSearchCallback(searchValue: string, item: Model): boolean {
         return item.get('title').toLowerCase().includes(searchValue.toLowerCase());
     }
 

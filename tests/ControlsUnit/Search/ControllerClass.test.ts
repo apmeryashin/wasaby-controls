@@ -426,7 +426,7 @@ describe('Controls/search:ControllerClass', () => {
       });
    });
 
-   it('search with searchFilterCallback option', async () => {
+   it('search with filterOnSearchCallback option', async () => {
       const filter = {};
       const source = getMemorySource();
       const sourceController = new NewSourceController({
@@ -434,7 +434,7 @@ describe('Controls/search:ControllerClass', () => {
       });
       await sourceController.reload();
       const searchControllerOptions = {
-         searchFilterCallback: (searchValue, item) => {
+         filterOnSearchCallback: (searchValue, item) => {
             return item.get('title').toLowerCase().includes(searchValue.toLowerCase());
          },
          filter,

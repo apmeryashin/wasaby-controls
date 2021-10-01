@@ -6,7 +6,7 @@
         navigation="{{_navigation}}"
         minSearchLength="{{3}}"
         searchDelay="{{50}}"
-        preFilterSearchCallback="{{_preFilterSearchCallback}}">
+        filterOnSearchCallback="{{_filterOnSearchCallback}}">
         <div>
             <Controls.search:InputContainer>
                 <Controls.search:Input attr:class="controlsDemo__searchBase_field"/>

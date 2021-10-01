@@ -20,7 +20,7 @@ export interface ISearchControllerOptions extends ISearchOptions,
    items?: RecordSet;
    searchStartCallback?: Function;
    deepReload?: boolean;
-   searchFilterCallback?: (searchValue: string, item: Model) => boolean;
+   filterOnSearchCallback?: (searchValue: string, item: Model) => boolean;
 }
 
 const SERVICE_FILTERS = {
@@ -172,7 +172,7 @@ export default class ControllerClass {
          this._setSearchValue(newSearchValue);
          this._saveRootBeforeSearch();
 
-         if (this._options.searchFilterCallback) {
+         if (this._options.filterOnSearchCallback) {
             return Promise.resolve(this._preFilterItemsAndUpdateFilter(value));
          } else {
             return this._updateFilterAndLoad(
@@ -473,7 +473,7 @@ export default class ControllerClass {
 
    private _preFilterItemsBySearchValue(items: RecordSet, searchValue: string): Model[] {
       return chainFactory(items)
-          .filter((item) => !!this._options.searchFilterCallback(searchValue, item))
+          .filter((item) => !!this._options.filterOnSearchCallback(searchValue, item))
           .value();
    }
 

@@ -132,15 +132,15 @@ export default interface ISearch {
  */
 
 /**
- * @name Controls/_interface/ISearch#searchFilterCallback
+ * @name Controls/_interface/ISearch#filterOnSearchCallback
  * @cfg {Function} Функция для фильтрации записей, синхронно вызывается при изменении поискового значения.
  * В функцию передаётся два аргумента: поисковое значение и запись.
  * Если функция возвращает true, то запись остаётся в списке.
- * @demo Controls-demo/Search/Browser/PreFilterSearchCallback/Index
+ * @demo Controls-demo/Search/Browser/PrefilterOnSearchCallback/Index
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.browser:Browser searchParam="comment" searchFilterCallback="{{_searchFilterCallback}}">
+ * <Controls.browser:Browser searchParam="comment" filterOnSearchCallback="{{_filterOnSearchCallback}}">
  *     <div>
  *         <Controls.search:InputContainer>
  *             <Controls.search:Input/>
@@ -169,7 +169,7 @@ export default interface ISearch {
  *       ],
  *       keyProperty: 'id'
  *    });
- *    this._searchFilterCallback = (searchValue, item) => {
+ *    this._filterOnSearchCallback = (searchValue, item) => {
  *        return item.get('title').includes(searchValue);
  *    }
  * </pre>
