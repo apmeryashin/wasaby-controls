@@ -32,7 +32,7 @@
  * <Controls.dropdown:Button
  *    keyProperty="id"
  *    icon="icon-medium icon-AddButtonNew"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    tooltip="Add">
  *    <ws:headerTemplate>
  *       <ws:partial template="Controls/dropdown:HeaderTemplate" scope="{{ headTemplate }}" caption="Add"/>
@@ -73,7 +73,7 @@
 *    <Controls.Button.Menu
 *          keyProperty="id"
 *          icon="icon-medium icon-AddButtonNew"
-*          source="{{_source)}}"
+*          source="{{_source}}"
 *          tooltip="Add">
 *       <ws:headerTemplate>
 *          <ws:partial template="Controls/dropdown:HeaderTemplate" scope="{{ headTemplate }}" caption="Add"/>
@@ -91,3 +91,34 @@
 *    });
 * </pre>
 */
+
+/**
+ * @name Controls/_dropdown/interface/IHeaderTemplate#headingCaptionProperty
+ * @cfg {String} Название свойства, которое содержит заголовок шапки для подменю.
+ * @demo Controls-demo/dropdown_new/Button/headingCaptionProperty/Index
+ * @example
+ * <pre class="brush: html; highlight: [8-12];">
+ * <!-- WML -->
+ * <Controls.dropdown:Button
+ *    keyProperty="key"
+ *    icon="icon-Save"
+ *    parentProperty="parent"
+ *    nodeProperty="@parent"
+ *    headingCaptionProperty="caption"
+ *    source="{{_source}}">
+ * </Controls.dropdown:Button>
+ * </pre>
+ * <pre class="brush: js;">
+ * _source: null,
+ * _beforeMount: function() {
+ *    this._source = new source.Memory ({
+ *       data: [{ key: 1, title: 'Task', '@parent': true, parent: null },
+                { key: 2, title: 'Error in the development', '@parent': false, parent: null },
+                { key: 3, title: 'Commission', parent: 1 },
+                { key: 4, title: 'Coordination', parent: 1, '@parent': true, caption: 'Node header caption' }
+ *       ],
+ *       keyProperty: 'key'
+ *    });
+ * }
+ * </pre>
+ */

@@ -1,8 +1,9 @@
 <ws:template name="EXPANDER">
-    <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"></div>
+    <div class="{{ item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize)) }}"
+         attr:data-qa="{{ item.listElementName }}-expander"></div>
 </ws:template>
 
-<tr attr:data-qa="{{item.getQAData(marker)}}"
+<tr attr:data-qa="{{ item.listElementName }}"
     attr:class="{{ item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'cursor': cursor,
@@ -13,11 +14,13 @@
         <td attr:class="{{ gridColumn.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
             attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
-            attr:rowspan="{{ gridColumn.getRowspan() }}">
+            attr:rowspan="{{ gridColumn.getRowspan() }}"
+            attr:data-qa="{{ gridColumn.listElementName }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses() }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
-                     attr:class="{{ gridColumn.getMarkerClasses() }}"></div>
+                     attr:class="{{ gridColumn.getMarkerClasses() }}"
+                     attr:data-qa="marker"></div>
 
                 <ws:partial template="{{ gridColumn.getTemplate() }}"
                             scope="{{ gridColumn.config.templateOptions }}"
@@ -99,7 +102,7 @@
                     </ws:else>
                 </ws:if>
                 <ws:if data="{{ (gridColumn || itemData).Draggable && (gridColumn || itemData).shouldDisplayDraggingCounter() }}">
-                    <span class="controls-ListView__item-dragging-counter">{{ (item || itemData).getDraggedItemsCount() }}</span>
+                    <span class="controls-ListView__item-dragging-counter">{{ (item || itemData).getDraggedItemsCountString() }}</span>
                 </ws:if>
             </div>
         </td>

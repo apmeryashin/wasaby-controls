@@ -1,13 +1,17 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth300 controlsDemo_treeGrid-offset-withoutLevelPadding">
     <Controls.treeGrid:View
             keyProperty="key"
-            source="{{_viewSource}}"
-            columns="{{_columns}}"
+            nodeProperty="type"
             parentProperty="parent"
-            bind:expandedItems="_expandedItems"
-            nodeProperty="type">
-    <ws:itemTemplate>
-        <ws:partial template="Controls/treeGrid:ItemTemplate" withoutLevelPadding="{{true}}" />
-    </ws:itemTemplate>
+            source="{{ _viewSource }}"
+            columns="{{ _columns }}"
+            collapsedItems="{{ _collapsedItems }}"
+            bind:expandedItems="_expandedItems">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/treeGrid:ItemTemplate"
+                        withoutLevelPadding="{{true}}"
+                        scope="{{ _options }}"
+                        expanderIcon="{{ _getExpanderIcon(itemTemplate.item.contents) }}"/>
+        </ws:itemTemplate>
     </Controls.treeGrid:View>
 </div>

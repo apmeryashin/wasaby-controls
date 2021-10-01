@@ -288,7 +288,6 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         if (!this._destroyed) {
             this._clearCloseId();
             if (this._validationResult && this._validationResult.length && !this._isOpened) {
-                this._isOpened = true;
                 const cfg = {
                     target: this._container,
                     validationStatus: 'invalid',
@@ -297,7 +296,8 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
                     closeOnOutsideClick: false,
                     eventHandlers: {
                         onResult: this._mouseInfoboxHandler.bind(this),
-                        onClose: this._closeHandler.bind(this)
+                        onClose: this._closeHandler.bind(this),
+                        onOpen: this._onOpenHandler.bind(this)
                     }
                 };
 
@@ -385,6 +385,10 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
 
     private _closeHandler(): void {
         this._isOpened = false;
+    }
+
+    protected _onOpenHandler(): void {
+        this._isOpened = true;
     }
 
     private _hoverInfoboxHandler(): void {

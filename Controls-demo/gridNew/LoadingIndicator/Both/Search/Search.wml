@@ -25,4 +25,10 @@
         </ws:content>
       </Controls.browser:Browser>
   </div>
+
+  <div class="controlsDemo__flexColumn">
+    <Controls.toggle:Checkbox caption="Загрузить мало данных вниз при поиске"
+                              bind:value="_littleData"
+                              on:valueChanged="_littleDataChangedHandler()"/>
+  </div>
 </div>

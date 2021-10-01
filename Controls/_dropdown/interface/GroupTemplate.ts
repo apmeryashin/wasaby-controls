@@ -8,7 +8,7 @@
  * <pre class="brush: html">
  * <Controls.dropdown:Button
  *    keyProperty="id"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    groupProperty="group">
  *    <ws:groupTemplate>
  *      <ws:partial template="Controls/dropdown:GroupTemplate" showText="{{true}}"/>

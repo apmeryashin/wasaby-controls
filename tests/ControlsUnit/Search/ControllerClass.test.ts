@@ -68,7 +68,7 @@ const  getSearchControllerClassOptions = (options = {}) => {
    };
 };
 
-const getSearchController = (options) => {
+const getSearchController = (options?) => {
    return new ControllerClass(getSearchControllerClassOptions(options));
 };
 
@@ -198,6 +198,15 @@ describe('Controls/search:ControllerClass', () => {
 
          const filter = searchController.reset(true);
          assert.ok(filter['Разворот']);
+         assert.ok(filter['usePages']);
+
+         sourceController.setFilter({
+            Разворот: 'Без разворота'
+         });
+
+         await searchController.search('testSearchValue');
+         const filter = searchController.reset(true);
+         assert.ok(!filter['usePages']);
       });
 
       describe('startingWith: root', () => {
@@ -343,7 +352,6 @@ describe('Controls/search:ControllerClass', () => {
          root: 'newRoot'
       });
 
-      assert.isTrue(loadSpy.withArgs(undefined, undefined, updatedFilter).called);
       assert.equal(controllerClass._root, 'newRoot');
    });
 
@@ -380,69 +388,31 @@ describe('Controls/search:ControllerClass', () => {
          assert.isFalse(resetStub.called);
       });
 
-      it('should call reset when new sourceController in options', () => {
-         const searchStub = sandbox.stub(controllerClass, 'search');
-         const resetStub = sandbox.stub(controllerClass, 'reset');
+      it('should call reset when new sourceController in options', async () => {
+         let searchControllerOptions = getSearchControllerClassOptions();
+         const searchController = getSearchController(searchControllerOptions);
 
-         controllerClass._options.searchValue = '';
-         controllerClass._sourceController = sandbox.mock({
-            ver: 'old'
-         });
+         searchControllerOptions = {...searchControllerOptions};
+         searchControllerOptions.searchValue = 'test';
+         assert.isTrue(searchController.update(searchControllerOptions));
+         await searchController.search('test');
 
-         controllerClass.update({
-            sourceController: sandbox.mock({
-               ver: 'new'
-            })
-         });
+         searchControllerOptions = {...searchControllerOptions};
+         searchControllerOptions.sourceController = getSourceController({source: new Memory()});
+         assert.isTrue(searchController.update(searchControllerOptions));
 
-         assert.isFalse(searchStub.called);
-         assert.isFalse(resetStub.called);
-
-         controllerClass._options.searchValue = 'test';
-         controllerClass.update({
-            sourceController: sandbox.mock({
-               ver: 'new'
-            })
-         });
-         assert.isTrue(searchStub.called);
-         assert.isFalse(resetStub.called);
-      });
-
-      it('should call search when new sourceController and new SearchValue in options', () => {
-         const searchStub = sandbox.stub(controllerClass, 'search');
-         const resetStub = sandbox.stub(controllerClass, 'reset');
-         const sourceControllerMock = sandbox.mock({
-            ver: 'new'
-         });
-
-         controllerClass._options.searchValue = '';
-         controllerClass._sourceController = sandbox.mock({
-            ver: 'old'
-         });
-
-         controllerClass.update({
-            sourceController: sourceControllerMock,
-            searchValue: 'test123'
-         });
-
-         assert.isTrue(searchStub.withArgs('test123').calledOnce);
-         assert.equal(controllerClass._sourceController, sourceControllerMock);
-         assert.isFalse(resetStub.called);
+         searchControllerOptions = {...searchControllerOptions};
+         searchControllerOptions.searchValue = '';
+         assert.isTrue(searchController.update(searchControllerOptions));
       });
 
       it('should call when searchValue not equal options.searchValue', () => {
-         const searchStub = sandbox.stub(controllerClass, 'search');
-         const resetStub = sandbox.stub(controllerClass, 'reset');
-
          controllerClass._options.searchValue = '';
          controllerClass._searchValue = 'searchValue';
 
-         controllerClass.update({
+         assert.isTrue(controllerClass.update({
             searchValue: ''
-         });
-
-         assert.isFalse(searchStub.called);
-         assert.isTrue(resetStub.called);
+         }));
       });
 
       it('update with same value after search', async () => {

@@ -11,8 +11,8 @@ export default class extends Control<IWIPOptions> {
     protected _template: TemplateFunction = Template;
     protected _canShowTask: boolean = false;
 
-    constructor(cfg: IWIPOptions){
-        super(cfg);
+    constructor(cfg: IWIPOptions, context?: object){
+        super(cfg, context);
         this._canShowTask = cookie.get('s3debug') === 'true';
     }
 

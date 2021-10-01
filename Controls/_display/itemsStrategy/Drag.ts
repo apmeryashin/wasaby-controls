@@ -1,9 +1,9 @@
 import CollectionItem from '../CollectionItem';
 import Collection from '../Collection';
-import { mixin } from 'Types/util';
-import { DestroyableMixin, Model } from 'Types/entity';
-import IItemsStrategy, { IOptions as IItemsStrategyOptions } from '../IItemsStrategy';
-import { IDragPosition } from 'Controls/_display/interface/IDragPosition';
+import {mixin} from 'Types/util';
+import {DestroyableMixin, Model} from 'Types/entity';
+import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
+import {IDragPosition} from 'Controls/_display/interface/IDragPosition';
 
 type TKey = string|number;
 
@@ -175,20 +175,50 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         });
     }
 
+    protected _isDisplayItem(item, draggedItemsKeys): boolean {
+        const itemKey = item.getContents().getKey();
+        // признак того, что item входит в список перемещаемых записей
+        const isDraggableItem = this._options.draggedItemsKeys.includes(itemKey);
+
+        if (isDraggableItem) {
+            return false;
+        }
+
+        return true;
+    }
+
     protected _createItems(): T[] {
         this._hiddenIndexes = [];
         const filteredItems = this.source.items.filter((item, index) => {
             if (!item.DraggableItem) {
                 return true;
             }
-            const key = item.getContents().getKey();
+            const isDisplayItem = this._isDisplayItem(item, this._options.draggedItemsKeys);
+
+            if (!isDisplayItem) {
+                const itemKey = item.getContents().getKey();
+                // item, за который начали перемещение
+                const startingDraggableItem = this._options.draggableItem;
+
+                if (startingDraggableItem) {
+                    const startingDraggableItemKey = startingDraggableItem.getContents().getKey();
+
+                    // если item перемещается, но перемещение начали не за него, то запоминаем его индекс в наборе скрытых элементов
+                    if (itemKey !== startingDraggableItemKey) {
+                        this._hiddenIndexes.push(index);
+                    }
+                }
+            }
+            return isDisplayItem;
+
+            /*const key = item.getContents().getKey();
             const filtered = !this._options.draggedItemsKeys.includes(key);
             const draggableItem = this._options.draggableItem;
             // запоминаем индексы всех скрытых элементов
             if (!filtered && (!draggableItem || draggableItem.getContents().getKey() !== key)) {
                 this._hiddenIndexes.push(index);
             }
-            return filtered;
+            return filtered;*/
         });
         // Если не передали перетаскиваемый элемент, то не нужно создавать "призрачный" элемент
         if (!this._avatarItem && this._options.draggableItem) {
@@ -253,7 +283,7 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
             // Это может произойти, например, если выделили несколько записей в конце списка и потащили за последнюю,
             // тогда перетаскиваемые записи скроются, но индексы были посчитаны до скрытия и будут указывать за пределы.
             let targetIndex = options.targetIndex < itemsCount
-                ? this.getIndexGivenFilter(options.targetIndex, options.filterMap)
+                ? this._getIndexGivenFilter(options.targetIndex, options.filterMap)
                 : itemsCount - 1;
             const startIndex = options.startIndex < itemsCount ? options.startIndex : itemsCount - 1;
 
@@ -266,21 +296,46 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
 
     /**
      * Возвращает индекс перетаскиваемой записи, учитывая скрытые записи
+     *
+     * Что видит контроллер(и пользователь):
+     *  0 Запись0 true
+     *  1 Запись3 true
+     *  2 Запись6 true
+     *  3 Запись7 true
+     *
+     * Как это выглядит внутри списка:
+     *  0 Запись0 true
+     *  1 Запись1 false
+     *  2 Запись2 false
+     *  3 Запись3 true
+     *  4 Запись4 false
+     *  5 Запись5 false
+     *  6 Запись6 true
+     *  7 Запись7 true
+     *
+     *  Нам нужно привести индексы к внутрисписочным.
+     *  Для этого мы из filterMap получаем следущий массив:
+     *  0 0 Запись0 true
+     *  1 3 Запись3 true
+     *  2 6 Запись6 true
+     *  3 7 Запись7 true
+     *
+     *  И по sourceIndex олучаем правильный индекс записи.
+     *
      * @param sourceIndex
      * @param filterMap
      * @private
      */
-    private static getIndexGivenFilter(sourceIndex: number, filterMap: boolean[]): number {
-        let countVisibleItem = 0;
-        let projectionIndex = 0;
+    private static _getIndexGivenFilter(sourceIndex: number, filterMap: boolean[]): number {
+        const visibleItems: Array<{index: number, visible: boolean}> = [];
 
-        while (countVisibleItem < sourceIndex && projectionIndex < filterMap.length) {
-            projectionIndex++;
-            if (filterMap[projectionIndex]) {
-                countVisibleItem++;
-            }
-        }
+        filterMap.forEach((visible, index) => {
+           if (visible) {
+               visibleItems.push({index, visible});
+           }
+        });
 
-        return projectionIndex;
+        const visibleItem = visibleItems[sourceIndex];
+        return visibleItem ? visibleItem.index : 0;
     }
 }

@@ -1,7 +1,6 @@
 /**
  * Библиотека контролов, которые служат для ввода значений различного типа. Примеры типов: строка, число, дата, телефон и т.д.
  * @library
- * @includes DateTimeModel Controls/_input/DateTime/Model
  * @includes AdapterMask Controls/_input/Adapter/Mask
  * @includes ISelection Controls/_input/interface/ISelection
  * @includes IArea Controls/_input/interface/IArea
@@ -12,9 +11,9 @@
 
 // TODO: Устаревшая модель, вместо неё нужно использовать NewBaseViewModel.
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import MaskViewModel = require('Controls/_input/Mask/ViewModel');
 export {default as TextViewModel, IViewModelOptions as ITextViewModelOptions} from 'Controls/_input/Text/ViewModel';
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
-export {default as StringValueConverter} from 'Controls/_input/DateTime/StringValueConverter';
 
 // Controls
 export {default as Base} from 'Controls/_input/Base';
@@ -24,17 +23,14 @@ export {default as Mask} from 'Controls/_input/Mask';
 export {default as Phone} from 'Controls/_input/Phone';
 export {default as Password} from 'Controls/_input/Password';
 export {default as Label, ILabelOptions} from 'Controls/_input/Label';
-export {default as DateBase} from 'Controls/_input/DateTime';
 export {default as TimeInterval} from 'Controls/_input/TimeInterval';
 export {default as Money} from 'Controls/_input/Money';
 export {default as Area} from './_input/Area';
-export {default as Date} from 'Controls/_input/Date/Picker';
 export {default as Render, IRenderOptions} from 'Controls/_input/Render';
 export {default as Field} from './_input/resources/Field';
 
 // Interface
 export {IAreaOptions} from './_input/interface/IArea';
-import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 export {THorizontalPadding, IPadding, IPaddingOptions, getDefaultPaddingOptions, getOptionPaddingTypes} from './_input/interface/IPadding';
 export {IText, ITextOptions} from 'Controls/_input/interface/IText';
 export {INewLineKey, INewLineKeyOptions} from 'Controls/_input/interface/INewLineKey';
@@ -44,9 +40,7 @@ export {INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INu
 export {ITimeMask, ITimeMaskOptions} from 'Controls/_input/interface/ITimeMask';
 export {ITimeInterval, ITimeIntervalOptions} from 'Controls/_input/interface/ITimeInterval';
 export {IInputMaskValue, IInputMaskValueOptions} from 'Controls/_input/interface/IInputMaskValue';
-export {IInputDateTime, IInputDateTimeOptions} from 'Controls/_input/interface/IInputDateTime';
-export {default as IValueValidators, IValueValidatorsOptions} from 'Controls/_input/interface/IValueValidators';
-export {IInputDisplayValue, IInputDisplayValueOptions} from 'Controls/_input/interface/IInputDisplayValue';
+export {IInputDisplayValue, IInputDisplayValueOptions, INPUT_MODE} from 'Controls/_input/interface/IInputDisplayValue';
 export {IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
 export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility,
     getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
@@ -95,8 +89,8 @@ const InputCallback = {
 };
 
 export {
-    IDateTimeMask,
     BaseViewModel,
+    MaskViewModel,
     MaskInputProcessor,
     MaskFormatterValue,
     InputCallback,

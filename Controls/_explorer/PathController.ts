@@ -3,8 +3,6 @@ import {Path} from 'Controls/dataSource';
 import HeadingPathBack from 'Controls/_explorer/HeadingPathBack';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-// tslint:disable-next-line:ban-ts-ignore
-// @ts-ignore
 import * as template from 'wml!Controls/_explorer/PathController/PathController';
 import { IGridControl, IHeaderCell } from 'Controls/grid';
 import {TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
@@ -84,6 +82,10 @@ export default class PathController extends Control<IOptions> {
      * Инициирует возвращение на предыдущий уровень в иерархии проваливания
      */
     goBack(e: Event): void {
+        if (!this._options.breadCrumbsItems?.length) {
+            return;
+        }
+
         require(['Controls/breadcrumbs'], (breadcrumbs) => {
             breadcrumbs.HeadingPathCommon.onBackButtonClick.call(this, e, 'breadCrumbsItems');
         });

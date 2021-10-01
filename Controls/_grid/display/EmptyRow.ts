@@ -7,6 +7,9 @@ import {TColspanCallbackResult} from './mixins/Grid';
  * Строка пустого представления таблицы
  */
 class EmptyRow extends Row<null> {
+
+    readonly listElementName: string = 'empty';
+
     getContents(): string {
         return 'emptyRow';
     }

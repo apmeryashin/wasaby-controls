@@ -55,8 +55,10 @@
                               monthTemplate="{{_options.monthTemplate}}"
                               dayTemplate="{{_options.dayTemplate}}"
                               dayHeaderTemplate="{{ _options.dayHeaderTemplate }}"
+                              theme="{{ _options.theme }}"
+                              newMode="{{ _options.newMode }}"
                               _formatMonth="{{_formatMonth}}"
-                              _options="{{_options}}"
+                              _options="{{ _options.viewMode !== 'month' ? _options}}"
                               _getMonth="{{_getMonth}}"
                               _dateToDataString="{{_dateToDataString}}"
                            />

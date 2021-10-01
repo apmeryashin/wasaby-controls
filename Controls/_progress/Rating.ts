@@ -3,11 +3,13 @@ import * as template from 'wml!Controls/_progress/Rating/Rating';
 import {detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import RatingViewModel from './Rating/RatingViewModel';
+import {descriptor} from 'Types/entity';
 import 'css!Controls/progress';
 
 type IconSize = 'default'|'2xs'|'xs'|'s'|'m'|'l';
 type IconStyle = 'warning'|'info'|'success'|'danger'|'secondary'|'primary'|'default'|'contrast'|'readonly';
 type IconPadding = 'null'|'3xs'|'2xs'|'xs'|'s'|'m'|'l'|'xl';
+type TPrecision = 0 | 0.5;
 
 const DEFAULT_ICON_SIZE = 's';
 const DEFAULT_ICON_PADDING = '3xs';
@@ -25,30 +27,37 @@ interface IRatingOptions extends IControlOptions {
      * @name Controls/progress:IRating#value
      * @cfg {Number} Количество заполненных звезд
      * @remark
-     * Целое число от 1 до 5.
+     * Число от 1 до 5. Допускается ввод дробных чисел. Если десятичное значение value больше половины целого значения, и в precision установленно 0.5, то показывается пол.звезды.
+     * @see Controls/progress:IRating#precision
      */
     /*
      * @name Controls/progress:IRating#value
      * @cfg {Number} Number of highlighted stars
      * @remark
-     * An integer from 1 to 5.
+     * An float from 1 to 5.
      */
     value: number;
     /**
      * @name Controls/progress:IRating#precision
-     * @cfg {Number} Количество символов десятичной части, по умолчанию 0
+     * @cfg {Number} Точность рейтинга
+     * @variable 0 - отображение полностью закрашенных звезд
+     * @variable 0.5 - отображение закрашенных на половину звезд
+     * @default 0
      * @remark
-     * Если десятичное значение precision больше половины целого значения, то показывается пол.звезды.
-     * 3,44 –3 звезды. 3,56 –3 с половиной здезды
+     * Если десятичное значение value больше половины целого значения, и в precision установленно 0.5, то показывается пол.звезды.
+     * 3,44 – 3 звезды. 3,56 – 3 с половиной здезды
      */
     /*
      * @name Controls/progress:IRating#precision
-     * @cfg {Number} Number of decimal characters, default 0
+     * @cfg {Number} precision rating
+     * @variable 0 - displays fully filled stars
+     * @variable 0.5 - display half-filled stars
+     * @ default 0
      * @remark
-     * If the precision decimal value is greater than half an integer value, then half a star is displayed.
-     * 3,44 – 3 highlighted stars. 3,56 –3 with half highlighted stars
+     * If the decimal "value" of value is more than half an integer value, and exactly 0.5 is set, then a half star is shown.
+     * 3,44 – 3 highlighted stars. 3,56 – 3 with half highlighted stars
      */
-    precision?: number;
+    precision?: TPrecision;
     /**
      * @name Controls/progress:IRating#readOnly
      * @cfg {Boolean} Определяет, может ли пользователь изменить значение контрола.
@@ -213,16 +222,9 @@ class Rating extends Control<IRatingOptions> {
     protected _correctPrecision: number;            //TODO precision сделан неправильно, надо править прикладников
 
     protected _beforeMount(options: IRatingOptions): void {
-        this._correctValue = options.value;
-        this._correctPrecision = options.precision ? 0.5 : 0;
-
-        if (this._correctPrecision) {
-            this._correctValue += options.precision / 100;
-        }
-
         this._viewModel = new RatingViewModel({
-            value: this._correctValue,
-            precision: this._correctPrecision,
+            value: options.value,
+            precision: options.precision,
             iconStyle: options.iconStyle,
             emptyIconStyle: options.emptyIconStyle
         });
@@ -231,22 +233,14 @@ class Rating extends Control<IRatingOptions> {
     protected _beforeUpdate(options: IRatingOptions): void {
         const valueChanged = this._options.value !== options.value;
         const precisionChanged = this._options.precision !== options.precision;
-        if (valueChanged || precisionChanged) {
-            this._correctValue = options.value;
-            this._correctPrecision = options.precision ? 0.5 : 0;
-
-            if (this._correctPrecision) {
-                this._correctValue += options.precision / 100;
-            }
-        }
 
         if (valueChanged || precisionChanged
             || options.iconStyle !== this._options.iconStyle
             || options.emptyIconStyle !== this._options.emptyIconStyle) {
 
             this._viewModel.setOptions({
-                value: this._correctValue,
-                precision: this._correctPrecision,
+                value: options.value,
+                precision: options.precision,
                 iconStyle: options.iconStyle,
                 emptyIconStyle: options.emptyIconStyle
             });
@@ -261,7 +255,7 @@ class Rating extends Control<IRatingOptions> {
 
     private _onHoverOutStar(): void {
         if (!this._options.readOnly && !detection.isMobilePlatform) {
-            this._viewModel.setValue(this._correctValue);
+            this._viewModel.setValue(this._options.value);
         }
     }
 
@@ -281,6 +275,13 @@ class Rating extends Control<IRatingOptions> {
             iconSize: DEFAULT_ICON_SIZE,
             iconStyle: DEFAULT_ICON_STYLE,
             emptyIconStyle: DEFAULT_EMPTY_ICON_STYLE
+        };
+    }
+    static getOptionTypes(): object {
+        return {
+            precision: descriptor(Number).oneOf([
+                0, 0.5
+            ])
         };
     }
 }

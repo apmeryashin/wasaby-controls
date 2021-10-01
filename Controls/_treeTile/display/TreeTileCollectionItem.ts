@@ -30,6 +30,10 @@ export interface ITreeTileCollectionItemOptions<S extends Model = Model>
 export default class TreeTileCollectionItem<T extends Model = Model>
     extends mixin<TreeItem, TileItemMixin>(TreeItem, TileItemMixin) {
 
+    readonly listInstanceName: string =  'controls-TreeTile';
+
+    readonly listElementName: string = 'item';
+
     protected _$nodesHeight: number;
 
     protected _$folderWidth: number;
@@ -45,6 +49,10 @@ export default class TreeTileCollectionItem<T extends Model = Model>
 
     getNodesHeight(): number {
         return this._$nodesHeight;
+    }
+
+    getTileHeight(): number {
+        return this.isNode() && this.getNodesHeight() || super.getTileHeight();
     }
 
     setNodesHeight(nodesHeight: number): void {
@@ -252,10 +260,15 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         gradientType: TGradientType = 'dark',
         titleStyle: TTitleStyle = 'light',
         imagePosition: TImagePosition = 'top',
-        contentPadding: TPaddingSize = 'default'
+        imageViewMode: TImageViewMode = 'none',
+        contentPadding: TPaddingSize = 'default',
+        footerTemplate: TemplateFunction = null,
+        description: string = '',
+        descriptionLines: number = 0,
+        titlePosition: TTitlePosition = 'underImage'
     ): string {
         let classes = super.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle,
-            imagePosition, contentPadding);
+            imagePosition, imageViewMode, contentPadding, footerTemplate, description, descriptionLines, titlePosition);
         switch (itemType) {
             case 'default':
             case 'medium':

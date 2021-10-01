@@ -13,20 +13,11 @@ interface ISrcData {
 
 const itemActions: IItemAction[] = [
    {
-      id: 1,
-      icon: 'icon-DownloadNew',
-      title: 'Download',
-      showType: TItemActionShowType.MENU_TOOLBAR,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action download Click');
-      }
-   },
-   {
       id: 2,
       icon: 'icon-Erase',
       iconStyle: 'danger',
       title: 'Remove',
-      showType: TItemActionShowType.MENU_TOOLBAR,
+      showType: TItemActionShowType.MENU,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action delete Click');
       }
@@ -36,7 +27,7 @@ const itemActions: IItemAction[] = [
 const data: ISrcData[] = [
    {
       key: 1,
-      title: 'Кнопка "Ещё" по свайпу будет показана, т.к. указан headerTemplate'
+      title: 'Кнопка меню будет показана, т.к. указан headerTemplate'
    }
 ];
 

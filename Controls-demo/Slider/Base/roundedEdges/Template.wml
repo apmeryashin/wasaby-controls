@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="wrapper">
+        <div class="controls-text-label">roundedEdges=false</div>
+        <Controls.slider:Base
+                attr:class="controlsDemo__class_wide-slider"
+                maxValue="{{100}}"
+                minValue="{{0}}"/>
+    </div>
+    <div class="wrapper">
+        <div class="controls-text-label">roundedEdges=true</div>
+        <Controls.slider:Base
+                attr:class="controlsDemo__class_wide-slider"
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                roundedEdges="{{true}}"/>
+    </div>
+</div>

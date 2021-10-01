@@ -2,6 +2,7 @@ import { Control } from 'UI/Base';
 import IControllerBase from 'Controls/_form/interface/IControllerBase';
 import {ErrorController} from 'Controls/error';
 import {Memory, SbisService} from 'Types/source';
+import {INITIALIZING_WAY} from 'Controls/_form/FormController';
 
 /**
  * Интерфейс для контроллера редактирования записи.
@@ -94,7 +95,7 @@ export default interface IFormController extends IControllerBase {
      * }
      * </pre>
      */
-    initializingWay?: string;
+    initializingWay?: INITIALIZING_WAY;
 }
 
 /**

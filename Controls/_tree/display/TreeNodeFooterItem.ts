@@ -13,6 +13,10 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
 
     protected _$moreFontColorStyle: string;
 
+    readonly listInstanceName: string =  'controls-Tree__node-footer';
+
+    readonly listElementName: string = 'item';
+
     get node(): TreeItem<Model> {
         return this.getNode();
     }

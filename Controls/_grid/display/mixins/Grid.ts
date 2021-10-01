@@ -341,6 +341,9 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         if (header) {
             header.setColumnSeparatorSize(columnSeparatorSize);
         }
+        if (this.getEmptyGridRow()) {
+            this.getEmptyGridRow().setColumnSeparatorSize(columnSeparatorSize);
+        }
         this._updateItemsProperty(
             'setColumnSeparatorSize', this._$columnSeparatorSize, 'setColumnSeparatorSize'
         );
@@ -355,6 +358,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         this._$emptyGridRow = new EmptyRow<S>({
             owner: this,
             columnsConfig: this._$emptyTemplateColumns,
+            columnSeparatorSize: this._$columnSeparatorSize,
             gridColumnsConfig: this._$columns,
             rowTemplate: this._$emptyTemplate,
             rowTemplateOptions: this._$emptyTemplateOptions,
@@ -610,6 +614,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
             }
         });
         this._nextVersion();
+    }
+
+    getIndicatorColspan(): number {
+        return this.getGridColumnsConfig().length + +(this.hasMultiSelectColumn());
     }
 
     // region Controls/_display/CollectionItem

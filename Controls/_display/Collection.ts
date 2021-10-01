@@ -182,7 +182,6 @@ export type TArrayGroupKey = TGroupKey[];
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
     style?: string;
-    size?: string;
     itemActionsPosition?: string;
     actionAlignment?: string;
     actionCaptionPosition?: 'right'|'bottom'|'none';
@@ -2711,7 +2710,7 @@ export default class Collection<
     }
 
     setMetaResults(metaResults: EntityModel): void {
-        if (!isEqual(this._$metaResults, metaResults)) {
+        if (!isEqual(this._$metaResults, metaResults) || this._$metaResults !== metaResults) {
             this._$metaResults = metaResults;
             this._nextVersion();
         }
@@ -2785,6 +2784,7 @@ export default class Collection<
 
     setIndexes(start: number, stop: number): void {
         this.getViewIterator().setIndices(start, stop);
+        this._notify('indexesChanged');
         // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
         // тоже должны перерисоваться при изменении видимости чекбоксов
         this._updateItemsProperty('setMultiSelectVisibility', this._$multiSelectVisibility, 'setMultiSelectVisibility');

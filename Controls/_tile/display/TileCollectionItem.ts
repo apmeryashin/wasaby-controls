@@ -13,6 +13,10 @@ export interface ITileCollectionItemOptions extends ICollectionItemOptions, ITil
 export default class TileCollectionItem<T extends Model = Model>
     extends mixin<CollectionItem, TileItem>(CollectionItem, TileItem) {
 
+    readonly listInstanceName: string =  'controls-Tile';
+
+    readonly listElementName: string = 'item';
+
     setActive(active: boolean, silent?: boolean): void {
         // TODO This is copied from TileViewModel, but there must be a better
         // place for it. For example, somewhere in ItemActions container

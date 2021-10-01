@@ -33,6 +33,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         multiSelect: options.multiSelect,
         typeShadow: options.typeShadow,
         selectorTemplate: options.selectorTemplate,
+        headingCaptionProperty: options.headingCaptionProperty,
         headerContentTemplate: options.headerContentTemplate,
         footerContentTemplate: options.footerContentTemplate || options.footerTemplate,
         footerItemData: options.footerItemData,
@@ -68,6 +69,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         minSearchLength: options.minSearchLength,
         searchDelay: options.searchDelay,
         searchValueTrim: options.searchValueTrim,
+        searchPlaceholder: options.searchPlaceholder,
         subMenuDirection: options.subMenuDirection
     };
     return dropdownOptions;

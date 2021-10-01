@@ -32,6 +32,8 @@ export default class GroupItem<T> extends mixin<
 
     protected _$multiSelectVisibility: string;
 
+    readonly listElementName: string =  'group';
+
     constructor(options?: IOptions<T>) {
         super(options);
         ExpandableMixin.call(this);

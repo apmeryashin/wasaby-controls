@@ -21,6 +21,10 @@ export default class TreeGridHeaderRow extends GridHeaderRow<null> {
      */
     protected _$expanderSize: string;
 
+    readonly listInstanceName: string =  'controls-TreeGrid';
+
+    readonly listElementName: string = 'header';
+
     // region DisplayExpanderPadding
 
     setDisplayExpanderPadding(displayExpanderPadding: boolean): void {

@@ -37,7 +37,7 @@ const itemActions: IItemAction[] = [
 const data: ISrcData[] = [
    {
       key: 1,
-      title: 'Кнопка "Ещё" по свайпу будет показана, т.к. указан footerTemplate',
+      title: 'Контекстное меню скрыто',
       menuFooterText: 'В шаблоне footerTemplate может быть размещена дополнительная информация'
    }
 ];

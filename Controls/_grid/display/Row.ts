@@ -33,6 +33,10 @@ export default class Row<TContents extends Model = Model>
     readonly DraggableItem: boolean = false;
     readonly ItemActionsItem: boolean = false;
 
+    readonly listInstanceName: string = 'controls-Grid';
+
+    readonly listElementName: string = 'row';
+
     constructor(options?: IOptions<TContents>) {
         super(options);
         GridRowMixin.call(this, options);

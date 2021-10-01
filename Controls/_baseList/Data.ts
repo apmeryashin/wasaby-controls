@@ -19,7 +19,7 @@ import {
    Direction,
    INavigationSourceConfig
 } from 'Controls/interface';
-import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions} from 'Controls/error';
+import {ErrorViewMode, ErrorViewConfig, ErrorController, IErrorControllerOptions, process} from 'Controls/error';
 import {SyntheticEvent} from 'UI/Vdom';
 import {isEqual} from 'Types/object';
 
@@ -150,6 +150,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
       this._onDataLoad = this._onDataLoad.bind(this);
+      this._onDataLoadError = this._onDataLoadError.bind(this);
       this._errorController = options.errorController || new ErrorController({});
       this._loadToDirectionRegister = new RegisterClass({register: 'loadToDirection'});
 
@@ -240,6 +241,10 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
       if (this._options.sourceController !== newOptions.sourceController) {
          this._sourceController = newOptions.sourceController;
+
+         if (newOptions.sourceController) {
+            this._initSourceController(newOptions);
+         }
       }
 
       if (this._sourceController && (this._sourceController.getItems() !== this._items)) {
@@ -261,7 +266,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       return updateResult;
    }
 
-   private _initSourceController(options: IDataOptions, receivedState: IReceivedState): void {
+   private _initSourceController(options: IDataOptions, receivedState?: IReceivedState): void {
       const sourceController = options.sourceController || this._getSourceController(options, receivedState);
       this._sourceController = sourceController;
       this._fixRootForMemorySource(options);
@@ -270,14 +275,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       sourceController.subscribe('breadcrumbsDataChanged', () => {
          this._updateBreadcrumbsFromSourceController();
       });
-      sourceController.subscribe('dataLoadError', (event, error, root, direction) => {
-         if (this._isMounted) {
-            this._processAndShowError(
-                {error, ...this._getErrorConfig(sourceController.getRoot(), root, direction)}
-            );
-         }
-         this._loading = false;
-      });
+      sourceController.subscribe('dataLoadError', this._onDataLoadError);
       sourceController.subscribe('dataLoad', this._onDataLoad);
       sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
    }
@@ -546,15 +544,32 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    private _onDataError(event: SyntheticEvent, errorConfig: ErrorViewConfig): void {
       event?.stopPropagation();
-      this._processAndShowError({
-         error: errorConfig.error,
-         mode: errorConfig.mode || ErrorViewMode.dialog
-      });
+
+      if (errorConfig?.mode) {
+         this._processAndShowError({
+            error: errorConfig.error,
+            mode: errorConfig.mode || ErrorViewMode.dialog
+         });
+      } else {
+         process(errorConfig);
+      }
    }
 
    private _onDataLoad(): void {
       this._loading = false;
       this._hideError();
+   }
+
+   private _onDataLoadError(event: SyntheticEvent, error: Error, root: TKey, direction: Direction): void {
+      if (this._isMounted) {
+         const currentRoot = this._sourceController.getRoot();
+         if (root === currentRoot) {
+            this._processAndShowError({error, ...this._getErrorConfig(currentRoot, root, direction)});
+         } else {
+            process({error});
+         }
+         this._loading = false;
+      }
    }
 
    private _showError(errorConfig: ErrorViewConfig): void {

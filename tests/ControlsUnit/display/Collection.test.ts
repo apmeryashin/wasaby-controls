@@ -4652,4 +4652,26 @@ describe('Controls/_display/Collection', () => {
             assert.isTrue(collection.getVersion() > version);
         });
     });
+
+    describe('setIndexes', () => {
+        it('event fires', () => {
+            const items = new RecordSet({
+                rawData: [
+                    {id: 1},
+                    {id: 2}
+                ],
+                metaData: {}
+            });
+            const collection = new CollectionDisplay({
+                collection: items,
+                keyProperty: 'id'
+            });
+            let indexesChangedFired = false;
+            collection.subscribe('indexesChanged', () => {
+                indexesChangedFired = true;
+            });
+            collection.setIndexes(0, 1);
+            assert.isTrue(indexesChangedFired);
+        });
+    });
 });

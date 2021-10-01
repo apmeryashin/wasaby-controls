@@ -22,6 +22,8 @@ class ResultsRow extends Row<null> {
     protected _$metaResults: EntityModel;
     protected _$resultsPosition: TResultsPosition;
 
+    readonly listElementName: string = 'results';
+
     constructor(options?: IResultsRowOptions) {
         super({
             ...options,

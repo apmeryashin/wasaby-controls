@@ -115,6 +115,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     getInstanceId: () => string;
 
     /**
+     * Имя сущности для идентификации в списке.
+     */
+    readonly listInstanceName: string = 'controls-List';
+
+    readonly listElementName: string =  'item';
+
+    /**
      * Коллекция, которой принадлежит элемент
      */
     protected _$owner: Collection;
@@ -539,6 +546,32 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._$editingColumnIndex;
     }
 
+    getEditorViewTemplateClasses(params: {
+        enabled?: boolean;
+        size?: string;
+        style?: string;
+        withPadding?: boolean;
+    } = {}): string {
+        let classes = 'controls-EditingTemplateText';
+        classes += ' controls-EditingTemplateText_border-partial';
+        classes += ` controls-EditingTemplateText_size_${params.size || 'default'}`;
+        classes += ` controls-EditingTemplateText_style_${params.style || 'default'}`;
+
+        if (params.withPadding || this.getEditingConfig().mode !== 'cell') {
+            classes += ' controls-EditingTemplateText_withPadding';
+        }
+
+        if (params.enabled) {
+            classes += ' controls-EditingTemplateText_enabled';
+        }
+
+        if (this.isActive()) {
+            classes += ' controls-EditingTemplateText_active';
+        }
+
+        return classes;
+    }
+
     acceptChanges(): void {
         (this._$contents as unknown as Model).acceptChanges();
 
@@ -720,6 +753,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getDraggedItemsCount();
     }
 
+    getDraggedItemsCountString(): string {
+        const count = this.getDraggedItemsCount();
+        // В днд мы можем получить максимум 100 записей, для производительности,
+        // поэтому если записей больше 99 пишем 99+
+        return count > 99 ? '99+' : String(count);
+    }
+
     // endregion Drag-n-drop
 
     isSticked(stickyCallback: Function, item: CollectionItem): boolean {
@@ -742,14 +782,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     getShadowVisibility(): string {
         return this._shadowVisibility;
-    }
-
-    getQAData(marker: boolean): string {
-        let classes = '';
-        if (this.shouldDisplayMarker(marker)) {
-            classes += 'key-controls-list-marked-item';
-        }
-        return classes;
     }
 
     /**
@@ -815,7 +847,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
                 (rowSeparatorSize ? rowSeparatorSize : 'default');
         } else {
             if (this._$roundBorder) {
-                classes = ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
+                classes += ` controls-itemActionsV_roundBorder_topLeft_${this.getTopLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_topRight_${this.getTopRightRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomLeft_${this.getBottomLeftRoundBorder()}`;
                 classes += ` controls-itemActionsV_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}`;

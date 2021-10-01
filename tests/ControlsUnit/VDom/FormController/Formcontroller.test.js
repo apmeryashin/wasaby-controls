@@ -640,6 +640,32 @@ define([
          });
       });
 
+      it('read with error', async () => {
+         let FC = new form.Controller();
+         let currentExpectedMode;
+         let opts = {key: 123, record: {key: 123}, initializingWay: 'preload'};
+         FC._beforeMount(opts);
+         FC.saveOptions(opts);
+         FC._crudController.read = () => {
+            return Promise.reject();
+         };
+         FC._errorController.process = (cfg) => {
+            assert.equal(cfg.mode, currentExpectedMode);
+            return Promise.resolve({});
+         };
+
+         currentExpectedMode = 'include';
+         opts.initializingWay = 'remote';
+         FC.saveOptions(opts);
+         await FC.read(123).catch((e) => e);
+
+
+         currentExpectedMode = 'dialog';
+         opts.initializingWay = 'delayed_remote';
+         FC.saveOptions(opts);
+         await FC.read(123).catch((e) => e);
+      });
+
       it('create record before mount check record state', () => {
          let FC = new form.Controller();
          FC._record = 'initModel';

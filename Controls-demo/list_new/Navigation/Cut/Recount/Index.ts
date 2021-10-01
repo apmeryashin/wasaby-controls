@@ -35,8 +35,8 @@ export default class Index extends Control {
    private _items: RecordSet;
    private _newKey: number = 3;
 
-   constructor(options: IControlOptions) {
-       super(options);
+   constructor(options: IControlOptions, context?: object) {
+       super(options, context);
        this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
    }
 

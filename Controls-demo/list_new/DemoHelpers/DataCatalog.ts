@@ -218,33 +218,13 @@ function getContactsCatalogWithActions(): unknown {
             id: 2,
             icon: 'icon-PhoneNull',
             title: 'Позвонить',
-            showType: showType.MENU_TOOLBAR
-        },
-        {
-            id: 3,
-            icon: 'icon-EmptyMessage',
-            title: 'Написать',
-            showType: showType.TOOLBAR
+            showType: showType.MENU
         }
     ];
     // tslint:disable-next-line
     catalog[1]['itemActions'] = [];
     // tslint:disable-next-line
     catalog[2]['itemActions'] = [
-        {
-            id: 1,
-            icon: 'icon-Chat',
-            title: 'Диалог',
-            showType: showType.MENU_TOOLBAR,
-            parent: 3
-        },
-        {
-            id: 2,
-            icon: 'icon-Email',
-            title: 'Email',
-            showType: showType.MENU,
-            parent: 3
-        },
         {
             id: 3,
             icon: 'icon-Profile',

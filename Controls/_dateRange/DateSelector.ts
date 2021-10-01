@@ -111,6 +111,12 @@ export default class DateSelector extends BaseSelector<IDateSelectorOptions> {
       this._startDependenciesTimer('Controls/datePopup', loadCss);
    }
 
+   protected _resetButtonClickHandler(): void {
+      // TODO: https://online.sbis.ru/opendoc.html?guid=40090032-fc78-4039-ad24-42cf611d4c94
+      this._startValue = this._endValue = this._options.resetStartValue || null;
+      this._notify('valueChanged', [this._startValue]);
+   }
+
    protected _onResult(value: Date): void {
       this._notify('valueChanged', [value]);
       this._startValue = value;

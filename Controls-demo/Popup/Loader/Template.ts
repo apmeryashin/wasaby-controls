@@ -18,13 +18,20 @@ export default class extends Control {
         if (!options.isPrefetchDataMode) {
             Logger.warn('Устаревший режим. Данные никто не загрузит');
         }
+        if (options.prefetchData) {
+            this._updateByPrefetchData(options.prefetchData);
+        }
     }
 
     protected _beforeUpdate(options): void {
         if (options.prefetchData !== this._options.prefetchData) {
-            this._attachments = options.prefetchData[LOADER_MAP.ATTACHMENT];
-            this._record = options.prefetchData[LOADER_MAP.RECORD];
+            this._updateByPrefetchData(options.prefetchData);
         }
+    }
+
+    private _updateByPrefetchData(prefetchData: Record<string, unknown>): void {
+        this._attachments = prefetchData[LOADER_MAP.ATTACHMENT];
+        this._record = prefetchData[LOADER_MAP.RECORD];
     }
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

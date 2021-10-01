@@ -17,6 +17,7 @@ export interface IIntersectionObserverControllerOptions extends IControlOptions,
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less переменные тем оформления}
  *
+ * @class Controls/_scroll/IntersectionObserverController
  * @author Красильников А.С.
  * @see Controls/_scroll/IntersectionObserver/Container
  * @demo Controls-demo/Scroll/IntersectionObserverController/Index
@@ -80,19 +81,19 @@ Object.defineProperty(IntersectionObserverController, 'defaultProps', {
 });
 
 /**
- * @name Controls/_scroll/IntersectionObserver/Controller#observerName
+ * @name Controls/_scroll/IntersectionObserverController#observerName
  * @cfg {String} Контроллер следит только за элементами с таким же именем.
  */
 
 /**
- * @name Controls/_scroll/IntersectionObserver/Controller#threshold
+ * @name Controls/_scroll/IntersectionObserverController#threshold
  * @cfg {Array} Число или массив чисел, указывающий, при каком проценте видимости целевого элемента должен
  * сработать callback. Например, в этом случае callback функция будет вызываться при появлении в зоне видимости
  * каждые 25% целевого элемента:  [0, 0.25, 0.5, 0.75, 1]
  */
 
 /**
- * @name Controls/_scroll/IntersectionObserver/Controller#rootMargin
+ * @name Controls/_scroll/IntersectionObserverController#rootMargin
  * @cfg {String} Смещение прямоугольника, применяемое к bounding box корня при расчёте пересечений,
  * эффективно сжимает или увеличивает корень для целей расчёта. Может быть выражено в пикселях (px) или в процентах (%).
  * Например "50% 0px 0px 0px"
@@ -101,6 +102,6 @@ Object.defineProperty(IntersectionObserverController, 'defaultProps', {
 
 /**
  * @event Происходит когда цель достигает порогового значения, указанного в опции threshold
- * @name Controls/_scroll/IntersectionObserver/Controller#intersect
+ * @name Controls/_scroll/IntersectionObserverController#intersect
  */
 export default IntersectionObserverController;

@@ -6,6 +6,7 @@ import {InputType, ISelection, ISplitValue} from './resources/Types';
 abstract class BaseViewModel<TValue, TOptions extends {} = {}> extends VersionableMixin {
     protected _value: TValue | null;
     protected _displayValue: string;
+    protected _newValue: string;
     protected _selection: ISelection;
     protected _options: TOptions;
     protected _emptyValue: TValue;
@@ -64,6 +65,17 @@ abstract class BaseViewModel<TValue, TOptions extends {} = {}> extends Versionab
         this._setValue(value);
         this._setSelection(this._getStartingPosition());
         this._nextVersion();
+    }
+
+    get newValue(): string {
+        return this._newValue;
+    }
+
+    set newValue(value: string | null) {
+        if (this._newValue === value) {
+            return;
+        }
+        this._newValue = value;
     }
 
     get displayValue(): string {

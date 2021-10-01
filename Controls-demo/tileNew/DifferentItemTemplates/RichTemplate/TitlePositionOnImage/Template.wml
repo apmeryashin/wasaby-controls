@@ -15,7 +15,7 @@
                  gradientColor="{{itemTemplate.item.contents.gradientColor}}"
                  titlePosition="onImage"
                  titleLines="{{itemTemplate.item.contents.titleLines}}"
-                 descriptionLines="{{itemTemplate.item.contents.titleLines}}"
+                 descriptionLines="{{descriptionLines}}"
                  imageSize="{{itemTemplate.item.contents.imageSize}}"
                  imageViewMode="{{imageViewMode}}"
                  imagePosition="{{itemTemplate.item.contents.imagePosition}}"
@@ -29,7 +29,9 @@
 </ws:template>
 <div class="controlsDemo__wrapper">
 <div class="controls-text-label">Шаблон 5.2 с изображением</div>
-   <ws:partial template="tile" imageViewMode="rectangle"></ws:partial>
+   <ws:partial template="tile" imageViewMode="rectangle" descriptionLines="{{3}}"></ws:partial>
 <div class="controls-text-label">Шаблон 5.2 без изображения</div>
-   <ws:partial template="tile" imageViewMode="none"></ws:partial>
+   <ws:partial template="tile" imageViewMode="none" descriptionLines="{{3}}"></ws:partial>
+<div class="controls-text-label">Шаблон 5.2 без описания</div>
+   <ws:partial template="tile" imageViewMode="rectangle" descriptionLines="{{0}}"></ws:partial>
 </div>

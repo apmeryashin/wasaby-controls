@@ -145,6 +145,7 @@ class Manager {
                 if (this.find(options.id)) {
                     this.update(options.id, options);
                 } else {
+                    this._registerPopupLink(item);
                     this._addElement(item);
                 }
                 this._redrawItems();
@@ -152,6 +153,7 @@ class Manager {
         } else if (defaultConfigResult === false) {
             this._fireEventHandler(item, 'onClose');
         } else {
+            this._registerPopupLink(item);
             this._addElement(item);
             this._redrawItems();
         }
@@ -274,11 +276,14 @@ class Manager {
     private _subscribeToPageDragNDrop(): void {
         // Подписка и на платформенное перемещение, и на нативное, т.к. перемещение файлов из ОС тоже нужно отследить.
         const handler = (...args) => {
-            const [, ...preparedArgs] = args;
-            this.eventHandler('pageDragnDropHandler', preparedArgs);
+            this.eventHandler('pageDragnDropHandler', args);
         };
-        EventBus.channel('dragnDrop').subscribe('documentDragStart', handler);
-        EventBus.channel('dragnDrop').subscribe('documentDragEnd', handler);
+        EventBus.channel('dragnDrop').subscribe('documentDragStart', (event, eventObject) => {
+            handler('dragStart', eventObject);
+        });
+        EventBus.channel('dragnDrop').subscribe('documentDragEnd', (event, eventObject) => {
+            handler('dragEnd', eventObject);
+        });
         if (document) {
             document.addEventListener('dragenter', handler);
         }
@@ -326,7 +331,7 @@ class Manager {
 
     private _createItemConfig(options: IPopupOptions, controller: IPopupController): IPopupItem {
         const popupId: string = options.id || randomId('popup-');
-        const popupConfig: IPopupItem = {
+        return {
             id: popupId,
             modal: options.modal,
             controller,
@@ -336,10 +341,7 @@ class Manager {
             activeNodeAfterDestroy: this._getActiveElement(), // TODO: COMPATIBLE
             popupState: controller.POPUP_STATE_INITIALIZING,
             childs: []
-        };
-
-        this._registerPopupLink(popupConfig);
-        return popupConfig;
+        } as IPopupItem;
     }
 
     // Register the relationship between the parent and child popup
@@ -902,7 +904,7 @@ class Manager {
         }
     }
 
-    protected _pageDragnDropHandler(dragEvent: object = {}): boolean {
+    protected _pageDragnDropHandler(type: string, dragEvent: object = {}): boolean {
         const {domEvent} = dragEvent;
         const delay = 10;
         if (this._dragTimer) {
@@ -924,7 +926,7 @@ class Manager {
             this._popupItems.each((item) => {
                 const popupContainer = this._getItemContainer(item.id);
                 const isInsideDrag = popupNode === popupContainer;
-                if (item.controller.dragNDropOnPage(item, popupContainer, isInsideDrag)) {
+                if (item.controller.dragNDropOnPage(item, popupContainer, isInsideDrag, type)) {
                     this.remove(item.id);
                 }
                 this._redrawItems();

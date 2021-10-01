@@ -55,12 +55,12 @@
 
    .controls-CutButton__container_extended_size-m::before {
       top: calc(var(--icon_collapsed_height_m_BigSeparator) + var(--offset_3xs));
-      width: calc((100% - var(--width_m_BigSeparator)) / 2 - var(--margin-horizontal_m_AreaCut));
+      width: calc((100% - var(--width_m_BigSeparator)) / 2 - var(--offset_st));
    }
 
    .controls-CutButton__container_extended_size-m::after {
       top: calc(var(--icon_collapsed_height_m_BigSeparator) + var(--offset_3xs));
-      width: calc((100% - var(--width_m_BigSeparator)) / 2 - var(--margin-horizontal_m_AreaCut));
+      width: calc((100% - var(--width_m_BigSeparator)) / 2 - var(--offset_st));
    }
 
    .controls-CutButton__container_extended_size-l::before {
@@ -91,6 +91,7 @@
    position: absolute;
    left: 0;
    width: 100%;
+   pointer-events: none;
 }
 
 .controls-AreaCut__ellipsis {

@@ -37,7 +37,7 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
      *    bind:selectedKeys="_selectedKeys"
      *    keyProperty="id"
      *    displayProperty="title"
-     *    source="{{_source)}}"
+     *    source="{{_source}}"
      *    lazyItemsLoading="{{true}}" />
      * </pre>
      * <pre>
@@ -94,7 +94,7 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
      *    bind:selectedKeys="_selectedKeys"
      *    keyProperty="id"
      *    displayProperty="title"
-     *    source="{{_source)}}"
+     *    source="{{_source}}"
      *    reloadOnOpen="{{true}}" />
      * </pre>
      * <pre>

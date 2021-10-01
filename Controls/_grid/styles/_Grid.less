@@ -12,6 +12,10 @@
    padding-right: var(--master_item_horizontal-offset_list);
 }
 
+.controls-GridView__loadingTrigger_notFullGridSupport {
+   position: relative;
+}
+
 .controls-GridView__emptyTemplate {
    display: contents;
 }
@@ -502,7 +506,7 @@
 }
 
 .controls-Grid__row-cell__ladder-main_spacing_withGroup {
-   top: var(--header_cell_min-height_grid) !important;
+   top: var(--grouping_height_list) !important;
 }
 
 .controls-Grid__cell-content-wrapper_ladder {
@@ -586,6 +590,7 @@
 .controls-Grid__row-cell__content_baseline_default:before {
    content: '\200b';
    font-size: var(--font-size_2xl);
+   width: 0;
 }
 
 .controls-Grid__header-cell-content-block:before {
@@ -903,7 +908,14 @@
    bottom: 0;
    display: inline-flex;
    align-items: baseline;
-   box-sizing: border-box;
+}
+
+// Для исправления бага safari, из-за которого position: absolute элементы,
+// не сдвигаются padding'ами внешнего блока
+.ws-is-mobile-safari {
+   .controls-StickyBlock_gapFix .controls-GridView__itemV_marker-master {
+      top: 1px;
+   }
 }
 
 .controls-GridView__itemV_marker-master::before {

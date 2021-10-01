@@ -3,7 +3,7 @@ import { stub, SinonStub } from 'sinon';
 
 import * as rk from 'i18n!ControlsUnit';
 
-import { IItemAction, IShownItemAction } from 'Controls/_itemActions/interface/IItemAction';
+import {IItemAction, IShownItemAction, TItemActionShowType} from 'Controls/_itemActions/interface/IItemAction';
 import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
 import {DOMUtil} from 'Controls/sizeUtils';
 
@@ -132,7 +132,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                         icon: 'icon-SwipeMenu',
                         title: rk('Ещё'),
                         isMenu: true,
-                        showType: 2
+                        showType: TItemActionShowType.TOOLBAR
                     })
                 },
                 paddingSize: 'm'
@@ -162,7 +162,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 icon: 'icon-SwipeMenu',
                 title: rk('Ещё'),
                 isMenu: true,
-                showType: 2
+                showType: TItemActionShowType.TOOLBAR
             });
             const result = {
                 itemActionsSize: 'm',
@@ -203,7 +203,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 icon: 'icon-SwipeMenu',
                 title: rk('Ещё'),
                 isMenu: true,
-                showType: 2
+                showType: TItemActionShowType.TOOLBAR
             });
 
             const result = {
@@ -263,7 +263,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                         icon: 'icon-SwipeMenu',
                         title: rk('Ещё'),
                         isMenu: true,
-                        showType: 2
+                        showType: TItemActionShowType.TOOLBAR
                     })
                 },
                 paddingSize: 'm'
@@ -347,7 +347,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             const otherActions: IItemAction[] = [
                 {
                     id: 1,
-                    showType: 2,
+                    showType: TItemActionShowType.TOOLBAR,
                     icon: 'icon-PhoneNull'
                 },
                 {
@@ -357,33 +357,33 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 },
                 {
                     id: 2,
-                    showType: 2,
+                    showType: TItemActionShowType.TOOLBAR,
                     icon: 'icon-Erase'
                 },
                 {
                     id: 3,
-                    showType: 0,
+                    showType: TItemActionShowType.MENU,
                     icon: 'icon-EmptyMessage'
                 },
                 {
                     id: 4,
-                    showType: 2,
+                    showType: TItemActionShowType.TOOLBAR,
                     icon: 'icon-Profile'
                 }];
             const result: IShownItemAction[] = [
                 {
                     id: 1,
-                    showType: 2,
+                    showType: TItemActionShowType.TOOLBAR,
                     icon: 'icon-PhoneNull'
                 },
                 {
                     id: 2,
-                    showType: 2,
+                    showType: TItemActionShowType.TOOLBAR,
                     icon: 'icon-Erase'
                 },
                 {
                     id: 4,
-                    showType: 2,
+                    showType: TItemActionShowType.TOOLBAR,
                     icon: 'icon-Profile'
                 },
                 {
@@ -391,7 +391,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                     icon: 'icon-SwipeMenu',
                     title: rk('Ещё'),
                     isMenu: true,
-                    showType: 2
+                    showType: TItemActionShowType.TOOLBAR
                 }
             ];
             assert.deepEqual(
@@ -404,6 +404,139 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                     'adaptive',
                     'default').itemActions.showed
             );
+        });
+
+        describe('FIXED actions', () => {
+            it('Fixed Action is sliced. Should replace visible from end', () => {
+                const actions: IItemAction[] = [
+                    {
+                        id: 1,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-PhoneNull'
+                    },
+                    {
+                        id: 2,
+                        icon: 'icon-PhoneNull',
+                        parent: 1
+                    },
+                    {
+                        id: 3,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-Erase'
+                    },
+                    {
+                        id: 4,
+                        showType: TItemActionShowType.MENU,
+                        icon: 'icon-EmptyMessage'
+                    },
+                    {
+                        id: 5,
+                        showType: TItemActionShowType.FIXED,
+                        icon: 'icon-Bell'
+                    },
+                    {
+                        id: 6,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-Profile'
+                    }
+                ];
+                const result = horizontalMeasurer.getSwipeConfig(
+                    actions,
+                    100,
+                    59,
+                    'none',
+                    'adaptive',
+                    'default');
+                assert.equal(result.itemActions.showed[2], actions[4]);
+            });
+
+            it('Fixed Action is not sliced, not last. Should not change position', () => {
+                const actions: IItemAction[] = [
+                    {
+                        id: 1,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-PhoneNull'
+                    },
+                    {
+                        id: 6,
+                        showType: TItemActionShowType.FIXED,
+                        icon: 'icon-Profile'
+                    },
+                    {
+                        id: 2,
+                        icon: 'icon-PhoneNull',
+                        parent: 1
+                    },
+                    {
+                        id: 3,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-Erase'
+                    },
+                    {
+                        id: 4,
+                        showType: TItemActionShowType.MENU,
+                        icon: 'icon-EmptyMessage'
+                    },
+                    {
+                        id: 5,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-Bell'
+                    }
+                ];
+                const result = horizontalMeasurer.getSwipeConfig(
+                    actions,
+                    100,
+                    59,
+                    'none',
+                    'adaptive',
+                    'default');
+                assert.equal(result.itemActions.showed[1], actions[1]);
+            });
+
+            it('Fixed Action is both sliced and not sliced, but last. Should change position of last', () => {
+                const actions: IItemAction[] = [
+                    {
+                        id: 1,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-PhoneNull'
+                    },
+                    {
+                        id: 2,
+                        icon: 'icon-PhoneNull',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: 1
+                    },
+                    {
+                        id: 3,
+                        showType: TItemActionShowType.FIXED,
+                        icon: 'icon-Erase'
+                    },
+                    {
+                        id: 4,
+                        showType: TItemActionShowType.MENU,
+                        icon: 'icon-EmptyMessage'
+                    },
+                    {
+                        id: 5,
+                        showType: TItemActionShowType.TOOLBAR,
+                        icon: 'icon-Bell'
+                    },
+                    {
+                        id: 6,
+                        showType: TItemActionShowType.FIXED,
+                        icon: 'icon-Profile'
+                    }
+                ];
+                const result = horizontalMeasurer.getSwipeConfig(
+                    actions,
+                    100,
+                    59,
+                    'none',
+                    'adaptive',
+                    'default');
+                assert.equal(result.itemActions.showed[1], actions[2]);
+                assert.equal(result.itemActions.showed[2], actions[5]);
+            });
         });
     });
 });

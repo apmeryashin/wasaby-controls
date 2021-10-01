@@ -36,6 +36,8 @@ export interface IToggleButtonOptions extends
     captions?: string[];
     viewMode?: 'button' | 'link' | 'toolButton' | 'pushButton';
     iconStyles?: string[];
+    buttonStyles?: string[];
+    fontColorStyles?: string[];
     // deprecated options
     icon?: string;
 }
@@ -138,7 +140,16 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         const iconStyles = newOptions.iconStyles || [newOptions.iconStyle];
         const iconStyle = (!value && iconStyles[1] ? iconStyles[1] : iconStyles[0]);
         this._iconStyle = this._icon ? ActualApi.iconStyle(iconStyle, this._icon,
-            newOptions.readOnly, false) : '';
+            newOptions.readOnly, this._options.translucent) : '';
+
+        const buttonStyles = newOptions.buttonStyles || [newOptions.buttonStyle];
+        const buttonStyle = this._viewMode === 'toolButton' ? 'default' :
+            (!value && buttonStyles[1] ? buttonStyles[1] : buttonStyles[0]);
+        this._buttonStyle = (newOptions.readOnly ? 'readonly' : buttonStyle) || this._buttonStyle;
+
+        const fontColorStyles = newOptions.fontColorStyles || [newOptions.fontColorStyle];
+        const fontColorStyle = (!value && fontColorStyles[1] ? fontColorStyles[1] : fontColorStyles[0]);
+        this._fontColorStyle = (newOptions.readOnly ? 'readonly' : fontColorStyle) || this._fontColorStyle;
 
         if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
             this._hoverIcon = !newOptions.value;
@@ -226,6 +237,20 @@ Object.defineProperty(ToggleButton, 'defaultProps', {
 /**
  * @name Controls/_toggle/Button#iconStyles
  * @cfg {Array} Пара стилей для иконок.
+ * Первый стиль отображается, когда переключатель выключен.
+ * Второй стиль отображается, когда переключатель включен.
+ */
+
+/**
+ * @name Controls/_toggle/Button#buttonStyles
+ * @cfg {Array} Пара стилей для отображения кнопки.
+ * Первый стиль отображается, когда переключатель выключен.
+ * Второй стиль отображается, когда переключатель включен.
+ */
+
+/**
+ * @name Controls/_toggle/Button#fontColorStyles
+ * @cfg {Array} Пара стилей для заголовков.
  * Первый стиль отображается, когда переключатель выключен.
  * Второй стиль отображается, когда переключатель включен.
  */

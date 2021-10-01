@@ -56,27 +56,8 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    selectAll(selection: ISelection, limit?: number): ISelection {
-      if (limit) {
-         /*
-            Если есть лимит, то сохраняем изначально выбранные элементы, чтобы при выборе пачки с них не слетел выбор.
-            КЕЙС 1:
-            Список: 1, 2, 3, 4, 5, 6, 7, 8
-            selected: [6]
-            Нажали выбрать +3
-            selected:  [1, 2, 3, 6]
-
-            КЕЙС 2:
-            Список: 1, 2, 3, 4, 5, 6, 7, 8
-            selected: [2, 4]
-            Нажали выбрать +3
-            selected:  [1, 2, 3, 4, 5]
-         */
-         const newSelection = {selected: [...selection.selected], excluded: []};
-         ArraySimpleValuesUtil.addSubArray(newSelection.selected, [ALL_SELECTION_VALUE]);
-         return newSelection;
-      } else {
-         return {selected: [ALL_SELECTION_VALUE], excluded: []};
-      }
+      const excluded = limit ? selection.excluded : [];
+      return {selected: [ALL_SELECTION_VALUE], excluded};
    }
 
    unselectAll(selection: ISelection): ISelection {
@@ -117,7 +98,6 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
        limit?: number,
        items?: Array<CollectionItem<Model>>
    ): Map<boolean, Array<CollectionItem<Model>>> {
-      let selectedItemsCount = 0;
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
       selectedItems.set(true, []);
@@ -133,19 +113,10 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
          const itemId = this._getKey(item);
          const inSelectedKeys = selection.selected.includes(itemId);
-         // для последнего условия смотри комментарий в Flat::selectAll
-         const allowSelectByLimit = !limit || selectedItemsCount < limit || limit && isAllSelected && inSelectedKeys;
          const isSelectedByAllValue = isAllSelected && !selection.excluded.includes(itemId);
          const selected = item.isReadonlyCheckbox()
             ? inSelectedKeys
-            : allowSelectByLimit && (inSelectedKeys || isSelectedByAllValue);
-
-         // при выборе пачкой пропускаем уже выбранные отдельно элементы, подробности Flat::selectAll
-         // !inSelectedKeys означает, что элемент выбран с помощью ALL_SELECTION_VALUE,
-         // именно эти элементы нужно считать для пачки выбранных элементов
-         if (selected && (!limit || limit && isAllSelected && !inSelectedKeys)) {
-            selectedItemsCount++;
-         }
+            : inSelectedKeys || isSelectedByAllValue;
 
          selectedItems.get(selected).push(item);
       };
@@ -160,16 +131,18 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
-      let countItemsSelected: number|null = null;
+      let countItemsSelected: number|null;
 
       if (this._isAllSelected(selection)) {
          const itemsCount = this._model.getItems().filter((it) => this._canBeSelected(it)).length;
-         if (!hasMoreData && (!limit || itemsCount <= limit)) {
-            countItemsSelected = itemsCount - selection.excluded.length;
-         } else if (limit) {
-            // limit задает только кол-во выбранных записей пачкой, а еще могут быть выбраны записи отдельно,
-            // они находятся в selectedKeys. -1 т.к. одно значение это обязательно будет null
-            countItemsSelected = limit + (selection.selected.length - 1);
+         if (limit) {
+            if (hasMoreData && limit > itemsCount) {
+               countItemsSelected = limit;
+            } else {
+               countItemsSelected = limit < itemsCount ? itemsCount - selection.excluded.length : itemsCount;
+            }
+         } else {
+            countItemsSelected = hasMoreData ? null : itemsCount - selection.excluded.length;
          }
       } else {
          const itemsCanBeSelected = selection.selected.filter((key) => {

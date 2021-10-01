@@ -219,6 +219,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
         // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
         if (item.getContents() instanceof Model && !this._isTouch() &&
+            !this._options.isDragging &&
             sourceEvent.target.closest('.controls-menu') === this._container) {
             this._clearClosingTimout();
             this._setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
@@ -824,6 +825,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (options.nodeProperty) {
             data[options.nodeProperty] = false;
         }
+        for (let field in data) {
+            this._addField(field, emptyItem, emptyItem.getFormat());
+        }
         emptyItem.set(data);
         items.prepend([emptyItem]);
     }
@@ -1005,11 +1009,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             vertical: subMenuDirection === 'bottom' ? 'bottom' : 'top',
             horizontal: subMenuDirection === 'bottom' ? 'left' : this._options.itemAlign
         };
-        const className = 'controls-Menu__subMenu controls-Menu__subMenu_margin' +
+        let className = 'controls-Menu__subMenu' +
             ` controls_popupTemplate_theme-${this._options.theme}` +
             this._getMenuPopupOffsetClass(item, this._options);
 
         return this._getTemplateOptions(item).then((templateOptions) => {
+            className += templateOptions.headingCaption ? ' controls-Menu__subMenu_withHeader_margin' : ' controls-Menu__subMenu_margin';
             return {
                 templateOptions,
                 target,
@@ -1026,6 +1031,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getTemplateOptions(item: CollectionItem<Model>): Promise<object> {
         const root: TKey = item.getContents().get(this._options.keyProperty);
+        const headingCaption = item.getContents().get(this._options.headingCaptionProperty);
         const isLoadedChildItems = this._isLoadedChildItems(root);
         const sourcePropertyConfig = item.getContents().get(this._options.sourceProperty);
         const dataLoadCallback = !isLoadedChildItems &&
@@ -1035,6 +1041,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 root: sourcePropertyConfig ? null : root,
                 bodyContentTemplate: 'Controls/_menu/Control',
                 dataLoadCallback,
+                headingCaption,
                 footerContentTemplate: this._options.nodeFooterTemplate,
                 footerItemData: {
                     key: root,
@@ -1044,7 +1051,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 emptyText: null,
                 showClose: false,
                 showHeader: false,
-                headerTemplate: null,
+                headerTemplate: headingCaption ? 'Controls/dropdown:HeaderTemplate' : null,
                 headerContentTemplate: null,
                 additionalProperty: null,
                 searchParam: null,
@@ -1102,16 +1109,21 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _subMenuDataLoadCallback(items: RecordSet): void {
         const origCollectionFormat = this._listModel.getCollection().getFormat();
+        const collection = this._listModel.getCollection();
         items.getFormat().forEach((field) => {
             const name = field.getName();
-            if (origCollectionFormat.getFieldIndex(name) === -1) {
-                this._listModel.getCollection().addField({
-                    name,
-                    type: 'string'
-                });
-            }
+            this._addField(name, collection, origCollectionFormat);
         });
         this._listModel.getCollection().append(items);
+    }
+
+    private _addField(name: string, items, format): void {
+        if (format.getFieldIndex(name) === -1) {
+            items.addField({
+                name,
+                type: 'string'
+            });
+        }
     }
 
     private _updateItemActions(listModel: Collection<Model>, options: IMenuControlOptions): void {

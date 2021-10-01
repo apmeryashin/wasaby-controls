@@ -53,6 +53,8 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
     protected _$metaResults: EntityModel;
     protected _$colspanGroup: boolean;
 
+    readonly listElementName: string = 'group';
+
     constructor(options?: IOptions<TContents>) {
         super(options);
         ExpandableMixin.call(this);

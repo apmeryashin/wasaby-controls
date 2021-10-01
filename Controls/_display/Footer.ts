@@ -27,6 +27,8 @@ export class Footer extends CollectionItem {
     //region options fields
     protected _$sticky: boolean;
     protected _$contentTemplate: TemplateFunction;
+
+    readonly listElementName: string =  'footer';
     //endregion
 
     constructor(options: IOptions) {

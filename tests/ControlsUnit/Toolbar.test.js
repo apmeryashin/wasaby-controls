@@ -282,13 +282,6 @@ define(
                   expectedConfig = {
                      opener: testSelf,
                      className: 'controls-Toolbar__popup__icon popupClassName controls_popupTemplate_theme-default controls_dropdownPopup_theme-default',
-                     targetPoint: {
-                        vertical: 'top',
-                        horizontal: 'left'
-                     },
-                     direction: {
-                        horizontal: 'right'
-                     },
                      templateOptions: {
                         groupTemplate: 'groupTemplate',
                         groupProperty: undefined,
@@ -307,6 +300,13 @@ define(
                            iconSize: undefined,
                            iconStyle: 'iconStyle'
                         }
+                     },
+                     targetPoint: {
+                        vertical: 'top',
+                        horizontal: 'left'
+                     },
+                     direction: {
+                        horizontal: 'right'
                      }
                   };
                 assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
@@ -435,7 +435,8 @@ define(
                      itemActions: undefined,
                      itemActionVisibilityCallback: undefined,
                      closeButtonVisibility: true,
-                     dropdownClassName: 'controls-Toolbar-horizontal__dropdown'
+                     dropdownClassName: 'controls-Toolbar-horizontal__dropdown',
+                     draggable: undefined
                   };
                const toolbar = new toolbars.View();
                const config = toolbar._getMenuConfig.call(testSelf);

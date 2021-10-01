@@ -19,6 +19,8 @@ import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import * as Clone from 'Core/core-clone';
+import { TItemActionShowType, IItemAction } from 'Controls/itemActions';
+import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 
@@ -28,6 +30,11 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
     additionalTextProperty: string;
     imageProperty?: string;
     multiSelect: boolean;
+    historyId?: string;
+    emptyKey: string;
+    emptyText?: string;
+    selectAllKey: string;
+    selectAllText?: string;
 }
 
 /**
@@ -67,6 +74,34 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
  * @default false
  */
 
+/**
+ * @name Controls/_filterPanel/Editors/List#emptyKey
+ * @cfg {string} Ключ для пункта списка, который используется для сброса параметра фильтрации.
+ * @see emptyText
+ * @demo Controls-demo/filterPanel/EmptyKey/Index
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#emptyText
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для сброса параметра фильтрации, когда в панели фильтров отключено отображение кнопки "Сбросить".
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
+ * @demo Controls-demo/filterPanel/EmptyKey/Index
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#selectAllKey
+ * @cfg {string} Ключ для пункта списка, который используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @see selectAllText
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#selectAllText
+ * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
+ * Используется для установки фильтрации по всем доступным значениям для данного параметра.
+ * @remark При активации снимает отметку чекбоксами со всех записей в списке
+ */
+
 class ListEditor extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
     protected _circleTemplate: TemplateFunction = MultiSelectCircleTemplate;
@@ -77,14 +112,18 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _filter: object = {};
     protected _navigation: INavigationOptionValue<unknown> = null;
     protected _editorTarget: HTMLElement | EventTarget;
+    protected _historyService: unknown;
+    protected _itemActions: IItemAction[];
     private _itemsReadyCallback: Function = null;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
         this._setColumns(options, options.propertyValue);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
-        this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
+        this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
+        this._itemActions = this._getItemActions(options.historyId);
+        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
     }
 
     protected _afterMount(): void {
@@ -107,13 +146,25 @@ class ListEditor extends Control<IListEditorOptions> {
             this._navigation = this._getNavigation(options);
         }
         if (filterChanged || valueChanged) {
-            this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
+            this._setFilter(this._selectedKeys, options);
         }
     }
 
+    protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {
+        if (item.get('pinned')) {
+            return action.id === 'PinOff';
+        }
+        return action.id === 'PinNull';
+    }
+
     protected _handleItemsReadyCallback(items: RecordSet): void {
-        if (!this._items) {
-            this._items = items;
+        this._items = items;
+        if (this._options.emptyText && !items.getRecordById(this._options.emptyKey)) {
+            this._addFilterItem(this._options.emptyText, this._options.emptyKey);
+        }
+
+        if (this._options.selectAllText && !items.getRecordById(this._options.selectAllKey)) {
+            this._addFilterItem(this._options.selectAllText, this._options.selectAllKey);
         }
     }
 
@@ -126,12 +177,12 @@ class ListEditor extends Control<IListEditorOptions> {
                 selectedKeysArray.unshift(item.get(this._options.keyProperty));
             }
             this._editorTarget = this._getEditorTarget(nativeEvent);
-            this._processPropertyValueChanged(selectedKeysArray, selectedKeysArray.length === 1);
+            this._processPropertyValueChanged(selectedKeysArray);
         }
     }
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: string[]|number[]): void {
-        this._processPropertyValueChanged(keys, !this._options.multiSelect);
+        this._processPropertyValueChanged(keys);
     }
 
     protected _handleCheckBoxClick(event: SyntheticEvent, keys: string[]|number[]): void {
@@ -139,7 +190,7 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _handleSelectedKeyChanged(event: SyntheticEvent, key: string|number): void {
-        this._processPropertyValueChanged([key], !this._options.multiSelect);
+        this._processPropertyValueChanged([key]);
     }
 
     protected _handleSelectorResult(result: Model[]): void {
@@ -149,10 +200,10 @@ class ListEditor extends Control<IListEditorOptions> {
         });
         if (selectedKeys.length) {
             this._items.assign(result);
-            this._setFilter(selectedKeys, this._options.filter, this._options.keyProperty);
+            this._setFilter(selectedKeys, this._options);
         }
         this._navigation = this._getNavigation(this._options, selectedKeys);
-        this._processPropertyValueChanged(selectedKeys, true);
+        this._processPropertyValueChanged(selectedKeys);
     }
 
     protected _handleFooterClick(event: SyntheticEvent): void {
@@ -177,18 +228,26 @@ class ListEditor extends Control<IListEditorOptions> {
         });
     }
 
-    protected _processPropertyValueChanged(value: string[] | number[], needCollapse: boolean): void {
+    protected _processPropertyValueChanged(value: string[] | number[]): void {
         this._selectedKeys = value;
         this._setColumns(this._options, this._selectedKeys);
-        this._notify('propertyValueChanged', [this._getExtendedValue(needCollapse)], {bubbling: true});
+        this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
     }
 
-    protected _getExtendedValue(needCollapse?: boolean): object {
+    protected _getExtendedValue(): object {
+        const value = this._getValue(this._selectedKeys);
         return {
-            value: this._selectedKeys,
-            textValue: this._getTextValue(this._selectedKeys),
-            needCollapse
+            value,
+            textValue: this._getTextValue(this._selectedKeys)
         };
+    }
+
+    private _getValue(value: string[] | number[]): string[] | number[] {
+        return this._isEmptyKeySelected(value) ? [] : value;
+    }
+
+    private _isEmptyKeySelected(value: string[] | number[]): boolean {
+        return value.includes(this._options.emptyKey);
     }
 
     protected _setColumns(options: IListEditorOptions, propertyValue: string[]|number[]): void {
@@ -215,10 +274,58 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    private _setFilter(selectedKeys: string[]|number[], filter: object, keyProperty: string): void {
-        this._filter = {...filter};
+    private _getItemActions(historyId?: string): IItemAction[] {
+        if (historyId) {
+            return [
+                {
+                    id: 'PinOff',
+                    icon: 'icon-PinOff',
+                    size: 's',
+                    showType: TItemActionShowType.TOOLBAR,
+                    handler: this._handlePinClick.bind(this)
+                }, {
+                    id: 'PinNull',
+                    icon: 'icon-PinNull',
+                    size: 's',
+                    showType: TItemActionShowType.TOOLBAR,
+                    handler: this._handlePinClick.bind(this)
+                }
+            ];
+        }
+        return [];
+    }
+
+    private _getItemModel(items: RecordSet, keyProperty: string): Model {
+        const model = items.getModel();
+        const modelConfig = {
+            keyProperty,
+            format: items.getFormat(),
+            adapter: items.getAdapter()
+        };
+        if (typeof model === 'string') {
+            return DiCreate(model, modelConfig);
+        } else {
+            return new model(modelConfig);
+        }
+    }
+
+    private _addFilterItem(additionalText: string, additionalKey: string): void {
+        const emptyItem = this._getItemModel(this._items, this._options.keyProperty);
+
+        const data = {};
+        data[this._options.keyProperty] = additionalKey;
+        data[this._options.displayProperty] = additionalText;
+        emptyItem.set(data);
+        this._items.prepend([emptyItem]);
+    }
+
+    private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
+        this._filter = {...options.filter};
         if (selectedKeys && selectedKeys.length) {
-            this._filter[keyProperty] = selectedKeys;
+            this._filter[options.keyProperty] = selectedKeys;
+        }
+        if (options.historyId) {
+            this._filter.historyId = options.historyId;
         }
     }
 
@@ -242,6 +349,28 @@ class ListEditor extends Control<IListEditorOptions> {
         return new List({
             items: selectedItems
         });
+    }
+
+    private _handlePinClick(item: Model): void {
+        this._getHistoryService().then((historyService) => {
+            historyService.update(item, {$_pinned: !item.get('pinned')}).then(() => {
+                this._children.gridView.reload();
+            });
+            return historyService;
+        });
+    }
+
+    private _getHistoryService(): Promise<unknown> {
+        if (!this._historyService) {
+             return import('Controls/history').then((history) => {
+                 this._historyService = new history.Service({
+                    historyId: this._options.historyId,
+                     pinned: true
+                });
+                 return this._historyService;
+            });
+        }
+        return Promise.resolve(this._historyService);
     }
 
     private _getTextValue(selectedKeys: number[]|string[]|Model[]): string {
