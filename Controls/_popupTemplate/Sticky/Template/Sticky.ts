@@ -148,6 +148,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             closeButtonVisibility: true,
             shadowVisible: false,
             backgroundStyle: 'default',
+            headerBackgroundStyle: 'default',
             closeButtonViewMode: 'link'
         };
     }
