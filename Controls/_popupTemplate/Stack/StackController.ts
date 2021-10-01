@@ -499,7 +499,8 @@ class StackController extends BaseController {
 
         // Защита от ситуации, когда getDefaultOptions есть, но вернул undefined.
         const defaultOptions = templateClass && templateClass.getDefaultOptions && templateClass.getDefaultOptions();
-        return defaultOptions || {};
+        const defaultProps = templateClass?.defaultProps;
+        return defaultOptions || defaultProps || {};
     }
 
     private _preparePropStorageId(item: IStackItem): void {
