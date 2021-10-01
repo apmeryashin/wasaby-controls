@@ -52,6 +52,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/input:IValue
  * @implements Controls/interface:IValidationStatus
  * @mixes Controls/input:IBorderVisibility
+ * @implements Controls/input:IPadding
  *
  * @public
  * @author Герасимов А.М.
