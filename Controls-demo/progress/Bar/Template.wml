@@ -17,5 +17,14 @@
             </Router.router:Reference>
             <Controls-demo.progress.Bar.BarStyle.Index/>
         </div>
+
+        <div class="controlsDemo__cell">
+            <Router.router:Reference attr:class="controls-text-label"
+                                     state="/Controls-demo/app/:app"
+                                     app="{{ 'Controls-demo/progress/Bar/BlankAreaStyle/Index' }}">
+                <a href="{{content.href}}">Настройка стиля отображения не заполненной области прогресс бара</a>
+            </Router.router:Reference>
+            <Controls-demo.progress.Bar.BlankAreaStyle.Index/>
+        </div>
     </div>
 </div>
