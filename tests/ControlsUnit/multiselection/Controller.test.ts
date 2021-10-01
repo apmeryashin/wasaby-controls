@@ -984,7 +984,9 @@ describe('Controls/_multiselection/Controller', () => {
                selectDescendants: true,
                selectAncestors: true,
                rootId: null,
-               selectionType: 'all'
+               entryPath: [],
+               selectionType: 'all',
+               selectionCountMode: 'all'
             }),
             selectedKeys: [null],
             excludedKeys: []
