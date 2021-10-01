@@ -19,7 +19,7 @@ define([
 
       describe('openPopup', function() {
          it('should open opener with default options', function() {
-            const component = calendarTestUtils.createComponent(date.Date, options);
+            const component = calendarTestUtils.createComponent(date.Input, options);
             component._children = {
                opener: {
                   open: sinon.fake()
@@ -37,7 +37,7 @@ define([
                   readOnly: true,
                   theme: 'default'
                },
-               component = calendarTestUtils.createComponent(date.Date, extOptions),
+               component = calendarTestUtils.createComponent(date.Input, extOptions),
                TARGET = 'target';
             component._children = {
                opener: {
@@ -62,7 +62,7 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(date.Date, options),
+               component = calendarTestUtils.createComponent(date.Input, options),
                value = new Date(2017, 11, 1);
 
             component._children = {}
@@ -84,7 +84,7 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(date.Date, options),
+               component = calendarTestUtils.createComponent(date.Input, options),
                value = new Date(2017, 11, 1);
 
             component._children = {}
@@ -105,7 +105,7 @@ define([
       describe('_afterUpdate', function() {
          it('should start validation', function () {
             const
-                component = calendarTestUtils.createComponent(date.Date, options),
+                component = calendarTestUtils.createComponent(date.Input, options),
                 value = new Date(2017, 11, 1);
 
             let result = false;
@@ -113,7 +113,7 @@ define([
             component._children.opener = {
                close: sinon.fake()
             };
-            component._children.date = {
+            component._children.input = {
                validate: function() {
                   result = true;
                }
@@ -124,7 +124,7 @@ define([
          });
          it('should not start validation', function () {
             const
-                component = calendarTestUtils.createComponent(date.Date, options);
+                component = calendarTestUtils.createComponent(date.Input, options);
 
             let result = false;
             component._children = {};

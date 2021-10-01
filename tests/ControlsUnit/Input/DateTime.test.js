@@ -22,10 +22,10 @@ define([
          replacer: ' ',
       };
 
-   describe('Controls/_input/DateTime', function() {
+   describe('Controls/_date/BaseInput', function() {
       describe('Initialisation', function() {
          it('should create correct model', function() {
-            const component = calendarTestUtils.createComponent(date.DateBase, options);
+            const component = calendarTestUtils.createComponent(date.BaseInput, options);
             assert(component._model);
             assert.strictEqual(component._model._mask, options.mask);
             assert.strictEqual(component._model.value, options.value);
@@ -45,7 +45,7 @@ define([
                         arguments: {}
                      }
                   ],
-                  component = calendarTestUtils.createComponent(date.DateBase,
+                  component = calendarTestUtils.createComponent(date.BaseInput,
                      cMerge({ valueValidators: validators }, options, { preferSource: true }));
 
                assert.isArray(component._validators);
@@ -53,7 +53,7 @@ define([
             });
 
             it('should validate partial value in partial mode.', function() {
-               const component = calendarTestUtils.createComponent(date.DateBase,
+               const component = calendarTestUtils.createComponent(date.BaseInput,
                      cMerge({ inputMode: 'partial', displayValue: '  .  .21'}, options, { preferSource: true }));
 
                assert.isArray(component._validators);
@@ -62,7 +62,7 @@ define([
 
             it('should update validators if displayValue changed.', function() {
                const newOptions = cMerge({ inputMode: 'partial', displayValue: '  .  .21'}, options, { preferSource: true })
-               const component = calendarTestUtils.createComponent(date.DateBase, newOptions);
+               const component = calendarTestUtils.createComponent(date.BaseInput, newOptions);
 
                assert.isEmpty(component._validators);
 
@@ -78,7 +78,7 @@ define([
 
       describe('_beforeUpdate', function() {
          it('should update the model', function() {
-            const component = calendarTestUtils.createComponent(date.DateBase, options),
+            const component = calendarTestUtils.createComponent(date.BaseInput, options),
                value = new Date(2017, 11, 1);
             sinon.stub(component, 'setValidationResult');
 
@@ -93,7 +93,7 @@ define([
       describe('_inputCompletedHandler', function() {
          it('should update model and generate events', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(date.DateBase, options),
+               component = calendarTestUtils.createComponent(date.BaseInput, options),
                textValue = '01.12.2017',
                value = new Date(2017, 11, 1),
                event = {
@@ -120,7 +120,7 @@ define([
                event = {
                   stopImmediatePropagation: sinon.fake()
                },
-               component = calendarTestUtils.createComponent(date.DateBase, options),
+               component = calendarTestUtils.createComponent(date.BaseInput, options),
                textValue = '01.12.2017',
                value = new Date(2017, 11, 1);
 
@@ -140,7 +140,7 @@ define([
       describe('_beforeUnmount', function() {
          it('should destroy the model', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(date.DateBase, options);
+               component = calendarTestUtils.createComponent(date.BaseInput, options);
 
             sandbox.stub(component._model, 'destroy');
             component._beforeUnmount();
@@ -155,7 +155,7 @@ define([
          it('should set current date on insert key press', function() {
             const sandbox = sinon.sandbox.create(),
                component = calendarTestUtils.createComponent(
-                  date.DateBase, cMerge({ dateConstructor: Date }, options, { preferSource: true })),
+                  date.BaseInput, cMerge({ dateConstructor: Date }, options, { preferSource: true })),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.insert
@@ -175,7 +175,7 @@ define([
          it('should not set date on insert + shift key press', function() {
             const
                component = calendarTestUtils.createComponent(
-                  date.DateBase, cMerge({ dateConstructor: Date }, optionsWithEmptyDate, { preferSource: true })),
+                  date.BaseInput, cMerge({ dateConstructor: Date }, optionsWithEmptyDate, { preferSource: true })),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.insert,
@@ -192,7 +192,7 @@ define([
          it('should not set date on insert + ctrl key press', function() {
             const
                component = calendarTestUtils.createComponent(
-                  date.DateBase, cMerge({ dateConstructor: Date }, optionsWithEmptyDate, { preferSource: true })),
+                  date.BaseInput, cMerge({ dateConstructor: Date }, optionsWithEmptyDate, { preferSource: true })),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.insert,
@@ -208,7 +208,7 @@ define([
 
          it('should increase current date on one day by plus key press', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(date.DateBase, options),
+               component = calendarTestUtils.createComponent(date.BaseInput, options),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.plus
@@ -230,7 +230,7 @@ define([
 
          it('should decrease current date on one day by minus key press', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(date.DateBase, options),
+               component = calendarTestUtils.createComponent(date.BaseInput, options),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.minus
@@ -250,7 +250,7 @@ define([
 
          it('should not change date, if value is empty', function(){
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(date.DateBase, optionsWithEmptyDate);
+               component = calendarTestUtils.createComponent(date.BaseInput, optionsWithEmptyDate);
             [{
                nativeEvent: {
                   keyCode: constants.key.minus
