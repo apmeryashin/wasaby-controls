@@ -43,6 +43,8 @@ class HorizontalMeasurer implements IMeasurer {
              actionTemplateConfig,
              theme
          );
+      } else if (menuButtonVisibility === 'visible') {
+         visibleActions = [HorizontalMeasurer._getMenuItemAction()];
       }
 
       return {
