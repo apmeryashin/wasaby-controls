@@ -1,23 +1,26 @@
 import {QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {NewSourceController} from 'Controls/dataSource';
+import {Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
-import {IHierarchyOptions, ISearchOptions, TKey} from 'Controls/interface';
+import {IHierarchyOptions, ISearchOptions, TKey, ISearchValueOptions} from 'Controls/interface';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import * as getSwitcherStrFromData from 'Controls/_search/Misspell/getSwitcherStrFromData';
+import {factory as chainFactory} from 'Types/chain';
 
 type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
 export interface ISearchControllerOptions extends ISearchOptions,
    IHierarchyOptions,
-   IHierarchySearchOptions {
+   IHierarchySearchOptions,
+   ISearchValueOptions {
    sourceController?: NewSourceController;
-   searchValue?: string;
    root?: TKey;
    viewMode?: TViewMode;
    items?: RecordSet;
    searchStartCallback?: Function;
    deepReload?: boolean;
+   searchFilterCallback?: (searchValue: string, item: Model) => boolean;
 }
 
 const SERVICE_FILTERS = {
@@ -101,7 +104,7 @@ export default class ControllerClass {
       }
 
       if (options.searchValue !== undefined) {
-         this._searchValue = options.searchValue;
+         this._setSearchValue(options.searchValue);
       }
 
       if (options.root !== undefined) {
@@ -128,7 +131,7 @@ export default class ControllerClass {
 
       let resetResult;
 
-      this._searchValue = '';
+      this._setSearchValue('');
       this._misspellValue = '';
       this._viewMode = this._previousViewMode;
       this._previousViewMode = null;
@@ -166,15 +169,17 @@ export default class ControllerClass {
       }
 
       if (this._searchValue !== newSearchValue || !this._searchPromise) {
-         this._searchValue = newSearchValue;
-         if (!this._rootBeforeSearch &&
-             this._root !== this._rootBeforeSearch) {
-            this._rootBeforeSearch = this._root;
+         this._setSearchValue(newSearchValue);
+         this._saveRootBeforeSearch();
+
+         if (this._options.searchFilterCallback) {
+            return Promise.resolve(this._preFilterItemsAndUpdateFilter(value));
+         } else {
+            return this._updateFilterAndLoad(
+                this._getFilter(),
+                this._getRoot()
+            );
          }
-         return this._updateFilterAndLoad(
-             this._getFilter(),
-             this._getRoot()
-         );
       } else if (this._searchPromise) {
          return this._searchPromise;
       }
@@ -344,6 +349,16 @@ export default class ControllerClass {
       return root;
    }
 
+   private _setSearchValue(searchValue: string): void {
+      this._searchValue = searchValue;
+   }
+
+   private _saveRootBeforeSearch(): void {
+      if (!this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
+         this._rootBeforeSearch = this._root;
+      }
+   }
+
    private _getFilterWithSearchValue(): QueryWhereExpression<unknown> {
       const filter = {...this._sourceController.getFilter()};
       const {parentProperty, searchParam, startingWith} = this._options;
@@ -445,6 +460,21 @@ export default class ControllerClass {
 
    private _isSearchMode(): boolean {
       return !!this._sourceController.getFilter()[this._options.searchParam];
+   }
+
+   private _preFilterItemsAndUpdateFilter(searchValue: string): RecordSet {
+      const sourceController = this._sourceController;
+      const items = sourceController.getItems();
+
+      items.assign(this._preFilterItemsBySearchValue(items, searchValue));
+      sourceController.setFilter(this._getFilter());
+      return items;
+   }
+
+   private _preFilterItemsBySearchValue(items: RecordSet, searchValue: string): Model[] {
+      return chainFactory(items)
+          .filter((item) => !!this._options.searchFilterCallback(searchValue, item))
+          .value();
    }
 
    private static _hasHierarchyFilter(filter: QueryWhereExpression<unknown>): boolean {

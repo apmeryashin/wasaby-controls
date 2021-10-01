@@ -20,7 +20,7 @@ import {
     ISearchOptions,
     ISourceOptions,
     TSelectionType,
-    ISelectionObject,
+    ISearchValueOptions,
     TKey,
     ISelectFieldsOptions
 } from 'Controls/interface';
@@ -46,10 +46,9 @@ type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
 export interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
     Required<IFilterOptions>, Required<IHierarchyOptions>, IHierarchySearchOptions,
-    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions {
+    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions, ISearchValueOptions {
     searchNavigationMode?: string;
     groupHistoryId?: string;
-    searchValue?: string;
     filterButtonSource?: IFilterItem[];
     useStore?: boolean;
     dataLoadCallback?: Function;

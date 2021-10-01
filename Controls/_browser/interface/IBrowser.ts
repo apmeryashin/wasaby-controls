@@ -10,6 +10,7 @@
  * @implements Controls/interface:ISelectFields
  * @implements Controls/marker:IMarkerList
  * @implements Controls/scroll:IShadows
+ * @implements Controls/interface:ISearchValue
  * @author Герасимов А.М.
  * @public
  */

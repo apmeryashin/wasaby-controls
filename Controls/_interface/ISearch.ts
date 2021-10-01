@@ -130,3 +130,49 @@ export default interface ISearch {
  * <Controls.suggest:Input minSearchLength="{{2}}" searchParam="city"/>
  * </pre>
  */
+
+/**
+ * @name Controls/_interface/ISearch#searchFilterCallback
+ * @cfg {Function} Функция для фильтрации записей, синхронно вызывается при изменении поискового значения.
+ * В функцию передаётся два аргумента: поисковое значение и запись.
+ * Если функция возвращает true, то запись остаётся в списке.
+ * @demo Controls-demo/Search/Browser/PreFilterSearchCallback/Index
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.browser:Browser searchParam="comment" searchFilterCallback="{{_searchFilterCallback}}">
+ *     <div>
+ *         <Controls.search:InputContainer>
+ *             <Controls.search:Input/>
+ *         </Controls.search:InputContainer>
+ *
+ *         <Controls.list:Container>
+ *             <Controls.list:View/>
+ *         </Controls.list:Container>
+ *     </div>
+ * </Controls.browser:Browser>
+ * </pre>
+ * <pre class="brush: js">
+ *    import {Memory} from 'Types/source';
+ *    this._source = new Memory ({
+ *       data: [
+ *           { id: 1,
+ *             title: 'Discussion',
+ *             comment: 'Create a discussion to find out the views of other group members on this issue' },
+ *           { id: 2,
+ *             title: 'Idea/suggestion',
+ *             comment: 'Offer your idea, which others can not only discuss, but also evaluate.
+ *             The best ideas will not go unnoticed and will be realized' },
+ *           { id: 3,
+ *             title: 'Problem',
+ *             comment: 'Do you have a problem? Tell about it and experts will help to find its solution' }
+ *       ],
+ *       keyProperty: 'id'
+ *    });
+ *    this._searchFilterCallback = (searchValue, item) => {
+ *        return item.get('title').includes(searchValue);
+ *    }
+ * </pre>
+ * @see searchParam
+ * @see searchValue
+ */

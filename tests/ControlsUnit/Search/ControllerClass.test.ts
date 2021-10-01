@@ -1,6 +1,6 @@
 import {ControllerClass} from 'Controls/search';
 import {assert} from 'chai';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController, NewSourceController as SourceController} from 'Controls/dataSource';
 import {Memory, QueryWhereExpression} from 'Types/source';
 import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
@@ -424,6 +424,28 @@ describe('Controls/search:ControllerClass', () => {
 
          assert.ok(!(updateResult instanceof Promise));
       });
+   });
+
+   it('search with searchFilterCallback option', async () => {
+      const filter = {};
+      const source = getMemorySource();
+      const sourceController = new NewSourceController({
+         source
+      });
+      await sourceController.reload();
+      const searchControllerOptions = {
+         searchFilterCallback: (searchValue, item) => {
+            return item.get('title').toLowerCase().includes(searchValue.toLowerCase());
+         },
+         filter,
+         sourceController,
+         source
+      };
+      const searchController = getSearchController(searchControllerOptions);
+      searchController.search('test2');
+
+      assert.ok(sourceController.getItems().getCount() === 1);
+      assert.ok(sourceController.getItems().at(0).get('title') === 'test2');
    });
 
    describe('search', () => {
