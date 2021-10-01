@@ -1,4 +1,15 @@
 import {Model} from 'Types/entity';
+import {TButtonStyle, IViewMode} from 'Controls/buttons';
+import {TIconStyle} from 'Controls/interface';
+
+/**
+ * @typedef {String} TItemActionViewMode
+ * @description
+ * Допустимые значения для опции {@link viewMode}
+ * @variant link В виде гиперссылки с возможностью отображения иконки.
+ * @variant functionalButton В виде кнопки с круглой подложкой. Цвет подложки фиксирован и имеет значение "pale".
+ */
+export type TItemActionViewMode = Extract<IViewMode, 'link' | 'functionalButton'>;
 
 /**
  * @typedef {String} TItemActionShowType
@@ -42,16 +53,6 @@ export enum TActionDisplayMode {
 }
 
 /**
- * @typedef {String} TIconStyle
- * @description Допустимые значения для опции {@link style}.
- * @variant secondary
- * @variant warning
- * @variant danger
- * @variant success
- */
-export type TIconStyle = 'secondary' | 'warning' | 'danger' | 'success';
-
-/**
  * @typedef {String} TActionCaptionPosition
  * @variant right Справа от иконки опции записи.
  * @variant bottom Под иконкой опции записи.
@@ -72,9 +73,8 @@ export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
  * Размер иконок опций записи
  * @variant s Маленькая.
  * @variant m Средняя.
- * @variant l Крупная.
  */
-export type TItemActionsSize = 's' | 'm' | 'l';
+export type TItemActionsSize = 's' | 'm';
 
 /**
  * @typedef {String} TMenuButtonVisibility
@@ -166,17 +166,17 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#style
-     * @cfg {TIconStyle} Стиль контейнера {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
+     * @cfg {TButtonStyle} Стиль контейнера {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      * @remark
-     * Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
+     * Значение свойства преобразуется в CSS-класс вида "controls-Button_linkButton_style-<значение_свойства>".
      * Он будет установлен для html-контейнера самой опции записи,
      * и свойства класса будут применены как к {@link Controls/_itemActions/interface/IItemAction#title тексту}, так и к {@link Controls/_itemActions/interface/IItemAction#icon иконке}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#style
-     * @cfg {TIconStyle} Operation style. (secondary | warning | danger | success).
+     * @cfg {TButtonStyle} Operation style. (secondary | warning | danger | success).
      */
-    style?: TIconStyle;
+    style?: TButtonStyle;
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#iconStyle
@@ -192,6 +192,26 @@ export interface IItemAction {
      * @default secondary
      */
     iconStyle?: TIconStyle;
+
+    /**
+     * @name Controls/_itemActions/interface/IItemAction#iconSize
+     * @cfg {TItemActionsSize} Размер иконки.
+     * @variant s малый
+     * @variant m средний
+     * @default m
+     * @remark
+     * Размер l намеренно не поддерживается. Контейнер ItemActions не может вместить по высоте иконки размера l.
+     */
+    iconSize?: TItemActionsSize;
+
+    /**
+     * @name Controls/_itemActions/interface/IItemAction#viewMode
+     * @cfg {TItemActionViewMode} Режим отображения кнопки операции над записью.
+     * @variant link В виде гиперссылки с возможностью отображения иконки.
+     * @variant functionalButton В виде кнопки с круглой подложкой. Цвет подложки фиксирован и имеет значение "pale".
+     * @default link
+     */
+    viewMode?: TItemActionViewMode;
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#handler

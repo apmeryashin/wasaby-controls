@@ -182,7 +182,6 @@ export type TArrayGroupKey = TGroupKey[];
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
     style?: string;
-    size?: string;
     itemActionsPosition?: string;
     actionAlignment?: string;
     actionCaptionPosition?: 'right'|'bottom'|'none';
