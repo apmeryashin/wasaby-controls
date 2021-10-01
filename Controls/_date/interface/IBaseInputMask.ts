@@ -1,18 +1,18 @@
 import {descriptor} from 'Types/entity';
 
-export interface IDateTimeMaskOptions {
+export interface IBaseInputMaskOptions {
     mask: string;
 }
 
 /**
  * Интерфейс маски ввода даты/времени.
  *
- * @interface Controls/_input/interface/IDateTimeMask
+ * @interface Controls/_date/interface/IBaseInputMask
  * @public
  * @author Красильников А.С.
  */
-export interface IDateTimeMask {
-    readonly '[Controls/_input/interface/IDateTimeMask]': boolean;
+export interface IBaseInputMask {
+    readonly '[Controls/_date/interface/IBaseInputMask]': boolean;
 }
 
 // TODO: Вернуть в документацию, когда появится поддержка миллисекунд
@@ -24,7 +24,7 @@ export interface IDateTimeMask {
 // @variant 'YY-MM-DD HH:mm:ss.UUU'
 
 /**
- * @name Controls/_input/interface/IDateTimeMask#mask
+ * @name Controls/_date/interface/IBaseInputMask#mask
  * @cfg {String} Формат даты.
  * @variant 'DD.MM.YYYY'
  * @variant 'DD.MM.YY'

@@ -5,10 +5,10 @@ export interface ValueValidatorObject {
    arguments: object;
 }
 
-export type ValueValidators = ValueValidatorObject[] | Function[];
+export type TValueValidators = ValueValidatorObject[] | Function[];
 
 export interface IValueValidatorsOptions {
-    valueValidators: ValueValidators;
+    valueValidators: TValueValidators;
     validateByFocusOut: boolean;
 }
 
@@ -29,15 +29,15 @@ export function getOptionTypes() {
 /**
  * Интерфейс для полей ввода с внутренней валидацией. Позволяет заать валидаторы для возвращаемого значения.
  *
- * @interface Controls/_input/interface/IValueValidators
+ * @interface Controls/_date/interface/IValueValidators
  * @public
  */
 export default interface IValueValidators {
-    readonly '[Controls/_input/interface/IValueValidators]': boolean;
+    readonly '[Controls/_date/interface/IValueValidators]': boolean;
 }
 
 /**
- * @name Controls/_input/interface/IValueValidators#valueValidators
+ * @name Controls/_date/interface/IValueValidators#valueValidators
  * @cfg {Array} Массив вылидаторов или объектов содержащих валидаторы и их аргументы.
  *
  * @remark
@@ -73,10 +73,10 @@ export default interface IValueValidators {
  * </Controls.date:BaseInput>
  * </pre>
  *
- * @see Controls/_input/interface/IValueValidators#validateByFocusOut
+ * @see Controls/_date/interface/IValueValidators#validateByFocusOut
  */
 /**
- * @name Controls/_input/interface/IValueValidators#validateByFocusOut
+ * @name Controls/_date/interface/IValueValidators#validateByFocusOut
  * @cfg {Boolean} Если true, то внутренняя валидация будет срабатывать по уходу фокуса из контрола, если false то
  * будет срабатывать только по внешнему триггеру, например при валидации формы.
  * @default true
@@ -85,5 +85,5 @@ export default interface IValueValidators {
  * Включаем срабатывание валидации только по внешнему тригеру. Например при валидации формы.
  * <Controls.date:Input validateByFocusOut="{{false}}"/>
  *
- * @see Controls/_input/interface/IValueValidators#valueValidators
+ * @see Controls/_date/interface/IValueValidators#valueValidators
  */

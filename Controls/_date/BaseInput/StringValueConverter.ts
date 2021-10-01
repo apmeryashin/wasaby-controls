@@ -4,7 +4,7 @@ import {DateTime} from 'Types/entity';
 import {date as DateFormatter} from 'Types/formatter';
 import {Range, Base as dateUtils} from 'Controls/dateUtils';
 import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
-import {INPUT_MODE} from 'Controls/_input/interface/IInputDisplayValue';
+import {INPUT_MODE} from 'Controls/input';
 
 const MASK_MAP: object = {
     YY: 'year',

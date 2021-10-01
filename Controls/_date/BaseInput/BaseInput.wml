@@ -1,6 +1,6 @@
 <ws:partial template="{{_validationContainer}}" on:valueChanged="_valueChangedHandler()" validators="{{_validators}}" name="validator">
     <ws:content>
-        <Controls._input.DateTime.Mask
+        <Controls._date.BaseInput.Mask
                 contrastBackground="{{ _options.contrastBackground }}"
                 horizontalPadding="{{ _options.horizontalPadding }}"
                 rightFieldTemplate="{{ _options.rightFieldTemplate }}"
@@ -28,6 +28,6 @@
                 on:tagClick="_proxyEvent('tagClick')"
                 on:tagHover="_proxyEvent('tagHover')"
                 on:keydown="_onKeyDown()">
-        </Controls._input.DateTime.Mask>
+        </Controls._date.BaseInput.Mask>
     </ws:content>
 </ws:partial>

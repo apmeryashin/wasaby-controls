@@ -1,5 +1,5 @@
-import MaskViewModel from 'Controls/_input/DateTime/MaskViewModel';
-import Mask from 'Controls/_input/Mask';
+import MaskViewModel from 'Controls/_date/BaseInput/MaskViewModel';
+import {Mask} from 'Controls/input';
 
 class Component extends Mask {
     protected _getViewModelConstructor() {

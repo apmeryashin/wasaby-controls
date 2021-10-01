@@ -1,7 +1,7 @@
 import cExtend = require('Core/core-simpleExtend');
 import entity = require('Types/entity');
-import {INPUT_MODE} from 'Controls/_input/interface/IInputDisplayValue';
-import StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
+import {INPUT_MODE} from 'Controls/input';
+import StringValueConverter from 'Controls/_date/BaseInput/StringValueConverter';
 import {Base as dateUtils} from 'Controls/dateUtils';
 
 const ALL_SPACES_REGEXP = /[ ]/g;
@@ -41,7 +41,7 @@ const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
    /**
     * Модель для контрола {@link Controls/input:Date}.
     *
-    * @class Controls/_input/DateTime/Model
+    * @class Controls/_date/BaseInput/Model
     *
     * @author Красильников А.С.
     * @public
@@ -50,7 +50,7 @@ const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
    /*
     * Model for 'Controls/input:Date' control.
     *
-    * @class Controls/_input/DateTime/Model
+    * @class Controls/_date/BaseInput/Model
     *
     * @author Красильников А.С.
     * @public
