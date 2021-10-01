@@ -229,7 +229,10 @@ define([
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;&#'];
             equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;&amp;#</p></div>');
 
-            // следующая часть теста некорректна под React. Поэтому не выполняем его под React.
+            // Следующая часть теста бессмысленна под React.
+            // Потому что сам React ничего не экранированного не вставляет на страницу.
+            // Поэтому тесты для экранирования тут не требуются.
+            // Так же нет инферновских структур, которые и тестируются в этих тестах.
             if (UIBase.Control.UNSAFE_isReact !== true) {
                var vdomTemplate = template({ _options: { 'value': json } }, {}, undefined, true);
                assert.equal(vdomTemplate[0].children[0].children[0].children, '&gt;&lt;><&#39;&#');
