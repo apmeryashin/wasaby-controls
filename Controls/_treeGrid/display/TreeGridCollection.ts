@@ -7,14 +7,14 @@ import {
     GridLadderUtil,
     CollectionItem,
     ItemsFactory,
-    itemsStrategy,
     IItemActionsTemplateConfig,
     IHasMoreData,
     ISessionItems
 } from 'Controls/display';
 import {
     GridGroupRow,
-    GridMixin
+    GridMixin,
+    IGridAbstractColumn
 } from 'Controls/grid';
 import TreeGridFooterRow from './TreeGridFooterRow';
 import {default as TreeGridGroupDataRow, IOptions as ITreeGridGroupDataRowOptions} from './TreeGridGroupDataRow';
@@ -22,6 +22,10 @@ import {Model as EntityModel, Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 import {TGroupNodeVisibility} from '../interface/ITreeGrid';
 import {ITreeGridOptions} from '../TreeGridView';
+import NodeFooterStrategy from './itemsStrategy/NodeFooter';
+import NodeFooter from "Controls/_display/itemsStrategy/NodeFooter";
+
+export interface INodeFooterColumn extends IGridAbstractColumn {}
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -54,16 +58,25 @@ export default class TreeGridCollection<
 
     protected _$nodeTypeProperty: string;
     protected _$groupNodeVisibility: TGroupNodeVisibility;
+    protected _$nodeFooterColumns: INodeFooterColumn[];
 
     constructor(options: ITreeGridOptions) {
         super(options);
         GridMixin.call(this, options);
 
         this._setupProjectionFilters();
+    }
 
-        this.appendStrategy(itemsStrategy.NodeFooter, {
-            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback
-        });
+    protected getNodeFooterStrategyCtor(): NodeFooterStrategy {
+        return NodeFooterStrategy;
+    }
+
+    protected getNodeFooterStrategy(): NodeFooter {
+        return this.getStrategyInstance(NodeFooterStrategy);
+    }
+
+    getNodeFooterColumns(): INodeFooterColumn[] {
+        return this._$nodeFooterColumns;
     }
 
     protected _setupProjectionFilters(): void {
@@ -165,6 +178,10 @@ export default class TreeGridCollection<
         if (this.getFooter()) {
             this.getFooter().setHasMoreData(hasMoreData);
         }
+    }
+
+    setHasMoreStorage(storage: Record<string, boolean>, reBuildNodeFooters: boolean = false): void {
+        super.setHasMoreStorage(storage, reBuildNodeFooters || !!this._$nodeFooterTemplate || !!this._$nodeFooterColumns);
     }
 
     protected _reBuild(reset?: boolean): void {
@@ -315,6 +332,16 @@ export default class TreeGridCollection<
             return superFactory.call(this, factoryOptions);
         };
 
+        const NodeFooterFactory = (factoryOptions?: ITreeGridGroupDataRowOptions<S>): ItemsFactory<T> => {
+            factoryOptions.columnsConfig = this._$nodeFooterColumns;
+            factoryOptions.rowTemplate = this._$nodeFooterTemplate;
+            return superFactory.call(this, factoryOptions);
+        };
+
+        if (options.itemModule === 'Controls/treeGrid:TreeGridNodeFooterRow') {
+            return NodeFooterFactory.call(this, options);
+        }
+
         if (this._$nodeTypeProperty &&
             options.contents && typeof options.contents !== 'string' && !Array.isArray(options.contents) &&
             options.contents.get(this._$nodeTypeProperty) === 'group') {
@@ -379,5 +406,6 @@ Object.assign(TreeGridCollection.prototype, {
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
     _itemModule: 'Controls/treeGrid:TreeGridDataRow',
     _$groupNodeVisibility: 'visible',
-    _$nodeTypeProperty: null
+    _$nodeTypeProperty: null,
+    _$nodeFooterColumns: null
 });

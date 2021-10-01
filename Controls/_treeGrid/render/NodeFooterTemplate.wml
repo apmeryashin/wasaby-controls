@@ -1,0 +1,22 @@
+<div class="{{ (gridColumn || itemData).getContentClasses() }}">
+    <ws:if data="{{ item.shouldDisplayVisibleFooter(!!content || !!contentTemplate) }}">
+        <ws:partial if="{{ beforeContentTemplate }}" template="{{ beforeContentTemplate }}"/>
+
+        <ws:if data="{{ gridColumn.shouldRenderHasMoreButton() }}">
+            <ws:partial template="Controls/list:NavigationButtonTemplate"
+                        buttonView="{{navigationButtonView}}"
+                        buttonConfig="{{navigationButtonConfig}}"
+                        linkFontColorStyle="{{ item.getMoreFontColorStyle() }}"
+                        linkFontSize="xs"
+                        linkClass="controls-TreeGrid__nodeFooterLoadMore"/>
+        </ws:if>
+        <ws:else data="{{ !gridColumn.isHasMoreButtonFooter() }}">
+            <ws:if data="{{ !!content || !!contentTemplate }}">
+                <!-- Прикладной контент -->
+                <ws:partial
+                        template="{{ content || contentTemplate }}"/>
+            </ws:if>
+        </ws:else>
+    </ws:if>
+</div>
+

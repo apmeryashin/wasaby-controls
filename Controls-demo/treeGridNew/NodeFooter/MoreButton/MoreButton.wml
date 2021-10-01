@@ -7,12 +7,21 @@
             parentProperty="parent"
             nodeProperty="type"
             navigation="{{_navigation}}">
-        <ws:nodeFooterTemplate>
-            <ws:partial template="Controls/treeGrid:NodeFooterTemplate"
-                        colspan="{{ false }}"
-                        navigationButtonView="separator">
-                <ws:navigationButtonConfig size="s"/>
-            </ws:partial>
-        </ws:nodeFooterTemplate>
+        <ws:nodeFooterColumns>
+            <ws:Array>
+                <ws:Object>
+                    <ws:template>
+                        <ws:partial template="Controls/treeGrid:NodeFooterTemplate"
+                                    navigationButtonView="separator">
+                            <ws:navigationButtonConfig size="s"/>
+                        </ws:partial>
+                    </ws:template>
+                </ws:Object>
+                <ws:Object>
+                </ws:Object>
+                <ws:Object>
+                </ws:Object>
+            </ws:Array>
+        </ws:nodeFooterColumns>
     </Controls.treeGrid:View>
 </div>

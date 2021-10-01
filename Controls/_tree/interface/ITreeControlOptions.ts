@@ -55,6 +55,20 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  */
 
 /**
+ * @typedef {Object} Controls/_tree/interface/ITreeControl/INodeFooterColumn
+ * @property {TemplateFunction|String} template Шаблон колонки.
+ * @property {Number} startColumn Начальный индекс колонки.
+ * @property {Number} endColumn Конечный индекс колонки.
+ */
+
+/*
+ * @typedef {Object} Controls/_tree/interface/ITreeControl/INodeFooterColumn
+ * @property {TemplateFunction|String} template Column template.
+ * @property {Number} startColumn Start index of column.
+ * @property {Number} endColumn End index of column.
+ */
+
+/**
  * @name Controls/_tree/interface/ITreeControl#expandByItemClick
  * @cfg {Boolean} Развертывание узлов кликом по элементу в {@link Controls/treeGrid:View дереве с колонками}.
  * @default false
@@ -142,6 +156,18 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * @name Controls/_tree/interface/ITreeControl#nodeFooterTemplate
  * @cfg {Function} Sets footer template that will be shown for every node.
  * @demo Controls-demo/treeGridNew/NodeFooter/NodeFooterTemplate/Index
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#nodeFooterColumns
+ * @cfg {Array.<INodeFooterColumn>} Конфигурация колонок подвалов узлов в {@link Controls/treeGrid:View дереве с колонками}.
+ * @default undefined
+ * @see nodeFooterTemplate
+ */
+
+/*
+ * @name Controls/_tree/interface/ITreeControl#nodeFooterColumns
+ * @cfg {Array.<INodeFooterColumn>} Node footer columns configuration in tree with columns
  */
 
 /**
@@ -408,7 +434,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * Контрол получит данные из источника и выведет их.
  *
  * <pre class="brush: html">
- * <!-- WML --> 
+ * <!-- WML -->
  * <Controls.tree:View
       source="{{_viewSource}}"
       parentProperty="parent"
@@ -433,17 +459,17 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  *                 hasChild: true
  *             },
  *             {
- *                 key: 11, 
- *                 title: 'Smartphones1', 
- *                 parent: 1, 
- *                 type: true, 
-                   rating: '9.2',hasChild: true 
+ *                 key: 11,
+ *                 title: 'Smartphones1',
+ *                 parent: 1,
+ *                 type: true,
+                   rating: '9.2',hasChild: true
  *             },
  *         ]
  *     });
  * }
  * </pre>
- * @see 
+ * @see
  * @see Types/source:ICrud
  */
 

@@ -26,6 +26,7 @@ import EmptyRow from '../EmptyRow';
 import {EnumeratorCallback, RecordSet} from 'Types/collection';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {create} from 'Types/di';
+import {IGridAbstractColumn} from './../interface/IGridAbstractColumn';
 
 type THeaderVisibility = 'visible' | 'hasdata';
 type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
@@ -41,11 +42,7 @@ export type TColspanCallback
 
 export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => TColspanCallbackResult;
 
-export interface IEmptyTemplateColumn {
-    template: TemplateFunction;
-    startColumn?: number;
-    endColumn?: number;
-}
+export interface IEmptyTemplateColumn extends IGridAbstractColumn {}
 
 export interface IOptions extends ICollectionOptions {
     columns: TColumns;
