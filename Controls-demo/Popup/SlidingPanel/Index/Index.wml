@@ -1,53 +1,59 @@
-<div class="ControlDemo__SlidingPanel">
-   <Controls.toggle:DoubleSwitch
-           attr:class="engine-demo-View__button"
-           on:valueChanged="_isMobileChanged()"
-           value="{{ _isMobile }}"
-           captions="{{ ['Мобильный', 'Десктоп'] }}"/>
-   <div class="ControlDemo__SlidingPanel-setting">
-      <Controls.input:Label caption="minHeight"/>
-      <Controls.input:Number bind:value="_minHeight"/>
-   </div>
-   <div class="ControlDemo__SlidingPanel-setting">
-      <Controls.input:Label caption="maxHeight"/>
-      <Controls.input:Number bind:value="_maxHeight"/>
-   </div>
-   <div class="ControlDemo__SlidingPanel-setting">
-      <Controls.input:Label caption="modal"/>
-      <Controls.toggle:Switch bind:value="_modal"/>
-   </div>
-   <div class="ControlDemo__SlidingPanel-setting">
-      <Controls.input:Label caption="position"/>
-      <Controls.dropdown:Selector
-         keyProperty="id"
-         displayProperty="id"
-         source="{{_positionSource}}"
-         bind:selectedKeys="_position"/>
-   </div>
-   <div class="ControlDemo__SlidingPanel-setting">
-      <Controls.input:Label caption="desktopMode"/>
-      <Controls.dropdown:Selector
-         keyProperty="id"
-         displayProperty="id"
-         on:selectedKeysChanged="_selectedModeChanged()"
-         source="{{_desktopModeSource}}"
-         bind:selectedKeys="_desktopMode"/>
-   </div>
-   <div class="ControlDemo__SlidingPanel-setting">
-      <Controls.input:Label caption="desktop popup width"/>
-      <Controls.input:Number bind:value="_desktopWidth"/>
-   </div>
-   <div class="ControlDemo__SlidingPanel-setting">
-      <Controls.input:Label caption="heightList"/>
-      <div class="ws-flexbox ws-flex-column">
-         <ws:for data="index in _stepsCount">
-            <Controls.input:Number
-                    attr:class="ControlDemo__SlidingPanel-setting"
-                    on:valueChanged="_heightListInputValueChanged(index)"
-                    value="{{ _heightList[index] }}"/>
-         </ws:for>
+<Controls.Application isAdaptive="{{ true }}">
+   <div class="ControlDemo__SlidingPanel">
+      <Controls.toggle:DoubleSwitch
+              attr:class="engine-demo-View__button"
+              on:valueChanged="_isMobileChanged()"
+              value="{{ _isMobile }}"
+              captions="{{ ['Мобильный', 'Десктоп'] }}"/>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="minHeight"/>
+         <Controls.input:Number bind:value="_minHeight"/>
       </div>
-      <Controls.buttons:Button caption="Добавить шаг" on:click="_addHeightListStep()"/>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="maxHeight"/>
+         <Controls.input:Number bind:value="_maxHeight"/>
+      </div>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="modal"/>
+         <Controls.toggle:Switch bind:value="_modal"/>
+      </div>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="position"/>
+         <Controls.dropdown:Selector
+            keyProperty="id"
+            displayProperty="id"
+            source="{{_positionSource}}"
+            bind:selectedKeys="_position"/>
+      </div>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="desktopMode"/>
+         <Controls.dropdown:Selector
+            keyProperty="id"
+            displayProperty="id"
+            on:selectedKeysChanged="_selectedModeChanged()"
+            source="{{_desktopModeSource}}"
+            bind:selectedKeys="_desktopMode"/>
+      </div>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="desktop popup width"/>
+         <Controls.input:Number bind:value="_desktopWidth"/>
+      </div>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="autoHeight"/>
+         <Controls.toggle:Switch bind:value="_autoHeight"/>
+      </div>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="heightList"/>
+         <div class="ws-flexbox ws-flex-column">
+            <ws:for data="index in _stepsCount">
+               <Controls.input:Number
+                       attr:class="ControlDemo__SlidingPanel-setting"
+                       on:valueChanged="_heightListInputValueChanged(index)"
+                       value="{{ _heightList[index] }}"/>
+            </ws:for>
+         </div>
+         <Controls.buttons:Button caption="Добавить шаг" on:click="_addHeightListStep()"/>
+      </div>
+      <Controls.buttons:Button caption="Открыть шторку" on:click="_openSlidingPanelHandler()"/>
    </div>
-   <Controls.buttons:Button caption="Открыть шторку" on:click="_openSlidingPanelHandler()"/>
-</div>
+</Controls.Application>
