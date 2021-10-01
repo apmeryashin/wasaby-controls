@@ -1,9 +1,9 @@
-export interface IInputDateTimeOptions {
+export interface IBaseInputOptions {
     value: Date;
 }
 
 /**
- * @name Controls/_input/interface/IInputDateTime#value
+ * @name Controls/_date/interface/IBaseInput#value
  * @cfg {Date} Дата, которую пользователь ввел в поле ввода.
  * @default null
  * @remark Если вы не обновите параметр "value", то не сможете ничего ввести в поле.
@@ -13,7 +13,7 @@ export interface IInputDateTimeOptions {
  * В этом примере вы осуществляете привязку _inputValue в состоянии контрола к значению поля ввода.
  * В любое время жизненного цикла контрола, _inputValue будет содержать текущее значение поля ввода.
  * <pre>
- *    <Controls._input.DateTime bind:value="_inputValue" />
+ *    <Controls.date:BaseInput bind:value="_inputValue" />
  *    <Controls.Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
@@ -31,7 +31,7 @@ export interface IInputDateTimeOptions {
 
 /**
  * @event Происходит при изменении значения поля ввода.
- * @name Controls/_input/interface/IInputDateTime#valueChanged
+ * @name Controls/_date/interface/IBaseInput#valueChanged
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля ввода.
  * @param {String} displayValue Текстовое значение поля ввода.
@@ -45,8 +45,8 @@ export interface IInputDateTimeOptions {
  * Оба поля в этом примере будут иметь одинаковое поведение.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.date:InputTime value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()"/>
- * <Controls.date:InputTime bind:value="_anotherFieldValue"/>
+ * <Controls.date:Input value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()"/>
+ * <Controls.date:Input bind:value="_anotherFieldValue"/>
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
@@ -63,7 +63,7 @@ export interface IInputDateTimeOptions {
 
 /**
  * @event Происходит при завершении ввода в поле (поле потеряло фокус или пользователь нажал клавишу "enter").
- * @name Controls/_input/interface/IInputDateTime#inputCompleted
+ * @name Controls/_date/interface/IBaseInput#inputCompleted
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Значение поля.
  * @param {String} displayValue Текстовое значение поля.
@@ -92,6 +92,6 @@ export interface IInputDateTimeOptions {
  * @public
  * @author Красильников А.С.
  */
-export interface IInputDateTime {
-    readonly '[Controls/_input/interface/IInputDateTime]': boolean;
+export interface IBaseInput {
+    readonly '[Controls/_date/interface/IBaseInput]': boolean;
 }

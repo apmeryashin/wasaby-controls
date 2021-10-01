@@ -1,14 +1,15 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as coreMerge from 'Core/core-merge';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
-import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
+import StringValueConverter from 'Controls/_date/BaseInput/StringValueConverter';
+import IBaseInputMask from 'Controls/_date/interface/IBaseInputMask';
 import {EventUtils} from 'UI/Events';
 import {Popup as PopupUtil} from 'Controls/dateUtils';
 import 'css!Controls/input';
 import 'css!Controls/CommonClasses';
+import 'css!Controls/date';
 
-import template = require('wml!Controls/_input/Date/Picker/Picker');
+import template = require('wml!Controls/_date/Input/Input');
 
 /**
  * Поле ввода даты. Поддерживает как ввод с клавиатуры, так и выбор даты из всплывающего календаря с помощью мыши. Не поддерживает ввод времени.
@@ -17,9 +18,9 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления input}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_datePicker.less переменные тем оформления dateRange}
  *
- * @class Controls/_input/Date/Picker
+ * @class Controls/_date/Input
  * @extends UI/Base:Control
- * @mixes Controls/input:IInputDateTime
+ * @mixes Controls/_date/interface/IBaseInput
  * @implements Controls/interface:IDateMask
  * @implements Controls/interface:IInputTag
  * @mixes Controls/input:IBorderVisibility
@@ -37,7 +38,7 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * @author Красильников А.С.
  */
 
-class Picker extends Control<IControlOptions> {
+class Input extends Control<IControlOptions> {
     _template: TemplateFunction = template;
     _proxyEvent: Function = EventUtils.tmplNotify;
     _shouldValidate: boolean = false;
@@ -120,24 +121,24 @@ class Picker extends Control<IControlOptions> {
 
     static getDefaultOptions(): object {
         return {
-            ...IDateTimeMask.getDefaultOptions(),
+            ...IBaseInputMask.getDefaultOptions(),
             valueValidators: [],
             datePopupType: 'datePicker'
         };
     }
 
     static getOptionTypes(): object {
-        return coreMerge({}, IDateTimeMask.getOptionTypes());
+        return coreMerge({}, IBaseInputMask.getOptionTypes());
     }
 }
 
-Object.defineProperty(Picker, 'defaultProps', {
+Object.defineProperty(Input, 'defaultProps', {
    enumerable: true,
    configurable: true,
 
    get(): object {
-      return Picker.getDefaultOptions();
+      return Input.getDefaultOptions();
    }
 });
 
-export default Picker;
+export default Input;

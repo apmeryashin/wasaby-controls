@@ -2,33 +2,32 @@
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Date as WSDate, DateTime as WSDateTime, Time as WSTime} from 'Types/entity';
-import * as Model from 'Controls/_input/DateTime/Model';
+import * as Model from 'Controls/_date/BaseInput/Model';
 import {
     DATE_MASK_TYPE,
     DATE_TIME_MASK_TYPE,
     getMaskType,
     TIME_MASK_TYPE
-} from './DateTime/Utils';
-import {IBaseOptions} from 'Controls/_input/interface/IBase';
-import {IInputDisplayValueOptions, INPUT_MODE} from 'Controls/_input/interface/IInputDisplayValue';
-import IDateTimeMask, {IDateTimeMaskOptions} from 'Controls/_input/interface/IDateTimeMask';
-import {IInputDateTimeOptions} from 'Controls/_input/interface/IInputDateTime';
+} from './BaseInput/Utils';
+import {IBaseOptions} from 'Controls/input';
+import {IInputDisplayValueOptions, INPUT_MODE} from 'Controls/input';
+import IBaseInputMask, {IBaseInputMaskOptions} from 'Controls/_date/interface/IBaseInputMask';
+import {IBaseInputOptions} from 'Controls/_date/interface/BaseInput';
 import {
-    ValueValidators,
+    TValueValidators,
     getDefaultOptions as getValueValidatorsDefaultOptions,
     getOptionTypes as getValueValidatorsOptionTypes,
     IValueValidatorsOptions
-} from 'Controls/_input/interface/IValueValidators';
+} from 'Controls/_date/interface/IValueValidators';
 import {EventUtils} from 'UI/Events';
 import {isValidDate, Container, InputContainer} from 'Controls/validate';
-import template = require('wml!Controls/_input/DateTime/DateTime');
-
+import template = require('wml!Controls/_date/BaseInput/BaseInput');
 
 export interface IDateBaseOptions extends
     IBaseOptions,
     IControlOptions,
-    IInputDateTimeOptions,
-    IDateTimeMaskOptions,
+    IBaseInputOptions,
+    IBaseInputMaskOptions,
     IValueValidatorsOptions,
     IInputDisplayValueOptions {
 
@@ -51,11 +50,11 @@ const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/input/date/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
- * @class Controls/_input/DateTime
+ * @class Controls/_date/BaseInput
  * @extends UI/Base:Control
- * @mixes Controls/input:IInputDateTime
+ * @mixes Controls/_date/interface/IBaseInput
  *
- * @mixes Controls/input:IDateTimeMask
+ * @mixes Controls/_date/interface/IBaseInputMask
  * @implements Controls/interface:IInputTag
  * @mixes Controls/input:IBase
  * @mixes Controls/input:IBorderVisibility
@@ -69,7 +68,7 @@ const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
  * @author Красильников А.С.
  */
 
-class DateTime extends Control<IDateBaseOptions> {
+class BaseInput extends Control<IDateBaseOptions> {
     protected _template: TemplateFunction = template;
     protected _validationContainer: InputContainer | Container;
     protected _proxyEvent: Function = EventUtils.tmplNotify;
@@ -188,9 +187,9 @@ class DateTime extends Control<IDateBaseOptions> {
         return dateConstructorMap[getMaskType(mask)];
     }
 
-    private _updateValidators(validators?: ValueValidators, inputMode?: string, mask?: string): void {
+    private _updateValidators(validators?: TValueValidators, inputMode?: string, mask?: string): void {
         const iMode = inputMode || this._options.inputMode;
-        const v: ValueValidators = validators || this._options.valueValidators;
+        const v: TValueValidators = validators || this._options.valueValidators;
         this._validators = [];
 
         const needValidateForPartialMode =
@@ -226,7 +225,7 @@ class DateTime extends Control<IDateBaseOptions> {
 
     static getDefaultOptions(): object {
         return {
-            ...IDateTimeMask.getDefaultOptions(),
+            ...IBaseInputMask.getDefaultOptions(),
             ...getValueValidatorsDefaultOptions(),
             autocompleteType: 'default',
             inputMode: INPUT_MODE.default
@@ -235,19 +234,19 @@ class DateTime extends Control<IDateBaseOptions> {
 
     static getOptionTypes(): object {
         return {
-            ...IDateTimeMask.getOptionTypes(),
+            ...IBaseInputMask.getOptionTypes(),
             ...getValueValidatorsOptionTypes()
         };
     }
 }
 
-Object.defineProperty(DateTime, 'defaultProps', {
+Object.defineProperty(BaseInput, 'defaultProps', {
    enumerable: true,
    configurable: true,
 
    get(): object {
-      return DateTime.getDefaultOptions();
+      return BaseInput.getDefaultOptions();
    }
 });
 
-export default DateTime;
+export default BaseInput;

@@ -1,5 +1,5 @@
 <div attr:class="controls-Input-DatePicker">
-   <Controls._input.DateTime
+   <Controls._date.BaseInput
       name="input"
       value="{{_options.value}}"
       displayValue="{{_options.displayValue}}"
@@ -29,7 +29,7 @@
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')">
-   </Controls._input.DateTime>
+   </Controls._date.BaseInput>
    <span class="controls-Input-DatePicker__buttonWrapper" attr:tabindex="-1">
       <span class="ws-flexbox ws-align-items-center controls-Input-DatePicker__buttonBaseLine" on:click="openPopup()">
             <svg class="controls-Input-DatePicker__button

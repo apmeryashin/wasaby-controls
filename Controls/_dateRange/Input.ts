@@ -5,7 +5,8 @@ import {IDateRangeOptions} from './interfaces/IDateRange';
 import {EventUtils} from 'UI/Events';
 import DateRangeModel from './DateRangeModel';
 import {Range, Popup as PopupUtil} from 'Controls/dateUtils';
-import {StringValueConverter, IDateTimeMask, ISelection} from 'Controls/input';
+import {IBaseInputMask, StringValueConverter} from 'Controls/date';
+import {ISelection} from 'Controls/input';
 import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
 import getPopupName from 'Controls/_dateRange/Utils/getPopupName';
 import template = require('wml!Controls/_dateRange/Input/Input');
@@ -289,7 +290,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
 
     static getDefaultOptions(): Partial<IDateRangeInputOptions> {
         return {
-            ...IDateTimeMask.getDefaultOptions(),
+            ...IBaseInputMask.getDefaultOptions(),
             startValueValidators: [],
             endValueValidators: [],
             validateByFocusOut: true,
@@ -302,7 +303,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
 
     static getOptionTypes(): Partial<Record<keyof IDateRangeInputOptions, Function>> {
         return {
-            ...IDateTimeMask.getOptionTypes()
+            ...IBaseInputMask.getOptionTypes()
         };
     }
 }

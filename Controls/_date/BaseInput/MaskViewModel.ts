@@ -1,6 +1,6 @@
-import StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
+import StringValueConverter from 'Controls/_date/BaseInput/StringValueConverter';
 import {Base as dateUtils} from 'Controls/dateUtils';
-import ViewModel = require('Controls/_input/Mask/ViewModel');
+import {MaskViewModel} from 'Controls/input';
 
 // new Date, без указания года, использует по умолчанию 1900 год. В некоторых контроллах ввода даты
 // можно задать только день и месяц. В некоторых случаях может быть необходимо выбрать 29 февраля.
@@ -9,7 +9,7 @@ import ViewModel = require('Controls/_input/Mask/ViewModel');
 const DEFAULT_YEAR_NUM = 1904;
 const DEFAULT_YEAR_STR = '1904';
 
-class ModuleClass extends ViewModel {
+class ModuleClass extends MaskViewModel {
     protected handleInput(splitValue, inputType) {
         let _stringValueConverter = new StringValueConverter({replacer: this.options.replacer}),
             date,

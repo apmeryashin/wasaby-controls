@@ -1,10 +1,10 @@
 define([
    'Core/core-merge',
-   'Controls/input',
+   'Controls/date',
    'ControlsUnit/Calendar/Utils'
 ], function(
    cMerge,
-   input,
+   date,
    calendarTestUtils
 ) {
    'use strict';
@@ -15,11 +15,11 @@ define([
       replacer: ' '
    };
 
-   describe('Controls/_input/Date/Picker', function() {
+   describe('Controls/_date/Input', function() {
 
       describe('openPopup', function() {
          it('should open opener with default options', function() {
-            const component = calendarTestUtils.createComponent(input.Date, options);
+            const component = calendarTestUtils.createComponent(date.Date, options);
             component._children = {
                opener: {
                   open: sinon.fake()
@@ -37,7 +37,7 @@ define([
                   readOnly: true,
                   theme: 'default'
                },
-               component = calendarTestUtils.createComponent(input.Date, extOptions),
+               component = calendarTestUtils.createComponent(date.Date, extOptions),
                TARGET = 'target';
             component._children = {
                opener: {
@@ -62,7 +62,7 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(input.Date, options),
+               component = calendarTestUtils.createComponent(date.Date, options),
                value = new Date(2017, 11, 1);
 
             component._children = {}
@@ -84,7 +84,7 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(input.Date, options),
+               component = calendarTestUtils.createComponent(date.Date, options),
                value = new Date(2017, 11, 1);
 
             component._children = {}
@@ -105,7 +105,7 @@ define([
       describe('_afterUpdate', function() {
          it('should start validation', function () {
             const
-                component = calendarTestUtils.createComponent(input.Date, options),
+                component = calendarTestUtils.createComponent(date.Date, options),
                 value = new Date(2017, 11, 1);
 
             let result = false;
@@ -113,7 +113,7 @@ define([
             component._children.opener = {
                close: sinon.fake()
             };
-            component._children.input = {
+            component._children.date = {
                validate: function() {
                   result = true;
                }
@@ -124,7 +124,7 @@ define([
          });
          it('should not start validation', function () {
             const
-                component = calendarTestUtils.createComponent(input.Date, options);
+                component = calendarTestUtils.createComponent(date.Date, options);
 
             let result = false;
             component._children = {};
