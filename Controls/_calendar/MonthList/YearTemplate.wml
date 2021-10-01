@@ -1,11 +1,10 @@
-<div class="controls-MonthList__year controls_calendar_theme-{{_options.theme}}">
+<div class="controls-MonthList__year controls_calendar_theme-{{theme}}">
    <div class="controls-MonthList__year-header">
       <ws:if data="{{headerTemplate}}">
          <ws:partial
             template="{{headerTemplate}}"
             date="{{date}}"
             extData="{{extData}}"
-            _options="{{_options}}"
          />
       </ws:if>
    </div>
@@ -16,18 +15,16 @@
             template="{{bodyTemplate}}"
             date="{{date}}"
             extData="{{extData}}"
-            _options="{{_options}}"
             _dateToDataString="{{_dateToDataString}}"
          />
       </ws:if>
       <ws:else>
          <ws:for data="month in 12">
             <ws:partial
-               template="{{_options.monthTemplate}}"
+               template="{{monthTemplate}}"
                date="{{_getMonth(date.getFullYear(), month)}}"
                extData="{{extData[month]}}"
                _formatMonth="{{_formatMonth}}"
-               _options="{{_options}}"
                dayTemplate="{{dayTemplate}}"
                dayHeaderTemplate="{{ dayHeaderTemplate }}"
                monthCaptionTemplate="{{monthCaptionTemplate}}"
