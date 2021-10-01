@@ -43,7 +43,7 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
          assert.isTrue(searchSuggest._markedKeyChanged);
       });
 
-      it('_searchClick', function() {
+      it('searchClick', function() {
          var searchSuggest = new suggest.SearchInput();
          searchSuggest._suggestState = true;
 
@@ -70,7 +70,7 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
          };
 
          searchSuggest._suggestMarkedKeyChanged(null, 'test');
-         searchSuggest._searchClick(null,{
+         searchSuggest.searchClick(null,{
             which: Env.constants.key.enter
          });
          assert.isFalse(searchClickNotifyed);
@@ -80,7 +80,7 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
          searchSuggest.saveOptions({
             value: 'testValue'
          });
-         searchSuggest._searchClick(null, {
+         searchSuggest.searchClick(null, {
             which: 'any'
          });
          assert.isTrue(searchClickNotifyed);
@@ -90,7 +90,7 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
 
          searchSuggest._suggestState = true;
          searchClickResult = false;
-         searchSuggest._searchClick();
+         searchSuggest.searchClick();
          assert.isTrue(searchSuggest._suggestState);
       });
 
