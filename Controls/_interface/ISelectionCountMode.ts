@@ -23,6 +23,7 @@ export interface ISelectionCountModeOptions {
  * @name Controls/_interface/ISelectionCountModeOptions#selectionCountMode
  * @cfg {SelectionCountMode} Тип подсчитываемых записей.
  * @default all
+ * @demo Controls-demo/treeGridNew/MultiSelect/SelectionCountMode/Index
  * @example
  * В этом примере для подсчета будут доступны только узлы.
  * <pre class="brush: html">
