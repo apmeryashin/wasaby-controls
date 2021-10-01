@@ -12,6 +12,7 @@ interface IRatingViewModelOptions {
     precision: number;
     iconStyle: string;
     emptyIconStyle: string;
+    emptyIconFill: string;
 }
 
 class RatingViewModel {
@@ -20,12 +21,14 @@ class RatingViewModel {
     private _items: IRatingItem[] | null = null;
     private _iconStyle: string;
     private _emptyIconStyle: string;
+    private _emptyIconFill: string;
     private _precision: number;
 
     constructor(options: IRatingViewModelOptions) {
         this._value = RatingViewModel._calcValue(options.value, options.precision);
         this._iconStyle = options.iconStyle;
         this._emptyIconStyle = options.emptyIconStyle;
+        this._emptyIconFill = options.emptyIconFill;
         this._precision = options.precision;
     }
 
@@ -39,12 +42,17 @@ class RatingViewModel {
 
     getItems(): IRatingItem[] {
         if (!this._items) {
-            this._items = RatingViewModel._generateItems(this._value, this._iconStyle, this._emptyIconStyle);
+            this._items = RatingViewModel._generateItems(
+                this._value,
+                this._iconStyle,
+                this._emptyIconStyle,
+                this._emptyIconFill
+            );
         }
         return this._items;
     }
 
-    setOptions({value, precision, emptyIconStyle, iconStyle}: IRatingViewModelOptions): void {
+    setOptions({value, precision, emptyIconStyle, iconStyle, emptyIconFill}: IRatingViewModelOptions): void {
         if (precision !== this._precision) {
             this._precision = precision;
             this._items = null;
@@ -57,6 +65,11 @@ class RatingViewModel {
 
         if (emptyIconStyle !== this._emptyIconStyle) {
             this._emptyIconStyle = emptyIconStyle;
+            this._items = null;
+        }
+
+        if (emptyIconFill !== this._emptyIconFill) {
+            this._emptyIconFill = emptyIconFill;
             this._items = null;
         }
 
@@ -88,7 +101,8 @@ class RatingViewModel {
         return calcValue;
     }
 
-    private static _generateItems(value: number, iconStyle: string, emptyIconStyle: string): IRatingItem[] {
+    private static _generateItems(value: number, iconStyle: string,
+                                  emptyIconStyle: string, emptyIconFill: string): IRatingItem[] {
         const items: IRatingItem[] = [];
 
         const floor = Math.floor(value);
@@ -119,7 +133,7 @@ class RatingViewModel {
                 items.push({
                     index: i,
                     type: 'empty',
-                    icon: 'icon-Unfavorite',
+                    icon: emptyIconFill === 'full' ? 'icon-Favorite' : 'icon-Unfavorite',
                     iconStyle: emptyIconStyle
                 });
             }
