@@ -3870,7 +3870,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 if (!this._listViewModel || !this._listViewModel.getCount()) {
+                    if (this._listViewModel && !this._listViewModel.destroyed) {
+                        this._listViewModel.destroy();
+                    }
                     _private.initializeModel(this, newOptions, items);
+                    this._observersController?.updateOptions(this._getObserversControllerOptions(newOptions));
+                    this._updateScrollController(newOptions);
+                    this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
                     if (_private.hasMarkerController(this)) {
                         _private.getMarkerController(this).updateOptions({
                             model: this._listViewModel,
