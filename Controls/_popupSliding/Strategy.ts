@@ -82,7 +82,6 @@ class Strategy {
         return {
             left: 0,
             right: 0,
-            width: this._getWindowWidth(),
             [position]: DEFAULT_POSITION_VALUE,
             maxHeight,
             height,
