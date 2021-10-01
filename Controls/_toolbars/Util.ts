@@ -1,4 +1,5 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {ButtonTemplate, IButtonOptions, defaultHeight, defaultFontColorStyle, getDefaultOptions} from 'Controls/buttons';
 import {Abstract as ChainAbstract, factory} from 'Types/chain';
 import {ICrudPlus} from "Types/source";
@@ -36,6 +37,10 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
 
     const viewMode = isVerticalDirection ? 'toolButton' : item.get('viewMode');
     const caption = item.get('caption');
+
+    if (!icon && !caption) {
+        Logger.warn('Не задана 1 из опций "icon" или "caption". Контрол может работать некорректно');
+    }
 
     const buttonStyle = (viewMode === 'toolButton' ? 'default' : (item.get('buttonStyle') || defaultOptions.buttonStyle));
 
