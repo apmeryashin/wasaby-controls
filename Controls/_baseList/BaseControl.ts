@@ -2218,6 +2218,7 @@ const _private = {
                 model: collection,
                 entryPath,
                 selectionType: options.selectionType || 'all',
+                selectionCountMode: options.selectionCountMode || 'all',
                 recursiveSelection: options.recursiveSelection || false
             };
         } else {

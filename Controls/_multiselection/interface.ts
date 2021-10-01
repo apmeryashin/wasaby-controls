@@ -103,6 +103,7 @@ export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOpt
    rootId: CrudEntityKey;
    entryPath: IEntryPathItem[];
    selectionType: 'node'|'leaf'|'all';
+   selectionCountMode: 'node'|'leaf'|'all';
    recursiveSelection: boolean;
 }
 

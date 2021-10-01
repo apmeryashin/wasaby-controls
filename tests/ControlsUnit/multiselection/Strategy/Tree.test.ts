@@ -2,7 +2,7 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { TreeSelectionStrategy } from 'Controls/multiselection';
+import {ITreeSelectionStrategyOptions, TreeSelectionStrategy} from 'Controls/multiselection';
 import { Model } from 'Types/entity';
 import * as ListData from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
@@ -10,6 +10,31 @@ import { Tree, TreeItem } from 'Controls/display';
 import GroupItem from 'Controls/_display/GroupItem';
 import { SearchGridCollection } from 'Controls/searchBreadcrumbsGrid';
 import TreeGridCollection from "Controls/_treeGrid/display/TreeGridCollection";
+
+function initTest(items: object[], options: Partial<ITreeSelectionStrategyOptions> = {}): TreeSelectionStrategy {
+   const model = new Tree({
+      collection: new RecordSet({
+         keyProperty: 'id',
+         rawData: items
+      }),
+      root: null,
+      keyProperty: 'id',
+      parentProperty: 'parent',
+      nodeProperty: 'node'
+   });
+
+   return new TreeSelectionStrategy({
+      selectDescendants: true,
+      selectAncestors: true,
+      rootId: null,
+      model,
+      entryPath: [],
+      selectionType: 'all',
+      selectionCountMode: 'all',
+      recursiveSelection: false,
+      ...options
+   });
+}
 
 describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    const model = new Tree({
@@ -30,6 +55,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       rootId: null,
       model: model,
       selectionType: 'all',
+      selectionCountMode: 'all',
       recursiveSelection: false
    });
 
@@ -39,6 +65,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       rootId: null,
       model: model,
       selectionType: 'all',
+      selectionCountMode: 'all',
       recursiveSelection: false
    });
 
@@ -212,6 +239,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             rootId: null,
             model,
             selectionType: 'all',
+            selectionCountMode: 'all',
             recursiveSelection: false
          });
 
@@ -243,6 +271,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             rootId: null,
             model,
             selectionType: 'all',
+            selectionCountMode: 'all',
             recursiveSelection: false
          });
 
@@ -310,6 +339,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             rootId: null,
             model: searchModel,
             selectionType: 'all',
+            selectionCountMode: 'all',
             recursiveSelection: false,
             entryPath: null
          });
@@ -500,6 +530,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             rootId: null,
             model,
             selectionType: 'all',
+            selectionCountMode: 'all',
             recursiveSelection: false
          });
          let selection = { selected: [3, 4], excluded: [] };
@@ -1081,6 +1112,250 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const selection = { selected: [null], excluded: [null] };
          const res = strategy.getCount(selection, false);
          assert.equal(res, 4);
+      });
+
+      describe('selectionCountMode', () => {
+         const items = [
+            {id: 1, parent: null, node: true},
+            {id: 11, parent: 1, node: null},
+            {id: 12, parent: 1, node: null},
+            {id: 2, parent: null, node: true},
+            {id: 21, parent: 2, node: null},
+            {id: 22, parent: 2, node: null},
+            {id: 3, parent: null, node: false},
+            {id: 31, parent: 3, node: null}
+         ];
+
+         describe('leaf', () => {
+            it('is all selected, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [null], excluded: [null]}, false);
+               assert.equal(count, 5);
+            });
+
+            it('is all selected, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [null], excluded: [null]}, true);
+               assert.equal(count, null);
+            });
+
+            it('selected node, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [1], excluded: []}, false);
+               assert.equal(count, 2);
+            });
+
+            it('selected node, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [1], excluded: []}, true);
+               assert.equal(count, 2);
+            });
+
+            it('selected leaf, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [11], excluded: []}, false);
+               assert.equal(count, 1);
+            });
+
+            it('selected leaf, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [11], excluded: []}, true);
+               assert.equal(count, 1);
+            });
+
+            it('selected leaf and node, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [1, 22], excluded: []}, false);
+               assert.equal(count, 3);
+            });
+
+            it('selected leaf and node, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [1, 22], excluded: []}, true);
+               assert.equal(count, 3);
+            });
+
+            it('selected unloaded item', () => {
+               const strategy = initTest(items, {selectionCountMode: 'leaf'});
+               const count = strategy.getCount({selected: [99], excluded: []}, true);
+               assert.equal(count, null);
+            });
+         });
+
+         describe('node', () => {
+            it('is all selected, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [null], excluded: [null]}, false);
+               assert.equal(count, 3);
+            });
+
+            it('is all selected, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [null], excluded: [null]}, true);
+               assert.equal(count, null);
+            });
+
+            it('selected node, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [1], excluded: []}, false);
+               assert.equal(count, 1);
+            });
+
+            it('selected node, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [1], excluded: []}, true);
+               assert.equal(count, 1);
+            });
+
+            it('selected leaf, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [11], excluded: []}, false);
+               assert.equal(count, 0);
+            });
+
+            it('selected leaf, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [11], excluded: []}, true);
+               assert.equal(count, 0);
+            });
+
+            it('selected leaf and node, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [1, 22], excluded: []}, false);
+               assert.equal(count, 1);
+            });
+
+            it('selected leaf and node, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [1, 22], excluded: []}, true);
+               assert.equal(count, 1);
+            });
+
+            it('selected unloaded item', () => {
+               const strategy = initTest(items, {selectionCountMode: 'node'});
+               const count = strategy.getCount({selected: [99], excluded: []}, true);
+               assert.equal(count, null);
+            });
+         });
+
+         describe('all', () => {
+            it('is all selected, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [null], excluded: [null]}, false);
+               assert.equal(count, 8);
+            });
+
+            it('is all selected, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [null], excluded: [null]}, true);
+               assert.equal(count, null);
+            });
+
+            it('selected node, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [1], excluded: []}, false);
+               assert.equal(count, 3);
+            });
+
+            it('selected node, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [1], excluded: []}, true);
+               assert.equal(count, 3);
+            });
+
+            it('selected leaf, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [11], excluded: []}, false);
+               assert.equal(count, 1);
+            });
+
+            it('selected leaf, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [11], excluded: []}, true);
+               assert.equal(count, 1);
+            });
+
+            it('selected leaf and node, not has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [1, 22], excluded: []}, false);
+               assert.equal(count, 4);
+            });
+
+            it('selected leaf and node, has more data', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [1, 22], excluded: []}, true);
+               assert.equal(count, 4);
+            });
+
+            it('selected unloaded item', () => {
+               const strategy = initTest(items, {selectionCountMode: 'all'});
+               const count = strategy.getCount({selected: [99], excluded: []}, true);
+               assert.equal(count, null);
+            });
+         });
+
+         describe('check validation of options', () => {
+            describe('selectionCountMode=leaf', () => {
+               it('selectionType=node, recursiveSelection=false', () => {
+                  let throwedError = false;
+                  try {
+                     const strategy = new TreeSelectionStrategy({
+                        selectDescendants: true,
+                        selectAncestors: true,
+                        rootId: null,
+                        model,
+                        entryPath: [],
+                        selectionType: 'node',
+                        selectionCountMode: 'leaf',
+                        recursiveSelection: false
+                     });
+                  } catch (e) {
+                     throwedError = true;
+                  }
+                  assert.isTrue(throwedError);
+               });
+
+               it('selectionType=node, recursiveSelection=true', () => {
+                  let throwedError = false;
+                  try {
+                     const strategy = new TreeSelectionStrategy({
+                        selectDescendants: true,
+                        selectAncestors: true,
+                        rootId: null,
+                        model,
+                        entryPath: [],
+                        selectionType: 'node',
+                        selectionCountMode: 'leaf',
+                        recursiveSelection: true
+                     });
+                  } catch (e) {
+                     throwedError = true;
+                  }
+                  assert.isFalse(throwedError);
+               });
+            })
+
+            describe('selectionCountMode=node', () => {
+               it('selectionType=leaf', () => {
+                  let throwedError = false;
+                  try {
+                     const strategy = new TreeSelectionStrategy({
+                        selectDescendants: true,
+                        selectAncestors: true,
+                        rootId: null,
+                        model,
+                        entryPath: [],
+                        selectionType: 'leaf',
+                        selectionCountMode: 'node',
+                        recursiveSelection: false
+                     });
+                  } catch (e) {
+                     throwedError = true;
+                  }
+                  assert.isTrue(throwedError);
+               });
+            })
+         })
       });
    });
 
