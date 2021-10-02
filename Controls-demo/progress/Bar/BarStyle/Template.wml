@@ -19,4 +19,8 @@
         <div class="controls-text-label">secondary</div>
         <Controls.progress:Bar value="{{30}}" barStyle="secondary"/>
     </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">info</div>
+        <Controls.progress:Bar value="{{30}}" barStyle="info"/>
+    </div>
 </div>
