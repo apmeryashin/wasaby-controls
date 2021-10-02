@@ -11,6 +11,7 @@ export interface IMenuBaseOptions extends IControlOptions, IHierarchyOptions, II
         IGroupedOptions, IItemTemplateOptions, IMultiSelectableOptions {
     keyProperty: string;
     displayProperty: string;
+    selectedAllText?: string;
     emptyText?: string;
     emptyKey?: string|number;
     itemPadding: IItemPadding;

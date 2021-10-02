@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import {Control, TemplateFunction} from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import * as Utils from 'Types/util';
 import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
