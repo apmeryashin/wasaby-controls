@@ -6,7 +6,7 @@ import {Model} from 'Types/entity';
 function generateData(count: number, title: string, anotherTitle: string): object[] {
     const data = [];
     for (let i = 0; i <= count; i++) {
-        data.push({id: i, title: (i % 2 === 0 ? title : anotherTitle });
+        data.push({id: i, title: i % 2 === 0 ? title : anotherTitle});
     }
     return data;
 }
