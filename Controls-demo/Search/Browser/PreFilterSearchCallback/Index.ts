@@ -50,10 +50,9 @@ export default class Index extends Control<IControlOptions> {
                 hasMore: false
             }
         };
-        this._filterOnSearchCallback = this._filterOnSearchCallback.bind(this);
     }
 
-    protected _prefilterOnSearchCallback(searchValue: string, item: Model): boolean {
+    protected _filterOnSearchCallback(searchValue: string, item: Model): boolean {
         return item.get('title').toLowerCase().includes(searchValue.toLowerCase());
     }
 
