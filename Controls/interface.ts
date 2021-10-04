@@ -75,6 +75,7 @@ export {
 export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch, ISearchOptions} from './_interface/ISearch';
+export {default as ISearchValue, ISearchValueOptions} from './_interface/ISearchValue';
 export {default as IFormOperation} from './_interface/IFormOperation';
 export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/ISelectorDialog';
 export {default as IItems, IItemsOptions, TKey} from './_interface/IItems';
