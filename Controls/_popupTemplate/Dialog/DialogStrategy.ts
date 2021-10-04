@@ -37,7 +37,7 @@ export class DialogStrategy {
         }: ILimitingSizes = this._calculateLimitOfSizes(popupOptions, windowData);
 
         const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item);
-        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth);
+        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth, windowData, containerSizes);
 
         this._resetMargins(item, position);
 
@@ -48,7 +48,14 @@ export class DialogStrategy {
         };
     }
 
-    private _validateCoordinate(position: IDialogPosition, maxHeight: number, maxWidth: number): IDialogPosition {
+    private _validateCoordinate(position: IDialogPosition, maxHeight: number, maxWidth: number,
+                                windowData: IPopupPosition = {}, containerSizes: IPopupSizes): IDialogPosition {
+        const height = position.height || containerSizes.height;
+        const outsideBottomBorderValue = position.top + height - windowData.height;
+        if (outsideBottomBorderValue > 0) {
+            position.top -= outsideBottomBorderValue;
+        }
+
         if (position.height > maxHeight) {
             position.height = maxHeight;
         }
