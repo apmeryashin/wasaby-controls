@@ -1,4 +1,7 @@
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
+import * as AddButtonNodeFooterTmpl from 'wml!Controls-demo/treeGridNew/NodeFooter/Configuration/CustomFooter/NodeFooter';
+import * as EmptyNodeFooterTmpl from 'wml!Controls-demo/treeGridNew/NodeFooter/Configuration/CustomFooter/EmptyNodeFooter';
+import * as SeparatorNodeFooterTmpl from 'wml!Controls-demo/treeGridNew/NodeFooter/MoreButton/NodeFooter';
 
 export const Flat = {
     getData: () => [
@@ -274,6 +277,13 @@ export const Flat = {
             width: ''
         }
     ],
+    getColumnsWithNodeFooters: (needSeparator) => {
+        const columns = Flat.getColumns();
+        columns[0].nodeFooterTemplate = needSeparator ? SeparatorNodeFooterTmpl : AddButtonNodeFooterTmpl;
+        columns[1].nodeFooterTemplate = EmptyNodeFooterTmpl;
+        columns[2].nodeFooterTemplate = EmptyNodeFooterTmpl;
+        return columns;
+    },
     getResults: () => {
         return {
             full: [

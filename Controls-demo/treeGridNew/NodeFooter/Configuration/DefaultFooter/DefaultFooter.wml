@@ -7,15 +7,5 @@
             parentProperty="parent"
             nodeProperty="type"
             navigation="{{_navigation}}">
-        <ws:nodeFooterColumns>
-            <ws:Array>
-                <ws:Object>
-                </ws:Object>
-                <ws:Object>
-                </ws:Object>
-                <ws:Object>
-                </ws:Object>
-            </ws:Array>
-        </ws:nodeFooterColumns>
     </Controls.treeGrid:View>
 </div>

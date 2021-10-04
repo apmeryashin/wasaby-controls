@@ -7,26 +7,5 @@
             parentProperty="parent"
             nodeProperty="type"
             navigation="{{_navigation}}">
-        <ws:nodeFooterColumns>
-            <ws:Array>
-                <ws:Object>
-                    <ws:template>
-                        <ws:partial template="Controls/treeGrid:NodeFooterTemplate">
-                            <Controls.list:AddButton caption="Добавить товар" />
-                        </ws:partial>
-                    </ws:template>
-                </ws:Object>
-                <ws:Object>
-                    <ws:template>
-                        <ws:partial template="Controls/treeGrid:NodeFooterTemplate"/>
-                    </ws:template>
-                </ws:Object>
-                <ws:Object>
-                    <ws:template>
-                        <ws:partial template="Controls/treeGrid:NodeFooterTemplate"/>
-                    </ws:template>
-                </ws:Object>
-            </ws:Array>
-        </ws:nodeFooterColumns>
     </Controls.treeGrid:View>
 </div>

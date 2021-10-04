@@ -25,8 +25,6 @@ import {ITreeGridOptions} from '../TreeGridView';
 import NodeFooterStrategy from './itemsStrategy/NodeFooter';
 import NodeFooter from "Controls/_display/itemsStrategy/NodeFooter";
 
-export interface INodeFooterColumn extends IGridAbstractColumn {}
-
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
  * @param {TreeItem<T>} item
@@ -58,7 +56,6 @@ export default class TreeGridCollection<
 
     protected _$nodeTypeProperty: string;
     protected _$groupNodeVisibility: TGroupNodeVisibility;
-    protected _$nodeFooterColumns: INodeFooterColumn[];
 
     constructor(options: ITreeGridOptions) {
         super(options);
@@ -73,10 +70,6 @@ export default class TreeGridCollection<
 
     protected getNodeFooterStrategy(): NodeFooter {
         return this.getStrategyInstance(NodeFooterStrategy);
-    }
-
-    getNodeFooterColumns(): INodeFooterColumn[] {
-        return this._$nodeFooterColumns;
     }
 
     protected _setupProjectionFilters(): void {
@@ -181,7 +174,11 @@ export default class TreeGridCollection<
     }
 
     setHasMoreStorage(storage: Record<string, boolean>, reBuildNodeFooters: boolean = false): void {
-        super.setHasMoreStorage(storage, reBuildNodeFooters || !!this._$nodeFooterTemplate || !!this._$nodeFooterColumns);
+        super.setHasMoreStorage(storage, reBuildNodeFooters || !!this._$nodeFooterTemplate || this.hasNodeFooterColumns());
+    }
+
+    hasNodeFooterColumns(): boolean {
+        return !!this._$columns && this._$columns.reduce((acc, column) => acc || !!column.nodeFooterTemplate, false);
     }
 
     protected _reBuild(reset?: boolean): void {
@@ -333,7 +330,6 @@ export default class TreeGridCollection<
         };
 
         const NodeFooterFactory = (factoryOptions?: ITreeGridGroupDataRowOptions<S>): ItemsFactory<T> => {
-            factoryOptions.columnsConfig = this._$nodeFooterColumns;
             factoryOptions.rowTemplate = this._$nodeFooterTemplate;
             return superFactory.call(this, factoryOptions);
         };
@@ -406,6 +402,5 @@ Object.assign(TreeGridCollection.prototype, {
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
     _itemModule: 'Controls/treeGrid:TreeGridDataRow',
     _$groupNodeVisibility: 'visible',
-    _$nodeTypeProperty: null,
-    _$nodeFooterColumns: null
+    _$nodeTypeProperty: null
 });

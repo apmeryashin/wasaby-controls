@@ -14,22 +14,24 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
     readonly listElementName: string = 'cell';
 
     getTemplate(): TemplateFunction | string {
-        return this._$column.template || 'Controls/treeGrid:NodeFooterTemplate';
+        const hasRowTemplate = this._$isSingleColspanedCell && !!this._$owner.getRowTemplate();
+        const customTemplate = hasRowTemplate ? this._$column.template : this._$column.nodeFooterTemplate;
+        return customTemplate || 'Controls/treeGrid:NodeFooterTemplate';
     }
 
-    isHasMoreButtonFooter(): boolean {
+    isMoreButtonFooter(): boolean {
         return !!((this.getOwner() as TreeGridNodeFooterRow).needMoreButton());
     }
 
     shouldRenderHasMoreButton(): boolean {
-        return this.isHasMoreButtonFooter() && this._$isFirstDataCell;
+        return this.isMoreButtonFooter() && this._$isFirstDataCell;
     }
 
     getWrapperClasses(): string {
         return '';
     }
 
-    getContentClasses(): string {
+    getContentClasses(params: {hasContent: boolean}): string {
         const rowSeparatorSize = this._$owner.getRowSeparatorSize();
 
         let classes =
@@ -37,6 +39,10 @@ export default class TreeGridNodeFooterCell extends TreeGridDataCell<null> {
             ' controls-TreeGrid__nodeFooterContent' +
             ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}` +
             ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+
+        if (params.hasContent || this.isMoreButtonFooter()) {
+            classes += ' controls-TreeGrid__nodeFooter-cell_withContent';
+        }
 
         if (this.getOwner().isFullGridSupport()) {
             classes += ' controls-TreeGrid__nodeFooterContent__baseline';
