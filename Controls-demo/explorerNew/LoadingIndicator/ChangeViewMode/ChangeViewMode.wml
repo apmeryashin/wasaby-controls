@@ -16,6 +16,7 @@
             viewMode="{{_viewMode}}">
             <ws:navigation source="page" view="infinity">
                 <ws:sourceConfig pageSize="{{20}}" page="{{0}}" hasMore="{{false}}"/>
+                <ws:viewConfig pagingMode="basic"/>
             </ws:navigation>
             <ws:tileItemTemplate>
                 <ws:partial template="Controls/tile:SmallItemTemplate" scope="{{itemTemplate}}"/>
