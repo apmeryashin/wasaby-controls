@@ -59,12 +59,16 @@ export default interface IFormController extends IControllerBase {
      * @cfg {Controls/dataSource:error.Container} Компонент для отображения ошибки, он оборачивает весь контент формы.
      * Способ отображения ошибки (диалог, вместо контента или во всю страницу) настраивается через переопределение {@link errorController}.
      * Данную опцию следует определять, если нужно как-то изменить раскладку контента в случае ошибки, если раскладка контрола {@link Controls/_dataSource/_error/Container}, который используется по умолчанию, не устраивает.
+     *
+     * Про обработку ошибок, возникающих в процессе работы Controls/form:Controller, читать {@link /doc/platform/developmentapl/interface-development/application-architecture/error-handling/error-handling-controls/#customize-error-handling-form-controller здесь}
      */
     errorContainer?: typeof Control;
     /**
      * @name Controls/form:IFormController#errorController
      * @cfg {Controls/error:ErrorController} Компонент для обработки ошибки.
      * Данную опцию следует определять, если нужно изменить способ отображения ошибки (диалог, вместо контента или во всю страницу) или добавить свои обработчики ошибок.
+     *
+     * Про обработку ошибок, возникающих в процессе работы Controls/form:Controller, читать {@link /doc/platform/developmentapl/interface-development/application-architecture/error-handling/error-handling-controls/#customize-error-handling-form-controller здесь}
      */
     errorController?: ErrorController;
     /**
