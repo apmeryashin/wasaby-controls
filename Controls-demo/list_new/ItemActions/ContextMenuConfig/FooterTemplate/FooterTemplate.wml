@@ -2,7 +2,7 @@
     <Controls.list:View
             keyProperty="key"
             source="{{_viewSource}}"
-            itemActions="{{_itemActions}}">
+            itemActionsProperty="itemActions">
         <ws:contextMenuConfig>
             <ws:footerTemplate>
                 <div class="ControlsDemo_MenuFooterTemplate-footer">

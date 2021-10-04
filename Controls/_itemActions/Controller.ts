@@ -314,7 +314,7 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
-        if (!menuActions || menuActions.length === 0) {
+        if ((!menuActions || menuActions.length === 0) && !this._hasMenuHeaderOrFooter()) {
             return;
         }
 

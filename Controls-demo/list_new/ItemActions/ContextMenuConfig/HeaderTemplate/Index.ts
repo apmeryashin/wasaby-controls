@@ -9,6 +9,7 @@ import * as template from 'wml!Controls-demo/list_new/ItemActions/ContextMenuCon
 interface ISrcData {
    key: number;
    title: string;
+   itemActions: IItemAction[];
 }
 
 const itemActions: IItemAction[] = [
@@ -27,14 +28,19 @@ const itemActions: IItemAction[] = [
 const data: ISrcData[] = [
    {
       key: 1,
-      title: 'Кнопка меню будет показана, т.к. указан headerTemplate'
+      title: 'Кнопка меню будет показана, т.к. указан headerTemplate',
+      itemActions
+   },
+   {
+      key: 2,
+      title: 'Кнопка меню будет показана, т.к. указан headerTemplate',
+      itemActions: []
    }
 ];
 
 export default class HeaderTemplate extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _viewSource: Memory;
-   protected _itemActions: IItemAction[] = itemActions;
 
    protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
       this._viewSource = new Memory({

@@ -431,6 +431,67 @@ describe('_getMenuActions cases', () => {
         assert.isEmpty(unexpectedActions);
     });
 
+    it('-itemActions, +nodeFooterTemplate, should show menu', () => {
+        const localItemActions: IItemAction[] = [];
+        const parentAction = {
+            id: null,
+            icon: 'icon-ExpandDown',
+            style: 'secondary',
+            iconStyle: 'secondary',
+            isMenu: true
+        };
+        // @ts-ignore
+        itemActionsController.update(initializeControllerOptions({
+            collection,
+            itemActions: localItemActions,
+            theme: 'default',
+            contextMenuConfig: {
+                footerTemplate: 'footerTemplate'
+            }
+        }));
+        const item3 = collection.getItemBySourceKey(3);
+        const config = itemActionsController.prepareActionsMenuConfig(
+            item3,
+            clickEvent,
+            // @ts-ignore
+            parentAction,
+            null,
+            false
+        );
+        assert.exists(config, 'config should exist');
+        // @ts-ignore
+        assert.isEmpty(config.templateOptions.source.data, 'Data should be empty');
+    });
+
+    it('-itemActions, -nodeFooterTemplate, should not show menu', () => {
+        const localItemActions: IItemAction[] = [];
+        const parentAction = {
+            id: null,
+            icon: 'icon-ExpandDown',
+            style: 'secondary',
+            iconStyle: 'secondary',
+            isMenu: true
+        };
+        // @ts-ignore
+        itemActionsController.update(initializeControllerOptions({
+            collection,
+            itemActions: localItemActions,
+            theme: 'default'
+        }));
+        const item3 = collection.getItemBySourceKey(3);
+        const config = itemActionsController.prepareActionsMenuConfig(
+            item3,
+            clickEvent,
+            // @ts-ignore
+            parentAction,
+            null,
+            false
+        );
+        assert.notExists(config, 'config should not exist');
+    });
+
+    // Swipe
+
     it('should collect non-"showed" or non-toolbar item actions when item is swiped', () => {
         const localItemActions: IItemAction[] = [
             {
