@@ -6232,7 +6232,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // В некоторых кейсах (например ScrollViewer) внутри списков могут находиться
         // другие списки, которые также будут нотифицировать события управления скроллом и тенью
         // Необходимо их останавливать, чтобы скроллом управлял только самый верхний список
-        event.stopPropagation();
+
+        // Можно избавиться от этой опции, если не использовать в scrollViewer BaseControl,
+        // а создать для этого самостоятельный контрол.
+        // Задача: https://online.sbis.ru/opendoc.html?guid=5bafceb4-b19b-4e72-ace0-c42d713ed083
+        if (!this._options.passBubblingEvents) {
+            event.stopPropagation();
+        }
     }
 
     _updateHeights(updateItems: boolean = true): void {
