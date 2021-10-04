@@ -59,19 +59,6 @@ interface IMouseCoords {
     y: number;
 }
 
-const MOUSE_EVENTS = [
-    'mousedown',
-    'mouseup',
-    'mouseover',
-    'mouseout',
-    'mousemove',
-    'mouseenter',
-    'mouseleave',
-    'contextmenu',
-    'click',
-    'dblclick'
-];
-const TOUCH_EVENTS = ['touchstart', 'touchend', 'touchmove'];
 const ZOOM_CLASS = 'controls-Zoom';
 
 /**
@@ -219,12 +206,7 @@ class DimensionsMeasurer {
     protected _getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent, scaleToBodyZoom: boolean): IMouseCoords {
         const eventType = event.type;
         const zoom = scaleToBodyZoom ? this._getMainZoom() : this.getZoomValue(event.target as HTMLElement);
-        if (MOUSE_EVENTS.includes(eventType)) {
-            return {
-                x: event.pageX / zoom,
-                y: event.pageY / zoom
-            };
-        } else if (TOUCH_EVENTS.includes(eventType)) {
+        if (event.touches || event.changedTouches) {
             let touches = event.touches;
             if (eventType === 'touchend') {
                 touches = event.changedTouches;
@@ -232,6 +214,11 @@ class DimensionsMeasurer {
             return {
                 x: touches[0].pageX / zoom,
                 y: touches[0].pageY / zoom
+            };
+        } else if (typeof event.pageX === 'number') {
+            return {
+                x: event.pageX / zoom,
+                y: event.pageY / zoom
             };
         } else {
             Logger.error('DimensionsMeasurer: Event type must be must be mouse or touch event.');
