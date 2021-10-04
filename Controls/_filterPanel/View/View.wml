@@ -88,11 +88,13 @@
             </ws:else>
             <div class="controls-FilterViewPanel__additional-editors">
                <ws:for data="filter in _viewModel.getExtendedFilterItems()">
-                  <ws:partial template="{{filter.editorTemplateName}}"
-                              scope="{{filter.editorOptions}}"
-                              viewMode="{{filter.viewMode}}"
-                              value="{{filter.value}}"
-                              on:propertyValueChanged="_propertyValueChanged(filter)"/>
+                  <Controls.Container.Async templateName="{{filter.editorTemplateName}}">
+                     <ws:partial template="{{content.resolvedTemplate}}"
+                                 scope="{{filter.editorOptions}}"
+                                 viewMode="{{filter.viewMode}}"
+                                 value="{{filter.value}}"
+                                 on:propertyValueChanged="_propertyValueChanged(filter)"/>
+                  </Controls.Container.Async>
                </ws:for>
             </div>
          </div>
