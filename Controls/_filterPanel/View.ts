@@ -106,11 +106,7 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _editingObjectChanged(event: SyntheticEvent, editingObject: Record<string, any>): void {
         this._viewModel.setEditingObject(editingObject);
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        } else {
-            this._notify('sourceChanged', [this._viewModel.getSource()]);
-        }
+        this._notifyFilterItemChanged();
     }
 
     protected _propertyValueChanged(event: SyntheticEvent, filterItem: IFilterItem, itemValue: object): void {
@@ -135,7 +131,15 @@ export default class View extends Control<IViewPanelOptions> {
     private _resetFilterItem(dispItem: GroupItem<Model>): void {
         const itemContent = dispItem.getContents();
         this._viewModel.resetFilterItem(itemContent);
-        this._notifyChanges();
+        this._notifyFilterItemChanged();
+    }
+
+    private _notifyFilterItemChanged(): void {
+        if (this._options.viewMode === 'default') {
+            this._notifyChanges();
+        } else {
+            this._notify('sourceChanged', [this._viewModel.getSource()]);
+        }
     }
 
     private _notifyChanges(): void {
