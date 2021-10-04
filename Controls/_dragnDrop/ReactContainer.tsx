@@ -47,6 +47,8 @@ interface IDragObject<T = object> {
     draggingTemplateOffset: number;
 }
 
+export const DragNDropContext = React.createContext({});
+
 class ReactContainer extends React.Component<IReactContainerProps> {
     /**
      * Хранит список перетаскиваемых элементов и ключ элемента, за который потащили (draggedKey)
@@ -60,6 +62,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     private _endDragNDropTimer: number = null;
     private _draggedKey: string = null;
     private _instanceId: string = 'inst_' + Guid.create();
+    static contextType = DragNDropContext;
 
     constructor(props) {
         super(props);
@@ -74,19 +77,19 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     }
 
     private _registerMouseMove(): void {
-        this.props.registerMouseMove(this._onMouseMove, this._onTouchMove, this);
+        this.context.registerMouseMove(this._onMouseMove, this._onTouchMove, this);
     }
 
     private _unregisterMouseMove(): void {
-        this.props.unregisterMouseMove(this);
+        this.context.unregisterMouseMove(this);
     }
 
     private _registerMouseUp(): void {
-        this.props.registerMouseUp(this._onMouseUp, this);
+        this.context.registerMouseUp(this._onMouseUp, this);
     }
 
     private _unregisterMouseUp(): void {
-        this.props.unregisterMouseUp(this);
+        this.context.unregisterMouseUp(this);
     }
 
     private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
@@ -146,7 +149,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
             const dragStarted: boolean = ReactContainer._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
             if (!this._documentDragging && dragStarted) {
                 this._insideDragging = true;
-                this.props.documentDragStart(dragObject);
+                this.context.documentDragStart(dragObject);
             }
             if (this._documentDragging) {
                 this._currentEvent = nativeEvent;
@@ -154,7 +157,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
                     this.props.onDragMove(dragObject);
                 }
                 if (this.props.draggingTemplate) {
-                    this.props.updateDraggingTemplate(dragObject, this.props.draggingTemplate);
+                    this.context.updateDraggingTemplate(dragObject, this.props.draggingTemplate);
                 }
             }
         }
@@ -214,7 +217,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     private _dragNDropEnded(event: SyntheticEvent<MouseEvent>): void {
         if (this._documentDragging) {
             const args = [this._getDragObject(event.nativeEvent, this._startEvent)];
-            this.props.documentDragEnd(args);
+            this.context.documentDragEnd(args);
         }
         if (this._startEvent && this._startEvent.target) {
             this._startEvent.target.classList.remove('controls-DragNDrop__dragTarget');
@@ -227,7 +230,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     }
 
     componentDidMount(): void {
-        this.props.registerDocumentDrag(this._documentDragStart, this._documentDragEnd, this);
+        this.context.registerDocumentDrag(this._documentDragStart, this._documentDragEnd, this);
     }
 
     componentWillUnmount(): void {
@@ -239,7 +242,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
         if (event) {
             this._onMouseUp(new SyntheticEvent<MouseEvent>(event));
         }
-        this.props.unregisterDocumentDrag(this);
+        this.context.unregisterDocumentDrag(this);
     }
 
     protected _mouseEnter = (event: SyntheticEvent<MouseEvent>): void => {
