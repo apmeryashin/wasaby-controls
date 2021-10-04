@@ -532,17 +532,29 @@ var CompoundArea = CompoundContainer.extend([
       return isVisible;
    },
 
+   _updateCustomToolbarMenuIcon(content): void {
+      if (content) {
+         const toolbarMenuIcon = content.querySelector('.controls-ToolBar__menuIcon .icon-ExpandDown');
+         if (toolbarMenuIcon) {
+            toolbarMenuIcon.classList.remove('icon-ExpandDown');
+            toolbarMenuIcon.classList.add('icon-SettingsNew');
+         }
+      }
+   },
+
    _setCustomToolbar(): void {
       if (this._options.isToolbarOnRightPanel && Controller.hasRightPanel()) {
          const toolbarContent = $('.controls-ToolBar:first', this._childControl.getContainer());
          if (toolbarContent.length) {
             const toolbarContainer = $('.controls-CompoundArea_toolbar', this.getContainer());
             if (toolbarContainer.length) {
-               const toolbarMenuIcon = toolbarContent[0].querySelector('.controls-ToolBar__menuIcon .icon-ExpandDown');
-               if (toolbarMenuIcon) {
-                  toolbarMenuIcon.classList.remove('icon-ExpandDown');
-                  toolbarMenuIcon.classList.add('icon-SettingsNew');
-               }
+               this._updateCustomToolbarMenuIcon(toolbarContent[0]);
+               const wsControl = toolbarContent.wsControl();
+               const setEnabled = wsControl.setEnabled.bind(wsControl);
+               wsControl.setEnabled = (enabled) => {
+                  setEnabled(enabled);
+                  this._updateCustomToolbarMenuIcon(toolbarContainer[0]);
+               };
                toolbarContainer.prepend(toolbarContent);
             }
          }
