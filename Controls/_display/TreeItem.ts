@@ -216,9 +216,12 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
         let hasChildren = object.getPropertyValue<boolean>(this.getContents(), this.getHasChildrenProperty());
 
-        // Если hasChildren не задали, то для узла по дефолту есть дети
+        // Если hasChildren не задали, то для свернутого узла по дефолту есть дети
+        // Для развернутого узла смотрим по кол-во детей
         if (hasChildren === undefined) {
-            hasChildren = this._$node !== null;
+            hasChildren = this.isExpanded()
+                ? !!this.getChildren().getCount()
+                : this._$node !== null;
         }
 
         return hasChildren;
