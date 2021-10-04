@@ -650,7 +650,6 @@ const _private = {
                     self._indicatorsController.continueDisplayPortionedSearch('top');
                 }
             } else {
-                self._indicatorsController.recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
                     self._displayGlobalIndicator();
                 }
@@ -693,19 +692,29 @@ const _private = {
                 const hasMoreData = _private.getHasMoreData(self);
                 self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
 
-                if (_private.isPortionedLoad(self, addedItems)) {
-                    if (!hasMoreData.down && !hasMoreData.up) {
-                        self._indicatorsController.endDisplayPortionedSearch();
+                // проверять что сейчас порционный поиск по метаданным нельзя,
+                // т.к. в этот момент могут сказать что вниз порционный поиск закончился(metaData.iterative = false)
+                const searchDirection = self._indicatorsController.getPortionedSearchDirection();
+                if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
+                    // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
+                    // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                    self._indicatorsController.endDisplayPortionedSearch();
+
+                    // если вьюпорт заполнен, то показываем индикатор вместе с триггером,
+                    // иначе только триггер, чтобы не было морганий индикатора
+                    const viewportFilled = self._viewSize > self._viewportSize && self._viewportSize;
+                    if (viewportFilled) {
+                        self._indicatorsController.displayTopIndicator(true);
                     } else {
-                        const searchDirection = self._indicatorsController.getPortionedSearchDirection();
-                        if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
-                            // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
-                            // который означает что есть данные вверх. По триггеру начнем поиск вверх
-                            self._indicatorsController.endDisplayPortionedSearch();
-                            self._indicatorsController.displayTopIndicator(true);
-                        }
+                        self._observersController.displayTrigger(self._children.listView?.getTopLoadingTrigger());
                     }
-                } else {
+                }
+                // если больше нет данных заканчиваем порцоннный поиск
+                if (!hasMoreData.down && !hasMoreData.up) {
+                    self._indicatorsController.endDisplayPortionedSearch();
+                }
+
+                if (!_private.isPortionedLoad(self, addedItems)) {
                     self._indicatorsController.recountIndicators(direction);
                 }
 
@@ -1966,9 +1975,6 @@ const _private = {
 
         _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
 
-        if (this._shouldEndDisplayPortionedSearch(items)) {
-            this._indicatorsController.endDisplayPortionedSearch();
-        }
         if (this._indicatorsController.shouldHideGlobalIndicator()) {
             this._indicatorsController.hideGlobalIndicator();
         }
