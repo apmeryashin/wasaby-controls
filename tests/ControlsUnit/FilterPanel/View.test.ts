@@ -24,22 +24,29 @@ describe('Controls/filterPanel:View', () => {
         it('viewMode is default', () => {
             const viewControl = new View({});
             viewControl._beforeMount(config);
+            viewControl.saveOptions(config);
             let filterChanged = false;
             viewControl._notify = (eventName) => {
-                filterChanged = eventName === 'filterChanged';
+                if (eventName === 'filterChanged') {
+                    filterChanged = true;
+                }
             };
 
             viewControl._resetFilterItem(displayItem);
+            assert.equal(viewControl._options.viewMode, 'default');
             assert.isTrue(filterChanged);
         });
 
-        it('viewMode is default', () => {
+        it('viewMode is filterPanelStack', () => {
             config.viewMode = 'filterPanelStack';
             const viewControl = new View({});
             viewControl._beforeMount(config);
+            viewControl.saveOptions(config);
             let filterChanged = false;
             viewControl._notify = (eventName) => {
-                filterChanged = eventName === 'filterChanged';
+                if (eventName === 'filterChanged') {
+                    filterChanged = true;
+                }
             };
 
             viewControl._resetFilterItem(displayItem);
