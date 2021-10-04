@@ -46,7 +46,7 @@ export function calculateMainClass(fontColorStyle: string, underline: string, st
 
 export function calculateCurrencyClass(currencySize: string, fontColorStyle: string, fontWeight: string): string {
     return `${currencySize ? 'controls-fontsize-' + currencySize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
-            ${fontWeight ? ' controls-fontweight-' + fontWeight : ''} controls-margin_left-2xs`;
+            ${fontWeight ? ' controls-fontweight-' + fontWeight : ''}`;
 }
 
 export function calculateStrokedClass(stroked: boolean): string {
@@ -63,7 +63,7 @@ export function calculateIntegerClass(
 ): string {
     return `${fontSize ? 'controls-fontsize-' + fontSize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
             ${fontWeight ? ' controls-fontweight-' + fontWeight : ''} ${currency && currencyPosition === 'left' ? ' controls-margin_left-2xs' : ''}
-            ${currency && currencyPosition === 'right' && isDisplayFractionPath ? ' controls-margin_right-2xs' + fontWeight : ''}`;
+            ${currency && currencyPosition === 'right' && !isDisplayFractionPath ? ' controls-margin_right-2xs' : ''}`;
 }
 
 export function calculateFractionClass(
