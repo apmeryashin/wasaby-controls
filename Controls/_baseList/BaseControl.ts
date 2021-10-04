@@ -3094,6 +3094,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _keepScrollAfterReload = false;
     _resetScrollAfterReload = false;
     _scrollPageLocked = false;
+    _bottomVisible: boolean = true;
 
     _modelRecreated = false;
     _viewReady = false;
