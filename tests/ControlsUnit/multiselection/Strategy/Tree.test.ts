@@ -6,12 +6,16 @@ import {ITreeSelectionStrategyOptions, TreeSelectionStrategy} from 'Controls/mul
 import { Model } from 'Types/entity';
 import * as ListData from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
-import { Tree, TreeItem } from 'Controls/display';
+import { ITreeOptions, Tree, TreeItem } from 'Controls/display';
 import GroupItem from 'Controls/_display/GroupItem';
 import { SearchGridCollection } from 'Controls/searchBreadcrumbsGrid';
 import TreeGridCollection from "Controls/_treeGrid/display/TreeGridCollection";
 
-function initTest(items: object[], options: Partial<ITreeSelectionStrategyOptions> = {}): TreeSelectionStrategy {
+function initTest(
+    items: object[],
+    options: Partial<ITreeSelectionStrategyOptions> = {},
+    modelOptions: Partial<ITreeOptions<Model, TreeItem>> = {}
+): TreeSelectionStrategy {
    const model = new Tree({
       collection: new RecordSet({
          keyProperty: 'id',
@@ -20,7 +24,8 @@ function initTest(items: object[], options: Partial<ITreeSelectionStrategyOption
       root: null,
       keyProperty: 'id',
       parentProperty: 'parent',
-      nodeProperty: 'node'
+      nodeProperty: 'node',
+      ...modelOptions
    });
 
    return new TreeSelectionStrategy({
@@ -1179,6 +1184,22 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                const strategy = initTest(items, {selectionCountMode: 'leaf'});
                const count = strategy.getCount({selected: [99], excluded: []}, true);
                assert.equal(count, null);
+            });
+
+            it('deep inside, empty node', () => {
+               const items = [
+                  {id: 1, parent: null, node: true},
+                  {id: 11, parent: 1, node: true},
+                  {id: 111, parent: 11, node: true},
+                  {id: 112, parent: 11, node: true},
+                  {id: 1121, parent: 112, node: null},
+                  {id: 1122, parent: 112, node: null},
+                  {id: 1123, parent: 112, node: null},
+                  {id: 12, parent: 1, node: null}
+               ];
+               const strategy = initTest(items, {selectionCountMode: 'leaf'}, {expandedItems: [null]});
+               const count = strategy.getCount({selected: [1], excluded: []}, false);
+               assert.equal(count, 4);
             });
          });
 
