@@ -59,7 +59,8 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     cfg._contrastBackground = item.get('contrastBackground');
     cfg._viewMode = viewMode;
     cfg._height = inlineHeight;
-    cfg._fontColorStyle = item.get('fontColorStyle') || toolbarOptions.fontColorStyle || defaultFontColorStyle(viewMode);
+    cfg._fontColorStyle = translucent ? 'forTranslucent' :
+        (item.get('fontColorStyle') || toolbarOptions.fontColorStyle || defaultFontColorStyle(viewMode));
     cfg._fontSize = item.get('fontSize') || defaultOptions.fontSize;
     cfg._hasIcon = !!icon;
     cfg._caption = caption;
