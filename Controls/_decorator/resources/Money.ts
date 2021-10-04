@@ -46,7 +46,7 @@ export function calculateMainClass(fontColorStyle: string, underline: string, st
 
 export function calculateCurrencyClass(currencySize: string, fontColorStyle: string, fontWeight: string): string {
     return `${currencySize ? 'controls-fontsize-' + currencySize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
-            ${fontWeight ? ' controls-fontweight-' + fontWeight : ''}`;
+            ${fontWeight ? ' controls-fontweight-' + fontWeight : ''} controls-margin_left-2xs`;
 }
 
 export function calculateStrokedClass(stroked: boolean): string {
