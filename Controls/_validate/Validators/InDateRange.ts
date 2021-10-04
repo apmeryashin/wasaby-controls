@@ -32,12 +32,12 @@ interface IArgs {
  * <Controls.dateRange:Input>
  *     <ws:startValueValidators>
  *         <ws:Array>
- *             <ws:Function value="{{ _startValue }} minValue="{{ _minValue }}" maxValue="{{ _maxValue }}">Controls/validate:inDateRange</ws:Function>
+ *             <ws:Function value="{{ _startValue }}" minValue="{{ _minValue }}" maxValue="{{ _maxValue }}">Controls/validate:inDateRange</ws:Function>
  *         </ws:Array>
  *     </ws:startValueValidators>
  *     <ws:endValueValidators>
  *         <ws:Array>
- *             <ws:Function value="{{ _endValue }} minValue="{{ _minValue }}" maxValue="{{ _maxValue }}">Controls/validate:inDateRange</ws:Function>
+ *             <ws:Function value="{{ _endValue }}" minValue="{{ _minValue }}" maxValue="{{ _maxValue }}">Controls/validate:inDateRange</ws:Function>
  *         </ws:Array>
  *     </ws:endValueValidators>
  * </Controls.dateRange:Input>
