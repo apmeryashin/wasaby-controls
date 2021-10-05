@@ -502,6 +502,23 @@ define([
                assert.deepEqual(newRanges[test.changedRangeIndex][1], test.end);
             });
          });
+
+         it('should change period with nulls correctly', () => {
+            const options = getOptions.apply(null, [new Date(2015, 0, 1), 1, {}, 2]);
+            const start = new Date(2021, 0);
+            const end = new Date(2021, 1, 0);
+            const changedRangeIndex = 0;
+            options.startValue1 = null;
+            options.endValue1 = null;
+            const component = calendarTestUtils.createComponent(RelationController, options);
+            const oldRanges = component._model.ranges;
+            component._model._relationMode = 'byCapacity';
+            component._model.updateRanges(start, end, changedRangeIndex);
+            const newRanges = component._model.ranges;
+            assert.notDeepEqual(oldRanges, newRanges);
+            assert.deepEqual(newRanges[changedRangeIndex][0], start);
+            assert.deepEqual(newRanges[changedRangeIndex][1], end);
+         });
       });
    });
 });

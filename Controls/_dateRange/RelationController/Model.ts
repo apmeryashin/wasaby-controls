@@ -127,9 +127,9 @@ class ModuleClass {
         // is a multiple of years.
         if (updatedPeriodType === periodTypes.year || updatedPeriodType === periodTypes.years ||
               (!capacityChanged &&
-               updatedStartValue.getFullYear() !== startValue.getFullYear() &&
-               updatedStartValue.getMonth() === startValue.getMonth() &&
-               updatedStartValue.getDate() === startValue.getDate())) {
+               updatedStartValue?.getFullYear() !== startValue?.getFullYear() &&
+               updatedStartValue?.getMonth() === startValue?.getMonth() &&
+               updatedStartValue?.getDate() === startValue?.getDate())) {
            this._relationMode = 'normal';
 
            // We update steps for calculation of the periods in other controls.
