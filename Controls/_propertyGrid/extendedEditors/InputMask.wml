@@ -1,0 +1,3 @@
+<Controls.input:Mask scope="{{_options}}"
+                     bind:value="_value"
+                     on:inputCompleted="_handleInputCompleted()"/>
