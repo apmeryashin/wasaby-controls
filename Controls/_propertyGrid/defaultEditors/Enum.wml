@@ -1,8 +1,11 @@
 <Controls.Container.Async templateName="Controls/source:EnumAdapter">
     <ws:partial template="{{content.resolvedTemplate}}"
                 enum="{{_enum}}">
-        <Controls.dropdown:Combobox attr:class="controls-PropertyGrid__editor_enum_control"
-                                    displayProperty="title"
-                                    on:selectedKeyChanged="_selectedKeyChanged()"/>
+        <Controls.Container.Async templateName="Controls/dropdown:Combobox">
+            <ws:partial template="{{content.resolvedTemplate}}"
+                        attr:class="controls-PropertyGrid__editor_enum_control"
+                        displayProperty="title"
+                        on:selectedKeyChanged="_selectedKeyChanged()"/>
+        </Controls.Container.Async>
     </ws:partial>
 </Controls.Container.Async>
