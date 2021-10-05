@@ -44,6 +44,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
  * @implements Controls/grid:IGridControl
  * @implements Controls/interface:INavigation
  * @author Мельникова Е.А.
+ * @demo Controls-demo/filterPanel/Base/Index
  * @public
  */
 
