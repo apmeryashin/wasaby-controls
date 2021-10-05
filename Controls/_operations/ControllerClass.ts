@@ -224,10 +224,12 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
                 }
             }
         }
-        return {
+        const counterResult = {
             count: selectedCount,
             isAllSelected
         };
+        this._notify('counterChanged', counterResult);
+        return counterResult;
     }
 
     getSelectedKeysByLists(): IKeysByList {
