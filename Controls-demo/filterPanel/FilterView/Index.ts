@@ -30,7 +30,7 @@ export default class extends Control {
         this._filterItems = [
             { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
             { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
-            { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' }
+            { id: 3, title: 'Очень длинное название Очень длинное название', owner: 'Очень длинное название' }
         ];
         this._filterSource = [
             {
