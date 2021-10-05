@@ -13,7 +13,7 @@
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
             inlineHeight=m contrastBackground=false
         </div>
-        <Controls.toggle:Switch bind:value="_value2"
+        <Controls.toggle:Switch bind:value="_value"
                                 contrastBackground="{{false}}"
                                 inlineHeight="m"
                                 caption="state"/>
@@ -25,7 +25,6 @@
         <Controls.toggle:Switch bind:value="_value2"
                                 contrastBackground="{{true}}"
                                 inlineHeight="s"
-                                readOnly="{{true}}"
                                 caption="state"/>
     </div>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
@@ -35,7 +34,6 @@
         <Controls.toggle:Switch bind:value="_value2"
                                 contrastBackground="{{false}}"
                                 inlineHeight="s"
-                                readOnly="{{true}}"
                                 caption="state"/>
     </div>
 </div>
