@@ -14,6 +14,7 @@ import {
     ErrorViewMode,
     ErrorViewSize,
     IErrorControllerOptions,
+    IErrorRepeatConfig,
     IDefaultTemplateOptions
 } from './_error/interface';
 import ErrorController, { IControllerOptions, IProcessConfig, OnProcessCallback } from './_error/Controller';
@@ -39,6 +40,7 @@ export {
     IErrorControllerOptions,
     IErrorHandlerConfig as HandlerConfig, // для совместимости
     IErrorHandlerConfig,
+    IErrorRepeatConfig,
     IPopupHelper,
     IProcessConfig,
     IProcessOptions,
