@@ -230,6 +230,9 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _processPropertyValueChanged(value: string[] | number[]): void {
         this._selectedKeys = value;
+        if (!this._selectedKeys.length) {
+            this._handleResetItems();
+        }
         this._setColumns(this._options, this._selectedKeys);
         this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
     }
@@ -272,6 +275,11 @@ class ListEditor extends Control<IListEditorOptions> {
         if (this._popupOpener) {
             this._popupOpener.destroy();
         }
+    }
+
+    private _handleResetItems(): void {
+        this._setFilter(this._selectedKeys, this._options);
+        this._navigation = this._getNavigation(this._options);
     }
 
     private _getItemActions(historyId?: string): IItemAction[] {

@@ -458,7 +458,7 @@ define(
             };
             windowData = {
                width: 800,
-               height: 600,
+               height: 620,
                topScroll: 0,
                left: 10,
                top: 20,

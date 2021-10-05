@@ -2353,8 +2353,10 @@ const _private = {
         }
         if (bottomEnabled) {
             self._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
+            self._bottomVisible = false;
         } else {
             self._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
+            self._bottomVisible = true;
         }
     },
 
@@ -3123,6 +3125,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _keepScrollAfterReload = false;
     _resetScrollAfterReload = false;
     _scrollPageLocked = false;
+    _bottomVisible: boolean = true;
 
     _modelRecreated = false;
     _viewReady = false;
@@ -6539,7 +6542,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _isPagingPadding(): boolean {
-        return !detection.isMobileIOS && this._isPagingPaddingFromOptions();
+        return !detection.isMobileIOS && this._isPagingPaddingFromOptions() && this._bottomVisible;
     }
 
     /**
