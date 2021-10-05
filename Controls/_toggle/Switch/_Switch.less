@@ -22,12 +22,12 @@
    border-radius: var(--border-radius_switcher);
 }
 
-.controls-Switch__toggle__wrapper_inlineHeight-m {
+.controls-Switch__toggle__wrapper_size-l {
    width: var(--width_switcher);
    height: var(--height_horizontal_switcher);
 }
 
-.controls-Switch__toggle__wrapper_inlineHeight-s {
+.controls-Switch__toggle__wrapper_size-s {
    width: var(--width_switcher-small);
    height: var(--height_horizontal_switcher-small);
 }
@@ -60,7 +60,7 @@
    background-color: var(--readonly_marker_color_switcher);
 }
 
-.controls-Switch__toggle__wrapper_defaultValue {
+.controls-Switch__toggle__wrapper_resetValue {
    &.controls-Switch__toggle__wrapper_bg-same,
    &.controls-Switch__toggle__wrapper_bg-contrast {
       border-color: var(--unaccented_active_same_background-color);
@@ -154,7 +154,7 @@
          background-color: var(--selected_marker-hover_color_switcher);
       }
 
-      .controls-Switch__toggle__wrapper_defaultValue {
+      .controls-Switch__toggle__wrapper_resetValue {
          .controls-SwitchCircle_unselected {
             background-color: var(--unaccented_active_same_background-color);
          }
@@ -191,7 +191,7 @@
       }
    }
 
-   .controls-Switch__toggle__wrapper_defaultValue {
+   .controls-Switch__toggle__wrapper_resetValue {
       .controls-Switch:hover {
          .controls-SwitchCircle__borderCircle_selected,
          .controls-SwitchCircle__borderCircle_unselected {
@@ -206,7 +206,7 @@
    margin-left: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
 }
 
-.controls-Switch__toggle__wrapper_inlineHeight-s .controls_Switch_SwitchCircle {
+.controls-Switch__toggle__wrapper_size-s .controls_Switch_SwitchCircle {
    margin-right: calc(var(--border-thickness_switcher) * -1);
    margin-left: calc(var(--border-thickness_switcher) * -1);
 }

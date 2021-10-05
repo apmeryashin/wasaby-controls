@@ -1,5 +1,5 @@
 <div class="controls-SwitchCircle
             {{borderVisible ? 'controls-SwitchCircle_border'}}
-            {{isDefaultValue ? 'controls-SwitchCircle_defaultValue'}}
+            {{isResetValue ? 'controls-SwitchCircle_resetValue'}}
             controls-SwitchCircle_{{contrastBackground ? 'contrast-' : ''}}{{selected ? 'selected' : 'unselected'}}{{readOnly ? '_disabled'}}">
 </div>

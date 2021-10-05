@@ -1,43 +1,39 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-    <Controls.toggle:Checkbox bind:value="_defaultValue" caption="defaultValue"/>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            inlineHeight=m contrastBackground=true
+            size=l contrastBackground=true
         </div>
         <Controls.toggle:Switch bind:value="_value"
                                 contrastBackground="{{true}}"
-                                inlineHeight="m"
-                                defaultValue="{{_defaultValue}}"
+                                size="l"
+                                readOnly="{{true}}"
                                 caption="state"/>
     </div>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            inlineHeight=m contrastBackground=false
+            size=l contrastBackground=false
         </div>
         <Controls.toggle:Switch bind:value="_value"
                                 contrastBackground="{{false}}"
-                                inlineHeight="m"
-                                defaultValue="{{_defaultValue}}"
+                                size="l"
                                 caption="state"/>
     </div>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            inlineHeight=s contrastBackground=true
+            size=s contrastBackground=true
         </div>
         <Controls.toggle:Switch bind:value="_value2"
                                 contrastBackground="{{true}}"
-                                inlineHeight="s"
-                                defaultValue="{{_defaultValue}}"
+                                size="s"
                                 caption="state"/>
     </div>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            inlineHeight=s contrastBackground=false
+            size=s contrastBackground=false
         </div>
         <Controls.toggle:Switch bind:value="_value2"
                                 contrastBackground="{{false}}"
-                                inlineHeight="s"
-                                defaultValue="{{_defaultValue}}"
+                                size="s"
                                 caption="state"/>
     </div>
 </div>

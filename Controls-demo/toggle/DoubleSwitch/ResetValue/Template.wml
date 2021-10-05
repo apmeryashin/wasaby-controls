@@ -1,43 +1,43 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-    <Controls.toggle:Checkbox bind:value="_defaultValue" caption="defaultValue"/>
+    <Controls.toggle:Checkbox bind:value="_resetValue" caption="resetValue"/>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            contrastBackground=true inlineHeight=m
+            contrastBackground=true size=m
         </div>
         <Controls.toggle:DoubleSwitch bind:value="value"
                                       captions="{{['Turned on', 'Turned off']}}"
-                                      inlineHeight="m"
-                                      defaultValue="{{_defaultValue}}"
+                                      size="l"
+                                      resetValue="{{_resetValue}}"
                                       contrastBackground="{{true}}"/>
     </div>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            contrastBackground=false inlineHeight=m
+            contrastBackground=false size=m
         </div>
         <Controls.toggle:DoubleSwitch bind:value="value"
                                       captions="{{['Turned on', 'Turned off']}}"
-                                      inlineHeight="m"
-                                      defaultValue="{{_defaultValue}}"
+                                      size="l"
+                                      resetValue="{{_resetValue}}"
                                       contrastBackground="{{false}}"/>
     </div>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            contrastBackground=true inlineHeight=s
+            contrastBackground=true size=s
         </div>
         <Controls.toggle:DoubleSwitch bind:value="value"
                                       captions="{{['Turned on', 'Turned off']}}"
-                                      inlineHeight="s"
-                                      defaultValue="{{_defaultValue}}"
+                                      size="s"
+                                      resetValue="{{_resetValue}}"
                                       contrastBackground="{{true}}"/>
     </div>
     <div class="controlsDemo__cell demo-switchBase__contrast-true">
         <div class="controls-text-label controlsDemo_widthFit controls-text-label">
-            contrastBackground=false inlineHeight=s
+            contrastBackground=false size=s
         </div>
         <Controls.toggle:DoubleSwitch bind:value="value"
                                       captions="{{['Turned on', 'Turned off']}}"
-                                      inlineHeight="s"
-                                      defaultValue="{{_defaultValue}}"
+                                      size="s"
+                                      resetValue="{{_resetValue}}"
                                       contrastBackground="{{false}}"/>
     </div>
 </div>
