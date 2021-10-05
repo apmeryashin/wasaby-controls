@@ -15,6 +15,7 @@ interface ISortOptions<S, T extends TreeItem<S>> {
     display: Tree<S, T>;
     itemModule?: string;
     nodeFooters: Array<T>;
+    hasNodeFooterViewConfig: boolean;
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
 }
 
@@ -25,12 +26,12 @@ interface ISortOptions<S, T extends TreeItem<S>> {
  */
 export function shouldDisplayNodeFooterTemplate(
     item: TreeItem,
-    nodeFooterTemplate: TemplateFunction,
+    hasNodeFooterViewConfig: boolean,
     nodeFooterVisibilityCallback: TNodeFooterVisibilityCallback
 ): boolean {
     // если темплейт не задан, то мы точно его не будем отображать. А если есть данные еще,
     // то в первую очередь отображается кнопка Еще
-    if (!nodeFooterTemplate || item.hasMoreStorage()) {
+    if (!hasNodeFooterViewConfig || item.hasMoreStorage()) {
         return false;
     }
 
@@ -171,8 +172,13 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             display: this.options.display,
             itemModule: this.options.itemModule,
             nodeFooters: this._nodeFooters,
+            hasNodeFooterViewConfig: this._hasNodeFooterViewConfig(this.options),
             nodeFooterVisibilityCallback: this.options.nodeFooterVisibilityCallback
         });
+    }
+
+    protected _hasNodeFooterViewConfig(options: IOptions): boolean {
+        return !!options.display.getNodeFooterTemplate();
     }
 
     /**
@@ -188,7 +194,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
 
         // считаем новый список футеров
         const nodesWithFooters = NodeFooter._countNodesWithFooters(
-            items, options.nodeFooterVisibilityCallback, options.display.getNodeFooterTemplate()
+            items, options.nodeFooterVisibilityCallback, options.hasNodeFooterViewConfig
         );
         const newNodeFooterContents = nodesWithFooters.map((it) => NodeFooter._getNodeFooterContent(it));
 
@@ -269,7 +275,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
     }
 
     private static _countNodesWithFooters(
-        items: TreeItem[], nodeFooterVisibilityCallback: TNodeFooterVisibilityCallback, nodeFooterTemplate: TemplateFunction
+        items: TreeItem[], nodeFooterVisibilityCallback: TNodeFooterVisibilityCallback, hasNodeFooterViewConfig: boolean
     ): TreeItem[] {
         const nodesWithFooter = [];
 
@@ -287,7 +293,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             // Проверяем что в узле есть еще записи или определен футер темплейт и прикладники разрешили его показывать
             // nodeFooterVisibilityCallback вызываем только когда будем отображать прикладной темплейт,
             // если отображаем Еще, то всегда показываем nodeFooter
-            if (item.hasMoreStorage() || shouldDisplayNodeFooterTemplate(item, nodeFooterTemplate, nodeFooterVisibilityCallback)) {
+            if (item.hasMoreStorage() || shouldDisplayNodeFooterTemplate(item, hasNodeFooterViewConfig, nodeFooterVisibilityCallback)) {
                 nodesWithFooter.push(item);
             }
         }

@@ -214,23 +214,25 @@
    padding-left: var(--item_padding-left_s_list);
 }
 
+.controls-TreeGrid__nodeFooter-cell__content {
+   width: 100%;
+   display: inline-flex;
+   align-items: baseline;
+   min-width: 0;
+   flex-shrink: 1;
+   box-sizing: border-box;
+   height: 100%;
+}
+
+.controls-TreeGrid__nodeFooter-cell_withContent {
+   min-height: var(--node-footer_height_treeGrid);
+}
+
 .controls-TreeGrid__nodeFooterContent {
    display: inline-flex;
    align-items: baseline;
-   min-height: var(--node-footer_height_treeGrid);
    box-sizing: border-box;
    border-top-style: solid;
-}
-
-.ws-is-ie .controls-TreeGrid__nodeFooterContent {
-   // см _Table.less .controls-Grid__row-cell
-   display: table-cell;
-   vertical-align: top;
-   height: 0;
-}
-
-.ws-is-ie .controls-TreeGrid__nodeFooterContent_colspaned {
-   width: 100%;
 }
 
 .controls-TreeGrid__nodeFooterCell_columnSeparator-size_null {

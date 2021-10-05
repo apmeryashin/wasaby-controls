@@ -1,4 +1,6 @@
 import { ITree, IOptions as ITreeOptions } from 'Controls/tree';
+import {IColumn as IGridColumn} from 'Controls/grid';
+import {TemplateFunction} from 'UI/Base';
 
 /**
  * @typedef {String} Controls/_treeGrid/interface/ITreeGrid/TGroupNodeVisibility
@@ -23,6 +25,20 @@ export interface IOptions extends ITreeOptions {
  */
 export default interface ITreeGrid extends ITree {
     readonly '[Controls/_treeGrid/interface/ITreeGrid]': true;
+}
+
+/**
+ * Интерфейс для конфигурации колонки в {@link Controls/treeGrid:View дереве с колонками}.
+ *
+ * @implements Controls/grid:IColumn
+ * @public
+ * @author Авраменко А.С.
+ */
+export interface IColumn extends IGridColumn {
+    /**
+     * @cfg {TemplateFunction|String} Шаблон ячейки подвала узла.
+     */
+    nodeFooterTemplate?: TemplateFunction | string;
 }
 
 /**
@@ -84,4 +100,36 @@ export default interface ITreeGrid extends ITree {
  * @remark
  * Опция необходима для подгрузки дерева с раскрытыми узлами по скроллу. При этом необходимо с БЛ линейно
  * возвращать строго отсортированные данные дерева с раскрытыми узлами.
+ */
+
+/**
+ * @name Controls/_treeGrid/interface/ITreeGrid#columns
+ * @cfg {Array.<IColumn>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/ колонок} дерева с колонками.
+ * @remark
+ * Если при отрисовске контрола данные не отображаются или выводится только их часть, то следует проверить {@link Controls/collection:RecordSet}, полученный от {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}.
+ * Такой RecordSet должен содержать набор полей, которые заданы в конфигурации контрола в опции columns, а также сами данные для каждого поля.
+ * @example
+ * <pre class="brush: js">
+ * _columns: null,
+ * _beforeMount: function() {
+ *    this._columns = [
+ *       {
+ *          displayProperty: 'name',
+ *          width: '1fr',
+ *          align: 'left',
+ *          template: _customNameTemplate
+ *       },
+ *       {
+ *          displayProperty: 'balance',
+ *          align: 'right',
+ *          width: 'auto',
+ *          resutTemplate: _customResultTemplate,
+ *          result: 12340
+ *       }
+ *    ];
+ * }
+ * </pre>
+ * <pre class="brush: html">
+ *  <Controls.grid:View columns="{{_columns}}" />
+ * </pre>
  */

@@ -1,8 +1,8 @@
 import {TemplateFunction} from 'UI/Base';
 import {TreeItem, MoreButtonVisibility} from 'Controls/display';
 import {Model} from 'Types/entity';
-import TreeGridDataRow from './TreeGridDataRow';
-import {GridCell, GridCell as Cell, IColumn, TColspanCallbackResult} from 'Controls/grid';
+import TreeGridDataRow, {IOptions} from './TreeGridDataRow';
+import {IColumn, TColspanCallbackResult} from 'Controls/grid';
 
 /**
  * Футер узла в иерархической таблице
@@ -22,63 +22,12 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     readonly listElementName: string = 'row';
 
-    // TODO нужно удалить, когда перепишем колспан для футеров узлов
-    //  https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
-    // Храним колспан, чтобы правильно определять индекс столбца.
-    // Он задается на темплейте, поэтмоу в моделе мы о нем не знаем
-    private _colspan: boolean;
-
     get node(): TreeItem<Model> {
         return this.getNode();
     }
 
     getNode(): TreeItem<Model> {
         return this.getParent();
-    }
-
-    getColumns(colspan?: boolean): GridCell[] {
-        this._colspan = colspan;
-        let columns = super.getColumns();
-        if (colspan !== false) {
-            let start = 0;
-            let end = 1;
-
-            // В данный момент поддержан только один сценарий лесенки и футеров узлов: лесенка для первого столбца.
-            // Чтобы поддержать все сценарии нужно переписать nodeFooterTemplate::colspan на Tree::colspanCallback
-            //  TODO переписать когда перепишем колспан для футеров узлов
-            //   https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
-            if (this.isSupportStickyLadder() && columns[0]['[Controls/_display/StickyLadderCell]']) {
-                start++;
-                end++;
-            }
-
-            if (this.isFullGridSupport() && this.hasColumnScroll()) {
-                end += this.getStickyColumnsCount();
-            }
-
-            if (this.hasMultiSelectColumn()) {
-                end++;
-            }
-
-            columns = columns.slice(start, end);
-        }
-        return columns;
-    }
-
-    // TODO нужно удалить, когда перепишем колспан для футеров узлов
-    //  https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
-    getColumnIndex(column: Cell): number {
-        return this.getColumns(this._colspan).indexOf(column);
-    }
-
-    // TODO нужно удалить, когда перепишем колспан для футеров узлов
-    //  https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
-    getColumnsCount(): number {
-        return this.getColumns(this._colspan).length;
-    }
-
-    getTemplate(): TemplateFunction | string {
-        return this._$owner.getNodeFooterTemplate() || 'Controls/treeGrid:NodeFooterTemplate';
     }
 
     getNodeFooterTemplateMoreButton(): TemplateFunction {
@@ -107,19 +56,6 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
     shouldDisplayVisibleFooter(content: TemplateFunction): boolean {
         // Нужно рисовать футер если есть пользовательский контент или нужно рисовать нашу кнопку "Еще" для подгрузки.
         return !!content || this.needMoreButton();
-    }
-
-    shouldDisplayContent(column: Cell<null, TreeGridNodeFooterRow>, colspan?: boolean): boolean {
-        const columns = this.getColumns(colspan);
-        const firstFooterCell = columns.find((it) => it['[Controls/treeGrid:TreeGridNodeFooterCell]']);
-        // Отображаем контент только для первой ячейки, которая является TreeGridNodeFooterCell
-        return firstFooterCell === column;
-    }
-
-    // TODO удалить после https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
-    isSupportStickyLadder(): boolean {
-        const ladderProperties = this.getStickyLadder();
-        return ladderProperties && !!Object.keys(ladderProperties).length;
     }
 
     getMoreFontColorStyle(): string {
@@ -154,10 +90,23 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return !needHide;
     }
 
+    _initializeColumns(): void {
+        if (this.needMoreButton() && !this.getRowTemplate() && !this.getOwner().hasNodeFooterColumns()) {
+            this.setRowTemplate('Controls/treeGrid:NodeFooterTemplate');
+        }
+
+        super._initializeColumns({
+            colspanStrategy: 'consistently',
+            shouldAddStickyLadderCells: !this._$rowTemplate,
+            shouldAddMultiSelectCell: !this._$rowTemplate,
+            extensionCellsConstructors: {
+                multiSelectCell: this.getColumnsFactory({column: {}})
+            }
+        });
+    }
+
     protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
-        // В данный момент nodeFooter не поддерживает colspanCallback,
-        // TODO поддержка будет по https://online.sbis.ru/opendoc.html?guid=76c1ba00-bfc9-4eb8-91ba-3977592e6648
-        return undefined;
+        return column.endColumn - column.startColumn;
     }
 }
 
