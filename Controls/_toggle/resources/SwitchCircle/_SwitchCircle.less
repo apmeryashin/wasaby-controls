@@ -7,28 +7,61 @@
     height: var(--marker_height_switcher);
 }
 
+.controls-SwitchCircle_border {
+    border: var(--border-thickness) solid;
+    box-sizing: border-box;
+}
+
 .controls-SwitchCircle_selected {
     background-color: var(--selected_marker_color_switcher);
+    border-color: var(--selected_marker_color_switcher);
 }
 
 .controls-SwitchCircle_contrast-selected {
     background-color: var(--marker_contrast-color_switcher);
+    border-color: var(--selected_marker_color_switcher);
 }
 
 .controls-SwitchCircle_contrast-unselected {
     background-color: var(--marker_contrast-color_switcher);
+    border-color: var(--unselected_marker_color_switcher);
 }
 
 .controls-SwitchCircle_unselected {
     background-color: var(--unselected_marker_color_switcher);
+    border-color: var(--unselected_marker_color_switcher);
 }
 
-.controls-SwitchCircle_selected_disabled,
-.controls-SwitchCircle_contrast-selected_disabled {
+.controls-SwitchCircle_defaultValue {
+    &.controls-SwitchCircle_selected,
+    &.controls-SwitchCircle_contrast-selected {
+        background-color: var(--primary_active_background-color);
+        border-color: var(--primary_active_background-color);
+    }
+
+    &.controls-SwitchCircle_contrast-unselected,
+    &.controls-SwitchCircle_unselected {
+        background-color: var(--unaccented_active_same_background-color);
+        border-color: var(--unaccented_active_same_background-color);
+    }
+}
+
+.controls-SwitchCircle_selected_disabled {
     background-color: var(--readonly_marker_color_switcher);
+    border-color: var(--readonly_marker_color_switcher);
 }
 
-.controls-SwitchCircle_unselected_disabled,
-.controls-SwitchCircle_contrast-unselected_disabled {
+.controls-SwitchCircle_unselected_disabled {
     background-color: var(--readonly_unselected_marker_color_switcher);
+    border-color: var(--readonly_unselected_marker_color_switcher);
+}
+
+.controls-SwitchCircle_contrast-unselected_disabled {
+    background-color: var(--marker_contrast-color_switcher);
+    border-color: var(--readonly_unselected_marker_color_switcher);
+}
+
+.controls-SwitchCircle_contrast-selected_disabled {
+    background-color: var(--marker_contrast-color_switcher);
+    border-color: var(--readonly_marker_color_switcher);
 }

@@ -6,20 +6,22 @@ import {
     ITooltip,
     ITooltipOptions,
     IValidationStatus,
+    IHeightOptions,
     IValidationStatusOptions
 } from 'Controls/interface';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 
-export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
+export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IHeightOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions {
    caption: string;
    captionPosition: string;
+   defaultValue?: boolean;
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2ftoggle%2fSwitch%2fIndex демо-пример}
@@ -45,7 +47,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
  * @extends UI/Base:Control
  * @implements Controls/toggle:ICheckable
  * @implements Controls/interface:ITooltip
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Switch/Base/Index
@@ -70,7 +72,8 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
          value: false,
          captionPosition: 'right',
          validationStatus: 'valid',
-         contrastBackground: true
+         contrastBackground: true,
+         inlineHeight: 'm'
       };
    }
    static getOptionTypes(): object {
@@ -92,6 +95,21 @@ Object.defineProperty(Switch, 'defaultProps', {
       return Switch.getDefaultOptions();
    }
 });
+
+/**
+ * @name Controls/_toggle/Switch#inlineHeight
+ * @cfg {string}
+ * @variable s
+ * @variable m
+ * @default m
+ * @demo Controls-demo/toggle/Switch/InlineHeight/Index
+ */
+
+/**
+ * @name Controls/_toggle/Switch#defaultValue
+ * @cfg {boolean} Предустановленное значение
+ * @demo Controls-demo/toggle/Switch/DefaultValue/Index
+ */
 
 /**
  * @name Controls/_toggle/Switch#contrastBackground

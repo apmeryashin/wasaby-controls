@@ -5,13 +5,14 @@ import toggleTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/Dou
 import textTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchText');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
-import {ITooltip, ITooltipOptions} from 'Controls/interface';
+import {IHeightOptions, ITooltip, ITooltipOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
 import {IContrastBackgroundOptions} from "Controls/_interface/IContrastBackground";
 
-export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IContrastBackgroundOptions {
+export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IContrastBackgroundOptions, IHeightOptions {
    captions?: string[];
    orientation?: string;
+   defaultValue?: boolean;
 }
 
 const CAPTIONS_LENGTH = 2;
@@ -99,7 +100,8 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
       return {
          value: false,
          contrastBackground: true,
-         orientation: 'horizontal'
+         orientation: 'horizontal',
+         inlineHeight: 'm'
       };
    }
    static getOptionTypes(): object {
@@ -132,6 +134,21 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
  * @cfg {string}
  * @default true
  * @demo Controls-demo/toggle/DoubleSwitch/ContrastBackground/Index
+ */
+
+/**
+ * @name Controls/_toggle/DoubleSwitch#inlineHeight
+ * @cfg {string}
+ * @variable s
+ * @variable m
+ * @default m
+ * @demo Controls-demo/toggle/DoubleSwitch/InlineHeight/Index
+ */
+
+/**
+ * @name Controls/_toggle/DoubleSwitch#defaultValue
+ * @cfg {boolean} Предустановленное значение
+ * @demo Controls-demo/toggle/DoubleSwitch/DefaultValue/Index
  */
 
 /**
