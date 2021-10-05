@@ -355,7 +355,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             this._destroyNavigationController();
             this._getNavigationController(this._navigation).updateQueryProperties(items, this._root);
         }
-        this._setItems(items);
+        this._addItems(items, this._root);
         return this._items;
     }
 
@@ -805,8 +805,8 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         return navigationSourceConfig?.multiNavigation || this._options.navigation?.sourceConfig?.multiNavigation;
     }
 
-    private _addItems(items: RecordSet, key: TKey, direction: Direction): RecordSet {
-        if (this._items && key === this._root) {
+    private _addItems(items: RecordSet, key: TKey, direction?: Direction): RecordSet {
+        if (this._items && key === this._root && items) {
             this._items.setMetaData(items.getMetaData());
         }
 
