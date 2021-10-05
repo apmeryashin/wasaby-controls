@@ -227,10 +227,14 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     setColspanGroup(colspanGroup: boolean): void {
         if (this._$colspanGroup !== colspanGroup) {
             this._$colspanGroup = colspanGroup;
-            this._updateItemsProperty(
+            const wasItemsUpdated = this._updateItemsProperty(
                 'setColspanGroup', colspanGroup, '[Controls/_display/grid/GroupRow]'
             );
-            this._nextVersion();
+            // Не обновляем и не перестраиваем таблицу, если нет элементов у которых обновилось свойство,
+            // от которого зависит визуальное отображение.
+            if (wasItemsUpdated) {
+                this._nextVersion();
+            }
         }
     }
 
@@ -670,7 +674,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     protected abstract _updateItemsProperty(updateMethodName: string,
                                             newPropertyValue: any,
                                             conditionProperty?: string,
-                                            silent?: boolean): void;
+                                            silent?: boolean): boolean;
 
     // endregion
 }

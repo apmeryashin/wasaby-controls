@@ -360,6 +360,10 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
 
     _$relativeCellContainers: null,
 
+    _relativeCellContainersUpdateCallback(newContainers: HTMLElement[]): void {
+        this._$relativeCellContainers = newContainers;
+    },
+
     //#region IFreezable
 
     _freezeColumnScroll(): void {
@@ -381,6 +385,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
 
     // _beforeMount
     _columnScrollOnViewBeforeMount(options: IAbstractViewOptions): void {
+        this._relativeCellContainersUpdateCallback = this._relativeCellContainersUpdateCallback.bind(this);
         if (options.columnScroll) {
             this._$columnScrollSelector = ColumnScrollController.createUniqSelector();
             if (
