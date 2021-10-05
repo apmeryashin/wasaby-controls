@@ -20,6 +20,6 @@ export default class ListController extends BaseController<IListConfig, TreeItem
     }
 
     get imageProperty(): string {
-        return this._$browserOptions.detail.imageProperty;
+        return this._$templateProperties.imageProperty;
     }
 }

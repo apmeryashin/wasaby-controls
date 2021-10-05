@@ -95,7 +95,7 @@ export default interface IItemTemplateOptions {
      * @demo Controls-demo/Menu/Control/ItemTemplate/AdditionalTextTemplate/Index
      * @example
      * <pre class="brush: html; highlight: [9,10,11]">
-     * <Controls.menu:Control source="{{_source)}}" keyProperty="id">
+     * <Controls.menu:Control source="{{_source}}" keyProperty="id">
      *    <ws:itemTemplate>
      *       <ws:partial template="Controls/menu:ItemTemplate">
      *          <ws:additionalTextTemplate>
@@ -132,7 +132,7 @@ export default interface IItemTemplateOptions {
      * @demo Controls-demo/Menu/Control/ItemTemplate/ItemTemplateProperty/RightTemplate/Index
      * @example
      * <pre class="brush: html; highlight: [9,10,11]">
-     * <Controls.menu:Control source="{{_source)}}" keyProperty="id">
+     * <Controls.menu:Control source="{{_source}}" keyProperty="id">
      *    <ws:itemTemplate>
      *       <ws:partial template="Controls/menu:ItemTemplate" attr:class="Controls-demo-Menu-Control__itemTemplate">
      *          <ws:rightTemplate>

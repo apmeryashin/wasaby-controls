@@ -93,6 +93,118 @@ describe('Controls/_multiselection/Controller', () => {
          const result = controller.toggleItem(2);
          assert.deepEqual(result, { selected: [2], excluded: [] });
       });
+
+      it('select pack, select one item and select pack, unselect it item => item shoul be unselected', () => {
+         model = new Collection({
+            collection: new RecordSet({
+               rawData: [
+                  { id: 0 },
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 },
+                  { id: 7 },
+                  { id: 8 },
+                  { id: 9 }
+               ],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         strategy = new FlatSelectionStrategy({ model });
+
+         controller = new SelectionController({
+            model,
+            strategy,
+            filter: {},
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         let selection = controller.selectAll(2);
+         controller.setSelection(selection);
+
+         selection = controller.toggleItem(7);
+         controller.setSelection(selection);
+
+         selection = controller.selectAll(2);
+         controller.setSelection(selection);
+
+         selection = controller.toggleItem(7);
+         controller.setSelection(selection);
+
+         assert.isTrue(model.getItemBySourceKey(0).isSelected());
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isFalse(model.getItemBySourceKey(4).isSelected());
+         assert.isFalse(model.getItemBySourceKey(5).isSelected());
+         assert.isFalse(model.getItemBySourceKey(6).isSelected());
+         assert.isFalse(model.getItemBySourceKey(7).isSelected());
+         assert.isFalse(model.getItemBySourceKey(8).isSelected());
+         assert.isFalse(model.getItemBySourceKey(9).isSelected());
+
+         assert.equal(controller.getCountOfSelected(), 4);
+      });
+
+      it('select pack, select one item and select pack, unselect item in pack => item should be unselected', () => {
+         model = new Collection({
+            collection: new RecordSet({
+               rawData: [
+                  { id: 0 },
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 },
+                  { id: 7 },
+                  { id: 8 },
+                  { id: 9 }
+               ],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         strategy = new FlatSelectionStrategy({ model });
+
+         controller = new SelectionController({
+            model,
+            strategy,
+            filter: {},
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         let selection = controller.selectAll(2);
+         controller.setSelection(selection);
+
+         selection = controller.toggleItem(7);
+         controller.setSelection(selection);
+
+         selection = controller.selectAll(2);
+         controller.setSelection(selection);
+
+         selection = controller.toggleItem(3);
+         controller.setSelection(selection);
+
+         assert.isTrue(model.getItemBySourceKey(0).isSelected());
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         assert.isFalse(model.getItemBySourceKey(3).isSelected());
+         assert.isFalse(model.getItemBySourceKey(4).isSelected());
+         assert.isFalse(model.getItemBySourceKey(5).isSelected());
+         assert.isFalse(model.getItemBySourceKey(6).isSelected());
+         assert.isTrue(model.getItemBySourceKey(7).isSelected());
+         assert.isFalse(model.getItemBySourceKey(8).isSelected());
+         assert.isFalse(model.getItemBySourceKey(9).isSelected());
+
+         assert.equal(controller.getCountOfSelected(), 4);
+      });
    });
 
    describe('selectRange', () => {
@@ -154,21 +266,7 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 
-   describe('increaseLimitByCount', () => {
-      it('limit is increased', () => {
-         controller.increaseLimitByCount(1);
-         assert.equal(controller.getLimit(), 1);
-
-         controller.increaseLimitByCount(1);
-         assert.equal(controller.getLimit(), 2);
-      });
-
-      it('update model', () => {
-         controller.setSelection({selected: [null], excluded: []});
-         controller.increaseLimitByCount(1);
-         assert.isTrue(model.getItemBySourceKey(1).isSelected());
-      });
-
+   describe('select all with limit', () => {
       it('not should unselect item, when it selected after pack', () => {
          model = new Collection({
             collection: new RecordSet({
@@ -201,8 +299,7 @@ describe('Controls/_multiselection/Controller', () => {
 
          let selection = controller.toggleItem(7);
          controller.setSelection(selection);
-         controller.increaseLimitByCount(5);
-         selection = controller.selectAll();
+         selection = controller.selectAll(5);
          controller.setSelection(selection);
 
          assert.isTrue(model.getItemBySourceKey(0).isSelected());
@@ -256,8 +353,7 @@ describe('Controls/_multiselection/Controller', () => {
          selection = controller.toggleItem(4);
          controller.setSelection(selection);
 
-         controller.increaseLimitByCount(5);
-         selection = controller.selectAll();
+         selection = controller.selectAll(5);
          controller.setSelection(selection);
 
          assert.isTrue(model.getItemBySourceKey(0).isSelected());
@@ -304,15 +400,13 @@ describe('Controls/_multiselection/Controller', () => {
             excludedKeys: []
          });
 
-         controller.increaseLimitByCount(2);
-         let result = controller.selectAll();
+         let result = controller.selectAll(2);
          controller.setSelection(result);
 
          result = controller.toggleItem(3);
          controller.setSelection(result);
 
-         controller.increaseLimitByCount(2);
-         result = controller.selectAll();
+         result = controller.selectAll(2);
          controller.setSelection(result);
 
          assert.isTrue(model.getItemBySourceKey(0).isSelected());
@@ -362,8 +456,7 @@ describe('Controls/_multiselection/Controller', () => {
          let selection = controller.toggleItem(7);
          controller.setSelection(selection);
 
-         controller.increaseLimitByCount(2);
-         selection = controller.selectAll();
+         selection = controller.selectAll(2);
          controller.setSelection(selection);
 
          assert.isTrue(model.getItemBySourceKey(0).isSelected());
@@ -410,15 +503,13 @@ describe('Controls/_multiselection/Controller', () => {
             excludedKeys: []
          });
 
-         controller.increaseLimitByCount(2);
-         let selection = controller.selectAll();
+         let selection = controller.selectAll(2);
          controller.setSelection(selection);
 
          selection = controller.toggleItem(7);
          controller.setSelection(selection);
 
-         controller.increaseLimitByCount(2);
-         selection = controller.selectAll();
+         selection = controller.selectAll(2);
          controller.setSelection(selection);
 
          assert.isTrue(model.getItemBySourceKey(0).isSelected());
@@ -432,6 +523,66 @@ describe('Controls/_multiselection/Controller', () => {
          assert.isFalse(model.getItemBySourceKey(8).isSelected());
          assert.isFalse(model.getItemBySourceKey(9).isSelected());
 
+         assert.equal(controller.getCountOfSelected(), 5);
+      });
+
+      it('select 2 packs, unselect 2/3 packs, select pack => should be selected only first pack', () => {
+         model = new Collection({
+            collection: new RecordSet({
+               rawData: [
+                  { id: 0 },
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 }
+               ],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         strategy = new FlatSelectionStrategy({ model });
+
+         controller = new SelectionController({
+            model,
+            strategy,
+            filter: {},
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         // выбираем 2 пачки
+         let selection = controller.selectAll(2);
+         controller.setSelection(selection);
+         selection = controller.selectAll(2);
+         controller.setSelection(selection);
+
+         // снимаем выбор со всей первой пачки и с части 2-ой пачки
+         selection = controller.toggleItem(0);
+         controller.setSelection(selection);
+         selection = controller.toggleItem(1);
+         controller.setSelection(selection);
+         selection = controller.toggleItem(2);
+         controller.setSelection(selection);
+
+         // выбираем пачку
+         selection = controller.selectAll(2);
+         controller.setSelection(selection);
+
+         // выбираем еще пачку
+         selection = controller.selectAll(2);
+         controller.setSelection(selection);
+
+         // ожидаем что выбрано 2 пачки по 2 элемента + 1 элемент = 5 элементов
+         assert.isTrue(model.getItemBySourceKey(0).isSelected());
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isTrue(model.getItemBySourceKey(4).isSelected());
+         assert.isFalse(model.getItemBySourceKey(5).isSelected());
+         assert.isFalse(model.getItemBySourceKey(6).isSelected());
          assert.equal(controller.getCountOfSelected(), 5);
       });
    });
@@ -608,48 +759,73 @@ describe('Controls/_multiselection/Controller', () => {
       assert.deepEqual(result, { selected: [], excluded: [] });
    });
 
-   it('onCollectionAdd', () => {
-      model.setCollection(new RecordSet({
-         rawData: [
-            { id: 1 },
-            { id: 2 },
-            { id: 3 },
-            { id: 4 }
-         ],
-         keyProperty: 'id'
-      }), {});
+   describe('onCollectionAdd', () => {
+      it('set selected on added items if it is selected', () => {
+         model.setCollection(new RecordSet({
+            rawData: [
+               { id: 1 },
+               { id: 2 },
+               { id: 3 },
+               { id: 4 }
+            ],
+            keyProperty: 'id'
+         }), {});
 
-      controller = new SelectionController({
-         model,
-         strategy,
-         selectedKeys: [null],
-         excludedKeys: []
+         controller = new SelectionController({
+            model,
+            strategy,
+            selectedKeys: [null],
+            excludedKeys: []
+         });
+
+         let addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
+         controller.onCollectionAdd(addedItems);
+
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
       });
 
-      let addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
-      controller.onCollectionAdd(addedItems);
+      it('limit', () => {
+         // проверяем что не проставим селекшин для новых элементов, если уперлись в лимит
+         let newSelection = controller.selectAll(3);
+         controller.setSelection(newSelection);
+         model.setCollection(new RecordSet({
+            rawData: [
+               { id: 1 },
+               { id: 2 },
+               { id: 3 },
+               { id: 4 }
+            ],
+            keyProperty: 'id'
+         }), {});
+         model.getItemBySourceKey(1).setSelected(true);
+         model.getItemBySourceKey(2).setSelected(true);
 
-      assert.isTrue(model.getItemBySourceKey(1).isSelected());
-      assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         newSelection = controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)], 2);
+         controller.setSelection(newSelection);
 
-      // проверяем что не проставим селекшин для новых элементов, если уперлись в лимит
-      controller.setLimit(3);
-      model.setCollection(new RecordSet({
-         rawData: [
-            { id: 1 },
-            { id: 2 },
-            { id: 3 },
-            { id: 4 }
-         ],
-         keyProperty: 'id'
-      }), {});
-      model.getItemBySourceKey(1).setSelected(true);
-      model.getItemBySourceKey(2).setSelected(true);
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isFalse(model.getItemBySourceKey(4).isSelected());
+      });
 
-      controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
+      it('limit, new items filled all limit', () => {
+         const newSelection = controller.selectAll(4);
+         controller.setSelection(newSelection);
+         model.setCollection(new RecordSet({
+            rawData: [
+               { id: 1 },
+               { id: 2 },
+               { id: 3 },
+               { id: 4 }
+            ],
+            keyProperty: 'id'
+         }), {});
 
-      assert.isTrue(model.getItemBySourceKey(3).isSelected());
-      assert.isFalse(model.getItemBySourceKey(4).isSelected());
+         controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)], 2);
+
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isTrue(model.getItemBySourceKey(4).isSelected());
+      });
    });
 
    describe('onCollectionRemove', () => {
@@ -808,7 +984,9 @@ describe('Controls/_multiselection/Controller', () => {
                selectDescendants: true,
                selectAncestors: true,
                rootId: null,
-               selectionType: 'all'
+               entryPath: [],
+               selectionType: 'all',
+               selectionCountMode: 'all'
             }),
             selectedKeys: [null],
             excludedKeys: []
@@ -933,10 +1111,7 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('with limit', () => {
-      controller.setLimit(1);
-
-      let result = controller.selectAll();
-      assert.deepEqual(result, {selected: [null], excluded: []});
+      let result = controller.selectAll(1);
       controller.setSelection(result);
       assert.equal(controller.getCountOfSelected(), 1);
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
@@ -944,7 +1119,6 @@ describe('Controls/_multiselection/Controller', () => {
       assert.isFalse(model.getItemBySourceKey(3).isSelected());
 
       result = controller.toggleItem(3);
-      assert.deepEqual(result, {selected: [null, 3], excluded: [2]});
       controller.setSelection(result);
       assert.equal(controller.getCountOfSelected(), 2);
       assert.isTrue(model.getItemBySourceKey(1).isSelected());

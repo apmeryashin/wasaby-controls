@@ -1,6 +1,7 @@
 import { IControlOptions, TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
+import { ISelectionCountModeOptions } from 'Controls/interface';
 
 
 type TNodeFooterVisibilityCallback = (item: Model) => boolean;
@@ -8,7 +9,7 @@ type TNodeFooterVisibilityCallback = (item: Model) => boolean;
 type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
 
 
-export interface ITreeControlOptions extends IControlOptions {
+export interface ITreeControlOptions extends IControlOptions, ISelectionCountModeOptions {
     expandByItemClick?: boolean;
     expandedItems?: Array<number | string>;
     collapsedItems?: Array<number | string>;

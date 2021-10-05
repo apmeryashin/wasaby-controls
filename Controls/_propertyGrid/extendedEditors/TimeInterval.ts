@@ -3,7 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import TimeIntervalTemplate = require('wml!Controls/_propertyGrid/extendedEditors/TimeInterval');
 import IEditor from 'Controls/_propertyGrid/IEditor';
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
-import {StringValueConverter} from 'Controls/input';
+import {StringValueConverter} from 'Controls/date';
 import {Time} from 'Types/entity';
 
 interface ITimeIntervalEditorOptions extends IEditorOptions, IControlOptions {

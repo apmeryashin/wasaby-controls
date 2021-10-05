@@ -6,7 +6,7 @@
  * @includes Base Controls/_slider/Base
  * @includes Range Controls/_slider/Range
  * @includes ISlider Controls/_slider/interface/ISlider
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 
 /*

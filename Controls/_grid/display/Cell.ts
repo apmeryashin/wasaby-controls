@@ -88,6 +88,10 @@ export default class Cell<
     protected _$isTopSeparatorEnabled?: string;
     protected _$isBottomSeparatorEnabled?: string;
 
+    readonly listInstanceName: string = 'controls-Grid';
+
+    readonly listElementName: string =  'cell';
+
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);

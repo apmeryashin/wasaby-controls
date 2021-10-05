@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 
 import {
+   Collection,
    Collection as CollectionDisplay, CollectionItem, Tree
 } from 'Controls/display';
 import Drag from 'Controls/_display/itemsStrategy/Drag';
@@ -219,6 +220,43 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
          const items = strategy.items;
          const keys = items.map((it) => it.getContents().getKey());
          assert.deepEqual(keys, [1, 2, 4, 6]);
+      });
+
+      it('collection has filtered items', () => {
+         display = new Collection({
+            collection: new RecordSet({
+               rawData: [
+                  { id: 0 },
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 }
+               ],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id',
+            filter: (item, index) => index % 2 === 0 // скрыты все нечетные записи
+         });
+         source = getSource(display.getItems());
+         strategy = new Drag({
+            source,
+            display,
+            draggableItem: display.getItemBySourceKey(2),
+            draggedItemsKeys: [2],
+            targetIndex: 1
+         });
+
+         let keys = strategy.items.map((it) => it.getContents().getKey());
+         assert.deepEqual(keys, [0, 1, 2, 3, 4, 5]);
+
+         strategy.setPosition({index: 2, position: 'after'});
+         keys = strategy.items.map((it) => it.getContents().getKey());
+         assert.deepEqual(keys, [0, 1, 3, 4, 2, 5]);
+
+         strategy.setPosition({index: 1, position: 'before'});
+         keys = strategy.items.map((it) => it.getContents().getKey());
+         assert.deepEqual(keys, [0, 1, 2, 3, 4, 5]);
       });
    });
 

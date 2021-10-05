@@ -773,7 +773,14 @@
    bottom: 0;
    display: inline-flex;
    align-items: baseline;
-   box-sizing: border-box;
+}
+
+// Для исправления бага safari, из-за которого position: absolute элементы,
+// не сдвигаются padding'ами внешнего блока
+.ws-is-mobile-safari {
+   .controls-StickyBlock_gapFix .controls-ListView__itemV_marker_master {
+      top: 1px;
+   }
 }
 
 .controls-ListView__itemV_marker_master::before {

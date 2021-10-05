@@ -22,7 +22,7 @@ interface IDragObject {
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/openers/dialog/#template руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
  *
  * @extends UI/Base:Control
  *
@@ -65,6 +65,22 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     protected _onMouseDown(event: SyntheticEvent<MouseEvent>): void {
         if (this._needStartDrag(event)) {
             this._startDragNDrop(event);
+        }
+    }
+
+    protected _getRoundClass(): string {
+        if (!this._options.maximize) {
+            if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
+                if (this._options.footerContentTemplate) {
+                    return 'controls-DialogTemplate__top-area_roundBorder';
+                } else {
+                    return 'controls-DialogTemplate__border-radius';
+                }
+            } else {
+                if (!this._options.footerContentTemplate) {
+                    return 'controls-DialogTemplate__footer-area_roundBorder';
+                }
+            }
         }
     }
 
@@ -119,10 +135,14 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
  * @cfg {String} Цвет фона шапки диалогового окна.
  * @variant default
  * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
  * @default default
- * @demo Controls-demo/PopupTemplate/Dialog/headerBackgroundStyle/Index
- * @remark Данная опция определяет префикс стиля для настройки фона шапки диалогового окна.
- * На шапку будет установлен класс **.controls-DialogTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}**, который следует определить у себя в стилях.
+ * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
  * @see backgroundStyle
  */
 
@@ -131,16 +151,20 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
  * @cfg {String} Цвет фона диалогового окна.
  * @variant default
  * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
  * @default default
  * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
- * @remark Данная опция определяет префикс стиля для настройки фона диалогового окна.
- * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-@{headerBackgroundStyle}**, который следует определить у себя в стилях.
  * @see headerBackgroundStyle
  */
 
 /**
  * @name Controls/_popupTemplate/Dialog/Template/DialogTemplate#maximize
- * @cfg {Boolean} Режим отображения окна во всесь экран. Влияет на видимость границы и тени диалогового окна.
+ * @cfg {Boolean} Режим отображения окна во весь экран. Влияет на видимость границы и тени диалогового окна.
  * @see headerBorderVisible
  */
 

@@ -173,7 +173,9 @@ export default class View extends Control<IOptions, IReceivedState> {
 
     //region ⇑ events handlers
     private _onDetailDataLoadCallback(event: SyntheticEvent, items: RecordSet, direction: string): void {
-        if (!direction) {
+        const searchController = this._dataContext.listsConfigs.detail.searchController;
+        const needApplyConfiguration = !direction && (!searchController || !searchController.isSearchInProcess());
+        if (needApplyConfiguration) {
             this._processItemsMetadata(items);
         }
         if (this._masterDataLoadResolver) {
@@ -188,7 +190,6 @@ export default class View extends Control<IOptions, IReceivedState> {
         if (this._detailExplorerOptions.dataLoadCallback) {
             this._detailExplorerOptions.dataLoadCallback(items, direction, 'detail');
         }
-        this._processItemsMetadata(items);
     }
 
     protected _updateContextVersion(context: typeof dataContext): boolean {
@@ -361,17 +362,22 @@ export default class View extends Control<IOptions, IReceivedState> {
 
     protected _createTemplateControllers(cfg: IBrowserViewConfig, options: IOptions): void {
         this._listConfiguration = cfg;
+        const templateProperties = {
+            imageProperty: options.detail.imageProperty,
+            gradientColorProperty: options.detail.gradientColorProperty,
+            descriptionProperty: options.detail.descriptionProperty
+        }
         this._tileCfg = new TileController({
             listConfiguration: this._listConfiguration,
-            browserOptions: options
+            templateProperties
         });
         this._listCfg = new ListController({
             listConfiguration: this._listConfiguration,
-            browserOptions: options
+            templateProperties
         });
         this._tableCfg = new TableController({
             listConfiguration: this._listConfiguration,
-            browserOptions: options
+            templateProperties
         });
         this._columns = this._getPatchedColumns(this._columns);
     }

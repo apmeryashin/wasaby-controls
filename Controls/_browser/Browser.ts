@@ -20,7 +20,7 @@ import {
     ISearchOptions,
     ISourceOptions,
     TSelectionType,
-    ISelectionObject,
+    ISearchValueOptions,
     TKey,
     ISelectFieldsOptions
 } from 'Controls/interface';
@@ -46,10 +46,9 @@ type TViewMode = 'search' | 'tile' | 'table' | 'list';
 
 export interface IListConfiguration extends IControlOptions, ISearchOptions, ISourceOptions,
     Required<IFilterOptions>, Required<IHierarchyOptions>, IHierarchySearchOptions,
-    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions {
+    IMarkerListOptions, IShadowsOptions, ISelectFieldsOptions, ISearchValueOptions {
     searchNavigationMode?: string;
     groupHistoryId?: string;
-    searchValue?: string;
     filterButtonSource?: IFilterItem[];
     useStore?: boolean;
     dataLoadCallback?: Function;
@@ -476,17 +475,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 return Promise.resolve();
             }
             this._validateSearchOptions(newOptions);
-            const updateResult = searchController.update({
+            const updateSearchControllerResult = searchController.update({
                 ...newOptions,
                 sourceController: this._getSourceController(),
                 root: this._root
             });
 
-            if (updateResult instanceof Promise) {
-                this._loading = true;
-                return updateResult.catch(this._processSearchError);
+            if (updateSearchControllerResult) {
+                if (newOptions.searchValue) {
+                    return this._search(null, newOptions.searchValue);
+                } else {
+                    return Promise.resolve(this._resetSearch());
+                }
             } else {
-                return Promise.resolve(updateResult);
+                return Promise.resolve(updateSearchControllerResult);
             }
         }) as Promise<void>;
     }

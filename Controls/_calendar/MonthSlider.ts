@@ -15,13 +15,14 @@ import 'css!Controls/calendar';
  *
  * @remark
  * Полезные ссылки:
- * * {@link https://github.com/saby/wasaby-controls/blob/6156a9009ee88d96bf73c8b1200e197f9db1c3c8/Controls-default-theme/variables/_calendar.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_calendar.less переменные тем оформления}
  *
  * @class Controls/_calendar/MonthSlider
  * @extends UI/Base:Control
  * @mixes Controls/calendar:IMonth
  * @mixes Controls/dateRange:IRangeSelectable
  * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/dateRange:IDateRange
  * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/interface:IDisplayedRanges
  * @public
@@ -88,6 +89,10 @@ export default class MonthSlider extends Control<IControlOptions> {
 
     protected _onEndValueChanged(event, value): void {
         this._notify('endValueChanged', [value]);
+    }
+
+    protected _rangeChangedHandler(event: Date, startValue: Date, endValue: Date): void {
+        this._notify('rangeChanged', [startValue, endValue]);
     }
 
     private _slideMonth(event, delta): void {

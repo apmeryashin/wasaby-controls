@@ -5,8 +5,10 @@ import {
     DragScrollController,
     StyleContainers
 } from 'Controls/columnScroll';
+import {TKey} from 'Controls/interface';
 import {SyntheticEvent} from 'UI/Vdom';
 import {DestroyableMixin} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
 
 interface IColumnScrollMixinOptions {
     columnScroll?: boolean;
@@ -20,8 +22,11 @@ interface IColumnScrollMixinOptions {
 interface IViewOptions extends IControlOptions, IColumnScrollMixinOptions {
     columns: Object[];
     header: Object[];
+    items: RecordSet;
     backgroundStyle?: string;
     needShowEmptyTemplate?: boolean;
+    expandedItems?: TKey[];
+    collapsedItems?: TKey[];
     itemsDragNDrop?: boolean;
     headerVisibility?: string;
     headerInEmptyListVisible?: boolean;
@@ -65,6 +70,8 @@ interface IColumnScrollViewMixin {
     _$columnScrollUseFakeRender: boolean;
     _$pendingMouseEnterForActivate: boolean;
 
+    _$relativeCellContainers: HTMLElement[];
+
     // IFreezable
     _freezeColumnScroll(): void;
     _unFreezeColumnScroll(): void;
@@ -79,7 +86,9 @@ interface IColumnScrollViewMixin {
 
     // Methods
     isColumnScrollVisible(): boolean;
-    setColumnScrollPosition(position: 'start' | IViewOptions['columnScrollStartPosition']): void;
+    scrollToColumn(columnIndex: number): void;
+    scrollToLeft(): void;
+    scrollToRight(): void;
     _resetColumnScroll(position: IViewOptions['columnScrollStartPosition']): void;
     _isDragScrollEnabledByOptions(options: IViewOptions): boolean;
     _getColumnScrollEmptyViewMaxWidth(): number;

@@ -1,4 +1,4 @@
-import { IItemAction, TActionDisplayMode, TItemActionShowType } from 'Controls/itemActions';
+import {IItemAction, TActionDisplayMode, TItemActionShowType} from 'Controls/itemActions';
 
 function getActionsForContacts(): IItemAction[] {
     return [
@@ -105,8 +105,47 @@ function getMoreActions(): IItemAction[] {
     ];
 }
 
+function getActionsWithViewMode(): IItemAction[] {
+    return [
+        {
+            id: 'redirect',
+            icon: 'icon-Redirect',
+            title: 'Перевести',
+            showType: TItemActionShowType.MENU_TOOLBAR,
+            viewMode: 'functionalButton',
+            iconStyle: 'secondary'
+        },
+        {
+            id: 'profile',
+            icon: 'icon-Profile',
+            title: 'Профиль пользователя',
+            showType: TItemActionShowType.MENU_TOOLBAR,
+            iconStyle: 'secondary',
+            viewMode: 'link'
+        },
+        {
+            id: 'email',
+            icon: 'icon-Email',
+            title: 'Email',
+            showType: TItemActionShowType.MENU_TOOLBAR,
+            iconStyle: 'secondary',
+            viewMode: 'link',
+            displayMode: TActionDisplayMode.BOTH
+        },
+        {
+            id: 'phoneCell',
+            icon: 'icon-PhoneCell',
+            title: 'Звонок',
+            showType: TItemActionShowType.MENU_TOOLBAR,
+            viewMode: 'link',
+            displayMode: TActionDisplayMode.TITLE
+        }
+    ];
+}
+
 export {
     getActionsForContacts,
     getActionsWithDisplayMode,
-    getMoreActions
+    getMoreActions,
+    getActionsWithViewMode
 };

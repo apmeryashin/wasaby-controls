@@ -6,7 +6,7 @@ import * as Utils from 'Types/util';
 import {factory} from 'Types/chain';
 import {Model} from 'Types/entity';
 import {RecordSet, List} from 'Types/collection';
-import {prepareEmpty, loadItems, loadSelectedItems, isEmptyItem} from 'Controls/_dropdown/Util';
+import {prepareEmpty, loadItems, loadSelectedItems, isSingleSelectionItem} from 'Controls/_dropdown/Util';
 import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import {TKey} from './interface/IDropdownController';
@@ -19,13 +19,15 @@ import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/popup';
 import 'css!Controls/dropdown';
 import 'css!Controls/CommonClasses';
-import {IValidationStatusOptions} from 'Controls/interface';
+import {IValidationStatusOptions, TSelectedKeys} from 'Controls/interface';
 
 interface IInputOptions extends IBaseDropdownOptions, IValidationStatusOptions {
    maxVisibleItems?: number;
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
+   selectedAllText?: string;
+   selectedAllKey: TSelectedKeys;
 }
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -41,8 +43,8 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2Fdropdown_new%2FInput%2FIndex демо-пример}
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/dropdown-menu/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_dropdown.less переменные тем оформления dropdown}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_dropdownPopup.less переменные тем оформления dropdownPopup}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_dropdown.less переменные тем оформления dropdown}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_dropdownPopup.less переменные тем оформления dropdownPopup}
  *
  * @extends UI/Base:Control
  * @mixes Controls/menu:IMenuPopup
@@ -96,6 +98,7 @@ export default class Selector extends BaseDropdown {
    protected _needInfobox: boolean = false;
    protected _item: Model = null;
    protected _isEmptyItem: boolean = false;
+   protected _isAllSelectedItem: boolean = false;
    protected _icon: string;
    protected _tooltip: string;
    protected _selectedItems: Model[];
@@ -165,6 +168,9 @@ export default class Selector extends BaseDropdown {
       if (this._options.emptyText) {
          this._countItems += 1;
       }
+      if (this._options.selectedAllText) {
+         this._countItems += 1;
+      }
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
@@ -175,10 +181,10 @@ export default class Selector extends BaseDropdown {
       if (items.length) {
          this._selectedItems = items;
          this._needInfobox = options.readOnly && this._selectedItems.length > 1;
-         this._item = items[0];
-         this._isEmptyItem = isEmptyItem(this._item, options.emptyText,
-             options.keyProperty, options.emptyKey);
-         this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
+         this._isEmptyItem = isSingleSelectionItem(items[0], options.emptyText, options.keyProperty, options.emptyKey);
+         this._isAllSelectedItem = isSingleSelectionItem(items[0], options.selectedAllText, options.keyProperty, options.selectedAllKey);
+         this._item = this._isAllSelectedItem || this._isEmptyItem ? null : items[0];
+         this._icon = this._isEmptyItem || this._isAllSelectedItem ? null : getPropValue(this._item, 'icon');
          this._text = this._getText(items, options);
          this._hasMoreText = this._getMoreText(items, options.maxVisibleItems);
          this._tooltip = this._getFullText(items, options.displayProperty);
@@ -263,9 +269,15 @@ export default class Selector extends BaseDropdown {
 
    private _getSelectedKeys(items: Model[], keyProperty: string): TKey[] {
       const keys = [];
-      factory(items).each((item) => {
-         keys.push(getPropValue(item, keyProperty));
-      });
+      if (isSingleSelectionItem(items[0], this._options.selectedAllText, this._options.keyProperty, this._options.selectedAllKey)) {
+         keys.push(this._options.selectedAllKey);
+      } else if (isSingleSelectionItem(items[0], this._options.emptyText, this._options.keyProperty, this._options.emptyKey)) {
+         keys.push(this._options.emptyKey);
+      } else {
+         factory(items).each((item) => {
+            keys.push(getPropValue(item, keyProperty));
+         });
+      }
       return keys;
    }
 
@@ -280,10 +292,18 @@ export default class Selector extends BaseDropdown {
    }
 
    private _getText(items: Model[],
-                    {emptyText, emptyKey, keyProperty, displayProperty, maxVisibleItems}: Partial<IInputOptions>): string {
+                    {selectedAllText,
+                     selectedAllKey,
+                     emptyText,
+                     emptyKey,
+                     keyProperty,
+                     displayProperty,
+                     maxVisibleItems}: Partial<IInputOptions>): string {
       const item = items[0];
       let text = '';
-      if (isEmptyItem(item, emptyText, keyProperty, emptyKey)) {
+      if (isSingleSelectionItem(item, selectedAllText, keyProperty, selectedAllKey)) {
+         text = selectedAllText;
+      } else if (isSingleSelectionItem(item, emptyText, keyProperty, emptyKey)) {
          text = prepareEmpty(emptyText);
       } else {
          text = this._getFullText(items, displayProperty, maxVisibleItems);
@@ -310,10 +330,11 @@ export default class Selector extends BaseDropdown {
    static getDefaultOptions(): Partial<IInputOptions> {
       return {
          iconSize: 's',
-         emptyKey: null,
          maxVisibleItems: 1,
          validationStatus: 'valid',
-         closeMenuOnOutsideClick: true
+         closeMenuOnOutsideClick: true,
+         emptyKey: null,
+         selectedAllKey: null
       };
    }
 }
@@ -330,7 +351,7 @@ export default class Selector extends BaseDropdown {
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="key"
  *    displayProperty="title"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    multiSelect="{{true}}"
  *    maxVisibleItems="{{null}}">
  * </Controls.dropdown:Selector>
@@ -370,7 +391,7 @@ export default class Selector extends BaseDropdown {
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Selector>
  * </pre>
@@ -404,7 +425,7 @@ export default class Selector extends BaseDropdown {
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
- *    source="{{_source)}}"
+ *    source="{{_source}}"
  *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Selector>
  * </pre>
@@ -449,6 +470,20 @@ export default class Selector extends BaseDropdown {
  * });
  * this._selectedKeys = [1, 3];
  * </pre>
+ */
+
+/**
+ * @name Controls/_dropdown/Selector#selectedAllText
+ * @cfg {String} Добавляет пустой элемент в список с заданным текстом.
+ * Ключ элемента по умолчанию null, для изменения значения ключа используйте {@link selectedAllKey}.
+ * @demo Controls-demo/dropdown_new/Input/SelectedAllText/Simple/Index
+ */
+
+/**
+ * @name Controls/_dropdown/Selector#selectedAllKey
+ * @cfg {String} Первичный ключ для пункта выпадающего списка, который создаётся при установке опции {@link selectedAllText}.
+ * @default null
+ * @demo Controls-demo/dropdown_new/Input/SelectedAllText/SelectedAllKey/Index
  */
 
 /*

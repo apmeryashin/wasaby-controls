@@ -17,6 +17,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
+import {getTextWidth} from 'Controls/sizeUtils';
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
 import 'css!Controls/CommonClasses';
@@ -42,7 +43,8 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
         options.viewMode === 'functionalButton' : options.contrastBackground;
     this._viewMode = options.viewMode;
     this._height = options.inlineHeight ? options.inlineHeight : defaultHeight(this._viewMode);
-    this._fontColorStyle = options.fontColorStyle ? options.fontColorStyle : defaultFontColorStyle(this._viewMode);
+    this._fontColorStyle = options.translucent ? 'forTranslucent' :
+        (options.fontColorStyle ? options.fontColorStyle : defaultFontColorStyle(this._viewMode));
     this._fontSize = options.fontSize;
     this._hasIcon = !!options.icon;
     const isTextAlignCenter = ['functionalButton', 'toolButton'].includes(this._viewMode);
@@ -65,7 +67,7 @@ export function simpleCssStyleGeneration(options: IButtonOptions): void {
         if (options.readOnly) {
             this._iconStyle = 'readonly';
         } else {
-            this._iconStyle =  options.buttonAdd ? 'default' : options.iconStyle;
+            this._iconStyle =  options.translucent ? 'forTranslucent' : options.iconStyle;
         }
     }
     if (this._viewMode === 'linkButton') {
@@ -97,7 +99,7 @@ export function getDefaultOptions(): object {
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex демо-пример}
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/buttons-switches/buttons-links/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/6156a9009ee88d96bf73c8b1200e197f9db1c3c8/Controls-default-theme/variables/_buttons.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_buttons.less переменные тем оформления}
  *
  * @extends UI/Base:Control
  * @implements Controls/interface:IHref
@@ -161,6 +163,7 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _hoverIcon: boolean = true;
     protected _isSVGIcon: boolean = false;
     protected _textAlign: string;
+    protected _tooltip: string;
 
     protected _beforeMount(options: IButtonOptions): void {
         simpleCssStyleGeneration.call(this, options);
@@ -179,6 +182,21 @@ class Button extends Control<IButtonOptions> implements IHref, ICaption, IIcon, 
     protected _clickHandler(e: SyntheticEvent<MouseEvent>): void {
         if (this._options.readOnly) {
             e.stopPropagation();
+        }
+    }
+
+    protected _onMouseEnterHandler(): void {
+        if (!this._options.readOnly) {
+            if (this._options.tooltip) {
+                this._tooltip = this._options.tooltip;
+            } else {
+                if (typeof this._options.caption === 'string' && this._tooltip !== this._options.caption) {
+                    const captionWidth = getTextWidth(this._options.caption);
+                    if (captionWidth > this._container.clientWidth) {
+                        this._tooltip = this._options.caption;
+                    }
+                }
+            }
         }
     }
 
@@ -277,6 +295,7 @@ Object.defineProperty(Button, 'defaultProps', {
  * @variant left Текст выравнивается по левой стороне.
  * @variant right Текст выравнивается по правой стороне.
  * @variant center Текст выравнивается по центру.
+ * @variant justify Текст и иконка прижаты к разным краям.
  * @default center
  * @demo Controls-demo/Buttons/TextAlign/Index
  */

@@ -8,7 +8,7 @@ import * as randomId from 'Core/helpers/Number/randomId';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {descriptor, Model} from 'Types/entity';
-import {IItemPadding, IList, ListView} from 'Controls/list';
+import {IItemPadding, IList, IReloadItemOptions, ListView} from 'Controls/list';
 import {SingleColumnStrategy, MultiColumnStrategy} from 'Controls/marker';
 import {isEqual} from 'Types/object';
 import {CrudEntityKey, DataSet, LOCAL_MOVE_POSITION} from 'Types/source';
@@ -209,6 +209,8 @@ export default class Explorer extends Control<IExplorerOptions> {
         treeControl: TreeControl,
         pathController: PathController
     };
+
+    protected _itemsSelector: string = '.controls-ListView__itemV';
     //endregion
 
     //region private fields
@@ -1301,8 +1303,8 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_explorer.less переменные тем оформления explorer}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_list.less переменные тем оформления list}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_explorer.less переменные тем оформления explorer}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_list.less переменные тем оформления list}
  *
  * @demo Controls-demo/Explorer/Explorer
  * @demo Controls-demo/Explorer/Search

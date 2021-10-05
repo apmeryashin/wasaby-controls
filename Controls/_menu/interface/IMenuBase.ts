@@ -11,6 +11,7 @@ export interface IMenuBaseOptions extends IControlOptions, IHierarchyOptions, II
         IGroupedOptions, IItemTemplateOptions, IMultiSelectableOptions {
     keyProperty: string;
     displayProperty: string;
+    selectedAllText?: string;
     emptyText?: string;
     emptyKey?: string|number;
     itemPadding: IItemPadding;
@@ -73,7 +74,7 @@ export default interface IMenuBase {
  *    <Controls.menu:Control
  *          keyProperty="id"
  *          displayProperty="title"
- *          source="{{_source)}}"
+ *          source="{{_source}}"
  *          itemTemplateProperty="myTemplate"/>
  * </pre>
  * myItemTemplate.wml

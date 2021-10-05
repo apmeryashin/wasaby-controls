@@ -61,7 +61,7 @@ type Path = ILink | IEmail | IPlain;
  * * Ссылка на локальный файл ({@link https://en.wikipedia.org/wiki/File_URI_scheme file}).
  *
  * Полезные ссылки:
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_decorator.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_decorator.less переменные тем оформления}
  *
  * @class Controls/_decorator/WrapURLs
  * @extends UI/Base:Control
@@ -98,7 +98,7 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
      * $6 - Closing delimiter.
      * @private
      */
-    private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file|Notes):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
+    private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file|Notes|notes):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
 
     private static mapExec: IMap = {
         result: 0,

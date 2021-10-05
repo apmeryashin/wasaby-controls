@@ -1,6 +1,11 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/NavigationSwitcher/NavigationSwitcher';
-import {INavigationOptionValue, INavigationSourceConfig, TNavigationDirection} from 'Controls/interface';
+import {
+    INavigationOptionValue,
+    INavigationSourceConfig,
+    TNavigationDirection,
+    TNavigationPagingMode
+} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 export interface INavigationSwitcherOptions extends IControlOptions {
@@ -9,6 +14,7 @@ export interface INavigationSwitcherOptions extends IControlOptions {
     page?: number;
     totalCount: number;
     direction?: TNavigationDirection;
+    pagingMode?: TNavigationPagingMode;
 }
 
 export class NavigationSwitcher extends Control<INavigationSwitcherOptions> {
@@ -20,7 +26,8 @@ export class NavigationSwitcher extends Control<INavigationSwitcherOptions> {
             direction: newOptions.direction,
             pageSize: newOptions.pageSize,
             page: newOptions.page,
-            totalCount: newOptions.totalCount
+            totalCount: newOptions.totalCount,
+            pagingMode: newOptions.pagingMode
         });
     }
 
@@ -35,7 +42,8 @@ export class NavigationSwitcher extends Control<INavigationSwitcherOptions> {
         pageSize?: INavigationSwitcherOptions['pageSize'],
         direction?: INavigationSwitcherOptions['direction'],
         page?: INavigationSwitcherOptions['page'],
-        totalCount: INavigationSwitcherOptions['totalCount']
+        totalCount: INavigationSwitcherOptions['totalCount'],
+        pagingMode?: INavigationSwitcherOptions['pagingMode']
     }): INavigationOptionValue<INavigationSourceConfig> {
         // tslint:disable-next-line
         const pageSize = cfg.pageSize || this._options.pageSize || 100;
@@ -48,6 +56,9 @@ export class NavigationSwitcher extends Control<INavigationSwitcherOptions> {
                 pageSize,
                 page: this._calcPage(cfg.page || this._options.page || 0, pageSize, cfg.totalCount),
                 hasMore: false
+            },
+            viewConfig: {
+                pagingMode: cfg.pagingMode || 'hidden'
             }
         };
     }

@@ -13,7 +13,7 @@ import {INavigationSourceConfig} from './_interface/INavigation';
 
 export {default as ITooltip, ITooltipOptions} from './_interface/ITooltip';
 export {default as IItemTemplate, IItemTemplateOptions} from './_interface/IItemTemplate';
-export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle';
+export {default as IIconStyle, IIconStyleOptions, TIconStyle} from './_interface/IIconStyle';
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
 export {default as IIcon, IIconOptions} from './_interface/IIcon';
 export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';
@@ -45,6 +45,7 @@ export {
     TKeySelection,
     TKeysSelection
 } from './_interface/ISelectionType';
+export { ISelectionCountModeOptions } from './_interface/ISelectionCountMode';
 export {ITileRoundBorder} from './_interface/ITileRoundBorder';
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
@@ -74,6 +75,7 @@ export {
 export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch, ISearchOptions} from './_interface/ISearch';
+export {default as ISearchValue, ISearchValueOptions} from './_interface/ISearchValue';
 export {default as IFormOperation} from './_interface/IFormOperation';
 export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/ISelectorDialog';
 export {default as IItems, IItemsOptions, TKey} from './_interface/IItems';

@@ -29,6 +29,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _model: Tree<Model, TreeItem<Model>>;
    private _entryPath: IEntryPathItem[];
    private _selectionType: 'node'|'leaf'|'all'|'allBySelectAction' = 'all';
+   private _selectionCountMode: 'node'|'leaf'|'all' = 'all';
    private _recursiveSelection: boolean;
    private _rootChanged: boolean;
 
@@ -38,6 +39,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    update(options: ITreeSelectionStrategyOptions): void {
+      this._validateOptions(options);
+
       if (this._rootId !== options.rootId) {
          this._rootChanged = true;
       }
@@ -49,6 +52,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._entryPath = options.entryPath;
       this._selectionType = options.selectionType;
       this._recursiveSelection = options.recursiveSelection;
+      this._selectionCountMode = options.selectionCountMode;
    }
 
    setEntryPath(entryPath: IEntryPathItem[]): void {
@@ -110,10 +114,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    selectAll(selection: ISelection, limit?: number): ISelection {
       const initSelection = this._rootChanged ? {selected: [], excluded: []} : selection;
       const newSelection = this.select(initSelection, this._rootId);
-      if (limit) {
-         // Если есть лимит, то сохраняем отдельно выбранные элементы, чтобы при выборе пачки с них не слетел выбор.
-         newSelection.selected = ArraySimpleValuesUtil.addSubArray(newSelection.selected, initSelection.selected);
-      } else {
+      if (!limit) {
          this._removeChildes(newSelection, this._getRoot());
       }
 
@@ -329,12 +330,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
       if (limit) {
          const countItems = this._model.getCount();
-         // limit задает только кол-во выбранных записей пачкой, а еще могут быть выбраны записи отдельно,
-         // они находятся в selectedKeys. -1 т.к. одно значение это обязательно будет корень
-         const itemsSeparatedSelectedCount = selection.selected.length - 1;
-         return !hasMoreData && limit > countItems
-             ? countItems
-             : limit + itemsSeparatedSelectedCount;
+         return !hasMoreData && limit > countItems ? countItems : limit;
       }
 
       let countItemsSelected: number|null = 0;
@@ -350,10 +346,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                   selectedNodes.push(key);
                }
 
-               // если по ключу не смогли получить запись, то она еще не подгружена,
-               // по дефолту считаем, что она не ридонли
-               const canBeSelected = !item || this._canBeSelected(item) && !item.isRoot();
-               if (!selection.excluded.includes(key) && canBeSelected) {
+               const canBeCounted = this._canBeCounted(item);
+               if (!selection.excluded.includes(key) && canBeCounted) {
                   countItemsSelected++;
                }
             }
@@ -753,7 +747,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                childId = this._getKey(childItem);
 
                if (!selection.excluded.includes(childId)) {
-                  if (!selection.selected.includes(childId) && this._canBeSelected(childItem)) {
+                  const canBeCounted = this._canBeCounted(childItem);
+                  if (!selection.selected.includes(childId) && canBeCounted) {
                      selectedChildrenCount++;
                   }
 
@@ -876,6 +871,45 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
             return !isNode || this._recursiveSelection && isNode || item.isRoot();
          case 'node':
             return isNode;
+      }
+   }
+
+   private _canBeCounted(item: TreeItem<Model>): boolean {
+      // считаем все не подгруженные записи, т.к. мы не знаем их тип
+      if (!item) {
+         return true;
+      }
+
+      if (!this._canBeSelected(item)) {
+         return false;
+      }
+
+      if (item.isRoot()) {
+         return false;
+      }
+
+      const isNode = this._isNode(item);
+      switch (this._selectionCountMode) {
+         case 'leaf':
+            return !isNode;
+         case 'node':
+            return isNode;
+         case 'all':
+         default:
+            return true;
+      }
+   }
+
+   private _validateOptions(options: ITreeSelectionStrategyOptions): void {
+      if (options.selectionCountMode === 'leaf') {
+         if (options.selectionType === 'node' && options.recursiveSelection === false) {
+            throw Error('Не правильно заданы опции множественного выбора. Запрещено выбирать листья, но нужно их считать. ' +
+                'Обратить внимание на опции: selectionCountMode, selectionType, recursiveSelection');
+         }
+      }
+      if (options.selectionCountMode === 'node' && options.selectionType === 'leaf') {
+         throw Error('Не правильно заданы опции множественного выбора. Запрещено выбирать узлы, но нужно их считать. ' +
+             'Обратите внимание на опции: selectionCountMode, selectionType');
       }
    }
 }

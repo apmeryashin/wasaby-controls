@@ -59,7 +59,7 @@ class Popup extends Control<IPopupControlOptions> {
         ManagerController.notifyToManager('popupBeforePaintOnMount', [this._options.id]);
     }
 
-    protected _beforeMount(options: IPopupControlOptions): void {
+    protected _beforeMount(options: IPopupControlOptions): void | Promise<void> {
         this._stringTemplate = typeof options.template === 'string';
         this._compatibleTemplateName = this._getCompatibleTemplateName(options);
         this._resizeRegister = new RegisterClass({register: 'controlResize'});
@@ -67,9 +67,12 @@ class Popup extends Control<IPopupControlOptions> {
         this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
 
         if (options._prefetchPromise) {
-            this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
+            const prefetchPromise = this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
                 this._prefetchData = data;
             });
+            if (options.initializingWay === 'remote') {
+                return prefetchPromise;
+            }
         } else if (options.prefetchData) {
             // Если с прикладной стороны сами получили предзагруженные данные
             this._isPrefetchDataMode = true;

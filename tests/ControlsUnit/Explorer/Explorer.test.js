@@ -143,7 +143,7 @@ define([
          const cfg = {};
          const explorer = new explorerMod.View(cfg);
          explorer.saveOptions(cfg);
-         explorer.__beforeMount(cfg);
+         explorer._beforeMount(cfg);
 
          explorer._isGoingBack = true;
          explorer._root = null;

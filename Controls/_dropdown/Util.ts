@@ -1,8 +1,7 @@
 import rk = require('i18n!Controls');
 import Controller from 'Controls/_dropdown/_Controller';
-import {ICrudPlus, Memory} from 'Types/source';
+import {ICrudPlus} from 'Types/source';
 import {Model} from 'Types/entity';
-import {RecordSet} from 'Types/collection';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IDropdownControllerOptions} from './interface/IDropdownController';
 import {process} from 'Controls/error';
@@ -14,8 +13,8 @@ export function prepareEmpty(emptyText) {
    }
 }
 
-export function isEmptyItem(item: Model, emptyText: string, keyProperty: string, emptyKey: TKey = null): boolean {
-   return emptyText && (!item || item.get(keyProperty) === emptyKey);
+export function isSingleSelectionItem(item: Model, text: string, keyProperty: string, key: TKey = null): boolean {
+   return text && (!item || item.get(keyProperty) === key);
 }
 
 export function loadItems(

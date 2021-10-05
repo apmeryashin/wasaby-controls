@@ -16,6 +16,28 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
       }
    }
 
+   protected _isDisplayParents(item, draggedItemsKeys): boolean {
+      const itemParent = item.getParent();
+
+      if (itemParent && !itemParent.isRoot()) {
+         const itemParentKey = itemParent.getContents().getKey();
+         if (draggedItemsKeys.includes(itemParentKey)) {
+            return false;
+         }
+
+         return this._isDisplayParents(itemParent, draggedItemsKeys);
+      }
+
+      return true;
+   }
+
+   protected _isDisplayItem(item, draggedItemsKeys): boolean {
+      if (!super._isDisplayItem(item, draggedItemsKeys)) {
+         return false;
+      }
+      return this._isDisplayParents(item, draggedItemsKeys);
+   }
+
    /**
     * После создания элементов, нужно выставить правильного родителя у avatarItem.
     * Делать это нужно именно в этот момент, т.к. тут мы скрываем перетаскиваемые записи и создаем avatarItem.

@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { TreeItem } from 'Controls/display';
 import { CssClassesAssert } from 'ControlsUnit/CustomAsserts';
+import TreeChildren from 'Controls/_display/TreeChildren';
 
 describe('Controls/_display/TreeItem', () => {
     const Owner = function(): void {
@@ -407,12 +408,15 @@ describe('Controls/_display/TreeItem', () => {
 
     describe('.hasChildren()', () => {
         it('should return false by default', () => {
-            const item = new TreeItem();
+            const item = new TreeItem({expanded: false});
             assert.isFalse(item.hasChildren());
         });
 
-        it('should return value passed to the constructor', () => {
-            const item = new TreeItem({hasChildren: false});
+        it('should return false for expanded node without childrens', () => {
+            const mockedOwner = {
+                getChildren: () => new TreeChildren({owner: new TreeItem({}), items: []})
+            }
+            const item = new TreeItem({expanded: true, owner: mockedOwner});
             assert.isFalse(item.hasChildren());
         });
     });

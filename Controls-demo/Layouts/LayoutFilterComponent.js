@@ -12,8 +12,8 @@ define('Controls-demo/Layouts/LayoutFilterComponent', [
          _template: template,
          _switchValue: false,
    
-         constructor: function(cfg) {
-            ModuleClass.superclass.constructor.call(this, cfg);
+         constructor: function(cfg, context) {
+            ModuleClass.superclass.constructor.call(this, cfg, context);
             Env.IoC.resolve('ILogger').info(cfg);
          },
          

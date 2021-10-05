@@ -28,6 +28,7 @@ export class Controller {
    private _excludedKeys: TKeys = [];
    private _strategy: ISelectionStrategy;
    private _limit: number = 0;
+   private _separatedSelectedItems: TKeys = [];
    private _searchValue: string;
    private _filter: any;
    private _filterChanged: boolean;
@@ -96,6 +97,7 @@ export class Controller {
          this._filterChanged = false;
          this._strategy.reset();
          this.resetLimit();
+         this._separatedSelectedItems = [];
       }
 
       this._selection = selection;
@@ -135,21 +137,7 @@ export class Controller {
     * @public
     */
    getLimit(): number {
-      return this._limit;
-   }
-
-   /**
-    * Увеличивает лимит на указанное количество
-    * @param {number} count Количество
-    * @number
-    * @public
-    */
-   increaseLimitByCount(count: number): number {
-      this._limit += count;
-
-      this._updateModel(this._selection);
-
-      return this._limit;
+      return this._limit + this._separatedSelectedItems.length;
    }
 
    /**
@@ -157,8 +145,8 @@ export class Controller {
     * @number
     * @public
     */
-   resetLimit(): number {
-      return this._limit = 0;
+   resetLimit(): void {
+      this._limit = 0;
    }
 
    /**
@@ -230,17 +218,18 @@ export class Controller {
       let newSelection;
 
       if (status === true || status === null) {
+         if (this._limit) {
+            // Если сняли выбор с элемента из пачки, то нужно уменьшить размер пачки
+            if (!this._separatedSelectedItems.includes(key)) {
+               this._limit--;
+            }
+         }
          newSelection = this._strategy.unselect(this._selection, key, this._searchValue);
       } else {
          if (this._limit) {
-            newSelection = this._increaseLimit(key);
+            this._separatedSelectedItems.push(key);
          }
-
-         if (newSelection) {
-            newSelection = this._strategy.select(newSelection, key);
-         } else {
-            newSelection = this._strategy.select(this._selection, key);
-         }
+         newSelection = this._strategy.select(this._selection, key);
       }
 
       this._lastCheckedKey = key;
@@ -249,10 +238,16 @@ export class Controller {
 
    /**
     * Выбирает все элементы
+    * @param packSize Размер пачки, которую нужно выбрать за этот раз. Увеличивает лимит на packSize.
     * @return {ISelection}
     */
-   selectAll(): ISelection {
-      const initSelection = this._filterChanged ? {selected: [], excluded: []} : this._selection;
+   selectAll(packSize?: number): ISelection {
+      let initSelection = this._filterChanged ? {selected: [], excluded: []} : clone(this._selection);
+
+      if (packSize) {
+         initSelection = this._fillSelectionByLimit(initSelection, packSize);
+      }
+
       return this._strategy.selectAll(initSelection, this._limit);
    }
 
@@ -344,14 +339,37 @@ export class Controller {
    /**
     * Обрабатывает добавление новых элементов в коллекцию
     * @param {Array<CollectionItem<Model>>} addedItems Новые элементы
+    * @param addIndex Индекс куда добавили записи
     * @void
     */
-   onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
+   onCollectionAdd(addedItems: Array<CollectionItem<Model>>, addIndex: number): ISelection|void {
       // Если задан лимит, то обрабатывать добавленные элементы нужно, если до добавления их было меньше лимита
       if (this._limit && (this._model.getCount() - addedItems.length) > this._limit) {
          return;
       }
-      this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
+      if (this._limit) {
+         const newSelection = clone(this._selection);
+         let selectionChanged = false;
+         // пробегаемся по добавленным записям и если они не выбраны лимитом, то закидываем их в excluded
+         for (let i = 0; i < addedItems.length; i++) {
+            const item = addedItems[i];
+            const itemKey = this._getKey(item);
+            const isSelectedByLimit = i + addIndex < this._limit;
+            if (!isSelectedByLimit) {
+               selectionChanged = !newSelection.excluded.includes(itemKey);
+               ArraySimpleValuesUtil.addSubArray(newSelection.excluded, [itemKey]);
+            }
+         }
+
+         // если selection не изменился, то сразу применяем его на список
+         if (!selectionChanged) {
+            this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
+         }
+
+         return newSelection;
+      } else {
+         this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
+      }
    }
 
    onCollectionMove(): void {
@@ -430,36 +448,66 @@ export class Controller {
           .map((item) => this._getKey(item));
    }
 
-   /**
-    * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
-    * @private
-    * @param toggledItemKey
-    */
-   private _increaseLimit(toggledItemKey: CrudEntityKey): ISelection {
-      const newSelection = clone(this._selection);
-      let selectedItemsCount = 0;
-      const limit = this._limit ? this._limit : 0;
+   private _fillSelectionByLimit(selection: ISelection, packSize: number): ISelection {
+      const newSelection = clone(selection);
 
-      let stopIncreasing = false;
-      this._model.each((item) => {
-         if (stopIncreasing) {
-            return;
-         }
+      const firstSelectPack = !this._limit;
+      if (packSize) {
+         this._limit += packSize;
+      }
 
-         if (selectedItemsCount < limit && item.isSelected() !== false) {
-            selectedItemsCount++;
+      if (this._limit) {
+         const items = this._model.getItems().filter((it) => it.SelectableItem);
+
+         if (firstSelectPack) {
+            // Если выбор первой пачки, то бежим по всем элементам, чтобы в excluded закинуть
+            // все не выбранные записи.
+            for (let i = 0; i < items.length; i++) {
+               const item = items[i];
+               const itemKey = this._getKey(item);
+               const isSelectedByLimit = i < this._limit;
+               if (isSelectedByLimit && item.isSelected()) {
+                  // если элемент входит в пачку и уже был до этого выбран,
+                  // то добавляем его в пачку увеличивая размер самой пачки
+                  this._limit++;
+               }
+               if (!isSelectedByLimit && !item.isSelected()) {
+                  ArraySimpleValuesUtil.addSubArray(newSelection.excluded, [itemKey]);
+               }
+            }
          } else {
-            const key = this._getKey(item);
-            if (toggledItemKey === key) {
-               selectedItemsCount++;
-               // сохраняем отдельно выбранные элементы в selected, чтобы не потерять их
-               newSelection.selected.push(key);
-               stopIncreasing = true;
-            } else if (!newSelection.excluded.includes(key)) {
-               newSelection.excluded.push(key);
+            let countSelected = 0;
+            // Могли снять точечно отметки с записи из пачки, поэтмоу пробегаемся по прошлой пачке
+            // и если нужно ставим отметку на невыбранные записи
+            for (let i = 0; i < this._limit - packSize && i < items.length; i++) {
+               const item = items[i];
+               const itemKey = this._getKey(item);
+               if (!item.isSelected()) {
+                  ArraySimpleValuesUtil.removeSubArray(newSelection.excluded, [itemKey]);
+                  countSelected++;
+               }
+            }
+
+            const currentPackIsFilled = countSelected === packSize;
+            if (!currentPackIsFilled) {
+               // Проходим по новой пачке
+               for (let i = this._limit - packSize; i < this._limit && i < items.length; i++) {
+                  const item = items[i];
+                  const itemKey = this._getKey(item);
+                  const isSelectedByLimit = i < this._limit;
+                  if (isSelectedByLimit) {
+                     if (this._separatedSelectedItems.includes(itemKey)) {
+                        // если элемент был выбран отдельно пачки, то его добавляем в пачку увеличивая размер пачки
+                        this._limit++;
+                     }
+                     ArraySimpleValuesUtil.removeSubArray(newSelection.excluded, [itemKey]);
+                  } else {
+                     ArraySimpleValuesUtil.addSubArray(newSelection.excluded, [itemKey]);
+                  }
+               }
             }
          }
-      });
+      }
 
       return newSelection;
    }

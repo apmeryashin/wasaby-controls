@@ -29,7 +29,7 @@
                     item="{{_listModel.getTopIndicator()}}"
                     on:click="_onIndicatorClick(_listModel.getTopIndicator())"/>
         <!--Top loading trigger-->
-        <div name="topLoadingTrigger"
+        <div name="topLoadingTrigger{{columnScrollPartName === 'scrollable' ? '_fake'}}"
              class="controls-BaseControl__loadingTrigger"
              data-qa="loading-trigger-top">
         </div>
@@ -43,10 +43,17 @@
                     backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
                     on:positionChanged="_onColumnScrollThumbPositionChanged()"
                     on:dragEnd="_onColumnScrollThumbDragEnd()"/>
+
+            <!-- Контрол строит наиболее полный набор колонок таблицы. Подробное описание в контроле. -->
+            <Controls.columnScroll:RelativeColumns
+                    if="{{ !_$columnScrollUseFakeRender }}"
+                    isFullGridSupport="{{ true }}"
+                    bind:relativeCellContainers="_$relativeCellContainers"
+                    viewColumns="{{ _getViewColumns(_options) }}"/>
         </ws:if>
 
         <!-- Items -->
-        <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
+        <div name="itemsContainer" class="controls-GridViewV__itemsContainer" attr:data-qa="items-container">
             <!-- TODO избавиться от прокидывания _onBreadcrumbClick https://online.sbis.ru/doc/0649e69a-d507-4024-9f99-c70205f535ef-->
             <ws:partial
                     template="Controls/baseList:ForTemplate"
@@ -85,7 +92,7 @@
         </ws:if>
 
         <!--Bottom loading trigger-->
-        <div name="bottomLoadingTrigger"
+        <div name="bottomLoadingTrigger{{columnScrollPartName === 'scrollable' ? '_fake'}}"
              class="controls-BaseControl__loadingTrigger"
              data-qa="loading-trigger-bottom">
         </div>
@@ -112,6 +119,13 @@
                         style="{{ _options.style }}"
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         </ws:if>
+
+        <!--Global loading indicator-->
+        <!--Отображаем глобальный индикатор внутри дива со столбцами,-->
+        <!--чтобы он центровался так же как и другие индикаторы, через стили в ColumnScrollController-->
+        <ws:partial if="{{ _listModel.getGlobalIndicator() }}"
+                    template="{{_listModel.getGlobalIndicator().getTemplate()}}"
+                    item="{{_listModel.getGlobalIndicator()}}"/>
     </div>
 </ws:template>
 
@@ -153,9 +167,4 @@
             <ws:partial template="gridView" columnScrollPartName="scrollable"/>
         </div>
     </ws:if>
-
-    <!--Global loading indicator-->
-    <ws:partial if="{{ _listModel.getGlobalIndicator() }}"
-                template="{{_listModel.getGlobalIndicator().getTemplate()}}"
-                item="{{_listModel.getGlobalIndicator()}}"/>
 </div>

@@ -89,7 +89,7 @@ const itemActions: IItemAction[] = [
       iconStyle: 'danger',
       title: 'delete pls',
       parent: null,
-      showType: TItemActionShowType.TOOLBAR,
+      showType: TItemActionShowType.FIXED,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action delete Click');
       }

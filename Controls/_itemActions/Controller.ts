@@ -132,6 +132,13 @@ export interface IControllerOptions {
      * @cfg {Controls/_itemActions/interface/IItemActionsOptions/TItemActionsVisibility.typedef} Отображение опций записи с задержкой или без.
      */
     itemActionsVisibility: TItemActionsVisibility;
+
+    /**
+     * Временная опция для реверсного вывода операций над записью
+     * @description
+     * https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
+     */
+    feature1183020440: boolean;
 }
 
 /**
@@ -175,7 +182,13 @@ export class Controller {
     // Видимость опций записи
     private _itemActionsVisibility: TItemActionsVisibility;
 
+    // Сохранённые операции над записью для восстановления при переключении между свайпом и
+    // отображением ItemActionsVisibility="visible"
     private _savedItemActions: IItemActionsObject;
+
+    // Временная опция для реверсного вывода операций над записью
+    // https://online.sbis.ru/opendoc.html?guid=76408b97-fc91-46dc-81b0-0f375d07ab99
+    private _feature1183020440: boolean;
 
     /**
      * Метод инициализации и обновления параметров.
@@ -197,6 +210,7 @@ export class Controller {
         this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
         this._collection = options.collection;
         this._itemActionsVisibility = options.itemActionsVisibility;
+        this._feature1183020440 = options.feature1183020440;
         this._updateActionsTemplateConfig(options);
 
         if (!options.itemActions ||
@@ -246,6 +260,16 @@ export class Controller {
     }
 
     /**
+     * Получить состояние флага "Опции записи заданы для элементов коллекции"
+     * @function
+     * @public
+     * @return {Boolean} Состояние флага "Опции записи заданы для элементов коллекции"
+     */
+    isActionsAssigned(): boolean {
+        return this._collection.isActionsAssigned();
+    }
+
+    /**
      * Деактивирует Swipe для меню операций с записью
      */
     deactivateSwipe(resetActiveItem: boolean = true): void {
@@ -290,7 +314,7 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
-        if (!menuActions || menuActions.length === 0) {
+        if ((!menuActions || menuActions.length === 0) && !this._hasMenuHeaderOrFooter()) {
             return;
         }
 
@@ -344,7 +368,7 @@ export class Controller {
         }
     }
 
-        /**
+    /**
      * Возвращает текущий активный Item
      */
     getActiveItem(): IItemActionsItem {
@@ -577,7 +601,6 @@ export class Controller {
             style: options.style,
             editingStyle: (options.editingItem && options.editingStyle) || undefined,
             itemActionsClass: options.itemActionsClass,
-            size: this._iconSize,
             itemActionsPosition: this._itemActionsPosition,
             actionAlignment: this._actionsAlignment,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
@@ -590,7 +613,7 @@ export class Controller {
             return;
         }
         const contents = Controller._getItemContents(item);
-        const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
+        const menuButtonVisibility = this._hasMenuHeaderOrFooter() ? 'visible' : 'adaptive';
         this._actionsWidth = actionsContainerWidth;
         this._actionsHeight = actionsContainerHeight;
         const actions = this._filterVisibleActions(item.getActions().all, contents, item.isEditing());
@@ -662,13 +685,42 @@ export class Controller {
     }
 
     /**
-     * Возвращает значение видимоси кнопки "Ещё" для свайпа
-     * @param contextMenuConfig
+     * Проверяет, есть ли Header или Footer в настройках меню.
      * @private
      */
-    private _getSwipeMenuButtonVisibility(contextMenuConfig: IContextMenuConfig): TMenuButtonVisibility {
-        return (contextMenuConfig && (contextMenuConfig.footerTemplate
-            || contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
+    private _hasMenuHeaderOrFooter(): boolean {
+        return this._contextMenuConfig &&
+            !!(this._contextMenuConfig.footerTemplate || this._contextMenuConfig.headerTemplate);
+    }
+
+    /**
+     * Определяет есть операции, которые надо показывать в меню по ховеру.
+     * @param actions
+     * @private
+     */
+    private _hasMenuActions(actions: IItemAction[]): boolean {
+        return actions.some(
+            (action) =>
+                !action.parent && (
+                    !action.showType ||
+                    action.showType === TItemActionShowType.MENU ||
+                    action.showType === TItemActionShowType.MENU_TOOLBAR)
+        );
+    }
+
+    /**
+     * Возвращает конфиг кнопки операции открытия меню.
+     * @private
+     */
+    private _getMenuItemAction(): IShownItemAction {
+        return {
+           id: null,
+           icon: 'icon-SettingsNew',
+           style: 'secondary',
+           iconStyle: 'secondary',
+           iconSize: this._menuIconSize,
+           isMenu: true
+        };
     }
 
     /**
@@ -694,25 +746,18 @@ export class Controller {
 
         const visibleActions = this._filterVisibleActions(all, contents, item.isEditing());
         if (visibleActions.length > 1) {
-            showed = visibleActions.filter((action) =>
-                !action.parent &&
-                (
-                    action.showType === TItemActionShowType.TOOLBAR ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR
-                )
-            );
-            if (this._isMenuButtonRequired(visibleActions)) {
-                showed.push({
-                    id: null,
-                    icon: 'icon-SettingsNew',
-                    style: 'secondary',
-                    iconStyle: 'secondary',
-                    size: this._menuIconSize,
-                    isMenu: true
-                });
+            showed = this._filterToolbarActions(visibleActions);
+            if (this._hasMenuActions(visibleActions) || this._hasMenuHeaderOrFooter()) {
+                showed.push(this._getMenuItemAction());
+            }
+            if (this._feature1183020440) {
+                showed.reverse();
             }
         } else {
             showed = visibleActions;
+            if (this._hasMenuHeaderOrFooter()) {
+                showed.push(this._getMenuItemAction());
+            }
         }
         return { all, showed };
     }
@@ -724,32 +769,56 @@ export class Controller {
     }
 
     /**
-     * Ищет операции, которые должны отображаться только в меню или в меню и тулбаре,
-     * и у которых нет родительской операции
-     * @param actions
+     * Отфильтровывает ItemActions по признаку нет родителя и по showType.
+     * @param itemActions
      * @private
      */
-    private _isMenuButtonRequired(actions: IItemAction[]): boolean {
-        return actions.some(
-            (action) =>
-                !action.parent &&
-                (!action.showType ||
-                    action.showType === TItemActionShowType.MENU ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR)
+    private _filterToolbarActions(itemActions: IItemAction[]): IItemAction[] {
+        return itemActions.filter((action) =>
+            !action.parent &&
+            (
+                action.showType === TItemActionShowType.TOOLBAR ||
+                action.showType === TItemActionShowType.MENU_TOOLBAR ||
+                action.showType === TItemActionShowType.FIXED
+            )
         );
     }
 
     /**
      * Настройка параметров отображения для опций записи, которые показываются
-     * при наведении на запись или при свайпе и itemActionsPosition === 'outside'
+     * при наведении на запись или при свайпе и itemActionsPosition === 'outside'.
+     * ItemAction  с этими опциями передаётся в шаблон без дальнейших изменений.
      * @param action
      * @private
      */
     private _fixShownActionOptions(action: IShownItemAction): IShownItemAction {
-        action.icon = Controller._fixActionIconClass(action.icon, this._theme);
-        action.showIcon = Controller._needShowIcon(action);
-        action.showTitle = Controller._needShowTitle(action);
-        return action;
+        const hasIcon = Controller._needShowIcon(action);
+        const shownAction: IShownItemAction = {
+            ...action,
+            hasIcon,
+            fontSize: 'm',
+            icon: hasIcon ? action.icon : null,
+            caption: Controller._needShowTitle(action) ? action.title : null
+        };
+        // ItemActions настраиваются одним размером iconSize, а functionalButton - двумя iconSize + inlineHeight.
+        // При этом размеры s и xs отличаются для кнопок и для операций над записью.
+        // Конвертируем параметры для functionalButton, подстраивая общий размер кнопки под размеры itemActions.
+        // Для functionalButton в ItemActions стандартный цвет "pale". Другие цвета не поддерживаются.
+        if (shownAction.viewMode === 'functionalButton') {
+            shownAction.style = 'pale';
+            switch (shownAction.iconSize) {
+                case 's':
+                    shownAction.iconSize = 'xs';
+                    shownAction.inlineHeight = 'xs';
+                    shownAction.fontSize = '2xs';
+                    break;
+                case 'm':
+                default:
+                    shownAction.iconSize = 's';
+                    shownAction.inlineHeight = 'm';
+            }
+        }
+        return shownAction;
     }
 
     /**
@@ -761,14 +830,26 @@ export class Controller {
         if (actionsObject.all && actionsObject.all.length) {
             actionsObject.all = actionsObject.all.map((action) => {
                 action.style = Utils.getStyle(action.style, 'itemActions/Controller');
+
+                // Это нужно чтобы не поддерживать старые стили типа icon-error и ховер по таким кнопкам.
+                action.iconStyle = Utils.getStyleFromIcon(action.iconStyle, action.icon, 'itemActions/Controller');
                 action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+
+                if (action.viewMode && action.viewMode !== 'link' && action.viewMode !== 'functionalButton') {
+                    Logger.error('Неподдерживаемый вид кнопки. Используйте viewMode, ' +
+                        'описанные в интерфейсе IItemAction', this);
+                }
+
+                action.viewMode = action.viewMode || 'link';
+                action.iconSize = action.iconSize || this._iconSize;
+
                 action.tooltip = Controller._getTooltip(action);
                 return action;
             });
         }
         if (actionsObject.showed && actionsObject.showed.length) {
             const fixShowOptionsBind = this._fixShownActionOptions.bind(this);
-            actionsObject.showed = clone(actionsObject.showed).map(fixShowOptionsBind);
+            actionsObject.showed = actionsObject.showed.map(fixShowOptionsBind);
         }
         return actionsObject;
     }
@@ -789,7 +870,7 @@ export class Controller {
     }
 
     /**
-     * Рассчитывает значение для флага showIcon операции с записью
+     * Рассчитывает значение для флага hasIcon операции над записью
      * @param action
      * @private
      */
@@ -798,7 +879,7 @@ export class Controller {
     }
 
     /**
-     * Рассчитывает значение для флага showTitle операции с записью
+     * Рассчитывает значение для значения caption операции над записью
      * @param action
      * @private
      */
@@ -879,17 +960,6 @@ export class Controller {
             actionsObject.showed?.length === 1 &&
             actionsObject.all?.length > 1
         );
-    }
-
-    private static _fixActionIconClass(icon: string, theme: string): string {
-        if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
-            return icon;
-        }
-        return `${icon} ${this._resolveItemActionClass(theme)}`;
-    }
-
-    private static _resolveItemActionClass(theme: string): string {
-        return 'controls-itemActionsV__action_icon';
     }
 
     private static _isMatchingActionLists(

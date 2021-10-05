@@ -9,7 +9,8 @@ describe('Controls/progress:Rating', () => {
             value: 3,
             precision: 0,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
         assert.deepEqual([
             {
@@ -48,7 +49,8 @@ describe('Controls/progress:Rating', () => {
             value: 1,
             precision: 0,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
         assert.deepEqual([
             {
@@ -87,7 +89,8 @@ describe('Controls/progress:Rating', () => {
             value: 5,
             precision: 0,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
         assert.deepEqual([
             {
@@ -126,7 +129,8 @@ describe('Controls/progress:Rating', () => {
             value: 3,
             precision: 0.5,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
         assert.deepEqual([
             {
@@ -165,7 +169,8 @@ describe('Controls/progress:Rating', () => {
             value: 3.2,
             precision: 0,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
         assert.deepEqual([
             {
@@ -204,7 +209,8 @@ describe('Controls/progress:Rating', () => {
             value: 3.2,
             precision: 0.5,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
         assert.deepEqual([
             {
@@ -243,7 +249,8 @@ describe('Controls/progress:Rating', () => {
             value: 3.6,
             precision: 0.5,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
         assert.deepEqual([
             {
@@ -277,6 +284,46 @@ describe('Controls/progress:Rating', () => {
                 iconStyle: 'y'
             }
         ], vm.getItems());
+
+        vm = new RatingViewModel({
+            value: 3,
+            precision: 0,
+            iconStyle: 'x',
+            emptyIconStyle: 'y',
+            emptyIconFill: 'full'
+        });
+        assert.deepEqual([
+            {
+                index: 1,
+                type: 'full',
+                icon: 'icon-Favorite',
+                iconStyle: 'x'
+            },
+            {
+                index: 2,
+                type: 'full',
+                icon: 'icon-Favorite',
+                iconStyle: 'x'
+            },
+            {
+                index: 3,
+                type: 'full',
+                icon: 'icon-Favorite',
+                iconStyle: 'x'
+            },
+            {
+                index: 4,
+                type: 'empty',
+                icon: 'icon-Favorite',
+                iconStyle: 'y'
+            },
+            {
+                index: 5,
+                type: 'empty',
+                icon: 'icon-Favorite',
+                iconStyle: 'y'
+            }
+        ], vm.getItems());
     });
 
     it('ViewModel setValue', () => {
@@ -286,7 +333,8 @@ describe('Controls/progress:Rating', () => {
             value: 3.6,
             precision: 0.5,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
 
         vm.setValue(4);
@@ -332,14 +380,16 @@ describe('Controls/progress:Rating', () => {
             value: 3.6,
             precision: 0.5,
             iconStyle: 'x',
-            emptyIconStyle: 'y'
+            emptyIconStyle: 'y',
+            emptyIconFill: 'none'
         });
 
         vm.setOptions({
             value: 2.8,
             precision: 0,
             iconStyle: 'a',
-            emptyIconStyle: 'b'
+            emptyIconStyle: 'b',
+            emptyIconFill: 'full'
         });
 
         assert.deepEqual([
@@ -358,19 +408,19 @@ describe('Controls/progress:Rating', () => {
             {
                 index: 3,
                 type: 'empty',
-                icon: 'icon-Unfavorite',
+                icon: 'icon-Favorite',
                 iconStyle: 'b'
             },
             {
                 index: 4,
                 type: 'empty',
-                icon: 'icon-Unfavorite',
+                icon: 'icon-Favorite',
                 iconStyle: 'b'
             },
             {
                 index: 5,
                 type: 'empty',
-                icon: 'icon-Unfavorite',
+                icon: 'icon-Favorite',
                 iconStyle: 'b'
             }
         ], vm.getItems());

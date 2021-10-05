@@ -45,8 +45,8 @@ export interface IResizingLine {
 
 /**
  * @name Controls/_dragnDrop/interface/IResizingLine#orientation
- * @cfg {String} Направление измнения размеров
- * @variant vertical Измнение размеров по вертикали
+ * @cfg {String} Направление изменения размеров
+ * @variant vertical Изменение размеров по вертикали
  * @variant horizontal Изменение размеров по горизонтале
  * @default horizontal
  */

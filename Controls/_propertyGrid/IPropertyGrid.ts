@@ -160,7 +160,7 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
      * @default Controls/propertyGrid:GroupTemplate
      * @example
      * Далее показано как изменить параметры шаблона.
-     * <pre class="brush: html; highlight: [3-14]">
+     * <pre class="brush: html; highlight: [3-11]">
      * <!-- WML -->
      * <Controls.propertyGrid:PropertyGrid>
      *    <ws:groupTemplate>
@@ -168,10 +168,7 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
      *          expanderVisible="{{true}}"
      *          scope="{{groupTemplate}}">
      *          <ws:contentTemplate>
-     *             <span class="myGroupTitle">ИНТЕРВАЛЫ И ОТСТУПЫ</span>
-     *             <ws:if data="{{!contentTemplate.itemData.isGroupExpanded}}">
-     *                 <div class="myGroupIndicator">Без отступов</div>
-     *             </ws:if>
+     *              <div>Заголовок группы</div>
      *          </ws:contentTemplate>
      *       </ws:partial>
      *    </ws:groupTemplate>

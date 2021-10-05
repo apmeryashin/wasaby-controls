@@ -2,7 +2,7 @@
                           on:valueChanged="_checkBoxClick()"
                           attr:class="controls-Menu__row-checkbox
                                       controls-Menu__row-checkbox-{{checkBoxAlign === 'left' ? 'left' : 'right'}}
-                                      controls-Menu__row-checkbox_{{itemData.isEmptyItem ? 'invisible' :
+                                      controls-Menu__row-checkbox_{{itemData.isSingleSelectionItem ? 'invisible' :
                                       treeItem.isSelected() ? 'active' : 'default'}}">
    <ws:templateOptions value="{{treeItem.isSelected()}}"/>
 </Controls.Container.Async>

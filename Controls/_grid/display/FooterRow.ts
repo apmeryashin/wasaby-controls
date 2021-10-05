@@ -15,6 +15,8 @@ export default class FooterRow extends mixin<Row<null>, Footer>(Row, Footer) {
     private _actionsTemplateConfig: IItemActionsTemplateConfig;
     protected _$shouldAddFooterPadding: boolean;
 
+    readonly listElementName: string = 'footer';
+
     getContents(): string {
         return 'footer';
     }

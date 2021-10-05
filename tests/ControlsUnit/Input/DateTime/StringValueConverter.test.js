@@ -4,7 +4,7 @@ define([
    'Types/entity',
    'Types/formatter',
    'Controls/dateUtils',
-   'Controls/input',
+   'Controls/date',
    'Controls/dateUtils'
 ], function(
    cMerge,
@@ -12,7 +12,7 @@ define([
    typesEntity,
    formatter,
    DateControlsUtils,
-   input,
+   dateLib,
    dateUtils
 ) {
    'use strict';
@@ -25,12 +25,12 @@ define([
       },
       masks = DateControlsUtils.Range.dateMaskConstants;
 
-   describe('Controls/_input/DateTime/StringValueConverter', function() {
+   describe('Controls/_date/StringValueConverter', function() {
 
       describe('.update', function() {
 
          it('should update mask and replacer options', function() {
-            let converter = new input.StringValueConverter(),
+            let converter = new dateLib.StringValueConverter(),
                mask = 'HH:mm',
                replacer = '-';
             converter.update(options);
@@ -54,7 +54,7 @@ define([
             dateStr: '01.01.2018'
          }].forEach(function(test) {
             it(`should return "${test.dateStr}" if "${test.date}" is passed`, function() {
-               let converter = new input.StringValueConverter();
+               let converter = new dateLib.StringValueConverter();
                converter.update(options);
                assert.strictEqual(converter.getStringByValue(test.date), test.dateStr);
             });
@@ -62,7 +62,7 @@ define([
 
          it(`should return time based on the timezone`, function() {
             const
-                converter = new input.StringValueConverter(),
+                converter = new dateLib.StringValueConverter(),
                 isServerSide = env.constants.isServerSide,
                 timeZone = typesEntity.DateTime.getClientTimezoneOffset(),
                 sandbox = sinon.createSandbox();
@@ -165,7 +165,7 @@ define([
             { mask: 'DD.MM.YY', stringValue: '__.__.20', value: new Date('Invalid'), inputMode: 'partial' },
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {
-               let converter = new input.StringValueConverter(),
+               let converter = new dateLib.StringValueConverter(),
                   rDate;
                const clock = sinon.useFakeTimers(now.getTime(), 'Date');
                converter.update(cMerge({ mask: test.mask, dateConstructor: Date, yearSeparatesCenturies: test.yearSeparatesCenturies }, options, { preferSource: true }));
@@ -176,7 +176,7 @@ define([
          });
 
          it('should create date with proper class', function() {
-            let converter = new input.StringValueConverter({
+            let converter = new dateLib.StringValueConverter({
                   mask: 'HH.mm.ss',
                   dateConstructor: Date
                }),
@@ -266,14 +266,14 @@ define([
          ].forEach(function(test) {
             it(`should return curent date if it icludes "${test.mask}"`, function() {
                clock = sinon.useFakeTimers(test.currentDate.getTime(), 'Date');
-               let converter = new input.StringValueConverter();
+               let converter = new dateLib.StringValueConverter();
                let tested = converter.getCurrentDate(test.baseDate || baseDate, test.mask);
                assert(dateUtils.Base.isDatesEqual(tested, test.value),`"${tested}" "${test.value}"`);
             });
          });
 
          it('should create date with proper class', function() {
-            let converter = new input.StringValueConverter({
+            let converter = new dateLib.StringValueConverter({
                   mask: 'HH.mm.ss',
                   dateConstructor: Date
                }),

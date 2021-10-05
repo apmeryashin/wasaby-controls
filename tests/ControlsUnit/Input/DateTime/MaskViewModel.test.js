@@ -1,7 +1,7 @@
 define([
    "Core/core-merge",
    'Env/Env',
-   "Controls/_input/DateTime/MaskViewModel"
+   "Controls/_date/BaseInput/MaskViewModel"
 ], function(
     cMerge,
     Env,
@@ -23,7 +23,7 @@ define([
       },
    };
 
-   describe("Controls/_input/DateTime/MaskViewModel", function() {
+   describe("\"Controls/_date/BaseInput/MaskViewModel", function() {
       describe("handleInput", function() {
          beforeEach(() => {
             sinon.stub(Env.constants, 'isServerSide').value(false);

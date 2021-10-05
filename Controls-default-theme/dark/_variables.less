@@ -228,17 +228,14 @@
 .controls_popupTemplate_theme-@{themeName} {
    //dialog
    --background-color_dialog: #383d44;
-   --header_background-color_dialog: #383d44;
    --border-color_dialog: #535c68;
    --footer_background-color_dialog: transparent;
    --footer_top-border-color_dialog: #6b6b6b;
-   --unaccented_header_background-color_dialog: transparent;
 
    //stack
    --background-color_stack: #383d44;
    --header_background-color_stack: transparent;
    --header_bottom-border-color_stack: transparent;
-   --header_background-color_stack_unaccented: transparent;
    --footer_background-color_stack: transparent;
    --footer_top-border-color_stack: #6b6b6b;
    --border-color_stack: rgba(247, 247, 247, 0.23);
@@ -313,6 +310,11 @@
    --trigger_icon-color_lookupInput: var(--link_text-color);
 }
 
+.controls_theme-@{themeName} {
+   --secondary_contrast_hover_background-color_toggleButton_pushButton: var(--background-color);
+   --secondary_contrast_toggled_background-color_toggleButton_pushButton: #383d44;
+}
+
 .controls_toggle_theme-@{themeName} {
    //toggle
    --border-color_switcher: #565e69;
@@ -320,8 +322,6 @@
    --marker-box_border-color_switcher: #999;
    --readonly_marker-box_border-color_switcher: var(--readonly_color);
    --secondary_toggled_background-color_toggleButton_pushButton: #383d44;
-   --secondary_contrast_toggled_background-color_toggleButton_pushButton: #383d44;
-   --secondary_contrast_hover_background-color_toggleButton_pushButton: var(--background-color);
    --icon_container_background_color_BigSeparator: #383d44;
    --readonly_marker-box_border-color_checkbox: var(--readonly_color);
    --background-color_tumbler: #30343b;

@@ -11,6 +11,7 @@ import {ISelectionObject, TKeySelection} from 'Controls/interface';
 import Store from 'Controls/Store';
 import MenuSource from './MenuSource';
 import {ControllerClass as OperationsController} from 'Controls/operations';
+import {ControllerClass as FilterController} from 'Controls/filter';
 
 interface IContainerOptions extends IControlOptions {
     _dataOptionsValue: {
@@ -38,13 +39,15 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     protected _menuSource: MenuSource = null;
     private _sourceController: SourceController;
     private _operationsController: OperationsController =  null;
+    private _filterController: FilterController = null;
 
-    constructor() {
-        super();
+    constructor(cfg: IControlOptions, context?: object) {
+        super(cfg, context);
         this._updateActions = this._updateActions.bind(this);
         this._operationsPanelVisibleChanged = this._operationsPanelVisibleChanged.bind(this);
         this._operationsMenuVisibleChanged = this._operationsMenuVisibleChanged.bind(this);
         this._selectionChanged = this._selectionChanged.bind(this);
+        this._filterChanged = this._filterChanged.bind(this);
     }
 
     protected _beforeMount(options: IContainerOptions): void {
@@ -64,6 +67,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         this._menuSource = new MenuSource({
             collection: this._actionsCollection
         });
+    }
+
+    protected _filterChanged(event: SyntheticEvent, filter: object): void {
+        this._actionsCollection.filterChanged(filter);
     }
 
     protected _operationsMenuVisibleChanged(e: SyntheticEvent, state: boolean): void {
@@ -164,6 +171,10 @@ export default class ActionsContainer extends Control<IContainerOptions> {
         if (prefetch || dataContext) {
             this._sourceController = this.getSourceController(dataContext, prefetch);
             this._operationsController = this.getOperationController(dataContext, prefetch);
+            this._filterController = prefetch[0].prefetchResult?.filterController;
+            if (this._filterController) {
+                this._filterController.subscribe('filterChanged', this._filterChanged);
+            }
             this._sourceController.subscribe('itemsChanged', this._updateActions);
             this._operationsController.subscribe('operationsPanelVisibleChanged', this._operationsPanelVisibleChanged);
             this._operationsController.subscribe('selectionChanged', this._selectionChanged);
@@ -194,6 +205,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                 this._operationsPanelVisibleChanged);
             this._operationsController.unsubscribe('selectionChanged', this._selectionChanged);
             this._operationsController.unsubscribe('operationsMenuVisibleChanged', this._operationsPanelVisibleChanged);
+        }
+        if (this._filterController) {
+            this._filterController.unsubscribe('filterChanged', this._filterChanged);
         }
     }
 

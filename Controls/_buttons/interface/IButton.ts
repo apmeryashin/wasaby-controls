@@ -15,6 +15,20 @@ import {
 export type IViewMode = 'button' | 'link' | 'linkButton' | 'toolButton' | 'functionalButton';
 export type TextAlign = 'left' | 'right' | 'center';
 
+/**
+ * @typedef {String} TButtonStyle
+ * @description Значения для стиля отображаения кнопки.
+ * @variant primary
+ * @variant secondary
+ * @variant success
+ * @variant danger
+ * @variant info
+ * @variant unaccented
+ * @variant default
+ * @variant pale
+ */
+export type TButtonStyle = 'primary' | 'secondary' | 'success' | 'danger' | 'info' | 'unaccented' | 'default' | 'pale';
+
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions, IIconStyleOptions,
     IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
     contrastBackground?: boolean;
@@ -45,7 +59,7 @@ export interface IButton extends IContrastBackground {
 
 /**
  * @name Controls/_buttons/interface/IButton#buttonStyle
- * @cfg {Enum} Стиль отображения кнопки.
+ * @cfg {TButtonStyle} Стиль отображения кнопки.
  * @variant primary
  * @variant secondary
  * @variant success
@@ -71,7 +85,7 @@ export interface IButton extends IContrastBackground {
 
 /*
  * @name Controls/_buttons/interface/IButton#buttonStyle
- * @cfg {Enum} Set style parameters for button. These are background color or border color for different values of viewMode
+ * @cfg {TButtonStyle} Set style parameters for button. These are background color or border color for different values of viewMode
  * @variant primary
  * @variant secondary
  * @variant success

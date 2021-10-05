@@ -45,7 +45,7 @@
                 </div>
             </ws:else>
 
-            <div class="controls-StackTemplate__content-area">
+            <div class="controls-StackTemplate__content-area controls-background-{{_options.backgroundStyle}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
                             scope="{{_options}}"
                             hasRightTemplate="{{_hasRightPanel}}"

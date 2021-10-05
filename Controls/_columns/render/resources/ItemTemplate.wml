@@ -1,6 +1,6 @@
-<div attr:class="{{ item.getWrapperClasses(highlightOnHover, theme, cursor || clickable) }}">
+<div attr:class="{{ item.getWrapperClasses(highlightOnHover, cursor || clickable, shadowVisibility) }}">
    <ws:if data="{{item.shouldDisplayMarker(marker)}}">
-      <div class="controls-ColumnsView__item_marker"></div>
+      <div class="controls-ColumnsView__item_marker" attr:data-qa="marker"></div>
    </ws:if>
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
       <ws:partial template="{{ item.getMultiSelectTemplate() }}" item="{{ item }}" />

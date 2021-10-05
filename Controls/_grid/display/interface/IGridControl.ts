@@ -653,17 +653,24 @@ export interface IGridControl extends IList {
  */
 
 /**
- * @typedef {String} Controls/_grid/display/interface/IGridControl/ColumnScrollPosition
- * @description Допустимые значения для параметра, переданного в метод {@link setColumnScrollPosition}.
- * @variant start Позиция горизонтального скрола, при котором колонки таблицы проскролены в начало.
- * @variant end Позиция горизонтального скрола, при котором колонки таблицы проскролены в конец.
+ * Устанавливает положение горизонтального скролла в крайнее левое положение, в начало таблицы.
+ * @function
+ * @name Controls/_grid/display/interface/IGridControl#scrollToLeft
+ * @returns {void}
  */
 
 /**
- * Сбрасывает положение горизонтального скролла.
+ * Устанавливает положение горизонтального скролла в крайнее правое положение, в конец таблицы.
  * @function
- * @name Controls/_grid/display/interface/IGridControl#setColumnScrollPosition
- * @param {Controls/_grid/display/interface/IGridControl/ColumnScrollPosition.typedef} [position=start] Позиция к которой сбрасывается горизонтальный скролл.
+ * @name Controls/_grid/display/interface/IGridControl#scrollToRight
+ * @returns {void}
+ */
+
+/**
+ * Проскролливает к колонке с заданным индексом.
+ * @function
+ * @name Controls/_grid/display/interface/IGridControl#scrollToColumn
+ * @param {Number} [columnIndex] Индекс колонки к которой необходимо проскролить.
  * @returns {void}
  */
 
@@ -671,7 +678,7 @@ export interface IGridControl extends IList {
  * @event Происходит при наведении курсора мыши на ячейку таблицы.
  * @name Controls/_grid/display/interface/IGridControl#hoveredCellChanged
  * @param {UICommon/Events:SyntheticEvent} event Объект события.
- * @param {Types/entity:Record} item Элемент, на который навели курсор.
+ * @param {Types/entity:Model} item Элемент, на который навели курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента, на который навели курсор.
  * @param {Number} columnIndex Индекс ячейки, на которую навели курсор.
  * @param {HTMLElement} cellContainer Контейнер ячейки элемента, на которую навели курсор.

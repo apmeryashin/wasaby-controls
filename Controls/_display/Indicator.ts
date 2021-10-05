@@ -44,6 +44,8 @@ export default class Indicator extends CollectionItem<null> {
         return `${this._$state}-` + this._$position + this._instancePrefix;
     }
 
+    readonly listElementName: string =  'indicator';
+
     display(state: TIndicatorState, topOffset?: number): boolean {
         const isHidden = !this._$visible;
         if (isHidden) {
@@ -89,19 +91,18 @@ export default class Indicator extends CollectionItem<null> {
     }
 
     getClasses(): string {
-        let classes = '';
+        let classes = 'controls-BaseControl__loadingIndicator';
 
         switch (this._$state) {
             case 'loading':
-                classes += ' controls-BaseControl__loadingIndicator';
                 classes += ` controls-BaseControl__loadingIndicator__state-${this._$position}`;
                 break;
             case 'portioned-search':
-                classes += ' controls-BaseControl__loadingIndicator controls-BaseControl__portionedSearch';
+                classes += ' controls-BaseControl__portionedSearch';
                 classes += ` controls-BaseControl__portionedSearch__state-${this._$position}`;
                 break;
             case 'continue-search':
-                classes += ' controls-BaseControl__continueSearch ws-justify-content-center';
+                classes += ' controls-BaseControl__continueSearch';
                 break;
         }
 
@@ -122,6 +123,14 @@ export default class Indicator extends CollectionItem<null> {
         return styles;
     }
 
+    getState(): TIndicatorState {
+        return this._$state;
+    }
+
+    getPosition(): TIndicatorPosition {
+        return this._$position;
+    }
+
     isTopIndicator(): boolean {
         return this._$position === 'top';
     }
@@ -132,10 +141,6 @@ export default class Indicator extends CollectionItem<null> {
 
     isGlobalIndicator(): boolean {
         return this._$position === 'global';
-    }
-
-    getQAData(marker?: boolean): string {
-        return this.key;
     }
 
     isDisplayed(): boolean {

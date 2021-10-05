@@ -731,25 +731,31 @@ describe('Controls/list_clean/BaseControl', () => {
                 scrollHeight: 1200,
                 clientHeight: 400
             };
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            const clearScrollParams = {
+                scrollTop: 0,
+                scrollHeight: 1000,
+                clientHeight: 400
+            };
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(true), clearScrollParams);
             scrollParams.scrollTop = 500;
             baseControl.scrollMoveSyncHandler({scrollTop: 400});
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
             scrollParams.scrollTop = 0;
             scrollParams.scrollHeight = 1000;
 
             baseControl.scrollMoveSyncHandler({scrollTop: scrollParams.scrollTop});
             baseControl.__onPagingArrowClick(null, '');
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
 
             scrollParams.scrollTop = 100;
             scrollParams.scrollHeight = 1200;
             baseControl.scrollMoveSyncHandler({scrollTop: 0});
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
             baseControl.scrollMoveSyncHandler({scrollTop: 400});
             scrollParams.scrollTop = 500;
-            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(), scrollParams);
         });
     });
     describe('beforeUnmount', () => {
@@ -1547,6 +1553,8 @@ describe('Controls/list_clean/BaseControl', () => {
     it('needFooterPadding', () => {
         let editing = false;
         let count = 10;
+        let stopIndex = 10;
+        let hasMore = false;
         let footer = false;
         let results = false;
         let resultsPosition = '';
@@ -1557,9 +1565,11 @@ describe('Controls/list_clean/BaseControl', () => {
                 getCount: () => count,
                 getFooter: () => footer,
                 getResults: () => results,
-                getResultsPosition: () => resultsPosition
+                getResultsPosition: () => resultsPosition,
+                getStopIndex: () => stopIndex
             },
-            _shouldDrawNavigationButton: false
+            _shouldDrawNavigationButton: false,
+            _hasMoreData: () => hasMore
         } as unknown as BaseControl;
 
         assert.isFalse(
@@ -1615,5 +1625,19 @@ describe('Controls/list_clean/BaseControl', () => {
             'itemActionsPosition is outside, empty items, run editing in place padding is needed'
         );
         editing = false;
+
+        count = 10;
+        hasMore = true;
+        assert.isFalse(
+            BaseControl._private.needBottomPadding(fakeInstance, {navigation: { view: 'infinity' }, itemActionsPosition: 'outside'}),
+            'itemActionsPosition is outside, hasMoreData, padding is not needed'
+        );
+
+        hasMore = false;
+        stopIndex = 5;
+        assert.isFalse(
+            BaseControl._private.needBottomPadding(fakeInstance, {navigation: { view: 'infinity' }, itemActionsPosition: 'outside'}),
+            'itemActionsPosition is outside, has hidden items at bottom, padding is not needed'
+        );
     });
 });

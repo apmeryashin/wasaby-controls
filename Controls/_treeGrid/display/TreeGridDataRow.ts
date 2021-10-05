@@ -39,6 +39,10 @@ export default class TreeGridDataRow<T extends Model = Model>
     protected _$searchValue: string;
     protected _$hasStickyGroup: boolean;
 
+    readonly listInstanceName: string =  'controls-TreeGrid';
+
+    readonly listElementName: string = 'row';
+
     constructor(options: IOptions<T>) {
         super(options);
         GridRowMixin.call(this, options);

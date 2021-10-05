@@ -78,8 +78,9 @@ export class ViewModel extends BaseViewModel {
             value: clearResult.value,
             carriagePosition: 0
         }).value;
-
-        result = ViewModel._removeStartZeros(result);
+        if (!this._options.shouldNotRemoveStartZeros) {
+            result = ViewModel._removeStartZeros(result);
+        }
         return result;
     }
 
@@ -239,6 +240,6 @@ export class ViewModel extends BaseViewModel {
             const count = zerosMatch[1].length
             result = ViewModel._replacer.repeat(count) + str.slice(count);
         }
-        return result
+        return result;
     }
 }

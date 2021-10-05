@@ -2,7 +2,6 @@ import {StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
-import {isEmptyItem, prepareEmpty} from 'Controls/_dropdown/Util';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {process} from 'Controls/error';
 import {IndicatorOpener} from 'Controls/LoadingIndicator';
@@ -352,7 +351,8 @@ export default class _Controller implements IDropdownController {
       }).then(
           () => {
              const count = this._items.getCount();
-             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerContentTemplate)) {
+             if (count > 1 || count === 1 &&
+                 (this._options.emptyText || this._options.selectedAllText || this._options.footerContentTemplate)) {
                 this._createMenuSource(this._items);
                 return openPopup();
              } else if (count === 1) {
@@ -383,10 +383,6 @@ export default class _Controller implements IDropdownController {
          }
       }
       return this._loadItemsPromise;
-   }
-
-   private _getEmptyText(): string {
-      return prepareEmpty(this._options.emptyText);
    }
 
    private _setItemsAndMenuSource(items: RecordSet|null): void {
@@ -483,8 +479,10 @@ export default class _Controller implements IDropdownController {
           return sourceController.load().then((items) => {
              return this._resolveLoadedItems(options, items);
           }, (error) => {
-             this._loadError(error);
-             return Promise.reject(error);
+             if (!error.isCanceled) {
+                this._loadError(error);
+                return Promise.reject(error);
+             }
           });
        });
    }
@@ -545,6 +543,8 @@ export default class _Controller implements IDropdownController {
 
    private _updateSelectedItems({selectedKeys,
                                  keyProperty,
+                                 selectedAllText,
+                                 selectedAllKey,
                                  emptyText,
                                  emptyKey,
                                  selectedItemsChangedCallback}: Partial<IDropdownControllerOptions>,
@@ -565,7 +565,10 @@ export default class _Controller implements IDropdownController {
       };
 
       if (selectedItemsChangedCallback) {
-         if (!selectedKeys || !selectedKeys.length || selectedKeys[0] === emptyKey) {
+         if (selectedKeys && selectedKeys[0] === selectedAllKey && selectedAllText) {
+            this._selectedKeys = selectedKeys;
+            selectedItems.push(null);
+         } else if (!selectedKeys || !selectedKeys.length || selectedKeys[0] === emptyKey) {
             if (emptyText) {
                addEmptyTextToSelected();
             } else {
@@ -608,11 +611,6 @@ export default class _Controller implements IDropdownController {
 
    private _prepareItem(item, keyProperty, source): Model {
       if (this._isHistoryMenu()) {
-         // В историческом меню в emptyItem ключ пишется в поле copyOriginalId.
-         // Поле keyProperty заполняется значением по умолчанию, которое может не совпадать с emptyKey.
-         if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty(), this._options.emptyKey)) {
-            item.set(keyProperty, item.getKey());
-         }
          return source.resetHistoryFields(item, keyProperty);
       } else {
          return item;
@@ -722,7 +720,8 @@ export default class _Controller implements IDropdownController {
          selectedKeys: this._selectedKeys,
          dataLoadCallback: null,
          closeButtonVisibility: false,
-         emptyText: this._getEmptyText(),
+         emptyText: this._options.emptyText,
+         selectedAllText: this._options.selectedAllText,
          allowPin: this._options.allowPin && this._hasHistory(this._options),
          keyProperty: this._isHistoryMenu() ? 'copyOriginalId' : baseConfig.keyProperty,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,

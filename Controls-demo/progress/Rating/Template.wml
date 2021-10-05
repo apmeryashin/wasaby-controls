@@ -43,6 +43,14 @@
             </Router.router:Reference>
             <Controls-demo.progress.Rating.IconSize.Index/>
          </div>
+         <div class="controlsDemo__cell">
+            <Router.router:Reference attr:class="controls-text-label"
+                                     state="/Controls-demo/app/:app"
+                                     app="{{ 'Controls-demo/progress/Rating/EmptyIconFill/Index' }}">
+               <a href="{{content.href}}">Настройка заливки пустой иконки</a>
+            </Router.router:Reference>
+            <Controls-demo.progress.Rating.EmptyIconFill.Index/>
+         </div>
       </div>
    </div>
 </div>

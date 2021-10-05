@@ -108,6 +108,9 @@ class Container extends Control<IControlOptions> {
             } else {
                 this._source = null;
             }
+            if (this._options.initStore) {
+                Store.dispatch('filterSource', this._source);
+            }
         }
     }
 

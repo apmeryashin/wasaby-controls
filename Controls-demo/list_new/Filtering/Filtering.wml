@@ -1,7 +1,10 @@
 <div class="controlsDemo__wrapper">
-    <Controls.list:View
+    <Controls.browser:Browser
             source="{{_viewSource}}"
             keyProperty="key"
-            bind:filter="_filter"
-    />
+            bind:filter="_filter">
+        <Controls.list:Container>
+            <Controls.list:View/>
+        </Controls.list:Container>
+    </Controls.browser:Browser>
 </div>

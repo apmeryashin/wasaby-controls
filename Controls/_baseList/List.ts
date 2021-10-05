@@ -8,9 +8,10 @@ import template = require('wml!Controls/_baseList/List');
 import viewName = require('Controls/_baseList/ListView');
 import {default as ListControl} from 'Controls/_baseList/BaseControl';
 import {default as Data} from 'Controls/_baseList/Data';
-import {ISelectionObject, IBaseSourceConfig} from 'Controls/interface';
+import {ISelectionObject, IBaseSourceConfig, TKey} from 'Controls/interface';
 import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import 'css!Controls/baseList';
+import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
 
 /**
  * Контрол "Плоский список" позволяет отображать данные из различных источников в виде упорядоченного списка.
@@ -19,7 +20,7 @@ import 'css!Controls/baseList';
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_list.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_list.less переменные тем оформления}
  *
  * @class Controls/_list/List
  * @extends UI/Base:Control
@@ -112,7 +113,12 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
         }
     }
 
-    reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
+    reloadItem(
+        key: TKey,
+        options: object | IReloadItemOptions,
+        replaceItem?: boolean,
+        reloadType: string = 'read'
+    ): Promise<Model> {
         const listControl = this._children.listControl;
         return listControl.reloadItem.apply(listControl, arguments);
     }

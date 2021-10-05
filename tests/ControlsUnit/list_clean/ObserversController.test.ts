@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 
-import {Collection} from 'Controls/display';
+import {Collection, EIndicatorState} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
 import ObserversController, {IObserversControllerOptions} from 'Controls/_baseList/Controllers/ObserversController';
 
@@ -34,7 +34,13 @@ describe('Controls/_baseList/ObserversController', () => {
 
         it('empty model', () => {
             const {controller} = initTest([], {scrollTop: 100, viewHeight: 1000, viewportHeight: 500});
-            assert.deepEqual(controller.getTriggerOffsets(), {top: 0, bottom: 0});
+            assert.deepEqual(controller.getTriggerOffsets(), {top: 1, bottom: 1});
+        });
+
+        it('not calc 1/3 of indicator height', () => {
+            const {controller, collection} = initTest([{id: 1}], {scrollTop: 0, viewHeight: 50, viewportHeight: 300});
+            collection.displayIndicator('bottom', EIndicatorState.Loading);
+            assert.deepEqual(controller.getTriggerOffsets(), {top: 0.6, bottom: 48.6});
         });
     });
 });

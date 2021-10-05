@@ -1,4 +1,5 @@
 import {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
+import {prepareEmpty} from 'Controls/_dropdown/Util';
 
 export default function getDropdownControllerOptions(options: IDropdownControllerOptions): IDropdownControllerOptions {
     const dropdownOptions: IDropdownControllerOptions = {
@@ -14,7 +15,9 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         notifyEvent: options.notifyEvent,
         lazyItemsLoading: options.lazyItemsLoading,
         reloadOnOpen: options.reloadOnOpen,
-        emptyText: options.emptyText,
+        selectedAllText: options.selectedAllText,
+        selectedAllKey: options.selectedAllKey,
+        emptyText: prepareEmpty(options.emptyText),
         emptyKey: options.emptyKey,
         itemActions: options.itemActions,
         itemActionVisibilityCallback: options.itemActionVisibilityCallback,
@@ -33,6 +36,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         multiSelect: options.multiSelect,
         typeShadow: options.typeShadow,
         selectorTemplate: options.selectorTemplate,
+        headingCaptionProperty: options.headingCaptionProperty,
         headerContentTemplate: options.headerContentTemplate,
         footerContentTemplate: options.footerContentTemplate || options.footerTemplate,
         footerItemData: options.footerItemData,
@@ -68,6 +72,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         minSearchLength: options.minSearchLength,
         searchDelay: options.searchDelay,
         searchValueTrim: options.searchValueTrim,
+        searchPlaceholder: options.searchPlaceholder,
         subMenuDirection: options.subMenuDirection
     };
     return dropdownOptions;

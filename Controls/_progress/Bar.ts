@@ -4,53 +4,15 @@ import {Logger} from 'UI/Utils';
 import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 import 'css!Controls/progress';
 
-/**
- * Интерфейс опций для {@link Controls/progress:Bar}.
- * @interface Controls/progress:IBar
- * @public
- * @author Колесов В.А.
- */
 export interface IBarOptions extends IControlOptions {
-   /**
-    * @name Controls/progress:IBar#value
-    * @cfg {Number} Значение прогресса в процентах.
-    * @remark
-    * Целое число от 0 до 100.
-    */
-
-   /*
-   * @name Controls/progress:IBar#value
-   * @cfg {Number} Progress in percents (ratio of the filled part)
-   * @remark
-   * An integer from 1 to 100.
-   */
    value?: number;
-   /**
-    * @name Controls/progress:IBar#barStyle
-    * @cfg {String} Стиль шкалы прогресс бара.
-    * @variant primary
-    * @variant success
-    * @variant warning
-    * @variant danger
-    * @variant secondary
-    * @default primary
-    * @demo Controls-demo/progress/Bar/BarStyle/Index
-    */
-   barStyle: 'primary' | 'success' | 'danger' | 'warning' | 'secondary';
-   /**
-    * @name Controls/progress:IBar#blankAreaStyle
-    * @cfg {String} Стиль шкалы не заполненной области прогресс бара.
-    * @variant default
-    * @variant none
-    * @default default
-    * @demo Controls-demo/progress/Bar/BlankAreaStyle/Index
-    */
-   blankAreaStyle?: 'default' | 'none';
+   barStyle: 'primary' | 'success' | 'danger' | 'warning' | 'secondary' | 'info';
+   blankAreaStyle?: 'default' | 'none' | 'primary' | 'success' | 'danger' | 'warning' | 'secondary' | 'info';
 }
 /**
  * Базовый индикатор выполнения процесса.
  * Отображает полосу прогресса выполнения.
- *
+ * @class Controls/_progress:Bar
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2fprogress%2fBar%2fIndex демо-пример}
@@ -68,7 +30,7 @@ export interface IBarOptions extends IControlOptions {
 
 /*
  * Control that renders progress bar
- * @class Controls/_progress/Bar
+ * @class Controls/_progress:Bar
  * @extends UI/Base:Control
  * @author Колесов В.А.
  *
@@ -124,4 +86,45 @@ Object.defineProperty(Bar, 'defaultProps', {
    }
 });
 
+/**
+ * @name Controls/_progress:Bar#value
+ * @cfg {Number} Значение прогресса в процентах.
+ * @remark
+ * Целое число от 0 до 100.
+ */
+
+/*
+* @name Controls/_progress:Bar#value
+* @cfg {Number} Progress in percents (ratio of the filled part)
+* @remark
+* An integer from 1 to 100.
+*/
+
+/**
+ * @name Controls/_progress:Bar#barStyle
+ * @cfg {String} Стиль шкалы прогресс бара.
+ * @variant primary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @variant secondary
+ * @variant info
+ * @default primary
+ * @demo Controls-demo/progress/Bar/BarStyle/Index
+ */
+
+/**
+ * @name Controls/_progress:Bar#blankAreaStyle
+ * @cfg {String} Стиль шкалы не заполненной области прогресс бара.
+ * @variant default
+ * @variant none
+ * @variant primary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @variant secondary
+ * @variant info
+ * @default default
+ * @demo Controls-demo/progress/Bar/BlankAreaStyle/Index
+ */
 export default Bar;

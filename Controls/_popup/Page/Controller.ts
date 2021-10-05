@@ -12,22 +12,26 @@ interface IPageTemplateOptions {
 }
 
 interface IPagePopupOptions extends IBasePopupOptions {
-    templateOptions?: IPagePopupOptions;
+    templateOptions?: IPageTemplateOptions;
 }
 
 class PageController {
+    private _pageTemplate: string;
 
     /**
      * Получение опций окна для открытия страницы
      * @param pageId
      * @param popupOptions
      */
-    getPagePopupOptions(pageId: string, popupOptions: IBasePopupOptions): Promise<unknown> {
+    getPagePopupOptions(pageId: string, popupOptions: IBasePopupOptions): Promise<IPagePopupOptions> {
         const resultPopupOptions = {...popupOptions};
+        if (!this._pageTemplate) {
+            throw new Error('На приложении не задан шаблон отображения страницы в окне');
+        }
         return DSPageController.getPageConfig(pageId).then((pageData) => {
             const templateOptions = this._getTemplateOptions(pageData, resultPopupOptions);
             templateOptions.prefetchResult = DSPageController.loadData(pageData, templateOptions.pageTemplateOptions);
-            resultPopupOptions.template = 'Controls/popupTemplate:Page';
+            resultPopupOptions.template = this._pageTemplate;
             resultPopupOptions.templateOptions = templateOptions;
             return resultPopupOptions;
         }).catch(() => {
@@ -41,6 +45,14 @@ class PageController {
      */
     loadModules(template: string): Promise<Control> {
         return loadModule(template);
+    }
+
+    /**
+     * Устанавливает шаблон отображения страницы на попапе
+     * @param template
+     */
+    setPageTemplate(template: string): void {
+        this._pageTemplate = template;
     }
 
     /**

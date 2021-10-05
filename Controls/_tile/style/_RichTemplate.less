@@ -123,6 +123,18 @@
    border-radius: 60px;
 }
 
+/*
+ overflow: hidden ломает clip-path в safari
+ Cделал как в ie, чтобы изображения хотя бы были видны.
+ https://online.sbis.ru/opendoc.html?guid=6a5a49c0-1274-46a4-a4d6-a514bac5838c
+ */
+.ws-is-desktop-safari,
+.ws-is-mobile-safari {
+   .controls-TileView__richTemplate_image_viewMode_ellipse {
+      border-radius: 60px;
+      clip-path: none;
+   }
+}
 .controls-TileView__richTemplate_image {
    width: 100%;
    height: 100%;
@@ -247,7 +259,7 @@
 
 .controls-TileView__richTemplate_image_size_s_position_bottom_viewMode_rectangle,
 .controls-TileView__richTemplate_image_size_s_position_top_viewMode_rectangle {
-   height: var(--image_height_s_position_top_rich_tile);
+   height: var(--size_6xl_image);
 }
 
 .controls-TileView__richTemplate_image_size_m_position_bottom_viewMode_rectangle,
@@ -281,7 +293,7 @@
 // поддержка старой плитки
 .controls-TileView_old {
    .controls-TileView__richTemplate_image_size_s_position_vertical {
-      height: var(--image_height_s_position_top_rich_tile);
+      height: var(--size_6xl_image);
    }
 
    .controls-TileView__richTemplate_image_size_m_position_vertical {

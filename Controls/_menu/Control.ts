@@ -3,7 +3,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet, List} from 'Types/collection';
-import {ICrudPlus, PrefetchProxy, QueryWhere} from 'Types/source';
+import {ICrudPlus, PrefetchProxy} from 'Types/source';
 import {Collection, CollectionItem, Search} from 'Controls/display';
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -40,6 +40,7 @@ interface ISourcePropertyConfig {
 const SUB_DROPDOWN_DELAY = 400;
 
 const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
+
 /**
  * Контрол меню.
  * @public
@@ -219,6 +220,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         // menu:Control могут положить в пункт меню, от такого пунта открывать подменю не нужно
         // TODO: https://online.sbis.ru/opendoc.html?guid=6fdbc4ca-d19a-46b3-ad68-24fceefa8ed0
         if (item.getContents() instanceof Model && !this._isTouch() &&
+            !this._options.isDragging &&
             sourceEvent.target.closest('.controls-menu') === this._container) {
             this._clearClosingTimout();
             this._setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
@@ -281,7 +283,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._rightTemplateClick(event, item);
         } else {
             if (this._options.multiSelect && this._selectionChanged &&
-                !this._isEmptyItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
+                !this._isSingleSelectionItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key);
 
                 this._notify('selectedKeysChanged', [this._getSelectedKeys()]);
@@ -325,8 +327,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _updateMakerController(newOptions: IMenuControlOptions): void {
         this._getMarkerController(newOptions).updateOptions(this._getMarkerControllerConfig(newOptions));
-        const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey,
-            newOptions.multiSelect);
+        const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions);
         this._markerController.setMarkedKey(markedKey);
     }
 
@@ -421,8 +422,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         config.overlay = 'none';
     }
 
-    protected _isEmptyItem(item: Model): boolean {
-        return this._options.emptyText && item.getKey() === this._options.emptyKey;
+    protected _isSingleSelectionItem(item: Model): boolean {
+        const key = item.getKey();
+        const isAllSelectedItem = this._options.selectedAllText && key === this._options.selectedAllKey;
+        const isEmptyItem = this._options.emptyText && key === this._options.emptyKey;
+        return isAllSelectedItem || isEmptyItem;
     }
 
     protected _openSelectorDialog(): void {
@@ -433,7 +437,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else {
             selectedItems = new List<Model>({
                 items: this._getSelectedItems().filter((item: Model): boolean => {
-                    return !this._isEmptyItem(item);
+                    return !this._isSingleSelectionItem(item);
                 }) as Model[]
             });
         }
@@ -623,7 +627,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const markedKey = markerController.getMarkedKey();
         const selectedItem = this._listModel.getItemBySourceKey(markedKey);
         if (selectedItem &&
-            (MenuControl._isFixedItem(selectedItem.getContents()) || this._isEmptyItem(selectedItem.getContents()))) {
+            (MenuControl._isFixedItem(selectedItem.getContents()) || this._isSingleSelectionItem(selectedItem.getContents()))) {
             markerController.setMarkedKey(undefined);
         }
         const selection = selectionController.toggleItem(key);
@@ -631,8 +635,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._listModel.nextVersion();
 
         const isEmptySelected = this._options.emptyText && !selection.selected.length;
+        const isAllItemSelected = this._options.selectedAllText && !selection.selected.length;
         if (isEmptySelected) {
             this._getMarkerController(this._options).setMarkedKey(this._options.emptyKey);
+        } else if (isAllItemSelected) {
+            this._getMarkerController(this._options).setMarkedKey(this._options.selectedAllKey);
         }
     }
 
@@ -684,19 +691,24 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getMarkerController(options: IMenuControlOptions): MarkerController {
         if (!this._markerController) {
-            const markedKey = this._getMarkedKey(options.selectedKeys, options.emptyKey, options.multiSelect);
+            const markedKey = this._getMarkedKey(options.selectedKeys, options);
             this._markerController = new MarkerController(this._getMarkerControllerConfig(options, markedKey));
         }
         return this._markerController;
     }
 
     private _getMarkedKey(selectedKeys: TSelectedKeys,
-                          emptyKey?: string|number,
-                          multiSelect?: boolean): string|number|undefined {
+                          {emptyKey,
+                           selectedAllKey,
+                          multiSelect,
+                          selectedAllText,
+                          emptyText}: Partial<IMenuControlOptions>): string|number|undefined {
         let markedKey;
         if (multiSelect) {
-            if (!selectedKeys.length || selectedKeys.includes(emptyKey)) {
+            if ((!selectedKeys.length || selectedKeys.includes(emptyKey)) && emptyText) {
                 markedKey = emptyKey;
+            } else if (selectedKeys.includes(selectedAllKey) && selectedAllText) {
+                markedKey = selectedAllKey;
             } else {
                 const item = this._listModel.getItemBySourceKey(selectedKeys[0]);
                 if (item && MenuControl._isFixedItem(item.getContents())) {
@@ -726,8 +738,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectedItems = this._getSelectionController().getSelectedItems().map((item) => {
             return item.getContents();
         }).reverse();
-        if (!selectedItems.length && this._options.emptyText) {
-            selectedItems.push(this._listModel.getItemBySourceKey(this._options.emptyKey).getContents());
+        if (!selectedItems.length) {
+            let key;
+            if (this._options.selectedAllText) {
+                key = this._options.selectedAllKey;
+            } else if (this._options.emptyText) {
+                key = this._options.emptyKey;
+            }
+            if (key !== undefined) {
+                selectedItems.push(this._listModel.getItemBySourceKey(key).getContents());
+            }
         }
         return selectedItems;
     }
@@ -765,8 +785,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getCollection(items: RecordSet<Model>, options: IMenuControlOptions): Collection<Model> {
-        if (!options.searchValue && options.emptyText && !items.getRecordById(options.emptyKey)) {
-            this._addEmptyItem(items, options);
+        if (!options.searchValue && !items.getRecordById(options.emptyKey)) {
+            if (options.emptyText) {
+                this._addSingleSelectionItem(options.emptyText, options.emptyKey, items, options);
+            } else if (options.selectedAllText) {
+                this._addSingleSelectionItem(options.selectedAllText, options.selectedAllKey, items, options);
+            }
         }
         const collectionConfig: object = {
             collection: items,
@@ -811,18 +835,24 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return listModel;
     }
 
-    private _addEmptyItem(items: RecordSet, options: IMenuControlOptions): void {
+    private _addSingleSelectionItem(itemText: string,
+                                    key: string,
+                                    items: RecordSet,
+                                    options: IMenuControlOptions): void {
         const emptyItem = this._getItemModel(items, options.keyProperty);
 
         const data = {};
-        data[options.keyProperty] = options.emptyKey;
-        data[options.displayProperty] = options.emptyText;
+        data[options.keyProperty] = key;
+        data[options.displayProperty] = itemText;
 
         if (options.parentProperty) {
             data[options.parentProperty] = options.root;
         }
         if (options.nodeProperty) {
             data[options.nodeProperty] = false;
+        }
+        for (let field in data) {
+            this._addField(field, emptyItem, emptyItem.getFormat());
         }
         emptyItem.set(data);
         items.prepend([emptyItem]);
@@ -1005,11 +1035,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             vertical: subMenuDirection === 'bottom' ? 'bottom' : 'top',
             horizontal: subMenuDirection === 'bottom' ? 'left' : this._options.itemAlign
         };
-        const className = 'controls-Menu__subMenu controls-Menu__subMenu_margin' +
+        let className = 'controls-Menu__subMenu' +
             ` controls_popupTemplate_theme-${this._options.theme}` +
             this._getMenuPopupOffsetClass(item, this._options);
 
         return this._getTemplateOptions(item).then((templateOptions) => {
+            className += templateOptions.headingCaption ? ' controls-Menu__subMenu_withHeader_margin' : ' controls-Menu__subMenu_margin';
             return {
                 templateOptions,
                 target,
@@ -1026,6 +1057,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getTemplateOptions(item: CollectionItem<Model>): Promise<object> {
         const root: TKey = item.getContents().get(this._options.keyProperty);
+        const headingCaption = item.getContents().get(this._options.headingCaptionProperty);
         const isLoadedChildItems = this._isLoadedChildItems(root);
         const sourcePropertyConfig = item.getContents().get(this._options.sourceProperty);
         const dataLoadCallback = !isLoadedChildItems &&
@@ -1035,6 +1067,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 root: sourcePropertyConfig ? null : root,
                 bodyContentTemplate: 'Controls/_menu/Control',
                 dataLoadCallback,
+                headingCaption,
                 footerContentTemplate: this._options.nodeFooterTemplate,
                 footerItemData: {
                     key: root,
@@ -1044,7 +1077,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 emptyText: null,
                 showClose: false,
                 showHeader: false,
-                headerTemplate: null,
+                headerTemplate: headingCaption ? 'Controls/dropdown:HeaderTemplate' : null,
                 headerContentTemplate: null,
                 additionalProperty: null,
                 searchParam: null,
@@ -1102,16 +1135,21 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _subMenuDataLoadCallback(items: RecordSet): void {
         const origCollectionFormat = this._listModel.getCollection().getFormat();
+        const collection = this._listModel.getCollection();
         items.getFormat().forEach((field) => {
             const name = field.getName();
-            if (origCollectionFormat.getFieldIndex(name) === -1) {
-                this._listModel.getCollection().addField({
-                    name,
-                    type: 'string'
-                });
-            }
+            this._addField(name, collection, origCollectionFormat);
         });
         this._listModel.getCollection().append(items);
+    }
+
+    private _addField(name: string, items, format): void {
+        if (format.getFieldIndex(name) === -1) {
+            items.addField({
+                name,
+                type: 'string'
+            });
+        }
     }
 
     private _updateItemActions(listModel: Collection<Model>, options: IMenuControlOptions): void {

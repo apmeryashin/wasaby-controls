@@ -102,10 +102,14 @@ class ModuleClass {
             return;
          }
 
-        var updatedStartValue = updatedRange[0],
+        const updatedStartValue = updatedRange[0],
             updatedEndValue = updatedRange[1],
-            updatedPeriodType = getPeriodType(updatedStartValue, updatedEndValue),
+            updatedPeriodType = getPeriodType(updatedStartValue, updatedEndValue);
+
+        let capacityChanged = false;
+        if (this._rangeIsNotEmpty(ranges[changedRangeIndex])) {
             capacityChanged = updatedPeriodType !== getPeriodType(ranges[changedRangeIndex][0], ranges[changedRangeIndex][1]);
+        }
 
          if (changedRangeIndex < ranges.length - 1) {
             this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged);
@@ -123,9 +127,9 @@ class ModuleClass {
         // is a multiple of years.
         if (updatedPeriodType === periodTypes.year || updatedPeriodType === periodTypes.years ||
               (!capacityChanged &&
-               updatedStartValue.getFullYear() !== startValue.getFullYear() &&
-               updatedStartValue.getMonth() === startValue.getMonth() &&
-               updatedStartValue.getDate() === startValue.getDate())) {
+               updatedStartValue?.getFullYear() !== startValue?.getFullYear() &&
+               updatedStartValue?.getMonth() === startValue?.getMonth() &&
+               updatedStartValue?.getDate() === startValue?.getDate())) {
            this._relationMode = 'normal';
 
            // We update steps for calculation of the periods in other controls.

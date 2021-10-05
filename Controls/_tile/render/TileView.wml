@@ -1,5 +1,5 @@
 <div class="{{ _getViewClasses() }} ">
-    <div class="controls-ListViewV controls-TileView" name="tileContainer">
+    <div class="controls-ListViewV controls-TileView" name="tileContainer" attr:data-qa="tile-container">
         <ws:if data="{{_listModel}}">
             <!--Top loading indicator-->
             <ws:partial if="{{ _listModel.getTopIndicator() }}"

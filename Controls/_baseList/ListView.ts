@@ -85,6 +85,9 @@ const ListView = Control.extend(
                   this._pendingRedraw = true;
                }
             };
+            this._onIndexesChanged = () => {
+                this._pendingRedraw = true;
+            };
         },
 
         _isPendingRedraw(event, changesType, action, newItems) {
@@ -166,6 +169,7 @@ const ListView = Control.extend(
                 this._listModel = newOptions.listModel;
 
                 this._listModel.subscribe('onCollectionChange', this._onListChangeFnc);
+                this._listModel.subscribe('indexesChanged', this._onIndexesChanged);
             }
             this._forTemplate = forTemplate;
             this._itemTemplate = this._resolveItemTemplate(newOptions);
@@ -173,7 +177,8 @@ const ListView = Control.extend(
 
         _beforeUnmount: function() {
             if (this._listModel && !this._listModel.destroyed) {
-                this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
+                this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
+                this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
             }
         },
 
@@ -181,8 +186,13 @@ const ListView = Control.extend(
             this._updateInProgress = true;
             this._waitingComponentDidUpdate = true;
             if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
+                if (this._listModel && !this._listModel.destroyed) {
+                    this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
+                    this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
+                }
                 this._listModel = newOptions.listModel;
-                this._listModel.subscribe('onListChange', this._onListChangeFnc);
+                this._listModel.subscribe('onCollectionChange', this._onListChangeFnc);
+                this._listModel.subscribe('indexesChanged', this._onIndexesChanged);
             }
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
@@ -463,6 +473,14 @@ Object.defineProperty(ListView, 'defaultProps', {
    get(): object {
       return ListView.getDefaultOptions();
    }
+});
+
+/**
+ * Имя сущности для идентификации списка.
+ */
+Object.defineProperty(ListView.prototype, 'listInstanceName', {
+    value: 'controls-List',
+    writable: false
 });
 
 export = ListView;

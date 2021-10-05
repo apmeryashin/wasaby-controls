@@ -1,0 +1,37 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__rightButton">
+      <div class="controls-text-label">captionPosition=right textAlign=left</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="left" viewMode="button" captionPosition="right" caption="Button"/>
+   </div>
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__leftButton">
+      <div class="controls-text-label">captionPosition=left textAlign=left</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="left" viewMode="button" captionPosition="left" caption="Button"/>
+   </div>
+
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__rightButton">
+      <div class="controls-text-label">captionPosition=right textAlign=center</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="center" viewMode="button" captionPosition="right" caption="Button"/>
+   </div>
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__leftButton">
+      <div class="controls-text-label">captionPosition=left textAlign=center</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="center" viewMode="button" captionPosition="left" caption="Button"/>
+   </div>
+
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__rightButton">
+      <div class="controls-text-label">captionPosition=right textAlign=right</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="right" viewMode="button" captionPosition="right" caption="Button"/>
+   </div>
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__leftButton">
+      <div class="controls-text-label">captionPosition=left textAlign=right</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="right" viewMode="button" captionPosition="left" caption="Button"/>
+   </div>
+
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__rightButton">
+      <div class="controls-text-label">captionPosition=right textAlign=justify</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="justify" viewMode="button" captionPosition="right" caption="Button"/>
+   </div>
+   <div class="controlsDemo__cell demo-ButtonsCaptionPosition__leftButton">
+      <div class="controls-text-label">captionPosition=left textAlign=justify</div>
+      <Controls.buttons:Button attr:class="controlsDemo_fixedWidth300" icon="icon-Send" textAlign="justify" viewMode="button" captionPosition="left" caption="Button"/>
+   </div>
+</div>

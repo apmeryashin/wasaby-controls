@@ -93,8 +93,9 @@ export default class DateRange extends Control<IDatePopupDateRangeOptions> {
         }
     }
 
-    protected _monthCaptionClick(e: SyntheticEvent, yearDate: Date, month: number): void {
+    protected _monthCaptionClick(e: SyntheticEvent, yearDate: Date): void {
         let date;
+        const month = yearDate.getMonth();
         if (this._monthSelectionEnabled) {
             date = new this._options.dateConstructor(yearDate.getFullYear(), month);
             let startValue = date;

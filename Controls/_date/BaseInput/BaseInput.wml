@@ -1,0 +1,33 @@
+<ws:partial template="{{_validationContainer}}" on:valueChanged="_valueChangedHandler()" validators="{{_validators}}" name="validator">
+    <ws:content>
+        <Controls._date.BaseInput.Mask
+                contrastBackground="{{ _options.contrastBackground }}"
+                horizontalPadding="{{ _options.horizontalPadding }}"
+                rightFieldTemplate="{{ _options.rightFieldTemplate }}"
+                textAlign="{{_options.textAlign}}"
+                attr:class="controls-{{ _controlName }}"
+                value="{{_model.clearTextValue}}"
+                replacer="{{_model._replacer}}"
+                mask="{{_options.mask}}"
+                size="{{ _options.size }}"
+                fontStyle="{{_options.fontStyle}}"
+                fontSize="{{_options.fontSize}}"
+                fontWeight="{{_options.fontWeight}}"
+                fontColorStyle="{{_options.fontColorStyle}}"
+                borderStyle="{{_options.borderStyle}}"
+                borderVisibility="{{_options.borderVisibility}}"
+                inlineHeight="{{_options.inlineHeight}}"
+                selectOnClick="{{_options.selectOnClick}}"
+                placeholder="{{_options.placeholder}}"
+                tagStyle="{{ _options.tagStyle }}"
+                style="{{_options.style}}"
+                validationStatus="{{_options.validationStatus}}"
+                tooltip="{{_options.tooltip}}"
+                formatMaskChars="{{_formatMaskChars}}"
+                on:inputCompleted="_inputCompletedHandler()"
+                on:tagClick="_proxyEvent('tagClick')"
+                on:tagHover="_proxyEvent('tagHover')"
+                on:keydown="_onKeyDown()">
+        </Controls._date.BaseInput.Mask>
+    </ws:content>
+</ws:partial>

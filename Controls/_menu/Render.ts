@@ -43,14 +43,32 @@ class MenuRender extends Control<IMenuRenderOptions> {
         const options = this._options;
         const listModel = options.listModel;
         const emptyItem = options.emptyText && listModel.getItemBySourceKey(options.emptyKey);
+        const allSelectedItem = options.selectedAllText && listModel.getItemBySourceKey(options.selectedAllKey);
 
         if (emptyItem) {
             listModel.getCollection().remove(emptyItem.getContents());
         }
+        if (allSelectedItem) {
+            listModel.getCollection().remove(allSelectedItem.getContents());
+        }
     }
 
     protected _isEmptyItem(treeItem: TreeItem<Model>): boolean {
-        return this._options.emptyText && treeItem.getContents().getId() === this._options.emptyKey;
+        const key = treeItem.getContents().getId();
+        return this._options.emptyText && key === this._options.emptyKey;
+    }
+
+    protected _isSingleSelectionItem(treeItem: TreeItem<Model>): boolean {
+        let result = false;
+        const item = treeItem.getContents();
+        if (item instanceof Model) {
+            if (this._options.selectedAllText && item.getId() === this._options.selectedAllKey) {
+                result = true;
+            } else if (this._isEmptyItem(treeItem)) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     // FIXME
@@ -73,7 +91,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
                     return Utils.object.getPropertyValue(itemContents, field);
                 }
             },
-            isEmptyItem: this._isEmptyItem(treeItem),
+            isSingleSelectionItem: this._isSingleSelectionItem(treeItem),
             isFixedItem: this._isFixedItem(treeItem),
             isSelected: treeItem.isSelected.bind(treeItem)
         };
@@ -128,7 +146,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             classes += ` controls-Menu__row_state_${readOnly ? 'readOnly' : 'default'}` +
                 `${!readOnly ? ` controls-Menu__row_hoverBackgroundStyle-${this._options.hoverBackgroundStyle}` : ''}`;
 
-            if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
+            if (this._isEmptyItem(treeItem)) {
                 classes += ' controls-Menu__emptyItem';
             } else {
                 classes += ' controls-Menu__defaultItem';

@@ -3,6 +3,7 @@ import {Source as HistorySource} from 'Controls/history';
 import {IPopupOptions} from 'Controls/popup';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {RecordSet} from 'Types/collection';
 
 export type TNavigation = INavigationOptionValue<INavigationSourceConfig>;
 
@@ -70,6 +71,8 @@ export interface IEditorOptions {
      */
     itemTemplateProperty?: string;
     sourceController?: SourceController;
+    dataLoadCallback?: (items: RecordSet) => void;
+    [key: string]: unknown;
 }
 
 /**

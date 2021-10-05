@@ -4,6 +4,7 @@ import GridViewTable from 'Controls/_grid/GridViewTable';
 import { isFullGridSupport } from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
 import { IOptions as IGridOptions } from './display/mixins/Grid';
+import {Logger} from "UICommon/Utils";
 
 /**
  * Контрол "Таблица" позволяет отображать данные из различных источников в виде таблицы.
@@ -12,8 +13,8 @@ import { IOptions as IGridOptions } from './display/mixins/Grid';
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_grid.less переменные тем оформления grid}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_list.less переменные тем оформления list}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_grid.less переменные тем оформления grid}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_list.less переменные тем оформления list}
  *
  * @class Controls/_grid/Grid
  * @extends Controls/list:View
@@ -83,7 +84,26 @@ export default class Grid extends List {
     }
 
     setColumnScrollPosition(position: 'start' | 'end'): void {
-        return this._children.listControl.setColumnScrollPosition(position);
+        Logger.warn(
+            'Method is deprecated and will be removed soon! Please use scrollToLeft/scrollToRight. See documentation on WI.'
+        );
+        if (position === 'start') {
+            this.scrollToLeft();
+        } else {
+            this.scrollToRight();
+        }
+    }
+
+    scrollToLeft(): void {
+        this._children.listControl.scrollToLeft();
+    }
+
+    scrollToRight(): void {
+        this._children.listControl.scrollToRight();
+    }
+
+    scrollToColumn(columnIndex: number): void {
+        this._children.listControl.scrollToColumn(columnIndex);
     }
 }
 

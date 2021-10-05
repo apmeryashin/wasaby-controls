@@ -147,12 +147,14 @@
    color: var(--master_node_expander_icon-color_treeGrid);
    font-family: var(--icon_font-family_s);
    padding-left: calc(@_expander_width_treeGrid - var(--master_node_expander_icon-size_treeGrid));
+   font-size: @_expander_height_treeGrid;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_master::before {
    color: var(--master_hidden-node_expander_icon-color_treeGrid);
    font-family: var(--icon_font-family_s);
    padding-left: calc(@_expander_width_treeGrid - var(--master_hidden-node_expander_icon-size_treeGrid));
+   font-size: @_expander_height_treeGrid;
 }
 
 .controls-TreeGrid__row-expander_node_master_position_default::before,
@@ -215,7 +217,7 @@
 .controls-TreeGrid__nodeFooterContent {
    display: inline-flex;
    align-items: baseline;
-   min-height: var(--inline_height_m);
+   min-height: var(--node-footer_height_treeGrid);
    box-sizing: border-box;
    border-top-style: solid;
 }
@@ -252,7 +254,7 @@
    border-top: var(--item-separator_l_thickness_list) solid var(--item_separator_l_color_list);
 }
 
-.controls-TreeGrid__nodeFooterContent::before {
+.controls-TreeGrid__nodeFooterContent__baseline::before {
    content: '\200b';
    font-size: var(--font-size_2xl);
 }

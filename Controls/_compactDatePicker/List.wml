@@ -53,7 +53,7 @@
                     </ws:dayTemplate>
                 </Controls.calendar:MonthView>
                 <ws:if data="{{ !_isLastMonth(bodyTemplate.date) }}">
-                    <div class="controls-CompactDatePicker__header__month">
+                    <div class="controls-CompactDatePicker__month-list__item__header">
                         {{ _getFormattedCaption(bodyTemplate.date) }}
                     </div>
                 </ws:if>

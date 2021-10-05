@@ -1,6 +1,6 @@
 import {detection} from 'Env/Env';
 import {IDialogPopupOptions, IPopupPosition, IPopupSizes} from 'Controls/popup';
-import {getPositionProperties, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
+import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from '../Util/DirectionUtil';
 import {IDialogItem} from 'Controls/_popupTemplate/Dialog/DialogController';
 
 interface ILimitingSizes {
@@ -37,7 +37,7 @@ export class DialogStrategy {
         }: ILimitingSizes = this._calculateLimitOfSizes(popupOptions, windowData);
 
         const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item);
-        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth);
+        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth, windowData, containerSizes);
 
         this._resetMargins(item, position);
 
@@ -48,7 +48,14 @@ export class DialogStrategy {
         };
     }
 
-    private _validateCoordinate(position: IDialogPosition, maxHeight: number, maxWidth: number): IDialogPosition {
+    private _validateCoordinate(position: IDialogPosition, maxHeight: number, maxWidth: number,
+                                windowData: IPopupPosition = {}, containerSizes: IPopupSizes): IDialogPosition {
+        const height = position.height || containerSizes.height;
+        const outsideBottomBorderValue = position.top + height - windowData.height;
+        if (outsideBottomBorderValue > 0) {
+            position.top -= outsideBottomBorderValue;
+        }
+
         if (position.height > maxHeight) {
             position.height = maxHeight;
         }
@@ -86,13 +93,17 @@ export class DialogStrategy {
         } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
 
         if (popupItem.fixPosition) {
+            const horizontalProperty = popupItem?.position?.right !== undefined ?
+                HORIZONTAL_DIRECTION.RIGHT : HORIZONTAL_DIRECTION.LEFT;
+            const verticalProperty = popupItem?.position?.bottom !== undefined ?
+                VERTICAL_DIRECTION.BOTTOM : VERTICAL_DIRECTION.TOP;
             return this._getPositionForFixPositionDialog(
                 popupItem.position,
                 windowData,
                 containerSizes,
                 popupItem,
-                verticalPositionProperty,
-                horizontalPositionProperty
+                verticalProperty,
+                horizontalProperty
             );
         } else {
             const position: IDialogPosition = this._getDefaultPosition(

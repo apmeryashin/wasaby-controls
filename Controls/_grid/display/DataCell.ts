@@ -224,6 +224,10 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
         }
     }
 
+    getEditorViewTemplateClasses(params): string {
+        return this.getOwner().getEditorViewTemplateClasses(params);
+    }
+
     // endregion
 
     // region Аспект "Кнопка редактирования"

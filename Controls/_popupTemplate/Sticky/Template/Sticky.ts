@@ -28,7 +28,7 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions,
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/openers/sticky/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_popupTemplate.less переменные тем оформления}
  *
  * @class Controls/_popupTemplate/Sticky
  * @extends UI/Base:Control
@@ -123,6 +123,20 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         this._notify(eventName, [event]);
     }
 
+    protected _getRoundClass(): string {
+        if (!(this._options.headingCaption || this._options.headerContentTemplate)) {
+            if (this._options.footerContentTemplate) {
+                return 'controls-StickyTemplate__top-area_roundBorder';
+            } else {
+                return 'controls-StickyTemplate_roundBorder';
+            }
+        } else {
+            if (!this._options.footerContentTemplate) {
+                return 'controls-StickyTemplate__bottom_roundBorder';
+            }
+        }
+    }
+
     private static _getTheme(): string {
         return ManagerController.getPopupHeaderTheme();
     }
@@ -134,6 +148,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             closeButtonVisibility: true,
             shadowVisible: false,
             backgroundStyle: 'default',
+            headerBackgroundStyle: 'default',
             closeButtonViewMode: 'link'
         };
     }
@@ -170,5 +185,35 @@ Object.defineProperty(StickyTemplate, 'defaultProps', {
  * @name Controls/_popupTemplate/Sticky#headingFontSize
  * @cfg {String}
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderCaption/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#backgroundStyle
+ * @cfg {String} Цвет фона окна.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Sticky/backgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#headerBackgroundStyle
+ * @cfg {String} Цвет фона шапки.
+ * @variant default
+ * @variant unaccented
+ * @variant secondary
+ * @variant primary
+ * @variant danger
+ * @variant warning
+ * @variant info
+ * @variant success
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Sticky/backgroundStyle/Index
  */
 export default StickyTemplate;

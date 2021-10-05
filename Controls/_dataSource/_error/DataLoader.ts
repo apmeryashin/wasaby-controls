@@ -133,7 +133,7 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
 
 /**
  * @name Controls/_dataSource/_error/DataLoader#sources
- * @cfg {Array.<ISourceConfig>} Конфигурации осточников данных.
+ * @cfg {Array.<ISourceConfig>} Конфигурации источников данных.
  */
 
 /**

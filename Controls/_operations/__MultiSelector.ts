@@ -10,6 +10,7 @@ import {LoadingIndicator} from 'Controls/LoadingIndicator';
 import {isEqual} from 'Types/object';
 import 'css!Controls/operations';
 import {ControllerClass as OperationsController} from '../_operations/ControllerClass';
+import {process} from 'Controls/error';
 
 const DEFAULT_CAPTION = rk('Отметить');
 const DEFAULT_ITEMS = [
@@ -104,7 +105,7 @@ export interface IMultiSelectorOptions extends IControlOptions {
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/actions/operations/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_operations.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_operations.less переменные тем оформления}
  *
  * @class Controls/_operations/SimpleMultiSelector
  * @extends Core/Control
@@ -184,30 +185,31 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    }
 
    private _updateMenuCaptionByOptions(options: IMultiSelectorOptions, counterConfigChanged?: boolean): Promise<TCount> {
-      const selectedKeys = options.selectedKeys;
-      const excludedKeys = options.excludedKeys;
+      const {selectedKeys, excludedKeys, selectedKeysCount, operationsController, selectedCountConfig} = options;
       const selection = this._getSelection(selectedKeys, excludedKeys);
-      const count = (counterConfigChanged && options.selectedKeysCount !== 0) ? null : options.selectedKeysCount;
+      const count = (counterConfigChanged && selectedKeysCount !== 0) ? null : selectedKeysCount;
       const getCountCallback = (count, isAllSelected) => {
          this._menuCaption = this._getMenuCaption(selection, count, isAllSelected);
          this._sizeChanged = true;
-         if (options.operationsController) {
-            options.operationsController.setSelectedKeysCount(count);
-         }
+         operationsController?.setSelectedKeysCount(count);
       };
-      const getCountResult = this._getCount(selection, count, options);
+      const needUpdateCount = !selectedCountConfig || !counterConfigChanged || this._isCorrectCount(count) || !options.isAllSelected;
 
-      // Если счётчик удаётся посчитать без вызова метода, то надо это делать синхронно,
-      // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
-      // хотя можно было это сделать за одну синхронизацию
-      if (getCountResult instanceof Promise) {
-         return getCountResult
-             .then((count) => {
-                getCountCallback(count, this._options.isAllSelected);
-             })
-             .catch((error) => error);
-      } else {
-         getCountCallback(getCountResult, options.isAllSelected);
+      if (needUpdateCount) {
+         const getCountResult = this._getCount(selection, count, options);
+
+         // Если счётчик удаётся посчитать без вызова метода, то надо это делать синхронно,
+         // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
+         // хотя можно было это сделать за одну синхронизацию
+         if (getCountResult instanceof Promise) {
+            return getCountResult
+                .then((count) => {
+                   getCountCallback(count, this._options.isAllSelected);
+                })
+                .catch((error) => error);
+         } else {
+            getCountCallback(getCountResult, options.isAllSelected);
+         }
       }
    }
 
@@ -271,15 +273,20 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       this._resetCountPromise();
    }
 
-   private _getCountBySourceCall(selection, selectionCountConfig): CountPromise {
+   private _getCountBySourceCall(selection, selectionCountConfig): Promise<number> {
       this._children.countIndicator?.show();
       this._countPromise = new CancelablePromise(getCountUtil.getCount(selection, selectionCountConfig));
-      return this._countPromise.promise.then(
-          (result: number): number => {
+      return this._countPromise.promise
+          .then((result: number): number => {
              this._resetCountPromise();
              return result;
-          }
-      );
+          })
+          .catch((error) => {
+             if (!error.isCanceled) {
+                process({error});
+             }
+             return Promise.reject(error);
+          });
    }
 
    private _getSelection(selectedKeys: TKeysSelection, excludedKeys: TKeysSelection): ISelectionObject {

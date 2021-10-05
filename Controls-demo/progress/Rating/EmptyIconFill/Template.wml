@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth350">
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">none</div>
+      <Controls.progress:Rating value="{{_value}}"
+                                readOnly="{{true}}"
+                                emptyIconFill="none"
+      />
+   </div>
+
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label">full</div>
+      <Controls.progress:Rating value="{{_value}}"
+                                readOnly="{{true}}"
+                                emptyIconFill="full"
+      />
+   </div>
+</div>

@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_operations/Controller/Controller');
 import {EventUtils} from 'UI/Events';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -13,7 +13,7 @@ import { TSelectionType } from 'Controls/interface';
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/actions/operations/ руководство разработчика}
- * * {@link https://github.com/saby/wasaby-controls/blob/897d41142ed56c25fcf1009263d06508aec93c32/Controls-default-theme/variables/_operations.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_operations.less переменные тем оформления}
  *
  * @class Controls/_operations/Controller
  * @extends UI/Base:Control
@@ -44,8 +44,8 @@ export default class MultiSelector extends Control {
    protected _listMarkedKey: TKey = null;
    protected _notifyHandler: Function = EventUtils.tmplNotify;
    private _operationsController: OperationsController = null;
-   constructor() {
-      super();
+   constructor(cfg: IControlOptions, context?: object) {
+      super(cfg, context);
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
       this._selectionViewModeChanged = this._selectionViewModeChanged.bind(this);
    }

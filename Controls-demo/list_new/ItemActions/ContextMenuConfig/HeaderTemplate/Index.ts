@@ -9,24 +9,16 @@ import * as template from 'wml!Controls-demo/list_new/ItemActions/ContextMenuCon
 interface ISrcData {
    key: number;
    title: string;
+   itemActions: IItemAction[];
 }
 
 const itemActions: IItemAction[] = [
-   {
-      id: 1,
-      icon: 'icon-DownloadNew',
-      title: 'Download',
-      showType: TItemActionShowType.MENU_TOOLBAR,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action download Click');
-      }
-   },
    {
       id: 2,
       icon: 'icon-Erase',
       iconStyle: 'danger',
       title: 'Remove',
-      showType: TItemActionShowType.MENU_TOOLBAR,
+      showType: TItemActionShowType.MENU,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action delete Click');
       }
@@ -36,14 +28,19 @@ const itemActions: IItemAction[] = [
 const data: ISrcData[] = [
    {
       key: 1,
-      title: 'Кнопка "Ещё" по свайпу будет показана, т.к. указан headerTemplate'
+      title: 'Кнопка меню будет показана, т.к. указан headerTemplate',
+      itemActions
+   },
+   {
+      key: 2,
+      title: 'Кнопка меню будет показана, т.к. указан headerTemplate',
+      itemActions: []
    }
 ];
 
 export default class HeaderTemplate extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _viewSource: Memory;
-   protected _itemActions: IItemAction[] = itemActions;
 
    protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
       this._viewSource = new Memory({

@@ -2,7 +2,9 @@
     'highlightOnHover': highlightOnHover,
     'cursor': cursor,
     'clickable': clickable
-})}}" attr:key="{{item.key}}">
+})}}"
+     attr:key="{{item.key}}"
+     attr:data-qa="{{ item.listElementName }}">
     <div class="{{ item.getContentClasses(backgroundColorStyle, cursor, highlightOnHover) }}">
         <!-- Отступы для выравнивания с экспандером -->
         <ws:if data="{{item.shouldDisplayExpanderBlock()}}">

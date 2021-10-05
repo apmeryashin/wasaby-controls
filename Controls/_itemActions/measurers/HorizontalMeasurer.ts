@@ -43,6 +43,8 @@ class HorizontalMeasurer implements IMeasurer {
              actionTemplateConfig,
              theme
          );
+      } else if (menuButtonVisibility === 'visible') {
+         visibleActions = [HorizontalMeasurer._getMenuItemAction()];
       }
 
       return {
@@ -161,8 +163,8 @@ class HorizontalMeasurer implements IMeasurer {
 
       // По стандарту, показываем не более трёх опций в свайпе.
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
-      const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
-      const itemActionsContainerWidth = DOMUtil.getWidthForCssClass(`controls-Swipe_horizontal`);
+      const itemActions = MeasurerUtils.sliceAndFixActions(actions, MAX_ACTIONS_COUNT);
+      const itemActionsContainerWidth = DOMUtil.getWidthForCssClass('controls-Swipe_horizontal');
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
       let availableWidth = rowWidth - itemActionsContainerWidth;
       let menuItemAction: IItemAction;
@@ -190,16 +192,17 @@ class HorizontalMeasurer implements IMeasurer {
    }
 
    /**
-    * Вычисляет на основе горизонтальных размеров видимые опции свайпа
+    * Вычисляет на основе горизонтальных размеров видимые операции над записью.
     * @param itemActions
     * @param itemActionsSizes
-    * @param maxWidth
+    * @param containerWidth
     * @private
     */
-   private static _fillVisibleActions(itemActions: IItemAction[], itemActionsSizes: number[], maxWidth: number)
-       : IItemAction[] {
+   private static _fillVisibleActions(itemActions: IItemAction[],
+                                      itemActionsSizes: number[],
+                                      containerWidth: number): IItemAction[] {
       const visibleActions: IItemAction[] = [];
-      let currentWidth: number = maxWidth;
+      let currentWidth: number = containerWidth;
       itemActions.every((action, index) => {
          currentWidth -= itemActionsSizes[index];
          if (currentWidth < 0) {
@@ -208,6 +211,7 @@ class HorizontalMeasurer implements IMeasurer {
          visibleActions.push(action);
          return true;
       });
+
       return visibleActions;
    }
 
