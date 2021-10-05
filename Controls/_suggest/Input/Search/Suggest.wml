@@ -41,7 +41,7 @@
             searchButtonIconStyle="{{_options.searchButtonIconStyle}}"
             leftFieldTemplate="{{_options.leftFieldTemplate}}"
             rightFieldTemplate="{{_options.rightFieldTemplate}}"
-            on:searchClick="_searchClick()"
+            on:searchClick="searchClick()"
             on:resetClick="_resetClick()"
             on:valueChanged="_changeValueHandler()"
             attr:class="{{_suggestState ? ('controls-Search_state-' + (_options.contrastBackground ? 'searchContrast' : 'search') + '__input_border')}}">
