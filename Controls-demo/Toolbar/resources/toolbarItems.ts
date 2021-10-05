@@ -12,6 +12,8 @@ export const data = {
             id: '3',
             icon: 'icon-Print',
             title: 'Распечатать',
+            caption: 'Распечатать',
+            viewMode: 'link',
             '@parent': false,
             parent: null
         }, {
@@ -42,6 +44,8 @@ export const data = {
             id: '7',
             showType: showType.MENU_TOOLBAR,
             title: 'Проекту',
+            caption: 'Проекту',
+            viewMode: 'link',
             '@parent': false,
             parent: '4'
         }, {
@@ -111,6 +115,8 @@ export const data = {
             id: '1',
             icon: 'icon-Print',
             title: 'Распечатать',
+            caption: 'Распечатать',
+            viewMode: 'link',
             readOnly: false,
             '@parent': false,
             parent: null
