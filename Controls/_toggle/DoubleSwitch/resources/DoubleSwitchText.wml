@@ -1,6 +1,6 @@
 <span on:mouseover="_toggleSwitchHoverState(_toggleValue !== _nextValue)"
       on:mouseout="_toggleSwitchHoverState(false)"
-      class="{{_orientation === 'vertical' ? ' controls-DoubleSwitch__text_vertical'}}
+      class="{{_orientation === 'vertical' ? ' controls-DoubleSwitch__text_vertical'}} ws-ellipsis
                controls-DoubleSwitch__text_{{_enabled ? 'enabled' : 'disabled'}}_{{_value ? 'selected' : 'unselected'}}"
       on:click="_clickTextHandler(_nextValue)">
     <ws:if data="{{_caption}}">
