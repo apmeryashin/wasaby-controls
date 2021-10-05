@@ -35,6 +35,8 @@ export {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupT
 export {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 
 export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton';
+import * as CloseButtonTemplate from 'wml!Controls/_popupTemplate/CloseButton/CloseButton';
+export {CloseButtonTemplate}; // для CompoundArea
 export {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 
 // Удалить
