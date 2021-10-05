@@ -41,12 +41,15 @@ export default class extends Control<IOperationsPanelOptions> {
         return options.selectedKeysCount !== 0;
     }
 
-    protected _getPanelOffsetClasses(position: TOperationsPanelPosition = TOperationsPanelPosition.DEFAULT): string {
-        let classes = '';
+    protected _getPanelOffsetClasses(
+        position: TOperationsPanelPosition = TOperationsPanelPosition.DEFAULT,
+        theme: string
+    ): string {
+        let classes = `controls_toggle_theme-${theme}`;
         if (position === TOperationsPanelPosition.LIST_HEADER) {
-            classes += 'controls-operationsPanelNew__listHeaderPosition';
+            classes += ' controls-operationsPanelNew__listHeaderPosition';
         } else {
-            classes += 'controls-operationsPanelNew__defaultPosition';
+            classes += ` controls-operationsPanelNew__defaultPosition controls_list_theme-${theme}`;
         }
         return classes;
     }
@@ -94,7 +97,7 @@ export default class extends Control<IOperationsPanelOptions> {
         this._operationsController.setOperationsPanelVisible(true);
         this._getDialogOpener().open({
             template: 'Controls/operationsPanel:Cloud',
-            className: this._getPanelOffsetClasses(options.position),
+            className: this._getPanelOffsetClasses(options.position, options.theme),
             opener: this,
             propStorageId: options.propStorageId,
             templateOptions: {
