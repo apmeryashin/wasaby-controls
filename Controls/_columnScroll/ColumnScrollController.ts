@@ -441,7 +441,7 @@ export default class ColumnScrollController {
                 newHTML += ` .${transformSelector} .controls-Grid-table-layout__itemActions__container {z-index: 1}`;
             }
         } else {
-            newHTML += ` .${transformSelector} .js-controls-ColumnScroll__thumbWrapper {width: ${this._scrollWidth}px;}`;
+            newHTML += ` .${transformSelector} .controls-ColumnScroll__thumbWrapper {width: ${this._scrollWidth}px;}`;
         }
 
         newHTML += ` .${transformSelector} .${JS_SELECTORS.FIXED_ELEMENT}.controls-GridView__footer__cell {z-index: 2}`;

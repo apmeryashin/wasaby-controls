@@ -385,6 +385,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
 
     // _beforeMount
     _columnScrollOnViewBeforeMount(options: IAbstractViewOptions): void {
+        this._relativeCellContainersUpdateCallback = this._relativeCellContainersUpdateCallback.bind(this);
         if (options.columnScroll) {
             this._$columnScrollSelector = ColumnScrollController.createUniqSelector();
             if (
