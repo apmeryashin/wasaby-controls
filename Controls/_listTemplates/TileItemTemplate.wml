@@ -48,24 +48,27 @@
       </div>
    </div>
 </ws:template>
-<ws:partial template="Controls/tile:TileItemTemplate"
-            border="{{false}}"
-            staticHeight="{{true}}"
-            width="{{itemData.getTileSizes && itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
-            height="auto"
-            attr:class="controls-listTemplates__tileItemTemplate__item"
-            shadowVisibility="{{_options.shadowVisibility}}"
-            imageProperty="{{null}}"
-            scope="{{_options}}">
-   <ws:contentTemplate>
-      <ws:partial template="itemContentTpl"
-                  imageCompressionCoefficient="{{_options.imageCompressionCoefficient}}"
-                  itemData="{{_options.itemData}}"
-                  imageProperty="{{_options.imageProperty}}"
-                  imagePosition="{{_options.imagePosition}}"
-                  imageViewMode="{{_options.imageViewMode}}"
-                  imageGradientColor="{{_options.imageGradientColor}}"
-                  imageFit="{{_options.imageFit}}"
-                  scope="{{contentTemplate}}"/>
-   </ws:contentTemplate>
-</ws:partial>
+
+<Controls.Container.Async templateName="Controls/tile:TileItemTemplate">
+    <ws:partial template="{{content.resolvedTemplate}}"
+                border="{{false}}"
+                staticHeight="{{true}}"
+                width="{{itemData.getTileSizes && itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
+                height="auto"
+                attr:class="controls-listTemplates__tileItemTemplate__item"
+                shadowVisibility="{{_options.shadowVisibility}}"
+                imageProperty="{{null}}"
+                scope="{{_options}}">
+       <ws:contentTemplate>
+          <ws:partial template="itemContentTpl"
+                      imageCompressionCoefficient="{{_options.imageCompressionCoefficient}}"
+                      itemData="{{_options.itemData}}"
+                      imageProperty="{{_options.imageProperty}}"
+                      imagePosition="{{_options.imagePosition}}"
+                      imageViewMode="{{_options.imageViewMode}}"
+                      imageGradientColor="{{_options.imageGradientColor}}"
+                      imageFit="{{_options.imageFit}}"
+                      scope="{{contentTemplate}}"/>
+       </ws:contentTemplate>
+    </ws:partial>
+</Controls.Container.Async>
