@@ -9,7 +9,7 @@ import {
 } from 'Controls/grid';
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 
-describe('Controls/grid/Display/Group/GridMixin', () => {
+describe('Controls/grid/Display/Group/GroupCell', () => {
     let column: IColumn;
     let hasMultiSelectColumn: boolean;
 
