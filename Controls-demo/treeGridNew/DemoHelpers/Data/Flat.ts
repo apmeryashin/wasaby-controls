@@ -10,7 +10,8 @@ export const Flat = {
             parent: null,
             type: true,
             hasChild: true,
-            photo: explorerImages[0]
+            photo: explorerImages[0],
+            group: 'склад 1'
         },
         {
             key: 11,
@@ -19,7 +20,8 @@ export const Flat = {
             rating: '9.2',
             type: true,
             hasChild: true,
-            photo: explorerImages[1]
+            photo: explorerImages[1],
+            group: 'склад 1'
         },
         {
             key: 12,
@@ -28,7 +30,8 @@ export const Flat = {
             rating: '9.2',
             type: true,
             hasChild: true,
-            photo: explorerImages[1]
+            photo: explorerImages[1],
+            group: 'склад 1'
         },
         {
             key: 13,
@@ -37,7 +40,8 @@ export const Flat = {
             rating: '9.2',
             type: true,
             hasChild: true,
-            photo: explorerImages[0]
+            photo: explorerImages[0],
+            group: 'склад 1'
         },
         {
             key: 14,
@@ -46,7 +50,8 @@ export const Flat = {
             rating: '9.2',
             type: true,
             hasChild: true,
-            photo: explorerImages[0]
+            photo: explorerImages[0],
+            group: 'склад 1'
         },
         {
             key: 15,
@@ -55,56 +60,64 @@ export const Flat = {
             rating: '9.2',
             type: true,
             hasChild: true,
-            photo: explorerImages[0]
+            photo: explorerImages[0],
+            group: 'склад 1'
         },
         {
             key: 151,
             title: 'iPhone 4s',
             rating: '9.5',
             parent: 15,
-            type: null
+            type: null,
+            group: 'склад 1'
         },
         {
             key: 152,
             title: 'iPhone 4',
             rating: '8.9',
             parent: 15,
-            type: null
+            type: null,
+            group: 'склад 1'
         },
         {
             key: 153,
             title: 'iPhone X Series',
             rating: '7.6',
             parent: 15,
-            type: false
+            type: false,
+            group: 'склад 1'
         },
         {
             key: 1531,
             title: 'iPhone Xs',
             rating: '7.4',
             parent: 153,
-            type: null
+            type: null,
+            group: 'склад 1'
         },
         {
             key: 1532,
             title: 'iPhone Xs Max',
             rating: '6.8',
             parent: 153,
-            type: null
+            type: null,
+            group: 'склад 1'
         },
         {
             key: 1533,
             title: 'iPhone XR',
             rating: '7.1',
             parent: 153,
-            type: null
+            type: null,
+            group: 'склад 1'
         },
         {
             key: 16,
             title: 'Notebooks',
             parent: 1,
             rating: '9.4',
-            type: false
+            type: false,
+            group: 'склад 1'
         },
         {
             key: 161,
@@ -116,7 +129,8 @@ export const Flat = {
             note: '2 порта Thunderbolt 3',
             parent: 16,
             type: null,
-            photo: explorerImages[3]
+            photo: explorerImages[3],
+            group: 'склад 1'
         },
         {
             key: 162,
@@ -128,7 +142,8 @@ export const Flat = {
             note: '',
             parent: 16,
             type: null,
-            photo: explorerImages[3]
+            photo: explorerImages[3],
+            group: 'склад 1'
         },
         {
             key: 163,
@@ -140,7 +155,8 @@ export const Flat = {
             note: '4 порта Thunderbolt 3',
             parent: 16,
             type: null,
-            photo: explorerImages[3]
+            photo: explorerImages[3],
+            group: 'склад 1'
         },
         {
             key: 164,
@@ -152,7 +168,8 @@ export const Flat = {
             note: '',
             parent: 16,
             type: null,
-            photo: explorerImages[3]
+            photo: explorerImages[3],
+            group: 'склад 1'
         },
         {
             key: 165,
@@ -164,7 +181,8 @@ export const Flat = {
             note: '4 порта Thunderbolt 3',
             parent: 16,
             type: null,
-            photo: explorerImages[3]
+            photo: explorerImages[3],
+            group: 'склад 1'
         },
         {
             key: 17,
@@ -173,7 +191,8 @@ export const Flat = {
             rating: '7.2',
             year: '2016',
             parent: 1,
-            type: null
+            type: null,
+            group: 'склад 1'
         },
         {
             key: 2,
@@ -183,35 +202,40 @@ export const Flat = {
             parent: null,
             type: true,
             hasChild: true,
-            photo: explorerImages[0]
+            photo: explorerImages[0],
+            group: 'склад 2'
         },
         {
             key: 21,
             title: 'Samusng A10',
             rating: '9.5',
             parent: 2,
-            type: null
+            type: null,
+            group: 'склад 2'
         },
         {
             key: 22,
             title: 'Samsung A20',
             rating: '9.5',
             parent: 2,
-            type: null
+            type: null,
+            group: 'склад 2'
         },
         {
             key: 23,
             title: 'Samsung A30',
             rating: '9.5',
             parent: 2,
-            type: null
+            type: null,
+            group: 'склад 2'
         },
         {
             key: 24,
             title: 'Samsung A40',
             rating: '9.5',
             parent: 2,
-            type: null
+            type: null,
+            group: 'склад 2'
         },
         {
             key: 3,
@@ -220,7 +244,8 @@ export const Flat = {
             country: 'КНР',
             parent: null,
             type: true,
-            photo: explorerImages[0]
+            photo: explorerImages[0],
+            group: 'склад 2'
         },
         {
             key: 4,
@@ -229,7 +254,8 @@ export const Flat = {
             country: 'Тайвань',
             parent: null,
             type: false,
-            photo: explorerImages[0]
+            photo: explorerImages[0],
+            group: 'склад 3'
         },
         {
             key: 5,
@@ -238,7 +264,8 @@ export const Flat = {
             country: 'Тайвань',
             parent: null,
             type: false,
-            photo: explorerImages[1]
+            photo: explorerImages[1],
+            group: 'склад 3'
         }
     ],
     getDataWithLargeTitle: () => Flat.getData().map((item) => {
@@ -251,14 +278,13 @@ export const Flat = {
     }),
     getHeader: () => [
         {
-            title: 'Наименование'
+            caption: 'Наименование'
         },
         {
-            title: 'Рейтинг покупателей'
+            caption: 'Рейтинг покупателе'
         },
         {
-            title: 'Страна производитель'
-        }
+            caption: 'Страна производитель'        }
     ],
     getColumns: () => [
         {
