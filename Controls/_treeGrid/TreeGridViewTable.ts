@@ -42,15 +42,23 @@ export default class TreeGridViewTable extends TreeGridView {
             return;
         }
 
+        const setStyles = (styles: string): void => {
+            // Контрол может быть разрушен к моменту следующего animationFrame,
+            // используем именно такую проверку, т.к. запоминание таймера и очистка
+            // его гораздо медленнее и вызовет дополнительные скачки.
+            if (!this._destroyed && 'redrawWrapperStyles' in this._children) {
+                this._children.redrawWrapperStyles.innerHTML = styles;
+            }
+        };
+
         // Данная конструкция "пересчелкивает" высоту блока, довольно безопасно, без скачков.
         // В IE td поддерживает position: relative лишь частично, который так нужен для
         // позиционирования абсолютных частей элементов(actions, marker).
         // Не поддерживается автовысота, она считается только когда действительно поменялась высота стилями.
         window.requestAnimationFrame(() => {
-            this._children.redrawWrapperStyles.innerHTML
-                = '.controls-Grid_table-layout .controls-Grid__row-cell__content { flex-basis: 100% }';
+            setStyles('.controls-Grid_table-layout .controls-Grid__row-cell__content { flex-basis: 100% }');
             window.requestAnimationFrame(() => {
-                this._children.redrawWrapperStyles.innerHTML = '';
+                setStyles('');
             });
         });
     }
