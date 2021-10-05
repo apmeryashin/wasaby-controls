@@ -4,6 +4,7 @@ import {getWidth} from 'Controls/sizeUtils';
 import {Model} from 'Types/entity';
 import * as selectedCollectionUtils from 'Controls/_lookup/SelectedCollection/Utils';
 import {default as Collection} from './SelectedCollection';
+import {Logger} from 'UI/Utils';
 import * as itemsTemplate from 'wml!Controls/_lookup/SelectedCollection/SelectedCollection';
 import * as ContentTemplate from 'wml!Controls/_lookup/SelectedCollection/_ContentTemplate';
 import * as CrossTemplate from 'wml!Controls/_lookup/SelectedCollection/_CrossTemplate';
@@ -258,7 +259,7 @@ export default class Lookup extends BaseLookupInput {
       let itemsCount;
       let collectionItems;
 
-      measurer.innerHTML = itemsTemplate({
+      let itemsTemplateResult = itemsTemplate({
          _options: {
             ...Collection.getDefaultOptions(),
             ...this._getCollectionOptions(newOptions, maxVisibleItems, counterWidth)
@@ -269,7 +270,15 @@ export default class Lookup extends BaseLookupInput {
          _contentTemplate: ContentTemplate,
          _crossTemplate: CrossTemplate,
          _counterTemplate: CounterTemplate
-      }).replace(/&amp;/g, '&');
+      });
+
+      if (itemsTemplateResult instanceof Promise) {
+         Logger.error('Lookup: шаблон элемента (itemTemplate) вернул некорректный результат. ' +
+                      'Для построения itemTemplate необходимо, чтобы все шаблоны и контролы, ' +
+                      'используемые в шаблоне, были загружены', this);
+         itemsTemplateResult = '';
+      }
+      measurer.innerHTML = itemsTemplateResult.replace(/&amp;/g, '&');
 
       if (newOptions.multiLine) {
          measurer.style.width = fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
