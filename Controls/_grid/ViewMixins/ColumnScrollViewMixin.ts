@@ -360,6 +360,10 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
 
     _$relativeCellContainers: null,
 
+    _relativeCellContainersUpdateCallback(newContainers: HTMLElement[]): void {
+        this._$relativeCellContainers = newContainers;
+    },
+
     //#region IFreezable
 
     _freezeColumnScroll(): void {

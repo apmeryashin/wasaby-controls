@@ -48,7 +48,7 @@
             <Controls.columnScroll:RelativeColumns
                     if="{{ !_$columnScrollUseFakeRender }}"
                     isFullGridSupport="{{ true }}"
-                    bind:relativeCellContainers="_$relativeCellContainers"
+                    containersUpdatedCallback="{{ _relativeCellContainersUpdateCallback }}"
                     viewColumns="{{ _getViewColumns(_options) }}"/>
         </ws:if>
 

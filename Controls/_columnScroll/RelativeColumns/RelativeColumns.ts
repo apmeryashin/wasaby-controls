@@ -4,6 +4,7 @@ import {isEqual} from 'Types/object';
 
 export interface IRelativeColumnsOptions extends IControlOptions {
     viewColumns: number;
+    containersUpdatedCallback?: (newContainers: HTMLElement[]) => void;
 }
 
 const CELL_JS_SELECTOR = 'controls-ColumnScroll__relativeCell';
@@ -29,9 +30,11 @@ export default class RelativeColumns extends Control<IRelativeColumnsOptions> {
     }
 
     private _onRelativeCellContainersChanged(): void {
-        this._notify('relativeCellContainersChanged', [
-            Array.from(this._container.querySelectorAll(`.${CELL_JS_SELECTOR}`))
-        ]);
+        if (this._options.containersUpdatedCallback) {
+            this._options.containersUpdatedCallback(
+                Array.from(this._container.querySelectorAll(`.${CELL_JS_SELECTOR}`))
+            );
+        }
     }
 }
 

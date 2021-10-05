@@ -3291,7 +3291,7 @@ export default class Collection<
     protected _updateItemsProperty(updateMethodName: string,
                                    newPropertyValue: any,
                                    conditionProperty?: string,
-                                   silent?: boolean): void {
+                                   silent?: boolean): boolean {
         let wasUpdated = false;
         this._getItems().forEach((item: CollectionItem<S>) => {
             // todo Разобраться, почему item === undefined по https://online.sbis.ru/opendoc.html?guid=9018fdea-5de1-4b89-9f48-fb8ded0673cd
