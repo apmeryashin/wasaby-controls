@@ -96,12 +96,10 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._minSavedWidth = item.minSavedWidth;
         this._maxSavedWidth = item.maxSavedWidth;
 
-        this._setWorkSpaceWidth(newWidth);
+        this._setWorkSpaceWidth(newWidth, false);
         // offsetChanged нужно только в 4100, пока в ЭДО полностью не перейдут на работу через нашу обертку.
         this._notify('offsetChanged', [offset]);
-        const data = {
-            width: this._workspaceWidth
-        };
+
         this._updateOffset();
         this._offsetChanged = true;
         // Так же как в реестрах, сообщаем про смену размеров рабочей области.
@@ -117,10 +115,10 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     }
 
     private _getMaximizeState(): boolean | void {
-        if (parseInt(this._minSavedWidth, 10) === parseInt(this._workspaceWidth, 10)) {
+        if (parseInt(this._minSavedWidth, 10) === parseInt(this._templateWorkSpaceWidth, 10)) {
             return false;
         }
-        if (parseInt(this._maxSavedWidth, 10) === parseInt(this._workspaceWidth, 10)) {
+        if (parseInt(this._maxSavedWidth, 10) === parseInt(this._templateWorkSpaceWidth, 10)) {
             return true;
         }
         return undefined;
@@ -133,7 +131,7 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
             popupOptions: {
                 minWidth: this._options.minWidth,
                 maxWidth: this._options.maxWidth,
-                stackWidth: this._workspaceWidth,
+                stackWidth: this._templateWorkSpaceWidth,
                 propStorageId: this._options.propStorageId,
                 templateOptions: {}
             },
@@ -157,10 +155,13 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
         this._minOffset = Math.max(this._workspaceWidth - options.minWidth, 0);
     }
 
-    private _setWorkSpaceWidth(width: number): void {
-        this._workspaceWidth = width;
-        // ширина прикладного шаблона без учета ширины правой панели
-        this._templateWorkSpaceWidth = width ? (width - RIGHT_PANEL_WIDTH) : undefined;
+    private _setWorkSpaceWidth(width: number, withRightPanel: boolean = true): void {
+        // Ширина складывается из установленной ширины + ширины правой панели
+        if (!withRightPanel) {
+            width -= RIGHT_PANEL_WIDTH;
+        }
+        this._workspaceWidth = width ? (width + RIGHT_PANEL_WIDTH) : undefined;
+        this._templateWorkSpaceWidth = width;
     }
 
     private _setSavedSizes(receivedState: IReceivedState = {}): void {
