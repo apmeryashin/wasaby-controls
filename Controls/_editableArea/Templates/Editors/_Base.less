@@ -1,3 +1,7 @@
+// Защита, на случай, если в value передадут пустую строку и ширины для редактирования не будет.
+// Значение 5px подобрано. Должно хватить чтобы активировать редактирование и не сломать прикладную верстку.
+@min-width_EditableArea-wrapper: 5px;
+
 .controls-EditableArea__Text {
    flex-shrink: 1;
    display: inline-flex;
@@ -29,4 +33,5 @@
    white-space: pre;
    width: 100%;
    display: inline-block;
+   min-width: @min-width_EditableArea-wrapper;
 }
