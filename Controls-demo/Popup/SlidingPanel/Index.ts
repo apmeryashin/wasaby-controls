@@ -17,6 +17,7 @@ class Index extends Control<IControlOptions> {
     protected _stepsCount: number = 5;
     protected _heightList: number = [400, 600, 800, 1000, 1200];
     protected _modal: boolean = false;
+    protected _popupTemplate: string = ['Controls-demo/Popup/SlidingPanel/PopupTemplate/Content/LargeContent'];
     protected _desktopModeSource: Memory = new Memory({
         keyProperty: 'id',
         data: [
@@ -29,6 +30,13 @@ class Index extends Control<IControlOptions> {
         data: [
             {id: 'top'},
             {id: 'bottom'}
+        ]
+    });
+    protected _templateSource: Memory = new Memory({
+        keyProperty: 'id',
+        data: [
+            {id: 'Controls-demo/Popup/SlidingPanel/PopupTemplate/Content/Input', title: 'Поля ввода'},
+            {id: 'Controls-demo/Popup/SlidingPanel/PopupTemplate/Content/LargeContent', title: 'Много контента'}
         ]
     });
     private _dialogOpener: SlidingPanelOpener;
@@ -77,6 +85,9 @@ class Index extends Control<IControlOptions> {
             },
             dialogOptions: {
                 width: this._desktopWidth
+            },
+            templateOptions: {
+                popupTemplate: this._popupTemplate[0]
             }
         });
     }

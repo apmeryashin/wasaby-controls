@@ -25,6 +25,14 @@
          bind:selectedKeys="_position"/>
    </div>
    <div class="ControlDemo__SlidingPanel-setting">
+      <Controls.input:Label caption="Шаблон: "/>
+      <Controls.dropdown:Selector
+              keyProperty="id"
+              displayProperty="title"
+              source="{{_templateSource}}"
+              bind:selectedKeys="_popupTemplate"/>
+   </div>
+   <div class="ControlDemo__SlidingPanel-setting">
       <Controls.input:Label caption="desktopMode"/>
       <Controls.dropdown:Selector
          keyProperty="id"
