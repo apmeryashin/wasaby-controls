@@ -23,6 +23,7 @@ const CONTEXT_FIELDS: ReadonlyArray<keyof IContextOptionsValue> = [
     'groupProperty',
     'parentProperty',
     'operationsController',
+    'filterController',
     'expandedItems',
     'dragControlId'
 ];

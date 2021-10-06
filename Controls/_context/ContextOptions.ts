@@ -18,6 +18,7 @@ import {
 import { RecordSet } from 'Types/collection';
 import { CrudEntityKey } from 'Types/source';
 import {ControllerClass as OperationsController} from 'Controls/operations';
+import {ControllerClass as FilterController} from 'Controls/filter';
 
 export interface IContextOptionsValue extends ISortingOptions {
    newLayout?: boolean; // до 3100 для OnlinePage/_base/View/Content.ts и Layout/_browsers/Browser/Tabs.ts
@@ -37,6 +38,7 @@ export interface IContextOptionsValue extends ISortingOptions {
    operationsController: OperationsController;
    expandedItems: CrudEntityKey[];
    dragControlId: string;
+   filterController?: FilterController;
 }
 
 const Context = DataContext.extend({

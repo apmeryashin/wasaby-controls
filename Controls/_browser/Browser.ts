@@ -647,7 +647,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             // Стейт _root не реактивный, поэтому необходимо звать forceUpdate
             this._forceUpdate();
         }
-        this._notify('rootChanged', [root, id]);
+        if (this._isMounted) {
+            this._notify('rootChanged', [root, id]);
+        }
     }
 
     protected _setRoot(root: Key, id?: string): void {
@@ -697,12 +699,17 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _updateContext(): void {
         const sourceControllerState = this._getSourceController().getState();
+        const operationsController = this._getOperationsController();
+        const dataLoader = this._dataLoader;
+
         this._contextState = {
             ...sourceControllerState,
-            listsConfigs: this._dataLoader.getState(),
-            listsSelectedKeys: this._getOperationsController().getSelectedKeysByLists(),
-            listsExcludedKeys: this._getOperationsController().getExcludedKeysByLists(),
-            operationsController: this._getOperationsController()
+            listsConfigs: dataLoader.getState(),
+            listsSelectedKeys: operationsController.getSelectedKeysByLists(),
+            listsExcludedKeys: operationsController.getExcludedKeysByLists(),
+            operationsController,
+            sourceController: this._getSourceController(),
+            filterController: dataLoader.getFilterController()
         };
         this._sourceControllerState = sourceControllerState;
     }
