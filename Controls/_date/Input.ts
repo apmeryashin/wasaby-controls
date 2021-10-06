@@ -5,11 +5,15 @@ import StringValueConverter from 'Controls/_date/BaseInput/StringValueConverter'
 import IBaseInputMask from 'Controls/_date/interface/IBaseInputMask';
 import {EventUtils} from 'UI/Events';
 import {Popup as PopupUtil} from 'Controls/dateUtils';
+import {ICalendarButtonVisibleOptions} from 'Controls/_date/interface/ICalendarButtonVisible';
 import 'css!Controls/input';
 import 'css!Controls/CommonClasses';
 import 'css!Controls/date';
 
 import template = require('wml!Controls/_date/Input/Input');
+
+interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions {
+}
 
 /**
  * Поле ввода даты. Поддерживает как ввод с клавиатуры, так и выбор даты из всплывающего календаря с помощью мыши. Не поддерживает ввод времени.
@@ -27,6 +31,7 @@ import template = require('wml!Controls/_date/Input/Input');
  *
  * @implements Controls/dateRange:IDatePickerSelectors
  * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/date:ICalendarButtonVisible
  * @mixes Controls/input:IBase
  * @mixes Controls/input:IValueValidators
  * @implements Controls/interface:IOpenPopup
@@ -38,7 +43,7 @@ import template = require('wml!Controls/_date/Input/Input');
  * @author Красильников А.С.
  */
 
-class Input extends Control<IControlOptions> {
+class Input extends Control<IDateInput> {
     _template: TemplateFunction = template;
     _proxyEvent: Function = EventUtils.tmplNotify;
     _shouldValidate: boolean = false;
@@ -48,7 +53,7 @@ class Input extends Control<IControlOptions> {
         this._stateChangedCallback = this._stateChangedCallback.bind(this);
     }
 
-    openPopup(event: SyntheticEvent<MouseEvent>): void {
+    openPopup(): void {
         // TODO: Перевести на улититу, после того как переведем контрол в либу _date. Сейчас появляется
         //  циклическая зависимость.
         const getPopupName = (datePopupType: string) => {
@@ -117,6 +122,13 @@ class Input extends Control<IControlOptions> {
          * Валидация срабатывает раньше, чем значение меняется, поэтому откладываем ее до _afterUpdate
          */
         this._shouldValidate = true;
+    }
+
+    protected _inputMouseDownHandler(event: Event): void {
+        if (!this._options.calendarButtonVisible) {
+            this.openPopup();
+            event.preventDefault();
+        }
     }
 
     static getDefaultOptions(): object {

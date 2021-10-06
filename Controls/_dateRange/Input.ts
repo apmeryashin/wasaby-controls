@@ -10,14 +10,14 @@ import {ISelection} from 'Controls/input';
 import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
 import getPopupName from 'Controls/_dateRange/Utils/getPopupName';
 import template = require('wml!Controls/_dateRange/Input/Input');
+import {ICalendarButtonVisibleOptions} from 'Controls/date';
 import {DependencyTimer} from 'Controls/popup';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/dateRange';
 import 'css!Controls/CommonClasses';
 
 interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOptions,
-    IDateRangeOptions, IDatePopupTypeOptions {
-    calendarButtonVisible: boolean;
+    IDateRangeOptions, IDatePopupTypeOptions, ICalendarButtonVisibleOptions {
 }
 
 /**
@@ -41,6 +41,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions, IControlOp
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/interface:IDateRangeValidators
  * @implements Controls/dateRange:IDateRangeSelectable
+ * @implements Controls/date:ICalendarButtonVisible
  *
  * @public
  * @demo Controls-demo/dateRange/Input/Default/Index
@@ -130,7 +131,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._rangeModel.destroy();
     }
 
-    openPopup(event: SyntheticEvent): void {
+    openPopup(): void {
         let className = `controls_popupTemplate_theme-${this._options.theme} `;
         if (this._options.datePopupType === 'datePicker') {
             className += `controls-PeriodDialog__picker controls_datePicker_theme-${this._options.theme}`;
@@ -286,6 +287,13 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             this._rangeModel,
             this._rangeModel.endValue
         );
+    }
+
+    protected _inputMouseDownHandler(event: Event): void {
+        if (!this._options.calendarButtonVisible) {
+            this.openPopup();
+            event.preventDefault();
+        }
     }
 
     static getDefaultOptions(): Partial<IDateRangeInputOptions> {
