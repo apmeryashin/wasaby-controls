@@ -132,14 +132,12 @@ class DialogController extends BaseController {
         // На ios ресайз страницы - это зум. Не реагируем на него.
         if (!detection.isMobileIOS) {
             // Если размер страницы уменьшили, то на ней может появиться скролл, вызванный самим окном.
-            // Чтобы окно не учитывало размеры скролла, сбрасываем его перед расчетами, потом восстанавливаем.
-            // Лучше делать это в обработчике на ресайз страницы, чем в стратегии проверять каждый раз есть ли скролл
-            // и компенсировать его.
-            const bodyOverflowValue = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            const result = this.elementUpdatedWrapper(item, container);
-            document.body.style.overflow = bodyOverflowValue;
-            return result;
+            // Поэтому чтобы окно не влияло на размеры окна браузера, после ресайза страницы меняю его макс. значения
+            if (item.popupOptions.maximize) {
+                container.style.maxHeight = window.innerHeight + 'px';
+                container.style.maxWidth = window.innerWidth + 'px';
+            }
+            return this.elementUpdatedWrapper(item, container);
         }
         // ресайз страницы это также смена ориентации устройства
         // если окно открыто на полный экран, то после переворота оно должно остаться на весь экран
