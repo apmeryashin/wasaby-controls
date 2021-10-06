@@ -64,7 +64,7 @@ export interface ILoadDataConfig extends
     searchDelay?: number;
     items?: RecordSet;
     loadTimeout?: number;
-    actions: boolean;
+    actions?: boolean;
 }
 
 export interface ILoadDataResult extends ILoadDataConfig {
