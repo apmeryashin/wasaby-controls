@@ -5,6 +5,7 @@ var CALC_PREFIX = 'calc(';
 var VAR_PREFIX = 'var(';
 
 var hashMap = {};
+var lessHashMap = {};
 
 var getFiles = function (dir, result) {
     result = result || [];
@@ -134,6 +135,17 @@ var lessFilesDataIterator = function (fileContent, callback) {
     var lines = fileContent.split('\n');
     lines = lines.map(function (line) {
         line = line.trim();
+        if (line.startsWith('/*')) { // Комментарий
+            return;
+        }
+        if (line.startsWith('@')) {
+            let [key, value] = line.split(':');
+            if (value) {
+                value = value.replace(/;/gi, '').trim(); // убираю ; в конце строки
+                lessHashMap[key.trim()] = value;
+            }
+            return;
+        }
         if (line.includes('--')) {
             var startIndexProperty = line.indexOf('-');
             var endIndexProperty = line.indexOf(':');
@@ -152,6 +164,14 @@ var lessFilesDataIterator = function (fileContent, callback) {
             if (value.indexOf(imgDir) !== -1) {
                 value = value.replace(imgDir, '../Controls-default-theme/img');
             }
+            if (value.startsWith('@')) {
+                if (lessHashMap[value]) { // Если это less переменная, то берем значение
+                    value = lessHashMap[value];
+                } else {
+                    consoleLog('Ошибка: Не найдена less переменная ' + value + ' в выражении ' + line);
+                }
+            }
+
             value = callback(value, property);
 
             return '  "' + property + '": "' + value + '",';
@@ -162,7 +182,7 @@ var lessFilesDataIterator = function (fileContent, callback) {
     return lines.join('\n');
 }
 
-var getFileJSONData = function (fileContent, prepareHashMap) {
+var getFileJSONData = function (fileContent) {
     return lessFilesDataIterator(fileContent, function (value) {
         if (value.includes('calc')) {
             return prepareValue(value);
@@ -181,12 +201,12 @@ var calcHashMap = function (files) {
     });
 }
 
-var writeJSONData = function (files, prepareHashMap) {
+var writeJSONData = function (files) {
     files = files || [];
     var resultString = '{\n';
     files.map(function (file, index) {
         var fileContent = getFileData(file);
-        var fileJSONContent = getFileJSONData(fileContent, prepareHashMap);
+        var fileJSONContent = getFileJSONData(fileContent);
         if (index !== 0) {
             resultString += '\n\n';
         }
