@@ -20,8 +20,8 @@
                 itemActionsTemplate="{{ itemActionsTemplate }}"
                 itemActionsClass="{{ itemActionsClass }}"
                 templateHighlightOnHover="{{ templateHighlightOnHover }}"
-                tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
-                tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
+                tagTemplate="{{ gridColumn.TagCell ? tagTemplate : undefined }}"
+                tagStyle="{{ gridColumn.TagCell ? tagStyle : undefined }}"
                 editArrowTemplate="{{ editArrowTemplate }}"
                 _onBreadcrumbClick="{{_onBreadcrumbClick}}"
                 _onBreadcrumbItemClick="{{_onBreadcrumbItemClick}}">

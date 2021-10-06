@@ -871,6 +871,25 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(browser._root === 'newRoot');
             });
 
+            it('backButtonCaption is updated after items changed in sourceController', async () => {
+                const options = getBrowserOptions();
+                options.parentProperty = 'testParentProperty';
+                options.displayProperty = 'title';
+                const sourceController = options.sourceController = new NewSourceController({...options});
+                const browser = await getBrowserWithMountCall(options);
+
+                const items = new RecordSet();
+                items.setMetaData({
+                    path: new RecordSet({
+                        rawData: [{id: 0, title: 'test'}]
+                    })
+                });
+
+                sourceController.setItems(items);
+                // _contextState, пока нет возможности тестировать вёрстку и то, что прокидывается в вёрстку
+                assert.ok(browser._contextState.backButtonCaption === 'test');
+            });
+
             describe('listsOptions', () => {
                 it('prefetchProxy source in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
@@ -931,7 +950,8 @@ describe('Controls/browser:Browser', () => {
                 it('sourceController on listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
                     const sourceController = new NewSourceController({
-                        source: browserOptions.source
+                        source: browserOptions.source,
+                        id: 'list'
                     });
                     let listsOptions = [
                         {
@@ -949,6 +969,9 @@ describe('Controls/browser:Browser', () => {
                     browser.saveOptions(options);
 
                     assert.ok(browser._getSourceController() === sourceController);
+
+                    sourceController.setRoot('testRoot');
+                    assert.ok(listsOptions[0].root === 'testRoot');
                 });
                 it('filterButtonSource in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
@@ -1282,28 +1305,31 @@ describe('Controls/browser:Browser', () => {
 
     describe('_updateSearchController', () => {
        it('filter changed if search was reset', async () => {
-           let options = getBrowserOptions();
-           options = {
-               ...options,
-               searchParam: 'param',
+           let options = {
+               ...getBrowserOptions(),
                searchValue: 'testSearchValue',
                filter: {
                    payload: 'something'
                }
            };
-           const browser = getBrowser(options);
-           await browser._beforeMount(options);
-           browser.saveOptions(options);
+           let sourceController = new NewSourceController(options);
+           let browserOptions = {
+               ...options,
+               sourceController
+           };
+           const browser = getBrowser(browserOptions);
+           await browser._beforeMount(browserOptions);
+           browser.saveOptions(browserOptions);
 
            let filter;
            browser._notify = (event, args) => {
-               filter = args[0];
+               if (event === 'filterChanged') {
+                   filter = args[0];
+               }
            };
-
-           options = {...options};
-           options.searchValue = '';
-           options.searchParam = 'param';
-           await browser._updateSearchController(options);
+           browserOptions = {...options};
+           browserOptions.searchValue = '';
+           await browser._updateSearchController(browserOptions);
 
            assert.deepStrictEqual(filter, {payload: 'something'});
            assert.equal(browser._searchValue, '');
@@ -1347,14 +1373,14 @@ describe('Controls/browser:Browser', () => {
             options.searchValue = 'Sash';
             const browser = await getBrowserWithMountCall(options);
 
-            browser._viewMode = 'search';
+            assert.ok(browser._viewMode === 'search');
             assert.ok(browser._searchValue === 'Sash');
 
             options = {...options};
             options.searchValue = '';
             await browser._beforeUpdate(options);
             assert.ok(browser._searchValue === '');
-            assert.isUndefined(browser._viewMode);
+            assert.isUndefined(browser._getSearchControllerSync().getViewMode());
             assert.ok(browser._misspellValue === '');
         });
 

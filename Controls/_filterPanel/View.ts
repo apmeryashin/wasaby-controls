@@ -106,11 +106,7 @@ export default class View extends Control<IViewPanelOptions> {
 
     protected _editingObjectChanged(event: SyntheticEvent, editingObject: Record<string, any>): void {
         this._viewModel.setEditingObject(editingObject);
-        if (this._options.viewMode === 'default') {
-            this._notifyChanges();
-        } else {
-            this._notify('sourceChanged', [this._viewModel.getSource()]);
-        }
+        this._notifyFilterItemChanged();
     }
 
     protected _propertyValueChanged(event: SyntheticEvent, filterItem: IFilterItem, itemValue: object): void {
@@ -120,9 +116,14 @@ export default class View extends Control<IViewPanelOptions> {
     protected _groupClick(e: SyntheticEvent, dispItem: GroupItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         const itemContents = dispItem.getContents() as string;
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
+        const isResultClick = clickEvent?.target.closest('.controls-FilterViewPanel__group-result_wrapper');
         this._viewModel.handleGroupClick(itemContents, !isResetClick);
         if (isResetClick) {
             this._resetFilterItem(dispItem);
+        }
+        //Будет удалено после: https://online.sbis.ru/opendoc.html?guid=53839728-e9dc-4af0-88a8-e847b5b4c5f8
+        if (isResultClick) {
+            this._notify('groupClick');
         }
         this._notify('collapsedGroupsChanged', [this._viewModel.getCollapsedGroups()]);
     }
@@ -130,7 +131,15 @@ export default class View extends Control<IViewPanelOptions> {
     private _resetFilterItem(dispItem: GroupItem<Model>): void {
         const itemContent = dispItem.getContents();
         this._viewModel.resetFilterItem(itemContent);
-        this._notifyChanges();
+        this._notifyFilterItemChanged();
+    }
+
+    private _notifyFilterItemChanged(): void {
+        if (this._options.viewMode === 'default') {
+            this._notifyChanges();
+        } else {
+            this._notify('sourceChanged', [this._viewModel.getSource()]);
+        }
     }
 
     private _notifyChanges(): void {

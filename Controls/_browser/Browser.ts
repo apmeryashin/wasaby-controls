@@ -212,6 +212,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
         this._searchStartCallback = this._searchStartCallback.bind(this);
+        this._itemsChanged = this._itemsChanged.bind(this);
         this._operationsController = options.operationsController;
 
         if (options.root !== undefined) {
@@ -477,17 +478,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 return Promise.resolve();
             }
             this._validateSearchOptions(newOptions);
-            const updateResult = searchController.update({
+            const updateSearchControllerResult = searchController.update({
                 ...newOptions,
                 sourceController: this._getSourceController(),
                 root: this._root
             });
 
-            if (updateResult instanceof Promise) {
-                this._loading = true;
-                return updateResult.catch(this._processSearchError);
+            if (updateSearchControllerResult) {
+                if (newOptions.searchValue) {
+                    return this._search(null, newOptions.searchValue);
+                } else {
+                    return Promise.resolve(this._resetSearch());
+                }
             } else {
-                return Promise.resolve(updateResult);
+                return Promise.resolve(updateSearchControllerResult);
             }
         }) as Promise<void>;
     }
@@ -539,6 +543,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._updateItemsOnState();
         this._subscribeOnRootChanged();
         this._subscribeOnSortingChanged();
+        this._subscribeOnItemsChanged();
         this._updateContext();
     }
 
@@ -552,12 +557,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._getSourceController().subscribe('sortingChanged', this._sortingChanged.bind(this));
     }
 
+    private _subscribeOnItemsChanged(): void {
+        this._getSourceController().subscribe('itemsChanged', this._itemsChanged);
+    }
+
     private _updateItemsOnState(): void {
         // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
         const sourceControllerItems = this._getSourceController().getItems();
         if (!this._items || this._items !== sourceControllerItems) {
             this._items = sourceControllerItems;
         }
+    }
+
+    private _itemsChanged(): void {
+        this._updateContext();
     }
 
     protected _getSourceController(id?: string): SourceController {
@@ -620,9 +633,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
+
+        const listOptions = this._getListOptionsById(id);
         this._dataLoader.getFilterController()?.setFilter(filter);
-        if (this._listsOptions && id) {
-            this._getListOptionsById(id).filter = this._getListOptionsById(id).filter || filter;
+        if (listOptions && id) {
+            listOptions.filter = listOptions.filter || filter;
         }
         if (!Browser._hasInOptions(this._options, ['filter']) || !this._options.task1182865383) {
             this._filter = filter;
@@ -644,8 +659,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     protected _setRoot(root: Key, id?: string): void {
-        if (this._listsOptions && id) {
-            this._getListOptionsById(id).root = root;
+        const listOptions = this._getListOptionsById(id);
+        if (listOptions && id) {
+            listOptions.root = root;
         } else {
             this._root = root;
         }
@@ -655,10 +671,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._notify('sortingChanged', [sorting, id]);
     }
 
-    protected _getListOptionsById(id: string): IBrowserOptions {
+    protected _getListOptionsById(id: string): IListConfiguration|void {
         return this._listsOptions.find((options: IBrowserOptions) => {
             return options.id === id;
-        }) || this._options;
+        });
     }
 
     protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
@@ -1030,7 +1046,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._updateViewMode(this._previousViewMode);
             this._previousViewMode = null;
         }
-        this._updateContext();
     }
 
     private _dataLoadCallback(data: RecordSet, direction?: Direction, id?: string): void {

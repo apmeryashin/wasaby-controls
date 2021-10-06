@@ -349,15 +349,23 @@ export class Controller {
       }
       if (this._limit) {
          const newSelection = clone(this._selection);
+         let selectionChanged = false;
          // пробегаемся по добавленным записям и если они не выбраны лимитом, то закидываем их в excluded
          for (let i = 0; i < addedItems.length; i++) {
             const item = addedItems[i];
             const itemKey = this._getKey(item);
             const isSelectedByLimit = i + addIndex < this._limit;
             if (!isSelectedByLimit) {
+               selectionChanged = !newSelection.excluded.includes(itemKey);
                ArraySimpleValuesUtil.addSubArray(newSelection.excluded, [itemKey]);
             }
          }
+
+         // если selection не изменился, то сразу применяем его на список
+         if (!selectionChanged) {
+            this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
+         }
+
          return newSelection;
       } else {
          this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));

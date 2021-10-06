@@ -181,15 +181,15 @@ export default class IndicatorsController {
      * @void
      */
     displayTopIndicator(scrollToFirstItem: boolean, onDrawItems?: boolean): void {
-        const isDisplayedIndicator = this._model.getTopIndicator().isDisplayed();
-        if (isDisplayedIndicator) {
-            return;
-        }
+        const wasDisplayedIndicator = this._model.getTopIndicator().isDisplayed();
 
+        // если индикатор уже показан, то возможно у нас поменялось состояние индикатора.
+        // Поэтому метод на модели нужно всегда вызывать
         const indicatorState = this._getLoadingIndicatorState('top');
         this._model.displayIndicator('top', indicatorState);
 
-        if (scrollToFirstItem) {
+        // к первому элементу не нужно скроллить, если индикатор и так был показан
+        if (scrollToFirstItem && !wasDisplayedIndicator) {
             this._options.scrollToFirstItem(onDrawItems);
         }
     }
@@ -208,11 +208,8 @@ export default class IndicatorsController {
      * @void
      */
     displayBottomIndicator(): void {
-        const isDisplayedIndicator = this._model.getBottomIndicator().isDisplayed();
-        if (isDisplayedIndicator) {
-            return;
-        }
-
+        // если индикатор уже показан, то возможно у нас поменялось состояние индикатора.
+        // Поэтому метод на модели нужно всегда вызывать
         const indicatorState = this._getLoadingIndicatorState('bottom');
         this._model.displayIndicator('bottom', indicatorState);
     }

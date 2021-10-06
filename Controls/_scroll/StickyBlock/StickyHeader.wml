@@ -3,7 +3,9 @@
    <!--https://online.sbis.ru/opendoc.html?guid=e692216c-8a18-4b42-8523-5434d436a502-->
    <div class="controls-StickyHeader controls_scroll_theme-{{ _options.theme }}
    controls-background-{{ _options.backgroundStyle }}
-   controls-StickyHeader_position" style="{{_style + (_options.style || '')}}"
+   controls-StickyHeader_position
+   {{_gapFixClass}}"
+        style="{{_style + (_options.style || '')}}"
         name="content">
       <ws:if data="{{_canShadowVisible.top}}">
          <!-- We use visibility style instead of "display: none;" statement to prevent jumps when scrolling on iPad -->

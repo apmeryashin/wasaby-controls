@@ -9,6 +9,7 @@ import * as cDeferred from 'Core/Deferred';
 import * as cInstance from 'Core/core-instance';
 import * as callNext from 'Core/helpers/Function/callNext';
 import {Controller} from 'Controls/popup';
+import {CloseButtonTemplate} from 'Controls/popupTemplate';
 import {delay as runDelayed} from 'Types/function';
 import {InstantiableMixin} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -532,17 +533,67 @@ var CompoundArea = CompoundContainer.extend([
       return isVisible;
    },
 
+   _updateCustomToolbarMenuIcon(content): void {
+      if (content) {
+         const toolbarMenuIcon = content.querySelector('.controls-ToolBar__menuIcon .icon-ExpandDown');
+         if (toolbarMenuIcon) {
+            toolbarMenuIcon.classList.remove('icon-ExpandDown');
+            toolbarMenuIcon.classList.add('icon-SettingsNew');
+         }
+      }
+   },
+
+   _updateCustomToolbarCloseButton(content): void {
+      const menuButton = content.find('.controls-ToolBar__menuIcon'); // Кнопка с меню
+      if (menuButton.length) {
+         const isCompound = menuButton.hasClass('compoundarea-processed'); // Чтобы не подписываться много раз
+         if (!isCompound) {
+            menuButton.addClass('compoundarea-processed');
+            const menuButtonControl = menuButton.wsControl();
+            menuButtonControl.subscribe('onPickerOpen', () => {
+               const pickerContainer = menuButtonControl._picker.getContainer();
+               // Скрыли старую кнопку
+               pickerContainer.find('.controls-PopupMixin__closeButton').addClass('ws-hidden');
+               const newCloseButton = pickerContainer.find('.compoundarea-closebutton');
+
+               // Создаем новую кнопку закрытия если ее еще нет
+               if (!newCloseButton.length) {
+                  const closeButtonHTML = $(CloseButtonTemplate({
+                     theme: 'default',
+                     viewMode: 'external'
+                  }));
+                  pickerContainer.append(closeButtonHTML);
+                  closeButtonHTML.addClass('compoundarea-closebutton');
+                  closeButtonHTML.css({
+                     position: 'absolute',
+                     zIndex: 10,
+                     top: 8,
+                     left: -33
+                  });
+
+                  closeButtonHTML.on('click', () => {
+                     menuButtonControl.hidePicker();
+                  });
+               }
+            });
+         }
+      }
+   },
+
    _setCustomToolbar(): void {
       if (this._options.isToolbarOnRightPanel && Controller.hasRightPanel()) {
          const toolbarContent = $('.controls-ToolBar:first', this._childControl.getContainer());
          if (toolbarContent.length) {
             const toolbarContainer = $('.controls-CompoundArea_toolbar', this.getContainer());
             if (toolbarContainer.length) {
-               const toolbarMenuIcon = toolbarContent[0].querySelector('.controls-ToolBar__menuIcon .icon-ExpandDown');
-               if (toolbarMenuIcon) {
-                  toolbarMenuIcon.classList.remove('icon-ExpandDown');
-                  toolbarMenuIcon.classList.add('icon-SettingsNew');
-               }
+               this._updateCustomToolbarMenuIcon(toolbarContent[0]);
+               this._updateCustomToolbarCloseButton(toolbarContent);
+               const wsControl = toolbarContent.wsControl();
+               const setEnabled = wsControl.setEnabled.bind(wsControl);
+               wsControl.setEnabled = (enabled) => {
+                  setEnabled(enabled);
+                  this._updateCustomToolbarMenuIcon(toolbarContainer[0]);
+               };
                toolbarContainer.prepend(toolbarContent);
             }
          }

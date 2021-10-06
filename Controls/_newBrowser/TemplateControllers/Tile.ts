@@ -33,7 +33,7 @@ export default class TileController extends BaseController<ITileConfig, TreeItem
         }
 
         // В режима ImageGradient.custom берем значение из поля записи
-        return item.contents.get(this._$browserOptions.detail.gradientColorProperty);
+        return item.contents.get(this._$templateProperties.gradientColorProperty);
     }
 
     getImageEffect(item: TreeItem): string {

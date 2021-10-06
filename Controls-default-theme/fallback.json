@@ -288,6 +288,7 @@
   "--unaccented_active_same_background-color": "#e3e5e8",
   "--unaccented_border-color": "#ccc",
   "--unaccented_hover_border-color": "#aab0c1",
+  "--item_selected_color": "#05121e",
   "--default_contrast_background-color_button": "#fff",
   "--default_border-color_button": "#ccc",
   "--default_hover_border-color_button": "#aab0c1",
@@ -1192,7 +1193,7 @@
 
   "--master_item_padding-top_list": "4px",
   "--master_item_padding-bottom_list": "4px",
-  "--master_item_horizontal-offset_list": "var(--offset_m)",
+  "--master_item_horizontal-offset_list": "var(--offset_2xs)",
   "--master_item_border-radius_list": "4px",
   "--detail_contrast_background-color_masterDetail": "var(--background-color)",
   "--detail_background-color_masterDetail": "#F8F8F8",
@@ -1656,13 +1657,9 @@
   "--max-height_compactDatePicker": "400px",
   "--border-radius_compactDatePicker": "8px",
   "--header_height_compactDatePicker": "72px",
-  "--header_caption_height_compactDatePicker": "46px",
+  "--header_layer_height_compactDatePicker": "24px",
   "--header_today_width_compactDatePicker": "20px",
   "--calendar_item-size_compactDatePicker": "32px",
-  "--calendar_margin_compactDatePicker": "0 15px",
-  "--calendar_today_background-color_compactDatePicker": "#f0f0f0",
-  "--calendar_selected-day_background-color_compactDatePicker": "#eaeaea",
-  "--calendar_selected-day-edge_background-color_compactDatePicker": "#333",
-  "--calendar_item_hover_border-color_compactDatePicker":  "#333",
+  "--calendar_selected-day_background-color_compactDatePicker": "#dbdbdb",
   "--shadow_start-color_compactDatePicker": "rgba(0, 0, 0, 0.05)"
 }

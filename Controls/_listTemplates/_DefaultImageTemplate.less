@@ -32,6 +32,18 @@
    border-radius: 60px;
 }
 
+/*
+ overflow: hidden ломает clip-path в safari
+ Cделал как в ie, чтобы изображения хотя бы были видны.
+ https://online.sbis.ru/opendoc.html?guid=6a5a49c0-1274-46a4-a4d6-a514bac5838c
+ */
+.ws-is-desktop-safari,
+.ws-is-mobile-safari {
+   .controls-listTemplates__imageTemplate_image_viewMode-ellipse {
+      border-radius: 60px;
+      clip-path: none;
+   }
+}
 .controls-listTemplates__imageTemplate::after {
    content: "";
    display: block;

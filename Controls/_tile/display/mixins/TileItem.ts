@@ -80,6 +80,7 @@ export interface IOptions<S extends Model = Model> extends ICollectionItemOption
     tileScalingMode: TTileScalingMode;
     tileHeight: number;
     tileWidth: number;
+    tileFitProperty: string;
     tileWidthProperty: string;
     roundBorder: TRoundBorder;
     imageProperty: string;

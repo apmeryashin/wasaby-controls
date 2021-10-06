@@ -16,6 +16,7 @@ describe('Controls/_tile/display/TileCollection', () => {
             tileSize: 's',
             tileWidthProperty: 'tileWidth',
             imageWidthProperty: 'imageWidth',
+            tileFitProperty: 'tileFit',
             imageHeightProperty: 'imageHeight',
             imageProperty: 'image',
             imageFit: 'imageFit',
@@ -23,12 +24,13 @@ describe('Controls/_tile/display/TileCollection', () => {
             roundBorder: {tl: '1px', tr: '2px', bl: '3px', br: '4px'}
         });
         const item = model.at(0);
-        
+
         assert.equal(item.getTileMode(), 'static');
         assert.equal(item.getTileScalingMode(), 'outside');
         assert.equal(item.getTileSize(), 's');
         assert.equal(item.getTileWidthProperty(), 'tileWidth');
         assert.equal(item.getImageWidthProperty(), 'imageWidth');
+        assert.equal(item.getTileFitProperty(), 'tileFit');
         assert.equal(item.getImageHeightProperty(), 'imageHeight');
         assert.equal(item.getImageProperty(), 'image');
         assert.equal(item.getImageFit(), 'imageFit');

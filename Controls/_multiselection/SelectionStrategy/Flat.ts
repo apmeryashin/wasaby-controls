@@ -136,7 +136,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       if (this._isAllSelected(selection)) {
          const itemsCount = this._model.getItems().filter((it) => this._canBeSelected(it)).length;
          if (limit) {
-            if (hasMoreData) {
+            if (hasMoreData && limit > itemsCount) {
                countItemsSelected = limit;
             } else {
                countItemsSelected = limit < itemsCount ? itemsCount - selection.excluded.length : itemsCount;
