@@ -483,7 +483,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         return this._operationsPromises.begin;
     }
 
-    private _endEdit(commit: boolean, commitStrategy: 'hasChanges' | 'all' = 'all', force: boolean = false): TAsyncOperationResult {
+    private _endEdit(commit: boolean, commitStrategy: 'hasChanges' | 'all' = 'all', force: boolean = false): void | TAsyncOperationResult {
         const editingCollectionItem = this._getEditingItem();
 
         if (!editingCollectionItem) {
@@ -498,7 +498,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         const isAdd = editingCollectionItem.isAdd;
         const willSave = commitStrategy === 'hasChanges' && !editingItem.isChanged() ? false : commit;
 
-        this._operationsPromises.end = new Promise((resolve) => {
+        const notifyBeforeEndEdit = () => {
             if (this._options.onBeforeEndEdit) {
                 let sourceIndex;
                 if (this._addParams.targetItem) {
@@ -506,31 +506,54 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
                     sourceIndex = collectionIndex + (this._addParams.addPosition === 'bottom' ? 1 : 0);
                 }
 
-                const result = this._options.onBeforeEndEdit({
+                return this._options.onBeforeEndEdit({
                     item: editingItem,
                     willSave, isAdd, force, sourceIndex,
                     toArray: () => [editingItem, willSave, isAdd]
                 });
-                resolve(force ? void 0 : result);
-            } else {
-                resolve();
             }
-        }).catch((e) => {
-            this._processError(e, ERROR_MSG.BEFORE_END_EDIT_FAILED);
-            return CONSTANTS.CANCEL;
-        }).then((result) => {
-            if (result === CONSTANTS.CANCEL || this.destroyed) {
-                return {canceled: true};
-            }
+        };
+
+        const endEdit = () => {
             this._addParams = {};
             this._collectionEditor[willSave ? 'commit' : 'cancel']();
             (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
-            return this._options?.onAfterEndEdit(editingCollectionItem, isAdd, willSave);
-        }).finally(() => {
-            this._operationsPromises.end = null;
-        }) as TAsyncOperationResult;
+        };
 
-        return this._operationsPromises.end;
+        const notifyAfterEndEdit = () => {
+            return this._options?.onAfterEndEdit(editingCollectionItem, isAdd, willSave);
+        };
+
+        if (force) {
+            let result;
+            notifyBeforeEndEdit();
+            try {
+                endEdit();
+                result = Promise.resolve();
+            } catch (e) {
+                result = Promise.reject();
+            }
+            notifyAfterEndEdit();
+            return result;
+        } else {
+            this._operationsPromises.end = new Promise((resolve) => {
+                const result = notifyBeforeEndEdit();
+                resolve(force ? void 0 : result);
+            }).catch((e) => {
+                this._processError(e, ERROR_MSG.BEFORE_END_EDIT_FAILED);
+                return CONSTANTS.CANCEL;
+            }).then((result) => {
+                if (result === CONSTANTS.CANCEL || this.destroyed) {
+                    return {canceled: true};
+                }
+                endEdit();
+                return notifyAfterEndEdit();
+            }).finally(() => {
+                this._operationsPromises.end = null;
+            }) as TAsyncOperationResult;
+
+            return this._operationsPromises.end;
+        }
     }
 
     private _isTargetEditing(targetItem: Model, columnIndex?: number): boolean {
