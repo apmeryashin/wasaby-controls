@@ -212,6 +212,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
         this._searchStartCallback = this._searchStartCallback.bind(this);
+        this._itemsChanged = this._itemsChanged.bind(this);
         this._operationsController = options.operationsController;
 
         if (options.root !== undefined) {
@@ -542,6 +543,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._updateItemsOnState();
         this._subscribeOnRootChanged();
         this._subscribeOnSortingChanged();
+        this._subscribeOnItemsChanged();
         this._updateContext();
     }
 
@@ -555,12 +557,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._getSourceController().subscribe('sortingChanged', this._sortingChanged.bind(this));
     }
 
+    private _subscribeOnItemsChanged(): void {
+        this._getSourceController().subscribe('itemsChanged', this._itemsChanged);
+    }
+
     private _updateItemsOnState(): void {
         // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
         const sourceControllerItems = this._getSourceController().getItems();
         if (!this._items || this._items !== sourceControllerItems) {
             this._items = sourceControllerItems;
         }
+    }
+
+    private _itemsChanged(): void {
+        this._updateContext();
     }
 
     protected _getSourceController(id?: string): SourceController {
@@ -1036,7 +1046,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._updateViewMode(this._previousViewMode);
             this._previousViewMode = null;
         }
-        this._updateContext();
     }
 
     private _dataLoadCallback(data: RecordSet, direction?: Direction, id?: string): void {
