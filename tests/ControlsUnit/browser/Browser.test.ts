@@ -872,6 +872,25 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(browser._root === 'newRoot');
             });
 
+            it('backButtonCaption is updated after items changed in sourceController', async () => {
+                const options = getBrowserOptions();
+                options.parentProperty = 'testParentProperty';
+                options.displayProperty = 'title';
+                const sourceController = options.sourceController = new NewSourceController({...options});
+                const browser = await getBrowserWithMountCall(options);
+
+                const items = new RecordSet();
+                items.setMetaData({
+                    path: new RecordSet({
+                        rawData: [{id: 0, title: 'test'}]
+                    })
+                });
+
+                sourceController.setItems(items);
+                // _contextState, пока нет возможности тестировать вёрстку и то, что прокидывается в вёрстку
+                assert.ok(browser._contextState.backButtonCaption === 'test');
+            });
+
             describe('listsOptions', () => {
                 it('prefetchProxy source in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
