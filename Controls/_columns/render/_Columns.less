@@ -72,3 +72,48 @@
    margin-left: var(--offset_s);
    margin-top: var(--offset_xs);
 }
+
+
+.controls-ListView__item_roundBorder_bottomLeft {
+   @variants: xs, s, m, l, xl;
+
+   .for(@variants, {
+      &_@{_item} > .controls-ColumnsView__item_marker,
+      &_@{_item}::after {
+         border-bottom-left-radius: ~"var(--border_radius_@{_item}_list)";
+      }
+   });
+}
+
+.controls-ListView__item_roundBorder_bottomRight {
+   @variants: xs, s, m, l, xl;
+
+   .for(@variants, {
+      &_@{_item} > .controls-ColumnsView__item_marker,
+      &_@{_item}::after {
+         border-bottom-right-radius: ~"var(--border_radius_@{_item}_list)";
+      }
+   });
+}
+
+.controls-ListView__item_roundBorder_topLeft {
+   @variants: xs, s, m, l, xl;
+
+   .for(@variants, {
+      &_@{_item} > .controls-ColumnsView__item_marker,
+      &_@{_item}::after {
+         border-top-left-radius: ~"var(--border_radius_@{_item}_list)";
+      }
+   });
+}
+
+.controls-ListView__item_roundBorder_topRight {
+   @variants: xs, s, m, l, xl;
+
+   .for(@variants, {
+      &_@{_item} > .controls-ColumnsView__item_marker,
+      &_@{_item}::after {
+         border-top-right-radius: ~"var(--border_radius_@{_item}_list)";
+      }
+   });
+}
