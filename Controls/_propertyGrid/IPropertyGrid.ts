@@ -65,6 +65,8 @@ export interface IPropertyGridColumnOptions {
      */
     compatibleWidth: string;
 }
+
+export type TTypeDescription = IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
 export type TEditingObject = Model | Record<string, unknown>;
 export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectableOptions {
     /**
@@ -153,7 +155,7 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
      * </pre>
      * @demo Controls-demo/PropertyGridNew/Source/Index
      */
-    typeDescription?: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
+    typeDescription?: TTypeDescription;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#groupTemplate
      * @cfg {String|TemplateFunction} Устанавливает шаблон отображения заголовка группы.
@@ -327,7 +329,6 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object | Types/entity:Model} editingObject Объект, с обновленными значениями для редакторов.
  */
-
 
 /**
  * Интерфейс контрола {@link Controls/propertyGrid:PropertyGrid}.
