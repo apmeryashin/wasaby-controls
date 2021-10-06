@@ -64,6 +64,9 @@ export class RemoveController {
      * @returns {Promise}
      */
     removeWithConfirmation(selection: ISelectionObject, filter: TFilterObject = {}, selectedKeysCount?: number): Promise<void> {
+        if (!selectedKeysCount && selection?.selected?.length === 1 && selection.selected[0] !== null) {
+            selectedKeysCount = 1;
+        }
         return Confirmation.openPopup({
             type: 'yesno',
             style: 'default',
