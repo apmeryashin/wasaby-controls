@@ -3803,7 +3803,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = newOptions.viewModelConstructor !== this._viewModelConstructor ||
+        const oldViewModelConstructorChanged = !!newOptions._recreateCollection ||
+                                    newOptions.viewModelConstructor !== this._viewModelConstructor ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
         if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
@@ -3828,7 +3829,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if ((oldViewModelConstructorChanged || !!newOptions._recreateCollection) && this._listViewModel) {
+        if (oldViewModelConstructorChanged && this._listViewModel) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
