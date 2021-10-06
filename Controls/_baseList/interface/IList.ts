@@ -174,6 +174,7 @@ export interface IReloadItemOptions {
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/empty/ дерева c колонками}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/tile/empty/ плитки}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/empty/ иерархического проводника}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/extends/help-system/pages/ подсказки на пустых страницах}
  */
 
 /*ENG
