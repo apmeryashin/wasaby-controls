@@ -138,6 +138,7 @@ export default class Panel extends Control<IControlOptions> {
  * @variant null Кпопка скрыта.
  * @variant all Кнопка "Показать отмеченные".
  * @variant selected Кнопка "Показать все".
+ * @variant partial Кнопка с возможностью выбора количества отмечаемых записей.
  */
 
 /**
