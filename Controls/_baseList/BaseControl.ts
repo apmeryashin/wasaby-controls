@@ -3636,6 +3636,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._observersController = new ObserversController(this._getObserversControllerOptions(this._options));
 
+        // После создания observersController'а нужно обновить scrollController:
+        // для вычисления сдвига виртуального скролла нужно знать об отступах триггеров
+        this._updateScrollController();
+
         // Если верхний индикатор не будет показан, то сразу же показываем триггер,
         // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
         if (!this._indicatorsController.shouldDisplayTopIndicator()) {
