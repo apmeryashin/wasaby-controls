@@ -6,17 +6,17 @@ import {
     ITooltip,
     ITooltipOptions,
     IValidationStatus,
-    IHeightOptions,
     IValidationStatusOptions
 } from 'Controls/interface';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 
-export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IHeightOptions,
+export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions {
    caption: string;
    captionPosition: string;
+   size?: string;
    resetValue?: boolean;
 }
 /**
