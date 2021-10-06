@@ -487,7 +487,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             if (receivedItems) {
                 this._setStateByItems(receivedItems, options.source);
             } else {
-                return this.setStateBySource(options.source);
+                return this.setStateBySource(options.source, options.filter);
             }
         } else if (options.items) {
             this._setStateByItems(options.items);
@@ -503,7 +503,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._isLoadMenuItems = false;
             this._sticky?.close();
-            this.setStateBySource(newOptions.source);
+            this.setStateBySource(newOptions.source, newOptions.filter);
         }
         if (itemsChanged) {
             this._isLoadMenuItems = false;
@@ -541,8 +541,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    protected setStateBySource(source: ICrudPlus): Promise<TItems> {
-        return loadItems(source).then((items) => {
+    protected setStateBySource(source: ICrudPlus, filter?: Object): Promise<TItems> {
+        return loadItems(source, filter).then((items) => {
             this._setStateByItems(items, source);
             return items;
         });

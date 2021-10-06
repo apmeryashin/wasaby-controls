@@ -16,9 +16,13 @@ export function getButtonTemplate(): TemplateFunction {
     return ButtonTemplate;
 }
 
-export function loadItems(source: ICrudPlus): Promise<TItems> {
+export function loadItems(source: ICrudPlus, filter?: object): Promise<TItems> {
     const crudWrapper = new CrudWrapper({source});
-    return crudWrapper.query({});
+    const queryParams = {};
+    if (filter) {
+        queryParams.filter = filter;
+    }
+    return crudWrapper.query(queryParams);
 }
 
 export function hasSourceChanged(newSource?: ICrudPlus, oldSource?: ICrudPlus): boolean {
