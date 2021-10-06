@@ -140,9 +140,9 @@ export default abstract class BaseAction extends mixin<ObservableMixin>(
     private _executeCommand(options): Promise<unknown> {
         if (this.commandName) {
             const commandOptions = this._getCommandOptions(options);
-            this._createCommand(commandOptions, this.commandName).then((commandClass) => {
+            return this._createCommand(commandOptions, this.commandName).then((commandClass) => {
                 if (this.viewCommandName) {
-                    this._createCommand({
+                    return this._createCommand({
                             ...commandOptions,
                             command: commandClass,
                             sourceController: options.sourceController,
