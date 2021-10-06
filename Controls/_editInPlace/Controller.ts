@@ -506,12 +506,11 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
                     sourceIndex = collectionIndex + (this._addParams.addPosition === 'bottom' ? 1 : 0);
                 }
 
-                const result = this._options.onBeforeEndEdit({
+                return this._options.onBeforeEndEdit({
                     item: editingItem,
                     willSave, isAdd, force, sourceIndex,
                     toArray: () => [editingItem, willSave, isAdd]
                 });
-                return result;
             }
         };
 
@@ -526,10 +525,16 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         };
 
         if (force) {
+            let result;
             notifyBeforeEndEdit();
-            endEdit();
+            try {
+                endEdit();
+                result = Promise.resolve();
+            } catch (e) {
+                result = Promise.reject();
+            }
             notifyAfterEndEdit();
-            return Promise.resolve();
+            return result;
         } else {
             this._operationsPromises.end = new Promise((resolve) => {
                 const result = notifyBeforeEndEdit();
