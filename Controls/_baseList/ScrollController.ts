@@ -611,8 +611,9 @@ export default class ScrollController {
 
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
         const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        const topCompensation = scrollContent.getBoundingClientRect().top - itemsContainer.getBoundingClientRect().top;
-
+        const topCompensation = scrollContent ?
+            (scrollContent.getBoundingClientRect().top - itemsContainer.getBoundingClientRect().top) :
+            getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
 
         const items = Array.from(itemsContainer.querySelectorAll(`:scope > ${ this._options.itemsSelector }`));
