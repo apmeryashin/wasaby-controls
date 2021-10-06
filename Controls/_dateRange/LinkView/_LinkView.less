@@ -3,29 +3,24 @@
    .user-select();
    white-space: nowrap;
    max-width: 100%;
-   //В разных браузерах, при нечетнром количестве пикселей при делении, разные браузеры округлят по разному.
-   //Из-за этого существует разница в 1px по высоте. Увиеличил высоту контейнера на 1px и прижал к низу.
-   height: calc(var(--height_dateRangeSelector) + 1px);
+   height: var(--height_dateRangeSelector);
    line-height: var(--height_dateRangeSelector);
-   align-items: flex-end;
 }
 
-.controls-DateLinkView__prev:before {
-   content: "\e008 ";
+.controls-DateLinkView__button-value {
+   flex-grow: 1;
 }
 
-.controls-DateLinkView__next:before {
-   content: "\e007";
+.controls-DateLinkView__arrow {
+   align-self: center;
 }
 
-// Не меняем эти классы, используются в тестах
-.controls-DateLinkView__prev,
+.controls-DateLinkView__prev {
+   margin-left: var(--yearselector_arrow-prev_margin_shortDatePicker);
+}
+
 .controls-DateLinkView__next {
-   font-size: var(--icon-size_s);
-   width: var(--arrow_width_dateRangeSelector);
-   display: inline-block;
-   font-weight: normal;
-   text-align: center;
+   margin-left: var(--yearselector_arrow-next_margin_shortDatePicker);
 }
 
 .controls-DateLinkView__value_fontWeight-bold {
@@ -36,7 +31,7 @@
    .icon-size-without-important(var(--reset-button_icon-size));
    color: var(--reset-button_color);
    font-family: var(--icon_font-family_s);
-   margin-left: var(--reset-button_margin-left_dateRangeSelector);
+   margin-left: var(--offset_2xs);
    align-self: center;
    cursor: pointer;
 }
