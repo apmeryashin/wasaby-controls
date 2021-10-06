@@ -932,6 +932,10 @@ export default class Explorer extends Control<IExplorerOptions> {
                 this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
                 this._markerForRestoredScroll = this._potentialMarkedKey;
                 this._potentialMarkedKey = undefined;
+
+                // Вызывает _forceUpdate иначе у нас может не стрельнуть _afterRender
+                // и _markerForRestoredScroll не применится
+                this._forceUpdate();
             }
 
             if (
