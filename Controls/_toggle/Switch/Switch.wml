@@ -1,19 +1,24 @@
 <ws:template name="toggle">
    <span class="controls-Switch__toggle__wrapper
-                controls-Switch__toggle__wrapper_bg-{{(_options.contrastBackground && !_options.readOnly) ? 'contrast' : 'same'}}{{_options.value ? '_checked'}}
+                controls-Switch__toggle__wrapper_size-{{_options.size}}
+                controls-Switch__toggle__wrapper_bg-{{(_options.contrastBackground) ? 'contrast' : 'same'}}{{_options.value ? '_checked'}}{{_options.readOnly ? '_disabled'}}
+                {{_options.resetValue === _options.value ? 'controls-Switch__toggle__wrapper_resetValue'}}
                 controls-Switch__toggle_{{_options.captionPosition}}Caption
                 controls-Switch__toggle__wrapper{{(_options.captionPosition === 'right' && _options.value) || (_options.captionPosition === 'left' && _options.value) ? '_right' : '_left'}}
                {{_options.readOnly ? 'controls-Switch_disabled' : 'controls-Switch_enabled'}}
                {{_options.value ? ' controls-Switch_checked'}}"
          title="{{tooltip}}">
       <ws:partial template="wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle" readOnly="{{ _options.readOnly }}" attr:class="controls_Switch_SwitchCircle"
-                  selected="{{ _options.value }}" contrastBackground="{{_options.contrastBackground}}"/>
+                  selected="{{ _options.value }}"
+                  contrastBackground="{{_options.contrastBackground}}"
+                  isResetValue="{{_options.resetValue === _options.value}}"
+                  borderVisible="{{_options.size === 's'}}"/>
    </span>
 </ws:template>
 <ws:template name="caption">
    <ws:if data="{{_options.caption}}">
       <span class="controls-Switch__text_{{_options.captionPosition}}Caption controls-Switch__text_{{_options.captionPosition}}Caption
-                  controls-Switch__text_{{_options.readOnly ? 'disabled' : 'enabled'}}_{{_options.value ? 'selected' : 'unselected'}}">
+                  controls-Switch__text_{{_options.readOnly ? 'disabled' : 'enabled'}}_{{_options.value ? 'selected' : 'unselected'}} ws-ellipsis">
          <ws:partial template="{{_options.caption}}"/>
       </span>
    </ws:if>

@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model, Record} from 'Types/entity';
+import {descriptor as EntityDescriptor, Model, Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {CrudWrapper} from 'Controls/dataSource';
 import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
@@ -21,7 +21,9 @@ export interface IRadioGroupOptions extends IControlOptions,
     ISingleSelectableOptions,
     IHierarchyOptions,
     ISourceOptions,
-    IToggleGroupOptions {}
+    IToggleGroupOptions {
+   captionPosition: string;
+}
 
 /**
  * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
@@ -156,7 +158,17 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
    static getDefaultOptions(): object {
       return {
          direction: 'vertical',
-         validationStatus: 'valid'
+         validationStatus: 'valid',
+         captionPosition: 'right'
+      };
+   }
+
+   static getOptionTypes(): object {
+      return {
+         captionPosition: EntityDescriptor(String).oneOf([
+            'left',
+            'right'
+         ])
       };
    }
 }
@@ -178,6 +190,14 @@ export default Radio;
  * @demo Controls-demo/toggle/RadioGroup/Direction/Index
  */
 
+/**
+ * @name Controls/_toggle/RadioGroup#captionPosition
+ * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
+ * @variant left Заголовок расположен перед кнопкой.
+ * @variant right Заголовок расположен после кнопки.
+ * @default right
+ * @demo Controls-demo/toggle/RadioGroup/CaptionPosition/Index
+ */
 
 /**
  * @name Controls/_toggle/RadioGroup#displayProperty

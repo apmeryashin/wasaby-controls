@@ -1,0 +1,38 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            contrastBackground=true size=m
+        </div>
+        <Controls.toggle:DoubleSwitch bind:value="value"
+                                      captions="{{['Turned on', 'Turned off']}}"
+                                      size="m"
+                                      contrastBackground="{{true}}"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            contrastBackground=false size=m
+        </div>
+        <Controls.toggle:DoubleSwitch bind:value="value"
+                                      captions="{{['Turned on', 'Turned off']}}"
+                                      size="m"
+                                      contrastBackground="{{false}}"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            contrastBackground=true size=s
+        </div>
+        <Controls.toggle:DoubleSwitch bind:value="value"
+                                      captions="{{['Turned on', 'Turned off']}}"
+                                      size="s"
+                                      contrastBackground="{{true}}"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            contrastBackground=false size=s
+        </div>
+        <Controls.toggle:DoubleSwitch bind:value="value"
+                                      captions="{{['Turned on', 'Turned off']}}"
+                                      size="s"
+                                      contrastBackground="{{false}}"/>
+    </div>
+</div>

@@ -2,6 +2,7 @@
    .inline-flexbox();
    .align-items(center);
    .baseline-fix();
+
    border-style: solid;
    user-select: none;
    position: relative;
@@ -17,8 +18,27 @@
    background-color: var(--selected_marker_color_switcher);
 }
 
-.controls-DoubleSwitch__toggle_bg-same {
+.controls-DoubleSwitch__toggle_bg-contrast_disabled {
+   border-color: var(--readonly_marker_color_switcher);
+   background-color: var(--readonly_marker_color_switcher);
+}
+
+.controls-DoubleSwitch__toggle_bg-same,
+.controls-DoubleSwitch__toggle_bg-same_disabled {
    border-color: var(--border-color_switcher);
+}
+
+.controls-DoubleSwitch__toggle_resetValue.controls-DoubleSwitch__toggle_enabled {
+   border-color: var(--primary_active_background-color);
+   background-color: var(--primary_background-color);
+
+   .controls-SwitchCircle_selected {
+      background-color: var(--primary_active_background-color);
+   }
+
+   .controls-SwitchCircle_unselected {
+      background-color: var(--unaccented_active_same_background-color);
+   }
 }
 
 .controls-DoubleSwitch {
@@ -44,15 +64,22 @@
    height: var(--height_horizontal_switcher);
 }
 
+.controls-DoubleSwitch__toggle_size-s.controls-DoubleSwitch__toggle_horizontal {
+   width: var(--width_switcher-small);
+   height: var(--height_horizontal_switcher-small);
+}
+
 .controls-DoubleSwitch__toggle_vertical {
    .flex-direction(column);
+
    margin: 0;
 }
 
 .controls-DoubleSwitch__toggle_vertical {
    width: var(--height_horizontal_switcher);
    height: var(--height_vertical_switcher);
-   &:before {
+
+   &::before {
       height: 0;
       line-height: var(--font-size_switcher);
    }
@@ -65,6 +92,7 @@
 .controls-DoubleSwitch__textBlock {
    .inline-flexbox();
    .flex-direction(column);
+
    justify-content: space-between;
    flex: 1;
    overflow: hidden;
@@ -101,6 +129,7 @@
    height: calc(var(--height_vertical_switcher) / 2 - var(--border-thickness_switcher));
    line-height: calc(var(--height_vertical_switcher) / 2);
    display: block;
+
    .text-overflow();
 }
 
@@ -112,6 +141,7 @@
 .controls-DoubleSwitch__text_disabled_unselected {
    color: var(--readonly_unselected_text-color_switcher);
 }
+
 .controls-DoubleSwitch__text_enabled_selected {
    cursor: pointer;
    color: var(--text-color_switcher);
@@ -135,9 +165,29 @@
          background-color: var(--unselected_marker-hover_color_switcher);
       }
 
-      .controls-DoubleSwitch__toggle_bg-contrast:not(.controls-Switch_disabled) {
+      .controls-DoubleSwitch__toggle_bg-contrast {
          border-color: var(--selected_marker-hover_color_switcher);
          background-color: var(--selected_marker-hover_color_switcher);
+      }
+
+      .controls-DoubleSwitch__toggle_resetValue {
+         .controls-SwitchCircle_selected {
+            background-color: var(--primary_active_background-color);
+         }
+
+         &.controls-DoubleSwitch__toggle_bg-contrast {
+            background-color: var(--primary_hover_background-color);
+            border-color: var(--primary_active_background-color);
+         }
+
+         .controls-SwitchCircle_unselected {
+            background-color: var(--primary_active_background-color);
+         }
+
+         &.controls-DoubleSwitch__toggle_bg-same {
+            background-color: var(--primary_hover_background-color);
+            border-color: var(--primary_active_background-color);
+         }
       }
    }
 
@@ -147,6 +197,15 @@
       .controls-SwitchCircle__borderCircle_selected,
       .controls-SwitchCircle__borderCircle_unselected {
          stroke: var(--marker-box_hover_border-color_switcher);
+      }
+   }
+
+   .controls-DoubleSwitch__toggle_resetValue {
+      .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
+         .controls-SwitchCircle__borderCircle_selected,
+         .controls-SwitchCircle__borderCircle_unselected {
+            stroke: var(--primary_active_background-color);
+         }
       }
    }
 }
@@ -167,4 +226,11 @@
 .controls_DoubleSwitch_SwitchCircle_horizontal {
    margin-right: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
    margin-left: calc(var(--marker_border-offset_switcher) - var(--border-thickness_switcher));
+}
+
+.controls-DoubleSwitch__toggle_size-s {
+   .controls_DoubleSwitch_SwitchCircle_horizontal {
+      margin-right: calc(var(--border-thickness_switcher) * -1);
+      margin-left: calc(var(--border-thickness_switcher) * -1);
+   }
 }

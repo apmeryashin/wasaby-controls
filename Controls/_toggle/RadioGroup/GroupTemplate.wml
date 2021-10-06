@@ -9,6 +9,7 @@
                     item="{{item}}"
                     readOnly="{{options.readOnly || item['readOnly']}}"
                     displayProperty="{{options.displayProperty}}"
+                    captionPosition="{{options.captionPosition}}"
                     selected="{{isSelected(item)}}"/>
             <ws:if data="{{item[options.nodeProperty]}}">
                 <ws:partial template="{{groupTemplate}}"
