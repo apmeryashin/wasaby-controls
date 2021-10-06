@@ -191,14 +191,13 @@ export default Radio;
  */
 
 /**
- * @name Controls/_toggle/Switch#captionPosition
+ * @name Controls/_toggle/RadioGroup#captionPosition
  * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
  * @variant left Заголовок расположен перед кнопкой.
  * @variant right Заголовок расположен после кнопки.
  * @default right
  * @demo Controls-demo/toggle/RadioGroup/CaptionPosition/Index
  */
-
 
 /**
  * @name Controls/_toggle/RadioGroup#displayProperty
