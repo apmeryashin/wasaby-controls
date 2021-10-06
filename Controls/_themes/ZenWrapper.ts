@@ -18,7 +18,7 @@ export interface IZenWrapperOptions extends IControlOptions {
  * @author Клепиков И.А.
  * @public
  * @demo Controls-demo/themes/ZenWrapper/Index
- * @remark Доминантный и комплементарный цвет изображения должны быть вычислены заранее и переданы в опции контрола.
+ * @remark Доминантный и комплементарный цвет изображения должны быть заранее вычислены и переданы в опции контрола.
  */
 
 export default class ZenWrapper extends Control<IZenWrapperOptions> {
