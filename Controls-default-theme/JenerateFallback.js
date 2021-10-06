@@ -164,9 +164,14 @@ var lessFilesDataIterator = function (fileContent, callback) {
             if (value.indexOf(imgDir) !== -1) {
                 value = value.replace(imgDir, '../Controls-default-theme/img');
             }
-            if (lessHashMap[value]) { // Если это less переменная, то берем значение
-                value = lessHashMap[value];
+            if (value.startsWith('@')) {
+                if (lessHashMap[value]) { // Если это less переменная, то берем значение
+                    value = lessHashMap[value];
+                } else {
+                    consoleLog('Ошибка: Не найдена less переменная ' + value + ' в выражении ' + line);
+                }
             }
+
             value = callback(value, property);
 
             return '  "' + property + '": "' + value + '",';
