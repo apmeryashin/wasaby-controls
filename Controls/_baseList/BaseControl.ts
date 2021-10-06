@@ -5851,11 +5851,21 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     removeItems(selection: ISelectionObject): Promise<string | void> {
         return _private
             .removeItems(this, selection, 'Controls/listCommands:RemoveProvider')
-            .catch((error) => process({error}));
+            .catch((error) => {
+                if (error) {
+                    return process({error});
+                }
+                return;
+            });
     }
 
     removeItemsWithConfirmation(selection: ISelectionObject): Promise<string | void> {
-        return _private.removeItems(this, selection).catch((error) => process({error}));
+        return _private.removeItems(this, selection).catch((error) => {
+            if (error) {
+                return process({error});
+            }
+            return;
+        });
     }
 
     // endregion remove
