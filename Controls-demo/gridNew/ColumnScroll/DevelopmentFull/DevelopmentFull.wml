@@ -75,7 +75,8 @@
 
         <div class="controlsDemo__mr2 controlsDemo__mb2" style="max-width: 300px;">
             <h4 class="controlsDemo__mb1">Перезагрузка</h4>
-            <button on:click="_reload()" style="padding: 3px;">Перезагрузить</button>
+            <button on:click="_reload()" style="padding: 3px;">Быстрая</button>
+            <button on:click="_reload(true)" style="padding: 3px;">{{ _isLongLoad ? 'Долгая [Завершить]' : 'Долгая [Начать]'}}</button>
         </div>
 
         <div class="controlsDemo__mr2 controlsDemo__mb2" style="max-width: 300px;">

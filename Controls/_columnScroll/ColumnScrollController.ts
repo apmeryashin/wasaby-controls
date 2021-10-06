@@ -406,7 +406,7 @@ export default class ColumnScrollController {
         newTransformHTML += `.${transformSelector} .${JS_SELECTORS.FIXED_ELEMENT} {transform: translateX(${position}px);}`;
 
         // скроллируем индикаторы загрузки
-        const indicatorPosition = position + this._fixedColumnsWidth + (this._scrollWidth / 2);
+        const indicatorPosition = position + this._containerSize / 2;
         newTransformHTML += `.${transformSelector} .controls-BaseControl__loadingIndicator {width: fit-content; transform: translateX(${indicatorPosition}px);}`;
 
         // Не скроллируем операции над записью
