@@ -7,6 +7,7 @@
               source="{{_source}}"
               searchParam="title"
               minSearchLength="{{3}}"
+              searchDelay="1000"
               keyProperty="id"
               bind:filter="_filter">
             <div>
