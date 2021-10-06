@@ -29,8 +29,12 @@ export default class extends Control {
                   storage[controlId] = undefined;
                }
                if (controlId.indexOf('scrollContainerWheelEventHappened') > -1) {
-                  // Уберем скроллбар с демок
-                  storage[controlId] = true;
+                  if (storage.hasOwnProperty('scrollContainerWheelEventHappenedDemo')) {
+                     storage[controlId] = false;
+                  } else {
+                     // Уберем скроллбар с демок
+                     storage[controlId] = true;
+                  }
                }
             }
             return (new Deferred()).callback(storage);
