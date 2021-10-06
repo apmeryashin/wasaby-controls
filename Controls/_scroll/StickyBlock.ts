@@ -702,7 +702,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             options.fixedZIndex,
             options.zIndex,
             options.offsetTop,
-            options._mobSafariZIndexFixOff,
+            options._isIosZIndexOptimized,
             options.task1177692247,
             options.task1181007458
         );
@@ -711,15 +711,15 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStyle(position: POSITION,fixedZIndex: number,
-                         zIndex: number, offsetTop: number, mobSafariZIndexFixOff: boolean, task1177692247?, task1181007458?): void {
-        const style = this._getStyle(position, fixedZIndex, zIndex, offsetTop, mobSafariZIndexFixOff, task1177692247);
+                         zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): void {
+        const style = this._getStyle(position, fixedZIndex, zIndex, offsetTop, isIosZIndexOptimized, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
     protected _getStyle(positionFromOptions: POSITION,fixedZIndex: number,
-                        zIndex: number, offsetTop: number, mobSafariZIndexFixOff: boolean, task1177692247?, task1181007458?): string {
+                        zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): string {
         let offset: number = 0;
         let container: HTMLElement;
         let top: number;
@@ -822,10 +822,11 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             }
 
             // TODO https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
-            // Из-за статичного z-index в safari (z-index всегда ставим = fixedZIndex) itemAction в списках
-            // перекрывается незафиксированным стики блоком. Временно решаем приватной опцией, из-за этого вернутся
-            // прыжки при фиксировании стики блока.
-            if (!mobSafariZIndexFixOff || fixedPosition) {
+            // В ios на стикиблоках всегда установлен z-index: fixedZIndex, т.к из-за смены z-index происходят прыжки.
+            // Из-за этого возникает следующая проблема: в списке лежат стики и не стики элементы. У не стики элеметов
+            // присутствует весло с itemAction. Если следующим элементом идёт стикиблок, то он перекроет весло.
+            // Получается, нужно чтобы весло был выше незафиксированного стикиблока, но ниже зафиксированного.
+            if (isIosZIndexOptimized || fixedPosition) {
                 style += 'z-index: ' + fixedZIndex + ';';
             }
         } else if (zIndex) {
@@ -1039,7 +1040,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             position: {
                 vertical: 'top'
             },
-            _mobSafariZIndexFixOff: false
+            _isIosZIndexOptimized: true
         };
     }
 
