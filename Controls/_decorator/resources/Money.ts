@@ -63,7 +63,7 @@ export function calculateIntegerClass(
 ): string {
     return `${fontSize ? 'controls-fontsize-' + fontSize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
             ${fontWeight ? ' controls-fontweight-' + fontWeight : ''} ${currency && currencyPosition === 'left' ? ' controls-margin_left-2xs' : ''}
-            ${currency && currencyPosition === 'right' && isDisplayFractionPath ? ' controls-margin_right-2xs' + fontWeight : ''}`;
+            ${currency && currencyPosition === 'right' && !isDisplayFractionPath ? ' controls-margin_right-2xs' : ''}`;
 }
 
 export function calculateFractionClass(
