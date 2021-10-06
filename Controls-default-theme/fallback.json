@@ -1465,7 +1465,6 @@
   "--height_horizontal_switcher": "14px",
   "--height_horizontal_switcher-small": "6px",
   "--height_vertical_switcher": "40px",
-  "--height_vertical_switcher-small": "38px",
   "--border-thickness_switcher": "var(--border-thickness)",
   "--border-radius_switcher": "8px",
   "--border-color_switcher": "#e4e4e4",
