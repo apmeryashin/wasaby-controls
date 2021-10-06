@@ -5723,6 +5723,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // Ключ перетаскиваемой записи мы запоминаем на mouseDown, но днд начнется только после смещения на 4px и не факт, что он вообще начнется
             // Если сработал mouseUp, то днд точно не сработает и draggedKey нам уже не нужен
             this._draggedKey = null;
+            // контроллер создается на mouseDown, но драг может и не начаться, поэтому контроллер уже не нужен
+            if (this._dndListController && !this._dndListController.isDragging()) {
+                this._dndListController = null;
+            }
         }
 
         this._mouseDownItemKey = undefined;
