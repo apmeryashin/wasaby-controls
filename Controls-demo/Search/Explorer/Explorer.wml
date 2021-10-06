@@ -14,7 +14,7 @@
         parentProperty="parent"
         nodeProperty="parent@"
         searchParam="title"
-        searchDelay="1000"
+        searchDelay="700"
         minSearchLength="{{3}}"
         startingWith="{{_startingWith}}"
         bind:root="_root"

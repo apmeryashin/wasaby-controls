@@ -9,7 +9,7 @@
         parentProperty="parent"
         nodeProperty="parent@"
         searchParam="title"
-        searchDelay="1000"
+        searchDelay="700"
         minSearchLength="{{3}}"
         searchStartingWith="{{_startingWith}}"
         bind:root="_root"
