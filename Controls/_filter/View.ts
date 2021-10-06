@@ -262,7 +262,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             if (
                 (!oldItem ||
                 this._isFrequentItem(oldItem) &&
-                (oldItem.viewMode !== newItem.viewMode || !isEqual(oldItem.value, newItem.value))) &&
+                (oldItem.viewMode !== newItem.viewMode)) &&
                 displayText[newItem.name]
             ) {
                 displayText[newItem.name] = {};
