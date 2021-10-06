@@ -18,7 +18,7 @@ import template = require('wml!Controls/_date/Input/Input');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления input}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_datePicker.less переменные тем оформления dateRange}
  *
- * @class Controls/_date/Input
+ * @class Controls/date:Input
  * @extends UI/Base:Control
  * @mixes Controls/_date/interface/IBaseInput
  * @implements Controls/interface:IDateMask

@@ -81,7 +81,7 @@ export interface IMovableList {
 }
 
 /**
- * @name Controls/_list/interface/IMovableList#moveDialogTemplate
+ * @name Controls/_baseList/interface/IMovableList#moveDialogTemplate
  * @cfg {Controls/list:IMoveDialogTemplate} Шаблон диалогового окна выбора целевой записи для перемещения.
  * Рекомендуется использовать стандартный шаблон {@link Controls/moverDialog:Template}.
  * @see Controls/moverDialog:Template

@@ -71,6 +71,7 @@ interface IColumnScrollViewMixin {
     _$pendingMouseEnterForActivate: boolean;
 
     _$relativeCellContainers: HTMLElement[];
+    _relativeCellContainersUpdateCallback(newContainers: HTMLElement[]): void;
 
     // IFreezable
     _freezeColumnScroll(): void;

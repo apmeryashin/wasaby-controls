@@ -22,7 +22,7 @@
 </ws:if>
 <ws:else>
     <Controls.scroll:_Scrollbar name="scrollbar"
-                                attr:class="js-controls-ColumnScroll__thumb controls-ColumnScroll__thumb"
+                                attr:class="js-controls-ColumnScroll__thumb controls-ColumnScroll__thumb controls-ColumnScroll__thumbWrapper"
                                 position="{{_position}}"
                                 contentSize="{{_contentSize}}"
                                 direction="horizontal"

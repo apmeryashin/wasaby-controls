@@ -80,20 +80,12 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterRow', () => {
    });
 
    it('.getColumns()', () => {
-      let columns = nodeFooterRow.getColumns(false);
-      assert.equal(columns.length, 2);
-
-      columns = nodeFooterRow.getColumns(true);
-      assert.equal(columns.length, 1);
-
-      columns = nodeFooterRow.getColumns();
+      let columns = nodeFooterRow.getColumns();
       assert.equal(columns.length, 1);
 
       treeGridCollection.setMultiSelectVisibility('visible');
       columns = nodeFooterRow.getColumns();
-      assert.equal(columns.length, 2);
-      columns = nodeFooterRow.getColumns(false);
-      assert.equal(columns.length, 3);
+      assert.equal(columns.length, 1);
    });
 
    it('.getItemClasses()', () => {
@@ -111,15 +103,5 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterRow', () => {
 
       treeGridCollection.setHasMoreStorage({ 3: true });
       assert.isTrue(nodeFooterRow.shouldDisplayVisibleFooter(undefined));
-   });
-
-   it('with fixed column', () => {
-      treeGridCollection = getCollection({columnScroll: true});
-      nodeFooterRow = treeGridCollection.at(3) as TreeGridNodeFooterRow;
-
-      const columns = nodeFooterRow.getColumns();
-      assert.equal(columns.length, 2);
-      assert.equal(columns[0].getColspanStyles(), 'grid-column: 1 / 2');
-      assert.equal(columns[1].getColspanStyles(), 'grid-column: 2 / 4');
    });
 });

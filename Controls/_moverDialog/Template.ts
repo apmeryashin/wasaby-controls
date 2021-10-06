@@ -101,7 +101,6 @@ export default class MoverDialogTemplate extends Control<IMoverDialogTemplateOpt
 
     resetSearch(): void {
         this._searchValue = '';
-        this._filter = this._options.filter || {};
     }
 
     protected _itemsFilterMethod(items: Model | Model[]): boolean {

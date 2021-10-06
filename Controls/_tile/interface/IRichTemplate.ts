@@ -88,7 +88,7 @@ export default interface IRichTemplateOptions {
     /**
      * @typedef {String} TitlePosition
      * @variant underImage Заголовок отображается под изображением.
-     * @variant onImage Заголовок отображается в верхней части поверх изображения изображением.
+     * @variant onImage Заголовок отображается в верхней части поверх изображения.
      */
     /**
      * @cfg {TitlePosition} Положение заголовка.

@@ -345,6 +345,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         } else {
             this._recountHasNode();
         }
+
+        this.appendStrategy(this.getNodeFooterStrategyCtor(), {
+            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback
+        });
     }
 
     destroy(): void {
@@ -496,7 +500,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             this._$nodeFooterVisibilityCallback = callback;
 
             // Нужно пересоздавать стратегию, чтобы Composer правильно запомнил опции для нее
-            this.reCreateStrategy(NodeFooter, { nodeFooterVisibilityCallback: callback });
+            this.reCreateStrategy(this.getNodeFooterStrategyCtor(), { nodeFooterVisibilityCallback: callback });
 
             this._nextVersion();
         }
@@ -998,15 +1002,23 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._childrenMap = {};
     }
 
+    protected getNodeFooterStrategyCtor(): NodeFooter {
+        return NodeFooter;
+    }
+
+    protected getNodeFooterStrategy(): NodeFooter {
+        return this.getStrategyInstance(NodeFooter);
+    }
+
     protected _reBuildNodeFooters(reset: boolean = false): void {
         if (reset) {
             const session = this._startUpdateSession();
-            this.getStrategyInstance(NodeFooter)?.reset();
+            this.getNodeFooterStrategy()?.reset();
             this._reSort();
             this._reFilter();
             this._finishUpdateSession(session, true);
         } else {
-            this.getStrategyInstance(NodeFooter)?.invalidate();
+            this.getNodeFooterStrategy()?.invalidate();
         }
     }
 

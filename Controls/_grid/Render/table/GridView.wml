@@ -23,7 +23,7 @@
         <Controls.columnScroll:RelativeColumns
                 if="{{ _options.columnScroll }}"
                 isFullGridSupport="{{ false }}"
-                bind:relativeCellContainers="_$relativeCellContainers"
+                containersUpdatedCallback="{{ _relativeCellContainersUpdateCallback }}"
                 viewColumns="{{ _getViewColumns(_options) }}"/>
 
         <!-- Header -->

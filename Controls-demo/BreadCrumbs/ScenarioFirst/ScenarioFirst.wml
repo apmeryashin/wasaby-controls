@@ -59,6 +59,7 @@
                     attr:class="demo-FourthExample"
                     headingCaption="Продажи"
                     headingFontColorStyle="primary"
+                    backgroundStyle="stack"
                     maximizeButtonVisibility="{{true}}">
                 <ws:headerContentTemplate>
                     <div>

@@ -459,22 +459,6 @@ describe('Controls/_display/Tree', () => {
             assert.strictEqual(tree.getCount(), 6);
         });
 
-        it('should keep old instances', () => {
-            const oldItems = [];
-            const newItems = [];
-
-            tree.each((item) => {
-                oldItems.push(item);
-            });
-
-            tree.setRoot(1);
-            tree.each((item) => {
-                newItems.push(item);
-            });
-
-            assert.deepEqual(oldItems.slice(1, 7), newItems);
-        });
-
         it('should change items and then the revert it back', () => {
             const before = [];
             tree.each((item) => {
@@ -1208,64 +1192,6 @@ describe('Controls/_display/Tree', () => {
                 assert.deepEqual(given, []);
             });
 
-            it('should fire properly with duplicates', () => {
-                const list = new ObservableList({
-                    items: [
-                        {id: 'a',   pid: 0},
-                        {id: 'aa',  pid: 'a'},
-                        {id: 'aaa', pid: 'aa'},
-                        {id: 'b',   pid: 0},
-                        {id: 'ba',  pid: 'b'},
-                        {id: 'bb',  pid: 'b'}
-                    ]
-                });
-                const tree = getObservableTree(list);
-
-                /*
-                   0  +-a
-                   1  | +-aa
-                   2  |   +-aaa
-                   3  +-b
-                   4    +-ba
-                   5      +-bb
-                   =>
-                   0  +-a
-                   1  | +-aa
-                   2  |   +-aaa
-                   3  |     +-aa1  1st event
-                   4  +-b
-                   5  | +-ba
-                   6  |   +-bb
-                   7  +-a          2nd event
-                   8    +-aa       2nd event
-                   9      +-aaa    2nd event
-                   10       +-aa1  2nd event
-                */
-                const expected = [{
-                    action: IBindCollectionDisplay.ACTION_ADD,
-                    newItems: ['aa1'],
-                    newItemsIndex: 3,
-                    oldItems: [],
-                    oldItemsIndex: 0
-                }, {
-                    action: IBindCollectionDisplay.ACTION_ADD,
-                    newItems: ['a', 'aa', 'aaa', 'aa1'],
-                    newItemsIndex: 7,
-                    oldItems: [],
-                    oldItemsIndex: 0
-                }];
-                const given = [];
-                const handler = getCollectionChangeHandler(given, (item) => item.getContents().id);
-
-                tree.subscribe('onCollectionChange', handler);
-                list.append([
-                    {id: 'a',   pid: 0},
-                    {id: 'aa1', pid: 'a'}
-                ]);
-                tree.unsubscribe('onCollectionChange', handler);
-
-                assert.deepEqual(given, expected);
-            });
 
             it('should fire after call setRootEnumerable with change to true', () => {
                 const given = [];
@@ -1706,17 +1632,6 @@ describe('Controls/_display/Tree', () => {
                     'at parent for ' + i
                 );
             }
-        });
-
-        it('should keep relation between a tree item contents and the source collection', () => {
-            const serializer = new Serializer();
-            const json = JSON.stringify(tree, serializer.serialize);
-            const clone = JSON.parse(json, serializer.deserialize);
-
-            clone.each((item) => {
-                assert.notEqual(clone.getCollection().getIndex(item.getContents()), -1);
-            });
-
         });
     });
 

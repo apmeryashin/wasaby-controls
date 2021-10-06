@@ -50,7 +50,7 @@ const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
  * * {@link /doc/platform/developmentapl/interface-development/controls/input-elements/input/date/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_input.less переменные тем оформления}
  *
- * @class Controls/_date/BaseInput
+ * @class Controls/date:BaseInput
  * @extends UI/Base:Control
  * @mixes Controls/_date/interface/IBaseInput
  *

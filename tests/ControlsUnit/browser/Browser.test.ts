@@ -81,6 +81,7 @@ async function getBrowserWithMountCall(options: object = {}): Promise<Browser> {
     const brow = getBrowser(options);
     await brow._beforeMount(options);
     brow.saveOptions(options);
+    brow._afterMount(options);
     return brow;
 }
 
@@ -871,6 +872,25 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(browser._root === 'newRoot');
             });
 
+            it('backButtonCaption is updated after items changed in sourceController', async () => {
+                const options = getBrowserOptions();
+                options.parentProperty = 'testParentProperty';
+                options.displayProperty = 'title';
+                const sourceController = options.sourceController = new NewSourceController({...options});
+                const browser = await getBrowserWithMountCall(options);
+
+                const items = new RecordSet();
+                items.setMetaData({
+                    path: new RecordSet({
+                        rawData: [{id: 0, title: 'test'}]
+                    })
+                });
+
+                sourceController.setItems(items);
+                // _contextState, пока нет возможности тестировать вёрстку и то, что прокидывается в вёрстку
+                assert.ok(browser._contextState.backButtonCaption === 'test');
+            });
+
             describe('listsOptions', () => {
                 it('prefetchProxy source in listsOptions', async () => {
                     const browserOptions = getBrowserOptions();
@@ -1007,9 +1027,7 @@ describe('Controls/browser:Browser', () => {
                         listsOptions
                     };
 
-                    const browser = getBrowser(browserOptions);
-                    await browser._beforeMount(browserOptions);
-                    browser.saveOptions(browserOptions);
+                    const browser = await getBrowserWithMountCall(browserOptions);
                     const notifyStub = sinon.stub(browser, '_notify');
                     sourceController.setRoot('testRoot');
                     assert.ok(notifyStub.withArgs('rootChanged', ['testRoot', 'list2']).calledOnce);

@@ -211,6 +211,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
         this._searchStartCallback = this._searchStartCallback.bind(this);
+        this._itemsChanged = this._itemsChanged.bind(this);
         this._operationsController = options.operationsController;
 
         if (options.root !== undefined) {
@@ -549,6 +550,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         });
         sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
         sourceController.subscribe('sortingChanged', this._sortingChanged.bind(this));
+        sourceController.subscribe('itemsChanged', this._itemsChanged);
     }
 
     private _updateItemsOnState(): void {
@@ -557,6 +559,10 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (!this._items || this._items !== sourceControllerItems) {
             this._items = sourceControllerItems;
         }
+    }
+
+    private _itemsChanged(): void {
+        this._updateContext();
     }
 
     protected _getSourceController(id?: string): SourceController {
@@ -647,7 +653,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             // Стейт _root не реактивный, поэтому необходимо звать forceUpdate
             this._forceUpdate();
         }
-        this._notify('rootChanged', [root, id]);
+        if (this._isMounted) {
+            this._notify('rootChanged', [root, id]);
+        }
     }
 
     protected _setRoot(root: Key, id?: string): void {
@@ -697,12 +705,17 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _updateContext(): void {
         const sourceControllerState = this._getSourceController().getState();
+        const operationsController = this._getOperationsController();
+        const dataLoader = this._dataLoader;
+
         this._contextState = {
             ...sourceControllerState,
-            listsConfigs: this._dataLoader.getState(),
-            listsSelectedKeys: this._getOperationsController().getSelectedKeysByLists(),
-            listsExcludedKeys: this._getOperationsController().getExcludedKeysByLists(),
-            operationsController: this._getOperationsController()
+            listsConfigs: dataLoader.getState(),
+            listsSelectedKeys: operationsController.getSelectedKeysByLists(),
+            listsExcludedKeys: operationsController.getExcludedKeysByLists(),
+            operationsController,
+            sourceController: this._getSourceController(),
+            filterController: dataLoader.getFilterController()
         };
         this._sourceControllerState = sourceControllerState;
     }
@@ -1038,7 +1051,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             this._updateViewMode(this._previousViewMode);
             this._previousViewMode = null;
         }
-        this._updateContext();
     }
 
     private _dataLoadCallback(data: RecordSet, direction?: Direction, id?: string): void {

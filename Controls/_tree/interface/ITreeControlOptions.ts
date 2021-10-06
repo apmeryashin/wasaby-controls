@@ -408,7 +408,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * Контрол получит данные из источника и выведет их.
  *
  * <pre class="brush: html">
- * <!-- WML --> 
+ * <!-- WML -->
  * <Controls.tree:View
       source="{{_viewSource}}"
       parentProperty="parent"
@@ -433,17 +433,17 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  *                 hasChild: true
  *             },
  *             {
- *                 key: 11, 
- *                 title: 'Smartphones1', 
- *                 parent: 1, 
- *                 type: true, 
-                   rating: '9.2',hasChild: true 
+ *                 key: 11,
+ *                 title: 'Smartphones1',
+ *                 parent: 1,
+ *                 type: true,
+                   rating: '9.2',hasChild: true
  *             },
  *         ]
  *     });
  * }
  * </pre>
- * @see 
+ * @see
  * @see Types/source:ICrud
  */
 

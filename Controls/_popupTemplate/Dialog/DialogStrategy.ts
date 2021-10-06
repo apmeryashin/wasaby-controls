@@ -37,7 +37,7 @@ export class DialogStrategy {
         }: ILimitingSizes = this._calculateLimitOfSizes(popupOptions, windowData);
 
         const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item);
-        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth);
+        const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth, windowData, containerSizes);
 
         this._resetMargins(item, position);
 
@@ -48,7 +48,14 @@ export class DialogStrategy {
         };
     }
 
-    private _validateCoordinate(position: IDialogPosition, maxHeight: number, maxWidth: number): IDialogPosition {
+    private _validateCoordinate(position: IDialogPosition, maxHeight: number, maxWidth: number,
+                                windowData: IPopupPosition = {}, containerSizes: IPopupSizes): IDialogPosition {
+        const height = position.height || containerSizes.height;
+        const outsideBottomBorderValue = position.top + height - windowData.height;
+        if (outsideBottomBorderValue > 0) {
+            position.top -= outsideBottomBorderValue;
+        }
+
         if (position.height > maxHeight) {
             position.height = maxHeight;
         }
@@ -80,18 +87,19 @@ export class DialogStrategy {
         containerSizes: IPopupSizes,
         popupItem: IDialogItem
     ): IDialogPosition {
-        const {
-            horizontal: horizontalPositionProperty,
-            vertical: verticalPositionProperty
-        } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
+        const popupOptions = popupItem?.popupOptions || {};
 
         if (popupItem.fixPosition) {
-            const horizontalProperty = popupItem?.position?.right !== undefined ?
-                HORIZONTAL_DIRECTION.RIGHT : HORIZONTAL_DIRECTION.LEFT;
-            const verticalProperty = popupItem?.position?.bottom !== undefined ?
-                VERTICAL_DIRECTION.BOTTOM : VERTICAL_DIRECTION.TOP;
+            const position = popupItem?.position || {};
+
+            const isRightProperty = position.right !== undefined || popupOptions.right !== undefined;
+            const horizontalProperty = isRightProperty ? HORIZONTAL_DIRECTION.RIGHT : HORIZONTAL_DIRECTION.LEFT;
+
+            const isBottomProperty = position.bottom !== undefined || popupOptions.bottom !== undefined;
+            const verticalProperty = isBottomProperty ? VERTICAL_DIRECTION.BOTTOM : VERTICAL_DIRECTION.TOP;
+
             return this._getPositionForFixPositionDialog(
-                popupItem.position,
+                position,
                 windowData,
                 containerSizes,
                 popupItem,
@@ -99,12 +107,13 @@ export class DialogStrategy {
                 horizontalProperty
             );
         } else {
+            const properties = getPositionProperties(popupOptions.resizeDirection);
             const position: IDialogPosition = this._getDefaultPosition(
                 windowData,
                 containerSizes,
                 popupItem,
-                verticalPositionProperty,
-                horizontalPositionProperty
+                properties.vertical,
+                properties.horizontal
             );
 
             this._updateCoordsByOptions(windowData, popupItem, position);

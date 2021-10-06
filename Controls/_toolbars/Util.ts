@@ -1,4 +1,5 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {ButtonTemplate, IButtonOptions, defaultHeight, defaultFontColorStyle, getDefaultOptions} from 'Controls/buttons';
 import {Abstract as ChainAbstract, factory} from 'Types/chain';
 import {ICrudPlus} from "Types/source";
@@ -15,9 +16,13 @@ export function getButtonTemplate(): TemplateFunction {
     return ButtonTemplate;
 }
 
-export function loadItems(source: ICrudPlus): Promise<TItems> {
+export function loadItems(source: ICrudPlus, filter?: object): Promise<TItems> {
     const crudWrapper = new CrudWrapper({source});
-    return crudWrapper.query({});
+    const queryParams = {};
+    if (filter) {
+        queryParams.filter = filter;
+    }
+    return crudWrapper.query(queryParams);
 }
 
 export function hasSourceChanged(newSource?: ICrudPlus, oldSource?: ICrudPlus): boolean {
@@ -34,13 +39,11 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const isVerticalDirection = toolbarOptions.direction === 'vertical';
     const iconStyle = item.get('iconStyle') || toolbarOptions.iconStyle || defaultOptions.iconStyle;
 
-    let viewMode = isVerticalDirection ? 'toolButton' : item.get('viewMode');
-    let caption = '';
-    if (viewMode && viewMode !== 'toolButton') {
-        caption = item.get('caption');
-    } else if (item.get('title') && !viewMode) {
-        viewMode = 'link';
-        caption = item.get('title');
+    const viewMode = isVerticalDirection ? 'toolButton' : item.get('viewMode');
+    const caption = item.get('caption');
+
+    if (!icon && !caption) {
+        Logger.error('Controls.toolbars.View: У элемента не задан "icon" и "caption". Элемент тулбара может отображаться некорректно');
     }
 
     const buttonStyle = (viewMode === 'toolButton' ? 'default' : (item.get('buttonStyle') || defaultOptions.buttonStyle));
