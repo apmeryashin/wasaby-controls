@@ -75,10 +75,20 @@ export class StickyController extends BaseController {
             this._setStickyContent(item);
             item.position.position = undefined;
             this.prepareConfig(item, container);
+            item.popupOptions.className += this._getStickyTemplateVisibilityClass(item);
         } else {
             this._printTargetRemovedWarn();
         }
         return true;
+    }
+
+    protected _getStickyTemplateVisibilityClass(item: IStickyItem): string {
+        // Не задаем класс controls-StickyTemplate-visibility, так как на нем установлена анимация для скрытия
+        // Анимация не нужна в случае, когда окно создается, но при этом, target находится не в видимой области
+        if (item.popupOptions.actionOnScroll === 'track' && !this._isVisibleTarget(item.popupOptions.target)) {
+            return 'controls-StickyTemplate-visibility-hidden';
+        }
+        return '';
     }
 
     elementUpdated(item: IStickyItem, container: HTMLElement): boolean {
@@ -98,10 +108,7 @@ export class StickyController extends BaseController {
             if (item.popupOptions.className) {
                 item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');
             }
-            item.popupOptions.className += ' controls-StickyTemplate-visibility';
-            if (item.popupOptions.actionOnScroll === 'track' && !this._isVisibleTarget(item.popupOptions.target)) {
-                item.popupOptions.className += ' controls-StickyTemplate-visibility-hidden';
-            }
+            item.popupOptions.className += ` controls-StickyTemplate-visibility ${this._getStickyTemplateVisibilityClass(item)}`;
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
             // Open Windows are not placed in the workspace and chrome scrollit body.
