@@ -398,6 +398,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     private _cleanValid(): void {
         if (this._validationResult) {
             this.setValidationResult(null);
+            this._forceCloseInfoBox();
         }
     }
 
