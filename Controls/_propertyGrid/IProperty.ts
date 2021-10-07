@@ -6,7 +6,7 @@ import {TEditingObject, TTypeDescription} from 'Controls/_propertyGrid/IProperty
 type TProperty = 'string' | 'boolean' | 'number' | 'date' | 'enum' | 'text' | 'list' | 'propertyGrid';
 export type TValidator = (value: TEditingObject,
                           item: Model<IProperty>,
-                          items: TTypeDescription) => boolean;
+                          items: TTypeDescription) => boolean | string;
 
 /**
  * Интерфейс опций для {@link Controls/propertyGrid:PropertyGrid}.
