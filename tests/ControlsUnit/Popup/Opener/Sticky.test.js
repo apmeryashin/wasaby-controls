@@ -160,6 +160,39 @@ define(
             assert.equal(item.popupOptions.className, classes); // Классы не поменялись
          });
 
+         it('Sticky visibility classes', () => {
+            StickyController._isVisibleTarget = () => false;
+            StickyController._isTargetVisible = () => true;
+            let item = {
+               position: {},
+               popupOptions: {
+                  actionOnScroll: 'track'
+               },
+               sizes: {}
+            };
+            let container = {
+               getBoundingClientRect: () => {
+                  return {
+                     width: 100,
+                     height: 100
+                  };
+               }
+            };
+            let classes = ' controls-Popup-corner-vertical-top controls-Popup-corner-horizontal-left controls-Popup-align-horizontal-right controls-Popup-align-vertical-bottom';
+            StickyController.elementCreated(item, container);
+            assert.equal(item.popupOptions.className, classes + ' controls-StickyTemplate-visibility-hidden');
+
+            StickyController._isVisibleTarget = () => true;
+            classes += ' controls-StickyTemplate-visibility';
+            StickyController.elementUpdated(item, container);
+            assert.equal(item.popupOptions.className, classes);
+
+            StickyController._isVisibleTarget = () => false;
+            classes += ' controls-StickyTemplate-visibility-hidden';
+            StickyController.elementUpdated(item, container);
+            assert.equal(item.popupOptions.className, classes);
+         });
+
          it('Sticky check visible target on elementCreated', () => {
             StickyController._isTargetVisible = () => false;
             let isRemoveCalled = false;
