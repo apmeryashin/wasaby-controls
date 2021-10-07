@@ -18,7 +18,8 @@
                    {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
                    {{item.popupOptions.className}}
                    {{item.position.invisible ? 'ws-invisible'}}
-                   {{item.position.hidden ? 'ws-hidden'}}"
+                   {{item.position.hidden ? 'ws-hidden'}}
+                    {{item.position.zoom !== undefined ? 'controls-Zoom'}}"
                                            attr:style="z-index: {{item.currentZIndex}};
                    position: {{item.position.position !== undefined ? item.position.position : 'absolute'}};
                    left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
