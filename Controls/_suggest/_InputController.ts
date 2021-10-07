@@ -545,14 +545,22 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _getSelectorOptions(templateOptions: object): IStackPopupOptions {
-      return { ...{
-            opener: this,
-            template: 'Controls/suggestPopup:Dialog',
-            closeOnOutsideClick: true,
-            eventHandlers: {
-               onResult: this._select.bind(this)
-            }
-         }, ...templateOptions};
+      const selectorTemplate = this._options.selectorTemplate;
+      let selectorOptions = {
+         opener: this,
+         template: 'Controls/suggestPopup:Dialog',
+         closeOnOutsideClick: true,
+         eventHandlers: {
+            onResult: this._select.bind(this)
+         }
+      };
+      if (selectorTemplate) {
+         selectorOptions.template = selectorTemplate.templateName;
+         selectorOptions.templateOptions = selectorTemplate.templateOptions;
+      } else {
+         selectorOptions = {...selectorOptions, ...templateOptions};
+      }
+      return selectorOptions;
    }
 
    private _getTemplateOptions(filter: QueryWhereExpression<unknown>, searchValue: string): IStackPopupOptions {

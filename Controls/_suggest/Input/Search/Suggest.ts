@@ -21,6 +21,7 @@ import 'Controls/search';
  * @implements Controls/interface:ISearch
  * @implements Controls/interface:ISource
  * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:ISelectorDialog
  * @mixes Controls/suggest:ISuggest
  * @implements Controls/interface:INavigation
  * @mixes Controls/input:IFieldTemplate
