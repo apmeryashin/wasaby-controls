@@ -86,7 +86,7 @@ export class StickyController extends BaseController {
         // Не задаем класс controls-StickyTemplate-visibility, так как на нем установлена анимация для скрытия
         // Анимация не нужна в случае, когда окно создается, но при этом, target находится не в видимой области
         if (item.popupOptions.actionOnScroll === 'track' && !this._isVisibleTarget(item.popupOptions.target)) {
-            return 'controls-StickyTemplate-visibility-hidden';
+            return ' controls-StickyTemplate-visibility-hidden';
         }
         return '';
     }
@@ -108,7 +108,7 @@ export class StickyController extends BaseController {
             if (item.popupOptions.className) {
                 item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');
             }
-            item.popupOptions.className += ` controls-StickyTemplate-visibility ${this._getStickyTemplateVisibilityClass(item)}`;
+            item.popupOptions.className += ` controls-StickyTemplate-visibility${this._getStickyTemplateVisibilityClass(item)}`;
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
             // Open Windows are not placed in the workspace and chrome scrollit body.
