@@ -1,4 +1,6 @@
-<Controls.lookup:Input scope="{{_options}}"
-                       bind:selectedKeys="_selectedKeys"
-                       on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
-
+<Controls.Container.Async templateName="Controls/lookup:Input">
+    <ws:partial template="{{content.resolvedTemplate}}"
+                scope="{{_options}}"
+                bind:selectedKeys="_selectedKeys"
+                on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
+</Controls.Container.Async>
