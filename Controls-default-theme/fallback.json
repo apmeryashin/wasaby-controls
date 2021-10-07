@@ -492,7 +492,7 @@
   "--dash_thickness_dateRangeInput": "1px",
   "--min-width_dateRangeSelector": "150px",
   "--font-weight_dateRangeSelector": "bold",
-  "----height_dateRangeSelector": "24px",
+  "--height_dateRangeSelector": "24px",
   "--shift-top_fontSize-s_expression_PeriodLiteDialog-selector": "-42px",
   "--shift-top_fontSize-s_PeriodLiteDialog-selector": "-42px",
   "--shift-top_fontSize-m_expression_PeriodLiteDialog-selector": "-41px",
