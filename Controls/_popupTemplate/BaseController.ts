@@ -294,9 +294,30 @@ abstract class BaseController implements IPopupController {
         return goUpByControlTree(container);
     }
 
+    private _hasPoisitionByCoords(item: IPopupItem): boolean {
+        const {target} = item.popupOptions;
+        if (target && typeof target === 'object') {
+            const isNumber = (n: number) => typeof n === 'number';
+            // Проверяем на кол-во св-в, т.к. в target может лежать html-элемент со св-вами x, y.
+            // Если не тот формат что мы ожидаем - игнорируем.
+            const keys = Object.keys(target);
+            return keys.length === 2 && isNumber(target.x) && isNumber(target.y);
+        }
+        return false;
+    }
+
     protected _getTargetCoords(item: IPopupItem, sizes: IPopupSizes = {}) {
-        if (item.popupOptions.nativeEvent) {
-            const {x, y} = DimensionsMeasurer.getMouseCoordsByMouseEvent(item.popupOptions.nativeEvent);
+        const hasPosition = this._hasPoisitionByCoords(item);
+        if (item.popupOptions.nativeEvent || hasPosition) {
+            let position;
+            if (item.popupOptions.nativeEvent) {
+                Logger.warn('Controls/popup:Sticky: Опция nativeEvent устарела и больше не поддерживается.' +
+                    'Используйте опцию target со значением {x: number, y: number} для описания точки позиционирования');
+                position = DimensionsMeasurer.getMouseCoordsByMouseEvent(item.popupOptions.nativeEvent);
+            } else {
+                position = item.popupOptions.target;
+            }
+            let {x, y} = position;
             const size = 1;
             const positionCfg = {
                 direction: {
@@ -315,7 +336,7 @@ abstract class BaseController implements IPopupController {
                 right: x + size,
                 topScroll: 0,
                 leftScroll: 0,
-                zoom: DimensionsMeasurer.getZoomValue(item.popupOptions.nativeEvent.target)
+                zoom: DimensionsMeasurer.getZoomValue()
             };
         }
 
