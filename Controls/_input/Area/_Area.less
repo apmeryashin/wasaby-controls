@@ -48,6 +48,18 @@
    visibility: hidden;
 }
 
+.ws-is-desktop-safari,
+.ws-is-mobile-safari {
+   /**
+    * В safari есть бага, при которой visibility: hidden, работает не корректно, когда выделен текст,
+    * поэтому задаем выделенному тексту прозрачный фон
+    * https://online.sbis.ru/opendoc.html?guid=ebe1cc65-0d62-47a2-a08a-b8a7f746010c
+    */
+   .controls-Area__fakeField::selection {
+      background: transparent;
+   }
+}
+
 .controls-Area__footer {
    flex-grow: 1;
 }
