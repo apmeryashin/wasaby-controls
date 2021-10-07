@@ -1,8 +1,0 @@
-<Controls.grid:View
-        keyProperty="key"
-        source="{{_viewSource}}"
-        itemActions="{{_itemActions}}"
-        itemActionsPosition="outside"
-        columns="{{_columns}}">
-    <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
-</Controls.grid:View>

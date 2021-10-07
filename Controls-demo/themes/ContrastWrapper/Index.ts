@@ -4,23 +4,23 @@ import {IColumn} from 'Controls/grid';
 import {RecordSet} from 'Types/collection';
 import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
-import 'wml!Controls-demo/themes/ThemeWrapper/resources/_cellEditor';
+import 'wml!Controls-demo/themes/ContrastWrapper/_cellEditor';
 import { Editing } from 'Controls-demo/gridNew/DemoHelpers/Data/Editing';
 
 const columns: IColumn[] = [
     {
         displayProperty: 'title',
         width: '180px',
-        template: 'wml!Controls-demo/themes/ThemeWrapper/resources/_cellEditor'
+        template: 'wml!Controls-demo/themes/ContrastWrapper/_cellEditor'
     },
     {
         displayProperty: 'description',
         width: 'auto',
-        template: 'wml!Controls-demo/themes/ThemeWrapper/resources/_cellEditor'
+        template: 'wml!Controls-demo/themes/ContrastWrapper/_cellEditor'
     }
 ];
 
-import * as Template from 'wml!Controls-demo/themes/ThemeWrapper/resources/EditableGrid';
+import * as Template from 'wml!Controls-demo/themes/ContrastWrapper/ContrastWrapper';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
