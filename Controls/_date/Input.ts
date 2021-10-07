@@ -135,7 +135,8 @@ class Input extends Control<IDateInput> {
         return {
             ...IBaseInputMask.getDefaultOptions(),
             valueValidators: [],
-            datePopupType: 'datePicker'
+            datePopupType: 'datePicker',
+            calendarButtonVisible: true
         };
     }
 
