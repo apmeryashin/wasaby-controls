@@ -17,18 +17,25 @@
    .controls-PeriodLiteDialog__container-caption();
 }
 
+.controls-PeriodLiteDialog__shadow {
+   box-shadow: var(--box-shadow_sticky);
+}
+
+.controls-PeriodLiteDialog__without-sticky-template {
+   border-radius: 0;
+   border: var(--border-thickness) solid var(--border-color_shortDatePicker);
+}
+
 .controls-PeriodLiteDialog {
    position: relative;
    box-sizing: border-box;
    user-select: none;
-   border-radius: 0;
    padding: 0;
    display: flex;
    flex-direction: column;
    background-color: var(--background-color_shortDatePicker);
-   border: var(--border-thickness) solid var(--border-color_shortDatePicker);
-   box-shadow: var(--box-shadow_sticky);
    color: var(--text-color);
+   overflow: hidden;
 }
 
 .controls-PeriodLiteDialog__footer {
@@ -109,29 +116,6 @@
 
 .controls-PeriodLiteDialog__text-align-left {
    text-align: left;
-}
-
-.controls-PeriodLiteDialog__close {
-   position: absolute;
-   top: calc(-1 * var(--item_border-thickness_shortDatePicker));
-   color: var(--unaccented_icon-color);
-   background-color: var(--closeButton_background-color_shortDatePicker);
-   box-shadow: var(--closeButton_box-shadow_shortDatePicker);
-   cursor: pointer;
-
-   &::before {
-      content: '\e66c';
-   }
-}
-
-.controls-PeriodLiteDialog__close_position-left {
-   left: 0;
-   margin-left: calc(-1 * (var(--icon-size_m) + var(--closeButton_offset-left_shortDatePicker)));
-}
-
-.controls-PeriodLiteDialog__close_position-right {
-   right: 0;
-   margin-right: calc(-1 * (var(--icon-size_m) + var(--closeButton_offset-left_shortDatePicker) + var(--item_border-thickness_shortDatePicker)));
 }
 
 .controls-PeriodLiteDialog__header {
@@ -429,11 +413,6 @@
       background-color: var(--item_hover_background-color_shortDatePicker);
    }
 
-   .controls-PeriodLiteDialog__close:hover {
-      background-color: var(--closeButton_hover_background-color_shortDatePicker);
-      color: var(--icon-color_hovered_closeButton_external);
-   }
-
    .controls-PeriodLiteDialog__year-clickable:hover {
       background-color: inherit;
    }
@@ -459,11 +438,6 @@
 
    .controls-PeriodLiteDialog-item__quarter-caption:active {
       color: var(--quarterly_quarters_hover_text-color_shortDatePicker);
-   }
-
-   .controls-PeriodLiteDialog__close:active {
-      background-color: var(--closeButton_hover_background-color_shortDatePicker);
-      color: var(--icon-color_hovered_closeButton_external);
    }
 }
 

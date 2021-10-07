@@ -5,13 +5,14 @@
                endValue="{{ _options.endValue }}"/>
 </ws:template>
 
+<ws:template name="bodyContentTemplate">
 <div class="controls_shortDatePicker_theme-{{_options.theme}}
             controls_popupTemplate_theme-{{_options.theme}}
             controls-PeriodLiteDialog
             {{_getSizeCssClass('width')}} {{_options.popupClassName}}
             {{!_isExpandedPopup ? _getSizeCssClass('height')}}"
-            name="shortDatePicker"
-            on:mouseenter="_mouseEnterHandler()">
+     name="shortDatePicker"
+     on:mouseenter="_mouseEnterHandler()">
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__header">
          <div class="controls-PeriodLiteDialog__currentValue"
@@ -34,11 +35,6 @@
             <ws:else>
                {{_caption}}
             </ws:else>
-         </div>
-         <div class="controls-PeriodLiteDialog__close
-                     controls-icon controls-icon_size-m
-                     controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}" title="{[Закрыть]}"
-              on:click="_onHeaderClick()">
          </div>
       </div>
       <div class="controls-PeriodLiteDialog__bodyWrapper">
@@ -103,11 +99,6 @@
                                        readOnly="{{ _nextArrowButtonReadOnly }}"
                                        attr:class="controls-PeriodLiteDialog__arrowUp"/>
       </div>
-      <div class="controls-PeriodLiteDialog__close
-                     controls-icon controls-icon_size-m
-                     controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}" title="{[Закрыть]}"
-           on:click="_onHeaderClick()">
-      </div>
       <Controls.calendar:MonthList
               order="desc"
               virtualPageSize="{{24}}"
@@ -116,24 +107,24 @@
               attachLoadTopTriggerToNull="{{ false }}"
               attachLoadDownTriggerToNull="{{ false }}"
               _limit="{{_limit}}"
-         class="controls-PeriodLiteDialog__year-list">
+              class="controls-PeriodLiteDialog__year-list">
          <ws:yearTemplate>
             <ws:partial template="Controls/calendar:MonthListYearTemplate">
                <ws:bodyTemplate>
                   <div class="controls-PeriodLiteDialog__body
                               controls-PeriodLiteDialog__text-align-center">
-                        <div  class="controls-PeriodLiteDialog-item-yearList-years"
-                              on:click="_onYearClick(yearTemplate.date.getFullYear())">
-<!--                           controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} - если использовать переменную на шаблоне
-                               и использовать её в tabindex, то реактивности не будет, поэтому используем эту переменную в классе-->
-                           <div class="controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} controls-PeriodLiteDialog__vLayoutItem-caption
+                     <div  class="controls-PeriodLiteDialog-item-yearList-years"
+                           on:click="_onYearClick(yearTemplate.date.getFullYear())">
+                        <!--                           controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} - если использовать переменную на шаблоне
+                                                       и использовать её в tabindex, то реактивности не будет, поэтому используем эту переменную в классе-->
+                        <div class="controls-PeriodLiteDialog__tabPressed-{{_tabPressed}} controls-PeriodLiteDialog__vLayoutItem-caption
                                  {{_getYearItemCssClasses(yearTemplate.date.getFullYear())}}
                                  controls-PeriodLiteDialog__yearList-year"
-                                tabindex="{{_getTabindex(yearTemplate.date.getFullYear())}}"
-                                on:keyup="_keyUpYearHandler(yearTemplate.date.getFullYear())">
-                              {{ yearTemplate.date.getFullYear() }}
-                           </div>
+                             tabindex="{{_getTabindex(yearTemplate.date.getFullYear())}}"
+                             on:keyup="_keyUpYearHandler(yearTemplate.date.getFullYear())">
+                           {{ yearTemplate.date.getFullYear() }}
                         </div>
+                     </div>
                   </div>
                </ws:bodyTemplate>
             </ws:partial>
@@ -147,3 +138,16 @@
       </div>
    </ws:if>
 </div>
+</ws:template>
+
+
+<ws:if data="{{ _options.stickyPosition }}">
+   <Controls.popupTemplate:Sticky stickyPosition="{{ _options.stickyPosition }}" closeButtonViewMode="external" attr:class="controls-PeriodLiteDialog__shadow">
+      <ws:bodyContentTemplate>
+         <ws:partial template="bodyContentTemplate"/>
+      </ws:bodyContentTemplate>
+   </Controls.popupTemplate:Sticky>
+</ws:if>
+<ws:else>
+   <ws:partial template="bodyContentTemplate" attr:class="controls-PeriodLiteDialog__shadow controls-PeriodLiteDialog__without-sticky-template" />
+</ws:else>
