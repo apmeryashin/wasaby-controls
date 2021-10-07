@@ -7,10 +7,10 @@ define(
       'UI/Base',
       'Core/core-clone'
    ],
-   (StickyStrategy, StickyController, PopupUtilConfig, popupLib, UIBase, cClone) => {
+   (StickyStrategy, StickyControllerMod, PopupUtilConfig, popupLib, UIBase, cClone) => {
       'use strict';
 
-      StickyController = StickyController.default;
+      StickyController = StickyControllerMod.default;
       StickyStrategy = StickyStrategy.default;
 
       describe('Sticky Utils', () => {
@@ -161,8 +161,9 @@ define(
          });
 
          it('Sticky visibility classes', () => {
-            StickyController._isVisibleTarget = () => false;
-            StickyController._isTargetVisible = () => true;
+            const Sticky = new StickyControllerMod.StickyController();
+            Sticky._isVisibleTarget = () => false;
+            Sticky._isTargetVisible = () => true;
             let item = {
                position: {},
                popupOptions: {
@@ -179,17 +180,17 @@ define(
                }
             };
             let classes = ' controls-Popup-corner-vertical-top controls-Popup-corner-horizontal-left controls-Popup-align-horizontal-right controls-Popup-align-vertical-bottom';
-            StickyController.elementCreated(item, container);
+            Sticky.elementCreated(item, container);
             assert.equal(item.popupOptions.className, classes + ' controls-StickyTemplate-visibility-hidden');
 
-            StickyController._isVisibleTarget = () => true;
+            Sticky._isVisibleTarget = () => true;
             classes += ' controls-StickyTemplate-visibility';
-            StickyController.elementUpdated(item, container);
+            Sticky.elementUpdated(item, container);
             assert.equal(item.popupOptions.className, classes);
 
-            StickyController._isVisibleTarget = () => false;
+            Sticky._isVisibleTarget = () => false;
             classes += ' controls-StickyTemplate-visibility-hidden';
-            StickyController.elementUpdated(item, container);
+            Sticky.elementUpdated(item, container);
             assert.equal(item.popupOptions.className, classes);
          });
 
