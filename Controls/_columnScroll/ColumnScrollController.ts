@@ -141,7 +141,7 @@ export default class ColumnScrollController {
             this._currentScrollDirection = this._scrollPosition > newScrollPosition ? 'backward' : 'forward';
             this._scrollPosition = newScrollPosition;
             this._updateShadowState();
-            this._drawTransform(this._scrollPosition, this._options.isFullGridSupport, immediate);
+            this._drawTransform(this._scrollPosition, immediate);
         }
         return this._scrollPosition;
     }
@@ -289,7 +289,7 @@ export default class ColumnScrollController {
             if (detection.safari) {
                 this._fixSafariBug();
             }
-            this._drawTransform(0, isFullGridSupport);
+            this._drawTransform(0);
 
             newContentSize = this._contentContainer.scrollWidth;
             newContainerSize = isFullGridSupport ? this._contentContainer.offsetWidth : this._scrollContainer.offsetWidth;
@@ -320,7 +320,7 @@ export default class ColumnScrollController {
         }
 
         this._contentSizeForHScroll = isFullGridSupport ? this._contentSize - this._fixedColumnsWidth : this._contentSize;
-        this._drawTransform(this._scrollPosition, isFullGridSupport, hasSizesPreSet);
+        this._drawTransform(this._scrollPosition, hasSizesPreSet);
 
         if (!hasSizesPreSet) {
             this._toggleStickyElementsForScrollCalculation(true, originStickyDisplayValue);
@@ -464,7 +464,7 @@ export default class ColumnScrollController {
         return newHTML;
     }
 
-    private _drawTransform(position: number, isFullGridSupport: boolean, immediate?: boolean): void {
+    private _drawTransform(position: number, immediate?: boolean): void {
         // This is the fastest synchronization method scroll position and cell transform.
         // Scroll position synchronization via VDOM is much slower.
         const newHTML = this.getColumnScrollStyles();
@@ -501,7 +501,7 @@ export default class ColumnScrollController {
 
     disableFakeRender(): void {
         this._options.useFakeRender = false;
-        this._drawTransform(this._scrollPosition, this._options.isFullGridSupport, true);
+        this._drawTransform(this._scrollPosition, true);
     }
 
     scrollByWheel(e: SyntheticEvent<WheelEvent>): number {
@@ -607,9 +607,9 @@ export default class ColumnScrollController {
     }
 
     shouldDrawColumnScroll(viewContainers, getFixedPartWidth, isFullGridSupport: boolean): IShouldDrawColumnScrollResult {
-        this._drawTransform(0, isFullGridSupport, true);
+        this._drawTransform(0, true);
         const res = ColumnScrollController.shouldDrawColumnScroll(viewContainers, getFixedPartWidth, isFullGridSupport);
-        this._drawTransform(this._scrollPosition, isFullGridSupport, true);
+        this._drawTransform(this._scrollPosition, true);
 
         return res;
     }

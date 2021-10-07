@@ -132,6 +132,7 @@ const createColumnScroll = (self: TColumnScrollViewMixin, options: IAbstractView
         backgroundStyle: options.backgroundStyle || 'default',
         isEmptyTemplateShown: !!options.needShowEmptyTemplate,
         transformSelector: self._$columnScrollSelector,
+        columnScrollViewMode: options.columnScrollViewMode || 'scrollBar',
         getFixedPartWidth: () => getFixedPartWidth(self._children.gridWrapper, getViewHeader(self)),
         containers: {
             scrollContainer: self._children.gridWrapper,
@@ -318,13 +319,18 @@ const recalculateSizes = (self: TColumnScrollViewMixin, viewOptions, calcedSizes
     const wasUpdated = self._$columnScrollController.updateSizes(calcedSizes);
 
     if (wasUpdated) {
-        const {contentSizeForHScroll, scrollWidth, containerSize} = self._$columnScrollController.getSizes();
+        const {contentSizeForHScroll, scrollWidth, containerSize, contentSize} = self._$columnScrollController.getSizes();
         const scrollPosition = self._$columnScrollController.getScrollPosition();
 
         self._$columnScrollEmptyViewMaxWidth = containerSize;
 
         // Установка размеров и позиции в скроллбар
-        self._children.horizontalScrollBar.setSizes({contentSize: contentSizeForHScroll, scrollWidth, scrollPosition});
+        self._children.horizontalScrollBar.setSizes({
+            contentSize: contentSizeForHScroll,
+            maxScrollPosition: contentSize - containerSize,
+            scrollWidth,
+            scrollPosition
+        });
 
         // Установка размеров и позиции в контроллер скроллирования мышью
         if (self._$dragScrollController) {
@@ -479,6 +485,10 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
 
         if (this._options.stickyColumnsCount !== newOptions.stickyColumnsCount) {
             this.getListModel().setStickyColumnsCount(newOptions.stickyColumnsCount);
+        }
+
+        if (this._options.columnScrollViewMode !== newOptions.columnScrollViewMode) {
+            this.getListModel().setColumnScrollViewMode(newOptions.columnScrollViewMode || 'scrollBar');
         }
     },
 
