@@ -141,9 +141,11 @@ export default abstract class
 
     private _notifyChanges(): void {
         const controller = this._lookupController;
-        const newSelectedkeys = controller.getSelectedKeys();
-        const selectedKeysDiff = ArrayUtil.getArrayDifference(this._getSelectedKeys(this._options), newSelectedkeys);
-        this._notify('selectedKeysChanged', [newSelectedkeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
+        const newSelectedKeys = controller.getSelectedKeys();
+        const {added, removed} = ArrayUtil.getArrayDifference(this._getSelectedKeys(this._options), newSelectedKeys);
+        if (added?.length || removed?.length) {
+            this._notify('selectedKeysChanged', [newSelectedKeys, added, removed]);
+        }
         this._notify('itemsChanged', [controller.getItems()]);
         this._notify('textValueChanged', [controller.getTextValue()]);
     }
