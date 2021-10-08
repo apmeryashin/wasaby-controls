@@ -156,9 +156,16 @@ class DimensionsMeasurer {
      * Получение значения зума для html элемента с учетом того, что zoom может лежать не на одном родительском элементе
      * @param element
      */
-    getZoomValue(element: HTMLElement = document?.body): number {
+    getZoomValue(element?: HTMLElement): number {
+        let node = element;
+        if (!constants.isBrowserPlatform) {
+            return 1;
+        }
+        if (!(element instanceof HTMLElement)) {
+            node = document.body;
+        }
         let zoomValue = DEFAULT_ZOOM_VALUE;
-        let zoomElement = element.closest(`.${ZOOM_CLASS}`);
+        let zoomElement = node.closest(`.${ZOOM_CLASS}`);
         while (zoomElement) {
             const parentZoomValue = window?.getComputedStyle(zoomElement)?.zoom;
             if (parentZoomValue) {
