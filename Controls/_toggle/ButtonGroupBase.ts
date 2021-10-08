@@ -1,6 +1,6 @@
 import {Control, IControlOptions} from 'UI/Base';
 import {Model} from 'Types/entity';
-import {ISingleSelectableOptions, IItemsOptions} from 'Controls/interface';
+import {ISingleSelectableOptions, IItemsOptions, IHeightOptions} from 'Controls/interface';
 import * as itemTemplate from 'wml!Controls/_toggle/ButtonGroup/itemTemplate';
 import {IItemTemplateOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -9,8 +9,9 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 
 export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlOptions, IItemsOptions<object>,
-    IItemTemplateOptions {
+    IItemTemplateOptions, IHeightOptions {
     allowEmptySelection?: boolean;
+    direction?: string;
 }
 
 /**
@@ -18,6 +19,19 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * @cfg {Boolean} Использование единичного выбора с возможностью сбросить значение.
  * @default false
  * @demo Controls-demo/toggle/ButtonGroup/AllowEmptySelection/Index
+ */
+
+/**
+ * @name Controls/_toggle/ButtonGroupBase#direction
+ * @cfg {string} Расположение элементов в контейнере.
+ * @variant horizontal Элементы расположены один за другим (горизонтально).
+ * @variant vertical Элементы расположены один под другим (вертикально).
+ * @default vertical
+ * @example
+ * Вертикальная ориентация.
+ * <pre>
+ *    <Controls.toggle:Chips direction="vertical"/>
+ * </pre>
  */
 
 /**
@@ -31,7 +45,7 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * @author Красильников А.С.
  */
 
-class ButtonGroupBase extends Control<IButtonGroupOptions> {
+class ButtonGroupBase<TOptions extends IButtonGroupOptions = IButtonGroupOptions> extends Control<TOptions> {
 
     protected _getIconStyle(item: Model): string {
         if (this._isSelectedItem(item)) {
@@ -54,13 +68,12 @@ class ButtonGroupBase extends Control<IButtonGroupOptions> {
         }
     }
 
-    static getDefaultOptions(): IButtonGroupOptions {
-        return {
-            keyProperty: 'id',
-            allowEmptySelection: false,
-            itemTemplate
-        };
-    }
+    static defaultProps: Partial<IButtonGroupOptions> = {
+        keyProperty: 'id',
+        allowEmptySelection: false,
+        itemTemplate,
+        inlineHeight: 'm'
+    };
 }
 
 export default ButtonGroupBase;

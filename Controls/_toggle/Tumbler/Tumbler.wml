@@ -1,5 +1,7 @@
 <div class="controls_toggle_theme-{{_options.theme}} controls-Tumbler">
-    <div class="controls-Tumbler__wrapper controls-inlineheight-{{_options.inlineHeight}}" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()">
+    <div class="controls-Tumbler__wrapper
+    controls-Tumbler__wrapper_{{_options.direction}}
+     {{_options.direction === 'horizontal' ? 'controls-inlineheight-'+_options.inlineHeight}}" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()">
         <ws:for data="index, itemData in _options.items">
             <div class="controls-Tumbler__button
                         controls-Tumbler__button-{{_options.inlineHeight}}
@@ -17,7 +19,6 @@
             </div>
         </ws:for>
         <div class="controls-Tumbler__button-background controls-Tumbler__button-{{_options.inlineHeight}}"
-             style="width:{{_backgroundPosition[_options.selectedKey].width}}px;
-             left:{{_backgroundPosition[_options.selectedKey].left}}px;"></div>
+             style="{{_getButtonBackgroundStyle()}}"></div>
     </div>
 </div>
