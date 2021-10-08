@@ -105,7 +105,15 @@ class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, 
             ]),
             iconStyle: EntityDescriptor(String).oneOf([
                 'primary',
-                'secondary'
+                'secondary',
+                'success',
+                'warning',
+                'danger',
+                'info',
+                'label',
+                'default',
+                'contrast',
+                'unaccented'
             ]),
             iconSize: EntityDescriptor(String).oneOf([
                 's',
