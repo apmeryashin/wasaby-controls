@@ -27,8 +27,8 @@ import {EnumeratorCallback, RecordSet} from 'Types/collection';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {create} from 'Types/di';
 
-type THeaderVisibility = 'visible' | 'hasdata';
-type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
+export type THeaderVisibility = 'visible' | 'hasdata';
+export type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
 
 export type ISortItem = { [p: string]: string };
 
