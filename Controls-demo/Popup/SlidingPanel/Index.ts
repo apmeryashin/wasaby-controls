@@ -15,7 +15,8 @@ class Index extends Control<IControlOptions> {
     protected _desktopMode: string[] = ['stack'];
     protected _desktopWidth: number = 900;
     protected _stepsCount: number = 5;
-    protected _heightList: number = [400, 600, 800, 1000, 1200];
+    protected _heightList: number[] = [300, 400, 500, 600, 700];
+    protected _autoHeight: boolean = false;
     protected _modal: boolean = false;
     protected _desktopModeSource: Memory = new Memory({
         keyProperty: 'id',
@@ -73,7 +74,8 @@ class Index extends Control<IControlOptions> {
                 minHeight: this._minHeight,
                 maxHeight: this._maxHeight,
                 position: this._position[0],
-                heightList: this._heightList
+                heightList: this._heightList,
+                autoHeight: this._autoHeight
             },
             dialogOptions: {
                 width: this._desktopWidth
