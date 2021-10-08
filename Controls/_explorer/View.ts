@@ -34,7 +34,6 @@ import {ItemsEntity} from 'Controls/dragnDrop';
 import {TBreadcrumbsVisibility, TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
 import {TreeControl} from 'Controls/tree';
 import {IEditableList} from 'Controls/list';
-import 'css!Controls/tile';
 import 'css!Controls/explorer';
 import { isFullGridSupport } from 'Controls/display';
 import PathController from 'Controls/_explorer/PathController';
