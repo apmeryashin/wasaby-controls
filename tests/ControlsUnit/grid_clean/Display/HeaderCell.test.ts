@@ -19,6 +19,7 @@ describe('Controls/grid_clean/Display/HeaderCell', () => {
 
     describe('Controls/grid_clean/Display/HeaderCell/getWrapperClasses', () => {
         let hasColumnScroll;
+        let columnScrollViewMode;
 
         const headerConfig = [{}, {}];
         const columnsConfig = [{}, {}];
@@ -29,6 +30,7 @@ describe('Controls/grid_clean/Display/HeaderCell', () => {
                 getHeaderConfig: () => headerConfig,
                 isFullGridSupport: () => true,
                 hasColumnScroll: () => hasColumnScroll,
+                getColumnScrollViewMode: () => columnScrollViewMode,
                 getLeftPadding: () => 'default',
                 getRightPadding: () => 'default',
                 getColumnIndex: () => 1,
@@ -49,6 +51,12 @@ describe('Controls/grid_clean/Display/HeaderCell', () => {
         it('with column scroll', () => {
             hasColumnScroll = true;
             cAssert.notInclude(cell.getWrapperClasses(), 'controls-Grid__header-cell_min-width');
+        });
+
+        it('with column scroll and arrows scroll mode', () => {
+            hasColumnScroll = true;
+            columnScrollViewMode = 'arrowButtons';
+            cAssert.include(cell.getWrapperClasses(), 'controls-Grid__header-cell_withColumnScrollArrows');
         });
     });
 });

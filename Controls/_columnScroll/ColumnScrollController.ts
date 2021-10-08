@@ -3,6 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {detection} from 'Env/Env';
 import {IContainers as IStyleContainers} from './StyleContainers/StyleContainers';
 import {Logger} from 'UI/Utils';
+import {IScrollBarOptions} from './ScrollBar/ScrollBar';
 
 export interface IControllerOptions {
     stickyColumnsCount?: number;
@@ -11,6 +12,7 @@ export interface IControllerOptions {
     stickyLadderCellsCount?: number;
     getFixedPartWidth: () => number;
     useFakeRender?: boolean;
+    columnScrollViewMode: IScrollBarOptions['mode'];
 
     transformSelector?: string;
     backgroundStyle?: string;
@@ -124,8 +126,8 @@ export default class ColumnScrollController {
      * @param newPosition Новая позиция скролла
      * @public
      */
-    setScrollPosition(newPosition: number, immediate?: boolean): number {
-        return this._setScrollPosition(newPosition, immediate);
+    setScrollPosition(newPosition: number, immediate?: boolean, useAnimation?: boolean): number {
+        return this._setScrollPosition(newPosition, immediate, useAnimation);
     }
 
     /**
@@ -135,13 +137,20 @@ export default class ColumnScrollController {
      * @param newPosition Новая позиция скролла
      * @private
      */
-    private _setScrollPosition(newPosition: number, immediate?: boolean): number {
+    private _setScrollPosition(newPosition: number, immediate?: boolean, useAnimation?: boolean): number {
         const newScrollPosition = Math.round(newPosition);
         if (this._scrollPosition !== newScrollPosition) {
+            const oldScrollPosition = this._scrollPosition;
+            const oldShadowState = {...this._shadowState};
             this._currentScrollDirection = this._scrollPosition > newScrollPosition ? 'backward' : 'forward';
             this._scrollPosition = newScrollPosition;
             this._updateShadowState();
-            this._drawTransform(this._scrollPosition, immediate);
+            this._drawTransform(this._scrollPosition, immediate, {
+                oldPosition: oldScrollPosition,
+                oldShadowState,
+                useAnimation,
+                animationState: 'begin'
+            });
         }
         return this._scrollPosition;
     }
@@ -149,6 +158,12 @@ export default class ColumnScrollController {
     setIsEmptyTemplateShown(newState: boolean): void {
         if (this._options.isEmptyTemplateShown !== newState) {
             this._options.isEmptyTemplateShown = newState;
+        }
+    }
+
+    setColumnScrollViewMode(newState: IScrollBarOptions['mode']): void {
+        if (this._options.columnScrollViewMode !== newState) {
+            this._options.columnScrollViewMode = newState;
         }
     }
 
@@ -391,7 +406,11 @@ export default class ColumnScrollController {
 
     //#endregion
 
-    getTransformStyles(position = this._scrollPosition): string {
+    getTransformStyles(position: number = this._scrollPosition, options: {
+        oldPosition?: number;
+        useAnimation?: boolean;
+        animationState?: 'begin' | 'end'
+    } = {}): string {
         const isFullGridSupport = this._options.isFullGridSupport;
         const transformSelector = this._transformSelector;
         let newTransformHTML = '';
@@ -399,28 +418,67 @@ export default class ColumnScrollController {
         // Горизонтальный скролл передвигает всю таблицу, но компенсирует скролл для некоторых ячеек, например для
         // зафиксированных ячеек
 
-        // Скроллируется таблица
-        newTransformHTML += `.${transformSelector}>.${JS_SELECTORS.CONTENT} {transform: translateX(${-position}px);}`;
+        if (options.useAnimation && options.animationState === 'begin') {
+            const ANIMATION_DURATION = '0.4s';
+            const scrollAnimationId = 'scrollAnimation';
+            const compensationAnimationId = 'compensationAnimation';
 
-        // Не скроллируем зафиксированные элементы
-        newTransformHTML += `.${transformSelector} .${JS_SELECTORS.FIXED_ELEMENT} {transform: translateX(${position}px);}`;
+            newTransformHTML += `@keyframes ${scrollAnimationId} { from { transform: translateX(-${options.oldPosition}px); } to { transform: translateX(-${position}px); } }`;
+            newTransformHTML += `@keyframes ${compensationAnimationId} { from { transform: translateX(${options.oldPosition}px); } to { transform: translateX(${position}px); } }`;
+
+            // Скроллируется таблица
+            newTransformHTML += `.${transformSelector}>.${JS_SELECTORS.CONTENT} { animation-duration: ${ANIMATION_DURATION}; animation-name: ${scrollAnimationId}; }`;
+
+            // Не скроллируем зафиксированные элементы
+            newTransformHTML += `.${transformSelector} .${JS_SELECTORS.FIXED_ELEMENT} { animation-duration: ${ANIMATION_DURATION}; animation-name: ${compensationAnimationId}; }`;
+
+            // Не скроллируем операции над записью
+            if (isFullGridSupport) {
+                // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
+                // table-layout скроллбар лежит вне таблицы
+                newTransformHTML += `.${transformSelector} .js-controls-GridView__emptyTemplate {animation-duration: ${ANIMATION_DURATION}; animation-name: ${compensationAnimationId};}`;
+
+                // Не верьте эмулятору в хроме! Safari (12.1, 13) считает координаты иначе, чем другие браузеры
+                // и для него не нужно делать transition.
+                if (!detection.safari) {
+                    newTransformHTML += `.${transformSelector} .controls-Grid__itemAction {animation-duration: ${ANIMATION_DURATION}; animation-name: ${compensationAnimationId};}`;
+                }
+            }
+
+            this._contentContainer.onanimationend = () => {
+                this._drawTransform(position, false, {
+                    useAnimation: true,
+                    animationState: 'end'
+                });
+            };
+        } else {
+            // Скроллируется таблица
+            newTransformHTML += `.${transformSelector}>.${JS_SELECTORS.CONTENT} {transform: translateX(${-position}px);}`;
+
+            // Не скроллируем зафиксированные элементы
+            newTransformHTML += `.${transformSelector} .${JS_SELECTORS.FIXED_ELEMENT} {transform: translateX(${position}px);}`;
+
+            // Не скроллируем операции над записью
+            if (isFullGridSupport) {
+                // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
+                // table-layout скроллбар лежит вне таблицы
+                newTransformHTML += `.${transformSelector} .js-controls-GridView__emptyTemplate {transform: translateX(${position}px);}`;
+
+                // Не верьте эмулятору в хроме! Safari (12.1, 13) считает координаты иначе, чем другие браузеры
+                // и для него не нужно делать transition.
+                if (!detection.safari) {
+                    newTransformHTML += `.${transformSelector} .controls-Grid__itemAction {transform: translateX(${position}px);}`;
+                }
+            }
+        }
 
         // скроллируем индикаторы загрузки
         const indicatorPosition = position + this._containerSize / 2;
         newTransformHTML += `.${transformSelector} .controls-BaseControl__loadingIndicator {width: fit-content; transform: translateX(${indicatorPosition}px);}`;
 
-        // Не скроллируем операции над записью
-        if (isFullGridSupport) {
-            // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
-            // table-layout скроллбар лежит вне таблицы
-            newTransformHTML += `.${transformSelector} .js-controls-GridView__emptyTemplate {transform: translateX(${position}px);}`;
-
-            // Не верьте эмулятору в хроме! Safari (12.1, 13) считает координаты иначе, чем другие браузеры
-            // и для него не нужно делать transition.
-            if (!detection.safari) {
-                newTransformHTML += `.${transformSelector} .controls-Grid__itemAction {transform: translateX(${position}px);}`;
-            }
-        } else {
+        // Не скроллируем операции над записью и не анимируем пока не перешли на нативный скролл.
+        // Отсутствие анимации в реальном кейсе почти невозможно заметить.
+        if (!isFullGridSupport) {
             const maxVisibleScrollPosition = position - (this._contentSize - this._containerSize);
             newTransformHTML += ` .${transformSelector} .controls-Grid-table-layout__itemActions__container {transform: translateX(${maxVisibleScrollPosition}px);}`;
         }
@@ -451,10 +509,17 @@ export default class ColumnScrollController {
         return newHTML;
     }
 
-    getShadowsStyles(): string {
+    getShadowsStyles(options = {}): string {
+        if (options.useAnimation && options.animationState === 'begin') {
+            const isShadowShown = !options.oldShadowState['start'] && this._shadowState['start'] ||
+                                  !options.oldShadowState['end'] && this._shadowState['end'];
+            if (!isShadowShown) {
+                return this._shadowsStylesContainer.innerHTML;
+            }
+        }
+
         const transformSelector = this._transformSelector;
         let newHTML = '';
-
         // Обновление теней не должно вызывать перерисовку
         if (!this._options.useFakeRender) {
             newHTML += `.${transformSelector}>.js-controls-ColumnScroll__shadows .js-controls-ColumnScroll__shadow_position-start {${this.getShadowStyles('start')}}`;
@@ -464,12 +529,12 @@ export default class ColumnScrollController {
         return newHTML;
     }
 
-    private _drawTransform(position: number, immediate?: boolean): void {
+    private _drawTransform(position: number, immediate?: boolean, params?): void {
         // This is the fastest synchronization method scroll position and cell transform.
         // Scroll position synchronization via VDOM is much slower.
         const newHTML = this.getColumnScrollStyles();
-        const newTransformHTML = this.getTransformStyles(position);
-        const newShadowsHTML = this.getShadowsStyles();
+        const newTransformHTML = this.getTransformStyles(position, params);
+        const newShadowsHTML = this.getShadowsStyles(params);
 
         if (
             this._stylesContainer.innerHTML !== newHTML ||

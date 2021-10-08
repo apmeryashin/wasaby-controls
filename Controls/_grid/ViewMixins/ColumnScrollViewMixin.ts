@@ -299,9 +299,9 @@ const scrollToColumnEdge = (self): void => {
     }
 };
 
-const setScrollPosition = (self: TColumnScrollViewMixin, position: number, immediate?: boolean): void => {
+const setScrollPosition = (self: TColumnScrollViewMixin, position: number, immediate?: boolean, useAnimation?: boolean): void => {
     const oldScrollPosition = self._$columnScrollController.getScrollPosition();
-    const newPosition = self._$columnScrollController.setScrollPosition(position, immediate);
+    const newPosition = self._$columnScrollController.setScrollPosition(position, immediate, useAnimation);
     if (oldScrollPosition !== newPosition) {
         self._children.horizontalScrollBar.setScrollPosition(newPosition);
         if (self._$dragScrollController) {
@@ -488,6 +488,9 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         }
 
         if (this._options.columnScrollViewMode !== newOptions.columnScrollViewMode) {
+            if (this._$columnScrollController) {
+                this._$columnScrollController.setColumnScrollViewMode(newOptions.columnScrollViewMode);
+            }
             this.getListModel().setColumnScrollViewMode(newOptions.columnScrollViewMode || 'scrollBar');
         }
     },
@@ -687,7 +690,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         if (!this._$columnScrollController) {
             throw Error(ERROR_MESSAGES.CALLED_POSITION_CHANGE_HANDLER);
         }
-        setScrollPosition(this, newScrollPosition);
+        setScrollPosition(this, newScrollPosition, false, this._options.columnScrollViewMode === 'arrowButtons');
     },
 
     _onColumnScrollThumbDragEnd(e: SyntheticEvent<null>): void {

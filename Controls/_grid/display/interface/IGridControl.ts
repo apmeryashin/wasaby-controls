@@ -342,6 +342,20 @@ export interface IGridControl extends IList {
  */
 
 /**
+ * @typedef {String} Controls/_grid/display/interface/IGridControl/TColumnScrollViewMode
+ * @description Допустимые значения для опции {@link columnScrollViewMode}.
+ * @variant scrollBar Прокрутка с помощью скроллбара.
+ * @variant arrowButtons Прокрутка с помощью стрелок навигации.
+ */
+
+/**
+ * @name Controls/_grid/display/interface/IGridControl#columnScrollViewMode
+ * @cfg {Controls/_grid/display/interface/IGridControl/TColumnScrollViewMode.typedef} Режим отображения {@link /doc/platform/developmentapl/interface-development/controls/list/grid/horizontal-scrolling/ горизонтальной прокрутки} колонок в таблице.
+ * @default scrollBar
+ * @see columnScroll
+ */
+
+/**
  * @name Controls/_grid/display/interface/IGridControl#stickyColumnsCount
  * @cfg {Number} Количество зафиксированных колонок, которые не двигаются при {@link /doc/platform/developmentapl/interface-development/controls/list/grid/horizontal-scrolling/ горизонтальной прокрутке}.
  * @default 1
