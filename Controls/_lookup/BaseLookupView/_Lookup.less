@@ -144,7 +144,12 @@
 
 .controls-Lookup__showSelector {
   .icon(var(--trigger_icon-size_lookupInput));
-  color: var(--trigger_icon-color_lookupInput);
+  fill: var(--trigger_icon-color_lookupInput);
+}
+
+.controls-Lookup__showSelector:hover,
+.controls-Lookup__showSelector:active {
+  fill: var(--trigger_hover_icon-color_lookupInput);
 }
 
 .controls-Lookup__showSelector_horizontalPadding-xs {
@@ -152,13 +157,7 @@
 }
 
 .controls-Lookup__showSelector_horizontalPadding-null {
-  padding: var(--trigger_padding_lookupInput) 0 var(--trigger_padding_lookupInput) var(--trigger_padding_lookupInput);
-}
-
-.ws-is-hover {
-  .controls-Lookup__showSelector:hover {
-    color: var(--trigger_hover_icon-color_lookupInput);
-  }
+  padding: var(--trigger_padding_lookupInput) 0 0 var(--trigger_padding_lookupInput);
 }
 
 .controls-Lookup__showSelector:active {
