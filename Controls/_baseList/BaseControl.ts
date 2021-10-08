@@ -3873,7 +3873,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
 
-        if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
+        if (loadStarted) {
             this._displayGlobalIndicator();
         }
 
