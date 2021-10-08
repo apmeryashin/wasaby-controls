@@ -1,6 +1,5 @@
 import {debounce} from 'Types/function';
 import {
-    getGapFixSize,
     IFixedEventData,
     isHidden,
     MODE,
@@ -637,12 +636,6 @@ class StickyHeaderController {
         for (let headerId: number of headersStack) {
             headerInst = this._headers[headerId].inst;
             let headerOffset = this._getHeaderOffsetByContainer(contentContainer, headerId, position);
-            // При расчете отступа стики хедера от скролл контейнера нужно учитывать костыльный отступ getGapFixSize.
-            // Но метод можен быть вызван еще до того, как стили с отступами успели навесится на заголовок.
-            // Будет считать заголовок изначально закрпленным, если его высота равна getGapFixSize;
-            if (headerOffset === getGapFixSize()) {
-                headerOffset = 0;
-            }
             if (headerOffset !== 0) {
                 // При расчете высоты заголовка, мы учитываем devicePixelRatio. Нужно его учитывать и здесь, иначе
                 // расчеты не сойдутся. Делайем это только если headerOffset не равен нулю, т.е. после первой итерации.

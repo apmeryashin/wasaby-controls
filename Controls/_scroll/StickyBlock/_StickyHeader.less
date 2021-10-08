@@ -75,7 +75,8 @@
 // Делаем заголовки внахлёст на 1px.
 
 .controls-StickyBlock__subpixelFix-default,
-.controls-StickyBlock__subpixelFix-listItem {
+.controls-StickyBlock__subpixelFix-listItem,
+.controls-StickyBlock__subpixelFix-stack {
    box-shadow: -1px 0 0 0 var(--background-color);
 }
 
@@ -103,10 +104,6 @@
    box-shadow: -1px 0 0 0 var(--info_background-color);
 }
 
-.controls-StickyBlock__subpixelFix-stack {
-   box-shadow: -1px 0 0 0 var(--background-color);
-}
-
 .controls-StickyBlock__subpixelFix-master {
    box-shadow: -1px 0 0 0 var(--master_item_background-color_list);
 }
@@ -124,3 +121,55 @@
 }
 
 /* endregion Sub-Pixel Fix */
+
+/* region Mobile Safari Gap Fix */
+
+// В Safari на iOS могут появляться щели между стики блоками. Делаем заголовки внахлёст на 1px.
+
+.controls-StickyBlock__mobileSafariGap-default,
+.controls-StickyBlock__mobileSafariGap-listItem,
+.controls-StickyBlock__mobileSafariGap-stack {
+   box-shadow: 0 -1px 0 0 var(--background-color);
+}
+
+.controls-StickyBlock__mobileSafariGap-primary {
+   box-shadow: 0 -1px 0 0 var(--primary_background-color);
+}
+
+.controls-StickyBlock__mobileSafariGap-secondary {
+   box-shadow: 0 -1px 0 0 var(--secondary_background-color);
+}
+
+.controls-StickyBlock__mobileSafariGap-danger {
+   box-shadow: 0 -1px 0 0 var(--danger_background-color);
+}
+
+.controls-StickyBlock__mobileSafariGap-success {
+   box-shadow: 0 -1px 0 0 var(--success_background-color);
+}
+
+.controls-StickyBlock__mobileSafariGap-warning {
+   box-shadow: 0 -1px 0 0 var(--warning_background-color);
+}
+
+.controls-StickyBlock__mobileSafariGap-info {
+   box-shadow: 0 -1px 0 0 var(--info_background-color);
+}
+
+.controls-StickyBlock__mobileSafariGap-master {
+   box-shadow: 0 -1px 0 0 var(--master_item_background-color_list);
+}
+
+.controls-StickyBlock__mobileSafariGap-infoBox {
+   box-shadow: 0 -1px 0 0 var(--background-color_infobox);
+}
+
+.controls-StickyBlock__mobileSafariGap-detailContrast {
+   box-shadow: 0 -1px 0 0 var(--detail_contrast_background-color_masterDetail);
+}
+
+.controls-StickyBlock__mobileSafariGap-stackHeader {
+   box-shadow: 0 -1px 0 0 var(--header_background-color_stack);
+}
+
+/* endregion Mobile Safari Gap Fix */

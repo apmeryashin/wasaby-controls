@@ -8,7 +8,6 @@ import {
     IOffset,
     IFixedEventData,
     TRegisterEventData,
-    getGapFixSize,
     SHADOW_VISIBILITY_BY_CONTROLLER,
     MODE
 } from 'Controls/_scroll/StickyBlock/Utils';
@@ -94,11 +93,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
-        let offset: number = getOffset(parentElement, this._container, position);
-        if (this._fixed) {
-            offset += getGapFixSize();
-        }
-        return offset;
+        return getOffset(parentElement, this._container, position);
     }
 
     resetSticky(): void {
