@@ -84,7 +84,7 @@ export default class extends Control {
     private _itemsDragNDrop: boolean = false;
     private _scrollToColumnIdx?: number;
     private _multiSelectVisibility: 'visible' | 'hidden' = 'hidden';
-    private _columnScrollViewMode?: 'scrollBar' | 'arrowButtons';
+    private _columnScrollViewMode?: 'scrollbar' | 'arrows';
 
     protected _beforeMount(): void {
         this._columns[2].width = '1fr';

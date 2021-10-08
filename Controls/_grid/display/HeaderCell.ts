@@ -239,7 +239,7 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
-            if (this._$owner.getColumnScrollViewMode() === 'arrowButtons') {
+            if (this._$owner.getColumnScrollViewMode() === 'arrows') {
                 wrapperClasses += ' controls-Grid__header-cell_withColumnScrollArrows';
             }
         }

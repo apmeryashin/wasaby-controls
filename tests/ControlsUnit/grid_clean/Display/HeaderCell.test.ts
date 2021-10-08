@@ -55,7 +55,7 @@ describe('Controls/grid_clean/Display/HeaderCell', () => {
 
         it('with column scroll and arrows scroll mode', () => {
             hasColumnScroll = true;
-            columnScrollViewMode = 'arrowButtons';
+            columnScrollViewMode = 'arrows';
             cAssert.include(cell.getWrapperClasses(), 'controls-Grid__header-cell_withColumnScrollArrows');
         });
     });

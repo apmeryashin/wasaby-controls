@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_columnScroll/ScrollBar/ScrollBar';
 import {JS_SELECTORS} from './../ColumnScrollController';
 
-export type TScrollBarViewMode = 'scrollBar' | 'arrowButtons';
+export type TScrollBarViewMode = 'scrollbar' | 'arrows';
 
 export interface IScrollBarOptions extends IControlOptions {
     stickyHeader?: boolean;
@@ -23,7 +23,7 @@ export default class ScrollBar extends Control<IScrollBarOptions> {
     private readonly _fixedClass = JS_SELECTORS.FIXED_ELEMENT;
 
     private _isArrowsMode(): boolean {
-        return !this._options.mode || this._options.mode === 'arrowButtons';
+        return !this._options.mode || this._options.mode === 'arrows';
     }
 
     /*

@@ -344,8 +344,8 @@ export interface IGridControl extends IList {
 /**
  * @typedef {String} Controls/_grid/display/interface/IGridControl/TColumnScrollViewMode
  * @description Допустимые значения для опции {@link columnScrollViewMode}.
- * @variant scrollBar Прокрутка с помощью скроллбара.
- * @variant arrowButtons Прокрутка с помощью стрелок навигации.
+ * @variant scrollbar Прокрутка с помощью скроллбара.
+ * @variant arrows Прокрутка с помощью стрелок навигации.
  */
 
 /**

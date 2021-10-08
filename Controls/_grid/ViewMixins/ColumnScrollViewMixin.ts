@@ -132,7 +132,7 @@ const createColumnScroll = (self: TColumnScrollViewMixin, options: IAbstractView
         backgroundStyle: options.backgroundStyle || 'default',
         isEmptyTemplateShown: !!options.needShowEmptyTemplate,
         transformSelector: self._$columnScrollSelector,
-        columnScrollViewMode: options.columnScrollViewMode || 'scrollBar',
+        columnScrollViewMode: options.columnScrollViewMode || 'scrollbar',
         getFixedPartWidth: () => getFixedPartWidth(self._children.gridWrapper, getViewHeader(self)),
         containers: {
             scrollContainer: self._children.gridWrapper,
@@ -491,7 +491,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
             if (this._$columnScrollController) {
                 this._$columnScrollController.setColumnScrollViewMode(newOptions.columnScrollViewMode);
             }
-            this.getListModel().setColumnScrollViewMode(newOptions.columnScrollViewMode || 'scrollBar');
+            this.getListModel().setColumnScrollViewMode(newOptions.columnScrollViewMode || 'scrollbar');
         }
     },
 
@@ -690,7 +690,7 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
         if (!this._$columnScrollController) {
             throw Error(ERROR_MESSAGES.CALLED_POSITION_CHANGE_HANDLER);
         }
-        setScrollPosition(this, newScrollPosition, false, this._options.columnScrollViewMode === 'arrowButtons');
+        setScrollPosition(this, newScrollPosition, false, this._options.columnScrollViewMode === 'arrows');
     },
 
     _onColumnScrollThumbDragEnd(e: SyntheticEvent<null>): void {

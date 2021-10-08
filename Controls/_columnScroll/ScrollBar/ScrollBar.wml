@@ -11,7 +11,7 @@
 </ws:template>
 
 <ws:template name="SCROLLBAR_CONTENT">
-    <ws:if data="{{ !_options.mode || _options.mode === 'scrollBar' }}">
+    <ws:if data="{{ !_options.mode || _options.mode === 'scrollbar' }}">
         <Controls.scroll:_Scrollbar name="scrollbar"
                                     attr:class="js-controls-ColumnScroll__thumb controls-ColumnScroll__thumb controls-ColumnScroll__thumbWrapper"
                                     position="{{_position}}"

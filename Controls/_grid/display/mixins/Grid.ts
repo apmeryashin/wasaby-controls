@@ -716,7 +716,7 @@ Object.assign(Grid.prototype, {
     _$resultsTemplate: null,
     _$colspanGroup: true,
     _$columnScroll: false,
-    _$columnScrollViewMode: 'scrollBar',
+    _$columnScrollViewMode: 'scrollbar',
     _$stickyColumnsCount: 1,
     _$sorting: null,
     _$emptyTemplateColumns: null,
