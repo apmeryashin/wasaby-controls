@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as controlTemplate from 'wml!Controls-demo/Search/Base/Index';
+import * as controlTemplate from 'wml!Controls-demo/Search/Browser/Base/Index';
 import {Memory} from 'Types/source';
 import * as memorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 
