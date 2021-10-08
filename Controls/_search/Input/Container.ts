@@ -122,8 +122,8 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _valueChanged(event: SyntheticEvent, value: string): void {
       if (this._value !== value) {
          this._value = value;
-         this._getSearchResolverController().resolve(value);
          this._notify('inputSearchValueChanged', [value], {bubbling: true});
+         this._getSearchResolverController().resolve(value);
       }
    }
 
