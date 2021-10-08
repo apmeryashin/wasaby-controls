@@ -48,6 +48,10 @@ export default class TabButtonsDemo extends Control {
             keyProperty: 'id',
             rawData: data.getItems8()
         });
+        this._items9 = new RecordSet({
+            keyProperty: 'id',
+            rawData: data.getItems9()
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Tabs/Buttons/Buttons', 'Controls-demo/Controls-demo'];
