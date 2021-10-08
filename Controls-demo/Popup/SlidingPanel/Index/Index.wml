@@ -20,27 +20,31 @@
       <div class="ControlDemo__SlidingPanel-setting">
          <Controls.input:Label caption="position"/>
          <Controls.dropdown:Selector
-            keyProperty="id"
-            displayProperty="id"
-            source="{{_positionSource}}"
-            bind:selectedKeys="_position"/>
+                 keyProperty="id"
+                 displayProperty="id"
+                 source="{{_positionSource}}"
+                 bind:selectedKeys="_position"/>
+      </div>
+      <div class="ControlDemo__SlidingPanel-setting">
+         <Controls.input:Label caption="Шаблон: "/>
+         <Controls.dropdown:Selector
+                 keyProperty="id"
+                 displayProperty="title"
+                 source="{{_templateSource}}"
+                 bind:selectedKeys="_popupTemplate"/>
       </div>
       <div class="ControlDemo__SlidingPanel-setting">
          <Controls.input:Label caption="desktopMode"/>
          <Controls.dropdown:Selector
-            keyProperty="id"
-            displayProperty="id"
-            on:selectedKeysChanged="_selectedModeChanged()"
-            source="{{_desktopModeSource}}"
-            bind:selectedKeys="_desktopMode"/>
+                 keyProperty="id"
+                 displayProperty="id"
+                 on:selectedKeysChanged="_selectedModeChanged()"
+                 source="{{_desktopModeSource}}"
+                 bind:selectedKeys="_desktopMode"/>
       </div>
       <div class="ControlDemo__SlidingPanel-setting">
          <Controls.input:Label caption="desktop popup width"/>
          <Controls.input:Number bind:value="_desktopWidth"/>
-      </div>
-      <div class="ControlDemo__SlidingPanel-setting">
-         <Controls.input:Label caption="autoHeight"/>
-         <Controls.toggle:Switch bind:value="_autoHeight"/>
       </div>
       <div class="ControlDemo__SlidingPanel-setting">
          <Controls.input:Label caption="heightList"/>
