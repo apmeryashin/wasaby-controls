@@ -60,9 +60,11 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
         backgroundColorStyle: string = this._$column.backgroundColorStyle,
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
-        tmplIsEditable: boolean = true
+        tmplIsEditable: boolean = true,
+        templateHoverBackgroundStyle?: string
     ): string {
-        let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover);
+        let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover,
+            tmplIsEditable, templateHoverBackgroundStyle);
 
         if (this._$owner.isAnimatedForSelection()) {
             classes += ' controls-ListView__item_rightSwipeAnimation';
@@ -98,7 +100,8 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
         templateHighlightOnHover?: boolean,
         templateHoverBackgroundStyle?: string
     ): string {
-        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
+        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover,
+            templateHoverBackgroundStyle);
 
         if (this.isFirstColumn()) {
             classes += ` controls-Grid__row-cell__first-${this.getStyle()}`;

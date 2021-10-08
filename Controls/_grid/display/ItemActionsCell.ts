@@ -33,7 +33,7 @@ export default class ItemActionsCell extends Cell<null, Row<null>> implements II
             classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
             return classes;
         } else {
-            let classes = `${super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover)}`;
+            let classes = `${super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle)}`;
             classes += ' controls-Grid-table-layout__itemActions__container';
             return classes;
         }

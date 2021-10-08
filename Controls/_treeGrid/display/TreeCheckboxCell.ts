@@ -12,7 +12,8 @@ export default class TreeCheckboxCell<
         templateHighlightOnHover?: boolean,
         templateHoverBackgroundStyle?: string
     ): string {
-        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover);
+        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover,
+            templateHoverBackgroundStyle);
 
         if (this.getOwner().isDragTargetNode()) {
             classes += ' controls-TreeGridView__dragTargetNode controls-TreeGridView__dragTargetNode_first';

@@ -24,6 +24,7 @@
                itemActionsTemplate="{{ itemActionsTemplate }}"
                itemActionsClass="{{ itemActionsClass }}"
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
+               hoverBackgroundStyle="{{ hoverBackgroundStyle }}"
                tagTemplate="{{ gridColumn.TagCell ? tagTemplate : undefined }}"
                tagStyle="{{ gridColumn.TagCell ? tagStyle : undefined }}"
                editArrowTemplate="{{ editArrowTemplate }}">
