@@ -4307,7 +4307,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        if (this._pagingVisible) {
+        if (this._pagingVisible && this._isPagingPadding()) {
             this._updatePagingPadding();
         }
         if (this._pagingVisibilityChanged) {
