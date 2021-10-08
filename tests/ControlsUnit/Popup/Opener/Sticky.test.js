@@ -7,10 +7,11 @@ define(
       'UI/Base',
       'Core/core-clone'
    ],
-   (StickyStrategy, StickyControllerMod, PopupUtilConfig, popupLib, UIBase, cClone) => {
+   (StickyStrategy, StickyController, PopupUtilConfig, popupLib, UIBase, cClone) => {
       'use strict';
 
-      StickyController = StickyControllerMod.default;
+      const StickyControllerClass = StickyController.StickyController;
+      StickyController = StickyController.default;
       StickyStrategy = StickyStrategy.default;
 
       describe('Sticky Utils', () => {
@@ -161,7 +162,7 @@ define(
          });
 
          it('Sticky visibility classes', () => {
-            const Sticky = new StickyControllerMod.StickyController();
+            const Sticky = new StickyControllerClass();
             Sticky._isVisibleTarget = () => false;
             Sticky._isTargetVisible = () => true;
             let item = {
