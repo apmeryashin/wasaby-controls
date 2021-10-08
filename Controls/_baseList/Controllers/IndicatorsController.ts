@@ -509,8 +509,11 @@ export default class IndicatorsController {
      * Определяет, можно ли продолжить отображать порционный поиск.
      * @return {boolean} Можно ли продолжить отображать порционный поиск
      */
-    shouldContinueDisplayPortionedSearch(): boolean {
-        return this._getSearchState() !== SEARCH_STATES.STOPPED && this._getSearchState() !== SEARCH_STATES.ABORTED;
+    shouldContinueDisplayPortionedSearch(direction?: 'up'|'down'): boolean {
+        // Либо мы при остановке пытаемся подгрузить в другую сторону, либо поиск не приостановле
+        const allowByStoppedState = direction && this.getPortionedSearchDirection() !== direction ||
+            this._getSearchState() !== SEARCH_STATES.STOPPED;
+        return allowByStoppedState && this._getSearchState() !== SEARCH_STATES.ABORTED;
     }
 
     /**
