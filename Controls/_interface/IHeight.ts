@@ -17,7 +17,7 @@ export default interface IHeight {
 }
 /**
  * @name Controls/_interface/IHeight#inlineHeight
- * @cfg {string} Высота контрола.
+ * @cfg {String} Высота контрола.
  * @variant xs
  * @variant s
  * @variant m
@@ -45,7 +45,7 @@ export default interface IHeight {
 
 /*
  * @name Controls/_interface/IHeight#inlineHeight
- * @cfg {string} Control height value
+ * @cfg {String} Control height value
  * @variant xs
  * @variant s
  * @variant m
