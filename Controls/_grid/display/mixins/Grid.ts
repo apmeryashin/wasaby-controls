@@ -28,8 +28,8 @@ import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interfac
 import {create} from 'Types/di';
 import {IGridAbstractColumn} from './../interface/IGridAbstractColumn';
 
-type THeaderVisibility = 'visible' | 'hasdata';
-type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
+export type THeaderVisibility = 'visible' | 'hasdata';
+export type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
 
 export type ISortItem = { [p: string]: string };
 
