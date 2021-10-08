@@ -6,7 +6,6 @@ import * as memorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 export default class FlatList extends Control<IControlOptions> {
    protected _template: TemplateFunction = controlTemplate;
    protected _source: Memory;
-   protected _searchValue: string;
 
    protected _beforeMount(): void {
       this._source = new Memory({
