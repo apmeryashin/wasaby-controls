@@ -49,7 +49,7 @@ export default class BreadcrumbsItemCell<S extends Model, TOwner extends Breadcr
    }
 
    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
-      return super.getWrapperClasses(theme, backgroundColorStyle, style, templateHighlightOnHover)
+      return super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle)
          + ' controls-TreeGrid__row__searchBreadCrumbs js-controls-ListView__notEditable';
    }
 
