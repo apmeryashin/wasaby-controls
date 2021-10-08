@@ -25,6 +25,10 @@
 	cursor: pointer;
 	.icon-size(var(--reset-button_icon-size));
 	color: var(--reset-button_icon-color_suggest);
+
+	&:active {
+		color: var(--unaccented_hover_icon-color);
+	}
 }
 
 .controls-SuggestV__rightFieldWrapper {
@@ -37,4 +41,10 @@
 .controls-SuggestV__showAllPopup {
 	max-width: 700px;
 	width: calc(~"100% - 64px");
+}
+
+.ws-is-hover {
+	.controls-SuggestV__clear:hover {
+		color: var(--unaccented_hover_icon-color);
+	}
 }
