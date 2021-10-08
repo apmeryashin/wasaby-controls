@@ -4439,10 +4439,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this.callbackAfterRender = null;
         }
 
-        // это нужно делать после вызова всех колбэков, т.к. остановка порционного поиска по необходимости
-        // может вызвать отрисовку верхней ромашки. Эта отрисовка юзает колбэки выше, но мы должны попасть через них
-        // в следующую отрисовку, чтобы ромашка уже была точно отрисована.
-        if (this._indicatorsController.shouldStopDisplayPortionedSearch()) {
+        if (
+            this._indicatorsController.isDisplayedPortionedSearch() &&
+            _private.isMaxCountNavigation(this._options.navigation) &&
+            !_private.needLoadByMaxCountNavigation(this._listViewModel, this._options.navigation)) {
+            this._indicatorsController.endDisplayPortionedSearch();
+        } else if (this._indicatorsController.shouldStopDisplayPortionedSearch()) {
+            // это нужно делать после вызова всех колбэков, т.к. остановка порционного поиска по необходимости
+            // может вызвать отрисовку верхней ромашки. Эта отрисовка юзает колбэки выше, но мы должны попасть через них
+            // в следующую отрисовку, чтобы ромашка уже была точно отрисована.
             this._indicatorsController.stopDisplayPortionedSearch();
         }
     }
