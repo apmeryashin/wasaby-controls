@@ -1994,9 +1994,6 @@ const _private = {
 
         _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
 
-        if (this._shouldEndDisplayPortionedSearch(items)) {
-            this._indicatorsController.endDisplayPortionedSearch();
-        }
         if (this._indicatorsController.shouldHideGlobalIndicator()) {
             this._indicatorsController.hideGlobalIndicator();
         }
@@ -6436,6 +6433,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const stopDisplayPortionedSearchCallback = () => {
             if (typeof this._sourceController.cancelLoading !== 'undefined') {
                 this._sourceController.cancelLoading();
+            }
+
+            if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                this._indicatorsController.displayTopIndicator(true);
             }
 
             if (this._isScrollShown) {
