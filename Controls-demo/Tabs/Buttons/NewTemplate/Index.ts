@@ -17,6 +17,7 @@ export default class TabButtonsDemo extends Control {
     protected _items6: RecordSet | null = null;
     protected _items7: RecordSet | null = null;
     protected _items8: RecordSet | null = null;
+    protected _items9: RecordSet | null = null;
 
     protected _beforeMount(): void {
         this._items1 = new RecordSet({
