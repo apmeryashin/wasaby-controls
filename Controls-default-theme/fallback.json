@@ -1312,7 +1312,7 @@
 
   "--height_shortDatePicker": "564px",
   "--width_shortDatePicker": "88px",
-  "--monthly_width_shortDatePicker": "136px",
+  "--monthly_width_shortDatePicker": "134px",
   "--quarterly_width_shortDatePicker": "160px",
   "--quarterly-monthly_width_shortDatePicker": "150px",
   "--background-color_shortDatePicker": "var(--background-color)",
