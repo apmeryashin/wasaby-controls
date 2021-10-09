@@ -175,7 +175,7 @@ define(
                      };
                   });
 
-                  item.sizes = null;
+                  item.sizes = {};
                   Controller.getDefaultConfig(item);
                   assert.equal(item.position.top, 900);
 
@@ -198,7 +198,7 @@ define(
                      };
                   });
 
-                  item.sizes = null;
+                  item.sizes = {};
                   Controller.getDefaultConfig(item);
                   assert.equal(item.position.bottom, 900);
                   const result = Controller.elementCreated(item, {});
