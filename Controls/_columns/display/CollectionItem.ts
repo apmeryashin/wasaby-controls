@@ -39,6 +39,8 @@ export default class CollectionItem<T extends Model = Model> extends BaseCollect
         let result: string = super.getWrapperClasses.apply(this, arguments);
         result += ' controls-ColumnsView__itemV';
 
+        result += ` ${this.getRoundBorderClasses()}`;
+
         if (cursor === true || cursor === 'pointer') {
             result += ' controls-ListView__itemV_cursor-pointer';
         }

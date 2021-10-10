@@ -3636,6 +3636,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._observersController = new ObserversController(this._getObserversControllerOptions(this._options));
 
+        // После создания observersController'а нужно обновить scrollController:
+        // для вычисления сдвига виртуального скролла нужно знать об отступах триггеров
+        this._updateScrollController();
+
         // Если верхний индикатор не будет показан, то сразу же показываем триггер,
         // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
         if (!this._indicatorsController.shouldDisplayTopIndicator()) {
@@ -3799,7 +3803,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = newOptions.viewModelConstructor !== this._viewModelConstructor ||
+        const oldViewModelConstructorChanged = !!newOptions._recreateCollection ||
+                                    newOptions.viewModelConstructor !== this._viewModelConstructor ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
         if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
@@ -3824,7 +3829,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if ((oldViewModelConstructorChanged || !!newOptions._recreateCollection) && this._listViewModel) {
+        if (oldViewModelConstructorChanged && this._listViewModel) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
@@ -5771,6 +5776,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             // Ключ перетаскиваемой записи мы запоминаем на mouseDown, но днд начнется только после смещения на 4px и не факт, что он вообще начнется
             // Если сработал mouseUp, то днд точно не сработает и draggedKey нам уже не нужен
             this._draggedKey = null;
+            // контроллер создается на mouseDown, но драг может и не начаться, поэтому контроллер уже не нужен
+            if (this._dndListController && !this._dndListController.isDragging()) {
+                this._dndListController = null;
+            }
         }
 
         this._mouseDownItemKey = undefined;
@@ -5895,11 +5904,21 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     removeItems(selection: ISelectionObject): Promise<string | void> {
         return _private
             .removeItems(this, selection, 'Controls/listCommands:RemoveProvider')
-            .catch((error) => process({error}));
+            .catch((error) => {
+                if (error) {
+                    return process({error});
+                }
+                return;
+            });
     }
 
     removeItemsWithConfirmation(selection: ISelectionObject): Promise<string | void> {
-        return _private.removeItems(this, selection).catch((error) => process({error}));
+        return _private.removeItems(this, selection).catch((error) => {
+            if (error) {
+                return process({error});
+            }
+            return;
+        });
     }
 
     // endregion remove

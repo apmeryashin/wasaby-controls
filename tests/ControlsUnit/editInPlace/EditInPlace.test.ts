@@ -993,6 +993,17 @@ describe('Controls/_editInPlace/EditInPlace', () => {
             });
         });
 
+        it('should execute cancel operation in sync mode if', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+
+            const result = editInPlace.cancel(true);
+            assert.isTrue(onBeforeEndEditCalled);
+            assert.isTrue(onAfterEndEditCalled);
+            assert.isNull(collection.find((i) => i.isEditing()));
+
+            return result;
+        });
+
         it('should ignore promise as a result of callback if force', () => {
             assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
             editInPlace.updateOptions({
