@@ -312,13 +312,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       // или выбранный элемент находится ближе к концу крошки(глубже по иерархии) чем исключенный
       const hasSelected = selectedKeyIndex !== -1;
       const hasExcluded = excludedKeyIndex !== -1;
+      const isAllChildsExcluded = this._isAllChildrenExcluded(selection, item as unknown as TreeItem);
 
       let isSelected;
       if (this._isAllSelectedInRoot(selection)) {
          // Если нажали выбрать все, то выбирается все что найдено, то есть сама хлебная крошка не выбрана
-         isSelected = !hasExcluded ? null : false;
+         isSelected = !hasExcluded && !isAllChildsExcluded ? null : false;
       } else {
-         isSelected = hasSelected && (!hasExcluded || selectedKeyIndex < excludedKeyIndex);
+         isSelected = hasSelected && (!hasExcluded || selectedKeyIndex < excludedKeyIndex) && !isAllChildsExcluded;
       }
       return isSelected;
    }
@@ -417,7 +418,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _unselectParentNodes(selection: ISelection, item: TreeItem<Model>): void {
       let allChildrenExcluded = this._isAllChildrenExcluded(selection, item);
       let currentParent = item;
-      while (currentParent && allChildrenExcluded) {
+      while (currentParent && allChildrenExcluded && !item['[Controls/_display/BreadcrumbsItem]']) {
          this._unselectNode(selection, currentParent);
          currentParent = currentParent.getParent();
          allChildrenExcluded = this._isAllChildrenExcluded(selection, currentParent);
@@ -484,7 +485,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [itemId]);
       }
 
-      if (this._isAllChildrenExcluded(selection, parent) && this._selectAncestors && parentId !== this._rootId) {
+      if (this._isAllChildrenExcluded(selection, parent) && this._selectAncestors && parentId !== this._rootId && !parent['[Controls/_display/BreadcrumbsItem]']) {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [parentId]);
          ArraySimpleValuesUtil.removeSubArray(selection.selected, [parentId]);
       }
