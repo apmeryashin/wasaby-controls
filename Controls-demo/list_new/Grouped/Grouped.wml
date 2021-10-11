@@ -107,6 +107,14 @@
                 </Router.router:Reference>
                 <Controls-demo.list_new.Grouped.NoSticky.Index />
             </div>
+            <div class="controlsDemo__cell controlsDemo__mr2 demo-ListGrouped__templateGroupResult">
+                <Router.router:Reference attr:class="controls-text-label"
+                                         state="/Controls-demo/app/:app"
+                                         app="{{ 'Controls-demo/list_new/Grouped/Nested/Index' }}">
+                    <a href="{{content.href}}">Вложенные списки с группировкой</a>
+                </Router.router:Reference>
+                <Controls-demo.list_new.Grouped.Nested.Index />
+            </div>
         </div>
     </Controls.scroll:Container>
 </div>

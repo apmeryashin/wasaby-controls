@@ -4899,8 +4899,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 // определяет, какие группы надо создавать свёрнутыми. Поэтому обновляем его тут.
                 collection.setCollapsedGroups(collapsedGroups);
                 _private.groupsExpandChangeHandler(this, changes);
-                this._notify('groupClick', [dispItem.getContents(), baseEvent, dispItem]);
             });
+            this._notify('groupClick', [dispItem.getContents(), baseEvent, dispItem]);
         }
     }
 
