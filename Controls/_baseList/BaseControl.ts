@@ -773,8 +773,18 @@ const _private = {
         const needLoad = _private.needLoadNextPageAfterLoad(self, items, self._listViewModel, options.navigation);
         if (needLoad) {
             const filter = self._sourceController && self._sourceController.getFilter() || options.filter;
-            const direction = self._indicatorsController.getPortionedSearchDirection() || 'down';
-            _private.loadToDirectionIfNeed(self, direction, filter);
+            let direction;
+            if (_private.isPortionedLoad(self, loadedItems) && self._indicatorsController.getPortionedSearchDirection()) {
+                direction = self._indicatorsController.getPortionedSearchDirection();
+            } else if (self._hasMoreData('down')) {
+                direction = 'down';
+            } else if (self._hasMoreData('up')) {
+                direction = 'up';
+            }
+
+            if (direction) {
+                _private.loadToDirectionIfNeed(self, direction, filter);
+            }
         }
     },
 
