@@ -97,6 +97,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (options.captionColumnOptions || options.editorColumnOptions) {
             this._render = gridRenderTemplate;
         }
+        if (options.multiSelectVisibility !== 'hidden' && options.selectedKeys?.length > 0) {
+            this._getSelectionController(options)
+                .setSelection({selected: options.selectedKeys, excluded: options.excludedKeys});
+        }
         this._editingObject = options.editingObject;
     }
 
@@ -387,14 +391,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _getSelectionStrategyOptions(
-        {parentProperty}: IPropertyGridOptions,
+        {parentProperty, selectionType}: IPropertyGridOptions,
         collection: TPropertyGridCollection
     ): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (parentProperty) {
             return {
                 rootId: null,
                 model: collection,
-                selectionType: 'all',
+                selectionType: selectionType || 'all',
                 recursiveSelection: false
             };
         } else {
