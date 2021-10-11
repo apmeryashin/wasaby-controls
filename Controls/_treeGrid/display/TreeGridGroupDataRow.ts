@@ -63,6 +63,11 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
         return this.getOwner().isStickyGroup() && !this.isHiddenGroup();
     }
 
+    // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
+    isIosZIndexOptimized(): boolean {
+        return false;
+    }
+
     getStickyHeaderMode(): string {
         return 'replaceable';
     }
