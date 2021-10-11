@@ -83,6 +83,7 @@
                                               mode="{{ (item || itemData).getStickyHeaderMode(stickyCallback) }}"
                                               backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
                                               shadowVisibility="{{column.shadowVisibility}}"
+                                              _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
                                               fixedZIndex="{{ column.getZIndex()}}"
                                               attr:key="sticky_{{ column.getInstanceId() }}"
                                               attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
