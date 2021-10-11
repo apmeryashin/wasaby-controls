@@ -73,7 +73,8 @@ describe('Controls/_display/itemsStrategy/NodeFooter', () => {
         strategy = new NodeFooter({
             display: tree,
             source,
-            nodeFooterVisibilityCallback: () => true
+            nodeFooterVisibilityCallback: () => true,
+            nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow'
         });
     });
 
@@ -127,7 +128,8 @@ describe('Controls/_display/itemsStrategy/NodeFooter', () => {
         strategy = new NodeFooter({
             display: tree,
             source,
-            nodeFooterVisibilityCallback: () => true
+            nodeFooterVisibilityCallback: () => true,
+            nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow'
         });
         strategy.items;
 
