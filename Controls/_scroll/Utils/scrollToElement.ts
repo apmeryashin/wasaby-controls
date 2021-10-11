@@ -110,7 +110,7 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
  */
 
 export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boolean | SCROLL_POSITION,
-                                force?: Boolean, waitInitialization: boolean = false): Promise<void> {
+                                force?: Boolean, waitInitialization: boolean = false, forceSticky: boolean): Promise<void> {
    // TODO: переделать аргумент toBottom в position https://online.sbis.ru/opendoc.html?guid=4693dfce-f11d-4792-b62d-9faf54564553
    const position: SCROLL_POSITION = toBottomOrPosition === true ? SCROLL_POSITION.bottom : toBottomOrPosition;
    const stickyHeaderClass = 'controls-StickyHeader';
@@ -153,9 +153,9 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
    for (const parent of scrollableParent) {
       const
          elemToScroll = parent === document.documentElement ? document.body : parent,
-         parentOffset = getOffset(parent),
-         elemOffset = getOffset(element), //Offset of the element changes after each scroll, so we can't just cache it
-         stickyHeaderHeight = getStickyHeaderHeight(parent);
+         parentOffset = getOffset(parent);
+      let elemOffset = getOffset(element); //Offset of the element changes after each scroll, so we can't just cache it
+      const stickyHeaderHeight = getStickyHeaderHeight(parent);
       // Если внутри элемента, к которому хотят подскроллиться, лежит StickyHeader или элемент является StickyHeader'ом,
       // то мы не должны учитывать высоту предыдущего заголовка, т.к. заголовок встанет вместо него
       // Рассматримается кейс: https://online.sbis.ru/opendoc.html?guid=cf7d3b3a-de34-43f2-ad80-d545d462602b, где все
@@ -166,8 +166,20 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
       } else {
           const innerStickyHeader = element.querySelector(`.${stickyHeaderClass}`);
           if (innerStickyHeader) {
-              innerStickyHeaderHeight = innerStickyHeader.offsetHeight;
-              innerStickyHeaderHeight -= getGapFixSize();
+             if (forceSticky) {
+                const oldPosition = innerStickyHeader.style.position;
+                const oldTop = innerStickyHeader.style.top;
+                innerStickyHeader.style.position = 'relative';
+                innerStickyHeader.style.top = 0;
+
+                elemOffset = getOffset(innerStickyHeader);
+                elemOffset.top -= 1;
+
+                innerStickyHeader.style.position = oldPosition;
+                innerStickyHeader.style.top = oldTop;
+             }
+             innerStickyHeaderHeight = innerStickyHeader.offsetHeight;
+             innerStickyHeaderHeight -= getGapFixSize();
           }
       }
       if (innerStickyHeaderHeight) {

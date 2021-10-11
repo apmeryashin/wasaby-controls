@@ -8,8 +8,9 @@ import * as GroupTemplate from 'wml!Controls/_baseList/GroupTemplate';
 import * as ListViewTpl from 'wml!Controls/_baseList/ListView/ListView';
 import * as defaultItemTemplate from 'wml!Controls/_baseList/ItemTemplate';
 import 'css!Controls/baseList';
-import {Collection} from 'Controls/display';
+import { Collection, CollectionItem } from 'Controls/display';
 import {IRoundBorder} from 'Controls/interface';
+import { Model } from 'Types/entity';
 
 export interface IListViewOptions {
     listModel: Collection;
@@ -420,6 +421,10 @@ const ListView = Control.extend(
 
         getHoveredItem: function () {
             return this._listModel.getHoveredItem();
+        },
+
+        _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
+            this._notify('fixedItemChanged', [item, information]);
         },
 
         // protected

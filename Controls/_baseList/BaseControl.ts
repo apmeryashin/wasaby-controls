@@ -465,7 +465,7 @@ const _private = {
             self._doNotScrollToFirtsItem = false;
             if (itemContainer && needScroll) {
                 self._notify('scrollToElement', [{
-                    itemContainer, toBottom, force
+                    itemContainer, toBottom, force, waitInitialization: false, forceSticky: true
                 }], {bubbling: true});
             }
             if (result) {
@@ -3181,6 +3181,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _editInPlaceInputHelper = null;
 
     _editingItem: IEditableCollectionItem;
+
+    _fixedItem: CollectionItem<Model> = null;
 
     _continuationEditingDirection: Exclude<EDIT_IN_PLACE_CONSTANTS, EDIT_IN_PLACE_CONSTANTS.CANCEL>;
 
@@ -5974,6 +5976,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
     }
+
+    private _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
+        if (information.fixedPosition === '') {
+            this._fixedItem = null;
+        } else {
+            this._fixedItem = item;
+        }
+
+    }
+
     _sortingChanged(event, propName) {
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
