@@ -15,6 +15,11 @@
                     <ws:Object displayProperty="populationDensity"
                                displayType="money"
                                fontColorStyle="warning"/>
+                    <ws:Object displayProperty="date"
+                               displayType="date"
+                               fontColorStyle="warning">
+                        <ws:displayTypeOptions format="DD MMM'YY HH:mm"/>
+                    </ws:Object>
                 </ws:Array>
             </ws:columns>
         </Controls.grid:View>

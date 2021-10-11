@@ -417,6 +417,7 @@ export interface IColumn extends IColspanParams {
      * @cfg Тип данных, отображаемых колонкой.
      * @variant money Деньги. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Money}.
      * @variant number Число. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Number}.
+     * @variant date Дата. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Date}.
      * @variant string Строка.
      * @default string
      * @remark
