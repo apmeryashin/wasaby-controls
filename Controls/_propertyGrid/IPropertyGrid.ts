@@ -4,7 +4,7 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import { IItemPadding } from 'Controls/display';
-import {IPromiseSelectableOptions} from 'Controls/interface';
+import {IPromiseSelectableOptions, ISelectionTypeOptions} from 'Controls/interface';
 
 type TPadding = 'null'|'m';
 
@@ -66,7 +66,7 @@ export interface IPropertyGridColumnOptions {
     compatibleWidth: string;
 }
 export type TEditingObject = Model | Record<string, unknown>;
-export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectableOptions {
+export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectableOptions, ISelectionTypeOptions {
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#editingObject
      * @cfg {Object | Types/entity:Model} Объект, свойства которого являются значениями для редакторов.
