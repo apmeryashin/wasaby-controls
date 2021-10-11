@@ -130,15 +130,7 @@ export default class MonthSlider extends Control<IControlOptions> {
     private _getHomeVisible(month: Date, dateConstructor: Function, displayedRanges: Date[][]): boolean {
         const currentDate = new dateConstructor();
         const isCurrentMonth = DateUtil.isMonthsEqual(month, currentDate);
-        let canBeDisplayed = !displayedRanges;
-        if (displayedRanges) {
-            for (const range of displayedRanges) {
-                if (range[0] <= currentDate && currentDate <= range[1]) {
-                    canBeDisplayed = true;
-                    break;
-                }
-            }
-        }
+        let canBeDisplayed = DateUtil.hitsDisplayedRanges(currentDate, displayedRanges);
 
         return !isCurrentMonth && canBeDisplayed;
     }

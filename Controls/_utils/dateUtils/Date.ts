@@ -309,3 +309,17 @@ export function isRangesOverlaps(startDate1: Date|number, endDate1: Date|number,
 
     return Math.max(startDate1, startDate2) <= Math.min(endDate1, endDate2);
 }
+
+export function hitsDisplayedRanges(date: Date, displayedRanges: Date[][]): boolean {
+    if (!displayedRanges) {
+        return true;
+    }
+    if (displayedRanges) {
+        for (const range of displayedRanges) {
+            if (range[0] <= date && date <= range[1]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
