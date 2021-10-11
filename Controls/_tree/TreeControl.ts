@@ -171,7 +171,7 @@ const _private = {
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
                     if (self._fixedItem) {
-                        return self.scrollToItem(self._fixedItem.key, false, true);
+                        return self.scrollToItem(self._fixedItem.key, false, false);
                     }
                     //endregion
                 });
