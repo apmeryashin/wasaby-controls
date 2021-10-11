@@ -4,7 +4,8 @@
                 keyProperty="key"
                 source="{{_rootSource}}"
                 markerVisibility="hidden"
-                groupProperty="group">
+                groupProperty="group"
+                on:groupClick="_groupClick()">
             <ws:groupTemplate>
                 <ws:partial template="Controls/list:GroupTemplate" fontSize="xl" textAlign="left" expanderAlign="right"/>
             </ws:groupTemplate>
@@ -17,7 +18,8 @@
                         <Controls.list:View
                                 keyProperty="key"
                                 source="{{_nestedSource}}"
-                                groupProperty="group">
+                                groupProperty="group"
+                                on:groupClick="_groupClick()">
                             <ws:groupTemplate>
                                 <ws:partial template="Controls/list:GroupTemplate" textAlign="left"  expanderAlign="right"/>
                             </ws:groupTemplate>
@@ -27,4 +29,7 @@
             </ws:itemTemplate>
         </Controls.list:View>
     </Controls.scroll:Container>
+    <div if="{{_lastClickedGroup}}">
+        Кликнули на {{_lastClickedElement}}
+    </div>
 </div>

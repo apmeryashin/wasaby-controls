@@ -1,5 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {Memory} from 'Types/source';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { Model } from 'Types/entity';
 
 import * as Template from 'wml!Controls-demo/list_new/Nested/Nested';
 
@@ -38,6 +40,7 @@ export default class extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected _rootSource: Memory;
     protected _nestedSource: Memory;
+    protected _lastClickedElement: string;
 
     protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         this._rootSource = new Memory({
@@ -48,6 +51,10 @@ export default class extends Control<IControlOptions> {
             keyProperty: 'key',
             data: nestedData
         });
+    }
+
+    protected _groupClick(e: SyntheticEvent, item: Model | string, originalEvent: SyntheticEvent): void {
+        this._lastClickedElement = item as string;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
