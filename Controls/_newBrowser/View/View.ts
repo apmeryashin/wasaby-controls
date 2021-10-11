@@ -127,6 +127,7 @@ export default class View extends Control<IOptions, IReceivedState> {
     protected _detailLoading: boolean = false;
     protected _detailRootChanged: boolean = false;
     protected _masterDataLoadResolver: Function = null;
+    protected _needUpdateColumns: boolean = false;
 
     /**
      * Опции для Controls/explorer:View в master-колонке
@@ -208,6 +209,7 @@ export default class View extends Control<IOptions, IReceivedState> {
                 this._listCfg.setImageVisibility(imageVisibility);
                 this._tileCfg.setImageVisibility(imageVisibility);
                 this._tableCfg.setImageVisibility(imageVisibility);
+                this._needUpdateColumns = true;
                 /*
                     Восстанавливать скролл нужно только если фотки появились в текущем узле при подгрузке по скроллу
                     Если видимость меняется при проваливании в папку, то скролл всегда будет в шапке списка.
@@ -247,13 +249,14 @@ export default class View extends Control<IOptions, IReceivedState> {
         if (isDetailRootChanged) {
             this._detailRootChanged = true;
         }
-        if (detailOptionsChanged || contextVersionChanged) {
+        if (detailOptionsChanged || contextVersionChanged || this._needUpdateColumns) {
             const oldColumns = this._detailExplorerOptions.columns;
             this._detailExplorerOptions = this._getListOptions(
                 this._dataContext.listsConfigs.detail,
                 newOptions.detail
             );
-            if (!isEqual(oldColumns, this._detailExplorerOptions.columns)) {
+            if (!isEqual(oldColumns, this._detailExplorerOptions.columns) || this._needUpdateColumns) {
+                this._needUpdateColumns = false;
                 this._columns = this._getPatchedColumns(this._detailExplorerOptions.columns);
             }
         }
