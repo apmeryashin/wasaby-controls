@@ -112,7 +112,9 @@ export {
     TColspanCallback,
     TResultsColspanCallback,
     IEmptyTemplateColumn,
-    IOptions as IGridOptions
+    IOptions as IGridOptions,
+    THeaderVisibility,
+    TResultsVisibility
 } from 'Controls/_grid/display/mixins/Grid';
 export {default as GridRowMixin, IInitializeColumnsOptions} from 'Controls/_grid/display/mixins/Row';
 export {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/GroupCell';

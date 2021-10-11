@@ -5,7 +5,8 @@ import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_explorer/PathController/PathController';
 import { IGridControl, IHeaderCell } from 'Controls/grid';
-import {TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
+import {TBreadcrumbsVisibility, TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
+import {needBackButtonInHeader} from 'Controls/_explorer/utils';
 
 interface IOptions extends IControlOptions, IGridControl {
     breadCrumbsItems: Path;
@@ -18,7 +19,7 @@ interface IOptions extends IControlOptions, IGridControl {
     backButtonFontColorStyle: string;
     viewMode?: TExplorerViewMode;
     backButtonNewIcon?: boolean;
-    breadcrumbsVisibility?: string;
+    breadcrumbsVisibility?: TBreadcrumbsVisibility;
     backButtonBeforeCaptionTemplate?: string | TemplateFunction;
 }
 
@@ -97,17 +98,10 @@ export default class PathController extends Control<IOptions> {
      */
     private static _getHeader(options: IOptions, items: Path): IHeaderCell[] {
         let newHeader = options.header;
-        // title - устаревшее поле колонки
-        const firstHeaderCell = options.header?.length && options.header[0] as IHeaderCell & {title: string};
 
         // Если пользовательский контент первой ячейки заголовка не задан, то
         // то задаем наш шаблон с хлебными крошками
-        if (
-            options.breadcrumbsVisibility !== 'hidden' &&
-            firstHeaderCell &&
-            !(firstHeaderCell.title || firstHeaderCell.caption) &&
-            !firstHeaderCell.template
-        ) {
+        if (needBackButtonInHeader(options.header, options.breadcrumbsVisibility)) {
             newHeader = options.header.slice();
             newHeader[0] = {
                 ...options.header[0],

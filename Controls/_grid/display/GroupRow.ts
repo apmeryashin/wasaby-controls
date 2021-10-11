@@ -97,6 +97,11 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
         return this._$owner.isStickyGroup() && !this.isHiddenGroup();
     }
 
+    // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
+    isIosZIndexOptimized(): boolean {
+        return false;
+    }
+
     getStickyColumn(): GridLadderUtil.IStickyColumn {
         return this._$owner.getStickyColumn();
     }

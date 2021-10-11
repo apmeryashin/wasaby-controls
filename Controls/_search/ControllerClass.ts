@@ -268,6 +268,12 @@ export default class ControllerClass {
       this._path = path;
    }
 
+   setInputSearchValue(value: string): void {
+      if (this.isSearchInProcess()) {
+         this._sourceController?.cancelLoading();
+      }
+   }
+
    needChangeSearchValueToSwitchedString(items: RecordSet): boolean {
       const metaData = items && items.getMetaData();
       return metaData ? metaData.returnSwitched : false;

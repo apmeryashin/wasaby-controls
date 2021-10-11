@@ -1,7 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_toggle/ButtonGroup/ButtonGroup');
 import {ButtonTemplate} from 'Controls/buttons';
-import ButtonGroupBase from 'Controls/_toggle/ButtonGroupBase';
+import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroupBase';
 
 /**
  * Контрол представляет собой набор из нескольких взаимосвязанных между собой кнопок. Используется, когда необходимо выбрать один из нескольких параметров.
@@ -24,20 +24,20 @@ import ButtonGroupBase from 'Controls/_toggle/ButtonGroupBase';
  *
  * <pre>
  *   new RecordSet({
-            rawData: [
-                {
-                    id: '1',
-                    caption: 'caption 1',
-                    title: 'title 1'
-                },
-                {
-                    id: '2',
-                    caption: 'Caption 2',
-                    title: 'title 2'
-                }
-            ],
-            keyProperty: 'id'
-        });
+ *           rawData: [
+ *               {
+ *                   id: '1',
+ *                   caption: 'caption 1',
+ *                   title: 'title 1'
+ *               },
+ *               {
+ *                   id: '2',
+ *                   caption: 'Caption 2',
+ *                   title: 'title 2'
+ *               }
+ *           ],
+ *           keyProperty: 'id'
+ *       });
  * </pre>
  *
  * @demo Controls-demo/toggle/ButtonGroup/displayProperty/Index
@@ -84,15 +84,8 @@ import ButtonGroupBase from 'Controls/_toggle/ButtonGroupBase';
 class ButtonGroup extends ButtonGroupBase {
     protected _template: TemplateFunction = template;
     protected _buttonTemplate: TemplateFunction = ButtonTemplate;
+
+    static defaultProps: Partial<IButtonGroupOptions> = ButtonGroupBase.defaultProps;
 }
-
-Object.defineProperty(ButtonGroup, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
-
-   get(): object {
-      return ButtonGroup.getDefaultOptions();
-   }
-});
 
 export default ButtonGroup;

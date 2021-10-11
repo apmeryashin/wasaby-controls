@@ -1,50 +1,103 @@
-.controls-text-buttonGroupSelected {
-  color: var(--contrast_text-color);
+.controls-Button_buttonGroup {
+   min-width: var(--min-width_button_button);
+   border-radius: var(--border-radius_button);
+   border: var(--border-thickness_button) solid transparent;
 }
 
-.controls-Button_buttonGroup_style-buttonGroupSelected,
+.controls-text-buttonGroupSelected {
+   color: var(--contrast_text-color);
+}
+
+.controls-Button_buttonGroup_style-buttonGroupSelected {
+   background-color: var(--item_selected_color);
+   border-color: var(--item_selected_color);
+}
+
 .controls-Button_buttonGroup_style-readOnly-buttonGroupSelected {
-  background-color: var(--unaccented_contrast_background-color);
-  border-color: var(--unaccented_contrast_background-color);
+   background-color: var(--readonly_marker_color_switcher);
+   border-color: var(--readonly_marker_color_switcher);
+   color: var(--contrast_text-color);
 }
 
 .controls-Button_buttonGroup_style-buttonGroupUnselected,
-.controls-Button_buttonGroup_style--readOnly-buttonGroupUnselected {
-  background-color: var(--background-color);
-  box-shadow: var(--box-shadow_ToolbarBox);
+.controls-Button_buttonGroup_style-readOnly-buttonGroupUnselected {
+   background-color: var(--background-color);
+   box-sizing: border-box;
 }
+
+.controls-Button_buttonGroup_style-buttonGroupUnselected {
+   box-shadow: var(--box-shadow_ToolbarBox);
+}
+
+.controls-Button_buttonGroup_style-readOnly-buttonGroupUnselected {
+   border-color: var(--readonly_marker-box_border-color_checkbox);
+}
+
 .ws-is-hover {
-  .controls-Button_buttonGroup_style-buttonGroupUnselected:hover {
-    background-color: var(--hover_background-color);
-  }
+   .controls-Button_buttonGroup_style-buttonGroupUnselected:hover {
+      border-color: var(--unaccented_hover_border-color);
+   }
 }
 
 .controls-ButtonGroup__button_withMargin {
-  margin-right: var(--offset_m);
+   margin-right: var(--offset_m);
+   margin-bottom: var(--offset_m);
 }
 
 .controls-ButtonGroup__wrapper {
-  display: inline-flex;
-  flex-direction: row;
+   display: inline-flex;
 }
 
-.controls-Button_buttonGroup {
-  min-width: var(--min-width_button_button);
+.controls-ButtonGroup__wrapper-horizontal {
+   flex-flow: row wrap;
+}
+
+.controls-ButtonGroup__wrapper-vertical {
+   .flex-direction(column);
+
+   width: 100%;
+}
+
+.controls-Button__wrapper_buttonGroup_xs {
+   padding: 0 calc(var(--padding-horizontal_xs_button) - var(--border-thickness_button));
+}
+
+.controls-Button__wrapper_buttonGroup_s {
+   padding: 0 calc(var(--padding-horizontal_s_button) - var(--border-thickness_button));
 }
 
 .controls-Button__wrapper_buttonGroup_m {
-  padding: 0 calc(var(--padding-horizontal_m_button) - var(--border-thickness_button));
+   padding: 0 calc(var(--padding-horizontal_m_button) - var(--border-thickness_button));
 }
 
-.controls-Button_buttonGroup_m {
-  border-radius: var(--border-radius_button);
-  border: var(--border-thickness_button) solid transparent;
+.controls-Button__wrapper_buttonGroup_l {
+   padding: 0 calc(var(--padding-horizontal_l_button) - var(--border-thickness_button));
+}
+
+.controls-Button__wrapper_buttonGroup_xl {
+   padding: 0 calc(var(--padding-horizontal_xl_button) - var(--border-thickness_button));
+}
+
+.controls-Button__wrapper_buttonGroup_2xl {
+   padding: 0 calc(var(--padding-horizontal_2xl_button) - var(--border-thickness_button));
+}
+
+.controls-Button__wrapper_buttonGroup_3xl {
+   padding: 0 calc(var(--padding-horizontal_3xl_button) - var(--border-thickness_button));
+}
+
+.controls-Button__wrapper_buttonGroup_4xl {
+   padding: 0 calc(var(--padding-horizontal_4xl_button) - var(--border-thickness_button));
+}
+
+.controls-Button__wrapper_buttonGroup_5xl {
+   padding: 0 calc(var(--padding-horizontal_5xl_button) - var(--border-thickness_button));
 }
 
 .controls-Button__wrapper_viewMode-buttonGroup {
-  justify-content: center;
+   justify-content: center;
 }
 
 .controls-ButtonGroup__button-counter {
-  margin-left: var(--offset_2xs);
+   margin-left: var(--offset_2xs);
 }

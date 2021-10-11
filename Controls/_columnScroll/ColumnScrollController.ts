@@ -474,7 +474,7 @@ export default class ColumnScrollController {
 
         // скроллируем индикаторы загрузки
         const indicatorPosition = position + this._containerSize / 2;
-        newTransformHTML += `.${transformSelector} .controls-BaseControl__loadingIndicator {width: fit-content; transform: translateX(${indicatorPosition}px);}`;
+        newTransformHTML += `.${transformSelector} .controls-BaseControl__loadingIndicator {width: calc(100% - ${indicatorPosition}px); transform: translateX(${indicatorPosition}px);}`;
 
         // Не скроллируем операции над записью и не анимируем пока не перешли на нативный скролл.
         // Отсутствие анимации в реальном кейсе почти невозможно заметить.

@@ -382,9 +382,12 @@ export default class Cell<
     getContentClasses(
         backgroundColorStyle: string = this._$column.backgroundColorStyle,
         cursor: string = 'pointer',
-        templateHighlightOnHover: boolean = true
+        templateHighlightOnHover: boolean = true,
+        tmplIsEditable?: boolean,
+        templateHoverBackgroundStyle?: string
     ): string {
-        const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
+        const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || templateHoverBackgroundStyle ||
+            this._$owner.getHoverBackgroundStyle();
 
         // TODO: Убрать js-controls-ListView__editingTarget' по задаче
         //  https://online.sbis.ru/opendoc.html?guid=deef0d24-dd6a-4e24-8782-5092e949a3d9

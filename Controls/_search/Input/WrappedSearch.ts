@@ -90,7 +90,6 @@ export default class WrappedSearch extends Control {
  * * TypeScript
  * <pre>
  *     protected _value: string = '';
- *
  *     private _searchClick():boolean {
  *       //Не закрываем автодополнение при клике на лупу, если введено больше 3 символов
  *       return this._value.length < 3;

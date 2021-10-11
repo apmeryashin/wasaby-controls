@@ -346,31 +346,6 @@ define([
             assert.include(component._getStyle(position, fixedZIndex), 'right: 20px;');
          });
 
-         it('should return correct min-height.', function() {
-            const fixedZIndex = 2;
-            const position = 'topbottom';
-            const
-               component = createComponent(StickyHeader, { fixedZIndex, position });
-            sandbox.replace(component, '_getComputedStyle', function() {
-               return { boxSizing: 'border-box', minHeight: '30px' };
-            });
-            component._context = {
-               stickyHeader: { top: 2}
-            };
-            component._stickyHeadersHeight = {
-               top: 10
-            };
-            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
-
-            component._model = { fixedPosition: 'top' };
-            component._container = { style: { paddingTop: '' } };
-
-            assert.include(component._getStyle(position, fixedZIndex), 'min-height:31px;');
-            component._minHeight = 40;
-            component._container.style.minHeight = 40;
-            assert.include(component._getStyle(position, fixedZIndex), 'min-height:40px;');
-         });
-
          it('should return correct styles for Android.', function() {
             const fixedZIndex = 2;
             const position = {
@@ -385,43 +360,12 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(3);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
             style = component._getStyle(position, fixedZIndex);
-            assert.include(style, 'min-height:33px;');
-            assert.include(style, 'top: 7px;');
-            assert.include(style, 'margin-top: -3px;');
-            assert.include(style, 'padding-top:4px;');
-         });
-
-         it('should return correct styles for container with border on mobile platforms.', function() {
-            const fixedZIndex = 2;
-            const position = {
-               vertical: 'top'
-            };
-            const
-               component = createComponent(StickyHeader, { fixedZIndex, position });
-            let style;
-            sandbox.replace(component, '_getComputedStyle', function() {
-               return { boxSizing: 'border-box', minHeight: '30px', paddingTop: '1px', 'border-top-width': '1px' };
-            });
-            component._stickyHeadersHeight = {
-               top: 10
-            };
-            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
-
-            component._model = { fixedPosition: 'top' };
-            component._container = { style: { paddingTop: '' } };
-
-            style = component._getStyle(position, fixedZIndex);
-            assert.include(style, 'min-height:31px;');
-            assert.include(style, 'top: 9px;');
-            assert.include(style, 'margin-top: -1px;');
-            assert.include(style, 'border-top-width:2px;');
-
-            sandbox.restore();
+            assert.include(style, 'z-index: 2;');
+            assert.include(style, 'top: 10px;');
          });
          describe('offsetTop', function() {
             it('should return correct top.', function () {

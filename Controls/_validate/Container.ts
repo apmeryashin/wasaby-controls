@@ -67,9 +67,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'scroll', {listenAll: true});
         this._notify('validateDestroyed', [this], {bubbling: true});
-        if (this._isOpened) {
-            this._forceCloseInfoBox();
-        }
+        this._forceCloseInfoBox();
         IndicatorOpener.hide(this._indicatorId);
     }
 
@@ -398,6 +396,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     private _cleanValid(): void {
         if (this._validationResult) {
             this.setValidationResult(null);
+            this._forceCloseInfoBox();
         }
     }
 
