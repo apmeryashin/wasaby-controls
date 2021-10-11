@@ -242,4 +242,22 @@ export class InputActivationHelper {
         }
         return false;
     }
+
+    private tryActivateNextCellByEnter(enterTarget): boolean {
+        const row = enterTarget.closest('.controls-Grid__row');
+        const cell = enterTarget.closest('.controls-Grid__row-cell');
+        if (!row || !cell) {
+            return false;
+        }
+
+        const cells = Array.from(row.children);
+        const editingCellIndex = cells.indexOf(cell);
+
+        if ((editingCellIndex + 1) < cells.length) {
+            cells[editingCellIndex + 1].querySelector('input').focus();
+            return true;
+        }
+
+        return false;
+    }
 }
