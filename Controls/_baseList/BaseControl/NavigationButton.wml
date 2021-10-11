@@ -2,7 +2,7 @@
     <div class="controls-BaseControl__cut ws-flexbox ws-flex-grow-1
             ws-justify-content-{{ buttonPosition }}
             controls-BaseControl__cut-container_{{ size }}
-            controls-BaseControl__cut-container_{{ size }}_position_{{ position }}">
+            controls-BaseControl__cut-container_{{ size }}_position_{{ buttonPosition }}">
         <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
             <ws:partial template="{{ content.resolvedTemplate }}"
                         attr:class="js-controls-BaseControl__NavigationButton"
@@ -17,7 +17,7 @@
 <ws:if data="{{ buttonView === 'separator' }}">
     <ws:partial template="separator"
                 size="{{ buttonConfig && buttonConfig.size || 'm' }}"
-                position="{{ buttonConfig && buttonConfig.buttonPosition || 'center' }}"
+                buttonPosition="{{ buttonConfig && buttonConfig.buttonPosition || 'center' }}"
                 contrastBackground="{{ !buttonConfig || buttonConfig.contrastBackground !== false }}"
                 />
 </ws:if>
