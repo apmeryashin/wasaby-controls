@@ -85,6 +85,7 @@
                                               mode="{{ (item || itemData).getStickyHeaderMode(stickyCallback) }}"
                                               backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
                                               shadowVisibility="{{column.shadowVisibility}}"
+                                              _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
                                               fixedZIndex="{{ column.getZIndex()}}"
                                               _subPixelArtifactFix="{{columnIndex !== 0}}"
                                               attr:key="sticky_{{ column.getInstanceId() }}"
