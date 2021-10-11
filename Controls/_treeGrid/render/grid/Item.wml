@@ -113,6 +113,7 @@
                                           shadowVisibility="{{column.shadowVisibility}}"
                                           backgroundStyle="{{ column.getStickyBackgroundStyle() }}"
                                           fixedZIndex="{{ column.getZIndex()}}"
+                                          isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
                                           attr:key="sticky_{{ column.getInstanceId() }}"
                                           attr:class="{{ column.getWrapperClasses(backgroundColorStyle, highlightOnHover, hoverBackgroundStyle) }}"
                                           attr:style="{{ column.getWrapperStyles(containerSize) }}">
