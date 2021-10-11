@@ -5,6 +5,7 @@
             bind:editingObject="_editingObject"
             typeDescription="{{_typeDescription}}"
             multiSelectVisibility="visible">
+            <ws:itemPadding top="s" bottom="s" left="null" right="null"/>
         </Controls.propertyGrid:PropertyGrid>
     </div>
     <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controls-Demo__wide-propertyGrid">
