@@ -359,10 +359,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _updateSelectionController(newOptions: IPropertyGridOptions): void {
-        const selectionChanged = !isEqual(this._options.selectedKeys, newOptions.selectedKeys) ||
-                                 !isEqual(this._options.excludedKeys, newOptions.excludedKeys);
+        const isTypeDescriptionChanged = newOptions.typeDescription !== this._options.typeDescription;
+        const isUpdateNeeded = !isEqual(this._options.selectedKeys, newOptions.selectedKeys) ||
+                               !isEqual(this._options.excludedKeys, newOptions.excludedKeys) ||
+                               isTypeDescriptionChanged;
 
-        if (selectionChanged) {
+        if (isTypeDescriptionChanged || newOptions.multiSelectVisibility === 'hidden') {
+            this._destroySelectionController();
+        }
+
+        if (isUpdateNeeded) {
             const controller = this._getSelectionController(newOptions);
             const newSelection = newOptions.selectedKeys === undefined
                 ? controller.getSelection()
@@ -371,10 +377,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                     excluded: newOptions.excludedKeys || []
                 };
             controller.setSelection(newSelection);
-        }
-        if (newOptions.multiSelectVisibility === 'hidden' && this._selectionController) {
-            this._selectionController.destroy();
-            this._selectionController = null;
         }
     }
 
@@ -429,6 +431,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         const excludedDiff = selectionDifference.excludedKeysDifference;
         if (excludedDiff.added.length || excludedDiff.removed.length) {
             this._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
+        }
+    }
+
+    private _destroySelectionController(): void {
+        if (this._selectionController) {
+            this._selectionController.destroy();
+            this._selectionController = null;
         }
     }
 
