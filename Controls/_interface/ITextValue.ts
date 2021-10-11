@@ -24,7 +24,7 @@ export default interface ITextValue {
  * <pre>
  * // JavaScript
  * onTextValueChanged: function(e, textValue) {
- *    UserConfig.setParam('selectedItems', textValue);
+ *    USER.set('selectedItems', textValue);
  * }
  * </pre>
  */
@@ -47,7 +47,7 @@ export default interface ITextValue {
  * JS:
  * <pre>
  *    onTextValueChanged: function(e, textValue) {
- *       UserConfig.setParam('selectedItems', textValue);
+ *       USER.set('selectedItems', textValue);
  *    }
  * </pre>
  */

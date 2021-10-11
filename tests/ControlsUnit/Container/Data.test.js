@@ -6,11 +6,10 @@ define(
       'Types/collection',
       'Application/Initializer',
       'Application/Env',
-      'EnvConfig/Config',
       'Controls/dataSource',
       'Browser/Transport'
    ],
-   function(lists, sourceLib, Deferred, collection, AppInit, AppEnv, Config, dataSourceLib, Transport) {
+   function(lists, sourceLib, Deferred, collection, AppInit, AppEnv, dataSourceLib, Transport) {
       describe('Container/Data', function() {
 
          var sourceData = [
