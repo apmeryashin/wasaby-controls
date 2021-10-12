@@ -44,10 +44,6 @@ export default class TreeCollection<
     constructor(options: IOptions<S, T>) {
         super(options);
         this._setupProjectionFilters();
-        this.appendStrategy(itemsStrategy.NodeFooter, {
-            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
-            itemModule: 'Controls/tree:TreeNodeFooterItem'
-        });
     }
 
     protected _setupProjectionFilters(): void {
@@ -100,5 +96,6 @@ export default class TreeCollection<
 Object.assign(TreeCollection.prototype, {
     '[Controls/tree:TreeCollection]': true,
     _moduleName: 'Controls/tree:TreeCollection',
-    _itemModule: 'Controls/tree:TreeItem'
+    _itemModule: 'Controls/tree:TreeItem',
+    _nodeFooterModule: 'Controls/tree:TreeNodeFooterItem'
 });
