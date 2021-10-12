@@ -31,7 +31,7 @@ const MAX_VISIBLE_YEARS = 14;
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_shortDatePicker.less переменные тем оформления}
  *
- * @class Controls/shortDatePicker
+ * @class Controls/shortDatePicker:View
  * @extends UI/Base:Control
  * @mixes Controls/shortDatePicker/IDateLitePopup
  *
@@ -45,6 +45,12 @@ const MAX_VISIBLE_YEARS = 14;
  * @demo Controls-demo/ShortDatePicker/DisplayedRanges/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/ContentTemplate/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
+ */
+
+/*
+ * @name Controls/shortDatePicker:View#displayedRanges
+ * @remark
+ * Интервал отображаемых периодов должен равняться году
  */
 
 class View extends Control<IDateLitePopupOptions> {
@@ -66,6 +72,11 @@ class View extends Control<IDateLitePopupOptions> {
     protected _tabPressed: boolean = false;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
+        if (!this._validateDisplayedRanges(options.displayedRanges)) {
+            Logger.error('Controls/shortDatePicker:View: интервал отображаемых периодов' +
+                ' в опции displayedRanges должен равняться году');
+        }
+
         this._isHeaderContentTemplateString = typeof options.headerContentTemplate === 'string';
         this._displayedRanges = options.displayedRanges;
         if (!options.emptyCaption) {
@@ -114,6 +125,19 @@ class View extends Control<IDateLitePopupOptions> {
     setYear(year: number): void {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    }
+
+    private _validateDisplayedRanges(displayedRanges: Date[][]): boolean {
+        if (!displayedRanges) {
+            return true;
+        }
+        for (const range of displayedRanges) {
+            if ((range[0] !== null && !dateUtils.isStartOfYear(range[0])) ||
+                (range[1] !== null && !dateUtils.isStartOfYear(range[1]))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected _getFirstPositionInMonthList(srcPosition: Date, dateConstructor: Function): Date {
