@@ -57,6 +57,7 @@ interface IPropertyGridValidatorArguments {
  * @implements Controls/propertyGrid:IProperty
  * @implements Controls/propertyGrid:IPropertyGrid
  * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/list:IRemovableList
  * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
  *
  * @public
