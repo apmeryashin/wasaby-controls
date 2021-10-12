@@ -94,7 +94,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return !needHide;
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         if (this.needMoreButton() && !this.getRowTemplate() && !this.getOwner().hasNodeFooterColumns()) {
             this.setRowTemplate('Controls/treeGrid:NodeFooterTemplate');
         }
