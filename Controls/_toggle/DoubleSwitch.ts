@@ -146,7 +146,7 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
 
 /**
  * @name Controls/_toggle/DoubleSwitch#resetValue
- * @cfg {boolean} Предустановленное значение
+ * @cfg {boolean}
  * @demo Controls-demo/toggle/DoubleSwitch/ResetValue/Index
  */
 

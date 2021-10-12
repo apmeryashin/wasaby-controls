@@ -107,7 +107,7 @@ Object.defineProperty(Switch, 'defaultProps', {
 
 /**
  * @name Controls/_toggle/Switch#resetValue
- * @cfg {boolean} Предустановленное значение
+ * @cfg {boolean}
  * @demo Controls-demo/toggle/Switch/ResetValue/Index
  */
 
