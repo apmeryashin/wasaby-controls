@@ -98,6 +98,7 @@ class FormController extends ControllerBase<IFormController> {
     protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
+    private _shouldSetFocusAfterUpdate: boolean = false;
     private _errorController: ErrorController;
     private _createdInMounting: IConfigInMounting;
     private _isMount: boolean;
@@ -152,7 +153,7 @@ class FormController extends ControllerBase<IFormController> {
         }
     }
 
-    protected _afterMount(): void {
+    protected _afterMount(options: IFormController): void {
         super._afterMount();
         this._isMount = true;
         // если рекорд был создан во время beforeMount, уведомим об этом
@@ -264,13 +265,19 @@ class FormController extends ControllerBase<IFormController> {
         return INITIALIZING_WAY.CREATE;
     }
 
-    protected _afterUpdate(): void {
+    protected _afterUpdate(options: IFormController): void {
         if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
             this._validateController.setValidationResult(null);
             this._wasCreated = false;
             this._wasRead = false;
             this._wasDestroyed = false;
+        }
+
+        // В случае прелоада при появлении рекорда ставим фокус,
+        // т.к. могло не быть много контента и фокус поставить было некуда
+        if (this._options.initializingWay === INITIALIZING_WAY.PRELOAD && !options.record && this._options.record) {
+            this.activate();
         }
         super._afterUpdate();
     }

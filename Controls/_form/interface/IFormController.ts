@@ -73,6 +73,7 @@ export default interface IFormController extends IControllerBase {
     errorController?: ErrorController;
     /**
      * @name Controls/form:IFormController#initializingWay
+     * @demo Controls-demo/FormController/InitializingWay/Index
      * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
      * @variant preload В этом режиме FormController строится без данных, ожидая что запись появится на фазе обновления. Используется совместно с режимом предзагрузки данных при построении контрола. Подробнее см опцию {@link Controls/popup:IBaseOpener#dataLoaders}
      * @variant local Верстка контрола строится по записи, переданной в опцию {@link Controls/form:IFormController#record record}, запроса на БЛ нет.
