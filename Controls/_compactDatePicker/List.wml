@@ -17,6 +17,7 @@
         <ws:bodyTemplate>
             <div>
                 <Controls.calendar:MonthView
+                        _date="{{ _options._date }}"
                         monthViewModel="{{ _monthViewModel }}"
                         isDayAvailable="{{ _options.isDayAvailable }}"
                         attr:class="controls-CompactDatePicker__month-list__item"

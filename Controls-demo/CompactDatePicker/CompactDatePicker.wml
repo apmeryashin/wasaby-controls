@@ -2,5 +2,6 @@
     <Controls.compactDatePicker:View
             bind:startValue="_startValue"
             bind:endValue="_endValue"
+            _date="{{ _date }}"
     />
 </div>
