@@ -8,7 +8,6 @@ import 'css!Controls/CommonClasses';
 import {Control, IControlOptions} from 'UI/Base';
 import cClone = require('Core/core-clone');
 import cInstance = require('Core/core-instance');
-import Deferred = require('Core/Deferred');
 
 import {constants, detection} from 'Env/Env';
 
@@ -82,10 +81,10 @@ import {
 import {IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
+import { ScrollController as NewScrollController, IDirection as IScrollControllerDirection } from './Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
-import {CssClassList} from './resources/utils/CssClassList';
 import {
     FlatSelectionStrategy,
     TreeSelectionStrategy,
@@ -126,6 +125,7 @@ import ObserversController, {
 } from 'Controls/_baseList/Controllers/ObserversController';
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
 import {convertReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
+import {IRangeChangeResult} from "Controls/_baseList/Controllers/ScrollController/Calculator";
 
 //#endregion
 
@@ -189,7 +189,7 @@ const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isWin && !detection.isDesktopChro
                                      detection.isIE || detection.isMobileIOS ? 150 : 0;
 const LIST_MEASURABLE_CONTAINER_SELECTOR = 'js-controls-ListView__measurableContainer';
 const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
-
+const LOADING_TRIGGER_SELECTOR = '.controls-BaseControl__loadingTrigger';
 //#endregion
 
 //#region Types
@@ -3120,6 +3120,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _scrollTop = 0;
     _popupOptions = null;
     private _scrollController: ScrollController;
+    private _newScrollController: NewScrollController;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3569,6 +3570,27 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._sourceController;
     }
 
+    private _createNewScrollController(): void {
+        this._newScrollController = new NewScrollController({
+            itemsContainer: this._getItemsContainer(),
+            itemsQuerySelector: this._options.itemsSelector,
+
+            listContainer: this._container,
+            listControl: this,
+            triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
+            triggersVisibility: undefined,
+
+            scrollTop: 0,
+            viewPortSize: 0,
+            indexChangedCallback(rangeChangeResult: IRangeChangeResult): void {
+                console.log('indexChangedCallback', rangeChangeResult);
+            },
+            itemsEndedCallback(direction: IScrollControllerDirection): void {
+                console.log('itemsEndedCallback', direction);
+            }
+        });
+    }
+
     protected _afterMount(): void {
         this._isMounted = true;
 
@@ -3678,6 +3700,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         _private.tryLoadToDirectionAgain(this);
+
+        this._createNewScrollController();
     }
 
     _updateScrollController(newOptions?: IBaseControlOptions) {

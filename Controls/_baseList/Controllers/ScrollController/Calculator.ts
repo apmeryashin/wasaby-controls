@@ -1,5 +1,23 @@
 // import { calculateVirtualRange } from './VirtualScrollUtil';
 
+
+export interface IRangeChangeResult {
+    startIndex: number;
+    stopIndex: number;
+
+    topEdgeItemIndex: number;
+    bottomEdgeItemIndex: number;
+
+    hasItemsBackward: boolean;
+    hasItemsForward: boolean;
+
+    topVirtualPlaceholderSize: number;
+    bottomVirtualPlaceholderSize: number;
+
+    // todo release it!
+    activeElementIndex: number
+}
+
 export interface ICalculatorOptions {
     segmentSize: number;
 }

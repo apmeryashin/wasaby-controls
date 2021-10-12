@@ -1,10 +1,12 @@
-import { EdgeIntersectionObserver, TIntersectionEvent } from 'Controls/scroll';
+import { EdgeIntersectionObserver } from 'Controls/scroll';
 import { Control } from 'UI/Base';
 
 export interface ITriggersVisibility {
     top: boolean;
     bottom: boolean;
 }
+
+export type TIntersectionEvent = 'bottomIn' | 'bottomOut' | 'topIn' | 'topOut';
 
 export interface ITriggersOffset {
     top: number;
@@ -13,11 +15,14 @@ export interface ITriggersOffset {
 
 export type TObserversCallback = (event: TIntersectionEvent) => void;
 
-export interface IObserversControllerOptions {
+export interface IObserversControllerBaseOptions {
     listControl: Control,
     listContainer: HTMLElement;
     triggersQuerySelector: string;
     triggersVisibility: ITriggersVisibility;
+}
+
+export interface IObserversControllerOptions extends IObserversControllerBaseOptions {
     observersCallback: TObserversCallback;
 }
 
