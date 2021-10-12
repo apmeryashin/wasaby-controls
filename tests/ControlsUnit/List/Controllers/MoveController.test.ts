@@ -405,7 +405,7 @@ describe('Controls/list_clean/MoveController', () => {
                 });
         });
 
-        // Случай, когда пытаются вызвать множество диалогов перемещения
+        // Случай, когда пытаются вызвать диалог перемещения несколько раз подряд
         it('moveWithDialog() multiple times, should open only one', () => {
             // to prevent popup open
             sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => (
@@ -413,16 +413,24 @@ describe('Controls/list_clean/MoveController', () => {
             )));
             controller = new MoveController({...cfg, parentProperty: undefined});
             controller.updateOptions(cfg);
-            return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
+            let callThen1: boolean = false;
+            let callThen2: boolean = false;
+            const call1 = controller.moveWithDialog(selectionObject, {myProp: 'test'})
+                .then(() => {
+                    callThen1 = true;
+                });
+            const call2 = controller.moveWithDialog(selectionObject, {myProp: 'test'})
+                .then(() => {
+                    callThen2 = true;
+                })
                 .catch(() => {
                     callCatch = true;
-                })
-                .finally(() => {
-
-                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
-                    assert.isFalse(callCatch);
                 });
+            return Promise.all([call1, call2]).finally(() => {
+                assert.isTrue(callThen1);
+                assert.isFalse(callThen2);
+                assert.isTrue(callCatch);
+            });
         });
     });
 });
