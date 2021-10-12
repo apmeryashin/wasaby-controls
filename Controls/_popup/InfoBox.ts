@@ -9,7 +9,7 @@ import {goUpByControlTree} from 'UI/Focus';
 import * as getZIndex from 'Controls/Utils/getZIndex';
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-import {CalmTimer} from 'Controls/_popup/fastOpenUtils/FastOpen';
+import {CalmTimer} from 'Controls/_popup/utils/FastOpen';
 import {detection} from 'Env/Env';
 
 /**

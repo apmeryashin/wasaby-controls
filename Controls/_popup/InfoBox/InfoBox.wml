@@ -1,16 +1,22 @@
-<div>
-   <ws:partial template="{{_options.content}}"
-               on:mousedown="_contentMousedownHandler()"
-               on:mousemove="_contentMousemoveHandler()"
-               on:mouseleave="_contentMouseleaveHandler()"
-               on:touchstart="_contentTouchStartHandler()"
-               on:click="_contentClickHandler()"
-   />
+<ws:if data="{{_isNewEnvironment()}}">
+    <ws:partial template="{{_options.content}}"
+                on:mousedown="_contentMousedownHandler()"
+                on:mousemove="_contentMousemoveHandler()"
+                on:mouseleave="_contentMouseleaveHandler()"
+                on:touchstart="_contentTouchStartHandler()"
+                on:click="_contentClickHandler()"
+    />
+</ws:if>
+<ws:else>
+   <div>
+      <ws:partial template="{{_options.content}}"
+                on:mousedown="_contentMousedownHandler()"
+                on:mousemove="_contentMousemoveHandler()"
+                on:mouseleave="_contentMouseleaveHandler()"
+                on:touchstart="_contentTouchStartHandler()"
+                on:click="_contentClickHandler()"
+      />
 
-   <ws:if data="{{!_isNewEnvironment()}}">
       <Controls._popup.Opener.InfoBox name="infoBoxOpener"/>
-   </ws:if>
-   <ws:if data="{{_opened}}">
-      <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()"/>
-   </ws:if>
-</div>
+   </div>
+</ws:else>
