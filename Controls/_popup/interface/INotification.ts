@@ -15,6 +15,7 @@ export interface INotificationOpener extends IOpener {
 
 /**
  * @name Controls/_popup/interface/INotificationOpener#autoClose
+ * @cfg {Boolean} Автоматически закрывать окно после открытия.
  * @default true
  */
 
@@ -25,6 +26,7 @@ export interface INotificationOpener extends IOpener {
  * @property {String} className Имена классов, которые будут применены к корневой ноде окна уведомления.
  * @property {String|TemplateFunction} template Шаблон окна уведомления.
  * @property {Object} templateOptions Опции для контрола, который добавлен в шаблон {@link template}.
+ * @property {Boolean}  autoClose Автоматически закрывать окно после открытия.
  */
 
 /**
