@@ -324,6 +324,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     protected _displayExpanderPadding: boolean;
 
+    /**
+     * Название модуля элементы, который будет создаваться в стратегии NodeFooter.
+     * Задается с помощью Object.assign
+     * @private
+     */
+    private _nodeFooterModule: string;
+
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
 
@@ -347,7 +354,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         }
 
         this.appendStrategy(this.getNodeFooterStrategyCtor(), {
-            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback
+            nodeFooterVisibilityCallback: this._$nodeFooterVisibilityCallback,
+            nodeFooterModule: this._nodeFooterModule
         });
     }
 
@@ -500,7 +508,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             this._$nodeFooterVisibilityCallback = callback;
 
             // Нужно пересоздавать стратегию, чтобы Composer правильно запомнил опции для нее
-            this.reCreateStrategy(this.getNodeFooterStrategyCtor(), { nodeFooterVisibilityCallback: callback });
+            this.reCreateStrategy(
+                this.getNodeFooterStrategyCtor(),
+                { nodeFooterVisibilityCallback: callback, nodeFooterModule: this._nodeFooterModule}
+            );
 
             this._nextVersion();
         }
@@ -1399,6 +1410,7 @@ Object.assign(Tree.prototype, {
     '[Controls/_display/Tree]': true,
     _moduleName: 'Controls/display:Tree',
     _itemModule: 'Controls/display:TreeItem',
+    _nodeFooterModule: 'Controls/display:NodeFooter',
     _$parentProperty: '',
     _$nodeProperty: '',
     _$childrenProperty: '',
