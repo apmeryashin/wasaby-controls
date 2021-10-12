@@ -130,7 +130,8 @@ export function getResetButtonVisible(startValue: Date, endValue: Date, resetSta
             date.setMilliseconds(0);
         }
     };
-    for (const value of [startValue, endValue, resetStartValue, resetEndValue]) {
+    const values = [startValue, endValue, resetStartValue, resetEndValue];
+    for (const value of values) {
         setTimeToZero(value);
     }
     const hasResetStartValue = resetStartValue || resetStartValue === null;
