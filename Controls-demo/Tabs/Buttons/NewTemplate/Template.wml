@@ -34,14 +34,6 @@
                     items="{{_items4}}"
                     keyProperty="id"/>
         </div>
-        <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
-            <span attr:style="white-space: nowrap">caption-counter-icon-additionalCaption</span>
-            <Controls.tabs:Buttons
-                    bind:selectedKey='SelectedKey1'
-                    itemRightTemplate="Controls/tabs:TextCounterTabTemplate"
-                    items="{{_items5}}"
-                    keyProperty="id"/>
-        </div>
     </div>
     <div attr:style="text-align: center;" class="controls-text-secondary">3. IconCounterTabTemplate</div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -49,7 +41,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items6}}"
+                items="{{_items5}}"
                 keyProperty="id"/>
     </div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -57,7 +49,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items7}}"
+                items="{{_items6}}"
                 keyProperty="id"/>
     </div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -65,7 +57,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items8}}"
+                items="{{_items7}}"
                 keyProperty="id"/>
     </div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -73,7 +65,18 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items9}}"
+                items="{{_items8}}"
                 keyProperty="id"/>
+    </div>
+    <div>
+        <div attr:style="text-align: center;" class="controls-text-secondary">4. TextTabTemplate</div>
+        <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
+            <span attr:style="white-space: nowrap">caption-icon-additionalCaption</span>
+            <Controls.tabs:Buttons
+                    bind:selectedKey='SelectedKey1'
+                    itemRightTemplate="Controls/tabs:ITextTabTemplate"
+                    items="{{_items9}}"
+                    keyProperty="id"/>
+        </div>
     </div>
 </div>

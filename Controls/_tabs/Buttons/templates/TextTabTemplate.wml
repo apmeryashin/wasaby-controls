@@ -6,11 +6,7 @@
                         controls-icon_style-{{item.iconStyle || 'unaccented'}}"></div>
         </div>
     </ws:if>
-    <ws:if data="{{item.mainCounter}}">
-        <div class="controls-Tabs_margin-left ws-align-self-center">
-            <Controls.heading:Counter class="controls-fontweight-default"
-                                      caption="{{item.mainCounter}}"
-                                      fontColorStyle="{{item.mainCounterStyle || 'unaccented'}}"/>
-        </div>
+    <ws:if data="{{item.additionalCaption}}">
+        <div class="controls-Tabs_margin-left controls-text-unaccented">{{item.additionalCaption}}</div>
     </ws:if>
 </div>
