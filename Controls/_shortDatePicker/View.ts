@@ -72,20 +72,7 @@ class View extends Control<IDateLitePopupOptions> {
     protected _tabPressed: boolean = false;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
-        const validateDisplayedRanges = () => {
-            if (!options.displayedRanges) {
-                return true;
-            }
-            for (const range of options.displayedRanges) {
-                if ((range[0] !== null && !dateUtils.isStartOfYear(range[0])) ||
-                    (range[1] !== null && !dateUtils.isStartOfYear(range[1]))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        if (!validateDisplayedRanges()) {
+        if (!this._validateDisplayedRanges(options.displayedRanges)) {
             Logger.error('Controls/shortDatePicker:View: интервал отображаемых периодов' +
                 ' в опции displayedRanges должен равняться году');
         }
@@ -138,6 +125,19 @@ class View extends Control<IDateLitePopupOptions> {
     setYear(year: number): void {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    }
+
+    private _validateDisplayedRanges(displayedRanges: Date[][]): boolean {
+        if (!displayedRanges) {
+            return true;
+        }
+        for (const range of displayedRanges) {
+            if ((range[0] !== null && !dateUtils.isStartOfYear(range[0])) ||
+                (range[1] !== null && !dateUtils.isStartOfYear(range[1]))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected _getFirstPositionInMonthList(srcPosition: Date, dateConstructor: Function): Date {
