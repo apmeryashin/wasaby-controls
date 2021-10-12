@@ -35,6 +35,7 @@ import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObs
 import _ContainerBase from 'Controls/_scroll/ContainerBase';
 import VirtualScrollContainer from 'Controls/_scroll/VirtualScrollContainer';
 import {SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
+export { TIntersectionEvent } from 'Controls/_baseList/Controllers/ObserversController';
 
 import Group from 'Controls/_scroll/StickyBlock/Group';
 import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset, IFixedEventData} from 'Controls/_scroll/StickyBlock/Utils';
