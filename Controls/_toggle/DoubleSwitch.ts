@@ -5,15 +5,13 @@ import toggleTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/Dou
 import textTemplate = require('wml!Controls/_toggle/DoubleSwitch/resources/DoubleSwitchText');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
-import {ITooltip, ITooltipOptions} from 'Controls/interface';
+import {IResetValueOptions, ITooltip, ITooltipOptions, IContrastBackgroundOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
-import {IContrastBackgroundOptions} from "Controls/_interface/IContrastBackground";
 
-export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IContrastBackgroundOptions {
+export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IContrastBackgroundOptions, IResetValueOptions {
    captions?: string[];
    orientation?: string;
    size?: string;
-   resetValue?: boolean;
 }
 
 const CAPTIONS_LENGTH = 2;

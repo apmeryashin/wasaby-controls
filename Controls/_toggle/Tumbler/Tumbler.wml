@@ -13,6 +13,7 @@
                 <ws:partial
                     template="{{_getTemplate(_options.itemTemplate, itemData, _options.itemTemplateProperty)}}"
                     item="{{itemData}}"
+                    fontSize="{{_options.inlineHeight === 'default' ? 'm' : _options.inlineHeight}}"
                     displayProperty="{{_options.displayProperty}}"/>
             </div>
         </ws:for>

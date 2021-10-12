@@ -874,6 +874,12 @@
 //TODO это должно уехать в BaseControl после задачи https://online.sbis.ru/opendoc.html?guid=92bedbf7-6038-4c1f-826e-b096b4cddd6d
 .controls-CheckboxMarker_inList {
    height: var(--checkbox_height_list);
+
+   &::before {
+      content: '\200b';
+      font-size: var(--font-size_2xl);
+      width: 0;
+   }
 }
 /// decorator:money in list, grid
 .controls-text-group{

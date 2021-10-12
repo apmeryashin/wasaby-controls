@@ -2,22 +2,22 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
-    IContrastBackgroundOptions,
-    ITooltip,
-    ITooltipOptions,
-    IValidationStatus,
-    IValidationStatusOptions
+   IContrastBackgroundOptions,
+   IResetValueOptions,
+   ITooltip,
+   ITooltipOptions,
+   IValidationStatus,
+   IValidationStatusOptions
 } from 'Controls/interface';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
-    ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions {
+    ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
    caption: string;
    captionPosition: string;
    size?: string;
-   resetValue?: boolean;
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
