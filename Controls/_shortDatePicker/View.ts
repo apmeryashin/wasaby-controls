@@ -74,7 +74,7 @@ class View extends Control<IDateLitePopupOptions> {
     protected _beforeMount(options: IDateLitePopupOptions): void {
         const validateDisplayedRanges = () => {
             if (!options.displayedRanges) {
-                return false;
+                return true;
             }
             for (const range of options.displayedRanges) {
                 if ((range[0] !== null && !dateUtils.isStartOfYear(range[0])) ||
