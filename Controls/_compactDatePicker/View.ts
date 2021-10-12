@@ -2,7 +2,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_compactDatePicker/View';
 import {Date as WSDate} from 'Types/entity';
 import {Base as dateUtils} from 'Controls/dateUtils';
-import {Utils as DateControlsUtils, DateRangeModel} from 'Controls/dateRange';
+import {Utils as DateControlsUtils, DateRangeModel, IDateRangeOptions} from 'Controls/dateRange';
+import {IDisplayedRangesOptions} from "Controls/interface";
 import {getFormattedCaption} from 'Controls/_compactDatePicker/Utils';
 import 'css!Controls/compactDatePicker';
 
@@ -52,10 +53,8 @@ import 'css!Controls/compactDatePicker';
  * @demo Controls-demo/CompactDatePicker/IsDayAvailable/Index
  */
 
-interface ICompactDatePickerOptions extends IControlOptions {
+interface ICompactDatePickerOptions extends IControlOptions, IDateRangeOptions, IDisplayedRangesOptions {
     position: Date;
-    startValue: Date | null;
-    endValue: Date | null;
 }
 
 export default class CompactDatePicker extends Control<ICompactDatePickerOptions> {
@@ -65,11 +64,13 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
     protected _weekdaysCaptions: string = DateControlsUtils.getWeekdaysCaptions();
     protected _rangeModel: DateRangeModel;
     protected _todayIconVisible: boolean = false;
-    protected _today: number = (new WSDate()).getDate();
+    protected _today: number;
     protected _getFormattedCaption: Function = getFormattedCaption;
     protected _topShadowVisibility: string = 'hidden';
 
     protected _beforeMount(options: ICompactDatePickerOptions): void {
+        // _date только для тестов, чтобы замокать текущий день
+        this._today = options._date ? options._date.getDate() : (new WSDate()).getDate();
         const getFormattedPosition = () => {
             let date;
             if (dateUtils.isValidDate(options.startValue)) {
@@ -88,7 +89,7 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
         // посчитаем видимость кнопки
         if (this._position.getFullYear() !== new WSDate().getFullYear() ||
             this._position.getMonth() !== new WSDate().getMonth()) {
-            this._todayIconVisible = true;
+            this._updateTodayIconVisible(true, options.displayedRanges);
         }
     }
 
@@ -96,12 +97,26 @@ export default class CompactDatePicker extends Control<ICompactDatePickerOptions
         this._rangeModel.destroy();
     }
 
+    private _updateTodayIconVisible(newState: boolean, displayedRanges: Date[][]): void {
+        const date = this._options._date || new WSDate();
+        if (dateUtils.hitsDisplayedRanges(date, displayedRanges)) {
+            this._todayIconVisible = newState;
+        } else {
+            this._todayIconVisible = false;
+        }
+    }
+
+    protected _todayIconVisibleChangedHandler(event: Event, todayIconVisible: boolean): void {
+        this._updateTodayIconVisible(todayIconVisible, this._options.displayedRanges);
+    }
+
     protected _positionChangedHandler(): void {
         this._headerCaption = this._getFormattedCaption(this._position);
     }
 
     protected _scrollToCurrentDate(): void {
-        this._position = dateUtils.getStartOfMonth(new WSDate());
+        const date = this._options._date || new WSDate();
+        this._position = dateUtils.getStartOfMonth(date);
         this._headerCaption = this._getFormattedCaption(this._position);
     }
 
