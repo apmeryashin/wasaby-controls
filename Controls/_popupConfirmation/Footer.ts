@@ -29,6 +29,12 @@ class Footer extends Control<IFooterOptions> implements IConfirmationFooter {
         this._prepareData(options);
     }
 
+    protected _beforeUpdate(newOptions?: IFooterOptions): void {
+        if (newOptions.type !== this._options.type || newOptions.buttons !== this._options.buttons) {
+            this._prepareData(newOptions);
+        }
+    }
+
     protected _prepareData(options: IFooterOptions): void {
         if (options.buttons) {
             this._buttons = options.buttons;
