@@ -134,9 +134,6 @@ class FormController extends ControllerBase<IFormController> {
 
         if (initializingWay === INITIALIZING_WAY.PRELOAD) {
             // В случае с предзагрузкой рекорда может не быть, но он придет на фазе обновления с prefetchData.
-            // Т.к. в случае прелоада у нас может не быть большей части контента
-            // нужно заново поставить фокус после появления записи из prefetchData
-            this._shouldSetFocusAfterUpdate = true;
         } else if (initializingWay !== INITIALIZING_WAY.LOCAL) {
             let recordPromise;
             if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_READ) {
@@ -167,13 +164,6 @@ class FormController extends ControllerBase<IFormController> {
         // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
         if (this._readInMounting) {
             this._readRecordBeforeMountNotify();
-        }
-
-        // В случае прелоада при появлении рекорда ставим фокус,
-        // т.к. могло не быть много контента и фокус поставить было некуда
-        if (this._shouldSetFocusAfterUpdate && options.record !== this._options.record) {
-            this.activate();
-            this._shouldSetFocusAfterUpdate = false;
         }
     }
 
@@ -275,13 +265,19 @@ class FormController extends ControllerBase<IFormController> {
         return INITIALIZING_WAY.CREATE;
     }
 
-    protected _afterUpdate(): void {
+    protected _afterUpdate(options: IFormController): void {
         if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
             this._validateController.setValidationResult(null);
             this._wasCreated = false;
             this._wasRead = false;
             this._wasDestroyed = false;
+        }
+
+        // В случае прелоада при появлении рекорда ставим фокус,
+        // т.к. могло не быть много контента и фокус поставить было некуда
+        if (this._options.initializingWay === INITIALIZING_WAY.PRELOAD && !options.record && this._options.record) {
+            this.activate();
         }
         super._afterUpdate();
     }
