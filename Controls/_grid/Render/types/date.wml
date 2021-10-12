@@ -1,0 +1,4 @@
+<Controls.decorator:Date fontSize="{{fontSize}}"
+                         fontColorStyle="{{fontColorStyle}}"
+                         value="{{value}}"
+                         scope="{{displayTypeOptions}}"/>
