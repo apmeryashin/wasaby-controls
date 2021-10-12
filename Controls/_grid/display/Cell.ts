@@ -20,6 +20,7 @@ import Row from './Row';
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
 const NUMBER_RENDER = 'Controls/grid:NumberTypeRender';
+const DATE_RENDER = 'Controls/grid:DateTypeRender';
 const STRING_RENDER = 'Controls/grid:StringTypeRender';
 const STRING_SEARCH_RENDER = 'Controls/grid:StringSearchTypeRender';
 
@@ -127,6 +128,8 @@ export default class Cell<
                 return MONEY_RENDER;
             case 'number':
                 return NUMBER_RENDER;
+            case 'date':
+                return DATE_RENDER;
             default:
                 return STRING_RENDER;
         }
