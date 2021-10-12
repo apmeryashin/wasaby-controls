@@ -150,8 +150,8 @@ define([
             result: true
          }, {
             options: {
-               startValue: new Date(2021, 5, 4),
-               endValue: new Date(2021, 5, 4),
+               startValue: new Date(2021, 5, 4, 9, 9, 9, 1),
+               endValue: new Date(2021, 5, 4, 1, 1, 1, 4),
                resetStartValue: new Date(2021, 5, 4, 10, 42, 41, 33),
                resetEndValue: new Date(2021, 5, 4, 10, 42, 41, 33),
             },
