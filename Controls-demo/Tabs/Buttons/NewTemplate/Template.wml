@@ -74,7 +74,7 @@
             <span attr:style="white-space: nowrap">caption-icon-additionalCaption</span>
             <Controls.tabs:Buttons
                     bind:selectedKey='SelectedKey1'
-                    itemRightTemplate="Controls/tabs:ITextTabTemplate"
+                    itemRightTemplate="Controls/tabs:TextTabTemplate"
                     items="{{_items9}}"
                     keyProperty="id"/>
         </div>
