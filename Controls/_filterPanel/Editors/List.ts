@@ -10,8 +10,9 @@ import {
     ISourceOptions,
     INavigationOptions,
     INavigationOptionValue,
-    IItemActionsOptions,
-    ISelectorDialogOptions
+    ISelectorDialogOptions,
+    TFilter,
+    TKey
 } from 'Controls/interface';
 import {IList, MultiSelectCircleTemplate} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
@@ -19,7 +20,11 @@ import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import * as Clone from 'Core/core-clone';
-import { TItemActionShowType, IItemAction } from 'Controls/itemActions';
+import {
+    TItemActionShowType,
+    IItemAction,
+    IItemActionsOptions
+} from 'Controls/itemActions';
 import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
@@ -110,21 +115,23 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _popupOpener: StackOpener|DialogOpener = null;
     protected _items: RecordSet = null;
     protected _selectedKeys: string[]|number[] = [];
-    protected _filter: object = {};
+    protected _filter: TFilter = {};
     protected _navigation: INavigationOptionValue<unknown> = null;
     protected _editorTarget: HTMLElement | EventTarget;
     protected _historyService: unknown;
     protected _itemActions: IItemAction[];
-    private _itemsReadyCallback: Function = null;
+    protected _itemsReadyCallback: Function = null;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
         this._setColumns(options, options.propertyValue);
-        this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
         this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
         this._itemActions = this._getItemActions(options.historyId);
+
+        this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
         this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
+        this._onCollectionChange = this._onCollectionChange.bind(this);
     }
 
     protected _afterMount(): void {
@@ -152,21 +159,26 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {
+        let isActionVisible;
+        const itemKey = item.getKey();
+        const {emptyKey, selectAllKey} = this._options;
+
         if (item.get('pinned')) {
-            return action.id === 'PinOff';
+            isActionVisible = action.id === 'PinOff';
+        } else {
+            isActionVisible = action.id === 'PinNull';
         }
-        return action.id === 'PinNull';
+        return isActionVisible && itemKey !== emptyKey && itemKey !== selectAllKey;
     }
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
         this._items = items;
-        if (this._options.emptyText && !items.getRecordById(this._options.emptyKey)) {
-            this._addFilterItem(this._options.emptyText, this._options.emptyKey);
-        }
+        this._addSyntheticItemsToOriginItems(items, this._options);
+        this._items.subscribe('onCollectionChange', this._onCollectionChange);
+    }
 
-        if (this._options.selectAllText && !items.getRecordById(this._options.selectAllKey)) {
-            this._addFilterItem(this._options.selectAllText, this._options.selectAllKey);
-        }
+    protected _onCollectionChange(): void {
+        this._addSyntheticItemsToOriginItems(this._items, this._options);
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
@@ -276,6 +288,10 @@ class ListEditor extends Control<IListEditorOptions> {
         if (this._popupOpener) {
             this._popupOpener.destroy();
         }
+
+        if (this._items) {
+            this._items.unsubscribe('onCollectionChange', this._onCollectionChange);
+        }
     }
 
     private _handleResetItems(): void {
@@ -289,13 +305,13 @@ class ListEditor extends Control<IListEditorOptions> {
                 {
                     id: 'PinOff',
                     icon: 'icon-PinOff',
-                    size: 's',
+                    iconSize: 's',
                     showType: TItemActionShowType.TOOLBAR,
                     handler: this._handlePinClick.bind(this)
                 }, {
                     id: 'PinNull',
                     icon: 'icon-PinNull',
-                    size: 's',
+                    iconSize: 's',
                     showType: TItemActionShowType.TOOLBAR,
                     handler: this._handlePinClick.bind(this)
                 }
@@ -318,23 +334,37 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    private _addFilterItem(additionalText: string, additionalKey: string): void {
-        const emptyItem = this._getItemModel(this._items, this._options.keyProperty);
+    private _addSyntheticItemsToOriginItems(
+        items: RecordSet,
+        {emptyText, emptyKey, selectAllText, selectAllKey}: IListEditorOptions,
+    ): void {
+        if (emptyText && !items.getRecordById(emptyKey)) {
+            this._prependItem(emptyKey, emptyText);
+        }
+
+        if (selectAllText && !items.getRecordById(selectAllKey)) {
+            this._prependItem(selectAllKey, selectAllText);
+        }
+    }
+
+    private _prependItem(key: TKey, text: string): void {
+        const {keyProperty, displayProperty} = this._options;
+        const emptyItem = this._getItemModel(this._items, keyProperty);
 
         const data = {};
-        data[this._options.keyProperty] = additionalKey;
-        data[this._options.displayProperty] = additionalText;
+        data[keyProperty] = key;
+        data[displayProperty] = text;
         emptyItem.set(data);
         this._items.prepend([emptyItem]);
     }
 
-    private _setFilter(selectedKeys: string[]|number[], options: IListEditorOptions): void {
-        this._filter = {...options.filter};
+    private _setFilter(selectedKeys: string[]|number[], {filter, historyId, keyProperty}: IListEditorOptions): void {
+        this._filter = {...filter};
         if (selectedKeys && selectedKeys.length) {
-            this._filter[options.keyProperty] = selectedKeys;
+            this._filter[keyProperty] = selectedKeys;
         }
-        if (options.historyId) {
-            this._filter.historyId = options.historyId;
+        if (historyId) {
+            this._filter._historyIds = [historyId];
         }
     }
 
