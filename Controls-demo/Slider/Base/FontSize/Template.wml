@@ -6,6 +6,7 @@
                 minValue="{{0}}"
                 bind:value="_value"
                 scaleStep="{{10}}"
+                attr:data-qa="controlsDemo_slider__slider_size_default"
         />
     </div>
     <div class="controlsDemo__cell">
@@ -17,6 +18,7 @@
                 scaleStep="{{10}}"
                 scaleFontSize="l"
                 tooltipFontSize="s"
+                attr:data-qa="controlsDemo_slider__slider_size_l"
         />
     </div>
     <div class="controlsDemo__cell">
@@ -28,6 +30,7 @@
                 scaleStep="{{10}}"
                 scaleFontSize="xs"
                 tooltipFontSize="3xl"
+                attr:data-qa="controlsDemo_slider__slider_size_xs"
         />
     </div>
 </div>

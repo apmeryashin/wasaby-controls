@@ -9,7 +9,7 @@ export interface ISlidingPanelPopupOptions {
     modal?: boolean;
     position?: TSlidingPanelPosition;
     content?: TemplateFunction;
-    desktopMode?: 'dialog' | 'stack';
+    desktopMode?: 'dialog' | 'stack' | 'sticky';
 }
 
 export interface ISlidingPanelOptions {
@@ -49,6 +49,7 @@ export interface ISlidingPanel {
  * @cfg {String} Определяет какого вида окно откроется на настольном копьютере и планшете.
  * @variant stack (Стековая панель)
  * @variant dialog (Диалоговое окно)
+ * @variant sticky (Всплывающее окно)
  * @default stack
  */
 

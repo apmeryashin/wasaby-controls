@@ -400,10 +400,6 @@
          .controls-Grid__editArrow-wrapper {
             visibility: visible;
          }
-
-         .controls-Grid__editArrow:hover {
-            fill: var(--secondary_hover_icon-color);
-         }
       }
    }
 }
@@ -908,14 +904,6 @@
    align-items: baseline;
 }
 
-// Для исправления бага safari, из-за которого position: absolute элементы,
-// не сдвигаются padding'ами внешнего блока
-.ws-is-mobile-safari {
-   .controls-StickyBlock_gapFix .controls-GridView__itemV_marker-master {
-      top: 1px;
-   }
-}
-
 .controls-GridView__itemV_marker-master::before {
    content: '\200b';
    font-size: var(--font-size_2xl);
@@ -1057,6 +1045,10 @@
    align-items: baseline;
    cursor: pointer;
    pointer-events: auto;
+}
+
+.controls-Grid__editArrow:hover {
+   fill: var(--secondary_hover_icon-color);
 }
 
 .controls-Grid__editArrow-blur_style-default_background:before,

@@ -5,6 +5,7 @@
                 source="{{_buttonsSource}}"
                 keyProperty="id"
                 menuButtonViewMode="toolButton"
+                attr:data-qa="controlsDemo_toolbars_view__tool_button"
         />
     </div>
     <div class="controlsDemo__cell">
@@ -13,6 +14,7 @@
                 source="{{_buttonsSource}}"
                 on:itemClick="_itemClick()"
                 menuButtonViewMode="link"
+                attr:data-qa="controlsDemo_toolbars_view__link"
         />
     </div>
 </div>

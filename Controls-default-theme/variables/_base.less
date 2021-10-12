@@ -5,33 +5,45 @@
    // Общие цвета
    --background-color: #fff;
    --unaccented_background-color: #f8f8f8;
-   --hover_background-color: #f0f5fb;
+   --unaccented_active_background-color: #edeef2;
+   --hover_background-color: #f3f4f8;
    --unaccented_color: #999;
    --readonly_color: #ccc;
+   --readonly_text-color: #ccc;
+   --readonly_icon-color: #ccc;
    --invalid_border-color: var(--danger_border-color);
    --invalid_focus_background-color: var(--danger_background-color);
-   --marker_color: #ff7033;
-   --border-color: #ccc;
-   --separator_color: #eaeaea;
+   --marker_color: #cc3d00;
+   --border-color: #d2d6da;
+   --separator_color: #f0f0f0;
    --readonly_marker-color: #313e78;
+   --readonly_border-color: #e4e4e4;
+   --readonly_same_background-color: transparent;
+   --readonly_contrast_background-color: #8a94a8;
 
    // Цвета текста
    --text-color: #333;
+   --hover_text-color: #575757;
    --contrast_text-color: #fff;
-   --link_text-color: #05b;
-   --link_hover_text-color: #313e78;
+   --link_text-color: #2562aa;
+   --link_hover_text-color: #153f6f;
    --label_text-color: #8991a9;
-   --label_hover_text-color: var(--link_hover_text-color);
+   --label_hover_text-color: #313e78;
    --unaccented_text-color: var(--unaccented_color);
+   --unaccented_hover_text-color: #666;
    --link_text-color_inline: var(--link_hover_text-color);
    --link_hover_text-color_inline: var(--link_text-color);
 
    // Цвета иконок
    --icon-color: #333;
+   --hover_icon-color: #575757;
    --contrast_icon-color: #fff;
    --unaccented_icon-color: #ccc;
    --unaccented_hover_icon-color: #999;
+   --label_icon-color: #8991a9;
    --label_hover_icon-color: #313e78;
+   --link_icon-color: #2562aa;
+   --link_hover_icon-color: #153f6f;
 
    // Новая палитра
    --primary_color: #ff7033;          // для совместимости. цвет должен быть такой как у текста.
@@ -40,7 +52,6 @@
    --primary_icon-color: #f47843;
    --primary_hover_icon-color: #db4200;
    --primary_border-color: #ff621f;
-   --primary_hover_border-color: #f1a17e;
    --primary_background-color: #fff8f5;
    --primary_hover_background-color: #fff1eb;
    --primary_active_background-color: #ffe6db;
@@ -56,7 +67,6 @@
    --secondary_icon-color: #656c87;
    --secondary_hover_icon-color: #153f6f;
    --secondary_border-color: #1b579d;
-   --secondary_hover_border-color: #7d99ba;
    --secondary_background-color: #f5faff;
    --secondary_hover_background-color: #ebf4ff;
    --secondary_active_background-color: #dbecff;
@@ -72,7 +82,6 @@
    --danger_icon-color: #c2140a;
    --danger_hover_icon-color: #e50c00;
    --danger_border-color: #e50c00;
-   --danger_hover_border-color: #e07b76;
    --danger_background-color: #fff7f7;
    --danger_hover_background-color: #ffeceb;
    --danger_active_background-color: #ffdddb;
@@ -88,7 +97,6 @@
    --success_icon-color: #298e3c;
    --success_hover_icon-color: #28bd44;
    --success_border-color: #00a31f;
-   --success_hover_border-color: #47c25f;
    --success_background-color: #f7fff8;
    --success_hover_background-color: #ebffee;
    --success_active_background-color: #dbffe2;
@@ -104,7 +112,6 @@
    --warning_icon-color: #e6a119;
    --warning_hover_icon-color: #f6c055;
    --warning_border-color: #ffb92e;
-   --warning_hover_border-color: #e49b0c;
    --warning_background-color: #fffcf7;
    --warning_hover_background-color: #fff8eb;
    --warning_active_background-color: #fff3db;
@@ -119,7 +126,6 @@
    --info_icon-color: #5a49ab;
    --info_hover_icon-color: #7e70c2;
    --info_border-color: #513bbf;
-   --info_hover_border-color: #9188bf;
    --info_background-color: #f8f7ff;
    --info_hover_background-color: #eeebff;
    --info_active_background-color: #e1dbff;
@@ -132,14 +138,15 @@
    --unaccented_contrast_background-color: #dbdbdb;
    --unaccented_hover_contrast_background-color: #ccc;
    --unaccented_active_contrast_background-color: #d4d4d4;
-   --unaccented_hover_same_background-color: #ebedf0;
-   --unaccented_active_same_background-color: #e3e5e8;
+   --unaccented_same_background-color: #eceeee;
+   --unaccented_hover_same_background-color: #e5e7eb;
+   --unaccented_active_same_background-color: #d9dbde;
    --unaccented_border-color: var(--border-color);
-   --unaccented_hover_border-color: #aab0c1;
-   --pale_contrast_background-color: #f2f3f3;
-   --pale_border-color: #ebedf0;
-   --pale_hover_contrast_background-color: #ebedf0;
-   --pale_active_contrast_background-color: #d9dbde;
+   --unaccented_hover_border-color: #8f99a3;
+   --pale_contrast_background-color: var(--unaccented_same_background-color);
+   --pale_border-color: #e5e7eb;
+   --pale_hover_contrast_background-color: var(--unaccented_hover_same_background-color);
+   --pale_active_contrast_background-color: var(--unaccented_active_same_background-color);
    --item_selected_color: #05121e;
 
    // Шрифты

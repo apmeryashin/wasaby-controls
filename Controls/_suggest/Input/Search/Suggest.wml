@@ -10,6 +10,7 @@
         value="{{_options.value}}"
         suggestTemplate="{{_options.suggestTemplate}}"
         footerTemplate="{{_options.footerTemplate}}"
+        selectorTemplate="{{_options.selectorTemplate}}"
         emptyTemplate="{{_options.emptyTemplate}}"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"

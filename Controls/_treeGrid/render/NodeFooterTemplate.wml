@@ -16,7 +16,10 @@
             <div class="controls-TreeGrid__nodeFooter-cell__customContent">
                 <!-- Прикладной контент -->
                 <ws:partial template="{{ content || contentTemplate }}"
-                            if="{{ !!content || !!contentTemplate }}"/>
+                            if="{{ !!content || !!contentTemplate }}"
+                            node="{{ (gridColumn || itemData).getOwner().getNode() }}"
+                            item="{{ (gridColumn || itemData).getOwner() }}"
+                            column="{{ (gridColumn || itemData) }}"/>
             </div>
         </ws:else>
     </ws:if>

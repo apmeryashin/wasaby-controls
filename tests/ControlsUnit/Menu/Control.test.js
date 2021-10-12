@@ -195,6 +195,7 @@ define(
                let isViewModelCreated = false;
                let isSelectionControllerUpdated = false;
                const menuControl = getMenu();
+               menuControl._listModel = getListModel();
                const newMenuOptions = { ...defaultOptions, searchParam: 'title' };
 
                menuControl._closeSubMenu = () => { isClosed = true; };

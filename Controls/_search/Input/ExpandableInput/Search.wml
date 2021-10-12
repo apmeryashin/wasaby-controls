@@ -10,6 +10,7 @@
                             name="searchInput"
                             searchButtonVisible="{{_options.searchButtonVisible}}"
                             searchButtonAlign="{{_options.searchButtonAlign}}"
+                            searchButtonIconStyle="{{_options.searchButtonIconStyle}}"
                             constraint="{{_options.constraint}}"
                             maxLength="{{_options.maxLength}}"
                             trim="{{_options.trim}}"

@@ -3,20 +3,29 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroupBase';
 import * as ItemTemplate from 'wml!Controls/_toggle/Tumbler/itemTemplate';
-import {IItemTemplateOptions, IHeightOptions} from 'Controls/interface';
+import {IItemTemplateOptions} from 'Controls/interface';
 import {Record} from 'Types/entity';
 
 interface IBackgroundPosition {
     [key: number]: IBackgroundPositionData;
+
     isEmpty: boolean;
 }
 
 interface IBackgroundPositionData {
     width: number;
+    height: number;
     left: number;
+    top: number;
 }
 
-interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHeightOptions {}
+interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
+
+/**
+ * @name Controls/_toggle/Tumbler#direction
+ * @cfg {string}
+ * @demo Controls-demo/toggle/Tumbler/Direction/Index
+ */
 
 /**
  * @name Controls/_toggle/Tumbler#keyProperty
@@ -29,18 +38,18 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHe
  * <pre class="brush: js">
  *     // TypeScript
  *     new RecordSet({
-            rawData: [
-                {
-                   id: '1',
-                   caption: 'Название 1'
-                },
-                {
-                    id: '2',
-                    caption: 'Название 2'
-                }
-            ],
-            keyProperty: 'id'
-        });
+ *           rawData: [
+ *               {
+ *                  id: '1',
+ *                  caption: 'Название 1'
+ *               },
+ *               {
+ *                   id: '2',
+ *                   caption: 'Название 2'
+ *               }
+ *           ],
+ *           keyProperty: 'id'
+ *       });
  * </pre>
  */
 
@@ -143,6 +152,10 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHe
  * @variant m
  * @variant l
  * @variant xl
+ * @variant 2xl
+ * @variant 3xl
+ * @variant 4xl
+ * @variant 5xl
  * @variant default
  * @default default
  *
@@ -167,20 +180,20 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHe
  *
  * <pre>
  *   new RecordSet({
-            rawData: [
-                {
-                    id: '1',
-                    caption: 'caption 1',
-                    title: 'title 1'
-                },
-                {
-                    id: '2',
-                    caption: 'Caption 2',
-                    title: 'title 2'
-                }
-            ],
-            keyProperty: 'id'
-        });
+ *           rawData: [
+ *               {
+ *                   id: '1',
+ *                   caption: 'caption 1',
+ *                   title: 'title 1'
+ *               },
+ *               {
+ *                   id: '2',
+ *                   caption: 'Caption 2',
+ *                   title: 'title 2'
+ *               }
+ *           ],
+ *           keyProperty: 'id'
+ *       });
  * </pre>
  *
  * @demo Controls-demo/toggle/Tumbler/displayProperty/Index
@@ -202,11 +215,11 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions, IHe
  * @demo Controls-demo/toggle/Tumbler/ReadOnly/Index
  */
 
-class Tumbler extends ButtonGroupBase {
+class Tumbler extends ButtonGroupBase<ITumblerOptions> {
     protected _template: TemplateFunction = template;
     protected _backgroundPosition: IBackgroundPosition = {isEmpty: true};
 
-    protected _beforeUpdate(newOptions: IButtonGroupOptions): void {
+    protected _beforeUpdate(newOptions: ITumblerOptions): void {
         if (this._options.items !== newOptions.items) {
             this._backgroundPosition = {isEmpty: true};
         }
@@ -234,6 +247,17 @@ class Tumbler extends ButtonGroupBase {
         return template;
     }
 
+    private _getButtonBackgroundStyle(): string {
+        let style = `width:${this._backgroundPosition[this._options.selectedKey]?.width}px;`;
+        if (this._options.direction !== 'vertical') {
+            style += ` left:${this._backgroundPosition[this._options.selectedKey]?.left}px;`;
+        } else {
+            style += ` height:${this._backgroundPosition[this._options.selectedKey]?.height}px;`;
+            style += ` top:${this._backgroundPosition[this._options.selectedKey]?.top}px;`;
+        }
+        return style;
+    }
+
     private _setBackgroundPosition(): void {
         if (this._backgroundPosition.isEmpty) {
             this._backgroundPosition = {isEmpty: false};
@@ -241,18 +265,20 @@ class Tumbler extends ButtonGroupBase {
                 const key = item.get(this._options.keyProperty);
                 this._backgroundPosition[key] = {
                     width: (this._children['TumblerButton' + index] as HTMLDivElement).offsetWidth,
-                    left: (this._children['TumblerButton' + index] as HTMLDivElement).offsetLeft
+                    height: (this._children['TumblerButton' + index] as HTMLDivElement).offsetHeight,
+                    left: (this._children['TumblerButton' + index] as HTMLDivElement).offsetLeft,
+                    top: (this._children['TumblerButton' + index] as HTMLDivElement).offsetTop
                 };
             });
         }
     }
-    static getDefaultOptions(): ITumblerOptions {
-        return {
-            keyProperty: 'id',
-            inlineHeight: 'default',
-            itemTemplate: ItemTemplate
-        };
-    }
+
+    static defaultProps: Partial<ITumblerOptions> = {
+        keyProperty: 'id',
+        inlineHeight: 'default',
+        itemTemplate: ItemTemplate,
+        direction: 'horizontal'
+    };
 }
 
 export default Tumbler;

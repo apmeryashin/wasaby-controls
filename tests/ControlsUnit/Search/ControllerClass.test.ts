@@ -520,5 +520,16 @@ describe('Controls/search:ControllerClass', () => {
          await searchController.search('testSearchValue');
          assert.deepStrictEqual(sourceController.getExpandedItems(), [null]);
       });
+
+      it('inputSearchValue changed while search is in process', async () => {
+         const sourceController = getSourceController();
+         const searchController = getSearchController({sourceController});
+         const searchPromise = searchController.search('testSearchValue');
+         searchController.setInputSearchValue('newInputSearchValue');
+
+         return searchPromise.catch((error) => {
+            assert.ok(error.isCanceled);
+         });
+      });
    });
 });

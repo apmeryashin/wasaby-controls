@@ -1,6 +1,8 @@
 import {TemplateFunction} from 'UI/Base';
 import {Model, Model as EntityModel} from 'Types/entity';
 
+import {IScrollBarOptions} from 'Controls/columnScroll';
+
 import {IColumn, TColumns, TColumnSeparatorSize} from '../interface/IColumn';
 import {THeader} from '../interface/IHeaderCell';
 
@@ -28,8 +30,8 @@ import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interfac
 import {create} from 'Types/di';
 import {IGridAbstractColumn} from './../interface/IGridAbstractColumn';
 
-type THeaderVisibility = 'visible' | 'hasdata';
-type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
+export type THeaderVisibility = 'visible' | 'hasdata';
+export type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
 
 export type ISortItem = { [p: string]: string };
 
@@ -41,6 +43,8 @@ export type TColspanCallback
     = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
 
 export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => TColspanCallbackResult;
+
+export type TColumnScrollViewMode = IScrollBarOptions['mode'];
 
 export interface IEmptyTemplateColumn extends IGridAbstractColumn {}
 
@@ -61,6 +65,7 @@ export interface IOptions extends ICollectionOptions {
     resultsColspanCallback?: TResultsColspanCallback;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
+    columnScrollViewMode?: TColumnScrollViewMode;
     stickyColumnsCount?: number;
     sorting?: ISortItem[];
     emptyTemplateColumns?: IEmptyTemplateColumn[];
@@ -92,6 +97,7 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     protected _$resultsColspanCallback: TResultsColspanCallback;
     protected _$resultsTemplate: TemplateFunction;
     protected _$columnScroll: boolean;
+    protected _$columnScrollViewMode: TColumnScrollViewMode;
     protected _$stickyColumnsCount: number;
     protected _$emptyGridRow: EmptyRow<S>;
     protected _$emptyTemplate: TemplateFunction;
@@ -572,6 +578,19 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
         return this._$columnScroll;
     }
 
+    getColumnScrollViewMode() {
+        return this._$columnScrollViewMode;
+    }
+
+    setColumnScrollViewMode(newColumnScrollViewMode: TColumnScrollViewMode): void {
+        if (this._$columnScrollViewMode !== newColumnScrollViewMode) {
+            this._$columnScrollViewMode = newColumnScrollViewMode;
+            if (this.getHeader()) {
+                this.getHeader().setColumnScrollViewMode(newColumnScrollViewMode);
+            }
+        }
+    }
+
     getStickyColumnsCount(): number {
         return this._$stickyColumnsCount;
     }
@@ -697,6 +716,7 @@ Object.assign(Grid.prototype, {
     _$resultsTemplate: null,
     _$colspanGroup: true,
     _$columnScroll: false,
+    _$columnScrollViewMode: 'scrollbar',
     _$stickyColumnsCount: 1,
     _$sorting: null,
     _$emptyTemplateColumns: null,

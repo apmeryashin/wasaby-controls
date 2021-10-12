@@ -228,6 +228,7 @@ class BaseInput extends Control<IDateBaseOptions> {
             ...IBaseInputMask.getDefaultOptions(),
             ...getValueValidatorsDefaultOptions(),
             autocompleteType: 'default',
+            calendarButtonVisible: true,
             inputMode: INPUT_MODE.default
         };
     }

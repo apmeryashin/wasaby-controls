@@ -1,8 +1,9 @@
 import rk = require('i18n!Controls');
 import {descriptor} from 'Types/entity';
 import {TemplateFunction, IControlOptions} from 'UI/Base';
+import {IDisplayedRangesOptions} from 'Controls/interface';
 
-export interface IDateLitePopupOptions extends IControlOptions {
+export interface IDateLitePopupOptions extends IControlOptions, IDisplayedRangesOptions {
    year?: Date;
    chooseMonths?: boolean;
    chooseQuarters?: boolean;
@@ -13,7 +14,6 @@ export interface IDateLitePopupOptions extends IControlOptions {
    captionFormatter?: Function;
    startValue?: Date;
    endValue?: Date;
-   displayedRanges?: Date[];
    dateConstructor?: Function;
    monthTemplate?: TemplateFunction;
    itemTemplate?: TemplateFunction;

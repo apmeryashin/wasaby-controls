@@ -27,7 +27,7 @@
                      scope="{{multiSelectTpl}}"/>
       </ws:multiSelectTpl>
    </ws:partial>
-   <ws:if data="{{_options.allowPin && _isHistorySeparatorVisible(item)}}">
+   <ws:if data="{{_options.allowPin && !_options.searchValue && _isHistorySeparatorVisible(item)}}">
       <div class="controls-Menu__group_separator-container"
            attr:key="{{item.getUid()}} + '_separator'" on:mouseenter="_separatorMouseEnter()">
          <div class="controls-Menu__group_separator"></div>
@@ -47,15 +47,17 @@
            on:itemActionMouseDown="_itemActionMouseDown()"
            on:itemClick="_itemClick()">
       <ws:itemTemplate>
-         <ws:if data="{{!itemTemplate.item.contents['doNotSaveToHistory']}}">
-            <ws:partial template="itemTpl" item="{{itemTemplate.item}}"/>
-         </ws:if>
-         <ws:else>
+         <ws:if data="{{_options.needStickyHistoryItems && itemTemplate.item.contents['doNotSaveToHistory']}}">
             <Controls.scroll:StickyBlock
+                    mode="stackable"
+                    shadowVisibility="lastVisible"
                     backgroundStyle="menuPopup"
                     position="{{ {'vertical' : 'bottom'} }}">
                <ws:partial template="itemTpl" item="{{itemTemplate.item}}"/>
             </Controls.scroll:StickyBlock>
+         </ws:if>
+         <ws:else>
+            <ws:partial template="itemTpl" item="{{itemTemplate.item}}"/>
          </ws:else>
       </ws:itemTemplate>
    </Controls.listRender:Render>

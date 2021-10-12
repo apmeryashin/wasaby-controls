@@ -68,3 +68,108 @@
       var(--shadow_start-color_scroll), var(--shadow_end-color_scroll)
    );
 }
+
+/* region Sub-Pixel Fix */
+
+// В хроме могут возникать разрывы и артефакты между заголовками из-за особенностей субпиксельного рендеринга.
+// Делаем заголовки внахлёст на 1px.
+
+.controls-StickyBlock__subpixelFix-default,
+.controls-StickyBlock__subpixelFix-listItem,
+.controls-StickyBlock__subpixelFix-stack {
+   box-shadow: -1px 0 0 0 var(--background-color);
+}
+
+.controls-StickyBlock__subpixelFix-primary {
+   box-shadow: -1px 0 0 0 var(--primary_background-color);
+}
+
+.controls-StickyBlock__subpixelFix-secondary {
+   box-shadow: -1px 0 0 0 var(--secondary_background-color);
+}
+
+.controls-StickyBlock__subpixelFix-danger {
+   box-shadow: -1px 0 0 0 var(--danger_background-color);
+}
+
+.controls-StickyBlock__subpixelFix-success {
+   box-shadow: -1px 0 0 0 var(--success_background-color);
+}
+
+.controls-StickyBlock__subpixelFix-warning {
+   box-shadow: -1px 0 0 0 var(--warning_background-color);
+}
+
+.controls-StickyBlock__subpixelFix-info {
+   box-shadow: -1px 0 0 0 var(--info_background-color);
+}
+
+.controls-StickyBlock__subpixelFix-master {
+   box-shadow: -1px 0 0 0 var(--master_item_background-color_list);
+}
+
+.controls-StickyBlock__subpixelFix-infoBox {
+   box-shadow: -1px 0 0 0 var(--background-color_infobox);
+}
+
+.controls-StickyBlock__subpixelFix-detailContrast {
+   box-shadow: -1px 0 0 0 var(--detail_contrast_background-color_masterDetail);
+}
+
+.controls-StickyBlock__subpixelFix-stackHeader {
+   box-shadow: -1px 0 0 0 var(--header_background-color_stack);
+}
+
+/* endregion Sub-Pixel Fix */
+
+/* region Mobile Safari Gap Fix */
+
+// В Safari на iOS могут появляться щели между стики блоками. Делаем заголовки внахлёст на 1px.
+
+.controls-StickyBlock__topGapFix-default,
+.controls-StickyBlock__topGapFix-listItem,
+.controls-StickyBlock__topGapFix-stack {
+   box-shadow: 0 -1px 0 0 var(--background-color);
+}
+
+.controls-StickyBlock__topGapFix-primary {
+   box-shadow: 0 -1px 0 0 var(--primary_background-color);
+}
+
+.controls-StickyBlock__topGapFix-secondary {
+   box-shadow: 0 -1px 0 0 var(--secondary_background-color);
+}
+
+.controls-StickyBlock__topGapFix-danger {
+   box-shadow: 0 -1px 0 0 var(--danger_background-color);
+}
+
+.controls-StickyBlock__topGapFix-success {
+   box-shadow: 0 -1px 0 0 var(--success_background-color);
+}
+
+.controls-StickyBlock__topGapFix-warning {
+   box-shadow: 0 -1px 0 0 var(--warning_background-color);
+}
+
+.controls-StickyBlock__topGapFix-info {
+   box-shadow: 0 -1px 0 0 var(--info_background-color);
+}
+
+.controls-StickyBlock__topGapFix-master {
+   box-shadow: 0 -1px 0 0 var(--master_item_background-color_list);
+}
+
+.controls-StickyBlock__topGapFix-infoBox {
+   box-shadow: 0 -1px 0 0 var(--background-color_infobox);
+}
+
+.controls-StickyBlock__topGapFix-detailContrast {
+   box-shadow: 0 -1px 0 0 var(--detail_contrast_background-color_masterDetail);
+}
+
+.controls-StickyBlock__topGapFix-stackHeader {
+   box-shadow: 0 -1px 0 0 var(--header_background-color_stack);
+}
+
+/* endregion Mobile Safari Gap Fix */

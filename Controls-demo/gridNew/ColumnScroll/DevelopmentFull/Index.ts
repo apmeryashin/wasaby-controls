@@ -84,6 +84,7 @@ export default class extends Control {
     private _itemsDragNDrop: boolean = false;
     private _scrollToColumnIdx?: number;
     private _multiSelectVisibility: 'visible' | 'hidden' = 'hidden';
+    private _columnScrollViewMode?: 'scrollbar' | 'arrows';
 
     protected _beforeMount(): void {
         this._columns[2].width = '1fr';
@@ -193,8 +194,6 @@ export default class extends Control {
         }];
     }
 
-    protected _requestReload(): void {
-    }
     protected _reload(e, isLong): void {
         if (isLong) {
             if (this._isLongLoad) {
@@ -232,6 +231,10 @@ export default class extends Control {
 
     protected _toggleCheckbox(): void {
         this._multiSelectVisibility = this._multiSelectVisibility === 'visible' ? 'hidden' : 'visible';
+    }
+
+    protected _toggleScrollBar(e, value): void {
+        this._columnScrollViewMode = value;
     }
 
     protected _scrollToColumn(): void {

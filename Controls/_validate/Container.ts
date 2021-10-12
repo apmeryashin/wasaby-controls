@@ -45,6 +45,7 @@ type ValidResult = boolean|null|Promise<boolean>|string[];
 class ValidateContainer extends Control<IValidateContainerOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
+    _openingInProcess: boolean = false;
     _contentActive: boolean = false;
     _validationStatus: string = 'valid';
     _currentValue: any;
@@ -67,9 +68,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'scroll', {listenAll: true});
         this._notify('validateDestroyed', [this], {bubbling: true});
-        if (this._isOpened) {
-            this._forceCloseInfoBox();
-        }
+        this._forceCloseInfoBox();
         IndicatorOpener.hide(this._indicatorId);
     }
 
@@ -97,7 +96,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
             this.setValidationResult(null, validateConfig);
             this._callValidators(validators, validateConfig).then((validationResult) => {
                 const isValid = validationResult === null;
-                if (this._isOpened && isValid) {
+                if (this._infoboxCanBeClosed() && isValid) {
                     this._forceCloseInfoBox();
                 }
                 this._notify('validateFinished', [validationResult]);
@@ -127,7 +126,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
             if (!config.hideInfoBox) {
                 if (validationResult) {
                     this._openInfoBox();
-                } else if (this._isOpened) {
+                } else if (this._infoboxCanBeClosed()) {
                     this._closeInfoBox();
                 }
             }
@@ -288,6 +287,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         if (!this._destroyed) {
             this._clearCloseId();
             if (this._validationResult && this._validationResult.length && !this._isOpened) {
+                this._openingInProcess = true;
                 const cfg = {
                     target: this._container,
                     validationStatus: 'invalid',
@@ -365,12 +365,24 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
             }
         }
         this._isOpened = false;
+        this._openingInProcess = false;
     }
 
     private _scrollHandler(): void {
-        if (this._isOpened) {
+        if (this._infoboxCanBeClosed()) {
             this._forceCloseInfoBox();
         }
+    }
+
+    /**
+     * Нужно 2 признака того что инфобокс открыт - синхронный и по факту открытия.
+     * 1. От вызова открытия до появления инфобокса он нужен для того, чтобы отменить открытие если сбросили валидацию во время открытия
+     * Он не сбрасывается на onClose, т.к. во время открытия onClose может стрельнуть только для предыдущего инфобокса
+     * 2. По факту открытия, взводится на onOpen, сбрасывается на onClose
+     * @private
+     */
+    private _infoboxCanBeClosed(): boolean {
+        return this._isOpened || this._openingInProcess;
     }
 
     private _mouseInfoboxHandler(event: Event): void {
@@ -389,6 +401,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
 
     protected _onOpenHandler(): void {
         this._isOpened = true;
+        this._openingInProcess = false;
     }
 
     private _hoverInfoboxHandler(): void {
@@ -398,6 +411,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     private _cleanValid(): void {
         if (this._validationResult) {
             this.setValidationResult(null);
+            this._forceCloseInfoBox();
         }
     }
 

@@ -22,6 +22,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     readonly listElementName: string = 'row';
 
+    getTemplate(): TemplateFunction | string {
+        return 'Controls/treeGrid:ItemTemplate';
+    }
+
     get node(): TreeItem<Model> {
         return this.getNode();
     }

@@ -3,6 +3,7 @@
         <div>
             {{ item.contents[column.config.displayProperty || 'title'] }}
         </div>
+        <ws:partial template="{{editArrowTemplate}}" scope="{{ _options }}"/>
         <ws:partial template="{{itemActionsTemplate}}" scope="{{ _options }}" highlightOnHover="{{ false }}"/>
     </ws:contentTemplate>
 </ws:partial>

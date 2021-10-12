@@ -10,6 +10,7 @@ define(
    (StickyStrategy, StickyController, PopupUtilConfig, popupLib, UIBase, cClone) => {
       'use strict';
 
+      const StickyControllerClass = StickyController.StickyController;
       StickyController = StickyController.default;
       StickyStrategy = StickyStrategy.default;
 
@@ -140,7 +141,9 @@ define(
             StickyController._isTargetVisible = () => true;
             let item = {
                position: {},
-               popupOptions: {},
+               popupOptions: {
+                  target: {}
+               },
                sizes: {}
             };
             let container = {
@@ -158,6 +161,40 @@ define(
 
             StickyController.elementUpdated(item, container);
             assert.equal(item.popupOptions.className, classes); // Классы не поменялись
+         });
+
+         it('Sticky visibility classes', () => {
+            const Sticky = new StickyControllerClass();
+            Sticky._isVisibleTarget = () => false;
+            Sticky._isTargetVisible = () => true;
+            let item = {
+               position: {},
+               popupOptions: {
+                  actionOnScroll: 'track'
+               },
+               sizes: {}
+            };
+            let container = {
+               getBoundingClientRect: () => {
+                  return {
+                     width: 100,
+                     height: 100
+                  };
+               }
+            };
+            let classes = ' controls-Popup-corner-vertical-top controls-Popup-corner-horizontal-left controls-Popup-align-horizontal-right controls-Popup-align-vertical-bottom';
+            Sticky.elementCreated(item, container);
+            assert.equal(item.popupOptions.className, classes + ' controls-StickyTemplate-visibility-hidden');
+
+            Sticky._isVisibleTarget = () => true;
+            classes += ' controls-StickyTemplate-visibility';
+            Sticky.elementUpdated(item, container);
+            assert.equal(item.popupOptions.className, classes);
+
+            Sticky._isVisibleTarget = () => false;
+            classes += ' controls-StickyTemplate-visibility-hidden';
+            Sticky.elementUpdated(item, container);
+            assert.equal(item.popupOptions.className, classes);
          });
 
          it('Sticky check visible target on elementCreated', () => {

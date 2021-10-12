@@ -3,6 +3,7 @@ import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {ISlidingPanelOptions, ISlidingPanelPopupOptions} from 'Controls/_popup/interface/ISlidingPanel';
 import StackOpener from 'Controls/_popup/PopupHelper/Stack';
 import DialogOpener from 'Controls/_popup/PopupHelper/Dialog';
+import StickyOpener from 'Controls/_popup/PopupHelper/Sticky';
 import {detection} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
@@ -11,7 +12,8 @@ const POPUP_CONTROLLER = 'Controls/popupSliding:Controller';
 const DEFAULT_DESKTOP_MODE = 'stack';
 const OPENER_BY_DESKTOP_MODE = {
     stack: StackOpener,
-    dialog: DialogOpener
+    dialog: DialogOpener,
+    sticky: StickyOpener
 };
 
 type TDesktopOpener = StackOpener | DialogOpener;
