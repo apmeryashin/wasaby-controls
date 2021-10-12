@@ -13,4 +13,7 @@
                                       fontColorStyle="{{item.mainCounterStyle || 'unaccented'}}"/>
         </div>
     </ws:if>
+    <ws:if data="{{item.additionalCaption}}">
+        <div class="controls-Tabs_margin-left controls-text-unaccented">{{item.additionalCaption}}</div>
+    </ws:if>
 </div>
