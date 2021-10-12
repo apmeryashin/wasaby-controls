@@ -27,6 +27,7 @@ export default class extends Control {
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
+                    primaryFilter: true,
                     style: 'master',
                     navigation: {
                         source: 'page',

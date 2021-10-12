@@ -21,12 +21,14 @@
                 root="{{_options.root}}"
                 attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
                 on:itemClick="_handleItemClick()">
-        <ws:multiSelectTemplate>
-            <ws:partial template="{{_circleTemplate}}"
-                        style="{{_options.style}}"
-                        attr:class="controls-ListEditor__multiSelect"
-                        on:click="_handleCheckBoxClick()"/>
-        </ws:multiSelectTemplate>
+       <ws:multiSelectTemplate>
+          <ws:if data="{{!_options.primaryFilter}}">
+             <ws:partial template="{{_circleTemplate}}"
+                         style="{{_options.style}}"
+                         attr:class="controls-ListEditor__multiSelect"
+                         on:click="_handleCheckBoxClick()"/>
+          </ws:if>
+       </ws:multiSelectTemplate>
     </ws:partial>
 </ws:template>
 
