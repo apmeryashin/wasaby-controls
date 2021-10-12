@@ -126,6 +126,7 @@ export default class Selector extends BaseDropdown {
    _getControllerOptions(options: IInputOptions): object {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
+            markerVisibility: 'onactivated',
             dataLoadCallback: this._dataLoadCallback.bind(this),
             selectorOpener: this,
             selectedKeys: options.selectedKeys || [],

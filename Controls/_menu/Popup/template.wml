@@ -29,6 +29,7 @@
               minSearchLength="{{_options.minSearchLength}}"
               searchDelay="{{_options.searchDelay}}"
               headerBackgroundStyle="transparent"
+              markerVisibility="{{_options.markerVisibility}}"
               on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">

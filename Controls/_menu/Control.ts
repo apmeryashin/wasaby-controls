@@ -897,7 +897,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getLeftPadding(options: IMenuControlOptions, items: RecordSet): string {
-        let leftSpacing = 'm';
+        let leftSpacing = options.markerVisibility !== 'hidden' ? 's' : 'm';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
         } else if (options.itemAlign === 'left' && MenuControl._hasNodesAtLevel(items, options)) {
@@ -1291,7 +1291,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         moreButtonCaption: rk('Еще') + '...',
         groupTemplate,
         itemPadding: {},
-        markerVisibility: 'onactivated',
+        markerVisibility: 'hidden',
         hoverBackgroundStyle: 'default',
         subMenuDirection: 'right',
         itemAlign: 'right'

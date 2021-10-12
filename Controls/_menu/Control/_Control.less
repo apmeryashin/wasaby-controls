@@ -67,24 +67,9 @@
    }
 }
 
-.controls-Menu__row_selected {
-   position: absolute;
+.controls-Menu__row_selected_align {
    display: inline-flex;
-   align-items: baseline;
-   left: var(--offset_2xs);
-
-   &::before {
-      content: '\200b';
-      font-size: inherit;
-   }
-
-   &::after {
-      content: '';
-      display: block;
-      background: var(--marker_color);
-      width: var(--marker_width_menu);
-      border-radius: var(--border-radius_default_block);
-   }
+   align-items: center;
 }
 
 .controls-Menu__row_selected_padding {
@@ -99,13 +84,6 @@
 
 .controls-Menu__row_selected_markerSize_s::after {
    height: var(--empty-item-marker_height_filterSimplePanel);
-}
-
-// Будет удалено после: https://online.sbis.ru/opendoc.html?guid=8b5f2552-e249-4783-b551-3e37b285aad5
-.ws-is-ie11 .controls-Menu__row_selected {
-   top: 0;
-   bottom: 0;
-   line-height: calc(var(--item_height_menu) + 1px);
 }
 
 .ws-is-ie11 .controls-Menu__row_selected-multiLine {
@@ -123,6 +101,34 @@
 
 .controls-Menu__row_multiLine {
    min-height: var(--item_height_menu);
+}
+
+.controls-Menu__row-radioCircle {
+   display: inline-block;
+   flex-shrink: 0;
+   margin-right: var(--offset_3xs);
+}
+
+.controls-Menu__row-radioCircle_unselected,
+.controls-Menu__row-radioCircle_disabled {
+   visibility: hidden;
+}
+
+.controls-Menu__row-radioCircle__borderCircle {
+   stroke-width: var(--border-thickness);
+}
+
+.controls-Menu__row-radioCircle__borderCircle {
+   fill: var(--unaccented_background-color);
+   stroke-width: var(--border-thickness);
+}
+
+.controls-Menu__row-radioCircle__innerCircle_selected {
+   fill: var(--marker_color);
+}
+
+.controls-Menu__row-radioCircle__innerCircle_unselected {
+   fill: none;
 }
 
 .controls-Menu__row-checkbox-right {
@@ -337,12 +343,12 @@
    height: var(--footer_min-height_menuPopup);
 }
 
-.controls-Menu__footer-moreButton {
+.controls-Menu_withoutMarker__footer-moreButton {
    padding-left: var(--item_padding-horizontal_l_menu);
 }
 
-.controls-Menu__footer-moreButton_multiSelect {
-   padding-left: var(--click-area_width_checkbox);
+.controls-Menu_withMarker__footer-moreButton {
+   padding-left: calc(var(--item_padding-left_s_list) + var(--icon-size_2xs) + var(--offset_3xs));
 }
 
 .controls-text-menuMore {
@@ -468,6 +474,14 @@
         .controls-Menu__row-checkbox_default {
             visibility: visible;
         }
+
+       .controls-Menu__row-radioCircle_unselected_enabled {
+          visibility: visible;
+       }
+
+       .controls-Menu__row-radioCircle__borderCircle {
+          stroke: var(--border-color);
+       }
 
         .controls-Menu__iconPin {
            .inline-flexbox();
