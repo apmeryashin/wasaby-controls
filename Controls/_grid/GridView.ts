@@ -349,7 +349,7 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
         if (!e.preventItemEvent) {
             const contents = item.getContents();
             if (item['[Controls/_display/GroupItem]']) {
-                this._notify('groupClick', [contents, e, item], {bubbling: true});
+                this._notify('groupClick', [contents, e, item]);
                 return;
             }
             if (e.target.closest('.js-controls-ListView__checkbox')) {
