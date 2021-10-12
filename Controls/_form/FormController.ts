@@ -98,6 +98,7 @@ class FormController extends ControllerBase<IFormController> {
     protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
+    private _shouldSetFocusAfterUpdate: boolean = false;
     private _errorController: ErrorController;
     private _createdInMounting: IConfigInMounting;
     private _isMount: boolean;
@@ -133,6 +134,9 @@ class FormController extends ControllerBase<IFormController> {
 
         if (initializingWay === INITIALIZING_WAY.PRELOAD) {
             // В случае с предзагрузкой рекорда может не быть, но он придет на фазе обновления с prefetchData.
+            // Т.к. в случае прелоада у нас может не быть большей части контента
+            // нужно заново поставить фокус после появления записи из prefetchData
+            this._shouldSetFocusAfterUpdate = true;
         } else if (initializingWay !== INITIALIZING_WAY.LOCAL) {
             let recordPromise;
             if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_READ) {
@@ -152,7 +156,7 @@ class FormController extends ControllerBase<IFormController> {
         }
     }
 
-    protected _afterMount(): void {
+    protected _afterMount(options: IFormController): void {
         super._afterMount();
         this._isMount = true;
         // если рекорд был создан во время beforeMount, уведомим об этом
@@ -163,6 +167,13 @@ class FormController extends ControllerBase<IFormController> {
         // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
         if (this._readInMounting) {
             this._readRecordBeforeMountNotify();
+        }
+
+        // В случае прелоада при появлении рекорда ставим фокус,
+        // т.к. могло не быть много контента и фокус поставить было некуда
+        if (this._shouldSetFocusAfterUpdate && options.record !== this._options.record) {
+            this.activate();
+            this._shouldSetFocusAfterUpdate = false;
         }
     }
 
