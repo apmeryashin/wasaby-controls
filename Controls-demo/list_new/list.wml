@@ -170,4 +170,13 @@
         </Router.router:Reference>
         <Controls-demo.list_new.ColumnsView.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Nested/Index' }}">
+            <a href="{{content.href}}">Список в списке</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Nested.Index/>
+    </div>
 </div>

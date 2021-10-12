@@ -4910,6 +4910,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 collection.setCollapsedGroups(collapsedGroups);
                 _private.groupsExpandChangeHandler(this, changes);
             });
+            this._notify('groupClick', [dispItem.getContents(), baseEvent, dispItem]);
         }
     }
 

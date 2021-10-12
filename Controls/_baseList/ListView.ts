@@ -291,7 +291,7 @@ const ListView = Control.extend(
             if (!e.preventItemEvent) {
                 if (dispItem['[Controls/_display/GroupItem]']) {
                     const groupItem = dispItem.getContents();
-                    this._notify('groupClick', [groupItem, e, dispItem], {bubbling: true});
+                    this._notify('groupClick', [groupItem, e, dispItem]);
                     return;
                 }
                 if (e.target.closest('.js-controls-ListView__checkbox')) {
@@ -306,7 +306,7 @@ const ListView = Control.extend(
 
         _onGroupClick: function(e, dispItem) {
             var item = dispItem.getContents();
-            this._notify('groupClick', [item, e], {bubbling: true});
+            this._notify('groupClick', [item, e]);
         },
 
         _onItemContextMenu: function(event, itemData) {
