@@ -68,32 +68,17 @@
    justify-content: flex-end;
    position: absolute;
    width: 100%;
-   top: calc(0px - (var(--columnscroll_arrowButton_margin_header_grid) + ((var(--columnscroll_arrowButton_height_grid) - var(--columnscroll_arrowButton_margin_header_grid)) / 2)));
+   top: calc(0px - (var(--offset_xl) + (((var(--inline_height_ArrowButton) - 2 * var(--border-thickness_button)) - var(--offset_xl)) / 2)));
    box-sizing: border-box;
-   padding-right: var(--columnscroll_arrowButtons_padding-right_grid);
+   padding-right: var(--offset_xl);
 }
 
-.controls-ColumnScroll__scrollToButton {
-   .flex-centered();
-   border-radius: 50%;
-   cursor: pointer;
-   background-color: var(--columnscroll_arrowButton_color_grid);
-   box-shadow: var(--columnscroll_arrowButton_box-shadow_grid);
-   width: var(--columnscroll_arrowButton_width_grid);
-   height: var(--columnscroll_arrowButton_height_grid);
-   &:first-child {
-      margin-right: var(--offset_xs);
-   }
-   &__icon {
-      .flex-centered();
-   }
-   &_disabled {
-      cursor: default;
-   }
+.controls-ColumnScroll__scrollToButton_left {
+   margin-right: var(--offset_xs);
 }
 
 .controls-Grid__header-cell_withColumnScrollArrows {
-   margin-bottom: var(--columnscroll_arrowButton_margin_header_grid);
+   margin-bottom: var(--offset_xl);
 }
 
 // Загрузка с проскролом вконец в новых таблицах

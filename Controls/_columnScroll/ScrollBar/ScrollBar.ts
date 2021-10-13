@@ -91,8 +91,7 @@ export default class ScrollBar extends Control<IScrollBarOptions> {
         if (!this._isArrowActive(direction)) {
             return;
         }
-        const delta = this._scrollWidth - this._scrollWidth / 10 ;
-        const newScrollPosition = this._position + (direction === 'left' ? -delta : delta);
+        const newScrollPosition = this._position + (direction === 'left' ? -this._scrollWidth : this._scrollWidth);
         this._updateScrollPosition(newScrollPosition);
     }
 
