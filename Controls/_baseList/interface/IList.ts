@@ -251,7 +251,7 @@ export interface IReloadItemOptions {
 /**
  * @name Controls/_list/interface/IList#multiSelectTemplate
  * @cfg {TemplateFunction|String} Пользовательский шаблон множественного выбора.
- * @demo Controls-demo/list_new/Multiselect/CircleTemplate/Index
+ * @demo Controls-demo/list_new/MultiSelect/CircleTemplate/Index
  * @description
  * Доступны следующие платформенные шаблоны множественного выбора:
  * 1. Controls/list:MultiSelectTemplate - множественный выбор при помощи чекбоксов (по умолчанию)
