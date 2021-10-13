@@ -17,16 +17,27 @@ import template = require('wml!Controls/_validate/InputContainer');
 class Input extends Container {
     _template: TemplateFunction = template;
     _shouldValidate: boolean;
+
+    /**
+     * Валидация по уходу фокуса должна начинаться только в случае,
+     *  если была ручная валидация или пользователь ввел что-то в поле ввода
+     */
+    _shouldValidateByFocusOut: boolean = false;
+    validate(...args: unknown[]): Promise<boolean[]> {
+        this._shouldValidateByFocusOut = true;
+        return super.validate(...args);
+    }
     protected _deactivatedHandler(): void {
         this._contentActive = false;
         this._validationStatus = this._getValidStatus(this._contentActive);
-        if (!this._options.readOnly) {
+        if (!this._options.readOnly && this._shouldValidateByFocusOut) {
             this._shouldValidate = true;
             this._forceUpdate();
         }
     }
     _inputCompletedHandler(event: Event, ...rest: any): void {
         this._notify('inputCompleted', rest);
+        this._shouldValidateByFocusOut = true;
         // Because of this error:
         // https://online.sbis.ru/opendoc.html?guid=ef52bfb5-56ea-4397-a77f-89e5c3413ed9
         // we need to stop event propagation, otherwise all subscribtions to inputComplete-event of
