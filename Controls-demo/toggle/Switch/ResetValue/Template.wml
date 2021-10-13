@@ -1,0 +1,43 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <Controls.toggle:Checkbox bind:value="_resetValue" caption="resetValue"/>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=l contrastBackground=true
+        </div>
+        <Controls.toggle:Switch bind:value="_value"
+                                contrastBackground="{{true}}"
+                                size="l"
+                                resetValue="{{_resetValue}}"
+                                caption="state"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=l contrastBackground=false
+        </div>
+        <Controls.toggle:Switch bind:value="_value"
+                                contrastBackground="{{false}}"
+                                size="l"
+                                resetValue="{{_resetValue}}"
+                                caption="state"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=s contrastBackground=true
+        </div>
+        <Controls.toggle:Switch bind:value="_value2"
+                                contrastBackground="{{true}}"
+                                size="s"
+                                resetValue="{{_resetValue}}"
+                                caption="state"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=s contrastBackground=false
+        </div>
+        <Controls.toggle:Switch bind:value="_value2"
+                                contrastBackground="{{false}}"
+                                size="s"
+                                resetValue="{{_resetValue}}"
+                                caption="state"/>
+    </div>
+</div>

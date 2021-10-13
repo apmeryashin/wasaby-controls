@@ -1,6 +1,12 @@
 import {TemplateFunction} from 'UI/Base';
 import {ILabelOptions} from 'Controls/input';
+import {Model} from 'Types/entity';
+import {TEditingObject, TTypeDescription} from 'Controls/_propertyGrid/IPropertyGrid';
+
 type TProperty = 'string' | 'boolean' | 'number' | 'date' | 'enum' | 'text' | 'list' | 'propertyGrid';
+export type TValidator = (value: TEditingObject,
+                          item: Model<IProperty>,
+                          items: TTypeDescription) => boolean | string;
 
 /**
  * Интерфейс опций для {@link Controls/propertyGrid:PropertyGrid}.
@@ -240,7 +246,58 @@ export default interface IProperty {
      */
     group?: string;
     propertyValue?: unknown;
+    /**
+     * @cfg {String} Задаёт иконку для кнопки скрытия/отображения редактора.
+     * @remark Набор кнопок для скрытия/отображения редакторов будет отображаться под последним редактором.
+     * @example
+     * <pre class="brush: js; highlight: [12]">
+     * // JavaScript
+     * _beforeMount() {
+     *    this._editingObject = {
+     *       description: 'This is http://mysite.com'
+     *    };
+     *
+     *    this._source = [
+     *       {
+     *          name: 'description',
+     *          caption: 'Описание',
+     *          type: 'text',
+     *          toggleEditorButtonIcon: 'icon-done'
+     *       }
+     *    ]
+     * }
+     * </pre>
+     * @see toggledEditors
+     * @demo Controls-demo/PropertyGridNew/Source/ToggleEditorButtonIcon/Index
+     */
     toggleEditorButtonIcon?: string;
-    validators?: Function[];
+    /**
+     * @typedef {String} TValidateTemplate
+     * @description Шаблоны для валидации значения.
+     * @variant Controls/validate:SelectionContainer
+     * @variant Controls/validate:InputContainer
+     * @default Controls/validate:Container
+     */
+
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#validateTemplateName
+     * @cfg {TValidateTemplate} Шаблон для валидации значения в редакторе свойства.
+     * @demo Controls-demo/PropertyGridNew/Validators/Index
+     * @see validators
+     */
     validateTemplateName?: string;
+
+    /**
+     * @function TValidator
+     * @param {Object | Types/entity:Model} value Объект, свойства которого являются значениями для редакторов.
+     * @param {Model<IPropertyGridProperty>} item Редактируемое свойство
+     * @param {Controls/_propertyGrid/IProperty[]} items свойства в PropertyGrid
+     */
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#validators
+     * @cfg {TValidator} Функции-валидаторы для свойства.
+     * @demo Controls-demo/PropertyGridNew/Validators/Index
+     * @see validateTemplateName
+     */
+    validators?: TValidator[];
 }

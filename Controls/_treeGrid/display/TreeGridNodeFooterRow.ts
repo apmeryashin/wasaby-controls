@@ -22,6 +22,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     readonly listElementName: string = 'row';
 
+    getTemplate(): TemplateFunction | string {
+        return 'Controls/treeGrid:ItemTemplate';
+    }
+
     get node(): TreeItem<Model> {
         return this.getNode();
     }
@@ -90,7 +94,7 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return !needHide;
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         if (this.needMoreButton() && !this.getRowTemplate() && !this.getOwner().hasNodeFooterColumns()) {
             this.setRowTemplate('Controls/treeGrid:NodeFooterTemplate');
         }

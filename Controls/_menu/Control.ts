@@ -669,6 +669,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _setStateByItems(items: RecordSet, options: IMenuControlOptions): void {
         this._setButtonVisibleState(items, options);
         this._createViewModel(items, options);
+        this._needStickyHistoryItems = this._checkStickyHistoryItems(options);
     }
 
     private _createControllers(options: IMenuControlOptions): void {
@@ -778,6 +779,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         newSwipedItem.setSwiped(isSwipeLeft);
         this._listModel.nextVersion();
+    }
+
+    private _checkStickyHistoryItems(options: IMenuControlOptions): boolean {
+        let countSticky = 0;
+        if (options.allowPin) {
+            this._listModel.each((item) => {
+                if (item.getContents().get && item.getContents().get('doNotSaveToHistory')) {
+                    countSticky++;
+                }
+            });
+        }
+        return this._listModel.getCount(true) !== countSticky;
     }
 
     private _createViewModel(items: RecordSet, options: IMenuControlOptions): void {

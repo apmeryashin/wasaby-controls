@@ -131,6 +131,12 @@ class DialogController extends BaseController {
     resizeOuter(item: IDialogItem, container: HTMLElement): boolean {
         // На ios ресайз страницы - это зум. Не реагируем на него.
         if (!detection.isMobileIOS) {
+            // Если размер страницы уменьшили, то на ней может появиться скролл, вызванный самим окном.
+            // Поэтому чтобы окно не влияло на размеры окна браузера, после ресайза страницы меняю его макс. значения
+            if (item.popupOptions.maximize) {
+                container.style.maxHeight = window.innerHeight + 'px';
+                container.style.maxWidth = window.innerWidth + 'px';
+            }
             return this.elementUpdatedWrapper(item, container);
         }
         // ресайз страницы это также смена ориентации устройства

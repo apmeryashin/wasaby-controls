@@ -5,12 +5,14 @@ import {detection} from 'Env/Env';
 
 export enum DESKTOP_MODE {
     STACK = 'stack',
-    DIALOG = 'dialog'
+    DIALOG = 'dialog',
+    STICKY = 'sticky'
 }
 
 const DESKTOP_TEMPLATE_BY_MODE = {
     [DESKTOP_MODE.DIALOG]: 'Controls/popupTemplate:Dialog',
-    [DESKTOP_MODE.STACK]: 'Controls/popupTemplate:Stack'
+    [DESKTOP_MODE.STACK]: 'Controls/popupTemplate:Stack',
+    [DESKTOP_MODE.STICKY]: 'Controls/popupTemplate:Sticky'
 };
 
 const MOBILE_TEMPLATE = 'Controls/popupSliding:_SlidingPanel';

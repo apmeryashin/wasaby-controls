@@ -780,6 +780,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             (this.getStyle() === 'master');
     }
 
+    // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
+    isIosZIndexOptimized(): boolean {
+        return true;
+    }
+
     getShadowVisibility(): string {
         return this._shadowVisibility;
     }

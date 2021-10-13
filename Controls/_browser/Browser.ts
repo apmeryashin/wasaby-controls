@@ -963,6 +963,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
         this._inputSearchValue = value;
+        this._getSearchControllerSync()?.setInputSearchValue(value);
     }
 
     private _processSearchError(error: Error): void|Error {

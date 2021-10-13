@@ -17,6 +17,7 @@ export default class TabButtonsDemo extends Control {
     protected _items6: RecordSet | null = null;
     protected _items7: RecordSet | null = null;
     protected _items8: RecordSet | null = null;
+    protected _items9: RecordSet | null = null;
 
     protected _beforeMount(): void {
         this._items1 = new RecordSet({
@@ -46,6 +47,10 @@ export default class TabButtonsDemo extends Control {
         this._items8 = new RecordSet({
             keyProperty: 'id',
             rawData: data.getItems8()
+        });
+        this._items9 = new RecordSet({
+            keyProperty: 'id',
+            rawData: data.getItems9()
         });
     }
 

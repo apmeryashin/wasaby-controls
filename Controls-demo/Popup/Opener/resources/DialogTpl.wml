@@ -1,5 +1,5 @@
 <div style="height: 100%;">
-    <Controls.popupTemplate:Dialog headingCaption="Dialog" draggable="{{_options.draggable}}" footerContentTemplate="{{_options.footerContentTemplate}}">
+    <Controls.popupTemplate:Dialog headingCaption="Dialog" draggable="{{_options.canTemplateDrag}}" footerContentTemplate="{{_options.footerContentTemplate}}">
         <ws:headerContentTemplate>
             <Controls.buttons:Button attr:class="demo-Header__closeButton" caption="Закрыть" on:click="_close()"/>
         </ws:headerContentTemplate>

@@ -16,10 +16,12 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
     ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions {
    caption: string;
    captionPosition: string;
+   size?: string;
+   resetValue?: boolean;
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2ftoggle%2fSwitch%2fIndex демо-пример}
@@ -45,7 +47,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
  * @extends UI/Base:Control
  * @implements Controls/toggle:ICheckable
  * @implements Controls/interface:ITooltip
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Switch/Base/Index
@@ -70,7 +72,8 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
          value: false,
          captionPosition: 'right',
          validationStatus: 'valid',
-         contrastBackground: true
+         contrastBackground: true,
+         size: 'l'
       };
    }
    static getOptionTypes(): object {
@@ -92,6 +95,21 @@ Object.defineProperty(Switch, 'defaultProps', {
       return Switch.getDefaultOptions();
    }
 });
+
+/**
+ * @name Controls/_toggle/Switch#size
+ * @cfg {string} Определяет размер переключателя.
+ * @variable s
+ * @variable s
+ * @default l
+ * @demo Controls-demo/toggle/Switch/Size/Index
+ */
+
+/**
+ * @name Controls/_toggle/Switch#resetValue
+ * @cfg {boolean} Предустановленное значение
+ * @demo Controls-demo/toggle/Switch/ResetValue/Index
+ */
 
 /**
  * @name Controls/_toggle/Switch#contrastBackground

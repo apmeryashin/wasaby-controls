@@ -1,5 +1,11 @@
 @import 'Controls/_scroll/Scroll/_contentEnvironmentZIndex';
 
+.flex-centered() {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
 // НА ОБЁРТКЕ ГОРИЗОНТАЛЬНОГО СКРОЛЛА  НЕ ДОЛЖНО быть стилей, которые формируют
 // новый контекст z-index'ов. В противном случае оверлей скроллирования колонок
 // мышью будет ограничен размерами таблицы (даже будучи fixed).
@@ -55,6 +61,39 @@
 
 .controls-VScrollbar.controls-ColumnScroll__thumb {
    display: none;
+}
+
+.controls-ColumnScroll__scrollToButtons {
+   display: flex;
+   justify-content: flex-end;
+   position: absolute;
+   width: 100%;
+   top: calc(0px - (var(--columnscroll_arrowButton_margin_header_grid) + ((var(--columnscroll_arrowButton_height_grid) - var(--columnscroll_arrowButton_margin_header_grid)) / 2)));
+   box-sizing: border-box;
+   padding-right: var(--columnscroll_arrowButtons_padding-right_grid);
+}
+
+.controls-ColumnScroll__scrollToButton {
+   .flex-centered();
+   border-radius: 50%;
+   cursor: pointer;
+   background-color: var(--columnscroll_arrowButton_color_grid);
+   box-shadow: var(--columnscroll_arrowButton_box-shadow_grid);
+   width: var(--columnscroll_arrowButton_width_grid);
+   height: var(--columnscroll_arrowButton_height_grid);
+   &:first-child {
+      margin-right: var(--offset_xs);
+   }
+   &__icon {
+      .flex-centered();
+   }
+   &_disabled {
+      cursor: default;
+   }
+}
+
+.controls-Grid__header-cell_withColumnScrollArrows {
+   margin-bottom: var(--columnscroll_arrowButton_margin_header_grid);
 }
 
 // Загрузка с проскролом вконец в новых таблицах

@@ -65,22 +65,30 @@ describe('Controls/toggle:Tumbler', () => {
         control._children = {
             'TumblerButton0': {
                 offsetWidth: 10,
-                offsetLeft: 20
+                offsetHeight: 10,
+                offsetLeft: 20,
+                offsetTop: 2
             },
             'TumblerButton1': {
                 offsetWidth: 30,
-                offsetLeft: 40
+                offsetHeight: 30,
+                offsetLeft: 40,
+                offsetTop: 2
             }
         };
         const result = {
             isEmpty: false,
             '-1': {
                 width: 10,
-                left: 20
+                height: 10,
+                left: 20,
+                top: 2
             },
             2: {
                 width: 30,
-                left: 40
+                height: 30,
+                left: 40,
+                top: 2
             }
         };
 

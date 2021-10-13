@@ -8,6 +8,7 @@ type TNodeFooterVisibilityCallback = (item: Model) => boolean;
 
 type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
 
+export type TExpanderPosition = 'default'|'right'|'custom';
 
 export interface ITreeControlOptions extends IControlOptions, ISelectionCountModeOptions {
     expandByItemClick?: boolean;
@@ -24,6 +25,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
     selectDescendants?: boolean;
     markItemByExpanderClick?: boolean;
     expanderSize?: 's'|'m'|'l'|'xl';
+    expanderPosition?: TExpanderPosition;
 }
 
 /**
@@ -240,6 +242,21 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  *     <li>shows an outline expander when hovering over a collapsed node</li>
  * </ul>
  * @default visible
+ */
+
+/**
+ * @typedef {String} TExpanderPosition
+ * @variant default Стандартное расположение иконки узла.
+ * @variant right Расположение иконки узла справа.
+ * @variant custom Произвольное расположение иконки узла. При данном значении опции, шаблон иконки передается в прикладной шаблон и может быть выведен в любом месте записи.
+ */
+
+/**
+ * @name Controls/_treeGrid/View#expanderPosition
+ * @cfg {TExpanderPosition} Расположение иконки для узла и скрытого узла.
+ * @default default
+ * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
+ * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
  */
 
 /**

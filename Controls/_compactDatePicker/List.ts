@@ -23,7 +23,6 @@ export default class List extends Control<ICompactDatePickerOptions> {
     protected _dayTemplate: TemplateFunction = dayTemplate;
     protected _defaultDayTemplate: TemplateFunction = MonthViewDayTemplate;
     protected _weekdaysCaptions: string = DateControlsUtils.getWeekdaysCaptions();
-    protected _today: number = (new WSDate()).getDate();
     // Список подскролливает к первому элементу после того как мы навели мышку на список, т.к. загружаются новые
     // элементы и показывается ромашка. Не будем реагировать на первое событие скролла.
     private _shouldUpdateShadowState: boolean = false;

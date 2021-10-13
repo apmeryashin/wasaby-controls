@@ -29,6 +29,36 @@ const COLSPAN_HEADER = [
     { title: 'Площадь км2', startColumn: 5, endColumn: 7 }
 ];
 
+class DemoSource extends Memory {
+    private _qPromise: Promise<void>;
+    private _qPromiseResolver: () => void;
+
+    setDelay(delay: number): void {
+        this._delay = delay;
+    }
+
+    freezeQuerry() {
+        if (!this._qPromise) {
+            this._qPromise = new Promise((res) => {
+                this._qPromiseResolver = res;
+            });
+        }
+    }
+
+    unfreezeQuerry() {
+        if (this._qPromise) {
+            this._qPromiseResolver();
+            this._qPromiseResolver = null;
+            this._qPromise = null;
+        }
+    }
+
+    query(): Promise<any> {
+        const args = arguments;
+        return Promise.resolve().then(() => this._qPromise).then(() => super.query.apply(this, args));
+    }
+}
+
 export default class extends Control {
     private DEFAULT_HEADER = DEFAULT_HEADER;
     private COLSPAN_HEADER = COLSPAN_HEADER;
@@ -41,8 +71,8 @@ export default class extends Control {
     private _columnScroll: boolean = true;
     private _dragScrolling: boolean = undefined;
     private _currentItemsName: 'Empty' | 'Not empty' = 'Not empty';
-    private _emptyViewSource: Memory;
-    private _notEmptyViewSource: Memory;
+    private _emptyViewSource: DemoSource;
+    private _notEmptyViewSource: DemoSource;
     private _newColumnWidth: string = '100px';
     private _containerWidth: string = '710px';
     private _containerWidthInputValue: string = this._containerWidth;
@@ -54,17 +84,18 @@ export default class extends Control {
     private _itemsDragNDrop: boolean = false;
     private _scrollToColumnIdx?: number;
     private _multiSelectVisibility: 'visible' | 'hidden' = 'hidden';
+    private _columnScrollViewMode?: 'scrollbar' | 'arrows';
 
     protected _beforeMount(): void {
         this._columns[2].width = '1fr';
         this._columns[3].template = PopulationColumn;
-        this._emptyViewSource = new Memory({
+        this._emptyViewSource = new DemoSource({
             keyProperty: 'key',
             data: []
         });
         const data = Countries.getData();
         data[2].show = true;
-        this._notEmptyViewSource = new Memory({
+        this._notEmptyViewSource = new DemoSource({
             keyProperty: 'key',
             data
         });
@@ -163,10 +194,19 @@ export default class extends Control {
         }];
     }
 
-    protected _requestReload(): void {
-    }
-    protected _reload(): void {
-        this._children.grid.reload();
+    protected _reload(e, isLong): void {
+        if (isLong) {
+            if (this._isLongLoad) {
+                this._isLongLoad = false;
+                this._viewSource.unfreezeQuerry();
+            } else {
+                this._isLongLoad = true;
+                this._viewSource.freezeQuerry();
+                this._children.grid.reload();
+            }
+        } else {
+            this._children.grid.reload();
+        }
     }
 
     protected _toggleColumnScrollStartPosition(e, value): void {
@@ -191,6 +231,10 @@ export default class extends Control {
 
     protected _toggleCheckbox(): void {
         this._multiSelectVisibility = this._multiSelectVisibility === 'visible' ? 'hidden' : 'visible';
+    }
+
+    protected _toggleScrollBar(e, value): void {
+        this._columnScrollViewMode = value;
     }
 
     protected _scrollToColumn(): void {

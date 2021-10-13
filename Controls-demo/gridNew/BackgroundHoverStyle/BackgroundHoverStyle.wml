@@ -5,5 +5,10 @@
             source="{{_viewSource}}"
             hoverBackgroundStyle="primary"
             columns="{{_columns}}">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/grid:ItemTemplate"
+                        scope="{{ _options }}"
+                        hoverBackgroundStyle="{{itemTemplate.item.contents.get('population') > 1000000000 ? 'default'}}"/>
+        </ws:itemTemplate>
     </Controls.grid:View>
 </div>

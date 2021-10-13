@@ -10,6 +10,7 @@
                             name="searchInput"
                             searchButtonVisible="{{_options.searchButtonVisible}}"
                             searchButtonAlign="{{_options.searchButtonAlign}}"
+                            searchButtonIconStyle="{{_options.searchButtonIconStyle}}"
                             constraint="{{_options.constraint}}"
                             maxLength="{{_options.maxLength}}"
                             trim="{{_options.trim}}"
@@ -50,7 +51,8 @@
             <div class="controls-Search__expandable-button
                     {{_needShowAnimation ? 'controls-Search__expandable-button-animation'}}
                     controls-Search__button_{{_options.readOnly ? 'readOnly' : 'enabled'}}
-                    controls-Search__searchButton_color icon-Search2
+                    {{_options.searchButtonIconStyle ? 'controls-icon_style-' + searchButtonIconStyle : 'controls-Search__searchButton_color'}}
+                    icon-Search2
                     controls-icon_size-m"
                  on:animationend="_animationendHandler()"
                  on:click="_handleOpenClick()"></div>

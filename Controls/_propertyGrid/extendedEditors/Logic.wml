@@ -1,5 +1,8 @@
-<Controls.source:SelectedKey scope="{{_options}}"
-                             bind:selectedKey="_selectedKey"
-                             on:selectedKeyChanged="_handleSelectedKeyChanged()">
-  <Controls.dropdown:Toggle attr:class="controls-PropertyGrid__editor_dropdown_control"/>
-</Controls.source:SelectedKey>
+<Controls.Container.Async templateName="Controls/source:SelectedKey">
+  <ws:partial template="{{content.resolvedTemplate}}"
+              scope="{{_options}}"
+              bind:selectedKey="_selectedKey"
+              on:selectedKeyChanged="_handleSelectedKeyChanged()">
+    <Controls.dropdown:Toggle attr:class="controls-PropertyGrid__editor_dropdown_control"/>
+  </ws:partial>
+</Controls.Container.Async>

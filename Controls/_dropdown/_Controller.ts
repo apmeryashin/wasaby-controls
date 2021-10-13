@@ -628,7 +628,7 @@ export default class _Controller implements IDropdownController {
          }
          this._updateHistoryPromise = this._source.update(items, getMetaHistory()).then(() => {
             this._updateHistoryPromise = null;
-            if (this._sourceController && this._source.getItems) {
+            if (this._sourceController && this._source.getItems && (!this._options.searchParam || this._items)) {
                this._setItemsAndMenuSource(this._source.getItems());
             }
          });

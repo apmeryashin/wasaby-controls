@@ -9,7 +9,7 @@ import 'css!Controls/decorator';
 /**
  * @typedef Controls/_decorator/IHighlight/HighlightMode
  * @variant word Подсветка осуществляется по словам.
- * Слово - это набор символов,  длина не менее 2. Слова разделяются пробелом и пунктуацией.
+ * Слово - это набор символов, длина не менее 2. Слова разделяются пробелом и пунктуацией.
  * @variant substring Подсветка осуществляется по подстрокам.
  */
 export type HighlightMode = 'word' | 'substring';

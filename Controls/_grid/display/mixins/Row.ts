@@ -16,7 +16,7 @@ import {TResultsPosition} from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import ItemActionsCell from './../ItemActionsCell';
-import {TColspanCallback, TColspanCallbackResult} from './Grid';
+import {TColspanCallback, TColspanCallbackResult, TColumnScrollViewMode} from './Grid';
 import {DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/grid:ItemTemplate';
@@ -632,6 +632,14 @@ export default abstract class Row<T extends Model = Model> {
 
     hasColumnScroll(): boolean {
         return this._$owner.hasColumnScroll();
+    }
+
+    getColumnScrollViewMode(): TColumnScrollViewMode {
+        return this._$owner.getColumnScrollViewMode();
+    }
+
+    setColumnScrollViewMode(newColumnScrollViewMode: TColumnScrollViewMode): void {
+        this._reinitializeColumns(true);
     }
 
     getStickyColumnsCount(): number {

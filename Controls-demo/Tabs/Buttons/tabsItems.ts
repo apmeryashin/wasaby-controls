@@ -73,20 +73,46 @@ export const data = {
     getItems5: () => ([
         {
             id: '1',
-            icon: 'Lenta'
+            title: 'Вкладка',
+            mainCounter: 12,
+            icon: 'EmptyMessage',
+            caption: 'Всего',
+            additionalCaption: ' 11.11.2021'
         },
         {
             id: '2',
-            icon: 'Lenta'
+            title: 'Вкладка',
+            mainCounter: 12,
+            icon: 'EmptyMessage',
+            caption: 'Всего',
+            additionalCaption: '11.11.2021'
         },
         {
             id: '3',
-            icon: 'Lenta'
+            title: 'Вкладка',
+            mainCounter: 12,
+            icon: 'EmptyMessage',
+            caption: 'Всего',
+            additionalCaption: '11.11.2021'
         }
     ]),
     getItems6: () => ([
         {
             id: '1',
+            icon: 'Lenta'
+        },
+        {
+            id: '2',
+            icon: 'Lenta'
+        },
+        {
+            id: '3',
+            icon: 'Lenta'
+        }
+    ]),
+    getItems7: () => ([
+        {
+            id: '1',
             icon: 'EmptyMessage',
             mainCounter: 12
         },
@@ -101,7 +127,7 @@ export const data = {
             mainCounter: 12
         }
     ]),
-    getItems7: () => ([
+    getItems8: () => ([
         {
             id: '1',
             icon: 'Show',
@@ -118,7 +144,7 @@ export const data = {
             caption: 'Вкладка'
         }
     ]),
-    getItems8: () => ([
+    getItems9: () => ([
         {
             id: '1',
             image: {

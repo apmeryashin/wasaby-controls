@@ -2,24 +2,9 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {RecordSet} from 'Types/collection';
 import {showType} from 'Controls/toolbars';
 import * as Template from 'wml!Controls-demo/Toolbar/Items/Items';
-import {Memory} from 'Types/source';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _itemSource: Memory = new Memory({
-        data: [{
-            title:'Распечатать1',
-            '@parent': null,
-            parent: null,
-            id: 15
-        }, {
-            title: 'Распечатать2',
-            '@parent': null,
-            parent: null,
-            id: 16
-        }],
-        keyProperty: 'id'
-    });
     protected _items: RecordSet = new RecordSet({
         rawData: [
             {
@@ -34,8 +19,7 @@ export default class extends Control {
                 icon: 'icon-Print',
                 title: 'Распечатать',
                 '@parent': false,
-                parent: null,
-                source: this._itemSource
+                parent: null
             },
             {
                 id: '4',

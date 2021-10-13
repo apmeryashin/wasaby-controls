@@ -46,6 +46,8 @@ export default class PropertyGridRender extends Control<IPropertyGridRenderOptio
         e.stopPropagation();
     }
 
+    protected _onItemActionMouseUp(e: SyntheticEvent<MouseEvent>): void {}
+
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridCollectionItem<Model>): void {
         if (e.target.closest('.js-controls-ListView__checkbox')) {
             this._notify('checkBoxClick', [item, e]);

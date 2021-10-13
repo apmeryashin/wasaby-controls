@@ -97,6 +97,8 @@ export {IItemsStrategy, IItemsStrategyOptions};
 
 import {Footer, IOptions as IFooterOptions} from './_display/Footer';
 export {Footer, IFooterOptions};
+import NodeFooter from 'Controls/_display/NodeFooter';
+export { NodeFooter };
 
 import Indicator from 'Controls/_display/Indicator';
 export {default as Indicator, EIndicatorState, TIndicatorState} from 'Controls/_display/Indicator';
@@ -111,5 +113,6 @@ register('Controls/display:TreeChildren', TreeChildren, {instantiate: false});
 register('Controls/display:TreeItem', TreeItem, {instantiate: false});
 register('Controls/display:TreeItemDecorator', TreeItemDecorator, {instantiate: false});
 register('Controls/display:Footer', Footer, {instantiate: false});
+register('Controls/display:NodeFooter', NodeFooter, {instantiate: false});
 
 register('Controls/display:Indicator', Indicator, {instantiate: false});

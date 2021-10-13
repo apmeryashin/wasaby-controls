@@ -24,7 +24,22 @@
 }
 
 .controls-RadioItem__RadioCircle {
+   display: inline-flex;
+   align-self: normal;
+   align-items: center;
+   height: var(--inline_height_m);
+
+   &::before {
+      content: '\200b';
+   }
+}
+
+.controls-RadioItem__RadioCircle_captionPosition-right {
    padding-right: var(--offset_2xs);
+}
+
+.controls-RadioItem__RadioCircle_captionPosition-left {
+   padding-left: var(--offset_2xs);
 }
 
 .controls-RadioItem__caption {
@@ -62,7 +77,7 @@
 }
 
 .controls-RadioGroup__childGroup {
-   margin-left: var(--offset_l);
+   margin-left: var(--offset_xl);
 }
 
 .ws-is-hover {

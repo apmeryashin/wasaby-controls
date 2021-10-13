@@ -120,11 +120,11 @@ define(
             it('On the mobile platform', function() {
                var sandbox = sinon.createSandbox();
 
-               sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
                inst._model.fixedPosition = 'top';
                sandbox.replace(inst, '_getComputedStyle', function() {
                   return {'padding-top': '0px'};
                });
+               inst._isMobileIOS = true;
                inst._container = {style: {paddingTop: ''}};
                inst._options.theme = 'default';
                inst._options.content = function() {
@@ -140,12 +140,12 @@ define(
 
                inst._updateStyles(inst._options);
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position controls-StickyBlock_gapFix" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls_scroll_theme-default controls-background-default controls-StickyHeader_position controls-StickyBlock__topGapFix-default" style="top: 0px;z-index: 2;">' +
                   '<div data-qa="StickyHeader__shadow-top" class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomLeft" style="bottom: -2px;"></div>' +
                    '<div class="controls-StickyHeader__observationTargetBottomRight" style="bottom: -2px;"></div>' +
-                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-hidden"></div>' +
+                  '<div data-qa="StickyHeader__shadow-bottom" class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '</div>');
                sandbox.restore();
             });

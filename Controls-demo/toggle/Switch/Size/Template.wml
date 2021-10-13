@@ -1,0 +1,39 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=l contrastBackground=true
+        </div>
+        <Controls.toggle:Switch bind:value="_value"
+                                contrastBackground="{{true}}"
+                                size="l"
+                                readOnly="{{true}}"
+                                caption="state"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=l contrastBackground=false
+        </div>
+        <Controls.toggle:Switch bind:value="_value"
+                                contrastBackground="{{false}}"
+                                size="l"
+                                caption="state"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=s contrastBackground=true
+        </div>
+        <Controls.toggle:Switch bind:value="_value2"
+                                contrastBackground="{{true}}"
+                                size="s"
+                                caption="state"/>
+    </div>
+    <div class="controlsDemo__cell demo-switchBase__contrast-true">
+        <div class="controls-text-label controlsDemo_widthFit controls-text-label">
+            size=s contrastBackground=false
+        </div>
+        <Controls.toggle:Switch bind:value="_value2"
+                                contrastBackground="{{false}}"
+                                size="s"
+                                caption="state"/>
+    </div>
+</div>

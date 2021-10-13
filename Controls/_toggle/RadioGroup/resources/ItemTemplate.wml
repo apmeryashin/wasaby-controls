@@ -1,5 +1,4 @@
-<span attr:class="{{selected ? ' js-controls-RaidoItem__wrapper__selected'}} controls-RadioItem__wrapper_{{readOnly ? 'disabled' : 'enabled'}}">
-    <ws:partial attr:class="controls-RadioItem__RadioCircle" template="wml!Controls/_toggle/RadioGroup/resources/RadioCircle/RadioCircle" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
+<ws:template name="CaptionTemplate">
     <ws:if data="{{contentTemplate}}">
         <ws:partial template="{{contentTemplate}}" class="controls-RadioItem__caption" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
     </ws:if>
@@ -8,4 +7,16 @@
                           controls-RadioItem__caption">{{item[displayProperty || 'title']}}
         </span>
     </ws:else>
+</ws:template>
+
+<span attr:class="{{selected ? ' js-controls-RaidoItem__wrapper__selected'}} controls-RadioItem__wrapper_{{readOnly ? 'disabled' : 'enabled'}}">
+    <ws:if data="{{captionPosition === 'left'}}">
+        <ws:partial template="CaptionTemplate"/>
+    </ws:if>
+    <div class="controls-RadioItem__RadioCircle">
+        <ws:partial attr:class="controls-RadioItem__RadioCircle_captionPosition-{{(captionPosition || 'right')}}" template="wml!Controls/_toggle/RadioGroup/resources/RadioCircle/RadioCircle" item="{{item}}" readOnly="{{readOnly}}" selected="{{selected}}"/>
+    </div>
+    <ws:if data="{{captionPosition !== 'left'}}">
+        <ws:partial template="CaptionTemplate"/>
+    </ws:if>
 </span>

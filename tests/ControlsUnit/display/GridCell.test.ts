@@ -118,6 +118,12 @@ describe('Controls/display:Cell', () => {
                 displayType: 'number'
             }
         }, {
+            caseName: 'date render',
+            assertValue: 'Controls/grid:DateTypeRender',
+            cellConfig: {
+                displayType: 'date'
+            }
+        }, {
             caseName: 'default render',
             assertValue: 'Controls/grid:StringTypeRender',
             cellConfig: {}

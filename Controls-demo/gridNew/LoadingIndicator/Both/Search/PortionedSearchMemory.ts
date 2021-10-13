@@ -6,12 +6,13 @@ interface IItem {
 }
 
 const SEARCH_DELAY = 2500;
+const DEFAULT_DELAY = 1000;
 
 export default class PositionSourceMemory extends Memory {
-    private _littleData: boolean = false;
+    private _littleDataToDown: boolean = false;
 
     setLittleData(newValue: boolean): void {
-        this._littleData = newValue;
+        this._littleDataToDown = newValue;
     }
 
     query(query?: Query<unknown>): Promise<DataSet> {
@@ -19,38 +20,58 @@ export default class PositionSourceMemory extends Memory {
         let limit = query.getLimit();
 
         const isSearch = query.getWhere().title !== undefined;
-        let isPrepend = typeof filter['key<='] !== 'undefined';
+        const isPrepend = typeof filter['key<='] !== 'undefined';
         const isPosition = typeof filter['key~'] !== 'undefined';
+        const isAppend = typeof filter['key>='] !== 'undefined';
         let position = filter['key<='] || filter['key>='] || filter['key~'] || 0;
-
-        if (isPrepend) {
-            position -= limit;
+        if (isAppend) {
+            position++;
+        } else if (isPrepend) {
+            position--;
         }
+
+        const delay = isSearch ? SEARCH_DELAY : DEFAULT_DELAY;
+        let total = isPosition ? {before: true, after: true} : true;
+        let more = isPosition ? {before: true, after: true} : true;
+        let iterative = false;
 
         if (isSearch) {
-            const limit = this._littleData ? 5 : 20;
-            const iterative =  position > -60 || position < limit;
-            const hasMore = isPrepend ? position > -60 : position < limit;
-            return this._getSearchItems(position)
-                .then((items) => this._prepareQueryResult({
-                        items,
-                        meta: {
-                            total: iterative,
-                            more: isPosition ? {before: true, after: !this._littleData} : hasMore,
-                            iterative
-                        }
-                    }, null)
-                );
+            if (this._littleDataToDown && isAppend) {
+                limit = 1;
+            } else {
+                limit = 3;
+            }
+
+            if (isPrepend) {
+                position -= limit;
+            }
+
+            if (this._littleDataToDown && isAppend) {
+                iterative = position < 5;
+            } else {
+                iterative = isPrepend ? position > -60 : position < 60;
+            }
+
+            if (isPosition) {
+                more = { before: true, after: true };
+            } else if (this._littleDataToDown && isAppend) {
+                more = position < 5;
+            } else {
+                more = isPrepend ? position > -60 : position < 60;
+            }
+
+            total = more;
         } else {
-            const items = this._getItems(position, limit);
-            const result = this._prepareQueryResult({
-                items,
-                meta: {
-                    total: isPosition ? {before: true, after: true} : true
-                }
-            }, null);
-            return Promise.resolve(result);
+            if (isPrepend) {
+                position -= limit;
+            }
         }
+
+        const meta = { total, more, iterative};
+        return this._timeout(delay).then(() => {
+            const items = this._getItems(position, limit);
+            return this._prepareQueryResult({items, meta}, null);
+        });
     }
 
     private _getItems(position: number, limit: number): IItem[] {
@@ -66,12 +87,11 @@ export default class PositionSourceMemory extends Memory {
         return items;
     }
 
-    private _getSearchItems(position: number): Promise<IItem[]> {
+    private _timeout(delay: number): Promise<void> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const items = this._getItems(position, 5);
-                resolve(items);
-            }, SEARCH_DELAY);
+                resolve();
+            }, delay);
         });
     }
 }

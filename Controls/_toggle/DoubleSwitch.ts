@@ -12,6 +12,8 @@ import {IContrastBackgroundOptions} from "Controls/_interface/IContrastBackgroun
 export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IContrastBackgroundOptions {
    captions?: string[];
    orientation?: string;
+   size?: string;
+   resetValue?: boolean;
 }
 
 const CAPTIONS_LENGTH = 2;
@@ -99,7 +101,8 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
       return {
          value: false,
          contrastBackground: true,
-         orientation: 'horizontal'
+         orientation: 'horizontal',
+         size: 'l'
       };
    }
    static getOptionTypes(): object {
@@ -132,6 +135,21 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
  * @cfg {string}
  * @default true
  * @demo Controls-demo/toggle/DoubleSwitch/ContrastBackground/Index
+ */
+
+/**
+ * @name Controls/_toggle/DoubleSwitch#size
+ * @cfg {string} Определяет размер переключателя.
+ * @variable s
+ * @variable s
+ * @default l
+ * @demo Controls-demo/toggle/DoubleSwitch/Size/Index
+ */
+
+/**
+ * @name Controls/_toggle/DoubleSwitch#resetValue
+ * @cfg {boolean} Предустановленное значение
+ * @demo Controls-demo/toggle/DoubleSwitch/ResetValue/Index
  */
 
 /**

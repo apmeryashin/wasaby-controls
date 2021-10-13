@@ -62,7 +62,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
         let result = false;
         const item = treeItem.getContents();
         if (item instanceof Model) {
-            if (this._options.selectedAllText && item.getId() === this._options.selectedAllKey) {
+            if (this._options.selectedAllText && item.getKey() === this._options.selectedAllKey) {
                 result = true;
             } else if (this._isEmptyItem(treeItem)) {
                 result = true;
@@ -169,14 +169,18 @@ class MenuRender extends Control<IMenuRenderOptions> {
     }
 
     protected _isHistorySeparatorVisible(treeItem: TreeItem<Model>): boolean {
+        let result = false;
         const item = treeItem.getContents();
         const nextItem = this._getNextItem(treeItem);
         const isGroupNext = this._isGroupNext(treeItem);
-        return !isGroupNext &&
-            nextItem?.getContents() &&
-            this._isHistoryItem(item) &&
-            !this._hasParent(treeItem.getContents(), this._options.historyRoot) &&
-            !this._isHistoryItem(nextItem.getContents());
+        if (item instanceof Model) {
+            result = !isGroupNext &&
+                nextItem?.getContents() &&
+                this._isHistoryItem(item) &&
+                !this._hasParent(treeItem.getContents(), this._options.historyRoot) &&
+                !this._isHistoryItem(nextItem.getContents());
+        }
+        return result;
     }
 
     protected _isGroupVisible(groupItem: GroupItem): boolean {

@@ -26,6 +26,7 @@
          on:itemClick="_itemClickHandler()"
          startValue="{{_options.startValue}}"
          endValue="{{_options.endValue}}"
+         showWeekdays="{{ _options.showWeekdays }}"
          bind:selectionProcessing="selectionProcessing"
          bind:selectionBaseValue="selectionBaseValue"
          bind:selectionHoveredValue="selectionHoveredValue"

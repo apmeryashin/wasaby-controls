@@ -3,7 +3,6 @@ import {Logger} from 'UI/Utils';
 import {constants, detection} from 'Env/Env';
 import {descriptor} from 'Types/entity';
 import {
-    getGapFixSize,
     getNextId,
     getOffset,
     IFixedEventData,
@@ -178,7 +177,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     private _isHidden: boolean = false;
 
-    protected _gapFixClass: string = '';
+    protected _isPixelRatioBug: boolean = false;
 
     group: Group;
 
@@ -234,6 +233,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         if (!this._isStickyEnabled(this._options)) {
             return;
         }
+        this._updateIsPixelRatioBug();
         if (options.position !== this._options.position) {
             this._updateCanShadowVisible(options);
         }
@@ -346,13 +346,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
-        let offset = getOffset(parentElement, this._container, position);
-        // Проверяем действительно ли устновлен top. Иногда мы производим замеры когда модель уже поменяли,
-        // а изменения еще не применились к dom дереву и просто проверка на isFixed проходит, а блок еще не смещен.
-        if (this._model?.isFixed() && this._container.style.top !== '') {
-            offset += getGapFixSize();
-        }
-        return offset;
+        return getOffset(parentElement, this._container, position);
     }
 
     resetSticky(): void {
@@ -383,9 +377,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
                     this._height -= Math.abs(1 - StickyBlock.getDevicePixelRatio());
                 }
             }
-            if (this._model?.isFixed()) {
-                this._height -= getGapFixSize();
-            }
         }
         return this._height;
     }
@@ -410,13 +401,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         const setTop = () => {
             this._stickyHeadersHeight.top = value;
             this._initialized = true;
-            // При установке top'а учитываем gap
-            const offset = getGapFixSize();
-            const topValue = value - offset;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
             if (this._syncDomOptimization) {
                 fastUpdate.mutate(() => {
-                    this._container.style.top = `${topValue}px`;
+                    this._container.style.top = `${value}px`;
                 });
             }
             this._updateStylesIfCanScroll();
@@ -475,11 +463,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         if (this._stickyHeadersHeight.bottom !== value) {
             this._stickyHeadersHeight.bottom = value;
             this._initialized = true;
-            // При установке bottom учитываем gap
-            const offset = getGapFixSize();
-            const bottomValue = value - offset;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
-            this._container.style.bottom = `${bottomValue}px`;
+            this._container.style.bottom = `${value}px`;
             this._updateStylesIfCanScroll();
         }
     }
@@ -546,6 +531,22 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
 
     protected _selfResizeHandler(): void {
         this._notify('stickyHeaderResize', [], {bubbling: true});
+    }
+
+    private _getDevicePixelRatio(): number {
+        return window ? window.devicePixelRatio : 1;
+    }
+
+    private _updateIsPixelRatioBug(): void {
+        const DESKTOP_PIXEL_RATIOS_BUG = [0.75, 1.25, 1.75];
+        let result = false;
+        if (!detection.isMobilePlatform) {
+            // Щель над прилипающим заголовком появляется на десктопах на масштабе 75%, 125% и 175%
+            if (DESKTOP_PIXEL_RATIOS_BUG.indexOf(this._getDevicePixelRatio()) !== -1) {
+                result = true;
+            }
+        }
+        this._isPixelRatioBug = result;
     }
 
     private _initObserver(): void {
@@ -699,6 +700,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             options.fixedZIndex,
             options.zIndex,
             options.offsetTop,
+            options._isIosZIndexOptimized,
             options.task1177692247,
             options.task1181007458
         );
@@ -707,15 +709,15 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStyle(position: POSITION,fixedZIndex: number,
-                         zIndex: number, offsetTop: number, task1177692247?, task1181007458?): void {
-        const style = this._getStyle(position, fixedZIndex, zIndex, offsetTop, task1177692247);
+                         zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): void {
+        const style = this._getStyle(position, fixedZIndex, zIndex, offsetTop, isIosZIndexOptimized, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
     protected _getStyle(positionFromOptions: POSITION,fixedZIndex: number,
-                        zIndex: number, offsetTop: number, task1177692247?, task1181007458?): string {
+                        zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): string {
         let offset: number = 0;
         let container: HTMLElement;
         let top: number;
@@ -726,9 +728,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         let styles: CSSStyleDeclaration;
         let style: string = '';
         let minHeight: number;
-
-        // Этот костыль нужен, чтобы убрать щели между заголовками. Для прозрачных заголовков он не нужен.
-        offset = this._options.backgroundStyle !== 'transparent' ? getGapFixSize() : 0;
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
@@ -779,45 +778,14 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             position = stickyPosition.vertical;
         }
         if (position && this._container) {
-            if (offset) {
-                container = this._getNormalizedContainer();
-
-                styles = this._getComputedStyle();
-                minHeight = parseInt(styles.minHeight, 10);
-                // Increasing the minimum height, otherwise if the content is less than the established minimum height,
-                // the height is not compensated by padding and the header is shifted. If the minimum height is already
-                // set by the style attribute, then do not touch it.
-                if (styles.boxSizing === 'border-box' && minHeight && !container.style.minHeight) {
-                    this._minHeight = minHeight + offset;
-                }
-                if (this._minHeight) {
-                    style += 'min-height:' + this._minHeight + 'px;';
-                }
-                // Increase border or padding by offset.
-                // If the padding or border is already set by the style attribute, then don't change it.
-                if (this._reverseOffsetStyle === null) {
-                    const borderWidth: number = parseInt(styles['border-' + position + '-width'], 10);
-
-                    if (borderWidth) {
-                        this._reverseOffsetStyle = 'border-' + position + '-width:' + (borderWidth + offset) + 'px;';
-                        this._resetGapFixClass();
-                    } else {
-                        const padding = parseInt(styles['padding-' + position], 10);
-                        this._reverseOffsetStyle = 'padding-' + position + ':' + (padding + offset) + 'px;';
-
-                        // Для исправления бага Safari, из-за которого position: absolute элементы, не сдвигаются
-                        // padding'ами внешнего блока (маркер в Grid, List).
-                        this._gapFixClass = 'controls-StickyBlock_gapFix';
-                    }
-                }
-
-                style += this._reverseOffsetStyle;
-                style += 'margin-' + position + ': -' + offset + 'px;';
-            } else {
-                this._resetGapFixClass();
+            // TODO https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
+            // В ios на стикиблоках всегда установлен z-index: fixedZIndex, т.к в момент оттягивания из-за смены z-index происходят прыжки.
+            // Из-за этого возникает следующая проблема: в списке лежат стики и не стики элементы. У не стики элеметов
+            // присутствует весло с itemAction. Если следующим элементом идёт стикиблок, то он перекроет весло.
+            // Получается, нужно чтобы весло был выше незафиксированного стикиблока, но ниже зафиксированного.
+            if (isIosZIndexOptimized || fixedPosition) {
+                style += 'z-index: ' + fixedZIndex + ';';
             }
-
-            style += 'z-index: ' + fixedZIndex + ';';
         } else if (zIndex) {
             style += 'z-index: ' + zIndex + ';';
         }
@@ -828,12 +796,6 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         }
 
         return style;
-    }
-
-    private _resetGapFixClass(): void {
-        if (this._gapFixClass !== '') {
-            this._gapFixClass = '';
-        }
     }
 
     private _updateObserversStyles(offsetTop: number, shadowVisibility: SHADOW_VISIBILITY): void {
@@ -1028,7 +990,8 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
             offsetLeft: 0,
             position: {
                 vertical: 'top'
-            }
+            },
+            _isIosZIndexOptimized: true
         };
     }
 

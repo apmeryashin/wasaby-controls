@@ -122,6 +122,18 @@ export function gePeriodLengthInDays(start: Date, end: Date): number {
 
 export function getResetButtonVisible(startValue: Date, endValue: Date, resetStartValue: Date,
                                       resetEndValue: Date): boolean {
+    const setTimeToZero = (date: Date): void => {
+        if (date instanceof Date) {
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+        }
+    };
+    const values = [startValue, endValue, resetStartValue, resetEndValue];
+    for (const value of values) {
+        setTimeToZero(value);
+    }
     const hasResetStartValue = resetStartValue || resetStartValue === null;
     const hasResetEndValue = resetEndValue || resetEndValue === null;
 
