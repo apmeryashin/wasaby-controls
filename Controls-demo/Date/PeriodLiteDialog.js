@@ -43,6 +43,6 @@ define('Controls-demo/Date/PeriodLiteDialog', [
          };
       }
    });
-   ModuleClass._styles = ['Controls-demo/Date/PeriodLiteDialog'];
+   ModuleClass._styles = ['Controls-demo/Date/PeriodLiteDialog', 'Controls-demo/ShortDatePicker/ShortDatePicker'];
    return ModuleClass;
 });
