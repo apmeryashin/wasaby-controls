@@ -93,3 +93,4 @@ export {default as ISelectField, ISelectFieldsOptions} from './_interface/ISelec
 export {IRoundBorder} from 'Controls/_interface/IRoundBorder';
 export {TPaddingSize} from 'Controls/_interface/TPaddingSize';
 export {IItemPaddingOptions, default as IItemPadding} from 'Controls/_interface/IItemPadding';
+export {default as IResetValue, IResetValueOptions} from 'Controls/_interface/IResetValue';
