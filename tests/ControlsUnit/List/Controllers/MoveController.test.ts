@@ -57,26 +57,21 @@ function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => P
             return Promise.resolve(args.eventHandlers.onResult(null));
         };
     }
-    function FakeDialogOpener(): any {
-        return function _ctor(): any {
+    return function FakeDialogOpener(): any {
+        function FakeDialogOpener(): any {
             this._popupId = null;
             this.open = function(popupOptions: popup.IBasePopupOptions): Promise<void> {
                 return new Promise((resolve, reject) => {
-                    this._popupId = 'POPUP_ID'
+                    this._popupId = 'POPUP_ID';
                     return openFunction(popupOptions);
                 });
-            };
-            this.close = function(): void {
-                this._popupId = null;
-                FakeDialogOpener.closeCallCount++;
             };
             this.isOpened = function(): boolean {
                 return !!this._popupId;
             };
-        };
-    }
-    FakeDialogOpener.closeCallCount = 0;
-    return FakeDialogOpener;
+        }
+        return FakeDialogOpener;
+    };
 }
 
 describe('Controls/list_clean/MoveController', () => {
@@ -151,7 +146,6 @@ describe('Controls/list_clean/MoveController', () => {
             controller = new MoveController({...cfg, source: undefined});
             return controller
                 .move(selectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -181,7 +175,6 @@ describe('Controls/list_clean/MoveController', () => {
             };
             controller = new MoveController(cfg);
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -210,7 +203,6 @@ describe('Controls/list_clean/MoveController', () => {
             };
             controller = new MoveController(cfg);
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -231,7 +223,6 @@ describe('Controls/list_clean/MoveController', () => {
             )));
             controller = new MoveController({...cfg, popupOptions: {}});
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -265,7 +256,6 @@ describe('Controls/list_clean/MoveController', () => {
                 }
             });
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -285,7 +275,6 @@ describe('Controls/list_clean/MoveController', () => {
             )));
             controller = new MoveController({...cfg, parentProperty: undefined});
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -305,7 +294,6 @@ describe('Controls/list_clean/MoveController', () => {
             controller = new MoveController({...cfg, source: undefined});
             controller.updateOptions({...cfg, source});
             return controller.move(selectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -324,7 +312,6 @@ describe('Controls/list_clean/MoveController', () => {
             controller = new MoveController({...cfg, source: undefined});
             controller.updateOptions({...cfg, source});
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -344,7 +331,6 @@ describe('Controls/list_clean/MoveController', () => {
             controller = new MoveController({...cfg, popupOptions: {}});
             controller.updateOptions({...cfg, popupOptions: { template: 'anyNewTemplate' }});
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -378,7 +364,6 @@ describe('Controls/list_clean/MoveController', () => {
                 }
             });
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -399,7 +384,6 @@ describe('Controls/list_clean/MoveController', () => {
             controller = new MoveController({...cfg, parentProperty: undefined});
             controller.updateOptions(cfg);
             return controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -408,22 +392,6 @@ describe('Controls/list_clean/MoveController', () => {
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
                     assert.isFalse(callCatch);
                 });
-        });
-
-        // Случай, когда пытаются вызвать диалог перемещения несколько раз подряд
-        it('moveWithDialog() multiple times, should open only one', () => {
-            // to prevent popup open
-            const DialogOpener = getFakeDialogOpener((args) => (
-                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
-            ));
-            sandbox.replaceGetter(popup, 'DialogOpener', DialogOpener);
-            controller = new MoveController({...cfg, parentProperty: undefined});
-            controller.updateOptions(cfg);
-            const call1 = controller.moveWithDialog(selectionObject, {myProp: 'test'});
-            const call2 = controller.moveWithDialog(selectionObject, {myProp: 'test'});
-            return Promise.all([call1, call2]).finally(() => {
-                assert.equal(DialogOpener.closeCallCount, 1);
-            });
         });
     });
 });

@@ -161,9 +161,6 @@ export class MoveController {
      */
     moveWithDialog(selection: ISelectionObject, filter: TFilterObject = {}): Promise<DataSet> {
         const validationResult = MoveController._validateBeforeOpenDialog(selection, this._popupOptions);
-        if (this._dialogOpener.isOpened()) {
-            this._dialogOpener.close();
-        }
         if (validationResult.message === undefined) {
             return this._openMoveDialog(selection, filter);
         } else if (!validationResult.isError) {

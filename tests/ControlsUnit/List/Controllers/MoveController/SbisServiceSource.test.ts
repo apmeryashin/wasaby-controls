@@ -5,45 +5,11 @@ import {Logger} from 'UI/Utils';
 import {Control} from 'UI/Base';
 import {IHashMap} from 'Types/declarations';
 
-import * as clone from 'Core/core-clone';
 import {CrudEntityKey, DataSet, SbisService, LOCAL_MOVE_POSITION} from 'Types/source';
 import {IMoveControllerOptions, MoveController} from 'Controls/list';
 import {ISelectionObject} from 'Controls/interface';
 import * as popup from 'Controls/popup';
 import {Model, adapter, Record} from 'Types/entity';
-
-const data = [
-    {
-        id: 1,
-        folder: null,
-        'folder@': true
-    },
-    {
-        id: 2,
-        folder: null,
-        'folder@': null
-    },
-    {
-        id: 3,
-        folder: null,
-        'folder@': null
-    },
-    {
-        id: 4,
-        folder: 1,
-        'folder@': true
-    },
-    {
-        id: 5,
-        folder: 1,
-        'folder@': null
-    },
-    {
-        id: 6,
-        folder: null,
-        'folder@': null
-    }
-];
 
 const sbisServiceSource: Partial<SbisService> = {
     getAdapter(): any {
@@ -84,7 +50,7 @@ function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => P
             this._popupId = null;
             this.open = function(popupOptions: popup.IBasePopupOptions): Promise<void> {
                 return new Promise((resolve, reject) => {
-                    this._popupId = 'POPUP_ID'
+                    this._popupId = 'POPUP_ID';
                     return openFunction(popupOptions);
                 });
             };
@@ -105,7 +71,6 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
     let callCatch: boolean;
 
     beforeEach(() => {
-        const _data = clone(data);
 
         // fake opener
         const opener = new Control({});
@@ -610,7 +575,11 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             };
             // to prevent popup open
             sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => (
-                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel({
+                    id: 3,
+                    folder: null,
+                    'folder@': null
+                }))
             )));
             const stubCall = sandbox.stub(sbisServiceSource, 'call')
                 .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
@@ -646,7 +615,11 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             };
             // to prevent popup open
             sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => (
-                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel({
+                    id: 3,
+                    folder: null,
+                    'folder@': null
+                })))
             )));
             const stubCall = sandbox.stub(sbisServiceSource, 'call')
                 .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
@@ -679,7 +652,11 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
             // to prevent popup open
             sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => (
-                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel({
+                    id: 3,
+                    folder: null,
+                    'folder@': null
+                })))
             )));
             controller = new MoveController({...cfg, source: (sbisServiceSource as SbisService)});
             return controller.moveWithDialog(selectionObject, () => {})
@@ -705,7 +682,11 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 });
             // to prevent popup open
             sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => (
-                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel({
+                    id: 3,
+                    folder: null,
+                    'folder@': null
+                })))
             )));
             controller = new MoveController({...cfg, source: (sbisServiceSource as SbisService)});
             return controller.moveWithDialog(selectionObject, undefined)
@@ -734,7 +715,11 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 });
             // to prevent popup open
             sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => (
-                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel({
+                    id: 3,
+                    folder: null,
+                    'folder@': null
+                })))
             )));
             controller = new MoveController({...cfg, source: (sbisServiceSource as SbisService)});
             return controller.moveWithDialog(selectionObject, {mother: 'anarchy'})

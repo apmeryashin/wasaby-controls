@@ -61,7 +61,7 @@ function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => P
             this._popupId = null;
             this.open = function(popupOptions: popup.IBasePopupOptions): Promise<void> {
                 return new Promise((resolve, reject) => {
-                    this._popupId = 'POPUP_ID'
+                    this._popupId = 'POPUP_ID';
                     return openFunction(popupOptions);
                 });
             };
