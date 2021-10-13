@@ -202,10 +202,10 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         const scrollContainers = this._getParentScrollContainerElements(event.target as HTMLElement);
         const swipeInTopScrollContainer = scrollContainers.length === 1;
         const swipeInsideInnerScrollContainer = scrollContainers.length > 1;
-        return this._scrollAvailable && swipeInTopScrollContainer && (
-            this._getScrollTop() !== 0 ||
-            this._startTouchYPosition - event.nativeEvent.changedTouches[0].clientY > 0
-        ) || swipeInsideInnerScrollContainer;
+        const alreadyScrolled = this._getScrollTop() !== 0;
+        const swipeToScrollSide = this._startTouchYPosition - event.nativeEvent.changedTouches[0].clientY > 0;
+
+        return this._scrollAvailable && swipeInTopScrollContainer && (alreadyScrolled || swipeToScrollSide) || swipeInsideInnerScrollContainer;
     }
 
     private _getParentScrollContainerElements(element: HTMLElement): HTMLElement[] {
