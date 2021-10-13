@@ -57,7 +57,7 @@
             </div>
 
             <ws:if data="{{_options.footerContentTemplate }}">
-                <div class="controls-StackTemplate__bottomArea">
+                <div class="controls-StackTemplate__bottomArea controls-background-{{_options.backgroundStyle}}">
                     <ws:partial template="{{_options.footerContentTemplate}}"
                                 scope="{{_options}}"
                                 bodyContentTemplate="{{null}}"
