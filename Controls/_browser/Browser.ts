@@ -632,13 +632,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
 
+        const hasFilterInOptions = Browser._hasInOptions(this._options, ['filter']);
         const listOptions = this._getListOptionsById(id);
         this._dataLoader.getFilterController()?.setFilter(filter);
         if (listOptions && id) {
             listOptions.filter = listOptions.filter || filter;
         }
-        if (!Browser._hasInOptions(this._options, ['filter']) || !this._options.task1182865383) {
+        if (!hasFilterInOptions || !this._options.task1182865383) {
             this._filter = filter;
+        }
+        if (!hasFilterInOptions) {
+            // _filter - состояние, которое используется, когда не передают опцию filter.
+            // это состояние не рекативное, т.к. в шаблоне не используется
+            // из-за этого необходимо звать _forceUpdate
+            this._forceUpdate();
         }
         this._notify('filterChanged', [filter, id]);
     }
