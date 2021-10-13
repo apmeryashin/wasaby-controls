@@ -6,7 +6,6 @@
                 filter="{{_filter}}"
                 keyProperty="{{_options.keyProperty}}"
                 selectedKeys="{{_selectedKeys}}"
-                scope="{{_options}}"
                 navigation="{{_navigation}}"
                 backgroundStyle="transparent"
                 hoverBackgroundStyle="listEditor"
