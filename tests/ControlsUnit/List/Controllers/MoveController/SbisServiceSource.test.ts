@@ -580,7 +580,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     folder: null,
                     'folder@': null
                 }))
-            )));
+            ))));
             const stubCall = sandbox.stub(sbisServiceSource, 'call')
                 .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
                     assert.exists(data.filter, 'filter should exist');
