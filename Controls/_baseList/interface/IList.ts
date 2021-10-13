@@ -525,7 +525,7 @@ export interface IReloadItemOptions {
 
 /**
  * @name Controls/_list/interface/IList#stickyFooter
- * @cfg {String} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ подвал} списка.
+ * @cfg {Boolean} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ подвал} списка.
  * @default false
  */
 
