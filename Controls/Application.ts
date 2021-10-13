@@ -184,7 +184,11 @@ export default class Application extends Control<IApplication> {
 
       if (Application._isIOS13()) {
          window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
-         window.addEventListener('orientationchange', this._orientationChange);
+
+         // Хак актуален только для телефона с Ios и мета тегом viewport
+         if (options.isAdaptive) {
+            window.addEventListener('orientationchange', this._orientationChange);
+         }
       }
       window.addEventListener('resize', this._resizePage.bind(this));
       window.document.addEventListener('scroll', this._scrollPage.bind(this));
