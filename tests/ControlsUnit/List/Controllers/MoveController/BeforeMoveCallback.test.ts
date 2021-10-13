@@ -52,14 +52,14 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
     let sandbox: any;
     let callCatch: boolean;
 
-    function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => Promise<any>) {
+    function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => Promise<any>): Function {
         if (!openFunction) {
-            openFunction = function(args) {
-                return Promise.resolve(args.eventHandlers.onResult(null);
-            }
+            openFunction = (args): Promise<any> => {
+                return Promise.resolve(args.eventHandlers.onResult(null));
+            };
         }
-        return function () {
-            return function() {
+        function FakeDialogOpener(): any {
+            return function _ctor(): any {
                 this._popupId = null;
                 this.open = function(popupOptions: popup.IBasePopupOptions): Promise<void> {
                     return new Promise((resolve, reject) => {
@@ -67,11 +67,17 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
                         return openFunction(popupOptions);
                     });
                 };
+                this.close = function(): void {
+                    this._popupId = null;
+                    FakeDialogOpener.closeCallCount++;
+                };
                 this.isOpened = function(): boolean {
                     return !!this._popupId;
-                }
-            }
+                };
+            };
         }
+        FakeDialogOpener.closeCallCount = 0;
+        return FakeDialogOpener;
     }
 
     function createFakeModel(rawData: {id: number, folder: number, 'folder@': boolean}): Model {
