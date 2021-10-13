@@ -16,7 +16,7 @@ export interface IBarOptions extends IControlOptions {
  * @remark
  * Полезные ссылки:
  * * {@link /materials/Controls-demo/app/Controls-demo%2fprogress%2fBar%2fIndex демо-пример}
- * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less переменные тем оформления}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-21.6000/Controls-default-theme/variables/_progress.less переменные тем оформления}
  *
  * @extends UI/Base:Control
  * @implements Controls/progress:IBar
