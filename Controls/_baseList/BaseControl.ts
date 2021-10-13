@@ -3001,6 +3001,7 @@ const _private = {
  * @implements Controls/list:IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
  * @implements Controls/list:IMovableList
