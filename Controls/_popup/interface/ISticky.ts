@@ -8,7 +8,7 @@ interface ITargetPosition {
     x: number;
     y: number;
 }
-export type TTarget = HTMLElement | EventTarget | ITargetPosition | Control<{}, void>;
+export type TTarget = HTMLElement | EventTarget | ITargetPosition | Control<{}>;
 
 export interface IStickyPopupPosition {
     targetPoint?: IStickyPosition;
