@@ -217,7 +217,7 @@ define(
                     }
                 }, itemWithMenu);
                 setTimeout(() => {
-                    assert.equal(eventString, 'itemClickbeforeMenuOpenmenuOpened');
+                    assert.equal(eventString, 'itemClickbeforeMenuOpen');
                     assert.equal(isNotify, true);
                 });
                 done();
