@@ -5,7 +5,7 @@ import {IColumn} from 'Controls/grid';
 import {ISelectionObject} from 'Controls/interface';
 import {Model} from 'Types/entity';
 
-import {Gadgets} from '../../DemoHelpers/DataCatalog';
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 import * as Template from 'wml!Controls-demo/treeGridNew/MoveController/BeforeMoveCallback/BeforeMoveCallback';
 
@@ -14,6 +14,8 @@ export default class extends Control {
    protected _viewSource: HierarchicalMemory;
    protected _columns: IColumn[];
    protected _beforeMoveCallback: TBeforeMoveCallback;
+   protected _selectedKeys: CrudEntityKey[];
+   protected _excludedKeys: CrudEntityKey[];
 
    protected _beforeMount(): void {
       this._columns = [{
@@ -21,8 +23,8 @@ export default class extends Control {
          width: ''
       }];
       this._viewSource = new HierarchicalMemory({
-         keyProperty: 'id',
-         data: Gadgets.getFlatData(),
+         keyProperty: 'key',
+         data: Flat.getData(),
          parentProperty: 'parent'
       });
       this._beforeMoveCallback = this.__beforeMoveCallback.bind(this);
@@ -31,7 +33,7 @@ export default class extends Control {
    protected __beforeMoveCallback(selection: ISelectionObject, target: Model | CrudEntityKey): Promise<void> {
       return new Promise((resolve, reject) => {
          setTimeout(() => {
-            if (target.getKey() === 2) {
+            if ((target as Model).getKey() === 2) {
                const config = {
                   target: this._children.treeGrid,
                   message: 'Cannot move to the folder #2'

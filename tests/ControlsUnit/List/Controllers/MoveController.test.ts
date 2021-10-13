@@ -57,8 +57,8 @@ function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => P
             return Promise.resolve(args.eventHandlers.onResult(null));
         };
     }
-    return function FakeDialogOpener(): any {
-        function FakeDialogOpener(): any {
+    function FakeDialogOpener(): any {
+        return function _ctor(): any {
             this._popupId = null;
             this.open = function(popupOptions: popup.IBasePopupOptions): Promise<void> {
                 return new Promise((resolve, reject) => {
@@ -66,12 +66,17 @@ function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => P
                     return openFunction(popupOptions);
                 });
             };
+            this.close = function(): void {
+                this._popupId = null;
+                FakeDialogOpener.closeCallCount++;
+            };
             this.isOpened = function(): boolean {
                 return !!this._popupId;
             };
-        }
-        return FakeDialogOpener;
-    };
+        };
+    }
+    FakeDialogOpener.closeCallCount = 0;
+    return FakeDialogOpener;
 }
 
 describe('Controls/list_clean/MoveController', () => {
@@ -408,28 +413,16 @@ describe('Controls/list_clean/MoveController', () => {
         // Случай, когда пытаются вызвать диалог перемещения несколько раз подряд
         it('moveWithDialog() multiple times, should open only one', () => {
             // to prevent popup open
-            sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => (
+            const DialogOpener = getFakeDialogOpener((args) => (
                 Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
-            )));
+            ));
+            sandbox.replaceGetter(popup, 'DialogOpener', DialogOpener);
             controller = new MoveController({...cfg, parentProperty: undefined});
             controller.updateOptions(cfg);
-            let callThen1: boolean = false;
-            let callThen2: boolean = false;
-            const call1 = controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {
-                    callThen1 = true;
-                });
-            const call2 = controller.moveWithDialog(selectionObject, {myProp: 'test'})
-                .then(() => {
-                    callThen2 = true;
-                })
-                .catch(() => {
-                    callCatch = true;
-                });
+            const call1 = controller.moveWithDialog(selectionObject, {myProp: 'test'});
+            const call2 = controller.moveWithDialog(selectionObject, {myProp: 'test'});
             return Promise.all([call1, call2]).finally(() => {
-                assert.isTrue(callThen1);
-                assert.isFalse(callThen2);
-                assert.isTrue(callCatch);
+                assert.equal(DialogOpener.closeCallCount, 1);
             });
         });
     });
