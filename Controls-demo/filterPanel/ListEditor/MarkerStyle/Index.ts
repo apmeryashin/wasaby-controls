@@ -1,12 +1,13 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/filterPanel/ListEditor/AdditionalTextProperty/Index';
+import * as Template from 'wml!Controls-demo/filterPanel/ListEditor/MarkerStyle/Index';
 import {Memory} from 'Types/source';
+import {departments} from 'Controls-demo/Filter_new/resources/DataStorage';
+import {isEqual} from 'Types/object';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _filterButtonData: unknown[] = [];
-    protected _sourceWithAdditional: object[] = null;
-    protected _source: object[] = null;
+    protected _source: Memory = null;
     protected _filterItems: object[] = null;
 
     protected _beforeMount(): void {
@@ -14,49 +15,36 @@ export default class extends Control {
             { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
             { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
             { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
-            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
+            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' }
         ];
 
-        this._source = [
-            {
-                group: 'Ответственный',
-                name: 'owner',
-                resetValue: [],
-                caption: '',
-                value: [],
-                textValue: '',
-                editorTemplateName: 'Controls/filterPanel:ListEditor',
-                editorOptions: {
-                    style: 'master',
-                    navigation: {
-                        source: 'page',
-                        view: 'page',
-                        sourceConfig: {
-                            pageSize: 3,
-                            page: 0,
-                            hasMore: false
-                        }
-                    },
-                    keyProperty: 'owner',
-                    displayProperty: 'title',
-                    source: new Memory({
-                        data: this._filterItems,
-                        keyProperty: 'owner'
-                    })
+        this._source = new Memory({
+            data: departments,
+            keyProperty: 'id',
+            filter: (item, queryFilter) => {
+                const emptyField = []
+                let addToData = true;
+                for (const filterField in queryFilter) {
+                    if (queryFilter.hasOwnProperty(filterField) && addToData) {
+                        const filterValue = queryFilter[filterField];
+                        const itemValue = item.get('owner');
+                        addToData = filterValue.includes(itemValue) || isEqual(filterValue, emptyField) || filterValue[0] === null || filterValue[1] === null;
+                    }
                 }
+                return addToData;
             }
-        ];
-
-        this._sourceWithAdditional = [
+        });
+        this._filterButtonData = [
             {
-                group: 'Ответственный',
-                name: 'owner',
+                group: 'Ответственные',
+                name: 'owners',
                 resetValue: [],
                 caption: '',
-                value: [],
+                value: ['Новиков Д.В.', 'Чеперегин А.С.'],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
+                    markerStyle: 'primary',
                     style: 'master',
                     navigation: {
                         source: 'page',
@@ -68,8 +56,9 @@ export default class extends Control {
                         }
                     },
                     keyProperty: 'owner',
-                    displayProperty: 'title',
                     additionalTextProperty: 'id',
+                    displayProperty: 'title',
+                    selectorTemplate: { templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate', templateOptions: {items: this._filterItems}, popupOptions: {width: 300} },
                     source: new Memory({
                         data: this._filterItems,
                         keyProperty: 'owner'
@@ -77,7 +66,6 @@ export default class extends Control {
                 }
             }
         ];
-
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Filter_new/Filter'];
