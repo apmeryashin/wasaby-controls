@@ -36,6 +36,15 @@ import {TSelectedKeys} from 'Controls/interface';
  *
  * @private
  */
+
+const DEPEND_TEMPLATES = [
+   'headTemplate',
+   'headerTemplate',
+   'headerContentTemplate',
+   'itemTemplate',
+   'footerContentTemplate'
+];
+
 export default class _Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
@@ -645,9 +654,7 @@ export default class _Controller implements IDropdownController {
          return typeof newOptions[tplOption] === 'string' && newOptions[tplOption] !== options[tplOption];
       };
 
-      if (isTemplateChanged('headTemplate') ||
-          isTemplateChanged('itemTemplate') ||
-          isTemplateChanged('footerContentTemplate')) {
+      if (DEPEND_TEMPLATES.find((template) => isTemplateChanged(template))) {
          return true;
       }
    }
@@ -663,8 +670,7 @@ export default class _Controller implements IDropdownController {
    private _loadMenuTemplates(options: object): Promise<any> {
       if (!this._loadMenuTempPromise) {
          let templatesToLoad = ['Controls/menu'];
-         let templates = ['headTemplate', 'headerTemplate', 'itemTemplate', 'footerContentTemplate'];
-         templates.forEach((template) => {
+         DEPEND_TEMPLATES.forEach((template) => {
             if (typeof options[template] === 'string') {
                templatesToLoad.push(options[template]);
             }
