@@ -47,8 +47,8 @@ export interface IListEditorOptions extends
     historyId?: string;
     emptyKey: string;
     emptyText?: string;
-    selectAllKey: string;
-    selectAllText?: string;
+    selectedAllKey: string;
+    selectedAllText?: string;
 }
 
 /**
@@ -73,6 +73,15 @@ export interface IListEditorOptions extends
  * @cfg {String} Имя свойства, содержащего ссылку на изображение для элемента списка.
  * @demo Controls-demo/filterPanel/View/Index
  */
+
+/**
+ * @name Controls/_filterPanel/Editors/List#markerStyle
+ * @cfg {String} Стиль отображения маркера в списке.
+ * @variant default - маркер в виде радиокнопки;
+ * @variant primary - обычный маркер.
+ * @default default
+ */
+
 
 /**
  * @name Controls/_filterPanel/Editors/List#style
@@ -105,13 +114,13 @@ export interface IListEditorOptions extends
  */
 
 /**
- * @name Controls/_filterPanel/Editors/List#selectAllKey
+ * @name Controls/_filterPanel/Editors/List#selectedAllKey
  * @cfg {string} Ключ для пункта списка, который используется для установки фильтрации по всем доступным значениям для данного параметра.
- * @see selectAllText
+ * @see selectedAllText
  */
 
 /**
- * @name Controls/_filterPanel/Editors/List#selectAllText
+ * @name Controls/_filterPanel/Editors/List#selectedAllText
  * @cfg {string} Добавляет в начало списка элемент с заданным текстом.
  * Используется для установки фильтрации по всем доступным значениям для данного параметра.
  * @remark При активации снимает отметку чекбоксами со всех записей в списке
@@ -130,9 +139,11 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _historyService: unknown;
     protected _itemActions: IItemAction[];
     protected _itemsReadyCallback: Function = null;
+    protected _markedKey: string|number;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
+        this._setMarkedKey(this._selectedKeys, options);
         this._setColumns(options, options.propertyValue);
         this._setFilter(this._selectedKeys, options);
         this._navigation = this._getNavigation(options);
@@ -170,14 +181,14 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {
         let isActionVisible;
         const itemKey = item.getKey();
-        const {emptyKey, selectAllKey} = this._options;
+        const {emptyKey, selectedAllKey} = this._options;
 
         if (item.get('pinned')) {
             isActionVisible = action.id === 'PinOff';
         } else {
             isActionVisible = action.id === 'PinNull';
         }
-        return isActionVisible && itemKey !== emptyKey && itemKey !== selectAllKey;
+        return isActionVisible && itemKey !== emptyKey && itemKey !== selectedAllKey;
     }
 
     protected _handleItemsReadyCallback(items: RecordSet): void {
@@ -193,9 +204,11 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
         const contentClick = nativeEvent.target.closest('.controls-ListEditor__columns');
         if (contentClick) {
-            const selectedKeysArray = this._options.multiSelect ? Clone(this._selectedKeys) : [];
+            let selectedKeysArray = this._options.multiSelect ? Clone(this._selectedKeys) : [];
             const itemkey = item.get(this._options.keyProperty);
-            if (!selectedKeysArray.includes(itemkey)) {
+            if (itemkey === this._options.emptyKey || itemkey === this._options.selectedAllKey) {
+                selectedKeysArray = [itemkey];
+            } else if (!selectedKeysArray.includes(itemkey)) {
                 selectedKeysArray.unshift(item.get(this._options.keyProperty));
             }
             this._editorTarget = this._getEditorTarget(nativeEvent);
@@ -251,10 +264,11 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _processPropertyValueChanged(value: string[] | number[]): void {
-        this._selectedKeys = value;
+        this._selectedKeys = this._getValue(value);
         if (!this._selectedKeys.length) {
             this._handleResetItems();
         }
+        this._setMarkedKey(this._selectedKeys, this._options);
         this._setColumns(this._options, this._selectedKeys);
         this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
     }
@@ -348,14 +362,14 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _addSyntheticItemsToOriginItems(
         items: RecordSet,
-        {emptyText, emptyKey, selectAllText, selectAllKey}: IListEditorOptions,
+        {emptyText, emptyKey, selectedAllText, selectedAllKey}: IListEditorOptions,
     ): void {
         if (emptyText && !items.getRecordById(emptyKey)) {
             this._prependItem(emptyKey, emptyText);
         }
 
-        if (selectAllText && !items.getRecordById(selectAllKey)) {
-            this._prependItem(selectAllKey, selectAllText);
+        if (selectedAllText && !items.getRecordById(selectedAllKey)) {
+            this._prependItem(selectedAllKey, selectedAllText);
         }
     }
 
@@ -377,6 +391,13 @@ class ListEditor extends Control<IListEditorOptions> {
         }
         if (historyId) {
             this._filter._historyIds = [historyId];
+        }
+    }
+
+    private _setMarkedKey(selectedKeys: string[]|number[], {emptyKey, selectedAllKey}: IListEditorOptions): void {
+        const resetKey = emptyKey !== undefined ? emptyKey : selectedAllKey;
+        if (selectedKeys) {
+            this._markedKey = !selectedKeys.length || selectedKeys[0] === resetKey ? resetKey : selectedKeys[0];
         }
     }
 

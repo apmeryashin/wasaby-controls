@@ -7,7 +7,6 @@
                 keyProperty="{{_options.keyProperty}}"
                 selectedKeys="{{_selectedKeys}}"
                 scope="{{_options}}"
-                markerVisibility="hidden"
                 navigation="{{_navigation}}"
                 backgroundStyle="transparent"
                 hoverBackgroundStyle="listEditor"
@@ -20,13 +19,22 @@
                 nodeProperty="{{_options.nodeProperty}}"
                 root="{{_options.root}}"
                 attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
-                on:itemClick="_handleItemClick()">
-        <ws:multiSelectTemplate>
-            <ws:partial template="{{_circleTemplate}}"
-                        style="{{_options.style}}"
-                        attr:class="controls-ListEditor__multiSelect"
-                        on:click="_handleCheckBoxClick()"/>
-        </ws:multiSelectTemplate>
+                on:itemClick="_handleItemClick()"
+                markedKey="{{_markedKey}}">
+       <ws:itemTemplate>
+          <ws:partial template="{{_options.parentProperty ? 'Controls/treeGrid:ItemTemplate' : 'Controls/grid:ItemTemplate'}}"
+                      marker="{{_options.markerStyle === 'primary' ||
+                                itemTemplate.item.key === _options.emptyKey ||
+                                itemTemplate.item.key === _options.selectedAllKey}}"/>
+       </ws:itemTemplate>
+       <ws:multiSelectTemplate>
+          <ws:if data="{{_options.markerStyle !== 'primary'}}">
+             <ws:partial template="{{_circleTemplate}}"
+                         style="{{_options.style}}"
+                         attr:class="controls-ListEditor__multiSelect"
+                         on:click="_handleCheckBoxClick()"/>
+          </ws:if>
+       </ws:multiSelectTemplate>
     </ws:partial>
 </ws:template>
 

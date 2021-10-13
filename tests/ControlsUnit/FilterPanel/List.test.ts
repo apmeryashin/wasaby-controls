@@ -154,6 +154,7 @@ describe('Controls/filterPanel:ListEditor', () => {
 
         it('empty _selectedKeys', () => {
             const listEditor = new ListEditor({});
+            listEditor._selectedKeys = [];
             const options = getEditorOptionsWithMultiSelet();
             options.propertyValue = null;
             listEditor._beforeMount(options);
