@@ -44,6 +44,10 @@
    font-size: var(--item_font-size_shortDatePicker);
 }
 
+.controls-PeriodLiteDialog__body__year-list_margin-bottom {
+   margin-bottom: calc(-1 * var(--item_border-thickness_shortDatePicker));
+}
+
 .controls-PeriodLiteDialog__width-big {
    min-width: var(--quarterly_width_shortDatePicker);
 }
@@ -225,7 +229,7 @@
    position: relative;
    box-sizing: border-box;
    min-width: var(--width_shortDatePicker);
-   height: calc(var(--item_height_shortDatePicker) - var(--item_border-thickness_shortDatePicker));
+   height: var(--item_height_shortDatePicker);
 }
 
 .controls-PeriodLiteDialog__yearList-year {
