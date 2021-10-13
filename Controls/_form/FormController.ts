@@ -27,7 +27,7 @@ interface IAdditionalData {
     error?: Error;
 }
 
-interface IResultData {
+export interface IResultData {
     formControllerEvent: string;
     record: Model;
     additionalData: IAdditionalData;
