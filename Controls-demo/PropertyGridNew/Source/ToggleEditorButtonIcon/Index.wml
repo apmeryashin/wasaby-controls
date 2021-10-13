@@ -1,4 +1,5 @@
 <Controls.propertyGrid:PropertyGrid
     bind:editingObject="_editingObject"
-    typeDescription="{{_typeDescription}}">
+    typeDescription="{{_typeDescription}}"
+    toggledEditors="{{_toggledEditors}}">
 </Controls.propertyGrid:PropertyGrid>
