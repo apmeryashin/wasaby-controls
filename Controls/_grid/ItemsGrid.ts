@@ -14,6 +14,7 @@ import {IItemsViewOptions, ItemsView as ListItemsView, ListControl as viewTempla
  * @implements Controls/list:IItemsView
  * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/interface/IGridItemTemplate
  * @implements Controls/interface/IGroupedGrid
