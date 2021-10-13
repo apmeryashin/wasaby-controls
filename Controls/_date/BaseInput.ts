@@ -114,7 +114,8 @@ class BaseInput extends Control<IDateBaseOptions> {
         if (this._model.value !== options.value) {
             this.setValidationResult(null);
         }
-        if (options.value !== this._options.value || options.displayValue !== this._options.displayValue) {
+        if (options.value !== this._options.value || options.displayValue !== this._options.displayValue ||
+            options.mask !== this._options.mask) {
             this._model.update({
                 ...options,
                 dateConstructor: this._dateConstructor
