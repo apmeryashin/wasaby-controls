@@ -1,11 +1,4 @@
-<div class="controls-DateLinkView">
-    <ws:if data="{{ _options.prevArrowVisibility && !_options.readOnly}}">
-        <span
-                class="controls-DateLinkView__prev
-              {{_fontColorStyle? 'controls-text-' + _fontColorStyle}} {{ _styleClass }}"
-                on:click="shiftBack()">
-        </span>
-    </ws:if>
+<div class="controls-DateLinkView controls_shortDatePicker_theme-{{_options.theme}}">
     <ws:partial template="{{ _itemTemplate}}"
                 fontSize="{{ _fontSize }}"
                 fontWeight="{{ _fontWeight }}"
@@ -15,6 +8,7 @@
                 styleClass="{{ _styleClass }}"
                 caption="{{ _caption }}"
                 on:mousedown="_onClick()"
+                attr:class="controls-DateLinkView__button-value"
                 attr:data-qa="DateLinkView__template"
     />
     <ws:if data="{{ _resetButtonVisible }}">
@@ -22,11 +16,16 @@
                         controls-icon icon-Close"
               on:click="_resetButtonClickHandler()"></span>
     </ws:if>
+    <ws:if data="{{ _options.prevArrowVisibility && !_options.readOnly}}">
+        <Controls.buttons:ArrowButton attr:class="controls-DateLinkView__arrow controls-DateLinkView__prev
+        controls-RangeShortSelectorLink__arrow-prev"
+                                      direction="left"
+                                      on:click="shiftBack()"/>
+    </ws:if>
     <ws:if data="{{ _options.nextArrowVisibility && !_options.readOnly}}">
-        <span
-                class="controls-DateLinkView__next
-              {{_fontColorStyle? 'controls-text-' + _fontColorStyle}} {{ _styleClass }}"
-                on:click="shiftForward()">
-        </span>
+        <Controls.buttons:ArrowButton attr:class="controls-DateLinkView__arrow controls-DateLinkView__next
+        controls-RangeShortSelectorLink__arrow-next"
+                                      direction="right"
+                                      on:click="shiftForward()"/>
     </ws:if>
 </div>
