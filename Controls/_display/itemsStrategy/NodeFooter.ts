@@ -7,13 +7,13 @@ import {TemplateFunction} from "UI/Base";
 interface IOptions<S, T extends TreeItem<S>> {
     source: IItemsStrategy<S, T>;
     display: Tree<S, T>;
-    itemModule?: string;
+    nodeFooterModule?: string;
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
 }
 
 interface ISortOptions<S, T extends TreeItem<S>> {
     display: Tree<S, T>;
-    itemModule?: string;
+    nodeFooterModule?: string;
     nodeFooters: Array<T>;
     hasNodeFooterViewConfig: boolean;
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
@@ -170,7 +170,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
     protected _createItemsOrder(): number[] {
         return NodeFooter.sortItems<S, T>(this.source.items, {
             display: this.options.display,
-            itemModule: this.options.itemModule,
+            nodeFooterModule: this.options.nodeFooterModule,
             nodeFooters: this._nodeFooters,
             hasNodeFooterViewConfig: this._hasNodeFooterViewConfig(this.options),
             nodeFooterVisibilityCallback: this.options.nodeFooterVisibilityCallback
@@ -213,7 +213,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             if (nodeFooterContents.indexOf(nodeFooterContent) === -1) {
                 const item = nodesWithFooters[index];
                 const nodeFooter = options.display.createItem({
-                    itemModule: options.itemModule || 'Controls/treeGrid:TreeGridNodeFooterRow',
+                    itemModule: options.nodeFooterModule,
                     contents: nodeFooterContent,
                     parent: item,
                     hasMore: item.hasMoreStorage(),

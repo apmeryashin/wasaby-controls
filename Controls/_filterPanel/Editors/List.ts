@@ -12,7 +12,8 @@ import {
     INavigationOptionValue,
     ISelectorDialogOptions,
     TFilter,
-    TKey
+    TKey,
+    IHierarchyOptions
 } from 'Controls/interface';
 import {IList, MultiSelectCircleTemplate} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
@@ -29,8 +30,16 @@ import {create as DiCreate} from 'Types/di';
 import 'css!Controls/toggle';
 import 'css!Controls/filterPanel';
 
-export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOptions,
-    INavigationOptions<unknown>, IItemActionsOptions, IList, IColumn, ISelectorDialogOptions {
+export interface IListEditorOptions extends
+    IControlOptions,
+    IFilterOptions,
+    ISourceOptions,
+    INavigationOptions<unknown>,
+    IItemActionsOptions,
+    IList,
+    IColumn,
+    ISelectorDialogOptions,
+    IHierarchyOptions {
     propertyValue: number[]|string[];
     additionalTextProperty: string;
     imageProperty?: string;
@@ -266,21 +275,24 @@ class ListEditor extends Control<IListEditorOptions> {
         return value.includes(this._options.emptyKey);
     }
 
-    protected _setColumns(options: IListEditorOptions, propertyValue: string[]|number[]): void {
+    protected _setColumns(
+        {displayProperty, keyProperty, imageProperty, filterViewMode, additionalTextProperty}: IListEditorOptions,
+        propertyValue: string[]|number[]): void {
         this._columns = [{
             template: ColumnTemplate,
             selected: propertyValue,
-            displayProperty: options.displayProperty,
-            keyProperty: options.keyProperty,
-            imageProperty: options.imageProperty,
-            filterViewMode: options.filterViewMode
+            displayProperty,
+            keyProperty,
+            imageProperty,
+            filterViewMode
         }];
-        if (options.additionalTextProperty) {
+        if (additionalTextProperty) {
             this._columns.push({
                 template: AdditionalColumnTemplate,
                 align: 'right',
-                displayProperty: options.additionalTextProperty,
-                width: 'auto'});
+                displayProperty: additionalTextProperty,
+                width: 'auto'
+            });
         }
     }
 

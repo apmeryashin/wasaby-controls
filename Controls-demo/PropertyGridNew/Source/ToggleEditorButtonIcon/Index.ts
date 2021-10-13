@@ -5,6 +5,7 @@ export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _editingObject: object;
     protected _typeDescription: object[];
+    protected _toggledEditors: string[];
 
     protected _beforeMount(): void {
         this._editingObject = {
@@ -25,7 +26,8 @@ export default class Demo extends Control<IControlOptions> {
             },
             {
                 name: 'showVideo',
-                caption: 'Показывать видео'
+                caption: 'Показывать видео',
+                toggleEditorButtonIcon: 'icon-TFVideoMessage'
             },
             {
                 name: 'showBackgroundImage',
@@ -33,6 +35,8 @@ export default class Demo extends Control<IControlOptions> {
                 toggleEditorButtonIcon: 'icon-Question2'
             }
         ];
+
+        this._toggledEditors = ['showBackgroundImage'];
     }
 
     static _styles: string[] = ['Controls-demo/PropertyGridNew/PropertyGrid'];

@@ -15,6 +15,7 @@
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/list:IEditableList
  * @implements Controls/interface:ISorting

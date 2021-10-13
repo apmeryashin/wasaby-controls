@@ -8,6 +8,11 @@
             <ws:multiSelectTemplate>
                 <ws:partial template="Controls/list:MultiSelectCircleTemplate"/>
             </ws:multiSelectTemplate>
+            <ws:itemTemplate>
+                <ws:partial template="Controls/propertyGrid:ItemTemplate"
+                            highlightOnHover="{{true}}"/>
+            </ws:itemTemplate>
+            <ws:captionColumnOptions width="50%"/>
             <ws:itemPadding top="s" bottom="s" left="s" right="m"/>
         </Controls.propertyGrid:PropertyGrid>
     </div>

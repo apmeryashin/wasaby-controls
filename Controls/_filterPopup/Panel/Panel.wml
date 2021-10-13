@@ -70,7 +70,10 @@
                                            tooltip="{[По умолчанию]}"
                                            attr:data-qa="FilterPanel__resetButton" />
                </ws:if>
-               <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
+               <Controls.buttons:Button viewMode="button"
+                                        buttonStyle="{{_options.applyButtonStyle}}"
+                                        caption="{{_options.applyButtonCaption}}"
+                                        on:click="_applyFilter()"
                                         attr:tabindex="1"
                                         attr:ws-autofocus="true"
                                         attr:class="controls-FilterPanel__filterButton"
