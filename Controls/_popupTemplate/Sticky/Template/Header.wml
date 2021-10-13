@@ -1,6 +1,7 @@
 <div class="controls-StickyTemplate__top-area
             {{_options.roundBorder !== false ? 'controls-StickyTemplate__top-area_roundBorder'}}
-            controls-background-{{_options.headerBackgroundStyle}}
+            {{_options.headerBackgroundStyle === 'default' ? 'controls-StickyTemplate-background-default' :
+                                                             'controls-background-' + _options.headerBackgroundStyle}}
             controls-StickyTemplate__top-area-{{_options.closeButtonVisibility ? 'withClose' : 'withoutClose'}}">
    <div class="controls-StickyTemplate__top-area-content">
       <ws:if data="{{_options.headingCaption && !_options.headerContentTemplate}}">
