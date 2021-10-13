@@ -70,12 +70,15 @@ class View extends Control<IDateLitePopupOptions> {
     protected _nextArrowButtonReadOnly: boolean = false;
     protected _isHeaderContentTemplateString: boolean;
     protected _tabPressed: boolean = false;
+    protected _lastYear: boolean;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
         if (!this._validateDisplayedRanges(options.displayedRanges)) {
             Logger.error('Controls/shortDatePicker:View: интервал отображаемых периодов' +
                 ' в опции displayedRanges должен равняться году');
         }
+
+        this._lastYear = options.displayedRanges ? options.displayedRanges[0][0]?.getFullYear() : null;
 
         this._isHeaderContentTemplateString = typeof options.headerContentTemplate === 'string';
         this._displayedRanges = options.displayedRanges;
