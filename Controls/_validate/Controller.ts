@@ -9,7 +9,7 @@ import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
  * Валидация запускается при вызове метода {@link Controls/_validate/Controller#submit submit}.
  * @class Controls/_validate/Controller
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @demo Controls-demo/Input/Validate/FormController
  * @author Красильников А.С.
@@ -64,7 +64,7 @@ export default Form;
 
 /**
  * @name Controls/_validate/Controller#content
- * @cfg {Content} Содержимое, к которому добавлена ​​логика валидации.
+ * @cfg {Content} Содержимое, к которому добавлена логика валидации.
  */
 
 /**
