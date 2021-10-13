@@ -120,7 +120,7 @@
          <ws:yearTemplate>
             <ws:partial template="Controls/calendar:MonthListYearTemplate">
                <ws:bodyTemplate>
-                  <div class="controls-PeriodLiteDialog__body
+                  <div class="controls-PeriodLiteDialog__body {{ _lastYear !== yearTemplate.date.getFullYear()? 'controls-PeriodLiteDialog__body__year-list_margin-bottom' }}
                               controls-PeriodLiteDialog__text-align-center">
                         <div  class="controls-PeriodLiteDialog-item-yearList-years"
                               on:click="_onYearClick(yearTemplate.date.getFullYear())">
