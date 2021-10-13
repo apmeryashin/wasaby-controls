@@ -31,6 +31,12 @@
 .controls-MultiSelector__checkbox {
   height: var(--height_checkbox);
   cursor: pointer;
+
+  &::before {
+    content: '\200b';
+    font-size: var(--font-size_2xl);
+    width: 0;
+  }
 }
 
 .controls-text-operationsPanel {

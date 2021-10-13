@@ -12,15 +12,18 @@ export default class extends Control {
             rawData: [
                 {
                     id: '1',
-                    title: 'title 1'
+                    title: 'title 1',
+                    icon: 'icon-EmptyMessage'
                 },
                 {
                     id: '2',
-                    title: 'title 2'
+                    title: 'title 2',
+                    icon: 'icon-Email'
                 },
                 {
                     id: '3',
-                    title: 'title 3'
+                    title: 'title 3',
+                    icon: 'icon-Edit'
                 }
             ],
             keyProperty: 'id'
