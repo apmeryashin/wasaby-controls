@@ -3572,6 +3572,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _createNewScrollController(): void {
         this._newScrollController = new NewScrollController({
+            collection: this._listViewModel,
+
             itemsContainer: this._getItemsContainer(),
             itemsQuerySelector: this._options.itemsSelector,
 
@@ -3582,6 +3584,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             scrollTop: 0,
             viewPortSize: 0,
+            segmentSize: this._options.virtualScrollConfig.segmentSize,
             indexChangedCallback(rangeChangeResult: IRangeChangeResult): void {
                 console.log('indexChangedCallback', rangeChangeResult);
             },

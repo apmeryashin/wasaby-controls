@@ -36,10 +36,10 @@ export class ObserversController {
     _triggersQuerySelector: string;
     _triggersVisibility: ITriggersVisibility;
 
-    // _triggersOffset: ITriggersOffset = {
-    //     top: 0,
-    //     bottom: 0
-    // };
+    _triggersOffset: ITriggersOffset = {
+        top: 0,
+        bottom: 0
+    };
 
     _observer: EdgeIntersectionObserver;
     _observersCallback: TObserversCallback;
@@ -64,6 +64,10 @@ export class ObserversController {
     setTriggersQuerySelector(newTriggersQuerySelector: string): void {
         this._triggersQuerySelector = newTriggersQuerySelector;
         this._updateTriggers();
+    }
+
+    getTriggerOffsets(): ITriggersOffset {
+        return this._triggersOffset;
     }
 
     private _updateTriggers(): void {
