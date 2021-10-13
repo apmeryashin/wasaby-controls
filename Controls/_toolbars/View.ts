@@ -459,12 +459,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _openMenu(config: IStickyPopupOptions): void {
-        /**
-         * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
-         * по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
-         */
-        this._notify('menuOpened', [], {bubbling: true});
-
         if (!this._sticky) {
             this._sticky = new StickyOpener();
         }
@@ -549,7 +543,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _closeHandler(): void {
-        this._notify('menuClosed', [], {bubbling: true});
         this._setStateByItems(this._items, this._options.source);
         this._setMenuSource();
     }
