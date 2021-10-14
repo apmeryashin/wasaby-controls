@@ -1,45 +1,53 @@
 import { calculateVirtualRange } from './VirtualScrollUtil';
 
-
 import { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
 import { ITriggersOffset } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
-import { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 
 export interface IRangeChangeResult {
     startIndex: number;
-    stopIndex: number;
-
-    topEdgeItemIndex: number;
-    bottomEdgeItemIndex: number;
+    endIndex: number;
 
     hasItemsBackward: boolean;
     hasItemsForward: boolean;
 
-    topVirtualPlaceholderSize: number;
-    bottomVirtualPlaceholderSize: number;
+    beforePlaceholderSize: number;
+    afterPlaceholderSize: number;
+
+    indexesChanged: boolean;
 
     // todo release it!
     activeElementIndex: number
 }
 
-export interface IVirtualScrollCollection {
-    setIndexes: (start: number, stop: number) => void;
-}
-
+/**
+ * Интерфейс опции класса Calculator
+ */
 export interface ICalculatorOptions {
-    collection: IVirtualScrollCollection;
     itemsSizes: IItemsSizes;
+
+    /**
+     * Размеры смещения триггеров. Нужны чтобы избежать лишних отрисовок и сразу же отловить видимость триггера.
+     */
     triggersOffsets: ITriggersOffset;
+
     scrollTop: number;
-    segmentSize: number;
+    viewportSize: number;
+
+    virtualScrollConfig: IVirtualScrollConfig;
 }
 
-export interface IVirtualRange {
+/**
+ * Интерфейс диапазона отображаемых элементов.
+ * start, end - индексы элементов включительно
+ */
+export interface IRange {
     start: number;
-    stop: number;
+    end: number;
 }
 
-interface IVirtualPlaceholders {
+export interface IPlaceholders {
     top: number;
     bottom: number;
 }
@@ -51,21 +59,20 @@ interface IVirtualPlaceholders {
  *  - вычисление размеров virtual placeholders.
  */
 export class Calculator {
-    private _collection: IVirtualScrollCollection;
     private _itemsSizes: IItemsSizes;
-    // TODO для чего он вообще нужен?
     private _triggersOffsets: ITriggersOffset;
-    private _segmentSize: number;
+    private _virtualScrollConfig: IVirtualScrollConfig;
     private _scrollTop: number;
-    private _range: IVirtualRange;
-    private _placeholders: IVirtualPlaceholders;
+    private _viewportSize: number;
+    private _range: IRange;
+    private _placeholders: IPlaceholders;
 
     constructor(options: ICalculatorOptions) {
-        this._collection = options.collection;
         this._itemsSizes = options.itemsSizes;
         this._triggersOffsets = options.triggersOffsets;
         this._scrollTop = options.scrollTop;
-        this._segmentSize = options.segmentSize;
+        this._viewportSize = options.viewportSize;
+        this._virtualScrollConfig = options.virtualScrollConfig; // TODO нужно избавитсья от понятия виртуализации
     }
 
     // region Getters/Setters
@@ -79,32 +86,11 @@ export class Calculator {
     }
 
     /**
-     * Возвращает текущий виртуальный диапазон
-     */
-    getVirtualRange(): IVirtualRange {
-        return this._range;
-    }
-
-    /**
-     * Возвращает активный элемент. Активный элемент - это первый видимый элемент во вьюпорте.
-     * Используется, чтобы
-     *  1. после скролла поставить маркер
-     *  2. отправить прикладникам(используется например в двухколоночных реестрах)
+     * Возвращает активный элемент. Активный элемент - это элемент, который находится по середине вьюпорта.
      */
     getActiveElementIndex(): number {
-        let activeElementIndex = this._range.start;
-        let itemsHeight = 0;
-        while (itemsHeight < this._scrollTop && activeElementIndex < this._range.stop) {
-            itemsHeight += this._itemsSizes[activeElementIndex].height;
-            activeElementIndex++;
-        }
-
-        if (activeElementIndex < this._range.start || activeElementIndex >= this._range.stop) {
-            throw new Error('Calculator::getActiveElementIndex Внутренняя ошибка виртуального скролла.' +
-                ' Активный элемент не может быть за пределами virtualRange.');
-        }
-
-        return activeElementIndex;
+        // TODO взять старую реализацию
+        return 0;
     }
 
     // endregion Getters/Setters
@@ -114,26 +100,33 @@ export class Calculator {
     // region ShiftRangeByDirection
 
     /**
-     * Возвращает, что в заданном направлении еще есть не отображенные элементы.
-     * Используется, чтобы понять нужно ли подгружать данные или нужно сделать ссмещение виртуального скролла.
-     * @param direction Направление
-     */
-    hasItemsInDirection(direction: IDirection): boolean {
-        // TODO в IRangeChangeResult налогичные значения называются hasItemsBackward, нужно свести названия
-        // TODO видимо на коллекции нужен метод getCount, чтобы определить что закончились данные вниз
-        return direction === 'top'
-            ? this._range.start > 0
-            : false; // this._range.stop < this._collection.getCount()
-    }
-
-    /**
      * Смещает виртуальный диапазон в заданном направлении.
      * Используется при достижении триггера.
      * @param direction Направление, в котором будет смещаться диапазон
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeInDirection(direction: IDirection): IRangeChangeResult {
+    shiftRangeToDirection(direction: IDirection, totalCount: number): IRangeChangeResult {
+        const oldRange = this._range;
+
+        // если в заданном направлении больше нет элементов, то ничего не делаем
+        if (!this._hasItemsToDirection(direction, totalCount)) {
+            return this._getRangeChangeResult(oldRange, totalCount);
+        }
+
         this._updateVirtualRange();
-        return this._getRangeChangeResult();
+        return this._getRangeChangeResult(oldRange, totalCount);
+    }
+
+    /**
+     * Возвращает, что в заданном направлении еще есть не отображенные элементы.
+     * Используется, чтобы понять нужно ли подгружать данные или нужно сделать ссмещение виртуального скролла.
+     * @param direction Направление
+     * @param totalCount Общее кол-во элементов в коллекции
+     */
+    private _hasItemsToDirection(direction: IDirection, totalCount: number): boolean {
+        return direction === 'backward'
+            ? this._range.start > 0
+            : this._range.end < (totalCount - 1);
     }
 
     // endregion ShiftRangeByDirection
@@ -141,24 +134,29 @@ export class Calculator {
     // region ShiftRangeByIndex
 
     /**
+     * Смещает виртуальный диапазон к элементу по переданному индексу.
+     * @param index Индекс элемента
+     * @param totalCount Общее кол-во элементов в коллекции
+     */
+    shiftRangeToIndex(index: number, totalCount: number): IRangeChangeResult {
+        const oldRange = this._range;
+
+        // если элемент уже внутри диапазона, то ничего не делаем.
+        if (this._isItemInVirtualRange(index)) {
+            return this._getRangeChangeResult(oldRange, totalCount);
+        }
+
+        this._updateVirtualRange();
+        return this._getRangeChangeResult(oldRange, totalCount);
+    }
+
+    /**
      * Возвращает, что элемент по переданному index находится внутри виртуального диапазона
      * @param index Индекс элемента
      * @return {boolean}
      */
-    isItemInVirtualRange(index: number): boolean {
-        return index >= this._range.start && index < this._range.stop;
-    }
-
-    /**
-     * Смещает виртуальный диапазон к элементу по переданному индексу.
-     * @param index Индекс элемента
-     */
-    updateRangeByIndex(index: number): IRangeChangeResult {
-        // TODO наверное стоит переименовать метод по аналогии с shiftRangeInDirection: shiftRangeToIndex
-        //  Лучше и shiftRangeInDirection переименовать в shiftRangeToDirection.
-        //  Тогда аналогичные методы будут аналогично названы.
-        this._updateVirtualRange();
-        return this._getRangeChangeResult();
+    private _isItemInVirtualRange(index: number): boolean {
+        return index >= this._range.start && index < this._range.end;
     }
 
     // endregion ShiftRangeByIndex
@@ -168,10 +166,12 @@ export class Calculator {
     /**
      * Смещает диапазон к переданной позиции скролла.
      * @param scrollPosition Позиция скролла
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeToScrollPosition(scrollPosition: number): IRangeChangeResult {
+    shiftRangeToScrollPosition(scrollPosition: number, totalCount: number): IRangeChangeResult {
+        const oldRange = this._range;
         this._updateVirtualRange();
-        return this._getRangeChangeResult();
+        return this._getRangeChangeResult(oldRange, totalCount);
     }
 
     // endregion ShiftRangeByScrollPosition
@@ -179,9 +179,8 @@ export class Calculator {
     private _updateVirtualRange(): void {
         this._range = calculateVirtualRange({
             currentVirtualRange: this._range,
-            segmentSize: this._segmentSize
+            segmentSize: this._virtualScrollConfig.segmentSize
         });
-        this._collection.setIndexes(this._range.start, this._range.stop);
     }
 
     // endregion ShiftRange
@@ -193,26 +192,27 @@ export class Calculator {
      * При необходимости смещает виртуальный диапазон.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    addItems(position: number, count: number): IRangeChangeResult {
+    addItems(position: number, count: number, totalCount: number): IRangeChangeResult {
+        const oldRange = this._range;
         this._updateVirtualRange();
-        return this._getRangeChangeResult();
+        return this._getRangeChangeResult(oldRange, totalCount);
     }
 
     /**
      * Обрабатывает перемещение элементов внутри коллекции.
-     * @param addPosition Индекс элемента, после которого вставили записи
-     * @param addCount Кол-во перемещенных элементов
-     * @param removePosition Индекс элемента откуда переместили записи
-     * @param removeCount Кол-во перемещенных элементов
+     * @param newPosition Индекс элемента, после которого вставили записи
+     * @param oldPosition Индекс элемента откуда переместили записи
+     * @param movedCount Кол-во перемещенных элементов
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): IRangeChangeResult {
-        // TODO по идее addCount и removeCount всегда будет одинаковым(иначе коллекция еще на своем уровне кинет ошибку).
-        //  Поэтому можно свести к одному параметру movedCount(count).
-        //  И я думаю лучше переименовать addPosition -> newPosition, removePosition -> oldPosition
+    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): IRangeChangeResult {
+        const oldRange = this._range;
+
         this._updateVirtualRange();
 
-        return this._getRangeChangeResult();
+        return this._getRangeChangeResult(oldRange, totalCount);
     }
 
     /**
@@ -220,11 +220,14 @@ export class Calculator {
      * Смещает соответственно виртуальный диапазон.
      * @param position Индекс первого удаленного элемента.
      * @param count Кол-во удаленных элементов.
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    removeItems(position: number, count: number): IRangeChangeResult {
+    removeItems(position: number, count: number, totalCount: number): IRangeChangeResult {
+        const oldRange = this._range;
+
         this._updateVirtualRange();
 
-        return this._getRangeChangeResult();
+        return this._getRangeChangeResult(oldRange, totalCount);
     }
 
     /**
@@ -233,11 +236,13 @@ export class Calculator {
      * @param count Новое кол-во элементов
      */
     resetItems(count: number): IRangeChangeResult {
-        this._itemsSizes = [];
+        const oldRange = this._range;
+
+        this.setItemsSizes([]);
         // TODO не факт что все элементы поместятся в virtualPageSize
         this._range = {
             start: 0,
-            stop: count
+            end: count
         }
         // TODO мы в этот момент не знаем размеры элементов, как посчитать placeholders если count > virtualPageSize
         this._placeholders = {
@@ -245,23 +250,21 @@ export class Calculator {
             bottom: 0
         }
 
-        return this._getRangeChangeResult();
+        return this._getRangeChangeResult(oldRange, count);
     }
 
     // endregion HandleCollectionChanges
 
-    // TODO временно, в каждом методе должен быть уникальный результат только с изменившимися значениями
-    private _getRangeChangeResult(): IRangeChangeResult {
+    private _getRangeChangeResult(oldRange: IRange, totalCount: number): IRangeChangeResult {
         return {
             startIndex: this._range.start,
-            stopIndex: this._range.stop,
-            topEdgeItemIndex: this._range.start,
-            bottomEdgeItemIndex: this._range.stop,
-            hasItemsBackward: this.hasItemsInDirection('top'),
-            hasItemsForward: this.hasItemsInDirection('down'),
-            topVirtualPlaceholderSize: this._placeholders.top,
-            bottomVirtualPlaceholderSize: this._placeholders.bottom,
-            activeElementIndex: this.getActiveElementIndex()
+            endIndex: this._range.end,
+            hasItemsBackward: this._hasItemsToDirection('backward', totalCount),
+            hasItemsForward: this._hasItemsToDirection('forward', totalCount),
+            beforePlaceholderSize: this._placeholders.top,
+            afterPlaceholderSize: this._placeholders.bottom,
+            activeElementIndex: this.getActiveElementIndex(),
+            indexesChanged: oldRange.start !== this._range.start || oldRange.end !== this._range.end
         }
     }
 }

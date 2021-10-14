@@ -1,7 +1,7 @@
-import type { IVirtualRange } from './Calculator';
+import type { IRange } from './Calculator';
 
 export interface ICalculateVirtualRangeParams {
-    currentVirtualRange: IVirtualRange;
+    currentVirtualRange: IRange;
     segmentSize: number;
 }
 
@@ -13,8 +13,8 @@ export interface ICalculateVirtualRangeParams {
  */
 export function calculateVirtualRange(
     params: ICalculateVirtualRangeParams
-): IVirtualRange {
+): IRange {
     const start = 0;
     const stop = start + params.segmentSize;
-    return { start, stop };
+    return { start, end: stop };
 }

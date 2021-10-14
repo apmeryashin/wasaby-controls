@@ -3583,8 +3583,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             triggersVisibility: undefined,
 
             scrollTop: 0,
-            viewPortSize: 0,
-            segmentSize: this._options.virtualScrollConfig.segmentSize,
+            viewportSize: 0,
+            virtualScrollConfig: this._options.virtualScrollConfig,
             indexChangedCallback(rangeChangeResult: IRangeChangeResult): void {
                 console.log('indexChangedCallback', rangeChangeResult);
             },

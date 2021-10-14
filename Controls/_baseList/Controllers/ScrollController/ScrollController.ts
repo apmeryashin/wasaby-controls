@@ -3,7 +3,7 @@ import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversControlle
 import {Calculator, ICalculatorOptions, IRangeChangeResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
 
-export type IDirection = 'top' | 'down';
+export type IDirection = 'backward' | 'forward';
 export type IIndexChangedCallback = (rangeChangeResult: IRangeChangeResult) => void;
 export type IItemsEndedCallback = (direction: IDirection) => void;
 
@@ -12,7 +12,6 @@ export interface IScrollControllerOptions extends
     IObserversControllerBaseOptions,
     ICalculatorOptions {
     scrollTop: number;
-    viewPortSize: number;
     indexChangedCallback: IIndexChangedCallback;
     itemsEndedCallback: IItemsEndedCallback;
 }
@@ -51,9 +50,9 @@ export class ScrollController {
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggerOffsets(), // TODO где-то триггер, где-то обсервер???
             itemsSizes: this._itemsSizesController.getItemsSizes(),
-            collection: options.collection,
             scrollTop: options.scrollTop,
-            segmentSize: options.segmentSize // TODO почему только segmentSize? А как же pageSize?
+            virtualScrollConfig: options.virtualScrollConfig,
+            viewportSize: options.viewportSize
         })
     }
 
@@ -63,29 +62,31 @@ export class ScrollController {
      * Обрабатывает добавление элементов в коллекцию.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    addItems(position: number, count: number): IRangeChangeResult {
-        return this._calculator.addItems(position, count);
+    addItems(position: number, count: number, totalCount: number): IRangeChangeResult {
+        return this._calculator.addItems(position, count, totalCount);
     }
 
     /**
      * Обрабатывает перемещение элементов внутри коллекции.
-     * @param addPosition Индекс элемента, после которого вставили записи
-     * @param addCount Кол-во перемещенных элементов
-     * @param removePosition Индекс элемента откуда переместили записи
-     * @param removeCount Кол-во перемещенных элементов
+     * @param newPosition Индекс элемента, после которого вставили записи
+     * @param oldPosition Индекс элемента откуда переместили записи
+     * @param movedCount Кол-во перемещенных элементов
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): IRangeChangeResult {
-        return this._calculator.moveItems(addPosition, addCount, removePosition, removeCount);
+    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): IRangeChangeResult {
+        return this._calculator.moveItems(newPosition, oldPosition, movedCount, totalCount);
     }
 
     /**
      * Обрабатывает удаление элементов из коллекции.
      * @param position Индекс первого удаленного элемента.
      * @param count Кол-во удаленных элементов.
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    removeItems(position: number, count: number): IRangeChangeResult {
-        return this._calculator.removeItems(position, count);
+    removeItems(position: number, count: number, totalCount: number): IRangeChangeResult {
+        return this._calculator.removeItems(position, count, totalCount);
     }
 
     /**
@@ -101,25 +102,24 @@ export class ScrollController {
     // region Scroll
 
     scrollTo(): IRangeChangeResult {
-        // TODO тут что должно быть? К чему скроллим? Наверное это должен быть метод scrollToPosition(shiftToPosition)
-        //  вместо changeScrollPosition.
+        // TODO скорее всего мы должны здесь позвать shiftRangeToIndex, где index - lastVisibleItemIndex
         return null;
     }
 
-    scrollToItem(itemKey: CrudEntityKey): IRangeChangeResult {
+    scrollToItem(itemKey: CrudEntityKey, totalCount: number): IRangeChangeResult {
         // TODO видимо нужна коллекция? Либо тут тоже нужно индекс прокидывать,
         //  либо в калькуляторе неправильно назван метод
         const index = 0; // this._collection.getIndexBySourceKey(itemKey)
-        return this._calculator.updateRangeByIndex(index);
+        return this._calculator.shiftRangeToIndex(index, totalCount);
     }
 
-    changeScrollPosition(position: number): IRangeChangeResult {
-        return this._calculator.shiftRangeToScrollPosition(position);
+    changeScrollPosition(position: number, totalCount: number): IRangeChangeResult {
+        return this._calculator.shiftRangeToScrollPosition(position, totalCount);
     }
 
     // endregion Scroll
 
     private _observersCallback(eventName: TIntersectionEvent): void {
-        this._itemsEndedCallback('down');
+        this._itemsEndedCallback('forward');
     }
 }
