@@ -61,6 +61,7 @@ class ControllerClass {
     updateDraggingTemplate(draggingTemplateOptions: IDragObject, draggingTpl: TemplateFunction): void {
         this._dialogOpener.open({
             topPopup: true,
+            fittingMode: 'overflow',
             opener: null,
             autofocus: false,
             template: 'Controls/dragnDrop:DraggingTemplateWrapper',
