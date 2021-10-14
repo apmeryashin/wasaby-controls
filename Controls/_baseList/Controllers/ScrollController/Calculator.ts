@@ -2,19 +2,14 @@ import { calculateVirtualRange } from './VirtualScrollUtil';
 
 import { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
 import { ITriggersOffset } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
-import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
+import type {
+    IDirection,
+    IIndexesChangedParams,
+    IEnvironmentChangedParams
+} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 
-export interface IRangeChangeResult {
-    startIndex: number;
-    endIndex: number;
-
-    hasItemsBackward: boolean;
-    hasItemsForward: boolean;
-
-    beforePlaceholderSize: number;
-    afterPlaceholderSize: number;
-
+export interface IRangeChangeResult extends IIndexesChangedParams, IEnvironmentChangedParams {
     indexesChanged: boolean;
 
     // todo release it!

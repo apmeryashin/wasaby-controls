@@ -4,15 +4,32 @@ import {Calculator, ICalculatorOptions, IRangeChangeResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
 
 export type IDirection = 'backward' | 'forward';
-export type IIndexChangedCallback = (rangeChangeResult: IRangeChangeResult) => void;
+export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
+export type IEnvironmentChangedCallback = (params: IEnvironmentChangedParams) => void;
+export type IActiveElementChangedChangedCallback = (activeElementIndex: number) => void;
 export type IItemsEndedCallback = (direction: IDirection) => void;
+
+export interface IIndexesChangedParams {
+    startIndex: number;
+    endIndex: number;
+}
+
+export interface IEnvironmentChangedParams {
+    hasItemsBackward: boolean;
+    hasItemsForward: boolean;
+
+    beforePlaceholderSize: number;
+    afterPlaceholderSize: number;
+}
 
 export interface IScrollControllerOptions extends
     IItemsSizesControllerOptions,
     IObserversControllerBaseOptions,
     ICalculatorOptions {
     scrollTop: number;
-    indexChangedCallback: IIndexChangedCallback;
+    indexesChangedCallback: IIndexesChangedCallback;
+    activeElementChangedCallback: IActiveElementChangedChangedCallback;
+    environmentChangedCallback: IEnvironmentChangedCallback;
     itemsEndedCallback: IItemsEndedCallback;
 }
 
@@ -27,11 +44,11 @@ export class ScrollController {
     private _itemsSizesController: ItemsSizesController;
     private _observersController: ObserversController;
     private _calculator: Calculator;
-    private _indexChangedCallback: IIndexChangedCallback;
+    private _indexesChangedCallback: IIndexesChangedCallback;
     private _itemsEndedCallback: IItemsEndedCallback;
 
     constructor(options: IScrollControllerOptions) {
-        this._indexChangedCallback = options.indexChangedCallback;
+        this._indexesChangedCallback = options.indexesChangedCallback;
         this._itemsEndedCallback = options.itemsEndedCallback;
 
         this._itemsSizesController = new ItemsSizesController({

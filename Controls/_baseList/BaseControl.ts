@@ -81,7 +81,11 @@ import {
 import {IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
-import { ScrollController as NewScrollController, IDirection as IScrollControllerDirection } from './Controllers/ScrollController/ScrollController';
+import {
+    ScrollController as NewScrollController,
+    IDirection as IScrollControllerDirection,
+    IIndexesChangedParams, IEnvironmentChangedParams
+} from './Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
@@ -3585,8 +3589,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             scrollTop: 0,
             viewportSize: 0,
             virtualScrollConfig: this._options.virtualScrollConfig,
-            indexChangedCallback(rangeChangeResult: IRangeChangeResult): void {
-                console.log('indexChangedCallback', rangeChangeResult);
+            indexesChangedCallback(params: IIndexesChangedParams): void {
+                console.log('indexChangedCallback', params);
+            },
+            environmentChangedCallback(params: IEnvironmentChangedParams): void {
+                console.log('environmentChangedCallback', params);
+            },
+            activeElementChangedCallback(activeElementIndex: number): void {
+                console.log('activeElementChangedCallback', activeElementIndex);
             },
             itemsEndedCallback(direction: IScrollControllerDirection): void {
                 console.log('itemsEndedCallback', direction);
