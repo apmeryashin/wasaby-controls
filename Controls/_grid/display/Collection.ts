@@ -111,9 +111,8 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
 
         // Сбрасываем модель заголовка если его видимость зависит от наличия данных и текущее действие
         // это смена записей.
-        // При headerVisibility === 'visible' вроде как пока не требуется перерисовывать заголовок, т.к.
-        // он есть всегда. Но если потребуется, то нужно поправить это условие
-        if (this._$headerVisibility === 'hasdata' && changeAction === IObservable.ACTION_RESET) {
+        const headerIsVisible = this._headerIsVisible(this._$header);
+        if (changeAction === IObservable.ACTION_RESET && !headerIsVisible) {
             this._$headerModel = null;
         }
 
