@@ -158,8 +158,10 @@ export default class ControllerClass {
     * Произвести поиск по значению.
     * @param {string} value Значение, по которому будет производиться поиск
     */
-   search(value: string): Promise<RecordSet | Error> {
+   search(value: string): Promise<RecordSet | Error | null> {
       const newSearchValue = this._trim(value);
+      let searchResult;
+
       this._checkSourceController();
 
       if (this._viewMode !== 'search') {
@@ -168,21 +170,22 @@ export default class ControllerClass {
          this._hasHiearchyFilterBeforeSearch = ControllerClass._hasHierarchyFilter(this._sourceController.getFilter());
       }
 
-      if (this._searchValue !== newSearchValue || !this._searchPromise) {
+      if (this._searchValue !== newSearchValue || (!this._searchPromise && newSearchValue)) {
          this._setSearchValue(newSearchValue);
          this._saveRootBeforeSearch();
 
          if (this._options.filterOnSearchCallback) {
-            return Promise.resolve(this._preFilterItemsAndUpdateFilter(value));
+            searchResult =  Promise.resolve(this._preFilterItemsAndUpdateFilter(value));
          } else {
-            return this._updateFilterAndLoad(
-                this._getFilter(),
-                this._getRoot()
-            );
+            searchResult = this._updateFilterAndLoad(this._getFilter(), this._getRoot());
          }
       } else if (this._searchPromise) {
-         return this._searchPromise;
+         searchResult = this._searchPromise;
+      } else {
+         searchResult = Promise.resolve(null);
       }
+
+      return searchResult;
    }
 
    /**
