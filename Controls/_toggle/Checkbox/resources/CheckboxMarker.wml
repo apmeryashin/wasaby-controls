@@ -5,7 +5,7 @@
             {{_options.value === null && _options.triState ?
             'controls-CheckboxMarker__state-null__icon-color__' + (_options.readOnly ? 'disabled':'enabled')}}">
     <ws:if data="{{!_options.readOnly}}">
-        <input type="checkbox" class="controls_toggle_fakeCheckbox">
+        <input type="checkbox" class="controls_toggle_fakeCheckbox"/>
     </ws:if>
     <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" attr:class="controls-CheckboxMarker__icon-checked">
         <path d="M8 0.5H4C2.067 0.5 0.5 2.067 0.5 4V8C0.5 9.933 2.067 11.5 4 11.5H8C9.933 11.5 11.5 9.933 11.5 8V4C11.5 2.067 9.933 0.5 8 0.5Z"
