@@ -1,15 +1,3 @@
-<ws:template name="ARROW">
-    <div class="js-controls-DragScroll__notDraggable controls-ColumnScroll__scrollToButton
-                {{ !_isArrowActive(direction) ? 'controls-ColumnScroll__scrollToButton_disabled' }}"
-         on:click="_onArrowClick(direction)">
-        <div class="icon-{{direction === 'left' ? 'MarkLeftBold' : 'MarkRightBold'}}
-                    controls-icon_size-s
-                    controls-ColumnScroll__scrollToButton__icon
-                    controls-icon_style-{{ _isArrowActive(direction) ? 'default' : 'readonly' }}">
-        </div>
-    </div>
-</ws:template>
-
 <ws:template name="SCROLLBAR_CONTENT">
     <ws:if data="{{ !_options.mode || _options.mode === 'scrollbar' }}">
         <Controls.scroll:_Scrollbar name="scrollbar"
@@ -24,8 +12,16 @@
     </ws:if>
     <ws:else>
         <div class="controls-ColumnScroll__scrollToButtons">
-            <ws:partial template="ARROW" direction="left"/>
-            <ws:partial template="ARROW" direction="right"/>
+            <Controls.buttons:ArrowButton direction="left"
+                                          contrastBackground="{{ true }}"
+                                          attr:class="controls-ColumnScroll__scrollToButton_left"
+                                          on:click="_onArrowClick('left')"
+                                          readOnly="{{ !_isArrowActive('left') }}"/>
+
+            <Controls.buttons:ArrowButton direction="right"
+                                          contrastBackground="{{ true }}"
+                                          on:click="_onArrowClick('right')"
+                                          readOnly="{{ !_isArrowActive('right') }}"/>
         </div>
     </ws:else>
 </ws:template>
