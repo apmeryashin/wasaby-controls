@@ -3,6 +3,7 @@ define('Controls-demo/StickyBlock/StickyBlockDisplaced',
       'UI/Base',
       'Controls/scroll',
       'wml!Controls-demo/StickyBlock/StickyBlockDisplaced',
+      'css!Controls-demo/Controls-demo'
 
    ],
    function(Base, scrollLib, template) {
@@ -23,7 +24,7 @@ define('Controls-demo/StickyBlock/StickyBlockDisplaced',
          }
       });
 
-      StickyBlock._styles = ['Controls-demo/StickyBlock/StickyBlock', 'Controls-demo/Controls-demo'];
+      StickyBlock._styles = ['Controls-demo/StickyBlock/StickyBlock'];
 
       return StickyBlock;
    }
