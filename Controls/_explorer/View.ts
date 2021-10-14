@@ -4,6 +4,7 @@ import * as template from 'wml!Controls/_explorer/View/View';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import {EventUtils} from 'UI/Events';
+import { addPageDeps } from 'UICommon/Deps';
 import * as randomId from 'Core/helpers/Number/randomId';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
@@ -1119,6 +1120,10 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     private _loadTileViewMode(): Promise<void> | void {
+        // Это нужно для попадания стилей плитки в bundle на сервере
+        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
+        addPageDeps(['css!Controls/tile']);
+
         return executeSyncOrAsync(['Controls/treeTile'], (tile) => {
             VIEW_NAMES.tile = tile.TreeTileView;
             VIEW_TABLE_NAMES.tile = tile.TreeTileView;
@@ -1127,6 +1132,10 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     private _loadColumnsViewMode(): Promise<void> | void {
+        // Это нужно для попадания стилей плитки в bundle на сервере
+        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
+        addPageDeps(['css!Controls/columns']);
+
         return executeSyncOrAsync(['Controls/columns'], (columns) => {
             VIEW_NAMES.list = columns.ViewTemplate;
             MARKER_STRATEGY.list = MultiColumnStrategy;
