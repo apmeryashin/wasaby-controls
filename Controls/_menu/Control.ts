@@ -137,7 +137,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (newOptions.sourceController && newOptions.searchParam &&
-            newOptions.searchValue && searchValueChanged) {
+            (newOptions.searchValue && searchValueChanged || newOptions.viewMode !== this._options.viewMode)) {
             this._notifyResizeAfterRender = true;
             this._closeSubMenu();
             this._updateItems(newOptions.sourceController.getItems(), newOptions);
@@ -651,7 +651,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 
+    private _dataLoadCallback(items, options): void {
+        if (options.dataLoadCallback) {
+            options.dataLoadCallback(items);
+        }
+    }
+
     private _setItems(items: RecordSet, options: IMenuControlOptions): void {
+        this._dataLoadCallback(items, options);
         this._setStateByItems(items, options);
         this._createControllers(options);
     }
@@ -955,10 +962,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         return sourceController.load().then(
             (items: RecordSet): RecordSet => {
-                if (options.dataLoadCallback) {
-                    options.dataLoadCallback(items);
-                }
-
                 return items;
             },
             (error: Error): Promise<void | ErrorViewConfig> => {
