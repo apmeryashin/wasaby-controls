@@ -6,7 +6,6 @@
                 filter="{{_filter}}"
                 keyProperty="{{_options.keyProperty}}"
                 selectedKeys="{{_selectedKeys}}"
-                scope="{{_options}}"
                 navigation="{{_navigation}}"
                 backgroundStyle="transparent"
                 hoverBackgroundStyle="listEditor"
@@ -18,6 +17,7 @@
                 parentProperty="{{_options.parentProperty}}"
                 nodeProperty="{{_options.nodeProperty}}"
                 root="{{_options.root}}"
+                style="{{_options.style}}"
                 attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
                 on:itemClick="_handleItemClick()"
                 markedKey="{{_markedKey}}">
