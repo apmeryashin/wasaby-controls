@@ -117,7 +117,7 @@ export default class SizeAndVisibilityObserver {
 
                 // Если заголовок состоит в группе и у него изменился размер, то нужно будет пересчитать top'ы всех
                 // заголовков группы.
-                // Если headers пустой, то и группы заголовка мы получить не сможем.
+                // Если headers пустой, то и группу заголовка мы получить не сможем.
                 if (this._isHeaderOfGroup(header.index) && Object.keys(this._headers).length !== 0) {
                     groupHeader = this._getGroupByHeader(header);
                     const groupInUpdateGroups = this._groupInObject(groupHeader, updateGroups);
