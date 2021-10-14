@@ -109,7 +109,7 @@ export default interface ISearch {
 /**
  * @name Controls/_interface/ISearch#searchParam
  * @cfg {String} Имя поля фильтра, в значение которого будет записываться текст для поиска.
- * Фильтр с этим значением будет отправлен в поисковой запрос в источнику данных.
+ * Фильтр с этим значением будет отправлен в поисковой запрос к источнику данных.
  * @demo Controls-demo/dropdown_new/Search/SearchParam/Index
  * @example
  * В этом примере вы можете найти город, введя название города.
