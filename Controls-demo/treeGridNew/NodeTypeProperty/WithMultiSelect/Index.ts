@@ -3,6 +3,7 @@ import {Model} from 'Types/entity';
 import {CrudEntityKey, HierarchicalMemory} from 'Types/source';
 import {TColspanCallbackResult} from 'Controls/grid';
 import {IGroupNodeColumn} from 'Controls/treeGrid';
+import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
 import {data} from '../data/NodeTypePropertyData';
 
@@ -14,7 +15,9 @@ const columns: IGroupNodeColumn[] = [
         width: '300px',
         displayProperty: 'title',
         groupNodeConfig: {
-            textAlign: 'center'
+            textAlign: 'left',
+            expanderAlign: 'right',
+            fontSize: 'm'
         }
     },
     {
@@ -60,6 +63,7 @@ export default class extends Control {
     protected _expandedItems: CrudEntityKey[] = [];
     protected _collapsedItems: CrudEntityKey[] = [];
     protected _columns: IGroupNodeColumn[] = columns;
+    protected _itemActions: IItemAction[];
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
@@ -67,6 +71,13 @@ export default class extends Control {
             keyProperty: 'key',
             data
         });
+        this._itemActions = [
+            {
+                id: 'open',
+                showType: TItemActionShowType.TOOLBAR,
+                title: 'Открыть'
+            }
+        ];
     }
 
     protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
@@ -74,6 +85,14 @@ export default class extends Control {
             return 3;
         }
         return 1;
+    }
+
+    protected _resolveHighlightOnHover(item: Model): boolean {
+        return item.get('nodeType') === 'group';
+    }
+
+    protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {
+        return item.get('nodeType') === 'group';
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

@@ -13,5 +13,9 @@
             columns="{{ _columns }}"
             dataLoadCallback="{{ _dataLoadCallback }}"
             bind:expandedItems="_expandedItems"
-            bind:collapsedItems="_collapsedItems"/>
+            bind:collapsedItems="_collapsedItems">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{ _resolveHighlightOnHover(itemTemplate.item.contents) }}"/>
+        </ws:itemTemplate>
+    </Controls.treeGrid:View>
 </div>

@@ -61,6 +61,10 @@ export default class extends Control {
         return 1;
     }
 
+    protected _resolveHighlightOnHover(item: Model): boolean {
+        return item.get('nodeType') !== 'group';
+    }
+
     private _updateMetaData(): void {
         this._items.setMetaData({
             ...this._items.getMetaData(),

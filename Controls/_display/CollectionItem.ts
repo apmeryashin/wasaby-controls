@@ -1016,7 +1016,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             itemPadding = {
                 top: this.getOwner().getTopPadding().toLowerCase(),
                 bottom: this.getOwner().getBottomPadding().toLowerCase()
-            }
+            };
         }
         if (itemActionsPosition !== 'outside') {
             result.push(classes);

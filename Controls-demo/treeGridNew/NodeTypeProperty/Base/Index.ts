@@ -76,5 +76,9 @@ export default class extends Control {
         return 1;
     }
 
+    protected _resolveHighlightOnHover(item: Model): boolean {
+        return item.get('nodeType') !== 'group';
+    }
+
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
