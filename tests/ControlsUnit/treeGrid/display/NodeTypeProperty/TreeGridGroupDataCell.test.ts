@@ -45,7 +45,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
         CssClassesAssert.include(getGroupCell().getContentClasses(), [
             'controls-Grid__row-cell__content_baseline_default',
             'controls-ListView__groupContent',
-            'controls-ListView__groupContent_height_default']);
+            'controls-ListView__groupContent_height']);
     });
 
     it('getExpanderClasses should include expander js-class', () => {

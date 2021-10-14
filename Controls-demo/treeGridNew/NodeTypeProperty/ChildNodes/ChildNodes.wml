@@ -18,8 +18,5 @@
                 <Controls.list:AddButton caption="Добавить товар"/>
             </ws:partial>
         </ws:nodeFooterTemplate>
-        <ws:itemTemplate>
-            <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{ _resolveHighlightOnHover(itemTemplate.item.contents) }}"/>
-        </ws:itemTemplate>
     </Controls.treeGrid:View>
 </div>

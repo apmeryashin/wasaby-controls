@@ -9,9 +9,5 @@
             colspanCallback="{{ _colspanCallback }}"
             columns="{{ _columns }}"
             bind:expandedItems="_expandedItems"
-            bind:collapsedItems="_collapsedItems">
-        <ws:itemTemplate>
-            <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{ _resolveHighlightOnHover(itemTemplate.item.contents) }}"/>
-        </ws:itemTemplate>
-    </Controls.treeGrid:View>
+            bind:collapsedItems="_collapsedItems"/>
 </div>

@@ -87,10 +87,6 @@ export default class extends Control {
         return 1;
     }
 
-    protected _resolveHighlightOnHover(item: Model): boolean {
-        return item.get('nodeType') === 'group';
-    }
-
     protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {
         return item.get('nodeType') === 'group';
     }

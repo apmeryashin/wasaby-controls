@@ -14,7 +14,7 @@
             bind:expandedItems="_expandedItems"
             bind:collapsedItems="_collapsedItems">
         <ws:itemTemplate>
-            <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{ _resolveHighlightOnHover(itemTemplate.item.contents) }}"/>
+            <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{ itemTemplate.item.contents.get('nodeType') === 'group' }}"/>
         </ws:itemTemplate>
     </Controls.treeGrid:View>
 </div>
