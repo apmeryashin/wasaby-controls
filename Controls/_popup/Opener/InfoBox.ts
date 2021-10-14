@@ -4,6 +4,7 @@ import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from 'UI/Focus';
 import {IInfoBoxPopupOptions, IInfoBoxOpener} from 'Controls/_popup/interface/IInfoBoxOpener';
+import {toggleActionOnScroll} from 'Controls/_popup/utils/SubscribeToScroll';
 
 /**
  * Component that opens a popup that is positioned relative to a specified element. {@link /doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
@@ -33,6 +34,7 @@ const DEFAULT_CONFIG = {
     floatCloseButton: false,
     closeOnOutsideClick: true,
     closeButtonVisibility: true,
+    actionOnScroll: 'close',
     hideDelay: INFOBOX_HIDE_DELAY,
     showDelay: INFOBOX_SHOW_DELAY
 };
@@ -100,6 +102,27 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
             newCfg.opener = DefaultOpenerFinder.find(newCfg.target);
         }
 
+        newCfg.eventHandlers = newCfg.eventHandlers || {};
+        const baseOnOpen = newCfg.eventHandlers.onOpen;
+        const baseOnClose = newCfg.eventHandlers.onClose;
+        const onOpenHandler = () => {
+            if (baseOnOpen) {
+                baseOnOpen();
+            }
+            toggleActionOnScroll(newCfg.target, true, () => {
+                InfoBox.closePopup();
+            });
+        };
+        const onCloseHandler = () => {
+            if (baseOnClose) {
+                baseOnClose();
+            }
+            toggleActionOnScroll(newCfg.target, false);
+        };
+
+        newCfg.eventHandlers.onOpen = onOpenHandler;
+        newCfg.eventHandlers.onClose = onCloseHandler;
+
         // Высчитывается только на старой странице через утилиту getZIndex, т.к. открывать инфобокс могут со старых окон
         // Аналогично новому механизму, zIndex инфобокса на 1 больше родительского.
         const zIndex = newCfg.zIndex || ( getZIndex(newCfg.opener || this) - (Z_INDEX_STEP - 1));
@@ -108,6 +131,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
             target: newCfg.target && newCfg.target[0] || newCfg.target,
             position: newCfg.position,
             autofocus: false,
+            actionOnScroll: newCfg.actionOnScroll,
             maxWidth: newCfg.maxWidth,
             eventHandlers: newCfg.eventHandlers,
             closeOnOutsideClick: newCfg.closeOnOutsideClick,
