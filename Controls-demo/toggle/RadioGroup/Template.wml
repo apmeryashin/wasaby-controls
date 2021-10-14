@@ -31,4 +31,20 @@
         </Router.router:Reference>
         <Controls-demo.toggle.RadioGroup.ValidationStatus.Index/>
     </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/toggle/RadioGroup/ParentProperty/Index' }}">
+            <a href="{{content.href}}">Настройка c иерархией</a>
+        </Router.router:Reference>
+        <Controls-demo.toggle.RadioGroup.ParentProperty.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/toggle/RadioGroup/ManyItems/Index' }}">
+            <a href="{{content.href}}">Настройка когда не все элементы влезают в 1 строку</a>
+        </Router.router:Reference>
+        <Controls-demo.toggle.RadioGroup.ManyItems.Index/>
+    </div>
 </div>

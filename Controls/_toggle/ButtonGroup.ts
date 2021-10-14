@@ -81,6 +81,11 @@ import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroup
  * </pre>
  */
 
+/**
+ * @name Controls/_toggle/ButtonGroup#readOnly
+ * @demo Controls-demo/toggle/ButtonGroup/ReadOnly/Index
+ */
+
 class ButtonGroup extends ButtonGroupBase {
     protected _template: TemplateFunction = template;
     protected _buttonTemplate: TemplateFunction = ButtonTemplate;
