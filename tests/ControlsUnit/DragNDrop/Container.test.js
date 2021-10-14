@@ -32,6 +32,7 @@ define([
          var config = {
             topPopup: true,
             opener: null,
+            fittingMode: 'overflow',
             autofocus: false,
             template: 'Controls/dragnDrop:DraggingTemplateWrapper',
             templateOptions: {
