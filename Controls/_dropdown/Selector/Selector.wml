@@ -6,23 +6,24 @@
                               on:mouseenter="_handleMouseEnter()"
                               on:mouseleave="_handleMouseLeave()"
                               on:keydown="_handleKeyDown()"
-                              on:deactivated="_deactivated()"
-                              attr:class="controls-Dropdown">
+                              on:deactivated="_deactivated()">
     <ws:content>
-        <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
-                    item="{{_item}}"
-                    icon="{{_icon}}"
-                    iconSize="{{_item && _item.get('iconSize') || _options.iconSize}}"
-                    fontSize="{{_options.fontSize}}"
-                    fontColorStyle="{{_options.fontColorStyle}}"
-                    text="{{_text}}"
-                    tooltip="{{_needInfobox ? '' : _tooltip}}"
-                    countItems="{{_countItems}}"
-                    hasMoreText="{{_hasMoreText}}"
-                    isEmptyItem="{{_isEmptyItem}}"
-                    validationStatus="{{_options.validationStatus}}"
-                    readOnly="{{_options.readOnly}}"
-                    footerTemplate="{{_options.footerTemplate || _options.footerContentTemplate}}"/>
+        <div class="controls-Dropdown">
+            <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
+                        item="{{_item}}"
+                        icon="{{_icon}}"
+                        iconSize="{{_item && _item.get('iconSize') || _options.iconSize}}"
+                        fontSize="{{_options.fontSize}}"
+                        fontColorStyle="{{_options.fontColorStyle}}"
+                        text="{{_text}}"
+                        tooltip="{{_needInfobox ? '' : _tooltip}}"
+                        countItems="{{_countItems}}"
+                        hasMoreText="{{_hasMoreText}}"
+                        isEmptyItem="{{_isEmptyItem}}"
+                        validationStatus="{{_options.validationStatus}}"
+                        readOnly="{{_options.readOnly}}"
+                        footerTemplate="{{_options.footerTemplate || _options.footerContentTemplate}}"/>
+        </div>
     </ws:content>
     <ws:template>
         <ws:partial template="wml!Controls/_dropdown/Selector/resources/infoBoxContentTemplate"
