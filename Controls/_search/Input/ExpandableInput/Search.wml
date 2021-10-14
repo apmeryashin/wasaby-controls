@@ -51,7 +51,7 @@
             <div class="controls-Search__expandable-button
                     {{_needShowAnimation ? 'controls-Search__expandable-button-animation'}}
                     controls-Search__button_{{_options.readOnly ? 'readOnly' : 'enabled'}}
-                    {{_options.searchButtonIconStyle ? 'controls-icon_style-' + searchButtonIconStyle : 'controls-Search__searchButton_color'}}
+                    {{_options.searchButtonIconStyle ? ('controls-icon_style-' + _options.searchButtonIconStyle) : 'controls-Search__searchButton_color'}}
                     icon-Search2
                     controls-icon_size-m"
                  on:animationend="_animationendHandler()"
