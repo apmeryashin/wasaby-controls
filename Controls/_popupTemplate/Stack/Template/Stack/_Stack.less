@@ -24,13 +24,16 @@
 
 .controls-StackTemplate-shadow {
    position: absolute;
-   z-index: 2;
    height: 100%;
    overflow: hidden;
    width: var(--shadow-blur_stack);
    left: calc((var(--shadow-blur_stack) + var(--border-thickness_stack))/(-1));
    background: linear-gradient(to right, transparent, var(--shadow-color_stack));
    border-right: var(--border-thickness_stack) solid var(--border-color_stack);
+}
+
+.controls-StackTemplate-shadow_zindex {
+   z-index: 2;
 }
 
 .controls-StackTemplate__top-area {
