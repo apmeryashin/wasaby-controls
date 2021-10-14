@@ -94,7 +94,7 @@ export default class WrappedSearch extends Control {
  *       //Не закрываем автодополнение при клике на лупу, если введено больше 3 символов
  *       return this._value.length < 3;
  *     }
- * <pre>
+ * </pre>
  * @default true
  */
 
@@ -125,11 +125,10 @@ export default class WrappedSearch extends Control {
  * TS:
  * <pre>
  *     protected _value: string = '';
- *
  *     private _searchClick():boolean {
  *       return this._value.length < 3;
  *     }
- * <pre>
+ * </pre>
  */
 
 /*
