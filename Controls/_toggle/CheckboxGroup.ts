@@ -94,6 +94,11 @@ export interface ICheckboxGroupOptions extends IControlOptions,
  * @demo Controls-demo/toggle/CheckboxGroup/displayProperty/Index
  */
 
+/**
+ * @name Controls/_toggle/CheckboxGroup#parentProperty
+ * @demo Controls-demo/toggle/CheckboxGroup/ParentProperty/Index
+ */
+
 class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements ISource,
     IMultiSelectable, IHierarchy, IToggleGroup {
     '[Controls/_interface/ISource]': boolean = true;

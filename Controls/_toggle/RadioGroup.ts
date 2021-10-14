@@ -211,25 +211,25 @@ export default Radio;
  *
  * <pre>
  *   new Memory({
-        keyProperty: 'key',
-        data: [
-            {
-                key: 1,
-                title: 'title 1',
-                caption: 'caption 1'
-            },
-            {
-                key: 2,
-                title: 'title 2',
-                caption: 'caption 2'
-            },
-            {
-                key: 3,
-                title: 'title 3',
-                caption: 'caption 3'
-            }
-        ]
-    });
+ *       keyProperty: 'key',
+ *       data: [
+ *           {
+ *               key: 1,
+ *               title: 'title 1',
+ *               caption: 'caption 1'
+ *           },
+ *           {
+ *               key: 2,
+ *               title: 'title 2',
+ *               caption: 'caption 2'
+ *           },
+ *           {
+ *               key: 3,
+ *               title: 'title 3',
+ *               caption: 'caption 3'
+ *           }
+ *       ]
+ *   });
  * </pre>
  *
  * @demo Controls-demo/toggle/RadioGroup/displayProperty/Index

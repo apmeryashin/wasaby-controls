@@ -151,6 +151,11 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
  */
 
 /**
+ * @name Controls/_toggle/DoubleSwitch#tooltip
+ * @demo Controls-demo/toggle/DoubleSwitch/Tooltip/Index
+ */
+
+/**
  * @name Controls/_toggle/DoubleSwitch#captions
  * @cfg {Array.<String>} Массив из двух подписей. Если количество подписей не равно двум, то возникает ошибка.
  */
