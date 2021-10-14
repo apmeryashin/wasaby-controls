@@ -837,6 +837,7 @@ define(
             expectedOptions.subMenuLevel = 1;
             expectedOptions.draggable = false;
             expectedOptions.iWantBeWS3 = false;
+            expectedOptions.sourceController = undefined;
 
             let resultOptions = await menuControl._getTemplateOptions(item);
             assert.deepEqual(resultOptions, expectedOptions);
