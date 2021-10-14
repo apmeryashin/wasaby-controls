@@ -375,7 +375,7 @@ export default class Selector extends BaseDropdown {
 
 /**
  * @name Controls/_dropdown/Selector#contentTemplate
- * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
+ * @cfg {Function} Шаблон отображения вызывающего элемента.
  * @remark
  * Для определения шаблона вызовите базовый шаблон - "Controls/dropdown:inputDefaultContentTemplate".
  * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
