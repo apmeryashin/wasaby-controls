@@ -1,7 +1,7 @@
 import { calculateVirtualRange } from './VirtualScrollUtil';
 
 import { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import { ITriggersOffset } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 import type {
     IDirection,
     IIndexesChangedParams,
@@ -14,6 +14,9 @@ export interface IRangeChangeResult extends IIndexesChangedParams, IEnvironmentC
 
     // todo release it!
     activeElementIndex: number
+    activeElementIndexChanged: boolean;
+
+    environmentChanged: boolean;
 }
 
 /**
@@ -25,7 +28,7 @@ export interface ICalculatorOptions {
     /**
      * Размеры смещения триггеров. Нужны чтобы избежать лишних отрисовок и сразу же отловить видимость триггера.
      */
-    triggersOffsets: ITriggersOffset;
+    triggersOffsets: ITriggersOffsets;
 
     scrollTop: number;
     viewportSize: number;
@@ -55,7 +58,7 @@ export interface IPlaceholders {
  */
 export class Calculator {
     private _itemsSizes: IItemsSizes;
-    private _triggersOffsets: ITriggersOffset;
+    private _triggersOffsets: ITriggersOffsets;
     private _virtualScrollConfig: IVirtualScrollConfig;
     private _scrollTop: number;
     private _viewportSize: number;
@@ -98,10 +101,10 @@ export class Calculator {
      * Смещает виртуальный диапазон в заданном направлении.
      * Используется при достижении триггера.
      * @param direction Направление, в котором будет смещаться диапазон
-     * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeToDirection(direction: IDirection, totalCount: number): IRangeChangeResult {
+    shiftRangeToDirection(direction: IDirection): IRangeChangeResult {
         const oldRange = this._range;
+        const totalCount: number = 0; // todo totalCount === undefined, его похоже надо хранить в состоянии Calculator
 
         // если в заданном направлении больше нет элементов, то ничего не делаем
         if (!this._hasItemsToDirection(direction, totalCount)) {
@@ -254,12 +257,16 @@ export class Calculator {
         return {
             startIndex: this._range.start,
             endIndex: this._range.end,
+            indexesChanged: oldRange.start !== this._range.start || oldRange.end !== this._range.end,
+
             hasItemsBackward: this._hasItemsToDirection('backward', totalCount),
             hasItemsForward: this._hasItemsToDirection('forward', totalCount),
             beforePlaceholderSize: this._placeholders.top,
             afterPlaceholderSize: this._placeholders.bottom,
+            environmentChanged: true, // todo Calc it!
+
             activeElementIndex: this.getActiveElementIndex(),
-            indexesChanged: oldRange.start !== this._range.start || oldRange.end !== this._range.end
+            activeElementIndexChanged: true // todo Calc it!
         }
     }
 }

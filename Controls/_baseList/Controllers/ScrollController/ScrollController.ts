@@ -3,12 +3,6 @@ import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversControlle
 import {Calculator, ICalculatorOptions, IRangeChangeResult} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
 
-export type IDirection = 'backward' | 'forward';
-export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
-export type IEnvironmentChangedCallback = (params: IEnvironmentChangedParams) => void;
-export type IActiveElementChangedChangedCallback = (activeElementIndex: number) => void;
-export type IItemsEndedCallback = (direction: IDirection) => void;
-
 export interface IIndexesChangedParams {
     startIndex: number;
     endIndex: number;
@@ -21,6 +15,16 @@ export interface IEnvironmentChangedParams {
     beforePlaceholderSize: number;
     afterPlaceholderSize: number;
 }
+
+export type IDirection = 'backward' | 'forward';
+
+export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
+
+export type IEnvironmentChangedCallback = (params: IEnvironmentChangedParams) => void;
+
+export type IActiveElementChangedChangedCallback = (activeElementIndex: number) => void;
+
+export type IItemsEndedCallback = (direction: IDirection) => void;
 
 export interface IScrollControllerOptions extends
     IItemsSizesControllerOptions,
@@ -36,19 +40,22 @@ export interface IScrollControllerOptions extends
 /**
  * Класс предназначен для управления scroll и обеспечивает:
  *   - генерацию событий о достижении границ контента (работа с триггерами);
- *   - управление virtual scroll и установка рассчитанных индексов;
- *   - scroll к записи / к границе (при необходимости - пересчёт virtualScroll);
+ *   - scroll к записи / к границе (при необходимости - пересчёт range);
  *   - сохранение / восстановление позиции scroll.
  */
 export class ScrollController {
-    private _itemsSizesController: ItemsSizesController;
-    private _observersController: ObserversController;
-    private _calculator: Calculator;
-    private _indexesChangedCallback: IIndexesChangedCallback;
-    private _itemsEndedCallback: IItemsEndedCallback;
+    private readonly _itemsSizesController: ItemsSizesController;
+    private readonly _observersController: ObserversController;
+    private readonly _calculator: Calculator;
+    private readonly _indexesChangedCallback: IIndexesChangedCallback;
+    private readonly _activeElementChangedCallback: IActiveElementChangedChangedCallback;
+    private readonly _environmentChangedCallback: IEnvironmentChangedCallback;
+    private readonly _itemsEndedCallback: IItemsEndedCallback;
 
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
+        this._environmentChangedCallback = options.environmentChangedCallback;
+        this._activeElementChangedCallback = options.activeElementChangedCallback;
         this._itemsEndedCallback = options.itemsEndedCallback;
 
         this._itemsSizesController = new ItemsSizesController({
@@ -65,7 +72,7 @@ export class ScrollController {
         });
 
         this._calculator = new Calculator({
-            triggersOffsets: this._observersController.getTriggerOffsets(), // TODO где-то триггер, где-то обсервер???
+            triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
             scrollTop: options.scrollTop,
             virtualScrollConfig: options.virtualScrollConfig,
@@ -73,7 +80,7 @@ export class ScrollController {
         })
     }
 
-    // region HandleCollectionChanges
+    // region Collection changes
 
     /**
      * Обрабатывает добавление элементов в коллекцию.
@@ -81,8 +88,8 @@ export class ScrollController {
      * @param count Кол-во добавленных записей
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    addItems(position: number, count: number, totalCount: number): IRangeChangeResult {
-        return this._calculator.addItems(position, count, totalCount);
+    addItems(position: number, count: number, totalCount: number): void {
+        this._calculator.addItems(position, count, totalCount);
     }
 
     /**
@@ -92,8 +99,8 @@ export class ScrollController {
      * @param movedCount Кол-во перемещенных элементов
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): IRangeChangeResult {
-        return this._calculator.moveItems(newPosition, oldPosition, movedCount, totalCount);
+    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): void {
+        this._calculator.moveItems(newPosition, oldPosition, movedCount, totalCount);
     }
 
     /**
@@ -110,11 +117,11 @@ export class ScrollController {
      * Обрабатывает пересоздание всех элементов коллекции.
      * @param count Новое кол-во элементов
      */
-    resetItems(count: number): IRangeChangeResult {
-        return this._calculator.resetItems(count);
+    resetItems(count: number): void {
+        this._calculator.resetItems(count);
     }
 
-    // endregion HandleCollectionChanges
+    // endregion Collection changes
 
     // region Scroll
 
@@ -123,20 +130,63 @@ export class ScrollController {
         return null;
     }
 
-    scrollToItem(itemKey: CrudEntityKey, totalCount: number): IRangeChangeResult {
+    scrollToItem(itemKey: CrudEntityKey, totalCount: number): void {
         // TODO видимо нужна коллекция? Либо тут тоже нужно индекс прокидывать,
         //  либо в калькуляторе неправильно назван метод
         const index = 0; // this._collection.getIndexBySourceKey(itemKey)
-        return this._calculator.shiftRangeToIndex(index, totalCount);
+        this._calculator.shiftRangeToIndex(index, totalCount);
     }
 
-    changeScrollPosition(position: number, totalCount: number): IRangeChangeResult {
-        return this._calculator.shiftRangeToScrollPosition(position, totalCount);
+    changeScrollPosition(position: number, totalCount: number): void {
+        this._calculator.shiftRangeToScrollPosition(position, totalCount);
     }
 
     // endregion Scroll
 
+
+    // region Private API
+
+    /**
+     * Callback, вызываемый при достижении триггера.
+     * Вызывает сдвиг itemsRange в направлении триггера.
+     * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback или itemsEndedCallback.
+     * Также, по необходимости, обеспечивает вызов activeElementChangedCallback, environmentChangedCallback.
+     * @param {TIntersectionEvent} eventName
+     * @private
+     */
     private _observersCallback(eventName: TIntersectionEvent): void {
-        this._itemsEndedCallback('forward');
+        let direction: IDirection;
+        if (eventName === 'bottomIn') {
+            direction = 'forward';
+        }
+        if (eventName === 'topIn') {
+            direction = 'backward';
+        }
+
+        const result = this._calculator.shiftRangeToDirection(direction);
+
+        if (result.activeElementIndexChanged) {
+            this._activeElementChangedCallback(result.activeElementIndex);
+        }
+
+        if (result.environmentChanged) {
+            this._environmentChangedCallback({
+                afterPlaceholderSize: result.afterPlaceholderSize,
+                beforePlaceholderSize: result.beforePlaceholderSize,
+                hasItemsBackward: result.hasItemsBackward,
+                hasItemsForward: result.hasItemsForward
+            });
+        }
+
+        if (result.indexesChanged) {
+            this._indexesChangedCallback({
+                startIndex: result.startIndex,
+                endIndex: result.endIndex
+            });
+        } else {
+            this._itemsEndedCallback('forward');
+        }
     }
+
+    // endregion Private API
 }

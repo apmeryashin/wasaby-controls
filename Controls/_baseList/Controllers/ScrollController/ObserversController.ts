@@ -8,7 +8,7 @@ export interface ITriggersVisibility {
 
 export type TIntersectionEvent = 'bottomIn' | 'bottomOut' | 'topIn' | 'topOut';
 
-export interface ITriggersOffset {
+export interface ITriggersOffsets {
     top: number;
     bottom: number;
 }
@@ -36,7 +36,7 @@ export class ObserversController {
     _triggersQuerySelector: string;
     _triggersVisibility: ITriggersVisibility;
 
-    _triggersOffset: ITriggersOffset = {
+    _triggersOffsets: ITriggersOffsets = {
         top: 0,
         bottom: 0
     };
@@ -66,8 +66,8 @@ export class ObserversController {
         this._updateTriggers();
     }
 
-    getTriggerOffsets(): ITriggersOffset {
-        return this._triggersOffset;
+    getTriggersOffsets(): ITriggersOffsets {
+        return this._triggersOffsets;
     }
 
     private _updateTriggers(): void {
