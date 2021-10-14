@@ -18,7 +18,10 @@ function getActiveElement(): HTMLElement|void {
 
 export default function isLetterPressedOnKeyboard(event: SyntheticEvent|KeyboardEvent): boolean {
     const nativeEvent = event.nativeEvent || event;
-    const isSpecialKeyPressed = nativeEvent.altKey || nativeEvent.ctrlKey || nativeEvent.shiftKey;
+    const isSpecialKeyPressed = nativeEvent.altKey ||
+                                nativeEvent.ctrlKey ||
+                                nativeEvent.shiftKey ||
+                                nativeEvent.metaKey;
     const isLetterPressed = /^([a-zA-Z]|[а-яА-Я]|[0-9])$/.test(nativeEvent.key);
     const activeElement = getActiveElement();
     const allowProcessKeydown = activeElement &&
