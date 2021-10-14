@@ -1,4 +1,26 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500 ws-flexbox">
-    <Controls-demo.Buttons.MoreButton.Base.Index/>
-    <Controls-demo.Buttons.MoreButton.ContrastBackground.Index/>
+    <div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label controls-text-label">fontSize=s</div>
+            <Controls.buttons:MoreButton count="17" fontSize="s"/>
+        </div>
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label controls-text-label">fontSize=m</div>
+            <Controls.buttons:MoreButton count="17" fontSize="m"/>
+        </div>
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label controls-text-label">fontSize=l</div>
+            <Controls.buttons:MoreButton count="17" fontSize="l"/>
+        </div>
+    </div>
+    <div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
+        <div class="controlsDemo__cell demo-BigSeparator__contrastBackgroundTrue">
+            <div class="controls-text-label controls-text-label">contrastBackground = true</div>
+            <Controls.buttons:MoreButton count="17" contrastBackground="{{true}}"/>
+        </div>
+        <div class="controlsDemo__cell controlsDemo__background demo-BigSeparator__contrastBackgroundFalse">
+            <div class="controls-text-label controls-text-label">contrastBackground = false</div>
+            <Controls.buttons:MoreButton count="17" contrastBackground="{{false}}"/>
+        </div>
+    </div>
 </div>
