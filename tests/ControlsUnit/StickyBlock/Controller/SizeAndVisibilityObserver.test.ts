@@ -90,30 +90,6 @@ describe('SizeAndVisibilityObserver', () => {
         });
     });
 
-    describe('_isHeaderOfGroup', () => {
-        it('should return false if headers is empty', () => {
-            component._headers = {};
-            const res = component._isHeaderOfGroup(1);
-            assert.isFalse(res);
-        });
-
-        it('should return false', () => {
-            component._headers = {
-                1: {field: '1'}
-            };
-            const res = component._isHeaderOfGroup(1);
-            assert.isFalse(res);
-        });
-
-        it('should return true', () => {
-            component._headers = {
-                1: {field: '1'}
-            };
-            const res = component._isHeaderOfGroup(2);
-            assert.isTrue(res);
-        });
-    });
-
     describe('_resizeObserverCallback', () => {
         beforeEach(() => {
             component._initialized = true;

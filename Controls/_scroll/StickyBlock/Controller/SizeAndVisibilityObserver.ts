@@ -70,7 +70,7 @@ export default class SizeAndVisibilityObserver {
     }
 
     private _isHeaderOfGroup(id: number): boolean {
-        return Object.keys(this._headers).length !== 0 && !this._headers[id];
+        return !this._headers[id];
     }
 
     private _isGroup(id: string): boolean {
@@ -117,7 +117,8 @@ export default class SizeAndVisibilityObserver {
 
                 // Если заголовок состоит в группе и у него изменился размер, то нужно будет пересчитать top'ы всех
                 // заголовков группы.
-                if (this._isHeaderOfGroup(header.index)) {
+                // Если headers пустой, то и группы заголовка мы получить не сможем.
+                if (this._isHeaderOfGroup(header.index) && Object.keys(this._headers).length !== 0) {
                     groupHeader = this._getGroupByHeader(header);
                     const groupInUpdateGroups = this._groupInObject(groupHeader, updateGroups);
                     if (!groupInUpdateGroups) {
