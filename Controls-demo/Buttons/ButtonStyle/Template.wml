@@ -14,7 +14,7 @@
     <div class="controlsDemo__cell">
         <div class="controls-text-label">viewMode=toolButton, different iconStyles</div>
         <ws:for data="buttonStyle in _buttonStyles">
-            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconStyle="secondary" iconSize="{{buttonStyle}}" buttonStyle="{{buttonStyle}}"/>{{' '}}
+            <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconStyle="{{buttonStyle}}" iconSize="s" buttonStyle="{{buttonStyle}}"/>{{' '}}
         </ws:for>
     </div>
     <div class="controlsDemo__cell">
