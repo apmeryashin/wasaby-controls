@@ -70,7 +70,7 @@ export default class SizeAndVisibilityObserver {
     }
 
     private _isHeaderOfGroup(id: number): boolean {
-        return this._headers[id] !== undefined && !this._headers[id];
+        return Object.keys(this._headers).length !== 0 && !this._headers[id];
     }
 
     private _isGroup(id: string): boolean {
