@@ -17,7 +17,7 @@ const MASK_MAP: object = {
 };
 
 const RE_NUMBERS: RegExp = /\d/;
-const RE_MASK: RegExp = /^(?:(\d{1,2})(?:\.(\d{1,2})(?:\.((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?)?$/;
+const RE_MASK: RegExp = /^(?:(\d{1,2})(?:[./](\d{1,2})(?:[./]((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:[./](\d{3}))?)?)?$/;
 
 export interface IStringValueConverter {
     mask?: string;
