@@ -23,7 +23,7 @@ define('Controls-demo/StickyBlock/StickyBlockDisplaced',
          }
       });
 
-      StickyBlock._styles = ['Controls-demo/StickyBlock/StickyBlock'];
+      StickyBlock._styles = ['Controls-demo/StickyBlock/StickyBlock', 'Controls-demo/Controls-demo'];
 
       return StickyBlock;
    }
