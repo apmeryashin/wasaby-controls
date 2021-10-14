@@ -45,8 +45,8 @@ export class StickyStrategy {
          // position: 'fixed'
       };
       this._prepareRestrictiveCoords(popupCfg, targetCoords);
-      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'horizontal', targetElement));
-      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'vertical', targetElement));
+      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'horizontal', targetElement, position.zoom));
+      cMerge(position, this._calculatePosition(popupCfg, targetCoords, 'vertical', targetElement, position.zoom));
       this._setMaxSizes(popupCfg, position, targetElement);
       this._resetMargins(position);
       this._scalePositionToZoom(position);
@@ -57,10 +57,11 @@ export class StickyStrategy {
        popupCfg: IStickyPositionConfig,
        targetCoords: ITargetCoords,
        direction: TDirection,
-       targetElement: HTMLElement
+       targetElement: HTMLElement,
+       zoom: number
    ): IPopupPosition {
       const property = direction === 'horizontal' ? 'width' : 'height';
-      const position = this._getPosition(popupCfg, targetCoords, direction, targetElement);
+      const position = this._getPosition(popupCfg, targetCoords, direction, targetElement, zoom);
       let resultPosition = position;
       let positionOverflow = this._checkOverflow(popupCfg, targetCoords, position, direction, targetElement);
 
@@ -78,7 +79,7 @@ export class StickyStrategy {
                                                                  position, positionOverflow, direction);
          } else {
             this._invertPosition(popupCfg, direction);
-            const revertPosition = this._getPosition(popupCfg, targetCoords, direction, targetElement);
+            const revertPosition = this._getPosition(popupCfg, targetCoords, direction, targetElement, zoom);
             let revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition, direction, targetElement);
             if (revertPositionOverflow > 0) {
                if ((positionOverflow <= revertPositionOverflow)) {
@@ -113,7 +114,8 @@ export class StickyStrategy {
        popupCfg: IStickyPositionConfig,
        targetCoords: ITargetCoords,
        direction: TDirection,
-       targetElement: HTMLElement
+       targetElement: HTMLElement,
+       zoom: number
    ): IPopupPosition {
       const position = {};
       const isHorizontal = direction === 'horizontal';
@@ -128,7 +130,7 @@ export class StickyStrategy {
          const targetCoord: number = targetCoords[coord];
          const targetSize: number = targetCoords[isHorizontal ? 'width' : 'height'];
          const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
-         const margins: number = this._getMargins(popupCfg, direction);
+         const margins: number = this._getMargins(popupCfg, direction, zoom);
          const middleCoef: number = 2;
          position[coord] = targetCoord + targetSize / middleCoef - popupSize / middleCoef + margins;
       } else {
@@ -142,11 +144,11 @@ export class StickyStrategy {
             const topSpacing: number = viewportSize + viewportPage + viewportOffset;
             const bottomSpacing: number = this._getBody()[isHorizontal ? 'width' : 'height'] - topSpacing;
             const targetCoord: number = this._getTargetCoords(popupCfg, targetCoords, coord, direction);
-            const margins: number = this._getMargins(popupCfg, direction);
+            const margins: number = this._getMargins(popupCfg, direction, zoom);
             position[coord] = bottomSpacing + (topSpacing - targetCoord) - margins;
          } else {
             const targetCoord: number = this._getTargetCoords(popupCfg, targetCoords, coord, direction);
-            const margins: number = this._getMargins(popupCfg, direction);
+            const margins: number = this._getMargins(popupCfg, direction, zoom);
             position[coord] = targetCoord + margins;
 
             if (this._isIOS12()) {
@@ -430,10 +432,17 @@ export class StickyStrategy {
       return TouchKeyboardHelper.getKeyboardHeight(true);
    }
 
-   private _getMargins(popupCfg: IStickyPositionConfig, direction: TDirection): number {
+   /**
+    * Оффсеты нужно посчитать с учетом зума, т.к. они высчитываются с контейнера без учета его зума.
+    * @param popupCfg 
+    * @param direction 
+    * @param zoom 
+    * @returns 
+    */
+   private _getMargins(popupCfg: IStickyPositionConfig, direction: TDirection, zoom: number = 1): number {
       const margins = popupCfg.sizes.margins && popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] || 0;
       const offset = popupCfg.offset[direction] || 0;
-      return margins + offset;
+      return (margins + offset) * zoom;
    }
 
    private _getWindow(): Window {

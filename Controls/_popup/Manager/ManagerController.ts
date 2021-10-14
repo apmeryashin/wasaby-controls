@@ -109,6 +109,12 @@ export default {
         return this._callManager('updateOptionsAfterInitializing', arguments);
     },
 
+    resetRootContainersCache(): Promise<void> {
+        return loadModule('Controls/popupTemplate:BaseController').then((BaseController) => {
+            BaseController.resetRootContainerCoords();
+        });
+    },
+
     /**
      * Показать popup
      */
