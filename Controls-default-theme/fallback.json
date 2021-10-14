@@ -786,7 +786,7 @@
   "--font-size_xs_input": "var(--font-size_xs)",
   "--font-size_s_input": "var(--font-size_s)",
   "--font-size_m_input": "var(--font-size_m)",
-  "--placeholder-color_inputText": "rgb(137 145 169 / 60%)",
+  "--placeholder-color_inputText": "rgba(137, 145, 169, 0.6)",
   "--border-style_inputText": "solid",
   "--border-style_hover_inputText": "solid",
   "--border-style_focus_inputText": "solid",
