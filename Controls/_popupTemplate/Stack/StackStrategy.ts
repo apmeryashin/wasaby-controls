@@ -78,16 +78,17 @@ export class StackStrategy {
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
         const maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
-        // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
         if (this.isMaximizedPanel(item) && !item.popupOptions.propStorageId) {
             if (!this._isMaximizedState(item)) {
                 panelWidth = item.popupOptions.minimizedWidth;
             } else {
                 panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
-                // todo: https://online.sbis.ru/opendoc.html?gu run buildid=256679aa-fac2-4d95-8915-d25f5d59b1ca
                 if (minWidth) {
                     panelWidth = Math.max(panelWidth, minWidth); // more then minWidth
                 }
+            }
+            if (panelWidth > maxPanelWidthWithOffset) {
+                tCoords.right = minRightSpace;
             }
             return panelWidth;
         }
