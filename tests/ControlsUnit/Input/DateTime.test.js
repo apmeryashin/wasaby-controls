@@ -160,7 +160,8 @@ define([
                   nativeEvent: {
                      keyCode: constants.key.insert
                   },
-                  stopImmediatePropagation: sinon.fake()
+                  stopImmediatePropagation: sinon.fake(),
+                  preventDefault: sinon.fake()
                };
             sandbox.stub(component, '_notify');
             component._onKeyDown(event);
