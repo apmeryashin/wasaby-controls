@@ -11,8 +11,10 @@ export default class TabButtonsDemo extends Control {
     protected SelectedKey2: string = '1';
     protected SelectedKey3: string = '1';
     protected SelectedKeyLeft: string = '1';
+    protected SelectedKeyCenter: string = '1';
     protected _items: RecordSet | null = null;
     protected _sourceLeft: Memory | null = null;
+    protected _sourceCenter: Memory | null = null;
     protected _source2: Memory | null = null;
     protected _source3: Memory | null = null;
 
@@ -52,6 +54,26 @@ export default class TabButtonsDemo extends Control {
                     id: '3',
                     align: 'left',
                     title: 'Orders'
+                }
+            ]
+        });
+        this._sourceCenter = new Memory({
+            keyProperty: 'id',
+            data: [
+                {
+                    id: '1',
+                    title: '1',
+                    minWidth: '40px'
+                },
+                {
+                    id: '2',
+                    title: 'Files',
+                    minWidth: '30px'
+                },
+                {
+                    id: '3',
+                    title: 'Orders',
+                    minWidth: '70px'
                 }
             ]
         });
