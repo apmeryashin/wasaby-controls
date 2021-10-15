@@ -7,7 +7,7 @@
  * Меню с отображением заголовка группы 'Select'.
  * <pre class="brush: html">
  * <Controls.dropdown:Button
- *    keyProperty="id"
+ *    keyProperty="key"
  *    source="{{_source}}"
  *    groupProperty="group">
  *    <ws:groupTemplate>
