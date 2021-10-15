@@ -57,6 +57,10 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
     protected _beforeUpdate(options: IPopupTemplateOptions): void {
         this._headerTheme = StickyTemplate._getTheme();
         this._updateCloseBtnPosition(options);
+        if (options.stickyPosition && options.stickyPosition.direction &&
+            this._options.stickyPosition.direction !== options.stickyPosition.direction) {
+            this._verticalDirection = options.stickyPosition.direction.vertical;
+        }
     }
 
     protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
