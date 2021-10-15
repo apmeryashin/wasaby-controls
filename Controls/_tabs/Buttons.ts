@@ -401,6 +401,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         }
         if (minWidth !== undefined) {
             style += `min-width: ${this._getWidthValue(minWidth)};`;
+            style += 'text-align: center';
         }
         return style;
     }
