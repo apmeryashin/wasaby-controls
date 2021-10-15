@@ -3682,6 +3682,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._indicatorsController.displayTopIndicator(false);
                 this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
             }
+        } else if (this._indicatorsController.shouldDisplayBottomIndicator() && !_private.isPortionedLoad(this)) {
+            // если после моунта заполнен вьюпорт, то сразу же показываем индикатор, не дожидаясь таймера
+            this._indicatorsController.displayBottomIndicator();
         }
 
         _private.tryLoadToDirectionAgain(this);

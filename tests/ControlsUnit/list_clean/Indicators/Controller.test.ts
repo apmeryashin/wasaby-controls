@@ -87,6 +87,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
             controller.displayTopIndicator(false, false); // верхний индикатор показывается по маусЭнтер
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -111,6 +112,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
             controller.displayTopIndicator(false, false); // верхний индикатор показывается по маусЭнтер
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -264,6 +266,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
             controller.displayTopIndicator(false);
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 

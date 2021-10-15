@@ -62,7 +62,8 @@ export default class IndicatorsController {
 
         // Нижний индикатор сразу же показываем, т.к. не нужно скроллить
         if (displayBottomIndicator) {
-            this.displayBottomIndicator();
+            // показываем индикатор с задержкой, т.к. изначально вьюпорт может быть не заполнен
+            this._startDisplayIndicatorTimer(() => this.displayBottomIndicator());
         }
 
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
