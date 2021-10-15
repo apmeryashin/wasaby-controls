@@ -111,6 +111,14 @@ class StickyHeaderController {
         return false;
     }
 
+    getFirstReplaceableHeader(position: POSITION): object {
+        for (const headerId of this._headersStack[position]) {
+            if (this._headers[headerId].mode === MODE.replaceable) {
+                return this._headers[headerId];
+            }
+        }
+    }
+
     /**
      * Возвращает высоты заголовков.
      * @function
