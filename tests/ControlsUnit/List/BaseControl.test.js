@@ -6652,6 +6652,15 @@ define([
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
             });
 
+            it('clear by search value', () => {
+               const newCfg = { ...cfg, selectedKeys: [null], searchValue: '' };
+               baseControl.saveOptions(newCfg);
+               baseControl._beforeMount(newCfg);
+               const notifySpy = sinon.spy(baseControl, '_notify');
+               baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', searchValue: 'asdasfafs' });
+               assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+            });
+
             it('change selection', () => {
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);
