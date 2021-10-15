@@ -1,3 +1,8 @@
+/**
+ * Библиотека выбора дат
+ * @library
+ */
+
 export {default as Input} from 'Controls/_date/Input';
 export {default as BaseInput} from 'Controls/_date/BaseInput';
 
