@@ -117,3 +117,11 @@ export default Form;
  * @function
  * @returns {Boolean}
  */
+
+/**
+ * Устанавливает результат валидации.
+ * @name Controls/_validate/Controller#setValidationResult
+ * @function
+ * @see isValid
+ * @see validate
+ */
