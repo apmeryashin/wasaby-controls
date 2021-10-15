@@ -3790,7 +3790,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
         }
         this._updateInProgress = true;
-        const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const loadStarted = newOptions.loading && !this._options.loading;
         let updateResult;
@@ -3975,6 +3974,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._options.selectionViewMode === newOptions.selectionViewMode ||
                 newOptions.selectionViewMode !== 'selected';
             const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            const filterChanged = !isEqual(newOptions.filter, this._options.filter) ||
+                !isEqual(newOptions.searchValue, this._options.searchValue);
             if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
