@@ -4,20 +4,23 @@ import { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/Ite
 import { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 import type {
     IDirection,
+    IVisibleItemIndexes,
     IIndexesChangedParams,
     IEnvironmentChangedParams
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 
-export interface IRangeChangeResult extends IIndexesChangedParams, IEnvironmentChangedParams {
+export interface ICalculatorResult extends IIndexesChangedParams, IEnvironmentChangedParams {
     indexesChanged: boolean;
 
     // todo release it!
-    activeElementIndex: number
+    activeElementIndex: number;
     activeElementIndexChanged: boolean;
 
     environmentChanged: boolean;
 }
+
+export interface IShiftRangeToNearbyPageResult extends ICalculatorResult, IVisibleItemIndexes {}
 
 /**
  * Интерфейс опции класса Calculator
@@ -95,14 +98,14 @@ export class Calculator {
 
     // region ShiftRange
 
-    // region ShiftRangeByDirection
+    // region ShiftRangeToDirection
 
     /**
      * Смещает виртуальный диапазон в заданном направлении.
      * Используется при достижении триггера.
      * @param direction Направление, в котором будет смещаться диапазон
      */
-    shiftRangeToDirection(direction: IDirection): IRangeChangeResult {
+    shiftRangeToDirection(direction: IDirection): ICalculatorResult {
         const oldRange = this._range;
         const totalCount: number = 0; // todo totalCount === undefined, его похоже надо хранить в состоянии Calculator
 
@@ -127,7 +130,27 @@ export class Calculator {
             : this._range.end < (totalCount - 1);
     }
 
-    // endregion ShiftRangeByDirection
+    // endregion ShiftRangeToDirection
+
+    // region ShiftRangeToNearbyPage
+
+    shiftRangeToNearbyPage(direction: IDirection): IShiftRangeToNearbyPageResult {
+        const oldRange = this._range;
+        const totalCount: number = 0; // todo totalCount === undefined, его похоже надо хранить в состоянии Calculator
+
+        const calculatorResult = this._getRangeChangeResult(oldRange, totalCount);
+
+        const firstVisibleItemIndex = 0; // todo release it
+        const lastVisibleItemIndex = 10; // todo release it
+
+        return {
+            ...calculatorResult,
+            firstVisibleItemIndex,
+            lastVisibleItemIndex
+        };
+    }
+
+    // endregion ShiftRangeToNearbyPage
 
     // region ShiftRangeByIndex
 
@@ -136,7 +159,7 @@ export class Calculator {
      * @param index Индекс элемента
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeToIndex(index: number, totalCount: number): IRangeChangeResult {
+    shiftRangeToIndex(index: number, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
 
         // если элемент уже внутри диапазона, то ничего не делаем.
@@ -166,7 +189,7 @@ export class Calculator {
      * @param scrollPosition Позиция скролла
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeToScrollPosition(scrollPosition: number, totalCount: number): IRangeChangeResult {
+    shiftRangeToScrollPosition(scrollPosition: number, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
         this._updateVirtualRange();
         return this._getRangeChangeResult(oldRange, totalCount);
@@ -192,7 +215,7 @@ export class Calculator {
      * @param count Кол-во добавленных записей
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    addItems(position: number, count: number, totalCount: number): IRangeChangeResult {
+    addItems(position: number, count: number, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
         this._updateVirtualRange();
         return this._getRangeChangeResult(oldRange, totalCount);
@@ -205,7 +228,7 @@ export class Calculator {
      * @param movedCount Кол-во перемещенных элементов
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): IRangeChangeResult {
+    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
 
         this._updateVirtualRange();
@@ -220,7 +243,7 @@ export class Calculator {
      * @param count Кол-во удаленных элементов.
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    removeItems(position: number, count: number, totalCount: number): IRangeChangeResult {
+    removeItems(position: number, count: number, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
 
         this._updateVirtualRange();
@@ -233,7 +256,7 @@ export class Calculator {
      * Пересчитываем виртуальный диапазон, placeholders, сбрасывает старые размеры элементов.
      * @param count Новое кол-во элементов
      */
-    resetItems(count: number): IRangeChangeResult {
+    resetItems(count: number): ICalculatorResult {
         const oldRange = this._range;
 
         this.setItemsSizes([]);
@@ -241,19 +264,19 @@ export class Calculator {
         this._range = {
             start: 0,
             end: count
-        }
+        };
         // TODO мы в этот момент не знаем размеры элементов, как посчитать placeholders если count > virtualPageSize
         this._placeholders = {
             top: 0,
             bottom: 0
-        }
+        };
 
         return this._getRangeChangeResult(oldRange, count);
     }
 
     // endregion HandleCollectionChanges
 
-    private _getRangeChangeResult(oldRange: IRange, totalCount: number): IRangeChangeResult {
+    private _getRangeChangeResult(oldRange: IRange, totalCount: number): ICalculatorResult {
         return {
             startIndex: this._range.start,
             endIndex: this._range.end,
@@ -267,6 +290,6 @@ export class Calculator {
 
             activeElementIndex: this.getActiveElementIndex(),
             activeElementIndexChanged: true // todo Calc it!
-        }
+        };
     }
 }

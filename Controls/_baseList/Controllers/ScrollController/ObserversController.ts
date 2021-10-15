@@ -16,7 +16,7 @@ export interface ITriggersOffsets {
 export type TObserversCallback = (event: TIntersectionEvent) => void;
 
 export interface IObserversControllerBaseOptions {
-    listControl: Control,
+    listControl: Control;
     listContainer: HTMLElement;
     triggersQuerySelector: string;
     triggersVisibility: ITriggersVisibility;

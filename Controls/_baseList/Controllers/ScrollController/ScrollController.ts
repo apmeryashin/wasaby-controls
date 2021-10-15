@@ -1,11 +1,15 @@
 import { IItemsSizesControllerOptions, ItemsSizesController } from './ItemsSizeController';
 import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversController } from './ObserversController';
-import {Calculator, ICalculatorOptions, IRangeChangeResult} from './Calculator';
-import {CrudEntityKey} from 'Types/source';
+import { Calculator, ICalculatorOptions, ICalculatorResult } from './Calculator';
 
 export interface IIndexesChangedParams {
     startIndex: number;
     endIndex: number;
+}
+
+export interface IVisibleItemIndexes {
+    firstVisibleItemIndex: number;
+    lastVisibleItemIndex: number;
 }
 
 export interface IEnvironmentChangedParams {
@@ -77,7 +81,7 @@ export class ScrollController {
             scrollTop: options.scrollTop,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize
-        })
+        });
     }
 
     // region Collection changes
@@ -89,7 +93,8 @@ export class ScrollController {
      * @param totalCount Общее кол-во элементов в коллекции
      */
     addItems(position: number, count: number, totalCount: number): void {
-        this._calculator.addItems(position, count, totalCount);
+        const result = this._calculator.addItems(position, count, totalCount);
+        this._processCalculatorResult(result);
     }
 
     /**
@@ -100,7 +105,8 @@ export class ScrollController {
      * @param totalCount Общее кол-во элементов в коллекции
      */
     moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): void {
-        this._calculator.moveItems(newPosition, oldPosition, movedCount, totalCount);
+        const result = this._calculator.moveItems(newPosition, oldPosition, movedCount, totalCount);
+        this._processCalculatorResult(result);
     }
 
     /**
@@ -109,8 +115,9 @@ export class ScrollController {
      * @param count Кол-во удаленных элементов.
      * @param totalCount Общее кол-во элементов в коллекции
      */
-    removeItems(position: number, count: number, totalCount: number): IRangeChangeResult {
-        return this._calculator.removeItems(position, count, totalCount);
+    removeItems(position: number, count: number, totalCount: number): void {
+        const result = this._calculator.removeItems(position, count, totalCount);
+        this._processCalculatorResult(result);
     }
 
     /**
@@ -118,31 +125,36 @@ export class ScrollController {
      * @param count Новое кол-во элементов
      */
     resetItems(count: number): void {
-        this._calculator.resetItems(count);
+        const result = this._calculator.resetItems(count);
+        this._processCalculatorResult(result);
     }
 
     // endregion Collection changes
 
     // region Scroll
 
-    scrollTo(): IRangeChangeResult {
-        // TODO скорее всего мы должны здесь позвать shiftRangeToIndex, где index - lastVisibleItemIndex
-        return null;
+    // todo release it
+    scrollTo(direction: IDirection): IVisibleItemIndexes {
+        const result = this._calculator.shiftRangeToNearbyPage(direction);
+        this._processCalculatorResult(result);
+
+        return {
+            firstVisibleItemIndex: result.firstVisibleItemIndex,
+            lastVisibleItemIndex: result.lastVisibleItemIndex
+        };
     }
 
-    scrollToItem(itemKey: CrudEntityKey, totalCount: number): void {
-        // TODO видимо нужна коллекция? Либо тут тоже нужно индекс прокидывать,
-        //  либо в калькуляторе неправильно назван метод
-        const index = 0; // this._collection.getIndexBySourceKey(itemKey)
-        this._calculator.shiftRangeToIndex(index, totalCount);
+    scrollToItem(itemIndex: number, totalCount: number): void {
+        const result = this._calculator.shiftRangeToIndex(itemIndex, totalCount);
+        this._processCalculatorResult(result);
     }
 
     changeScrollPosition(position: number, totalCount: number): void {
-        this._calculator.shiftRangeToScrollPosition(position, totalCount);
+        const result = this._calculator.shiftRangeToScrollPosition(position, totalCount);
+        this._processCalculatorResult(result);
     }
 
     // endregion Scroll
-
 
     // region Private API
 
@@ -150,7 +162,6 @@ export class ScrollController {
      * Callback, вызываемый при достижении триггера.
      * Вызывает сдвиг itemsRange в направлении триггера.
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback или itemsEndedCallback.
-     * Также, по необходимости, обеспечивает вызов activeElementChangedCallback, environmentChangedCallback.
      * @param {TIntersectionEvent} eventName
      * @private
      */
@@ -165,6 +176,21 @@ export class ScrollController {
 
         const result = this._calculator.shiftRangeToDirection(direction);
 
+        this._processCalculatorResult(result);
+
+        // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
+        if (!result.indexesChanged) {
+            this._itemsEndedCallback(direction);
+        }
+    }
+
+    /**
+     * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback.
+     * Также, по необходимости, обеспечивает вызов activeElementChangedCallback, environmentChangedCallback.
+     * @param {ICalculatorResult} result
+     * @private
+     */
+    private _processCalculatorResult(result: ICalculatorResult): void {
         if (result.activeElementIndexChanged) {
             this._activeElementChangedCallback(result.activeElementIndex);
         }
@@ -183,8 +209,6 @@ export class ScrollController {
                 startIndex: result.startIndex,
                 endIndex: result.endIndex
             });
-        } else {
-            this._itemsEndedCallback('forward');
         }
     }
 
