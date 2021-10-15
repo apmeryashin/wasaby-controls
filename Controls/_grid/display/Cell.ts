@@ -76,6 +76,7 @@ export default class Cell<
     protected _$colspan: number;
     protected _$rowspan: number;
     protected _$isFixed: boolean;
+    protected _$isHidden: boolean;
     protected _$isSingleColspanedCell: boolean;
     protected _$isActsAsRowTemplate: boolean;
     protected _$isLadderCell: boolean;
@@ -258,6 +259,9 @@ export default class Cell<
         return this._$owner.getContents();
     }
 
+    isHidden(): boolean {
+        return !!this._$isHidden;
+    }
     // endregion
 
     // region Аспект "Стилевое оформление. Классы и стили"
@@ -270,6 +274,10 @@ export default class Cell<
             templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
+
+        if (this._$isHidden && this._$owner.isFullGridSupport()) {
+            return 'ws-hidden';
+        }
 
         wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
         wrapperClasses += this._getWrapperSeparatorClasses();
@@ -694,6 +702,7 @@ Object.assign(Cell.prototype, {
     _$shadowVisibility: 'lastVisible',
 
     _$isFixed: null,
+    _$isHidden: null,
     _$isSingleColspanedCell: null,
     _$isActsAsRowTemplate: null,
     _$isLadderCell: null,

@@ -16,7 +16,7 @@
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}"
             attr:data-qa="{{ gridColumn.listElementName }}">
-            <div class="{{ gridColumn.getRelativeCellWrapperClasses() }}"
+            <div class="{{ gridColumn.getRelativeCellWrapperClasses() }} {{ gridColumn.isHidden() ? 'ws-hidden' }}"
                  style="{{ gridColumn.getRelativeCellWrapperStyles() }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
                      attr:class="{{ gridColumn.getMarkerClasses() }}"

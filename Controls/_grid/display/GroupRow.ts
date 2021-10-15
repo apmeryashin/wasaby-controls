@@ -174,7 +174,7 @@ export default class GroupRow<TContents extends EntityModel = EntityModel> exten
                 this._$columnsConfig,
                 this.getColumnsFactory(),
                 true,
-                true,
+                'colspan',
                 true
             );
             this._processStickyLadderCells();
