@@ -5,6 +5,7 @@ import { Control, TemplateFunction } from 'UI/Base';
 import { cookie, location } from 'Application/Env';
 import * as Deferred from 'Core/Deferred';
 import { detection, constants } from 'Env/Env';
+import { Controller } from 'Controls/popup';
 import { MaskResolver } from 'Router/router';
 import { addPageDeps } from 'UICommon/Deps';
 import { loadAsync } from 'WasabyLoader/ModulesLoader';
@@ -19,6 +20,7 @@ export default class extends Control {
    protected _beforeMount(options: {resourceRoot: string}): Promise<void> | void {
       this._links = this._prepareLinks(options);
       this._title = this._getTitle();
+      Controller.setRightPanelBottomTemplate('wml!DemoStand/RightPanel');
       this._settigsController = {
          getSettings: (ids) => {
             const storage = window && JSON.parse(window.localStorage.getItem('controlSettingsStorage')) || {};

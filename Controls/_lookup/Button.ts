@@ -14,10 +14,14 @@ import {IValidationStatusOptions, ValidationStatus} from '../_interface/IValidat
 // @ts-ignore
 import rk = require('i18n!Controls');
 import {IHashMap} from 'Types/declarations';
+import {IFontColorStyleOptions, IFontSizeOptions} from 'Controls/interface';
 
-export interface ISelectorButtonOptions extends IControlOptions, IValidationStatusOptions, ILookupOptions {
-   fontColorStyle?: string;
-   fontSize?: string;
+export interface ISelectorButtonOptions extends
+    IControlOptions,
+    IValidationStatusOptions,
+    ILookupOptions,
+    IFontColorStyleOptions,
+    IFontSizeOptions {
    buttonStyle: string;
    maxVisibleItems: number;
    itemTemplate: TemplateFunction;

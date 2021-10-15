@@ -134,6 +134,7 @@ Object.defineProperty(Switch, 'defaultProps', {
  * @variant left Заголовок расположен перед кнопкой.
  * @variant right Заголовок расположен после кнопки.
  * @default right
+ * @demo Controls-demo/toggle/Switch/CaptionPosition/Index
  */
 
 /*

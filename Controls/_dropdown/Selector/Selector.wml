@@ -13,6 +13,7 @@
                         item="{{_item}}"
                         icon="{{_icon}}"
                         iconSize="{{_item && _item.get('iconSize') || _options.iconSize}}"
+                        iconStyle="{{_options.iconStyle}}"
                         fontSize="{{_options.fontSize}}"
                         fontColorStyle="{{_options.fontColorStyle}}"
                         text="{{_text}}"

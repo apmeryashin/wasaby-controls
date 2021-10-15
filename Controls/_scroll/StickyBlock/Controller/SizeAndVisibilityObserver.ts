@@ -120,7 +120,7 @@ export default class SizeAndVisibilityObserver {
                 if (this._isHeaderOfGroup(header.index)) {
                     groupHeader = this._getGroupByHeader(header);
                     const groupInUpdateGroups = this._groupInObject(groupHeader, updateGroups);
-                    if (!groupInUpdateGroups) {
+                    if (!groupInUpdateGroups && groupHeader) {
                         updateGroups[groupHeader.id] = groupHeader;
                     }
                 }
