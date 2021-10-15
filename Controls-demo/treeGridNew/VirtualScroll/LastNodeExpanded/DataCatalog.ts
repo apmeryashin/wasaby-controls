@@ -1,6 +1,17 @@
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
-
-export const getColumns = Flat.getColumns;
+export const getColumns = () => [
+    {
+        displayProperty: 'title',
+        width: ''
+    },
+    {
+        displayProperty: 'rating',
+        width: ''
+    },
+    {
+        displayProperty: 'country',
+        width: ''
+    }
+];
 
 export const generateData = (): Array<{
     key: number,
@@ -8,7 +19,6 @@ export const generateData = (): Array<{
     parent: number | null,
     type: boolean | null
 }> => {
-    const itemsCount = 500;
     const result = [];
     const parents = [
         {
@@ -24,6 +34,7 @@ export const generateData = (): Array<{
             type: true
         }
     ];
+    const itemsCount = (100 - parents.length) / parents.length;
 
     parents.forEach((parent) => {
         result.push(parent);
