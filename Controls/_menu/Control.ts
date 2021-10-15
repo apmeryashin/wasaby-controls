@@ -1097,6 +1097,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 itemPadding: null,
                 draggable: false,
                 source,
+                sourceController: !source ? this._options.sourceController : undefined,
                 items: isLoadedChildItems ? this._options.items : null,
                 ...item.getContents().get('menuOptions'),
                 subMenuLevel: this._options.subMenuLevel ? this._options.subMenuLevel + 1 : 1,

@@ -5,6 +5,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
     const dropdownOptions: IDropdownControllerOptions = {
         backgroundStyle: options.menuBackgroundStyle,
         hoverBackgroundStyle: options.menuHoverBackgroundStyle,
+        sourceController: options.sourceController,
         source: options.source,
         items: options.items,
         filter: options.filter,
