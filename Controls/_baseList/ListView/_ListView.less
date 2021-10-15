@@ -508,8 +508,12 @@
 
 /* endregion ItemActions display */
 
-.controls-ListView__group_min_height {
+.controls-ListView__groupContent_height {
    min-height: var(--grouping_height_list);
+}
+
+.controls-ListView__groupContent_height_withItemActions {
+   min-height: var(--height_itemActions);
 }
 
 .controls-ListView__groupContent {
@@ -518,7 +522,6 @@
    min-width: 0;
    flex-grow: 1;
    line-height: 1;
-   min-height: var(--grouping_height_list);
 }
 
 .controls-ListView__groupSeparator {
