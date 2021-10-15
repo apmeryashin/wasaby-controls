@@ -1,7 +1,7 @@
 <ws:partial template="wml!Controls/_dropdown/Selector/resources/defaultContentTemplate" scope="{{_options}}">
    <ws:contentTemplate>
       <div class="controls-Dropdown__iconTemplate_wrapper">
-         <div if="{{icon}}" class="controls-Dropdown__icon controls-icon_style-{{item.get('iconStyle') || 'secondary'}}
+         <div if="{{icon}}" class="controls-Dropdown__icon controls-icon_style-{{item.get('iconStyle') || iconStyle || 'secondary'}}
                {{text ? ' controls-Dropdown__icon-rightSpacing'}}"
               title="{{tooltip || text}}">
             <Controls.icon:Icon iconSize="{{iconSize}}"
