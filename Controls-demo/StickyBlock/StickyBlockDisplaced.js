@@ -3,6 +3,7 @@ define('Controls-demo/StickyBlock/StickyBlockDisplaced',
       'UI/Base',
       'Controls/scroll',
       'wml!Controls-demo/StickyBlock/StickyBlockDisplaced',
+      'css!Controls-demo/Controls-demo'
 
    ],
    function(Base, scrollLib, template) {
