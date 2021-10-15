@@ -37,12 +37,15 @@ class Input extends Container {
     }
     _inputCompletedHandler(event: Event, ...rest: any): void {
         this._notify('inputCompleted', rest);
-        this._shouldValidateByFocusOut = true;
         // Because of this error:
         // https://online.sbis.ru/opendoc.html?guid=ef52bfb5-56ea-4397-a77f-89e5c3413ed9
         // we need to stop event propagation, otherwise all subscribtions to inputComplete-event of
         // this control will be called twice
         event.stopPropagation();
+    }
+    _valueChangedHandler(...args: unknown[]): void {
+        this._shouldValidateByFocusOut = true;
+        return super._valueChangedHandler(...args);
     }
     _afterUpdate(oldOptions): void {
         if (this._shouldValidate || this._options.value !== oldOptions.value) {
