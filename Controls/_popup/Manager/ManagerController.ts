@@ -4,7 +4,7 @@
 import {Control} from 'UI/Base';
 import Container from 'Controls/_popup/Manager/Container';
 import {IPopupItem, IPopupOptions, IPopupController} from 'Controls/_popup/interface/IPopup';
-import {getModuleByName, loadModule} from 'Controls/_popup/utils/moduleHelper';
+import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import {Logger} from 'UI/Utils';
 
 interface IContentData {
@@ -109,10 +109,15 @@ export default {
         return this._callManager('updateOptionsAfterInitializing', arguments);
     },
 
-    resetRootContainersCache(): Promise<void> {
-        return loadModule('Controls/popupTemplate:BaseController').then((BaseController) => {
+    /**
+     * Сбрасываем кэш координат родительских контейнеров для попапов
+     * Если библиотека еще не загружена, то попапы еще не строились и сбрасывать нечего
+     */
+    resetRootContainersCache(): void {
+        const BaseController = getModuleByName('Controls/popupTemplate:BaseController');
+        if (BaseController) {
             BaseController.resetRootContainerCoords();
-        });
+        }
     },
 
     /**
