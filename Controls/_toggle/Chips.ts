@@ -32,7 +32,7 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * @cfg {string} Расположение элементов в контейнере.
  * @variant horizontal Элементы расположены один за другим (горизонтально).
  * @variant vertical Элементы расположены один под другим (вертикально).
- * @default vertical
+ * @default horizontal
  * @demo Controls-demo/toggle/Chips/Direction/Index
  * @example
  * Вертикальная ориентация.
@@ -154,7 +154,8 @@ class Chips extends Control<IChipsOptions> {
     static defaultProps: Partial<IChipsOptions> = {
         keyProperty: 'id',
         itemTemplate,
-        inlineHeight: 'm'
+        inlineHeight: 'm',
+        direction: 'horizontal'
     };
 }
 
