@@ -138,6 +138,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         return this._index;
     }
 
+    get container(): HTMLElement {
+        return this._container;
+    }
+
     getChildrenHeaders(): TRegisterEventData[] {
         return Object.keys(this._headers).map(id => this._headers[id]);
     }

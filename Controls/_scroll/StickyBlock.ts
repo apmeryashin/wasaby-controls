@@ -185,6 +185,10 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         return this._index;
     }
 
+    get container(): HTMLElement {
+        return this._container;
+    }
+
     constructor(cfg: IStickyHeaderOptions, context?: object) {
         super(cfg, context);
         this._observeHandler = this._observeHandler.bind(this);

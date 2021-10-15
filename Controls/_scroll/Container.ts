@@ -682,6 +682,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                      considerOffsetTop: boolean = true): number {
         return this._stickyHeaderController.getHeadersHeight(position, type, considerOffsetTop);
     }
+
+    getFirstReplaceableHeader(position: POSITION): object {
+        return this._stickyHeaderController.getFirstReplaceableHeader(position);
+    }
+
     // FIXME: костыль для input:Area, чтобы она напрямую в детей не лазала
     getScrollTop(): number {
         return this._children.content.scrollTop;
