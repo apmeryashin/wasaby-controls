@@ -10,6 +10,13 @@ import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
 
+// optionName: defaultValue
+const MULTIPLE_OPTIONS = {
+    selectedKeys: [],
+    value: '',
+    items: void 0
+};
+
 interface IMultipleLookupInputOptions extends ILookupInputOptions {
     name: string;
 }
@@ -52,19 +59,21 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
     protected _children: Record<string, BaseLookupInput>;
 
     protected _beforeMount(options: IMultipleInputNewOptions): void {
-        options.lookupsOptions.forEach(({name, value, selectedKeys, items}) => {
-            this._cloneAndSetStateByOptionValue(selectedKeys || options.selectedKeys || [], 'selectedKeys', name);
-            this._cloneAndSetStateByOptionValue(value ||  options.value, 'value', name);
-            this._cloneAndSetStateByOptionValue(items ||  options.items, 'items', name);
+        options.lookupsOptions.forEach((lookupOptions) => {
+            Object.entries(MULTIPLE_OPTIONS).forEach(([optionName]) => {
+                this._setOptionValue(options, lookupOptions, optionName);
+            });
         });
     }
 
     _beforeUpdate(newOptions: IMultipleInputNewOptions): void {
-        if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
-            newOptions.lookupsOptions.forEach(({name, selectedKeys}) => {
-                this._cloneAndSetStateByOptionValue(selectedKeys || newOptions.selectedKeys, 'selectedKeys', name);
-            });
-        }
+        Object.entries(MULTIPLE_OPTIONS).forEach(([optionName]) => {
+            if (!isEqual(newOptions[optionName], this._options[optionName])) {
+                newOptions.lookupsOptions.forEach((lookupOptions) => {
+                    this._setOptionValue(newOptions, lookupOptions, optionName);
+                });
+            }
+        });
     }
 
     protected _afterRender(): void {
@@ -103,6 +112,21 @@ export default class MultipleInputNew extends Control<IMultipleInputNewOptions> 
 
     protected _getLookupOptions(options: IMultipleInputNewOptions, lookupName: string): IMultipleLookupInputOptions {
         return options.lookupsOptions.find(({name}) => name === lookupName);
+    }
+
+    private _getOptionValueByLookupName(option: unknown, lookupName: string): unknown {
+        return option ? option[lookupName] || option : option;
+    }
+
+    private _setOptionValue(
+        options: IMultipleInputNewOptions,
+        lookupOptions: IMultipleLookupInputOptions,
+        optionName: string): void {
+        const lookupName = lookupOptions.name;
+        const optionValue = lookupOptions[optionName] ||
+            this._getOptionValueByLookupName(options[optionName], lookupName) ||
+            MULTIPLE_OPTIONS[optionName];
+        this._cloneAndSetStateByOptionValue(optionValue, optionName, lookupName);
     }
 
     protected _cloneAndSetStateByOptionValue(value: unknown, optionName: string, lookupName: string): void {
