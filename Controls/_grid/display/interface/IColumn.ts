@@ -475,6 +475,9 @@ export interface IColumn extends IColspanParams {
      * @see displayType
      */
     displayTypeOptions?: IDisplayTypeOptions;
+    /**
+     * @cfg {TFontColorStyle} Стиль цвета текста ячейки.
+     */
     fontColorStyle?: TFontColorStyle;
     /**
      * @cfg {Controls/display:IMarkable/BackgroundColorStyle.typedef} Цвет фона колонки.

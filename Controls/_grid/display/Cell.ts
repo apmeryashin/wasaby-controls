@@ -16,6 +16,7 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
+import {TFontColorStyle} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
@@ -387,7 +388,8 @@ export default class Cell<
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
         tmplIsEditable?: boolean,
-        templateHoverBackgroundStyle?: string
+        templateHoverBackgroundStyle?: string,
+        templateFontColorStyle?: TFontColorStyle
     ): string {
         const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || templateHoverBackgroundStyle ||
             this._$owner.getHoverBackgroundStyle();
@@ -430,6 +432,10 @@ export default class Cell<
 
         if (this.getOwner().isDragged()) {
             contentClasses += ' controls-ListView__itemContent_dragging';
+        }
+
+        if (this.config.fontColorStyle || templateFontColorStyle) {
+            contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
         }
 
         return contentClasses;
