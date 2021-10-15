@@ -3,6 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import * as template from 'wml!Controls/_propertyGrid/defaultEditors/Date';
+import {Base as dateUtils} from 'Controls/dateUtils';
 
 export interface IDateEditorOptions extends IEditorOptions {
     propertyValue: Date;
@@ -27,8 +28,10 @@ export default class DateEditor extends Control<IDateEditorOptions> implements I
         }
     }
 
-    protected _handleInputCompleted(event: SyntheticEvent, value: unknown): void {
-        this._notify('propertyValueChanged', [value], {bubbling: true});
+    protected _handleInputCompleted(event: SyntheticEvent, value: Date|null): void {
+        if (value === null || dateUtils.isValidDate(value)) {
+            this._notify('propertyValueChanged', [value], {bubbling: true});
+        }
     }
 
     private _updateValue(newValue: unknown): void {
