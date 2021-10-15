@@ -61,6 +61,7 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
 
         classes += this._getContentAlignClasses();
         classes += ' controls-ListView__groupContent';
+        classes += ' controls-ListView__groupContent_height';
         return classes;
     }
 

@@ -4,7 +4,7 @@
             <div class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
         </ws:if>
         <ws:if data="{{ groupNodeConfig.textVisible !== false }}">
-            <div class="{{ (gridColumn || itemData).getContentTextClasses(groupNodeConfig.separatorVisibility, groupNodeConfig.textAlign, fontSize) }}
+            <div class="{{ (gridColumn || itemData).getContentTextClasses(groupNodeConfig.separatorVisibility, groupNodeConfig.textAlign, groupNodeConfig.fontSize) }}
                     {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign) }}"
                  attr:data-qa="{{ item.listElementName }}-expander">
                 <ws:if data="{{ groupNodeConfig.contentTemplate }}">
@@ -18,7 +18,7 @@
                 </ws:else>
             </div>
         </ws:if>
-        <ws:if data="{{ (gridColumn || itemData).shouldDisplayRightSeparator(groupNodeConfig.separatorVisibility, groupNodeConfig.textVisible, groupNodeConfig.undefined, groupNodeConfig.textAlign) }}">
+        <ws:if data="{{ (gridColumn || itemData).shouldDisplayRightSeparator(groupNodeConfig.separatorVisibility, groupNodeConfig.textVisible, undefined, groupNodeConfig.textAlign) }}">
             <div class="controls-ListView__groupSeparator
                     {{ groupNodeConfig.textVisible !== false ? 'controls-ListView__groupSeparator-right' }}">&nbsp;</div>
         </ws:if>
