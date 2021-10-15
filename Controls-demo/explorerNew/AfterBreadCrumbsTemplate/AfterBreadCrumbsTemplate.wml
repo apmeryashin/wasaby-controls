@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo_fixedWidth500 ">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth800 ">
         <Controls.explorer:View
             source="{{_viewSource}}"
             bind:root="_root"
