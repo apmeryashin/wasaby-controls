@@ -228,6 +228,10 @@
    min-height: var(--node-footer_height_treeGrid);
 }
 
+.controls-TreeGrid__nodeFooter__wrapper {
+   display: flex;
+}
+
 .controls-TreeGrid__nodeFooterContent {
    display: inline-flex;
    align-items: baseline;
@@ -400,6 +404,9 @@
    align-items: baseline;
 }
 
+.controls-Grid_table-layout .controls-TreeGrid__nodeFooter__wrapper {
+   display: table-cell;
+}
 // Master list sets ::before on selected item, witch overflows expander. It has z-index: 2 and pointer-events: none, but
 // Old IE doesn't support pointer-events.
 .ws-is-ie10 .controls-TreeGrid__row-expander {
