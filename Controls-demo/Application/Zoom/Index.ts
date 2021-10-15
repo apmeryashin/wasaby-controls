@@ -5,6 +5,7 @@ import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/Application/Zoom/Index';
 import {HierarchicalMemory, Memory} from 'Types/source';
 import {DialogOpener, StackOpener, StickyOpener} from 'Controls/popup';
+import {Controller} from 'Controls/popup';
 const ZOOM_SIZES = [0.75, 0.85, 1, 1.15, 1.3].map((key) => {
     return {key};
 });
@@ -80,5 +81,9 @@ export default class Stack extends Control<IControlOptions> {
             template: 'Controls-demo/Popup/Opener/resources/DialogTpl',
             minWidth: 500
         });
+    }
+
+    protected _selectedKeysChangedHandler(): void {
+        this._notify('workspaceResize', [], {bubbling: true});
     }
 }
