@@ -4,7 +4,7 @@
 import {Control} from 'UI/Base';
 import Container from 'Controls/_popup/Manager/Container';
 import {IPopupItem, IPopupOptions, IPopupController} from 'Controls/_popup/interface/IPopup';
-import {getModuleByName, loadModule} from 'Controls/_popup/utils/moduleHelper';
+import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {Logger} from 'UI/Utils';
 
