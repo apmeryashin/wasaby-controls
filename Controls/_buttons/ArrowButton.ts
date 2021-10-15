@@ -9,6 +9,7 @@ export interface IArrowButtonOptions extends IControlOptions, IContrastBackgroun
     direction?: TArrowButtonDirection;
     inlineHeight: string;
     iconSize: string;
+    translucent: boolean;
 }
 
 /**
@@ -34,7 +35,8 @@ class ArrowButton extends Control<IArrowButtonOptions>  {
         return {
             inlineHeight: 'default',
             iconSize: 's',
-            direction: 'right'
+            direction: 'right',
+            translucent: false
         };
     }
 }
@@ -64,6 +66,16 @@ Object.defineProperty(ArrowButton, 'defaultProps', {
  * <Controls.buttons:ArrowButton direction="left"/>
  * </pre>
  * @demo Controls-demo/Buttons/ArrowButton/Direction/Index
+ */
+
+/**
+ * @name Controls/_buttons/ArrowButton#translucent
+ * @cfg {Boolean} Режим полупрозрачного отображения кнопки.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.buttons:ArrowButton translucent="{{true}}"/>
+ * </pre>
+ * @demo Controls-demo/Buttons/ArrowButton/Translucent/Index
  */
 
 /**
