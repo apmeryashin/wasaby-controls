@@ -35,7 +35,7 @@ interface IHierarchySearch {
          * </pre>
          * <pre class="brush: html">
          * <!-- WML -->
-         * <Layout.browsers:Browser parentProperty="Раздел" startingWith="root" searchParam="city" source="_source">
+         * <Layout.browsers:Browser parentProperty="Раздел" startingWith="root" searchParam="city" source={{ _source }}>
          *     <ws:search>
          *         <Controls.search:Input/>
          *     </ws:search>
