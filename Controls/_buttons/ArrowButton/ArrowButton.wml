@@ -5,7 +5,7 @@
      on:click="_clickHandler()">
     <ws:if data="{{_options.direction === 'up' || _options.direction === 'down'}}">
         <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg"
-             class="controls-ArrowButton_icon{{_options.translucent ? '__style-translucent' : ''}}
+             class="controls-ArrowButton_icon__style-{{_options.translucent ? 'translucent' : 'default'}}
                     controls-icon_size-{{ _options.iconSize }}
                     controls-ArrowButton_icon_direction-{{_options.direction}}">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M8 3.5L15 9H13L8 5.3L3 9H1L8 3.5Z"/>
