@@ -6070,6 +6070,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             } else {
                 this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
             }
+
+            if (this._indicatorsController.shouldDisplayBottomIndicator()) {
+                this._indicatorsController.displayBottomIndicator();
+            }
         }
 
         if (!this._pagingVisible) {
