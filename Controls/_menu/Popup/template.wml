@@ -89,6 +89,7 @@
                        markerVisibility="{{_options.markerVisibility}}"
                        emptyTemplate="{{_options.emptyTemplate}}"
                        source="{{_options.source}}"
+                       sourceController="{{_options.sourceController}}"
                        navigation="{{_options.navigation}}"
                        filter="{{filter || _options.filter}}"
                        parentProperty="{{_options.parentProperty}}"
