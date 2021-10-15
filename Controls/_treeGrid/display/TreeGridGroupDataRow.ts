@@ -95,7 +95,7 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
     protected _initializeColumns(options?: IInitializeColumnsOptions): void {
         super._initializeColumns({
             shouldAddMultiSelectCell: true,
-            shouldAddStickyLadderCells: false,
+            prepareStickyLadderCellsStrategy: 'colspan',
             extensionCellsConstructors: {
                 multiSelectCell: this.getColumnsFactory({column: {}})
             }
