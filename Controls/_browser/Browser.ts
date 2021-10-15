@@ -320,19 +320,23 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions): void | Promise<RecordSet> {
+        const currentOptions = this._options;
         return this._loadDependencies(newOptions, () => {
-            return this._beforeUpdateInternal(newOptions);
+            return this._beforeUpdateInternal(newOptions, currentOptions);
         });
     }
 
-    protected _beforeUpdateInternal(newOptions: IBrowserOptions): void | Promise<RecordSet> {
+    protected _beforeUpdateInternal(
+        newOptions: IBrowserOptions,
+        currentOptions: IBrowserOptions
+    ): void | Promise<RecordSet> {
         if (newOptions.listsOptions) {
             const listsIdsAreEqual = newOptions.listsOptions.every(({id}) => {
                 return this._listsOptions.find((listOption) => {
                     return listOption.id === id;
                 });
             });
-            if (!isEqual(newOptions.listsOptions, this._options.listsOptions)) {
+            if (!isEqual(newOptions.listsOptions, currentOptions.listsOptions)) {
                 this._listsOptions = Browser._getListsOptions(newOptions);
             }
             if (!listsIdsAreEqual) {
@@ -340,14 +344,14 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             }
             this._listsOptions.forEach((options, index) => {
                 this._update(
-                    {...this._options, ...this._options.listsOptions[index]},
+                    {...currentOptions, ...currentOptions.listsOptions[index]},
                     {...newOptions, ...options},
                     options.id
                 );
             });
         } else {
             this._listsOptions = Browser._getListsOptions(newOptions);
-            return this._update(this._options, newOptions);
+            return this._update(currentOptions, newOptions);
         }
     }
 
@@ -470,8 +474,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
     }
 
-    private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {
-        return this._callSearchController((searchController) => {
+    private _updateSearchController(newOptions: IBrowserOptions): Promise<unknown> {
+        return this._getSearchController().then((searchController): unknown => {
             if (this._destroyed) {
                 return Promise.resolve();
             }
@@ -491,7 +495,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             } else {
                 return Promise.resolve(updateSearchControllerResult);
             }
-        }) as Promise<void>;
+        });
     }
 
     private _afterSourceLoad(sourceController: SourceController, options: IBrowserOptions): void {
