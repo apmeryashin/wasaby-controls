@@ -90,7 +90,7 @@ export class StackStrategy {
                 }
             }
             if (panelWidth > maxPanelWidthWithOffset) {
-                tCoords.right = minRightSpace;
+                tCoords.right = rightCoord;
             }
             return panelWidth;
         }
