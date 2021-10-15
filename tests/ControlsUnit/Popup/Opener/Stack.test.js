@@ -12,8 +12,10 @@ define(
       'use strict';
       var StackStrategyClass = StackStrategyMod.StackStrategy;
       var StackStrategy = popupTemplate.StackStrategy;
+      var Controller = popupMod.Controller;
       BaseController = new BaseController.default();
       StackContent = StackContent.default;
+      Controller.setRightPanelBottomTemplate('rightTemplate');
       StackStrategy._goUpByControlTree = () => [];
 
       describe('Controls/_popupTemplate/Stack/Opener/StackContent', () => {
