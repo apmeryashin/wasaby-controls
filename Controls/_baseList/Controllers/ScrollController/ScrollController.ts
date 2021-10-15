@@ -2,7 +2,7 @@ import { IItemsSizesControllerOptions, ItemsSizesController } from './ItemsSizeC
 import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversController } from './ObserversController';
 import { Calculator, ICalculatorOptions, ICalculatorResult } from './Calculator';
 
-export interface IIndexesChangedParams {
+export interface IItemsRange {
     startIndex: number;
     endIndex: number;
 }
@@ -22,7 +22,7 @@ export interface IEnvironmentChangedParams {
 
 export type IDirection = 'backward' | 'forward';
 
-export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
+export type IIndexesChangedCallback = (itemsRange: IItemsRange) => void;
 
 export type IEnvironmentChangedCallback = (params: IEnvironmentChangedParams) => void;
 
@@ -83,6 +83,15 @@ export class ScrollController {
             viewportSize: options.viewportSize
         });
     }
+
+    // region Update items sizes
+
+    updateItemsSizes(itemsRange: IItemsRange): void {
+        const newItemsSizes = this._itemsSizesController.updateItemsSizes(itemsRange);
+        this._calculator.updateItemsSizes(newItemsSizes);
+    }
+
+    // endregion
 
     // region Collection changes
 

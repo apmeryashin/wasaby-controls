@@ -5,12 +5,12 @@ import { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollControlle
 import type {
     IDirection,
     IVisibleItemIndexes,
-    IIndexesChangedParams,
+    IItemsRange,
     IEnvironmentChangedParams
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 
-export interface ICalculatorResult extends IIndexesChangedParams, IEnvironmentChangedParams {
+export interface ICalculatorResult extends IItemsRange, IEnvironmentChangedParams {
     indexesChanged: boolean;
 
     // todo release it!
@@ -65,8 +65,8 @@ export class Calculator {
     private _virtualScrollConfig: IVirtualScrollConfig;
     private _scrollTop: number;
     private _viewportSize: number;
-    private _range: IRange;
-    private _placeholders: IPlaceholders;
+    private _range: IRange = { start: 0, end: 0 };
+    private _placeholders: IPlaceholders = { top: 0, bottom: 0 };
 
     constructor(options: ICalculatorOptions) {
         this._itemsSizes = options.itemsSizes;
@@ -82,7 +82,7 @@ export class Calculator {
      * Устанавливает новые размеры элементов
      * @param itemsSizes
      */
-    setItemsSizes(itemsSizes: IItemsSizes): void {
+    updateItemsSizes(itemsSizes: IItemsSizes): void {
         this._itemsSizes = itemsSizes;
     }
 
@@ -258,8 +258,6 @@ export class Calculator {
      */
     resetItems(count: number): ICalculatorResult {
         const oldRange = this._range;
-
-        this.setItemsSizes([]);
         // TODO не факт что все элементы поместятся в virtualPageSize
         this._range = {
             start: 0,

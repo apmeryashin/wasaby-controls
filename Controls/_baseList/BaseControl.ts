@@ -84,7 +84,7 @@ import {default as ScrollController, IScrollParams} from './ScrollController';
 import {
     ScrollController as NewScrollController,
     IDirection as IScrollControllerDirection,
-    IIndexesChangedParams, IEnvironmentChangedParams
+    IItemsRange, IEnvironmentChangedParams
 } from './Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
@@ -129,7 +129,6 @@ import ObserversController, {
 } from 'Controls/_baseList/Controllers/ObserversController';
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
 import {convertReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
-import {IRangeChangeResult} from "Controls/_baseList/Controllers/ScrollController/Calculator";
 
 //#endregion
 
@@ -3125,6 +3124,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _newScrollController: NewScrollController;
+    private _itemsRangeScheduledSizeUpdate: IItemsRange;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3576,8 +3576,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _createNewScrollController(): void {
         this._newScrollController = new NewScrollController({
-            collection: this._listViewModel,
-
             itemsContainer: this._getItemsContainer(),
             itemsQuerySelector: this._options.itemsSelector,
 
@@ -3589,19 +3587,34 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             scrollTop: 0,
             viewportSize: 0,
             virtualScrollConfig: this._options.virtualScrollConfig,
-            indexesChangedCallback(params: IIndexesChangedParams): void {
-                console.log('indexChangedCallback', params);
-            },
+            indexesChangedCallback: this._indexesChangedCallback.bind(this),
             environmentChangedCallback(params: IEnvironmentChangedParams): void {
-                console.log('environmentChangedCallback', params);
+                console.error('environmentChangedCallback', params);
             },
             activeElementChangedCallback(activeElementIndex: number): void {
-                console.log('activeElementChangedCallback', activeElementIndex);
+                console.error('activeElementChangedCallback', activeElementIndex);
             },
             itemsEndedCallback(direction: IScrollControllerDirection): void {
-                console.log('itemsEndedCallback', direction);
+                console.error('itemsEndedCallback', direction);
             }
         });
+        this._newScrollController.resetItems(this._listViewModel.getCount());
+    }
+
+    private _indexesChangedCallback(itemsRange: IItemsRange): void {
+        this._scheduleUpdateItemsSizes(itemsRange);
+        console.error('indexChangedCallback', itemsRange);
+    }
+
+    private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
+        this._itemsRangeScheduledSizeUpdate = itemsRange;
+    }
+
+    private _updateItemsSizes(): void {
+        if (this._itemsRangeScheduledSizeUpdate) {
+            this._newScrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
+            this._itemsRangeScheduledSizeUpdate = null;
+        }
     }
 
     protected _afterMount(): void {
@@ -3715,6 +3728,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         _private.tryLoadToDirectionAgain(this);
 
         this._createNewScrollController();
+        this._updateItemsSizes();
     }
 
     _updateScrollController(newOptions?: IBaseControlOptions) {
@@ -4351,6 +4365,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _afterRender(): void {
+        this._updateItemsSizes();
+
         let positionRestored = false;
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
