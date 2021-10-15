@@ -16,42 +16,42 @@ import {TemplateFunction} from 'UI/Base';
 export default interface IItemTemplateOptions {
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     buttonStyle?: string;
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     buttonReadOnly?: boolean;
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     buttonTransparent?: boolean;
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     buttonViewMode?: string;
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     displayProperty?: string;
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     iconStyleProperty?: string;
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     iconProperty?: string;
 
     /**
-     * @deprecated
+     * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена.
      */
     contentTemplate?: string;
     /**
