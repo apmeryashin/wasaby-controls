@@ -117,7 +117,7 @@ define(
                };
                return new Promise((resolve) => {
                   menuControl._loadItems(menuOptions).addCallback(() => {
-                     assert.isTrue(isDataLoadCallbackCalled);
+                     assert.isFalse(isDataLoadCallbackCalled);
                      resolve();
                   });
                });
