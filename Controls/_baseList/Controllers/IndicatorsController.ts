@@ -59,14 +59,6 @@ export default class IndicatorsController {
         this._options = options;
         this._model = options.model;
 
-        const hasItems = this._model && !!this._model.getCount();
-        const displayBottomIndicator = this.shouldDisplayBottomIndicator() && hasItems;
-
-        // Нижний индикатор сразу же показываем, т.к. не нужно скроллить
-        if (displayBottomIndicator) {
-            this.displayBottomIndicator();
-        }
-
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
             this.startDisplayPortionedSearch(direction);
@@ -228,8 +220,15 @@ export default class IndicatorsController {
     displayBottomIndicator(): void {
         // если индикатор уже показан, то возможно у нас поменялось состояние индикатора.
         // Поэтому метод на модели нужно всегда вызывать
-        const indicatorState = this._getLoadingIndicatorState('bottom');
-        this._model.displayIndicator('bottom', indicatorState);
+        if (this._viewportFilled) {
+            const indicatorState = this._getLoadingIndicatorState('bottom');
+            this._model.displayIndicator('bottom', indicatorState);
+        } else {
+            this._startDisplayIndicatorTimer(() => {
+                const indicatorState = this._getLoadingIndicatorState('bottom');
+                this._model.displayIndicator('bottom', indicatorState);
+            });
+        }
     }
 
     shouldDisplayGlobalIndicator(): boolean {
