@@ -68,8 +68,8 @@ function getStickyElementOffset(stickyElement: HTMLElement,
    const windowDimensions = DimensionsMeasurer.getWindowDimensions(stickyElement);
 
    const firstReplaceableBlock = getFirstReplaceableHeader(scrollableElement);
-   if (firstReplaceableBlock.inst.container === stickyElement.parentElement ||
-       firstReplaceableBlock.inst.container === stickyElement) {
+   if (firstReplaceableBlock?.inst.container === stickyElement.parentElement ||
+       firstReplaceableBlock?.inst.container === stickyElement) {
       // Смещение уменьшаем на 1, чтобы первый replaceable заголовок был отфиксирован и не имел тени.
       top -= 1;
    }
