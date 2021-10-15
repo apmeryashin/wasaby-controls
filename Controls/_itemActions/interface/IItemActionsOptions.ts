@@ -244,7 +244,7 @@ export interface IItemActionsOptions {
      * @name Controls/_itemActions/interface/IItemActions#itemActionVisibilityCallback
      * @cfg {Function} Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
      * @remark
-     * Функция принимает два аргумента:
+     * Функция принимает аргументы:
      *
      * * action — объект с конфигурацией опции записи.
      * * item — модель (см. {@link Types/entity:Model}), содержащая данные записи.
