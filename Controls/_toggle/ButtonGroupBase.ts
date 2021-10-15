@@ -26,7 +26,7 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * @cfg {string} Расположение элементов в контейнере.
  * @variant horizontal Элементы расположены один за другим (горизонтально).
  * @variant vertical Элементы расположены один под другим (вертикально).
- * @default vertical
+ * @default horizontal
  * @example
  * Вертикальная ориентация.
  * <pre>
@@ -72,7 +72,8 @@ class ButtonGroupBase<TOptions extends IButtonGroupOptions = IButtonGroupOptions
         keyProperty: 'id',
         allowEmptySelection: false,
         itemTemplate,
-        inlineHeight: 'm'
+        inlineHeight: 'm',
+        direction: 'horizontal'
     };
 }
 
