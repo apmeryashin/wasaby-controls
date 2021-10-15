@@ -110,17 +110,6 @@ export default {
     },
 
     /**
-     * Сбрасываем кэш координат родительских контейнеров для попапов
-     * Если библиотека еще не загружена, то попапы еще не строились и сбрасывать нечего
-     */
-    resetRootContainersCache(): void {
-        const BaseController = getModuleByName('Controls/popupTemplate:BaseController');
-        if (BaseController) {
-            BaseController.resetRootContainerCoords();
-        }
-    },
-
-    /**
      * Показать popup
      */
 

@@ -84,6 +84,6 @@ export default class Stack extends Control<IControlOptions> {
     }
 
     protected _selectedKeysChangedHandler(): void {
-        Controller.resetRootContainersCache();
+        this._notify('workspaceResize', [], {bubbling: true});
     }
 }
