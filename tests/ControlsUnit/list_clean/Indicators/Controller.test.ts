@@ -86,7 +86,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 hasHiddenItemsByVirtualScroll: () => false
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
+            controller.setViewportFilled(true);
             controller.displayTopIndicator(false, false); // верхний индикатор показывается по маусЭнтер
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -110,7 +112,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 hasHiddenItemsByVirtualScroll: () => false
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
+            controller.setViewportFilled(true);
             controller.displayTopIndicator(false, false); // верхний индикатор показывается по маусЭнтер
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -263,7 +267,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 scrollToFirstItem: (afterScroll) => afterScroll()
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
+            controller.setViewportFilled(true);
             controller.displayTopIndicator(false);
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
