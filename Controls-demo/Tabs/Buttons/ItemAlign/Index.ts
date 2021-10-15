@@ -62,7 +62,7 @@ export default class TabButtonsDemo extends Control {
             data: [
                 {
                     id: '1',
-                    title: '1',
+                    title: '😎',
                     minWidth: '40px'
                 },
                 {
