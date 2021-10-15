@@ -2,6 +2,7 @@ import { Control, IControlOptions, TemplateFunction } from 'UI/Base';
 import { isInit } from 'Application/Initializer';
 import { location } from 'Application/Env';
 import { cookie, constants } from 'Env/Env';
+import { Controller } from 'Controls/popup';
 import { LinkResolver } from 'UI/theme/controller';
 import template = require('wml!DemoStand/Index');
 
@@ -24,6 +25,7 @@ export default class Index extends Control<IControlOptions> {
     protected _beforeMount(): void {
         this._links = this._prepareLinks();
         this._title = this._getTitle();
+        Controller.setRightPanelBottomTemplate('wml!DemoStand/RightPanel');
         this._settigsController = {
             getSettings(ids: string[]): Promise<object> {
                 const storage = window && JSON.parse(window.localStorage.getItem('controlSettingsStorage')) || {};
