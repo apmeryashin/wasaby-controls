@@ -109,9 +109,10 @@ export default class StackPageWrapper extends Control<IPageTemplate, IReceivedSt
     }
 
     protected _maximizeHandler(): void {
-        const maximized = this._getMaximizeState();
+        const isPopupMaximized = this._getMaximizeState();
         const item = this._generateControllerItem();
-        StackController.elementMaximized(item, false, !maximized);
+        const maximized = isPopupMaximized !== undefined ? !isPopupMaximized : undefined;
+        StackController.elementMaximized(item, false, maximized);
         this._setWorkSpaceWidth(item.popupOptions.width);
         this._updateOffset();
     }
