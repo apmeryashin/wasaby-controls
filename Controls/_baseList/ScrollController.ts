@@ -606,7 +606,7 @@ export default class ScrollController {
         }
     }
 
-    saveEdgeItem(direction: IDirection, itemsContainer: HTMLElement): void {
+    saveEdgeItem(direction: IDirection, itemsContainer: HTMLElement, itemsContainerSelector: string): void {
         const viewportHeight = this._viewportHeight;
 
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
@@ -616,7 +616,7 @@ export default class ScrollController {
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
 
-        const items = Array.from(itemsContainer.querySelectorAll(`:scope > ${ this._options.itemsSelector }`));
+        const items = Array.from(itemsContainer.querySelectorAll(`${itemsContainerSelector} > ${ this._options.itemsSelector }`));
         let edgeItemParams: IEdgeItemParams;
 
         items.some((item: HTMLElement) => {
@@ -672,12 +672,12 @@ export default class ScrollController {
         }
     }
 
-    getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement): number {
+    getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement, itemsContainerSelector: string): number {
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
         // const compensation = getOffsetTop(itemsContainer);
 
         if (this._edgeItemParams) {
-            const item = itemsContainer.querySelector(`[item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
+            const item = itemsContainer.querySelector(`${itemsContainerSelector} > [item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
             if (item) {
                 const itemOffsetTop = getOffsetTop(item);
                 if (direction === 'up') {

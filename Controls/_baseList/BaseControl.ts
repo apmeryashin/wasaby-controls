@@ -4310,7 +4310,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             directionToRestoreScroll = 'up';
         }
         if (directionToRestoreScroll) {
-            this._scrollController.saveEdgeItem(directionToRestoreScroll, this._getItemsContainer());
+            this._scrollController.saveEdgeItem(directionToRestoreScroll,
+                this._getItemsContainer(),
+                this._getItemsContainerUniqueClass());
         }
     }
 
@@ -4389,7 +4391,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             if (directionToRestoreScroll) {
                 const newScrollTop = this._scrollController.getScrollTopToEdgeItem(directionToRestoreScroll,
-                    this._getItemsContainer());
+                    this._getItemsContainer(), this._getItemsContainerUniqueClass());
                 this._scrollController.beforeRestoreScrollPosition();
                 this._hasItemWithImageChanged = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
@@ -5940,6 +5942,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             classes.push(_private.getViewUniqueClass(this));
         }
         return classes.join(' ');
+    }
+
+    protected _getItemsContainerUniqueClass(): string {
+        return `controls-BaseControl__itemsContainer_${this._uniqueId}`;
     }
 
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
