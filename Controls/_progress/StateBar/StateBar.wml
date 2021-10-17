@@ -1,0 +1,14 @@
+<div class="
+  controls-StateBar
+  controls-StateBar_align-{{ _options.align ? _options.align : 'left' }}
+  {{ _options.blankAreaStyle ? 'controls-StateBar_style-' + _options.blankAreaStyle : '' }}
+  controls_progress_theme-{{ _options.theme }}"
+>
+    <ws:for data="i in _sectors.length">
+        <div
+            class="controls-StateBar__sector controls-StateBar__sector_style-{{ _sectors[i].style }}"
+            style="width: {{ _sectors[i].value }}%;"
+            title="{{ _sectors[i].title }}"
+        ></div>
+    </ws:for>
+</div>
