@@ -26,6 +26,8 @@
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
                hoverBackgroundStyle="{{ hoverBackgroundStyle }}"
                fontColorStyle="{{ fontColorStyle }}"
+               fontSize="{{ fontSize }}"
+               fontWeight="{{ fontWeight }}"
                textTransform="{{ textTransform }}"
                tagTemplate="{{ gridColumn.TagCell ? tagTemplate : undefined }}"
                tagStyle="{{ gridColumn.TagCell ? tagStyle : undefined }}"

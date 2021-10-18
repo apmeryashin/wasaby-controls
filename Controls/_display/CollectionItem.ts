@@ -970,11 +970,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
-     * @param fontColorStyle - цвет шрифта в строке
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
-    getContentClasses(fontColorStyle?: TFontColorStyle): string {
+    getContentClasses(): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
         let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses()}`;
@@ -993,9 +992,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (this.isDragged()) {
             contentClasses += ' controls-ListView__itemContent_dragging';
-        }
-        if (fontColorStyle) {
-            contentClasses += ` controls-text-${fontColorStyle}`;
         }
         return contentClasses;
     }

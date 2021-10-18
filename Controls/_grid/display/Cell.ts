@@ -396,8 +396,7 @@ export default class Cell<
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
         tmplIsEditable?: boolean,
-        templateHoverBackgroundStyle?: string,
-        templateFontColorStyle?: TFontColorStyle
+        templateHoverBackgroundStyle?: string
     ): string {
         const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || templateHoverBackgroundStyle ||
             this._$owner.getHoverBackgroundStyle();
@@ -440,10 +439,6 @@ export default class Cell<
 
         if (this.getOwner().isDragged()) {
             contentClasses += ' controls-ListView__itemContent_dragging';
-        }
-
-        if (this.config.fontColorStyle || templateFontColorStyle) {
-            contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
         }
 
         return contentClasses;
