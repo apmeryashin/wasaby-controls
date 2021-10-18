@@ -41,6 +41,7 @@
             <div
                class="
                   controls-BreadCrumbsPath__crumbsWrapper
+                  {{_breadCrumbsWrapperClass}}
                   {{_visibleItems || !_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__crumbsWrapper_fullWidth'}}
                   {{_options.displayMode === 'multiline' ? 'controls-BreadCrumbsPath__twoRows'}}
                "
