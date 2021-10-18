@@ -296,15 +296,26 @@ export default class Button extends BaseDropdown {
         }
     }
 
-    _openMenu(popupOptions?: IStickyPopupOptions): Promise<any> {
-        const config = this._getMenuPopupConfig();
+    _openMenu(popupOptions?: IStickyPopupOptions, id?: string): Promise<any> {
+        let config;
+        if (id) {
+            const targetIdConfig = {
+                templateOptions: {
+                    subMenuOptions: popupOptions,
+                    subMenuTargetId: id
+                }
+            };
+            config = Merge(this._getMenuPopupConfig(), targetIdConfig);
+        } else {
+            config = Merge(this._getMenuPopupConfig(), popupOptions || {});
+        }
         this._controller.setMenuPopupTarget(this._children.content);
 
-        return this._controller.openMenu(Merge(config, popupOptions || {}));
+        return this._controller.openMenu(config);
     }
 
-    openMenu(popupOptions?: IStickyPopupOptions): Promise<any> {
-        return this._openMenu(popupOptions).then((result) => {
+    openMenu(popupOptions?: IStickyPopupOptions, id?: string): Promise<any> {
+        return this._openMenu(popupOptions, id).then((result) => {
             if (result) {
                 this._onItemClickHandler(result);
             }
