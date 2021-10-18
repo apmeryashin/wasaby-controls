@@ -572,6 +572,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                     parentProperty: this._options.parentProperty,
                     nodeProperty: this._options.nodeProperty,
                     keyProperty: this._listModel.getKeyProperty(),
+                    rootVisible: true,
                     columns: [{
                         displayProperty: 'caption'
                     }],
