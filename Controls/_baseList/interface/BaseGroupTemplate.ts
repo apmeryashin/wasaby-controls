@@ -1,4 +1,6 @@
-export interface IBaseGroupTemplate {
+import {IFontWeightOptions} from 'Controls/interface';
+
+export interface IBaseGroupTemplate extends IFontWeightOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;

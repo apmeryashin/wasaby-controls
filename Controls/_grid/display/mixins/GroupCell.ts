@@ -1,3 +1,5 @@
+import {TFontWeight} from 'Controls/_interface/IFontWeight';
+
 /**
  * Миксин, который содержт логику отображения ячейки группы
  */
@@ -15,6 +17,15 @@ export default abstract class GroupCell<T> {
 
         if (separatorVisibility === false) {
             classes += ' controls-ListView__groupContent-withoutGroupSeparator';
+        }
+        return classes;
+    }
+
+    getContentTextStylingClasses(fontWeight?: TFontWeight): string {
+        let classes = '';
+        const config = this.getColumnConfig();
+        if (config.fontWeight || fontWeight) {
+            classes += ` controls-fontweight-${config.fontWeight || fontWeight}`;
         }
         return classes;
     }
@@ -75,4 +86,6 @@ export default abstract class GroupCell<T> {
     abstract isExpanded(): boolean;
 
     abstract getStyle(): string;
+
+    abstract getColumnConfig(): IColumn;
 }

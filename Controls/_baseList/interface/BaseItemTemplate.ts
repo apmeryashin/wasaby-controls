@@ -1,4 +1,5 @@
 import {TMarkerClassName} from 'Controls/display';
+import {IFontWeightOptions} from 'Controls/interface';
 
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/TCursor
@@ -8,7 +9,7 @@ import {TMarkerClassName} from 'Controls/display';
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
-export default interface IBaseItemTemplateOptions {
+export default interface IBaseItemTemplateOptions extends IFontWeightOptions {
    highlightOnHover?: boolean;
    cursor?: TCursor;
    marker?: boolean;

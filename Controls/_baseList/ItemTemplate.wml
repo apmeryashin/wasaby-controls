@@ -6,7 +6,8 @@
         <div attr:data-qa="marker" class="{{(item || itemData).getMarkerClasses(markerClassName, itemPadding)}}"></div>
     </ws:if>
     <ws:if data="{{ contentTemplate }}">
-        <div attr:class="{{ (item || itemData).getContentClasses() }}">
+        <div attr:class="{{ (item || itemData).getContentClasses() }}
+                         {{ (item || itemData).getContentTextStylingClasses(fontWeight) }}">
             <ws:partial
                     template="{{ contentTemplate }}"
                     item="{{ item }}"

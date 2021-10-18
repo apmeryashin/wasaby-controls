@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder} from 'Controls/interface';
+import {IRoundBorder, TFontWeight} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -992,6 +992,14 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (this.isDragged()) {
             contentClasses += ' controls-ListView__itemContent_dragging';
+        }
+        return contentClasses;
+    }
+
+    getContentTextStylingClasses(fontWeight?: TFontWeight): string {
+        let contentClasses = '';
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
         }
         return contentClasses;
     }
