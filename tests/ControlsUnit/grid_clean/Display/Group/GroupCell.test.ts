@@ -116,7 +116,7 @@ describe('Controls/grid/Display/Group/GroupCell', () => {
 
     describe('getContentTextStylingClasses', () => {
         it('should contain styling classes when styling options are set', () => {
-            const classes = getGroupCell().getContentTextStylingClasses('s', 'secondary');
+            const classes = getGroupCell().getContentTextStylingClasses('secondary', 's');
             CssClassesAssert.include(classes, [
                 'controls-fontsize-s',
                 'controls-text-secondary'
