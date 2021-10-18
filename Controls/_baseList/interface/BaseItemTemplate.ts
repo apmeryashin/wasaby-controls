@@ -1,5 +1,5 @@
 import {TMarkerClassName} from 'Controls/display';
-import {IFontSizeOptions} from 'Controls/interface';
+import {IFontColorStyleOptions, IFontSizeOptions} from 'Controls/interface';
 
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/TCursor
@@ -9,7 +9,7 @@ import {IFontSizeOptions} from 'Controls/interface';
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
-export default interface IBaseItemTemplateOptions extends IFontSizeOptions {
+export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions, IFontSizeOptions {
    highlightOnHover?: boolean;
    cursor?: TCursor;
    marker?: boolean;
@@ -62,6 +62,12 @@ export default interface IBaseItemTemplateOptions extends IFontSizeOptions {
  * @remark
  * Дополнительно об использовании опции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#inside здесь}.
  * @demo Controls-demo/list_new/ItemTemplate/ItemActionsClass/Index
+ */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста записи.
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  */
 /**
  * @name Controls/_list/interface/IBaseItemTemplate#fontSize

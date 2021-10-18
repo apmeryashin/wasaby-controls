@@ -24,7 +24,7 @@
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="{{ (item || itemData).getContentClasses() }}">
+        <div attr:class="{{ (item || itemData).getContentClasses(fontColorStyle) }}">
             {{ (item || itemData).getContents()[displayProperty || 'title'] }}
         </div>
     </ws:else>

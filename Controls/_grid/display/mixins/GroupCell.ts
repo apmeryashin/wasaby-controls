@@ -6,18 +6,31 @@ import {IColumn} from 'Controls/grid';
  */
 export default abstract class GroupCell<T> {
     getContentTextClasses(separatorVisibility: boolean,
-                          textAlign: 'right' | 'left',
-                          fontSize: string): string {
+                          textAlign: 'right' | 'left'): string {
         let classes = 'controls-ListView__groupContent-text';
+        classes += ` controls-ListView__groupContent_${textAlign || 'center'}`;
+
+        if (separatorVisibility === false) {
+            classes += ' controls-ListView__groupContent-withoutGroupSeparator';
+        }
+        return classes;
+    }
+
+    getContentTextStylingClasses(fontSize?: TFontSize,
+                                 fontColorStyle?: TFontColorStyle): string {
+        let classes = '';
+        const config = this.getColumnConfig();
         if (fontSize) {
             classes += ` controls-fontsize-${fontSize}`;
         } else {
             classes += ' controls-ListView__groupContent-text_default';
         }
-        classes += ` controls-ListView__groupContent_${textAlign || 'center'}`;
 
-        if (separatorVisibility === false) {
-            classes += ' controls-ListView__groupContent-withoutGroupSeparator';
+        // Настройка в колонке приоритетнее, чем полученная из ItemTemplate
+        if (config.fontColorStyle || fontColorStyle) {
+            classes += ` controls-text-${config.fontColorStyle || fontColorStyle}`;
+        } else {
+            classes += ' controls-ListView__groupContent-text_color_default';
         }
         return classes;
     }

@@ -970,7 +970,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
-     * @param fontSize - размер шрифта в строке
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
@@ -997,8 +996,12 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return contentClasses;
     }
 
-    getContentTextStylingClasses(fontSize?: TFontSize): string {
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize): string {
         let contentClasses = '';
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
+        }
         if (fontSize) {
             contentClasses += ` controls-fontsize-${fontSize}`;
         }

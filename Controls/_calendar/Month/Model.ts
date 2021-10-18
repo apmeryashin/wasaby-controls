@@ -54,10 +54,10 @@ export default class MonthModel extends MonthViewModel {
                 this._state.endValue > currentMonthEnd && state.endValue > currentMonthEnd);
     }
 
-    protected _getDayObject(date, state): object {
+    protected _getDayObject(date, state, dayIndex): object {
         state = state || this._state;
 
-        const obj = super._getDayObject(date, state);
+        const obj = super._getDayObject(date, state, dayIndex);
         const startDate = state.startValue;
         const endDate = state.endValue;
 

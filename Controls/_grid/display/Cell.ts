@@ -16,8 +16,7 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
-import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
-import {TFontSize} from 'Controls/_interface/IFontSize';
+import {TFontColorStyle, TFontSize} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
@@ -445,8 +444,12 @@ export default class Cell<
         return contentClasses;
     }
 
-    getContentTextStylingClasses(fontSize?: TFontSize): string {
+    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize): string {
         let contentClasses = '';
+        if (this.config.fontColorStyle || templateFontColorStyle) {
+            contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
+        }
         if (this.config.fontSize || fontSize) {
             contentClasses += ` controls-fontsize-${this.config.fontSize || fontSize}`;
         }

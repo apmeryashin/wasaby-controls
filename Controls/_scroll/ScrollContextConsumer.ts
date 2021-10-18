@@ -99,6 +99,11 @@ export default class ScrollContextConsumer extends Control {
       return this._children.scrollContainer.scrollTo(...args);
    }
 
+   /**
+    * Возвращает количество пикселей, прокрученных от верха скролл контейнера.
+    * @name Controls/_scroll/Container#getScrollTop
+    * @function
+    */
    getScrollTop(
       ...args: Parameters<ScrollContainer['getScrollTop']>
    ): ReturnType<ScrollContainer['getScrollTop']> {
