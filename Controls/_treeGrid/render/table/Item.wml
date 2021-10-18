@@ -41,7 +41,7 @@
                             hoverBackgroundStyle="{{ hoverBackgroundStyle }}"
                             fontColorStyle="{{ fontColorStyle }}"
                             fontSize="{{ fontSize }}"
-                            tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
+                            fontWeight="{{ fontWeight }}"                            tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                             tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
                             editArrowTemplate="{{ editArrowTemplate }}">
                     <ws:ladderWrapper>

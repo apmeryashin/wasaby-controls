@@ -24,7 +24,7 @@
                 hoverBackgroundStyle="{{ hoverBackgroundStyle }}"
                 fontColorStyle="{{ fontColorStyle }}"
                 fontSize="{{ fontSize }}"
-                tagTemplate="{{ gridColumn.TagCell ? tagTemplate : undefined }}"
+                fontWeight="{{ fontWeight }}"                tagTemplate="{{ gridColumn.TagCell ? tagTemplate : undefined }}"
                 tagStyle="{{ gridColumn.TagCell ? tagStyle : undefined }}"
                 editArrowTemplate="{{ editArrowTemplate }}"
                 _onBreadcrumbClick="{{_onBreadcrumbClick}}"
