@@ -3634,11 +3634,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _indexesChangedCallback(itemsRange: IItemsRange): void {
         this._scheduleUpdateItemsSizes(itemsRange);
-        this._sheduleSaveAndRestoreScrollPosition();
+        this._scheduleSaveAndRestoreScrollPosition();
         console.error('indexChangedCallback', itemsRange);
     }
 
-    private _sheduleSaveAndRestoreScrollPosition(): void {
+    private _scheduleSaveAndRestoreScrollPosition(): void {
         // todo release it
     }
 
