@@ -465,7 +465,7 @@ const _private = {
             self._doNotScrollToFirtsItem = false;
             if (itemContainer && needScroll) {
                 self._notify('scrollToElement', [{
-                    itemContainer, toBottom, force, waitInitialization: false, forceSticky: true
+                    itemContainer, toBottom, force
                 }], {bubbling: true});
             }
             if (result) {

@@ -169,7 +169,7 @@ function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): numb
  */
 
 export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boolean | SCROLL_POSITION,
-                                force?: Boolean, waitInitialization: boolean = false, forceSticky: boolean): Promise<void> {
+                                force?: Boolean, waitInitialization: boolean = false): Promise<void> {
    // TODO: переделать аргумент toBottom в position https://online.sbis.ru/opendoc.html?guid=4693dfce-f11d-4792-b62d-9faf54564553
    const position: SCROLL_POSITION = toBottomOrPosition === true ? SCROLL_POSITION.bottom : toBottomOrPosition;
    const stickyHeaderClass = 'controls-StickyHeader';
