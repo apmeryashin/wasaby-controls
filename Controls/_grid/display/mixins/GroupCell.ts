@@ -16,12 +16,12 @@ export default abstract class GroupCell<T> {
         return classes;
     }
 
-    getContentTextStylingClasses(fontSize?: TFontSize,
-                                 fontColorStyle?: TFontColorStyle): string {
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize): string {
         let classes = '';
         const config = this.getColumnConfig();
-        if (fontSize) {
-            classes += ` controls-fontsize-${fontSize}`;
+        if (config.fontSize || fontSize) {
+            classes += ` controls-fontsize-${config.fontSize || fontSize}`;
         } else {
             classes += ' controls-ListView__groupContent-text_default';
         }
@@ -31,17 +31,6 @@ export default abstract class GroupCell<T> {
             classes += ` controls-text-${config.fontColorStyle || fontColorStyle}`;
         } else {
             classes += ' controls-ListView__groupContent-text_color_default';
-        }
-        return classes;
-    }
-
-    getContentTextStylingClasses(fontSize?: TFontSize): string {
-        let classes = '';
-        const config = this.getColumnConfig();
-        if (config.fontSize || fontSize) {
-            classes += ` controls-fontsize-${config.fontSize || fontSize}`;
-        } else {
-            classes += ' controls-ListView__groupContent-text_default';
         }
         return classes;
     }
