@@ -100,17 +100,19 @@ export interface IConfirmationFooter {
  *                         buttons="{{_buttons}}"/>
  * </pre>
  * <pre>
- *     this._buttons = [{
- *      caption: 'Да',
- *      buttonStyle: primary,
- *      value: true
- *     },
- *     {
- *      caption: 'Собрать без конвертацией',
- *      viewMode: 'link',
- *      fontColorStyle: 'unaccented',
- *      value: false
- *     }];
+ * this._buttons = [
+ *      {
+ *          caption: 'Да',
+ *          buttonStyle: 'primary',
+ *          value: true
+ *      },
+ *      {
+ *          caption: 'Собрать без конвертацией',
+ *          viewMode: 'link',
+ *          fontColorStyle: 'unaccented',
+ *          value: false
+ *      }
+ * ];
  * </pre>
  * @demo Controls-demo/PopupTemplate/Confirmation/Buttons/Index
  */
