@@ -185,7 +185,7 @@ export interface IItemActionsOptions {
      */
 
     /*ENG
-     * 
+     *
      * @name Controls/_itemActions/interface/IItemActions#itemActionsProperty
      * @cfg {String} Name of the item's property that contains item actions.
      */
@@ -242,15 +242,8 @@ export interface IItemActionsOptions {
 
     /**
      * @name Controls/_itemActions/interface/IItemActions#itemActionVisibilityCallback
-     * @cfg {Function} Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
+     * @cfg {TItemActionVisibilityCallback} Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
      * @remark
-     * Функция принимает аргументы:
-     *
-     * * action — объект с конфигурацией опции записи.
-     * * item — модель (см. {@link Types/entity:Model}), содержащая данные записи.
-     * * isEditing — флаг, редактируется ли запись в данный момент.
-     *
-     * Чтобы опция записи отображалась, из функции следует вернуть true.
      * Подробнее об использовании функции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/separate-set-options/#visibility здесь}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionVisibilityCallback/Index
      * @example
@@ -291,7 +284,7 @@ export interface IItemActionsOptions {
 
     /*ENG
      * @name Controls/_itemActions/interface/IItemActions#itemActionVisibilityCallback
-     * @cfg {Function} item operation visibility filter function
+     * @cfg {TItemActionVisibilityCallback} item operation visibility filter function
      * @param {ItemAction} action Object with configuration of an action.
      * @param {Types/entity:Model} item Instance of the item whose action is being processed.
      * @param {Boolean} isEditing Determines whether the item is editing at the moment.
