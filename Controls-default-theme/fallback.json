@@ -151,6 +151,7 @@
   "--font-size_5xl": "24px",
   "--font-size_6xl": "28px",
   "--font-size_7xl": "32px",
+  "--font-size_8xl": "36px",
   "--font-size_default": "var(--font-size_m)",
   "--font-weight": "normal",
   "--font-family": "'TensorFont', sans-serif",
