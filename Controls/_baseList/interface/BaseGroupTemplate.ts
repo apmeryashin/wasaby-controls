@@ -8,6 +8,7 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOpt
    textAlign?: string;
    rightTemplate?: string;
    contentTemplate?: string;
+   iconSize?: string;
    textVisible?: boolean;
 }
 
