@@ -295,8 +295,6 @@ describe('Controls/suggest', () => {
 
          inputContainer._loadStart();
          assert.isTrue(inputContainer._loading);
-         assert.isTrue(isCallShowIndicator);
-         assert.isTrue(isCallHideIndicator);
 
          inputContainer._children = {};
          try {
