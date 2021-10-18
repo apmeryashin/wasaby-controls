@@ -2,6 +2,7 @@
     attr:class="controls-PropertyGrid
                 controls_propertyGrid_theme-{{_options.theme}}
                 controls_list_theme-{{_options.theme}}
+                controls_toggle_theme-{{_options.theme}}
                 controls-PropertyGrid__itemsContainer_paddingTop-{{_options.itemsContainerPadding.top || 'm'}}
                 controls-PropertyGrid__itemsContainer_paddingBottom-{{_options.itemsContainerPadding.bottom || 'm'}}
                 controls-PropertyGrid__itemsContainer_paddingLeft-{{_options.itemsContainerPadding.left || 'm'}}
