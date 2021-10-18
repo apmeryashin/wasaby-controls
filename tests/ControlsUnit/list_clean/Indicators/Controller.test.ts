@@ -342,7 +342,28 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
-        })
+        });
+
+        it('display global and display bottom indicator', async () => {
+            const {collection, controller} = initTest([{id: 1}], {});
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.displayGlobalIndicator(0);
+
+            assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
+
+            // ждем пока отобразится индикатор
+            fakeTimer.tick(1000);
+            controller.displayBottomIndicator();
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            fakeTimer.tick(2001);
+
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
     });
 
     describe('shouldHideGlobalIndicator', () => {
