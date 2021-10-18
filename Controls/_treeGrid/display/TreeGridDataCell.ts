@@ -61,11 +61,10 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
         tmplIsEditable: boolean = true,
-        templateHoverBackgroundStyle?: string,
-        templateFontColorStyle?: TFontColorStyle
+        templateHoverBackgroundStyle?: string
     ): string {
         let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover,
-            tmplIsEditable, templateHoverBackgroundStyle, templateFontColorStyle);
+            tmplIsEditable, templateHoverBackgroundStyle);
 
         if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn() && isFullGridSupport()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;
