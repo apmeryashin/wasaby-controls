@@ -170,6 +170,9 @@ const _private = {
                     self._notify('expandedItemsChanged', [expandedItems]);
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
+                    if (self._fixedItem && self._fixedItem.key === nodeKey && expanded) {
+                        return self.scrollToItem(self._fixedItem.key, false, false);
+                    }
                     //endregion
                 });
         }
