@@ -4,12 +4,9 @@
         <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
             typeDescription="{{_typeDescription}}"
-            selectedKeys="{{['description']}}"
             multiSelectVisibility="visible">
             <ws:multiSelectTemplate>
-                <ws:if data="{{multiSelectTemplate.item.isSelected()}}">
-                    <ws:partial template="Controls/list:MultiSelectCircleTemplate"/>
-                </ws:if>
+                <ws:partial template="Controls/list:MultiSelectCircleTemplate"/>
             </ws:multiSelectTemplate>
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"
