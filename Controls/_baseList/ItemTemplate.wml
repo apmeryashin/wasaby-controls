@@ -7,7 +7,7 @@
     </ws:if>
     <ws:if data="{{ contentTemplate }}">
         <div attr:class="{{ (item || itemData).getContentClasses() }}
-                         {{ (item || itemData).getContentTextStylingClasses(fontSize) }}">
+                         {{ (item || itemData).getContentTextStylingClasses(fontColorStyle, fontSize) }}">
             <ws:partial
                     template="{{ contentTemplate }}"
                     item="{{ item }}"

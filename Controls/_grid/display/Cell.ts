@@ -445,13 +445,13 @@ export default class Cell<
     }
 
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
-                                 fontSize?: TFontSize): string {
+                                 templateFontSize?: TFontSize): string {
         let contentClasses = '';
         if (this.config.fontColorStyle || templateFontColorStyle) {
             contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
         }
-        if (this.config.fontSize || fontSize) {
-            contentClasses += ` controls-fontsize-${this.config.fontSize || fontSize}`;
+        if (this.config.fontSize || templateFontSize) {
+            contentClasses += ` controls-fontsize-${this.config.fontSize || templateFontSize}`;
         }
         return contentClasses;
     }
