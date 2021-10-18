@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder, TFontColorStyle} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -996,6 +996,33 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (fontColorStyle) {
             contentClasses += ` controls-text-${fontColorStyle}`;
+        }
+        return contentClasses;
+    }
+
+    /**
+     * Добавляет CSS классы для стилизации текста в записи списка
+     * @param fontColorStyle Цвет шрифта
+     * @param fontSize Размер шрифта
+     * @param fontWeight Жирность шрифта
+     * @param textTransform Преобразование шрифта
+     */
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize,
+                                 fontWeight?: TFontWeight,
+                                 textTransform?: TTextTransform): string {
+        let contentClasses = '';
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
+        }
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
+        }
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
+        }
+        if (textTransform) {
+            contentClasses += ` controls-ListView__itemContent_textTransform-${textTransform}`;
         }
         return contentClasses;
     }

@@ -1,5 +1,5 @@
 import {TMarkerClassName} from 'Controls/display';
-import {IFontColorStyleOptions} from 'Controls/interface';
+import {IFontColorStyleOptions, ITextTransformOptions} from 'Controls/interface';
 
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/TCursor
@@ -9,7 +9,7 @@ import {IFontColorStyleOptions} from 'Controls/interface';
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
-export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions {
+export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions, ITextTransformOptions {
    highlightOnHover?: boolean;
    cursor?: TCursor;
    marker?: boolean;
@@ -68,6 +68,11 @@ export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions
  * @cfg {TFontColorStyle} Стиль цвета текста записи.
  * @remark
  * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+ */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#textTransform
+ * @cfg
+ * @default none
  */
 /*
  * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.

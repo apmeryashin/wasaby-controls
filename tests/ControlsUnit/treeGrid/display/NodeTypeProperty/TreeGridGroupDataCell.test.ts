@@ -48,6 +48,16 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
             'controls-ListView__groupContent_height']);
     });
 
+    it('should contain styling classes when styling options are set', () => {
+        const classes = getGroupCell().getContentTextStylingClasses('secondary', 's', 'bold', 'uppercase');
+        CssClassesAssert.include(classes, [
+            'controls-fontsize-s',
+            'controls-text-secondary',
+            'controls-fontweight-bold',
+            'controls-ListView__itemContent_textTransform-uppercase'
+        ]);
+    });
+
     it('getExpanderClasses should include expander js-class', () => {
         CssClassesAssert.include(getGroupCell().getExpanderClasses(true, 'right'),
             'js-controls-Tree__row-expander');

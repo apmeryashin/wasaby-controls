@@ -1,4 +1,4 @@
-import {TFontColorStyle, TFontSize} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
 import {IColumn} from 'Controls/grid';
 
 /**
@@ -16,8 +16,17 @@ export default abstract class GroupCell<T> {
         return classes;
     }
 
-    getContentTextStylingClasses(fontSize?: TFontSize,
-                                 fontColorStyle?: TFontColorStyle): string {
+    /**
+     * Добавляет CSS классы для стилизации текста в ячейке с заголовком группы
+     * @param fontColorStyle Цвет шрифта
+     * @param fontSize Размер шрифта
+     * @param fontWeight Жирность шрифта
+     * @param textTransform Преобразование шрифта
+     */
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize,
+                                 fontWeight?: TFontWeight,
+                                 textTransform?: TTextTransform): string {
         let classes = '';
         const config = this.getColumnConfig();
         if (fontSize) {
@@ -25,12 +34,13 @@ export default abstract class GroupCell<T> {
         } else {
             classes += ' controls-ListView__groupContent-text_default';
         }
-
-        // Настройка в колонке приоритетнее, чем полученная из ItemTemplate
         if (config.fontColorStyle || fontColorStyle) {
             classes += ` controls-text-${config.fontColorStyle || fontColorStyle}`;
         } else {
             classes += ' controls-ListView__groupContent-text_color_default';
+        }
+        if (textTransform) {
+            classes += ` controls-ListView__itemContent_textTransform-${textTransform}`;
         }
         return classes;
     }

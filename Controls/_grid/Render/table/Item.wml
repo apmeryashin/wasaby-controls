@@ -37,6 +37,7 @@
                             templateHighlightOnHover="{{ templateHighlightOnHover }}"
                             hoverBackgroundStyle="{{ hoverBackgroundStyle }}"
                             fontColorStyle="{{ fontColorStyle }}"
+                            textTransform="{{ textTransform }}"
                             tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                             tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
                             editArrowTemplate="{{ editArrowTemplate }}"

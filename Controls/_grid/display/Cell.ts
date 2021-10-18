@@ -16,7 +16,7 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
-import {TFontColorStyle} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
@@ -446,6 +446,33 @@ export default class Cell<
             contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
         }
 
+        return contentClasses;
+    }
+
+    /**
+     * Добавляет CSS классы для стилизации текста в ячейке грида
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param fontWeight Жирность шрифта
+     * @param textTransform Преобразование шрифта
+     */
+    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 fontWeight?: TFontWeight,
+                                 textTransform?: TTextTransform): string {
+        let contentClasses = '';
+        if (this.config.fontColorStyle || templateFontColorStyle) {
+            contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
+        }
+        if (this.config.fontSize || templateFontSize) {
+            contentClasses += ` controls-fontsize-${this.config.fontSize || templateFontSize}`;
+        }
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
+        }
+        if (textTransform) {
+            contentClasses += ` controls-ListView__itemContent_textTransform-${textTransform}`;
+        }
         return contentClasses;
     }
 

@@ -1,6 +1,6 @@
-import {IFontColorStyleOptions} from 'Controls/interface';
+import {IFontColorStyleOptions, ITextTransformOptions} from 'Controls/interface';
 
-export interface IBaseGroupTemplate extends IFontColorStyleOptions {
+export interface IBaseGroupTemplate extends IFontColorStyleOptions, ITextTransformOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
@@ -242,4 +242,9 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions {
  * @default s
  * @see expanderAlign
  * @see expanderVisible
+ */
+/**
+ * @name ontrols/_list/interface/IBaseGroupTemplate#textTransform
+ * @cfg
+ * @default none
  */

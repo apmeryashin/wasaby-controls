@@ -8,8 +8,11 @@
                 <ws:partial
                         template="Controls/list:GroupTemplate"
                         scope="{{ _options }}"
-                        fontSize="s"
-                        fontColorStyle="secondary"/>
+                        fontSize="m"
+                        fontColorStyle="secondary"
+                        fontWeight="bold"
+                        textTransform="uppercase"
+                />
             </ws:groupTemplate>
         </Controls.list:View>
     </Controls.scroll:Container>
