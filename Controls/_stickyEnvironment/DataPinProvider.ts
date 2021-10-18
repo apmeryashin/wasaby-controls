@@ -18,7 +18,8 @@ export interface IPinConsumerContext<T = unknown> {
  * При этом если несколько <i>DataPinContainer</i> будут находиться за верхней границей {@link Controls/scroll:Container},
  * то в <i>DataPinConsumer</i> будут переданы данные ближайшего <i>DataPinContainer</i>.
  *
- * @demo Controls-demo/StickyEnvironment/DataPinProvider
+ * @demo Controls-demo/StickyEnvironment/DataPinProvider/Base
+ * @demo Controls-demo/StickyEnvironment/DataPinProvider/Grid
  *
  * @public
  * @author Уфимцев Д.Ю.

@@ -5,9 +5,9 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {IGroupNodeColumn} from 'Controls/treeGrid';
 import {IHeaderCell, TColspanCallbackResult} from 'Controls/grid';
 import {CrudEntityKey, HierarchicalMemory} from 'Types/source';
-import * as template from 'wml!Controls-demo/StickyEnvironment/DataPinProvider/Index';
-import * as nodeTemplate from 'wml!Controls-demo/StickyEnvironment/DataPinProvider/NodeTemplate';
-import * as headerCell from 'wml!Controls-demo/StickyEnvironment/DataPinProvider/HeaderCellTemplate';
+import * as template from 'wml!Controls-demo/StickyEnvironment/DataPinProvider/Grid/Index';
+import * as headerCell from 'wml!Controls-demo/StickyEnvironment/DataPinProvider/Grid/HeaderCellTemplate';
+import * as totalCellTemplate from 'wml!Controls-demo/StickyEnvironment/DataPinProvider/Grid/TotalCellTemplate';
 
 export default class extends Control {
     protected _template: TemplateFunction = template;
@@ -61,12 +61,7 @@ export default class extends Control {
     protected _columns: IGroupNodeColumn[] = [
         {
             width: '200px',
-            displayProperty: 'name',
-            template: nodeTemplate,
-            templateOptions: {
-                // 40px высота шапки
-                topMargin: '-40px'
-            }
+            displayProperty: 'name'
         },
         {
             width: '100px',
@@ -84,7 +79,12 @@ export default class extends Control {
             width: '100px',
             align: 'right',
             displayType: 'number',
-            displayProperty: 'total'
+            displayProperty: 'total',
+            template: totalCellTemplate,
+            templateOptions: {
+                // 40px высота шапки
+                topMargin: '-40px'
+            }
         }
     ];
     protected _expandedItems: CrudEntityKey[] = [null];
