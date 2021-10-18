@@ -103,7 +103,8 @@ define(
             let windowData = {
                width: 1920,
                height: 1080,
-               topScroll: 0
+               topScroll: 0,
+               left: 0
             };
             const popupOptions = {
                left: 100,
