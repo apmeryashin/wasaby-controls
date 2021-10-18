@@ -3,7 +3,7 @@ import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {Logger} from 'UI/Utils';
 
-describe.only('Controls/progress:StateBar', () => {
+describe('Controls/progress:StateBar', () => {
     let stateBar;
     // Создаём песочницу, для одновременной очистки моков и стабов
     const sandbox = sinon.createSandbox();
@@ -15,7 +15,7 @@ describe.only('Controls/progress:StateBar', () => {
         stateBar = new StateBar({});
     });
 
-    describe.only('_beforeMount', () => {
+    describe('_beforeMount', () => {
         it('Вызов метода _applyNewState', () => {
             const options = {
                 data: [{value: 10}],
@@ -27,7 +27,7 @@ describe.only('Controls/progress:StateBar', () => {
         });
     });
 
-    describe.only('_beforeUpdate', () => {
+    describe('_beforeUpdate', () => {
         it('Вызов метода _applyNewState при обновлении опций', () => {
             stateBar._options = {
                 data: [{value: 20, style: 'success'}, {value: 30, style: 'danger'}],
@@ -52,7 +52,7 @@ describe.only('Controls/progress:StateBar', () => {
         });
     });
 
-    describe.only('_applyNewState', () => {
+    describe('_applyNewState', () => {
         let loggerMock;
         beforeEach(() => {
             stateBar = new StateBar({});
