@@ -150,7 +150,7 @@ export class DialogStrategy {
             const popupWidth = (popupItem.popupOptions.width || popupItem.sizes?.width);
             // Calculating the position when reducing the size of the browser window
             const differenceWindowWidth: number =
-                (horizontalPosition + popupWidth) - windowData.width;
+                (horizontalPosition + popupWidth) - windowData.width - windowData.left;
             if (differenceWindowWidth > 0) {
                 position[coordinate] = horizontalPosition - differenceWindowWidth;
             } else {
