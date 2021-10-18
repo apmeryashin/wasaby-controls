@@ -142,7 +142,7 @@ export default class ZenWrapper extends Control<IZenWrapperOptions> {
                                    complementaryRGB: IRgbColor, brightness: TBrightness): object {
         return {
             '--node_expander_icon-color_treeGrid': ZenWrapper.getMonochromeColor(brightness),
-            '--marker_color_list': ZenWrapper.getColor(complementaryRGB),
+            '--marker_color': ZenWrapper.getColor(complementaryRGB),
             '--item_shadow-color_columns': ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.15'),
             '--item_hover_shadow-color_columns':  ZenWrapper.getMonochromeColorWithOpacity(brightness, '0.45')
         };
