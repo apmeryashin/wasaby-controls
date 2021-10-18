@@ -16,6 +16,8 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
+import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
+import {TFontSize} from 'Controls/_interface/IFontSize';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
@@ -440,6 +442,15 @@ export default class Cell<
             contentClasses += ' controls-ListView__itemContent_dragging';
         }
 
+        return contentClasses;
+    }
+
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize): string {
+        let contentClasses = '';
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
+        }
         return contentClasses;
     }
 

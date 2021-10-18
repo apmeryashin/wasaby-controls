@@ -1,4 +1,5 @@
 import {TMarkerClassName} from 'Controls/display';
+import {IFontSizeOptions} from 'Controls/interface';
 
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/TCursor
@@ -8,7 +9,7 @@ import {TMarkerClassName} from 'Controls/display';
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
-export default interface IBaseItemTemplateOptions {
+export default interface IBaseItemTemplateOptions extends IFontSizeOptions {
    highlightOnHover?: boolean;
    cursor?: TCursor;
    marker?: boolean;
@@ -61,6 +62,13 @@ export default interface IBaseItemTemplateOptions {
  * @remark
  * Дополнительно об использовании опции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#inside здесь}.
  * @demo Controls-demo/list_new/ItemTemplate/ItemActionsClass/Index
+ */
+/**
+ * @name Controls/_list/interface/IBaseItemTemplate#fontSize
+ * @cfg {TFontSize} Размер шрифта.
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
  */
 /*
  * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.

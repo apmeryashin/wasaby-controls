@@ -1,11 +1,12 @@
-export interface IBaseGroupTemplate {
+import {IFontSizeOptions} from 'Controls/interface';
+
+export interface IBaseGroupTemplate extends IFontSizeOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
    textAlign?: string;
    rightTemplate?: string;
    contentTemplate?: string;
-   fontSize?: string;
    iconSize?: string;
    textVisible?: boolean;
 }
@@ -223,8 +224,11 @@ export interface IBaseGroupTemplate {
  */
 /**
  * @name Controls/_list/interface/IBaseGroupTemplate#fontSize
- * @cfg {String} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
+ * @cfg {TFontSize} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
  * @default xs
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
  * @see textAlign
  * @see contentTemplate
  */

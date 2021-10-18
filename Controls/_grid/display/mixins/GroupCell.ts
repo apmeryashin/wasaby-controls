@@ -1,3 +1,6 @@
+import {TFontColorStyle, TFontSize} from 'Controls/interface';
+import {IColumn} from 'Controls/grid';
+
 /**
  * Миксин, который содержт логику отображения ячейки группы
  */
@@ -15,6 +18,18 @@ export default abstract class GroupCell<T> {
 
         if (separatorVisibility === false) {
             classes += ' controls-ListView__groupContent-withoutGroupSeparator';
+        }
+        return classes;
+    }
+
+    getContentTextStylingClasses(fontSize?: TFontSize,
+                                 fontColorStyle?: TFontColorStyle): string {
+        let classes = '';
+        const config = this.getColumnConfig();
+        if (config.fontSize || fontSize) {
+            classes += ` controls-fontsize-${config.fontSize || fontSize}`;
+        } else {
+            classes += ' controls-ListView__groupContent-text_default';
         }
         return classes;
     }
@@ -75,4 +90,6 @@ export default abstract class GroupCell<T> {
     abstract isExpanded(): boolean;
 
     abstract getStyle(): string;
+
+    abstract getColumnConfig(): IColumn;
 }
