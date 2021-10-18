@@ -58,11 +58,17 @@ export class ObserversController {
 
     setListContainer(newListContainer: HTMLElement): void {
         this._listContainer = newListContainer;
+        if (this._observer) {
+            this._observer.destroy();
+        }
         this._updateTriggers();
     }
 
     setTriggersQuerySelector(newTriggersQuerySelector: string): void {
         this._triggersQuerySelector = newTriggersQuerySelector;
+        if (this._observer) {
+            this._observer.destroy();
+        }
         this._updateTriggers();
     }
 

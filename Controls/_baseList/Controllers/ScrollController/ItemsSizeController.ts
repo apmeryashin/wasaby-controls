@@ -32,14 +32,16 @@ export class ItemsSizesController {
 
     // region on DOM references update
 
-    setItemsContainer(newItemsContainer: HTMLElement): void {
+    setItemsContainer(newItemsContainer: HTMLElement): IItemsSizes {
         this._itemsContainer = newItemsContainer;
         // this._updateItemsSizes();
+        return this.getItemsSizes();
     }
 
-    setItemsQuerySelector(newItemsQuerySelector: string): void {
+    setItemsQuerySelector(newItemsQuerySelector: string): IItemsSizes {
         this._itemsQuerySelector = newItemsQuerySelector;
         // this._updateItemsSizes();
+        return this.getItemsSizes();
     }
 
     // endregion

@@ -1,4 +1,4 @@
-import { IItemsSizesControllerOptions, ItemsSizesController } from './ItemsSizeController';
+import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
 import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversController } from './ObserversController';
 import { Calculator, ICalculatorOptions, ICalculatorResult } from './Calculator';
 
@@ -83,6 +83,44 @@ export class ScrollController {
             viewportSize: options.viewportSize
         });
     }
+
+    // region Update DOM elements
+
+    /**
+     * Обновить контейнер с элементами. Также пересчитывает размеры отображаемых в данный момент элементов.
+     * @param {HTMLElement} newItemsContainer
+     */
+    setItemsContainer(newItemsContainer: HTMLElement): void {
+        const newItemsSizes = this._itemsSizesController.setItemsContainer(newItemsContainer);
+        this._calculator.updateItemsSizes(newItemsSizes);
+    }
+
+    /**
+     * Обновить селектор элементов. Также пересчитывает размеры отображаемых в данный момент элементов.
+     * @param {string} newItemsQuerySelector
+     */
+    setItemsQuerySelector(newItemsQuerySelector: string): void {
+        const newItemsSizes = this._itemsSizesController.setItemsQuerySelector(newItemsQuerySelector);
+        this._calculator.updateItemsSizes(newItemsSizes);
+    }
+
+    /**
+     * Обновить контейнер списочного контрола. Также производит реинициализацию observers.
+     * @param {HTMLElement} newListContainer
+     */
+    setListContainer(newListContainer: HTMLElement): void {
+        this._observersController.setListContainer(newListContainer);
+    }
+
+    /**
+     * Обновить селектор триггеров. Также производит реинициализацию observers.
+     * @param {string} newTriggersQuerySelector
+     */
+    setTriggersQuerySelector(newTriggersQuerySelector: string): void {
+        this._observersController.setTriggersQuerySelector(newTriggersQuerySelector);
+    }
+
+    // endregion Update DOM elements
 
     // region Update items sizes
 
