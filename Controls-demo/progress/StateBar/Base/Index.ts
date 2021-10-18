@@ -8,10 +8,8 @@ class StateBar extends Control<IControlOptions> {
     protected _data60: object[];
     protected _data60default: object[];
     protected _data100: object[];
-    protected _data2040: object[];
-    protected _data103040: object[];
+    protected _data4020: object[];
     protected _data104050: object[];
-    protected _data407050: object[];
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 
     protected _beforeMount(): void {
@@ -36,25 +34,12 @@ class StateBar extends Control<IControlOptions> {
             title: 'Положительно',
             style: 'success'
         }];
-        this._data2040 = [{
+        this._data4020 = [{
+            value: 40,
+            title: 'Положительно',
+            style: 'success'
+        }, {
             value: 20,
-            title: 'Положительно',
-            style: 'success'
-        }, {
-            value: 40,
-            title: 'Отрицательно',
-            style: 'danger'
-        }];
-        this._data103040 = [{
-            value: 10,
-            title: 'Положительно',
-            style: 'success'
-        }, {
-            value: 30,
-            title: 'В работе',
-            style: 'warning'
-        }, {
-            value: 40,
             title: 'Отрицательно',
             style: 'danger'
         }];

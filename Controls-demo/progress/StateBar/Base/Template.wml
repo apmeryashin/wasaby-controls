@@ -20,12 +20,8 @@
         <Controls.progress:StateBar data="{{_data100}}"/>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label">Два показателя: 30% и 20%</div>
-        <Controls.progress:StateBar data="{{_data2040}}"/>
-    </div>
-    <div class="controlsDemo__cell">
-        <div class="controls-text-label">Три показателя: 10%, 30%, 40%</div>
-        <Controls.progress:StateBar data="{{_data103040}}"/>
+        <div class="controls-text-label">Два показателя: 40% и 20%</div>
+        <Controls.progress:StateBar data="{{_data4020}}"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">Три показателя: 10%, 40%, 50%</div>

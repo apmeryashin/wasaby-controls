@@ -1,6 +1,6 @@
 .controls-StateBar {
    display: flex;
-   height: 4px;
+   height: var(--scale_thickness_stateBar);
    border-radius: var(--border-radius_2xs);
 }
 
@@ -35,6 +35,10 @@
       border-top-right-radius: var(--border-radius_2xs);
       border-bottom-right-radius: var(--border-radius_2xs);
    }
+}
+
+.controls-StateBar_style-readonly {
+   background-color: var(--readonly_color);
 }
 
 .controls-StateBar_style-primary {

@@ -4,6 +4,10 @@
         <Controls.progress:StateBar data="{{_data}}"/>
     </div>
     <div class="controlsDemo__cell">
+        <div class="controls-text-label">blankAreaStyle = readonly</div>
+        <Controls.progress:StateBar data="{{_data}}" blankAreaStyle="readonly"/>
+    </div>
+    <div class="controlsDemo__cell">
         <div class="controls-text-label">blankAreaStyle = primary</div>
         <Controls.progress:StateBar data="{{_data}}" blankAreaStyle="primary"/>
     </div>
