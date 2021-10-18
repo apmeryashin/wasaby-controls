@@ -678,7 +678,7 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
 
-            return self._sourceController.load(direction).addCallback((addedItems) => {
+            return self._loadItemsToDirection(direction).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
@@ -3044,6 +3044,7 @@ const _private = {
 export interface IBaseControlOptions extends IControlOptions, ISourceOptions, IItemActionsOptions {
     keyProperty: string;
     viewModelConstructor: string;
+    collection: Collection;
     navigation?: INavigationOptionValue<INavigationSourceConfig>;
     sourceController?: SourceController;
     items?: RecordSet;
@@ -3809,21 +3810,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = !!newOptions._recreateCollection ||
-                                    newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+        const shouldReInitCollection = !!newOptions._recreateCollection ||
+                                    newOptions.viewModelConstructor && newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+                                    newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-        if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
+        if (this._editInPlaceController && (shouldReInitCollection || loadStarted)) {
             if (this.isEditing()) {
                 // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
                 // без возможности отменить закрытие из вне.
                 this._cancelEdit(true).then(() => {
-                    if (oldViewModelConstructorChanged) {
+                    if (shouldReInitCollection) {
                         this._destroyEditInPlaceController();
                     }
                 });
             } else {
-                if (oldViewModelConstructorChanged) {
+                if (shouldReInitCollection) {
                     this._destroyEditInPlaceController();
                 }
             }
@@ -3835,7 +3837,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if (newOptions.viewModelConstructor && oldViewModelConstructorChanged && this._listViewModel) {
+        if (shouldReInitCollection && this._listViewModel) {
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
@@ -4869,6 +4871,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return !!(this._sourceController && this._sourceController.hasMoreData(direction));
     }
 
+    protected _loadItemsToDirection(direction: IDirection): Promise<RecordSet|Error> {
+        return this._sourceController.load(direction);
+    }
+
     private _commitEditInGroupBeforeCollapse(groupItem): TAsyncOperationResult {
         if (!this.isEditing() || !groupItem.isExpanded()) {
             return Promise.resolve();
@@ -5809,8 +5815,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // region Cut
 
     private _toggleCutClick() {
-        const newExpanded = !this._cutExpanded;
-        this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        const result = this._notify('cutClick', [this._cutExpanded], { bubbling: true });
+        if (result !== false) {
+            const newExpanded = !this._cutExpanded;
+            this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        }
     }
 
     private _reCountCut(newExpanded: boolean): Promise<void> {

@@ -13,6 +13,8 @@
         <ws:itemTemplate>
             <ws:partial template="Controls/treeGrid:ItemTemplate"
                         highlightOnHover="{{ itemTemplate.item.contents.get('nodeType') !== 'group' }}"
+                        fontColorStyle="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'secondary' }}"
+                        fontSize="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'm' }}"
                         fontWeight="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'bold' }}"/>
         </ws:itemTemplate>
     </Controls.treeGrid:View>

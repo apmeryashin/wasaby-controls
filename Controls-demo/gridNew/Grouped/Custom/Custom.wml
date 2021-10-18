@@ -12,8 +12,9 @@
                     <ws:partial template="Controls/grid:GroupTemplate"
                                 scope="{{ _options }}"
                                 expanderAlign="right"
-                                fontWeight="bold">
-                    </ws:partial>
+                                fontColorStyle="secondary"
+                                fontSize="m"
+                                fontWeight="bold"/>
                 </ws:groupTemplate>
             </Controls.grid:View>
         </Controls.list:Container>

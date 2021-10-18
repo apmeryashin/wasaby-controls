@@ -12,6 +12,7 @@ import Cell, {IOptions as ICellOptions} from './Cell';
 import DataRow from './DataRow';
 import DataCellCompatibility from './compatibility/DataCell';
 import {TemplateFunction} from 'UI/Base';
+import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
 
 export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions {
     markerPosition: string;

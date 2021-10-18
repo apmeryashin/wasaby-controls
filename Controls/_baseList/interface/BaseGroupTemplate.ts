@@ -1,13 +1,12 @@
-import {IFontWeightOptions} from 'Controls/interface';
+import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions} from 'Controls/interface';
 
-export interface IBaseGroupTemplate extends IFontWeightOptions {
+export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
    textAlign?: string;
    rightTemplate?: string;
    contentTemplate?: string;
-   fontSize?: string;
    iconSize?: string;
    textVisible?: boolean;
 }
@@ -225,10 +224,20 @@ export interface IBaseGroupTemplate extends IFontWeightOptions {
  */
 /**
  * @name Controls/_list/interface/IBaseGroupTemplate#fontSize
- * @cfg {String} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
+ * @cfg {TFontSize} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
  * @default xs
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
  * @see textAlign
  * @see contentTemplate
+ */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста заголовка группы.
+ * @demo Controls-demo/breadCrumbs_new/FontColorStyle/Index
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  */
 /**
  * @name Controls/_list/interface/IBaseGroupTemplate#iconSize

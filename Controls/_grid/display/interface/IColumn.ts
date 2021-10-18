@@ -475,6 +475,9 @@ export interface IColumn extends IColspanParams {
      * @see displayType
      */
     displayTypeOptions?: IDisplayTypeOptions;
+    /**
+     * @cfg {TFontColorStyle} Стиль цвета текста ячейки.
+     */
     fontColorStyle?: TFontColorStyle;
     /**
      * @cfg {Controls/display:IMarkable/BackgroundColorStyle.typedef} Цвет фона колонки.
@@ -497,8 +500,7 @@ export interface IColumn extends IColspanParams {
      */
     tooltipProperty?: string;
     /**
-     * @name Controls/_grid/display/interface/IColumn
-     * @cfg
+     * @cfg {TFontSize} Размер шрифта.
      * @default "l". Для контрола {@link Controls/treeGrid:View}: "m" (для листа), "xl" (для скрытого узла) и "2xl" (для узла).
      */
     fontSize?: TFontSize;

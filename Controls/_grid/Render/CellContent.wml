@@ -1,5 +1,5 @@
 <div class="{{ (gridColumn || itemData).getContentClasses(backgroundColorStyle, cursor, highlightOnHover, editable, hoverBackgroundStyle) }}
-            {{ (gridColumn || itemData).getContentTextStylingClasses(fontWeight) }}"
+            {{ (gridColumn || itemData).getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight) }}"
      style="{{ (gridColumn || itemData).getContentStyles() }}"
      attr:data-qa="{{ (gridColumn || itemData).listElementName }}_content">
 

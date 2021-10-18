@@ -1,18 +1,13 @@
-import {TFontWeight} from 'Controls/_interface/IFontWeight';
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
+import {IColumn} from 'Controls/grid';
 
 /**
  * Миксин, который содержт логику отображения ячейки группы
  */
 export default abstract class GroupCell<T> {
     getContentTextClasses(separatorVisibility: boolean,
-                          textAlign: 'right' | 'left',
-                          fontSize: string): string {
+                          textAlign: 'right' | 'left'): string {
         let classes = 'controls-ListView__groupContent-text';
-        if (fontSize) {
-            classes += ` controls-fontsize-${fontSize}`;
-        } else {
-            classes += ' controls-ListView__groupContent-text_default';
-        }
         classes += ` controls-ListView__groupContent_${textAlign || 'center'}`;
 
         if (separatorVisibility === false) {
@@ -21,9 +16,23 @@ export default abstract class GroupCell<T> {
         return classes;
     }
 
-    getContentTextStylingClasses(fontWeight?: TFontWeight): string {
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize,
+                                 fontWeight?: TFontWeight): string {
         let classes = '';
         const config = this.getColumnConfig();
+        if (config.fontSize || fontSize) {
+            classes += ` controls-fontsize-${config.fontSize || fontSize}`;
+        } else {
+            classes += ' controls-ListView__groupContent-text_default';
+        }
+
+        // Настройка в колонке приоритетнее, чем полученная из ItemTemplate
+        if (config.fontColorStyle || fontColorStyle) {
+            classes += ` controls-text-${config.fontColorStyle || fontColorStyle}`;
+        } else {
+            classes += ' controls-ListView__groupContent-text_color_default';
+        }
         if (config.fontWeight || fontWeight) {
             classes += ` controls-fontweight-${config.fontWeight || fontWeight}`;
         }
