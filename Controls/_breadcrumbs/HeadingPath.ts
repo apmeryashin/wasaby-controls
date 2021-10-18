@@ -19,6 +19,8 @@ import calculateBreadcrumbsUtil, {ARROW_WIDTH, PADDING_RIGHT} from 'Controls/_br
 
 interface IReceivedState {
     items: Record[];
+    breadCrumbsWrapperClass: string;
+    backButtonClass: string;
 }
 
 const SIZES = {
@@ -79,8 +81,23 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _beforeMount(options?: IHeadingPath,
                            contexts?: object,
                            receivedState?: IReceivedState): Promise<IReceivedState> | void {
+        if (receivedState) {
+            this._initStatesBeforeMount(options, receivedState);
+        } else {
+            return loadFontWidthConstants().then(() => {
+                this._initStatesBeforeMount(options, receivedState);
+                return {
+                    items: this._breadCrumbsItems,
+                    breadCrumbsWrapperClass: this._breadCrumbsWrapperClass,
+                    backButtonClass: this._backButtonClass
+                };
+            });
+        }
+    }
+
+    protected _initStatesBeforeMount(options?: IHeadingPath, receivedState?: IReceivedState): void {
         this._items = dataConversion(options.items, this._moduleName);
-        this._prepareItems(options);
+        this._prepareItems(options, receivedState);
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
             this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
@@ -89,18 +106,13 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
 
         if (options.containerWidth) {
             this._initializingWidth = options.containerWidth;
-            return loadFontWidthConstants().then((getTextWidth) => {
-                if (receivedState) {
-                    this._dotsWidth = this._getDotsWidth(options.fontSize);
-                    this._prepareData(options);
-                } else if (this._breadCrumbsItems) {
-                    this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth as Function);
-                    this._prepareData(options, getTextWidth as Function);
-                    return {
-                        items: this._breadCrumbsItems
-                    };
-                }
-            });
+            if (receivedState && receivedState.items) {
+                this._dotsWidth = this._getDotsWidth(options.fontSize);
+                this._prepareData(options);
+            } else if (this._breadCrumbsItems) {
+                this._dotsWidth = this._getDotsWidth(options.fontSize);
+                this._prepareData(options);
+            }
         }
     }
 
@@ -181,6 +193,31 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         return lastItem?.get('counterCaption');
     }
 
+    private _updateBreadCrumbsClasses(options: IHeadingPath, receivedState?: IReceivedState): void {
+        if (receivedState) {
+            this._breadCrumbsWrapperClass = receivedState.breadCrumbsWrapperClass;
+            this._backButtonClass = receivedState.backButtonClass;
+        } else {
+
+            /**
+             * Наименьший по длине текст фиксируем по максимальной ширине и не даем сокращать
+             */
+            const crumbsLength = this._breadCrumbsItems.reduce((reducer, item) => {
+                const text = item.get(options.displayProperty);
+                return reducer + text.length;
+            }, 0);
+            const backButtoLength = this._backButtonCaption.length;
+            if (crumbsLength > backButtoLength) {
+                this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
+                this._backButtonClass = 'controls-BreadCrumbsPath__widthRestriction';
+            } else {
+                this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__widthRestriction';
+                this._backButtonClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
+            }
+
+        }
+    }
+
     /**
      * На основании текущий опций собирает модель корневого каталога
      */
@@ -188,7 +225,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         return this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty);
     }
 
-    private _prepareItems(options: IHeadingPath): void {
+    private _prepareItems(options: IHeadingPath, receivedState?: IReceivedState): void {
         const clearCrumbsView = () => {
             this._visibleItems = null;
             this._breadCrumbsItems = null;
@@ -209,22 +246,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
                 this._breadCrumbsItems = this._items.slice(0, this._items.length - 1);
                 this._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
                 this._isHomeVisible = true;
-
-                /**
-                 * Наименьший по длине текст фиксируем по максимальной ширине и не даем сокращать
-                 */
-                const crumbsLength = this._breadCrumbsItems.reduce((reducer, item) => {
-                    const text = item.get(options.displayProperty);
-                    return reducer + text.length;
-                }, 0);
-                const backButtoLength = this._backButtonCaption.length;
-                if (crumbsLength > backButtoLength) {
-                    this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
-                    this._backButtonClass = 'controls-BreadCrumbsPath__widthRestriction';
-                } else {
-                    this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__widthRestriction';
-                    this._backButtonClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
-                }
+                this._updateBreadCrumbsClasses(options, receivedState);
             } else {
                 clearCrumbsView();
             }
