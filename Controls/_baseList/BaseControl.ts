@@ -6019,7 +6019,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
         if (information.fixedPosition === '') {
-            this._fixedItem = null;
+            if (this._fixedItem && this._fixedItem.key === item.key) {
+                this._fixedItem = null;
+            }
         } else {
             this._fixedItem = item;
         }
