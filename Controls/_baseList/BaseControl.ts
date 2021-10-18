@@ -3329,6 +3329,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (action === IObservable.ACTION_REMOVE) {
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
+
+        this._scrollControllerCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     }
     protected _afterCollectionReset(): void {
         // для переопределения
@@ -3574,6 +3576,35 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._sourceController;
     }
 
+    private _scrollControllerCollectionChange(action: string,
+                                              newItems: Array<CollectionItem<Model>>,
+                                              newItemsIndex: number,
+                                              removedItems: Array<CollectionItem<Model>>,
+                                              removedItemsIndex: number): void {
+        if (!this._newScrollController) {
+            return;
+        }
+        const totalCount = this._listViewModel.getCount();
+        switch (action) {
+            case IObservable.ACTION_ADD: {
+                this._newScrollController.addItems(newItemsIndex, newItems.length, totalCount);
+                break;
+            }
+            case IObservable.ACTION_MOVE: {
+                this._newScrollController.moveItems(newItemsIndex, removedItemsIndex, newItems.length, totalCount);
+                break;
+            }
+            case IObservable.ACTION_REMOVE: {
+                this._newScrollController.removeItems(removedItemsIndex, removedItems.length, totalCount);
+                break;
+            }
+            case IObservable.ACTION_RESET: {
+                this._newScrollController.resetItems(totalCount);
+                break;
+            }
+        }
+    }
+
     private _createNewScrollController(): void {
         this._newScrollController = new NewScrollController({
             itemsContainer: this._getItemsContainer(),
@@ -3603,7 +3634,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _indexesChangedCallback(itemsRange: IItemsRange): void {
         this._scheduleUpdateItemsSizes(itemsRange);
+        this._sheduleSaveAndRestoreScrollPosition();
         console.error('indexChangedCallback', itemsRange);
+    }
+
+    private _sheduleSaveAndRestoreScrollPosition(): void {
+        // todo release it
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {

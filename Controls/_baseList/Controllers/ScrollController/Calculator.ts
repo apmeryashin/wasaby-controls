@@ -187,9 +187,11 @@ export class Calculator {
     /**
      * Смещает диапазон к переданной позиции скролла.
      * @param scrollPosition Позиция скролла
-     * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeToScrollPosition(scrollPosition: number, totalCount: number): ICalculatorResult {
+    shiftRangeToScrollPosition(scrollPosition: number): ICalculatorResult {
+        // todo fix total count
+        const totalCount = 0;
+
         const oldRange = this._range;
         this._updateVirtualRange();
         return this._getRangeChangeResult(oldRange, totalCount);

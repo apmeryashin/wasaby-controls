@@ -91,7 +91,7 @@ export class ScrollController {
         this._calculator.updateItemsSizes(newItemsSizes);
     }
 
-    // endregion
+    // endregion Update items sizes
 
     // region Collection changes
 
@@ -158,8 +158,8 @@ export class ScrollController {
         this._processCalculatorResult(result);
     }
 
-    changeScrollPosition(position: number, totalCount: number): void {
-        const result = this._calculator.shiftRangeToScrollPosition(position, totalCount);
+    scrollToPosition(position: number): void {
+        const result = this._calculator.shiftRangeToScrollPosition(position);
         this._processCalculatorResult(result);
     }
 
