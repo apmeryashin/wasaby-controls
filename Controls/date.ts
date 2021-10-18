@@ -1,5 +1,5 @@
 /**
- * Библиотека выбора дат
+ * Библиотека контролов, которые служат для отображения и выбора дат из выпадающей панели.
  * @library
  * @includes Input Controls/_date/Input
  * @includes BaseInput Controls/_date/BaseInput
