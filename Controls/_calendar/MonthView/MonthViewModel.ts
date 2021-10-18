@@ -264,7 +264,7 @@ export default class MonthViewModel extends VersionableMixin {
 
         if (state.daysData) {
             if (obj.mode === 'extended') {
-                obj.extData = state.daysData[dayIndex];
+                obj.extData = state.daysData.at ? state.daysData.at(dayIndex) : state.daysData[dayIndex];
             } else {
                 obj.extData = state.daysData.at ? state.daysData.at(obj.day - 1) : state.daysData[obj.day - 1];
             }
