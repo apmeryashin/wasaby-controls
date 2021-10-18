@@ -6,6 +6,7 @@
             typeDescription="{{_typeDescription}}"
             multiSelectVisibility="visible"
             captionPosition="top">
+            <ws:itemPadding top="s" bottom="s" left="null" right="null"/>
             <ws:captionColumnOptions width="50%"/>
         </Controls.propertyGrid:PropertyGrid>
     </div>

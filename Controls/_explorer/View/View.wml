@@ -55,6 +55,8 @@
                                           itemsSelector="{{_itemsSelector}}"
                                           on:itemClick="_onItemClick()"
                                           on:itemMouseDown="_notifyHandler('itemMouseDown')"
+                                          on:itemMouseLeave="_notifyHandler('itemMouseLeave')"
+                                          on:itemMouseMove="_notifyHandler('itemMouseMove')"
                                           on:checkboxClick="_notifyHandler('checkboxClick')"
                                           on:itemSwipe="_notifyHandler('itemSwipe')"
                                           on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"

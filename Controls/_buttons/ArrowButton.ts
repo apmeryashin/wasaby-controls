@@ -1,13 +1,15 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_buttons/ArrowButton/ArrowButton');
+import {IContrastBackgroundOptions} from 'Controls/interface';
 import 'css!Controls/buttons';
 
 export type TArrowButtonDirection = 'right' | 'left' | 'up' | 'down';
 
-export interface IArrowButtonOptions extends IControlOptions {
+export interface IArrowButtonOptions extends IControlOptions, IContrastBackgroundOptions {
     direction?: TArrowButtonDirection;
     inlineHeight: string;
     iconSize: string;
+    translucent: boolean;
 }
 
 /**
@@ -33,7 +35,8 @@ class ArrowButton extends Control<IArrowButtonOptions>  {
         return {
             inlineHeight: 'default',
             iconSize: 's',
-            direction: 'right'
+            direction: 'right',
+            translucent: false
         };
     }
 }
@@ -66,6 +69,16 @@ Object.defineProperty(ArrowButton, 'defaultProps', {
  */
 
 /**
+ * @name Controls/_buttons/ArrowButton#translucent
+ * @cfg {Boolean} Режим полупрозрачного отображения кнопки.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.buttons:ArrowButton translucent="{{true}}"/>
+ * </pre>
+ * @demo Controls-demo/Buttons/ArrowButton/Translucent/Index
+ */
+
+/**
  * @name Controls/_buttons/ArrowButton#inlineHeight
  * @cfg {Enum} Высота контрола.
  * @variant s
@@ -84,6 +97,11 @@ Object.defineProperty(ArrowButton, 'defaultProps', {
 /**
  * @name Controls/_buttons/ArrowButton#iconSize
  * @demo Controls-demo/Buttons/ArrowButton/IconSize/Index
+ */
+
+/**
+ * @name Controls/_buttons/ArrowButton#contrastBackground
+ * @demo Controls-demo/Buttons/ArrowButton/ContrastBackground/Index
  */
 
 export default ArrowButton;

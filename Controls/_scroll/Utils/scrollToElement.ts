@@ -1,6 +1,6 @@
 import cInstance = require('Core/core-instance');
 import {DimensionsMeasurer, getDimensions} from 'Controls/sizeUtils';
-import {getGapFixSize, POSITION, TYPE_FIXED_HEADERS} from 'Controls/_scroll/StickyBlock/Utils';
+import {POSITION, TYPE_FIXED_HEADERS} from 'Controls/_scroll/StickyBlock/Utils';
 import {goUpByControlTree} from 'UI/NodeCollector';
 import {IControl} from 'UICommon/interfaces';
 import Container from '../Container';
@@ -35,6 +35,54 @@ function getScrollableParents(element: HTMLElement, stickyHeaderElement: Element
    return scrollableParents;
 }
 
+/**
+ * Если элемент является стикиблоком ИЛИ элемент display: contents, но его прямые дочерние элементы стикиблоки,
+ * то считаем, что он - стикиблок.
+ * @returns HTMLElement | undefined
+ */
+function isStickyElement(element: HTMLElement): HTMLElement {
+   const stickyHeaderClass = 'controls-StickyHeader';
+   let stickyElement;
+
+   if (element.classList.contains(stickyHeaderClass)) {
+      stickyElement = element;
+   } else {
+      const elementStyle = window.getComputedStyle(element);
+      if (elementStyle.display === 'contents' && element.children[0].classList.contains(stickyHeaderClass)) {
+         stickyElement = element.children[0];
+      }
+   }
+   return stickyElement;
+}
+
+function getStickyElementOffset(stickyElement: HTMLElement,
+                                scrollableElement: HTMLElement): { top: number; bottom: number } {
+   const oldTop = stickyElement.style.top;
+   stickyElement.style.position = 'relative';
+   stickyElement.style.top = '0px';
+
+   let { top, height } = getDimensions(stickyElement);
+   // В IE, в отличие от Chrome, getBoundingClientRect возвращает нецелочисленные значения top
+   top = Math.round(top);
+
+   const windowDimensions = DimensionsMeasurer.getWindowDimensions(stickyElement);
+
+   const firstReplaceableBlock = getFirstReplaceableHeader(scrollableElement);
+   if (firstReplaceableBlock?.inst.container === stickyElement.parentElement ||
+       firstReplaceableBlock?.inst.container === stickyElement) {
+      // Смещение уменьшаем на 1, чтобы первый replaceable заголовок был отфиксирован и не имел тени.
+      top -= 1;
+   }
+
+   stickyElement.style.position = 'sticky';
+   stickyElement.style.top = oldTop;
+
+   return {
+      top: top + windowDimensions.pageYOffset,
+      bottom: top + height + windowDimensions.pageYOffset
+   };
+}
+
 function getOffset(element: HTMLElement): { top: number; bottom: number } {
    if (element === document.body || element === document.documentElement) {
       const elementDimensions = DimensionsMeasurer.getElementDimensions(element);
@@ -63,6 +111,17 @@ function getScrollContainerByElement(scrollableElement: HTMLElement): Container 
         (control: IControl) => cInstance.instanceOfModule(control, 'Controls/scroll:_ContainerBase')) as Container;
 }
 
+function getFirstReplaceableHeader(scrollableElement: HTMLElement): object {
+   const scrollControlNode: HTMLElement = scrollableElement.closest(SCROLL_CONTAINERS_SELECTOR);
+   if (scrollControlNode) {
+      const scrollContainer = getScrollContainerByElement(scrollControlNode);
+
+      if (scrollContainer) {
+         return scrollContainer.getFirstReplaceableHeader(POSITION.top);
+      }
+   }
+}
+
 function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; bottom: number; topWithOffset: number } {
    const scrollControlNode: HTMLElement = scrollableElement.closest(SCROLL_CONTAINERS_SELECTOR);
    if (scrollControlNode) {
@@ -82,7 +141,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
 function getCenterOffset(parentElement: HTMLElement, element: HTMLElement): number {
    const elementHeight: number = getDimensions(element).height;
    const parentHeight: number = getDimensions(parentElement).height;
-   return (parentHeight - elementHeight)/2;
+   return (parentHeight - elementHeight) / 2;
 }
 
 /**
@@ -151,42 +210,22 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
    }
 
    for (const parent of scrollableParent) {
-      const
-         elemToScroll = parent === document.documentElement ? document.body : parent,
-         parentOffset = getOffset(parent);
-      let elemOffset = getOffset(element); //Offset of the element changes after each scroll, so we can't just cache it
+      const elemToScroll = parent === document.documentElement ? document.body : parent;
+      const parentOffset = getOffset(parent);
+      const stickyElement = isStickyElement(element);
+      const elemOffset = stickyElement ? getStickyElementOffset(stickyElement, parent) : getOffset(element);
+
       const stickyHeaderHeight = getStickyHeaderHeight(parent);
       // Если внутри элемента, к которому хотят подскроллиться, лежит StickyHeader или элемент является StickyHeader'ом,
       // то мы не должны учитывать высоту предыдущего заголовка, т.к. заголовок встанет вместо него
       // Рассматримается кейс: https://online.sbis.ru/opendoc.html?guid=cf7d3b3a-de34-43f2-ad80-d545d462602b, где все
       // StickyHeader'ы одной высоты и сменяются друг за другом.
-      let innerStickyHeaderHeight;
-      if (element.classList.contains(stickyHeaderClass)) {
-          innerStickyHeaderHeight = element.offsetHeight;
-      } else {
-          const innerStickyHeader = element.querySelector(`.${stickyHeaderClass}`);
-          if (innerStickyHeader) {
-             if (forceSticky) {
-                const oldPosition = innerStickyHeader.style.position;
-                const oldTop = innerStickyHeader.style.top;
-                innerStickyHeader.style.position = 'relative';
-                innerStickyHeader.style.top = 0;
-
-                elemOffset = getOffset(innerStickyHeader);
-                elemOffset.top -= 1;
-
-                innerStickyHeader.style.position = oldPosition;
-                innerStickyHeader.style.top = oldTop;
-             }
-             innerStickyHeaderHeight = innerStickyHeader.offsetHeight;
-             innerStickyHeaderHeight -= getGapFixSize();
-          }
-      }
+      const innerStickyHeaderHeight = stickyElement?.offsetHeight;
       if (innerStickyHeaderHeight) {
          const positions = ['top', 'topWithOffset', 'bottom'];
          for (const position of positions) {
-             // Если мы отнимаем высоту заголовка и получаем результат меьнше нуля, значит заголовок был последним.
-             // В таком случае не нужно отнимать высоту.
+            // Если мы отнимаем высоту заголовка и получаем результат меньше нуля, значит заголовок был последним.
+            // В таком случае не нужно отнимать высоту.
             if (stickyHeaderHeight[position] - innerStickyHeaderHeight >= 0) {
                stickyHeaderHeight[position] -= innerStickyHeaderHeight;
             }

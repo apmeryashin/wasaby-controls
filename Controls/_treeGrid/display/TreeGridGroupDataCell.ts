@@ -62,6 +62,11 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
         }
         classes += this._getContentAlignClasses();
         classes += ' controls-ListView__groupContent';
+
+        classes += ' controls-ListView__groupContent_height';
+        if (this.shouldDisplayItemActions()) {
+            classes += '_withItemActions';
+        }
         return classes;
     }
 

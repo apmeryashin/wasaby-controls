@@ -16,7 +16,7 @@ import {TResultsPosition} from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import ItemActionsCell from './../ItemActionsCell';
-import {TColspanCallback, TColspanCallbackResult} from './Grid';
+import {TColspanCallback, TColspanCallbackResult, TColumnScrollViewMode} from './Grid';
 import {DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/grid:ItemTemplate';
@@ -31,7 +31,7 @@ export interface IItemTemplateParams {
 }
 
 export interface IInitializeColumnsOptions {
-    shouldAddStickyLadderCells?: boolean;
+    prepareStickyLadderCellsStrategy?: 'add' | 'colspan' | 'offset';
     shouldAddMultiSelectCell?: boolean;
     addEmptyCellsForStickyLadder?: boolean;
     colspanStrategy?: 'skipColumns' | 'consistently';
@@ -449,10 +449,11 @@ export default abstract class Row<T extends Model = Model> {
     protected _prepareColumnItems(columns: IColspanParams[],
                                   factory: (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>>,
                                   shouldColspanWithMultiselect: boolean,
-                                  shouldColspanWithStickyLadderCells: boolean,
+                                  prepareStickyLadderCellsStrategy: IInitializeColumnsOptions['prepareStickyLadderCellsStrategy'],
                                   skipColumns: boolean = false): Cell[] {
 
         const creatingColumnsParams = [];
+        let stickyLadderCellsCount = 0;
 
         for (
             let columnIndex = 0, resultTotalLength = 0;
@@ -467,8 +468,8 @@ export default abstract class Row<T extends Model = Model> {
             if (this.hasMultiSelectColumn() && shouldColspanWithMultiselect) {
                 colspan++;
             }
-            let stickyLadderCellsCount = 0;
-            if (((shouldColspanWithStickyLadderCells || colspan > 1) && columnIndex === 0)  && this.isFullGridSupport()) {
+
+            if (((prepareStickyLadderCellsStrategy === 'colspan'  || colspan > 1) && columnIndex === 0)  && this.isFullGridSupport()) {
                 const stickyLadderProperties = this.getStickyLadderProperties(this.getGridColumnsConfig()[0]);
                 stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
                 colspan += stickyLadderCellsCount;
@@ -515,6 +516,16 @@ export default abstract class Row<T extends Model = Model> {
             creatingColumnsParams[0].isSingleColspanedCell = true;
             if (this.hasColumnScroll()) {
                 creatingColumnsParams[0].isFixed = true;
+            }
+
+            if (prepareStickyLadderCellsStrategy === 'offset' && stickyLadderCellsCount) {
+                creatingColumnsParams[0].colspan = creatingColumnsParams[0].colspan - 1;
+                creatingColumnsParams.unshift({
+                    isFixed: true,
+                    isHidden: true,
+                    column: {},
+                    colspan: 1
+                });
             }
         }
 
@@ -567,9 +578,10 @@ export default abstract class Row<T extends Model = Model> {
     }
 
     protected _initializeColumns(options: IInitializeColumnsOptions = {
-        shouldAddStickyLadderCells: true,
+        prepareStickyLadderCellsStrategy: 'add',
         shouldAddMultiSelectCell: true
     }): void {
+        const prepareStickyLadderCellsStrategy = options.prepareStickyLadderCellsStrategy || 'add';
         if (this._$columnsConfig) {
 
             // Заполняем основные ячейки строки (данные), учитывая колспаны.
@@ -577,13 +589,13 @@ export default abstract class Row<T extends Model = Model> {
                 this._$columnsConfig,
                 this.getColumnsFactory(),
                 options.shouldAddMultiSelectCell === false,
-                options.shouldAddStickyLadderCells === false,
+                prepareStickyLadderCellsStrategy,
                 options.colspanStrategy === 'skipColumns'
             );
 
             // Заполняем ячейки для лесенки.
             // TODO: Не работает с колспаннутыми узлами. Нужно чтобы лесенка работала до колспана или сквозь него.
-            if (options.shouldAddStickyLadderCells !== false &&
+            if (prepareStickyLadderCellsStrategy === 'add' &&
                 this.isFullGridSupport() &&
                 this._$columnItems.length &&
                 this._$columnItems[0].getColspan() === 1) {
@@ -632,6 +644,14 @@ export default abstract class Row<T extends Model = Model> {
 
     hasColumnScroll(): boolean {
         return this._$owner.hasColumnScroll();
+    }
+
+    getColumnScrollViewMode(): TColumnScrollViewMode {
+        return this._$owner.getColumnScrollViewMode();
+    }
+
+    setColumnScrollViewMode(newColumnScrollViewMode: TColumnScrollViewMode): void {
+        this._reinitializeColumns(true);
     }
 
     getStickyColumnsCount(): number {

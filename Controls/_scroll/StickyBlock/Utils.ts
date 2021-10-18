@@ -149,37 +149,3 @@ export function isHidden(element: HTMLElement): boolean {
 
     return !!element.closest('.ws-hidden');
 }
-
-/**
- * On android and ios there is a gap between child elements.
- * When the header is fixed, there is a space between the container, relative to which it is fixed,
- * and the header, through which you can see the scrolled content. Its size does not exceed one pixel.
- * https://jsfiddle.net/tz52xr3k/3/
- *
- * As a solution, move the header up and increase its size by an offset, using padding.
- * In this way, the content of the header does not change visually, and the free space disappears.
- * The offset must be at least as large as the free space. Take the nearest integer equal to one.
- * This fix does't work on android platform
- */
-
-const GAP_FIX_OFFSET: number = 1;
-const DESKTOP_PIXEL_RATIOS_BUG = [0.75, 1.25, 1.75];
-
-function getDevicePixelRatio(): number {
-        return window ? window.devicePixelRatio : 1;
-}
-
-export function getGapFixSize(): number {
-    let offset: number = 0;
-    if (detection.isMobilePlatform) {
-        if (!detection.isMobileAndroid) {
-            offset = GAP_FIX_OFFSET;
-        }
-    } else {
-        // Щель над прилипающим заголовком появляется на десктопах на масштабе 75%, 125% и 175%
-        if (DESKTOP_PIXEL_RATIOS_BUG.indexOf(getDevicePixelRatio()) !== -1) {
-            offset = GAP_FIX_OFFSET;
-        }
-    }
-    return offset;
-}

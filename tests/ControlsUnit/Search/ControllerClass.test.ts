@@ -520,5 +520,31 @@ describe('Controls/search:ControllerClass', () => {
          await searchController.search('testSearchValue');
          assert.deepStrictEqual(sourceController.getExpandedItems(), [null]);
       });
+
+      it('inputSearchValue changed while search is in process', async () => {
+         const sourceController = getSourceController();
+         const searchController = getSearchController({sourceController});
+         const searchPromise = searchController.search('testSearchValue');
+         searchController.setInputSearchValue('newInputSearchValue');
+
+         return searchPromise.catch((error) => {
+            assert.ok(error.isCanceled);
+         });
+      });
+
+      it('search with searchValueTrim option', async () => {
+         const searchController = getSearchController({
+            sourceController: getSourceController({filter: {}}),
+            searchValueTrim: true,
+            searchParam: 'title'
+         });
+
+         let searchResult = await searchController.search('   test    ');
+         assert.ok((searchResult as RecordSet).getCount() === 2);
+
+         await searchController.reset();
+         searchResult = await searchController.search('     ');
+         assert.ok(searchResult === null);
+      });
    });
 });

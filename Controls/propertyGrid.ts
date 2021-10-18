@@ -23,7 +23,7 @@ import BooleanEditor = require("Controls/_propertyGrid/defaultEditors/Boolean");
 import StringEditor = require("Controls/_propertyGrid/defaultEditors/String");
 import TextEditor = require("Controls/_propertyGrid/defaultEditors/Text");
 import EnumEditor = require("Controls/_propertyGrid/defaultEditors/Enum");
-import DateEditor = require('Controls/_propertyGrid/defaultEditors/Date');
+import {default as DateEditor} from 'Controls/_propertyGrid/defaultEditors/Date';
 import {default as NumberEditor} from 'Controls/_propertyGrid/defaultEditors/Number';
 import BooleanGroupEditor = require("Controls/_propertyGrid/extendedEditors/BooleanGroup");
 import FlatEnumEditor = require("Controls/_propertyGrid/extendedEditors/FlatEnum");
@@ -31,7 +31,6 @@ import {default as DropdownEditor} from 'Controls/_propertyGrid/extendedEditors/
 import {default as LookupEditor} from 'Controls/_propertyGrid/extendedEditors/Lookup';
 import {default as CheckboxGroupEditor} from 'Controls/_propertyGrid/extendedEditors/CheckboxGroup';
 import {default as TimeIntervalEditor} from 'Controls/_propertyGrid/extendedEditors/TimeInterval';
-import {default as InputMaskEditor} from 'Controls/_propertyGrid/extendedEditors/InputMask';
 import {default as LogicEditor} from 'Controls/_propertyGrid/extendedEditors/Logic';
 
 import {default as TabbedView} from 'Controls/_propertyGrid/TabbedView';

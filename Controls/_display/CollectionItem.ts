@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -780,6 +780,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             (this.getStyle() === 'master');
     }
 
+    // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
+    isIosZIndexOptimized(): boolean {
+        return true;
+    }
+
     getShadowVisibility(): string {
         return this._shadowVisibility;
     }
@@ -965,10 +970,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
+     * @param fontColorStyle - цвет шрифта в строке
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
-    getContentClasses(): string {
+    getContentClasses(fontColorStyle?: TFontColorStyle): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
         let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses()}`;
@@ -987,6 +993,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (this.isDragged()) {
             contentClasses += ' controls-ListView__itemContent_dragging';
+        }
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
         }
         return contentClasses;
     }
@@ -1011,7 +1020,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             itemPadding = {
                 top: this.getOwner().getTopPadding().toLowerCase(),
                 bottom: this.getOwner().getBottomPadding().toLowerCase()
-            }
+            };
         }
         if (itemActionsPosition !== 'outside') {
             result.push(classes);

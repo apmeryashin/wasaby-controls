@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {IItemsOptions, IMultiSelectableOptions} from 'Controls/interface';
+import {IHeightOptions, IItemsOptions, IMultiSelectableOptions} from 'Controls/interface';
 import {ButtonTemplate} from 'Controls/buttons';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -11,7 +11,8 @@ import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 
 export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions, IItemsOptions<object>,
-    IItemTemplateOptions {
+    IItemTemplateOptions, IHeightOptions {
+    direction?: string;
 }
 
 /**
@@ -23,6 +24,27 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Chips/Index
+ * @demo Controls-demo/toggle/Chips/ManyContent/Index
+ */
+
+/**
+ * @name Controls/_toggle/Chips#direction
+ * @cfg {string} Расположение элементов в контейнере.
+ * @variant horizontal Элементы расположены один за другим (горизонтально).
+ * @variant vertical Элементы расположены один под другим (вертикально).
+ * @default horizontal
+ * @demo Controls-demo/toggle/Chips/Direction/Index
+ * @example
+ * Вертикальная ориентация.
+ * <pre>
+ *    <Controls.toggle:Chips direction="vertical"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_toggle/Tumbler#inlineHeight
+ * @cfg {String}
+ * @demo Controls-demo/toggle/Chips/inlineHeight/Index
  */
 
 /**
@@ -94,6 +116,12 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * </pre>
  */
 
+/**
+ * @name Controls/_toggle/Chips#readOnly
+ * @cfg
+ * @demo Controls-demo/toggle/Chips/ReadOnly/Index
+ */
+
 class Chips extends Control<IChipsOptions> {
     protected _template: TemplateFunction = template;
     protected _buttonTemplate: TemplateFunction = ButtonTemplate;
@@ -110,32 +138,25 @@ class Chips extends Control<IChipsOptions> {
     }
 
     protected _onItemClick(event: SyntheticEvent<Event>, item: Model): void {
-        const keyProperty = this._options.keyProperty;
-        const selectedKeys = [...this._options.selectedKeys];
-        const itemIndex = selectedKeys.indexOf(item.get(keyProperty));
-        if (itemIndex === -1) {
-            selectedKeys.push(item.get(keyProperty));
-        } else {
-            selectedKeys.splice(itemIndex, 1);
+        if (!this._options.readOnly) {
+            const keyProperty = this._options.keyProperty;
+            const selectedKeys = [...this._options.selectedKeys];
+            const itemIndex = selectedKeys.indexOf(item.get(keyProperty));
+            if (itemIndex === -1) {
+                selectedKeys.push(item.get(keyProperty));
+            } else {
+                selectedKeys.splice(itemIndex, 1);
+            }
+            this._notify('selectedKeysChanged', [selectedKeys]);
         }
-        this._notify('selectedKeysChanged', [selectedKeys]);
     }
 
-    static getDefaultOptions(): IChipsOptions {
-        return {
-            keyProperty: 'id',
-            itemTemplate
-        };
-    }
+    static defaultProps: Partial<IChipsOptions> = {
+        keyProperty: 'id',
+        itemTemplate,
+        inlineHeight: 'm',
+        direction: 'horizontal'
+    };
 }
-
-Object.defineProperty(Chips, 'defaultProps', {
-    enumerable: true,
-    configurable: true,
-
-    get(): object {
-        return Chips.getDefaultOptions();
-    }
-});
 
 export default Chips;

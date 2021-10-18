@@ -19,7 +19,7 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
     readonly EdgeRowSeparatorItem: boolean = true;
     readonly DraggableItem: boolean = false;
     readonly LadderSupport: boolean = false;
-    readonly ItemActionsItem: boolean = false;
+    readonly ItemActionsItem: boolean = true;
     readonly GroupNodeItem: boolean = true;
 
     protected _$isHiddenGroup: boolean;
@@ -33,7 +33,6 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
     // region overrides
 
     getItemClasses(params: IItemTemplateParams): string {
-        params.highlightOnHover = false;
         let classes = super.getItemClasses(params);
         classes += ` controls-ListView__group${this.isHiddenGroup() ? 'Hidden' : ''}`;
         return classes;
@@ -61,6 +60,11 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
 
     isSticked(): boolean {
         return this.getOwner().isStickyGroup() && !this.isHiddenGroup();
+    }
+
+    // TODO Убрать после https://online.sbis.ru/opendoc.html?guid=b8c7818f-adc8-4e9e-8edc-ec1680f286bb
+    isIosZIndexOptimized(): boolean {
+        return false;
     }
 
     getStickyHeaderMode(): string {
@@ -91,11 +95,17 @@ export default class TreeGridGroupDataRow<T extends Model = Model> extends TreeG
     protected _initializeColumns(options?: IInitializeColumnsOptions): void {
         super._initializeColumns({
             shouldAddMultiSelectCell: true,
-            shouldAddStickyLadderCells: false,
+            prepareStickyLadderCellsStrategy: 'colspan',
             extensionCellsConstructors: {
                 multiSelectCell: this.getColumnsFactory({column: {}})
             }
         });
+    }
+
+    getItemActionPositionClasses(itemActionsPosition: string,
+                                 itemActionsClass: string,
+                                 itemPadding: {top?: string, bottom?: string}): string {
+        return itemActionsClass || 'controls-itemActionsV_position_bottomRight';
     }
 
     getLevel(): number {

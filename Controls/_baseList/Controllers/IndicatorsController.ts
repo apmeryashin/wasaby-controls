@@ -59,14 +59,6 @@ export default class IndicatorsController {
         this._options = options;
         this._model = options.model;
 
-        const hasItems = this._model && !!this._model.getCount();
-        const displayBottomIndicator = this.shouldDisplayBottomIndicator() && hasItems;
-
-        // Нижний индикатор сразу же показываем, т.к. не нужно скроллить
-        if (displayBottomIndicator) {
-            this.displayBottomIndicator();
-        }
-
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
             this.startDisplayPortionedSearch(direction);
@@ -228,8 +220,15 @@ export default class IndicatorsController {
     displayBottomIndicator(): void {
         // если индикатор уже показан, то возможно у нас поменялось состояние индикатора.
         // Поэтому метод на модели нужно всегда вызывать
-        const indicatorState = this._getLoadingIndicatorState('bottom');
-        this._model.displayIndicator('bottom', indicatorState);
+        if (this._viewportFilled) {
+            const indicatorState = this._getLoadingIndicatorState('bottom');
+            this._model.displayIndicator('bottom', indicatorState);
+        } else {
+            this._startDisplayIndicatorTimer(() => {
+                const indicatorState = this._getLoadingIndicatorState('bottom');
+                this._model.displayIndicator('bottom', indicatorState);
+            });
+        }
     }
 
     shouldDisplayGlobalIndicator(): boolean {
@@ -380,6 +379,7 @@ export default class IndicatorsController {
     }
 
     private _startDisplayIndicatorTimer(showIndicator: () => void): void {
+        this._clearDisplayIndicatorTimer();
         this._displayIndicatorTimer = setTimeout(() => {
             if (!this._model || this._model.destroyed) {
                 return;
@@ -529,8 +529,11 @@ export default class IndicatorsController {
      * Определяет, можно ли продолжить отображать порционный поиск.
      * @return {boolean} Можно ли продолжить отображать порционный поиск
      */
-    shouldContinueDisplayPortionedSearch(): boolean {
-        return this._getSearchState() !== SEARCH_STATES.STOPPED && this._getSearchState() !== SEARCH_STATES.ABORTED;
+    shouldContinueDisplayPortionedSearch(direction?: 'up'|'down'): boolean {
+        // Либо мы при остановке пытаемся подгрузить в другую сторону, либо поиск не приостановле
+        const allowByStoppedState = direction && this.getPortionedSearchDirection() !== direction ||
+            this._getSearchState() !== SEARCH_STATES.STOPPED;
+        return allowByStoppedState && this._getSearchState() !== SEARCH_STATES.ABORTED;
     }
 
     /**

@@ -2,7 +2,7 @@ import {default as BaseController, ITemplateControllerOptions} from './Base';
 import {ITableConfig} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
 import {TreeItem} from 'Controls/display';
 
-export default class ListController extends BaseController<ITableConfig, TreeItem> {
+export default class TableController extends BaseController<ITableConfig, TreeItem> {
     constructor(options: ITemplateControllerOptions) {
         super(options);
     }

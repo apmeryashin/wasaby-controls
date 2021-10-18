@@ -1,5 +1,6 @@
 import {IControlOptions} from 'UI/Base';
 import {IFilterItem} from 'Controls/filter';
+import {TButtonStyle} from 'Controls/buttons';
 
 export type THistorySaveMode = 'favorite'|'pinned';
 type TOrientation = 'vertical'|'horizontal';
@@ -19,6 +20,7 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  headingCaption: string;
  headingStyle: string;
  applyButtonCaption: string;
+ applyButtonStyle?: TButtonStyle;
 }
 
 /**
@@ -384,6 +386,12 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @default Отобрать
  * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
  * @cfg {String} Текст на кнопке применения фильтрации.
+ */
+
+/**
+ * @name Controls/_filterPopup/interface/IFilterPanel#applyButtonStyle
+ * @default primary
+ * @cfg {Controls/buttons:TButtonStyle} Стиль отображения кнопки применения фильтрации.
  */
 
  /**

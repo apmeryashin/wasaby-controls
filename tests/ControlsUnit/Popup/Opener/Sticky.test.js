@@ -141,7 +141,9 @@ define(
             StickyController._isTargetVisible = () => true;
             let item = {
                position: {},
-               popupOptions: {},
+               popupOptions: {
+                  target: {}
+               },
                sizes: {}
             };
             let container = {

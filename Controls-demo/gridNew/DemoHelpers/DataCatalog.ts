@@ -8,7 +8,7 @@ export interface IData {
     population?: number;
     square?: number;
     populationDensity?: number;
-    date?: string;
+    date?: string | Date;
     time?: string;
     name?: string;
     message?: string;

@@ -669,7 +669,6 @@ const _private = {
                     self._indicatorsController.continueDisplayPortionedSearch('top');
                 }
             } else {
-                self._indicatorsController.recountIndicators(direction);
                 if (!self._indicatorsController.hasDisplayedIndicator()) {
                     self._displayGlobalIndicator();
                 }
@@ -679,7 +678,7 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
 
-            return self._sourceController.load(direction).addCallback((addedItems) => {
+            return self._loadItemsToDirection(direction).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
@@ -712,19 +711,29 @@ const _private = {
                 const hasMoreData = _private.getHasMoreData(self);
                 self._indicatorsController.setHasMoreData(hasMoreData.up, hasMoreData.down);
 
-                if (_private.isPortionedLoad(self, addedItems)) {
-                    if (!hasMoreData.down && !hasMoreData.up) {
-                        self._indicatorsController.endDisplayPortionedSearch();
+                // проверять что сейчас порционный поиск по метаданным нельзя,
+                // т.к. в этот момент могут сказать что вниз порционный поиск закончился(metaData.iterative = false)
+                const searchDirection = self._indicatorsController.getPortionedSearchDirection();
+                if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
+                    // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
+                    // который означает что есть данные вверх. По триггеру начнем поиск вверх
+                    self._indicatorsController.endDisplayPortionedSearch();
+
+                    // если вьюпорт заполнен, то показываем индикатор вместе с триггером,
+                    // иначе только триггер, чтобы не было морганий индикатора
+                    const viewportFilled = self._viewSize > self._viewportSize && self._viewportSize;
+                    if (viewportFilled) {
+                        self._indicatorsController.displayTopIndicator(true);
                     } else {
-                        const searchDirection = self._indicatorsController.getPortionedSearchDirection();
-                        if (searchDirection === 'down' && !hasMoreData.down && hasMoreData.up) {
-                            // прекращаем показывать порционный поиск вниз, и показываем идикатор вверх,
-                            // который означает что есть данные вверх. По триггеру начнем поиск вверх
-                            self._indicatorsController.endDisplayPortionedSearch();
-                            self._indicatorsController.displayTopIndicator(true);
-                        }
+                        self._observersController.displayTrigger(self._children.listView?.getTopLoadingTrigger());
                     }
-                } else {
+                }
+                // если больше нет данных заканчиваем порцоннный поиск
+                if (!hasMoreData.down && !hasMoreData.up) {
+                    self._indicatorsController.endDisplayPortionedSearch();
+                }
+
+                if (!_private.isPortionedLoad(self, addedItems)) {
                     self._indicatorsController.recountIndicators(direction);
                 }
 
@@ -764,8 +773,18 @@ const _private = {
         const needLoad = _private.needLoadNextPageAfterLoad(self, items, self._listViewModel, options.navigation);
         if (needLoad) {
             const filter = self._sourceController && self._sourceController.getFilter() || options.filter;
-            const direction = self._indicatorsController.getPortionedSearchDirection() || 'down';
-            _private.loadToDirectionIfNeed(self, direction, filter);
+            let direction;
+            if (_private.isPortionedLoad(self, loadedItems) && self._indicatorsController.getPortionedSearchDirection()) {
+                direction = self._indicatorsController.getPortionedSearchDirection();
+            } else if (self._hasMoreData('down')) {
+                direction = 'down';
+            } else if (self._hasMoreData('up')) {
+                direction = 'up';
+            }
+
+            if (direction) {
+                _private.loadToDirectionIfNeed(self, direction, filter);
+            }
         }
     },
 
@@ -1994,9 +2013,6 @@ const _private = {
 
         _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
 
-        if (this._shouldEndDisplayPortionedSearch(items)) {
-            this._indicatorsController.endDisplayPortionedSearch();
-        }
         if (this._indicatorsController.shouldHideGlobalIndicator()) {
             this._indicatorsController.hideGlobalIndicator();
         }
@@ -3013,6 +3029,7 @@ const _private = {
  * @implements Controls/list:IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
  * @implements Controls/list:IMovableList
@@ -3027,6 +3044,7 @@ const _private = {
 export interface IBaseControlOptions extends IControlOptions, ISourceOptions, IItemActionsOptions {
     keyProperty: string;
     viewModelConstructor: string;
+    collection: Collection;
     navigation?: INavigationOptionValue<INavigationSourceConfig>;
     sourceController?: SourceController;
     items?: RecordSet;
@@ -3769,7 +3787,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
         }
         this._updateInProgress = true;
-        const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const loadStarted = newOptions.loading && !this._options.loading;
         const loadedBySourceController = this._loadedBySourceController;
@@ -3795,21 +3812,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = !!newOptions._recreateCollection ||
-                                    newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+        const shouldReInitCollection = !!newOptions._recreateCollection ||
+                                    newOptions.viewModelConstructor && newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+                                    newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-        if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
+        if (this._editInPlaceController && (shouldReInitCollection || loadStarted)) {
             if (this.isEditing()) {
                 // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
                 // без возможности отменить закрытие из вне.
                 this._cancelEdit(true).then(() => {
-                    if (oldViewModelConstructorChanged) {
+                    if (shouldReInitCollection) {
                         this._destroyEditInPlaceController();
                     }
                 });
             } else {
-                if (oldViewModelConstructorChanged) {
+                if (shouldReInitCollection) {
                     this._destroyEditInPlaceController();
                 }
             }
@@ -3821,7 +3839,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if (newOptions.viewModelConstructor && oldViewModelConstructorChanged && this._listViewModel) {
+        if (shouldReInitCollection && this._listViewModel) {
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
@@ -3850,7 +3868,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         this._updateIndicatorsController(newOptions, isSourceControllerLoadingNow);
 
-        if (loadStarted && !this._indicatorsController.hasDisplayedIndicator()) {
+        if (loadStarted) {
             this._displayGlobalIndicator();
         }
 
@@ -3949,6 +3967,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._options.selectionViewMode === newOptions.selectionViewMode ||
                 newOptions.selectionViewMode !== 'selected';
             const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            const filterChanged = !isEqual(newOptions.filter, this._options.filter) ||
+                !isEqual(newOptions.searchValue, this._options.searchValue);
             if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
@@ -4312,7 +4332,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        if (this._pagingVisible) {
+        if (this._pagingVisible && this._isPagingPadding()) {
             this._updatePagingPadding();
         }
         if (this._pagingVisibilityChanged) {
@@ -4435,10 +4455,15 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this.callbackAfterRender = null;
         }
 
-        // это нужно делать после вызова всех колбэков, т.к. остановка порционного поиска по необходимости
-        // может вызвать отрисовку верхней ромашки. Эта отрисовка юзает колбэки выше, но мы должны попасть через них
-        // в следующую отрисовку, чтобы ромашка уже была точно отрисована.
-        if (this._indicatorsController.shouldStopDisplayPortionedSearch()) {
+        if (
+            this._indicatorsController.isDisplayedPortionedSearch() &&
+            _private.isMaxCountNavigation(this._options.navigation) &&
+            !_private.needLoadByMaxCountNavigation(this._listViewModel, this._options.navigation)) {
+            this._indicatorsController.endDisplayPortionedSearch();
+        } else if (this._indicatorsController.shouldStopDisplayPortionedSearch()) {
+            // это нужно делать после вызова всех колбэков, т.к. остановка порционного поиска по необходимости
+            // может вызвать отрисовку верхней ромашки. Эта отрисовка юзает колбэки выше, но мы должны попасть через них
+            // в следующую отрисовку, чтобы ромашка уже была точно отрисована.
             this._indicatorsController.stopDisplayPortionedSearch();
         }
     }
@@ -4723,6 +4748,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
+        // При перезагрузке через public-метод полностью сбрасываем состояние cut-навигации
+        // https://online.sbis.ru/opendoc.html?guid=73d5765b-598a-4e2c-a867-91a54150ae9e
+        if (this._cutExpanded) {
+            this._cutExpanded = false;
+            this._sourceController.setNavigation(this._options.navigation);
+        }
+
         if (keepScroll) {
             this._keepScrollAfterReload = true;
             if (!sourceConfig) {
@@ -4841,6 +4873,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return !!(this._sourceController && this._sourceController.hasMoreData(direction));
     }
 
+    protected _loadItemsToDirection(direction: IDirection): Promise<RecordSet|Error> {
+        return this._sourceController.load(direction);
+    }
+
     private _commitEditInGroupBeforeCollapse(groupItem): TAsyncOperationResult {
         if (!this.isEditing() || !groupItem.isExpanded()) {
             return Promise.resolve();
@@ -4891,6 +4927,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 collection.setCollapsedGroups(collapsedGroups);
                 _private.groupsExpandChangeHandler(this, changes);
             });
+            this._notify('groupClick', [dispItem.getContents(), baseEvent, dispItem]);
         }
     }
 
@@ -5780,8 +5817,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // region Cut
 
     private _toggleCutClick() {
-        const newExpanded = !this._cutExpanded;
-        this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        const result = this._notify('cutClick', [this._cutExpanded], { bubbling: true });
+        if (result !== false) {
+            const newExpanded = !this._cutExpanded;
+            this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        }
     }
 
     private _reCountCut(newExpanded: boolean): Promise<void> {
@@ -6012,6 +6052,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._indicatorsController.displayTopIndicator(true);
             } else {
                 this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+            }
+
+            if (this._indicatorsController.shouldDisplayBottomIndicator()) {
+                this._indicatorsController.displayBottomIndicator();
             }
         }
 
@@ -6448,6 +6492,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const stopDisplayPortionedSearchCallback = () => {
             if (typeof this._sourceController.cancelLoading !== 'undefined') {
                 this._sourceController.cancelLoading();
+            }
+
+            if (this._indicatorsController.shouldDisplayTopIndicator()) {
+                this._indicatorsController.displayTopIndicator(true);
             }
 
             if (this._isScrollShown) {

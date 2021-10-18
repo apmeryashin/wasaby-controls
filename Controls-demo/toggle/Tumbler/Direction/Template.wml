@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper {{_options.theme.indexOf('default')<0 ? 'controlsDemo_fixedWidth500' : 'controlsDemo_fixedWidth300'}}">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label controlsDemo_widthFit">direction='horizontal'</div>
+        <Controls.toggle:Tumbler items="{{_items1}}" direction="horizontal" bind:selectedKey="_selectedKey1" attr:class="ControlsDemo-Tumbler__horizontal"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label controlsDemo_widthFit">direction='vertical'</div>
+        <Controls.toggle:Tumbler items="{{_items1}}" direction="vertical" bind:selectedKey="_selectedKey2" attr:class="ControlsDemo-Tumbler__vertical">
+            <ws:itemTemplate>
+                <span class="controls-icon controls-icon_size-s controls-icon_style-secondary {{itemTemplate.item.get('icon')}}"></span>
+            </ws:itemTemplate>
+        </Controls.toggle:Tumbler>
+    </div>
+</div>

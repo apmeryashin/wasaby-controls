@@ -8,26 +8,47 @@
    position: relative;
    border-radius: var(--border-radius_tumbler);
    background: var(--background-color_tumbler);
-   padding-left: var(--button_offset_tumbler);
 }
 
 .controls-Tumbler__button {
    z-index: 1;
    white-space: nowrap;
-   margin-right: var(--button_offset_tumbler);
    align-items: center;
-   padding: 0 var(--offset_m);
    display: flex;
    flex-shrink: 1;
-   width: auto;
    border-radius: var(--border-radius_tumbler);
+}
 
-   @variants: xs, s, m, l, xl, 2xl, default;
-   .for(@variants, {
-      &-@{_item} {
-         height: ~"calc(var(--inline_height_@{_item}) - 2 * var(--button_offset_tumbler))";
-      }
-   });
+@variants: xs, s, m, l, xl, 2 xl, 3 xl, 4 xl, 5 xl, default;
+
+.controls-Tumbler__wrapper_vertical {
+   .flex-direction(column);
+
+   width: 100%;
+   margin: 0 var(--button_offset_tumbler);
+   padding-top: var(--button_offset_tumbler);
+
+   .controls-Tumbler__button {
+      padding: var(--offset_s) var(--icon_offset_tumbler);
+      margin-bottom: var(--button_offset_tumbler);
+      height: auto;
+   }
+}
+
+.controls-Tumbler__wrapper_horizontal {
+   padding-left: var(--button_offset_tumbler);
+
+   .controls-Tumbler__button {
+      margin-right: var(--button_offset_tumbler);
+      padding: 0 var(--offset_m);
+      width: auto;
+
+      .for(@variants, {
+         &-@{_item} {
+            height: ~"calc(var(--inline_height_@{_item}) - 2 * var(--button_offset_tumbler))";
+         }
+      });
+   }
 }
 
 .controls-Tumbler__button-selected {

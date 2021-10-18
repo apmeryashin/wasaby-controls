@@ -4,7 +4,9 @@
    <div class="controls-StickyHeader controls_scroll_theme-{{ _options.theme }}
    controls-background-{{ _options.backgroundStyle }}
    controls-StickyHeader_position
-   {{_gapFixClass}}"
+   {{_gapFixClass}}
+   {{_options._subPixelArtifactFix ? ('controls-StickyBlock__subpixelFix-' + _options.backgroundStyle) : ''}}
+   {{_isMobileIOS || _isPixelRatioBug ? ('controls-StickyBlock__topGapFix-' + _options.backgroundStyle) : ''}}"
         style="{{_style + (_options.style || '')}}"
         name="content">
       <ws:if data="{{_canShadowVisible.top}}">
@@ -19,7 +21,7 @@
       <ws:partial template="{{_options.content}}"
                   attr:class="controls-StickyHeader__content"
                   scope="{{_options}}"
-                  isHeaderFixed="{{_isStickyShadowVisible}}"
+                  isHeaderFixed="{{!!_model.fixedPosition}}"
                   on:arrowClick="_notifyHandler('arrowClick')"
                   on:controlResize="_selfResizeHandler()"/>
       <div name="observationTargetBottomLeft" class="controls-StickyHeader__observationTargetBottomLeft" style="{{ _getObserverStyle('bottom', _options.offsetTop, _options.shadowVisibility) }}"></div>

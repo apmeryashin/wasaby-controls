@@ -90,5 +90,30 @@ describe('Controls/grid/Display/Cell/background/hoverBackgroundStyle', () => {
             cAssert.include(cell.getContentClasses(undefined, 'default', true),
                 'controls-Grid__item_background-hover_default');
         });
+
+        // Если на шаблоне выключен ховер для всей строки, то нет смысла подсвечивать какую-то одну
+        it('templateHighlightOnHover=false, templateHoverBackgroundStyle=custom2, column.hoverBackgroundStyle=custom', () => {
+            cell = new GridCell({ owner, column: { width: '', hoverBackgroundStyle: 'custom'} });
+            cAssert.notInclude(cell.getContentClasses( undefined, 'default', false, true, 'custom2'),
+                'controls-Grid__item_background-hover_custom');
+        });
+
+        it('templateHighlightOnHover=true, templateHoverBackgroundStyle=custom2, column.hoverBackgroundStyle=custom', () => {
+            cell = new GridCell({ owner, column: { width: '', hoverBackgroundStyle: 'custom'} });
+            cAssert.include(cell.getContentClasses(undefined, 'default', true, true, 'custom2'),
+                'controls-Grid__item_background-hover_custom');
+        });
+
+        it('templateHighlightOnHover=true, templateHoverBackgroundStyle=custom2, column.hoverBackgroundStyle=transparent', () => {
+            cell = new GridCell({ owner, column: { width: '', hoverBackgroundStyle: 'transparent'} });
+            cAssert.notInclude(cell.getContentClasses( undefined, 'default', true, true, 'custom2'),
+                'controls-Grid__item_background-hover_default');
+        });
+
+        it('templateHighlightOnHover=true, templateHoverBackgroundStyle=custom2, column.hoverBackgroundStyle not defined', () => {
+            cell = new GridCell({ owner, column: { width: ''} });
+            cAssert.include(cell.getContentClasses(undefined, 'default', true, true, 'custom2'),
+                'controls-Grid__item_background-hover_custom2');
+        });
     });
 });

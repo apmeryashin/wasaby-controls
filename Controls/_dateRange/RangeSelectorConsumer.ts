@@ -45,6 +45,10 @@ export default class RangeSelectorConsumer extends Control {
         consumer: DateRangeSelectorConsumer
     };
 
+    openPopup(): void {
+        this._children.dateRange.openPopup();
+    }
+
     protected _afterMount(options: IControlOptions): void {
         const shiftPeriod = this._children.dateRange.shiftPeriod;
         this._children.consumer.setShiftPeriod(shiftPeriod);

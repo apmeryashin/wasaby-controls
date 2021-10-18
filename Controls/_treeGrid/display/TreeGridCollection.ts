@@ -229,9 +229,8 @@ export default class TreeGridCollection<
 
         // Сбрасываем модель заголовка если его видимость зависит от наличия данных и текущее действие
         // это смена записей.
-        // При headerVisibility === 'visible' вроде как пока не требуется перерисовывать заголовок, т.к.
-        // он есть всегда. Но если потребуется, то нужно поправить это условие
-        if (this._$headerVisibility === 'hasdata' && changeAction === IObservable.ACTION_RESET) {
+        const headerIsVisible = this._headerIsVisible(this._$header);
+        if (changeAction === IObservable.ACTION_RESET && !headerIsVisible) {
             this._$headerModel = null;
         }
 
@@ -401,6 +400,7 @@ Object.assign(TreeGridCollection.prototype, {
     '[Controls/treeGrid:TreeGridCollection]': true,
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
     _itemModule: 'Controls/treeGrid:TreeGridDataRow',
+    _nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow',
     _$groupNodeVisibility: 'visible',
     _$nodeTypeProperty: null
 });

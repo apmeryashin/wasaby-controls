@@ -22,6 +22,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
     readonly listElementName: string = 'row';
 
+    getTemplate(): TemplateFunction | string {
+        return 'Controls/treeGrid:ItemTemplate';
+    }
+
     get node(): TreeItem<Model> {
         return this.getNode();
     }
@@ -90,14 +94,14 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return !needHide;
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         if (this.needMoreButton() && !this.getRowTemplate() && !this.getOwner().hasNodeFooterColumns()) {
             this.setRowTemplate('Controls/treeGrid:NodeFooterTemplate');
         }
 
         super._initializeColumns({
             colspanStrategy: 'consistently',
-            shouldAddStickyLadderCells: !this._$rowTemplate,
+            prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' : (this.getStickyLadderCellsCount() ? 'offset' : 'colspan'),
             shouldAddMultiSelectCell: !this._$rowTemplate,
             extensionCellsConstructors: {
                 multiSelectCell: this.getColumnsFactory({column: {}})

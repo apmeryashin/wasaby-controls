@@ -1,10 +1,16 @@
 import {
+    DetailViewMode,
     IBrowserViewConfig,
-    IListConfig, ImageGradient, ImageViewMode, ITableConfig, ITileConfig,
+    IListConfig,
+    ImageGradient,
+    ImageViewMode,
+    ITableConfig,
+    ITileConfig,
     ListImagePosition,
-    NodesPosition, TileImagePosition, TileSize
+    NodesPosition,
+    TileImagePosition,
+    TileSize
 } from 'Controls/newBrowser';
-import {DetailViewMode} from 'Controls/newBrowser';
 
 export function getDefaultViewCfg(): IBrowserViewConfig {
     return {
@@ -21,7 +27,8 @@ export function getDefaultViewCfg(): IBrowserViewConfig {
 
 const LIST_CFG: IListConfig = {
     list: {
-        imagePosition: ListImagePosition.left
+        imagePosition: ListImagePosition.left,
+        imageViewMode: ImageViewMode.circle
     },
     node: {
         descriptionLines: 4,
@@ -41,12 +48,14 @@ const TILE_CFG: ITileConfig = {
         descriptionLines: 3,
         position: NodesPosition.top,
         imageGradient: ImageGradient.custom,
-        imageViewMode: ImageViewMode.rectangle
+        imageViewMode: ImageViewMode.circle,
+        imageProportion: '16:9'
     },
     leaf: {
-        descriptionLines: 3,
-        imageGradient: ImageGradient.custom,
-        imageViewMode: ImageViewMode.rectangle
+        descriptionLines: 4,
+        imageGradient: ImageGradient.light,
+        imageViewMode: ImageViewMode.rectangle,
+        imageProportion: '4:3'
     }
 };
 

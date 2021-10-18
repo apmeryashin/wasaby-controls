@@ -35,7 +35,8 @@ export const Countries = {
             capital: 'Москва',
             population: 143420300,
             square: 17075200,
-            populationDensity: 8
+            populationDensity: 8,
+            date: new Date('December 17, 2021 10:00:00')
         },
         {
             key: 1,
@@ -44,7 +45,8 @@ export const Countries = {
             capital: 'Оттава',
             population: 32805000,
             square: 9976140,
-            populationDensity: 3
+            populationDensity: 3,
+            date: new Date('December 17, 2021 10:00:00')
         },
         {
             key: 2,
@@ -53,7 +55,8 @@ export const Countries = {
             capital: 'Вашингтон',
             population: 295734100,
             square: 9629091,
-            populationDensity: 30.71
+            populationDensity: 30.71,
+            date: new Date('December 17, 2021 10:00:00')
         },
         {
             key: 3,
@@ -62,7 +65,8 @@ export const Countries = {
             capital: 'Пекин',
             population: 1306313800,
             square: 9596960,
-            populationDensity: 136.12
+            populationDensity: 136.12,
+            date: new Date('December 17, 2021 10:00:00')
         },
         {
             key: 4,
@@ -71,7 +75,8 @@ export const Countries = {
             capital: 'Бразилиа',
             population: 186112800,
             square: 8511965,
-            populationDensity: 21.86
+            populationDensity: 21.86,
+            date: new Date('December 17, 2021 10:00:00')
         },
         {
             key: 5,

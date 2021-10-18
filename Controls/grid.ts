@@ -36,6 +36,7 @@ import * as TableIndicatorTemplate from 'wml!Controls/_grid/Render/TableIndicato
 
 import * as MoneyTypeRender from 'wml!Controls/_grid/Render/types/money';
 import * as NumberTypeRender from 'wml!Controls/_grid/Render/types/number';
+import * as DateTypeRender from 'wml!Controls/_grid/Render/types/date';
 import * as StringTypeRender from 'wml!Controls/_grid/Render/types/string';
 import * as StringSearchTypeRender from 'wml!Controls/_grid/Render/types/StringSearch';
 import * as TypesLadderWrapper from 'wml!Controls/_grid/Render/types/ladderWrapper';
@@ -93,6 +94,7 @@ export {
     EmptyColumnTemplate,
     MoneyTypeRender,
     NumberTypeRender,
+    DateTypeRender,
     StringTypeRender,
     StringSearchTypeRender,
     TableTemplate,
@@ -112,7 +114,9 @@ export {
     TColspanCallback,
     TResultsColspanCallback,
     IEmptyTemplateColumn,
-    IOptions as IGridOptions
+    IOptions as IGridOptions,
+    THeaderVisibility,
+    TResultsVisibility
 } from 'Controls/_grid/display/mixins/Grid';
 export {default as GridRowMixin, IInitializeColumnsOptions} from 'Controls/_grid/display/mixins/Row';
 export {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/GroupCell';

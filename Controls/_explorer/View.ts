@@ -4,6 +4,7 @@ import * as template from 'wml!Controls/_explorer/View/View';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import {EventUtils} from 'UI/Events';
+import { addPageDeps } from 'UICommon/Deps';
 import * as randomId from 'Core/helpers/Number/randomId';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
@@ -34,13 +35,13 @@ import {ItemsEntity} from 'Controls/dragnDrop';
 import {TBreadcrumbsVisibility, TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
 import {TreeControl} from 'Controls/tree';
 import {IEditableList} from 'Controls/list';
-import 'css!Controls/tile';
 import 'css!Controls/explorer';
 import { isFullGridSupport } from 'Controls/display';
 import PathController from 'Controls/_explorer/PathController';
 import {Object as EventObject} from 'Env/Event';
 import {IColumn, IGridControl, IHeaderCell} from 'Controls/grid';
 import { executeSyncOrAsync } from 'UICommon/Deps';
+import {getHeaderVisibility} from './utils';
 
 const HOT_KEYS = {
     _backByPath: constants.key.backspace
@@ -288,7 +289,13 @@ export default class Explorer extends Control<IExplorerOptions> {
         this._navigation = cfg.navigation;
 
         const root = this._getRoot(cfg.root);
-        this._headerVisibility = this._getHeaderVisibility(root, cfg.headerVisibility, cfg.breadcrumbsVisibility);
+        this._headerVisibility = getHeaderVisibility(
+            root,
+            this._topRoot,
+            cfg.header,
+            cfg.headerVisibility,
+            cfg.breadcrumbsVisibility
+        );
 
         // TODO: для 20.5100. в 20.6000 можно удалить
         if (cfg.displayMode) {
@@ -332,8 +339,10 @@ export default class Explorer extends Control<IExplorerOptions> {
         // searchStartingWith === 'root', после сбрасываем поиск и возвращаем root в предыдущую папку после чего
         // этот код покажет заголовок и только после получения данных они отрисуются
         if (!isRootChanged) {
-            this._headerVisibility = this._getHeaderVisibility(
+            this._headerVisibility = getHeaderVisibility(
                 this._getRoot(cfg.root),
+                this._topRoot,
+                cfg.header,
                 cfg.headerVisibility,
                 cfg.breadcrumbsVisibility
             );
@@ -492,8 +501,10 @@ export default class Explorer extends Control<IExplorerOptions> {
             ? this._options.sourceController.getRoot()
             : this._getRoot(this._options.root);
 
-        this._headerVisibility = this._getHeaderVisibility(
+        this._headerVisibility = getHeaderVisibility(
             curRoot,
+            this._topRoot,
+            this._options.header,
             this._options.headerVisibility,
             this._options.breadcrumbsVisibility
         );
@@ -905,30 +916,6 @@ export default class Explorer extends Control<IExplorerOptions> {
         return false;
     }
 
-    /**
-     * На основании переданного root и значения опции headerVisibility и breadcrumbsVisibility
-     * вычисляет итоговую видимость заголовка таблицы.
-     *    * Если breadcrumbsVisibility === 'hidden', то видимость берем либо из headerVisibility
-     *    либо проставляем 'hasdata'.
-     *    * Если breadcrumbsVisibility === 'visible', то
-     *      * Если находимся в корне то видимость берем либо из headerVisibility
-     *      либо проставляем 'hasdata'.
-     *      * Если находимся не в корне, то заголовок всегда делаем видимым
-     *      https://online.sbis.ru/doc/19106882-fada-47f7-96bd-516f9fb0522f
-     */
-    private _getHeaderVisibility(
-        root: TKey,
-        headerVisibility: string,
-        breadcrumbsVisibility: TBreadcrumbsVisibility
-    ): string {
-        // Если крошки скрыты, то руководствуется значением опции headerVisibility
-        if (breadcrumbsVisibility === 'hidden') {
-            return headerVisibility || 'hasdata';
-        }
-
-        return root === (this._topRoot || null) ? (headerVisibility || 'hasdata') : 'visible';
-    }
-
     private _itemsReadyCallbackFunc(items: RecordSet): void {
         if (this._items) {
             this._unsubscribeOnCollectionChange();
@@ -947,6 +934,10 @@ export default class Explorer extends Control<IExplorerOptions> {
                 this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
                 this._markerForRestoredScroll = this._potentialMarkedKey;
                 this._potentialMarkedKey = undefined;
+
+                // Вызывает _forceUpdate иначе у нас может не стрельнуть _afterRender
+                // и _markerForRestoredScroll не применится
+                this._forceUpdate();
             }
 
             if (
@@ -1131,6 +1122,10 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     private _loadTileViewMode(): Promise<void> | void {
+        // Это нужно для попадания стилей плитки в bundle на сервере
+        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
+        addPageDeps(['css!Controls/tile']);
+
         return executeSyncOrAsync(['Controls/treeTile'], (tile) => {
             VIEW_NAMES.tile = tile.TreeTileView;
             VIEW_TABLE_NAMES.tile = tile.TreeTileView;
@@ -1139,6 +1134,10 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     private _loadColumnsViewMode(): Promise<void> | void {
+        // Это нужно для попадания стилей плитки в bundle на сервере
+        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
+        addPageDeps(['css!Controls/columns']);
+
         return executeSyncOrAsync(['Controls/columns'], (columns) => {
             VIEW_NAMES.list = columns.ViewTemplate;
             MARKER_STRATEGY.list = MultiColumnStrategy;
@@ -1318,6 +1317,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
@@ -1504,9 +1504,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @typedef {String} Controls/_explorer/View/TBreadCrumbsMode
  * @description Допустимые зачения для опции {@link breadCrumbsMode}.
  * @variant row Все ячейки строки с хлебными крошками объединяются в одну ячейку, в которой выводятся хлебные крошки.
- * @variant cell Ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной
- * конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек
- * строки с хлебными крошками.
+ * @variant cell Ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
  */
 
 /**
@@ -1518,9 +1516,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * Данная опция позволяет сконфигурировать вывод строки с хлебными крошками. Возможны 2 варианта:
  *
  * * row - все ячейки строки с хлебными крошками объединяются в одну ячейку в которой выводятся хлебные крошки.
- * * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной
- * конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек
- * строки с хлебными крошками.
+ * * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
  */
 
 /**

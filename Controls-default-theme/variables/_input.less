@@ -10,7 +10,7 @@
 
    // Цвет подсказки
 
-   --placeholder-color_inputText: #ccc;
+   --placeholder-color_inputText: rgba(137, 145, 169, 0.6);
 
    // Обводка
    --border-style_inputText: solid;
@@ -18,15 +18,13 @@
    --border-style_focus_inputText: solid;
    --invalid_border-style_inputText: solid;
    --border-radius_default_inputText: 0;
-   --border-color_inputText: #eaeaea #eaeaea #ccc #eaeaea;
-   --border-contrast-color_inputText: #eaeaea #eaeaea #e4e4e4 #eaeaea;
-   --border-contrast-color_hover_inputText: #eaeaea #eaeaea #bbc0cd #eaeaea;
-   --border-contrast-color_focus_inputText: #eaeaea #eaeaea #bbc0cd #eaeaea;
-   --border-color_hover_inputText: #eaeaea #eaeaea #aab0c1 #eaeaea;
-   --border-color_focus_inputText: #eaeaea #eaeaea #aab0c1 #eaeaea;
-
-
-   --readonly_border-color_inputText: transparent transparent #e4e4e4 transparent;
+   --border-color_inputText: var(--separator_color) var(--separator_color) var(--unaccented_border-color) var(--separator_color);
+   --border-contrast-color_inputText: var(--border-color_inputText);
+   --border-contrast-color_hover_inputText: var(--separator_color) var(--separator_color) var(--unaccented_hover_border-color) var(--separator_color);
+   --border-contrast-color_focus_inputText: var(--border-contrast-color_hover_inputText);
+   --border-color_hover_inputText: var(--border-contrast-color_hover_inputText);
+   --border-color_focus_inputText: var(--border-contrast-color_hover_inputText);
+   --readonly_border-color_inputText: transparent transparent var(--unaccented_border-color) transparent;
    --readonly_border-color_inputArea: transparent;
 
    // Цвета фона

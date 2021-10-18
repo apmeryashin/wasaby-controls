@@ -9,5 +9,11 @@
             colspanCallback="{{ _colspanCallback }}"
             columns="{{ _columns }}"
             bind:expandedItems="_expandedItems"
-            bind:collapsedItems="_collapsedItems"/>
+            bind:collapsedItems="_collapsedItems">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/treeGrid:ItemTemplate"
+                        highlightOnHover="{{ itemTemplate.item.contents.get('nodeType') !== 'group' }}"
+                        fontColorStyle="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'secondary' }}"/>
+        </ws:itemTemplate>
+    </Controls.treeGrid:View>
 </div>

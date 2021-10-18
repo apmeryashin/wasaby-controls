@@ -1,29 +1,41 @@
 <ws:template name="listBase">
-   <Controls.grid:View name="gridView"
-                       source="{{_options.source}}"
-                       columns="{{_columns}}"
-                       filter="{{_filter}}"
-                       keyProperty="{{_options.keyProperty}}"
-                       selectedKeys="{{_selectedKeys}}"
-                       scope="{{_options}}"
-                       markerVisibility="hidden"
-                       navigation="{{_navigation}}"
-                       backgroundStyle="transparent"
-                       hoverBackgroundStyle="listEditor"
-                       footerTemplate="{{footerTemplate}}"
-                       multiSelectVisibility="onhover"
-                       itemsReadyCallback="{{_itemsReadyCallback}}"
-                       itemActions="{{_itemActions}}"
-                       itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-                       attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
-                       on:itemClick="_handleItemClick()">
-      <ws:multiSelectTemplate>
-         <ws:partial template="{{_circleTemplate}}"
-                     style="{{_options.style}}"
-                     attr:class="controls-ListEditor__multiSelect"
-                     on:click="_handleCheckBoxClick()"/>
-      </ws:multiSelectTemplate>
-   </Controls.grid:View>
+    <ws:partial template="{{_options.parentProperty ? 'Controls/treeGrid:View' : 'Controls/grid:View'}}"
+                name="gridView"
+                source="{{_options.source}}"
+                columns="{{_columns}}"
+                filter="{{_filter}}"
+                keyProperty="{{_options.keyProperty}}"
+                selectedKeys="{{_selectedKeys}}"
+                navigation="{{_navigation}}"
+                backgroundStyle="transparent"
+                hoverBackgroundStyle="listEditor"
+                footerTemplate="{{footerTemplate}}"
+                multiSelectVisibility="onhover"
+                itemsReadyCallback="{{_itemsReadyCallback}}"
+                itemActions="{{_itemActions}}"
+                itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+                parentProperty="{{_options.parentProperty}}"
+                nodeProperty="{{_options.nodeProperty}}"
+                root="{{_options.root}}"
+                style="{{_options.style}}"
+                attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
+                on:itemClick="_handleItemClick()"
+                markedKey="{{_markedKey}}">
+       <ws:itemTemplate>
+          <ws:partial template="{{_options.parentProperty ? 'Controls/treeGrid:ItemTemplate' : 'Controls/grid:ItemTemplate'}}"
+                      marker="{{_options.markerStyle === 'primary' ||
+                                itemTemplate.item.key === _options.emptyKey ||
+                                itemTemplate.item.key === _options.selectedAllKey}}"/>
+       </ws:itemTemplate>
+       <ws:multiSelectTemplate>
+          <ws:if data="{{_options.markerStyle !== 'primary'}}">
+             <ws:partial template="{{_circleTemplate}}"
+                         style="{{_options.style}}"
+                         attr:class="controls-ListEditor__multiSelect"
+                         on:click="_handleCheckBoxClick()"/>
+          </ws:if>
+       </ws:multiSelectTemplate>
+    </ws:partial>
 </ws:template>
 
 <ws:template name="listEditor">

@@ -43,17 +43,18 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @implements Controls/interface:IMultiSelectable
  * @implements Controls/interface:ITextValue
  * @implements Controls/interface:ISorting
- * @mixes Controls/input:IBase
+ * @implements Controls/input:IBase
  * @implements Controls/interface:IInputPlaceholder
- * @mixes Controls/input:IText
+ * @implements Controls/input:IText
  * @implements Controls/interface:IHeight
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IInputTag
- * @mixes Controls/input:IValue
+ * @implements Controls/input:IValue
  * @implements Controls/interface:IValidationStatus
- * @mixes Controls/input:IBorderVisibility
+ * @implements  Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
+ * @implements Controls/interface:IFontWeight
  *
  * @public
  * @author Герасимов А.М.

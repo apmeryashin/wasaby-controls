@@ -4,7 +4,11 @@ import {Control} from 'UI/Base';
 import {IBackgroundStyleOptions} from 'Controls/interface';
 
 export type TActionOnScroll = 'close' | 'track' | 'none';
-export type TTarget = HTMLElement | EventTarget | Control<{}, void>;
+interface ITargetPosition {
+    x: number;
+    y: number;
+}
+export type TTarget = HTMLElement | EventTarget | ITargetPosition | Control<{}>;
 
 export interface IStickyPopupPosition {
     targetPoint?: IStickyPosition;
@@ -109,7 +113,11 @@ export interface IStickyOpener extends IOpener {
 
 /**
  * @name Controls/_popup/interface/IStickyOpener#target
- * @cfg {Node|Control} Элемент (DOM-элемент или контрол), относительно которого позиционируется прилипающий блок.
+ * @cfg {Node|Control} Элемент, относительно которого позиционируется прилипающий блок.
+ * @variant DOM-элемент
+ * @variant Контрол
+ * @variant Точка позиционирования {x: number, y: number}. Используется когда DOM-элемент/Контрол могут быть
+ * удалены из DOM-дерева.
  */
 
 /**

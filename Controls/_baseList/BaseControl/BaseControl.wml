@@ -51,15 +51,16 @@
             </div>
         </ws:if>
         <ws:if data="{{_shouldDrawNavigationButton}}">
-            <ws:partial template="wml!Controls/_baseList/BaseControl/NavigationButton"
-                        attr:class="{{ _getNavigationButtonClasses(_options, _options.navigation.viewConfig.buttonConfig) }}"
-                        value="{{_cutExpanded}}"
-                        buttonConfig="{{_options.navigation.viewConfig.buttonConfig}}"
-                        buttonView="{{_resolveNavigationButtonView()}}"
-                        linkFontColorStyle="{{_options.moreFontColorStyle}}"
-                        linkClass="controls-BaseControl__loadMore"
-                        linkLabel="{{_loadMoreCaption}}"
-                        on:click="_onNavigationButtonClick()"/>
+            <div attr:class="{{ _getNavigationButtonClasses(_options, _options.navigation.viewConfig.buttonConfig) }}">
+                <ws:partial template="wml!Controls/_baseList/BaseControl/NavigationButton"
+                            value="{{_cutExpanded}}"
+                            buttonConfig="{{_options.navigation.viewConfig.buttonConfig}}"
+                            buttonView="{{_resolveNavigationButtonView()}}"
+                            linkFontColorStyle="{{_options.moreFontColorStyle}}"
+                            linkClass="controls-BaseControl__loadMore"
+                            linkLabel="{{_loadMoreCaption}}"
+                            on:click="_onNavigationButtonClick()"/>
+            </div>
         </ws:if>
     </div>
 </ws:template>

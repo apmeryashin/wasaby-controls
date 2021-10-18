@@ -823,8 +823,6 @@
 
 .controls-GridView__checkbox_position-custom {
    display: inline-block;
-   // Высота чекбокса 18px и он ломает 17px базовую линию.
-   margin-top: calc(var(--font-size_2xl) - var(--true_marker_size_checkbox));
 }
 
 .controls-Grid__row-cell__contentWrapper {
@@ -904,14 +902,6 @@
    bottom: 0;
    display: inline-flex;
    align-items: baseline;
-}
-
-// Для исправления бага safari, из-за которого position: absolute элементы,
-// не сдвигаются padding'ами внешнего блока
-.ws-is-mobile-safari {
-   .controls-StickyBlock_gapFix .controls-GridView__itemV_marker-master {
-      top: 1px;
-   }
 }
 
 .controls-GridView__itemV_marker-master::before {

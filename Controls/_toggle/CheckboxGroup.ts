@@ -9,17 +9,20 @@ import {RecordSet} from 'Types/collection';
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 import {
     ISource, ISourceOptions, IMultiSelectable,
-    IMultiSelectableOptions, IHierarchy, IHierarchyOptions
+    IMultiSelectableOptions, IHierarchy, IHierarchyOptions, IResetValueOptions, IContrastBackgroundOptions
 } from 'Controls/interface';
 import 'css!Controls/toggle';
 
 export interface ICheckboxGroupOptions extends IControlOptions,
-            IMultiSelectableOptions,
-            IHierarchyOptions,
-            ISourceOptions,
-            IToggleGroupOptions {
+    IMultiSelectableOptions,
+    IHierarchyOptions,
+    ISourceOptions,
+    IToggleGroupOptions,
+    IResetValueOptions,
+    IContrastBackgroundOptions {
     direction?: string;
 }
+
 /**
  * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
  *
@@ -67,32 +70,37 @@ export interface ICheckboxGroupOptions extends IControlOptions,
  *
  * <pre>
  *   new Memory({
-        keyProperty: 'key',
-        data: [
-            {
-                key: 1,
-                title: 'title 1',
-                caption: 'caption 1'
-            },
-            {
-                key: 2,
-                title: 'title 2',
-                caption: 'caption 2'
-            },
-            {
-                key: 3,
-                title: 'title 3',
-                caption: 'caption 3'
-            }
-        ]
-    });
+ *       keyProperty: 'key',
+ *       data: [
+ *           {
+ *               key: 1,
+ *               title: 'title 1',
+ *               caption: 'caption 1'
+ *           },
+ *           {
+ *               key: 2,
+ *               title: 'title 2',
+ *               caption: 'caption 2'
+ *           },
+ *           {
+ *               key: 3,
+ *               title: 'title 3',
+ *               caption: 'caption 3'
+ *           }
+ *       ]
+ *   });
  * </pre>
  *
  * @demo Controls-demo/toggle/CheckboxGroup/displayProperty/Index
  */
 
+/**
+ * @name Controls/_toggle/CheckboxGroup#parentProperty
+ * @demo Controls-demo/toggle/CheckboxGroup/ParentProperty/Index
+ */
+
 class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements ISource,
-                                                                      IMultiSelectable, IHierarchy, IToggleGroup {
+    IMultiSelectable, IHierarchy, IToggleGroup {
     '[Controls/_interface/ISource]': boolean = true;
     '[Controls/_interface/IMultiSelectable]': boolean = true;
     '[Controls/_interface/IHierarchy]': boolean = true;
@@ -109,7 +117,7 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements
 
     protected _beforeMount(options: ICheckboxGroupOptions,
                            context: object,
-                           receivedState: RecordSet): void|Promise<RecordSet> {
+                           receivedState: RecordSet): void | Promise<RecordSet> {
 
         this._isSelected = this._isSelected.bind(this);
         if (receivedState) {
@@ -311,12 +319,12 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements
 }
 
 Object.defineProperty(CheckboxGroup, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return CheckboxGroup.getDefaultOptions();
-   }
+    get(): object {
+        return CheckboxGroup.getDefaultOptions();
+    }
 });
 
 export default CheckboxGroup;

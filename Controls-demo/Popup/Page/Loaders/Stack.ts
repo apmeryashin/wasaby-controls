@@ -1,4 +1,4 @@
-export function getConfig(): object {
+export function getConfig({widgetSource}): object {
     return {
         data: {
             type: 'custom',
@@ -9,7 +9,6 @@ export function getConfig(): object {
                             key: 'key',
                             count: 100500,
                             date: new Date(),
-                            widgetsCountAtStart: 15,
                             info: 'This is long info about this dialog '.repeat(10)
                         });
                     }, 2000);
@@ -18,15 +17,15 @@ export function getConfig(): object {
             dependentArea: ['workspace']
         },
         widgets: {
-            id: 'widgets',
-            type: 'additionalDependencies',
-            dependencies: ['data'],
-            loadDataMethod: (cfg, deps) => {
-                const keys = [];
-                for (let i = 0; i < deps[0].widgetsCountAtStart; i++) {
-                    keys.push(`widget${i}`);
-                }
-                return Promise.resolve(keys);
+            type: 'custom',
+            loadDataMethod: (cfg) => {
+                return widgetSource.query().then((data) => {
+                    const widgetsData = {};
+                    data.getAll().forEach(element => {
+                        widgetsData[element.getKey()] = element.getRawData();
+                    });
+                    return widgetsData;
+                });
             },
             dependentArea: ['workspace']
         }

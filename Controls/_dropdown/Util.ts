@@ -27,6 +27,8 @@ export function loadItems(
       return controller.setItems(receivedState.items).then(() => {
          controller.setHistoryItems(receivedState.history);
       });
+   } else  if (options.sourceController) {
+      return controller.setItems(options.sourceController.getItems());
    } else if (source) {
       return controller.loadItems().catch((error) => {
          process({error});

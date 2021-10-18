@@ -1,4 +1,4 @@
-<div class="{{ (gridColumn || itemData).getContentClasses(backgroundColorStyle, cursor, highlightOnHover, editable) }}"
+<div class="{{ (gridColumn || itemData).getContentClasses(backgroundColorStyle, cursor, highlightOnHover, editable, hoverBackgroundStyle, fontColorStyle) }}"
      style="{{ (gridColumn || itemData).getContentStyles() }}"
      attr:data-qa="{{ (gridColumn || itemData).listElementName }}_content">
 

@@ -14,14 +14,6 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 import 'css!Controls/shortDatePicker';
 import {SyntheticEvent} from "Vdom/Vdom";
 
-const enum POSITION {
-    RIGHT = 'right',
-    LEFT = 'left'
-}
-
-// Минимальный отступ справа до края экрана. Если попап ближе чем это значение, то крестик нужно показать слева
-// Когда в контролах будут доступны переменные темы, значение должно браться с алиаса ширины крестика
-const MIN_RIGHT_OFFSET = 30;
 const MAX_VISIBLE_YEARS = 14;
 
 /**
@@ -31,7 +23,7 @@ const MAX_VISIBLE_YEARS = 14;
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_shortDatePicker.less переменные тем оформления}
  *
- * @class Controls/shortDatePicker
+ * @class Controls/shortDatePicker:View
  * @extends UI/Base:Control
  * @mixes Controls/shortDatePicker/IDateLitePopup
  *
@@ -47,6 +39,12 @@ const MAX_VISIBLE_YEARS = 14;
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
  */
 
+/*
+ * @name Controls/shortDatePicker:View#displayedRanges
+ * @remark
+ * Интервал отображаемых периодов должен равняться году
+ */
+
 class View extends Control<IDateLitePopupOptions> {
     protected _template: TemplateFunction = componentTmpl;
     protected _defaultListTemplate: TemplateFunction = listTmpl;
@@ -56,7 +54,6 @@ class View extends Control<IDateLitePopupOptions> {
     protected _limit: number = 15;
     protected _isExpandedPopup: boolean = false;
     protected _isExpandButtonVisible: boolean = true;
-    protected _closeBtnPosition: POSITION = POSITION.RIGHT;
     protected _emptyCaption: string = '';
     protected _caption: string = '';
     protected _displayedRanges: Date[];
@@ -64,8 +61,16 @@ class View extends Control<IDateLitePopupOptions> {
     protected _nextArrowButtonReadOnly: boolean = false;
     protected _isHeaderContentTemplateString: boolean;
     protected _tabPressed: boolean = false;
+    protected _lastYear: boolean;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
+        if (!this._validateDisplayedRanges(options.displayedRanges)) {
+            Logger.error('Controls/shortDatePicker:View: интервал отображаемых периодов' +
+                ' в опции displayedRanges должен равняться году');
+        }
+
+        this._lastYear = options.displayedRanges ? options.displayedRanges[0][0]?.getFullYear() : null;
+
         this._isHeaderContentTemplateString = typeof options.headerContentTemplate === 'string';
         this._displayedRanges = options.displayedRanges;
         if (!options.emptyCaption) {
@@ -101,7 +106,6 @@ class View extends Control<IDateLitePopupOptions> {
     protected _beforeUpdate(options: IDateLitePopupOptions): void {
         this._isHeaderContentTemplateString = typeof options.headerContentTemplate === 'string';
         this._isExpandButtonVisible = this._getExpandButtonVisibility(options);
-        this._updateCloseBtnPosition(options);
         if (options.displayedRanges) {
             this._updateArrowButtonsState();
         }
@@ -114,6 +118,19 @@ class View extends Control<IDateLitePopupOptions> {
     setYear(year: number): void {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    }
+
+    private _validateDisplayedRanges(displayedRanges: Date[][]): boolean {
+        if (!displayedRanges) {
+            return true;
+        }
+        for (const range of displayedRanges) {
+            if ((range[0] !== null && !dateUtils.isStartOfYear(range[0])) ||
+                (range[1] !== null && !dateUtils.isStartOfYear(range[1]))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected _getFirstPositionInMonthList(srcPosition: Date, dateConstructor: Function): Date {
@@ -214,25 +231,6 @@ class View extends Control<IDateLitePopupOptions> {
             const openerTop = options.stickyPosition.targetPosition?.top;
             const popupTop = options.stickyPosition.position?.top + Math.abs(options.stickyPosition.margins?.top);
             return openerTop === popupTop;
-        }
-    }
-
-    protected _updateCloseBtnPosition(options: IDateLitePopupOptions): void {
-        if (options.stickyPosition) {
-            // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
-            if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
-                this._closeBtnPosition =  POSITION.RIGHT;
-            } else {
-                const openerLeft = options.stickyPosition.targetPosition.left;
-                const popupLeft = options.stickyPosition.position.left;
-                // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
-                const popupOffset = (options.stickyPosition.sizes.width -
-                    options.stickyPosition.targetPosition.width) / 2;
-                const isReverted = (popupLeft + popupOffset) !== openerLeft;
-                const isOutside = popupLeft + options.stickyPosition.sizes.width >
-                    window?.innerWidth - MIN_RIGHT_OFFSET;
-                this._closeBtnPosition = isReverted || isOutside ? POSITION.LEFT : POSITION.RIGHT;
-            }
         }
     }
 

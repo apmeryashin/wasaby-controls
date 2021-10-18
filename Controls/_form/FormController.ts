@@ -27,7 +27,7 @@ interface IAdditionalData {
     error?: Error;
 }
 
-interface IResultData {
+export interface IResultEventData {
     formControllerEvent: string;
     record: Model;
     additionalData: IAdditionalData;
@@ -98,6 +98,7 @@ class FormController extends ControllerBase<IFormController> {
     protected _errorContainer: typeof Control = dataSourceError.Container;
     private _isNewRecord: boolean = false;
     private _createMetaDataOnUpdate: unknown = null;
+    private _shouldSetFocusAfterUpdate: boolean = false;
     private _errorController: ErrorController;
     private _createdInMounting: IConfigInMounting;
     private _isMount: boolean;
@@ -152,7 +153,7 @@ class FormController extends ControllerBase<IFormController> {
         }
     }
 
-    protected _afterMount(): void {
+    protected _afterMount(options: IFormController): void {
         super._afterMount();
         this._isMount = true;
         // если рекорд был создан во время beforeMount, уведомим об этом
@@ -264,13 +265,19 @@ class FormController extends ControllerBase<IFormController> {
         return INITIALIZING_WAY.CREATE;
     }
 
-    protected _afterUpdate(): void {
+    protected _afterUpdate(options: IFormController): void {
         if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
             this._validateController.setValidationResult(null);
             this._wasCreated = false;
             this._wasRead = false;
             this._wasDestroyed = false;
+        }
+
+        // В случае прелоада при появлении рекорда ставим фокус,
+        // т.к. могло не быть много контента и фокус поставить было некуда
+        if (this._options.initializingWay === INITIALIZING_WAY.PRELOAD && !options.record && this._options.record) {
+            this.activate();
         }
         super._afterUpdate();
     }
@@ -638,13 +645,13 @@ class FormController extends ControllerBase<IFormController> {
         }
     }
 
-    private _getUpdateStartedData(record: Model, key: string): IResultData {
+    private _getUpdateStartedData(record: Model, key: string): IResultEventData {
         const config = this._getUpdateSuccessedData(record, key);
         config.formControllerEvent = CRUD_EVENTS.UPDATE_STARTED;
         return config;
     }
 
-    private _getUpdateSuccessedData(record: Model, key: string, config?: object): IResultData {
+    private _getUpdateSuccessedData(record: Model, key: string, config?: object): IResultEventData {
         const configData = config ? config.additionalData : {};
         const additionalData: IAdditionalData = {
             key,
@@ -654,23 +661,23 @@ class FormController extends ControllerBase<IFormController> {
         return this._getResultData('update', record, additionalData);
     }
 
-    private _getDeleteStartedData(record: Model, key: string, config: object): IResultData {
+    private _getDeleteStartedData(record: Model, key: string, config: object): IResultEventData {
         return this._getResultData(CRUD_EVENTS.DELETE_STARTED, record, config);
     }
 
-    private _getDeleteSuccessedData(record: Model): IResultData {
+    private _getDeleteSuccessedData(record: Model): IResultEventData {
         return this._getResultData('delete', record);
     }
 
-    private _getCreateSuccessedData(record: Model): IResultData {
+    private _getCreateSuccessedData(record: Model): IResultEventData {
         return this._getResultData('create', record);
     }
 
-    private _getReadSuccessedData(record: Model): IResultData {
+    private _getReadSuccessedData(record: Model): IResultEventData {
         return this._getResultData('read', record);
     }
 
-    private _getUpdateFailedData(error: Error, record: Model): IResultData {
+    private _getUpdateFailedData(error: Error, record: Model): IResultEventData {
         const additionalData: IAdditionalData = {
             record,
             error,
@@ -679,7 +686,7 @@ class FormController extends ControllerBase<IFormController> {
         return this._getResultData(CRUD_EVENTS.UPDATE_FAILED, record, additionalData);
     }
 
-    private _getResultData(eventName: string, record: Model, additionalData?: IAdditionalData): IResultData {
+    private _getResultData(eventName: string, record: Model, additionalData?: IAdditionalData): IResultEventData {
         return {
             formControllerEvent: eventName,
             record,

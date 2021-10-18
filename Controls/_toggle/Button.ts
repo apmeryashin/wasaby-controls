@@ -254,6 +254,7 @@ Object.defineProperty(ToggleButton, 'defaultProps', {
  * @cfg {Array} Пара стилей для заголовков.
  * Первый стиль отображается, когда переключатель выключен.
  * Второй стиль отображается, когда переключатель включен.
+ * @demo Controls-demo/toggle/Button/FontColorStyles/Index
  */
 
 /**

@@ -40,7 +40,6 @@
    font-family: var(--icon_font-family_m);
 }
 
-
 //todo change font icons to svg https://online.sbis.ru/opendoc.html?guid=90761cbd-04f8-4fad-be7d-8c1707bdd30e
 //icon-24 font has a problem with baseline in FF IE
 //important is for cases when non-theme css loads after theme css
@@ -142,7 +141,6 @@
    fill: var(--secondary_hover_icon-color);
    color: var(--secondary_hover_icon-color);
 }
-
 
 //text colors
 .controls-text-default {
@@ -285,9 +283,7 @@
    font-size: var(--font-size_7xl);
 }
 
-
 //heights
-
 .controls-inlineheight-xs {
    height: var(--inline_height_xs);
 }
@@ -328,7 +324,6 @@
    height: var(--inline_height_default);
 }
 
-
 //font-weights
 .controls-fontweight-bold {
    font-weight: bold;
@@ -347,7 +342,6 @@
    background-color: transparent;
 }
 
-
 //validate
 .controls-invalid-border {
    position: absolute;
@@ -355,6 +349,11 @@
    height: 100%;
    pointer-events: none;
    z-index: -1;
+   border: var(--border-thickness) solid var(--invalid_border-color);
+   left: calc(-1 * (var(--invalid_padding-horizontal) + var(--border-thickness)));
+   bottom: calc(-1 * (var(--invalid_padding-vertical) + var(--border-thickness)));
+   padding: var(--invalid_padding-vertical) var(--invalid_padding-horizontal);
+   border-radius: var(--border-radius_xs);
 }
 
 .controls-invalid-container {
@@ -371,13 +370,6 @@
    bottom: calc(-1 * (var(--invalid_padding-vertical) + var(--border-thickness)));
    padding: var(--invalid_padding-vertical) var(--invalid_padding-horizontal);
    background-color: var(--invalid_focus_background-color);
-}
-
-.controls-invalid-border {
-   border: var(--border-thickness) solid var(--invalid_border-color);
-   left: calc(-1 * (var(--invalid_padding-horizontal) + var(--border-thickness)));
-   bottom: calc(-1 * (var(--invalid_padding-vertical) + var(--border-thickness)));
-   padding: var(--invalid_padding-vertical) var(--invalid_padding-horizontal);
 }
 
 //offsets

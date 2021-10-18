@@ -90,7 +90,6 @@
 .controls-MasterDetail_resizing-line {
    position: absolute;
    top: 0;
-   right: 0;
    height: 100%;
    // Движение границ всегда должно быть выше любого прикладного элемента в контроле.
    // Решать проблему через z-index на контейнерах 'master' и 'detail' нельзя.
@@ -98,6 +97,14 @@
    // пользовательских элементов выпирающих за пределы контейнеров. Например, плитка по ховеру.
    // https://online.sbis.ru/opendoc.html?guid=add422e3-ea09-494b-821f-514acab083f1
    z-index: 9999;
+}
+
+.controls-MasterDetail_resizing-line_position-right {
+   left: 0;
+}
+
+.controls-MasterDetail_resizing-line_position-left {
+   right: 0;
 }
 
 .controls-MasterDetail_resizing-line-newDesign {

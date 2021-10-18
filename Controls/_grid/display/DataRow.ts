@@ -104,7 +104,7 @@ export default class DataRow<T extends Model = Model> extends Row<T> implements
     _initializeColumns(): void {
         super._initializeColumns({
             colspanStrategy: 'skipColumns',
-            shouldAddStickyLadderCells: !this._$rowTemplate
+            prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' : 'colspan'
         });
     }
 

@@ -5,6 +5,7 @@ import {HierarchicalMemory} from 'Types/source';
 import {Control, TemplateFunction} from 'UI/Base';
 import {data} from 'Controls-demo/breadCrumbs_new/PathButton/Data';
 import * as template from 'wml!Controls-demo/breadCrumbs_new/PathButton/Index';
+import 'css!Controls-demo/Controls-demo';
 
 /**
  * Демопример демонстрирует работу компонента {@link Controls/breadcrumbs:PathButton}
