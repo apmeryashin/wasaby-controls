@@ -263,11 +263,13 @@ export default class MonthViewModel extends VersionableMixin {
         }
 
         if (state.daysData) {
+            let dayDataIndex;
             if (obj.mode === 'extended') {
-                obj.extData = state.daysData.at ? state.daysData.at(dayIndex) : state.daysData[dayIndex];
+                dayDataIndex = dayIndex;
             } else {
-                obj.extData = state.daysData.at ? state.daysData.at(obj.day - 1) : state.daysData[obj.day - 1];
+                dayDataIndex = obj.day - 1;
             }
+            obj.extData = state.daysData.at ? state.daysData.at(dayDataIndex) : state.daysData[dayDataIndex];
         }
         obj.selectionBase = DateUtil.isDatesEqual(date, state.selectionBaseValue);
 
