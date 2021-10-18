@@ -15,6 +15,7 @@ import {Logger} from 'UI/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Path} from 'Controls/dataSource';
 import {IHeadingPath} from './interface/IHeadingPath';
+import calculateBreadcrumbsUtil, {ARROW_WIDTH, PADDING_RIGHT} from 'Controls/_breadcrumbs/Utils';
 
 interface IReceivedState {
     items: Record[];
@@ -65,6 +66,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _breadCrumbsItems: Record[] = null;
     protected _items: Record[] = null;
     protected _backButtonClass: string = '';
+    protected _breadCrumbsWrapperClass: string = '';
     protected _breadCrumbsClass: string = '';
     protected _notifyHandler: Function = EventUtils.tmplNotify;
     protected _applyHighlighter: Function = applyHighlighter;
@@ -72,9 +74,6 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _dotsWidth: number = 0;
     protected _indexEdge: number = 0;
     protected _isHomeVisible: boolean = false;
-    protected calculateBreadcrumbsUtil: object;
-    protected _arrowWidth: number;
-    protected _paddingRight: number;
     private _initializingWidth: number;
 
     protected _beforeMount(options?: IHeadingPath,
@@ -90,15 +89,11 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
 
         if (options.containerWidth) {
             this._initializingWidth = options.containerWidth;
-            return Promise.all([import('Controls/_breadcrumbs/Utils'), loadFontWidthConstants()]).then((res) => {
-                this.calculateBreadcrumbsUtil = res[0].default;
-                this._arrowWidth = res[0].ARROW_WIDTH;
-                this._paddingRight = res[0].PADDING_RIGHT;
+            return loadFontWidthConstants().then((getTextWidth) => {
                 if (receivedState) {
                     this._dotsWidth = this._getDotsWidth(options.fontSize);
                     this._prepareData(options);
                 } else if (this._breadCrumbsItems) {
-                    const getTextWidth = res[1];
                     this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth as Function);
                     this._prepareData(options, getTextWidth as Function);
                     return {
@@ -141,8 +136,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         }
     }
     private _getDotsWidth(fontSize: string, getTextWidth: Function = this._getTextWidth): number {
-        const dotsWidth = getTextWidth('...', fontSize) + this._paddingRight;
-        return this._arrowWidth + dotsWidth;
+        const dotsWidth = getTextWidth('...', fontSize) + PADDING_RIGHT;
+        return ARROW_WIDTH + dotsWidth;
     }
     private _prepareData(options: IHeadingPath, getTextWidth: Function = this._getTextWidth): void {
         if (this._items && this._items.length > 1) {
@@ -155,7 +150,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     private _calculateBreadCrumbsToDraw(items: Record[], options: IHeadingPath, getTextWidth: Function = this._getTextWidth): void {
         if (items && items.length > 0) {
             const width = options.containerWidth - getTextWidth(this._backButtonCaption, '3xl') - SIZES.ARROW_WIDTH - SIZES.HOME_BUTTON_WIDTH;
-            this._visibleItems = this.calculateBreadcrumbsUtil.calculateItemsWithDots(items, options, 0, width, this._dotsWidth, getTextWidth);
+            this._visibleItems = calculateBreadcrumbsUtil.calculateItemsWithDots(items, options, 0, width, this._dotsWidth, getTextWidth);
             this._visibleItems[0].hasArrow = false;
             this._indexEdge = 0;
         }
@@ -199,6 +194,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
             this._breadCrumbsItems = null;
             this._backButtonClass = '';
             this._breadCrumbsClass = '';
+            this._breadCrumbsWrapperClass = '';
             this._isHomeVisible = false;
         };
 
@@ -213,6 +209,22 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
                 this._breadCrumbsItems = this._items.slice(0, this._items.length - 1);
                 this._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
                 this._isHomeVisible = true;
+
+                /**
+                 * Наименьший по длине текст фиксируем по максимальной ширине и не даем сокращать
+                 */
+                const crumbsLength = this._breadCrumbsItems.reduce((reducer, item) => {
+                    const text = item.get(options.displayProperty);
+                    return reducer + text.length;
+                }, 0);
+                const backButtoLength = this._backButtonCaption.length;
+                if (crumbsLength > backButtoLength) {
+                    this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
+                    this._backButtonClass = 'controls-BreadCrumbsPath__widthRestriction';
+                } else {
+                    this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__widthRestriction';
+                    this._backButtonClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
+                }
             } else {
                 clearCrumbsView();
             }
