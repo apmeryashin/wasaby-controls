@@ -677,7 +677,7 @@ export default class ScrollController {
         // const compensation = getOffsetTop(itemsContainer);
 
         if (this._edgeItemParams) {
-            const item = itemsContainer.querySelector(`.${itemsContainerSelector} > [item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
+            const item = itemsContainer.querySelector(`.${itemsContainerSelector} > ${this._options.itemsSelector}[item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
             if (item) {
                 const itemOffsetTop = getOffsetTop(item);
                 if (direction === 'up') {
