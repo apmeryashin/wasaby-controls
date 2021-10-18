@@ -678,7 +678,7 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
 
-            return self._sourceController.load(direction).addCallback((addedItems) => {
+            return self._loadItemsToDirection(direction).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
@@ -3044,6 +3044,7 @@ const _private = {
 export interface IBaseControlOptions extends IControlOptions, ISourceOptions, IItemActionsOptions {
     keyProperty: string;
     viewModelConstructor: string;
+    collection: Collection;
     navigation?: INavigationOptionValue<INavigationSourceConfig>;
     sourceController?: SourceController;
     items?: RecordSet;
@@ -3198,6 +3199,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _editInPlaceInputHelper = null;
 
     _editingItem: IEditableCollectionItem;
+
+    _fixedItem: CollectionItem<Model> = null;
 
     _continuationEditingDirection: Exclude<EDIT_IN_PLACE_CONSTANTS, EDIT_IN_PLACE_CONSTANTS.CANCEL>;
 
@@ -3809,21 +3812,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = !!newOptions._recreateCollection ||
-                                    newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+        const shouldReInitCollection = !!newOptions._recreateCollection ||
+                                    newOptions.viewModelConstructor && newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+                                    newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-        if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
+        if (this._editInPlaceController && (shouldReInitCollection || loadStarted)) {
             if (this.isEditing()) {
                 // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
                 // без возможности отменить закрытие из вне.
                 this._cancelEdit(true).then(() => {
-                    if (oldViewModelConstructorChanged) {
+                    if (shouldReInitCollection) {
                         this._destroyEditInPlaceController();
                     }
                 });
             } else {
-                if (oldViewModelConstructorChanged) {
+                if (shouldReInitCollection) {
                     this._destroyEditInPlaceController();
                 }
             }
@@ -3835,7 +3839,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if (newOptions.viewModelConstructor && oldViewModelConstructorChanged && this._listViewModel) {
+        if (shouldReInitCollection && this._listViewModel) {
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
@@ -4867,6 +4871,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     protected _hasMoreData(direction: Direction): boolean {
         return !!(this._sourceController && this._sourceController.hasMoreData(direction));
+    }
+
+    protected _loadItemsToDirection(direction: IDirection): Promise<RecordSet|Error> {
+        return this._sourceController.load(direction);
     }
 
     private _commitEditInGroupBeforeCollapse(groupItem): TAsyncOperationResult {
@@ -6008,6 +6016,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
     }
+
+    private _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
+        if (information.fixedPosition === '') {
+            if (this._fixedItem && this._fixedItem.key === item.key) {
+                this._fixedItem = null;
+            }
+        } else {
+            this._fixedItem = item;
+        }
+
+    }
+
     _sortingChanged(event, propName) {
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
