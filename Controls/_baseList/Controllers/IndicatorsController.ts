@@ -379,6 +379,7 @@ export default class IndicatorsController {
     }
 
     private _startDisplayIndicatorTimer(showIndicator: () => void): void {
+        this._clearDisplayIndicatorTimer();
         this._displayIndicatorTimer = setTimeout(() => {
             if (!this._model || this._model.destroyed) {
                 return;
