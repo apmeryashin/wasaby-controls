@@ -10,12 +10,13 @@ import {
     IFontColorStyle,
     IFontColorStyleOptions,
     IFontSize,
-    IFontSizeOptions
+    IFontSizeOptions,
+    ITextTransformOptions
 } from 'Controls/interface';
 
 export interface IHeadingOptions
-    extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions {
-    textTransform: 'none' | 'uppercase';
+    extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions,
+            ITextTransformOptions {
 }
 
 /**
@@ -76,14 +77,8 @@ Object.defineProperty(Header, 'defaultProps', {
 });
 
 /**
- * @typedef {String} TTextTransform
- * @variant none Без изменения регистра символов.
- * @variant uppercase Все символы текста становятся прописными (верхний регистр).
- */
-
-/**
  * @name Controls/_heading/Heading#textTransform
- * @cfg {TTextTransform} Управляет преобразованием текста элемента в заглавные или прописные символы
+ * @cfg
  * @default none
  * @demo Controls-demo/Heading/Title/TextTransform/Index
  * @remark
