@@ -237,3 +237,8 @@ export interface IBaseGroupTemplate extends IFontWeightOptions {
  * @see expanderAlign
  * @see expanderVisible
  */
+/**
+ * @name Controls/_list/interface/IBaseGroupTemplate#fontWeight
+ * @cfg
+ * @default default
+ */

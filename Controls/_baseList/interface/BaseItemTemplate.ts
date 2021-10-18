@@ -63,6 +63,11 @@ export default interface IBaseItemTemplateOptions extends IFontWeightOptions {
  * Дополнительно об использовании опции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#inside здесь}.
  * @demo Controls-demo/list_new/ItemTemplate/ItemActionsClass/Index
  */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#fontWeight
+ * @cfg
+ * @default none
+ */
 /*
  * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.
  * @default false
