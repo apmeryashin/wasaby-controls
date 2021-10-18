@@ -12,6 +12,7 @@ import Cell, {IOptions as ICellOptions} from './Cell';
 import DataRow from './DataRow';
 import DataCellCompatibility from './compatibility/DataCell';
 import {TemplateFunction} from 'UI/Base';
+import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
 
 export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions {
     markerPosition: string;
@@ -61,10 +62,11 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
         tmplIsEditable: boolean = true,
-        templateHoverBackgroundStyle?: string
+        templateHoverBackgroundStyle?: string,
+        templateFontColorStyle?: TFontColorStyle
     ): string {
         let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover,
-            tmplIsEditable, templateHoverBackgroundStyle);
+            tmplIsEditable, templateHoverBackgroundStyle, templateFontColorStyle);
 
         if (this._$owner.isAnimatedForSelection()) {
             classes += ' controls-ListView__item_rightSwipeAnimation';

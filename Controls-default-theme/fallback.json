@@ -151,6 +151,7 @@
   "--font-size_5xl": "24px",
   "--font-size_6xl": "28px",
   "--font-size_7xl": "32px",
+  "--font-size_8xl": "36px",
   "--font-size_default": "var(--font-size_m)",
   "--font-weight": "normal",
   "--font-family": "'TensorFont', sans-serif",
@@ -1552,6 +1553,7 @@
   "--background-color_tumbler": "#eceeee",
   "--button-hover_background-color_tumbler": "var(--unaccented_hover_same_background-color)",
   "--button_offset_tumbler": "2px",
+  "--icon_offset_tumbler": "3px",
   "--border-radius_tumbler": "12px",
   "--counter_offset_tumbler": "4px",
 

@@ -1007,6 +1007,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._tabsSelectedKey !== tabId) {
          this._sourceController = null;
          this._searchController = null;
+         this._showIndicator();
          this._setFilterAndLoad(this._options.filter, this._options, tabId)
              .finally(() => {
                 changeTabCallback();
@@ -1038,11 +1039,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _loadStart(): void {
       this._loading = true;
-      // Обновим таймер, т.к. могут прерывать поиск новыми запросами
-      if (this._children.indicator) {
-         this._children.indicator.hide();
-         this._children.indicator.show();
-      }
       if (this._options.searchStartCallback) {
          this._options.searchStartCallback();
       }
@@ -1061,6 +1057,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._processResultData(result);
       if (this._options.searchEndCallback) {
          this._options.searchEndCallback();
+      }
+   }
+
+   _showIndicator(): void {
+      if (this._children.indicator) {
+         this._children.indicator.hide();
+         this._children.indicator.show();
       }
    }
 
