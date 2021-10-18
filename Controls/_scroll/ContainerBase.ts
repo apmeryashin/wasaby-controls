@@ -1068,10 +1068,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    private _isScrollSmoothSupported(): boolean {
-        return detection.chrome || detection.firefox || detection.isIE12;
-    }
-
     private _scrollTo(scrollPosition: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL, smoothSrc: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
         const smooth = smoothSrc;
@@ -1079,20 +1075,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
         if (smooth) {
             scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'top' : 'left';
-            if (!this._isScrollSmoothSupported()) {
-                import('Controls/_scroll/Polyfills/Smoothscroll').then((smoothScroll) => {
-                    smoothScroll.default.polyfill();
-                    scrollContainer.scrollTo({
-                        [scrollOrientation]: scrollPosition,
-                        behavior: 'smooth'
-                    });
-                });
-            } else {
-                scrollContainer.scrollTo({
-                    [scrollOrientation]: scrollPosition,
-                    behavior: 'smooth'
-                });
-            }
+            scrollContainer.scrollTo({
+                [scrollOrientation]: scrollPosition,
+                behavior: 'smooth'
+            });
         } else {
             scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'scrollTop' : 'scrollLeft';
             scrollContainer[scrollOrientation] = scrollPosition;
