@@ -3811,7 +3811,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         const shouldReInitCollection = !!newOptions._recreateCollection ||
-                                    newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+                                    newOptions.viewModelConstructor && newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
                                     newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
