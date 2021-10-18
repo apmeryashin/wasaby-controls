@@ -222,7 +222,7 @@ export default class MonthViewModel extends VersionableMixin {
         return !DateUtil.isDatesEqual(state.month, this._state.month) || state.daysData !== this._state.daysData;
     }
 
-    protected _getDayObject(date, state) {
+    protected _getDayObject(date, state, dayIndex) {
         state = state || this._state;
         /* Опция _date устаналивается только(!) в демках, для возможности протестировать
          визуальное отображение текущей даты */
@@ -263,7 +263,11 @@ export default class MonthViewModel extends VersionableMixin {
         }
 
         if (state.daysData) {
-            obj.extData = state.daysData.at ? state.daysData.at(obj.day - 1) : state.daysData[obj.day - 1];
+            if (obj.mode === 'extended') {
+                obj.extData = state.daysData[dayIndex];
+            } else {
+                obj.extData = state.daysData.at ? state.daysData.at(obj.day - 1) : state.daysData[obj.day - 1];
+            }
         }
         obj.selectionBase = DateUtil.isDatesEqual(date, state.selectionBaseValue);
 
@@ -277,10 +281,13 @@ export default class MonthViewModel extends VersionableMixin {
     private _getDaysArray(state?) {
         state = state || this._state;
         const weeks = calendarUtils.getWeeksArray(state.month, state.mode, state.dateConstructor);
+        let dayIndex = 0;
 
         return weeks.map((weekArray) => {
             return weekArray.map((day) => {
-                return this._getDayObject(day, state);
+                const dayObject = this._getDayObject(day, state, dayIndex);
+                dayIndex += 1;
+                return dayObject;
             }, this);
         }, this);
     }
