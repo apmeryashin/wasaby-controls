@@ -22,8 +22,7 @@ export default abstract class GroupCell<T> {
         return classes;
     }
 
-    getContentTextStylingClasses(fontSize?: TFontSize,
-                                 fontColorStyle?: TFontColorStyle): string {
+    getContentTextStylingClasses(fontSize?: TFontSize): string {
         let classes = '';
         const config = this.getColumnConfig();
         if (config.fontSize || fontSize) {

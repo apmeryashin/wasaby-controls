@@ -997,8 +997,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return contentClasses;
     }
 
-    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
-                                 fontSize?: TFontSize): string {
+    getContentTextStylingClasses(fontSize?: TFontSize): string {
         let contentClasses = '';
         if (fontSize) {
             contentClasses += ` controls-fontsize-${fontSize}`;

@@ -445,11 +445,10 @@ export default class Cell<
         return contentClasses;
     }
 
-    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
-                                 fontSize?: TFontSize): string {
+    getContentTextStylingClasses(fontSize?: TFontSize): string {
         let contentClasses = '';
-        if (fontSize) {
-            contentClasses += ` controls-fontsize-${fontSize}`;
+        if (this.config.fontSize || fontSize) {
+            contentClasses += ` controls-fontsize-${this.config.fontSize || fontSize}`;
         }
         return contentClasses;
     }
