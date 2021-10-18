@@ -5809,8 +5809,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // region Cut
 
     private _toggleCutClick() {
-        const newExpanded = !this._cutExpanded;
-        this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        const result = this._notify('cutClick', [this._cutExpanded], { bubbling: true });
+        if (result !== false) {
+            const newExpanded = !this._cutExpanded;
+            this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        }
     }
 
     private _reCountCut(newExpanded: boolean): Promise<void> {
