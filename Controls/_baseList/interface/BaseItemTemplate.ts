@@ -1,4 +1,5 @@
 import {TMarkerClassName} from 'Controls/display';
+import {IFontColorStyleOptions} from 'Controls/interface';
 
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/TCursor
@@ -8,7 +9,7 @@ import {TMarkerClassName} from 'Controls/display';
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
-export default interface IBaseItemTemplateOptions {
+export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions {
    highlightOnHover?: boolean;
    cursor?: TCursor;
    marker?: boolean;
@@ -61,6 +62,12 @@ export default interface IBaseItemTemplateOptions {
  * @remark
  * Дополнительно об использовании опции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#inside здесь}.
  * @demo Controls-demo/list_new/ItemTemplate/ItemActionsClass/Index
+ */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста записи.
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  */
 /*
  * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.

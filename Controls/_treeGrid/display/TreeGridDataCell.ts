@@ -2,6 +2,7 @@ import {GridDataCell, IGridDataCellOptions} from 'Controls/grid';
 import {isFullGridSupport, ITreeItemOptions} from 'Controls/display';
 import TreeGridDataRow from './TreeGridDataRow';
 import { Model } from 'Types/entity';
+import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
 
 export interface ITreeGridDataCellOptions<T extends Model> extends IGridDataCellOptions<T>, ITreeItemOptions<T> {
     isDragTargetNode?: boolean;
@@ -60,10 +61,11 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
         tmplIsEditable: boolean = true,
-        templateHoverBackgroundStyle?: string
+        templateHoverBackgroundStyle?: string,
+        templateFontColorStyle?: TFontColorStyle
     ): string {
         let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover,
-            tmplIsEditable, templateHoverBackgroundStyle);
+            tmplIsEditable, templateHoverBackgroundStyle, templateFontColorStyle);
 
         if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn() && isFullGridSupport()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;

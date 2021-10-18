@@ -1,4 +1,6 @@
-export interface IBaseGroupTemplate {
+import {IFontColorStyleOptions} from 'Controls/interface';
+
+export interface IBaseGroupTemplate extends IFontColorStyleOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
@@ -6,7 +8,6 @@ export interface IBaseGroupTemplate {
    rightTemplate?: string;
    contentTemplate?: string;
    fontSize?: string;
-   iconSize?: string;
    textVisible?: boolean;
 }
 
@@ -227,6 +228,13 @@ export interface IBaseGroupTemplate {
  * @default xs
  * @see textAlign
  * @see contentTemplate
+ */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста заголовка группы.
+ * @demo Controls-demo/breadCrumbs_new/FontColorStyle/Index
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  */
 /**
  * @name Controls/_list/interface/IBaseGroupTemplate#iconSize
