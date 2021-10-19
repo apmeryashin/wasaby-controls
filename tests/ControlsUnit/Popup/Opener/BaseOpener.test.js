@@ -129,17 +129,12 @@ define(
          assert.deepEqual(newConfig, popup.BaseOpener.util.getIndicatorConfig(indicatorId, cfg));
       });
 
-      it('showDialog remove old id', (done) => {
-         const baseOpenPopup = popup.BaseOpener._openPopup;
-         popup.BaseOpener._openPopup = (cfg) => {
-            popup.BaseOpener._openPopup = baseOpenPopup;
-            assert.equal(cfg.id, undefined); // id почистился, т.к. такого окна не было открыто
-            done();
-         };
+      it('showDialog remove old id', () => {
          const config = {
             id: 'badId'
          };
-         popup.BaseOpener.showDialog({}, config);
+         popup.BaseOpener._showIndicator(config);
+         assert.equal(config.id, undefined); // id почистился, т.к. такого окна не было открыто
       });
    }
 );

@@ -55,7 +55,7 @@
 .controls-GridView__itemV_marker-default {
    position: absolute;
    width: var(--marker_thickness_list);
-   background-color: var(--marker_color_list);
+   background-color: var(--marker_color);
    z-index: 2;
    max-height: 100%;
 }
@@ -394,12 +394,11 @@
    .controls-BaseControl_showActions_visible .controls-ListView__item_showActions,
    .controls-BaseControl_showActions_delayed .controls-ListView__item_showActions:hover,
    .controls-BaseControl_showActions_onhover .controls-ListView__item_showActions:hover {
-      > .controls-Grid__row-cell,
-      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
-      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
-         .controls-Grid__editArrow-wrapper {
-            visibility: visible;
-         }
+      > .controls-Grid__editArrow-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__editArrow-wrapper,
+      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper .controls-Grid__editArrow-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content .controls-Grid__editArrow-wrapper{
+         visibility: visible;
       }
    }
 }
@@ -911,7 +910,7 @@
 
 .controls-GridView__itemV_marker-master::after {
    content: '';
-   background-color: var(--master-marker_color_list);
+   background-color: var(--marker_color);
    width: var(--master-marker_thickness_list);
    border-radius: var(--marker_border-radius_list);
    height: 100%;
