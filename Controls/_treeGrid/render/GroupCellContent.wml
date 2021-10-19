@@ -5,8 +5,9 @@
         </ws:if>
         <ws:if data="{{ groupNodeConfig.textVisible !== false }}">
             <div class="{{ (gridColumn || itemData).getContentTextClasses(groupNodeConfig.separatorVisibility, groupNodeConfig.textAlign) }}
-                    {{ (gridColumn || itemData).getContentTextStylingClasses(groupNodeConfig.fontSize, fontColorStyle) }}
-                    {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign) }}"
+
+                        {{ (gridColumn || itemData).getContentTextStylingClasses(fontColorStyle, fontSize) }}
+                        {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign) }}"
                  attr:data-qa="{{ item.listElementName }}-expander">
                 <ws:if data="{{ groupNodeConfig.contentTemplate }}">
                     <ws:partial template="{{ groupNodeConfig.contentTemplate }}"

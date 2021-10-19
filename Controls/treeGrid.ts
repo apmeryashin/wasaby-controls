@@ -1,5 +1,7 @@
 /**
  * @library Controls/treeGrid
+ * @includes ITreeGrid Controls/_treeGrid/interface/ITreeGrid
+ * @includes IColumn Controls/_treeGrid/interface/IColumn
  * @includes IGroupNodeColumn Controls/_treeGrid/interface/IGroupNodeColumn
  * @includes ItemTemplate Controls/_treeGrid/interface/ItemTemplate
  * @public
@@ -52,7 +54,8 @@ import TreeGridGroupDataRow from 'Controls/_treeGrid/display/TreeGridGroupDataRo
 import TreeGridGroupDataCell from 'Controls/_treeGrid/display/TreeGridGroupDataCell';
 import TreeGridViewTable from './_treeGrid/TreeGridViewTable';
 import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
-import {TGroupNodeVisibility} from 'Controls/_treeGrid/interface/ITreeGrid';
+import ITreeGrid, {TGroupNodeVisibility} from 'Controls/_treeGrid/interface/ITreeGrid';
+import {IColumn} from 'Controls/_treeGrid/interface/IColumn';
 import TreeGridHeaderRow from 'Controls/_treeGrid/display/TreeGridHeaderRow';
 import TreeGridHeaderCell from 'Controls/_treeGrid/display/TreeGridHeaderCell';
 import TreeGridTableHeaderRow from 'Controls/_treeGrid/display/TreeGridTableHeaderRow';
@@ -60,6 +63,8 @@ import TreeGridHeader from 'Controls/_treeGrid/display/TreeGridHeader';
 import TreeGridTableHeader from 'Controls/_treeGrid/display/TreeGridTableHeader';
 
 export {
+    ITreeGrid,
+    IColumn,
     TreeGridFooterCell,
     TreeGridCollection,
     TreeGridDataRow,

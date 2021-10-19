@@ -1,13 +1,13 @@
-import {IFontColorStyleOptions} from 'Controls/interface';
+import {IFontColorStyleOptions, IFontSizeOptions} from 'Controls/interface';
 
-export interface IBaseGroupTemplate extends IFontColorStyleOptions {
+export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
    textAlign?: string;
    rightTemplate?: string;
    contentTemplate?: string;
-   fontSize?: string;
+   iconSize?: string;
    textVisible?: boolean;
 }
 
@@ -64,7 +64,6 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions {
  * @default center
  * @demo Controls-demo/list_new/Grouped/CaptionAlign/Right/Index В следующем примере для текста заголовка группы задано выравнивание по правому краю.
  * @see contentTemplate
- * @see fontSize
  */
 
 /**
@@ -224,8 +223,11 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions {
  */
 /**
  * @name Controls/_list/interface/IBaseGroupTemplate#fontSize
- * @cfg {String} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
+ * @cfg {TFontSize} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
  * @default xs
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
  * @see textAlign
  * @see contentTemplate
  */

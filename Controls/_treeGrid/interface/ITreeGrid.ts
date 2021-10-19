@@ -1,6 +1,5 @@
 import { ITree, IOptions as ITreeOptions } from 'Controls/tree';
-import {IColumn as IGridColumn} from 'Controls/grid';
-import {TemplateFunction} from 'UI/Base';
+import { IGridControl } from 'Controls/grid';
 
 /**
  * @typedef {String} Controls/_treeGrid/interface/ITreeGrid/TGroupNodeVisibility
@@ -23,22 +22,8 @@ export interface IOptions extends ITreeOptions {
  * @public
  * @author Аверкиев П.А.
  */
-export default interface ITreeGrid extends ITree {
+export default interface ITreeGrid extends ITree, IGridControl {
     readonly '[Controls/_treeGrid/interface/ITreeGrid]': true;
-}
-
-/**
- * Интерфейс для конфигурации колонки в {@link Controls/treeGrid:View дереве с колонками}.
- *
- * @implements Controls/grid:IColumn
- * @public
- * @author Авраменко А.С.
- */
-export interface IColumn extends IGridColumn {
-    /**
-     * @cfg {TemplateFunction|String} Шаблон ячейки подвала узла.
-     */
-    nodeFooterTemplate?: TemplateFunction | string;
 }
 
 /**
@@ -104,7 +89,7 @@ export interface IColumn extends IGridColumn {
 
 /**
  * @name Controls/_treeGrid/interface/ITreeGrid#columns
- * @cfg {Array.<IColumn>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/ колонок} дерева с колонками.
+ * @cfg {Array.<Controls/treeGrid:IColumn>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/ колонок} дерева с колонками.
  * @remark
  * Если при отрисовске контрола данные не отображаются или выводится только их часть, то следует проверить {@link Controls/collection:RecordSet}, полученный от {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}.
  * Такой RecordSet должен содержать набор полей, которые заданы в конфигурации контрола в опции columns, а также сами данные для каждого поля.
