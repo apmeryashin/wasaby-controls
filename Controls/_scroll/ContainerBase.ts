@@ -114,6 +114,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _scrollMoveTimer: number;
 
+    private _isFirstUpdateState: boolean = true;
+
     // Состояние для логирования сохраняем отдельно, т.к. состояние положения скрола в некоторых сценариях
     // обновляется синхронно, и невозможно узнать старое состояние в обработчике.
     private _lastLogState: {top: number, left: number} = { top: 0, left: 0 };
@@ -429,13 +431,23 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     //     // console.log(edge);
     // }
 
-    /*
-       * Scrolls to the given position from the top of the container.
-       * @function Controls/_scroll/Container#scrollTo
-       * @param {Number} Offset
-       */
-    scrollTo(scrollPosition: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
-        scrollTo(this._children.content, scrollPosition, direction);
+    /**
+     * Прокручивает до указанных координат контейнера.
+     * @name Controls/_scroll/Container#scrollTo
+     * @function
+     * @param {String} direction - направление (vertical - по вертикали, horizontal - по горизонтали).
+     * @param {Boolean} smooth - плавная прокрутка, по умолчанию false (необязательный).
+     * @example
+     * <pre class="brush: js">
+     * _scrollTo(): void {
+     *    this._children.scrollContainer.scrollTo(50, 'vertical');
+     * }
+     * </pre>
+     */
+    scrollTo(scrollPosition: number,
+             direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL,
+             smooth: boolean = false): void {
+        this._scrollTo(scrollPosition, direction, smooth);
     }
 
     /**
@@ -634,6 +646,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             }
 
             this._generateCompatibleEvents();
+        } else if (this._isFirstUpdateState) {
+            // При первом обновлении scrollState кидаем scrollStateChanged, чтобы можно было знать, с какими размерами
+            // построился скролл контейнер.
+            this._isFirstUpdateState = false;
+            this._generateEvent('scrollStateChanged', [scrollState, oldScrollState]);
         }
     }
 
@@ -1053,24 +1070,19 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    private _isScrollSmoothSupported(): boolean {
-        if (detection.chrome || detection.firefox || detection.isIE12) {
-            return true;
-        }
-        return false;
-    }
-
-    private _scrollTo(scrollTop: number, smoothSrc: boolean): void {
+    private _scrollTo(scrollPosition: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL, smooth: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
-        const smooth = smoothSrc && this._isScrollSmoothSupported();
+        let scrollOrientation;
 
         if (smooth) {
+            scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'top' : 'left';
             scrollContainer.scrollTo({
-                top: scrollTop,
+                [scrollOrientation]: scrollPosition,
                 behavior: 'smooth'
             });
         } else {
-            scrollContainer.scrollTop = scrollTop;
+            scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'scrollTop' : 'scrollLeft';
+            scrollContainer[scrollOrientation] = scrollPosition;
         }
     }
 
@@ -1084,10 +1096,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
                 // нужный scrollTop будет отличным от realScrollTop, если изменился _topPlaceholderSize.
                 // Вычисляем его по месту
-                this._scrollTo(cachedScrollTop - this._topPlaceholderSize, smooth);
+                this._scrollTo(cachedScrollTop - this._topPlaceholderSize, SCROLL_DIRECTION.VERTICAL, smooth);
             };
             if (realScrollTop >= 0 && !scrollTopOverflow) {
-                this._scrollTo(realScrollTop, smooth);
+                this._scrollTo(realScrollTop, SCROLL_DIRECTION.VERTICAL, smooth);
             } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow
                 && this._bottomPlaceholderSize === 0) {
                 applyScrollTop();
@@ -1110,7 +1122,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                     });
             }
         } else {
-            this._scrollTo(scrollTop, smooth);
+            this._scrollTo(scrollTop, SCROLL_DIRECTION.VERTICAL, smooth);
             this._updateStateAndGenerateEvents({
                 scrollTop
             });

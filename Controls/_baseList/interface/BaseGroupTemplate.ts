@@ -64,7 +64,6 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOpt
  * @default center
  * @demo Controls-demo/list_new/Grouped/CaptionAlign/Right/Index В следующем примере для текста заголовка группы задано выравнивание по правому краю.
  * @see contentTemplate
- * @see fontSize
  */
 
 /**

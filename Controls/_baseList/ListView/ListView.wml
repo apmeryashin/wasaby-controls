@@ -18,7 +18,7 @@
            data-qa="loading-trigger-top">
       </div>
 
-      <div name="itemsContainer" class="controls-ListViewV__itemsContainer" attr:data-qa="items-container">
+      <div name="itemsContainer" class="controls-ListViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">
          <ws:partial
              template="{{_forTemplate}}"
              collection="{{ _listModel }}"

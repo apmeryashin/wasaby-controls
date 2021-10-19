@@ -1412,7 +1412,8 @@ const _private = {
                     if (itemsCount !== moreMetaCount) {
                         _private.prepareFooter(self, self._options, self._sourceController);
                     } else {
-                        self._shouldDrawNavigationButton = false;
+                        self._shouldDrawNavigationButton = _private.isCutNavigation(self._navigation) ?
+                            self._cutExpanded : false;
                     }
                 } else if (moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
@@ -3200,6 +3201,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _editingItem: IEditableCollectionItem;
 
+    _fixedItem: CollectionItem<Model> = null;
+
     _continuationEditingDirection: Exclude<EDIT_IN_PLACE_CONSTANTS, EDIT_IN_PLACE_CONSTANTS.CANCEL>;
 
     _hoverFreezeController: HoverFreeze;
@@ -4313,7 +4316,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             directionToRestoreScroll = 'up';
         }
         if (directionToRestoreScroll) {
-            this._scrollController.saveEdgeItem(directionToRestoreScroll, this._getItemsContainer());
+            this._scrollController.saveEdgeItem(directionToRestoreScroll,
+                this._getItemsContainer(),
+                this._getItemsContainerUniqueClass());
         }
     }
 
@@ -4392,7 +4397,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             if (directionToRestoreScroll) {
                 const newScrollTop = this._scrollController.getScrollTopToEdgeItem(directionToRestoreScroll,
-                    this._getItemsContainer());
+                    this._getItemsContainer(), this._getItemsContainerUniqueClass());
                 this._scrollController.beforeRestoreScrollPosition();
                 this._hasItemWithImageChanged = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
@@ -5952,6 +5957,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return classes.join(' ');
     }
 
+    protected _getItemsContainerUniqueClass(): string {
+        return `controls-BaseControl__itemsContainer_${this._uniqueId}`;
+    }
+
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
         if (_private.hasHoverFreezeController(this) &&
             _private.isAllowedHoverFreeze(this) &&
@@ -6014,6 +6023,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
     }
+
+    private _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
+        if (information.fixedPosition === '') {
+            if (this._fixedItem && this._fixedItem.key === item.key) {
+                this._fixedItem = null;
+            }
+        } else {
+            this._fixedItem = item;
+        }
+
+    }
+
     _sortingChanged(event, propName) {
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();

@@ -30,4 +30,3 @@
  * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ здесь}.
  * @public
  */
-
