@@ -4,6 +4,7 @@
             source="{{_viewSource}}"
             itemActions="{{_itemActions}}"
             itemActionsPosition="custom"
+            showEditArrow="{{true}}"
             colspanCallback="{{ _colspanCallback }}"
             name="gridView">
         <ws:itemTemplate>
@@ -23,6 +24,7 @@
                                         <div>country:&nbsp;{{ contentTemplate.item.getContents().get('country') }}</div>
                                     </div>
                                     <ws:partial template="{{contentTemplate.itemActionsTemplate}}" itemActionsClass="{{contentTemplate.itemActionsClass}}"/>
+                                    <ws:partial template="{{ contentTemplate.editArrowTemplate }}"/>
                                 </div>
                             </ws:contentTemplate>
                         </ws:partial>
