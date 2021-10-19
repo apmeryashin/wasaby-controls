@@ -2,7 +2,6 @@ import {Tumbler} from 'Controls/toggle';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {assert} from 'chai';
-import {width} from "Controls/_utils/sizeUtils/DOMUtil";
 
 describe('Controls/toggle:Tumbler', () => {
     it('Tumbler _beforeUpdate', () => {
