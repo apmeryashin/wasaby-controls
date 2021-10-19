@@ -26,6 +26,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
     IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
    triState?: boolean;
    value?: boolean | null;
+   textOverflow?: 'none' | 'ellipsis';
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -110,7 +111,8 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
          iconSize: 'default',
          iconStyle: 'secondary',
          validationStatus: 'valid',
-         contrastBackground: false
+         contrastBackground: false,
+         textOverflow: 'none'
       };
    }
 
@@ -309,6 +311,14 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * </pre>
  * @see value
  * @see triState
+ */
+/**
+ * @name Controls/_toggle/Checkbox#textOverflow
+ * @cfg {String} Поведение текста, если он не умещается.
+ * @variant ellipsis Текст обрезается многоточием.
+ * @variant none Текст разбивается на несколько строк.
+ * @default none
+ * @demo Controls-demo/toggle/Checkbox/TextOverflow/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#icon
