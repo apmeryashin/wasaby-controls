@@ -1,12 +1,14 @@
 <div class="controlsDemo__wrapper">
-   <div>root: {{_rootTitle}}</div>
-   <Controls.breadcrumbs:PathButton
-      source="{{_source}}"
-      keyProperty="id"
-      nodeProperty="node"
-      parentProperty="parent"
-      displayProperty="title"
-      bind:path="_path"
-      on:pathChanged="_updateRootTitle()"
-   />
+   <span data-qa="controlsDemo-PathButton__rootTitle">root: {{_rootTitle}}</span>
+   <div>
+      <Controls.breadcrumbs:PathButton
+         source="{{_source}}"
+         keyProperty="id"
+         nodeProperty="node"
+         parentProperty="parent"
+         displayProperty="title"
+         bind:path="_path"
+         on:pathChanged="_updateRootTitle()"
+      />
+   </div>
 </div>
