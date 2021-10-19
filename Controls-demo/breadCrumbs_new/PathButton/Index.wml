@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__wrapper__padding-left">
    <span data-qa="controlsDemo-PathButton__rootTitle">root: {{_rootTitle}}</span>
    <div>
       <Controls.breadcrumbs:PathButton
