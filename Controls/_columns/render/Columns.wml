@@ -11,7 +11,7 @@
            data-qa="loading-trigger-top">
       </div>
 
-      <div attr:class="controls-ColumnsView__itemsContainer" attr:data-qa="items-container"
+      <div attr:class="controls-ColumnsView__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container"
            style="{{_getItemsContainerStyle()}}" name="itemsContainer">
          <ws:for data="i in _options.listModel.getColumnsCount()">
             <div class="controls-ColumnsView_column" style="{{_getColumnStyle(i)}}">
