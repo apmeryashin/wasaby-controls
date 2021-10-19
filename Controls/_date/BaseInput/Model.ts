@@ -147,11 +147,9 @@ const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
             this._nextVersion();
 
             _private.updateLastValue(this);
-            this._notify('valueChanged', [this._value, this.displayValue]);
-            return;
          }
 
-         if (this._inputMode === INPUT_MODE.partial) {
+         if (valueChanged || this._inputMode === INPUT_MODE.partial) {
             this._notify('valueChanged', [this._value, this.displayValue]);
          }
 
