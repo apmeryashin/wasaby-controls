@@ -2,9 +2,7 @@
      attr:class="controls_toggle_theme-{{_options.theme}}
       controls-Menu__row-radioCircle
       controls-icon_size-2xs
-      controls-Menu__row-radioCircle_{{selected ? 'selected' : 'unselected'}}
-      controls-Menu__row-radioCircle_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}
-      controls-Menu__row-radioCircle_{{readOnly ? 'disabled' : 'enabled'}}"
+      controls-Menu__row-radioCircle_{{selected ? 'selected' : 'unselected'}}"
      attr:viewBox="0 0 12 12">
 
     <circle class="controls-Menu__row-radioCircle__borderCircle"

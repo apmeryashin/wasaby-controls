@@ -1,6 +1,6 @@
 <ws:template name="itemTpl">
    <ws:partial template="{{item.getContents()[_options.itemTemplateProperty] || _options.itemTemplate}}"
-               marker="{{_options.markerVisibility !== 'hidden'}}"
+               marker="{{_options.markerVisibility !== 'hidden' || _options.multiSelect === true}}"
                itemData="{{_getItemData(item)}}"
                treeItem="{{item}}"
                emptyText="{{_options.emptyText}}"
