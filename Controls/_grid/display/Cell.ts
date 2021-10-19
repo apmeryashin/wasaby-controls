@@ -446,18 +446,23 @@ export default class Cell<
 
     /**
      * Добавляет CSS классы для стилизации текста в ячейке грида.
+     * Настройки из конфига колонок имеют бОльший приоритет
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
+     * @param templateFontWeight Начертание шрифта
      */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,
-                                 fontWeight?: TFontWeight): string {
+                                 templateFontWeight?: TFontWeight): string {
+        const fontColorStyle = this.config.fontColorStyle || templateFontColorStyle;
+        const fontSize = this.config.fontSize || templateFontSize;
+        const fontWeight = this.config.fontWeight || templateFontWeight;
         let contentClasses = '';
-        if (this.config.fontColorStyle || templateFontColorStyle) {
-            contentClasses += ` controls-text-${this.config.fontColorStyle || templateFontColorStyle}`;
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
         }
-        if (this.config.fontSize || templateFontSize) {
-            contentClasses += ` controls-fontsize-${this.config.fontSize || templateFontSize}`;
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
         }
         if (fontWeight) {
             contentClasses += ` controls-fontweight-${fontWeight}`;

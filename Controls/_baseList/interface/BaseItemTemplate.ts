@@ -77,9 +77,9 @@ export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions
  * @default l
  */
 /**
- * @name Controls/_interface/IBaseGroupTemplate#fontWeight
- * @cfg
- * @default none
+ * @name Controls/_list/interface/IBaseItemTemplate#fontWeight
+ * @cfg {TFontWeight} Начертание шрифта.
+ * @default "default".
  */
 /*
  * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.
