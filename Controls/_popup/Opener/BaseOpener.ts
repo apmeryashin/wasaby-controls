@@ -248,21 +248,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             delete cfg.opener;
             Logger.error('Controls/popup: Задано некорректное значение опции opener. Опция в качестве значения принимает инстанс контрола.');
         }
-        // Если открывают не через инстанс опенера (инстанс сейчас сам показываем индикатор, т.к. грузит зависимости)
-        // И если опционально показ индикатора не отключен, то на момент построения окна покажем индикатор
-        if (!cfg._events && cfg.showIndicator !== false) {
-            // Если окно уже открыто или открывается, новые обработчики не создаем
-            const popupItem = ManagerController.find(cfg.id);
-            if (popupItem) {
-                cfg._events = popupItem.popupOptions._events;
-            } else {
-                // Даже если окна с переданным id нет, синхронизатор иногда считает что такой контрол у него есть
-                // (например окно с таким id только удалилось) и не вызовет на созданном окне фазу afterMount.
-                // Из-за этого открываемый инидкатор не скроется. Чищу id, если он не актуальный.
-                delete cfg.id;
-                BaseOpenerUtil.showIndicator(cfg);
-            }
-        }
+
+        BaseOpener._showIndicator(cfg);
 
         if (!isNewEnvironment()) {
             BaseOpenerUtil.getManagerWithCallback(() => {
@@ -371,6 +358,24 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
      */
     static requireModule(module: string|Control): Promise<Control> {
         return loadModule(module);
+    }
+
+    static _showIndicator(cfg: IBaseOpenerOptions): void {
+        // Если открывают не через инстанс опенера (инстанс сейчас сам показываем индикатор, т.к. грузит зависимости)
+        // И если опционально показ индикатора не отключен, то на момент построения окна покажем индикатор
+        if (!cfg._events && cfg.showIndicator !== false) {
+            // Если окно уже открыто или открывается, новые обработчики не создаем
+            const popupItem = ManagerController.find(cfg.id);
+            if (popupItem) {
+                cfg._events = popupItem.popupOptions._events;
+            } else {
+                // Даже если окна с переданным id нет, синхронизатор иногда считает что такой контрол у него есть
+                // (например окно с таким id только удалилось) и не вызовет на созданном окне фазу afterMount.
+                // Из-за этого открываемый инидкатор не скроется. Чищу id, если он не актуальный.
+                delete cfg.id;
+                BaseOpenerUtil.showIndicator(cfg);
+            }
+        }
     }
 
     static _openPopup(cfg: IBaseOpenerOptions, controller: Control, def: Promise<string>): void {
