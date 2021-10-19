@@ -8,7 +8,7 @@
                 <ws:partial
                         template="Controls/list:GroupTemplate"
                         scope="{{ _options }}"
-                        fontSize="s"
+                        fontSize="m"
                         fontColorStyle="secondary"/>
             </ws:groupTemplate>
         </Controls.list:View>

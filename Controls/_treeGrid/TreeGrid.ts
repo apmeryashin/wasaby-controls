@@ -31,7 +31,6 @@ import 'css!Controls/treeGrid';
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface/ITreeGridItemTemplate
  * @implements Controls/interface:IDraggable
- * @implements Controls/interface:IGridControl
  * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/list:IList
  * @implements Controls/interface:IItemPadding
@@ -39,6 +38,7 @@ import 'css!Controls/treeGrid';
  * @implements Controls/grid:IPropStorage
  * @implements Controls/tree:ITreeControl
  * @implements Controls/itemActions:IItemActions
+ * @implements Controls/_treeGrid/interface/ITreeGrid
  *
  * @public
  * @author Авраменко А.С.

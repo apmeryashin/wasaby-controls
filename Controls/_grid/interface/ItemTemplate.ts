@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/grid:View таблице}.
- *  
+ *
  * @class Controls/_grid/interface/ItemTemplate
  * @implements Controls/list:IBaseItemTemplate
  * @author Авраменко А.С.
@@ -20,4 +20,20 @@
  * @remark
  * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/item/ здесь}.
  * @public
+ */
+
+/**
+ * @name Controls/_grid/interface/ItemTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста записи.
+ * @remark
+ * {@link Controls/_grid/display/interface/IColumn#fontColorStyle Стиль цвета текста ячейки} имеет больший приоритет, чем стиль цвета текста записи.
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+ */
+/**
+ * @name Controls/_grid/interface/ItemTemplate#fontSize
+ * @cfg {TFontSize} Размер шрифта записи.
+ * @remark
+ * {@link Controls/_grid/display/interface/IColumn#fontSize Размер шрифта ячейки} имеет больший приоритет, чем стиль размер шрифта текста записи.
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
  */

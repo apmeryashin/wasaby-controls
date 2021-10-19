@@ -477,6 +477,8 @@ export interface IColumn extends IColspanParams {
     displayTypeOptions?: IDisplayTypeOptions;
     /**
      * @cfg {TFontColorStyle} Стиль цвета текста ячейки.
+     * @remark
+     * Стиль цвета текста ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontColorStyle стиль цвета текста записи}.
      */
     fontColorStyle?: TFontColorStyle;
     /**
@@ -500,9 +502,10 @@ export interface IColumn extends IColspanParams {
      */
     tooltipProperty?: string;
     /**
-     * @name Controls/_grid/display/interface/IColumn
-     * @cfg
+     * @cfg {TFontSize} Размер шрифта.
      * @default "l". Для контрола {@link Controls/treeGrid:View}: "m" (для листа), "xl" (для скрытого узла) и "2xl" (для узла).
+     * @remark
+     * Размер шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontSize размер шрифта записи}.
      */
     fontSize?: TFontSize;
 }
