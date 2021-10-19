@@ -245,7 +245,11 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
                 this._breadCrumbsItems = this._items.slice(0, this._items.length - 1);
                 this._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
                 this._isHomeVisible = true;
-                this._updateBreadCrumbsClasses(options, receivedState, getTextWidth);
+
+                // Ограничиваем ширину только в случае отображения на одной линии кнопки назад и крошек
+                if (options.displayMode === 'default') {
+                    this._updateBreadCrumbsClasses(options, receivedState, getTextWidth);
+                }
             } else {
                 clearCrumbsView();
             }
