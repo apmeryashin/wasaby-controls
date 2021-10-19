@@ -62,11 +62,10 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true,
         tmplIsEditable: boolean = true,
-        templateHoverBackgroundStyle?: string,
-        templateFontColorStyle?: TFontColorStyle
+        templateHoverBackgroundStyle?: string
     ): string {
         let classes = super.getContentClasses(backgroundColorStyle, cursor, templateHighlightOnHover,
-            tmplIsEditable, templateHoverBackgroundStyle, templateFontColorStyle);
+            tmplIsEditable, templateHoverBackgroundStyle);
 
         if (this._$owner.isAnimatedForSelection()) {
             classes += ' controls-ListView__item_rightSwipeAnimation';

@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder, TFontColorStyle} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle, TFontSize} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -970,11 +970,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
-     * @param fontColorStyle - цвет шрифта в строке
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
-    getContentClasses(fontColorStyle?: TFontColorStyle): string {
+    getContentClasses(): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
         let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses()}`;
@@ -994,8 +993,22 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         if (this.isDragged()) {
             contentClasses += ' controls-ListView__itemContent_dragging';
         }
+        return contentClasses;
+    }
+
+    /**
+     * Добавляет CSS классы для стилизации текста в записи списка
+     * @param fontColorStyle Цвет шрифта
+     * @param fontSize Размер шрифта
+     */
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize): string {
+        let contentClasses = '';
         if (fontColorStyle) {
             contentClasses += ` controls-text-${fontColorStyle}`;
+        }
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
         }
         return contentClasses;
     }
