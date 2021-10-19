@@ -66,7 +66,7 @@ export default interface IItemTemplateOptions {
  * @cfg {TFontColorStyle} Стиль цвета текста записи.
  * @remark
  * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
- * {@link Controls/_grid/display/interface/IColumn#fontColorStyle Стиль цвета текста ячейки} имеет больший приоритет, чем стиль цвета текста записи.
+ * {@link Controls/_treeGrid/interface/IColumn#fontColorStyle Стиль цвета текста ячейки} имеет больший приоритет, чем стиль цвета текста записи.
  * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  */
 /**
@@ -74,7 +74,15 @@ export default interface IItemTemplateOptions {
  * @cfg {TFontSize} Размер шрифта записи.
  * @remark
  * Размер шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
- * {@link Controls/_grid/display/interface/IColumn#fontSize Размер шрифта ячейки} имеет больший приоритет, чем стиль размер шрифта текста записи.
+ * {@link Controls/_treeGrid/interface/IColumn#fontSize Размер шрифта ячейки} имеет больший приоритет, чем стиль размер шрифта текста записи.
  * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @default l
+ */
+/**
+ * @name Controls/_treeGrid/interface/ItemTemplate#fontWeight
+ * @cfg {TFontWeight} Начертание шрифта.
+ * @remark
+ * Начертание шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
+ * {@link Controls/_treeGrid/interface/IColumn#fontWeightНачертание шрифта ячейки} имеет больший приоритет, чем стиль начертание шрифта текста записи.
+ * @default "default".
  */
