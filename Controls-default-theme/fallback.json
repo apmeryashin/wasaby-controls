@@ -1554,7 +1554,7 @@
   "--button-hover_background-color_tumbler": "var(--unaccented_hover_same_background-color)",
   "--button_offset_tumbler": "2px",
   "--icon_offset_tumbler": "3px",
-  "--border-radius_tumbler": "12px",
+  "--border-radius_tumbler": "100px",
   "--counter_offset_tumbler": "4px",
 
   "--item_offset_s_toolbar": "var(--offset_m)",
