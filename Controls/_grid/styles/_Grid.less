@@ -394,12 +394,11 @@
    .controls-BaseControl_showActions_visible .controls-ListView__item_showActions,
    .controls-BaseControl_showActions_delayed .controls-ListView__item_showActions:hover,
    .controls-BaseControl_showActions_onhover .controls-ListView__item_showActions:hover {
-      > .controls-Grid__row-cell,
-      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
-      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
-         .controls-Grid__editArrow-wrapper {
-            visibility: visible;
-         }
+      > .controls-Grid__editArrow-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__editArrow-wrapper,
+      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper .controls-Grid__editArrow-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content .controls-Grid__editArrow-wrapper{
+         visibility: visible;
       }
    }
 }
