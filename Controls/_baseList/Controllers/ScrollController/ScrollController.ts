@@ -1,6 +1,6 @@
 import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
 import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversController } from './ObserversController';
-import { Calculator, ICalculatorOptions, ICalculatorResult } from './Calculator';
+import { Calculator, IActiveElementIndexChanged, ICalculatorOptions, ICalculatorResult } from './Calculator';
 
 export interface IItemsRange {
     startIndex: number;
@@ -10,6 +10,10 @@ export interface IItemsRange {
 export interface IVisibleItemIndexes {
     firstVisibleItemIndex: number;
     lastVisibleItemIndex: number;
+}
+
+export interface IActiveElementIndex {
+    activeElementIndex: number;
 }
 
 export interface IEnvironmentChangedParams {
@@ -169,10 +173,10 @@ export class ScrollController {
 
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
-     * @param count Новое кол-во элементов
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    resetItems(count: number): void {
-        const result = this._calculator.resetItems(count);
+    resetItems(totalCount: number): void {
+        const result = this._calculator.resetItems(totalCount);
         this._processCalculatorResult(result);
     }
 
@@ -196,9 +200,14 @@ export class ScrollController {
         this._processCalculatorResult(result);
     }
 
-    scrollToPosition(position: number): void {
-        const result = this._calculator.shiftRangeToScrollPosition(position);
+    scrollToPosition(position: number, totalCount: number): void {
+        const result = this._calculator.shiftRangeToScrollPosition(position, totalCount);
         this._processCalculatorResult(result);
+    }
+
+    scrollPositionChange(position: number, totalCount: number): void {
+        const result = this._calculator.shiftActiveElementIndexToScrollPosition(position, totalCount);
+        this._processActiveElementIndexChanged(result);
     }
 
     // endregion Scroll
@@ -232,15 +241,24 @@ export class ScrollController {
     }
 
     /**
+     * При изменении activeElementIndex обеспечивает activeElementChangedCallback.
+     * @param {IActiveElementIndexChanged} result
+     * @private
+     */
+    private _processActiveElementIndexChanged(result: IActiveElementIndexChanged): void {
+        if (result.activeElementIndexChanged) {
+            this._activeElementChangedCallback(result.activeElementIndex);
+        }
+    }
+
+    /**
      * В зависимости от результатов сдвига itemsRange вызывает indexesChangedCallback.
      * Также, по необходимости, обеспечивает вызов activeElementChangedCallback, environmentChangedCallback.
      * @param {ICalculatorResult} result
      * @private
      */
     private _processCalculatorResult(result: ICalculatorResult): void {
-        if (result.activeElementIndexChanged) {
-            this._activeElementChangedCallback(result.activeElementIndex);
-        }
+        this._processActiveElementIndexChanged(result);
 
         if (result.environmentChanged) {
             this._environmentChangedCallback({

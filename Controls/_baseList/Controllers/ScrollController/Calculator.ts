@@ -1,22 +1,30 @@
-import { calculateVirtualRange } from './VirtualScrollUtil';
+import {
+    calculateVirtualRange,
+    getRangeByIndex,
+    getRangeByScrollPosition,
+    getActiveElementIndexByPosition
+} from './CalculatorUtil';
 
-import { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
+import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
+import type { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 import type {
     IDirection,
     IVisibleItemIndexes,
     IItemsRange,
-    IEnvironmentChangedParams
+    IEnvironmentChangedParams,
+    IActiveElementIndex
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
-import { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 
-export interface ICalculatorResult extends IItemsRange, IEnvironmentChangedParams {
-    indexesChanged: boolean;
-
-    // todo release it!
-    activeElementIndex: number;
+export interface IActiveElementIndexChanged extends IActiveElementIndex {
     activeElementIndexChanged: boolean;
+}
 
+export interface ICalculatorResult extends
+    IItemsRange,
+    IEnvironmentChangedParams,
+    IActiveElementIndexChanged {
+    indexesChanged: boolean;
     environmentChanged: boolean;
 }
 
@@ -67,6 +75,7 @@ export class Calculator {
     private _viewportSize: number;
     private _range: IRange = { start: 0, end: 0 };
     private _placeholders: IPlaceholders = { top: 0, bottom: 0 };
+    private _activeElementIndex: number;
 
     constructor(options: ICalculatorOptions) {
         this._itemsSizes = options.itemsSizes;
@@ -84,14 +93,6 @@ export class Calculator {
      */
     updateItemsSizes(itemsSizes: IItemsSizes): void {
         this._itemsSizes = itemsSizes;
-    }
-
-    /**
-     * Возвращает активный элемент. Активный элемент - это элемент, который находится по середине вьюпорта.
-     */
-    getActiveElementIndex(): number {
-        // TODO взять старую реализацию
-        return 0;
     }
 
     // endregion Getters/Setters
@@ -157,17 +158,22 @@ export class Calculator {
     /**
      * Смещает виртуальный диапазон к элементу по переданному индексу.
      * @param index Индекс элемента
-     * @param totalCount Общее кол-во элементов в коллекции
+     * @param totalCount Общее кол-во элементов
      */
     shiftRangeToIndex(index: number, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
 
         // если элемент уже внутри диапазона, то ничего не делаем.
-        if (this._isItemInVirtualRange(index)) {
-            return this._getRangeChangeResult(oldRange, totalCount);
+        if (!this._isItemInVirtualRange(index)) {
+            this._range = getRangeByIndex({
+                pageSize: this._virtualScrollConfig.pageSize,
+                start: 0,
+                totalCount
+            });
+
+            this._updatePlaceholders(this._range);
         }
 
-        this._updateVirtualRange();
         return this._getRangeChangeResult(oldRange, totalCount);
     }
 
@@ -187,22 +193,55 @@ export class Calculator {
     /**
      * Смещает диапазон к переданной позиции скролла.
      * @param scrollPosition Позиция скролла
+     * @param totalCount Позиция скролла
      */
-    shiftRangeToScrollPosition(scrollPosition: number): ICalculatorResult {
-        // todo fix total count
-        const totalCount = 0;
-
+    shiftRangeToScrollPosition(scrollPosition: number, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
-        this._updateVirtualRange();
+
+        this._range = getRangeByScrollPosition({
+            itemsSizes: this._itemsSizes,
+            pageSize: this._virtualScrollConfig.pageSize,
+            scrollPosition,
+            totalCount,
+            triggerOffset: this._triggersOffsets.top
+        });
+
+        this._updatePlaceholders(this._range);
+
         return this._getRangeChangeResult(oldRange, totalCount);
+    }
+
+    // endregion ShiftRangeByScrollPosition
+
+    // region ShiftActiveElementIndexToScrollPosition
+
+    /**
+     * Пересчитывает индекс активного элемента от текущей позиции скролла
+     * @param scrollPosition Позиция скролла
+     * @param totalCount Позиция скролла
+     */
+    shiftActiveElementIndexToScrollPosition(scrollPosition: number, totalCount: number): IActiveElementIndexChanged {
+        const oldActiveElementIndex = this._activeElementIndex;
+
+        this._activeElementIndex = getActiveElementIndexByPosition({
+            itemsSizes: this._itemsSizes,
+            pageSize: this._virtualScrollConfig.pageSize,
+            scrollPosition,
+            totalCount,
+            triggerOffset: this._triggersOffsets.top
+        });
+
+        return {
+            activeElementIndex: this._activeElementIndex,
+            activeElementIndexChanged: oldActiveElementIndex !== this._activeElementIndex
+        };
     }
 
     // endregion ShiftRangeByScrollPosition
 
     private _updateVirtualRange(): void {
         this._range = calculateVirtualRange({
-            currentVirtualRange: this._range,
-            segmentSize: this._virtualScrollConfig.segmentSize
+            pageSize: 0, totalCount: 0
         });
     }
 
@@ -256,25 +295,31 @@ export class Calculator {
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
      * Пересчитываем виртуальный диапазон, placeholders, сбрасывает старые размеры элементов.
-     * @param count Новое кол-во элементов
+     * @param totalCount Новое кол-во элементов
      */
-    resetItems(count: number): ICalculatorResult {
+    resetItems(totalCount: number): ICalculatorResult {
         const oldRange = this._range;
-        // TODO не факт что все элементы поместятся в virtualPageSize
-        this._range = {
+
+        this._range = getRangeByIndex({
+            pageSize: this._virtualScrollConfig.pageSize,
             start: 0,
-            end: count
-        };
+            totalCount
+        });
+
+        this._updatePlaceholders(this._range);
+
+        return this._getRangeChangeResult(oldRange, totalCount);
+    }
+
+    // endregion HandleCollectionChanges
+
+    private _updatePlaceholders(itemsRange: IRange): void {
         // TODO мы в этот момент не знаем размеры элементов, как посчитать placeholders если count > virtualPageSize
         this._placeholders = {
             top: 0,
             bottom: 0
         };
-
-        return this._getRangeChangeResult(oldRange, count);
     }
-
-    // endregion HandleCollectionChanges
 
     private _getRangeChangeResult(oldRange: IRange, totalCount: number): ICalculatorResult {
         return {
@@ -288,7 +333,7 @@ export class Calculator {
             afterPlaceholderSize: this._placeholders.bottom,
             environmentChanged: true, // todo Calc it!
 
-            activeElementIndex: this.getActiveElementIndex(),
+            activeElementIndex: this._activeElementIndex,
             activeElementIndexChanged: true // todo Calc it!
         };
     }
