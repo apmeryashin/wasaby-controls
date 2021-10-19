@@ -101,6 +101,9 @@
             <ws:rightFieldWrapper>
                 <ws:if data="{{!_options.readOnly}}">
                     <div class="controls-Lookup__rightFieldWrapper controls-Lookup__rightFieldWrapper_{{_multiLineState ? 'multiLine' : 'singleLine'}}">
+                        <ws:if data="{{!_isInputVisible(_options)}}">
+                            <div name="fakeFocusElem" tabindex="0"></div>
+                        </ws:if>
                         <ws:if data="{{_options.showClearButton !== false && !_options.readOnly && _items.getCount() > 1}}">
                             <ws:partial template="{{_clearRecordsTemplate}}"
                                         name="clearRecords"
