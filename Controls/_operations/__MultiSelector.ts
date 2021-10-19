@@ -160,13 +160,15 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       if (selectionViewMode === 'selected') {
          additionalItems.push(SHOW_ALL_ITEM);
          // Показываем кнопку если есть выбранные и невыбранные записи
-      } else if (selectionViewMode === 'all' && hasSelected && !isAllSelected) {
-         additionalItems.push(SHOW_SELECTED_ITEM);
-      } else if (selectionViewMode === 'partial') {
-         if (hasSelected && (selectedKeysCount > 0 || selectedKeysCount === null)) {
-            additionalItems.push(...SHOW_SELECT_COUNT_SELECTED_ITEMS);
-         } else {
-            additionalItems.push(...SHOW_SELECT_COUNT);
+      } else if (!isAllSelected) {
+         if (selectionViewMode === 'all' && hasSelected) {
+            additionalItems.push(SHOW_SELECTED_ITEM);
+         } else if (selectionViewMode === 'partial') {
+            if (hasSelected && (selectedKeysCount > 0 || selectedKeysCount === null)) {
+               additionalItems.push(...SHOW_SELECT_COUNT_SELECTED_ITEMS);
+            } else {
+               additionalItems.push(...SHOW_SELECT_COUNT);
+            }
          }
       }
 
