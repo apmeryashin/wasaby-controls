@@ -109,10 +109,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
 
         if (options.containerWidth) {
             this._initializingWidth = options.containerWidth;
-            if (receivedState && receivedState.items || this._breadCrumbsItems) {
-                this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
-                this._prepareData(options, getTextWidth);
-            }
+            this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
+            this._prepareData(options, getTextWidth);
         }
     }
 
