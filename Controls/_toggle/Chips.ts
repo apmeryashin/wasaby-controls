@@ -21,6 +21,7 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * @extends UI/Base:Control
  * @implements Controls/interface:IMultiSelectable
  * @implements Controls/interface:IItems
+ * @implements Controls/interface:IHeight
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Chips/Index

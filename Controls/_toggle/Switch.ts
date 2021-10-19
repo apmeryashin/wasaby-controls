@@ -31,6 +31,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
  * @extends UI/Base:Control
  * @implements Controls/toggle:ICheckable
  * @implements Controls/interface:ITooltip
+ * @implements Controls/interface:IResetValue
  * @implements Controls/interface:IContrastBackground
  *
  * @public

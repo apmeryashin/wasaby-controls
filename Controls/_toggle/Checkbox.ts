@@ -45,8 +45,12 @@ const mapBoolState = {true: false, false: true, null: true};
  * @extends UI/Base:Control
  * @implements Controls/interface:ICaption
  * @implements Controls/interface:IIcon
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IValidationStatus
+ * @implements Controls/interface:IResetValue
+ * @implements Controls/interface:IContrastBackground
  *
  * @public
  * @author Красильников А.С.

@@ -28,6 +28,7 @@ const CAPTIONS_LENGTH = 2;
  * @implements Controls/toggle:ICheckable
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IContrastBackground
+ * @implements Controls/interface:IResetValue
  *
  * @public
  * @author Красильников А.С.
