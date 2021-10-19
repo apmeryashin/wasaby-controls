@@ -62,7 +62,7 @@ export default interface IItemTemplateOptions {
 }
 
 /**
- * @name Controls/interface/ITreeGridItemTemplate#fontColorStyle
+ * @name Controls/_treeGrid/interface/ItemTemplate#fontColorStyle
  * @cfg {TFontColorStyle} Стиль цвета текста записи.
  * @remark
  * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
@@ -70,7 +70,7 @@ export default interface IItemTemplateOptions {
  * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  */
 /**
- * @name Controls/interface/ITreeGridItemTemplate#fontSize
+ * @name Controls/_treeGrid/interface/ItemTemplate#fontSize
  * @cfg {TFontSize} Размер шрифта записи.
  * @remark
  * Размер шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
