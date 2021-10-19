@@ -18,11 +18,11 @@ describe('Controls/toggle:Tumbler', () => {
 
     it('Tumbler _onItemClick', () => {
         const control = new Tumbler({});
-        const item1 = new Model({rawData: {id: '-1', caption: 'Название 1'}, keyProperty: 'id'} );
-        const item2 = new Model({rawData: {id: '2', caption: 'Название 2'}, keyProperty: 'id'} );
+        const item1 = new Model({rawData: {id: '-1', caption: 'Название 1'}, keyProperty: 'id'});
+        const item2 = new Model({rawData: {id: '2', caption: 'Название 2'}, keyProperty: 'id'});
         control.saveOptions({
             keyProperty: 'id',
-            selectedKey:'2',
+            selectedKey: '2',
             items: new RecordSet({
                 rawData: [
                     {
@@ -39,8 +39,8 @@ describe('Controls/toggle:Tumbler', () => {
         });
         const sandbox = sinon.createSandbox();
         const notifySpy = sandbox.spy(control, '_notify');
-        control._onItemClick({},item1);
-        control._onItemClick({},item2);
+        control._onItemClick({}, item1);
+        control._onItemClick({}, item2);
         assert.isTrue(notifySpy.calledOnce);
         sandbox.restore();
     });
@@ -85,11 +85,13 @@ describe('Controls/toggle:Tumbler', () => {
                 }
             }
         };
-        control._container.getBoundingClientRect = () => {
-            return {
-                left: 0,
-                top: 0
-            };
+        control._container = {
+            getBoundingClientRect: () => {
+                return {
+                    left: 0,
+                    top: 0
+                };
+            }
         };
         const result = {
             isEmpty: false,
