@@ -15,6 +15,7 @@
                 itemActions="{{_itemActions}}"
                 itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                 parentProperty="{{_options.parentProperty}}"
+                multiSelectAccessibilityProperty="{{_options.multiSelectAccessibilityProperty}}"
                 nodeProperty="{{_options.nodeProperty}}"
                 root="{{_options.root}}"
                 style="{{_options.style}}"
