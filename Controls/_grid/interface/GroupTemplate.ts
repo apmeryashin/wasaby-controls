@@ -1,6 +1,8 @@
+import {IFontColorStyleOptions, IFontSizeOptions} from 'Controls/interface';
+import {IBaseGroupTemplate} from 'Controls/baseList';
 /**
  * Шаблон, который по умолчанию используется для отображения заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link Controls/grid:View таблице}, {@link Controls/treeGrid:View дереве с колонками} и {@link Controls/explorer:View иерархическом проводнике}.
- * 
+ *
  * @class Controls/_grid/interface/GroupTemplate
  * @implements Controls/list:IBaseGroupTemplate
  * @author Авраменко А.С.
@@ -24,12 +26,24 @@
  * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ здесь}.
  * @public
  */
-export default interface IGroupTemplateOptions {
-   /**
-    * @cfg {Number|undefined} Номер колонки, относительно которой происходит горизонтальное выравнивание заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
-    * @default undefined
-    * @remark
-    * В значении undefined выравнивание отключено.
-    */
-   columnAlignGroup?: number;
+export default interface IGroupTemplate extends IBaseGroupTemplate, IFontColorStyleOptions, IFontSizeOptions {
+   '[Controls/_grid/interface/GroupTemplate]': boolean;
 }
+
+/**
+ * @name Controls/_grid/interface/GroupTemplate#fontSize
+ * @cfg {TFontSize} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
+ * @default xs
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
+ * @see fontColorStyle
+ */
+/**
+ * @name Controls/_grid/interface/GroupTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста заголовка группы.
+ * @demo Controls-demo/breadCrumbs_new/FontColorStyle/Index
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+ * @see iconSize
+ */

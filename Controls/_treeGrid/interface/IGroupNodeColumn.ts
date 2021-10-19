@@ -1,6 +1,5 @@
 import {IColumn} from 'Controls/grid';
 import {IBaseGroupTemplate} from 'Controls/baseList';
-
 /**
  * Интерфейс колонки списка с иерархической группировкой.
  * @interface Controls/_treeGrid/interface/IGroupNodeColumn
@@ -56,3 +55,18 @@ export interface IGroupNodeColumn extends IColumn {
      * @see Controls/grid:IColumn
      */
 }
+/**
+ * @name Controls/_treeGrid/interface/IGroupNodeColumn#fontSize
+ * @cfg {TFontSize} Размер шрифта.
+ * @default "l". Для контрола {@link Controls/treeGrid:View}: "m" (для листа), "xl" (для скрытого узла) и "2xl" (для узла).
+ * @remark
+ * Размер шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontSize размер шрифта записи}.
+ * Размер шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
+ */
+/**
+ * @name Controls/_treeGrid/interface/IGroupNodeColumn#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста ячейки.
+ * @remark
+ * Стиль цвета текста ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontColorStyle стиль цвета текста записи}.
+ * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ */

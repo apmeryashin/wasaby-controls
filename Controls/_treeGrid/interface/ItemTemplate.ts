@@ -60,3 +60,21 @@ export default interface IItemTemplateOptions {
      */
     levelIndentSize?: string;
 }
+
+/**
+ * @name Controls/interface/ITreeGridItemTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста записи.
+ * @remark
+ * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ * {@link Controls/_grid/display/interface/IColumn#fontColorStyle Стиль цвета текста ячейки} имеет больший приоритет, чем стиль цвета текста записи.
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+ */
+/**
+ * @name Controls/interface/ITreeGridItemTemplate#fontSize
+ * @cfg {TFontSize} Размер шрифта записи.
+ * @remark
+ * Размер шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
+ * {@link Controls/_grid/display/interface/IColumn#fontSize Размер шрифта ячейки} имеет больший приоритет, чем стиль размер шрифта текста записи.
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
+ */

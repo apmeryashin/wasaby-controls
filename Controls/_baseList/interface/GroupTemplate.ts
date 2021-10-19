@@ -1,3 +1,5 @@
+import {IFontColorStyleOptions, IFontSizeOptions} from 'Controls/interface';
+import {IBaseGroupTemplate} from 'Controls/_baseList/interface/BaseGroupTemplate';
 /**
  * Шаблон, который по умолчанию используется для отображения заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link Controls/list:View плоских списках} и {@link Controls/tile:View плитке}.
  *
@@ -30,4 +32,24 @@
  * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ здесь}.
  * @public
  */
+export default interface IGroupTemplate extends IBaseGroupTemplate, IFontColorStyleOptions, IFontSizeOptions {
+    '[Controls/_baseList/interface/GroupTemplate]': boolean;
+}
 
+/**
+ * @name Controls/_list/interface/GroupTemplate#fontSize
+ * @cfg {TFontSize} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
+ * @default xs
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
+ * @see fontColorStyle
+ */
+/**
+ * @name Controls/_list/interface/GroupTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста заголовка группы.
+ * @demo Controls-demo/breadCrumbs_new/FontColorStyle/Index
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+ * @see iconSize
+ */

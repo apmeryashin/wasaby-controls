@@ -71,7 +71,7 @@ export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions
  */
 /**
  * @name Controls/_list/interface/IBaseItemTemplate#fontSize
- * @cfg {TFontSize} Размер шрифта.
+ * @cfg {TFontSize} Размер шрифта записи.
  * @remark
  * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @default l
