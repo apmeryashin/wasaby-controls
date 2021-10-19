@@ -43,48 +43,51 @@ export default class LinkView extends LinkViewBase<ILinkView> {
 
     shiftBack(): void {
         this._rangeModel.shiftBack();
-        this._updateCaption(this._options);
+        this._setNewCaption(this._options);
     }
 
     shiftForward(): void {
         this._rangeModel.shiftForward();
-        this._updateCaption(this._options);
+        this._setNewCaption(this._options);
     }
 
-    protected _updateCaption(options): void {
+    protected _updateCaption(options: ILinkView): void {
         const changed = this._rangeModel.update(options);
         if (changed || this._options.emptyCaption !== options.emptyCaption ||
             this._options.captionFormatter !== options.captionFormatter) {
+            this._setNewCaption(options);
+        }
+    }
 
-            let captionFormatter;
-            let startValue;
-            let endValue;
-            let captionPrefix = '';
+    private _setNewCaption(options: ILinkView): void {
+        let captionFormatter;
+        let startValue;
+        let endValue;
+        let captionPrefix = '';
 
-            if (options.captionFormatter) {
-                captionFormatter = options.captionFormatter;
+        if (options.captionFormatter) {
+            captionFormatter = options.captionFormatter;
+            startValue = this._rangeModel.startValue;
+            endValue = this._rangeModel.endValue;
+        } else {
+            captionFormatter = dateControlsUtils.formatDateRangeCaption;
+
+            if (this._rangeModel.startValue === null && this._rangeModel.endValue === null) {
+                startValue = null;
+                endValue = null;
+            } else if (this._rangeModel.startValue === null) {
+                startValue = this._rangeModel.endValue;
+                endValue = this._rangeModel.endValue;
+                captionPrefix = `${rk('по', 'Period')} `;
+            } else if (this._rangeModel.endValue === null) {
+                startValue = this._rangeModel.startValue;
+                endValue = this._rangeModel.startValue;
+                captionPrefix = `${rk('с')} `;
+            } else {
                 startValue = this._rangeModel.startValue;
                 endValue = this._rangeModel.endValue;
-            } else {
-                captionFormatter = dateControlsUtils.formatDateRangeCaption;
-
-                if (this._rangeModel.startValue === null && this._rangeModel.endValue === null) {
-                    startValue = null;
-                    endValue = null;
-                } else if (this._rangeModel.startValue === null) {
-                    startValue = this._rangeModel.endValue;
-                    endValue = this._rangeModel.endValue;
-                    captionPrefix = `${rk('по', 'Period')} `;
-                } else if (this._rangeModel.endValue === null) {
-                    startValue = this._rangeModel.startValue;
-                    endValue = this._rangeModel.startValue;
-                    captionPrefix = `${rk('с')} `;
-                } else {
-                    startValue = this._rangeModel.startValue;
-                    endValue = this._rangeModel.endValue;
-                }
             }
-            this._caption = captionPrefix + captionFormatter(startValue, endValue, options.emptyCaption);
         }
+        this._caption = captionPrefix + captionFormatter(startValue, endValue, options.emptyCaption);
     }
 }
