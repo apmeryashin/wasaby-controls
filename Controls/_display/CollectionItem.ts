@@ -996,6 +996,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return contentClasses;
     }
 
+    /**
+     * Добавляет CSS классы для стилизации текста в записи списка
+     * @param fontColorStyle Цвет шрифта
+     * @param fontSize Размер шрифта
+     */
     getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
                                  fontSize?: TFontSize): string {
         let contentClasses = '';

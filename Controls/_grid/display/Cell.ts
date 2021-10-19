@@ -444,6 +444,11 @@ export default class Cell<
         return contentClasses;
     }
 
+    /**
+     * Добавляет CSS классы для стилизации текста в ячейке грида.
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize): string {
         let contentClasses = '';

@@ -16,6 +16,11 @@ export default abstract class GroupCell<T> {
         return classes;
     }
 
+    /**
+     * Добавляет CSS классы для стилизации текста в заголовке группы
+     * @param fontColorStyle Цвет шрифта
+     * @param fontSize Размер шрифта
+     */
     getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
                                  fontSize?: TFontSize): string {
         let classes = '';
