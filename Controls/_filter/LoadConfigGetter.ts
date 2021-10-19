@@ -1,6 +1,6 @@
 import {IProperty} from 'Controls/propertyGrid';
 import {object} from 'Types/util';
-import {IFilterItem} from 'Controls/filter';
+import {IFilterItem} from 'Controls/_filter/View/interface/IFilterItem';
 import {isEqual} from 'Types/object';
 import {ILoadPropertyGridDataConfig} from 'Controls/dataSource';
 
@@ -27,7 +27,7 @@ function getFilter(
 }
 
 function prepareDescription(
-    description: IPropertyFilterItem[],
+    description: IPropertyFilterItem[]
 ): IPropertyFilterItem[] {
     const resultDescription = object.clone(description);
     return resultDescription.map((property) => {
