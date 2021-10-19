@@ -156,7 +156,8 @@ const _private = {
                     self.getViewModel().setHasMoreStorage(
                         _private.prepareHasMoreStorage(
                             self.getSourceController(),
-                            expandController.getExpandedItems()
+                            expandController.getExpandedItems(),
+                            self.getViewModel().getHasMoreStorage()
                         )
                     );
                     expandController.applyStateToModel();
@@ -170,6 +171,9 @@ const _private = {
                     self._notify('expandedItemsChanged', [expandedItems]);
                     self._notify('collapsedItemsChanged', [expandController.getCollapsedItems()]);
                     self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [item]);
+                    if (self._fixedItem && self._fixedItem.key === nodeKey && expanded) {
+                        return self.scrollToItem(self._fixedItem.key, false, false);
+                    }
                     //endregion
                 });
         }
@@ -237,8 +241,12 @@ const _private = {
         return true;
     },
 
-    prepareHasMoreStorage(sourceController: NewSourceController, expandedItems: TKey[]): Record<string, boolean> {
-        const hasMore = {};
+    prepareHasMoreStorage(
+        sourceController: NewSourceController,
+        expandedItems: TKey[],
+        currentHasMore: Record<string, boolean>
+    ): Record<string, boolean> {
+        const hasMore = {...currentHasMore};
 
         expandedItems.forEach((nodeKey) => {
             hasMore[nodeKey] = sourceController ? sourceController.hasMoreData('down', nodeKey) : false;
@@ -348,7 +356,7 @@ const _private = {
                 }
 
                 collection.setHasMoreStorage(
-                    _private.prepareHasMoreStorage(sourceController, collection.getExpandedItems())
+                    _private.prepareHasMoreStorage(sourceController, collection.getExpandedItems(), collection.getHasMoreStorage())
                 );
 
                 return items;
@@ -677,7 +685,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
         super._beforeUpdate(...arguments);
 
-        const viewModel = this.getViewModel();
+        const viewModel = this.getViewModel() as Tree;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         const isSourceControllerLoading = sourceController && sourceController.isLoading();
         this._plainItemsContainer = newOptions.plainItemsContainer;
@@ -720,7 +728,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
                     // Проставляем hasMoreStorage до простановки expandedItems,
                     // чтобы футеры узлов правильно посчитать за один раз
-                    viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(sourceController, expandedItems));
+                    viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(sourceController, expandedItems, viewModel.getHasMoreStorage()));
                     this._expandController.applyStateToModel();
 
                     if (newOptions.markerMoveMode === 'leaves') {
@@ -1062,7 +1070,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             if (sourceController) {
                 // Вызываем метод с флагом reBuildNodeFooters, т.к. после перезагрузки не будет события с добавлением
                 // элементов и футеры без флага не посчитаются
-                this._listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(sourceController, expandedItems), true);
+                this._listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(sourceController, expandedItems, this._listViewModel.getHasMoreStorage()), true);
             }
 
             if (this._updateExpandedItemsAfterReload) {
@@ -1436,7 +1444,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const expandedItems = _private.getExpandedItems(
             this, this._options, this._listViewModel.getCollection(), this._listViewModel.getExpandedItems()
         );
-        this._listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(this.getSourceController(), expandedItems));
+        this._listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(this.getSourceController(), expandedItems, this._listViewModel.getHasMoreStorage()));
     }
 
     static getDefaultOptions() {

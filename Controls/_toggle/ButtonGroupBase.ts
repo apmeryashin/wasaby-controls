@@ -39,6 +39,7 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * @extends UI/Base:Control
  * @implements Controls/interface:ISingleSelectable
  * @implements Controls/interface:IItems
+ * @implements Controls/interface:IHeight
  * @mixes Controls/toggle:IButtonGroupOptions
  *
  * @public

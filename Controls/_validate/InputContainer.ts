@@ -17,10 +17,20 @@ import template = require('wml!Controls/_validate/InputContainer');
 class Input extends Container {
     _template: TemplateFunction = template;
     _shouldValidate: boolean;
+
+    /**
+     * Валидация по уходу фокуса должна начинаться только в случае,
+     *  если была ручная валидация или пользователь ввел что-то в поле ввода
+     */
+    _shouldValidateByFocusOut: boolean = false;
+    validate(...args: unknown[]): Promise<boolean[]> {
+        this._shouldValidateByFocusOut = true;
+        return super.validate(...args);
+    }
     protected _deactivatedHandler(): void {
         this._contentActive = false;
         this._validationStatus = this._getValidStatus(this._contentActive);
-        if (!this._options.readOnly) {
+        if (!this._options.readOnly && this._shouldValidateByFocusOut) {
             this._shouldValidate = true;
             this._forceUpdate();
         }
@@ -32,6 +42,10 @@ class Input extends Container {
         // we need to stop event propagation, otherwise all subscribtions to inputComplete-event of
         // this control will be called twice
         event.stopPropagation();
+    }
+    _valueChangedHandler(...args: unknown[]): void {
+        this._shouldValidateByFocusOut = true;
+        return super._valueChangedHandler(...args);
     }
     _afterUpdate(oldOptions): void {
         if (this._shouldValidate || this._options.value !== oldOptions.value) {
