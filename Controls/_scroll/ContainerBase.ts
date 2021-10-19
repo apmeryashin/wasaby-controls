@@ -647,6 +647,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
             this._generateCompatibleEvents();
         } else if (this._isFirstUpdateState) {
+            // При первом обновлении scrollState кидаем scrollStateChanged, чтобы можно было знать, с какими размерами
+            // построился скролл контейнер.
             this._isFirstUpdateState = false;
             this._generateEvent('scrollStateChanged', [scrollState, oldScrollState]);
         }
