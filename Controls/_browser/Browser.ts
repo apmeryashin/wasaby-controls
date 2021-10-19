@@ -253,6 +253,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 }
             }, true);
         }
+        if (options.searchValue) {
+
+        }
     }
 
     private _validateSearchOptions(options: IBrowserOptions): void {
@@ -838,7 +841,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _getSourceControllerOptions(options: IListConfiguration): ISourceControllerOptions {
         const root = options.id ? options.root : this._root;
-        const filter = options.id ? options.filter : this._filter;
+        const filter = options.id && this._listsOptions?.length > 1 ? options.filter : this._filter;
         return {
             filter,
             navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
