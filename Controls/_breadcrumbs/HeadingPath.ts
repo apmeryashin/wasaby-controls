@@ -18,9 +18,9 @@ import {IHeadingPath} from './interface/IHeadingPath';
 import calculateBreadcrumbsUtil, {ARROW_WIDTH, PADDING_RIGHT} from 'Controls/_breadcrumbs/Utils';
 
 interface IReceivedState {
-    items: Record[];
-    breadCrumbsWrapperClass: string;
-    backButtonClass: string;
+    items?: Record[];
+    breadCrumbsWidth?: number;
+    backButtonWidth?: number;
 }
 
 const SIZES = {
@@ -70,6 +70,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     protected _backButtonClass: string = '';
     protected _breadCrumbsWrapperClass: string = '';
     protected _breadCrumbsClass: string = '';
+    private _crumbsWidth: number;
+    private _backButtonWidth: number;
     protected _notifyHandler: Function = EventUtils.tmplNotify;
     protected _applyHighlighter: Function = applyHighlighter;
     protected _getRootModel: Function = Common.getRootModel;
@@ -88,16 +90,17 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
                 this._initStatesBeforeMount(options, receivedState, getTextWidth);
                 return {
                     items: this._breadCrumbsItems,
-                    breadCrumbsWrapperClass: this._breadCrumbsWrapperClass,
-                    backButtonClass: this._backButtonClass
+                    breadCrumbsWidth: this._crumbsWidth,
+                    backButtonWidth: this._backButtonWidth
                 };
             });
         }
     }
 
-    protected _initStatesBeforeMount(options?: IHeadingPath, receivedState?: IReceivedState, getTextWidth?: Function): void {
+    protected _initStatesBeforeMount(options?: IHeadingPath, receivedState?: IReceivedState, getTextWidth: Function = this._getTextWidth): void {
         this._items = dataConversion(options.items, this._moduleName);
         this._prepareItems(options, receivedState, getTextWidth);
+
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
             this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
@@ -106,10 +109,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
 
         if (options.containerWidth) {
             this._initializingWidth = options.containerWidth;
-            if (receivedState && receivedState.items) {
-                this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
-                this._prepareData(options, getTextWidth);
-            } else if (this._breadCrumbsItems) {
+            if (receivedState && receivedState.items || this._breadCrumbsItems) {
                 this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
                 this._prepareData(options, getTextWidth);
             }
@@ -193,28 +193,29 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         return lastItem?.get('counterCaption');
     }
 
-    private _updateBreadCrumbsClasses(options: IHeadingPath, receivedState?: IReceivedState): void {
+    private _getCrumbsWidth(options: IHeadingPath, getTextWidth: Function = this._getTextWidth): {backButtonWidth: number, breadCrumbsWidth: number} {
+        const crumbsWidthArr = calculateBreadcrumbsUtil.getItemsWidth(this._breadCrumbsItems, options, getTextWidth);
+        return {
+            backButtonWidth: getTextWidth(this._backButtonCaption, '3xl'),
+            breadCrumbsWidth: crumbsWidthArr.reduce((accumulator, current) => accumulator + current, 0)
+        };
+    }
+
+    private _updateBreadCrumbsClasses(options: IHeadingPath, receivedState?: IReceivedState, getTextWidth: Function = this._getTextWidth): void {
         if (receivedState) {
-            this._breadCrumbsWrapperClass = receivedState.breadCrumbsWrapperClass;
-            this._backButtonClass = receivedState.backButtonClass;
+            this._crumbsWidth = receivedState.breadCrumbsWidth;
+            this._backButtonWidth = receivedState.backButtonWidth;
         } else {
-
-            /**
-             * Наименьший по длине текст фиксируем по максимальной ширине и не даем сокращать
-             */
-            const crumbsLength = this._breadCrumbsItems.reduce((reducer, item) => {
-                const text = item.get(options.displayProperty);
-                return reducer + text.length;
-            }, 0);
-            const backButtoLength = this._backButtonCaption.length;
-            if (crumbsLength > backButtoLength) {
-                this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
-                this._backButtonClass = 'controls-BreadCrumbsPath__widthRestriction';
-            } else {
-                this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__widthRestriction';
-                this._backButtonClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
-            }
-
+            const crumbsWidthObj = this._getCrumbsWidth(options, getTextWidth);
+            this._crumbsWidth = crumbsWidthObj.breadCrumbsWidth;
+            this._backButtonWidth = crumbsWidthObj.backButtonWidth;
+        }
+        if (this._crumbsWidth > this._backButtonWidth) {
+            this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
+            this._backButtonClass = 'controls-BreadCrumbsPath__widthRestriction';
+        } else {
+            this._breadCrumbsWrapperClass = 'controls-BreadCrumbsPath__widthRestriction';
+            this._backButtonClass = 'controls-BreadCrumbsPath__unrestrictedWidth';
         }
     }
 
@@ -225,7 +226,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         return this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty);
     }
 
-    private _prepareItems(options: IHeadingPath, receivedState?: IReceivedState): void {
+    private _prepareItems(options: IHeadingPath, receivedState?: IReceivedState, getTextWidth: Function = this._getTextWidth): void {
         const clearCrumbsView = () => {
             this._visibleItems = null;
             this._breadCrumbsItems = null;
@@ -246,7 +247,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
                 this._breadCrumbsItems = this._items.slice(0, this._items.length - 1);
                 this._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
                 this._isHomeVisible = true;
-                this._updateBreadCrumbsClasses(options, receivedState);
+                this._updateBreadCrumbsClasses(options, receivedState, getTextWidth);
             } else {
                 clearCrumbsView();
             }
