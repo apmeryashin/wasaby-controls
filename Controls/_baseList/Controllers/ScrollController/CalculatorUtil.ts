@@ -1,15 +1,20 @@
 import type { IRange } from './Calculator';
 import type { IItemsSizes } from './ItemsSizeController';
+import type { IDirection } from './ScrollController';
 
 export interface IGetRangeBaseParams {
     pageSize: number;
     totalCount: number;
 }
 
-// segmentSize: number;
-
 export interface IGetRangeByIndexParams extends IGetRangeBaseParams {
     start: number;
+}
+
+export interface IShiftRangeBySegmentParams extends IGetRangeBaseParams {
+    segmentSize: number;
+    direction: IDirection;
+    currentRange: IRange;
 }
 
 export interface IGetRangeByPositionParams extends IGetRangeBaseParams {
@@ -19,17 +24,33 @@ export interface IGetRangeByPositionParams extends IGetRangeBaseParams {
 }
 
 /**
- * Класс предназначен для:
- *  - первоначального расчёта virtual indexes;
- *  - расчет индексов при scroll;
- *  - расчет индексов при scroll к определенной записи.
+ * Расчет видимых индексов от переданного индекса
+ * @param {IShiftRangeBySegmentParams} params
  */
-export function calculateVirtualRange(
-    params: IGetRangeBaseParams
-): IRange {
-    const start = 0;
-    const stop = start + params.pageSize;
-    return { start, end: stop };
+export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IRange {
+    const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
+    const fixedSegmentSize = Math
+        .min(segmentSize, Math.max(pageSize - (currentRange.end - currentRange.start), 0));
+
+    let { start, end } = currentRange;
+
+    // TODO Совместимость, пока виртуальный скролл не включен у всех безусловно
+    if (!pageSize) {
+        start = 0;
+        end = totalCount;
+    } else if (direction === 'backward') {
+        start = Math.max(0, start - fixedSegmentSize);
+        if (start >= totalCount) {
+            start = Math.max(0, totalCount - pageSize);
+        }
+        end = Math.min(totalCount, Math.max(currentRange.end, start + pageSize));
+    } else {
+        end = Math.min(end + fixedSegmentSize, totalCount);
+    }
+
+    return {
+        start, end
+    };
 }
 
 /**

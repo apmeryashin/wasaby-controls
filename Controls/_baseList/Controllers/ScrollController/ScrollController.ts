@@ -230,6 +230,7 @@ export class ScrollController {
             direction = 'backward';
         }
 
+        // todo А вот и причина хранить totalCount. Тут его по просту нет и взять не откуда.
         const result = this._calculator.shiftRangeToDirection(direction);
 
         this._processCalculatorResult(result);

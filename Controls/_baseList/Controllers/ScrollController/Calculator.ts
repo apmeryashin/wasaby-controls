@@ -1,5 +1,5 @@
 import {
-    calculateVirtualRange,
+    shiftRangeBySegment,
     getRangeByIndex,
     getRangeByScrollPosition,
     getActiveElementIndexByPosition
@@ -97,26 +97,30 @@ export class Calculator {
 
     // endregion Getters/Setters
 
-    // region ShiftRange
-
     // region ShiftRangeToDirection
 
     /**
      * Смещает виртуальный диапазон в заданном направлении.
      * Используется при достижении триггера.
      * @param direction Направление, в котором будет смещаться диапазон
+     * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeToDirection(direction: IDirection): ICalculatorResult {
+    shiftRangeToDirection(direction: IDirection, totalCount: number): ICalculatorResult {
         const oldRange = this._range;
-        const totalCount: number = 0; // todo totalCount === undefined, его похоже надо хранить в состоянии Calculator
 
         // если в заданном направлении больше нет элементов, то ничего не делаем
         if (!this._hasItemsToDirection(direction, totalCount)) {
             return this._getRangeChangeResult(oldRange, totalCount);
         }
 
-        this._updateVirtualRange();
-        return this._getRangeChangeResult(oldRange, totalCount);
+        const newRange = shiftRangeBySegment({
+            currentRange: this._range,
+            direction,
+            pageSize: this._virtualScrollConfig.pageSize,
+            segmentSize: this._virtualScrollConfig.segmentSize,
+            totalCount
+        });
+        return this._getRangeChangeResult(newRange, totalCount);
     }
 
     /**
@@ -240,12 +244,7 @@ export class Calculator {
     // endregion ShiftRangeByScrollPosition
 
     private _updateVirtualRange(): void {
-        this._range = calculateVirtualRange({
-            pageSize: 0, totalCount: 0
-        });
     }
-
-    // endregion ShiftRange
 
     // region HandleCollectionChanges
 
