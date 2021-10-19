@@ -43,4 +43,13 @@
         </Router.router:Reference>
         <Controls-demo.toggle.Checkbox.ContrastBackground.Index/>
     </div>
+
+    <div class="controlsDemo__cell demo-checkboxIndex__withIcon">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/toggle/Checkbox/TextOverflow/Index' }}">
+            <a href="{{content.href}}">Настройка с обрезанием текста чекбокса</a>
+        </Router.router:Reference>
+        <Controls-demo.toggle.Checkbox.TextOverflow.Index/>
+    </div>
 </div>

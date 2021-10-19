@@ -2,6 +2,7 @@ import {Tumbler} from 'Controls/toggle';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {assert} from 'chai';
+import {width} from "Controls/_utils/sizeUtils/DOMUtil";
 
 describe('Controls/toggle:Tumbler', () => {
     it('Tumbler _beforeUpdate', () => {
@@ -64,17 +65,31 @@ describe('Controls/toggle:Tumbler', () => {
         });
         control._children = {
             'TumblerButton0': {
-                offsetWidth: 10,
-                offsetHeight: 10,
-                offsetLeft: 20,
-                offsetTop: 2
+                getBoundingClientRect: () => {
+                    return {
+                        width: 10,
+                        height: 10,
+                        left: 20,
+                        top: 2
+                    };
+                }
             },
             'TumblerButton1': {
-                offsetWidth: 30,
-                offsetHeight: 30,
-                offsetLeft: 40,
-                offsetTop: 2
+                getBoundingClientRect: () => {
+                    return {
+                        width: 30,
+                        height: 30,
+                        left: 40,
+                        top: 2
+                    };
+                }
             }
+        };
+        control._container.getBoundingClientRect = () => {
+            return {
+                left: 0,
+                top: 0
+            };
         };
         const result = {
             isEmpty: false,
