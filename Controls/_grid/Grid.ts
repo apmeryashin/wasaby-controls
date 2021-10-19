@@ -22,6 +22,7 @@ import { IOptions as IGridOptions } from './display/mixins/Grid';
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/grid:IGridControl
  * @implements Controls/interface/IGridItemTemplate

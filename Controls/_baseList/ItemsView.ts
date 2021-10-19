@@ -34,6 +34,7 @@ export interface IItemsViewOptions extends IControlOptions {
  * @implements Controls/list:IItemsView
  * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/interface/IGroupedList

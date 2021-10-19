@@ -3,8 +3,7 @@ import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
-import { IItemPadding } from 'Controls/display';
-import {IPromiseSelectableOptions, ISelectionTypeOptions} from 'Controls/interface';
+import {IPromiseSelectableOptions, ISelectionTypeOptions, IItemPaddingOptions, TKey} from 'Controls/interface';
 
 type TPadding = 'null'|'m';
 
@@ -66,7 +65,11 @@ export interface IPropertyGridColumnOptions {
     compatibleWidth: string;
 }
 export type TEditingObject = Model | Record<string, unknown>;
-export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectableOptions, ISelectionTypeOptions {
+export interface IPropertyGridOptions extends
+    IControlOptions,
+    IPromiseSelectableOptions,
+    ISelectionTypeOptions,
+    IItemPaddingOptions {
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#editingObject
      * @cfg {Object | Types/entity:Model} Объект, свойства которого являются значениями для редакторов.
@@ -266,7 +269,6 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
      * @demo Controls-demo/PropertyGridNew/CaptionColumnOptions/Index
      */
     captionColumnOptions?: IPropertyGridColumnOptions;
-    itemPadding: IItemPadding;
     withoutLevelPadding?: boolean;
     /**
      * @name Controls/_propertyGrid/IPropertyGrid#itemsContainerPadding
@@ -305,6 +307,13 @@ export interface IPropertyGridOptions extends IControlOptions, IPromiseSelectabl
      */
     multiSelectTemplate?: Function;
     captionPosition?: TCaptionPosition;
+    /**
+     * @name Controls/_propertyGrid/IPropertyGrid#toggledEditors
+     * @cfg {Array.<String>} Список идентификаторов скрытых редакторов.
+     * @see toggleEditorButtonIcon
+     * @demo Controls-demo/PropertyGridNew/Source/ToggleEditorButtonIcon/Index
+     */
+    toggledEditors?: TKey[];
 }
 
 /**

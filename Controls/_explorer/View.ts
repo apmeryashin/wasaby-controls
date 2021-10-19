@@ -1315,6 +1315,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl

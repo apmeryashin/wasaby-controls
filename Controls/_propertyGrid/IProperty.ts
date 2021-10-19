@@ -240,6 +240,30 @@ export default interface IProperty {
      */
     group?: string;
     propertyValue?: unknown;
+    /**
+     * @cfg {String} Задаёт иконку для кнопки скрытия/отображения редактора.
+     * @remark Набор кнопок для скрытия/отображения редакторов будет отображаться под последним редактором.
+     * @example
+     * <pre class="brush: js; highlight: [12]">
+     * // JavaScript
+     * _beforeMount() {
+     *    this._editingObject = {
+     *       description: 'This is http://mysite.com'
+     *    };
+     *
+     *    this._source = [
+     *       {
+     *          name: 'description',
+     *          caption: 'Описание',
+     *          type: 'text',
+     *          toggleEditorButtonIcon: 'icon-done'
+     *       }
+     *    ]
+     * }
+     * </pre>
+     * @see toggledEditors
+     * @demo Controls-demo/PropertyGridNew/Source/ToggleEditorButtonIcon/Index
+     */
     toggleEditorButtonIcon?: string;
     validators?: Function[];
     validateTemplateName?: string;
