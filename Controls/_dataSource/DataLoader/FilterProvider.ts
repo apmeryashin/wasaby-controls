@@ -2,7 +2,8 @@ import {IDataLoadProvider, IBaseLoadDataConfig} from 'Controls/_dataSource/DataL
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
 import {TFilter} from 'Controls/_interface/IFilter';
-import {LoadConfigGetter} from 'Controls/filter';
+import {isEqual} from 'Types/object';
+import {object} from 'Types/util';
 import PropertyGridProvider from 'Controls/_dataSource/DataLoader/PropertyGridProvider';
 
 interface IFilterHistoryLoaderResult {
@@ -23,6 +24,39 @@ export interface IFilterLoadDataConfig extends IBaseLoadDataConfig {
 
 interface IFilterLoaderResult {
     controller: FilterController;
+}
+
+function isPropertyChanged(property: Record<string, any>): boolean {
+    return !isEqual(property.value, property.resetValue);
+}
+
+function getFilter(
+    property: Record<string, any>,
+    filter: Record<string, any>,
+    propertyChanged: boolean
+): Record<string, any> {
+    const resultFilter = filter || {};
+    const editorOptions = property.editorOptions;
+    if (propertyChanged) {
+        resultFilter[editorOptions.keyProperty] = property.value;
+    }
+    if (editorOptions.historyId) {
+        resultFilter.historyIds = [editorOptions.historyId];
+    }
+    return resultFilter;
+}
+
+export function prepareDescription(
+    description: Array<Record<string, any>>
+): Array<Record<string, any>> {
+    const resultDescription = object.clone(description);
+    return resultDescription.map((property) => {
+        if (property.type === 'list') {
+            const propertyChanged = isPropertyChanged(property);
+            property.editorOptions.filter = getFilter(property, property.editorOptions.filter, propertyChanged);
+        }
+        return property;
+    });
 }
 
 /**
