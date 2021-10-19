@@ -84,8 +84,8 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         if (receivedState) {
             this._initStatesBeforeMount(options, receivedState);
         } else {
-            return loadFontWidthConstants().then(() => {
-                this._initStatesBeforeMount(options, receivedState);
+            return loadFontWidthConstants().then((getTextWidth: Function) => {
+                this._initStatesBeforeMount(options, receivedState, getTextWidth);
                 return {
                     items: this._breadCrumbsItems,
                     breadCrumbsWrapperClass: this._breadCrumbsWrapperClass,
@@ -95,9 +95,9 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         }
     }
 
-    protected _initStatesBeforeMount(options?: IHeadingPath, receivedState?: IReceivedState): void {
+    protected _initStatesBeforeMount(options?: IHeadingPath, receivedState?: IReceivedState, getTextWidth?: Function): void {
         this._items = dataConversion(options.items, this._moduleName);
-        this._prepareItems(options, receivedState);
+        this._prepareItems(options, receivedState, getTextWidth);
         // Ветка, где построение идет на css
         if (this._breadCrumbsItems && !options.containerWidth) {
             this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
@@ -107,11 +107,11 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
         if (options.containerWidth) {
             this._initializingWidth = options.containerWidth;
             if (receivedState && receivedState.items) {
-                this._dotsWidth = this._getDotsWidth(options.fontSize);
-                this._prepareData(options);
+                this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
+                this._prepareData(options, getTextWidth);
             } else if (this._breadCrumbsItems) {
-                this._dotsWidth = this._getDotsWidth(options.fontSize);
-                this._prepareData(options);
+                this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
+                this._prepareData(options, getTextWidth);
             }
         }
     }
