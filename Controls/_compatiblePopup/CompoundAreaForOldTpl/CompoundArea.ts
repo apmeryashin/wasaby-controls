@@ -65,6 +65,7 @@ var CompoundArea = CompoundContainer.extend([
    _beforeMount: function(_options) {
       CompoundArea.superclass._beforeMount.apply(this, arguments);
 
+      this._hasRightPanel = Controller.hasRightPanel();
       this._childPendingOperations = [];
       this._producedPendingOperations = [];
 
