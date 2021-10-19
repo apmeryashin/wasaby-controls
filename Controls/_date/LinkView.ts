@@ -43,10 +43,10 @@ class LinkView<T extends ILinkView> extends Control<T> {
                 'resetStartValue и resetEndValue');
         }
         if (options.prevArrowVisibility) {
-            Logger.error('LinkView: Используется устаревшая опция prevArrowVisibility, используйте контрол ArrowButton');
+            Logger.warn('LinkView: Используется устаревшая опция prevArrowVisibility, используйте контрол ArrowButton');
         }
         if (options.nextArrowVisibility) {
-            Logger.error('LinkView: Используется устаревшая опция nextArrowVisibility, используйте контрол ArrowButton');
+            Logger.warn('LinkView: Используется устаревшая опция nextArrowVisibility, используйте контрол ArrowButton');
         }
         if (options.viewMode) {
             Logger.warn('LinkView: Используется устаревшая опция viewMode, используйте fontSize, fontColorStyle, fontWeight');
