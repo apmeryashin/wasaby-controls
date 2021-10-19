@@ -111,8 +111,7 @@ class LinkView<T extends ILinkView> extends Control<T> {
     }
 
     protected _updateCaption(options): void {
-        (this._options.value !== options.value ||
-            this._options.emptyCaption !== options.emptyCaption ||
+        if (this._options.value !== options.value || this._options.emptyCaption !== options.emptyCaption ||
             this._options.captionFormatter !== options.captionFormatter) {
             const opts = options || this._options;
             let captionFormatter;
