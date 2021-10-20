@@ -120,6 +120,9 @@ export class Calculator {
             segmentSize: this._virtualScrollConfig.segmentSize,
             totalCount: this._totalCount
         });
+
+        this._updatePlaceholders(this._range);
+
         return this._getRangeChangeResult(newRange);
     }
 
@@ -238,7 +241,7 @@ export class Calculator {
         };
     }
 
-    // endregion ShiftRangeByScrollPosition
+    // endregion ShiftActiveElementIndexToScrollPosition
 
     // region HandleCollectionChanges
 
