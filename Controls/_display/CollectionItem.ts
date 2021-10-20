@@ -557,7 +557,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         classes += ` controls-EditingTemplateText_size_${params.size || 'default'}`;
         classes += ` controls-EditingTemplateText_style_${params.style || 'default'}`;
 
-        if (params.withPadding || this.getEditingConfig().mode !== 'cell') {
+        if (params.withPadding || !this.getEditingConfig() || this.getEditingConfig().mode !== 'cell') {
             classes += ' controls-EditingTemplateText_withPadding';
         }
 

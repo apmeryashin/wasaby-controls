@@ -719,7 +719,7 @@ describe('Controls/_display/CollectionItem', () => {
                     rawData: [item],
                     keyProperty: 'id'
                 }) as any
-            }))
+            }));
         });
 
         // CSS класс для позиционирования опций записи.
@@ -754,7 +754,46 @@ describe('Controls/_display/CollectionItem', () => {
             const result = item.getItemActionPositionClasses('inside', null, {top: 's', bottom: 's'}, 'default', true);
             assert.equal(result, ' controls-itemActionsV_position_bottomRight controls-itemActionsV_padding-bottom_default ');
         });
-    })
+
+        describe('.getEditorViewTemplateClasses()', () => {
+            it('base classes', () => {
+                CssClassesAssert.include(item.getEditorViewTemplateClasses(), [
+                    'controls-EditingTemplateText',
+                    'controls-EditingTemplateText_border-partial',
+                    'controls-EditingTemplateText_size_default',
+                    'controls-EditingTemplateText_style_default'
+                ]);
+            });
+
+            it('padding class for different modes', () => {
+                it('no editing config', () => {
+                    CssClassesAssert.include(item.getEditorViewTemplateClasses(), 'controls-EditingTemplateText_withPadding');
+                });
+                it('no editing config, but need padding', () => {
+                    CssClassesAssert.include(item.getEditorViewTemplateClasses({ withPadding: true }), 'controls-EditingTemplateText_withPadding');
+                });
+                it('default editing mode', () => {
+                    item.getOwner().setEditingConfig({mode: undefined});
+                    CssClassesAssert.include(item.getEditorViewTemplateClasses(), 'controls-EditingTemplateText_withPadding');
+                });
+                it('row editing mode', () => {
+                    item.getOwner().setEditingConfig({mode: 'row'});
+                    CssClassesAssert.include(item.getEditorViewTemplateClasses(), 'controls-EditingTemplateText_withPadding');
+                });
+                it('cell editing mode', () => {
+                    item.getOwner().setEditingConfig({mode: 'cell'});
+                    CssClassesAssert.notInclude(item.getEditorViewTemplateClasses(), 'controls-EditingTemplateText_withPadding');
+                });
+            });
+
+            it('hover classes for input', () => {
+                CssClassesAssert.notInclude(item.getEditorViewTemplateClasses(), 'controls-EditingTemplateText_enabled');
+                CssClassesAssert.notInclude(item.getEditorViewTemplateClasses({}), 'controls-EditingTemplateText_enabled');
+                CssClassesAssert.notInclude(item.getEditorViewTemplateClasses({enabled: false}), 'controls-EditingTemplateText_enabled');
+                CssClassesAssert.include(item.getEditorViewTemplateClasses({enabled: true}), 'controls-EditingTemplateText_enabled');
+            });
+        });
+    });
 
     it('.getSearchValue()', () => {
         const item = new CollectionItem({searchValue: 'abc'});
