@@ -88,6 +88,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                     backgroundStyle: 'secondary',
                     hoverBackgroundStyle: 'secondary',
                     itemTemplateProperty: 'itemTemplate'
+                },
+                popupOptions: {
+                    autofocus: false
                 }
             };
         } else {
