@@ -96,7 +96,6 @@ export default class DateSelector extends BaseSelector<IDateSelectorOptions> {
             dayTemplate: this._options.dayTemplate,
             monthCaptionTemplate: this._options.monthCaptionTemplate,
             closeButtonEnabled: true,
-            rangeselect: false,
             selectionType: 'single',
             ranges: null,
             state: this._state,
