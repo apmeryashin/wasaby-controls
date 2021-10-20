@@ -1,5 +1,13 @@
 import {Logger} from 'UI/Utils';
 
+/**
+ * Проверяет, является ли значение числом.
+ * При передаче параметра controlName, логирует ошибку.
+ * @param value - Проверяемое значение
+ * @param controlName - Название контрола
+ * @param optionName - Название проверяемой опции
+ * @returns boolean
+ */
 function isNumeric(
     value: number,
     controlName?: string,
@@ -15,6 +23,16 @@ function isNumeric(
     return true;
 }
 
+/**
+ * Проверяет, находится ли значение в допустимых пределах.
+ * При передаче параметра controlName, логирует ошибку.
+ * @param value - Проверяемое значение
+ * @param minValue - Минимальное допустимое значение
+ * @param maxValue - Максимальное допустимое значение
+ * @param controlName - Название контрола
+ * @param optionName - Название проверяемой опции
+ * @returns boolean
+ */
 function isValueInRange(
     value: number,
     minValue: number = 0,
@@ -33,6 +51,14 @@ function isValueInRange(
     return true;
 }
 
+/**
+ * Проверяет, находится ли значение в допустимых пределах.
+ * При передаче параметра controlName, логирует ошибку.
+ * @param data - Массив проверяемых объектов
+ * @param maxValue - Максимальное допустимое значение
+ * @param controlName - Название контрола
+ * @returns boolean
+ */
 function isSumInRange(
     data: object[],
     maxValue: number = 100,
