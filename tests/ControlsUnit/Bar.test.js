@@ -1,7 +1,19 @@
 define([
-   'Controls/progress'
-], function(progress) {
+   'Controls/progress',
+   'UI/Utils'
+], function(progress, { Logger }) {
    describe('Controls.progress:Bar', function() {
+      var sandbox;
+      beforeEach(() => {
+         sandbox = sinon.createSandbox();
+
+         // prevent console errors
+         sandbox.stub(Logger, 'error');
+      });
+      afterEach(() => {
+         sandbox.restore();
+      });
+
       it('getWidth', function() {
          var pb, width;
          pb = new progress.Bar({});
@@ -21,5 +33,5 @@ define([
          width = pb._getWidth(150);
          assert.equal('100%', width, 'getWidth test case 5: WrongResult');
       });
-   })
+   });
 });
