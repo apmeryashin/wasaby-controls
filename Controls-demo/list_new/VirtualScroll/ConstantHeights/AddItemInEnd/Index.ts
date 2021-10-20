@@ -1,8 +1,10 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/ConstantHeights/AddItemInEnd/AddItemInEnd';
 import {Memory} from 'Types/source';
-import {RecordSet} from 'Types/collection';
+import {RecordSet } from 'Types/collection';
+import {Container} from 'Controls/scroll';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
+import {Model} from 'Types/entity';
 
 interface IItem {
     title: string;
@@ -15,11 +17,15 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
     private _itemsCount: number = 1000;
-
-    protected get _page(): number {
-        // tslint:disable-next-line
-        return Math.ceil(this._itemsCount / 100 );
-    }
+    private _scrollToBottom: boolean = false;
+    private _items: RecordSet;
+    private _itemsReady: Function;
+    protected _children: {
+        scroll: Container;
+    };
+    protected _initialScrollPosition = {
+        vertical: 'end'
+    };
 
     private dataArray: IItem[] = generateData({
         keyProperty: 'key',
@@ -30,14 +36,13 @@ export default class extends Control {
     });
 
     protected _addItem(): void {
-        this._viewSource.update(new RecordSet({
-            rawData: [{
+        this._items.add(new Model({
+            rawData: {
                 key: ++this._itemsCount,
                 title: `Запись с ключом ${this._itemsCount}.`
-            }]
+            }
         }));
-
-        this._children.list.reload();
+        this._scrollToBottom = true;
     }
 
     protected _beforeMount(): void {
@@ -45,6 +50,18 @@ export default class extends Control {
             keyProperty: 'key',
             data: this.dataArray
         });
+        this._itemsReady = this._saveItems.bind(this);
+    }
+
+    private _saveItems(items: RecordSet): void {
+        this._items = items;
+    }
+
+    private _onDrawItems(): void {
+        if (this._scrollToBottom) {
+            this._children.scroll.scrollToBottom();
+            this._scrollToBottom = false;
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
