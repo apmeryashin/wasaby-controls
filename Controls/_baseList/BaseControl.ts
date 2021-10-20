@@ -1436,8 +1436,9 @@ const _private = {
                                 self._addItems.push(...newItems);
                                 self._addItemsIndex = newItemsIndex;
                             } else {
+                                const isBottom = (self._viewportSize + self._scrollTop) === self._viewSize;
                                 let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
+                                    : (newItemsIndex >= collectionStopIndex && !isBottom ? 'down' : undefined);
                                 if (self._listViewModel.getCount() === newItems.length) {
                                     direction = undefined;
                                 }
@@ -3434,6 +3435,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
+            this._scrollController.scrollPositionChange({scrollTop}, false);
             this._observersController?.setScrollTop(
                 this._scrollTop,
                 this._children.listView?.getTopLoadingTrigger(),
