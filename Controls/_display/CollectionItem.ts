@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder, TFontColorStyle, TFontSize} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -1002,13 +1002,17 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param fontSize Размер шрифта
      */
     getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
-                                 fontSize?: TFontSize): string {
+                                 fontSize?: TFontSize,
+                                 fontWeight?: TFontWeight): string {
         let contentClasses = '';
         if (fontColorStyle) {
             contentClasses += ` controls-text-${fontColorStyle}`;
         }
         if (fontSize) {
             contentClasses += ` controls-fontsize-${fontSize}`;
+        }
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
         }
         return contentClasses;
     }
