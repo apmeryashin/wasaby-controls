@@ -6,15 +6,16 @@ import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as sinon from 'sinon';
 
-async function getBaseLookup(options?: Partial<ILookupOptions>): Promise<Lookup> {
-    const lookupOptions = options || {
+async function getBaseLookup(options?: Partial<ILookupOptions>, receivedState?: RecordSet): Promise<Lookup> {
+    const lookupOptions = {
         source: getSource(),
-        selectedKeys: []
+        selectedKeys: [],
+        ...options
     };
-    const lookup = new Lookup(lookupOptions);
+    const lookup = new Lookup();
     // tslint:disable-next-line:ban-ts-ignore
     // @ts-ignore
-    await lookup._beforeMount(lookupOptions);
+    await lookup._beforeMount(lookupOptions, undefined, receivedState);
     lookup.saveOptions(lookupOptions);
     return lookup;
 }
@@ -111,6 +112,19 @@ describe('Controls/lookup:Input', () => {
 
             const lookup = await getBaseLookup(options as unknown as ILookupOptions);
             assert.deepStrictEqual(lookup._items.getCount(), data.length);
+        });
+
+        it('with dataLoadCallback', async () => {
+            let isDataLoadCallbackCalled = false;
+            const items = new RecordSet({
+                keyProperty: 'id'
+            });
+            const dataLoadCallback = () => {
+                isDataLoadCallbackCalled = true;
+            };
+
+            await getBaseLookup({dataLoadCallback} as unknown as ILookupOptions, items);
+            assert.ok(isDataLoadCallbackCalled);
         });
 
     });
