@@ -2,13 +2,15 @@
     <span class="controls-text-label controlsDemo__mb1">Добавление записи в список с маленькими записями, pageSize 100, virtualPageSize не задан, показ с конца</span>
     <Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index totalCount="{{1000}}" pageSize="{{100}}" page="{{9}}" direction="backward">
         <ws:content>
-            <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo__height500">
+            <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo__height500"
+                                       name="scroll"
+                                       initialScrollPosition="{{_initialScrollPosition}}">
                 <Controls.list:View source="{{_viewSource}}"
                                     name="list"
                                     keyProperty="key"
-                                    on:drawItems="_drawItems()"
-                                    itemsReadyCallback="{{_itemsReadyCallback}}"
-                                    navigation="{{content.navigation}}">
+                                    on:drawItems="_onDrawItems()"
+                                    itemsReadyCallback="{{_itemsReady}}"
+                                    navigation="{{_options.navigation}}">
                     <ws:virtualScrollConfig pageSize="{{100}}"/>
                 </Controls.list:View>
             </Controls.scroll:Container>
