@@ -23,11 +23,9 @@ export default class extends Control {
     protected _children: {
         scroll: Container;
     };
-
-    protected get _page(): number {
-        // tslint:disable-next-line
-        return Math.ceil(this._itemsCount / 100 );
-    }
+    protected _initialScrollPosition = {
+        vertical: 'end'
+    };
 
     private dataArray: IItem[] = generateData({
         keyProperty: 'key',
