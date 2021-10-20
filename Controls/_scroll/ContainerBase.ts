@@ -115,6 +115,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     private _scrollMoveTimer: number;
 
     private _isFirstUpdateState: boolean = true;
+    private _scrollToElementCalled: boolean = false;
 
     // Состояние для логирования сохраняем отдельно, т.к. состояние положения скрола в некоторых сценариях
     // обновляется синхронно, и невозможно узнать старое состояние в обработчике.
@@ -159,7 +160,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         // может быть сразу проскролен. Исправляем эту ситуацию.
         // Не будем скроллить в случае, если на странице есть нативные якоря для скролла,
         // т.е. в ссылке присутсвует хэш
-        if (isInitialScrollPositionStart && (!location.hash && this._container.dataset?.scrollContainerNode)) {
+        if (isInitialScrollPositionStart && (!location.hash && this._container.dataset?.scrollContainerNode) &&
+            !this._scrollToElementCalled) {
             this._children.content.scrollTop = 0;
         }
         this._initialScrollPositionResetAfterInitialization();
@@ -977,6 +979,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): void {
+        // Есть кейсы, когда scrollToElement вызывается до componentDidMount. По этому флагу не будем сбрасывать
+        // scrollTop в componentDidMount.
+        this._scrollToElementCalled = true;
         event.stopPropagation();
         scrollToElement(itemContainer, toBottom, force, true);
         /**
