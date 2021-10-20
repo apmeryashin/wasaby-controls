@@ -21,7 +21,6 @@ import 'css!Controls/dateRange';
  * @implements Controls/dateRange:IDatePickerSelectors
  * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/interface:IFontColorStyle
- * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
  * @implements Controls/dateRange:ICaptionFormatter
  * @mixes Controls/dateRange:IDateSelector
