@@ -51,4 +51,5 @@ export interface IHeadingPath extends IBreadCrumbsOptions {
      * @cfg {String} Имя поля записи содержащее её отображаемое значение.
      */
     pathButtonDisplayProperty: string;
+    displayMode: 'default' | 'multiline';
 }
