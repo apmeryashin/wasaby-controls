@@ -2,7 +2,6 @@ import {GridDataCell, IGridDataCellOptions} from 'Controls/grid';
 import {isFullGridSupport, ITreeItemOptions} from 'Controls/display';
 import TreeGridDataRow from './TreeGridDataRow';
 import { Model } from 'Types/entity';
-import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
 
 export interface ITreeGridDataCellOptions<T extends Model> extends IGridDataCellOptions<T>, ITreeItemOptions<T> {
     isDragTargetNode?: boolean;

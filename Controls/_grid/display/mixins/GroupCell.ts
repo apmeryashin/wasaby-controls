@@ -1,4 +1,4 @@
-import {TFontColorStyle, TFontSize} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 import {IColumn} from 'Controls/grid';
 
 /**
@@ -17,25 +17,28 @@ export default abstract class GroupCell<T> {
     }
 
     /**
-     * Добавляет CSS классы для стилизации текста в заголовке группы
-     * @param fontColorStyle Цвет шрифта
-     * @param fontSize Размер шрифта
+     * Добавляет CSS классы для стилизации текста в заголовке группы.
+     * Настройки из шаблона по умолчанию имеют больший приоритет, т.к. обычные группы настраиваются через шаблон Controls/grid:GroupTemplate.
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight жирность шрифта
      */
-    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
-                                 fontSize?: TFontSize): string {
+    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight): string {
         let classes = '';
-        const config = this.getColumnConfig();
-        if (config.fontSize || fontSize) {
-            classes += ` controls-fontsize-${config.fontSize || fontSize}`;
+        if (templateFontSize) {
+            classes += ` controls-fontsize-${templateFontSize}`;
         } else {
             classes += ' controls-ListView__groupContent-text_default';
         }
-
-        // Настройка в колонке приоритетнее, чем полученная из ItemTemplate
-        if (config.fontColorStyle || fontColorStyle) {
-            classes += ` controls-text-${config.fontColorStyle || fontColorStyle}`;
+        if (templateFontColorStyle) {
+            classes += ` controls-text-${templateFontColorStyle}`;
         } else {
             classes += ' controls-ListView__groupContent-text_color_default';
+        }
+        if (templateFontWeight) {
+            classes += ` controls-fontweight-${templateFontWeight}`;
         }
         return classes;
     }

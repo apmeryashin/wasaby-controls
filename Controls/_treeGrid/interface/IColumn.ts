@@ -32,3 +32,11 @@ export interface IColumn extends IGridColumn, IGroupNodeColumn {
  * Стиль цвета текста ячейки имеет больший приоритет, чем {@link Controls/_treeGrid/interface/ItemTemplate#fontColorStyle стиль цвета текста записи}.
  * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
  */
+/**
+ * @name Controls/_treeGrid/interface/IColumn#fontWeight
+ * @cfg {TFontWeight} Начертание шрифта.
+ * @default "default".
+ * @remark
+ * Начертание шрифта ячейки имеет больший приоритет, чем {@link Controls/_treeGrid/interface/ItemTemplate#fontWeight Начертание шрифта записи}.
+ * Начертание шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ */

@@ -41,6 +41,7 @@
                             hoverBackgroundStyle="{{ hoverBackgroundStyle }}"
                             fontColorStyle="{{ fontColorStyle }}"
                             fontSize="{{ fontSize }}"
+                            fontWeight="{{ fontWeight }}"
                             tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                             tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
                             editArrowTemplate="{{ editArrowTemplate }}">
