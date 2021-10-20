@@ -73,6 +73,7 @@ export class Calculator {
     private _virtualScrollConfig: IVirtualScrollConfig;
     private _scrollTop: number;
     private _viewportSize: number;
+    private _totalCount: number;
     private _range: IRange = { start: 0, end: 0 };
     private _placeholders: IPlaceholders = { top: 0, bottom: 0 };
     private _activeElementIndex: number;
@@ -103,14 +104,13 @@ export class Calculator {
      * Смещает виртуальный диапазон в заданном направлении.
      * Используется при достижении триггера.
      * @param direction Направление, в котором будет смещаться диапазон
-     * @param totalCount Общее кол-во элементов в коллекции
      */
-    shiftRangeToDirection(direction: IDirection, totalCount: number): ICalculatorResult {
+    shiftRangeToDirection(direction: IDirection): ICalculatorResult {
         const oldRange = this._range;
 
         // если в заданном направлении больше нет элементов, то ничего не делаем
-        if (!this._hasItemsToDirection(direction, totalCount)) {
-            return this._getRangeChangeResult(oldRange, totalCount);
+        if (!this._hasItemsToDirection(direction, this._totalCount)) {
+            return this._getRangeChangeResult(oldRange);
         }
 
         const newRange = shiftRangeBySegment({
@@ -118,9 +118,9 @@ export class Calculator {
             direction,
             pageSize: this._virtualScrollConfig.pageSize,
             segmentSize: this._virtualScrollConfig.segmentSize,
-            totalCount
+            totalCount: this._totalCount
         });
-        return this._getRangeChangeResult(newRange, totalCount);
+        return this._getRangeChangeResult(newRange);
     }
 
     /**
@@ -141,9 +141,8 @@ export class Calculator {
 
     shiftRangeToNearbyPage(direction: IDirection): IShiftRangeToNearbyPageResult {
         const oldRange = this._range;
-        const totalCount: number = 0; // todo totalCount === undefined, его похоже надо хранить в состоянии Calculator
 
-        const calculatorResult = this._getRangeChangeResult(oldRange, totalCount);
+        const calculatorResult = this._getRangeChangeResult(oldRange);
 
         const firstVisibleItemIndex = 0; // todo release it
         const lastVisibleItemIndex = 10; // todo release it
@@ -164,21 +163,21 @@ export class Calculator {
      * @param index Индекс элемента
      * @param totalCount Общее кол-во элементов
      */
-    shiftRangeToIndex(index: number, totalCount: number): ICalculatorResult {
+    shiftRangeToIndex(index: number): ICalculatorResult {
         const oldRange = this._range;
 
         // если элемент уже внутри диапазона, то ничего не делаем.
-        if (!this._isItemInVirtualRange(index)) {
+        if (!this._isItemInRange(index)) {
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
                 start: 0,
-                totalCount
+                totalCount: this._totalCount
             });
 
             this._updatePlaceholders(this._range);
         }
 
-        return this._getRangeChangeResult(oldRange, totalCount);
+        return this._getRangeChangeResult(oldRange);
     }
 
     /**
@@ -186,7 +185,7 @@ export class Calculator {
      * @param index Индекс элемента
      * @return {boolean}
      */
-    private _isItemInVirtualRange(index: number): boolean {
+    private _isItemInRange(index: number): boolean {
         return index >= this._range.start && index < this._range.end;
     }
 
@@ -197,22 +196,21 @@ export class Calculator {
     /**
      * Смещает диапазон к переданной позиции скролла.
      * @param scrollPosition Позиция скролла
-     * @param totalCount Позиция скролла
      */
-    shiftRangeToScrollPosition(scrollPosition: number, totalCount: number): ICalculatorResult {
+    shiftRangeToScrollPosition(scrollPosition: number): ICalculatorResult {
         const oldRange = this._range;
 
         this._range = getRangeByScrollPosition({
             itemsSizes: this._itemsSizes,
             pageSize: this._virtualScrollConfig.pageSize,
             scrollPosition,
-            totalCount,
+            totalCount: this._totalCount,
             triggerOffset: this._triggersOffsets.top
         });
 
         this._updatePlaceholders(this._range);
 
-        return this._getRangeChangeResult(oldRange, totalCount);
+        return this._getRangeChangeResult(oldRange);
     }
 
     // endregion ShiftRangeByScrollPosition
@@ -222,16 +220,15 @@ export class Calculator {
     /**
      * Пересчитывает индекс активного элемента от текущей позиции скролла
      * @param scrollPosition Позиция скролла
-     * @param totalCount Позиция скролла
      */
-    shiftActiveElementIndexToScrollPosition(scrollPosition: number, totalCount: number): IActiveElementIndexChanged {
+    shiftActiveElementIndexToScrollPosition(scrollPosition: number): IActiveElementIndexChanged {
         const oldActiveElementIndex = this._activeElementIndex;
 
         this._activeElementIndex = getActiveElementIndexByPosition({
             itemsSizes: this._itemsSizes,
             pageSize: this._virtualScrollConfig.pageSize,
             scrollPosition,
-            totalCount,
+            totalCount: this._totalCount,
             triggerOffset: this._triggersOffsets.top
         });
 
@@ -243,9 +240,6 @@ export class Calculator {
 
     // endregion ShiftRangeByScrollPosition
 
-    private _updateVirtualRange(): void {
-    }
-
     // region HandleCollectionChanges
 
     /**
@@ -253,27 +247,64 @@ export class Calculator {
      * При необходимости смещает виртуальный диапазон.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
-     * @param totalCount Общее кол-во элементов в коллекции
+     * @param predicatedDirection заранее высчитанное направление добавления (необходимо при вызове prepend и append)
      */
-    addItems(position: number, count: number, totalCount: number): ICalculatorResult {
+    addItems(position: number, count: number, predicatedDirection: IDirection): ICalculatorResult {
         const oldRange = this._range;
-        this._updateVirtualRange();
-        return this._getRangeChangeResult(oldRange, totalCount);
+        const direction = predicatedDirection || (position <= this._range.start ? 'backward' : 'forward');
+
+        this._totalCount += count;
+
+        if (direction === 'backward' && predicatedDirection) {
+            this._range.start = Math.min(this._totalCount, this._range.start + count);
+            this._range.end = Math.min(this._totalCount, this._range.end + count);
+        }
+
+        // todo FIX IT
+        /*if (predicatedDirection) {
+            this._savedDirection = predicatedDirection;
+        }*/
+
+        //if (!predicatedDirection && triggerState[direction]) {
+        this._range = shiftRangeBySegment({
+            currentRange: this._range,
+            direction,
+            pageSize: this._virtualScrollConfig.pageSize,
+            segmentSize: count,
+            totalCount: this._totalCount
+        });
+
+        this._updatePlaceholders(this._range);
+
+        return this._getRangeChangeResult(oldRange);
     }
 
     /**
      * Обрабатывает перемещение элементов внутри коллекции.
-     * @param newPosition Индекс элемента, после которого вставили записи
-     * @param oldPosition Индекс элемента откуда переместили записи
-     * @param movedCount Кол-во перемещенных элементов
-     * @param totalCount Общее кол-во элементов в коллекции
+     * @param addPosition Индекс элемента, после которого вставили записи
+     * @param addCount Кол-во добавляемых элементов
+     * @param removePosition Индекс элемента откуда переместили записи
+     * @param removeCount Кол-во удаляемых элементов
+     * @param direction Направление перемещения
      */
-    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): ICalculatorResult {
+    moveItems(addPosition: number,
+              addCount: number,
+              removePosition: number,
+              removeCount: number,
+              direction: IDirection): ICalculatorResult {
         const oldRange = this._range;
 
-        this._updateVirtualRange();
+        this.addItems(
+            addPosition,
+            addCount,
+            direction
+        );
 
-        return this._getRangeChangeResult(oldRange, totalCount);
+        this.removeItems(removePosition, removeCount);
+
+        this._updatePlaceholders(this._range);
+
+        return this._getRangeChangeResult(oldRange);
     }
 
     /**
@@ -281,14 +312,24 @@ export class Calculator {
      * Смещает соответственно виртуальный диапазон.
      * @param position Индекс первого удаленного элемента.
      * @param count Кол-во удаленных элементов.
-     * @param totalCount Общее кол-во элементов в коллекции
      */
-    removeItems(position: number, count: number, totalCount: number): ICalculatorResult {
+    removeItems(position: number, count: number): ICalculatorResult {
         const oldRange = this._range;
 
-        this._updateVirtualRange();
+        const direction = position <= this._range.start ? 'backward' : 'forward';
+        this._totalCount -= count;
 
-        return this._getRangeChangeResult(oldRange, totalCount);
+        this._range = shiftRangeBySegment({
+            currentRange: this._range,
+            direction,
+            pageSize: this._virtualScrollConfig.pageSize,
+            segmentSize: count,
+            totalCount: this._totalCount
+        });
+
+        this._updatePlaceholders(this._range);
+
+        return this._getRangeChangeResult(oldRange);
     }
 
     /**
@@ -299,15 +340,17 @@ export class Calculator {
     resetItems(totalCount: number): ICalculatorResult {
         const oldRange = this._range;
 
+        this._totalCount = totalCount;
+
         this._range = getRangeByIndex({
             pageSize: this._virtualScrollConfig.pageSize,
             start: 0,
-            totalCount
+            totalCount: this._totalCount
         });
 
         this._updatePlaceholders(this._range);
 
-        return this._getRangeChangeResult(oldRange, totalCount);
+        return this._getRangeChangeResult(oldRange);
     }
 
     // endregion HandleCollectionChanges
@@ -320,14 +363,14 @@ export class Calculator {
         };
     }
 
-    private _getRangeChangeResult(oldRange: IRange, totalCount: number): ICalculatorResult {
+    private _getRangeChangeResult(oldRange: IRange): ICalculatorResult {
         return {
             startIndex: this._range.start,
             endIndex: this._range.end,
             indexesChanged: oldRange.start !== this._range.start || oldRange.end !== this._range.end,
 
-            hasItemsBackward: this._hasItemsToDirection('backward', totalCount),
-            hasItemsForward: this._hasItemsToDirection('forward', totalCount),
+            hasItemsBackward: this._hasItemsToDirection('backward', this._totalCount),
+            hasItemsForward: this._hasItemsToDirection('forward', this._totalCount),
             beforePlaceholderSize: this._placeholders.top,
             afterPlaceholderSize: this._placeholders.bottom,
             environmentChanged: true, // todo Calc it!
