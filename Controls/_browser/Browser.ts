@@ -253,9 +253,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 }
             }, true);
         }
-        if (options.searchValue) {
-
-        }
     }
 
     private _validateSearchOptions(options: IBrowserOptions): void {
