@@ -26,6 +26,8 @@ export interface IEnvironmentChangedParams {
 
 export type IDirection = 'backward' | 'forward';
 
+export type IPageDirection = 'backward' | 'forward' | 'start' | 'end';
+
 export type IIndexesChangedCallback = (itemsRange: IItemsRange) => void;
 
 export type IEnvironmentChangedCallback = (params: IEnvironmentChangedParams) => void;
@@ -39,6 +41,7 @@ export interface IScrollControllerOptions extends
     IObserversControllerBaseOptions,
     ICalculatorOptions {
     scrollTop: number;
+    totalCount: number;
     indexesChangedCallback: IIndexesChangedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     environmentChangedCallback: IEnvironmentChangedCallback;
@@ -83,6 +86,7 @@ export class ScrollController {
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
             scrollTop: options.scrollTop,
+            totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize
         });
@@ -141,22 +145,26 @@ export class ScrollController {
      * Обрабатывает добавление элементов в коллекцию.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
-     * @param totalCount Общее кол-во элементов в коллекции
      */
-    addItems(position: number, count: number, totalCount: number): void {
-        const result = this._calculator.addItems(position, count, totalCount);
+    addItems(position: number, count: number): void {
+        const result = this._calculator.addItems(position, count);
         this._processCalculatorResult(result);
     }
 
     /**
      * Обрабатывает перемещение элементов внутри коллекции.
-     * @param newPosition Индекс элемента, после которого вставили записи
-     * @param oldPosition Индекс элемента откуда переместили записи
-     * @param movedCount Кол-во перемещенных элементов
-     * @param totalCount Общее кол-во элементов в коллекции
+     * @param addPosition Индекс элемента, после которого вставили записи
+     * @param addCount Кол-во добавляемых элементов
+     * @param removePosition Индекс элемента откуда переместили записи
+     * @param removeCount Кол-во удаляемых элементов
+     * @param direction Направление перемещения
      */
-    moveItems(newPosition: number, oldPosition: number, movedCount: number, totalCount: number): void {
-        const result = this._calculator.moveItems(newPosition, oldPosition, movedCount, totalCount);
+    moveItems(addPosition: number,
+              addCount: number,
+              removePosition: number,
+              removeCount: number,
+              direction: IDirection): void {
+        const result = this._calculator.moveItems(addPosition, addCount, removePosition, removeCount, direction);
         this._processCalculatorResult(result);
     }
 
@@ -164,10 +172,9 @@ export class ScrollController {
      * Обрабатывает удаление элементов из коллекции.
      * @param position Индекс первого удаленного элемента.
      * @param count Кол-во удаленных элементов.
-     * @param totalCount Общее кол-во элементов в коллекции
      */
-    removeItems(position: number, count: number, totalCount: number): void {
-        const result = this._calculator.removeItems(position, count, totalCount);
+    removeItems(position: number, count: number): void {
+        const result = this._calculator.removeItems(position, count);
         this._processCalculatorResult(result);
     }
 
@@ -184,29 +191,33 @@ export class ScrollController {
 
     // region Scroll
 
-    // todo release it
-    scrollTo(direction: IDirection): IVisibleItemIndexes {
-        const result = this._calculator.shiftRangeToNearbyPage(direction);
-        this._processCalculatorResult(result);
-
-        return {
-            firstVisibleItemIndex: result.firstVisibleItemIndex,
-            lastVisibleItemIndex: result.lastVisibleItemIndex
-        };
+    getEdgeVisibleItemIndexes(): IVisibleItemIndexes {
+        return this._calculator.getEdgeVisibleItemIndexes();
     }
 
-    scrollToItem(itemIndex: number, totalCount: number): void {
-        const result = this._calculator.shiftRangeToIndex(itemIndex, totalCount);
+    /**
+     * Скроллит к элементу по переданному индексу.
+     * При необходимости смещает диапазон.
+     * @param itemIndex Индекс элемента, к которому нужно проскроллить.
+     * @return {boolean} Изменился ли диапазон отображаемых записей.
+     */
+    scrollToItem(itemIndex: number): boolean {
+        // TODO не забыть про InertialScrolling
+        const rangeResult = this._calculator.shiftRangeToIndex(itemIndex);
+        return rangeResult.indexesChanged;
+    }
+
+    /**
+     * Сдвигает диапазон отображаемых элементов к позиции скролла.
+     * @param position Позиция скролла.
+     */
+    scrollToPosition(position: number): void {
+        const result = this._calculator.shiftRangeToScrollPosition(position);
         this._processCalculatorResult(result);
     }
 
-    scrollToPosition(position: number, totalCount: number): void {
-        const result = this._calculator.shiftRangeToScrollPosition(position, totalCount);
-        this._processCalculatorResult(result);
-    }
-
-    scrollPositionChange(position: number, totalCount: number): void {
-        const result = this._calculator.shiftActiveElementIndexToScrollPosition(position, totalCount);
+    scrollPositionChange(position: number): void {
+        const result = this._calculator.shiftActiveElementIndexToScrollPosition(position);
         this._processActiveElementIndexChanged(result);
     }
 
@@ -230,7 +241,6 @@ export class ScrollController {
             direction = 'backward';
         }
 
-        // todo А вот и причина хранить totalCount. Тут его по просту нет и взять не откуда.
         const result = this._calculator.shiftRangeToDirection(direction);
 
         this._processCalculatorResult(result);

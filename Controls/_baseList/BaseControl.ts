@@ -84,8 +84,10 @@ import {default as ScrollController, IScrollParams} from './ScrollController';
 import {
     ScrollController as NewScrollController,
     IDirection as IScrollControllerDirection,
-    IItemsRange, IEnvironmentChangedParams
-} from './Controllers/ScrollController/ScrollController';
+    IItemsRange,
+    IEnvironmentChangedParams,
+    IPageDirection
+} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
@@ -454,39 +456,47 @@ const _private = {
     },
 
     scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
-        const scrollCallback = (index, result) => {
+        if (self._useNewScroll) {
+            self._scrollToItem(key, toBottom, force);
+        } else {
+            const scrollCallback = (index, result) => {
 
-            // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
-            // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
-            // логического родителя, который отрисовывает все элементы
-            // https://online.sbis.ru/opendoc.html?guid=942e1a1d-15ee-492e-b763-0a52d091a05e
-            const itemsContainer = self._getItemsContainer();
-            const scrollItemIndex = index - self._listViewModel.getStartIndex();
-            const itemContainer = self._options.itemContainerGetter.getItemContainerByIndex(scrollItemIndex, itemsContainer, self._listViewModel);
+                // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
+                // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
+                // логического родителя, который отрисовывает все элементы
+                // https://online.sbis.ru/opendoc.html?guid=942e1a1d-15ee-492e-b763-0a52d091a05e
+                const itemsContainer = self._getItemsContainer();
+                const scrollItemIndex = index - self._listViewModel.getStartIndex();
+                const itemContainer = self._options.itemContainerGetter.getItemContainerByIndex(scrollItemIndex, itemsContainer, self._listViewModel);
 
-            const needScroll = !self._doNotScrollToFirtsItem || index !== 0;
-            self._doNotScrollToFirtsItem = false;
-            if (itemContainer && needScroll) {
-                self._notify('scrollToElement', [{
-                    itemContainer, toBottom, force
-                }], {bubbling: true});
-            }
-            if (result) {
-                _private.handleScrollControllerResult(self, result);
-            }
-        };
-        return new Promise((resolve) => {
-            self._scrollController && self._listViewModel ?
-                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
-                    resolve();
-                }) : resolve();
-        });
+                const needScroll = !self._doNotScrollToFirtsItem || index !== 0;
+                self._doNotScrollToFirtsItem = false;
+                if (itemContainer && needScroll) {
+                    self._notify('scrollToElement', [{
+                        itemContainer, toBottom, force
+                    }], {bubbling: true});
+                }
+                if (result) {
+                    _private.handleScrollControllerResult(self, result);
+                }
+            };
+            return new Promise((resolve) => {
+                self._scrollController && self._listViewModel ?
+                    self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
+                        resolve();
+                    }) : resolve();
+            });
+        }
     },
 
     // region key handlers
 
     keyDownHome(self, event) {
-        _private.setMarkerAfterScroll(self, event);
+        if (self._useNewScroll) {
+            self._keyDownHome(event);
+        } else {
+            _private.setMarkerAfterScroll(self, event);
+        }
     },
 
     keyDownRight(self, event) {
@@ -498,16 +508,28 @@ const _private = {
     },
 
     keyDownEnd(self, event) {
-        _private.setMarkerAfterScroll(self, event);
-        if (self._options.navigation?.viewConfig?.showEndButton) {
-            _private.scrollToEdge(self, 'down');
+        if (self._useNewScroll) {
+            self._keyDownEnd(event);
+        } else {
+            _private.setMarkerAfterScroll(self, event);
+            if (self._options.navigation?.viewConfig?.showEndButton) {
+                _private.scrollToEdge(self, 'down');
+            }
         }
     },
     keyDownPageUp(self, event) {
-        _private.setMarkerAfterScroll(self, event);
+        if (self._useNewScroll) {
+            self._keyDownPageUp(event);
+        } else {
+            _private.setMarkerAfterScroll(self, event);
+        }
     },
     keyDownPageDown(self, event) {
-        _private.setMarkerAfterScroll(self, event);
+        if (self._useNewScroll) {
+            self._keyDownPageDown(event);
+        } else {
+            _private.setMarkerAfterScroll(self, event);
+        }
     },
 
     enterHandler(self, event) {
@@ -3606,6 +3628,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _createNewScrollController(): void {
+        if (!this._useNewScroll) {
+            return;
+        }
         this._newScrollController = new NewScrollController({
             itemsContainer: this._getItemsContainer(),
             itemsQuerySelector: this._options.itemsSelector,
@@ -3617,6 +3642,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             scrollTop: 0,
             viewportSize: 0,
+            totalCount: this._listViewModel.getCount(),
             virtualScrollConfig: this._options.virtualScrollConfig,
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
             environmentChangedCallback(params: IEnvironmentChangedParams): void {
@@ -3625,8 +3651,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             activeElementChangedCallback(activeElementIndex: number): void {
                 console.error('activeElementChangedCallback', activeElementIndex);
             },
-            itemsEndedCallback(direction: IScrollControllerDirection): void {
+            itemsEndedCallback: (direction: IScrollControllerDirection) => {
                 console.error('itemsEndedCallback', direction);
+                const compatibleDirection = direction === 'forward' ? 'down' : 'up';
+                _private.loadToDirectionIfNeed(this, compatibleDirection);
             }
         });
         this._newScrollController.resetItems(this._listViewModel.getCount());
@@ -3651,6 +3679,86 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._newScrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
             this._itemsRangeScheduledSizeUpdate = null;
         }
+    }
+
+    private _scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): void {
+        const scrollToElement = (itemIndex) => {
+            const itemsContainer = this._getItemsContainer();
+            const domItemIndex = itemIndex - this._listViewModel.getStartIndex();
+            const itemContainer = this._options.itemContainerGetter.getItemContainerByIndex(
+                domItemIndex,
+                itemsContainer,
+                this._listViewModel
+            );
+
+            if (itemContainer) {
+                this._notify(
+                    'scrollToElement',
+                    [{ itemContainer, toBottom, force }],
+                    {bubbling: true}
+                );
+            }
+        };
+
+        const itemIndex = this._listViewModel.getIndexByKey(key);
+        const rangeChanged = this._newScrollController.scrollToItem(itemIndex);
+        if (rangeChanged) {
+            _private.doAfterRender(this, () => scrollToElement(itemIndex));
+        } else {
+            scrollToElement(itemIndex);
+        }
+    }
+
+    /**
+     * Скроллит к переданной странице.
+     * Скроллит так, чтобы было видно последний элемент с предыдущей страницы, чтобы не потерять "контекст".
+     * Смещает диапазон, возвращает промис с индексами крайних видимых полностью элементов.
+     * @param page Условная страница, к которой нужно скроллить. (Следующая, предыдущая, начальная, конечная)
+     * @private
+     */
+    private _scrollToPage(page: IPageDirection): void {
+        this._newScrollController.getEdgeVisibleItemIndexes()
+        const { firstVisibleItemIndex, lastVisibleItemIndex } = this._newScrollController.getEdgeVisibleItemIndexes();
+        let itemIndex;
+        if (page === 'forward' || page === 'backward') {
+            itemIndex = page === 'forward' ? lastVisibleItemIndex : firstVisibleItemIndex;
+        } else {
+            itemIndex = page === 'start' ? 0 : this._listViewModel.getCount() - 1;
+        }
+
+        const item = this._listViewModel.getItemBySourceIndex(itemIndex);
+        if (item) {
+            this._scrollToItem(item.getContents().getKey());
+
+            const newEdgeVisibleItemIndexes = this._newScrollController.getEdgeVisibleItemIndexes();
+            this._setMarkerAfterScroll(newEdgeVisibleItemIndexes.firstVisibleItemIndex)
+        }
+    }
+
+    private _keyDownPageUp(event: SyntheticEvent): void {
+        event.stopPropagation();
+        this._scrollToPage('backward');
+    }
+
+    private _keyDownPageDown(event: SyntheticEvent): void {
+        event.stopPropagation();
+        this._scrollToPage('forward');
+    }
+
+    private _keyDownEnd(event: SyntheticEvent): void {
+        event.stopPropagation();
+        this._scrollToPage('end');
+    }
+
+    private _keyDownHome(event: SyntheticEvent): void {
+        event.stopPropagation();
+        this._scrollToPage('start');
+    }
+
+    private _setMarkerAfterScroll(itemIndex: number): void {
+        const item = this._listViewModel.getItemBySourceIndex(itemIndex);
+        const markedKey = _private.getMarkerController(this).getSuitableMarkedKey(item);
+        this._changeMarkedKey(markedKey);
     }
 
     protected _afterMount(): void {

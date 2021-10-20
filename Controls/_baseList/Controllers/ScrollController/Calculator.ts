@@ -1,19 +1,19 @@
 import {
-    shiftRangeBySegment,
+    getActiveElementIndexByPosition,
     getRangeByIndex,
     getRangeByScrollPosition,
-    getActiveElementIndexByPosition
+    shiftRangeBySegment
 } from './CalculatorUtil';
 
-import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
-import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
-import type { ITriggersOffsets } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
+import type {IVirtualScrollConfig} from 'Controls/_baseList/interface/IVirtualScroll';
+import type {IItemsSizes} from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
+import type {ITriggersOffsets} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 import type {
+    IActiveElementIndex,
     IDirection,
-    IVisibleItemIndexes,
-    IItemsRange,
     IEnvironmentChangedParams,
-    IActiveElementIndex
+    IItemsRange,
+    IVisibleItemIndexes
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
@@ -28,8 +28,6 @@ export interface ICalculatorResult extends
     environmentChanged: boolean;
 }
 
-export interface IShiftRangeToNearbyPageResult extends ICalculatorResult, IVisibleItemIndexes {}
-
 /**
  * Интерфейс опции класса Calculator
  */
@@ -43,6 +41,7 @@ export interface ICalculatorOptions {
 
     scrollTop: number;
     viewportSize: number;
+    totalCount: number;
 
     virtualScrollConfig: IVirtualScrollConfig;
 }
@@ -82,6 +81,7 @@ export class Calculator {
         this._itemsSizes = options.itemsSizes;
         this._triggersOffsets = options.triggersOffsets;
         this._scrollTop = options.scrollTop;
+        this._totalCount = options.totalCount;
         this._viewportSize = options.viewportSize;
         this._virtualScrollConfig = options.virtualScrollConfig; // TODO нужно избавитсья от понятия виртуализации
     }
@@ -98,6 +98,41 @@ export class Calculator {
 
     // endregion Getters/Setters
 
+    // region EdgeVisibleItemIndexes
+
+    getEdgeVisibleItemIndexes(): IVisibleItemIndexes {
+        return {
+            firstVisibleItemIndex: this._getFirstVisibleItemIndex(),
+            lastVisibleItemIndex: this._getLastVisibleItemIndex()
+        };
+    }
+
+    /**
+     * Возвращает индекс первого полностью видимого элемента.
+     * Определяет это следующий образом: находим элемент позиция(offsetTop) которого больше scrollTop
+     * @private
+     */
+    private _getFirstVisibleItemIndex(): number {
+        return this._itemsSizes.findIndex((it) => it.offsetTop >= this._scrollTop);
+    }
+
+    /**
+     * Возвращает индекс последнего полностью видимого элемента.
+     * Определяет это следующий образом: считает позицию нижней границы элемента, считает позицию нижней границы вьюпорта,
+     * находит элемент у которого уже скрылась нижняя граница, берет индекс предыдущего элемента(он точно полностью показан).
+     * @private
+     */
+    private _getLastVisibleItemIndex(): number {
+        const itemIndexWithHiddenBottomBorder = this._itemsSizes.findIndex((it) => {
+            const bottomBorderItemPosition = it.offsetTop + it.height;
+            const bottomBorderViewportPosition = this._scrollTop + this._viewportSize;
+            return bottomBorderItemPosition > bottomBorderViewportPosition;
+        });
+        return itemIndexWithHiddenBottomBorder - 1;
+    }
+
+    // endregion EdgeVisibleItemIndexes
+
     // region ShiftRangeToDirection
 
     /**
@@ -109,7 +144,7 @@ export class Calculator {
         const oldRange = this._range;
 
         // если в заданном направлении больше нет элементов, то ничего не делаем
-        if (!this._hasItemsToDirection(direction, this._totalCount)) {
+        if (!this._hasItemsToDirection(direction)) {
             return this._getRangeChangeResult(oldRange);
         }
 
@@ -127,41 +162,20 @@ export class Calculator {
      * Возвращает, что в заданном направлении еще есть не отображенные элементы.
      * Используется, чтобы понять нужно ли подгружать данные или нужно сделать ссмещение виртуального скролла.
      * @param direction Направление
-     * @param totalCount Общее кол-во элементов в коллекции
      */
-    private _hasItemsToDirection(direction: IDirection, totalCount: number): boolean {
+    private _hasItemsToDirection(direction: IDirection): boolean {
         return direction === 'backward'
             ? this._range.start > 0
-            : this._range.end < (totalCount - 1);
+            : this._range.end < (this._totalCount - 1);
     }
 
     // endregion ShiftRangeToDirection
-
-    // region ShiftRangeToNearbyPage
-
-    shiftRangeToNearbyPage(direction: IDirection): IShiftRangeToNearbyPageResult {
-        const oldRange = this._range;
-
-        const calculatorResult = this._getRangeChangeResult(oldRange);
-
-        const firstVisibleItemIndex = 0; // todo release it
-        const lastVisibleItemIndex = 10; // todo release it
-
-        return {
-            ...calculatorResult,
-            firstVisibleItemIndex,
-            lastVisibleItemIndex
-        };
-    }
-
-    // endregion ShiftRangeToNearbyPage
 
     // region ShiftRangeByIndex
 
     /**
      * Смещает виртуальный диапазон к элементу по переданному индексу.
      * @param index Индекс элемента
-     * @param totalCount Общее кол-во элементов
      */
     shiftRangeToIndex(index: number): ICalculatorResult {
         const oldRange = this._range;
@@ -338,6 +352,7 @@ export class Calculator {
      * @param totalCount Новое кол-во элементов
      */
     resetItems(totalCount: number): ICalculatorResult {
+        this._totalCount = totalCount;
         const oldRange = this._range;
 
         this._totalCount = totalCount;
@@ -369,8 +384,8 @@ export class Calculator {
             endIndex: this._range.end,
             indexesChanged: oldRange.start !== this._range.start || oldRange.end !== this._range.end,
 
-            hasItemsBackward: this._hasItemsToDirection('backward', this._totalCount),
-            hasItemsForward: this._hasItemsToDirection('forward', this._totalCount),
+            hasItemsBackward: this._hasItemsToDirection('backward'),
+            hasItemsForward: this._hasItemsToDirection('forward'),
             beforePlaceholderSize: this._placeholders.top,
             afterPlaceholderSize: this._placeholders.bottom,
             environmentChanged: true, // todo Calc it!
