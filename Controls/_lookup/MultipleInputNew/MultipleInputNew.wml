@@ -27,6 +27,14 @@
                  <ws:partial template="{{lookupOptions.placeholder}}" scope="{{lookupOptions}}"/>
              </ws:if>
          </ws:placeholder>
+         <ws:itemTemplate>
+             <ws:if data="{{lookupOptions.itemTemplate || _options.itemTemplate}}">
+                 <ws:partial template="{{lookupOptions.itemTemplate || _options.itemTemplate}}" scope="{{lookupOptions}}"/>
+             </ws:if>
+             <ws:else>
+                 <ws:partial template="wml!Controls/_lookup/SelectedCollection/ItemTemplate"/>
+             </ws:else>
+         </ws:itemTemplate>
      </Controls._lookup.BaseLookupInput>
      <ws:if data="{{index !== (_options.lookupsOptions.length - 1)}}">
         <div class="controls-MultipleInputNew__separator"></div>
