@@ -238,29 +238,31 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    protected _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
       let updateResult;
+      const {sourceController, expandedItems} = newOptions;
+      let currentSourceController = this._sourceController;
 
-      if (this._options.sourceController !== newOptions.sourceController) {
-         this._sourceController = newOptions.sourceController;
+      if (this._options.sourceController !== sourceController) {
+         this._sourceController = currentSourceController = sourceController;
 
-         if (newOptions.sourceController) {
+         if (sourceController) {
             this._initSourceController(newOptions);
          }
       }
 
-      if (this._sourceController && (this._sourceController.getItems() !== this._items)) {
-         this._items = this._sourceController.getItems();
+      if (currentSourceController && (currentSourceController.getItems() !== this._items)) {
+         this._items = currentSourceController.getItems();
       }
 
-      if (this._sourceController) {
-         if (newOptions.sourceController) {
+      if (currentSourceController) {
+         if (sourceController) {
             updateResult = this._updateWithSourceControllerInOptions(newOptions);
          } else {
             updateResult = this._updateWithoutSourceControllerInOptions(newOptions);
          }
       }
 
-      if (!isEqual(newOptions.expandedItems, this._options.expandedItems) && !newOptions.nodeHistoryId) {
-         this._expandedItems = newOptions.expandedItems;
+      if (!isEqual(expandedItems, this._options.expandedItems) && !newOptions.nodeHistoryId) {
+         this._expandedItems = expandedItems;
       }
 
       return updateResult;
@@ -281,19 +283,21 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    }
 
    _updateWithoutSourceControllerInOptions(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
+      const sourceController = this._sourceController;
+      const {root, source, filter} = newOptions;
       let filterChanged;
       let expandedItemsChanged;
 
-      if (this._options.source !== newOptions.source) {
-         this._source = newOptions.source;
+      if (this._options.source !== source) {
+         this._source = source;
       }
 
-      if (this._options.root !== newOptions.root) {
-         this._root = newOptions.root;
+      if (this._options.root !== root) {
+         this._root = root;
       }
 
-      if (!isEqual(this._options.filter, newOptions.filter)) {
-         this._filter = newOptions.filter;
+      if (!isEqual(this._options.filter, filter)) {
+         this._filter = filter;
          filterChanged = true;
       }
 
@@ -301,18 +305,21 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          expandedItemsChanged = true;
       }
 
-      const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+      const isChanged = sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+      const sourceControllerState = sourceController.getState();
 
       if (isChanged && this._source) {
          return this._reload(newOptions);
       } else if (filterChanged) {
-         this._filter = this._sourceController.getFilter();
-         this._updateContext(this._sourceController.getState());
+         this._filter = sourceController.getFilter();
+         this._updateContext(sourceControllerState);
       } else if (expandedItemsChanged) {
          if (newOptions.nodeHistoryId) {
-            this._sourceController.updateExpandedItemsInUserStorage();
+            sourceController.updateExpandedItemsInUserStorage();
          }
-         this._updateContext(this._sourceController.getState());
+         this._updateContext(sourceControllerState);
+      } else if (isChanged) {
+         this._updateContext(sourceControllerState);
       }
    }
 
