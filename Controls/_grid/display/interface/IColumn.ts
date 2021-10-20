@@ -38,16 +38,6 @@ export interface ICellPadding {
 }
 
 /**
- * @typedef {Object} TDisplayType
- * @description Значения для типа отображаемых данных.
- * @variant money Деньги. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Money}.
- * @variant number Число. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Number}.
- * @variant date Дата. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Date}.
- * @variant string Строка.
- */
-export type TDisplayType = 'money' | 'number' | 'date' | 'string';
-
-/**
  * @typedef {Object} IDisplayTypeOptions
  * @description Настройки для типа отображаемых данных.
  * @property {searchHighlight} [searchHighlight=true] Подсветку данных при поиске (по умолчанию подсветка включена).
@@ -448,7 +438,7 @@ export interface IColumn extends IColspanParams {
      * </pre>
      * @see displayTypeOptions
      */
-    displayType?: TDisplayType;
+    displayType?: string;
     /**
      * @cfg Конфигурация декоратора (см. {@link displayType}), который используется для отображения данных в колонке.
      * @example

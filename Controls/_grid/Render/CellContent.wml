@@ -31,9 +31,7 @@
                             <!-- Контент по умолчанию, обрезка длинного текста с многоточием -->
                             <div class="{{ (gridColumn || itemData).getTextOverflowClasses() }}">
                                 <ws:partial template="{{ (gridColumn || itemData).getCellContentRender() }}"
-                                            value="{{ (gridColumn || itemData).getDefaultDisplayValue() }}"
-                                            searchValue="{{ (gridColumn || itemData).getSearchValue() }}"
-                                            gridColumn="{{(gridColumn || itemData)}}"
+                                            gridColumn="{{ gridColumn || itemData }}"
                                             scope="{{ (gridColumn || itemData).getCellContentRenderOptions(fontColorStyle, fontSize, fontWeight) }}"/>
                             </div>
                         </ws:if>
@@ -52,11 +50,9 @@
             <ws:if data="{{ (gridColumn || itemData).hasCellContentRender() }}">
                 <!-- Контент по умолчанию, обрезка длинного текста с многоточием -->
                 <div class="{{ (gridColumn || itemData).getTextOverflowClasses() }}">
-                    <ws:partial template="{{(gridColumn || itemData).getCellContentRender()}}"
+                    <ws:partial template="{{ (gridColumn || itemData).getCellContentRender() }}"
                                 attr:title="{{ (gridColumn || itemData).getTextOverflowTitle() }}"
-                                value="{{(gridColumn || itemData).getDefaultDisplayValue()}}"
-                                searchValue="{{(gridColumn || itemData).getSearchValue()}}"
-                                gridColumn="{{(gridColumn || itemData)}}"
+                                gridColumn="{{ gridColumn || itemData }}"
                                 scope="{{ (gridColumn || itemData).getCellContentRenderOptions(fontColorStyle, fontSize, fontWeight) }}"/>
                 </div>
             </ws:if>
