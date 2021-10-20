@@ -32,7 +32,6 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @implements Controls/dateRange:IDateRangeSelectable
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
- * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/dateRange:ICaptionFormatter
