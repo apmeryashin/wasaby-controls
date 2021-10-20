@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import Utils = require('Controls/_progress/Utils');
+import * as Utils from 'Controls/_progress/Utils';
 
 import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 import 'css!Controls/progress';

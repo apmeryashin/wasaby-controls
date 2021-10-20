@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {Logger} from 'UI/Utils';
-import Utils = require('Controls/_progress/Utils');
+import * as Utils from 'Controls/_progress/Utils';
 
 describe('Controls/_progress/Utils', () => {
     // Создаём песочницу, для одновременной очистки моков и стабов

@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import Utils = require('Controls/_progress/Utils');
+import * as Utils from 'Controls/_progress/Utils';
 import stateIndicatorTemplate = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!Controls/progress';
