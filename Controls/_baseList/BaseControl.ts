@@ -86,7 +86,7 @@ import {
     IDirection as IScrollControllerDirection,
     IItemsRange,
     IEnvironmentChangedParams,
-    IPageDirection
+    IPageDirection, IScheduledScrollParams, IScheduledScrollToElementParams
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
@@ -3147,6 +3147,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _scrollController: ScrollController;
     private _newScrollController: NewScrollController;
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
+    private _scheduledScrollParams: IScheduledScrollParams;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3662,12 +3663,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     private _indexesChangedCallback(itemsRange: IItemsRange): void {
         this._scheduleUpdateItemsSizes(itemsRange);
-        this._scheduleSaveAndRestoreScrollPosition();
+        this._scheduleScroll({
+            type: 'restoreScroll',
+            params: {key: '', border: 'top', borderDistance: 0} // TODO restore посчитать параметры
+        });
         console.error('indexChangedCallback', itemsRange);
-    }
-
-    private _scheduleSaveAndRestoreScrollPosition(): void {
-        // todo release it
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
@@ -3682,30 +3682,51 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     private _scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): void {
-        const scrollToElement = (itemIndex) => {
-            const itemsContainer = this._getItemsContainer();
-            const domItemIndex = itemIndex - this._listViewModel.getStartIndex();
-            const itemContainer = this._options.itemContainerGetter.getItemContainerByIndex(
-                domItemIndex,
-                itemsContainer,
-                this._listViewModel
-            );
-
-            if (itemContainer) {
-                this._notify(
-                    'scrollToElement',
-                    [{ itemContainer, toBottom, force }],
-                    {bubbling: true}
-                );
-            }
-        };
-
         const itemIndex = this._listViewModel.getIndexByKey(key);
         const rangeChanged = this._newScrollController.scrollToItem(itemIndex);
         if (rangeChanged) {
-            _private.doAfterRender(this, () => scrollToElement(itemIndex));
+            this._scheduleScroll({
+                type: 'scrollToElement',
+                params: { itemIndex, toBottom, force }
+            });
         } else {
-            scrollToElement(itemIndex);
+            this._scrollToElement(itemIndex, toBottom, force);
+        }
+    }
+
+    private _scheduleScroll(scrollParams: IScheduledScrollParams): void {
+        this._scheduledScrollParams = scrollParams;
+    }
+
+    private _handleScheduledScroll(): void {
+        if (this._scheduledScrollParams) {
+            switch (this._scheduledScrollParams.type) {
+                case 'restoreScroll':
+                    // TODO restore
+                    break;
+                case 'scrollToElement':
+                    const params = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
+                    this._scrollToElement(params.itemIndex, params.toBottom, params.force);
+                    break;
+            }
+        }
+    }
+
+    private _scrollToElement(itemIndex: number, toBottom?: boolean, force?: boolean): void {
+        const itemsContainer = this._getItemsContainer();
+        const domItemIndex = itemIndex - this._listViewModel.getStartIndex();
+        const itemContainer = this._options.itemContainerGetter.getItemContainerByIndex(
+            domItemIndex,
+            itemsContainer,
+            this._listViewModel
+        );
+
+        if (itemContainer) {
+            this._notify(
+                'scrollToElement',
+                [{ itemContainer, toBottom, force }],
+                {bubbling: true}
+            );
         }
     }
 
@@ -3730,6 +3751,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (item) {
             this._scrollToItem(item.getContents().getKey());
 
+            // TODO маркер нужно ставить обязательно после выполнения скролла, как дождаться??
             const newEdgeVisibleItemIndexes = this._newScrollController.getEdgeVisibleItemIndexes();
             this._setMarkerAfterScroll(newEdgeVisibleItemIndexes.firstVisibleItemIndex)
         }
@@ -4510,6 +4532,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _afterRender(): void {
         this._updateItemsSizes();
+        this._handleScheduledScroll();
 
         let positionRestored = false;
 

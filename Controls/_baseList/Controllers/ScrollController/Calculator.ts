@@ -100,6 +100,11 @@ export class Calculator {
 
     // region EdgeVisibleItemIndexes
 
+    /**
+     * Считает и возвращает индексы крайних видимых элементов.
+     * Считаем именно по гетеру только при необходимости.
+     * Всегда пересчитывать не нужно, т.к. ,например, при скролле это бесмысленно.
+     */
     getEdgeVisibleItemIndexes(): IVisibleItemIndexes {
         return {
             firstVisibleItemIndex: this._getFirstVisibleItemIndex(),

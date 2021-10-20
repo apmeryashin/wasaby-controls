@@ -24,6 +24,25 @@ export interface IEnvironmentChangedParams {
     afterPlaceholderSize: number;
 }
 
+export type IScheduledScrollType = 'restoreScroll' | 'scrollToElement';
+
+export interface IScheduledRestoreScrollParams {
+    key: string;
+    border: 'top'|'bottom';
+    borderDistance: number;
+}
+
+export interface IScheduledScrollToElementParams {
+    itemIndex: number;
+    toBottom: boolean;
+    force: boolean;
+}
+
+export interface IScheduledScrollParams {
+    type: IScheduledScrollType;
+    params: IScheduledRestoreScrollParams | IScheduledScrollToElementParams;
+}
+
 export type IDirection = 'backward' | 'forward';
 
 export type IPageDirection = 'backward' | 'forward' | 'start' | 'end';
@@ -40,8 +59,6 @@ export interface IScrollControllerOptions extends
     IItemsSizesControllerOptions,
     IObserversControllerBaseOptions,
     ICalculatorOptions {
-    scrollTop: number;
-    totalCount: number;
     indexesChangedCallback: IIndexesChangedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     environmentChangedCallback: IEnvironmentChangedCallback;
