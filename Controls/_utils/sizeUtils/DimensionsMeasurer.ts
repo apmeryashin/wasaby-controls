@@ -65,6 +65,7 @@ const ZOOM_CLASS = 'controls-Zoom';
  * Модуль для измерения размеров элементов
  */
 class DimensionsMeasurer {
+    private _zoomCache: Map<HTMLElement, number> = new Map<HTMLElement, number>(); // Иначе на любой чих меряется DOM.
     /**
      * Расчет getBoundingClientRect с учетом зума
      * Значения приводятся к координатной сетке body
@@ -130,8 +131,8 @@ class DimensionsMeasurer {
      * Получение координат мышки/тача по нативному событию
      * Координаты возвращаются с учетом zoom элемента
      */
-    getRelativeMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent): IMouseCoords {
-        return this._getMouseCoordsByMouseEvent(event, false);
+    getRelativeMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent, zoom?: number): IMouseCoords {
+        return this._getMouseCoordsByMouseEvent(event, false, zoom);
     }
 
     /**
@@ -164,8 +165,13 @@ class DimensionsMeasurer {
         if (!(element instanceof HTMLElement)) {
             node = document.body;
         }
+
         let zoomValue = DEFAULT_ZOOM_VALUE;
-        let zoomElement = node.closest(`.${ZOOM_CLASS}`);
+        let zoomElement = node.closest(`.${ZOOM_CLASS}`) as HTMLElement;
+        if (this._zoomCache.has(zoomElement)) {
+            return this._zoomCache.get(zoomElement);
+        }
+        const baseZoomElement = zoomElement;
         while (zoomElement) {
             const parentZoomValue = window?.getComputedStyle(zoomElement)?.zoom;
             if (parentZoomValue) {
@@ -173,7 +179,14 @@ class DimensionsMeasurer {
             }
             zoomElement = zoomElement?.parentElement?.closest(`.${ZOOM_CLASS}`);
         }
+
+        this._zoomCache.set(baseZoomElement, zoomValue);
+
         return zoomValue;
+    }
+
+    resetCache(): void {
+        this._zoomCache.clear();
     }
 
     /**
@@ -210,22 +223,23 @@ class DimensionsMeasurer {
         };
     }
 
-    protected _getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent, scaleToBodyZoom: boolean): IMouseCoords {
+    protected _getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent, scaleToBodyZoom: boolean, zoom?: number): IMouseCoords {
         const eventType = event.type;
-        const zoom = scaleToBodyZoom ? this._getMainZoom() : this.getZoomValue(event.target as HTMLElement);
+        const target = scaleToBodyZoom ? document?.body : event.target;
+        const zoomValue = zoom || this.getZoomValue(target);
         if (event.touches || event.changedTouches) {
             let touches = event.touches;
             if (eventType === 'touchend') {
                 touches = event.changedTouches;
             }
             return {
-                x: touches[0].pageX / zoom,
-                y: touches[0].pageY / zoom
+                x: touches[0].pageX / zoomValue,
+                y: touches[0].pageY / zoomValue
             };
         } else if (typeof event.pageX === 'number') {
             return {
-                x: event.pageX / zoom,
-                y: event.pageY / zoom
+                x: event.pageX / zoomValue,
+                y: event.pageY / zoomValue
             };
         } else {
             Logger.error('DimensionsMeasurer: Event type must be must be mouse or touch event.');
