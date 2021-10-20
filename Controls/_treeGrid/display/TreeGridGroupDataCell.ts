@@ -55,6 +55,12 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
     }
 
     getContentClasses(): string {
+        // Если ячейка не должна рендериться через шаблон заголовка группы,
+        // то ей должны добавляться классы как у обычной ячейки
+        const isFirstDataColumn = this.getColumnIndex() === (this._$owner.hasMultiSelectColumn() ? 1 : 0);
+        if (!this._$column.groupNodeConfig && !isFirstDataColumn) {
+            return super.getContentClasses();
+        }
         let classes = '';
         classes += ' controls-Grid__row-cell__content_baseline_default';
         classes += this._getHorizontalPaddingClasses(this._$column.cellPadding);
