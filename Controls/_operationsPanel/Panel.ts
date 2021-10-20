@@ -100,6 +100,7 @@ export default class extends Control<IOperationsPanelOptions> {
         this._getDialogOpener().open({
             template: 'Controls/operationsPanel:Cloud',
             className: this._getPanelOffsetClasses(options.position, options.theme),
+			autofocus: false,
             opener: this,
             propStorageId: options.propStorageId,
             templateOptions: {
