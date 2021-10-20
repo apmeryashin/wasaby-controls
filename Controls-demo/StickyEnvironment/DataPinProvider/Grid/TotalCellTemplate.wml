@@ -5,11 +5,11 @@
             data="{{item.contents}}"
             topMargin="{{topMargin}}"
          >
-            <b>{{ item.contents.name }}</b>
+            <b>{{ item.contents.total }}</b>
          </Controls.stickyEnvironment:DataPinContainer>
       </ws:if>
       <ws:else>
-         {{item.contents.name}}
+         {{item.contents.total}}
       </ws:else>
    </ws:contentTemplate>
 </ws:partial>
