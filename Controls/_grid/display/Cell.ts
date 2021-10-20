@@ -16,11 +16,7 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
-import {
-    TFontColorStyle,
-    TFontSize,
-    TFontWeight
-} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
