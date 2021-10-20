@@ -1418,7 +1418,8 @@ const _private = {
                 } else if (moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
                 } else {
-                    self._shouldDrawNavigationButton = false;
+                    self._shouldDrawNavigationButton = _private.isCutNavigation(self._navigation) ?
+                        self._cutExpanded : false;
                 }
             }
 
