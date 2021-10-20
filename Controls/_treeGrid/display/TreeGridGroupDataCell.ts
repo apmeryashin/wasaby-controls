@@ -4,9 +4,7 @@ import {mixin} from 'Types/util';
 import {GridGroupCellMixin, IGridRowOptions} from 'Controls/grid';
 import TreeGridDataCell, {ITreeGridDataCellOptions} from 'Controls/_treeGrid/display/TreeGridDataCell';
 import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
-import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
-import {TFontSize} from 'Controls/_interface/IFontSize';
-import {TFontWeight} from 'Controls/_interface/IFontWeight';
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 const GROUP_CELL_TEMPLATE = 'Controls/treeGrid:GroupColumnTemplate';
 

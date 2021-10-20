@@ -7,9 +7,6 @@ import {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/Group
 
 import DataCell from './DataCell';
 import GroupRow from './GroupRow';
-import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
-import {TFontSize} from 'Controls/_interface/IFontSize';
-import {TFontWeight} from 'Controls/_interface/IFontWeight';
 
 export interface IOptions<T> {
     owner: GroupRow<T>;

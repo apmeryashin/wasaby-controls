@@ -9,8 +9,7 @@
                         template="Controls/list:GroupTemplate"
                         scope="{{ _options }}"
                         fontSize="m"
-                        fontColorStyle="secondary"
-                        fontWeight="bold"/>
+                        fontColorStyle="secondary"/>
             </ws:groupTemplate>
         </Controls.list:View>
     </Controls.scroll:Container>

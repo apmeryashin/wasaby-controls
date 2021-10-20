@@ -13,8 +13,7 @@
                                 scope="{{ _options }}"
                                 expanderAlign="right"
                                 fontColorStyle="secondary"
-                                fontSize="m"
-                                fontWeight="bold"/>
+                                fontSize="m"/>
                 </ws:groupTemplate>
             </Controls.grid:View>
         </Controls.list:Container>
