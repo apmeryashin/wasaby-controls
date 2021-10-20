@@ -256,7 +256,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _isInputActive(options: ILookupInputOptions): boolean {
-        return !options.readOnly && this._isInputVisible(options) && (this._isEmpty() || options.multiSelect);
+        return !options.readOnly && this._isInputVisible(options);
     }
 
     private _openInfoBox(event: SyntheticEvent, config: IHashMap<unknown>): void {
@@ -321,9 +321,9 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         this._notify('itemClick', [item, nativeEvent]);
     }
 
-    private _keyDown(event: SyntheticEvent, keyboardEvent): void {
+    private _keyDown(event: SyntheticEvent): void {
         const items = this._items;
-        const keyCodeEvent = keyboardEvent.nativeEvent.keyCode;
+        const keyCodeEvent = event.nativeEvent.keyCode;
         const hasValueInInput = this._getInputValue(this._options);
 
         if (keyCodeEvent === KEY_CODE_F2) {

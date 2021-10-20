@@ -6,19 +6,33 @@
    </ws:if>
    <ws:else data="{{_options.type === 'stack'}}">
       <div class="controls-StackTemplate-shadow"></div>
-      <Controls.popupTemplate:Stack
-         closeButtonVisibility="{{!_options.hideCross}}"
-         maximizeButtonVisibility="{{_options.canMaximize}}"
-         closeButtonViewMode="{{_options.closeButtonStyle}}"
-         on:maximized="_changeMaximizedMode()">
-         <ws:bodyContentTemplate>
-            <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
-         </ws:bodyContentTemplate>
-         <ws:toolbarContentTemplate>
-            <div name="toolbarBlock" attr:class="controls-CompoundArea_toolbar"></div>
-         </ws:toolbarContentTemplate>
-         <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
-      </Controls.popupTemplate:Stack>
+      <ws:if data="{{_hasRightPanel}}">
+         <Controls.popupTemplate:Stack
+                 closeButtonVisibility="{{!_options.hideCross}}"
+                 maximizeButtonVisibility="{{_options.canMaximize}}"
+                 closeButtonViewMode="{{_options.closeButtonStyle}}"
+                 on:maximized="_changeMaximizedMode()">
+            <ws:bodyContentTemplate>
+               <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
+            </ws:bodyContentTemplate>
+            <ws:toolbarContentTemplate>
+               <div name="toolbarBlock" attr:class="controls-CompoundArea_toolbar"></div>
+            </ws:toolbarContentTemplate>
+            <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
+         </Controls.popupTemplate:Stack>
+      </ws:if>
+      <ws:else>
+         <Controls.popupTemplate:Stack
+                 closeButtonVisibility="{{!_options.hideCross}}"
+                 maximizeButtonVisibility="{{_options.canMaximize}}"
+                 closeButtonViewMode="{{_options.closeButtonStyle}}"
+                 on:maximized="_changeMaximizedMode()">
+            <ws:bodyContentTemplate>
+               <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
+            </ws:bodyContentTemplate>
+            <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
+         </Controls.popupTemplate:Stack>
+      </ws:else>
    </ws:else>
    <ws:else>
       <Controls.popupTemplate:Dialog

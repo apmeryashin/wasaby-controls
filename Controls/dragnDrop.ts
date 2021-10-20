@@ -8,7 +8,7 @@
  * @includes ItemsEntity Controls/_dragnDrop/Entity/Items
  * @includes ResizingLine Controls/_dragnDrop/ResizingLine
  * @public
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  */
 
 /*
@@ -22,7 +22,7 @@
  * @includes ResizingLine Controls/_dragnDrop/ResizingLine
  * @includes IDragObject Controls/_dragnDrop/Container/IDragObject.typedef
  * @public
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  */
 
 export {default as ControllerClass} from 'Controls/_dragnDrop/ControllerClass';

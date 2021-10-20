@@ -68,42 +68,6 @@ define([
          });
       });
 
-      describe('_onClick', function() {
-         const event = {
-            nativeEvent: {
-               button: 0
-            }
-         };
-         it('should generate "linkClick" event', function() {
-            const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.LinkView, config);
-
-            sandbox.stub(component, '_notify');
-            component._onClick(event);
-
-            sinon.assert.calledWith(component._notify, 'linkClick');
-            sandbox.restore();
-         });
-
-         [{
-            title: 'control disabled',
-            options: { readOnly: true }
-         }, {
-            title: 'clickable option is false',
-            options: { clickable: false }
-         }].forEach(function(test) {
-            it(`should not generate "linkClick" event if ${test.title}`, function() {
-               const sandbox = sinon.sandbox.create(),
-                  component = calendarTestUtils.createComponent(dateRange.LinkView, test.options);
-
-               sandbox.stub(component, '_notify');
-               component._onClick(event);
-
-               sinon.assert.notCalled(component._notify);
-               sandbox.restore();
-            });
-         });
-      });
       describe('_beforeUpdate', function() {
          it('should update caption', function() {
             const component = calendarTestUtils.createComponent(dateRange.LinkView, config),

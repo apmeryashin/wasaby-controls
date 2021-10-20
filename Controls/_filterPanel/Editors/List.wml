@@ -28,7 +28,9 @@
                                 itemTemplate.item.key === _options.selectedAllKey}}"/>
        </ws:itemTemplate>
        <ws:multiSelectTemplate>
-          <ws:if data="{{_options.markerStyle !== 'primary'}}">
+          <ws:if data="{{_options.markerStyle !== 'primary' &&
+                        !(multiSelectTemplate.item.key === _options.emptyKey ||
+                        multiSelectTemplate.item.key === _options.selectedAllKey)}}">
              <ws:partial template="{{_circleTemplate}}"
                          style="{{_options.style}}"
                          attr:class="controls-ListEditor__multiSelect"
