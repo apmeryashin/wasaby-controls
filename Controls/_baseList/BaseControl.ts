@@ -4060,6 +4060,23 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (newOptions.searchValue || this._loadedBySourceController) {
             _private.tryLoadToDirectionAgain(this, null, newOptions);
         }
+        // если у нас не изменилось searchValue, оно не пустое и началась загрузка, то это ситуация описанная выше
+        // нужен завершить показ порционного поиска при начале подгрузки(перезагрузки) и начать показ после загрузки
+        if (
+            this._options.searchValue &&
+            this._options.searchValue === newOptions.searchValue &&
+            _private.isPortionedLoad(this)
+        ) {
+            if (loadStarted) {
+                this._indicatorsController.endDisplayPortionedSearch();
+            } else if (this._loadedBySourceController) {
+                const hasMore = _private.getHasMoreData(this);
+                if (hasMore.up || hasMore.down) {
+                    const direction = hasMore.down ? 'bottom' : 'top';
+                    this._indicatorsController.startDisplayPortionedSearch(direction);
+                }
+            }
+        }
 
         if (!loadStarted) {
             _private.doAfterUpdate(this, () => {
