@@ -276,7 +276,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
 
 /**
  * @name Controls/_tree/interface/ITreeControl#deepReload
- * @cfg {Boolean} Опередяет, нужно ли выполнять перезагрузку с сохранением развернутых узлов.
+ * @cfg {Boolean} Определяет, нужно ли выполнять перезагрузку с сохранением развернутых узлов.
  * @remark
  * Перезагрузка выполняется с сохранением развернутых узлов, даже при изменении опций filter, source, sorting и тд.
  * В поле фильтра, указанное в parentProperty будет отправлен массив развернутых узлов.
