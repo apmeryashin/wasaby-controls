@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/toggle/Checkbox/Ellipsis/Template');
+import controlTemplate = require('wml!Controls-demo/toggle/Checkbox/Multiline/Template');
 
 class ViewModes extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;

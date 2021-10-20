@@ -47,9 +47,9 @@
     <div class="controlsDemo__cell demo-checkboxIndex__withIcon">
         <Router.router:Reference attr:class="controls-text-label"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/toggle/Checkbox/Ellipsis/Index' }}">
+                                 app="{{ 'Controls-demo/toggle/Checkbox/Multiline/Index' }}">
             <a href="{{content.href}}">Настройка с обрезанием текста чекбокса</a>
         </Router.router:Reference>
-        <Controls-demo.toggle.Checkbox.Ellipsis.Index/>
+        <Controls-demo.toggle.Checkbox.Multiline.Index/>
     </div>
 </div>

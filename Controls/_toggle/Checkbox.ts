@@ -26,7 +26,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
     IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
    triState?: boolean;
    value?: boolean | null;
-   ellipsis?: boolean;
+   multiline?: boolean;
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -112,7 +112,7 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
          iconStyle: 'secondary',
          validationStatus: 'valid',
          contrastBackground: false,
-         ellipsis: false
+         multiline: true
       };
    }
 
@@ -313,12 +313,12 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @see triState
  */
 /**
- * @name Controls/_toggle/Checkbox#ellipsis
+ * @name Controls/_toggle/Checkbox#multiline
  * @cfg {boolean} Поведение текста, если он не умещается.
- * @variant true Текст обрезается многоточием.
- * @variant false Текст разбивается на несколько строк.
- * @default false
- * @demo Controls-demo/toggle/Checkbox/Ellipsis/Index
+ * @variant false Текст обрезается многоточием.
+ * @variant true Текст разбивается на несколько строк.
+ * @default true
+ * @demo Controls-demo/toggle/Checkbox/Multiline/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#icon
