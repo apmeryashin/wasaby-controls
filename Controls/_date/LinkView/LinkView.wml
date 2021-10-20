@@ -7,7 +7,7 @@
                 tooltip="{{ _options.tooltip }}"
                 styleClass="{{ _styleClass }}"
                 caption="{{ _caption }}"
-                on:mousedown="_onClick()"
+                on:mousedown="_mouseDownHandler()"
                 attr:class="controls-DateLinkView__button-value"
                 attr:data-qa="DateLinkView__template"
     />

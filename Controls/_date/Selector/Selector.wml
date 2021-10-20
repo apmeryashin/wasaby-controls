@@ -1,11 +1,11 @@
-<Controls.date:LinkView
+<Controls._date.LinkView
         name="linkView"
         scope="{{_options}}"
-        value="{{ _startValue }}"
+        value="{{ _options.value }}"
         fontColorStyle="{{_options.fontColorStyle}}"
         fontWeight="{{ _options.fontWeight }}"
         on:linkClick="openPopup()"
-        on:rangeChanged="_rangeChangedHandler()"
+        on:valueChanged="_rangeChangedHandler()"
         on:mouseenter="_mouseEnterHandler()"
         on:mouseleave="_mouseLeaveHandler()"
         on:resetButtonClick="_resetButtonClickHandler()"

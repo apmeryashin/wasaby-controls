@@ -18,7 +18,6 @@ export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteD
 export {default as ILinkView} from './_dateRange/interfaces/ILinkView';
 export {default as WeekdayFormatter} from './_dateRange/WeekdayFormatter';
 export {default as keyboardPeriodController} from './_dateRange/Utils/keyboardPeriodController';
-export {default as getPopupName} from './_dateRange/Utils/getPopupName';
 export {default as DateRangeContextProvider} from './_dateRange/DateRangeContextProvider';
 export {default as ArrowButtonConsumer} from './_dateRange/ArrowButtonConsumer';
 export {default as RangeSelectorConsumer} from './_dateRange/RangeSelectorConsumer';
@@ -27,7 +26,6 @@ export {default as RangeShortSelectorConsumer} from './_dateRange/RangeShortSele
 export {IDateRangeSelectableOptions, IRangeSelectableOptions, TSelectionType} from 'Controls/_dateRange/interfaces/IDateRangeSelectable';
 export {default as IMonthCaptionTemplate, IMonthCaptionTemplateOptions} from 'Controls/_dateRange/interfaces/IMonthCaptionTemplate';
 export {IDateRangeOptions} from 'Controls/_dateRange/interfaces/IDateRange';
-export {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
 import * as MonthCaptionTemplate from 'wml!Controls/_dateRange/DateSelector/monthCaptionTemplate';
 export {default as ICaptionFormatter} from 'Controls/_dateRange/interfaces/ICaptionFormatter';
@@ -61,7 +59,6 @@ export {
  * @includes IDayTemplate Controls/_interface/IDayTemplate
  * @includes IRangeInputTag Controls/_dateRange/interfaces/IRangeInputTag
  * @includes IDateSelector Controls/_dateRange/interfaces/IDateSelector
- * @includes IDatePopupType Controls/_dateRange/interfaces/IDatePopupType
  * @public
  * @author Красильников А.С.
  */

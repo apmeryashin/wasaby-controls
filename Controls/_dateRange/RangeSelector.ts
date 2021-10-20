@@ -8,8 +8,7 @@ import {Popup as PopupUtil, Base as dateUtils} from 'Controls/dateUtils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import * as monthCaptionTemplate from 'wml!Controls/_dateRange/DateSelector/monthCaptionTemplate';
-import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
-import getPopupName from 'Controls/_dateRange/Utils/getPopupName';
+import {getDatePopupName, IDatePopupTypeOptions} from 'Controls/date';
 import 'css!Controls/dateRange';
 
 interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelectorOptions, IDatePopupTypeOptions {
@@ -155,7 +154,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         return {
             ...PopupUtil.getCommonOptions(this),
             target: container,
-            template: getPopupName(this._options.datePopupType),
+            template: getDatePopupName(this._options.datePopupType),
             className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
