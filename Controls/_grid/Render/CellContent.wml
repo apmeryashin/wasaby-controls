@@ -51,7 +51,7 @@
                 <!-- Контент по умолчанию, обрезка длинного текста с многоточием -->
                 <div class="{{ (gridColumn || itemData).getTextOverflowClasses() }}">
                     <ws:partial template="{{ (gridColumn || itemData).getCellContentRender() }}"
-                                attr:title="{{ (gridColumn || itemData).getTextOverflowTitle() }}"
+                                title="{{ (gridColumn || itemData).getTextOverflowTitle() }}"
                                 gridColumn="{{ gridColumn || itemData }}"
                                 scope="{{ (gridColumn || itemData).getCellContentRenderOptions(fontColorStyle, fontSize, fontWeight) }}"/>
                 </div>

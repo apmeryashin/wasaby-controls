@@ -2,5 +2,6 @@
         fontColorStyle="{{fontColorStyle}}"
         fontSize="{{fontSize}}"
         fontWeight="{{fontWeight}}"
+        title="{{title}}"
         value="{{value}}"
         scope="{{displayTypeOptions}}"/>
