@@ -80,6 +80,7 @@ export default class extends Control<IOperationsPanelOptions> {
         this._operationsController.setOperationsPanelVisible(true);
         this._getDialogOpener().open({
             template: 'Controls/operationsPanel:Cloud',
+            autofocus: false,
             opener: this,
             className: 'controls-operationPanel__offset',
             propStorageId: options.propStorageId,
