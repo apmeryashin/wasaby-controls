@@ -12,8 +12,8 @@ import type {
     IActiveElementIndex,
     IDirection,
     IEnvironmentChangedParams,
-    IItemsRange,
-    IVisibleItemIndexes
+    IEdgeItem,
+    IIndexesChangedParams
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
@@ -21,7 +21,7 @@ export interface IActiveElementIndexChanged extends IActiveElementIndex {
 }
 
 export interface ICalculatorResult extends
-    IItemsRange,
+    IIndexesChangedParams,
     IEnvironmentChangedParams,
     IActiveElementIndexChanged {
     indexesChanged: boolean;
@@ -96,44 +96,104 @@ export class Calculator {
         this._itemsSizes = itemsSizes;
     }
 
+    getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
+        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
+        // const compensation = getOffsetTop(itemsContainer);
+
+        let scrollTop = 0;
+
+        const item = this._itemsSizes.find((it) => it.key === edgeItem.key);
+        if (item) {
+            if (edgeItem.direction === 'backward') {
+                if (edgeItem.border === 'forward') {
+                    scrollTop = item.offsetTop + (item.height - edgeItem.borderDistance);
+                } else {
+                    scrollTop = item.offsetTop + edgeItem.borderDistance;
+                }
+            } else {
+                const viewportHeight = this._viewportSize;
+                scrollTop = item.offsetTop + edgeItem.borderDistance - viewportHeight;
+            }
+        }
+
+        return scrollTop;
+    }
+
     // endregion Getters/Setters
 
     // region EdgeVisibleItemIndexes
 
     /**
-     * Считает и возвращает индексы крайних видимых элементов.
+     * Считает и возвращает крайний видимый элемент.
      * Считаем именно по гетеру только при необходимости.
      * Всегда пересчитывать не нужно, т.к. ,например, при скролле это бесмысленно.
      */
-    getEdgeVisibleItemIndexes(): IVisibleItemIndexes {
-        return {
-            firstVisibleItemIndex: this._getFirstVisibleItemIndex(),
-            lastVisibleItemIndex: this._getLastVisibleItemIndex()
-        };
+    getEdgeVisibleItem(direction: IDirection): IEdgeItem {
+        return this._getEdgeVisibleItem(direction);
     }
 
-    /**
-     * Возвращает индекс первого полностью видимого элемента.
-     * Определяет это следующий образом: находим элемент позиция(offsetTop) которого больше scrollTop
-     * @private
-     */
-    private _getFirstVisibleItemIndex(): number {
-        return this._itemsSizes.findIndex((it) => it.offsetTop >= this._scrollTop);
-    }
+    private _getEdgeVisibleItem(direction: IDirection): IEdgeItem {
+        const viewportHeight = this._viewportSize;
 
-    /**
-     * Возвращает индекс последнего полностью видимого элемента.
-     * Определяет это следующий образом: считает позицию нижней границы элемента, считает позицию нижней границы вьюпорта,
-     * находит элемент у которого уже скрылась нижняя граница, берет индекс предыдущего элемента(он точно полностью показан).
-     * @private
-     */
-    private _getLastVisibleItemIndex(): number {
-        const itemIndexWithHiddenBottomBorder = this._itemsSizes.findIndex((it) => {
-            const bottomBorderItemPosition = it.offsetTop + it.height;
-            const bottomBorderViewportPosition = this._scrollTop + this._viewportSize;
-            return bottomBorderItemPosition > bottomBorderViewportPosition;
+        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
+        // TODO нет доступа к дому.
+        const topCompensation = 0;
+        /*const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
+        const topCompensation = scrollContent ?
+            (scrollContent.getBoundingClientRect().top - itemsContainer.getBoundingClientRect().top) :
+            getOffsetTop(itemsContainer);*/
+        const scrollTop = this._scrollTop;
+
+        let edgeItemParams: IEdgeItem;
+
+        this._itemsSizes.some((item) => {
+            // TODO у нас нет доступа к дом элементу
+            // if (item.className.includes('controls-ListView__hiddenContainer')) {
+            //     return false;
+            // }
+
+            const itemBorderBottom = Math.round(item.offsetTop) + Math.round(item.height);
+
+            // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
+            let edgeBorder = scrollTop + topCompensation;
+            // при скроле вниз - на границе тот элемент, нижняя граница которого больше scrollTop + viewportHeight
+            if (direction === 'forward') {
+                // нижняя граница - это верхняя + размер viewPort
+                edgeBorder += viewportHeight;
+            }
+            // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
+            if (itemBorderBottom >= edgeBorder || this._itemsSizes.indexOf(item) === this._itemsSizes.length - 1) {
+                let borderDistance;
+                let border;
+                if (direction === 'forward') {
+                    // от верхней границы элемента до нижней границы viewPort
+                    // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
+                    const bottomViewportBorder = scrollTop + viewportHeight;
+                    border = 'backward';
+                    borderDistance = bottomViewportBorder - item.offsetTop;
+                } else {
+                    // запись - выше, чем верхняя граница viewPort
+                    if (scrollTop >= item.offsetTop) {
+                        border = 'forward';
+                        borderDistance = itemBorderBottom - scrollTop;
+                    } else {
+                        border = 'backward';
+                        borderDistance = scrollTop - item.offsetTop;
+                    }
+                }
+                edgeItemParams = {
+                    key: item.key,
+                    direction,
+                    border,
+                    borderDistance
+                };
+                return true;
+            }
+
+            return false;
         });
-        return itemIndexWithHiddenBottomBorder - 1;
+
+        return edgeItemParams;
     }
 
     // endregion EdgeVisibleItemIndexes
@@ -148,22 +208,19 @@ export class Calculator {
     shiftRangeToDirection(direction: IDirection): ICalculatorResult {
         const oldRange = this._range;
 
-        // если в заданном направлении больше нет элементов, то ничего не делаем
-        if (!this._hasItemsToDirection(direction)) {
-            return this._getRangeChangeResult(oldRange);
+        if (this._hasItemsToDirection(direction)) {
+            this._range = shiftRangeBySegment({
+                currentRange: this._range,
+                direction,
+                pageSize: this._virtualScrollConfig.pageSize,
+                segmentSize: this._virtualScrollConfig.segmentSize,
+                totalCount: this._totalCount
+            });
+
+            this._updatePlaceholders(this._range);
         }
 
-        const newRange = shiftRangeBySegment({
-            currentRange: this._range,
-            direction,
-            pageSize: this._virtualScrollConfig.pageSize,
-            segmentSize: this._virtualScrollConfig.segmentSize,
-            totalCount: this._totalCount
-        });
-
-        this._updatePlaceholders(this._range);
-
-        return this._getRangeChangeResult(newRange);
+        return this._getRangeChangeResult(oldRange, direction);
     }
 
     /**
@@ -187,9 +244,11 @@ export class Calculator {
      */
     shiftRangeToIndex(index: number): ICalculatorResult {
         const oldRange = this._range;
+        let direction = null;
 
         // если элемент уже внутри диапазона, то ничего не делаем.
         if (!this._isItemInRange(index)) {
+            direction = index > this._range.end ? 'forward' : 'backward';
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
                 start: 0,
@@ -199,7 +258,7 @@ export class Calculator {
             this._updatePlaceholders(this._range);
         }
 
-        return this._getRangeChangeResult(oldRange);
+        return this._getRangeChangeResult(oldRange, direction);
     }
 
     /**
@@ -221,6 +280,7 @@ export class Calculator {
      */
     shiftRangeToScrollPosition(scrollPosition: number): ICalculatorResult {
         const oldRange = this._range;
+        const direction = scrollPosition > this._scrollTop ? 'forward' : 'backward';
 
         this._range = getRangeByScrollPosition({
             itemsSizes: this._itemsSizes,
@@ -232,7 +292,7 @@ export class Calculator {
 
         this._updatePlaceholders(this._range);
 
-        return this._getRangeChangeResult(oldRange);
+        return this._getRangeChangeResult(oldRange, direction);
     }
 
     // endregion ShiftRangeByScrollPosition
@@ -298,7 +358,7 @@ export class Calculator {
 
         this._updatePlaceholders(this._range);
 
-        return this._getRangeChangeResult(oldRange);
+        return this._getRangeChangeResult(oldRange, direction);
     }
 
     /**
@@ -326,7 +386,7 @@ export class Calculator {
 
         this._updatePlaceholders(this._range);
 
-        return this._getRangeChangeResult(oldRange);
+        return this._getRangeChangeResult(oldRange, direction);
     }
 
     /**
@@ -351,7 +411,7 @@ export class Calculator {
 
         this._updatePlaceholders(this._range);
 
-        return this._getRangeChangeResult(oldRange);
+        return this._getRangeChangeResult(oldRange, direction);
     }
 
     /**
@@ -373,7 +433,7 @@ export class Calculator {
 
         this._updatePlaceholders(this._range);
 
-        return this._getRangeChangeResult(oldRange);
+        return this._getRangeChangeResult(oldRange, 'forward');
     }
 
     // endregion HandleCollectionChanges
@@ -386,11 +446,12 @@ export class Calculator {
         };
     }
 
-    private _getRangeChangeResult(oldRange: IRange): ICalculatorResult {
+    private _getRangeChangeResult(oldRange: IRange, shiftDirection: IDirection): ICalculatorResult {
         return {
             startIndex: this._range.start,
             endIndex: this._range.end,
             indexesChanged: oldRange.start !== this._range.start || oldRange.end !== this._range.end,
+            shiftDirection,
 
             hasItemsBackward: this._hasItemsToDirection('backward'),
             hasItemsForward: this._hasItemsToDirection('forward'),

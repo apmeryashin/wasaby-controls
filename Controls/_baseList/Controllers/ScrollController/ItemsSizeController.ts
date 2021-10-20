@@ -1,5 +1,6 @@
 import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
+import { CrudEntityKey } from 'Types/source';
 
 export interface IItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
@@ -7,6 +8,7 @@ export interface IItemsSizesControllerOptions {
 }
 
 export interface IItemSize {
+    key: CrudEntityKey;
     height: number;
     offsetTop: number;
 }
@@ -92,6 +94,7 @@ export class ItemsSizesController {
             itemsElements.forEach((element) => {
                 // todo add support for Controls/grid and display: contents
                 this._itemsSizes[position] = {
+                    key: (element as HTMLElement).getAttribute('item-key'),
                     height: (element as HTMLElement).offsetHeight,
                     offsetTop: (element as HTMLElement).offsetTop
                 };

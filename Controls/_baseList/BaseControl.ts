@@ -86,7 +86,7 @@ import {
     IDirection as IScrollControllerDirection,
     IItemsRange,
     IEnvironmentChangedParams,
-    IPageDirection, IScheduledScrollParams, IScheduledScrollToElementParams
+    IPageDirection, IScheduledScrollParams, IScheduledScrollToElementParams, IEdgeItem, IIndexesChangedParams
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
@@ -3661,13 +3661,24 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._newScrollController.resetItems(this._listViewModel.getCount());
     }
 
-    private _indexesChangedCallback(itemsRange: IItemsRange): void {
-        this._scheduleUpdateItemsSizes(itemsRange);
+    private _indexesChangedCallback(params: IIndexesChangedParams): void {
+        this._scheduleUpdateItemsSizes({
+            startIndex: params.startIndex,
+            endIndex: params.endIndex
+        });
+
+        const edgeVisibleItem = this._newScrollController.getEdgeVisibleItem(params.shiftDirection);
+        if (!this._listViewModel.getItemBySourceKey(edgeVisibleItem.key)) {
+            throw new Error('Controls/_baseList/BaseControl::_indexesChangedCallback | ' +
+                'Внутренняя ошибка списков! Крайний видимый элемент не найден в Collection.');
+        }
         this._scheduleScroll({
             type: 'restoreScroll',
-            params: {key: '', border: 'top', borderDistance: 0} // TODO restore посчитать параметры
+            params: edgeVisibleItem
         });
-        console.error('indexChangedCallback', itemsRange);
+
+
+        console.error('indexChangedCallback', params);
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
@@ -3702,13 +3713,31 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._scheduledScrollParams) {
             switch (this._scheduledScrollParams.type) {
                 case 'restoreScroll':
-                    // TODO restore
+                    const edgeItem = this._scheduledScrollParams.params as IEdgeItem;
+                    let directionToRestoreScroll = edgeItem.direction;
+                    if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
+                        directionToRestoreScroll = 'backward';
+                    }
+                    if (directionToRestoreScroll) {
+                        const newScrollTop = this._newScrollController.getScrollTopToEdgeItem(edgeItem);
+                        this._notify('doScroll', [newScrollTop, true], { bubbling: true });
+                        this._hasItemWithImageChanged = false;
+                    }
                     break;
                 case 'scrollToElement':
-                    const params = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
-                    this._scrollToElement(params.itemIndex, params.toBottom, params.force);
+                    const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
+                    this._scrollToElement(
+                        scrollToElementParams.itemIndex,
+                        scrollToElementParams.toBottom,
+                        scrollToElementParams.force
+                    );
                     break;
+                default:
+                    throw new Error('Controls/_baseList/BaseControl::_handleScheduledScroll | ' +
+                        'Внутренняя ошибка списков! Неопределенный тип запланированного скролла.');
             }
+
+            this._scheduledScrollParams = null;
         }
     }
 
@@ -3738,11 +3767,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
      * @private
      */
     private _scrollToPage(page: IPageDirection): void {
-        this._newScrollController.getEdgeVisibleItemIndexes()
-        const { firstVisibleItemIndex, lastVisibleItemIndex } = this._newScrollController.getEdgeVisibleItemIndexes();
         let itemIndex;
         if (page === 'forward' || page === 'backward') {
-            itemIndex = page === 'forward' ? lastVisibleItemIndex : firstVisibleItemIndex;
+            const edgeItem = this._newScrollController.getEdgeVisibleItem(page);
+            itemIndex = this._listViewModel.getIndexByKey(edgeItem.key);
         } else {
             itemIndex = page === 'start' ? 0 : this._listViewModel.getCount() - 1;
         }
@@ -3750,10 +3778,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const item = this._listViewModel.getItemBySourceIndex(itemIndex);
         if (item) {
             this._scrollToItem(item.getContents().getKey());
-
-            // TODO маркер нужно ставить обязательно после выполнения скролла, как дождаться??
-            const newEdgeVisibleItemIndexes = this._newScrollController.getEdgeVisibleItemIndexes();
-            this._setMarkerAfterScroll(newEdgeVisibleItemIndexes.firstVisibleItemIndex)
+            // TODO поставить маркер после скролла
         }
     }
 
@@ -3775,12 +3800,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _keyDownHome(event: SyntheticEvent): void {
         event.stopPropagation();
         this._scrollToPage('start');
-    }
-
-    private _setMarkerAfterScroll(itemIndex: number): void {
-        const item = this._listViewModel.getItemBySourceIndex(itemIndex);
-        const markedKey = _private.getMarkerController(this).getSuitableMarkedKey(item);
-        this._changeMarkedKey(markedKey);
     }
 
     protected _afterMount(): void {

@@ -1,15 +1,15 @@
 import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
 import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversController } from './ObserversController';
 import { Calculator, IActiveElementIndexChanged, ICalculatorOptions, ICalculatorResult } from './Calculator';
+import {CrudEntityKey} from 'Types/source';
 
 export interface IItemsRange {
     startIndex: number;
     endIndex: number;
 }
 
-export interface IVisibleItemIndexes {
-    firstVisibleItemIndex: number;
-    lastVisibleItemIndex: number;
+export interface IIndexesChangedParams extends IItemsRange {
+    shiftDirection: IDirection;
 }
 
 export interface IActiveElementIndex {
@@ -26,9 +26,10 @@ export interface IEnvironmentChangedParams {
 
 export type IScheduledScrollType = 'restoreScroll' | 'scrollToElement';
 
-export interface IScheduledRestoreScrollParams {
-    key: string;
-    border: 'top'|'bottom';
+export interface IEdgeItem {
+    key: CrudEntityKey;
+    direction: IDirection;
+    border: IDirection;
     borderDistance: number;
 }
 
@@ -40,14 +41,14 @@ export interface IScheduledScrollToElementParams {
 
 export interface IScheduledScrollParams {
     type: IScheduledScrollType;
-    params: IScheduledRestoreScrollParams | IScheduledScrollToElementParams;
+    params: IEdgeItem | IScheduledScrollToElementParams;
 }
 
 export type IDirection = 'backward' | 'forward';
 
 export type IPageDirection = 'backward' | 'forward' | 'start' | 'end';
 
-export type IIndexesChangedCallback = (itemsRange: IItemsRange) => void;
+export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
 
 export type IEnvironmentChangedCallback = (params: IEnvironmentChangedParams) => void;
 
@@ -208,8 +209,12 @@ export class ScrollController {
 
     // region Scroll
 
-    getEdgeVisibleItemIndexes(): IVisibleItemIndexes {
-        return this._calculator.getEdgeVisibleItemIndexes();
+    getEdgeVisibleItem(direction: IDirection): IEdgeItem {
+        return this._calculator.getEdgeVisibleItem(direction);
+    }
+
+    getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
+        return this._calculator.getScrollTopToEdgeItem(edgeItem);
     }
 
     /**
@@ -300,7 +305,8 @@ export class ScrollController {
         if (result.indexesChanged) {
             this._indexesChangedCallback({
                 startIndex: result.startIndex,
-                endIndex: result.endIndex
+                endIndex: result.endIndex,
+                shiftDirection: result.shiftDirection
             });
         }
     }
