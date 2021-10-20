@@ -260,14 +260,16 @@ class Tumbler extends ButtonGroupBase<ITumblerOptions> {
 
     private _setBackgroundPosition(): void {
         if (this._backgroundPosition.isEmpty) {
+            const tumblerClientRect = this._container.getBoundingClientRect();
             this._backgroundPosition = {isEmpty: false};
             this._options.items.forEach((item: Model, index: number) => {
                 const key = item.get(this._options.keyProperty);
+                const clientRect = (this._children['TumblerButton' + index] as HTMLDivElement).getBoundingClientRect();
                 this._backgroundPosition[key] = {
-                    width: (this._children['TumblerButton' + index] as HTMLDivElement).offsetWidth,
-                    height: (this._children['TumblerButton' + index] as HTMLDivElement).offsetHeight,
-                    left: (this._children['TumblerButton' + index] as HTMLDivElement).offsetLeft,
-                    top: (this._children['TumblerButton' + index] as HTMLDivElement).offsetTop
+                    width: clientRect.width,
+                    height: clientRect.height,
+                    left: clientRect.left - tumblerClientRect.left,
+                    top: clientRect.top - tumblerClientRect.top
                 };
             });
         }
