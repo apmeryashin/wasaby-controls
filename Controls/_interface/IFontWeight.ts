@@ -13,7 +13,7 @@ export interface IFontWeightOptions {
      * @default default
      * @demo Controls-demo/Decorator/Money/FontWeight/Index
      */
-    fontWeight: TFontWeight;
+    fontWeight?: TFontWeight;
 }
 
 /**

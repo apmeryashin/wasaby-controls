@@ -1,5 +1,6 @@
 <Controls.decorator:Number
-        attr:class="{{fontColorStyle ? 'controls-text-' + fontColorStyle}}
-        {{fontSize ? 'controls-fontsize-' + fontSize}}"
+        fontColorStyle="{{fontColorStyle}}"
+        fontSize="{{fontSize}}"
+        fontWeight="{{fontWeight}}"
         value="{{value}}"
         scope="{{displayTypeOptions}}"/>

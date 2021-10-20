@@ -10,13 +10,20 @@ import {
 } from 'Types/entity';
 import {TemplateFunction} from 'UI/Base';
 
-import {IColumn, IColspanParams, TColumnSeparatorSize, ICellPadding} from './interface/IColumn';
+import {IColumn, IColspanParams, TColumnSeparatorSize, ICellPadding, IDisplayTypeOptions} from './interface/IColumn';
 
 import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
-import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
+import {
+    IFontColorStyleOptions,
+    IFontSizeOptions,
+    IFontWeightOptions,
+    TFontColorStyle,
+    TFontSize,
+    TFontWeight
+} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
@@ -24,6 +31,10 @@ const NUMBER_RENDER = 'Controls/grid:NumberTypeRender';
 const DATE_RENDER = 'Controls/grid:DateTypeRender';
 const STRING_RENDER = 'Controls/grid:StringTypeRender';
 const STRING_SEARCH_RENDER = 'Controls/grid:StringSearchTypeRender';
+
+interface IContentRenderOptions extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions {
+    displayTypeOptions: IDisplayTypeOptions;
+}
 
 export interface IOptions<T extends Model = Model> extends IColspanParams {
     owner: Row<T>;
@@ -135,6 +146,25 @@ export default class Cell<
             default:
                 return STRING_RENDER;
         }
+    }
+
+    /**
+     * Предоставляет набор опций для декоратора,
+     * если контент колонки выводится через декоратор
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight Начертание шрифта
+     */
+    getCellContentRenderOptions(templateFontColorStyle?: TFontColorStyle,
+                                templateFontSize?: TFontSize,
+                                templateFontWeight?: TFontWeight): IContentRenderOptions {
+        const columnConfig: IColumn = this.getColumnConfig();
+        return {
+            displayTypeOptions: columnConfig.displayTypeOptions,
+            fontColorStyle: columnConfig.fontColorStyle || templateFontColorStyle,
+            fontSize: columnConfig.fontSize || templateFontSize,
+            fontWeight: columnConfig.fontWeight || templateFontWeight
+        };
     }
 
     shouldDisplayItemActions(): boolean {

@@ -34,7 +34,7 @@
                                             value="{{ (gridColumn || itemData).getDefaultDisplayValue() }}"
                                             searchValue="{{ (gridColumn || itemData).getSearchValue() }}"
                                             gridColumn="{{(gridColumn || itemData)}}"
-                                            scope="{{ (gridColumn || itemData).config }}"/>
+                                            scope="{{ (gridColumn || itemData).getCellContentRenderOptions(fontColorStyle, fontSize, fontWeight) }}"/>
                             </div>
                         </ws:if>
                         <ws:else>
@@ -57,7 +57,7 @@
                                 value="{{(gridColumn || itemData).getDefaultDisplayValue()}}"
                                 searchValue="{{(gridColumn || itemData).getSearchValue()}}"
                                 gridColumn="{{(gridColumn || itemData)}}"
-                                scope="{{(gridColumn || itemData).config}}"/>
+                                scope="{{ (gridColumn || itemData).getCellContentRenderOptions(fontColorStyle, fontSize, fontWeight) }}"/>
                 </div>
             </ws:if>
             <ws:else>
