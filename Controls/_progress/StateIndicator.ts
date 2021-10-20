@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {Logger} from 'UI/Utils';
+import Utils = require('Controls/_progress/Utils');
 import stateIndicatorTemplate = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!Controls/progress';
@@ -12,7 +12,6 @@ const defaultColors = [
 ];
 const defaultScaleValue = 10;
 const maxPercentValue = 100;
-
 
 /**
  * Интерфейс опций для конфигурации категорий.
@@ -135,24 +134,9 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    private _percentageDifferences: number[] = [];
 
    private _checkData(opts: IStateIndicatorOptions): void {
-      let sum = 0;
-      if (isNaN(opts.scale)) {
-          Logger.error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it is non-numeric value', this);
-      }
-      if (opts.scale > maxPercentValue || opts.scale < 1) {
-          Logger.error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it must be in range (0..100]', this);
-      }
-
-      sum = opts.data.map(Object).reduce((curSum, d) => {
-         return curSum + Math.max(d.value, 0);
-      }, 0);
-
-      if (isNaN(sum)) {
-          Logger.error('StateIndicator', 'Data is incorrect, it contains non-numeric values', this);
-      }
-      if (sum > maxPercentValue) {
-          Logger.error('StateIndicator', 'Data is incorrect. Values total is greater than 100%', this);
-      }
+      Utils.isNumeric(opts.scale, 'StateIndicator', 'Scale');
+      Utils.isValueInRange(opts.scale, 1, maxPercentValue, 'StateIndicator', 'Scale');
+      Utils.isSumInRange(opts.data, maxPercentValue, 'StateIndicator');
    }
 
    private _setColors(data: IIndicatorCategory[]): string[] {
@@ -176,7 +160,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       let excess;
       this._percentageDifferences = [];
 
-      if (opts.scale <= 0 || opts.scale > maxPercentValue) {
+      if (!Utils.isValueInRange(opts.scale, 1, maxPercentValue)) {
          correctScale = defaultScaleValue;
       }
       for (let i = 0; i < Math.min(opts.data.length); i++) {
@@ -237,7 +221,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    private _applyNewState(opts: IStateIndicatorOptions): void {
       let correctScale: number = opts.scale;
       this._checkData(opts);
-      if (opts.scale <= 0 || opts.scale > maxPercentValue) {
+      if (!Utils.isValueInRange(opts.scale, 1, maxPercentValue)) {
          correctScale = defaultScaleValue;
       }
       this._numSectors = Math.floor(maxPercentValue / correctScale);
@@ -258,7 +242,6 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
          this._applyNewState(opts);
       }
    }
-
 
    static getDefaultOptions(): object {
       return {

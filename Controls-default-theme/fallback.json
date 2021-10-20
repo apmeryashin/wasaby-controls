@@ -1249,6 +1249,7 @@
 
   "--unselected_scale_color_progressBar": "var(--readonly_color)",
   "--scale_thickness_progressBar": "3px",
+  "--scale_thickness_stateBar": "4px",
   "--padding-horizontal_progressStateIndicator": "var(--offset_xs)",
   "--item_height_l_progressStateIndicator": "12px",
   "--item_width_l_progressStateIndicator": "10px",

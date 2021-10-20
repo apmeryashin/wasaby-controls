@@ -53,14 +53,12 @@ describe('Controls/progress:StateBar', () => {
     });
 
     describe('_applyNewState', () => {
-        let loggerMock;
         beforeEach(() => {
             stateBar = new StateBar({});
-            loggerMock = sandbox.mock(Logger).expects('error');
+            sandbox.stub(Logger, 'error');
         });
 
         it('Установка значений по умолчанию', () => {
-            loggerMock.never();
             stateBar._applyNewState({
                 data: [{value: 10}]
             });
@@ -69,11 +67,9 @@ describe('Controls/progress:StateBar', () => {
                 title: '',
                 value: 10
             }], 'Массив секторов отличается от ожидаемого');
-            loggerMock.verify();
         });
 
         it('Переданные сектора имеют весь набор опций', () => {
-            loggerMock.never();
             stateBar._applyNewState({
                 data: [{
                     value: 10,
@@ -96,11 +92,9 @@ describe('Controls/progress:StateBar', () => {
                 style: 'danger',
                 title: 'test3'
             }], 'Массив секторов отличается от ожидаемого');
-            loggerMock.verify();
         });
 
         it('Сумма секторов превышает 100', () => {
-            loggerMock.exactly(2);
             stateBar._applyNewState({
                 data: [{
                     value: 20,
@@ -129,11 +123,9 @@ describe('Controls/progress:StateBar', () => {
                 style: 'warning',
                 title: 'test3'
             }], 'Массив секторов отличается от ожидаемого');
-            loggerMock.verify();
         });
 
         it('Сектора содержат значения 0 и 100', () => {
-            loggerMock.never();
             stateBar._applyNewState({
                 data: [{
                     value: 0,
@@ -154,11 +146,9 @@ describe('Controls/progress:StateBar', () => {
                 style: 'danger',
                 title: 'test2'
             }], 'Массив секторов отличается от ожидаемого');
-            loggerMock.verify();
         });
 
         it('Сектора содержат значения меньше нуля и больше 100', () => {
-            loggerMock.exactly(3);
             stateBar._applyNewState({
                 data: [{
                     value: -10,
@@ -187,11 +177,9 @@ describe('Controls/progress:StateBar', () => {
                 style: 'warning',
                 title: 'test3'
             }], 'Массив секторов отличается от ожидаемого');
-            loggerMock.verify();
         });
 
         it('Переданы нечисловые значения ширины секторов', () => {
-            loggerMock.exactly(3);
             stateBar._applyNewState({
                 data: [{
                     value: null,
@@ -236,7 +224,6 @@ describe('Controls/progress:StateBar', () => {
                 style: 'warning',
                 title: 'test5'
             }], 'Массив секторов отличается от ожидаемого');
-            loggerMock.verify();
         });
     });
 });

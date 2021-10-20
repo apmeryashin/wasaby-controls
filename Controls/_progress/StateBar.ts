@@ -1,7 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {Logger} from 'UI/Utils';
-import {isEqual} from 'Types/object';
+import Utils = require('Controls/_progress/Utils');
 
 import stateBarTemplate = require('wml!Controls/_progress/StateBar/StateBar');
 import 'css!Controls/progress';
@@ -117,53 +116,49 @@ class StateBar extends Control<IStateBarOptions> {
     }
 
     protected _beforeUpdate(opts: IStateBarOptions): void {
-        if (!isEqual(opts.data, this._options.data)) {
+        if (opts.data !== this._options.data) {
             this._applyNewState(opts);
         }
     }
 
     /**
-     * Проверяеит и подготавливает данные
+     * Проверяеит данные
      * @param opts {IStateBarOptions}
      * @private
      */
     private _applyNewState(opts: IStateBarOptions): void {
         let currSumValue = 0;
         const maxPercentValue = 100;
+        Utils.isSumInRange(opts.data, maxPercentValue, 'StateBar');
+
         this._sectors = opts.data.map((sector) => {
-            // Приводим значение к числу
             let value = Number(sector.value);
-            if (isNaN(value)) {
+            if (!Utils.isNumeric(value)) {
                 value = 0;
-                Logger.error('StateBar: Sector value type is incorrect', this);
             }
 
             // Проверяем, выходит ли значение за допустимы пределы
-            if (value < 0 || value > maxPercentValue) {
-                Logger.error('StateBar: Sector value must be in range of [0..100]', this);
+            if (!Utils.isValueInRange(value)) {
+                value = value > 0 ? Math.min(value, maxPercentValue) : 0;
             }
-            value = value > 0 ? Math.min(value, maxPercentValue) : 0;
 
             // Если при добавлениии очередного сектора, сумма секторов превышает ширину в 100%,
             // устанавливаем для сектора оставшуюся незадействованную ширину
-            if (currSumValue + value > maxPercentValue) {
+            if (!Utils.isValueInRange(currSumValue + value)) {
                 value = maxPercentValue - currSumValue;
-                Logger.error('StateBar', 'Data is incorrect. Values total is greater than 100%', this);
             }
-
             currSumValue += value;
 
             return {
-                style: sector.style ? sector.style: 'secondary',
+                style: sector.style ? sector.style : 'secondary',
                 title: sector.title ? sector.title : '',
                 value
-            }
+            };
         });
     }
 
     static getDefaultOptions(): object {
         return {
-            theme: 'default',
             data: [{value: 0}]
         };
     }

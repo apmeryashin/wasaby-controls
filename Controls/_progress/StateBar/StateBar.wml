@@ -6,7 +6,7 @@
 >
     <ws:for data="i in _sectors.length">
         <div
-            class="controls-StateBar__sector controls-StateBar__sector_style-{{ _sectors[i].style }}"
+            class="controls-StateBar__sector controls-StateBar__sector_style-{{ _sectors[i].style }} controls-StateBar__sector_aligned-{{ _options.align ? _options.align : 'left' }}"
             style="width: {{ _sectors[i].value }}%;"
             title="{{ _sectors[i].title }}"
         ></div>

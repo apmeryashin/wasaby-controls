@@ -8,37 +8,37 @@
    max-width: 100%;
    transition: width 0.2s;
    height: 100%;
-}
 
-.controls-StateBar_align-left {
-   .controls-StateBar__sector:first-child {
+   &:first-child {
       border-top-left-radius: var(--border-radius_2xs);
       border-bottom-left-radius: var(--border-radius_2xs);
    }
 
-   .controls-StateBar__sector:last-child {
+   &:last-child {
       border-top-right-radius: var(--border-radius_2xs);
       border-bottom-right-radius: var(--border-radius_2xs);
+   }
+}
+
+.controls-StateBar__sector_aligned-right {
+   &:first-child {
+      border-top-right-radius: var(--border-radius_2xs);
+      border-bottom-right-radius: var(--border-radius_2xs);
+   }
+
+   &:last-child {
+      border-top-left-radius: var(--border-radius_2xs);
+      border-bottom-left-radius: var(--border-radius_2xs);
    }
 }
 
 .controls-StateBar_align-right {
    flex-direction: row-reverse;
    justify-content: end;
-
-   .controls-StateBar__sector:last-child {
-      border-top-left-radius: var(--border-radius_2xs);
-      border-bottom-left-radius: var(--border-radius_2xs);
-   }
-
-   .controls-StateBar__sector:first-child {
-      border-top-right-radius: var(--border-radius_2xs);
-      border-bottom-right-radius: var(--border-radius_2xs);
-   }
 }
 
 .controls-StateBar_style-readonly {
-   background-color: var(--readonly_color);
+   background-color: var(--unselected_scale_color_progressBar);
 }
 
 .controls-StateBar_style-primary {
@@ -66,23 +66,23 @@
 }
 
 .controls-StateBar__sector_style-primary {
-   background-color: var(--primary_color);
+   background-color: var(--primary_contrast_background-color);
 }
 
 .controls-StateBar__sector_style-success {
-   background-color: var(--success_color);
+   background-color: var(--success_contrast_background-color);
 }
 
 .controls-StateBar__sector_style-warning {
-   background-color: var(--warning_color);
+   background-color: var(--warning_contrast_background-color);
 }
 
 .controls-StateBar__sector_style-danger {
-   background-color: var(--danger_color);
+   background-color: var(--danger_contrast_background-color);
 }
 
 .controls-StateBar__sector_style-secondary {
-   background-color: var(--secondary_color);
+   background-color: var(--secondary_contrast_background-color);
 }
 
 .controls-StateBar__sector_style-info {
