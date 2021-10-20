@@ -28,10 +28,11 @@ export default abstract class
         options: ILookupOptions,
         context: object,
         receivedState: LookupReceivedState
-    ): Promise<LookupReceivedState> | void {
+    ): Promise<LookupReceivedState|Error> | void {
         this._lookupController = new LookupController(options);
 
         if (receivedState && !isEmpty(receivedState)) {
+            options.dataLoadCallback?.(receivedState);
             this._setItems(receivedState);
             this._inheritorBeforeMount(options);
         } else if (options.items) {
@@ -39,7 +40,7 @@ export default abstract class
             this._inheritorBeforeMount(options);
         } else if (options.selectedKeys && options.selectedKeys.length && options.source) {
             return this._lookupController.loadItems().then((items) => {
-                this._setItems(items);
+                this._setItems(items as SelectedItems);
                 this._inheritorBeforeMount(options);
                 return items;
             });
