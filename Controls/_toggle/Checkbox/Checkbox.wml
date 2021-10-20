@@ -18,7 +18,7 @@
                         icon="{{_options.icon}}"
                         iconSize="{{_options.iconSize}}"
                         iconStyle="{{_options.iconStyle}}"
-                        textOverflow="{{_options.textOverflow}}"
+                        ellipsis="{{_options.ellipsis}}"
                         caption="{{_options.caption}}"/>
         </div>
         <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border'}}"></div>
