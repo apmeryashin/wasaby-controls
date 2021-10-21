@@ -4061,11 +4061,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (newOptions.searchValue || this._loadedBySourceController) {
             _private.tryLoadToDirectionAgain(this, null, newOptions);
         }
-        // если у нас не изменилось searchValue, оно не пустое и началась загрузка, то это ситуация описанная выше
-        // нужен завершить показ порционного поиска при начале подгрузки(перезагрузки) и начать показ после загрузки
+        // В случае если у нас пустой список, то при сценарии выше не сработает событие reset. Поэтому нужно завершить
+        // показ порционного поиска и начать его в этом месте,
+        // по опциям от DataContainer(loading - loadStarted, loadedBySourceController)
         if (
+            (!this._listViewModel || !this._listViewModel.getCount()) &&
             this._options.searchValue &&
-            this._options.searchValue === newOptions.searchValue &&
+            newOptions.searchValue &&
             _private.isPortionedLoad(this)
         ) {
             if (loadStarted) {
