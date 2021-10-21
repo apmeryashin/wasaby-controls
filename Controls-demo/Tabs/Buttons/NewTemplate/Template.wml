@@ -1,4 +1,4 @@
-<div class="{{_options.theme.indexOf('default') !== -1 ? 'controlsDemo_fixedWidth800'}} controlsDemo__ml1">
+<div class="{{_options.theme.indexOf('default') !== -1 ? 'controlsDemo__maxWidth1200'}} controlsDemo__ml1">
     <div attr:style="margin-bottom: 15px">
         <div attr:style="text-align: center;" class="controls-text-secondary">1. default</div>
         <div class="demo-TabButtons">
