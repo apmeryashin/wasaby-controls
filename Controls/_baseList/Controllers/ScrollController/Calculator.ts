@@ -84,6 +84,16 @@ export class Calculator {
         return this._range;
     }
 
+    setTriggerOffsets(triggerOffset: ITriggersOffsets): void {
+        this._triggersOffsets = triggerOffset;
+    }
+
+    setViewportSize(viewportSize: number): void {
+        if (this._viewportSize !== viewportSize) {
+            this._viewportSize = viewportSize;
+        }
+    }
+
     /**
      * Устанавливает новые размеры элементов
      * @param itemsSizes

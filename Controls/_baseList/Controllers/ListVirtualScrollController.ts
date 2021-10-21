@@ -163,8 +163,12 @@ export class ListVirtualScrollController {
         this._scrollToPage('backward');
     }
 
-    resized(): void {
-        this._scrollController.resized();
+    viewResized(): void {
+        this._scrollController.viewResized();
+    }
+
+    viewportResized(viewportSize: number): void {
+        this._scrollController.setViewportSize(viewportSize);
     }
 
     private _createScrollController(): void {
@@ -180,6 +184,8 @@ export class ListVirtualScrollController {
             triggersQuerySelector: this._triggerQuerySelector,
 
             triggersVisibility: undefined,
+            topTriggerOffsetCoefficient: 0,
+            bottomTriggerOffsetCoefficient: 0,
 
             scrollTop: 0,
             viewportSize: 0,

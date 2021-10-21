@@ -121,12 +121,12 @@ import IndicatorsController, {
     INDICATOR_HEIGHT
 } from './Controllers/IndicatorsController';
 import ObserversController, {
-    DEFAULT_TRIGGER_OFFSET,
     IObserversControllerOptions,
     TIntersectionEvent
 } from 'Controls/_baseList/Controllers/ObserversController';
 import { selectionToRecord } from './resources/utils/getItemsBySelection';
 import {convertReloadItemArgs} from 'Controls/_baseList/resources/utils/helpers';
+import { DEFAULT_TRIGGER_OFFSET } from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 
 //#endregion
 
@@ -3455,6 +3455,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
+
+        if (this._listVirtualScrollController) {
+            this._listVirtualScrollController.viewportResized(viewportHeight);
+        }
         this._observersController?.setViewportHeight(
             this._viewportSize,
             this._children.listView?.getTopLoadingTrigger(),
@@ -3529,6 +3533,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._isMounted) {
             const container = this._children.viewContainer || this._container[0] || this._container;
             this._viewSize = _private.getViewSize(this, true);
+
+            if (this._listVirtualScrollController) {
+                this._listVirtualScrollController.viewResized();
+            }
 
             /**
              * Заново определяем должен ли отображаться пэйджинг или нет.

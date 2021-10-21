@@ -1,5 +1,10 @@
 import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
-import { TIntersectionEvent, IObserversControllerBaseOptions, ObserversController } from './ObserversController';
+import {
+    TIntersectionEvent,
+    IObserversControllerBaseOptions,
+    ObserversController,
+    ITriggersOffsets
+} from './ObserversController';
 import { Calculator, IActiveElementIndexChanged, ICalculatorOptions, ICalculatorResult } from './Calculator';
 import {CrudEntityKey} from 'Types/source';
 
@@ -97,6 +102,9 @@ export class ScrollController {
             listContainer: options.listContainer,
             triggersQuerySelector: options.triggersQuerySelector,
             triggersVisibility: options.triggersVisibility,
+            viewportSize: options.viewportSize,
+            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
+            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
             observersCallback: this._observersCallback.bind(this)
         });
 
@@ -108,6 +116,12 @@ export class ScrollController {
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize
         });
+    }
+
+    setViewportSize(viewportSize: number): void {
+        const triggerOffsets = this._observersController.setViewportSize(viewportSize);
+        this._calculator.setTriggerOffsets(triggerOffsets);
+        this._calculator.setViewportSize(viewportSize);
     }
 
     // region Update DOM elements
@@ -155,7 +169,7 @@ export class ScrollController {
         this._calculator.updateItemsSizes(newItemsSizes);
     }
 
-    resized(): void {
+    viewResized(): void {
         const range = this._calculator.getRange();
         const newItemsSizes = this._itemsSizesController.updateItemsSizes(range);
         this._calculator.updateItemsSizes(newItemsSizes);
@@ -211,6 +225,13 @@ export class ScrollController {
      * @param totalCount Общее кол-во элементов в коллекции
      */
     resetItems(totalCount: number): void {
+        if (!totalCount) {
+            // для пустого списка сбрасываем оффсет триггеров, чтобы триггеры не уехали за пределы списка.
+            this._observersController.setResetBackwardTriggerOffset(true);
+            this._observersController.setResetForwardTriggerOffset(true);
+            this._calculator.setTriggerOffsets(this._observersController.getTriggersOffsets());
+        }
+
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);
         this._calculator.updateItemsSizes(itemsSizes);
 
@@ -284,8 +305,17 @@ export class ScrollController {
         }
 
         const result = this._calculator.shiftRangeToDirection(direction);
-
         this._processCalculatorResult(result);
+
+        // после первого срабатывания триггера сбрасываем флаг resetTriggerOffset.
+        // Чтобы дальше триггер срабатывал заранее за счет оффсета.
+        let triggerOffsets;
+        if (direction === 'forward') {
+            triggerOffsets = this._observersController.setResetForwardTriggerOffset(false);
+        } else {
+            triggerOffsets = this._observersController.setResetBackwardTriggerOffset(false);
+        }
+        this._calculator.setTriggerOffsets(triggerOffsets);
 
         // itemsEndedCallback должен вызываться ТОЛЬКО ТУТ, загрузка осуществляется ТОЛЬКО по достижению триггера
         if (!result.indexesChanged) {
