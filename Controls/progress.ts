@@ -6,6 +6,7 @@
  * @includes IndicatorCategory Controls/progress:IndicatorCategory
  * @includes IStateIndicator Controls/progress:IStateIndicator
  * @includes IRating Controls/progress:IRating
+ * @includes IStateBar Controls/progress:IStateBar
  * @author Колесов В.А.
  */
 
@@ -17,6 +18,7 @@
  * @includes IndicatorCategory Controls/progress:IndicatorCategory
  * @includes IStateIndicator Controls/progress:IStateIndicator
  * @includes IRating Controls/progress:IRating
+ * @includes IStateBar Controls/progress:IStateBar
  * @author Колесов В.А.
  */
 
@@ -24,3 +26,4 @@ export {default as StateIndicator} from './_progress/StateIndicator';
 export {default as Legend} from './_progress/Legend';
 export {default as Bar} from './_progress/Bar';
 export {default as Rating} from './_progress/Rating';
+export {default as StateBar} from './_progress/StateBar';
