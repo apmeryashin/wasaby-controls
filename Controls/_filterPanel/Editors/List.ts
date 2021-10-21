@@ -206,10 +206,15 @@ class ListEditor extends Control<IListEditorOptions> {
         if (contentClick) {
             let selectedKeysArray = this._options.multiSelect ? Clone(this._selectedKeys) : [];
             const itemkey = item.get(this._options.keyProperty);
-            if (itemkey === this._options.emptyKey || itemkey === this._options.selectedAllKey) {
-                selectedKeysArray = [itemkey];
-            } else if (!selectedKeysArray.includes(itemkey)) {
-                selectedKeysArray.unshift(item.get(this._options.keyProperty));
+            const itemIndex = selectedKeysArray.indexOf(itemkey);
+            if (itemIndex !== -1) {
+                selectedKeysArray.splice(itemIndex);
+            } else {
+                if (itemkey === this._options.emptyKey || itemkey === this._options.selectedAllKey) {
+                    selectedKeysArray = [itemkey];
+                } else if (!selectedKeysArray.includes(itemkey)) {
+                    selectedKeysArray.unshift(item.get(this._options.keyProperty));
+                }
             }
             this._editorTarget = this._getEditorTarget(nativeEvent);
             this._processPropertyValueChanged(selectedKeysArray);
