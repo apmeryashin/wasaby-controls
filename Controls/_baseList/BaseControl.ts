@@ -81,13 +81,6 @@ import {
 import {IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
-import {
-    ScrollController as NewScrollController,
-    IDirection as IScrollControllerDirection,
-    IItemsRange,
-    IEnvironmentChangedParams,
-    IPageDirection, IScheduledScrollParams, IScheduledScrollToElementParams, IEdgeItem, IIndexesChangedParams
-} from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
@@ -3597,35 +3590,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     getSourceController(): SourceController {
         return this._sourceController;
-    }
-
-    private _scrollControllerCollectionChange(action: string,
-                                              newItems: Array<CollectionItem<Model>>,
-                                              newItemsIndex: number,
-                                              removedItems: Array<CollectionItem<Model>>,
-                                              removedItemsIndex: number): void {
-        if (!this._newScrollController) {
-            return;
-        }
-        const totalCount = this._listViewModel.getCount();
-        switch (action) {
-            case IObservable.ACTION_ADD: {
-                this._newScrollController.addItems(newItemsIndex, newItems.length, totalCount);
-                break;
-            }
-            case IObservable.ACTION_MOVE: {
-                this._newScrollController.moveItems(newItemsIndex, removedItemsIndex, newItems.length, totalCount);
-                break;
-            }
-            case IObservable.ACTION_REMOVE: {
-                this._newScrollController.removeItems(removedItemsIndex, removedItems.length, totalCount);
-                break;
-            }
-            case IObservable.ACTION_RESET: {
-                this._newScrollController.resetItems(totalCount);
-                break;
-            }
-        }
     }
 
     private _createNewScrollController(): void {
