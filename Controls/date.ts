@@ -12,6 +12,7 @@ export {default as LinkView} from 'Controls/_date/LinkView';
 export {default as Selector} from 'Controls/_date/Selector';
 export {default as BaseSelector} from 'Controls/_date/BaseSelector';
 
+export {default as IValue} from 'Controls/_date/interface/IValue';
 import * as MonthCaptionTemplate from 'wml!Controls/_date/Selector/monthCaptionTemplate';
 export {default as IMonthCaptionTemplate, IMonthCaptionTemplateOptions} from 'Controls/_date/interface/IMonthCaptionTemplate';
 export {IDatePopupTypeOptions} from 'Controls/_date/interface/IDatePopupType';
