@@ -9,6 +9,8 @@ import * as Template from 'wml!Controls-demo/NewBrowser/Index';
 import {SyntheticEvent} from 'UI/Vdom';
 import {TKey} from 'Controls/_interface/IItems';
 
+import * as DetailTableColumnTemplate from 'wml!Controls-demo/NewBrowser/resources/DetailTableColumnTemplate';
+
 const baseSource = new DemoSource({
     keyProperty: 'id',
     parentProperty: 'parent',
@@ -108,6 +110,10 @@ export default class extends Control {
     protected _detailTableColumns: unknown[] = FlatHierarchy.getGridColumns();
 
     //region life circle hooks
+    protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
+        this._detailTableColumns[0].template = DetailTableColumnTemplate;
+    }
+
     protected _componentDidMount(options?: {}, contexts?: any): void {
         this._userViewMode = [this._children.browser.viewMode];
     }
