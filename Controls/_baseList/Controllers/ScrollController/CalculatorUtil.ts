@@ -30,26 +30,26 @@ export interface IGetRangeByPositionParams extends IGetRangeBaseParams {
 export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IRange {
     const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
     const fixedSegmentSize = Math
-        .min(segmentSize, Math.max(pageSize - (currentRange.end - currentRange.start), 0));
+        .min(segmentSize, Math.max(pageSize - (currentRange.endIndex - currentRange.startIndex), 0));
 
-    let { start, end } = currentRange;
+    let { startIndex, endIndex } = currentRange;
 
     // TODO Совместимость, пока виртуальный скролл не включен у всех безусловно
     if (!pageSize) {
-        start = 0;
-        end = totalCount;
+        startIndex = 0;
+        endIndex = totalCount;
     } else if (direction === 'backward') {
-        start = Math.max(0, start - fixedSegmentSize);
-        if (start >= totalCount) {
-            start = Math.max(0, totalCount - pageSize);
+        startIndex = Math.max(0, startIndex - fixedSegmentSize);
+        if (startIndex >= totalCount) {
+            startIndex = Math.max(0, totalCount - pageSize);
         }
-        end = Math.min(totalCount, Math.max(currentRange.end, start + pageSize));
+        endIndex = Math.min(totalCount, Math.max(currentRange.endIndex, startIndex + pageSize));
     } else {
-        end = Math.min(end + fixedSegmentSize, totalCount);
+        endIndex = Math.min(endIndex + fixedSegmentSize, totalCount);
     }
 
     return {
-        start, end
+        startIndex: start, endIndex: end
     };
 }
 
@@ -59,19 +59,19 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IRange 
  */
 export function getRangeByIndex(params: IGetRangeByIndexParams): IRange {
     const { start, pageSize, totalCount } = params;
-    const result: IRange = { start: 0, end: 0 };
+    const result: IRange = { startIndex: 0, endIndex: 0 };
 
     if (pageSize && pageSize < totalCount) {
-        result.start = start;
-        result.end = start + pageSize;
+        result.startIndex = start;
+        result.endIndex = start + pageSize;
 
-        if (result.end >= totalCount) {
-            result.end = totalCount;
-            result.start = result.end - pageSize;
+        if (result.endIndex >= totalCount) {
+            result.endIndex = totalCount;
+            result.startIndex = result.endIndex - pageSize;
         }
     } else {
-        result.start = 0;
-        result.end = totalCount;
+        result.startIndex = 0;
+        result.endIndex = totalCount;
     }
 
     return result;
@@ -113,7 +113,7 @@ export function getRangeByScrollPosition(params: IGetRangeByPositionParams): IRa
             start = Math.max(start - missingCount, 0);
         }
     }
-    return { start, end };
+    return { startIndex: start, endIndex: end };
 }
 
 export function getActiveElementIndexByPosition(params: IGetRangeByPositionParams): number {
