@@ -3634,53 +3634,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         });
     }
 
-    /**
-     * Скроллит к переданной странице.
-     * Скроллит так, чтобы было видно последний элемент с предыдущей страницы, чтобы не потерять "контекст".
-     * Смещает диапазон, возвращает промис с индексами крайних видимых полностью элементов.
-     * @param page Условная страница, к которой нужно скроллить. (Следующая, предыдущая, начальная, конечная)
-     * @private
-     */
-    private _scrollToPage(page: IPageDirection): void {
-        let itemIndex;
-        if (page === 'forward' || page === 'backward') {
-            const edgeItem = this._newScrollController.getEdgeVisibleItem(page);
-            itemIndex = this._listViewModel.getIndexByKey(edgeItem.key);
-        } else {
-            itemIndex = page === 'start' ? 0 : this._listViewModel.getCount() - 1;
-        }
-
-        const item = this._listViewModel.getItemBySourceIndex(itemIndex);
-        if (item) {
-            this._scrollToItem(item.getContents().getKey());
-            // TODO поставить маркер после скролла
-        }
-    }
-
-    private _keyDownPageUp(event: SyntheticEvent): void {
-        event.stopPropagation();
-        this._scrollToPage('backward');
-    }
-
-    private _keyDownPageDown(event: SyntheticEvent): void {
-        event.stopPropagation();
-        this._scrollToPage('forward');
-    }
-
-    private _keyDownEnd(event: SyntheticEvent): void {
-        event.stopPropagation();
-        this._scrollToPage('end');
-    }
-
-    private _keyDownHome(event: SyntheticEvent): void {
-        event.stopPropagation();
-        this._scrollToPage('start');
-    }
-
-    private _handleVirtualScrollPositionChanged(params: IScrollParams): void {
-        this._newScrollController.scrollToPosition(params.scrollTop);
-    }
-
     protected _afterMount(): void {
         this._isMounted = true;
 
