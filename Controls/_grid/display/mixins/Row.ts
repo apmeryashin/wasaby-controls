@@ -117,16 +117,20 @@ export default abstract class Row<T extends Model = Model> {
 
     // @TODO https://online.sbis.ru/opendoc.html?guid=907731fd-b8a8-4b58-8958-61b5c8090188
     setBottomSeparatorEnabled(state: boolean): void {
-        this._$isBottomSeparatorEnabled = state;
-        this._reinitializeColumns();
-        this._nextVersion();
+        if (this._$isBottomSeparatorEnabled !== state) {
+            this._$isBottomSeparatorEnabled = state;
+            this._reinitializeColumns();
+            this._nextVersion();
+        }
     }
 
     // @TODO https://online.sbis.ru/opendoc.html?guid=907731fd-b8a8-4b58-8958-61b5c8090188
     setTopSeparatorEnabled(state: boolean): void {
-        this._$isTopSeparatorEnabled = state;
-        this._reinitializeColumns();
-        this._nextVersion();
+        if (this._$isTopSeparatorEnabled !== state) {
+            this._$isTopSeparatorEnabled = state;
+            this._reinitializeColumns();
+            this._nextVersion();
+        }
     }
 
     //region Аспект "Стилевое оформление. Классы и стили строки"
@@ -863,7 +867,7 @@ Object.assign(Row.prototype, {
     _$columnSeparatorSize: null,
     _$backgroundStyle: 'default',
     _$itemActionsPosition: 'inside',
-    _$isBottomSeparatorEnabled: false,
-    _$isTopSeparatorEnabled: false,
+    _$isBottomSeparatorEnabled: null,
+    _$isTopSeparatorEnabled: null,
     _$editingColumnIndex: null
 });

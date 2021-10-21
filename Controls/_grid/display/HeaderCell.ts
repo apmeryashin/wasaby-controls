@@ -283,8 +283,10 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
     }
 
     setSorting(sorting: string): void {
-        this._$sorting = sorting;
-        this._nextVersion();
+        if (this._$sorting !== sorting) {
+            this._$sorting = sorting;
+            this._nextVersion();
+        }
     }
 
     getSorting(): string {
