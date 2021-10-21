@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {Logger} from 'UI/Utils';
+import * as Utils from 'Controls/_progress/Utils';
+
 import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 import 'css!Controls/progress';
 
@@ -46,10 +47,9 @@ class Bar extends Control<IBarOptions> {
 
    private _getWidth(val: number): string {
       const maxPercentValue = 100;
-      if (val < 0 || val > maxPercentValue) {
-         Logger.error('Bar: The value must be in range of [0..100]', this);
-      }
-      return (val > 0 ? Math.min(val, maxPercentValue) + '%' : '0px');
+      const value = Utils.isNumeric(val) ? val : 0;
+      Utils.isValueInRange(value, 0, maxPercentValue, 'Bar', 'Value');
+      return (value > 0 ? Math.min(value, maxPercentValue) + '%' : '0px');
    }
 
    protected _beforeMount(opts: IBarOptions): void {
