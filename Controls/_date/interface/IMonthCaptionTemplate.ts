@@ -1,5 +1,5 @@
 export default interface IMonthCaptionTemplate {
-    readonly '[Controls/_dateRange/interfaces/IMonthCaptionTemplate]': boolean;
+    readonly '[Controls/_date/interface/IMonthCaptionTemplate]': boolean;
 }
 
 export interface IMonthCaptionTemplateOptions {
@@ -9,13 +9,13 @@ export interface IMonthCaptionTemplateOptions {
 /**
  * Интерфейс для контролов ввода или выбора дат, которые поддерживают шаблон заголовка месяца.
  *
- * @interface Controls/_dateRange/interfaces/IMonthCaptionTemplate
+ * @interface Controls/_date/interface/IMonthCaptionTemplate
  * @public
  * @author Красильников А.С.
  */
 
 /**
- * @name Controls/_dateRange/interfaces/IMonthCaptionTemplate#monthCaptionTemplate
+ * @name Controls/_date/interface/IMonthCaptionTemplate#monthCaptionTemplate
  * @cfg {HTMLElement} Шаблон заголовка месяца.
  * @remark
  * В шаблон передается:
@@ -31,11 +31,11 @@ export interface IMonthCaptionTemplateOptions {
  * </ul>
  * @example
  * <pre>
- *     <Controls.dateRange:DateSelector>
+ *     <Controls.date:Selector>
  *        <ws:monthCaptionTemplate>
- *          <ws:partial template="Controls/dateRange:MonthCaptionTemplate" icon="icon-Yes" iconStyle="{{_getIconStyle(monthCaptionTemplate.month)}}"/>
+ *          <ws:partial template="Controls/date:MonthCaptionTemplate" icon="icon-Yes" iconStyle="{{_getIconStyle(monthCaptionTemplate.month)}}"/>
  *        </ws:monthCaptionTemplate>
- *     </Controls.shortDatePicker:View>
+ *     </Controls.date:Selector>
  * </pre>
  * @demo Controls-demo/dateRange/DateSelector/MonthCaptionTemplate/Index
  */
