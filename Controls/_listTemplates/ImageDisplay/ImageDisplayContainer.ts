@@ -158,7 +158,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     private _getPatchedColumns(columns: TColumns): TColumns {
         let newColumns = columns;
         if (columns) {
-            newColumns = object.clone(columns);
+            newColumns = object.clonePlain(columns);
             newColumns.forEach((column) => {
                 const templateOptions: {imageViewMode?: string} = column.templateOptions || {};
                 templateOptions.imageViewMode = this._getImageViewMode(templateOptions.imageViewMode);
