@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <span class="controls-text-label controlsDemo__mb1">pageSize 50, остальные опции не заданы, показ с первой страницы</span>
-    <Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index totalCount="{{50}}" pageSize="{{5}}">
+    <Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index totalCount="{{500}}" pageSize="{{50}}">
         <ws:content>
             <Controls.scroll:Container attr:style="height: 300px;">
                 <Controls.grid:View
@@ -8,7 +8,7 @@
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
                         navigation="{{_options.navigation}}">
-                    <ws:virtualScrollConfig pageSize="{{30}}"/>
+                    <ws:virtualScrollConfig pageSize="{{50}}"/>
                 </Controls.grid:View>
             </Controls.scroll:Container>
         </ws:content>
