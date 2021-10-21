@@ -1,0 +1,7 @@
+<ws:partial template="Controls/listTemplates:TableCellTemplate"
+            scope="{{ _options }}"
+            imageProperty="{{ _options.tableCfg.imageProperty }}">
+    <ws:contentTemplate>
+        <div>{{contentTemplate.gridColumn.getDefaultDisplayValue()}}</div>
+    </ws:contentTemplate>
+</ws:partial>
