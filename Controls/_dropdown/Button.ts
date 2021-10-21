@@ -286,8 +286,8 @@ export default class Button extends BaseDropdown {
     }
 
     _handleMouseMove(event: SyntheticEvent<MouseEvent>): void {
-        const isOpenMenuPopup = !(event.nativeEvent.relatedTarget
-            && event.nativeEvent.relatedTarget.closest('.controls-Menu__popup'));
+        const isOpenMenuPopup = !(event.nativeEvent.relatedTarget &&
+            event.nativeEvent.relatedTarget.closest('.controls-Menu__popup'));
         if (this._options.menuPopupTrigger === 'hover' && isOpenMenuPopup) {
             this._calmTimer.start();
         }

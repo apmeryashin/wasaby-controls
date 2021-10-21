@@ -335,7 +335,8 @@ define(
          it('_getLeftPadding', function() {
             const menu = getMenu();
             let menuOptions = {
-               itemPadding: {}
+               itemPadding: {},
+               markerVisibility: 'hidden'
             };
             let leftSpacing = menu._getLeftPadding(menuOptions);
             assert.equal(leftSpacing, 'm');
@@ -347,6 +348,11 @@ define(
             menuOptions.itemPadding.left = 'xs';
             leftSpacing = menu._getLeftPadding(menuOptions);
             assert.equal(leftSpacing, 'xs');
+
+            menuOptions.itemPadding.left = undefined;
+            menuOptions.markerVisibility = 'visible';
+            leftSpacing = menu._getLeftPadding(menuOptions);
+            assert.equal(leftSpacing, 's');
          });
 
          it('_getRightPadding', function() {

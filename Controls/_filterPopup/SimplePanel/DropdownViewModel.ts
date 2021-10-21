@@ -85,10 +85,8 @@ var _private = {
             const paddings = options.itemPadding || {};
             if (options.multiSelect && itemData.emptyText) {
                classes += ' controls-SimplePanel-List__emptyItem-leftPadding_multiSelect';
-            } else if (!options.multiSelect && (!options.nodeProperty || item.get(options.nodeProperty))) {
-               classes += ' controls-SimplePanel-List__item-leftPadding_' + (paddings.left || 'default');
             } else if (!options.multiSelect) {
-               classes += ' controls-SimplePanel-List__hierarchyItem-leftPadding_' + (paddings.left || 'default');
+               classes += ' controls-SimplePanel-List__item-leftPadding_' + (paddings.left || 'default');
             }
             classes += ' controls-SimplePanel-List__item-rightPadding_' +
                 _private.getRightPadding(options, paddings.right, itemData, hasHierarchy, options.hasApplyButton);
