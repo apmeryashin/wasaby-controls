@@ -34,9 +34,9 @@ export interface IColumn extends IGridColumn, IGroupNodeColumn {
  */
 /**
  * @name Controls/_treeGrid/interface/IColumn#fontWeight
- * @cfg {TFontWeight} Начертание шрифта.
+ * @cfg {TFontWeight} Насыщенность шрифта.
  * @default "default".
  * @remark
- * Начертание шрифта ячейки имеет больший приоритет, чем {@link Controls/_treeGrid/interface/ItemTemplate#fontWeight Начертание шрифта записи}.
- * Начертание шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ * Насыщенность шрифта ячейки имеет больший приоритет, чем {@link Controls/_treeGrid/interface/ItemTemplate#fontWeight Насыщенность шрифта записи}.
+ * Насыщенность шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
  */
