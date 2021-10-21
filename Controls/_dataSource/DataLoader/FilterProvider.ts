@@ -1,6 +1,7 @@
 import {IDataLoadProvider, IBaseLoadDataConfig} from 'Controls/_dataSource/DataLoader/IDataLoadProvider';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
-import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
+import {IFilterItem, ControllerClass as FilterController} from 'Controls/filter';
+import ListProvider from 'Controls/_dataSource/DataLoader/ListProvider';
 import {TFilter} from 'Controls/_interface/IFilter';
 import {isEqual} from 'Types/object';
 import {object} from 'Types/util';
@@ -71,7 +72,7 @@ class FilterProvider implements IDataLoadProvider<IFilterLoadDataConfig, IFilter
             historyItems,
             filterHistoryLoader
         }: IFilterLoadDataConfig): Promise<IFilterItem[]> {
-        const filterController = new FilterController({
+        const filterController = ListProvider.getFilterController({
             filterButtonSource: filterSource,
             filter,
             historyId
