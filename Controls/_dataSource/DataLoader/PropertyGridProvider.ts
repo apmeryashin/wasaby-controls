@@ -44,7 +44,7 @@ class PropertyGridProvider implements IDataLoadProvider<ILoadPropertyGridDataCon
 
     private _loadList(property: IProperty): Promise<IProperty> {
         return new ListProvider().load(property.editorOptions).then((loadResult) => {
-            property.editorOptions.sourceController = loadResult.sourceController;
+            property.editorOptions.items = loadResult.sourceController.getItems();
             return property;
         });
     }

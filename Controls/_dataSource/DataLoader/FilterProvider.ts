@@ -96,9 +96,9 @@ class FilterProvider implements IDataLoadProvider<IFilterLoadDataConfig, IFilter
 
     load(loadConfig: IFilterLoadDataConfig, loadDataTimeout?: number): Promise<IFilterLoaderResult> {
         const loadPromise = this._getFilterSource(loadConfig).then((filterItems: IFilterItem[]) => {
-            const filterLoaderConfig = LoadConfigGetter(loadConfig.id, filterItems);
+            const filterDescription = prepareDescription(filterItems);
             return new PropertyGridProvider().load({
-                typeDescription: filterLoaderConfig.typeDescription,
+                typeDescription: filterDescription,
                 afterLoadCallback: loadConfig.afterLoadCallback,
                 id: loadConfig.id
             });

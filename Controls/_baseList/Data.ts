@@ -42,6 +42,7 @@ export interface IDataOptions extends IControlOptions,
    expandedItems?: CrudEntityKey[];
    nodeHistoryId?: string;
    processError?: boolean;
+   items?: RecordSet;
 }
 
 export interface IDataContextOptions extends ISourceOptions,
@@ -170,6 +171,7 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
       this._initSourceController(options, receivedState);
       const sourceController = this._sourceController;
       const controllerState = sourceController.getState();
+      const items = receivedState?.items instanceof RecordSet ? receivedState.items || options.items;
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;
@@ -188,11 +190,11 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
             }
             this._setItemsAndUpdateContext();
          }
-      } else if (receivedState?.items instanceof RecordSet) {
+      } else if (items) {
          if (options.source && options.dataLoadCallback) {
-            options.dataLoadCallback(receivedState.items);
+            options.dataLoadCallback(items);
          }
-         sourceController.setItems(receivedState.items);
+         sourceController.setItems(items);
          this._setItemsAndUpdateContext();
       } else if (receivedState?.errorConfig) {
          this._showError(receivedState.errorConfig);
