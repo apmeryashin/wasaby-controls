@@ -393,21 +393,6 @@ define(
             assert.isTrue(dataLoadCallbackItems === items, 'wrong items in dataLoadCallback');
          });
 
-         it('_itemsReadyCallbackHandler', async function() {
-            const options = {source: source, keyProperty: 'id'};
-            let data = getDataWithConfig(options);
-            await data._beforeMount(options);
-
-            const prefetchSource = data._contextState.prefetchSource;
-            const currentItems = data._items;
-            const newItems = new collection.RecordSet();
-
-            data._itemsReadyCallbackHandler(newItems);
-            assert.isTrue(data._items === newItems);
-            assert.isTrue(data._contextState.items === newItems);
-            assert.isTrue(data._contextState.prefetchSource === prefetchSource);
-         });
-
          it('data source options tests', function(done) {
             var config = {source: null, keyProperty: 'id'},
                data = getDataWithConfig(config);
