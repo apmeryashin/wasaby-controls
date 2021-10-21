@@ -1,4 +1,5 @@
-<span class="{{fontColorStyle ? 'controls-text-' + fontColorStyle}}
+<span title="{{title}}"
+      class="{{fontColorStyle ? 'controls-text-' + fontColorStyle}}
              {{fontSize ? 'controls-fontsize-' + fontSize}}">
     {{value}}
 </span>

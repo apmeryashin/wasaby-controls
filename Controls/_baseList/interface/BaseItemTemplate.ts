@@ -78,7 +78,7 @@ export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions
  */
 /**
  * @name Controls/_list/interface/IBaseItemTemplate#fontWeight
- * @cfg {TFontWeight} Начертание шрифта.
+ * @cfg {TFontWeight} Насыщенность шрифта.
  * @default "default".
  */
 /*

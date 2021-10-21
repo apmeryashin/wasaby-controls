@@ -1,5 +1,7 @@
 <Controls.decorator:Money
         fontSize="{{fontSize}}"
         fontColorStyle="{{fontColorStyle}}"
+        fontWeight="{{fontWeight}}"
+        title="{{title}}"
         value="{{value}}"
         scope="{{displayTypeOptions}}"/>

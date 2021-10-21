@@ -124,7 +124,7 @@ export default interface IResultColumnTemplateOptions {
      */
 
     /**
-     * @cfg {Controls/_grid/interface/ResultColumnTemplate/TFontWeight.typedef} Начертание шрифта.
+     * @cfg {Controls/_grid/interface/ResultColumnTemplate/TFontWeight.typedef} Насыщенность шрифта.
      * @default bold
      */
     fontWeight?: TFontWeight;

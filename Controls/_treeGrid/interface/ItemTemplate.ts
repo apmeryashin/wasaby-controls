@@ -80,9 +80,9 @@ export default interface IItemTemplateOptions {
  */
 /**
  * @name Controls/_treeGrid/interface/ItemTemplate#fontWeight
- * @cfg {TFontWeight} Начертание шрифта.
+ * @cfg {TFontWeight} Насыщенность шрифта.
  * @remark
- * Начертание шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
- * {@link Controls/_treeGrid/interface/IColumn#fontWeightНачертание шрифта ячейки} имеет больший приоритет, чем стиль начертание шрифта текста записи.
+ * Насыщенность шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
+ * {@link Controls/_treeGrid/interface/IColumn#fontWeight Насыщенность шрифта ячейки} имеет больший приоритет, чем Насыщенность шрифта текста записи.
  * @default "default".
  */
