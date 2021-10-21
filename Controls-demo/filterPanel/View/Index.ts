@@ -67,6 +67,7 @@ export default class extends Control {
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
+                    expanderVisible: true,
                     imageProperty: 'sourceImage',
                     multiSelect: true,
                     navigation: {

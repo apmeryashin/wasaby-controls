@@ -13,7 +13,7 @@
                      {{_options.groupItems[item].caption}}
                   </div>
                </ws:if>
-               <ws:if data="{{_options.groupItems[item].needShowExpander}}">
+               <ws:if data="{{_options.groupItems[item].expanderVisible}}">
                   <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
                        class="controls-FilterViewPanel__groupExpander controls-icon controls-icon_size-s
                            {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}">
