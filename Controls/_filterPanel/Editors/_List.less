@@ -23,21 +23,11 @@
 }
 
 .controls-ListView__multiSelect__innerCircle_selected-master {
-   fill: var(--inner-circle_color-master_filterViewPanel);
-}
-
-.controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover-listEditor,
-.controls-Grid__row_highlightOnHover_master:hover .controls-Grid__row-cell-background-hover-listEditor,
-.controls-itemActionsV_style_listEditor {
-   background-color: var(--list-editor_color-hover_filterViewPanel);
+   fill: var(--marker_color);
 }
 
 .controls-FilterEditors__list_style-default {
    margin-left: calc(-1 * var(--offset_xl));
-}
-
-.controls-FilterEditors__list_style-master {
-   margin-left: calc(-1 * calc(var(--offset_xl) - var(--master_item_horizontal-offset_list)));
 }
 
 .controls-ListEditor__column-img {
@@ -57,10 +47,4 @@
 
 .controls-ListEditor__column-text-filterPanelStack {
    font-size: var(--font-size_m);
-}
-
-//Будет удалено после согласования стандарта: https://online.sbis.ru/opendoc.html?guid=8721ea60-3d63-4b7e-a095-7849e0647b14
-.controls-EditorList_style-master .controls-Grid__row-cell-checkbox {
-   min-width: var(--icon-size_s);
-   max-width: var(--icon-size_s);
 }
