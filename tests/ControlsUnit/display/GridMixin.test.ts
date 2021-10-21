@@ -73,8 +73,8 @@ describe('Controls/_display/GridMixin', () => {
                 header,
                 columns
             });
-            grid.setSorting([{price: 'DESC'}]);
             const headerColumns = grid.getHeader().getRow().getColumns() as Array<GridHeaderCell<Model>>;
+            grid.setSorting([{price: 'DESC'}]);
             assert.equal(headerColumns[1].getSorting(), 'DESC');
             assert.notEqual(headerColumns[0].getSorting(), 'DESC');
         });
