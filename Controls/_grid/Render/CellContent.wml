@@ -31,10 +31,8 @@
                             <!-- Контент по умолчанию, обрезка длинного текста с многоточием -->
                             <div class="{{ (gridColumn || itemData).getTextOverflowClasses() }}">
                                 <ws:partial template="{{ (gridColumn || itemData).getCellContentRender() }}"
-                                            value="{{ (gridColumn || itemData).getDefaultDisplayValue() }}"
-                                            searchValue="{{ (gridColumn || itemData).getSearchValue() }}"
-                                            gridColumn="{{(gridColumn || itemData)}}"
-                                            scope="{{ (gridColumn || itemData).config }}"/>
+                                            gridColumn="{{ gridColumn || itemData }}"
+                                            scope="{{ (gridColumn || itemData).getCellContentRenderOptions(fontColorStyle, fontSize, fontWeight) }}"/>
                             </div>
                         </ws:if>
                         <ws:else>
@@ -52,12 +50,10 @@
             <ws:if data="{{ (gridColumn || itemData).hasCellContentRender() }}">
                 <!-- Контент по умолчанию, обрезка длинного текста с многоточием -->
                 <div class="{{ (gridColumn || itemData).getTextOverflowClasses() }}">
-                    <ws:partial template="{{(gridColumn || itemData).getCellContentRender()}}"
-                                attr:title="{{ (gridColumn || itemData).getTextOverflowTitle() }}"
-                                value="{{(gridColumn || itemData).getDefaultDisplayValue()}}"
-                                searchValue="{{(gridColumn || itemData).getSearchValue()}}"
-                                gridColumn="{{(gridColumn || itemData)}}"
-                                scope="{{(gridColumn || itemData).config}}"/>
+                    <ws:partial template="{{ (gridColumn || itemData).getCellContentRender() }}"
+                                title="{{ (gridColumn || itemData).getTextOverflowTitle() }}"
+                                gridColumn="{{ gridColumn || itemData }}"
+                                scope="{{ (gridColumn || itemData).getCellContentRenderOptions(fontColorStyle, fontSize, fontWeight) }}"/>
                 </div>
             </ws:if>
             <ws:else>

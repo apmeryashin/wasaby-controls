@@ -449,7 +449,7 @@ export default class Cell<
      * Настройки из конфига колонок имеют бОльший приоритет
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
-     * @param templateFontWeight Начертание шрифта
+     * @param templateFontWeight Насыщенность шрифта
      */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,

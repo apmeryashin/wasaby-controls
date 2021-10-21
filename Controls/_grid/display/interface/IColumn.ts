@@ -509,10 +509,10 @@ export interface IColumn extends IColspanParams {
      */
     fontSize?: TFontSize;
     /**
-     * @cfg {TFontWeight} Начертание шрифта.
+     * @cfg {TFontWeight} Насыщенность шрифта.
      * @default "default".
      * @remark
-     * Начертание шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontWeight Начертание шрифта записи}.
+     * Насыщенность шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontWeight Насыщенность шрифта записи}.
      */
     fontWeight?: TFontWeight;
 }
