@@ -231,6 +231,7 @@ export class ScrollController {
 
     /**
      * Сдвигает диапазон отображаемых элементов к позиции скролла.
+     * Используется при нажатии в скролбар в позицию, где записи уже скрыты виртуальным скроллом.
      * @param position Позиция скролла.
      */
     scrollToPosition(position: number): void {
@@ -238,6 +239,12 @@ export class ScrollController {
         this._processCalculatorResult(result);
     }
 
+    /**
+     * Обрабатывает изменение позиции при скролле.
+     * Используется при обычном скролле списка.
+     * TODO возможно стоит сделать более понятные названия для методов scrollToPosition, scrollPositionChange
+     * @param position
+     */
     scrollPositionChange(position: number): void {
         const result = this._calculator.shiftActiveElementIndexToScrollPosition(position);
         this._processActiveElementIndexChanged(result);

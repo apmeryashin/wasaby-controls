@@ -1268,8 +1268,12 @@ const _private = {
 
     // throttle нужен, чтобы при потоке одинаковых событий не пересчитывать состояние на каждое из них
     throttledVirtualScrollPositionChanged: throttle((self, params) => {
-        const result = self._scrollController.scrollPositionChange(params, true);
-        _private.handleScrollControllerResult(self, result);
+        if (self._useNewScroll) {
+            self._handleVirtualScrollPositionChanged(params);
+        } else {
+            const result = self._scrollController.scrollPositionChange(params, true);
+            _private.handleScrollControllerResult(self, result);
+        }
     }, SCROLLMOVE_DELAY, true),
 
     /**
@@ -3800,6 +3804,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     private _keyDownHome(event: SyntheticEvent): void {
         event.stopPropagation();
         this._scrollToPage('start');
+    }
+
+    private _handleVirtualScrollPositionChanged(params: IScrollParams): void {
+        this._newScrollController.scrollToPosition(params.scrollTop);
     }
 
     protected _afterMount(): void {
