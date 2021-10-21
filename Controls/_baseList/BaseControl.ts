@@ -3352,7 +3352,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._afterCollectionRemove(removedItems, removedItemsIndex);
         }
 
-        this._scrollControllerCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.collectionChange(
+                action,
+                newItems,
+                newItemsIndex,
+                removedItems,
+                removedItemsIndex);
+        }
     }
     protected _afterCollectionReset(): void {
         // для переопределения
