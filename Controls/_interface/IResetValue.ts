@@ -12,6 +12,6 @@ export default interface IResetValue {
 }
 
 /**
- * @name Controls/_interface/IResetValueOptions#resetValue
+ * @name Controls/_interface/IResetValue#resetValue
  * @cfg {boolean} Предустановленное значение
  */
