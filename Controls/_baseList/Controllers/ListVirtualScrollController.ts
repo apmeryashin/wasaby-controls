@@ -4,8 +4,16 @@ import { Model } from 'Types/entity';
 import { IObservable } from 'Types/collection';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
 import {
-    ScrollController, IDirection as IScrollControllerDirection, IItemsRange, IEnvironmentChangedParams, IPageDirection,
-    IScheduledScrollParams, IScheduledScrollToElementParams, IEdgeItem, IIndexesChangedParams, IItemsEndedCallback
+    ScrollController,
+    IItemsRange,
+    IEnvironmentChangedParams,
+    IPageDirection,
+    IScheduledScrollParams,
+    IScheduledScrollToElementParams,
+    IEdgeItem,
+    IIndexesChangedParams,
+    IItemsEndedCallback,
+    IDirection
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { SyntheticEvent } from 'UI/Vdom';
 
@@ -96,27 +104,18 @@ export class ListVirtualScrollController {
         }
 
         const totalCount = this._collection.getCount();
-        const collectionStartIndex = this._collection.getStartIndex();
 
         switch (action) {
             case IObservable.ACTION_ADD: {
-                // let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                //                                     : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
-                //                                 if (self._collection.getCount() === newItems.length) {
-                //                                     direction = undefined;
-                //                                 }
                 this._scrollController.addItems(newItemsIndex, newItems.length);
                 break;
             }
             case IObservable.ACTION_MOVE: {
-                // todo fix commented code
-                const direction: IScrollControllerDirection =
-                    newItemsIndex <= collectionStartIndex /*&& this._scrollTop !== 0*/ ? 'backward' : 'forward';
-                this._scrollController.moveItems(newItemsIndex,
+                this._scrollController.moveItems(
+                    newItemsIndex,
                     newItems.length,
                     removedItemsIndex,
-                    removedItems.length,
-                    direction);
+                    removedItems.length);
                 break;
             }
             case IObservable.ACTION_REMOVE: {
@@ -193,7 +192,7 @@ export class ListVirtualScrollController {
             activeElementChangedCallback(activeElementIndex: number): void {
                 console.error('activeElementChangedCallback', activeElementIndex);
             },
-            itemsEndedCallback: (direction: IScrollControllerDirection) => {
+            itemsEndedCallback: (direction: IDirection) => {
                 console.error('itemsEndedCallback', direction);
                 this._itemsEndedCallback(direction);
             },

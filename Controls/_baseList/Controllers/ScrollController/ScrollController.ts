@@ -184,17 +184,12 @@ export class ScrollController {
      * @param addCount Кол-во добавляемых элементов
      * @param removePosition Индекс элемента откуда переместили записи
      * @param removeCount Кол-во удаляемых элементов
-     * @param direction Направление перемещения
      */
-    moveItems(addPosition: number,
-              addCount: number,
-              removePosition: number,
-              removeCount: number,
-              direction: IDirection): void {
+    moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): void {
         const itemsSizes = this._itemsSizesController.moveItems(addPosition, addCount, removePosition, removeCount);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        const result = this._calculator.moveItems(addPosition, addCount, removePosition, removeCount, direction);
+        const result = this._calculator.moveItems(addPosition, addCount, removePosition, removeCount);
         this._processCalculatorResult(result);
     }
 

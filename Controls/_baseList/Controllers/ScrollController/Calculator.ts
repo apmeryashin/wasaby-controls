@@ -325,25 +325,18 @@ export class Calculator {
      * При необходимости смещает виртуальный диапазон.
      * @param position Индекс элемента, после которого добавили записи
      * @param count Кол-во добавленных записей
-     * @param predicatedDirection заранее высчитанное направление добавления (необходимо при вызове prepend и append)
      */
-    addItems(position: number, count: number, predicatedDirection: IDirection): ICalculatorResult {
+    addItems(position: number, count: number): ICalculatorResult {
         const oldRange = this._range;
-        const direction = predicatedDirection || (position <= this._range.startIndex ? 'backward' : 'forward');
-
         this._totalCount += count;
 
-        if (direction === 'backward' && predicatedDirection) {
+        const direction = this._calcAddDirection(position, count);
+
+        if (direction === 'backward') {
             this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
             this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
         }
 
-        // todo FIX IT
-        /*if (predicatedDirection) {
-            this._savedDirection = predicatedDirection;
-        }*/
-
-        //if (!predicatedDirection && triggerState[direction]) {
         this._range = shiftRangeBySegment({
             currentRange: this._range,
             direction,
@@ -357,32 +350,37 @@ export class Calculator {
         return this._getRangeChangeResult(oldRange, direction);
     }
 
+    private _calcAddDirection(position: number, count: number): IDirection {
+        // Если изначально не было элементов, то direction === 'forward'
+        if (this._totalCount === count) {
+            return 'forward';
+        }
+
+        // Если позиция скролла === 0, то мы должны пожертвовать текущими отображаемыми записями и уступить место
+        // свежедобавленным, т.е. direction === 'forward'
+        if (this._scrollTop === 0) {
+            return 'forward';
+        }
+
+        const addBeforeStartIndex = position <= this._range.startIndex;
+        return addBeforeStartIndex ? 'backward' : 'forward';
+    }
+
     /**
      * Обрабатывает перемещение элементов внутри коллекции.
      * @param addPosition Индекс элемента, после которого вставили записи
      * @param addCount Кол-во добавляемых элементов
      * @param removePosition Индекс элемента откуда переместили записи
      * @param removeCount Кол-во удаляемых элементов
-     * @param direction Направление перемещения
      */
-    moveItems(addPosition: number,
-              addCount: number,
-              removePosition: number,
-              removeCount: number,
-              direction: IDirection): ICalculatorResult {
+    moveItems(addPosition: number, addCount: number, removePosition: number, removeCount: number): ICalculatorResult {
         const oldRange = this._range;
 
-        this.addItems(
-            addPosition,
-            addCount,
-            direction
-        );
+        const result = this.addItems(addPosition, addCount);
 
         this.removeItems(removePosition, removeCount);
 
-        this._updatePlaceholders(this._range);
-
-        return this._getRangeChangeResult(oldRange, direction);
+        return this._getRangeChangeResult(oldRange, result.shiftDirection);
     }
 
     /**
@@ -446,7 +444,8 @@ export class Calculator {
         return {
             startIndex: this._range.startIndex,
             endIndex: this._range.endIndex,
-            indexesChanged: oldRange.startIndex !== this._range.startIndex || oldRange.endIndex !== this._range.endIndex,
+            indexesChanged: oldRange.startIndex !== this._range.startIndex ||
+                oldRange.endIndex !== this._range.endIndex,
             shiftDirection,
 
             hasItemsBackward: this._hasItemsToDirection('backward'),
