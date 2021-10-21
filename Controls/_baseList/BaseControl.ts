@@ -1990,11 +1990,12 @@ const _private = {
 
         if (!direction) {
             this._loadedBySourceController = true;
-            if (this._isMounted && this._children.listView) {
+            if (this._isMounted && this._children.listView && !this._keepHorizontalScroll) {
                 this._children.listView.reset({
                     keepScroll: this._keepScrollAfterReload
                 });
             }
+            this._keepHorizontalScroll = false;
             _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
@@ -3207,6 +3208,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _continuationEditingDirection: Exclude<EDIT_IN_PLACE_CONSTANTS, EDIT_IN_PLACE_CONSTANTS.CANCEL>;
 
     _hoverFreezeController: HoverFreeze;
+
+    _keepHorizontalScroll: boolean = false;
 
     //#endregion
 
@@ -6056,6 +6059,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _sortingChanged(event, propName) {
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
+
+        // При смене сортировки позиция горизонтального скролла не должна изменяться.
+        // FIXME: Временное решение, до перехода на нативный горизонтальный скролл.
+        //  https://online.sbis.ru/opendoc.html?guid=bc40e794-c5d4-4381-800f-a98f2746750a
+        this._keepHorizontalScroll = true;
         this._notify('sortingChanged', [newSorting]);
     }
 
