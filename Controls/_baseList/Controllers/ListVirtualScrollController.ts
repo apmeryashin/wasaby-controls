@@ -70,6 +70,7 @@ export class ListVirtualScrollController {
         this._itemsEndedCallback = options.itemsEndedCallback;
 
         this._createScrollController();
+        this._scrollController.resetItems(this._collection.getCount());
     }
 
     afterMountListControl(): void {

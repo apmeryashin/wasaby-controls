@@ -82,6 +82,9 @@ import {IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
 
+import { ListVirtualScrollController } from './Controllers/ListVirtualScrollController';
+import type { IDirection as IScrollControllerDirection } from './Controllers/ScrollController/ScrollController';
+
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
 import {
@@ -450,7 +453,7 @@ const _private = {
 
     scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
         if (self._useNewScroll) {
-            self._scrollToItem(key, toBottom, force);
+            return self._listVirtualScrollController.scrollToItem(key, toBottom, force);
         } else {
             const scrollCallback = (index, result) => {
 
@@ -486,7 +489,7 @@ const _private = {
 
     keyDownHome(self, event) {
         if (self._useNewScroll) {
-            self._keyDownHome(event);
+            self._listVirtualScrollController.keyDownHome(event);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -502,7 +505,7 @@ const _private = {
 
     keyDownEnd(self, event) {
         if (self._useNewScroll) {
-            self._keyDownEnd(event);
+            self._listVirtualScrollController.keyDownEnd(event);
         } else {
             _private.setMarkerAfterScroll(self, event);
             if (self._options.navigation?.viewConfig?.showEndButton) {
@@ -512,14 +515,14 @@ const _private = {
     },
     keyDownPageUp(self, event) {
         if (self._useNewScroll) {
-            self._keyDownPageUp(event);
+            self._listVirtualScrollController.keyDownPageUp(event);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
     },
     keyDownPageDown(self, event) {
         if (self._useNewScroll) {
-            self._keyDownPageDown(event);
+            self._listVirtualScrollController.keyDownPageDown(event);
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -1262,7 +1265,7 @@ const _private = {
     // throttle нужен, чтобы при потоке одинаковых событий не пересчитывать состояние на каждое из них
     throttledVirtualScrollPositionChanged: throttle((self, params) => {
         if (self._useNewScroll) {
-            self._handleVirtualScrollPositionChanged(params);
+            self._listVirtualScrollController.virtualScrollPositionChange(params.scrollTop);
         } else {
             const result = self._scrollController.scrollPositionChange(params, true);
             _private.handleScrollControllerResult(self, result);
@@ -3142,9 +3145,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _scrollTop = 0;
     _popupOptions = null;
     private _scrollController: ScrollController;
-    private _newScrollController: NewScrollController;
-    private _itemsRangeScheduledSizeUpdate: IItemsRange;
-    private _scheduledScrollParams: IScheduledScrollParams;
+    private _listVirtualScrollController: ListVirtualScrollController;
+    private _useNewScroll: boolean = false;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3596,135 +3598,40 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._sourceController;
     }
 
-    private _createNewScrollController(): void {
+    private _createListVirtualScrollController(): void {
         if (!this._useNewScroll) {
             return;
         }
-        this._newScrollController = new NewScrollController({
+
+        this._listVirtualScrollController = new ListVirtualScrollController({
+            collection: this._listViewModel,
+            listControl: this,
+            virtualScrollConfig: this._options.virtualScrollConfig,
+
             itemsContainer: this._getItemsContainer(),
+            listContainer: this._container,
+
+            triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: this._options.itemsSelector,
 
-            listContainer: this._container,
-            listControl: this,
-            triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             triggersVisibility: undefined,
 
-            scrollTop: 0,
-            viewportSize: 0,
             totalCount: this._listViewModel.getCount(),
-            virtualScrollConfig: this._options.virtualScrollConfig,
-            indexesChangedCallback: this._indexesChangedCallback.bind(this),
-            environmentChangedCallback(params: IEnvironmentChangedParams): void {
-                console.error('environmentChangedCallback', params);
+
+            getItemContainerByIndexUtil: (index: number, itemsContainer: HTMLElement): HTMLElement => {
+                return this._options.itemContainerGetter.getItemContainerByIndex(index, itemsContainer);
             },
-            activeElementChangedCallback(activeElementIndex: number): void {
-                console.error('activeElementChangedCallback', activeElementIndex);
+
+            scrollToElementUtil: (container: HTMLElement, toBottom: boolean, force: boolean): void => {
+                this._notify('scrollToElement', [{ container, toBottom, force }], { bubbling: true });
             },
-            itemsEndedCallback: (direction: IScrollControllerDirection) => {
-                console.error('itemsEndedCallback', direction);
+
+            itemsEndedCallback: (direction: IScrollControllerDirection): void => {
+                console.error('BaseControl.itemsEndedCallback', direction);
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
                 _private.loadToDirectionIfNeed(this, compatibleDirection);
             }
         });
-        this._newScrollController.resetItems(this._listViewModel.getCount());
-    }
-
-    private _indexesChangedCallback(params: IIndexesChangedParams): void {
-        this._scheduleUpdateItemsSizes({
-            startIndex: params.startIndex,
-            endIndex: params.endIndex
-        });
-
-        const edgeVisibleItem = this._newScrollController.getEdgeVisibleItem(params.shiftDirection);
-        if (!this._listViewModel.getItemBySourceKey(edgeVisibleItem.key)) {
-            throw new Error('Controls/_baseList/BaseControl::_indexesChangedCallback | ' +
-                'Внутренняя ошибка списков! Крайний видимый элемент не найден в Collection.');
-        }
-        this._scheduleScroll({
-            type: 'restoreScroll',
-            params: edgeVisibleItem
-        });
-
-
-        console.error('indexChangedCallback', params);
-    }
-
-    private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
-        this._itemsRangeScheduledSizeUpdate = itemsRange;
-    }
-
-    private _updateItemsSizes(): void {
-        if (this._itemsRangeScheduledSizeUpdate) {
-            this._newScrollController.updateItemsSizes(this._itemsRangeScheduledSizeUpdate);
-            this._itemsRangeScheduledSizeUpdate = null;
-        }
-    }
-
-    private _scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): void {
-        const itemIndex = this._listViewModel.getIndexByKey(key);
-        const rangeChanged = this._newScrollController.scrollToItem(itemIndex);
-        if (rangeChanged) {
-            this._scheduleScroll({
-                type: 'scrollToElement',
-                params: { itemIndex, toBottom, force }
-            });
-        } else {
-            this._scrollToElement(itemIndex, toBottom, force);
-        }
-    }
-
-    private _scheduleScroll(scrollParams: IScheduledScrollParams): void {
-        this._scheduledScrollParams = scrollParams;
-    }
-
-    private _handleScheduledScroll(): void {
-        if (this._scheduledScrollParams) {
-            switch (this._scheduledScrollParams.type) {
-                case 'restoreScroll':
-                    const edgeItem = this._scheduledScrollParams.params as IEdgeItem;
-                    let directionToRestoreScroll = edgeItem.direction;
-                    if (!directionToRestoreScroll && (this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges())) {
-                        directionToRestoreScroll = 'backward';
-                    }
-                    if (directionToRestoreScroll) {
-                        const newScrollTop = this._newScrollController.getScrollTopToEdgeItem(edgeItem);
-                        this._notify('doScroll', [newScrollTop, true], { bubbling: true });
-                        this._hasItemWithImageChanged = false;
-                    }
-                    break;
-                case 'scrollToElement':
-                    const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
-                    this._scrollToElement(
-                        scrollToElementParams.itemIndex,
-                        scrollToElementParams.toBottom,
-                        scrollToElementParams.force
-                    );
-                    break;
-                default:
-                    throw new Error('Controls/_baseList/BaseControl::_handleScheduledScroll | ' +
-                        'Внутренняя ошибка списков! Неопределенный тип запланированного скролла.');
-            }
-
-            this._scheduledScrollParams = null;
-        }
-    }
-
-    private _scrollToElement(itemIndex: number, toBottom?: boolean, force?: boolean): void {
-        const itemsContainer = this._getItemsContainer();
-        const domItemIndex = itemIndex - this._listViewModel.getStartIndex();
-        const itemContainer = this._options.itemContainerGetter.getItemContainerByIndex(
-            domItemIndex,
-            itemsContainer,
-            this._listViewModel
-        );
-
-        if (itemContainer) {
-            this._notify(
-                'scrollToElement',
-                [{ itemContainer, toBottom, force }],
-                {bubbling: true}
-            );
-        }
     }
 
     /**
@@ -3884,8 +3791,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.tryLoadToDirectionAgain(this);
 
-        this._createNewScrollController();
-        this._updateItemsSizes();
+        this._createListVirtualScrollController();
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.afterMountListControl();
+        }
     }
 
     _updateScrollController(newOptions?: IBaseControlOptions) {
@@ -4522,8 +4431,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     _afterRender(): void {
-        this._updateItemsSizes();
-        this._handleScheduledScroll();
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.afterRenderListControl();
+        }
 
         let positionRestored = false;
 
