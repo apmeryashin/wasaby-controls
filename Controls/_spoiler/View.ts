@@ -108,7 +108,7 @@ export default View;
  */
 /**
  * @name Controls/_spoiler/View#headingFontWeight
- * @cfg {Enum} Начертание шрифта заголовка.
+ * @cfg {Enum} Насыщенность шрифта заголовка.
  * @see Controls/spoiler:Heading#fontWeight
  */
 /**

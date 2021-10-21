@@ -9,7 +9,7 @@ export type TFontWeight = 'default' | 'bold';
 export interface IFontWeightOptions {
     /**
      * @name Controls/_interface/IFontWeight#fontWeight
-     * @cfg {TFontWeight} Начертание шрифта.
+     * @cfg {TFontWeight} Насыщенность шрифта.
      * @default default
      * @demo Controls-demo/Decorator/Money/FontWeight/Index
      */

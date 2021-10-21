@@ -116,7 +116,7 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
      * если контент колонки выводится через декоратор
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
-     * @param templateFontWeight Начертание шрифта
+     * @param templateFontWeight Насыщенность шрифта
      */
     getCellContentRenderOptions(templateFontColorStyle?: TFontColorStyle,
                                 templateFontSize?: TFontSize,

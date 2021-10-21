@@ -1000,7 +1000,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * Добавляет CSS классы для стилизации текста в записи списка
      * @param fontColorStyle Цвет шрифта
      * @param fontSize Размер шрифта
-     * @param fontWeight начертание шрифта
+     * @param fontWeight Насыщенность шрифта
      */
     getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
                                  fontSize?: TFontSize,

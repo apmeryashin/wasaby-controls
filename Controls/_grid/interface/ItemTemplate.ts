@@ -39,8 +39,8 @@
  */
 /**
  * @name Controls/_grid/interface/ItemTemplate#fontWeight
- * @cfg {TFontWeight} Начертание шрифта.
+ * @cfg {TFontWeight} Насыщенность шрифта.
  * @default "default".
  * @remark
- * {@link Controls/_grid/display/interface/IColumn#fontWeight Начертание шрифта ячейки} имеет больший приоритет, чем начертание шрифта записи.
+ * {@link Controls/_grid/display/interface/IColumn#fontWeight Насыщенность шрифта ячейки} имеет больший приоритет, чем Насыщенность шрифта записи.
  */
