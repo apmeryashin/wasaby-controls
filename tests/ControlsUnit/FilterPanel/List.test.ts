@@ -136,6 +136,22 @@ describe('Controls/filterPanel:ListEditor', () => {
             assert.deepEqual(listEditor._selectedKeys, [2, 1]);
         });
 
+        it('selectedKeys includes selectedItem', () => {
+            const listEditor = getEditor(true);
+            listEditor._getTextValue = () => '';
+            const nativeEvent = {
+                target: {
+                    closest: () => true
+                }
+            };
+            const item = new Model({
+                rawData: { id: 1, title: 'first'},
+                keyProperty: 'id'
+            });
+            listEditor._handleItemClick(null, item, nativeEvent);
+            assert.deepEqual(listEditor._selectedKeys, []);
+        });
+
         it('multiSelect is false', () => {
             const listEditor = getEditor(false);
             listEditor._getTextValue = () => '';
