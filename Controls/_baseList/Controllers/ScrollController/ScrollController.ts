@@ -155,6 +155,12 @@ export class ScrollController {
         this._calculator.updateItemsSizes(newItemsSizes);
     }
 
+    resized(): void {
+        const range = this._calculator.getRange();
+        const newItemsSizes = this._itemsSizesController.updateItemsSizes(range);
+        this._calculator.updateItemsSizes(newItemsSizes);
+    }
+
     // endregion Update items sizes
 
     // region Collection changes
@@ -165,6 +171,9 @@ export class ScrollController {
      * @param count Кол-во добавленных записей
      */
     addItems(position: number, count: number): void {
+        const itemsSizes = this._itemsSizesController.addItems(position, count);
+        this._calculator.updateItemsSizes(itemsSizes);
+
         const result = this._calculator.addItems(position, count);
         this._processCalculatorResult(result);
     }
@@ -182,6 +191,9 @@ export class ScrollController {
               removePosition: number,
               removeCount: number,
               direction: IDirection): void {
+        const itemsSizes = this._itemsSizesController.moveItems(addPosition, addCount, removePosition, removeCount);
+        this._calculator.updateItemsSizes(itemsSizes);
+
         const result = this._calculator.moveItems(addPosition, addCount, removePosition, removeCount, direction);
         this._processCalculatorResult(result);
     }
@@ -192,6 +204,9 @@ export class ScrollController {
      * @param count Кол-во удаленных элементов.
      */
     removeItems(position: number, count: number): void {
+        const itemsSizes = this._itemsSizesController.removeItems(position, count);
+        this._calculator.updateItemsSizes(itemsSizes);
+
         const result = this._calculator.removeItems(position, count);
         this._processCalculatorResult(result);
     }
@@ -201,6 +216,9 @@ export class ScrollController {
      * @param totalCount Общее кол-во элементов в коллекции
      */
     resetItems(totalCount: number): void {
+        const itemsSizes = this._itemsSizesController.resetItems(totalCount);
+        this._calculator.updateItemsSizes(itemsSizes);
+
         const result = this._calculator.resetItems(totalCount);
         this._processCalculatorResult(result);
     }

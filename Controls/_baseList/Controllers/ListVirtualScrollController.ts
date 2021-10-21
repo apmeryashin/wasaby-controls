@@ -163,6 +163,10 @@ export class ListVirtualScrollController {
         this._scrollToPage('backward');
     }
 
+    resized(): void {
+        this._scrollController.resized();
+    }
+
     private _createScrollController(): void {
         const totalCount = this._collection.getCount();
         this._scrollController = new ScrollController({

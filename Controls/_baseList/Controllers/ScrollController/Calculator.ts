@@ -13,7 +13,8 @@ import type {
     IDirection,
     IEnvironmentChangedParams,
     IEdgeItem,
-    IIndexesChangedParams
+    IIndexesChangedParams,
+    IItemsRange
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 export interface IActiveElementIndexChanged extends IActiveElementIndex {
@@ -46,15 +47,6 @@ export interface ICalculatorOptions {
     virtualScrollConfig: IVirtualScrollConfig;
 }
 
-/**
- * Интерфейс диапазона отображаемых элементов.
- * start, end - индексы элементов включительно
- */
-export interface IRange {
-    start: number;
-    end: number;
-}
-
 export interface IPlaceholders {
     top: number;
     bottom: number;
@@ -73,7 +65,7 @@ export class Calculator {
     private _scrollTop: number;
     private _viewportSize: number;
     private _totalCount: number;
-    private _range: IRange = { start: 0, end: 0 };
+    private _range: IItemsRange = { startIndex: 0, endIndex: 0 };
     private _placeholders: IPlaceholders = { top: 0, bottom: 0 };
     private _activeElementIndex: number;
 
@@ -87,6 +79,10 @@ export class Calculator {
     }
 
     // region Getters/Setters
+
+    getRange(): IItemsRange {
+        return this._range;
+    }
 
     /**
      * Устанавливает новые размеры элементов
@@ -230,8 +226,8 @@ export class Calculator {
      */
     private _hasItemsToDirection(direction: IDirection): boolean {
         return direction === 'backward'
-            ? this._range.start > 0
-            : this._range.end < (this._totalCount - 1);
+            ? this._range.startIndex > 0
+            : this._range.endIndex < (this._totalCount - 1);
     }
 
     // endregion ShiftRangeToDirection
@@ -248,7 +244,7 @@ export class Calculator {
 
         // если элемент уже внутри диапазона, то ничего не делаем.
         if (!this._isItemInRange(index)) {
-            direction = index > this._range.end ? 'forward' : 'backward';
+            direction = index > this._range.endIndex ? 'forward' : 'backward';
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
                 start: 0,
@@ -267,7 +263,7 @@ export class Calculator {
      * @return {boolean}
      */
     private _isItemInRange(index: number): boolean {
-        return index >= this._range.start && index < this._range.end;
+        return index >= this._range.startIndex && index < this._range.endIndex;
     }
 
     // endregion ShiftRangeByIndex
@@ -333,13 +329,13 @@ export class Calculator {
      */
     addItems(position: number, count: number, predicatedDirection: IDirection): ICalculatorResult {
         const oldRange = this._range;
-        const direction = predicatedDirection || (position <= this._range.start ? 'backward' : 'forward');
+        const direction = predicatedDirection || (position <= this._range.startIndex ? 'backward' : 'forward');
 
         this._totalCount += count;
 
         if (direction === 'backward' && predicatedDirection) {
-            this._range.start = Math.min(this._totalCount, this._range.start + count);
-            this._range.end = Math.min(this._totalCount, this._range.end + count);
+            this._range.startIndex = Math.min(this._totalCount, this._range.startIndex + count);
+            this._range.endIndex = Math.min(this._totalCount, this._range.endIndex + count);
         }
 
         // todo FIX IT
@@ -398,7 +394,7 @@ export class Calculator {
     removeItems(position: number, count: number): ICalculatorResult {
         const oldRange = this._range;
 
-        const direction = position <= this._range.start ? 'backward' : 'forward';
+        const direction = position <= this._range.startIndex ? 'backward' : 'forward';
         this._totalCount -= count;
 
         this._range = shiftRangeBySegment({
@@ -438,7 +434,7 @@ export class Calculator {
 
     // endregion HandleCollectionChanges
 
-    private _updatePlaceholders(itemsRange: IRange): void {
+    private _updatePlaceholders(itemsRange: IItemsRange): void {
         // TODO мы в этот момент не знаем размеры элементов, как посчитать placeholders если count > virtualPageSize
         this._placeholders = {
             top: 0,
@@ -446,11 +442,11 @@ export class Calculator {
         };
     }
 
-    private _getRangeChangeResult(oldRange: IRange, shiftDirection: IDirection): ICalculatorResult {
+    private _getRangeChangeResult(oldRange: IItemsRange, shiftDirection: IDirection): ICalculatorResult {
         return {
-            startIndex: this._range.start,
-            endIndex: this._range.end,
-            indexesChanged: oldRange.start !== this._range.start || oldRange.end !== this._range.end,
+            startIndex: this._range.startIndex,
+            endIndex: this._range.endIndex,
+            indexesChanged: oldRange.startIndex !== this._range.startIndex || oldRange.endIndex !== this._range.endIndex,
             shiftDirection,
 
             hasItemsBackward: this._hasItemsToDirection('backward'),
