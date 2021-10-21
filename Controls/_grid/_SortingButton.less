@@ -18,11 +18,18 @@
    max-width: 100%;
 }
 .controls-SortingButton__icon {
-   align-self: baseline;
+   align-self: center;
    display: inline-block;
    flex-shrink: 0;
-   width: var(--icon-size_s);
-   height: var(--icon-size_s);
+   height: 100%;
+}
+
+.controls-SortingButton__arrow-spacing-right {
+   margin-right: var(--offset_xs);
+}
+
+.controls-SortingButton__arrow-spacing-left {
+   margin-left: var(--offset_xs);
 }
 
 .controls-SortingButton__caption {
@@ -32,7 +39,6 @@
 
 .controls-SortingButton_arrow {
    fill: var(--icon-color_gridSortingButton);
-   width: var(--icon-size_s);
    height: var(--icon-height_gridSortingButton);
 }
 
