@@ -14,8 +14,6 @@ const enum POSITION {
     DEFAULT = 'default'
 }
 
-const DEFAULT_CLOSE_BTN_WIDTH = 33;
-
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
     stickyPosition?: object;
@@ -63,11 +61,11 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         }
     }
 
-    protected getCloseButtonWidth(): number {
+    protected _getCloseButtonWidth(): number {
         if (this._children.hasOwnProperty('closeButton')) {
-            return this._children.closeButton._container?.offsetWidth || DEFAULT_CLOSE_BTN_WIDTH;
+            return this._children.closeButton._container?.offsetWidth;
         }
-        return DEFAULT_CLOSE_BTN_WIDTH;
+        return 0;
     }
 
     protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
@@ -76,13 +74,14 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
                 this._closeBtnPosition =  POSITION.RIGHT;
             } else {
-                const popupLeft = options.stickyPosition.position.left;
-                const isRightPosition = typeof options.stickyPosition.position.left === 'undefined';
-                let popupRight = popupLeft + options.stickyPosition.sizes.width;
+                const isRightPosition = options.stickyPosition.targetPoint?.horizontal === 'right';
+                let popupRight;
                 if (isRightPosition) {
                     popupRight = window?.innerWidth - options.stickyPosition.position.right;
+                } else {
+                    popupRight = options.stickyPosition.position.left + options.stickyPosition.sizes.width;
                 }
-                const isOutside = popupRight > window?.innerWidth - this.getCloseButtonWidth();
+                const isOutside = popupRight > window?.innerWidth - this._getCloseButtonWidth();
                 this._closeBtnPosition = isOutside ? POSITION.LEFT : POSITION.RIGHT;
             }
         }
