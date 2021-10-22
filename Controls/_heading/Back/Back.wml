@@ -1,54 +1,42 @@
 <ws:template name="caption">
-   <span attr:class="controls-Back__caption controls-fontsize-{{_options.fontSize}} controls-Back__caption_style-{{_options.fontColorStyle}}">{{_options.caption}}</span>
+   <span attr:class="
+      controls-Back__caption
+      controls-fontsize-{{_options.fontSize}}
+      controls-Back__caption_style-{{_options.fontColorStyle}}
+   ">
+      {{_options.caption}}
+   </span>
 </ws:template>
+
 <span attr:title="{{_options.tooltip}}" class="controls-Back">
    <span class="
       controls-Back__wrapper
       controls-fontsize-{{_options.fontSize}}
       controls-Back__wrapper_{{_options.fontSize}}
    ">
-      <ws:if data="{{ _options.newIcon }}">
-         <svg
-            version="1.1"
-            id="Слой_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            viewBox="0 0 8 16"
-            style="enable-background:new 0 0 8 16;"
-            xml:space="preserve"
-            class="
-               controls-Back_arrow
-               controls-Back_new-icon
-               controls-Back__icon_style-{{_options.iconStyle}}_modified
-            "
-         >
-            <polygon transform="matrix(0.7,0,0,0.7,0,5)" points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
-         </svg>
-      </ws:if>
-      <ws:else>
-         <div
-            class="
-               controls-Back_arrow
-               controls-Back_style-{{_options.iconStyle}}
-               controls-Back_style-{{_options.iconStyle}}_size-{{_options.iconSize}}
-               controls-Back_size-{{_options.iconSize}}
-            "
-         ></div>
-      </ws:else>
+      <svg
+         version="1.1"
+         id="Слой_1"
+         xmlns="http://www.w3.org/2000/svg"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         x="0px"
+         y="0px"
+         viewBox="0 0 9 16"
+         style="enable-background:new 0 0 8 16;"
+         xml:space="preserve"
+         class="
+            controls-Back_arrow
+            controls-Back_new-icon
+            controls-Back__icon_style-{{_options.iconStyle}}_modified
+         "
+      >
+         <polygon transform="matrix(0.7,0,0,0.7,2,5)" points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
+      </svg>
 
       <ws:if data="{{_options.beforeCaptionTemplate}}">
          <ws:partial template="{{_options.beforeCaptionTemplate}}"/>
       </ws:if>
 
-      <ws:if data="{{_isOldIe}}">
-         <div class="controls-Back__caption__wrapper controls-Back__caption_style-{{_options.fontColorStyle}}">
-            <ws:partial template="caption"/>
-         </div>
-      </ws:if>
-      <ws:else>
-         <ws:partial template="caption"/>
-      </ws:else>
+      <ws:partial template="caption"/>
    </span>
 </span>
