@@ -16,8 +16,10 @@ export default class EditingRow extends Control {
         // Don't stop propagation event with tab-key, it breaks the moving focus by tab/shift+tab.
         // Stop propagation on escape, because it should only be used to cancel edit in place
         if (
-            event.nativeEvent.keyCode === constants.key.esc ||
-            !event.target.closest('.ws-dont-stop-native-event') && event.nativeEvent.keyCode !== constants.key.tab
+            !(event.nativeEvent.keyCode === constants.key.enter && this._options.keepEnter) && (
+                event.nativeEvent.keyCode === constants.key.esc ||
+                !event.target.closest('.ws-dont-stop-native-event') && event.nativeEvent.keyCode !== constants.key.tab
+            )
         ) {
             event.stopPropagation();
         }

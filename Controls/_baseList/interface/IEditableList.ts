@@ -227,10 +227,22 @@ export interface IEditingConfig {
      * @variant true Включен.
      * @variant false Отключен.
      * @default true
+     * @deprecated
+     * @see sequentialEditingMode
      * @remark
      * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#edit здесь}.
      */
     sequentialEditing?: boolean;
+
+    /**
+     * @name Controls/_list/interface/IEditingConfig#sequentialEditingMode
+     * @cfg {Controls/list:IEditableList/TSequentialEditingMode.typedef} Автоматический запуск редактирования по месту для следующего элемента, происходящий при завершении редактирования любого (кроме последнего) элемента списка.
+     * @default row
+     * @remark
+     * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#edit здесь}.
+     */
+    sequentialEditingMode?: TSequentialEditingMode;
+
     /**
      * @name Controls/_list/interface/IEditingConfig#toolbarVisibility
      * @cfg {Boolean} Видимость кнопок "Сохранить" и "Отмена", отображаемых на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} в режиме редактирования.
@@ -292,6 +304,15 @@ interface IOperationCanceledResult { canceled: true; }
  * @variant bottom В конце.
  */
 type TAddPosition = 'top' | 'bottom';
+
+/**
+ * @typedef {Enum} TSequentialEditingMode
+ * @description Допустимые значения для свойства {@link Controls/list:IEditingConfig#sequentialEditingMode sequentialEditingMode}.
+ * @variant row Запускать редактирование в следующей строке, при завершении текущего редактирования.
+ * @variant cell Запускать редактирование в следующей ячейке, при завершении текущего редактирования.
+ * @variant none Не запускать новое редактирование, при завершении текущего редактирования.
+ */
+type TSequentialEditingMode = 'row' | 'none';
 
 /**
  * Интерфейс объекта-конфигурации для запуска {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/add/ добавления по месту}.
@@ -361,7 +382,7 @@ type TBeforeBeginEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBe
 /**
  * @typedef {String | undefined} Controls/_list/interface/IEditableList/TBeforeEndEditEventSyncResult
  * @description Синхронные значения, которые можно возвращать из обработчика события {@link beforeEndEdit}.
- * @variant {String} 
+ * @variant {String}
  * @variant undefined Использовать базовую логику редактирования/добавления по месту.
  */
 type TBeforeEndEditEventSyncResult = LIST_EDITING_CONSTANTS.CANCEL | undefined;

@@ -20,8 +20,6 @@ interface IFilterGroup {
     afterEditorTemplate: TemplateFunction | string;
 }
 
-const LIST_EDITOR_NAME = 'Controls/filterPanel:ListEditor';
-
 export default class FilterViewModel extends mixin<VersionableMixin>(VersionableMixin) {
     protected _source: IFilterItem[] = null;
     protected _editingObject: Record<string, unknown> = {};
@@ -58,6 +56,10 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     private _getSource(source: IFilterItem[]): IFilterItem[] {
         const newSource = [];
         source.forEach((item) => {
+            // Здесь не подходит опция caption PropertyGrid, т.к мы настраиваем отображения заголовка в шаблоне группы
+            // Вместо caption для установки заголовка используем editorCaption
+            item.editorCaption = item.caption || item.group || item.editorCaption;
+            item.caption = '';
             const editorOptions = {
                 ...item.editorOptions,
                 ...{
@@ -87,8 +89,9 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
     private _getGroupItemsBySource(source: IFilterItem[]): Record<string, IFilterGroup> {
         const groupsItems = {};
         source.forEach((item) => {
-            groupsItems[item.group] = {
-                needShowExpander: item.editorTemplateName === LIST_EDITOR_NAME,
+            groupsItems[item.name] = {
+                caption: item.editorCaption,
+                expanderVisible: item.expanderVisible,
                 textValue: item.textValue,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
@@ -214,9 +217,9 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
         this._nextVersion();
     }
 
-    resetFilterItem(group: string): void {
+    resetFilterItem(name: string): void {
         this._source = object.clone(this._source);
-        const item = this._source.find((filterItem) => filterItem.group === group);
+        const item = this._source.find((filterItem) => filterItem.name === name);
         item.value = item.resetValue;
         item.textValue = '';
         this._editingObject = this._getEditingObjectBySource(this._source);

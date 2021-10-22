@@ -16,6 +16,7 @@
                              ' controls-ListView__groupContent_textTransform_' + textTransform + '_' + (fontSize || 's') }}
                           {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander' +
                           (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
+						  ' controls-ListView__groupExpander-iconStyle_' + (iconStyle || 'default') +
                           ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +
                           (!(item || itemData).isExpanded() ?
                           ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?

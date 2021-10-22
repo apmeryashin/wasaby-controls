@@ -14,6 +14,7 @@ const columns: IGroupNodeColumn[] = [
         displayProperty: 'title',
         groupNodeConfig: {
             textAlign: 'right',
+            iconStyle: 'secondary',
             textTransform: 'uppercase'
         }
     },

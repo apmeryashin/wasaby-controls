@@ -1,4 +1,4 @@
-import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight, TIconSize, TIconStyle, TTextTransform} from 'Controls/interface';
 import {IColumn} from 'Controls/grid';
 
 /**
@@ -50,7 +50,9 @@ export default abstract class GroupCell<T> {
     }
 
     getExpanderClasses(expanderVisible: boolean = true,
-                       expanderAlign: 'right' | 'left' = 'left'): string {
+                       expanderAlign: 'right' | 'left' = 'left',
+                       iconSize: TIconSize,
+                       iconStyle: TIconStyle): string {
         let classes = '';
         if (expanderVisible !== false) {
             if (!this.isExpanded()) {
@@ -58,9 +60,10 @@ export default abstract class GroupCell<T> {
                 classes += ` controls-ListView__groupExpander_collapsed_${expanderAlign}`;
             }
 
-            classes += ` controls-ListView__groupExpander ` +
+            classes += ' controls-ListView__groupExpander ' +
                 ` controls-ListView__groupExpander_${expanderAlign}` +
-                ` controls-ListView__groupExpander-iconSize_default`;
+                ` controls-ListView__groupExpander-iconSize_${iconSize || 'default'}` +
+                ` controls-ListView__groupExpander-iconStyle_${iconStyle || 'default'}`;
 
             classes += ' js-controls-Tree__row-expander';
         }

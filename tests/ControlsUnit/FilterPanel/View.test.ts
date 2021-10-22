@@ -6,8 +6,7 @@ describe('Controls/filterPanel:View', () => {
         const config = {
             source: [
                 {
-                    group: 'owners',
-                    name: 'owner',
+                    name: 'owners',
                     value: 'Test owner',
                     textValue: 'Test owner',
                     resetValue: null

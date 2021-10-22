@@ -1,3 +1,14 @@
+/**
+ * @typedef {String} Значения для размеров иконки
+ * @variant 2xs минимальный
+ * @variant xs уменьшенный
+ * @variant s малый
+ * @variant m средний
+ * @variant l большой
+ * @variant default по-умолчанию
+ */
+export type TIconSize = '2xs' | 'xs' | 's' | 'm' | 'l';
+
 export interface IIconSizeOptions {
    iconSize?: string;
 }
@@ -19,7 +30,9 @@ export default interface IIconSize {
 }
 /**
  * @name Controls/_interface/IIconSize#iconSize
- * @cfg {Enum} Размер иконки.
+ * @cfg {TIconSize} Размер иконки.
+ * @variant 2xs минимальный
+ * @variant xs уменьшенный
  * @variant s малый
  * @variant m средний
  * @variant l большой
@@ -43,7 +56,7 @@ export default interface IIconSize {
 
 /*
  * @name Controls/_interface/IIconSize#iconSize
- * @cfg {Enum} Icon display Size.
+ * @cfg {TIconSize} Icon display Size.
  * @variant s
  * @variant m
  * @variant l

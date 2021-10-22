@@ -2,6 +2,8 @@ import { TemplateFunction } from 'UI/Base';
 
 type TSlidingPanelPosition = 'top' | 'bottom';
 
+type TDesktopMode = 'dialog' | 'stack' | 'sticky';
+
 export interface ISlidingPanelPopupOptions {
     slidingPanelOptions: ISlidingPanelOptions;
     className?: string;
@@ -9,18 +11,21 @@ export interface ISlidingPanelPopupOptions {
     modal?: boolean;
     position?: TSlidingPanelPosition;
     content?: TemplateFunction;
-    desktopMode?: 'dialog' | 'stack' | 'sticky';
+    desktopMode?: TDesktopMode;
+    isAdaptive?: boolean;
 }
 
 export interface ISlidingPanelOptions {
+    restrictiveContainer?: string;
     maxHeight?: number;
     minHeight?: number;
     position?: TSlidingPanelPosition;
     height?: number;
-    desktopMode?: 'dialog' | 'stack';
+    desktopMode?: TDesktopMode;
     autoHeight?: boolean;
     heightList?: number[];
     userMoveLocked?: boolean;
+    isMobileMode?: boolean;
 }
 
 export interface IDialogOptions {
@@ -54,6 +59,25 @@ export interface ISlidingPanel {
  */
 
 /**
+ * @name Controls/_popup/interface/ISlidingPanel#isAdaptive
+ * @cfg {boolean} Определяет должна ли шторка адаптировать способ открытия в зависимости от того вызывается отрытие на мобильном устройстве или нет.
+ * @variant true На мобильном устройстве открывается шторка, на остальных открывается stack/dialog/sticky в зависимости от desktopMode
+ * @variant false Всегда открывается шторка
+ * @default true
+ * @example
+ * <pre class="brush: js">
+ * import {SlidingPanelOpener} from 'Controls/popup';
+ *
+ * this._slidingPanel = new SlidingPanelOpener({
+ *    isAdaptive: false
+ * });
+ *
+ * _openSlidingPanel() {
+ *     this._slidingPanel.open(config);
+ * }
+ */
+
+/**
  * @name Controls/_popup/interface/ISlidingPanel#slidingPanelOptions
  * @cfg {Controls/_popup/interface/ISlidingPanel/SlidingPanelOptions.typedef} Конфигурация окна на мобильном устройстве.
  */
@@ -79,6 +103,7 @@ export interface ISlidingPanel {
 
 /**
  * @typedef {Object} Controls/_popup/interface/ISlidingPanel/SlidingPanelOptions
+ * @demo Controls-demo/Popup/SlidingPanel/RestrictiveContainer/Index
  * @description Настройки окна на мобильном устройстве.
  * @property {Boolean} modal
  * @property {Number} minHeight Минимально допустимая высота окна. С такой высотой оно открывается.
@@ -90,6 +115,9 @@ export interface ISlidingPanel {
  * @property {Number[]} heightList Определяет список высот(якорей), которые может принимать окно при растягивании.
  * Когда пользователь отпускает свайп после растягивания окна принимает высоту ближайшего по значению якоря.
  * Для определения того, к какому якорю сейчас прикреплена шторка в шаблон попапа спускаются опции currentHeight и heightList
+ * @property {String} restrictiveContainer Определяет селектор контейнера в рамаках которого будет строиться шторка.
+ * Шторка будет вписываться в данный контейнер по ширине, но открываться будет от низа экрана.
+ * Пример задания: '.my-super-class'
  */
 
 /**

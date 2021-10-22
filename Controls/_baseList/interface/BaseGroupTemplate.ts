@@ -1,13 +1,20 @@
-import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions, ITextTransformOptions} from 'Controls/interface';
+import {
+   IFontColorStyleOptions,
+   IFontSizeOptions,
+   IFontWeightOptions,
+   IIconSizeOptions,
+   IIconStyleOptions,
+   ITextTransformOptions
+} from 'Controls/interface';
 
-export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions, ITextTransformOptions {
+export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions,
+    IIconSizeOptions, IIconStyleOptions, ITextTransformOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
    textAlign?: string;
    rightTemplate?: string;
    contentTemplate?: string;
-   iconSize?: string;
    textVisible?: boolean;
 }
 
@@ -240,8 +247,19 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOpt
  */
 /**
  * @name Controls/_list/interface/IBaseGroupTemplate#iconSize
- * @cfg {String} Размер иконки {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ кнопки-экспандера}.
+ * @cfg {TIconSize} Размер иконки {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ кнопки-экспандера}.
  * @default s
+ * @see iconStyle
+ * @see expanderAlign
+ * @see expanderVisible
+ */
+/**
+ * @name Controls/_list/interface/IBaseGroupTemplate#iconStyle
+ * @cfg {TIconStyle} Стиль цвета иконки {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ кнопки-экспандера}.
+ * @default default
+ * @remark
+ * Цвет иконки задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+ * @see iconSize
  * @see expanderAlign
  * @see expanderVisible
  */
