@@ -16,7 +16,7 @@ export {default as IItemTemplate, IItemTemplateOptions} from './_interface/IItem
 export {default as IIconStyle, IIconStyleOptions, TIconStyle} from './_interface/IIconStyle';
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
 export {default as IIcon, IIconOptions} from './_interface/IIcon';
-export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';
+export {default as IIconSize, IIconSizeOptions, TIconSize} from './_interface/IIconSize';
 export {default as IFontColorStyle, IFontColorStyleOptions, TFontColorStyle} from './_interface/IFontColorStyle';
 export {default as IFontSize, IFontSizeOptions, TFontSize} from './_interface/IFontSize';
 export {default as IFontWeight, IFontWeightOptions, TFontWeight} from './_interface/IFontWeight';

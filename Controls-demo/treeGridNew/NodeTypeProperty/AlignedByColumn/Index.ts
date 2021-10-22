@@ -13,7 +13,8 @@ const columns: IGroupNodeColumn[] = [
         width: '300px',
         displayProperty: 'title',
         groupNodeConfig: {
-            textAlign: 'right'
+            textAlign: 'right',
+            iconStyle: 'secondary'
         }
     },
     {

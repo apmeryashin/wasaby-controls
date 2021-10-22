@@ -622,12 +622,34 @@
    }});
 }
 
-.ws-is-hover .controls-ListView__groupExpander:hover {
+.ws-is-hover .controls-ListView__groupExpander:hover,
+.ws-is-hover .controls-ListView__groupExpander:hover::before,
+.ws-is-hover .controls-ListView__groupExpander:hover::after {
    color: var(--grouping_expander_hover_text-color_list);
 }
 
-.controls-ListView__groupExpander:active {
+.controls-ListView__groupExpander:active,
+.controls-ListView__groupExpander:active::before,
+.controls-ListView__groupExpander:active::after {
    color: var(--grouping_expander_hover_text-color_list);
+}
+
+.controls-ListView__groupExpander-iconStyle_default {
+   &::before,
+   &::after {
+      color: var(--grouping_expander_text-color_list);
+   }
+}
+
+.controls-ListView__groupExpander-iconStyle_ {
+   @variants: primary, secondary, success, warning, danger, info, label, contrast, unaccented;
+   .for(@variants, { &@{_item}, &@{_item}:hover {
+      &::before,
+      &::after {
+         color: ~"var(--controls-icon_style-@{_item})";
+         fill: ~"var(--controls-icon_style-@{_item})";
+      }
+   }});
 }
 
 .controls-ListView__groupExpander_collapsed_left:before {
