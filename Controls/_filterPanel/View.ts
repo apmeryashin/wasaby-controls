@@ -28,6 +28,7 @@ import 'css!Controls/filterPanel';
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста при закрытии группы.
  * @property {Controls/filter:EditorOptions.typedef} editorOptions Опции для редактора.
  * @property {String} editorTemplateName Имя редактора.
+ * @property {boolean} expanderVisible Видимость экспандера редактора.
  * В настоящей версии фреймворка поддерживается только 2 значения для editorTemplateName — NumberRangeEditor и ListEditor.
  * При использовании NumberRangeEditor будет построен контрол {@link Controls/input:Number}.
  * При использовании ListEditor будет построен контрол {@link Controls/grid:View}.
