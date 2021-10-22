@@ -168,4 +168,47 @@ describe('Controls/_searchBreadcrumbsGrid/display/SearchGridCollection', () => {
 
       assert.equal(collection.getCount(), 3);
    });
+
+   describe('parent', () => {
+      it('should recalculate collection when changed hierarchy', () => {
+         /*
+            [1]
+               11
+            [2]
+               21
+          */
+         const items = new RecordSet({
+            rawData: [
+               { key: 1, parent: null, node: true },
+               { key: 11, parent: 1, node: null },
+               { key: 2, parent: null, node: true },
+               { key: 21, parent: 2, node: null, value: 123 }
+            ],
+            keyProperty: 'key'
+         });
+         const collection = new SearchGridCollection({
+            collection: items,
+            keyProperty: 'key',
+            parentProperty: 'parent',
+            nodeProperty: 'node',
+            columns: [{}],
+            root: null
+         });
+
+         items.setEventRaising(false, true);
+         const movedItem = items.getRecordById(21);
+         items.getRecordById(21).set('pid', 1);
+         movedItem.merge(new Model({
+            rawData: { key: 21, parent: 1, node: null, value: 0 },
+            keyProperty: 'key'
+         }));
+         items.setEventRaising(true, true);
+
+         // лениво инициализируем создание всех элементов
+         collection.getItems();
+         const item = collection.getItemBySourceKey(21);
+         const parent = item.getParent();
+         assert.equal(parent.getContents()[0].getKey(), 1);
+      });
+   });
 });
