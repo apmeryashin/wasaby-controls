@@ -2,13 +2,13 @@
    <div class="controls-FilterViewPanel__group-wrapper controls-FilterViewPanel__group-wrapper_style-{{style}}
             {{collapsedGroups[item] ? 'controls-FilterViewPanel__group-wrapper-collapsed'}}">
       <div class="controls-FilterViewPanel__group-header">
-         <div class="controls-FilterViewPanel__group {{_options.groupItems[item].needShowExpander ?
+         <div class="controls-FilterViewPanel__group {{_options.groupItems[item].expanderVisible ?
          'controls-PropertyGrid__groupExpander'}}"
               attr:key="group-{{item}}">
             <div class="controls-FilterViewPanel__group-content_container ws-flexbox">
                <ws:if data="{{_options.groupItems[item].caption}}">
                   <div class="controls-FilterViewPanel__group-content
-                              {{_options.groupItems[item].needShowExpander ? 'controls-FilterViewPanel__group-content-expandable'}}"
+                              {{_options.groupItems[item].expanderVisible ? 'controls-FilterViewPanel__group-content-expandable'}}"
                        title="{{_options.groupItems[item].caption}}">
                      {{_options.groupItems[item].caption}}
                   </div>
@@ -19,9 +19,7 @@
                            {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}">
                   </div>
                </ws:if>
-               <ws:if data="{{_options.groupItems[item].separatorVisibility !== 'hidden'}}">
-                  <div class="controls-FilterViewPanel__group-separator"> </div>
-               </ws:if>
+               <div class="controls-FilterViewPanel__group-separator"> </div>
             </div>
             <ws:if data="{{!collapsedGroups[item] && _options.groupItems[item].textValue.length}}">
                <div class="controls-FilterViewPanel__group-content_reset controls-FilterViewPanel__groupReset" title="{[Сбросить фильтр]}">{{rk('Сбросить')}}</div>

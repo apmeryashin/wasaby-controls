@@ -64,10 +64,10 @@ export default class extends Control {
                 name: 'owner',
                 resetValue: [],
                 value: [],
+                expanderVisible: true,
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
-                    expanderVisible: true,
                     imageProperty: 'sourceImage',
                     multiSelect: true,
                     navigation: {
