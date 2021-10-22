@@ -1,5 +1,5 @@
 import {TMarkerClassName} from 'Controls/display';
-import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions} from 'Controls/interface';
+import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions, ITextTransformOptions} from 'Controls/interface';
 
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/TCursor
@@ -9,7 +9,7 @@ import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions} from 'Cont
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
-export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions {
+export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions, ITextTransformOptions {
    highlightOnHover?: boolean;
    cursor?: TCursor;
    marker?: boolean;
@@ -80,6 +80,11 @@ export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions
  * @name Controls/_list/interface/IBaseItemTemplate#fontWeight
  * @cfg {TFontWeight} Насыщенность шрифта.
  * @default "default".
+ */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#textTransform
+ * @cfg
+ * @default none
  */
 /*
  * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.

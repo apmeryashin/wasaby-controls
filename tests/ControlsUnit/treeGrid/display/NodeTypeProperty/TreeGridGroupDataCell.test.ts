@@ -49,10 +49,12 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
     });
 
     it('should contain styling classes when styling options are set', () => {
-        const classes = getGroupCell().getContentTextStylingClasses('secondary', 's');
+        const classes = getGroupCell().getContentTextStylingClasses('secondary', 's', 'bold', 'uppercase');
         CssClassesAssert.include(classes, [
             'controls-fontsize-s',
-            'controls-text-secondary'
+            'controls-text-secondary',
+            'controls-fontweight-bold',
+            'controls-ListView__itemContent_textTransform-uppercase'
         ]);
     });
 

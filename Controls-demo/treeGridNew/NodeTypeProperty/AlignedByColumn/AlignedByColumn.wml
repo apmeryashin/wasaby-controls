@@ -15,7 +15,8 @@
                         highlightOnHover="{{ itemTemplate.item.contents.get('nodeType') !== 'group' }}"
                         fontColorStyle="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'secondary' }}"
                         fontSize="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'xl' }}"
-                        fontWeight="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'bold' }}"/>
+                        fontWeight="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'bold' }}"
+                        textTransform="{{ itemTemplate.item.contents.get('nodeType') === 'group' ? 'uppercase' }}"/>
         </ws:itemTemplate>
     </Controls.treeGrid:View>
 </div>

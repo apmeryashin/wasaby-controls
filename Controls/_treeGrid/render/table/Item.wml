@@ -42,6 +42,7 @@
                             fontColorStyle="{{ fontColorStyle }}"
                             fontSize="{{ fontSize }}"
                             fontWeight="{{ fontWeight }}"
+                            textTransform="{{ textTransform }}"
                             tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                             tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
                             editArrowTemplate="{{ editArrowTemplate }}">

@@ -1,6 +1,6 @@
-import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions} from 'Controls/interface';
+import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions, ITextTransformOptions} from 'Controls/interface';
 
-export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions {
+export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions, ITextTransformOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
@@ -249,4 +249,9 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOpt
  * @name Controls/_list/interface/IBaseGroupTemplate#fontWeight
  * @cfg
  * @default default
+ */
+/**
+ * @name ontrols/_list/interface/IBaseGroupTemplate#textTransform
+ * @cfg
+ * @default none
  */
