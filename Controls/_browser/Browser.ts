@@ -627,7 +627,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._viewMode === 'search';
     }
 
-    protected _dataLoadStart(event: SyntheticEvent, key: TKey, direction: Direction): void {
+    protected _dataLoadStart(event: SyntheticEvent, direction: Direction): void {
         if (!direction) {
             this._loading = true;
         }
