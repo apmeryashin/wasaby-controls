@@ -5450,7 +5450,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         switch (nativeEvent.keyCode) {
             case 13: // Enter
-                if (this._getEditingConfig().sequentialEditingMode === 'cell' && this._editInPlaceInputHelper.tryActivateNextCellByEnter(nativeEvent.target)) {
+                if (this._getEditingConfig().sequentialEditingMode === 'cell') {
                     return Promise.resolve();
                 } else {
                     return this._editingRowEnterHandler(e);
