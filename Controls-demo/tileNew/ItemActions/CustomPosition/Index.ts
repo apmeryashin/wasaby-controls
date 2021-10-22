@@ -15,7 +15,12 @@ export default class extends Control {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             parentProperty: 'parent',
-            data: Gadgets.getData().map((item) => (item.width = 300, item))
+            data: Gadgets.getData().map((item) => {
+                return {
+                    ...item,
+                    width: 300
+                };
+            })
         });
     }
 
