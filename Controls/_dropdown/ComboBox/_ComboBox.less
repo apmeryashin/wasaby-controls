@@ -117,7 +117,21 @@
 
 .controls-ComboBox-popup {
    margin-top: calc(-1 * var(--border-thickness));
-   margin-left: calc(-1 * (var(--border-thickness) + var(--offset_xs) + var(--item_padding-horizontal_s_menu)));
+
+   // отступ попапа меню + отступ пункта меню + ширина маркера - ширина обводки - отступ маркера
+   --combobox_popup_shift: calc(var(--offset_xs) + var(--item_padding-horizontal_s_menu) + var(--icon-size_2xs) / 2 - var(--border-thickness) - var(--offset_3xs));
+}
+
+.controls-ComboBox-popup_shift {
+   margin-left: calc(-1 * var(--combobox_popup_shift));
+}
+
+.controls-ComboBox-popup_shift_borderVisible {
+   margin-left: calc(-1 * (var(--combobox_popup_shift) - var(--border-thickness)));
+}
+
+.controls-ComboBox-popup_shift_contrastBackground {
+   margin-left: calc(-1 * (var(--combobox_popup_shift) - var(--padding-horizontal_inputText)));
 }
 
 .controls-ComboBox:hover,
