@@ -39,16 +39,12 @@ export class ItemsSizesController {
 
     // region on DOM references update
 
-    setItemsContainer(newItemsContainer: HTMLElement): IItemsSizes {
+    setItemsContainer(newItemsContainer: HTMLElement): void {
         this._itemsContainer = newItemsContainer;
-        // this._updateItemsSizes();
-        return this.getItemsSizes();
     }
 
-    setItemsQuerySelector(newItemsQuerySelector: string): IItemsSizes {
+    setItemsQuerySelector(newItemsQuerySelector: string): void {
         this._itemsQuerySelector = newItemsQuerySelector;
-        // this._updateItemsSizes();
-        return this.getItemsSizes();
     }
 
     // endregion
@@ -83,25 +79,31 @@ export class ItemsSizesController {
     private _updateItemsSizes(itemsRange: IItemsRange): void {
         const itemsRangeLength = itemsRange.endIndex - itemsRange.startIndex;
 
-        const itemsElements = this._itemsContainer.querySelectorAll(
-            this._itemsQuerySelector
-        );
+        if (this._itemsContainer) {
+            const itemsElements = this._itemsContainer.querySelectorAll(
+                this._itemsQuerySelector
+            );
 
-        if (itemsRangeLength !== itemsElements.length) {
-            Logger.error('Controls/list:ItemsSizeController.updateItemsSizes | ' +
-                'The count of elements in the DOM differs from the length of the updating items range.');
+            if (itemsRangeLength !== itemsElements.length) {
+                Logger.error('Controls/list:ItemsSizeController.updateItemsSizes | ' +
+                    'The count of elements in the DOM differs from the length of the updating items range.');
+            } else {
+                let position = itemsRange.startIndex;
+
+                itemsElements.forEach((element) => {
+                    // todo add support for Controls/grid and display: contents
+                    this._itemsSizes[position] = {
+                        key: (element as HTMLElement).getAttribute('item-key'),
+                        height: (element as HTMLElement).offsetHeight,
+                        offsetTop: (element as HTMLElement).offsetTop
+                    };
+                    position++;
+                });
+            }
         } else {
-            let position = itemsRange.startIndex;
-
-            itemsElements.forEach((element) => {
-                // todo add support for Controls/grid and display: contents
-                this._itemsSizes[position] = {
-                    key: (element as HTMLElement).getAttribute('item-key'),
-                    height: (element as HTMLElement).offsetHeight,
-                    offsetTop: (element as HTMLElement).offsetTop
-                };
-                position++;
-            });
+            for (let position = itemsRange.startIndex; position <= itemsRange.endIndex; position++) {
+                this._itemsSizes[position] = ItemsSizesController._getEmptyItemSize();
+            }
         }
     }
 
@@ -110,6 +112,6 @@ export class ItemsSizesController {
             key: undefined,
             offsetTop: 0,
             height: 0
-        }
+        };
     }
 }

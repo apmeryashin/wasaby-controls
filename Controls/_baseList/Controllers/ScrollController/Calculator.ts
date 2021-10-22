@@ -29,22 +29,24 @@ export interface ICalculatorResult extends
     environmentChanged: boolean;
 }
 
+export interface ICalculatorBaseOptions {
+    scrollTop: number;
+    viewportSize: number;
+    totalCount: number;
+
+    virtualScrollConfig: IVirtualScrollConfig;
+}
+
 /**
  * Интерфейс опции класса Calculator
  */
-export interface ICalculatorOptions {
+export interface ICalculatorOptions extends ICalculatorBaseOptions {
     itemsSizes: IItemsSizes;
 
     /**
      * Размеры смещения триггеров. Нужны чтобы избежать лишних отрисовок и сразу же отловить видимость триггера.
      */
     triggersOffsets: ITriggersOffsets;
-
-    scrollTop: number;
-    viewportSize: number;
-    totalCount: number;
-
-    virtualScrollConfig: IVirtualScrollConfig;
 }
 
 export interface IPlaceholders {
@@ -75,13 +77,18 @@ export class Calculator {
         this._scrollTop = options.scrollTop;
         this._totalCount = options.totalCount;
         this._viewportSize = options.viewportSize;
-        this._virtualScrollConfig = options.virtualScrollConfig; // TODO нужно избавитсья от понятия виртуализации
+        this._virtualScrollConfig = options.virtualScrollConfig;
+        this.resetItems(this._totalCount);
     }
 
     // region Getters/Setters
 
     getRange(): IItemsRange {
         return this._range;
+    }
+
+    getTotalItemsCount(): number {
+        return this._totalCount;
     }
 
     setTriggerOffsets(triggerOffset: ITriggersOffsets): void {
@@ -281,10 +288,10 @@ export class Calculator {
     // region ShiftRangeByScrollPosition
 
     /**
-     * Смещает диапазон к переданной позиции скролла.
+     * Смещает диапазон к переданной позиции скролла, учитывая виртуальный скролл.
      * @param scrollPosition Позиция скролла
      */
-    shiftRangeToScrollPosition(scrollPosition: number): ICalculatorResult {
+    shiftRangeToVirtualScrollPosition(scrollPosition: number): ICalculatorResult {
         const oldRange = this._range;
         const direction = scrollPosition > this._scrollTop ? 'forward' : 'backward';
 

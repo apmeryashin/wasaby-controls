@@ -3146,7 +3146,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _popupOptions = null;
     private _scrollController: ScrollController;
     private _listVirtualScrollController: ListVirtualScrollController;
-    private _useNewScroll: boolean = false;
+    private _useNewScroll: boolean = true;
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem = null;
@@ -3406,6 +3406,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.createScrollController(self, newOptions);
         self._createIndicatorsController(newOptions);
+        self._createListVirtualScrollController(newOptions);
     }
 
     _initKeyProperty(options: TOptions): void {
@@ -3613,7 +3614,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return this._sourceController;
     }
 
-    private _createListVirtualScrollController(): void {
+    private _createListVirtualScrollController(options): void {
         if (!this._useNewScroll) {
             return;
         }
@@ -3621,24 +3622,24 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._listVirtualScrollController = new ListVirtualScrollController({
             collection: this._listViewModel,
             listControl: this,
-            virtualScrollConfig: this._options.virtualScrollConfig,
+            virtualScrollConfig: options.virtualScrollConfig,
 
-            itemsContainer: this._getItemsContainer(),
-            listContainer: this._container,
+            itemsContainer: null,
+            listContainer: null,
 
             triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
-            itemsQuerySelector: this._options.itemsSelector,
+            itemsQuerySelector: options.itemsSelector,
 
             triggersVisibility: undefined,
 
             totalCount: this._listViewModel.getCount(),
 
             getItemContainerByIndexUtil: (index: number, itemsContainer: HTMLElement): HTMLElement => {
-                return this._options.itemContainerGetter.getItemContainerByIndex(index, itemsContainer);
+                return options.itemContainerGetter.getItemContainerByIndex(index, itemsContainer);
             },
 
             scrollToElementUtil: (container: HTMLElement, toBottom: boolean, force: boolean): void => {
-                this._notify('scrollToElement', [{ container, toBottom, force }], { bubbling: true });
+                this._notify('scrollToElement', [{ itemContainer: container, toBottom, force }], { bubbling: true });
             },
 
             itemsEndedCallback: (direction: IScrollControllerDirection): void => {
@@ -3651,6 +3652,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     protected _afterMount(): void {
         this._isMounted = true;
+
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
+            this._listVirtualScrollController.setListContainer(this._container);
+        }
 
         if (constants.isBrowserPlatform) {
             window.addEventListener('resize', this._onWindowResize);
@@ -3758,11 +3764,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         _private.tryLoadToDirectionAgain(this);
-
-        this._createListVirtualScrollController();
-        if (this._useNewScroll) {
-            this._listVirtualScrollController.afterMountListControl();
-        }
     }
 
     _updateScrollController(newOptions?: IBaseControlOptions) {

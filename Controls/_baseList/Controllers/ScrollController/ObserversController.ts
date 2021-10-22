@@ -55,8 +55,8 @@ export class ObserversController {
      * Это нужно для того, чтобы изначально не произошло лишних подгрузок и чтобы триггер работал, если список пустой.
      * @private
      */
-    private _resetBackwardTriggerOffset: boolean;
-    private _resetForwardTriggerOffset: boolean;
+    private _resetBackwardTriggerOffset: boolean = true;
+    private _resetForwardTriggerOffset: boolean = true;
 
     private _observer: EdgeIntersectionObserver;
     private _observersCallback: TObserversCallback;
@@ -71,12 +71,10 @@ export class ObserversController {
         this._backwardTriggerOffsetCoefficient = options.topTriggerOffsetCoefficient;
         this._forwardTriggerOffsetCoefficient = options.bottomTriggerOffsetCoefficient;
 
-        this._updateTriggers();
-
-        this._resetBackwardTriggerOffset = true;
-        this._resetForwardTriggerOffset = true;
-
-        this._recalculateOffsets();
+        if (this._listContainer) {
+            this._updateTriggers();
+            this._recalculateOffsets();
+        }
     }
 
     setListContainer(newListContainer: HTMLElement): void {
@@ -85,6 +83,7 @@ export class ObserversController {
             this._observer.destroy();
         }
         this._updateTriggers();
+        this._recalculateOffsets();
     }
 
     setTriggersQuerySelector(newTriggersQuerySelector: string): void {
@@ -93,12 +92,15 @@ export class ObserversController {
             this._observer.destroy();
         }
         this._updateTriggers();
+        this._recalculateOffsets();
     }
 
     setViewportSize(size: number): ITriggersOffsets {
         if (this._viewportSize !== size) {
             this._viewportSize = size;
-            this._recalculateOffsets();
+            if (this._listContainer) {
+                this._recalculateOffsets();
+            }
         }
 
         return this.getTriggersOffsets();
@@ -132,14 +134,14 @@ export class ObserversController {
             : this._viewportSize * this._backwardTriggerOffsetCoefficient;
         const newBottomTriggerOffset = this._resetForwardTriggerOffset
             ? 0
-            : this._viewportSize & this._forwardTriggerOffsetCoefficient;
+            : this._viewportSize * this._forwardTriggerOffsetCoefficient;
 
         this._triggersOffsets = {
             top: newTopTriggerOffset,
             bottom: newBottomTriggerOffset
-        }
+        };
 
-        // TODO нужна будет поодержка left, right для горизонтального скролла
+        // Для горизонтального скролла нужно будет поправить этот код (поодержка left, right)
         this._triggers[0].style.top = `${this._triggersOffsets.top}px`;
         this._triggers[1].style.bottom = `${this._triggersOffsets.bottom}px`;
     }

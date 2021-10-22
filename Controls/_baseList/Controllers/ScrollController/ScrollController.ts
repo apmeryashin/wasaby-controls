@@ -2,10 +2,14 @@ import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeCo
 import {
     TIntersectionEvent,
     IObserversControllerBaseOptions,
-    ObserversController,
-    ITriggersOffsets
+    ObserversController
 } from './ObserversController';
-import { Calculator, IActiveElementIndexChanged, ICalculatorOptions, ICalculatorResult } from './Calculator';
+import {
+    Calculator,
+    IActiveElementIndexChanged,
+    ICalculatorBaseOptions,
+    ICalculatorResult
+} from './Calculator';
 import {CrudEntityKey} from 'Types/source';
 
 export interface IItemsRange {
@@ -61,10 +65,13 @@ export type IActiveElementChangedChangedCallback = (activeElementIndex: number) 
 
 export type IItemsEndedCallback = (direction: IDirection) => void;
 
+export type IIndexesInitializedCallback = (range: IItemsRange) => void;
+
 export interface IScrollControllerOptions extends
     IItemsSizesControllerOptions,
     IObserversControllerBaseOptions,
-    ICalculatorOptions {
+    ICalculatorBaseOptions {
+    indexesInitializedCallback: IIndexesInitializedCallback;
     indexesChangedCallback: IIndexesChangedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
     environmentChangedCallback: IEnvironmentChangedCallback;
@@ -85,12 +92,14 @@ export class ScrollController {
     private readonly _activeElementChangedCallback: IActiveElementChangedChangedCallback;
     private readonly _environmentChangedCallback: IEnvironmentChangedCallback;
     private readonly _itemsEndedCallback: IItemsEndedCallback;
+    private readonly _indexesInitializedCallback: IIndexesInitializedCallback;
 
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
         this._environmentChangedCallback = options.environmentChangedCallback;
         this._activeElementChangedCallback = options.activeElementChangedCallback;
         this._itemsEndedCallback = options.itemsEndedCallback;
+        this._indexesInitializedCallback = options.indexesInitializedCallback;
 
         this._itemsSizesController = new ItemsSizesController({
             itemsContainer: options.itemsContainer,
@@ -116,6 +125,8 @@ export class ScrollController {
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize
         });
+
+        this._indexesInitializedCallback(this._calculator.getRange());
     }
 
     setViewportSize(viewportSize: number): void {
@@ -131,7 +142,10 @@ export class ScrollController {
      * @param {HTMLElement} newItemsContainer
      */
     setItemsContainer(newItemsContainer: HTMLElement): void {
-        const newItemsSizes = this._itemsSizesController.setItemsContainer(newItemsContainer);
+        this._itemsSizesController.setItemsContainer(newItemsContainer);
+        this._itemsSizesController.resetItems(this._calculator.getTotalItemsCount());
+
+        const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
         this._calculator.updateItemsSizes(newItemsSizes);
     }
 
@@ -140,7 +154,10 @@ export class ScrollController {
      * @param {string} newItemsQuerySelector
      */
     setItemsQuerySelector(newItemsQuerySelector: string): void {
-        const newItemsSizes = this._itemsSizesController.setItemsQuerySelector(newItemsQuerySelector);
+        this._itemsSizesController.setItemsQuerySelector(newItemsQuerySelector);
+        this._itemsSizesController.resetItems(this._calculator.getTotalItemsCount());
+
+        const newItemsSizes = this._itemsSizesController.updateItemsSizes(this._calculator.getRange());
         this._calculator.updateItemsSizes(newItemsSizes);
     }
 
@@ -268,15 +285,14 @@ export class ScrollController {
      * Используется при нажатии в скролбар в позицию, где записи уже скрыты виртуальным скроллом.
      * @param position Позиция скролла.
      */
-    scrollToPosition(position: number): void {
-        const result = this._calculator.shiftRangeToScrollPosition(position);
+    scrollToVirtualPosition(position: number): void {
+        const result = this._calculator.shiftRangeToVirtualScrollPosition(position);
         this._processCalculatorResult(result);
     }
 
     /**
      * Обрабатывает изменение позиции при скролле.
      * Используется при обычном скролле списка.
-     * TODO возможно стоит сделать более понятные названия для методов scrollToPosition, scrollPositionChange
      * @param position
      */
     scrollPositionChange(position: number): void {

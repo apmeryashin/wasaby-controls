@@ -29,7 +29,7 @@ interface IListVirtualScrollControllerOptions {
     listContainer: HTMLElement;
     itemsContainer: HTMLElement;
 
-    triggerQuerySelector: string;
+    triggersQuerySelector: string;
     itemsQuerySelector: string;
 
     getItemContainerByIndexUtil: IGetItemContainerByIndexUtil;
@@ -40,15 +40,8 @@ interface IListVirtualScrollControllerOptions {
 
 export class ListVirtualScrollController {
     private _collection: Collection;
-    private _listControl: Control;
 
-    private _virtualScrollConfig: IVirtualScrollConfig;
-
-    private _listContainer: HTMLElement;
     private _itemsContainer: HTMLElement;
-
-    private _triggerQuerySelector: string;
-    private _itemsQuerySelector: string;
 
     private _getItemContainerByIndexUtil: IGetItemContainerByIndexUtil;
     private _scrollToElementUtil: IScrollToElementUtil;
@@ -62,27 +55,24 @@ export class ListVirtualScrollController {
 
     constructor(options: IListVirtualScrollControllerOptions) {
         this._collection = options.collection;
-        this._listControl = options.listControl;
 
-        this._virtualScrollConfig = options.virtualScrollConfig;
-
-        this._listContainer = options.listContainer;
         this._itemsContainer = options.itemsContainer;
-
-        this._triggerQuerySelector = options.triggerQuerySelector;
-        this._itemsQuerySelector = options.itemsQuerySelector;
 
         this._getItemContainerByIndexUtil = options.getItemContainerByIndexUtil;
         this._scrollToElementUtil = options.scrollToElementUtil;
 
         this._itemsEndedCallback = options.itemsEndedCallback;
 
-        this._createScrollController();
-        this._scrollController.resetItems(this._collection.getCount());
+        this._createScrollController(options);
     }
 
-    afterMountListControl(): void {
-        this._updateItemsSizes();
+    setItemsContainer(itemsContainer: HTMLElement): void {
+        this._itemsContainer = itemsContainer;
+        this._scrollController.setItemsContainer(itemsContainer);
+    }
+
+    setListContainer(listContainer: HTMLElement): void {
+        this._scrollController.setListContainer(listContainer);
     }
 
     afterRenderListControl(): void {
@@ -91,7 +81,7 @@ export class ListVirtualScrollController {
     }
 
     virtualScrollPositionChange(position: number): void {
-        this._scrollController.scrollToPosition(position);
+        this._scrollController.scrollToVirtualPosition(position);
     }
 
     collectionChange(action: string,
@@ -171,17 +161,17 @@ export class ListVirtualScrollController {
         this._scrollController.setViewportSize(viewportSize);
     }
 
-    private _createScrollController(): void {
+    private _createScrollController(options: IListVirtualScrollControllerOptions): void {
         const totalCount = this._collection.getCount();
         this._scrollController = new ScrollController({
-            listControl: this._listControl,
-            virtualScrollConfig: this._virtualScrollConfig,
+            listControl: options.listControl,
+            virtualScrollConfig: options.virtualScrollConfig,
 
             itemsContainer: this._itemsContainer,
-            listContainer: this._listContainer,
+            listContainer: options.listContainer,
 
-            itemsQuerySelector: this._itemsQuerySelector,
-            triggersQuerySelector: this._triggerQuerySelector,
+            itemsQuerySelector: options.itemsQuerySelector,
+            triggersQuerySelector: options.triggersQuerySelector,
 
             triggersVisibility: undefined,
             topTriggerOffsetCoefficient: 0,
@@ -191,6 +181,13 @@ export class ListVirtualScrollController {
             viewportSize: 0,
             totalCount,
 
+            indexesInitializedCallback: (range: IItemsRange): void => {
+                this._scheduleUpdateItemsSizes({
+                    startIndex: range.startIndex,
+                    endIndex: range.endIndex
+                });
+                this._collection.setIndexes(range.startIndex, range.endIndex);
+            },
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
             environmentChangedCallback(params: IEnvironmentChangedParams): void {
                 console.error('environmentChangedCallback', params);
@@ -201,9 +198,7 @@ export class ListVirtualScrollController {
             itemsEndedCallback: (direction: IDirection) => {
                 console.error('itemsEndedCallback', direction);
                 this._itemsEndedCallback(direction);
-            },
-
-            itemsSizes: [], triggersOffsets: undefined // todo fix this
+            }
         });
 
         this._scrollController.resetItems(totalCount);
@@ -214,6 +209,7 @@ export class ListVirtualScrollController {
             startIndex: params.startIndex,
             endIndex: params.endIndex
         });
+        this._collection.setIndexes(params.startIndex, params.endIndex);
 
         const edgeVisibleItem = this._scrollController.getEdgeVisibleItem(params.shiftDirection);
         if (!this._collection.getItemBySourceKey(edgeVisibleItem.key)) {

@@ -1,6 +1,5 @@
-import type { IRange } from './Calculator';
 import type { IItemsSizes } from './ItemsSizeController';
-import type { IDirection } from './ScrollController';
+import type { IDirection, IItemsRange } from './ScrollController';
 
 export interface IGetRangeBaseParams {
     pageSize: number;
@@ -14,7 +13,7 @@ export interface IGetRangeByIndexParams extends IGetRangeBaseParams {
 export interface IShiftRangeBySegmentParams extends IGetRangeBaseParams {
     segmentSize: number;
     direction: IDirection;
-    currentRange: IRange;
+    currentRange: IItemsRange;
 }
 
 export interface IGetRangeByPositionParams extends IGetRangeBaseParams {
@@ -27,18 +26,14 @@ export interface IGetRangeByPositionParams extends IGetRangeBaseParams {
  * Расчет видимых индексов от переданного индекса
  * @param {IShiftRangeBySegmentParams} params
  */
-export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IRange {
+export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IItemsRange {
     const { direction, segmentSize, totalCount, pageSize, currentRange } = params;
     const fixedSegmentSize = Math
         .min(segmentSize, Math.max(pageSize - (currentRange.endIndex - currentRange.startIndex), 0));
 
     let { startIndex, endIndex } = currentRange;
 
-    // TODO Совместимость, пока виртуальный скролл не включен у всех безусловно
-    if (!pageSize) {
-        startIndex = 0;
-        endIndex = totalCount;
-    } else if (direction === 'backward') {
+    if (direction === 'backward') {
         startIndex = Math.max(0, startIndex - fixedSegmentSize);
         if (startIndex >= totalCount) {
             startIndex = Math.max(0, totalCount - pageSize);
@@ -49,7 +44,7 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IRange 
     }
 
     return {
-        startIndex: start, endIndex: end
+        startIndex, endIndex
     };
 }
 
@@ -57,9 +52,9 @@ export function shiftRangeBySegment(params: IShiftRangeBySegmentParams): IRange 
  * Расчет видимых индексов от переданного индекса
  * @param {IGetRangeByIndexParams} params
  */
-export function getRangeByIndex(params: IGetRangeByIndexParams): IRange {
+export function getRangeByIndex(params: IGetRangeByIndexParams): IItemsRange {
     const { start, pageSize, totalCount } = params;
-    const result: IRange = { startIndex: 0, endIndex: 0 };
+    const result: IItemsRange = { startIndex: 0, endIndex: 0 };
 
     if (pageSize && pageSize < totalCount) {
         result.startIndex = start;
@@ -81,7 +76,7 @@ export function getRangeByIndex(params: IGetRangeByIndexParams): IRange {
  * Рассчет видимых индексов от позиции скролла
  * @param {IGetRangeByPositionParams} params
  */
-export function getRangeByScrollPosition(params: IGetRangeByPositionParams): IRange {
+export function getRangeByScrollPosition(params: IGetRangeByPositionParams): IItemsRange {
     const { pageSize, totalCount, itemsSizes, triggerOffset, scrollPosition } = params;
 
     let start: number = 0;
