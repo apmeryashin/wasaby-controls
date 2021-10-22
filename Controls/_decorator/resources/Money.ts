@@ -37,7 +37,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
     precision?: TPrecision;
 }
 
-//TODO Покрыть тестами функции https://online.sbis.ru/opendoc.html?guid=dd60b3fe-5990-4abf-9a7e-436763a85f69
+// TODO Покрыть тестами функции https://online.sbis.ru/opendoc.html?guid=dd60b3fe-5990-4abf-9a7e-436763a85f69
 
 export function calculateMainClass(fontColorStyle: string, underline: string, style: string): string {
     return 'controls-DecoratorMoney' + `${underline === 'hovered' ? ' controls-DecoratorMoney__underline' : ''}

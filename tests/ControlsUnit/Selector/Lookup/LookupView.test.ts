@@ -250,7 +250,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       ok(lookup._isInputVisible({
          placeholder: 'test',
          placeholderVisibility: 'empty',
-			readOnly: true
+            readOnly: true
       }));
    });
 

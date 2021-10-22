@@ -251,9 +251,9 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
         if (isArray) {
             item = collection[at];
         } else if (isList) {
-            item = (<IList<any>> collection).at(at);
+            item = (collection as IList<any>).at(at);
         } else if (isEnumerable) {
-            const enumerator = (<IEnumerable<any>> collection).getEnumerator();
+            const enumerator = (collection as IEnumerable<any>).getEnumerator();
             let current;
             let index = 0;
             while (enumerator.moveNext()) {

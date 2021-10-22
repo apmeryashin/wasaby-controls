@@ -7,7 +7,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/SetExp
     const owner = {
         getStickyColumnsCount: () => 0,
         hasMultiSelectColumn: () => false,
-        notifyItemChange: () => {},
+        notifyItemChange: () => {/* FIXME: sinon mock */},
         hasItemActionsSeparatedCell: () => false,
         isFullGridSupport: () => true,
         hasColumnScroll: () => false,

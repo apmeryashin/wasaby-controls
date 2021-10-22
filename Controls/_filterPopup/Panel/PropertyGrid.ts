@@ -119,8 +119,8 @@ class PropertyGrid extends Control<IFilterPropertyGridOptions> {
       return result;
    }
 
-   //Necessary for correct work of updating control, after update object in array.
-   //Binding on object property in array does not update control, if this property is not versioned.
+   // Necessary for correct work of updating control, after update object in array.
+   // Binding on object property in array does not update control, if this property is not versioned.
    private _observeProp(propName: string, obj: IFilterItem): void {
       let value = obj[propName];
       const _this = this;

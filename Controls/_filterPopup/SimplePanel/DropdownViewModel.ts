@@ -37,7 +37,7 @@ var _private = {
             isAdditional = item.get(this._options.additionalProperty);
             isHistory = _private.isHistoryItem(item);
 
-            //additional item in history must be showed
+            // additional item in history must be showed
             return isAdditional !== true || isHistory;
          },
 
@@ -51,7 +51,7 @@ var _private = {
          },
 
          needHideGroup: function(self, key) {
-            //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
+            // FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
 
             // Get items from the same group. Hide the separator, if the group is empty or all list items from the same group
             let itemsGroup = self._itemsModel._display.getGroupItems(key);
@@ -212,10 +212,10 @@ var _private = {
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
 
-            //if we had group element we should return it without changes
+            // if we had group element we should return it without changes
             if (itemsModelCurrent.isGroup) {
 
-               //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
+               // FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
                if (_private.needHideGroup(this, itemsModelCurrent.key)) {
                   itemsModelCurrent.isHiddenGroup = true;
                }
@@ -230,9 +230,9 @@ var _private = {
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
             itemsModelCurrent.iconSize = this._options.iconSize;
 
-            //Draw the separator to split history and nohistory items.
-            //Separator is needed only when list has both history and nohistory items
-            //if the last item is in history then separator is unnecessary
+            // Draw the separator to split history and nohistory items.
+            // Separator is needed only when list has both history and nohistory items
+            // if the last item is in history then separator is unnecessary
             if (!this._itemsModel.isLast()) {
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item, itemsModelCurrent.hasParent);
             }

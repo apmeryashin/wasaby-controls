@@ -318,7 +318,7 @@ export interface IBasePopupOptions {
     zIndex?: number; // TODO Compatible
     isCompoundTemplate?: boolean; // TODO Compatible
     _type?: string; // TODO Compatible
-    isHelper?: boolean; //TODO удалить после перехода со статических методов на хелперы
+    isHelper?: boolean; // TODO удалить после перехода со статических методов на хелперы
 }
 
 /*

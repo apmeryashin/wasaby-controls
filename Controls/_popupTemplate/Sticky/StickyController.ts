@@ -209,7 +209,7 @@ export class StickyController extends BaseController {
         container.style[verticalPosition] = item.position[verticalPosition] + 'px';
         container.style[revertVerticalPosition] = 'auto';
 
-        //TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
+        // TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
         scroll?.scrollTop = scrollTop;
         /* end: Return all values to the node. Need for vdom synchronizer */
 

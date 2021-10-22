@@ -266,10 +266,8 @@ describe('Controls/_listRender/View', () => {
             });
             view._itemActionsMenuId = 'megaPopup';
             view._itemActionsController = {
-                setActiveItem(item: IItemActionsItem) {
-                },
-                deactivateSwipe(): void {
-                }
+                setActiveItem(item: IItemActionsItem) {/* FIXME: sinon mock */},
+                deactivateSwipe(): void {/* FIXME: sinon mock */}
             }
             view._itemActionsMenuCloseHandler(null, null);
             assert.isTrue(isPopupCloseCalled);
@@ -323,8 +321,7 @@ describe('Controls/_listRender/View', () => {
 
         it('_onItemActionMouseDown', () => {
             view._itemActionsController = {
-                prepareActionsMenuConfig(): void {
-                }
+                prepareActionsMenuConfig(): void {/* FIXME: sinon mock */}
             };
 
             view._onItemActionMouseDown({}, view._collection.getItemBySourceKey(1), null, {});

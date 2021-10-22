@@ -4,7 +4,7 @@ import {IMultilinePathOptions} from './MultilinePath';
 import PrepareDataUtil from './PrepareDataUtil';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 
-//TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
+// TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 export const ARROW_WIDTH = 16;
 export const PADDING_RIGHT = 2;
 

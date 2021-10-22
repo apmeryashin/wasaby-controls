@@ -8,7 +8,7 @@ import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
 import * as Env from 'Env/Env';
 
-var global = (function() { return this || (0,eval)('this') })();
+var global = (function() { return this || (0 || eval)('this') })();
 
 function getBoundingClientRectMock() {
    return { height: 30, width: 50};
@@ -145,7 +145,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          sinon.stub(control._resizeObserver, 'observe');
-         control._controlResizeHandler = () => {};
+         control._controlResizeHandler = () => {/* FIXME: sinon mock */};
          control._children = {
             content: {
                getBoundingClientRect: getBoundingClientRectMock

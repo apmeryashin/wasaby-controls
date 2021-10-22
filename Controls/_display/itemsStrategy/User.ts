@@ -142,7 +142,7 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         resultState.$options = this._options;
         resultState._itemsOrder = this._itemsOrder;
 
-        //If some handlers are defined force calc order because handlers can be lost during serialization
+        // If some handlers are defined force calc order because handlers can be lost during serialization
         if (!resultState._itemsOrder && this._options.handlers.length) {
             resultState._itemsOrder = this._getItemsOrder();
         }

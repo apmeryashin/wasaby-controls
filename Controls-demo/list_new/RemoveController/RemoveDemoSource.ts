@@ -8,7 +8,7 @@ export class RemoveDemoSource extends Memory {
       } else if (keys.indexOf(7) !== -1) {
          return new Promise((resolve) => {
 
-            //We simulate the long deletion of records.
+            // We simulate the long deletion of records.
             setTimeout(() => {
                super.destroy.apply(this, arguments);
                resolve(true);

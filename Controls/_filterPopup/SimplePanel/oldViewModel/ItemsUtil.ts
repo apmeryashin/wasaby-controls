@@ -34,7 +34,7 @@ var ItemsUtil = {
         }
     },
 
-    //TODO это наверное к Лехе должно уехать
+    // TODO это наверное к Лехе должно уехать
     getDisplayItemById: function(display, id, keyProperty) {
         var list = display.getCollection();
         if (cInstance.instanceOfModule(list, 'Types/collection:RecordSet')) {

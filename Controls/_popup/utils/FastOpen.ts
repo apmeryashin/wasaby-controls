@@ -7,7 +7,7 @@ export class DependencyTimer {
     protected _loadDependenciesTimer: number;
 
     start(callback: Function): void {
-        this._loadDependenciesTimer = <any>setTimeout(callback, PRELOAD_DEPENDENCIES_HOVER_DELAY);
+        this._loadDependenciesTimer = (setTimeout(callback, PRELOAD_DEPENDENCIES_HOVER_DELAY) as any);
     }
 
     stop(): void {

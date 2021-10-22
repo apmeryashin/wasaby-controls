@@ -20,9 +20,9 @@ export function hasScrollbar(element: HTMLElement | unknown, kind?: 'x' | 'y'): 
     let result = false;
 
     // @ts-ignore
-    const el = element.length ? element[0] : element; //это может быть DOM-объект, а не jQuery-объект
+    const el = element.length ? element[0] : element; // это может быть DOM-объект, а не jQuery-объект
     if (el) {
-        //проверим, есть ли полосы прокрутки
+        // проверим, есть ли полосы прокрутки
         if (kind === undefined || kind === 'y') {
             result = (el.scrollHeight > el.clientHeight);
         }

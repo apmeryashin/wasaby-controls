@@ -180,7 +180,7 @@ describe('Controls/lookup:Input', () => {
             const lookup = await getBaseLookup({
                 multiSelect: true
             });
-            sinon.replace(lookup, '_itemsChanged', () => {});
+            sinon.replace(lookup, '_itemsChanged', () => {/* FIXME: sinon mock */});
             const items = new RecordSet({
                 rawData: getData(),
                 keyProperty: 'id'
@@ -193,7 +193,7 @@ describe('Controls/lookup:Input', () => {
             const lookup = await getBaseLookup({
                 multiSelect: true
             });
-            sinon.replace(lookup, '_itemsChanged', () => {});
+            sinon.replace(lookup, '_itemsChanged', () => {/* FIXME: sinon mock */});
             const items = new RecordSet({
                 rawData: getData(),
                 keyProperty: 'id'

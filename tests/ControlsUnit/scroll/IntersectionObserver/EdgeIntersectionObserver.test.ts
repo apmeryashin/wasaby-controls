@@ -13,7 +13,7 @@ describe('Controls/scroll:EdgeIntersectionObserverContainer', () => {
     describe('constructor', () => {
         it('should initialize observers', () => {
             const observer = new EdgeIntersectionObserver(
-                component, () => {}, 'topTrigger', 'bottomTrigger', );
+                component, () => {/* FIXME: sinon mock */}, 'topTrigger', 'bottomTrigger', );
 
             sinon.assert.calledTwice(component._notify);
             sinon.assert.alwaysCalledWith(component._notify, 'intersectionObserverRegister');
@@ -49,7 +49,7 @@ describe('Controls/scroll:EdgeIntersectionObserverContainer', () => {
         }].forEach((test) => {
             it(`should generate "${test.result}" event`, () => {
                 const observer = new EdgeIntersectionObserver(
-                    component, () => {}, 'topTrigger', 'bottomTrigger', );
+                    component, () => {/* FIXME: sinon mock */}, 'topTrigger', 'bottomTrigger', );
 
                 sinon.stub(observer, '_handler');
                 observer._observeHandler({nativeEntry: test.entry});
@@ -62,7 +62,7 @@ describe('Controls/scroll:EdgeIntersectionObserverContainer', () => {
     describe('destroy', () => {
         it('should destroy all objects', () => {
             const observer = new EdgeIntersectionObserver(
-                component, () => {}, 'topTrigger', 'bottomTrigger', );
+                component, () => {/* FIXME: sinon mock */}, 'topTrigger', 'bottomTrigger', );
 
             observer.destroy();
 

@@ -33,7 +33,7 @@ import cInstance = require('Core/core-instance');
  *
  */
 export = function (args) {
-   //Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
+   // Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
    if (args.doNotValidate) {
       return true;
    }

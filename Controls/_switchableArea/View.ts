@@ -29,7 +29,7 @@ export interface ISwitchableAreaItem {
 
 class View extends Control<ISwitchableOptions> {
     protected _template: TemplateFunction = template;
-    protected _viewModel: any; //TODO: заменить, когда переведем ViewModel на ts
+    protected _viewModel: any; // TODO: заменить, когда переведем ViewModel на ts
     protected _selectedKey: number | string = null;
 
     protected _beforeMount(options: ISwitchableOptions): void {
