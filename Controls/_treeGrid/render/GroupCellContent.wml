@@ -6,7 +6,7 @@
         <ws:if data="{{ groupNodeConfig.textVisible !== false }}">
             <div class="{{ (gridColumn || itemData).getContentTextClasses(groupNodeConfig.separatorVisibility, groupNodeConfig.textAlign) }}
                         {{ (gridColumn || itemData).getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight) }}
-                        {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign) }}"
+                        {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign, groupNodeConfig.iconSize, groupNodeConfig.iconStyle) }}"
                  attr:data-qa="{{ item.listElementName }}-expander">
                 <ws:if data="{{ groupNodeConfig.contentTemplate }}">
                     <ws:partial template="{{ groupNodeConfig.contentTemplate }}"
