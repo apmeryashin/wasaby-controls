@@ -15,7 +15,7 @@
                           {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander_' + (expanderAlign || 'left') +
                              ' controls-ListView__groupExpander-iconStyle_' + (iconStyle || 'default') +
                              ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +
-                             (expanderVisible !== false && !(item || itemData).isExpanded() ?
+                             (!(item || itemData).isExpanded() ?
                              ' controls-ListView__groupExpander_collapsed controls-ListView__groupExpander_collapsed_' + (expanderAlign || 'left')) }}"
                  attr:data-qa="{{ item.listElementName }}-expander">
                <ws:if data="{{ !!contentTemplate }}">
