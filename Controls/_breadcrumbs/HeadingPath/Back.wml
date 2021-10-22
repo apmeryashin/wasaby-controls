@@ -1,17 +1,21 @@
 <div class="controls_breadcrumbs_theme-{{_options.theme}} controls-BreadCrumbsPath__backButton__wrapper {{_options.backButtonClass}}">
-    <div class="controls-BreadCrumbsPath__backButton__container
-    {{( _options.showArrowOutsideOfBackButton || _options.displayMode === 'multiline' ) && _options.showActionButton ? ' controls-BreadCrumbsPath__backButton__container__only__withArrow'}}">
+    <div class="
+      controls-BreadCrumbsPath__backButton__container
+      {{( _options.showArrowOutsideOfBackButton || _options.displayMode === 'multiline' ) && _options.showActionButton
+       ? ' controls-BreadCrumbsPath__backButton__container__only__withArrow'}}
+   ">
         <Controls.heading:Back attr:class="controls-BreadCrumbsPath__backButton"
                                caption="{{ _options.backButtonCaption }}"
                                tooltip="{{ _options.backButtonCaption }}"
                                style="{{ _options.backButtonStyle }}"
                                iconStyle="{{ _options.backButtonIconStyle }}"
                                fontColorStyle="{{ _options.backButtonFontColorStyle }}"
-                               newIcon="{{_options.backButtonNewIcon}}"
                                fontSize="{{_options.backButtonFontSize || 'headingPathBack'}}"
                                theme="{{ _options.theme}}"
                                beforeCaptionTemplate="{{_options.beforeCaptionTemplate}}"
-                               on:click="_onBackButtonClick()"/>
+                               on:click="_onBackButtonClick()"
+        />
+
         <ws:if data="{{ _options.afterBackButtonTemplate }}">
             <ws:partial template="{{ _options.afterBackButtonTemplate }}"/>
         </ws:if>
