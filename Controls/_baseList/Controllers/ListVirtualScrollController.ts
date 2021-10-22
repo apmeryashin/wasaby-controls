@@ -16,8 +16,8 @@ import {
     IDirection
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { SyntheticEvent } from 'UI/Vdom';
+import { CrudEntityKey } from 'Types/source';
 
-type IGetItemContainerByIndexUtil = (index: number, itemsContainer: HTMLElement) => HTMLElement;
 type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => void;
 type IDoScrollUtil = (scrollTop: number) => void;
 
@@ -33,7 +33,6 @@ interface IListVirtualScrollControllerOptions {
     triggersQuerySelector: string;
     itemsQuerySelector: string;
 
-    getItemContainerByIndexUtil: IGetItemContainerByIndexUtil;
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
 
@@ -43,9 +42,6 @@ interface IListVirtualScrollControllerOptions {
 export class ListVirtualScrollController {
     private _collection: Collection;
 
-    private _itemsContainer: HTMLElement;
-
-    private _getItemContainerByIndexUtil: IGetItemContainerByIndexUtil;
     private _scrollToElementUtil: IScrollToElementUtil;
     private _doScrollUtil: IDoScrollUtil;
 
@@ -59,9 +55,6 @@ export class ListVirtualScrollController {
     constructor(options: IListVirtualScrollControllerOptions) {
         this._collection = options.collection;
 
-        this._itemsContainer = options.itemsContainer;
-
-        this._getItemContainerByIndexUtil = options.getItemContainerByIndexUtil;
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
 
@@ -71,7 +64,6 @@ export class ListVirtualScrollController {
     }
 
     setItemsContainer(itemsContainer: HTMLElement): void {
-        this._itemsContainer = itemsContainer;
         this._scrollController.setItemsContainer(itemsContainer);
     }
 
@@ -130,10 +122,10 @@ export class ListVirtualScrollController {
         if (rangeChanged) {
             this._scheduleScroll({
                 type: 'scrollToElement',
-                params: { itemIndex, toBottom, force }
+                params: { key, toBottom, force }
             });
         } else {
-            this._scrollToElement(itemIndex, toBottom, force);
+            this._scrollToElement(key, toBottom, force);
         }
     }
 
@@ -171,7 +163,7 @@ export class ListVirtualScrollController {
             listControl: options.listControl,
             virtualScrollConfig: options.virtualScrollConfig,
 
-            itemsContainer: this._itemsContainer,
+            itemsContainer: options.itemsContainer,
             listContainer: options.listContainer,
 
             itemsQuerySelector: options.itemsQuerySelector,
@@ -262,7 +254,7 @@ export class ListVirtualScrollController {
                 case 'scrollToElement':
                     const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
                     this._scrollToElement(
-                        scrollToElementParams.itemIndex,
+                        scrollToElementParams.key,
                         scrollToElementParams.toBottom,
                         scrollToElementParams.force
                     );
@@ -276,12 +268,10 @@ export class ListVirtualScrollController {
         }
     }
 
-    private _scrollToElement(itemIndex: number, toBottom?: boolean, force?: boolean): void {
-        const domItemIndex = itemIndex - this._collection.getStartIndex();
-        const itemContainer = this._getItemContainerByIndexUtil(domItemIndex, this._itemsContainer);
-
-        if (itemContainer) {
-            this._scrollToElementUtil(itemContainer, toBottom, force);
+    private _scrollToElement(key: CrudEntityKey, toBottom?: boolean, force?: boolean): void {
+        const element = this._scrollController.getElement(key);
+        if (element) {
+            this._scrollToElementUtil(element, toBottom, force);
         }
     }
 

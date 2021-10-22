@@ -43,7 +43,7 @@ export interface IEdgeItem {
 }
 
 export interface IScheduledScrollToElementParams {
-    itemIndex: number;
+    key: CrudEntityKey;
     toBottom: boolean;
     force: boolean;
 }
@@ -135,6 +135,10 @@ export class ScrollController {
         this._calculator.setViewportSize(viewportSize);
 
         this._updateItemsSizes();
+    }
+
+    getElement(key: CrudEntityKey): HTMLElement {
+        return this._itemsSizesController.getElement(key);
     }
 
     // region Update DOM elements

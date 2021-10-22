@@ -37,6 +37,10 @@ export class ItemsSizesController {
         return this._itemsSizes;
     }
 
+    getElement(key: CrudEntityKey): HTMLElement {
+        return this._itemsContainer.querySelector(`[item-key="${key}"]`) as HTMLElement
+    }
+
     // region on DOM references update
 
     setItemsContainer(newItemsContainer: HTMLElement): void {
