@@ -489,7 +489,7 @@ const _private = {
 
     keyDownHome(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownHome(event);
+            self._listVirtualScrollController.keyDownHome(event).then((key) => self._changeMarkedKey(key));
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
@@ -505,7 +505,7 @@ const _private = {
 
     keyDownEnd(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownEnd(event);
+            self._listVirtualScrollController.keyDownEnd(event).then((key) => self._changeMarkedKey(key));
         } else {
             _private.setMarkerAfterScroll(self, event);
             if (self._options.navigation?.viewConfig?.showEndButton) {
@@ -515,14 +515,14 @@ const _private = {
     },
     keyDownPageUp(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownPageUp(event);
+            self._listVirtualScrollController.keyDownPageUp(event).then((key) => self._changeMarkedKey(key));
         } else {
             _private.setMarkerAfterScroll(self, event);
         }
     },
     keyDownPageDown(self, event) {
         if (self._useNewScroll) {
-            self._listVirtualScrollController.keyDownPageDown(event);
+            self._listVirtualScrollController.keyDownPageDown(event).then((key) => self._changeMarkedKey(key));
         } else {
             _private.setMarkerAfterScroll(self, event);
         }

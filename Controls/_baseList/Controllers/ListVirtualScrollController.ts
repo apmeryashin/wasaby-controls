@@ -139,24 +139,24 @@ export class ListVirtualScrollController {
         return promise;
     }
 
-    keyDownHome(event: SyntheticEvent): void {
+    keyDownHome(event: SyntheticEvent): Promise<CrudEntityKey> {
         event.stopPropagation();
-        this._scrollToPage('start');
+        return this._scrollToPage('start');
     }
 
-    keyDownEnd(event: SyntheticEvent): void {
+    keyDownEnd(event: SyntheticEvent): Promise<CrudEntityKey> {
         event.stopPropagation();
-        this._scrollToPage('end');
+        return this._scrollToPage('end');
     }
 
-    keyDownPageDown(event: SyntheticEvent): void {
+    keyDownPageDown(event: SyntheticEvent): Promise<CrudEntityKey> {
         event.stopPropagation();
-        this._scrollToPage('forward');
+        return this._scrollToPage('forward');
     }
 
-    keyDownPageUp(event: SyntheticEvent): void {
+    keyDownPageUp(event: SyntheticEvent): Promise<CrudEntityKey> {
         event.stopPropagation();
-        this._scrollToPage('backward');
+        return this._scrollToPage('backward');
     }
 
     viewResized(): void {
@@ -293,7 +293,7 @@ export class ListVirtualScrollController {
      * @param page Условная страница, к которой нужно скроллить. (Следующая, предыдущая, начальная, конечная)
      * @private
      */
-    private _scrollToPage(page: IPageDirection): void {
+    private _scrollToPage(page: IPageDirection): Promise<CrudEntityKey> {
         let itemIndex;
         if (page === 'forward' || page === 'backward') {
             const edgeItem = this._scrollController.getEdgeVisibleItem(page);
@@ -303,9 +303,7 @@ export class ListVirtualScrollController {
         }
 
         const item = this._collection.getItemBySourceIndex(itemIndex);
-        if (item) {
-            this.scrollToItem(item.getContents().getKey());
-            // TODO поставить маркер после скролла
-        }
+        const itemKey = item.getContents().getKey();
+        return this.scrollToItem(itemKey).then(() => itemKey);
     }
 }
