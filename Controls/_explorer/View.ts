@@ -717,7 +717,9 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     scrollToItem(key: string | number, toBottom?: boolean): void {
-        this._children.treeControl.scrollToItem(key, toBottom);
+        if (this._children.treeControl) {
+            this._children.treeControl.scrollToItem(key, toBottom);
+        }
     }
 
     getLastVisibleItemKey(): number | string | void {
