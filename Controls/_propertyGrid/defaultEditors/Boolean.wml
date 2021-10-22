@@ -2,5 +2,6 @@
     <ws:partial template="{{content.resolvedTemplate}}"
                 attr:class="controls-Input_negativeOffset"
                 on:valueChanged="_valueChanged()"
-                value="{{value}}"/>
+                value="{{value}}"
+                validationStatus="{{_options.validationStatus}}"/>
 </Controls.Container.Async>
