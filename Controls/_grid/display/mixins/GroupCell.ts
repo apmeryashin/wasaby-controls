@@ -43,7 +43,8 @@ export default abstract class GroupCell<T> {
             classes += ` controls-fontweight-${templateFontWeight}`;
         }
         if (templateTextTransform) {
-            classes += ` controls-ListView__itemContent_textTransform-${templateTextTransform}`;
+            classes += ` controls-ListView__groupContent_textTransform_${templateTextTransform}` +
+                       ` controls-ListView__groupContent_textTransform_${templateTextTransform}_${templateFontSize || 's'}`;
         }
         return classes;
     }

@@ -12,7 +12,8 @@
                           {{ fontSize ? ' controls-fontsize-' + fontSize : ' controls-ListView__groupContent-text_default' }}
                           {{ fontWeight ? ' controls-fontweight-' + fontWeight }}
                           {{ fontColorStyle ? ' controls-text-' + fontColorStyle : ' controls-ListView__groupContent-text_color_default' }}
-                          {{ textTransform ? ' controls-ListView__itemContent_textTransform-' + textTransform }}
+                          {{ textTransform ? ' controls-ListView__groupContent_textTransform_' + textTransform +
+                             ' controls-ListView__groupContent_textTransform_' + textTransform + '_' + (fontSize || 's') }}
                           {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander' +
                           (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
                           ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +

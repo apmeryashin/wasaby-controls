@@ -16,7 +16,7 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
-import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
@@ -450,12 +450,10 @@ export default class Cell<
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
      * @param templateFontWeight Насыщенность шрифта
-     * @param templateTextTransform Преобразование шрифта
      */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,
-                                 templateFontWeight?: TFontWeight,
-                                 templateTextTransform?: TTextTransform): string {
+                                 templateFontWeight?: TFontWeight): string {
         const fontColorStyle = this.config.fontColorStyle || templateFontColorStyle;
         const fontSize = this.config.fontSize || templateFontSize;
         const fontWeight = this.config.fontWeight || templateFontWeight;
@@ -468,9 +466,6 @@ export default class Cell<
         }
         if (fontWeight) {
             contentClasses += ` controls-fontweight-${fontWeight}`;
-        }
-        if (templateTextTransform) {
-            contentClasses += ` controls-ListView__itemContent_textTransform-${templateTextTransform}`;
         }
         return contentClasses;
     }

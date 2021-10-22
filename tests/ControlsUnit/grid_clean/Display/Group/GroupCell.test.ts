@@ -121,7 +121,8 @@ describe('Controls/grid/Display/Group/GroupCell', () => {
                 'controls-fontsize-s',
                 'controls-text-secondary',
                 'controls-fontweight-bold',
-                'controls-ListView__itemContent_textTransform-uppercase'
+                'controls-ListView__groupContent_textTransform_uppercase',
+                'controls-ListView__groupContent_textTransform_uppercase_s'
             ]);
         });
 
@@ -133,7 +134,8 @@ describe('Controls/grid/Display/Group/GroupCell', () => {
             ]);
             CssClassesAssert.notInclude(classes, [
                 'controls-fontweight-bold',
-                'controls-ListView__itemContent_textTransform-uppercase'
+                'controls-ListView__groupContent_textTransform_uppercase',
+                'controls-ListView__groupContent_textTransform_uppercase_s'
             ]);
         });
     });

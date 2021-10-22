@@ -10,8 +10,10 @@ export interface ITextTransformOptions {
      * @name Controls/_interface/ITextTransform#textTransform
      * @cfg {TTextTransform} Управляет преобразованием текста элемента в заглавные или прописные символы
      * @default none
+     * @remark
+     * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
      */
-    textTransform: TTextTransform;
+    textTransform?: TTextTransform;
 }
 
 /**

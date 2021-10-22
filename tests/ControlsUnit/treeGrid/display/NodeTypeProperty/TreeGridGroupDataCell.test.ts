@@ -54,7 +54,8 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
             'controls-fontsize-s',
             'controls-text-secondary',
             'controls-fontweight-bold',
-            'controls-ListView__itemContent_textTransform-uppercase'
+            'controls-ListView__groupContent_textTransform_uppercase',
+            'controls-ListView__groupContent_textTransform_uppercase_s'
         ]);
     });
 

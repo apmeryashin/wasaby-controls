@@ -557,6 +557,18 @@
    text-overflow: ellipsis;
 }
 
+.controls-ListView__groupContent_textTransform_uppercase {
+   text-transform: uppercase;
+
+   @variants: xs 1.25px, s 1.25px, m 1.25px, l 1.5px, xl 1.5px, 2xl 1.75px, 3xl 1.75px;
+   .for(@variants, {
+      @letter-spacing-value: extract(@_item, 1);
+      &_@{letter-spacing-value} {
+         letter-spacing: extract(@_item, 2);
+      }
+   });
+}
+
 .controls-ListView__groupContent_left {
    text-align: left;
 }
@@ -645,10 +657,6 @@
 .controls-ListView__groupContent-rightTemplate {
    padding-left: var(--offset_m);
    flex-shrink: 0;
-}
-
-.controls-ListView__itemContent_textTransform-uppercase {
-   text-transform: uppercase;
 }
 
 .controls-ListView__empty {
