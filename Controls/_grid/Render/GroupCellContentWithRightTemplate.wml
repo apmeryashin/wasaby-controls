@@ -9,7 +9,7 @@ TODO Нужно удалить этот шаблон, когда починим 
     </ws:if>
     <ws:if data="{{ textVisible !== false && (gridColumn || itemData).isContentCell() }}">
         <div class="{{ (gridColumn || itemData).getContentTextClasses(separatorVisibility, textAlign) }}
-                    {{ (gridColumn || itemData).getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight) }}
+                    {{ (gridColumn || itemData).getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}
                     {{ (gridColumn || itemData).getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle) }}"
              attr:data-qa="{{ item.listElementName }}-expander">
             <ws:if data="{{ contentTemplate }}">

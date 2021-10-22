@@ -1,4 +1,4 @@
-import {TFontColorStyle, TFontSize, TFontWeight, TIconSize, TIconStyle} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight, TIconSize, TIconStyle, TTextTransform} from 'Controls/interface';
 import {IColumn} from 'Controls/grid';
 
 /**
@@ -22,10 +22,12 @@ export default abstract class GroupCell<T> {
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
      * @param templateFontWeight жирность шрифта
+     * @param templateTextTransform Преобразование шрифта
      */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,
-                                 templateFontWeight?: TFontWeight): string {
+                                 templateFontWeight?: TFontWeight,
+                                 templateTextTransform?: TTextTransform): string {
         let classes = '';
         if (templateFontSize) {
             classes += ` controls-fontsize-${templateFontSize}`;
@@ -39,6 +41,10 @@ export default abstract class GroupCell<T> {
         }
         if (templateFontWeight) {
             classes += ` controls-fontweight-${templateFontWeight}`;
+        }
+        if (templateTextTransform) {
+            classes += ` controls-ListView__groupContent_textTransform_${templateTextTransform}` +
+                       ` controls-ListView__groupContent_textTransform_${templateTextTransform}_${templateFontSize || 's'}`;
         }
         return classes;
     }

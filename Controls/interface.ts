@@ -20,6 +20,7 @@ export {default as IIconSize, IIconSizeOptions, TIconSize} from './_interface/II
 export {default as IFontColorStyle, IFontColorStyleOptions, TFontColorStyle} from './_interface/IFontColorStyle';
 export {default as IFontSize, IFontSizeOptions, TFontSize} from './_interface/IFontSize';
 export {default as IFontWeight, IFontWeightOptions, TFontWeight} from './_interface/IFontWeight';
+export {default as ITextTransform, ITextTransformOptions, TTextTransform} from './_interface/ITextTransform';
 export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions, TSelectedKey} from './_interface/ISingleSelectable';
 export {default as IMultiSelectable, IMultiSelectableOptions, TSelectedKeys} from './_interface/IMultiSelectable';

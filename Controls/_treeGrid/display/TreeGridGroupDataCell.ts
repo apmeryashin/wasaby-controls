@@ -4,7 +4,7 @@ import {mixin} from 'Types/util';
 import {GridGroupCellMixin, IGridRowOptions} from 'Controls/grid';
 import TreeGridDataCell, {ITreeGridDataCellOptions} from 'Controls/_treeGrid/display/TreeGridDataCell';
 import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
-import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
 
 const GROUP_CELL_TEMPLATE = 'Controls/treeGrid:GroupColumnTemplate';
 
@@ -79,15 +79,18 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
      * @param templateFontWeight жирность шрифта
+     * @param templateTextTransform Преобразование шрифта
      */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,
-                                 templateFontWeight?: TFontWeight): string {
+                                 templateFontWeight?: TFontWeight,
+                                 templateTextTransform?: TTextTransform): string {
         const config = this.getColumnConfig() as IGroupNodeColumn;
         const fontColorStyle = config.groupNodeConfig?.fontSize || config.fontColorStyle || templateFontColorStyle;
         const fontSize = config.groupNodeConfig?.fontSize || config.fontSize || templateFontSize;
         const fontWeight = config.groupNodeConfig?.fontWeight || config.fontWeight || templateFontWeight;
-        return super.getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight);
+        const textTransform = config.groupNodeConfig?.textTransform || templateTextTransform;
+        return super.getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight, textTransform);
     }
 
     // region Аспект "Ячейка группы"
