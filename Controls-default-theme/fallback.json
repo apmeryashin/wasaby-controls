@@ -1341,7 +1341,7 @@
   "--yearselector_arrow-next_margin_shortDatePicker": "8px",
   "--yearselector_arrow-prev_margin_shortDatePicker": "12px",
   "--yearselector_arrow_padding-bottom_shortDatePicker": "3px",
-  "--separator_color_shortDatePicker": "var(--header_background-color_sticky)",
+  "--separator_color_shortDatePicker": "var(--unaccented_background-color)",
   "--separator_thickness_shortDatePicker": "4px",
   "--quarterly_quarters_text-color_shortDatePicker": "var(--text-color)",
   "--quarterly_quarters_hover_text-color_shortDatePicker": "var(--quarterly_quarters_text-color_shortDatePicker)",
