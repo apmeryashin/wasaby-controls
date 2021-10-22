@@ -194,7 +194,7 @@ class BreadCrumbsPath extends Control<IHeadingPath> {
     private _getCrumbsWidth(options: IHeadingPath, getTextWidth: Function = this._getTextWidth): {backButtonWidth: number, breadCrumbsWidth: number} {
         const crumbsWidthArr = calculateBreadcrumbsUtil.getItemsWidth(this._breadCrumbsItems, options, getTextWidth);
         return {
-            backButtonWidth: getTextWidth(this._backButtonCaption, '3xl'),
+            backButtonWidth: this._backButtonCaption && !options.withoutBackButton ? getTextWidth(this._backButtonCaption, '3xl') : 0,
             breadCrumbsWidth: crumbsWidthArr.reduce((accumulator, current) => accumulator + current, 0)
         };
     }
