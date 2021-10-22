@@ -64,6 +64,7 @@ export default class extends Control {
                 group: 'Пол',
                 name: 'gender',
                 resetValue: null,
+                expanderVisible: true,
                 caption: '',
                 value: '1',
                 textValue: 'Мужской',
