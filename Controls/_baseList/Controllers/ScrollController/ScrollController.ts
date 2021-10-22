@@ -277,7 +277,8 @@ export class ScrollController {
     // region Scroll
 
     getEdgeVisibleItem(direction: IDirection): IEdgeItem {
-        return this._calculator.getEdgeVisibleItem(direction);
+        const topOffset = this._itemsSizesController.getBeforeItemsContentSize();
+        return this._calculator.getEdgeVisibleItem(direction, topOffset);
     }
 
     getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {

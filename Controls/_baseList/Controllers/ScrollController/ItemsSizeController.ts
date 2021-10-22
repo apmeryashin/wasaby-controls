@@ -1,6 +1,7 @@
 import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
+import { getOffsetTop } from 'Controls/sizeUtils';
 
 export interface IItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
@@ -38,6 +39,16 @@ export class ItemsSizesController {
 
     getElement(key: CrudEntityKey): HTMLElement {
         return this._itemsContainer.querySelector(`[item-key="${key}"]`) as HTMLElement
+    }
+
+    /**
+     * Возвращает размер контента, расположенного в этом же ScrollContainer-е до списка.
+     */
+    getBeforeItemsContentSize(): number {
+        const scrollContent = this._itemsContainer.closest('.controls-Scroll-ContainerBase__content');
+        return scrollContent ?
+            scrollContent.getBoundingClientRect().top - this._itemsContainer.getBoundingClientRect().top :
+            getOffsetTop(this._itemsContainer);
     }
 
     // region on DOM references update

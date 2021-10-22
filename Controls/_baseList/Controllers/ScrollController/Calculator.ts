@@ -141,30 +141,16 @@ export class Calculator {
      * Считаем именно по гетеру только при необходимости.
      * Всегда пересчитывать не нужно, т.к. ,например, при скролле это бесмысленно.
      */
-    getEdgeVisibleItem(direction: IDirection): IEdgeItem {
-        return this._getEdgeVisibleItem(direction);
+    getEdgeVisibleItem(direction: IDirection, topCompensation: number): IEdgeItem {
+        return this._getEdgeVisibleItem(direction, topCompensation);
     }
 
-    private _getEdgeVisibleItem(direction: IDirection): IEdgeItem {
+    private _getEdgeVisibleItem(direction: IDirection, topCompensation: number): IEdgeItem {
         const viewportHeight = this._viewportSize;
-
-        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
-        // TODO нет доступа к дому.
-        const topCompensation = 0;
-        /*const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
-        const topCompensation = scrollContent ?
-            (scrollContent.getBoundingClientRect().top - itemsContainer.getBoundingClientRect().top) :
-            getOffsetTop(itemsContainer);*/
         const scrollTop = this._scrollTop;
-
         let edgeItemParams: IEdgeItem;
 
         this._itemsSizes.some((item, index) => {
-            // TODO у нас нет доступа к дом элементу
-            // if (item.className.includes('controls-ListView__hiddenContainer')) {
-            //     return false;
-            // }
-
             const itemBorderBottom = Math.round(item.offsetTop) + Math.round(item.height);
 
             // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
