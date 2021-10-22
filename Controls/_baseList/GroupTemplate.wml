@@ -12,12 +12,11 @@
                           {{ fontSize ? ' controls-fontsize-' + fontSize : ' controls-ListView__groupContent-text_default' }}
                           {{ fontWeight ? ' controls-fontweight-' + fontWeight }}
                           {{ fontColorStyle ? ' controls-text-' + fontColorStyle : ' controls-ListView__groupContent-text_color_default' }}
-                          {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander' }}
-                          {{ expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left' }}
-                          {{ 'controls-ListView__groupExpander-iconStyle_' + (iconStyle || 'default') }}
-                          {{ 'controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') }}
-                          {{ !(item || itemData).isExpanded() ?
-                          ' controls-ListView__groupExpander_collapsed controls-ListView__groupExpander_collapsed_' + (expanderAlign || 'left') }}"
+                          {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander_' + (expanderAlign || 'left') +
+                             ' controls-ListView__groupExpander-iconStyle_' + (iconStyle || 'default') +
+                             ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +
+                             (expanderVisible !== false && !(item || itemData).isExpanded() ?
+                             ' controls-ListView__groupExpander_collapsed controls-ListView__groupExpander_collapsed_' + (expanderAlign || 'left')) }}"
                  attr:data-qa="{{ item.listElementName }}-expander">
                <ws:if data="{{ !!contentTemplate }}">
                   <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
