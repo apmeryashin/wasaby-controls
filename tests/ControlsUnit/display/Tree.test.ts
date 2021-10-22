@@ -2747,7 +2747,7 @@ describe('Controls/_display/Tree', () => {
             let newItem = new Model({
                 rawData: {id: 3, hasChildren: false, node:  false, pid: null, group: 1},
                 keyProperty: 'id'
-            })
+            });
             assert.doesNotThrow(rs.add.bind(rs,newItem));
             newItem = rs.getRecordById(3);
             assert.doesNotThrow(newItem.set.bind(newItem, 'pid', 0));
