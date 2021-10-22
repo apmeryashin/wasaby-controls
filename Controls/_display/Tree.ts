@@ -649,12 +649,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                     continue;
                 }
 
-                const oldItemParent = oldCollectionItem.getParent();
-                const oldValue = oldItemParent.isRoot()
-                    ? oldItemParent.getContents()
-                    : oldItemParent.getContents().getKey();
                 const newValue = newItems[i].get(this.getParentProperty());
-                if (oldValue !== newValue) {
+                if (this._changedParent(oldCollectionItem, newValue)) {
                     changed = true;
                     break;
                 }
@@ -662,6 +658,14 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
             return changed;
         }
+    }
+
+    protected _changedParent(oldItem: T, newParentValue: boolean): boolean {
+        const oldItemParent = oldItem.getParent();
+        const oldValue = oldItemParent.isRoot()
+            ? oldItemParent.getContents()
+            : oldItemParent.getContents().getKey();
+        return newParentValue !== oldValue;
     }
 
     protected _reCountHierarchy(): void {
