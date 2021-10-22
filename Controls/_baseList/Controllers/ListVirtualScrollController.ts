@@ -18,7 +18,7 @@ import {
 import { SyntheticEvent } from 'UI/Vdom';
 import { CrudEntityKey } from 'Types/source';
 
-type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => void;
+type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>;
 type IDoScrollUtil = (scrollTop: number) => void;
 
 interface IListVirtualScrollControllerOptions {
@@ -51,6 +51,13 @@ export class ListVirtualScrollController {
 
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
+
+    /**
+     * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
+     * По этому колбэку резолвится промис, который возвращается из метода scrollToItem
+     * @private
+     */
+    private _scrollToElementCompletedCallback: () => void;
 
     constructor(options: IListVirtualScrollControllerOptions) {
         this._collection = options.collection;
@@ -115,8 +122,9 @@ export class ListVirtualScrollController {
         }
     }
 
-    // todo fix promise result
     scrollToItem(key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
+        const promise = new Promise<void>((resolver) => this._scrollToElementCompletedCallback = resolver);
+
         const itemIndex = this._collection.getIndexByKey(key);
         const rangeChanged = this._scrollController.scrollToItem(itemIndex);
         if (rangeChanged) {
@@ -127,6 +135,8 @@ export class ListVirtualScrollController {
         } else {
             this._scrollToElement(key, toBottom, force);
         }
+
+        return promise;
     }
 
     keyDownHome(event: SyntheticEvent): void {
@@ -271,7 +281,8 @@ export class ListVirtualScrollController {
     private _scrollToElement(key: CrudEntityKey, toBottom?: boolean, force?: boolean): void {
         const element = this._scrollController.getElement(key);
         if (element) {
-            this._scrollToElementUtil(element, toBottom, force);
+            const promise = this._scrollToElementUtil(element, toBottom, force);
+            promise.then(() => this._scrollToElementCompletedCallback());
         }
     }
 

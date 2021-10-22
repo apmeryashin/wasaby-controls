@@ -959,9 +959,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._registrars.listScroll.startOnceTarget(component, eventType, params);
     }
 
-    _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): void {
+    _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): Promise<void> {
         event.stopPropagation();
-        scrollToElement(itemContainer, toBottom, force, true);
+        const promise = scrollToElement(itemContainer, toBottom, force, true);
         /**
          * Синхронно обновляем состояние скрол контейнера, что бы корректно работали другие синхронные вызовы api скролл контейнера которое зависят от текущего состояния.
          */
@@ -969,6 +969,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             scrollTop: this._children.content.scrollTop,
             scrollLeft: this._children.content.scrollLeft
         });
+        return promise;
     }
 
     // Autoscroll

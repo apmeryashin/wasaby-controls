@@ -3634,8 +3634,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             totalCount: this._listViewModel.getCount(),
 
-            scrollToElementUtil: (container: HTMLElement, toBottom: boolean, force: boolean): void => {
-                this._notify('scrollToElement', [{ itemContainer: container, toBottom, force }], { bubbling: true });
+            scrollToElementUtil: (container: HTMLElement, toBottom: boolean, force: boolean): Promise<void> => {
+                return this._notify(
+                    'scrollToElement',
+                    [{ itemContainer: container, toBottom, force }],
+                    { bubbling: true }
+                ) as Promise<void>;
             },
 
             doScrollUtil: (scrollTop: number) => {
