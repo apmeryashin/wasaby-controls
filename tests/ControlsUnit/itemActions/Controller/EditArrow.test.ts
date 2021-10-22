@@ -34,7 +34,7 @@ function mockItem(): IItemActionsItem {
         setSwiped(state: boolean): void {
             this.swiped = state;
         },
-        setSwipeAnimation: () => {}
+        setSwipeAnimation: () => {/* FIXME: sinon mock */}
     } as undefined as IItemActionsItem;
 }
 
@@ -51,8 +51,8 @@ function mockCollection(item: IItemActionsItem): IItemActionsCollection {
         },
         each: (callback) => callback(item, 0),
         find: () => item,
-        setActionsAssigned: () => {},
-        setActiveItem: () => {},
+        setActionsAssigned: () => {/* FIXME: sinon mock */},
+        setActiveItem: () => {/* FIXME: sinon mock */},
         getItemBySourceKey: () => item,
         isEditing: () => false,
         getSwipeConfig(): ISwipeConfig {
@@ -76,21 +76,16 @@ function mockDocument(): object {
         createElement: () => ({
             style: ({}),
             classList: {
-                add: () => {
-                }
+                add: () => {/* FIXME: sinon mock */}
             },
-            setAttribute: () => {
-            },
-            appendChild: () => {
-            },
+            setAttribute: () => {/* FIXME: sinon mock */},
+            appendChild: () => {/* FIXME: sinon mock */},
             getBoundingClientRect: () => ({width: ''}),
             getElementsByClassName: () => ([])
         }),
         body: {
-            appendChild: () => {
-            },
-            removeChild: () => {
-            }
+            appendChild: () => {/* FIXME: sinon mock */},
+            removeChild: () => {/* FIXME: sinon mock */}
         }
     };
 }

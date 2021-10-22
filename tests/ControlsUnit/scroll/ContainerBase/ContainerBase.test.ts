@@ -145,7 +145,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          sinon.stub(control._resizeObserver, 'observe');
-         control._controlResizeHandler = () => {};
+         control._controlResizeHandler = () => {/* FIXME: sinon mock */};
          control._children = {
             content: {
                getBoundingClientRect: getBoundingClientRectMock

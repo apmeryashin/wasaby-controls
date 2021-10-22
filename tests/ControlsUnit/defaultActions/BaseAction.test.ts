@@ -15,6 +15,6 @@ describe('Controls/defaultActions:BaseAction', () => {
     });
 
     it('onExecuteHandler', () => {
-        //todo
+        // todo
     });
 });

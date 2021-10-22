@@ -5,20 +5,20 @@ import {constants} from 'Env/Env';
 import { _FocusAttrs } from 'UI/Focus';
 
 const lowerValidNodes = Object.assign(
-	...Object.keys(validHtml.validNodes).map((key) => {
-		return { [key.toLowerCase()]: validHtml.validNodes[key] };
-	})
+    ...Object.keys(validHtml.validNodes).map((key) => {
+        return { [key.toLowerCase()]: validHtml.validNodes[key] };
+    })
 );
 
 const lowerValidAttributes = Object.assign(
-	...Object.keys(validHtml.validAttributes).map((key) => {
-		return { [key.toLowerCase()]: validHtml.validAttributes[key] };
-	})
+    ...Object.keys(validHtml.validAttributes).map((key) => {
+        return { [key.toLowerCase()]: validHtml.validAttributes[key] };
+    })
 );
 
 const lowerValidHtml = {
-	validNodes: lowerValidNodes,
-	validAttributes: lowerValidAttributes
+    validNodes: lowerValidNodes,
+    validAttributes: lowerValidAttributes
 };
 
    var markupGenerator,

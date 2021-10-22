@@ -254,7 +254,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
       this._horizontalPadding = padding;
    }
 
-   //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+   // FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
    private _getContainerNode(container:[HTMLElement]|HTMLElement): HTMLElement {
       return container[0] || container;
    }

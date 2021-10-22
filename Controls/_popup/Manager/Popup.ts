@@ -79,7 +79,7 @@ class Popup extends Control<IPopupControlOptions> {
         }
     }
 
-    //TODO: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
+    // TODO: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
     private _getCompatibleTemplateName(options: IPopupOptions): string {
         if (options.isCompoundTemplate) {
             return options.templateOptions.template;

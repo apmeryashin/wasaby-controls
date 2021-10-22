@@ -10,7 +10,7 @@ interface IResultsRowOptions extends IBaseRowOptions<null> {
     metaResults: EntityModel;
     resultsPosition?: TResultsPosition;
 
-    //TODO: Здась другой тип, нужно внутри библиотеки переписать тип, добавить какой то абстрактный
+    // TODO: Здась другой тип, нужно внутри библиотеки переписать тип, добавить какой то абстрактный
     // колбек или поиграться с типом входных параметров.
     colspanCallback: TResultsColspanCallback;
 }

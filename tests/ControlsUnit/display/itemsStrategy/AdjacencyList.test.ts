@@ -801,7 +801,7 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
             const removeAt = 1;
             const expected = [1, 3, 2, 21];
 
-            //Force create item
+            // Force create item
             assert.strictEqual(strategy.at(removeAt).getContents().id, 2);
 
             const result = strategy.splice(removeAt, 1, []);

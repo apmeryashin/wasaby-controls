@@ -22,7 +22,7 @@ function getScrollableParents(element: HTMLElement, stickyHeaderElement: Element
 
       if ((currentStyle.overflowY === 'auto'
           || currentStyle.overflowY === 'scroll'
-          //TODO fix for Container/Scroll, which has "overflow: hidden" in content block while mounting
+          // TODO fix for Container/Scroll, which has "overflow: hidden" in content block while mounting
           || currentElement.className.indexOf('controls-Scroll__content_hidden') >= 0)
           // Элемент может находиться в полупустом скролл контейнере, который находится в стики блоке.
           && (currentElement.scrollHeight > currentElement.clientHeight || stickyHeaderElement)) {

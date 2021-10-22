@@ -407,7 +407,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _updateDisplayedItems(entry: IntersectionObserverSyntheticEntry): void {
 
-        //TODO: убрать `!entry.data` после https://online.sbis.ru/opendoc.html?guid=fee96058-62bc-4af3-8a74-b9d3b680f8ef
+        // TODO: убрать `!entry.data` после https://online.sbis.ru/opendoc.html?guid=fee96058-62bc-4af3-8a74-b9d3b680f8ef
         if (!this._options.source || !entry.data) {
             return;
         }
@@ -552,7 +552,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _getNormalizedContainer(): HTMLElement {
-        //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+        // TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
         return this._container.get ? this._container.get(0) : this._container;
     }
 

@@ -49,7 +49,7 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
 
     _mouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
-            //На мобильных устройствах положение подсказки и ползунка всегда совпадает
+            // На мобильных устройствах положение подсказки и ползунка всегда совпадает
             this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._getValue(event);
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
                 : this._tooltipPosition;

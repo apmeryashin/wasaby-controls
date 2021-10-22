@@ -667,7 +667,7 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
 
-        //T2.10.1 При свайпе editArrow добавляется в набор операций также и при itemActionsPosition: 'outside'
+        // T2.10.1 При свайпе editArrow добавляется в набор операций также и при itemActionsPosition: 'outside'
         it('should add editArrow when itemActionsPosition: \'outside\'', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',

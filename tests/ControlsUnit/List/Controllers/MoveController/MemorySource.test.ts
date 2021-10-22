@@ -133,7 +133,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should not move "after" with invalid selection', () => {
             // @ts-ignore
             return controller.move(['1', '2', '2'], {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -148,7 +148,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         // Попытка вызвать move() с selection===undefined
         it ('should not move "after" with undefined selection', () => {
             return controller.move(undefined, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -167,7 +167,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 excluded: []
             }
             return controller.move(emptySelectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -195,7 +195,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     return Promise.resolve();
                 });
             return controller.move(correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -224,7 +224,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 });
 
             return controller.move(correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -252,7 +252,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     return Promise.resolve();
                 });
             return controller.move(correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -269,7 +269,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should not move to undefined target', () => {
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, {myProp: 'test'}, undefined, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -286,7 +286,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should not move with incorrect filter (source)', () => {
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, () => {}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -304,7 +304,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyMove = sandbox.spy(source, 'move');
             // @ts-ignore
             return controller.move(selectionObject, {}, 4, 'incorrect')
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -321,7 +321,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with undefined filter', () => {
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, undefined, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -338,7 +338,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move "On" with target === null', () => {
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, {}, null, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -355,7 +355,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should not move "Before"/"After" to null target', () => {
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, {myProp: 'test'}, null, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -374,7 +374,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyMove = sandbox.spy(source, 'move');
             // @ts-ignore
             return controller.move(selectionObject, {}, 4, undefined)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -391,7 +391,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with position === LOCAL_MOVE_POSITION.On', () => {
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -408,7 +408,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with position === LOCAL_MOVE_POSITION.After', () => {
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.After)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -441,7 +441,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             controller = new MoveController({ ...cfg, parentProperty });
             const spyMove = sandbox.spy(source, 'move');
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -460,7 +460,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyConfirmation = sandbox.spy(popup.Confirmation, 'openPopup');
             // @ts-ignore
             return controller.moveWithDialog(['1', '2', '2'], {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch((error) => {
                     callCatch = true;
                     assert.notEqual(error, 'FAKE');
@@ -480,7 +480,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyConfirmation = sandbox.spy(popup.Confirmation, 'openPopup');
             // @ts-ignore
             return controller.moveWithDialog(undefined, {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch((error) => {
                     callCatch = true;
                     assert.notEqual(error, 'FAKE');
@@ -505,7 +505,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const stubConfirmation = sandbox.stub(popup.Confirmation, 'openPopup').callsFake((args) => Promise.resolve(true));
             // @ts-ignore
             return controller.moveWithDialog(correctSelection, {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch((error) => {
                     callCatch = true;
                     assert.notEqual(error, 'FAKE');
@@ -539,7 +539,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 });
             controller = new MoveController({ ...cfg });
             return controller.moveWithDialog(correctSelection, {myProp: 'test'})
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -572,7 +572,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 });
             controller = new MoveController({ ...cfg });
             return controller.moveWithDialog(correctSelection, {myProp: 'test'})
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -594,7 +594,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             )));
             controller = new MoveController({...cfg, source});
             return controller.moveWithDialog(selectionObject, () => {})
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -616,7 +616,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             )));
             controller = new MoveController({...cfg, source});
             return controller.moveWithDialog(selectionObject, undefined)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })

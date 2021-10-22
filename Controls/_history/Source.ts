@@ -343,7 +343,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                     item.set(this._$parentProperty, this._$root);
                 }
 
-                //removing group allows items to be shown in history items
+                // removing group allows items to be shown in history items
                 this._prepareHistoryItem(item, historyType);
                 item.set('HistoryId', historyId);
                 item.set(COPY_ORIG_ID, String(historyItem.getId()));

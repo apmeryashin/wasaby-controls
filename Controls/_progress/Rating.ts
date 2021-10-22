@@ -56,8 +56,8 @@ interface IRatingOptions extends IControlOptions {
 class Rating extends Control<IRatingOptions> {
     protected _template: TemplateFunction = template;
     protected _viewModel: RatingViewModel;
-    protected _correctValue: number;                //TODO precision сделан неправильно, надо править прикладников
-    protected _correctPrecision: number;            //TODO precision сделан неправильно, надо править прикладников
+    protected _correctValue: number;                // TODO precision сделан неправильно, надо править прикладников
+    protected _correctPrecision: number;            // TODO precision сделан неправильно, надо править прикладников
 
     protected _beforeMount(options: IRatingOptions): void {
         this._viewModel = new RatingViewModel({

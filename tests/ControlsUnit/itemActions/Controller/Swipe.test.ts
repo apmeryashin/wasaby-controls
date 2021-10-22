@@ -118,21 +118,16 @@ function mockDocument(): object {
         createElement: () => ({
             style: ({}),
             classList: {
-                add: () => {
-                }
+                add: () => {/* FIXME: sinon mock */}
             },
-            setAttribute: () => {
-            },
-            appendChild: () => {
-            },
+            setAttribute: () => {/* FIXME: sinon mock */},
+            appendChild: () => {/* FIXME: sinon mock */},
             getBoundingClientRect: () => ({width: ''}),
             getElementsByClassName: () => ([])
         }),
         body: {
-            appendChild: () => {
-            },
-            removeChild: () => {
-            }
+            appendChild: () => {/* FIXME: sinon mock */},
+            removeChild: () => {/* FIXME: sinon mock */}
         }
     };
 }

@@ -4471,7 +4471,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
         this._notifyOnDrawItems();
 
-        //TODO: можно убрать после https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
+        // TODO: можно убрать после https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (_private.needScrollPaging(this._options.navigation)) {
             if (this._scrollController && !this._scrollController.getParamsToRestoreScrollPosition()) {
                 _private.updateScrollPagingButtons(this, {...this._getScrollParams(), initial: !this._scrolled});
@@ -4709,7 +4709,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._selectedPageHasChanged = true;
         }
 
-        //При выборе первой или последней страницы крутим в край.
+        // При выборе первой или последней страницы крутим в край.
         if (page === 1) {
             this._currentPage = page;
             _private.scrollToEdge(this, 'up');
