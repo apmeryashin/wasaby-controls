@@ -160,7 +160,6 @@ export interface IEditableGrid {
  */
 type TEditingMode = 'row' | 'cell';
 
-
 /**
  * Интерфейс объекта-конфигурации {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту} в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ таблицах}.
  * @interface Controls/_grid/interface/IGridEditingConfig
@@ -174,6 +173,14 @@ export interface IGridEditingConfig {
     autoAdd?: boolean;
     autoAddByApplyButton?: boolean;
     sequentialEditing?: boolean;
+    /**
+     * @name Controls/_grid/interface/IGridEditingConfig#sequentialEditingMode
+     * @cfg {Controls/_grid/interface/IEditableGrid/TSequentialEditingMode.typedef} Автоматический запуск редактирования по месту для следующего элемента, происходящий при завершении редактирования любого (кроме последнего) элемента списка.
+     * @default row
+     * @remark
+     * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#edit здесь}.
+     */
+    sequentialEditingMode?: TSequentialEditingMode;
     toolbarVisibility?: boolean;
     backgroundStyle?: string;
     addPosition?: TAddPosition;
@@ -193,6 +200,15 @@ export interface IGridEditingConfig {
  * @description Результат выполнения методов {@link beginAdd}, {@link beginEdit}, {@link cancelEdit} и {@link commitEdit}.
  */
 type TAsyncOperationResult = Promise<void | IOperationCanceledResult>;
+
+/**
+ * @typedef {Enum} TSequentialEditingMode
+ * @description Допустимые значения для свойства {@link Controls/grid:IGridEditingConfig#sequentialEditingMode sequentialEditingMode}.
+ * @variant row Запускать редактирование в следующей строке, при завершении текущего редактирования.
+ * @variant cell Запускать редактирование в следующей ячейке, при завершении текущего редактирования.
+ * @variant none Не запускать новое редактирование, при завершении текущего редактирования.
+ */
+type TSequentialEditingMode = 'row' | 'cell' | 'none';
 
 /**
  * @typedef {Object} IOperationCanceledResult
@@ -516,7 +532,6 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
 //  * @property {Boolean} [editOnClick=false] Запуск редактирования по месту при клике по элементу списка. Является частью {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/basic/ базовой конфигурации} функционала редактирования по месту. По умолчанию отключено (false).
 //  * @property {Boolean} [autoAdd=false] Автоматический запуск добавления нового элемента, происходящий при завершении редактирования последнего элемента списка. По умолчанию отключено (false). Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#add здесь}.
 //  * @property {Boolean} [autoAddByApplyButton=true] Отмена автоматического запуска добавления нового элемента, если завершение добавления предыдущего элемента происходит {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/item-actions/#visible кнопкой "Сохранить"} на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи}. По умолчанию автоматический запуск включен (true). Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#add здесь}.
-//  * @property {Boolean} [sequentialEditing=true] Автоматический запуск редактирования по месту для следующего элемента, происходящий при завершении редактирования любого (кроме последнего) элемента списка. По умолчанию автоматический запуск включен (true). Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/auto/#edit здесь}.
 //  * @property {Boolean} [toolbarVisibility=false] Видимость кнопок "Сохранить" и "Отмена", отображаемых на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} в режиме редактирования. По умолчанию кнопки скрыты (false). Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/item-actions/#visible здесь}.
 //  * @property {String} [backgroundStyle=default] Предназначен для настройки фона редактируемого элемента. Подробнее см {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/template/#table-background Цвет фона элемента в режиме редактирования}.
 //  * @property {TEditingMode} [mode=row] Режим редактирования таблицы.
