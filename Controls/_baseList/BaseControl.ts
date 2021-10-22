@@ -79,7 +79,7 @@ import {
     IBeforeBeginEditCallbackParams,
     IBeforeEndEditCallbackParams, TAsyncOperationResult
 } from '../editInPlace';
-import {IEditableListOption} from './interface/IEditableList';
+import {IEditingConfig as IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
 
@@ -5450,7 +5450,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         switch (nativeEvent.keyCode) {
             case 13: // Enter
-                return this._editingRowEnterHandler(e);
+                if (this._getEditingConfig().sequentialEditingMode === 'cell') {
+                    return Promise.resolve();
+                } else {
+                    return this._editingRowEnterHandler(e);
+                }
             case 27: // Esc
                 // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
                 e.stopPropagation();
@@ -5468,7 +5472,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const editingConfig = this._getEditingConfig();
         const columnIndex = this._editInPlaceController._getEditingItem()._$editingColumnIndex;
         const next = this._getEditInPlaceController().getNextEditableItem();
-        const shouldEdit = editingConfig.sequentialEditing && !!next;
+        const shouldEdit = editingConfig.sequentialEditingMode !== 'none' && !!next;
         const shouldAdd = !next && !shouldEdit && !!editingConfig.autoAdd && editingConfig.addPosition === 'bottom';
         return this._tryContinueEditing(shouldEdit, shouldAdd, next && next.contents, columnIndex);
     }
@@ -5565,11 +5569,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _getEditingConfig(options = this._options): Required<IEditableListOption['editingConfig']> {
         const editingConfig = options.editingConfig || {};
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
+        const getSequentialEditingMode = () => {
+            if (typeof editingConfig.sequentialEditingMode === 'string') {
+                return editingConfig.sequentialEditingMode;
+            } else {
+                return editingConfig.sequentialEditing !== false ? 'row' : 'none';
+            }
+        };
 
         return {
             mode: editingConfig.mode || 'row',
             editOnClick: !!editingConfig.editOnClick,
-            sequentialEditing: editingConfig.sequentialEditing !== false,
+            sequentialEditingMode: getSequentialEditingMode(),
             addPosition,
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,

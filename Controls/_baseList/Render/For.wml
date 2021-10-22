@@ -59,7 +59,7 @@
 <ws:for data="index, item in collection.getViewIterator()">
    <ws:if data="{{ item.isEditing() }}">
       <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
-      <Controls._baseList.EditInPlace.EditingRow name="editingRow" on:deactivated="_onRowDeactivated()">
+      <Controls._baseList.EditInPlace.EditingRow name="editingRow" on:deactivated="_onRowDeactivated()" keepEnter="{{ item.getEditingConfig() && item.getEditingConfig().sequentialEditingMode === 'cell' }}">
          <ws:partial template="localItemTemplate" on:editingItemClick="_onEditingItemClick(item)"/>
       </Controls._baseList.EditInPlace.EditingRow>
    </ws:if>
