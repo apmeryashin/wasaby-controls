@@ -3,11 +3,12 @@ import {
    IFontSizeOptions,
    IFontWeightOptions,
    IIconSizeOptions,
-   IIconStyleOptions
+   IIconStyleOptions,
+   ITextTransformOptions
 } from 'Controls/interface';
 
 export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions,
-    IIconSizeOptions, IIconStyleOptions {
+    IIconSizeOptions, IIconStyleOptions, ITextTransformOptions {
    expanderAlign?: string;
    separatorVisibility?: boolean;
    expanderVisible?: boolean;
@@ -266,4 +267,9 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOpt
  * @name Controls/_list/interface/IBaseGroupTemplate#fontWeight
  * @cfg
  * @default default
+ */
+/**
+ * @name ontrols/_list/interface/IBaseGroupTemplate#textTransform
+ * @cfg
+ * @default none
  */
