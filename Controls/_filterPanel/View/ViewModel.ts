@@ -58,7 +58,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
         source.forEach((item) => {
             // Здесь не подходит опция caption PropertyGrid, т.к мы настраиваем отображения заголовка в шаблоне группы
             // Вместо caption для установки заголовка используем editorCaption
-            item.editorCaption = item.caption || item.group;
+            item.editorCaption = item.caption || item.group || item.editorCaption;
             item.caption = '';
             const editorOptions = {
                 ...item.editorOptions,
