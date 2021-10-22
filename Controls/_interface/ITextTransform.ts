@@ -23,5 +23,5 @@ export interface ITextTransformOptions {
  * @author Аверкиев П.А.
  */
 export default interface ITextTransform {
-    readonly '[Controls/_interface/IIconSize]': boolean;
+    readonly '[Controls/_interface/ITextTransform]': boolean;
 }
