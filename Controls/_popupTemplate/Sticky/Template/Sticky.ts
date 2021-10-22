@@ -14,7 +14,7 @@ const enum POSITION {
     DEFAULT = 'default'
 }
 
-const MIN_RIGHT_OFFSET = 30;
+const DEFAULT_CLOSE_BTN_WIDTH = 33;
 
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
@@ -63,21 +63,27 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         }
     }
 
+    protected getCloseButtonWidth(): number {
+        if (this._children.hasOwnProperty('closeButton')) {
+            return this._children.closeButton._container?.offsetWidth || DEFAULT_CLOSE_BTN_WIDTH;
+        }
+        return DEFAULT_CLOSE_BTN_WIDTH;
+    }
+
     protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
         if (options.stickyPosition && options.closeButtonViewMode === 'external') {
             // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
             if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
                 this._closeBtnPosition =  POSITION.RIGHT;
             } else {
-                const openerLeft = options.stickyPosition.targetPosition.left;
                 const popupLeft = options.stickyPosition.position.left;
-                // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
-                const popupOffset = (options.stickyPosition.sizes.width -
-                    options.stickyPosition.targetPosition.width) / 2;
-                const isReverted = (popupLeft + popupOffset) !== openerLeft;
-                const isOutside = popupLeft + options.stickyPosition.sizes.width >
-                    window?.innerWidth - MIN_RIGHT_OFFSET;
-                this._closeBtnPosition = isReverted || isOutside ? POSITION.LEFT : POSITION.RIGHT;
+                const isRightPosition = typeof options.stickyPosition.position.left === 'undefined';
+                let popupRight = popupLeft + options.stickyPosition.sizes.width;
+                if (isRightPosition) {
+                    popupRight = window?.innerWidth - options.stickyPosition.position.right;
+                }
+                const isOutside = popupRight > window?.innerWidth - this.getCloseButtonWidth();
+                this._closeBtnPosition = isOutside ? POSITION.LEFT : POSITION.RIGHT;
             }
         }
     }
