@@ -31,7 +31,9 @@
             </ws:if>
         </ws:else>
         <ws:if data="{{_options.bodyContentTemplate}}">
-            <div class="controls-StickyTemplate__content-area controls-background-{{_options.backgroundStyle}} {{_getRoundClass()}}">
+            <div class="controls-StickyTemplate__content-area {{_getRoundClass()}}
+                        {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
+                                                                   'controls-background-' + _options.backgroundStyle}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
                             attr:class="{{_getRoundClass()}}"
                             isDragging="{{_dragging}}"
@@ -43,7 +45,8 @@
                         scope="{{_options}}"
                         attr:class="controls-StickyTemplate__footer
                                     controls-StickyTemplate__bottom_roundBorder
-                                    controls-background-{{_options.backgroundStyle}}"
+                                    {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
+                                                                   'controls-background-' + _options.backgroundStyle}}"
                         on:click="_proxyEvent('footerClick')"></ws:partial>
         </ws:if>
     </div>
