@@ -2,8 +2,7 @@ import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeCo
 import {
     TIntersectionEvent,
     IObserversControllerBaseOptions,
-    ObserversController,
-    ITriggersOffsets
+    ObserversController
 } from './ObserversController';
 import { Calculator, IActiveElementIndexChanged, ICalculatorOptions, ICalculatorResult } from './Calculator';
 import {CrudEntityKey} from 'Types/source';
@@ -118,10 +117,12 @@ export class ScrollController {
         });
     }
 
-    setViewportSize(viewportSize: number): void {
+    viewportResized(viewportSize: number): void {
         const triggerOffsets = this._observersController.setViewportSize(viewportSize);
         this._calculator.setTriggerOffsets(triggerOffsets);
         this._calculator.setViewportSize(viewportSize);
+
+        this._updateItemsSizes();
     }
 
     // region Update DOM elements
@@ -165,12 +166,15 @@ export class ScrollController {
     // region Update items sizes
 
     updateItemsSizes(itemsRange: IItemsRange): void {
-        const newItemsSizes = this._itemsSizesController.updateItemsSizes(itemsRange);
-        this._calculator.updateItemsSizes(newItemsSizes);
+        this._updateItemsSizes(itemsRange);
     }
 
     viewResized(): void {
-        const range = this._calculator.getRange();
+        this._updateItemsSizes();
+    }
+
+    private _updateItemsSizes(itemsRange?: IItemsRange): void {
+        const range = itemsRange || this._calculator.getRange();
         const newItemsSizes = this._itemsSizesController.updateItemsSizes(range);
         this._calculator.updateItemsSizes(newItemsSizes);
     }
