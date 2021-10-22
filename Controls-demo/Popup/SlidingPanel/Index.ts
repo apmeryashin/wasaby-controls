@@ -44,11 +44,11 @@ class Index extends Control<IControlOptions> {
 
     protected _beforeMount(): void {
         this._originIsMobile = detection.isPhone;
-        // По умолчанию показываем версию для мобилки
-        detection.isPhone = this._isMobile;
     }
     protected _afterMount(): void {
-        this._dialogOpener = new SlidingPanelOpener();
+        this._dialogOpener = new SlidingPanelOpener({
+            isAdaptive: !this._isMobile
+        });
     }
     protected _beforeUnmount(): void {
         // На случай если в демках появится SPA, чтобы не поломать другие демки
@@ -60,7 +60,9 @@ class Index extends Control<IControlOptions> {
     }
 
     protected _selectedModeChanged(): void {
-        this._dialogOpener = new SlidingPanelOpener();
+        this._dialogOpener = new SlidingPanelOpener({
+            isAdaptive: !this._isMobile
+        });
     }
 
     protected _addHeightListStep(): void {

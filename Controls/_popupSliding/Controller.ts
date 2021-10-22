@@ -1,5 +1,5 @@
 import {BaseController, IDragOffset} from 'Controls/popupTemplate';
-import {Controller as PopupController, ISlidingPanelPopupOptions} from 'Controls/popup';
+import {Controller as PopupController, IPopupPosition, ISlidingPanelPopupOptions} from 'Controls/popup';
 import * as PopupContent from 'wml!Controls/_popupSliding/SlidingPanelContent';
 import SlidingPanelStrategy, {AnimationState, ISlidingPanelItem, ResizeType} from './Strategy';
 import {constants, detection} from 'Env/Env';
@@ -19,7 +19,7 @@ class Controller extends BaseController {
     elementCreated(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
         this._updatePopupSizes(item, container);
         // После создания запускаем анимацию изменив позицию
-        item.position = SlidingPanelStrategy.getShowingPosition(item);
+        item.position = SlidingPanelStrategy.getShowingPosition(item, this._getRestrictiveContainerCoords(item));
         item.popupOptions.workspaceWidth = this._getWorkspaceWidth(item);
         item.animationState = AnimationState.showing;
 
@@ -53,7 +53,7 @@ class Controller extends BaseController {
             this._fixOuterResize(item, container);
         }
         this._updatePopupSizes(item, container);
-        item.position = SlidingPanelStrategy.getPosition(item, resizeType);
+        item.position = SlidingPanelStrategy.getPosition(item, this._getRestrictiveContainerCoords(item), resizeType);
         item.popupOptions.workspaceWidth = this._getWorkspaceWidth(item);
 
         /* При смене ориентации в Application выполняется костыль, который ломает любое перепозиционирование
@@ -152,7 +152,7 @@ class Controller extends BaseController {
         }
 
         // Запускаем анимацию закрытия и откладываем удаление до её окончания
-        item.position = SlidingPanelStrategy.getHidingPosition(item);
+        item.position = SlidingPanelStrategy.getHidingPosition(item, this._getRestrictiveContainerCoords(item));
         item.popupOptions.workspaceWidth = this._getWorkspaceWidth(item);
         item.animationState = AnimationState.closing;
         return new Promise((resolve) => {
@@ -169,7 +169,7 @@ class Controller extends BaseController {
                 чтобы прибить окно к краю вьюпорта и не пересчитывать позицию при изменении размеров.
                 Например: Если шторка открывается снизу, то будет bottom: 0;
              */
-            item.position = SlidingPanelStrategy.getPosition(item);
+            item.position = SlidingPanelStrategy.getPosition(item, this._getRestrictiveContainerCoords(item));
         }
 
         // Резолвим удаление, только после окончания анимации закрытия
@@ -182,13 +182,15 @@ class Controller extends BaseController {
     }
 
     resizeInner(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
+        const restrictiveContainerCoords = this._getRestrictiveContainerCoords(item);
+
         this._updatePopupSizes(item, container);
 
         // Если еще открытие, то ресайзим по стартовым координатам(по которым анимируем открытие)
         if (item.animationState === 'showing') {
-            item.position = SlidingPanelStrategy.getStartPosition(item);
+            item.position = SlidingPanelStrategy.getStartPosition(item, restrictiveContainerCoords);
         } else {
-            item.position = SlidingPanelStrategy.getPosition(item, ResizeType.inner);
+            item.position = SlidingPanelStrategy.getPosition(item, restrictiveContainerCoords, ResizeType.inner);
         }
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
         item.popupOptions.workspaceWidth = this._getWorkspaceWidth(item);
@@ -205,7 +207,7 @@ class Controller extends BaseController {
     }
 
     getDefaultConfig(item: ISlidingPanelItem): void|Promise<void> {
-        item.position = SlidingPanelStrategy.getStartPosition(item);
+        item.position = SlidingPanelStrategy.getStartPosition(item, this._getRestrictiveContainerCoords(item));
         const className = `${item.popupOptions.className || ''} controls-SlidingPanel__popup
             controls-SlidingPanel__animation controls_popupSliding_theme-${PopupController.getTheme()}`;
 
@@ -235,7 +237,7 @@ class Controller extends BaseController {
 
         position.height = newHeight;
         item.sizes.height = newHeight;
-        item.position = SlidingPanelStrategy.getPosition(item);
+        item.position = SlidingPanelStrategy.getPosition(item, this._getRestrictiveContainerCoords(item));
         item.popupOptions.workspaceWidth = this._getWorkspaceWidth(item);
         item.popupOptions.slidingPanelData = this._getPopupTemplatePosition(item);
         item.dragOffset = offset;
@@ -243,15 +245,17 @@ class Controller extends BaseController {
     }
 
     popupDragEnd(item: ISlidingPanelItem): void {
+        const restrictiveContainerCoords = this._getRestrictiveContainerCoords(item);
+
         // Если драгали по горизонтали возвращаем первоначальную высоту,
         // чтобы не двигали шторку случайно при горизонтальном свайпе(например горизонтальный скролл)
         const finishHeight = this._isVerticalDrag(item.dragOffset) ? item.position.height : item.dragStartHeight;
         item.position.height = finishHeight;
 
-        if (finishHeight < SlidingPanelStrategy.getMinHeight(item)) {
+        if (finishHeight < SlidingPanelStrategy.getMinHeight(item, restrictiveContainerCoords)) {
             PopupController.remove(item.id);
         } else {
-            item.position = SlidingPanelStrategy.getPositionAfterDrag(item);
+            item.position = SlidingPanelStrategy.getPositionAfterDrag(item, restrictiveContainerCoords);
         }
         item.dragStartHeight = null;
         item.dragOffset = null;
@@ -288,14 +292,23 @@ class Controller extends BaseController {
      * @private
      */
     private _getPopupTemplatePosition(item: ISlidingPanelItem): ISlidingPanelPopupOptions['slidingPanelOptions'] {
+        const restrictiveContainerCoords = this._getRestrictiveContainerCoords(item);
         const {popupOptions: {slidingPanelOptions, desktopMode}} = item;
         return {
-            minHeight: SlidingPanelStrategy.getMinHeight(item),
-            maxHeight: SlidingPanelStrategy.getMaxHeight(item),
+            minHeight: SlidingPanelStrategy.getMinHeight(item, restrictiveContainerCoords),
+            maxHeight: SlidingPanelStrategy.getMaxHeight(item, restrictiveContainerCoords),
             height: this._getHeight(item),
             position: slidingPanelOptions.position,
-            desktopMode
+            desktopMode,
+
+            // Когда работаем через этот контроллер всегда работаем в режиме мобилки
+            isMobileMode: true
         };
+    }
+
+    protected _getRestrictiveContainerCoords(item: ISlidingPanelItem): IPopupPosition | void {
+        const restrictiveContainer = item.popupOptions.slidingPanelOptions.restrictiveContainer || 'body';
+        return BaseController.getCoordsByContainer(restrictiveContainer);
     }
 
     /**
