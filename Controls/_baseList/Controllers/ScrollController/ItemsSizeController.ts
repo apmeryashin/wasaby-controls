@@ -2,6 +2,7 @@ import type { IItemsRange } from './ScrollController';
 import { Logger } from 'UI/Utils';
 import { CrudEntityKey } from 'Types/source';
 import { getOffsetTop } from 'Controls/sizeUtils';
+import getDimensions from 'Controls/_utils/sizeUtils/getDimensions';
 
 export interface IItemsSizesControllerOptions {
     itemsContainer: HTMLElement;
@@ -94,9 +95,7 @@ export class ItemsSizesController {
         const itemsRangeLength = itemsRange.endIndex - itemsRange.startIndex;
 
         if (this._itemsContainer) {
-            const itemsElements = this._itemsContainer.querySelectorAll(
-                this._itemsQuerySelector
-            );
+            const itemsElements = this._itemsContainer.querySelectorAll(this._itemsQuerySelector);
 
             if (itemsRangeLength !== itemsElements.length) {
                 Logger.error('Controls/list:ItemsSizeController.updateItemsSizes | ' +
@@ -105,10 +104,9 @@ export class ItemsSizesController {
                 let position = itemsRange.startIndex;
 
                 itemsElements.forEach((element: HTMLElement) => {
-                    // todo add support for Controls/grid and display: contents
                     this._itemsSizes[position] = {
-                        height: element.offsetHeight,
-                        offsetTop: element.offsetTop
+                        height: getDimensions(element).height,
+                        offsetTop: getOffsetTop(element)
                     };
                     position++;
                 });
