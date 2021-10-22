@@ -628,6 +628,12 @@ export default class ScrollController {
                 return false;
             }
 
+            // Если элемент застикан, то пропускаем его, граничным будет элемент следующий за ним
+            // https://online.sbis.ru/opendoc.html?guid=9a0d939d-a08b-478b-b981-ccd1577fb184
+            if (window.getComputedStyle(item).position === 'sticky' || (item.children[0] && window.getComputedStyle(item.children[0]).position === 'sticky')) {
+                return false;
+            }
+
             const itemDimensions = uDimension(item);
             const itemOffsetTop = getOffsetTop(item);
 
