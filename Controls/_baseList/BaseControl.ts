@@ -5696,6 +5696,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             const item = _private.getItemActionsController(this, this._options).getActiveItem();
             if (item) {
                 this._notifyItemClick([clickEvent, item.contents, clickEvent]);
+                _private.closeActionsMenu(this);
             }
         } else if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
