@@ -3642,6 +3642,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('scrollToElement', [{ itemContainer: container, toBottom, force }], { bubbling: true });
             },
 
+            doScrollUtil: (scrollTop: number) => {
+                this._notify('doScroll', [scrollTop, true], { bubbling: true });
+            },
+
             itemsEndedCallback: (direction: IScrollControllerDirection): void => {
                 console.error('BaseControl.itemsEndedCallback', direction);
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
@@ -4401,7 +4405,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     _afterRender(): void {
         if (this._useNewScroll) {
-            this._listVirtualScrollController.afterRenderListControl();
+            const hasNotRenderedChanges = this._hasItemWithImageChanged || this._indicatorsController.hasNotRenderedChanges();
+            this._listVirtualScrollController.afterRenderListControl(hasNotRenderedChanges);
+            this._hasItemWithImageChanged = false;
         }
 
         let positionRestored = false;

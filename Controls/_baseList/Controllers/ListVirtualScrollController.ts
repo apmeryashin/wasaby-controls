@@ -19,6 +19,7 @@ import { SyntheticEvent } from 'UI/Vdom';
 
 type IGetItemContainerByIndexUtil = (index: number, itemsContainer: HTMLElement) => HTMLElement;
 type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => void;
+type IDoScrollUtil = (scrollTop: number) => void;
 
 interface IListVirtualScrollControllerOptions {
     collection: Collection;
@@ -34,6 +35,7 @@ interface IListVirtualScrollControllerOptions {
 
     getItemContainerByIndexUtil: IGetItemContainerByIndexUtil;
     scrollToElementUtil: IScrollToElementUtil;
+    doScrollUtil: IDoScrollUtil;
 
     itemsEndedCallback: IItemsEndedCallback;
 }
@@ -45,6 +47,7 @@ export class ListVirtualScrollController {
 
     private _getItemContainerByIndexUtil: IGetItemContainerByIndexUtil;
     private _scrollToElementUtil: IScrollToElementUtil;
+    private _doScrollUtil: IDoScrollUtil;
 
     private _itemsEndedCallback: IItemsEndedCallback;
 
@@ -60,6 +63,7 @@ export class ListVirtualScrollController {
 
         this._getItemContainerByIndexUtil = options.getItemContainerByIndexUtil;
         this._scrollToElementUtil = options.scrollToElementUtil;
+        this._doScrollUtil = options.doScrollUtil;
 
         this._itemsEndedCallback = options.itemsEndedCallback;
 
@@ -75,9 +79,9 @@ export class ListVirtualScrollController {
         this._scrollController.setListContainer(listContainer);
     }
 
-    afterRenderListControl(): void {
+    afterRenderListControl(hasNotRenderedChanges: boolean): void {
         this._updateItemsSizes();
-        this._handleScheduledScroll();
+        this._handleScheduledScroll(hasNotRenderedChanges);
     }
 
     virtualScrollPositionChange(position: number): void {
@@ -158,7 +162,7 @@ export class ListVirtualScrollController {
     }
 
     viewportResized(viewportSize: number): void {
-        this._scrollController.setViewportSize(viewportSize);
+        this._scrollController.viewportResized(viewportSize);
     }
 
     private _createScrollController(options: IListVirtualScrollControllerOptions): void {
@@ -239,21 +243,21 @@ export class ListVirtualScrollController {
         this._scheduledScrollParams = scrollParams;
     }
 
-    private _handleScheduledScroll(): void {
+    private _handleScheduledScroll(hasNotRenderedChanges: boolean): void {
         if (this._scheduledScrollParams) {
             switch (this._scheduledScrollParams.type) {
                 case 'restoreScroll':
-                    /*const edgeItem = this._scheduledScrollParams.params as IEdgeItem;
-                    let directionToRestoreScroll = edgeItem.direction;
-                    if (!directionToRestoreScroll && (this._hasItemWithImageChanged
-                        || this._indicatorsController.hasNotRenderedChanges())) {
+                    const edgeItem = this._scheduledScrollParams.params as IEdgeItem;
+                    let directionToRestoreScroll;
+                    if (!edgeItem && hasNotRenderedChanges) {
                         directionToRestoreScroll = 'backward';
+                    } else {
+                        directionToRestoreScroll = edgeItem.direction;
                     }
                     if (directionToRestoreScroll) {
                         const newScrollTop = this._scrollController.getScrollTopToEdgeItem(edgeItem);
-                        this._notify('doScroll', [newScrollTop, true], { bubbling: true });
-                        this._hasItemWithImageChanged = false;
-                    }*/
+                        this._doScrollUtil(newScrollTop);
+                    }
                     break;
                 case 'scrollToElement':
                     const scrollToElementParams = this._scheduledScrollParams.params as IScheduledScrollToElementParams;
