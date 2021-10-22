@@ -2,15 +2,31 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {
-   ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions,
-   IIconSize, IIconSizeOptions, IIconStyle, IIconStyleOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+   ITooltip,
+   ITooltipOptions,
+   ICaption,
+   ICaptionOptions,
+   IIcon,
+   IIconOptions,
+   IIconSize,
+   IIconSizeOptions,
+   IIconStyle,
+   IIconStyleOptions,
+   IValidationStatus,
+   IValidationStatusOptions,
+   IContrastBackgroundOptions,
+   IResetValueOptions
+} from 'Controls/interface';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {constants} from 'Env/Env';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
-    IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions {
+    IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
    triState?: boolean;
    value?: boolean | null;
+   multiline?: boolean;
 }
 
 const mapTriState = {false: true, true: null, null: false};
@@ -30,8 +46,12 @@ const mapBoolState = {true: false, false: true, null: true};
  * @extends UI/Base:Control
  * @implements Controls/interface:ICaption
  * @implements Controls/interface:IIcon
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IValidationStatus
+ * @implements Controls/interface:IResetValue
+ * @implements Controls/interface:IContrastBackground
  *
  * @public
  * @author Красильников А.С.
@@ -78,13 +98,21 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
       }
    }
 
+   protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+      if (e.nativeEvent.keyCode === constants.key.space && !this._options.readOnly) {
+         this._clickHandler();
+      }
+   }
+
    static getDefaultOptions(): object {
       return {
          value: false,
          triState: false,
          iconSize: 'default',
          iconStyle: 'secondary',
-         validationStatus: 'valid'
+         validationStatus: 'valid',
+         contrastBackground: false,
+         multiline: true
       };
    }
 
@@ -285,6 +313,14 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  * @see triState
  */
 /**
+ * @name Controls/_toggle/Checkbox#multiline
+ * @cfg {boolean} Поведение текста, если он не умещается.
+ * @variant false Текст обрезается многоточием.
+ * @variant true Текст разбивается на несколько строк.
+ * @default true
+ * @demo Controls-demo/toggle/Checkbox/Multiline/Index
+ */
+/**
  * @name Controls/_toggle/Checkbox#icon
  * @demo Controls-demo/toggle/Checkbox/Icon/Index
  */
@@ -295,5 +331,13 @@ Object.defineProperty(Checkbox, 'defaultProps', {
 /**
  * @name Controls/_toggle/Checkbox#iconStyle
  * @demo Controls-demo/toggle/Checkbox/Icon/Index
+ */
+/**
+ * @name Controls/_toggle/Checkbox#contrastBackground
+ * @demo Controls-demo/toggle/Checkbox/ContrastBackground/Index
+ */
+/**
+ * @name Controls/_toggle/Checkbox#resetValue
+ * @demo Controls-demo/toggle/Checkbox/ResetValue/Index
  */
 export default Checkbox;

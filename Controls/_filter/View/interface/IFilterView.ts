@@ -450,7 +450,8 @@ export interface IFilterView {
  * В истории будут храниться последние 10 применённых фильтров.
  * @remark
  * {@link Controls/_filter/View Controls/filter:View} занимается только отображением истории последних применённых фильтров,
- * чтобы работало сохранение в историю, контрол должен быть обёрнут в {@link Controls/_filter/Controller Controller}.
+ * чтобы работало сохранение в историю, контрол должен быть обёрнут в {@link Controls/browser:Browser}.
+ * При использовании стандартных раскладок опцию необходимо настроить на {@link Layout/browsers:Browser#historyId браузере}.
  * @example
  * <pre class="brush: html">
  * <Controls.filter:View detailTemplateName="EDO.MyPanelTemplate" historyId="myHistoryId"/>

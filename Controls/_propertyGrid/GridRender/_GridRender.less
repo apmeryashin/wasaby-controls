@@ -48,4 +48,18 @@
       visibility: visible;
       opacity: 1;
    }
+   .controls-PropertyGrid__cell_highlightOnHover .controls-ListView__multiSelect__borderCircle {
+      stroke: var(--border-color);
+   }
+}
+
+.controls-PropertyGrid__cell_checkbox {
+   min-width: var(--click-area_width_checkbox);
+   max-width: var(--click-area_width_checkbox);
+   //https://online.sbis.ru/opendoc.html?guid=b8ddb93e-7d44-4ded-9ed4-89b3d7d0d13c
+   z-index: 1;
+}
+
+.controls-PropertyGrid__cell_checkbox .controls-ListView__checkbox_position-default {
+   margin-top: var(--checkbox_offset-top_list);
 }

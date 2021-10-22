@@ -518,7 +518,7 @@ define(
 
             // spacingClassList
             let expectedClassList = 'controls-SimplePanel-List__row_state_default ' +
-               'controls-SimplePanel-List__hierarchyItem-leftPadding_default ' +
+               'controls-SimplePanel-List__item-leftPadding_default ' +
                'controls-SimplePanel-List__item-rightPadding_default';
             assert.equal(emptyItem.itemClassList, expectedClassList);
 

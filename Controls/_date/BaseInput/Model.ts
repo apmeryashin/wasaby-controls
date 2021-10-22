@@ -5,7 +5,8 @@ import StringValueConverter from 'Controls/_date/BaseInput/StringValueConverter'
 import {Base as dateUtils} from 'Controls/dateUtils';
 
 const ALL_SPACES_REGEXP = /[ ]/g;
-const VALID_PARTIAL_DATE_REGEXP = /^[0  ]{2}\.[0  ]{2}\.\d{2,4}$/;
+const SPACE = ' ';
+const VALID_PARTIAL_DATE_REGEXP = new RegExp('/^[0 ' + SPACE + ']{2}\.[0 ' + SPACE + '/s]{2}\.\d{2,4}$/');
 const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
 
    var _private = {
@@ -146,7 +147,6 @@ const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
             this._nextVersion();
 
             _private.updateLastValue(this);
-            this._notify('valueChanged', [this._value, this.displayValue]);
          }
 
          if (valueChanged || this._inputMode === INPUT_MODE.partial) {

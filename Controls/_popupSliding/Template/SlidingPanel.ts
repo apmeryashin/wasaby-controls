@@ -194,38 +194,36 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
      * 1. Скролл доступен (см. isScrollAvailable)
      * 2. Свайп внутри сролла
      * 3. Либо уже проскроллено, либо свайп в ту сторону, в которую двигается скролл
+     * 4. Свайп внутри внутреннего скролл контейнера(внутренние скроллы скроллим всегда)
      * @param event
      * @private
      */
     private _isSwipeForScroll(event: SyntheticEvent<TouchEvent>): boolean {
-        return this._scrollAvailable && this._isSwipeInsideScroll(event) && (
-            this._getScrollTop() !== 0 ||
-            this._startTouchYPosition - event.nativeEvent.changedTouches[0].clientY > 0
-        );
+        const scrollContainers = this._getParentScrollContainerElements(event.target as HTMLElement);
+        const swipeInTopScrollContainer = scrollContainers.length === 1;
+        const swipeInsideInnerScrollContainer = scrollContainers.length > 1;
+        const alreadyScrolled = this._getScrollTop() !== 0;
+        const swipeToScrollSide = this._startTouchYPosition - event.nativeEvent.changedTouches[0].clientY > 0;
+
+        return this._scrollAvailable && swipeInTopScrollContainer && (alreadyScrolled || swipeToScrollSide) || swipeInsideInnerScrollContainer;
     }
 
-    /**
-     * Проверка на то, что тач произошел внутри скролла.
-     * Если тач внутри скролла, то мы не тянем шторку в случае если скролл проскроллен.
-     * @param touchEvent
-     * @protected
-     */
-    protected _isSwipeInsideScroll(touchEvent: SyntheticEvent<TouchEvent>): boolean {
+    private _getParentScrollContainerElements(element: HTMLElement): HTMLElement[] {
         /**
          * TODO: Нужно избавиться от связности.
          * https://online.sbis.ru/opendoc.html?guid=64510772-df48-4af8-a240-7ac2b7509cff
          */
         const scrollClassName = 'controls-Scroll';
-        let currentNode: HTMLElement = touchEvent.target;
+        let currentNode: HTMLElement = element;
+        const scrollContainerNodes = [];
         while (currentNode && currentNode !== this._container) {
             const isScroll = currentNode.classList.contains(scrollClassName);
             if (isScroll) {
-                return true;
-            } else {
-                currentNode = currentNode.parentElement;
+                scrollContainerNodes.push(currentNode);
             }
+            currentNode = currentNode.parentElement;
         }
-        return false;
+        return scrollContainerNodes;
     }
 
     private _notifyDragStart(offset: IDragObject['offset']): void {

@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -557,7 +557,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         classes += ` controls-EditingTemplateText_size_${params.size || 'default'}`;
         classes += ` controls-EditingTemplateText_style_${params.style || 'default'}`;
 
-        if (params.withPadding || this.getEditingConfig().mode !== 'cell') {
+        if (params.withPadding || !this.getEditingConfig() || this.getEditingConfig().mode !== 'cell') {
             classes += ' controls-EditingTemplateText_withPadding';
         }
 
@@ -997,6 +997,28 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     /**
+     * Добавляет CSS классы для стилизации текста в записи списка
+     * @param fontColorStyle Цвет шрифта
+     * @param fontSize Размер шрифта
+     * @param fontWeight Насыщенность шрифта
+     */
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize,
+                                 fontWeight?: TFontWeight): string {
+        let contentClasses = '';
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
+        }
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
+        }
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
+        }
+        return contentClasses;
+    }
+
+    /**
      * Возвращает Класс для позиционирования опций записи.
      * Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку
      * Если новая модель, то в любом случае не считается класс, добавляющий padding
@@ -1016,7 +1038,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             itemPadding = {
                 top: this.getOwner().getTopPadding().toLowerCase(),
                 bottom: this.getOwner().getBottomPadding().toLowerCase()
-            }
+            };
         }
         if (itemActionsPosition !== 'outside') {
             result.push(classes);

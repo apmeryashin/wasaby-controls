@@ -18,7 +18,6 @@
               itemData="{{_listModel.getCurrent()}}"
               item="{{_listModel.getCurrent()}}"
               treeItem="{{_listModel.getCurrent().treeItem}}"
-              marker="{{_options.multiSelect ? false : marker}}"
               multiSelect="{{_options.multiSelect}}"
               checkBoxAlign="right"
               displayProperty="{{_options.displayProperty}}"
@@ -29,9 +28,9 @@
          <ws:multiSelectTpl>
             <Controls.Container.Async templateName="Controls/toggle:Checkbox"
                                       attr:class="controls-Menu__row-checkbox
-                                   controls-Menu__row-checkbox-right
-                                   controls-Menu__row-checkbox_{{multiSelectTpl.itemData.isEmptyItem ? 'invisible' :
-                                   multiSelectTpl.treeItem.isSelected() ? 'active' : 'default'}}">
+                                                  {{multiSelectTpl.treeItem.getContents()[_options.parentProperty] ?
+                                                   'controls-SimplePanel-List__hierarchyItem-checkbox-rightPadding' : 'controls-Menu__row-checkbox-left'}}
+                                                  controls-Menu__row-checkbox_{{multiSelectTpl.treeItem.isSelected() ? 'active' : 'default'}}">
                <ws:templateOptions value="{{multiSelectTpl.treeItem.isSelected()}}"/>
             </Controls.Container.Async>
          </ws:multiSelectTpl>

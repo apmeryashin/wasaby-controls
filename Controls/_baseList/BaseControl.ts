@@ -678,7 +678,7 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
 
-            return self._sourceController.load(direction).addCallback((addedItems) => {
+            return self._loadItemsToDirection(direction).addCallback((addedItems) => {
                 if (self._destroyed) {
                     return;
                 }
@@ -773,8 +773,18 @@ const _private = {
         const needLoad = _private.needLoadNextPageAfterLoad(self, items, self._listViewModel, options.navigation);
         if (needLoad) {
             const filter = self._sourceController && self._sourceController.getFilter() || options.filter;
-            const direction = self._indicatorsController.getPortionedSearchDirection() || 'down';
-            _private.loadToDirectionIfNeed(self, direction, filter);
+            let direction;
+            if (_private.isPortionedLoad(self, loadedItems) && self._indicatorsController.getPortionedSearchDirection()) {
+                direction = self._indicatorsController.getPortionedSearchDirection();
+            } else if (self._hasMoreData('down')) {
+                direction = 'down';
+            } else if (self._hasMoreData('up')) {
+                direction = 'up';
+            }
+
+            if (direction) {
+                _private.loadToDirectionIfNeed(self, direction, filter);
+            }
         }
     },
 
@@ -1402,12 +1412,14 @@ const _private = {
                     if (itemsCount !== moreMetaCount) {
                         _private.prepareFooter(self, self._options, self._sourceController);
                     } else {
-                        self._shouldDrawNavigationButton = false;
+                        self._shouldDrawNavigationButton = _private.isCutNavigation(self._navigation) ?
+                            self._cutExpanded : false;
                     }
                 } else if (moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
                 } else {
-                    self._shouldDrawNavigationButton = false;
+                    self._shouldDrawNavigationButton = _private.isCutNavigation(self._navigation) ?
+                        self._cutExpanded : false;
                 }
             }
 
@@ -1424,8 +1436,9 @@ const _private = {
                                 self._addItems.push(...newItems);
                                 self._addItemsIndex = newItemsIndex;
                             } else {
+                                const isBottom = (self._viewportSize + self._scrollTop) === self._viewSize;
                                 let direction = newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex >= collectionStopIndex ? 'down' : undefined);
+                                    : (newItemsIndex >= collectionStopIndex && !isBottom ? 'down' : undefined);
                                 if (self._listViewModel.getCount() === newItems.length) {
                                     direction = undefined;
                                 }
@@ -3019,6 +3032,7 @@ const _private = {
  * @implements Controls/list:IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
  * @implements Controls/list:IMovableList
@@ -3033,6 +3047,7 @@ const _private = {
 export interface IBaseControlOptions extends IControlOptions, ISourceOptions, IItemActionsOptions {
     keyProperty: string;
     viewModelConstructor: string;
+    collection: Collection;
     navigation?: INavigationOptionValue<INavigationSourceConfig>;
     sourceController?: SourceController;
     items?: RecordSet;
@@ -3187,6 +3202,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _editInPlaceInputHelper = null;
 
     _editingItem: IEditableCollectionItem;
+
+    _fixedItem: CollectionItem<Model> = null;
 
     _continuationEditingDirection: Exclude<EDIT_IN_PLACE_CONSTANTS, EDIT_IN_PLACE_CONSTANTS.CANCEL>;
 
@@ -3418,6 +3435,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._indicatorsController.setViewportFilled(this._viewSize > this._viewportSize && this._viewportSize);
         if (scrollTop !== undefined) {
             this._scrollTop = scrollTop;
+            this._scrollController.scrollPositionChange({scrollTop}, false);
             this._observersController?.setScrollTop(
                 this._scrollTop,
                 this._children.listView?.getTopLoadingTrigger(),
@@ -3773,7 +3791,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
         }
         this._updateInProgress = true;
-        const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const loadStarted = newOptions.loading && !this._options.loading;
         const loadedBySourceController = this._loadedBySourceController;
@@ -3799,21 +3816,22 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
         }
 
-        const oldViewModelConstructorChanged = !!newOptions._recreateCollection ||
-                                    newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+        const shouldReInitCollection = !!newOptions._recreateCollection ||
+                                    newOptions.viewModelConstructor && newOptions.viewModelConstructor !== this._options.viewModelConstructor ||
+                                    newOptions.collection !== this._options.collection ||
                                     (this._listViewModel && this._keyProperty !== this._listViewModel.getKeyProperty());
 
-        if (this._editInPlaceController && (oldViewModelConstructorChanged || loadStarted)) {
+        if (this._editInPlaceController && (shouldReInitCollection || loadStarted)) {
             if (this.isEditing()) {
                 // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
                 // без возможности отменить закрытие из вне.
                 this._cancelEdit(true).then(() => {
-                    if (oldViewModelConstructorChanged) {
+                    if (shouldReInitCollection) {
                         this._destroyEditInPlaceController();
                     }
                 });
             } else {
-                if (oldViewModelConstructorChanged) {
+                if (shouldReInitCollection) {
                     this._destroyEditInPlaceController();
                 }
             }
@@ -3825,7 +3843,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.checkRequiredOptions(this, newOptions);
         }
 
-        if (newOptions.viewModelConstructor && oldViewModelConstructorChanged && this._listViewModel) {
+        if (shouldReInitCollection && this._listViewModel) {
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
                : this._listViewModel.getCollection();
@@ -3953,6 +3971,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._options.selectionViewMode === newOptions.selectionViewMode ||
                 newOptions.selectionViewMode !== 'selected';
             const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            const filterChanged = !isEqual(newOptions.filter, this._options.filter) ||
+                !isEqual(newOptions.searchValue, this._options.searchValue);
             if (filterChanged && isAllSelected && allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
@@ -4033,6 +4053,25 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // запускающий подгрузку по скролу (в навигации more: true)
         if (newOptions.searchValue || this._loadedBySourceController) {
             _private.tryLoadToDirectionAgain(this, null, newOptions);
+        }
+        // В случае если у нас пустой список, то при сценарии выше не сработает событие reset. Поэтому нужно завершить
+        // показ порционного поиска и начать его в этом месте,
+        // по опциям от DataContainer(loading - loadStarted, loadedBySourceController)
+        if (
+            (!this._listViewModel || !this._listViewModel.getCount()) &&
+            this._options.searchValue &&
+            newOptions.searchValue &&
+            _private.isPortionedLoad(this)
+        ) {
+            if (loadStarted) {
+                this._indicatorsController.endDisplayPortionedSearch();
+            } else if (this._loadedBySourceController) {
+                const hasMore = _private.getHasMoreData(this);
+                if (hasMore.up || hasMore.down) {
+                    const direction = hasMore.down ? 'bottom' : 'top';
+                    this._indicatorsController.startDisplayPortionedSearch(direction);
+                }
+            }
         }
 
         if (!loadStarted) {
@@ -4299,7 +4338,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             directionToRestoreScroll = 'up';
         }
         if (directionToRestoreScroll) {
-            this._scrollController.saveEdgeItem(directionToRestoreScroll, this._getItemsContainer());
+            this._scrollController.saveEdgeItem(directionToRestoreScroll,
+                this._getItemsContainer(),
+                this._getItemsContainerUniqueClass());
         }
     }
 
@@ -4378,7 +4419,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             }
             if (directionToRestoreScroll) {
                 const newScrollTop = this._scrollController.getScrollTopToEdgeItem(directionToRestoreScroll,
-                    this._getItemsContainer());
+                    this._getItemsContainer(), this._getItemsContainerUniqueClass());
                 this._scrollController.beforeRestoreScrollPosition();
                 this._hasItemWithImageChanged = false;
                 this._notify('doScroll', [newScrollTop, true], { bubbling: true });
@@ -4732,6 +4773,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig): Promise<any> {
+        // При перезагрузке через public-метод полностью сбрасываем состояние cut-навигации
+        // https://online.sbis.ru/opendoc.html?guid=73d5765b-598a-4e2c-a867-91a54150ae9e
+        if (this._cutExpanded) {
+            this._cutExpanded = false;
+            this._sourceController.setNavigation(this._options.navigation);
+        }
+
         if (keepScroll) {
             this._keepScrollAfterReload = true;
             if (!sourceConfig) {
@@ -4850,6 +4898,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return !!(this._sourceController && this._sourceController.hasMoreData(direction));
     }
 
+    protected _loadItemsToDirection(direction: IDirection): Promise<RecordSet|Error> {
+        return this._sourceController.load(direction);
+    }
+
     private _commitEditInGroupBeforeCollapse(groupItem): TAsyncOperationResult {
         if (!this.isEditing() || !groupItem.isExpanded()) {
             return Promise.resolve();
@@ -4900,6 +4952,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 collection.setCollapsedGroups(collapsedGroups);
                 _private.groupsExpandChangeHandler(this, changes);
             });
+            this._notify('groupClick', [dispItem.getContents(), baseEvent, dispItem]);
         }
     }
 
@@ -5800,8 +5853,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     // region Cut
 
     private _toggleCutClick() {
-        const newExpanded = !this._cutExpanded;
-        this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        const result = this._notify('cutClick', [this._cutExpanded], { bubbling: true });
+        if (result !== false) {
+            const newExpanded = !this._cutExpanded;
+            this._reCountCut(newExpanded).then(() => this._cutExpanded = newExpanded);
+        }
     }
 
     private _reCountCut(newExpanded: boolean): Promise<void> {
@@ -5934,6 +5990,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         return classes.join(' ');
     }
 
+    protected _getItemsContainerUniqueClass(): string {
+        return `controls-BaseControl__itemsContainer_${this._uniqueId}`;
+    }
+
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
         if (_private.hasHoverFreezeController(this) &&
             _private.isAllowedHoverFreeze(this) &&
@@ -5996,6 +6056,18 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
     }
+
+    private _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
+        if (information.fixedPosition === '') {
+            if (this._fixedItem && this._fixedItem.key === item.key) {
+                this._fixedItem = null;
+            }
+        } else {
+            this._fixedItem = item;
+        }
+
+    }
+
     _sortingChanged(event, propName) {
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
@@ -6022,6 +6094,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._indicatorsController.displayTopIndicator(true);
             } else {
                 this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+            }
+
+            if (this._indicatorsController.shouldDisplayBottomIndicator()) {
+                this._indicatorsController.displayBottomIndicator();
             }
         }
 

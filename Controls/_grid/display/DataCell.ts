@@ -12,6 +12,22 @@ import Cell, {IOptions as ICellOptions} from './Cell';
 import DataRow from './DataRow';
 import DataCellCompatibility from './compatibility/DataCell';
 import {TemplateFunction} from 'UI/Base';
+import {
+    IFontColorStyleOptions,
+    TFontColorStyle,
+    IFontSizeOptions,
+    TFontSize,
+    IFontWeightOptions,
+    TFontWeight,
+    ISearchValueOptions
+} from 'Controls/interface';
+import {IColumn, IDisplayTypeOptions} from 'Controls/_grid/display/interface/IColumn';
+
+interface IContentRenderOptions extends IFontColorStyleOptions, IFontSizeOptions,
+    IFontWeightOptions, ISearchValueOptions {
+    displayTypeOptions: IDisplayTypeOptions;
+    value: string | number
+}
 
 export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions {
     markerPosition: string;
@@ -93,6 +109,27 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
         }
 
         return classes;
+    }
+
+    /**
+     * Предоставляет набор опций для декоратора,
+     * если контент колонки выводится через декоратор
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight Насыщенность шрифта
+     */
+    getCellContentRenderOptions(templateFontColorStyle?: TFontColorStyle,
+                                templateFontSize?: TFontSize,
+                                templateFontWeight?: TFontWeight): IContentRenderOptions {
+        const columnConfig: IColumn = this.getColumnConfig();
+        return {
+            displayTypeOptions: columnConfig.displayTypeOptions,
+            fontColorStyle: columnConfig.fontColorStyle || templateFontColorStyle,
+            fontSize: columnConfig.fontSize || templateFontSize,
+            fontWeight: columnConfig.fontWeight || templateFontWeight,
+            value: this.getDefaultDisplayValue(),
+            searchValue: this.getSearchValue()
+        };
     }
 
     getWrapperClasses(

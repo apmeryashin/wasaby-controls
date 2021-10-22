@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper demo-Mover controlsDemo_fixedWidth300">
-   <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id" parentProperty="parent">
+   <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="key" parentProperty="parent">
       <div>
          <Controls.buttons:Button icon="icon-Move" caption="Переместить" on:click="_moveButtonClick()" viewMode="linkButton"/>
          <Controls.operations:Controller bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
@@ -12,8 +12,9 @@
                   <ws:moveDialogTemplate templateName="Controls/moverDialog:Template" beforeMoveCallback="{{ _beforeMoveCallback }}">
                      <ws:templateOptions
                              root="{{null}}"
-                             showRoot="{{true}}"
-                             keyProperty="id"
+                             rootVisible="{{true}}"
+                             rootTitle="Каталог"
+                             keyProperty="key"
                              parentProperty="parent"
                              searchParam="title"
                              nodeProperty="type"

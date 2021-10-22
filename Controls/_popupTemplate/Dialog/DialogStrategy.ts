@@ -31,10 +31,8 @@ export class DialogStrategy {
      */
     getPosition(windowData: IPopupPosition = {}, containerSizes: IPopupSizes, item: IDialogItem): Position {
         const popupOptions = item.popupOptions;
-        const {
-            minWidth, maxWidth,
-            minHeight, maxHeight
-        }: ILimitingSizes = this._calculateLimitOfSizes(popupOptions, windowData);
+        const limitedSizes = this._calculateLimitOfSizes(popupOptions, windowData);
+        const {minWidth, maxWidth, minHeight, maxHeight} = limitedSizes;
 
         const positionCoordinates = this._getPositionCoordinates(windowData, containerSizes, item);
         const position = this._validateCoordinate(positionCoordinates, maxHeight, maxWidth, windowData, containerSizes);
@@ -152,7 +150,7 @@ export class DialogStrategy {
             const popupWidth = (popupItem.popupOptions.width || popupItem.sizes?.width);
             // Calculating the position when reducing the size of the browser window
             const differenceWindowWidth: number =
-                (horizontalPosition + popupWidth) - windowData.width;
+                (horizontalPosition + popupWidth) - windowData.width - windowData.left;
             if (differenceWindowWidth > 0) {
                 position[coordinate] = horizontalPosition - differenceWindowWidth;
             } else {
@@ -284,9 +282,14 @@ export class DialogStrategy {
 
     private _calculateLimitOfSizes(popupOptions: IDialogPopupOptions = {}, windowData: IPopupPosition): ILimitingSizes {
         let maxHeight = popupOptions.maxHeight || windowData.height;
-        if (windowData.height < popupOptions.top + maxHeight) {
-            maxHeight = windowData.height - popupOptions.top;
+        if (popupOptions.fittingMode === 'overflow') {
+            maxHeight = windowData.height;
+        } else {
+            if (windowData.height < popupOptions.top + maxHeight) {
+                maxHeight = windowData.height - popupOptions.top;
+            }
         }
+
         return {
             minWidth: popupOptions.minWidth,
             minHeight: popupOptions.minHeight,

@@ -123,7 +123,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    protected _contextState: IContextOptionsValue;
    private _isMounted: boolean;
    private _loading: boolean = false;
-   private _itemsReadyCallback: Function = null;
    private _loadToDirectionRegister: RegisterClass = null;
    private _sourceController: SourceController = null;
    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
@@ -146,7 +145,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
        context?: object,
        receivedState?: IReceivedState
    ): Promise<IReceivedState>|void {
-      this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
       this._onDataLoad = this._onDataLoad.bind(this);
@@ -238,29 +236,32 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    protected _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
       let updateResult;
+      const {sourceController, expandedItems} = newOptions;
+      let currentSourceController = this._sourceController;
 
-      if (this._options.sourceController !== newOptions.sourceController) {
-         this._sourceController = newOptions.sourceController;
+      if (this._options.sourceController !== sourceController) {
+         this._sourceController = currentSourceController = sourceController;
 
-         if (newOptions.sourceController) {
+         if (sourceController) {
             this._initSourceController(newOptions);
          }
       }
 
-      if (this._sourceController && (this._sourceController.getItems() !== this._items)) {
-         this._items = this._sourceController.getItems();
+      if (currentSourceController && (currentSourceController.getItems() !== this._items)) {
+         this._items = currentSourceController.getItems();
+         this._updateBreadcrumbsFromSourceController();
       }
 
-      if (this._sourceController) {
-         if (newOptions.sourceController) {
+      if (currentSourceController) {
+         if (sourceController) {
             updateResult = this._updateWithSourceControllerInOptions(newOptions);
          } else {
             updateResult = this._updateWithoutSourceControllerInOptions(newOptions);
          }
       }
 
-      if (!isEqual(newOptions.expandedItems, this._options.expandedItems) && !newOptions.nodeHistoryId) {
-         this._expandedItems = newOptions.expandedItems;
+      if (!isEqual(expandedItems, this._options.expandedItems) && !newOptions.nodeHistoryId) {
+         this._expandedItems = expandedItems;
       }
 
       return updateResult;
@@ -281,19 +282,21 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    }
 
    _updateWithoutSourceControllerInOptions(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
+      const sourceController = this._sourceController;
+      const {root, source, filter} = newOptions;
       let filterChanged;
       let expandedItemsChanged;
 
-      if (this._options.source !== newOptions.source) {
-         this._source = newOptions.source;
+      if (this._options.source !== source) {
+         this._source = source;
       }
 
-      if (this._options.root !== newOptions.root) {
-         this._root = newOptions.root;
+      if (this._options.root !== root) {
+         this._root = root;
       }
 
-      if (!isEqual(this._options.filter, newOptions.filter)) {
-         this._filter = newOptions.filter;
+      if (!isEqual(this._options.filter, filter)) {
+         this._filter = filter;
          filterChanged = true;
       }
 
@@ -301,18 +304,21 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
          expandedItemsChanged = true;
       }
 
-      const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+      const isChanged = sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+      const sourceControllerState = sourceController.getState();
 
       if (isChanged && this._source) {
          return this._reload(newOptions);
       } else if (filterChanged) {
-         this._filter = this._sourceController.getFilter();
-         this._updateContext(this._sourceController.getState());
+         this._filter = sourceController.getFilter();
+         this._updateContext(sourceControllerState);
       } else if (expandedItemsChanged) {
          if (newOptions.nodeHistoryId) {
-            this._sourceController.updateExpandedItemsInUserStorage();
+            sourceController.updateExpandedItemsInUserStorage();
          }
-         this._updateContext(this._sourceController.getState());
+         this._updateContext(sourceControllerState);
+      } else if (isChanged) {
+         this._updateContext(sourceControllerState);
       }
    }
 
@@ -405,22 +411,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
 
    _unregisterHandler(event, registerType, component, config): void {
       this._loadToDirectionRegister.unregister(event, component, config);
-   }
-
-   _itemsReadyCallbackHandler(items): void {
-      if (this._items !== items) {
-         this._items = this._sourceController.setItems(items);
-         this._updateBreadcrumbsFromSourceController();
-
-         this._contextState = {
-            ...this._contextState,
-            items: this._items
-         };
-      }
-
-      if (this._options.itemsReadyCallback) {
-         this._options.itemsReadyCallback(items);
-      }
    }
 
    _filterChanged(event, filter): void {

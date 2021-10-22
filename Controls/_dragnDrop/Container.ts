@@ -113,6 +113,9 @@ class Container extends Control<IContainerOptions> {
     private _draggedKey: string = null;
 
     protected _template: TemplateFunction = template;
+    // после начала драга event.target может меняться и zoom соответственно тоже.
+    // Смена zoom после начала драга для расчетов недопустима, запоминаем значение в самом начале.
+    private _draggingZoom: number;
 
     private _registerMouseMove(): void {
         this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
@@ -209,6 +212,8 @@ class Container extends Control<IContainerOptions> {
         } else {
             this._dragEntity = dragObject.entity;
         }
+        const target = dragObject?.domEvent?.target;
+        this._draggingZoom = DimensionsMeasurer.getZoomValue(target);
         this._documentDragging = true;
         this._notifyDragEvent('documentDragStart', [dragObject]);
         ControllerClass._dragStart();
@@ -240,8 +245,8 @@ class Container extends Control<IContainerOptions> {
         };
         if (mouseEvent && startEvent) {
             dragObject.domEvent = mouseEvent;
-            dragObject.position = Container._getPageXY(mouseEvent);
-            dragObject.offset = Container._getDragOffset(mouseEvent, startEvent);
+            dragObject.position = Container._getPageXY(mouseEvent, this._draggingZoom);
+            dragObject.offset = Container._getDragOffset(mouseEvent, startEvent, this._draggingZoom);
             dragObject.draggingTemplateOffset = this._options.draggingTemplateOffset;
         }
         return dragObject;
@@ -372,8 +377,8 @@ class Container extends Control<IContainerOptions> {
     private static SHIFT_LIMIT: number = 4;
     private static IE_MOUSEMOVE_FIX_DELAY: number = 50;
 
-    private static _getPageXY(event: MouseEvent | TouchEvent): ICords {
-        return DimensionsMeasurer.getRelativeMouseCoordsByMouseEvent(event);
+    private static _getPageXY(event: MouseEvent | TouchEvent, zoom?: number): ICords {
+        return DimensionsMeasurer.getRelativeMouseCoordsByMouseEvent(event,  zoom);
     }
 
     private static _isDragStarted(startEvent: MouseEvent, moveEvent: MouseEvent, immediately: boolean): boolean {
@@ -403,9 +408,9 @@ class Container extends Control<IContainerOptions> {
         }
     }
 
-    private static _getDragOffset(moveEvent: MouseEvent, startEvent: MouseEvent): ICords {
-        const moveEventXY = Container._getPageXY(moveEvent);
-        const startEventXY = Container._getPageXY(startEvent);
+    private static _getDragOffset(moveEvent: MouseEvent, startEvent: MouseEvent, zoom?: number): ICords {
+        const moveEventXY = Container._getPageXY(moveEvent, zoom);
+        const startEventXY = Container._getPageXY(startEvent, zoom);
 
         return {
             y: moveEventXY.y - startEventXY.y,

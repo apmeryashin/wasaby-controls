@@ -259,14 +259,14 @@ describe('Controls/_lookup/BaseLookupView', function() {
          selectedKeys: []
       });
       lookup._items = getItems(0);
-      lookup._keyDown(null, eventBackspace);
+      lookup._keyDown(eventBackspace);
       ok(!isNotifyRemoveItems);
 
       lookup._items = getItems(5);
-      lookup._keyDown(null, eventNotBackspace);
+      lookup._keyDown(eventNotBackspace);
       ok(!isNotifyRemoveItems);
 
-      lookup._keyDown(null, eventBackspace);
+      lookup._keyDown(eventBackspace);
       ok(isNotifyRemoveItems);
       isNotifyRemoveItems = false;
 
@@ -276,11 +276,11 @@ describe('Controls/_lookup/BaseLookupView', function() {
          selectedKeys: []
       });
       lookup._options.value = 'not empty valeue';
-      lookup._keyDown(null, eventBackspace);
+      lookup._keyDown(eventBackspace);
       ok(!isNotifyRemoveItems);
       ok(!isNotifyShowSelector);
 
-      lookup._keyDown(null, eventF2);
+      lookup._keyDown(eventF2);
       ok(isNotifyShowSelector);
    });
 

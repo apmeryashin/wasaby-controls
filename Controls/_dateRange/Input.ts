@@ -7,8 +7,7 @@ import DateRangeModel from './DateRangeModel';
 import {Range, Popup as PopupUtil} from 'Controls/dateUtils';
 import {IBaseInputMask, StringValueConverter} from 'Controls/date';
 import {ISelection} from 'Controls/input';
-import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
-import getPopupName from 'Controls/_dateRange/Utils/getPopupName';
+import {getDatePopupName, IDatePopupTypeOptions} from 'Controls/date';
 import template = require('wml!Controls/_dateRange/Input/Input');
 import {ICalendarButtonVisibleOptions} from 'Controls/date';
 import {DependencyTimer} from 'Controls/popup';
@@ -142,7 +141,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         const cfg = {
             ...PopupUtil.getCommonOptions(this),
             target: this._container,
-            template: getPopupName(this._options.datePopupType),
+            template: getDatePopupName(this._options.datePopupType),
             className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
@@ -154,7 +153,6 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
                 ranges: this._options.ranges,
                 headerType: 'input',
                 closeButtonEnabled: true,
-                rangeselect: true,
                 range: this._options.range,
                 state: this._state,
                 stateChangedCallback: this._stateChangedCallback

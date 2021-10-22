@@ -25,4 +25,31 @@
         </Router.router:Reference>
         <Controls-demo.toggle.Switch.Tooltip.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/toggle/Switch/ResetValue/Index' }}">
+            <a href="{{content.href}}">Настройка предустановленного значения</a>
+        </Router.router:Reference>
+        <Controls-demo.toggle.Switch.ResetValue.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/toggle/Switch/ContrastBackground/Index' }}">
+            <a href="{{content.href}}">Настройка контрастности</a>
+        </Router.router:Reference>
+        <Controls-demo.toggle.Switch.ContrastBackground.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/toggle/Switch/Size/Index' }}">
+            <a href="{{content.href}}">Настройка рамеров</a>
+        </Router.router:Reference>
+        <Controls-demo.toggle.Switch.Size.Index/>
+    </div>
 </div>

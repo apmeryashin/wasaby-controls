@@ -69,7 +69,7 @@
             </tr>
         </tbody>
         <!-- Items -->
-        <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer" attr:data-qa="items-container">
+        <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer {{_options.itemsContainerClass}}" attr:data-qa="items-container">
 
         <!-- TODO избавиться от прокидывания _onBreadcrumbClick https://online.sbis.ru/doc/0649e69a-d507-4024-9f99-c70205f535ef-->
         <ws:partial
@@ -180,6 +180,8 @@
         <Controls.columnScroll:ScrollBar
                 name="horizontalScrollBar"
                 attr:style="{{ _getColumnScrollThumbStyles(_options) }}"
+                mode="{{ _options.columnScrollViewMode || 'scrollbar' }}"
+                readOnly="{{ _options.columnScrollViewMode === 'arrows' && (_$pendingMouseEnterForActivate || !_$columnScrollController) }}"
                 stickyHeader="{{ false }}"
                 backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
                 on:positionChanged="_onColumnScrollThumbPositionChanged()"

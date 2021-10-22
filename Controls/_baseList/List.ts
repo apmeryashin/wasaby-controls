@@ -35,6 +35,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/interface/IGroupedList
  * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/list:IReloadableList
  * @implements Controls/marker:IMarkerList
@@ -60,6 +61,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/interface:ISelectFields
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
  * @implements Controls/list:IEditableList

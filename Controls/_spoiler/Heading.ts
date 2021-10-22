@@ -224,7 +224,7 @@ export default Heading;
 
 /**
  * @name Controls/_spoiler/Heading#fontWeight
- * @cfg {String} Начертание шрифта.
+ * @cfg {String} Насыщенность шрифта.
  * @variant bold
  * @variant default
  *
@@ -244,7 +244,7 @@ export default Heading;
  * @remark
  * Когда опция не задана, то её значение определяется контролом в зависимости от состояния развернутости.
  * В развернутом состоянии это "secondary", а в свёрнутом — "label".
- * 
+ *
  * @example
  * <pre class="brush: html">
  * <!-- WML -->

@@ -57,6 +57,9 @@ interface IPropertyGridValidatorArguments {
  * @implements Controls/propertyGrid:IProperty
  * @implements Controls/propertyGrid:IPropertyGrid
  * @implements Controls/interface/IPromisedSelectable
+ * @implements Controls/list:IRemovableList
+ * @implements Controls/list:IMovableList
+ * @implements Controls/interface:IItemPadding
  * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
  *
  * @public
@@ -87,8 +90,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _editingObject: TEditingObject = null;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
+        const {selectedKeys} = options;
         this._collapsedGroups = this._getCollapsedGroups(options.collapsedGroups);
-        this._toggledEditors = this._getToggledEditors(options.typeDescription, options.keyProperty);
+        this._toggledEditors = this._getToggledEditors(options);
 
         this._collectionChangedHandler = this._collectionChangedHandler.bind(this);
         this._listModel = this._getCollection(options);
@@ -97,30 +101,44 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (options.captionColumnOptions || options.editorColumnOptions) {
             this._render = gridRenderTemplate;
         }
+        if (options.multiSelectVisibility !== 'hidden' && selectedKeys?.length > 0) {
+            this._getSelectionController(options)
+                .setSelection({selected: selectedKeys, excluded: options.excludedKeys});
+        }
         this._editingObject = options.editingObject;
     }
 
     protected _beforeUpdate(newOptions: IPropertyGridOptions): void {
-        if (newOptions.editingObject !== this._options.editingObject) {
-            this._listModel.setEditingObject(newOptions.editingObject);
-            this._editingObject = newOptions.editingObject;
-        }
-        if (newOptions.typeDescription !== this._options.typeDescription) {
-            this._toggledEditors = this._getToggledEditors(newOptions.typeDescription, newOptions.keyProperty);
-            this._listModel = this._getCollection(newOptions);
-        } else if (newOptions.itemPadding !== this._options.itemPadding) {
-            this._listModel.setItemPadding(newOptions.itemPadding);
-        }
-        if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
-            this._listModel.setFilter(this._displayFilter.bind(this));
-        }
-        if (newOptions.captionPosition !== this._options.captionPosition) {
-            this._listModel.setCaptionPosition(newOptions.captionPosition);
+        const {
+            editingObject,
+            typeDescription,
+            itemPadding,
+            collapsedGroups,
+            captionPosition,
+            multiSelectAccessibilityProperty
+        } = newOptions;
+
+        if (editingObject !== this._options.editingObject) {
+            this._listModel.setEditingObject(editingObject);
+            this._editingObject = editingObject;
         }
 
-        if (newOptions.multiSelectAccessibilityProperty !== this._options.multiSelectAccessibilityProperty) {
-            this._listModel.setMultiSelectAccessibilityProperty(newOptions.multiSelectAccessibilityProperty);
+        if (typeDescription !== this._options.typeDescription) {
+            this._toggledEditors = this._getToggledEditors(newOptions);
+            this._listModel = this._getCollection(newOptions);
+        } else if (itemPadding !== this._options.itemPadding) {
+            this._listModel.setItemPadding(itemPadding);
+        }
+        if (collapsedGroups !== this._options.collapsedGroups) {
+            this._collapsedGroups = this._getCollapsedGroups(collapsedGroups);
+            this._listModel.setFilter(this._displayFilter.bind(this));
+        }
+        if (captionPosition !== this._options.captionPosition) {
+            this._listModel.setCaptionPosition(captionPosition);
+        }
+
+        if (multiSelectAccessibilityProperty !== this._options.multiSelectAccessibilityProperty) {
+            this._listModel.setMultiSelectAccessibilityProperty(multiSelectAccessibilityProperty);
         }
         this._updateSelectionController(newOptions);
     }
@@ -151,18 +169,17 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    private _getToggledEditors(
-        source: IPropertyGridItem[] | RecordSet<IPropertyGridItem>,
-        keyProperty: string
-    ): TToggledEditors {
-        const toggledEditors = {};
+    private _getToggledEditors({typeDescription, keyProperty, toggledEditors}: IPropertyGridOptions): TToggledEditors {
+        const result = {};
+        let key;
 
-        source.forEach((item) => {
+        typeDescription.forEach((item) => {
             if (object.getPropertyValue(item, PROPERTY_TOGGLE_BUTTON_ICON_FIELD)) {
-                toggledEditors[object.getPropertyValue<string>(item, keyProperty)] = false;
+                key = object.getPropertyValue<string>(item, keyProperty);
+                result[key] = toggledEditors ? toggledEditors.includes(key) : false;
             }
         });
-        return toggledEditors;
+        return result;
     }
 
     private _groupCallback(groupProperty: string, item: Model): string {
@@ -355,22 +372,25 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _updateSelectionController(newOptions: IPropertyGridOptions): void {
-        const selectionChanged = !isEqual(this._options.selectedKeys, newOptions.selectedKeys) ||
-                                 !isEqual(this._options.excludedKeys, newOptions.excludedKeys);
+        const {selectedKeys, excludedKeys} = newOptions;
+        const isTypeDescriptionChanged = newOptions.typeDescription !== this._options.typeDescription;
+        const isUpdateNeeded = !isEqual(this._options.selectedKeys, selectedKeys) ||
+                               !isEqual(this._options.excludedKeys, excludedKeys) ||
+                               isTypeDescriptionChanged;
 
-        if (selectionChanged) {
+        if (isTypeDescriptionChanged || newOptions.multiSelectVisibility === 'hidden') {
+            this._destroySelectionController();
+        }
+
+        if (isUpdateNeeded) {
             const controller = this._getSelectionController(newOptions);
-            const newSelection = newOptions.selectedKeys === undefined
+            const newSelection = selectedKeys === undefined
                 ? controller.getSelection()
                 : {
-                    selected: newOptions.selectedKeys,
-                    excluded: newOptions.excludedKeys || []
+                    selected: selectedKeys,
+                    excluded: excludedKeys || []
                 };
             controller.setSelection(newSelection);
-        }
-        if (newOptions.multiSelectVisibility === 'hidden' && this._selectionController) {
-            this._selectionController.destroy();
-            this._selectionController = null;
         }
     }
 
@@ -387,14 +407,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _getSelectionStrategyOptions(
-        {parentProperty}: IPropertyGridOptions,
+        {parentProperty, selectionType}: IPropertyGridOptions,
         collection: TPropertyGridCollection
     ): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (parentProperty) {
             return {
                 rootId: null,
                 model: collection,
-                selectionType: 'all',
+                selectionType: selectionType || 'all',
                 recursiveSelection: false
             };
         } else {
@@ -425,6 +445,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         const excludedDiff = selectionDifference.excludedKeysDifference;
         if (excludedDiff.added.length || excludedDiff.removed.length) {
             this._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
+        }
+    }
+
+    private _destroySelectionController(): void {
+        if (this._selectionController) {
+            this._selectionController.destroy();
+            this._selectionController = null;
         }
     }
 
@@ -559,6 +586,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                     parentProperty: this._options.parentProperty,
                     nodeProperty: this._options.nodeProperty,
                     keyProperty: this._listModel.getKeyProperty(),
+                    rootVisible: true,
                     columns: [{
                         displayProperty: 'caption'
                     }],

@@ -80,7 +80,7 @@ class ResultsRow extends Row<null> {
     protected _initializeColumns(): void {
         super._initializeColumns({
             colspanStrategy: 'skipColumns',
-            shouldAddStickyLadderCells: !this._$rowTemplate,
+            prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' : 'colspan',
             addEmptyCellsForStickyLadder: true,
             extensionCellsConstructors: {
                 stickyLadderCell: ResultsCell,

@@ -564,7 +564,10 @@ define([
                      height: 100
                   };
                },
-               closest: () => {}
+               closest: () => {},
+               style: {
+                  top: 5
+               }
             };
             scroll.scrollToElement(element, false, true);
             assert.equal(element.parentElement.scrollTop, 25);

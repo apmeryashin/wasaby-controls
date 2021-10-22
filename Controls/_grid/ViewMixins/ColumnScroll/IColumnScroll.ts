@@ -3,7 +3,8 @@ import {
     ColumnScrollController,
     ScrollBar,
     DragScrollController,
-    StyleContainers
+    StyleContainers,
+    IScrollBarOptions
 } from 'Controls/columnScroll';
 import {TKey} from 'Controls/interface';
 import {SyntheticEvent} from 'UI/Vdom';
@@ -17,6 +18,7 @@ interface IColumnScrollMixinOptions {
     stickyColumnsCount?: number;
     isFullGridSupport: boolean;
     startDragNDropCallback?: () => void;
+    columnScrollViewMode?: IScrollBarOptions['mode'];
 }
 
 interface IViewOptions extends IControlOptions, IColumnScrollMixinOptions {

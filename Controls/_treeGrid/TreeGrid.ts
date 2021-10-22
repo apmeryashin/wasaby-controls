@@ -19,7 +19,6 @@ import 'css!Controls/treeGrid';
  * Дополнительно о контроле:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/ руководство разработчика}
  * * {@link http://axure.tensor.ru/StandardsV8/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE.html Спецификация Axure}
- * * {@link /materials/Controls-demo/app/Controls-demo%2FList%2FTree%2FSingleExpand демо-пример с множественным выбором элементов и с единичным раскрытием содержимого папок}
  * * {@link /materials/Controls-demo/app/Controls-demo%2FList%2FTree%2FTreeWithPhoto демо-пример с пользовательским шаблоном элемента списка с фото}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_treeGrid.less переменные тем оформления treeGrid}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_list.less переменные тем оформления list}
@@ -32,13 +31,14 @@ import 'css!Controls/treeGrid';
  * @implements Controls/interface:IHierarchy
  * @implements Controls/interface/ITreeGridItemTemplate
  * @implements Controls/interface:IDraggable
- * @implements Controls/interface:IGridControl
  * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/grid:IPropStorage
  * @implements Controls/tree:ITreeControl
  * @implements Controls/itemActions:IItemActions
+ * @implements Controls/_treeGrid/interface/ITreeGrid
  *
  * @public
  * @author Авраменко А.С.

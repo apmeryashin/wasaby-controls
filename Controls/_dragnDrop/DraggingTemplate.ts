@@ -14,7 +14,7 @@ import 'css!Controls/dragnDrop';
  * @extends UI/Base:Control
  *
  * @public
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  */
 const MAX_ITEMS_COUNT: number = 999;
 

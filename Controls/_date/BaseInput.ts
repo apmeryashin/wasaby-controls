@@ -59,6 +59,7 @@ const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
  * @mixes Controls/input:IBase
  * @mixes Controls/input:IBorderVisibility
  * @implements Controls/interface:IInputPlaceholder
+ * @implements Controls/date:IValue
  * @mixes Controls/input:IValueValidators
  * @mixes Controls/input:IInputDisplayValueValidators
  *
@@ -114,7 +115,8 @@ class BaseInput extends Control<IDateBaseOptions> {
         if (this._model.value !== options.value) {
             this.setValidationResult(null);
         }
-        if (options.value !== this._options.value || options.displayValue !== this._options.displayValue) {
+        if (options.value !== this._options.value || options.displayValue !== this._options.displayValue ||
+            options.mask !== this._options.mask) {
             this._model.update({
                 ...options,
                 dateConstructor: this._dateConstructor
@@ -155,6 +157,11 @@ class BaseInput extends Control<IDateBaseOptions> {
             // on Insert button press current date should be inserted in field
             this._model.setCurrentDate();
             this._notify('inputCompleted', [this._model.value, this._model.textValue]);
+            // В IE при нажатии на кнопку insert включается поведение, при котором впередистоящие символы начинают
+            // перезаписываться при вводе. Из-за этого контрол не понимает какое действие произошло,
+            // т.к. при обычном вводе числа, значение в инпуте меняется по другому (например, значение 12.12.12,
+            // при вводе 1 станет 112.12.12). Отключим это поведение.
+            event.preventDefault();
         }
         if (key === constants.key.plus || key === constants.key.minus) {
             // on +/- buttons press date should be increased or decreased in field by one day if date is not empty

@@ -24,7 +24,7 @@ let _private = {
 };
 
 /**
- * Контрол "Строка поиска". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
+ * Контрол "Строка поиска". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
  * Функционал контрола идентичен полям ввода из библиотеки {@link Controls/input}, однако в отличие от них имеет собственное визуальное оформление.
  *
  * @remark
@@ -276,12 +276,11 @@ Object.defineProperty(Search, 'defaultProps', {
  * * TypeScript
  * <pre>
  *     protected _value: string = '';
- *
  *     private _searchClick():boolean {
  *       //Не закрываем автодополнение при клике на лупу, если введено больше 3 символов
  *       return this._value.length < 3;
  *     }
- * <pre>
+ * </pre>
  * @default true
  */
 
@@ -312,11 +311,10 @@ Object.defineProperty(Search, 'defaultProps', {
  * TS:
  * <pre>
  *     protected _value: string = '';
- *
  *     private _searchClick():boolean {
  *       return this._value.length < 3;
  *     }
- * <pre>
+ * </pre>
  */
 
 /*

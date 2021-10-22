@@ -55,7 +55,7 @@
 
   //Переменные для разделителей между периодами
 
-  --yearlist_block-separator_color_datePicker:                                      #f4f4f4;
+  --yearlist_block-separator_color_datePicker:                                      var(--unaccented_background-color);
   --yearlist_block-separator_thickness_datePicker:                                  4px;
 
   //Переменные для кнопки выбора квартала
@@ -123,7 +123,7 @@
 
   //Обводка
 
-  --monthnav_item_border-color_datePicker:                                          #F4F4F4;
+  --monthnav_item_border-color_datePicker:                                          var(--unaccented_background-color);
   --monthnav_item_hover_border-color_datePicker:                                    #8991A9;
 
   // Ячейка месяца
@@ -146,7 +146,7 @@
 
   //Обводка
 
-  --monthnav_year_border-color_datePicker:                                          #F4F4F4;
+  --monthnav_year_border-color_datePicker:                                          var(--unaccented_background-color);
   // needless
   --monthnav_year_hover_border-color_datePicker:                                    #D94700;
 
@@ -206,7 +206,7 @@
 
   // Фон
 
-  --monthlist_monthview_item_background-color_datePicker:                           #F4F4F4;
+  --monthlist_monthview_item_background-color_datePicker:                           var(--unaccented_background-color);
 
 
   // Переменные для заголовка месяца
@@ -294,9 +294,8 @@
   --shift-top_PeriodDialog-picker:                                                  calc(-1 * ((var(--header-min-height_dialog) - var(--inline_height_default)) / 2));
   --shift-left_PeriodDialog-picker:                                                 calc(-1 * (var(--header_padding-left_datePicker) + var(--switcher_icon-size_datePicker) + var(--offset_m)));
   --shift-left_PeriodDialog-picker-withoutModeBtn:                                  calc(-1 * var(--header_padding-left_datePicker));
-  //TODO: Добавить в fallback;
-  --shift-top_PeriodDialog-selector:                                                calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2);
-  --shift-top_fontSize-l_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2 + 1px);
-  --shift-top_fontSize-s_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog) + 1px) / 2 - 1px);
+  --shift-top_PeriodDialog-selector:                                                calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog)) / 2);
+  --shift-top_fontSize-l_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog)) / 2 + 1px);
+  --shift-top_fontSize-s_PeriodDialog-selector:                                     calc((var(--height_dateRangeSelector) - var(--header-min-height_dialog)) / 2 - 1px);
 
 }

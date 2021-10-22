@@ -10,6 +10,7 @@
  *       * mainCounter {Number} — Значение счетчика.
  *       * mainCounterStyle {String} — Стиль отображения счетчика.
  *       * caption {String} — Подпись вкладки.
+ *       * additionalCaption {String} - Дополнительная подпись вкладки.
  * @class Controls/_tabs/interface/ITextCounterTabTemplate
  * @author Красильников А.С.
  * @example
@@ -35,7 +36,8 @@
  *     {
  *        id: '3',
  *        caption: 'Вкладка',
- *        mainCounter: 12
+ *        mainCounter: 12,
+ *        additionalCaption: 'Доп. текст'
  *     }
  * </pre>
  * @demo Controls-demo/Tabs/Buttons/NewTemplate/Index
@@ -72,4 +74,9 @@ export interface ITextCounterTabTemplate {
      * @cfg {String} Подпись вкладки.
      */
     caption?: string;
+    /**
+     * @name Controls/_tabs/interface/ITextCounterTabTemplate#additionalCaption
+     * @cfg {String} Дополнительная подпись вкладки.
+     */
+    additionalCaption?: string;
 }

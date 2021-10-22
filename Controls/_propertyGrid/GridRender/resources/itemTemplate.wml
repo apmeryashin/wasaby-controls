@@ -46,7 +46,8 @@
                      class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}"></div>
             </ws:if>
             <div style="{{getCheckboxStyles(collectionItem, captionPosition)}}"
-                 class="{{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}">
+                 class="controls-PropertyGrid__cell_checkbox
+                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover'}}">
                 <ws:partial template="{{collectionItem.getMultiSelectTemplate()}}"
                             item="{{collectionItem}}"/>
             </div>

@@ -459,12 +459,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _openMenu(config: IStickyPopupOptions): void {
-        /**
-         * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
-         * по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
-         */
-        this._notify('menuOpened', [], {bubbling: true});
-
         if (!this._sticky) {
             this._sticky = new StickyOpener();
         }
@@ -549,7 +543,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _closeHandler(): void {
-        this._notify('menuClosed', [], {bubbling: true});
         this._setStateByItems(this._items, this._options.source);
         this._setMenuSource();
     }
@@ -773,6 +766,22 @@ Object.defineProperty(Toolbar, 'defaultProps', {
  * @name Controls/_toolbars/View#itemTemplate
  * @cfg {String | TemplateFunction} Пользовательский шаблон отображения элемента внутри тулбара.
  * Для того чтобы задать шаблон элемента и в тулбаре и в выпадающем списке, используйте опцию {@link Controls/interface/IItemTemplate itemTemplateProperty}.
+ * Для определения внутри шаблона места построения(тулбар или меню) используйте переменную type="toolbar"
+ * внутри шаблона.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <div class="wrapper">
+ *    <div class="cell">
+ *        <ws:if data="{{type === 'toolbar'}}">
+ *            {{toolbarContent}}
+ *        </ws:if>
+ *        <ws:else>
+ *            {{menuContent}}}
+ *        </ws:else>
+ *    </div>
+ * </div>
+ * </pre>
  *
  * @example
  * <pre class="brush: html">

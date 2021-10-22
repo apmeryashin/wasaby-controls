@@ -2,22 +2,22 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
-    IContrastBackgroundOptions,
-    ITooltip,
-    ITooltipOptions,
-    IValidationStatus,
-    IValidationStatusOptions
+   IContrastBackgroundOptions,
+   IResetValueOptions,
+   ITooltip,
+   ITooltipOptions,
+   IValidationStatus,
+   IValidationStatusOptions
 } from 'Controls/interface';
 import 'css!Controls/toggle';
 import 'css!Controls/CommonClasses';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
-    ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions {
+    ITooltipOptions, IValidationStatusOptions, IContrastBackgroundOptions, IResetValueOptions {
    caption: string;
    captionPosition: string;
    size?: string;
-   resetValue?: boolean;
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
@@ -31,6 +31,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions,
  * @extends UI/Base:Control
  * @implements Controls/toggle:ICheckable
  * @implements Controls/interface:ITooltip
+ * @implements Controls/interface:IResetValue
  * @implements Controls/interface:IContrastBackground
  *
  * @public
@@ -107,7 +108,7 @@ Object.defineProperty(Switch, 'defaultProps', {
 
 /**
  * @name Controls/_toggle/Switch#resetValue
- * @cfg {boolean} Предустановленное значение
+ * @cfg {boolean}
  * @demo Controls-demo/toggle/Switch/ResetValue/Index
  */
 
@@ -134,6 +135,7 @@ Object.defineProperty(Switch, 'defaultProps', {
  * @variant left Заголовок расположен перед кнопкой.
  * @variant right Заголовок расположен после кнопки.
  * @default right
+ * @demo Controls-demo/toggle/Switch/CaptionPosition/Index
  */
 
 /*

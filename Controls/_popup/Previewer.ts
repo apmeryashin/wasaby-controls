@@ -7,7 +7,7 @@ import PreviewerOpener from './Opener/Previewer';
 import {goUpByControlTree} from 'UI/Focus';
 import 'css!Controls/popup';
 import template = require('wml!Controls/_popup/Previewer/Previewer');
-import {CalmTimer} from 'Controls/_popup/fastOpenUtils/FastOpen';
+import {CalmTimer} from 'Controls/_popup/utils/FastOpen';
 
 const CALM_DELAY: number = 300; // During what time should not move the mouse to start opening the popup.
 /**
@@ -30,7 +30,6 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     _previewerId: IPreviewerPopupOptions;
     _calmTimer: CalmTimer;
     _isOpened: boolean = false;
-    _enableClose: boolean = true;
 
     protected _beforeMount(options: IPreviewerOptions): void {
         this._resultHandler = this._resultHandler.bind(this);
@@ -212,20 +211,12 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
 
     private _resultHandler(event: SyntheticEvent<MouseEvent>): void {
         switch (event.type) {
-            case 'menuclosed':
-                this._enableClose = true;
-                event.stopPropagation();
-                break;
-            case 'menuopened':
-                this._enableClose = false;
-                event.stopPropagation();
-                break;
             case 'mouseenter':
                 this._debouncedAction('_cancel', [event, 'closing']);
                 break;
             case 'mouseleave':
                 const isHoverType = this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick';
-                if (isHoverType && this._enableClose && !this._isLinkedPreviewer(event)) {
+                if (isHoverType && !this._isLinkedPreviewer(event)) {
                     this._debouncedAction('_close', [event]);
                 }
                 break;

@@ -1,20 +1,44 @@
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
+import {IColumn} from 'Controls/grid';
+
 /**
  * Миксин, который содержт логику отображения ячейки группы
  */
 export default abstract class GroupCell<T> {
     getContentTextClasses(separatorVisibility: boolean,
-                          textAlign: 'right' | 'left',
-                          fontSize: string): string {
+                          textAlign: 'right' | 'left'): string {
         let classes = 'controls-ListView__groupContent-text';
-        if (fontSize) {
-            classes += ` controls-fontsize-${fontSize}`;
-        } else {
-            classes += ' controls-ListView__groupContent-text_default';
-        }
         classes += ` controls-ListView__groupContent_${textAlign || 'center'}`;
 
         if (separatorVisibility === false) {
             classes += ' controls-ListView__groupContent-withoutGroupSeparator';
+        }
+        return classes;
+    }
+
+    /**
+     * Добавляет CSS классы для стилизации текста в заголовке группы.
+     * Настройки из шаблона по умолчанию имеют больший приоритет, т.к. обычные группы настраиваются через шаблон Controls/grid:GroupTemplate.
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight жирность шрифта
+     */
+    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight): string {
+        let classes = '';
+        if (templateFontSize) {
+            classes += ` controls-fontsize-${templateFontSize}`;
+        } else {
+            classes += ' controls-ListView__groupContent-text_default';
+        }
+        if (templateFontColorStyle) {
+            classes += ` controls-text-${templateFontColorStyle}`;
+        } else {
+            classes += ' controls-ListView__groupContent-text_color_default';
+        }
+        if (templateFontWeight) {
+            classes += ` controls-fontweight-${templateFontWeight}`;
         }
         return classes;
     }
@@ -64,7 +88,6 @@ export default abstract class GroupCell<T> {
         let classes = '';
         classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
         classes += ` controls-Grid__row-cell_${this.getStyle()}`;
-        classes += ' controls-ListView__group_min_height ';
 
         return classes;
     }
@@ -76,4 +99,6 @@ export default abstract class GroupCell<T> {
     abstract isExpanded(): boolean;
 
     abstract getStyle(): string;
+
+    abstract getColumnConfig(): IColumn;
 }

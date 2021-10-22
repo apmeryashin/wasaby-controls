@@ -16,10 +16,12 @@ import {IEditingConfig, IItemPadding, TMarkerClassName} from 'Controls/display';
 import {COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 import Row from './Row';
+import {TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/grid:ColumnTemplate';
 const MONEY_RENDER = 'Controls/grid:MoneyTypeRender';
 const NUMBER_RENDER = 'Controls/grid:NumberTypeRender';
+const DATE_RENDER = 'Controls/grid:DateTypeRender';
 const STRING_RENDER = 'Controls/grid:StringTypeRender';
 const STRING_SEARCH_RENDER = 'Controls/grid:StringSearchTypeRender';
 
@@ -75,6 +77,7 @@ export default class Cell<
     protected _$colspan: number;
     protected _$rowspan: number;
     protected _$isFixed: boolean;
+    protected _$isHidden: boolean;
     protected _$isSingleColspanedCell: boolean;
     protected _$isActsAsRowTemplate: boolean;
     protected _$isLadderCell: boolean;
@@ -127,6 +130,8 @@ export default class Cell<
                 return MONEY_RENDER;
             case 'number':
                 return NUMBER_RENDER;
+            case 'date':
+                return DATE_RENDER;
             default:
                 return STRING_RENDER;
         }
@@ -255,6 +260,9 @@ export default class Cell<
         return this._$owner.getContents();
     }
 
+    isHidden(): boolean {
+        return !!this._$isHidden;
+    }
     // endregion
 
     // region Аспект "Стилевое оформление. Классы и стили"
@@ -267,6 +275,10 @@ export default class Cell<
             templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
+
+        if (this._$isHidden && this._$owner.isFullGridSupport()) {
+            return 'ws-hidden';
+        }
 
         wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
         wrapperClasses += this._getWrapperSeparatorClasses();
@@ -429,6 +441,32 @@ export default class Cell<
             contentClasses += ' controls-ListView__itemContent_dragging';
         }
 
+        return contentClasses;
+    }
+
+    /**
+     * Добавляет CSS классы для стилизации текста в ячейке грида.
+     * Настройки из конфига колонок имеют бОльший приоритет
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight Насыщенность шрифта
+     */
+    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight): string {
+        const fontColorStyle = this.config.fontColorStyle || templateFontColorStyle;
+        const fontSize = this.config.fontSize || templateFontSize;
+        const fontWeight = this.config.fontWeight || templateFontWeight;
+        let contentClasses = '';
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
+        }
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
+        }
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
+        }
         return contentClasses;
     }
 
@@ -691,6 +729,7 @@ Object.assign(Cell.prototype, {
     _$shadowVisibility: 'lastVisible',
 
     _$isFixed: null,
+    _$isHidden: null,
     _$isSingleColspanedCell: null,
     _$isActsAsRowTemplate: null,
     _$isLadderCell: null,

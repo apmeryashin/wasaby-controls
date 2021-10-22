@@ -1,10 +1,7 @@
-import {Control} from 'UI/Base';
 import Base from 'Controls/_popup/PopupHelper/Base';
 import StickyOpener from 'Controls/_popup/Opener/Sticky';
 import {IStickyPopupOptions, TActionOnScroll, TTarget} from 'Controls/_popup/interface/ISticky';
-import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import {goUpByControlTree} from 'UI/Focus';
-import * as cInstance from 'Core/core-instance';
+import {toggleActionOnScroll} from 'Controls/_popup/utils/SubscribeToScroll';
 import * as randomId from 'Core/helpers/Number/randomId';
 
 /**
@@ -42,12 +39,18 @@ export default class Sticky extends Base {
 
     protected _openHandler(): void {
         super._openHandler();
-        this._toggleActionOnScrollHandler(true);
+        if (this._actionOnScroll) {
+            toggleActionOnScroll(this._target, true, (event: Event, scrollEvent: Event) => {
+                this._scrollHandler(event, scrollEvent);
+            });
+        }
     }
 
     protected _closeHandler(): void {
         super._closeHandler();
-        this._toggleActionOnScrollHandler(false);
+        if (this._actionOnScroll) {
+            toggleActionOnScroll(this._target, false);
+        }
     }
 
     protected _scrollHandler(event: Event, scrollEvent: Event): void {
@@ -60,28 +63,6 @@ export default class Sticky extends Base {
         }
         if (options.target) {
             this._target = options.target;
-        }
-    }
-
-    private _toggleActionOnScrollHandler(toggle: boolean): void {
-        if (this._actionOnScroll) {
-            const targetForSubscribe = this._getTargetForSubscribe(this._target);
-            if (targetForSubscribe) {
-                if (toggle) {
-                    RegisterUtil(targetForSubscribe, 'scroll', this._scrollHandler.bind(this));
-                } else {
-                    UnregisterUtil(targetForSubscribe, 'scroll');
-                }
-            }
-        }
-    }
-
-    private _getTargetForSubscribe(target: TTarget): Control {
-        const baseControlName = 'UI/Base:Control';
-        if (cInstance.instanceOfModule(target, baseControlName)) {
-            return target as Control;
-        } else if (target instanceof HTMLElement) {
-            return goUpByControlTree(target)[0];
         }
     }
 }

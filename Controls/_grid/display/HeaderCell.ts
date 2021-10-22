@@ -239,6 +239,9 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
+            if (this._$owner.getColumnScrollViewMode() === 'arrows') {
+                wrapperClasses += ' controls-Grid__header-cell_withColumnScrollArrows';
+            }
         }
         return wrapperClasses;
     }
@@ -280,8 +283,10 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
     }
 
     setSorting(sorting: string): void {
-        this._$sorting = sorting;
-        this._nextVersion();
+        if (this._$sorting !== sorting) {
+            this._$sorting = sorting;
+            this._nextVersion();
+        }
     }
 
     getSorting(): string {

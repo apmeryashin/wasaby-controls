@@ -6,7 +6,7 @@ class DemoControl extends Control<IControlOptions> {
     protected _startValue: Date = new Date(2020, 0);
     protected _endValue: Date = new Date(2020, 11, 31);
 
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/ShortDatePicker/ShortDatePicker'];
 }
 
 export default DemoControl;

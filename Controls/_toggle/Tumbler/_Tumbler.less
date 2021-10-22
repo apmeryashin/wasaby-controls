@@ -19,35 +19,67 @@
    border-radius: var(--border-radius_tumbler);
 }
 
-@variants: xs, s, m, l, xl, 2 xl, 3 xl, 4 xl, 5 xl, default;
+@variants: xs, s, m, l, xl, ~'2xl', ~'3xl', ~'4xl', ~'5xl', default;
 
 .controls-Tumbler__wrapper_vertical {
    .flex-direction(column);
 
    width: 100%;
-   padding: 0 var(--button_offset_tumbler);
+   margin: 0 var(--button_offset_tumbler);
    padding-top: var(--button_offset_tumbler);
 
    .controls-Tumbler__button {
-      padding: var(--offset_s) var(--offset_2xs);
+      padding: var(--offset_s) var(--icon_offset_tumbler);
       margin-bottom: var(--button_offset_tumbler);
       height: auto;
    }
 }
 
 .controls-Tumbler__wrapper_horizontal {
+   padding: var(--button_offset_tumbler) 0;
    padding-left: var(--button_offset_tumbler);
 
    .controls-Tumbler__button {
       margin-right: var(--button_offset_tumbler);
-      padding: 0 var(--offset_m);
       width: auto;
 
       .for(@variants, {
          &-@{_item} {
-            height: ~"calc(var(--inline_height_@{_item}) - 2 * var(--button_offset_tumbler))";
+            height: ~"var(--inline_height_@{_item})";
          }
       });
+   }
+
+   .controls-Tumbler__button-xs {
+      padding: 0 var(--offset_xs);
+   }
+
+   .controls-Tumbler__button-s {
+      padding: 0 var(--offset_st);
+   }
+
+   .controls-Tumbler__button-m,
+   .controls-Tumbler__button-default,
+   .controls-Tumbler__button-l {
+      padding: 0 var(--offset_m);
+   }
+
+   .controls-Tumbler__button-xl,
+   .controls-Tumbler__button-2xl {
+      padding: 0 var(--offset_l);
+   }
+
+   .controls-Tumbler__button-3xl,
+   .controls-Tumbler__button-4xl {
+      padding: 0 var(--offset_xl);
+   }
+
+   .controls-Tumbler__button-5xl {
+      padding: 0 var(--offset_2xl);
+   }
+
+   .controls-Tumbler__button-background {
+      padding: 0;
    }
 }
 

@@ -8,7 +8,7 @@ const baseDialogConfig = {
     closeOnOutsideClick: true,
     autofocus: true,
     templateOptions: {
-        draggable: true
+        canTemplateDrag: true
     },
     opener: null
 };

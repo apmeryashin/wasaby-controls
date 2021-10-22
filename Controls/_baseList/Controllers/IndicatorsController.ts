@@ -59,14 +59,6 @@ export default class IndicatorsController {
         this._options = options;
         this._model = options.model;
 
-        const hasItems = this._model && !!this._model.getCount();
-        const displayBottomIndicator = this.shouldDisplayBottomIndicator() && hasItems;
-
-        // Нижний индикатор сразу же показываем, т.к. не нужно скроллить
-        if (displayBottomIndicator) {
-            this.displayBottomIndicator();
-        }
-
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
             this.startDisplayPortionedSearch(direction);
@@ -135,6 +127,7 @@ export default class IndicatorsController {
      */
     onCollectionReset(): void {
         this._setSearchState(SEARCH_STATES.NOT_STARTED);
+        this.hideGlobalIndicator();
         if (this._isPortionedSearch() && (this._options.hasMoreDataToBottom || this._options.hasMoreDataToTop)) {
             const direction = this._options.hasMoreDataToBottom ? 'bottom' : 'top';
             this.startDisplayPortionedSearch(direction);
@@ -228,8 +221,15 @@ export default class IndicatorsController {
     displayBottomIndicator(): void {
         // если индикатор уже показан, то возможно у нас поменялось состояние индикатора.
         // Поэтому метод на модели нужно всегда вызывать
-        const indicatorState = this._getLoadingIndicatorState('bottom');
-        this._model.displayIndicator('bottom', indicatorState);
+        if (this._viewportFilled) {
+            const indicatorState = this._getLoadingIndicatorState('bottom');
+            this._model.displayIndicator('bottom', indicatorState);
+        } else {
+            this._startDisplayIndicatorTimer(() => {
+                const indicatorState = this._getLoadingIndicatorState('bottom');
+                this._model.displayIndicator('bottom', indicatorState);
+            });
+        }
     }
 
     shouldDisplayGlobalIndicator(): boolean {
@@ -354,7 +354,12 @@ export default class IndicatorsController {
         this._model.hideIndicator('top');
 
         if (this.shouldDisplayTopIndicator()) {
-            this.displayTopIndicator(scrollToFirstItem, false, isTopIndicatorDisplayed);
+            // смотри комментарий в _recountBottomIndicator
+            if (this._isPortionedSearch()) {
+                this.startDisplayPortionedSearch('top');
+            } else {
+                this.displayTopIndicator(scrollToFirstItem, false, isTopIndicatorDisplayed);
+            }
         }
     }
 
@@ -366,20 +371,31 @@ export default class IndicatorsController {
         }
 
         if (this.shouldDisplayBottomIndicator()) {
-            this.displayBottomIndicator();
+            // Возможен след кейс: список пустой, зовется релоад с итеративной загрузкой.
+            // Событие rs не сработает и items не пересоздастся. Единственное, что случится это поменяется опция loading
+            // Из-за этого мы попадем в updateOptions, в котором по hasMoreData вызовем пересчет ромашки.
+            // И именно здесь определим по флагу iterative, показывать порционный поиск или просто ромашку.
+            if (this._isPortionedSearch()) {
+                this.startDisplayPortionedSearch('bottom');
+            } else {
+                this.displayBottomIndicator();
+            }
         } else {
             this._model.hideIndicator('bottom');
         }
     }
 
     private _shouldDisplayIndicator(direction: 'up'|'down'): boolean {
+        // если нет элементов, то покажем глобальный индикатор при долгой загрузке
+        const hasItems = !!this._model.getCount();
         // порционынй поиск может быть включен не только в infinity навигации.
-        const allowByNavigation = this._options.isInfinityNavigation || this._isPortionedSearch();
+        const allowByNavigation = this._options.isInfinityNavigation && hasItems || this._isPortionedSearch();
         return allowByNavigation && !this._options.hasHiddenItemsByVirtualScroll(direction)
             && !this._options.shouldShowEmptyTemplate;
     }
 
     private _startDisplayIndicatorTimer(showIndicator: () => void): void {
+        this._clearDisplayIndicatorTimer();
         this._displayIndicatorTimer = setTimeout(() => {
             if (!this._model || this._model.destroyed) {
                 return;

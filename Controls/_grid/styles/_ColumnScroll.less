@@ -1,5 +1,11 @@
 @import 'Controls/_scroll/Scroll/_contentEnvironmentZIndex';
 
+.flex-centered() {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
 // НА ОБЁРТКЕ ГОРИЗОНТАЛЬНОГО СКРОЛЛА  НЕ ДОЛЖНО быть стилей, которые формируют
 // новый контекст z-index'ов. В противном случае оверлей скроллирования колонок
 // мышью будет ограничен размерами таблицы (даже будучи fixed).
@@ -55,6 +61,24 @@
 
 .controls-VScrollbar.controls-ColumnScroll__thumb {
    display: none;
+}
+
+.controls-ColumnScroll__scrollToButtons {
+   display: flex;
+   justify-content: flex-end;
+   position: absolute;
+   width: 100%;
+   top: calc(0px - (var(--offset_xl) + (((var(--inline_height_ArrowButton) - 2 * var(--border-thickness_button)) - var(--offset_xl)) / 2)));
+   box-sizing: border-box;
+   padding-right: var(--offset_xl);
+}
+
+.controls-ColumnScroll__scrollToButton_left {
+   margin-right: var(--offset_xs);
+}
+
+.controls-Grid__header-cell_withColumnScrollArrows {
+   margin-bottom: var(--offset_xl);
 }
 
 // Загрузка с проскролом вконец в новых таблицах

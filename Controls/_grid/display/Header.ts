@@ -4,7 +4,7 @@ import {TColumns, TColumnSeparatorSize} from './interface/IColumn';
 
 import Collection from './Collection';
 import HeaderRow, {IOptions as IHeaderRowOptions} from './HeaderRow';
-import {ISortItem} from './mixins/Grid';
+import {ISortItem, TColumnScrollViewMode} from './mixins/Grid';
 import {OptionsToPropertyMixin} from 'Types/entity';
 
 export interface IOptions extends IHeaderRowOptions {
@@ -67,6 +67,12 @@ export default class Header extends OptionsToPropertyMixin {
     setStickyColumnsCount(stickyColumnsCount: number): void {
         this._$rows.forEach((row) => {
             row.setStickyColumnsCount(stickyColumnsCount);
+        });
+    }
+
+    setColumnScrollViewMode(newColumnScrollViewMode: TColumnScrollViewMode): void {
+        this._$rows.forEach((row) => {
+            row.setColumnScrollViewMode(newColumnScrollViewMode);
         });
     }
 

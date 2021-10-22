@@ -41,4 +41,30 @@ describe('Controls/_compactDatePicker/View', () => {
         });
     });
 
+    describe('_updateTodayIconVisible', () => {
+        it('should set icon visible to false if current date does not hit current date', () => {
+            const component = new View();
+            const currentDate = new Date(2019, 7);
+            const clock = sinon.useFakeTimers(currentDate.getTime(), 'Date');
+            const displayedRanges = [
+                [new Date(2018, 0),new Date(2019, 5)],
+                [new Date(2020, 1), new Date(2021, 0)]
+            ];
+            component._updateTodayIconVisible(true, displayedRanges);
+            assert.isFalse(component._todayIconVisible);
+            clock.restore();
+        });
+        it('should set icon visible to true if current date hits current date', () => {
+            const component = new View();
+            const currentDate = new Date(2018, 7);
+            const clock = sinon.useFakeTimers(currentDate.getTime(), 'Date');
+            const displayedRanges = [
+                [new Date(2018, 0),new Date(2019, 5)],
+                [new Date(2020, 1), new Date(2021, 0)]
+            ];
+            component._updateTodayIconVisible(true, displayedRanges);
+            assert.isTrue(component._todayIconVisible);
+            clock.restore();
+        });
+    });
 });

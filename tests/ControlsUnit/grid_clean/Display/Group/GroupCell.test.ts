@@ -87,40 +87,48 @@ describe('Controls/grid/Display/Group/GroupCell', () => {
 
     describe('getContentTextClasses', () => {
         it('should contain placeholder class when no separator and textAlign === right', () => {
-            const classes = getGroupCell().getContentTextClasses(false, 'right', 's');
+            const classes = getGroupCell().getContentTextClasses(false, 'right');
             CssClassesAssert.include(classes, ['controls-ListView__groupContent-withoutGroupSeparator']);
         });
 
         it('should contain placeholder class when no separator', () => {
-            const classes = getGroupCell().getContentTextClasses(false, 'left', 's');
+            const classes = getGroupCell().getContentTextClasses(false, 'left');
             CssClassesAssert.include(classes, ['controls-ListView__groupContent-withoutGroupSeparator']);
         });
 
         it('should contain align class', () => {
             let classes: string;
-            classes = getGroupCell().getContentTextClasses(false, 'left', 's');
+            classes = getGroupCell().getContentTextClasses(false, 'left');
             CssClassesAssert.include(classes, ['controls-ListView__groupContent_left']);
 
-            classes = getGroupCell().getContentTextClasses(false, 'right', 's');
+            classes = getGroupCell().getContentTextClasses(false, 'right');
             CssClassesAssert.include(classes, ['controls-ListView__groupContent_right']);
 
-            classes = getGroupCell().getContentTextClasses(false, undefined, 's');
+            classes = getGroupCell().getContentTextClasses(false, undefined);
             CssClassesAssert.include(classes, ['controls-ListView__groupContent_center']);
         });
 
         it('should NOT contain placeholder class when separator and textAlign === right', () => {
-            const classes = getGroupCell().getContentTextClasses(true, 'right', 's');
+            const classes = getGroupCell().getContentTextClasses(true, 'right');
             CssClassesAssert.notInclude(classes, ['controls-ListView__groupContent-withoutGroupSeparator']);
         });
+    });
 
-        it('should contain fontSize class when fontSize=s', () => {
-            const classes = getGroupCell().getContentTextClasses(false, 'right', 's');
-            CssClassesAssert.include(classes, ['controls-fontsize-s']);
+    describe('getContentTextStylingClasses', () => {
+        it('should contain styling classes when styling options are set', () => {
+            const classes = getGroupCell().getContentTextStylingClasses('secondary', 's');
+            CssClassesAssert.include(classes, [
+                'controls-fontsize-s',
+                'controls-text-secondary'
+            ]);
         });
 
-        it('should contain default fontSize class when fontSize=undefined', () => {
-            const classes = getGroupCell().getContentTextClasses(false, 'right', undefined);
-            CssClassesAssert.include(classes, ['controls-ListView__groupContent-text_default']);
+        it('should contain default styling class when styling options are not set', () => {
+            const classes = getGroupCell().getContentTextStylingClasses();
+            CssClassesAssert.include(classes, [
+                'controls-ListView__groupContent-text_default',
+                'controls-ListView__groupContent-text_color_default'
+            ]);
         });
     });
 });

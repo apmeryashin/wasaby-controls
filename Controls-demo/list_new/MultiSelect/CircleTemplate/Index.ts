@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/Multiselect/CircleTemplate/CircleTemplate';
+import * as Template from 'wml!Controls-demo/list_new/MultiSelect/CircleTemplate/CircleTemplate';
 import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 

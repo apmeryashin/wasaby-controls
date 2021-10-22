@@ -80,7 +80,7 @@ export default class FooterRow extends mixin<Row<null>, Footer>(Row, Footer) {
     //region Аспект "Колонки. Создание, колспан."
     protected _initializeColumns(): void {
         super._initializeColumns({
-            shouldAddStickyLadderCells: !this._$rowTemplate,
+            prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' : 'colspan',
             addEmptyCellsForStickyLadder: true,
             extensionCellsConstructors: {
                 stickyLadderCell: FooterCell,

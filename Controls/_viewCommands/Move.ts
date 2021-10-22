@@ -34,8 +34,8 @@ export default class MoveViewCommand {
         }
     }
 
-    private _hierarchyMove(items: Model[], target: Model): void {
-        const targetId = target.getKey();
+    private _hierarchyMove(items: Model[], target: Model | null): void {
+        const targetId = target?.getKey() || null;
         items.forEach((item): void => {
             if (item) {
                 item.set(this._options.parentProperty, targetId);

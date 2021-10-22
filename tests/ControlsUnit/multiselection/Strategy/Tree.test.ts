@@ -358,6 +358,61 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          result = strategy.unselect({selected: [1], excluded: []}, 11);
          assert.deepEqual(result, {selected: [1], excluded: [11]});
       });
+
+      it('search model, select all and unselect only one breadcrumb child', () => {
+         /*
+            node-1, node-21
+               leaf-211
+            node-1
+               leaf-11
+          */
+         const items = new RecordSet({
+            rawData: [{
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node1'
+            }, {
+               id: 11,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf11'
+            }, {
+               id: 21,
+               parent: 1,
+               nodeType: true,
+               title: 'test_node2'
+            }, {
+               id: 211,
+               parent: 21,
+               nodeType: null,
+               title: 'test_leaf21'
+            }],
+            keyProperty: 'id'
+         });
+
+         const searchModel = new SearchGridCollection({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: searchModel,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: []
+         });
+
+         const result = strategy.unselect({selected: [null], excluded: [null]}, 11, 'aaa');
+         assert.deepEqual(result, {selected: [null], excluded: [null, 11]});
+      });
    });
 
    describe('selectAll', () => {
@@ -916,7 +971,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             rootId: null,
             model: searchModel,
             selectionType: 'all',
-            recursiveSelection: false
+            recursiveSelection: false,
+            entryPath: []
          });
 
          let res = strategy.getSelectionForModel({selected: [null], excluded: [null]}, undefined, undefined, 'sad');
@@ -927,8 +983,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          // Изменилось состояние хлебной крошки, когда сняли чекбокс с одного из ее детей
          res = strategy.getSelectionForModel({selected: [null], excluded: [null, 11, 12]}, undefined, undefined, 'sad');
          assert.deepEqual(toArrayKeys(res.get(true)), [21, 22]);
-         assert.deepEqual(toArrayKeys(res.get(null)), [1, 2]);
-         assert.deepEqual(toArrayKeys(res.get(false)), [11, 12]);
+         assert.deepEqual(toArrayKeys(res.get(null)), [2]);
+         assert.deepEqual(toArrayKeys(res.get(false)), [1, 11, 12]);
 
          // Выбирается хлебная крошка
          res = strategy.getSelectionForModel({selected: [2], excluded: []}, undefined, undefined, 'sad');
@@ -947,6 +1003,63 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(toArrayKeys(res.get(true)), [11]);
          assert.deepEqual(toArrayKeys(res.get(null)), [1]);
          assert.deepEqual(toArrayKeys(res.get(false)), [2, 12, 21, 22]);
+      });
+
+      it('search model, select all and unselect only one breadcrumb child', () => {
+         /*
+            node-1, node-21
+               leaf-211
+            node-1
+               leaf-11
+          */
+         const items = new RecordSet({
+            rawData: [{
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node1'
+            }, {
+               id: 11,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf11'
+            }, {
+               id: 21,
+               parent: 1,
+               nodeType: true,
+               title: 'test_node2'
+            }, {
+               id: 211,
+               parent: 21,
+               nodeType: null,
+               title: 'test_leaf21'
+            }],
+            keyProperty: 'id'
+         });
+
+         const searchModel = new SearchGridCollection({
+            collection: items,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: searchModel,
+            selectionType: 'all',
+            recursiveSelection: false,
+            entryPath: []
+         });
+
+         const res = strategy.getSelectionForModel({selected: [null], excluded: [null, 11]}, undefined, undefined, 'sad');
+         assert.deepEqual(toArrayKeys(res.get(true)), [211]);
+         assert.deepEqual(toArrayKeys(res.get(null)), [21]);
+         assert.deepEqual(toArrayKeys(res.get(false)), [1, 11]);
       });
    });
 

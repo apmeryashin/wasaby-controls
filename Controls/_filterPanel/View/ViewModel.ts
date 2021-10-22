@@ -67,8 +67,8 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                     style: this._options.style,
                     emptyText: item.emptyText,
                     emptyKey: item.emptyKey,
-                    selectAllText: item.selectAllText,
-                    selectAllKey: item.selectAllKey
+                    selectedAllText: item.selectedAllText,
+                    selectedAllKey: item.selectedAllKey
                 }};
             newSource.push({...item, ...{editorOptions}});
         });

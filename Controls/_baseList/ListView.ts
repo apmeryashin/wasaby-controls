@@ -8,8 +8,9 @@ import * as GroupTemplate from 'wml!Controls/_baseList/GroupTemplate';
 import * as ListViewTpl from 'wml!Controls/_baseList/ListView/ListView';
 import * as defaultItemTemplate from 'wml!Controls/_baseList/ItemTemplate';
 import 'css!Controls/baseList';
-import {Collection} from 'Controls/display';
+import { Collection, CollectionItem } from 'Controls/display';
 import {IRoundBorder} from 'Controls/interface';
+import { Model } from 'Types/entity';
 
 export interface IListViewOptions {
     listModel: Collection;
@@ -291,7 +292,7 @@ const ListView = Control.extend(
             if (!e.preventItemEvent) {
                 if (dispItem['[Controls/_display/GroupItem]']) {
                     const groupItem = dispItem.getContents();
-                    this._notify('groupClick', [groupItem, e, dispItem], {bubbling: true});
+                    this._notify('groupClick', [groupItem, e, dispItem]);
                     return;
                 }
                 if (e.target.closest('.js-controls-ListView__checkbox')) {
@@ -306,7 +307,7 @@ const ListView = Control.extend(
 
         _onGroupClick: function(e, dispItem) {
             var item = dispItem.getContents();
-            this._notify('groupClick', [item, e], {bubbling: true});
+            this._notify('groupClick', [item, e]);
         },
 
         _onItemContextMenu: function(event, itemData) {
@@ -420,6 +421,10 @@ const ListView = Control.extend(
 
         getHoveredItem: function () {
             return this._listModel.getHoveredItem();
+        },
+
+        _onFixedItemChanged(event: SyntheticEvent, item: CollectionItem<Model>, information: { fixedPosition: string }): void {
+            this._notify('fixedItemChanged', [item, information]);
         },
 
         // protected

@@ -36,6 +36,15 @@ import {TSelectedKeys} from 'Controls/interface';
  *
  * @private
  */
+
+const DEPEND_TEMPLATES = [
+   'headTemplate',
+   'headerTemplate',
+   'headerContentTemplate',
+   'itemTemplate',
+   'footerContentTemplate'
+];
+
 export default class _Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
@@ -140,7 +149,7 @@ export default class _Controller implements IDropdownController {
       if (selectedKeysChanged && newOptions.navigation) {
          newKeys = this._getUnloadedKeys(this._items, newOptions);
       }
-      if ((newOptions.source && (sourceChanged || !this._sourceController)) || navigationChanged || filterChanged) {
+      if (!newOptions.sourceController && (newOptions.source && (sourceChanged || !this._sourceController)) || navigationChanged || filterChanged) {
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
@@ -376,7 +385,7 @@ export default class _Controller implements IDropdownController {
          this._setItemsAndMenuSource(this._items);
          this._loadItemsPromise = Promise.resolve();
       } else if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
-         if (this._options.source && !this._items) {
+         if ((this._options.source || this._options.sourceController) && !this._items) {
             this._loadItemsPromise = this._loadItems(this._options, source);
          } else {
             this._loadItemsPromise = Promise.resolve();
@@ -401,7 +410,7 @@ export default class _Controller implements IDropdownController {
             adapter: 'Types/entity:adapter.RecordSet',
             keyProperty: this._options.keyProperty
          });
-      } else {
+      } else if (this._source) {
          this._menuSource = new PrefetchProxy({
             target: this._source,
             data: {
@@ -475,16 +484,22 @@ export default class _Controller implements IDropdownController {
    }
 
    private _loadItems(options: IDropdownControllerOptions, source?: ICrudPlus): Promise<RecordSet|Error> {
-      return this._getSourceController(options, source).then((sourceController) => {
-          return sourceController.load().then((items) => {
-             return this._resolveLoadedItems(options, items);
-          }, (error) => {
-             if (!error.isCanceled) {
-                this._loadError(error);
-                return Promise.reject(error);
-             }
-          });
-       });
+      if (options.sourceController) {
+         this._source = options.source;
+         this._sourceController = options.sourceController;
+         return Promise.resolve(this._resolveLoadedItems(options, options.sourceController.getItems()));
+      } else {
+         return this._getSourceController(options, source).then((sourceController) => {
+            return sourceController.load().then((items) => {
+               return this._resolveLoadedItems(options, items);
+            }, (error) => {
+               if (!error.isCanceled) {
+                  this._loadError(error);
+                  return Promise.reject(error);
+               }
+            });
+         });
+      }
    }
 
    private _loadSelectedItems(options: IDropdownControllerOptions): Promise<RecordSet> {
@@ -628,7 +643,7 @@ export default class _Controller implements IDropdownController {
          }
          this._updateHistoryPromise = this._source.update(items, getMetaHistory()).then(() => {
             this._updateHistoryPromise = null;
-            if (this._sourceController && this._source.getItems) {
+            if (this._sourceController && this._source.getItems && (!this._options.searchParam || this._items)) {
                this._setItemsAndMenuSource(this._source.getItems());
             }
          });
@@ -645,9 +660,7 @@ export default class _Controller implements IDropdownController {
          return typeof newOptions[tplOption] === 'string' && newOptions[tplOption] !== options[tplOption];
       };
 
-      if (isTemplateChanged('headTemplate') ||
-          isTemplateChanged('itemTemplate') ||
-          isTemplateChanged('footerContentTemplate')) {
+      if (DEPEND_TEMPLATES.find((template) => isTemplateChanged(template))) {
          return true;
       }
    }
@@ -663,8 +676,7 @@ export default class _Controller implements IDropdownController {
    private _loadMenuTemplates(options: object): Promise<any> {
       if (!this._loadMenuTempPromise) {
          let templatesToLoad = ['Controls/menu'];
-         let templates = ['headTemplate', 'headerTemplate', 'itemTemplate', 'footerContentTemplate'];
-         templates.forEach((template) => {
+         DEPEND_TEMPLATES.forEach((template) => {
             if (typeof options[template] === 'string') {
                templatesToLoad.push(options[template]);
             }
@@ -728,6 +740,7 @@ export default class _Controller implements IDropdownController {
          footerContentTemplate: this._options.footerContentTemplate,
          items: !this._isHistoryMenu() ? this._items : null,
          source: this._menuSource,
+         sourceController: this._options.sourceController ? this._sourceController : undefined,
          filter: this._filter,
          // FIXME this._container[0] delete after
          // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3

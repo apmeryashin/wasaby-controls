@@ -9,8 +9,11 @@
                     columns="{{_columns}}"
                     groupProperty="fullName">
                 <ws:groupTemplate>
-                    <ws:partial template="Controls/grid:GroupTemplate" scope="{{ _options }}" expanderAlign="right">
-                    </ws:partial>
+                    <ws:partial template="Controls/grid:GroupTemplate"
+                                scope="{{ _options }}"
+                                expanderAlign="right"
+                                fontColorStyle="secondary"
+                                fontSize="m"/>
                 </ws:groupTemplate>
             </Controls.grid:View>
         </Controls.list:Container>

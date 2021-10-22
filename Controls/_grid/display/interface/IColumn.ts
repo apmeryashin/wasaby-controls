@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import {TFontSize, TFontColorStyle} from 'Controls/interface';
+import {TFontSize, TFontColorStyle, TFontWeight} from 'Controls/interface';
 
 /**
  * @typedef {IColumn[]}
@@ -417,6 +417,7 @@ export interface IColumn extends IColspanParams {
      * @cfg Тип данных, отображаемых колонкой.
      * @variant money Деньги. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Money}.
      * @variant number Число. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Number}.
+     * @variant date Дата. Данные колонки будут отформатированы с помощью декоратора {@link Controls/decorator:Date}.
      * @variant string Строка.
      * @default string
      * @remark
@@ -474,6 +475,11 @@ export interface IColumn extends IColspanParams {
      * @see displayType
      */
     displayTypeOptions?: IDisplayTypeOptions;
+    /**
+     * @cfg {TFontColorStyle} Стиль цвета текста ячейки.
+     * @remark
+     * Стиль цвета текста ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontColorStyle стиль цвета текста записи}.
+     */
     fontColorStyle?: TFontColorStyle;
     /**
      * @cfg {Controls/display:IMarkable/BackgroundColorStyle.typedef} Цвет фона колонки.
@@ -496,9 +502,17 @@ export interface IColumn extends IColspanParams {
      */
     tooltipProperty?: string;
     /**
-     * @name Controls/_grid/display/interface/IColumn
-     * @cfg
+     * @cfg {TFontSize} Размер шрифта.
      * @default "l". Для контрола {@link Controls/treeGrid:View}: "m" (для листа), "xl" (для скрытого узла) и "2xl" (для узла).
+     * @remark
+     * Размер шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontSize размер шрифта записи}.
      */
     fontSize?: TFontSize;
+    /**
+     * @cfg {TFontWeight} Насыщенность шрифта.
+     * @default "default".
+     * @remark
+     * Насыщенность шрифта ячейки имеет больший приоритет, чем {@link Controls/_grid/interface/ItemTemplate#fontWeight Насыщенность шрифта записи}.
+     */
+    fontWeight?: TFontWeight;
 }

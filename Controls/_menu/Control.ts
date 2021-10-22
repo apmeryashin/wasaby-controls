@@ -137,7 +137,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (newOptions.sourceController && newOptions.searchParam &&
-            newOptions.searchValue && searchValueChanged) {
+            (newOptions.searchValue && searchValueChanged || newOptions.viewMode !== this._options.viewMode)) {
             this._notifyResizeAfterRender = true;
             this._closeSubMenu();
             this._updateItems(newOptions.sourceController.getItems(), newOptions);
@@ -651,7 +651,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 
+    private _dataLoadCallback(items, options): void {
+        if (options.dataLoadCallback) {
+            options.dataLoadCallback(items);
+        }
+    }
+
     private _setItems(items: RecordSet, options: IMenuControlOptions): void {
+        this._dataLoadCallback(items, options);
         this._setStateByItems(items, options);
         this._createControllers(options);
     }
@@ -890,7 +897,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getLeftPadding(options: IMenuControlOptions, items: RecordSet): string {
-        let leftSpacing = 'm';
+        let leftSpacing = options.markerVisibility !== 'hidden' ? 's' : 'm';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
         } else if (options.itemAlign === 'left' && MenuControl._hasNodesAtLevel(items, options)) {
@@ -955,10 +962,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         return sourceController.load().then(
             (items: RecordSet): RecordSet => {
-                if (options.dataLoadCallback) {
-                    options.dataLoadCallback(items);
-                }
-
                 return items;
             },
             (error: Error): Promise<void | ErrorViewConfig> => {
@@ -1097,6 +1100,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 itemPadding: null,
                 draggable: false,
                 source,
+                sourceController: !source ? this._options.sourceController : undefined,
                 items: isLoadedChildItems ? this._options.items : null,
                 ...item.getContents().get('menuOptions'),
                 subMenuLevel: this._options.subMenuLevel ? this._options.subMenuLevel + 1 : 1,
@@ -1287,7 +1291,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         moreButtonCaption: rk('Еще') + '...',
         groupTemplate,
         itemPadding: {},
-        markerVisibility: 'onactivated',
+        markerVisibility: 'hidden',
         hoverBackgroundStyle: 'default',
         subMenuDirection: 'right',
         itemAlign: 'right'

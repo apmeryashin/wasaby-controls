@@ -33,7 +33,7 @@ export interface IBasePopupOptions {
      * @cfg Определяет способ открытия при работе с предзагруженными данными.
      * Внимание: опция работает только в паре с опцией {@link dataLoaders}
      * @variant delayedRemote Диалог открывается сразу, предзагруженные данные после окончания запроса придут в опцию prefetchData шаблона окна.
-     * @variant remote Диалог откроется только по кончании запроса. Данные придут в _beforeMount шаблона в опции prefetchData
+     * @variant remote Диалог откроется только по окончании запроса. Данные придут в _beforeMount шаблона в опции prefetchData
      * @default delayedRemote
      * @demo Controls-demo/Popup/Loader/Index
      */
@@ -47,7 +47,7 @@ export interface IBasePopupOptions {
      * @cfg Опции для контрола, переданного в {@link template}.
      * @see template
      */
-    templateOptions?: unknown;
+    templateOptions?: object;
     /**
      * @cfg Логический инициатор открытия окна. Читайте подробнее {@link /doc/platform/developmentapl/interface-development/ui-library/focus/activate-control/#control-opener здесь}.
      */
@@ -84,7 +84,7 @@ export interface IBasePopupOptions {
      * @remark
      * Необходимо учитывать контекст выполнения функций обратного вызова.
      * @example
-     * 
+     *
      * <pre class="brush: html; highlight: [5]">
      * <!-- userControl.wml -->
      * <Controls.popup:Stack name="stack">
@@ -96,7 +96,7 @@ export interface IBasePopupOptions {
      *
      * <Controls.breadcrumbs:Path name="openStackButton" caption="open stack" on:click="_openStack()"/>
      * </pre>
-     * 
+     *
      * <pre class="brush: js; highlight: [21-23,25-27]">
      * // userControl.js
      * class MyControl extends Control<IControlOptions> {
@@ -128,12 +128,12 @@ export interface IBasePopupOptions {
      *    ...
      * };
      * </pre>
-     * 
+     *
      * <pre class="brush: html">
      * <!-- TestStack.wml -->
      * <Controls.breadcrumbs:Path name="sendDataButton" caption="sendData" on:click="_sendData()"/>
      * </pre>
-     * 
+     *
      * <pre class="brush: js">
      * // TestStack.js
      * class MyControl extends Control<IControlOptions>{
@@ -177,7 +177,7 @@ export interface IBasePopupOptions {
      * @example
      *
      * Описание модуля предзагрузки:
-     * 
+     *
      * <pre class="brush: js">
      * // TypeScript
      * import {getStore} from 'Application/Env';
@@ -221,7 +221,7 @@ export interface IBasePopupOptions {
      * </pre>
      *
      * Описание предзагрузчика при открытии окна:
-     * 
+     *
      * <pre class="brush: js">
      *   class UserControl extends Control {
      *      ...
@@ -285,10 +285,10 @@ export interface IBasePopupOptions {
      * @cfg Функция, позволяющая высчитать z-index окна вручную.
      * @remark
      * На вход принимает параметры:
-     * 
+     *
      * * currentItem — конфигурация текущего окна, для которого высчитывается z-index.
      * * popupList — Список с конфигурацией открытых на данный момент окон.
-     * 
+     *
      * Функция позволяет решить нетривиальные сценарии взаимодействия окон и не должна использоваться повсеместно.
      * Для большинства сценариев должно быть достаточно базового механизма простановки z-index.
      * @example

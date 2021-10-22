@@ -1,15 +1,21 @@
-<div class="controls_toggle_theme-{{_options.theme}} controls-CheckboxMarker controls-CheckboxMarker_theme-{{_options.theme}}
+<div class="controls_toggle_theme-{{_options.theme}} controls-CheckboxMarker
+            controls-CheckboxMarker_{{_options.contrastBackground ? 'contrast' : 'same'}} controls-CheckboxMarker_theme-{{_options.theme}}
             controls-CheckboxMarker__state-{{_options.value === null ? 'null' : _options.value}}
             controls-CheckboxMarker__icon-border-color__{{_options.readOnly ? 'disabled': 'enabled'}}
             {{_options.value === null && _options.triState ?
             'controls-CheckboxMarker__state-null__icon-color__' + (_options.readOnly ? 'disabled':'enabled')}}">
-    <svg xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 18 18"
-         attr:class="controls-CheckboxMarker__icon-checked
-                    {{_options.value ?
-                    'controls-CheckboxMarker__icon-checked-color_'+(_options.readOnly ? 'disabled':'enabled') :
-                    'controls-CheckboxMarker__icon-checked-color_transparent'}}">
-        <path d="M1.85,8.65l4,3.4,10.3-9.1-9.8,13.1Z"/>
+    <ws:if data="{{!_options.readOnly}}">
+        <input type="checkbox" class="controls_toggle_fakeCheckbox"/>
+    </ws:if>
+    <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" attr:class="controls-CheckboxMarker__icon-checked">
+        <path d="M8 0.5H4C2.067 0.5 0.5 2.067 0.5 4V8C0.5 9.933 2.067 11.5 4 11.5H8C9.933 11.5 11.5 9.933 11.5 8V4C11.5 2.067 9.933 0.5 8 0.5Z"
+              attr:class="controls-CheckboxMarker__icon-border controls-CheckboxMarker__icon-border-state-{{_options.value === null ? 'null' : _options.value}}{{_options.resetValue === _options.value ? '_resetValue'}}"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 0.5C8 0.22386 7.77614 0 7.5 0H4C1.79086 0 0 1.79086 0 4V8C0 10.2091 1.79086 12 4 12H8C10.2091 12 12 10.2091 12 8V7.5C12 7.22386 11.7761 7 11.5 7C11.2239 7 11 7.22386 11 7.5V8C11 9.6569 9.6569 11 8 11H4C2.34315 11 1 9.6569 1 8V4C1 2.34315 2.34315 1 4 1H7.5C7.77614 1 8 0.77614 8 0.5Z"
+        attr:class="controls-CheckboxMarker__icon-subtract {{(_options.value && _options.resetValue !== _options.value) ? 'controls-CheckboxMarker__icon-subtract-checked'}}"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.0109 0.919852C11.3049 1.16657 11.3314 1.59159 11.0701 1.86915L5.68653 8.52428C5.54707 8.67238 5.3455 8.75488 5.13565 8.74978C4.9258 8.74458 4.72904 8.65238 4.59789 8.49758L2.40612 5.91143C2.16036 5.62144 2.21017 5.1983 2.51737 4.96631C2.82456 4.73432 3.27283 4.78133 3.51858 5.07132L5.1828 7.03501L10.0053 0.975692C10.2666 0.698133 10.7169 0.673133 11.0109 0.919852Z"
+              attr:class="{{_options.value ?
+        'controls-CheckboxMarker__icon-checked-color_'+(_options.readOnly ? 'disabled':'enabled') :
+        'controls-CheckboxMarker__icon-checked-color_transparent'}}"/>
     </svg>
 </div>
 

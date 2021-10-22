@@ -117,7 +117,7 @@ define(
                };
                return new Promise((resolve) => {
                   menuControl._loadItems(menuOptions).addCallback(() => {
-                     assert.isTrue(isDataLoadCallbackCalled);
+                     assert.isFalse(isDataLoadCallbackCalled);
                      resolve();
                   });
                });
@@ -335,7 +335,8 @@ define(
          it('_getLeftPadding', function() {
             const menu = getMenu();
             let menuOptions = {
-               itemPadding: {}
+               itemPadding: {},
+               markerVisibility: 'hidden'
             };
             let leftSpacing = menu._getLeftPadding(menuOptions);
             assert.equal(leftSpacing, 'm');
@@ -347,6 +348,11 @@ define(
             menuOptions.itemPadding.left = 'xs';
             leftSpacing = menu._getLeftPadding(menuOptions);
             assert.equal(leftSpacing, 'xs');
+
+            menuOptions.itemPadding.left = undefined;
+            menuOptions.markerVisibility = 'visible';
+            leftSpacing = menu._getLeftPadding(menuOptions);
+            assert.equal(leftSpacing, 's');
          });
 
          it('_getRightPadding', function() {
@@ -837,6 +843,7 @@ define(
             expectedOptions.subMenuLevel = 1;
             expectedOptions.draggable = false;
             expectedOptions.iWantBeWS3 = false;
+            expectedOptions.sourceController = undefined;
 
             let resultOptions = await menuControl._getTemplateOptions(item);
             assert.deepEqual(resultOptions, expectedOptions);

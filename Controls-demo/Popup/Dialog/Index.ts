@@ -9,7 +9,7 @@ class PopupDialog extends Control<IControlOptions> {
             opener: this._children.button3,
             closeOnOutsideClick: true,
             templateOptions: {
-                draggable: true
+                canTemplateDrag: true
             },
             propStorageId: 'draggableDialog',
             maxHeight: 700,
