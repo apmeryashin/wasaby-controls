@@ -3,6 +3,8 @@
         <div class="controls-text-label">direction=horizontal</div>
         <Controls.toolbars:View
                 direction="horizontal"
+                parentProperty="parent"
+                nodeProperty="@parent"
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
@@ -13,6 +15,8 @@
         <Controls.toolbars:View
                 attr:style="margin-left: 250px"
                 direction="vertical"
+                parentProperty="parent"
+                nodeProperty="@parent"
                 source="{{_buttonsSource}}"
                 inlineHeight="l"
                 keyProperty="id"
