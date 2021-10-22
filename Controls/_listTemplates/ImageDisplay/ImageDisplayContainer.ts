@@ -84,11 +84,12 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _updateDisplayImage(items, imageProperty) {
+    private _updateDisplayImage(items, imageProperty, isResetState) {
         if (imageProperty) {
-            const newDisplayImage = ImageDisplayContainer._hasImage(items, imageProperty);
-            if (this._hasItemWithImage !== newDisplayImage) {
-                this._hasItemWithImage = newDisplayImage;
+            if (isResetState) {
+                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
+            } else if (!this._hasItemWithImage) {
+                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
             }
         }
     }
@@ -106,7 +107,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
             this._columns = this._getPatchedColumns(options.columns);
         }
         if (options.imageProperty !== this._options.imageProperty) {
-            this._updateDisplayImage(this._items, options.imageProperty);
+            this._updateDisplayImage(this._items, options.imageProperty, true);
             if (!options.imageProperty) {
                 this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
             }
@@ -120,7 +121,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     private _itemsReadyCallback(items: RecordSet): void {
         this._items = items;
         this._subscribeToCollectionChange(this._items, this._onCollectionItemChange);
-        this._updateDisplayImage(this._items, this._options.imageProperty);
+        this._updateDisplayImage(this._items, this._options.imageProperty, true);
 
         if (this._options.itemsReadyCallback) {
             this._options.itemsReadyCallback(items);
@@ -131,7 +132,10 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         if (!this._items) {
             this._items = items;
         }
-        this._updateDisplayImage(this._items, this._options.imageProperty);
+
+        const isResetState = !direction;
+        this._updateDisplayImage(items, this._options.imageProperty, isResetState);
+
         if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback(items, direction);
         }
@@ -143,7 +147,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
                             properties?: object): void {
         // Изменение элемента, поменяли _imageProperty в записи в RecordSet
         if (this._options.imageProperty && this._options.imageProperty in properties) {
-            this._updateDisplayImage(this._items, this._options.imageProperty);
+            this._updateDisplayImage(this._items, this._options.imageProperty, false);
         }
     }
 
