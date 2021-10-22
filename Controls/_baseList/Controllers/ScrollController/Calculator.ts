@@ -115,7 +115,7 @@ export class Calculator {
 
         let scrollTop = 0;
 
-        const item = this._itemsSizes.find((it) => it.key === edgeItem.key);
+        const item = this._itemsSizes[edgeItem.index];
         if (item) {
             if (edgeItem.direction === 'backward') {
                 if (edgeItem.border === 'forward') {
@@ -159,7 +159,7 @@ export class Calculator {
 
         let edgeItemParams: IEdgeItem;
 
-        this._itemsSizes.some((item) => {
+        this._itemsSizes.some((item, index) => {
             // TODO у нас нет доступа к дом элементу
             // if (item.className.includes('controls-ListView__hiddenContainer')) {
             //     return false;
@@ -195,7 +195,7 @@ export class Calculator {
                     }
                 }
                 edgeItemParams = {
-                    key: item.key,
+                    index,
                     direction,
                     border,
                     borderDistance

@@ -35,11 +35,18 @@ export interface IEnvironmentChangedParams {
 
 export type IScheduledScrollType = 'restoreScroll' | 'scrollToElement';
 
-export interface IEdgeItem {
-    key: CrudEntityKey;
+interface IBaseEdgeItem {
     direction: IDirection;
     border: IDirection;
     borderDistance: number;
+}
+
+export interface IEdgeItem extends IBaseEdgeItem {
+    index: number;
+}
+
+export interface IScheduledRestoreScrollParams extends IBaseEdgeItem {
+    key: CrudEntityKey;
 }
 
 export interface IScheduledScrollToElementParams {
@@ -50,7 +57,7 @@ export interface IScheduledScrollToElementParams {
 
 export interface IScheduledScrollParams {
     type: IScheduledScrollType;
-    params: IEdgeItem | IScheduledScrollToElementParams;
+    params: IScheduledRestoreScrollParams | IScheduledScrollToElementParams;
 }
 
 export type IDirection = 'backward' | 'forward';

@@ -8,7 +8,6 @@ export interface IItemsSizesControllerOptions {
 }
 
 export interface IItemSize {
-    key: CrudEntityKey;
     height: number;
     offsetTop: number;
 }
@@ -94,12 +93,11 @@ export class ItemsSizesController {
             } else {
                 let position = itemsRange.startIndex;
 
-                itemsElements.forEach((element) => {
+                itemsElements.forEach((element: HTMLElement) => {
                     // todo add support for Controls/grid and display: contents
                     this._itemsSizes[position] = {
-                        key: (element as HTMLElement).getAttribute('item-key'),
-                        height: (element as HTMLElement).offsetHeight,
-                        offsetTop: (element as HTMLElement).offsetTop
+                        height: element.offsetHeight,
+                        offsetTop: element.offsetTop
                     };
                     position++;
                 });
@@ -113,7 +111,6 @@ export class ItemsSizesController {
 
     private static _getEmptyItemSize(): IItemSize {
         return {
-            key: undefined,
             offsetTop: 0,
             height: 0
         };

@@ -13,7 +13,7 @@ import {
     IEdgeItem,
     IIndexesChangedParams,
     IItemsEndedCallback,
-    IDirection
+    IDirection, IScheduledRestoreScrollParams
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { SyntheticEvent } from 'UI/Vdom';
 import { CrudEntityKey } from 'Types/source';
@@ -218,13 +218,20 @@ export class ListVirtualScrollController {
         this._collection.setIndexes(params.startIndex, params.endIndex);
 
         const edgeVisibleItem = this._scrollController.getEdgeVisibleItem(params.shiftDirection);
-        if (!this._collection.getItemBySourceKey(edgeVisibleItem.key)) {
+        const item = this._collection.at(edgeVisibleItem.index);
+        if (!item) {
             throw new Error('Controls/_baseList/BaseControl::_indexesChangedCallback | ' +
                 'Внутренняя ошибка списков! Крайний видимый элемент не найден в Collection.');
         }
+        const restoreScrollParams: IScheduledRestoreScrollParams = {
+            key: item.getContents().getKey(),
+            border: edgeVisibleItem.border,
+            borderDistance: edgeVisibleItem.borderDistance,
+            direction: edgeVisibleItem.direction
+        }
         this._scheduleScroll({
             type: 'restoreScroll',
-            params: edgeVisibleItem
+            params: restoreScrollParams
         });
 
         console.error('indexChangedCallback', params);
@@ -249,14 +256,20 @@ export class ListVirtualScrollController {
         if (this._scheduledScrollParams) {
             switch (this._scheduledScrollParams.type) {
                 case 'restoreScroll':
-                    const edgeItem = this._scheduledScrollParams.params as IEdgeItem;
+                    const restoreScrollParams = this._scheduledScrollParams.params as IScheduledRestoreScrollParams;
                     let directionToRestoreScroll;
-                    if (!edgeItem && hasNotRenderedChanges) {
+                    if (!restoreScrollParams && hasNotRenderedChanges) {
                         directionToRestoreScroll = 'backward';
                     } else {
-                        directionToRestoreScroll = edgeItem.direction;
+                        directionToRestoreScroll = restoreScrollParams.direction;
                     }
                     if (directionToRestoreScroll) {
+                        const edgeItem: IEdgeItem = {
+                            index: this._collection.getIndexByKey(restoreScrollParams.key),
+                            border: restoreScrollParams.border,
+                            borderDistance: restoreScrollParams.borderDistance,
+                            direction: restoreScrollParams.direction,
+                        }
                         const newScrollTop = this._scrollController.getScrollTopToEdgeItem(edgeItem);
                         this._doScrollUtil(newScrollTop);
                     }
@@ -270,7 +283,7 @@ export class ListVirtualScrollController {
                     );
                     break;
                 default:
-                    throw new Error('Controls/_baseList/BaseControl::_handleScheduledScroll | ' +
+                    throw new Error('Controls/_baseList/Controllers/ListVirtualScrollController::_handleScheduledScroll | ' +
                         'Внутренняя ошибка списков! Неопределенный тип запланированного скролла.');
             }
 
@@ -283,6 +296,10 @@ export class ListVirtualScrollController {
         if (element) {
             const promise = this._scrollToElementUtil(element, toBottom, force);
             promise.then(() => this._scrollToElementCompletedCallback());
+        } else {
+            throw new Error('Controls/_baseList/Controllers/ListVirtualScrollController::_scrollToElement | ' +
+                'Внутренняя ошибка списков! По ключу записи не найден DOM элемент. ' +
+                'Промис scrollToItem не отстрельнет, возможны ошибки.');
         }
     }
 
@@ -297,7 +314,7 @@ export class ListVirtualScrollController {
         let itemIndex;
         if (page === 'forward' || page === 'backward') {
             const edgeItem = this._scrollController.getEdgeVisibleItem(page);
-            itemIndex = this._collection.getIndexByKey(edgeItem.key);
+            itemIndex = edgeItem.index;
         } else {
             itemIndex = page === 'start' ? 0 : this._collection.getCount() - 1;
         }
