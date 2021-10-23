@@ -1,4 +1,4 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filterPopup/SimplePanel/_List/List';
 import {ItemTemplate as defaultItemTemplate} from 'Controls/dropdown';
 import * as emptyItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate';
@@ -13,11 +13,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 import {ISwipeEvent} from 'Controls/listRender';
 import 'css!Controls/filterPopup';
 
-interface ISimplePanelListOptions extends IControlOptions {
-
-}
-
-class List extends Control<ISimplePanelListOptions> {
+class List extends Control {
     protected _template: TemplateFunction = template;
     protected _items: IFilterItem[] = null;
     protected _defaultItemTemplate: TemplateFunction = defaultItemTemplate;

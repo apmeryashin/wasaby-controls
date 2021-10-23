@@ -14,9 +14,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 
-export interface IOptions<S extends Model = Model,
-    T extends Row<S> = Row<S>> extends IGridMixinOptions {
-}
+export type IOptions<S extends Model = Model, T extends Row<S> = Row<S>> = IGridMixinOptions;
 
 /**
  * @public

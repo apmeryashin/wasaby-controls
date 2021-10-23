@@ -7,9 +7,6 @@ import HeaderRow, {IOptions as IHeaderRowOptions} from './HeaderRow';
 import {ISortItem, TColumnScrollViewMode} from './mixins/Grid';
 import {OptionsToPropertyMixin} from 'Types/entity';
 
-export interface IOptions extends IHeaderRowOptions {
-}
-
 export interface IHeaderBounds {
     row: { start: number, end: number };
     column: { start: number, end: number };
@@ -25,7 +22,7 @@ export default class Header extends OptionsToPropertyMixin {
     protected _$theme: string;
     protected _$style: string;
 
-    constructor(options: IOptions) {
+    constructor(options: IHeaderRowOptions) {
         super(options);
         this._$rows = this._initializeRows(options);
     }
@@ -100,17 +97,17 @@ export default class Header extends OptionsToPropertyMixin {
         });
     }
 
-    protected _initializeRows(options: IOptions): HeaderRow[] {
+    protected _initializeRows(options: IHeaderRowOptions): HeaderRow[] {
         this._$headerBounds = this._getGridHeaderBounds(options);
         return this._buildRows(options);
     }
 
-    protected _buildRows(options: IOptions): HeaderRow[] {
+    protected _buildRows(options: IHeaderRowOptions): HeaderRow[] {
         const factory = this._getRowsFactory();
         return [new factory(options)];
     }
 
-    protected _getGridHeaderBounds(options: IOptions): IHeaderBounds {
+    protected _getGridHeaderBounds(options: IHeaderRowOptions): IHeaderBounds {
         const bounds: IHeaderBounds = {
             row: {start: Number.MAX_VALUE, end: Number.MIN_VALUE},
             column: {start: 1, end: options.gridColumnsConfig.length + 1}
@@ -138,8 +135,8 @@ export default class Header extends OptionsToPropertyMixin {
         return bounds;
     }
 
-    protected _getRowsFactory(): new (options: IOptions) => HeaderRow {
-        return (options: IOptions) => {
+    protected _getRowsFactory(): new (options: IHeaderRowOptions) => HeaderRow {
+        return (options: IHeaderRowOptions) => {
             options.headerModel = this;
             options.hasMoreDataUp = !!options.hasMoreData?.up;
             options.theme = this.getTheme();
@@ -148,6 +145,10 @@ export default class Header extends OptionsToPropertyMixin {
         };
     }
 }
+
+export {
+    IHeaderRowOptions as IOptions
+};
 
 Object.assign(Header.prototype, {
     '[Controls/_display/grid/Header]': true,
