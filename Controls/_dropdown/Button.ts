@@ -6,7 +6,7 @@ import {EventUtils} from 'UI/Events';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
-import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IIconOptions, IHeightOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {isLeftMouseButton, IStickyPopupOptions, CalmTimer} from 'Controls/popup';
@@ -194,7 +194,7 @@ export default class Button extends BaseDropdown {
 
     _beforeMount(options: IButtonOptions,
                  context: object,
-                 receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
+                 receivedState: IDropdownReceivedState): void | Promise<IDropdownReceivedState> {
         this._offsetClassName = cssStyleGeneration(options);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._controller = new Controller(this._getControllerOptions(options));

@@ -47,7 +47,7 @@ export const enum MODE {
     notsticky = 'notsticky'
 }
 
-export interface TRegisterEventData {
+export interface IRegisterEventData {
    id: number;
    inst?: StickyBlock;
    container: HTMLElement;

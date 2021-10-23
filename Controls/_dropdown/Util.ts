@@ -2,7 +2,7 @@ import rk = require('i18n!Controls');
 import Controller from 'Controls/_dropdown/_Controller';
 import {ICrudPlus} from 'Types/source';
 import {Model} from 'Types/entity';
-import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IDropdownControllerOptions} from './interface/IDropdownController';
 import {process} from 'Controls/error';
 import {TKey} from '../interface';
@@ -19,9 +19,9 @@ export function isSingleSelectionItem(item: Model, text: string, keyProperty: st
 
 export function loadItems(
     controller: Controller,
-    receivedState: DropdownReceivedState,
+    receivedState: IDropdownReceivedState,
     options?: IDropdownControllerOptions
-): Promise<void | DropdownReceivedState> {
+): Promise<void | IDropdownReceivedState> {
    const source = options.source;
    if (receivedState) {
       return controller.setItems(receivedState.items).then(() => {
@@ -40,9 +40,9 @@ export function loadItems(
 
 export function loadSelectedItems(
     controller: Controller,
-    receivedState: DropdownReceivedState,
+    receivedState: IDropdownReceivedState,
     source: ICrudPlus
-): Promise<void | DropdownReceivedState>|void {
+): Promise<void | IDropdownReceivedState>|void {
    if (receivedState) {
       controller.updateSelectedItems(receivedState.items);
    } else if (source) {

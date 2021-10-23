@@ -10,7 +10,7 @@ import {prepareEmpty, loadItems, loadSelectedItems, isSingleSelectionItem} from 
 import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import {TKey} from './interface/IDropdownController';
-import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
@@ -108,7 +108,7 @@ export default class Selector extends BaseDropdown {
 
    _beforeMount(options: IInputOptions,
                 context: object,
-                receivedState: DropdownReceivedState): void | Promise<void|DropdownReceivedState> {
+                receivedState: IDropdownReceivedState): void | Promise<void|IDropdownReceivedState> {
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (options.navigation && options.selectedKeys &&  options.selectedKeys.length) {

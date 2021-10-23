@@ -7,7 +7,7 @@ import {
     POSITION,
     IOffset,
     IFixedEventData,
-    TRegisterEventData,
+    IRegisterEventData,
     SHADOW_VISIBILITY_BY_CONTROLLER,
     MODE
 } from 'Controls/_scroll/StickyBlock/Utils';
@@ -17,7 +17,7 @@ import {RegisterClass} from 'Controls/event';
 import fastUpdate from './FastUpdate';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 
-interface IHeaderData extends TRegisterEventData {
+interface IHeaderData extends IRegisterEventData {
     top: number;
     bottom: number;
 }
@@ -142,7 +142,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         return this._container;
     }
 
-    getChildrenHeaders(): TRegisterEventData[] {
+    getChildrenHeaders(): IRegisterEventData[] {
         return Object.keys(this._headers).map((id) => this._headers[id]);
     }
 
@@ -256,7 +256,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         return this._container;
     }
 
-    protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+    protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: IRegisterEventData, register: boolean): void {
         event.stopImmediatePropagation();
         if (register) {
             this._headers[data.id] = {
@@ -326,7 +326,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         event.stopPropagation();
     }
 
-    private _addDelayedHeaders(data: TRegisterEventData): void {
+    private _addDelayedHeaders(data: IRegisterEventData): void {
         // Проблема в том, что чтобы узнать положение заголовка относительно группы нам надо снять position: sticky.
         // Это приводит к layout. И так для каждой ячейки для заголвков в таблице. Создадим список всех заголовков
         // которые надо обсчитать в этом синхронном участке кода и обсчитаем их за раз в микротаске,
@@ -351,7 +351,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             bottom: {}
         };
         let offset: number;
-        let header: TRegisterEventData;
+        let header: IRegisterEventData;
         this.resetSticky();
 
         fastUpdate.measure(() => {
