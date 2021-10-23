@@ -56,11 +56,11 @@ var _private = {
     afterItemsMove: function(self, items, target, position, result) {
         self._notify('afterItemsMove', [items, target, position, result]);
 
-        //According to the standard, after moving the items, you need to unselect all in the table view.
-        //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
-        //The only way to affect the selection in the table view is to send the selectedTypeChanged event.
-        //You need a schema in which Mover will not work directly with the selection.
-        //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
+        // According to the standard, after moving the items, you need to unselect all in the table view.
+        // The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
+        // The only way to affect the selection in the table view is to send the selectedTypeChanged event.
+        // You need a schema in which Mover will not work directly with the selection.
+        // Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
         self._notify('selectedTypeChanged', ['unselectAll'], {
             bubbling: true
         });
@@ -97,7 +97,7 @@ var _private = {
                 }
 
                 if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
-                    //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
+                    // if the movement was in order and hierarchy at the same time, then you need to update parentProperty
                     movedItem.set(parentProperty, targetItem.get(parentProperty));
                 }
 
@@ -127,7 +127,7 @@ var _private = {
             return _private.getIdByItem(self, item);
         });
 
-        //If reverse sorting is set, then when we call the move on the source, we invert the position.
+        // If reverse sorting is set, then when we call the move on the source, we invert the position.
         if (position !== LOCAL_MOVE_POSITION.On && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
             position = position === LOCAL_MOVE_POSITION.After ? LOCAL_MOVE_POSITION.Before : LOCAL_MOVE_POSITION.After;
         }
@@ -158,11 +158,11 @@ var _private = {
             siblingItem,
             itemFromProjection;
 
-        //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
-        //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
-        //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
-        //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
-        //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+        // В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
+        // В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
+        // а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
+        // Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
+        // Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
         if (self._options.parentProperty) {
             display = new Tree({
                 collection: self._items,
@@ -227,7 +227,7 @@ var _private = {
             target = _private.getModelByItem(self, target);
         }
 
-        //Check for a item to be moved because it may not be in the current recordset
+        // Check for a item to be moved because it may not be in the current recordset
         if (self._options.parentProperty && movedItem) {
             if (target && position === LOCAL_MOVE_POSITION.On && target.get(self._options.nodeProperty) === null) {
                 return false;

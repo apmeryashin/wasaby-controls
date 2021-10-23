@@ -14,7 +14,7 @@ import {dataConversion} from './resources/dataConversion';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/breadcrumbs';
 
-//TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
+// TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 const ARROW_WIDTH = 16;
 const PADDING_RIGHT = 2;
 

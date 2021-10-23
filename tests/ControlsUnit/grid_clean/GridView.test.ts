@@ -50,8 +50,8 @@ describe('Controls/grid_clean/GridView', () => {
             const gridView = new GridView(gridOptions);
 
             // MOCK COLUMN SCROLL MIXIN. IT WORKS WITH DOM.
-            gridView._columnScrollOnViewBeforeMount = () => {};
-            gridView._columnScrollOnViewDidMount = () => {};
+            gridView._columnScrollOnViewBeforeMount = () => {/* FIXME: sinon mock */};
+            gridView._columnScrollOnViewDidMount = () => {/* FIXME: sinon mock */};
             // EMULATE THAT COLUMN SCROLL NEEDED AND CREATED
             gridView.isColumnScrollVisible = () => true;
             // END MOCK
@@ -71,8 +71,8 @@ describe('Controls/grid_clean/GridView', () => {
 
         beforeEach(() => {
             mockListViewModel = {
-                subscribe: () => {},
-                setItemPadding: () => {},
+                subscribe: () => {/* FIXME: sinon mock */},
+                setItemPadding: () => {/* FIXME: sinon mock */},
                 isDragging: () => false
             };
             options = { listModel: mockListViewModel, isFullGridSupport: true };
@@ -120,8 +120,8 @@ describe('Controls/grid_clean/GridView', () => {
                 listModel: {
                     getFooter: () => fakeFooter,
                     getResults: () => fakeResults,
-                    subscribe: () => {},
-                    setItemPadding: () => {},
+                    subscribe: () => {/* FIXME: sinon mock */},
+                    setItemPadding: () => {/* FIXME: sinon mock */},
                     getResultsPosition: () => resultsPosition,
                     isDragging: () => false
                 }};
@@ -242,8 +242,7 @@ describe('Controls/grid_clean/GridView', () => {
             setItemEditorTemplateOptions: (value) => {
                 itemEditorTemplateOptions = value;
             },
-            setColspanGroup: () => {
-            }
+            setColspanGroup: () => {/* FIXME: sinon mock */}
         };
 
         gridView._beforeUpdate({itemEditorTemplateOptions: 'newValue'});

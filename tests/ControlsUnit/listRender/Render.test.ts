@@ -453,7 +453,7 @@ describe('Controls/_listRender/Render', () => {
 
         it('should not fire closeSwipe event on any event', () => {
             render._onActionsSwipeAnimationEnd({
-                stopPropagation(): void {},
+                stopPropagation(): void {/* FIXME: sinon mock */},
                 nativeEvent: {
                     animationName: 'test'
                 }
@@ -463,7 +463,7 @@ describe('Controls/_listRender/Render', () => {
 
         it('should fire closeSwipe event on \'itemActionsSwipeClose\' event', () => {
             render._onActionsSwipeAnimationEnd({
-                stopPropagation(): void {},
+                stopPropagation(): void {/* FIXME: sinon mock */},
                 nativeEvent: {
                     animationName: 'itemActionsSwipeClose'
                 }

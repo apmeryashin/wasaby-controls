@@ -70,7 +70,7 @@ export default class ActionsCollection extends mixin<ObservableMixin>(
     }
 
     protected _prepareActionsShowType(actions: IAction[] = []): IAction[] {
-        //TODO: тут должен быть код, который уберет кнопку с меню если все основные команды в тулбаре
+        // TODO: тут должен быть код, который уберет кнопку с меню если все основные команды в тулбаре
         return actions;
     }
 

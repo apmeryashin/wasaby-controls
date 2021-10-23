@@ -7,7 +7,7 @@ export interface IConfirmationOptions extends IConfirmationFooterOptions, IContr
     message?: string;
     details?: string;
     closeHandler?: Function;
-    zIndex?: number; //todo: Compatible
+    zIndex?: number; // todo: Compatible
 }
 
 /**

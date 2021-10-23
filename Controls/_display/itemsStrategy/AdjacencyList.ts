@@ -367,7 +367,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         source.splice(start, deleteCount, added);
 
         // There is the one and only case to move items with two in turn splices
-        if ((<ISplicedArray> added).hasBeenRemoved) {
+        if ((added as ISplicedArray).hasBeenRemoved) {
             added.forEach((item, index) => {
                 // Actual index of added items in source
                 const startInSource = source.getDisplayIndex(start + index - deleteCount);
@@ -419,7 +419,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
             });
 
             // Set removed flag to use in possible move operation
-            (<ISplicedArray> removed).hasBeenRemoved = true;
+            (removed as ISplicedArray).hasBeenRemoved = true;
         }
 
         this._itemsOrder = itemsOrder;

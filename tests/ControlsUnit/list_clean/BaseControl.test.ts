@@ -1003,7 +1003,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl.saveOptions(baseControlCfg);
             baseControl._children = {
                 listView: {
-                    getItemsContainer: () => {}
+                    getItemsContainer: () => {/* FIXME: sinon mock */}
                 }
             };
 
@@ -1148,8 +1148,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 isEditing() {
                     return true;
                 },
-                updateOptions() {
-                }
+                updateOptions() {/* FIXME: sinon mock */}
             };
 
             baseControl._beforeUpdate({
@@ -1195,7 +1194,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl.saveOptions(cfg);
             await baseControl._beforeMount(cfg);
             const e = {
-                stopPropagation: () => {}
+                stopPropagation: () => {/* FIXME: sinon mock */}
             };
             const item = {};
             const originalEvent = {
@@ -1335,7 +1334,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     return Promise.reject(error);
                 };
                 sourceController.updateOptions(sourceControllerOptions);
-                await sourceController.reload().catch(() => {});
+                await sourceController.reload().catch(() => {/* FIXME: sinon mock */});
                 baseControlOptions.source = new Memory();
                 baseControlOptions.loading = true;
                 assert.doesNotThrow(() => {

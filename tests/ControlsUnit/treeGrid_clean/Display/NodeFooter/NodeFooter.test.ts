@@ -39,7 +39,7 @@ describe('Controls/_display/itemsStrategy/NodeFooter', () => {
             invalidate(): void {
                 this.invalidated = true;
             },
-            reset(): void {}
+            reset(): void {/* FIXME: sinon mock */}
         };
     }
 

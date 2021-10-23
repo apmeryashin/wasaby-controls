@@ -141,7 +141,7 @@ class DialogController extends BaseController {
         }
         // ресайз страницы это также смена ориентации устройства
         // если окно открыто на полный экран, то после переворота оно должно остаться на весь экран
-        //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=1b290673-5722-41cb-8120-ad6af46e64aa
+        // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=1b290673-5722-41cb-8120-ad6af46e64aa
         if (window.innerWidth >= IPAD_MIN_WIDTH && item.popupOptions.maximize) {
             return this.elementUpdatedWrapper(item, container);
         }

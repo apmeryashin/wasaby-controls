@@ -203,7 +203,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
    _prepareRange(): Date[] {
       let range;
       if (this._hasRanges() && this._options.rangeSelectedCallback) {
-         //Если заданы кванты вместе с rangeSelectedCallback, то мы должны сначала подстроить дату под них
+         // Если заданы кванты вместе с rangeSelectedCallback, то мы должны сначала подстроить дату под них
          range = CalendarUtils.updateRangeByQuantum(this.startValue, this.startValue, this._options.ranges);
       } else if (this._options.selectionType === 'workdays') {
          range = CalendarUtils.updateRangeByWorkdays(this.startValue);

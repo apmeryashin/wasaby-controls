@@ -10,7 +10,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetCol
         { width: '100px' }
     ];
     const owner = {
-        getNavigation: () => {},
+        getNavigation: () => {/* FIXME: sinon mock */},
         getItems: () => ([groupRow]),
         getCount: () => 1,
         getRootLevel: () => 0,

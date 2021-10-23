@@ -115,7 +115,7 @@ export function getPeriodLengthInDays(start: Date, end: Date): number {
     return Math.ceil(Math.abs((start.getTime() - end.getTime()) / (oneDay))) + 1;
 }
 
-//кривое название метода используется в прикладных репозиториях
+// кривое название метода используется в прикладных репозиториях
 export function gePeriodLengthInDays(start: Date, end: Date): number {
     return getPeriodLengthInDays(start, end);
 }

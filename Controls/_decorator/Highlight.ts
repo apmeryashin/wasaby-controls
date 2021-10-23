@@ -2,7 +2,7 @@ import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
 import {addWordCheck, escapeSpecialChars} from 'Controls/_decorator/inputUtils/RegExp';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-//@ts-ignore
+// @ts-ignore
 import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 import 'css!Controls/decorator';
 

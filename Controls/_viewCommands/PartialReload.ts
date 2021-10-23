@@ -11,7 +11,7 @@ interface IReloadOptions extends IOptions {
     source?: ICrudPlus;
     items: RecordSet;
     sorting?: QueryOrderSelector;
-    beforeLoadCallback?: Function; //TODO должна быть строка
+    beforeLoadCallback?: Function; // TODO должна быть строка
 }
 
 const SORT_DESC = 'DESC';
