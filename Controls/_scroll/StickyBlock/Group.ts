@@ -98,7 +98,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     resetSticky(): void {
         for (const id in this._headers) {
-            this._headers[id].inst.resetSticky();
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.resetSticky();
+            }
         }
     }
 
@@ -124,11 +126,13 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         // TODO: сделать чтобы видимость теней явно задавалась через опцию на группе.
         // https://online.sbis.ru/opendoc.html?guid=4e5cd2c6-a2ec-4619-b9c4-fafbb21fc4b8
         for (const id in this._headers) {
-            const shadowVisibility = this._headers[id].inst.shadowVisibility;
-            if (shadowVisibility === SHADOW_VISIBILITY.visible ||
-                shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
-                shadowVisibility === SHADOW_VISIBILITY.initial) {
-                return shadowVisibility;
+            if (this._headers.hasOwnProperty(id)) {
+                const shadowVisibility = this._headers[id].inst.shadowVisibility;
+                if (shadowVisibility === SHADOW_VISIBILITY.visible ||
+                    shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                    shadowVisibility === SHADOW_VISIBILITY.initial) {
+                    return shadowVisibility;
+                }
             }
         }
         return SHADOW_VISIBILITY.hidden;
@@ -149,7 +153,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     setSyncDomOptimization(value: boolean): void {
         if (this._syncDomOptimization !== value) {
             for (const id in this._headers) {
-                this._headers[id].inst.setSyncDomOptimization(value);
+                if (this._headers.hasOwnProperty(id)) {
+                    this._headers[id].inst.setSyncDomOptimization(value);
+                }
             }
         }
     }
@@ -160,8 +166,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
         if (this._initialized || !this._options.calculateHeadersOffsets) {
             for (const id in this._headers) {
-                const positionValue: number = this._headers[id][position] + value;
-                this._headers[id].inst[position] = positionValue;
+                if (this._headers.hasOwnProperty(id)) {
+                    const positionValue: number = this._headers[id][position] + value;
+                    this._headers[id].inst[position] = positionValue;
+                }
             }
         }
 
@@ -176,7 +184,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     setFixedPosition(position: string): void {
         for (const id in this._headers) {
-            this._headers[id].inst.setFixedPosition(position);
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.setFixedPosition(position);
+            }
         }
     }
 
@@ -232,14 +242,18 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     _updateShadowVisible(ids: number[], needFakeFixedNotify: boolean = true): void {
         for (const id in this._headers) {
-            this._headers[id].inst.updateShadowVisible(ids, needFakeFixedNotify);
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.updateShadowVisible(ids, needFakeFixedNotify);
+            }
         }
     }
 
     // Необходимость в "фейковом" событии fixed описана в интерфейсе IFixedEventData (scroll/StickyBlock/Utils.ts)
     fakeFixedNotifier(isFixed: boolean): void {
         for (const id in this._headers) {
-            this._headers[id].inst.fakeFixedNotifier(isFixed);
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.fakeFixedNotifier(isFixed);
+            }
         }
     }
 
@@ -247,7 +261,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         if (this._isShadowVisibleByController[position] !== visibility) {
             this._isShadowVisibleByController[position] = visibility;
             for (const id in this._headers) {
-                this._headers[id].inst.updateShadowVisibility(visibility, position);
+                if (this._headers.hasOwnProperty(id)) {
+                    this._headers[id].inst.updateShadowVisibility(visibility, position);
+                }
             }
         }
     }

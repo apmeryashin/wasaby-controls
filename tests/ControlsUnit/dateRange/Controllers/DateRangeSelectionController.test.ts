@@ -73,7 +73,9 @@ describe('Controls/_dateRange/Controllers/DateRangeSelectionController', () => {
                 component._beforeUpdate(test.newOptions);
 
                 for (const field in test.state) {
-                    assert.strictEqual(+component['_' + field], +test.state[field], `${field} field error, not equals ${component['_' + field]} and ${test.state[field]}`);
+                    if (test.state.hasOwnProperty(field)) {
+                        assert.strictEqual(+component['_' + field], +test.state[field], `${field} field error, not equals ${component['_' + field]} and ${test.state[field]}`);
+                    }
                 }
             });
         });

@@ -246,15 +246,17 @@ export default class StringValueConverter {
             return;
         }
         for (i in map) {
-            valueObject = valueModel[i];
-            valueObject.str = strItems[map[i]] || null;
-            if (this._isFilled(valueObject.str)) {
-                valueObject.valid = true;
-                valueObject.value = parseInt(valueObject.str, 10);
-                if (i === 'year' && valueObject.value < 100) {
-                    valueObject.value = this._getFullYearBy2DigitsYear(valueObject.value);
-                } else if (i === 'month') {
-                    valueObject.value -= 1;
+            if (map.hasOwnProperty(i)) {
+                valueObject = valueModel[i];
+                valueObject.str = strItems[map[i]] || null;
+                if (this._isFilled(valueObject.str)) {
+                    valueObject.valid = true;
+                    valueObject.value = parseInt(valueObject.str, 10);
+                    if (i === 'year' && valueObject.value < 100) {
+                        valueObject.value = this._getFullYearBy2DigitsYear(valueObject.value);
+                    } else if (i === 'month') {
+                        valueObject.value -= 1;
+                    }
                 }
             }
         }
