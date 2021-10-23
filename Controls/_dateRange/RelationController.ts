@@ -65,13 +65,15 @@ export default class RelationController extends Control<IControlOptions> {
     private _notifyRangeChanged(newRanges, ranges?): void {
         let changed = false;
         for (const i in newRanges) {
-            if (!ranges || ranges[i][0] !== newRanges[i][0]) {
-                this._notify('startValue' + i + 'Changed', [newRanges[i][0]]);
-                changed = true;
-            }
-            if (!ranges || ranges[i][1] !== newRanges[i][1]) {
-                this._notify('endValue' + i + 'Changed', [newRanges[i][1]]);
-                changed = true;
+            if (newRanges.hasOwnProperty(i)) {
+                if (!ranges || ranges[i][0] !== newRanges[i][0]) {
+                    this._notify('startValue' + i + 'Changed', [newRanges[i][0]]);
+                    changed = true;
+                }
+                if (!ranges || ranges[i][1] !== newRanges[i][1]) {
+                    this._notify('endValue' + i + 'Changed', [newRanges[i][1]]);
+                    changed = true;
+                }
             }
         }
         if (changed) {

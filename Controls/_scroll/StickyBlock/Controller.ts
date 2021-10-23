@@ -340,10 +340,12 @@ class StickyHeaderController {
 
         if (!isSingleHeader) {
             for (const id in this._headers) {
-                this._headers[id].inst.updateShadowVisible([
-                    this._getLastFixedHeaderWithShadowId(POSITION.top),
-                    this._getLastFixedHeaderWithShadowId(POSITION.bottom)
-                ], false);
+                if (this._headers.hasOwnProperty(id)) {
+                    this._headers[id].inst.updateShadowVisible([
+                        this._getLastFixedHeaderWithShadowId(POSITION.top),
+                        this._getLastFixedHeaderWithShadowId(POSITION.bottom)
+                    ], false);
+                }
             }
         }
         // Если зафиксировался (отфиксировался) replaceable заголовок, значит другой replaceable заголовок
@@ -431,7 +433,9 @@ class StickyHeaderController {
 
     private _resetSticky(): void {
         for (const id in this._headers) {
-            this._headers[id].inst.resetSticky();
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.resetSticky();
+            }
         }
     }
 
@@ -573,8 +577,10 @@ class StickyHeaderController {
      * @private
      */
     private _clearOffsetCache() {
-        for (const headerId: number in this._headers) {
-            this._headers[headerId].offset = {};
+        for (const id in this._headers) {
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].offset = {};
+            }
         }
     }
 
@@ -779,7 +785,9 @@ class StickyHeaderController {
             for (const position of [POSITION.top, POSITION.bottom, POSITION.left, POSITION.right]) {
                 const positionOffsets = offsets[position];
                 for (const headerId in offsets[position]) {
-                    this._headers[headerId].inst[position] = positionOffsets[headerId];
+                    if (offsets[position].hasOwnProperty(headerId)) {
+                        this._headers[headerId].inst[position] = positionOffsets[headerId];
+                    }
                 }
             }
         });

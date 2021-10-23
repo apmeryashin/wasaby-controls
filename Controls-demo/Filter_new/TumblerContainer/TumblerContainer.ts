@@ -64,10 +64,12 @@ export default class extends Control {
             filter: (item, queryFilter) => {
                 let addToData = true;
                 for (const filterField in queryFilter) {
-                    const filterValue = queryFilter[filterField];
-                    if (filterValue) {
-                        const itemId = item.get('id');
-                        addToData = itemId === filterValue;
+                    if (queryFilter.hasOwnProperty(filterField)) {
+                        const filterValue = queryFilter[filterField];
+                        if (filterValue) {
+                            const itemId = item.get('id');
+                            addToData = itemId === filterValue;
+                        }
                     }
                 }
                 return addToData;

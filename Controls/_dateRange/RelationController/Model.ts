@@ -182,19 +182,21 @@ class ModuleClass {
         let ranges = [],
             i, j;
         for (let field in options) {
-            i = null;
-            if (field.indexOf('startValue') === 0) {
-                i = parseInt(field.slice(10), 10);
-                j = 0;
-            } else if (field.indexOf('endValue') === 0) {
-                i = parseInt(field.slice(8), 10);
-                j = 1;
-            }
-            if (i !== null) {
-                if (!ranges[i]) {
-                    ranges[i] = [];
+            if (options.hasOwnProperty(field)) {
+                i = null;
+                if (field.indexOf('startValue') === 0) {
+                    i = parseInt(field.slice(10), 10);
+                    j = 0;
+                } else if (field.indexOf('endValue') === 0) {
+                    i = parseInt(field.slice(8), 10);
+                    j = 1;
                 }
-                ranges[i][j] = options[field];
+                if (i !== null) {
+                    if (!ranges[i]) {
+                        ranges[i] = [];
+                    }
+                    ranges[i][j] = options[field];
+                }
             }
         }
         return ranges;
