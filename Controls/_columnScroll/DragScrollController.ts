@@ -22,7 +22,7 @@ const SCROLL_SPEED_BY_DRAG = 0.75;
 const DISTANCE_TO_START_DRAG_N_DROP = 3;
 const START_ITEMS_DRAG_N_DROP_DELAY = 250;
 
-interface TPoint {
+interface IPoint {
     x: number;
     y: number;
 }
@@ -38,8 +38,8 @@ export default class DragScroll {
     private _mouseDownTarget?: HTMLElement;
     private _isOverlayShown: boolean = false;
 
-    private _startMousePosition: TPoint;
-    private _maxMouseMoveDistance: TPoint;
+    private _startMousePosition: IPoint;
+    private _maxMouseMoveDistance: IPoint;
     private _startScrollPosition: number;
     private _currentScrollPosition: number;
 
@@ -84,7 +84,7 @@ export default class DragScroll {
      * Возвращает флаг типа boolean, указывающий возможен ли старт прокрутки с помощью Drag'N'Drop.
      * @private
      */
-    private _manageDragScrollStart(startPosition: TPoint, target: HTMLElement): boolean {
+    private _manageDragScrollStart(startPosition: IPoint, target: HTMLElement): boolean {
         const hasDragNDrop = !!this._startDragNDropCallback;
         const isTargetDraggable = !target.closest(`.${DRAG_N_DROP_NOT_DRAGGABLE}`);
 
@@ -113,12 +113,12 @@ export default class DragScroll {
 
     /**
      * Обрабатывает перемещение указателя при запущеном перемещении скроле колонок через Drag'N'Drop
-     * @param {TPoint} newMousePosition Координаты текущей позиции указателя.
+     * @param {IPoint} newMousePosition Координаты текущей позиции указателя.
      * @private
      */
-    private _manageDragScrollMove(newMousePosition: TPoint): number | null {
+    private _manageDragScrollMove(newMousePosition: IPoint): number | null {
         // Расстояние, на которое был перемещен указатель мыши с момента нажатия клавиши ПКМ.
-        const mouseMoveDistance: TPoint = {
+        const mouseMoveDistance: IPoint = {
             x: newMousePosition.x - this._startMousePosition.x,
             y: newMousePosition.y - this._startMousePosition.y
         };
@@ -455,7 +455,7 @@ export default class DragScroll {
     //#endregion
 }
 
-function getCursorPosition(e: SyntheticEvent<MouseEvent | TouchEvent>): TPoint {
+function getCursorPosition(e: SyntheticEvent<MouseEvent | TouchEvent>): IPoint {
     if ((e.nativeEvent as TouchEvent).touches) {
         const touchEvent = e.nativeEvent as TouchEvent;
         return {

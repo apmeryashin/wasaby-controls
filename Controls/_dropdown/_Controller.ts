@@ -1,7 +1,7 @@
 import {StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
-import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {process} from 'Controls/error';
 import {IndicatorOpener} from 'Controls/LoadingIndicator';
@@ -63,7 +63,7 @@ export default class Controller implements IDropdownController {
       this._sticky = new StickyOpener();
    }
 
-   loadItems(): Promise<DropdownReceivedState> {
+   loadItems(): Promise<IDropdownReceivedState> {
       return new Promise((resolve, reject) => {
          this._loadItems(this._options).then(
              (items) => {
@@ -84,7 +84,7 @@ export default class Controller implements IDropdownController {
       });
    }
 
-   loadSelectedItems(): Promise<DropdownReceivedState> {
+   loadSelectedItems(): Promise<IDropdownReceivedState> {
       return this._loadSelectedItems(this._options).then((newItems) => {
          this._selectedItems = newItems;
          this._sourceController = null;

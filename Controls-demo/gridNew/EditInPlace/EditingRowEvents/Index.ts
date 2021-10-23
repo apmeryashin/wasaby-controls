@@ -1,7 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/EditingRowEvents/EditingRowEvents';
 import {Memory} from 'Types/source';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import * as cellTemplate from 'wml!Controls-demo/gridNew/EditInPlace/EditingRowEvents/cellTemplate';
 import {Ports} from 'Controls-demo/gridNew/DemoHelpers/Data/Ports';
@@ -18,7 +17,9 @@ export default class extends Control {
 
     private getData(data: object): object {
         for (const key in data) {
-            data[key] = `${data[key]}` || '';
+            if (data.hasOwnProperty(key)) {
+                data[key] = `${data[key]}` || '';
+            }
         }
         return data;
     }

@@ -5,7 +5,7 @@ import * as Utils from 'Types/util';
 import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
 import {EventUtils} from 'UI/Events';
 import Controller from 'Controls/_dropdown/_Controller';
-import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ISingleSelectableOptions, IBorderStyleOptions, IValidationStatusOptions, IInputPlaceholder,
    IInputPlaceholderOptions, IContrastBackgroundOptions, IContrastBackground} from 'Controls/interface';
@@ -90,7 +90,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder, IContrastBackg
 
    _beforeMount(options: IComboboxOptions,
                 context: object,
-                receivedState: DropdownReceivedState): Promise<void | DropdownReceivedState> {
+                receivedState: IDropdownReceivedState): Promise<void | IDropdownReceivedState> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._readOnly = options.readOnly;

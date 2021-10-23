@@ -872,7 +872,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             data[options.nodeProperty] = false;
         }
         for (const field in data) {
-            this._addField(field, emptyItem, emptyItem.getFormat());
+            if (data.hasOwnProperty(field)) {
+                this._addField(field, emptyItem, emptyItem.getFormat());
+            }
         }
         emptyItem.set(data);
         items.prepend([emptyItem]);

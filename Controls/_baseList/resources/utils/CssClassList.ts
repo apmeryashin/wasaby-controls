@@ -1,24 +1,24 @@
 /**
- * @typedef {Object} CssClassListChain
+ * @typedef {Object} ICssClassListChain
  * @property {Object} [classList]
  * @property {Function} [add] Adds class expression in class list.
  * @property {Function} [compile] Class list object in which key is a name of class and the value is a flag
  * indicates whether to add a class.
  */
-interface CssClassListChain {
-    classList: ClassListObject;
-    add(className: string, shouldAdd?: boolean): CssClassListChain;
-    compile(classListObject?: ClassListObject): string;
+interface ICssClassListChain {
+    classList: IClassListObject;
+    add(className: string, shouldAdd?: boolean): ICssClassListChain;
+    compile(classListObject?: IClassListObject): string;
 }
 
-interface ClassListObject {
+interface IClassListObject {
     [key: string]: boolean;
 }
 
 class StaticCssClassList {
 
-    static add(className: string, shouldAdd: boolean = true): CssClassListChain {
-        let classList: ClassListObject;
+    static add(className: string, shouldAdd: boolean = true): ICssClassListChain {
+        let classList: IClassListObject;
 
         /// @ts-ignore
         classList = this.classList || {};
@@ -32,10 +32,10 @@ class StaticCssClassList {
         };
     }
 
-    static compile(classList: ClassListObject = {}): string {
+    static compile(classList: IClassListObject = {}): string {
         let
             classListString = '',
-            classListObj: ClassListObject;
+            classListObj: IClassListObject;
 
         /// @ts-ignore
         classListObj = this.classList || classList;
@@ -90,9 +90,9 @@ class StaticCssClassList {
  */
 class CssClassList {
 
-    private _classList: ClassListObject;
+    private _classList: IClassListObject;
 
-    constructor(classList: ClassListObject = {}) {
+    constructor(classList: IClassListObject = {}) {
         this._classList = { ...classList };
     }
 
@@ -115,7 +115,7 @@ class CssClassList {
      * @return {Object}
      * @public
      */
-    getClassList(): ClassListObject {
+    getClassList(): IClassListObject {
         return {...this._classList};
     }
 
@@ -143,11 +143,11 @@ class CssClassList {
      * Adds class expression in class list given by chain.
      * @param {String} className Name of class
      * @param {Boolean} [shouldAdd=true] Should add a to class list
-     * @return {CssClassListChain}
+     * @return {ICssClassListChain}
      * @static
      * @public
      */
-    static add(className: string, shouldAdd: boolean = true): CssClassListChain {
+    static add(className: string, shouldAdd: boolean = true): ICssClassListChain {
         return StaticCssClassList.add(className, shouldAdd);
     }
 
@@ -161,7 +161,7 @@ class CssClassList {
      * @static
      * @public
      */
-    static compile(classList: ClassListObject): string {
+    static compile(classList: IClassListObject): string {
         return StaticCssClassList.compile(classList);
     }
 }

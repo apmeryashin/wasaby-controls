@@ -541,12 +541,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         };
 
         for (const item in templates) {
-            const element =  this._getElementByDate(
-                ITEM_BODY_SELECTOR[item],
-                monthListUtils.dateToId(templates[item].dateId)
-            );
-            if (element && templates[item].condition) {
-                return element;
+            if (templates.hasOwnProperty(item)) {
+                const element = this._getElementByDate(
+                    ITEM_BODY_SELECTOR[item],
+                    monthListUtils.dateToId(templates[item].dateId)
+                );
+                if (element && templates[item].condition) {
+                    return element;
+                }
             }
         }
     }

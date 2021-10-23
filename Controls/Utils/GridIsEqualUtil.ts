@@ -16,11 +16,15 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
    for (let i = 0; i < obj1.length; i++) {
       const props = [];
       for (const field1 in obj1[i]) {
-         props.push(field1);
+          if (obj1[i].hasOwnProperty(field1)) {
+              props.push(field1);
+          }
       }
       for (const field2 in obj2[i]) {
-         if (props.indexOf(field2) === -1) {
-            props.push(field2);
+          if (obj2[i].hasOwnProperty(field2)) {
+              if (props.indexOf(field2) === -1) {
+                  props.push(field2);
+              }
          }
       }
       for (const j of props) {
