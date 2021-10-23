@@ -73,10 +73,10 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('should not update equal options', () => {
             let wasCollectionUpdated = false;
             Object.defineProperty(collectionEditor._options, 'collection', {
-                get: function () {
+                get: function() {
                     return collection;
                 },
-                set: function () {
+                set: function() {
                     wasCollectionUpdated = true;
                 },
                 enumerable: false,

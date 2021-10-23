@@ -7,7 +7,7 @@
  * <pre class="brush: html">
  * <Controls.suggest:Input>
  *    <ws:footerTemplate templateName="Controls/suggestPopup:FooterTemplate">
- *       <ws:templateOptions>   
+ *       <ws:templateOptions>
  *          <ws:showSelectorButtonTemplate>
  *             <span on:click="_showAllClick()">
  *                <span>Моя кнопка</span>
@@ -27,7 +27,7 @@ export default interface IFooterTemplateOptions {
     /**
      * @name Controls/suggestPopup:FooterTemplate#showMoreButtonTemplate
      * @cfg {Function|String} Шаблон кнопки "Ещё".
-     * @example 
+     * @example
      * <pre class="brush: html">
      * <ws:partial template="Controls/suggestPopup:FooterTemplate">
      *    <ws:showMoreButtonTemplate>
@@ -42,7 +42,7 @@ export default interface IFooterTemplateOptions {
     /**
      * @name Controls/suggestPopup:FooterTemplate#showSelectorButtonTemplate
      * @cfg {Function|String} Шаблон кнопки "Показать всё".
-     * @example 
+     * @example
      * <pre class="brush: html">
      * <ws:partial template="Controls/suggestPopup:FooterTemplate">
      *    <ws:showSelectorButtonTemplate>
@@ -55,4 +55,3 @@ export default interface IFooterTemplateOptions {
      */
     showSelectorButtonTemplate?: string;
  }
- 

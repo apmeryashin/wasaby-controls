@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import {_companies, _equipment, _departmentsDataLong} from 'Controls-demo/Lookup/DemoHelpers/DataCatalog';
@@ -7,7 +7,7 @@ import suggestTemplate = require('wml!Controls-demo/Lookup/resources/SuggestTemp
 import selectorTemplate = require('Controls-demo/Lookup/FlatListSelector/FlatListSelector');
 import selectorTemplateWithTabs = require('Controls-demo/Lookup/FlatListSelectorWithTabs/FlatListSelectorWithTabs');
 
-export default class extends Control{
+export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;
    protected _suggestTemplate: TemplateFunction = suggestTemplate;
    protected _selectorTemplate: TemplateFunction = null;
@@ -163,7 +163,7 @@ export default class extends Control{
       if (items.at(0) && items.at(0).get('parent')) {
          items.clear();
       } else {
-         items.each(function (item) {
+         items.each(function(item) {
             correctKeys.push(item.get('id'));
             parentId = item.get('parent');
             if (parentId && correctKeys.indexOf(parentId) === -1) {

@@ -38,7 +38,7 @@ export default class SearchView extends TreeGridView {
       }
    }
 
-   protected _onBreadcrumbClick(e: SyntheticEvent, item: BreadcrumbsItemRow<Array<Model>>): void {
+   protected _onBreadcrumbClick(e: SyntheticEvent, item: BreadcrumbsItemRow<Model[]>): void {
       if (!this._itemClickNotifiedByPathClick) {
          const lastBreadcrumbItem = item.getContents()[item.getContents().length - 1];
          if (lastBreadcrumbItem) {

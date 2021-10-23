@@ -17,7 +17,6 @@ export interface ITimeMaskOptions {
  * @variant 'HH:II'
  */
 
-
 /**
  * Интерфейс для поля ввода времени с маской.
  *

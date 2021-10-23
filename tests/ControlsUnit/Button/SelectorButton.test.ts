@@ -63,7 +63,7 @@ describe('Controls/_lookup/Button/', (): void => {
 
    it('_itemClickHandler check notify itemClick', (): void => {
       const button = getButton(config);
-      let item: object = {id : 1};
+      const item: object = {id : 1};
       let dataItemClick: object[] = null;
 
       // @ts-ignore
@@ -74,13 +74,13 @@ describe('Controls/_lookup/Button/', (): void => {
       };
       // @ts-ignore
       button._itemClickHandler(null, item);
-      assert.equal(dataItemClick[0], item)
+      assert.equal(dataItemClick[0], item);
 
       dataItemClick = null;
       // @ts-ignore
       button._options.readOnly = true;
       // @ts-ignore
       button._itemClickHandler(null, item);
-      assert.equal(dataItemClick[0], item)
+      assert.equal(dataItemClick[0], item);
    });
 });

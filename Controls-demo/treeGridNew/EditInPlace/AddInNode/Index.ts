@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/treeGridNew/EditInPlace/AddInNode/A
 import * as ColumnTemplate from 'wml!Controls-demo/treeGridNew/EditInPlace/AddInNode/ColumnTemplate';
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 import {Model} from 'Types/entity';
 
 export default class extends Control {
@@ -16,7 +16,7 @@ export default class extends Control {
 
     protected _beforeMount(): void {
         this._columns.forEach((c) => {
-            c.template = ColumnTemplate
+            c.template = ColumnTemplate;
         });
         this._viewSource = new Memory({
             keyProperty: 'key',

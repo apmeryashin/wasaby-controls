@@ -26,4 +26,4 @@ export {ICalendarButtonVisibleOptions} from 'Controls/_date/interface/ICalendarB
 
 export {
     MonthCaptionTemplate
-}
+};

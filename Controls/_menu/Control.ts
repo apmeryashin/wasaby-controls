@@ -871,7 +871,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (options.nodeProperty) {
             data[options.nodeProperty] = false;
         }
-        for (let field in data) {
+        for (const field in data) {
             this._addField(field, emptyItem, emptyItem.getFormat());
         }
         emptyItem.set(data);
@@ -1189,7 +1189,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             theme: options.theme,
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            itemActionsClass: `controls-Menu__itemActions_position_rightCenter`,
+            itemActionsClass: 'controls-Menu__itemActions_position_rightCenter',
             iconSize: editingConfig ? 's' : 'm'
         });
     }
@@ -1221,6 +1221,20 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
         return this._errorController;
     }
+
+    static defaultProps: object = {
+        selectedKeys: [],
+        root: null,
+        historyRoot: null,
+        emptyKey: null,
+        moreButtonCaption: rk('Еще') + '...',
+        groupTemplate,
+        itemPadding: {},
+        markerVisibility: 'hidden',
+        hoverBackgroundStyle: 'default',
+        subMenuDirection: 'right',
+        itemAlign: 'right'
+    };
 
     private static _isPinIcon(target: EventTarget): boolean {
         return !!((target as HTMLElement)?.closest('.controls-Menu__iconPin'));
@@ -1282,20 +1296,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const parent = item.get(options.parentProperty);
         return parent === options.root || !parent && options.root === null;
     }
-
-    static defaultProps: object = {
-        selectedKeys: [],
-        root: null,
-        historyRoot: null,
-        emptyKey: null,
-        moreButtonCaption: rk('Еще') + '...',
-        groupTemplate,
-        itemPadding: {},
-        markerVisibility: 'hidden',
-        hoverBackgroundStyle: 'default',
-        subMenuDirection: 'right',
-        itemAlign: 'right'
-    };
 }
 /**
  * @name Controls/_menu/MenuControl#multiSelect

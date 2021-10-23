@@ -54,9 +54,9 @@ var _private = {
             //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
 
             // Get items from the same group. Hide the separator, if the group is empty or all list items from the same group
-            let itemsGroup = self._itemsModel._display.getGroupItems(key);
+            const itemsGroup = self._itemsModel._display.getGroupItems(key);
             // getCount of itemsModel returns count items includes groups
-            let numberItemsCurrentRoot = factory(self.getItems()).filter(_private.filterHierarchy.bind(self)).value().length;
+            const numberItemsCurrentRoot = factory(self.getItems()).filter(_private.filterHierarchy.bind(self)).value().length;
             return itemsGroup.length === 0 || itemsGroup.length === numberItemsCurrentRoot;
          },
 
@@ -106,7 +106,7 @@ var _private = {
          }
    };
 
-      var DropdownViewModel = BaseViewModel.extend({
+var DropdownViewModel = BaseViewModel.extend({
          _itemsModel: null,
          _expanded: false,
 
@@ -252,7 +252,7 @@ var _private = {
          _isItemSelected: function(item) {
             const keys = this._options.selectedKeys;
             if (keys instanceof Array) {
-               let index = keys.findIndex((key) => {
+               const index = keys.findIndex((key) => {
                   if (isEqual(key, item.get(this._options.keyProperty))) {
                      return true;
                   }
@@ -335,6 +335,5 @@ var _private = {
          }
       });
 
-      DropdownViewModel._private = _private;
-      export = DropdownViewModel;
-
+DropdownViewModel._private = _private;
+export = DropdownViewModel;

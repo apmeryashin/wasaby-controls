@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import * as controlTemplate from 'wml!Controls-demo/ReportDialog/Errors/Errors';
 
 export default class extends Control {

@@ -174,7 +174,7 @@ export default class StringValueConverter {
     }
 
     private _getFullYearBy2DigitsYear(valueYear: number): number {
-        let
+        const
             curYear = (new Date()).getFullYear(),
             shortCurYear = curYear % 100,
             curCentury = (curYear - shortCurYear);
@@ -293,12 +293,12 @@ export default class StringValueConverter {
         }
     }
 
-    private _autocomplete(valueModel, autocompleteType = 'default', inputType = 'default', required:boolean = false): void {
+    private _autocomplete(valueModel, autocompleteType = 'default', inputType = 'default', required: boolean = false): void {
         let now = new Date(),
             maskType = getMaskType(this._mask),
             item, itemValue, isZeroAtBeginning;
 
-        let getDate = function (autocompliteDefaultDate) {
+        const getDate = function(autocompliteDefaultDate) {
             autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
             if (autocompleteType === 'start') {
                 return 1;
@@ -309,7 +309,7 @@ export default class StringValueConverter {
             }
         };
 
-        let setValue = function (obj, value) {
+        const setValue = function(obj, value) {
             if (!obj.valid) {
                 obj.value = value;
                 obj.valid = true;
@@ -455,7 +455,7 @@ export default class StringValueConverter {
     }
 
     private _isValidDate(year, month, date, hours, minutes, seconds): boolean {
-        let lastMonthDay = dateUtils.getEndOfMonth(new Date(year, month)).getDate();
+        const lastMonthDay = dateUtils.getEndOfMonth(new Date(year, month)).getDate();
         return seconds < 60 && minutes < 60 && hours < 24 && month < 12 && month >= 0 &&
             date <= lastMonthDay && date > 0;
     }

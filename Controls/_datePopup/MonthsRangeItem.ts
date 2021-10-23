@@ -169,7 +169,7 @@ export default class MonthsRangeItem extends Control<IMonthsRangeItemOptions> {
         }
     }
 
-    protected _onMonthClick(event: Event, date: Date): void{
+    protected _onMonthClick(event: Event, date: Date): void {
         this._chooseMonth(date);
     }
 

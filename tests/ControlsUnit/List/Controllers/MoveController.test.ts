@@ -109,7 +109,7 @@ describe('Controls/list_clean/MoveController', () => {
                 movedItems: selectionObject.selected,
                 keyProperty: 'id',
                 nodeProperty: 'folder@',
-                parentProperty: 'folder',
+                parentProperty: 'folder'
             } as Partial<IMoverDialogTemplateOptions>,
             closeOnOutsideClick: true,
             template: 'fakeTemplate'

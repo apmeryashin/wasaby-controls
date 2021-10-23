@@ -110,7 +110,7 @@ export default class Area extends BaseText<IAreaOptions> {
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        let additionalProcessedKeys = ['Up', 'Down'];
+        const additionalProcessedKeys = ['Up', 'Down'];
 
         // Не будем стопать событие keyDown, если текст не выделен и:
         // 1. Каретка стоит в конце и нажали стрелку вниз.

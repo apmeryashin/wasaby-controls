@@ -17,7 +17,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
  */
 
    // Convert node to jsonML array.
-   function nodeToJson(node) {
+function nodeToJson(node) {
       // Text node, in jsonML it is just a string.
       if (node.nodeType === Node.TEXT_NODE) {
          return node.nodeValue;
@@ -83,10 +83,10 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @param html {String}
     * @returns {Array}
     */
-   var htmlToJson = function(html) {
+var htmlToJson = function(html) {
       if (!constants.isBrowserPlatform) {
          IoC.resolve('ILogger')
-            .error('Controls/_decorator/Markup/Converter' ,'htmlToJson method doesn\'t work on server-side');
+            .error('Controls/_decorator/Markup/Converter' , 'htmlToJson method doesn\'t work on server-side');
          return [];
       }
 
@@ -94,7 +94,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
          // Пришла строка без тега, значит, это текст, а не HTML.
          // TODO: во время рефактора написать функцию textToJson, и писать в консоль ошибку, если текст пришёл в
          // htmlToJson, а не в textToJson. https://online.sbis.ru/opendoc.html?guid=0ae06fe3-d773-4094-be9c-c365f4329d39
-         return [[], html]
+         return [[], html];
       }
 
       let div = document.createElement('div'),
@@ -150,7 +150,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
     * @returns {String}
     */
-   var jsonToHtml = function(json, tagResolver?, resolverParams?) {
+var jsonToHtml = function(json, tagResolver?, resolverParams?) {
       var generatorConfig = getGeneratorConfig();
       var result = template({
          _options: {
@@ -178,15 +178,14 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @param json
     * @return {Array}
     */
-   var deepCopyJson = function(json) {
+var deepCopyJson = function(json) {
       return objectMerge([], json, { clone: true });
    };
 
-   var MarkupConverter = {
+var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,
       deepCopyJson: deepCopyJson
    };
 
-   export = MarkupConverter;
-
+export = MarkupConverter;

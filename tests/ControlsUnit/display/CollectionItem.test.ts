@@ -503,11 +503,11 @@ describe('Controls/_display/CollectionItem', () => {
             getRightPadding(): string { return '#rightSpacing#'; },
             getMultiSelectVisibility(): string { return multiSelectVisibility; },
             getMultiSelectPosition(): string { return 'default'; },
-            getRowSeparatorSize: function () { return ''; },
-            isLastItem: function () { return false },
-            getNavigation: function () { return {
+            getRowSeparatorSize: function() { return ''; },
+            isLastItem: function() { return false; },
+            getNavigation: function() { return {
                 view: 'page'
-            }}
+            }; }
         };
         const defaultClasses = [
             'controls-ListView__itemContent',
@@ -643,7 +643,7 @@ describe('Controls/_display/CollectionItem', () => {
             editingContents._propertyChangedHandler.call(item);
 
             assert.strictEqual(given.item, item);
-            assert.strictEqual(given.property, 'editingContents')
+            assert.strictEqual(given.property, 'editingContents');
         });
 
         it('unsubscribes from editing contents property change when editing is finished', () => {
@@ -815,5 +815,5 @@ describe('Controls/_display/CollectionItem', () => {
 
         item = new CollectionItem({hasMoreDataUp: true, isFirstStickedItem: true});
         assert.equal(item.getShadowVisibility(), 'initial');
-    })
+    });
 });

@@ -13,7 +13,7 @@ import {SHADOW_VISIBILITY as SCROLL_SHADOW_VISIBILITY} from 'Controls/_scroll/Co
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 import fastUpdate from './FastUpdate';
 import {IPositionOrientation} from './StickyBlock/Utils';
-import SizeAndVisibilityObserver, {STACK_OPERATION} from "Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver";
+import SizeAndVisibilityObserver, {STACK_OPERATION} from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 // @ts-ignore
@@ -29,7 +29,7 @@ interface IStickyHeaderController {
 }
 
 function isLastVisibleModes(shadowVisibility: SHADOW_VISIBILITY): boolean {
-    return shadowVisibility === SHADOW_VISIBILITY.lastVisible || shadowVisibility === SHADOW_VISIBILITY.initial
+    return shadowVisibility === SHADOW_VISIBILITY.lastVisible || shadowVisibility === SHADOW_VISIBILITY.initial;
 }
 
 class StickyHeaderController {
@@ -137,7 +137,7 @@ class StickyHeaderController {
             header;
         let hasOffsetTop: boolean = false;
         const headers = this._headersStack;
-        for (let headerId of headers[position]) {
+        for (const headerId of headers[position]) {
             header = this._headers[headerId];
 
             if (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden) {
@@ -212,7 +212,7 @@ class StickyHeaderController {
 
                     if (header.inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
                         if (this._shadowVisibility[position] === SCROLL_SHADOW_VISIBILITY.HIDDEN) {
-                            visibility = SHADOW_VISIBILITY_BY_CONTROLLER.hidden
+                            visibility = SHADOW_VISIBILITY_BY_CONTROLLER.hidden;
                         } else if (this._shadowVisibility[position] === SCROLL_SHADOW_VISIBILITY.VISIBLE) {
                             // Если снаружи включили отбражать тени всегда, то для заголовков сконфигурированных
                             // отображать тень только у последнего, принудительно отключим тени на всех заголовках
@@ -289,8 +289,8 @@ class StickyHeaderController {
         this.resizeHandler();
 
         const addedHeaders = Object.entries(headers)
-            .filter(([, header]) => { return header.operation === STACK_OPERATION.add })
-            .map(([headerId, header]) => {return parseInt(headerId, 10)});
+            .filter(([, header]) => header.operation === STACK_OPERATION.add)
+            .map(([headerId, header]) => parseInt(headerId, 10));
 
         if (addedHeaders.length) {
             this._updateHeadersFixedPositions(addedHeaders);
@@ -307,8 +307,8 @@ class StickyHeaderController {
             const headerPosition = this._headers[header.id].position;
             const positions = this._getDecomposedPosition(headerPosition);
 
-            positions.forEach(position => {
-                const inHeadersStack = this._headersStack[position].some(headerId => headerId === header.id);
+            positions.forEach((position) => {
+                const inHeadersStack = this._headersStack[position].some((headerId) => headerId === header.id);
                 // В operations panel при инициализации контент намеренно скрывают, вешая нулевую высоту. Из-за этого вначале заголовок
                 // во время обсчета оффсетов запишет себе height = 0, а после, когда он покажется, по ресайз обсёрверу будет опять добавление
                 // в headersStack, т.к предыдущая высота была равна 0.
@@ -573,7 +573,7 @@ class StickyHeaderController {
      * @private
      */
     private _clearOffsetCache() {
-        for (let headerId: number in this._headers) {
+        for (const headerId: number in this._headers) {
             this._headers[headerId].offset = {};
         }
     }
@@ -641,7 +641,7 @@ class StickyHeaderController {
             headersHeight: number = 0,
             headerInst: StickyBlock;
 
-        for (let headerId: number of headersStack) {
+        for (const headerId: number of headersStack) {
             headerInst = this._headers[headerId].inst;
             let headerOffset = this._getHeaderOffsetByContainer(contentContainer, headerId, position);
             if (headerOffset !== 0) {
@@ -661,15 +661,15 @@ class StickyHeaderController {
 
     private _removeFromStack(id: number, stack: object): void {
         let isUpdated = false;
-        let index = stack['top'].indexOf(id);
+        let index = stack.top.indexOf(id);
 
         if (index !== -1) {
-            stack['top'].splice(index, 1);
+            stack.top.splice(index, 1);
             isUpdated = true;
         }
-        index = stack['bottom'].indexOf(id);
+        index = stack.bottom.indexOf(id);
         if (index !== -1) {
-            stack['bottom'].splice(index, 1);
+            stack.bottom.splice(index, 1);
             isUpdated = true;
         }
         if (isUpdated) {

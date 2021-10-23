@@ -5,6 +5,6 @@ class Component extends Mask {
     protected _getViewModelConstructor() {
         return MaskViewModel;
     }
-};
+}
 
 export default Component;

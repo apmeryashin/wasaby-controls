@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from "wml!Controls-demo/explorerNew/SearchExpandedAll/SearchExpandedAll";
+import * as Template from 'wml!Controls-demo/explorerNew/SearchExpandedAll/SearchExpandedAll';
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import {IColumn} from 'Controls/grid';
 import {TRoot} from 'Controls-demo/types';
@@ -37,7 +37,7 @@ export default class extends Control {
 
     protected _filterChanged(): void {
         // после сброса поиска браузер сбрасывает в фильтре разворот, восстанавливаем его
-        this._filter['Разворот'] = 'С разворотом';
+        this._filter.Разворот = 'С разворотом';
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

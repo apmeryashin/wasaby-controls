@@ -8,17 +8,17 @@ function createHistoryService(historyServiceLoad, config) {
    return historyServiceLoad.callback(new HistoryService(config));
 }
 
-export default function (config) {
-   let historyServiceLoad = new Deferred();
+export default function(config) {
+   const historyServiceLoad = new Deferred();
 
    if (HistoryService) {
       createHistoryService(historyServiceLoad, config);
    } else {
-      require(['Controls/history'], function (history) {
+      require(['Controls/history'], function(history) {
          HistoryService = history.Service;
          createHistoryService(historyServiceLoad, config);
       });
    }
 
    return historyServiceLoad;
-};
+}

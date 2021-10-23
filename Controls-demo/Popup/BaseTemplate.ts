@@ -11,4 +11,3 @@ class BaseTemplate extends Control<IControlOptions> {
     static _styles: string[] = ['Controls-demo/Popup/Opener/resources/StackHeader'];
 }
 export default BaseTemplate;
-

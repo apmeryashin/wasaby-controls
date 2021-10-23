@@ -458,4 +458,3 @@ Object.defineProperty(RelationController, 'defaultProps', {
  *    <Controls.buttons:Button on:click="dateRelation.shiftBackward()"/>
  * </pre>
  */
-

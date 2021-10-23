@@ -10,7 +10,7 @@ class PopupStack extends Control<IControlOptions> {
             closeOnOutsideClick: true,
             restrictiveContainer: this._restrictiveContainer,
             template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
-            width: 600,
+            width: 600
         });
     }
     protected openMaximizedStack(): void {
@@ -43,7 +43,7 @@ class PopupStack extends Control<IControlOptions> {
             opener: this._children.button6,
             closeOnOutsideClick: true,
             restrictiveContainer: this._restrictiveContainer,
-            template: 'Controls-demo/Popup/Opener/resources/StackTemplateHeader',
+            template: 'Controls-demo/Popup/Opener/resources/StackTemplateHeader'
         });
     }
     protected openStackWithoutHead(): void {
@@ -51,7 +51,7 @@ class PopupStack extends Control<IControlOptions> {
             opener: this._children.button7,
             width: 800,
             restrictiveContainer: this._restrictiveContainer,
-            template: 'wml!Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
+            template: 'wml!Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead'
         });
     }
 

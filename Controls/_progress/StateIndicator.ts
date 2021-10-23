@@ -126,7 +126,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @public
  * @demo Controls-demo/progress/StateIndicator/Base/Index.ts
  */
-class StateIndicator extends Control<IStateIndicatorOptions>{
+class StateIndicator extends Control<IStateIndicatorOptions> {
    protected _template: TemplateFunction = stateIndicatorTemplate;
    protected _colorState: number[];
    private _colors: string[];

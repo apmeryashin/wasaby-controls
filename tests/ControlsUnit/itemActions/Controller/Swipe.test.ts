@@ -150,12 +150,12 @@ function initializeControllerOptions(options?: IControllerOptions): IControllerO
         actionCaptionPosition: options ? options.actionCaptionPosition : null,
         editingToolbarVisible: options ? options.editingToolbarVisible : false,
         editArrowAction: options ? options.editArrowAction : null,
-        editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
-        contextMenuConfig: options ? options.contextMenuConfig: null,
-        iconSize: options ? options.iconSize: 'm',
+        editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback : null,
+        contextMenuConfig: options ? options.contextMenuConfig : null,
+        iconSize: options ? options.iconSize : 'm',
         editingItem: options ? options.editingItem : null,
         itemActionsVisibility: options ? options.itemActionsVisibility : 'onhover',
-        actionMode: "strict"
+        actionMode: 'strict'
     };
 }
 
@@ -181,7 +181,7 @@ describe('Controls/itemActions/Controller/Swipe', () => {
         }));
     });
 
-   it('should reset ItemActions on swipe close', () => {
+    it('should reset ItemActions on swipe close', () => {
        itemActionsController.activateSwipe(1, 100, 50);
        const item = collection.at(0);
        const spySetActions = sinon.spy(item, 'setActions');

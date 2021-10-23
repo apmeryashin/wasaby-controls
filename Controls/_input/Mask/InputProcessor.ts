@@ -1,8 +1,6 @@
 import {FormatBuilder, Formatter} from 'Controls/decorator';
 
-
-
-      var
+var
          _private = {
 
             /**
@@ -306,6 +304,6 @@ import {FormatBuilder, Formatter} from 'Controls/decorator';
             }
          };
 
-      InputProcessor._private = _private;
+InputProcessor._private = _private;
 
-      export = InputProcessor;
+export = InputProcessor;

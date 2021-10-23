@@ -35,7 +35,7 @@ export interface IResultEventData {
 
 interface IDataValid {
     data: {
-        validationErrors: undefined | Array<string>
+        validationErrors: undefined | string[]
     };
 }
 
@@ -725,8 +725,6 @@ class FormController extends ControllerBase<IFormController> {
  * @param {CrudResult} crudResult
  * @return {ReceivedState}
  */
-
-
 
 /**
  * Получение результата из обертки <CrudResult>

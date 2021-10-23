@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require("wml!Controls-demo/dateRange/LinkView/Underline/Underline");
+import template = require('wml!Controls-demo/dateRange/LinkView/Underline/Underline');
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;

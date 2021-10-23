@@ -56,7 +56,7 @@ describe('Controls/filter:ControllerClass', () => {
                 textValue: 'textValue4'
             }
         ];
-        sandbox.replace(filterController, '_loadHistoryItems', () => {return Promise.resolve(historyItems)});
+        sandbox.replace(filterController, '_loadHistoryItems', () => Promise.resolve(historyItems));
 
         return filterController.loadFilterItemsFromHistory().then((history) => {
             assert.deepEqual(filterController.getFilterButtonItems(), [
@@ -175,8 +175,8 @@ describe('Controls/filter:ControllerClass', () => {
             }
         });
 
-         controller.resetPrefetch();
-         assert.deepEqual(controller._$filter, {testField: 'testValue'});
+        controller.resetPrefetch();
+        assert.deepEqual(controller._$filter, {testField: 'testValue'});
     });
 
     it('updateFilterItems', () => {
@@ -383,7 +383,7 @@ describe('Controls/filter:ControllerClass', () => {
             assert.isFalse(result === items);
         });
 
-        it('items if function', function () {
+        it('items if function', function() {
              const returnOptFunc = () => [{
                    id: 'testId',
                    value: '',
@@ -399,13 +399,13 @@ describe('Controls/filter:ControllerClass', () => {
             value: 'testValue',
             resetValue: ''
         }];
-        it('items is array, with history', function () {
+        it('items is array, with history', function() {
             const result = ControllerClass._getItemsByOption(items, history);
             assert.deepEqual(result, history);
             assert.isFalse(result === items);
         });
 
-        it('items is function, with history', function () {
+        it('items is function, with history', function() {
             const returnOptFunc = function(history) {
                return [{
                   id: 'testId',

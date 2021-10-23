@@ -318,7 +318,7 @@ abstract class BaseController implements IPopupController {
             } else {
                 position = item.popupOptions.target;
             }
-            let {x, y} = position;
+            const {x, y} = position;
             const size = 1;
             const positionCfg = {
                 direction: {

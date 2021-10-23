@@ -1,5 +1,4 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
-      
 
       /**
        * @class Controls/_input/Password/ViewModel
@@ -10,7 +9,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
        * @author Красильников А.С.
        */
 
-      var _private = {
+var _private = {
          replaceOnAsterisks: function(value) {
             return '•'.repeat(value.length);
          },
@@ -26,7 +25,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
          }
       };
 
-      var ViewModel = BaseViewModel.extend({
+var ViewModel = BaseViewModel.extend({
          _convertToDisplayValue: function(value: string | null) {
             const curValue = ViewModel.superclass._convertToDisplayValue.call(this, value);
             const replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
@@ -54,5 +53,4 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
          }
       });
 
-      export = ViewModel;
-   
+export = ViewModel;

@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения {@link Controls/grid:View таблицы} без элементов в виде набора колонок.
- * 
+ *
  * @class Controls/_grid/interface/EmptyColumnTemplate
  * @author Авраменко А.С.
  * @see Controls/grid:View#emptyTemplateColumns
@@ -31,7 +31,7 @@
  *                 </ws:template>
  *             </ws:Object>
  *         </ws:Array>
- *     </ws:emptyTemplateColumns>  
+ *     </ws:emptyTemplateColumns>
  * </Controls.grid:View>
  * </pre>
  * @remark
@@ -46,4 +46,3 @@
      */
     contentTemplate?: string;
  }
- 

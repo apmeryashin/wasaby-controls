@@ -46,7 +46,7 @@ describe('tileImageUtil', () => {
 
             defaultUrl = getImageUrl(100, 0, baseUrl, null, imageUrlResolver);
             assert.strictEqual(defaultUrl, 'resolvedUrl');
-        })
+        });
     });
     describe('getImageSize', () => {
         describe('cover image fit', () => {

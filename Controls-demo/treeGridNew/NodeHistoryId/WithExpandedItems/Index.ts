@@ -3,7 +3,7 @@ import {HierarchicalMemory, CrudEntityKey} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeHistoryId/WithExpandedItems/WithExpandedItems';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 // Патч нужен, чтобы демка не выдавала ошибки
 import 'Controls-demo/Utils/WebApiScopePatch';

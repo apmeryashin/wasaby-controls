@@ -145,7 +145,7 @@ describe('Controls/lookup:Input', () => {
             const lookup = await getBaseLookup();
             let added, deleted;
             lookup._options.selectedKeys = [1];
-            lookup._lookupController.getSelectedKeys = () => { return [1, 3]};
+            lookup._lookupController.getSelectedKeys = () => [1, 3];
             lookup._notify = (action, data) => {
                 if (action === 'selectedKeysChanged') {
                     added = data[1];
@@ -161,7 +161,7 @@ describe('Controls/lookup:Input', () => {
             const lookup = await getBaseLookup();
             let added, deleted;
             lookup._options.selectedKeys = [1, 4, 5];
-            lookup._lookupController.getSelectedKeys = () => { return [1, 4, 6]};
+            lookup._lookupController.getSelectedKeys = () => [1, 4, 6];
             lookup._notify = (action, data) => {
                 if (action === 'selectedKeysChanged') {
                     added = data[1];
@@ -175,7 +175,7 @@ describe('Controls/lookup:Input', () => {
 
     });
 
-    describe('_selectCallback', function () {
+    describe('_selectCallback', function() {
         it('_selectCallback with items', async () => {
             const lookup = await getBaseLookup({
                 multiSelect: true

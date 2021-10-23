@@ -62,7 +62,7 @@ var _private = {
        } else {
            selectedKeys = [];
        }
-      return selectedKeys;
+       return selectedKeys;
    },
 
    // TODO: вообще не уверен что это нужно, но я побоялся трогать
@@ -532,7 +532,6 @@ Container._private = _private;
 * </pre>
 */
 
-
 /**
  * @name Controls/_lookupPopup/Container#selectionType
  * @cfg {String} Тип записей, которые можно выбрать.
@@ -563,4 +562,3 @@ Container._private = _private;
 * </pre>
 */
 export = Container;
-

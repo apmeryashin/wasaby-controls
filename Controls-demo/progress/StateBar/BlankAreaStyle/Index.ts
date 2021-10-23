@@ -4,13 +4,13 @@ import Template = require('wml!Controls-demo/progress/StateBar/BlankAreaStyle/Te
 class StateBar extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected _data: object[];
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 
     protected _beforeMount(): void {
         this._data = [{
             value: 20
         }];
     }
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
 export default StateBar;

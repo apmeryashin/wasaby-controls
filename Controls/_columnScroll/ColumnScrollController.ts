@@ -86,10 +86,6 @@ export default class ColumnScrollController {
             this._transformSelector = ColumnScrollController.createUniqSelector();
         }
     }
-
-    static createUniqSelector(): string {
-        return `controls-ColumnScroll__transform-${Guid.create()}`;
-    }
     /**
      * Возвращает флаг, указывающий должен ли быть виден горизонтальный скролл (ширина контента больше, чем его контейнер)
      */
@@ -247,18 +243,6 @@ export default class ColumnScrollController {
         return this._scrollableColumns;
     }
 
-    static getShadowClasses(position: 'start' | 'end', params: {
-        isVisible?: boolean,
-        needBottomPadding?: boolean;
-        backgroundStyle?: string;
-    }): string {
-        return 'controls-ColumnScroll__shadow'
-            + ` controls-ColumnScroll__shadow-${params.backgroundStyle}`
-            + ` controls-ColumnScroll__shadow_with${params.needBottomPadding ? '' : 'out'}-bottom-padding`
-            + ` controls-ColumnScroll__shadow_position-${position}`
-            + ` js-controls-ColumnScroll__shadow_position-${position}`;
-    }
-
     getShadowStyles(position: 'start' | 'end'): string {
         let shadowStyles = '';
 
@@ -328,7 +312,6 @@ export default class ColumnScrollController {
         }
         this._updateShadowState();
         this._updateFixedColumnWidth(isFullGridSupport);
-
 
         if (newContainerSize + this._scrollPosition > newContentSize) {
             this._scrollPosition -= (newContainerSize + this._scrollPosition) - newContentSize;
@@ -511,8 +494,8 @@ export default class ColumnScrollController {
 
     getShadowsStyles(options = {}): string {
         if (options.useAnimation && options.animationState === 'begin') {
-            const isShadowShown = !options.oldShadowState['start'] && this._shadowState['start'] ||
-                                  !options.oldShadowState['end'] && this._shadowState['end'];
+            const isShadowShown = !options.oldShadowState.start && this._shadowState.start ||
+                                  !options.oldShadowState.end && this._shadowState.end;
             if (!isShadowShown) {
                 return this._shadowsStylesContainer.innerHTML;
             }
@@ -677,6 +660,22 @@ export default class ColumnScrollController {
         this._drawTransform(this._scrollPosition, true);
 
         return res;
+    }
+
+    static createUniqSelector(): string {
+        return `controls-ColumnScroll__transform-${Guid.create()}`;
+    }
+
+    static getShadowClasses(position: 'start' | 'end', params: {
+        isVisible?: boolean,
+        needBottomPadding?: boolean;
+        backgroundStyle?: string;
+    }): string {
+        return 'controls-ColumnScroll__shadow'
+            + ` controls-ColumnScroll__shadow-${params.backgroundStyle}`
+            + ` controls-ColumnScroll__shadow_with${params.needBottomPadding ? '' : 'out'}-bottom-padding`
+            + ` controls-ColumnScroll__shadow_position-${position}`
+            + ` js-controls-ColumnScroll__shadow_position-${position}`;
     }
 
     static shouldDrawColumnScroll(viewContainers, getFixedPartWidth, isFullGridSupport: boolean): IShouldDrawColumnScrollResult {

@@ -59,7 +59,7 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
         });
 
         const sandbox = sinon.createSandbox();
-        let columnItems = gridDataRow.getColumns();
+        const columnItems = gridDataRow.getColumns();
         columnItems.forEach((column) => {
             sandbox.spy(column, 'setSearchValue');
         });
@@ -92,7 +92,7 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
         });
 
         const sandbox = sinon.createSandbox();
-        let columnItems = gridDataRow.getColumns();
+        const columnItems = gridDataRow.getColumns();
         columnItems.forEach((column) => {
             if (column.hasOwnProperty('setSearchValue')) {
                 sandbox.spy(column, 'setSearchValue');

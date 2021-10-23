@@ -11,7 +11,7 @@ import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {IItemAction} from 'Controls/_itemActions/interface/IItemAction';
 import {getActionsForContacts as getItemActions} from 'Controls-demo/list_new/DemoHelpers/ItemActionsCatalog';
-import {Countries} from "Controls-demo/gridNew/DemoHelpers/Data/Countries";
+import {Countries} from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 const DEFAULT_HEADER = [
     { title: '#' },

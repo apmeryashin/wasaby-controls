@@ -43,4 +43,3 @@
     * @type {Function} CallbackForField
     * @param {Node} field The field being processed.
     */
-

@@ -3,7 +3,7 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import * as sinon from 'sinon';
 import { GridCollection } from 'Controls/grid';
-import Header from "Controls/_grid/display/Header";
+import Header from 'Controls/_grid/display/Header';
 
 describe('Controls/grid_clean/Display/Grid/getHeader', () => {
 

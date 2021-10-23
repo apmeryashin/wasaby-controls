@@ -333,7 +333,7 @@ describe('Controls/_display/TreeItem', () => {
             });
 
             it('default', () => {
-                let item = new TreeItem({ owner });
+                const item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses();
                 CssClassesAssert.include(classes, 'js-controls-Tree__row-expander');
                 CssClassesAssert.include(classes, 'js-controls-ListView__notEditable');
@@ -345,7 +345,7 @@ describe('Controls/_display/TreeItem', () => {
 
             it('expanderPosition is right', () => {
                 owner.getExpanderPosition = () => 'right';
-                let item = new TreeItem({ owner });
+                const item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses();
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row_expander_position_right');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_hiddenNode_default');
@@ -353,7 +353,7 @@ describe('Controls/_display/TreeItem', () => {
 
             it('expanderPosition is custom', () => {
                 owner.getExpanderPosition = () => 'custom';
-                let item = new TreeItem({ owner });
+                const item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses();
                 CssClassesAssert.notInclude(classes, 'controls-TreeGrid__row_expander_position_right');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_hiddenNode_default');
@@ -361,45 +361,45 @@ describe('Controls/_display/TreeItem', () => {
 
             it('expanderPosition is right, style is master', () => {
                 owner.getExpanderPosition = () => 'right';
-                let item = new TreeItem({ owner, style: 'master' });
+                const item = new TreeItem({ owner, style: 'master' });
                 const classes = item.getExpanderClasses();
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row_expander_position_right');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_hiddenNode_default');
             });
 
             it('set style', () => {
-                let item = new TreeItem({ owner, style: 'master' });
+                const item = new TreeItem({ owner, style: 'master' });
                 const classes = item.getExpanderClasses();
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row_master-expander_size_default');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_hiddenNode_master');
             });
 
             it('pass icon', () => {
-                let item = new TreeItem({ owner });
+                const item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses('node');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_node_default');
             });
 
             it('pass custom icon', () => {
-                let item = new TreeItem({ owner });
+                const item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses('arbuz');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_arbuz');
             });
 
             it('pass custom icon', () => {
-                let item = new TreeItem({ owner });
+                const item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses('arbuz');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_arbuz');
             });
 
             it('pass size', () => {
-                let item = new TreeItem({ owner });
+                const item = new TreeItem({ owner });
                 const classes = item.getExpanderClasses('node', 's');
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row_default-expander_size_s');
             });
 
             it('count icon by node property', () => {
-                let item = new TreeItem({ owner, node: true });
+                const item = new TreeItem({ owner, node: true });
                 const classes = item.getExpanderClasses();
                 CssClassesAssert.include(classes, 'controls-TreeGrid__row-expander_node_default');
             });
@@ -415,7 +415,7 @@ describe('Controls/_display/TreeItem', () => {
         it('should return false for expanded node without childrens', () => {
             const mockedOwner = {
                 getChildren: () => new TreeChildren({owner: new TreeItem({}), items: []})
-            }
+            };
             const item = new TreeItem({expanded: true, owner: mockedOwner});
             assert.isFalse(item.hasChildren());
         });

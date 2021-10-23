@@ -632,7 +632,6 @@ class Data extends Control<IDataOptions, IReceivedState>/** @lends Controls/_lis
    }
 }
 
-
 Object.defineProperty(Data, 'defaultProps', {
    enumerable: true,
    configurable: true,
@@ -641,7 +640,6 @@ Object.defineProperty(Data, 'defaultProps', {
       return Data.getDefaultOptions();
    }
 });
-
 
 /**
  * @name Controls/_list/Data#root

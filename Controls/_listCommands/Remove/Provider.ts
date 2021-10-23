@@ -24,7 +24,7 @@ export default class RemoveProvider implements IAction, IRemoveProvider {
         } else {
             return loadAsync(CONTROLLER_MODULE_NAME).then((removeController) => {
                 return this._remove(removeController, meta);
-            })
+            });
         }
     }
 

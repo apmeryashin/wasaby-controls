@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_datePopup/DateRangeItem';
-import {MonthModel} from "Controls/calendar";
+import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
 
 export default class DateRangeItem extends Control<IControlOptions> {

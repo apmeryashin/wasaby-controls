@@ -642,7 +642,7 @@ describe('Controls/_multiselection/Controller', () => {
             controller.setSelection(result);
             result = controller.toggleAll();
             assert.deepEqual(result, { selected: [3], excluded: [] });
-         })
+         });
 
          it('selected one item, after filter it not exists', () => {
             controller.setSelection({ selected: [2222], excluded: [] });
@@ -661,7 +661,7 @@ describe('Controls/_multiselection/Controller', () => {
             controller.setSelection(result);
             result = controller.toggleAll();
             assert.deepEqual(result, { selected: [2222], excluded: [] });
-         })
+         });
 
          it('selected items, after filter one of there not exists', () => {
             controller.setSelection({ selected: [2, 3, 2222], excluded: [] });
@@ -680,7 +680,7 @@ describe('Controls/_multiselection/Controller', () => {
             controller.setSelection(result);
             result = controller.toggleAll();
             assert.deepEqual(result, { selected: [2, 3, 2222], excluded: [] });
-         })
+         });
 
          it('tree, selected items, after filter one of there not exists', () => {
             const model = new Tree({
@@ -732,7 +732,7 @@ describe('Controls/_multiselection/Controller', () => {
             controller.setSelection(result);
             result = controller.toggleAll();
             assert.deepEqual(result, { selected: [3, 5], excluded: [] });
-         })
+         });
       });
 
       it('filter is changed and selected all items', () => {
@@ -778,7 +778,7 @@ describe('Controls/_multiselection/Controller', () => {
             excludedKeys: []
          });
 
-         let addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
+         const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
          controller.onCollectionAdd(addedItems);
 
          assert.isTrue(model.getItemBySourceKey(1).isSelected());
@@ -1404,7 +1404,7 @@ describe('Controls/_multiselection/Controller', () => {
                {id: 21, hasChildren: false, node: true, parent: 2}
             ],
             keyProperty: 'id'
-         })
+         });
          const tree = new Tree({
             collection: rs,
             root: null,
@@ -1445,5 +1445,5 @@ describe('Controls/_multiselection/Controller', () => {
          controller.destroy();
          assert.isFalse(model.getItemBySourceKey(1).isSelected());
       });
-   })
+   });
 });

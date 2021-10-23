@@ -172,7 +172,7 @@ export default class _Controller implements IDropdownController {
             if (this._updateHistoryPromise) {
                this._updateHistoryPromise.then(() => {
                   return this.reload();
-               })
+               });
             } else {
                return this.reload();
             }
@@ -675,7 +675,7 @@ export default class _Controller implements IDropdownController {
 
    private _loadMenuTemplates(options: object): Promise<any> {
       if (!this._loadMenuTempPromise) {
-         let templatesToLoad = ['Controls/menu'];
+         const templatesToLoad = ['Controls/menu'];
          DEPEND_TEMPLATES.forEach((template) => {
             if (typeof options[template] === 'string') {
                templatesToLoad.push(options[template]);
@@ -689,13 +689,13 @@ export default class _Controller implements IDropdownController {
    }
 
    private _getItemsTemplates(options) {
-      let
+      const
           templates = {},
           itemTemplateProperty = options.itemTemplateProperty;
 
       if (itemTemplateProperty) {
          this._items.each(function(item) {
-            let itemTemplate = item.get(itemTemplateProperty);
+            const itemTemplate = item.get(itemTemplateProperty);
 
             if (typeof itemTemplate === 'string') {
                templates[itemTemplate] = true;
@@ -711,7 +711,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _getPopupOptions(popupOptions?): object {
-      let baseConfig = {...this._options};
+      const baseConfig = {...this._options};
       const ignoreOptions = [
          'iWantBeWS3',
          '_$createdFromCode',
@@ -728,7 +728,7 @@ export default class _Controller implements IDropdownController {
             delete baseConfig[option];
          }
       }
-      let templateOptions = {
+      const templateOptions = {
          selectedKeys: this._selectedKeys,
          dataLoadCallback: null,
          closeButtonVisibility: false,

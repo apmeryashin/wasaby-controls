@@ -290,7 +290,7 @@ const _private = {
         }
     },
 
-    doAfterRender(self: BaseControl, callback) : void {
+    doAfterRender(self: BaseControl, callback): void {
         if (self.callbackAfterRender) {
             self.callbackAfterRender.push(callback);
         } else {
@@ -917,7 +917,7 @@ const _private = {
             scrollToEdgePromiseResolver = res;
         });
         _private.setMarkerAfterScroll(self);
-        let hasMoreData = {
+        const hasMoreData = {
             up: self._hasMoreData('up'),
             down: self._hasMoreData('down')
         };
@@ -975,7 +975,7 @@ const _private = {
                         if (_private.isPagingNavigation(self._options.navigation)) {
                             self._currentPage = 1;
                         }
-                        self._finishScrollToEdgeOnDrawItems = function () {
+                        self._finishScrollToEdgeOnDrawItems = function() {
                             self._currentPage = 1;
                             self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                             self._notify('doScroll', ['top'], { bubbling: true });
@@ -4666,7 +4666,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     _canScroll(scrollTop: number, direction): boolean {
         const placeholder = this._scrollController?.getPlaceholders()?.top || 0;
         return !(direction === 'down' && scrollTop - placeholder + this._viewportSize > this._viewSize ||
-            direction === 'up' && scrollTop - placeholder < 0)
+            direction === 'up' && scrollTop - placeholder < 0);
     }
     _hasEnoughData(page: number): boolean {
         const neededItemsCount = this._scrollPagingCtr.getNeededItemsCountForPage(page);
@@ -4701,7 +4701,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
                 this._notify('doScroll', [scrollTop], { bubbling: true });
             }
-        }
+        };
         if (this._currentPage === page) {
             this._applySelectedPage();
             return;
@@ -5282,12 +5282,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
     isEditing(): boolean {
         return _private.isEditing(this);
-    }
-
-    private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {
-        const msg = ERROR_MSG.CANT_USE_IN_READ_ONLY(fromWhatMethod);
-        Logger.warn(msg);
-        return Promise.reject(msg);
     }
 
     beginEdit(userOptions: object): Promise<void | {canceled: true}> {
@@ -6518,8 +6512,8 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             intersectionHandler: this._intersectionObserverHandler,
             viewElement: this,
             topTriggerElement: this._children.listView?.getTopLoadingTrigger(),
-            bottomTriggerElement: this._children.listView?.getBottomLoadingTrigger(),
-        }
+            bottomTriggerElement: this._children.listView?.getBottomLoadingTrigger()
+        };
     }
 
     // endregion Observers
@@ -7061,6 +7055,12 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     static _private: typeof _private = _private;
+
+    private static _rejectEditInPlacePromise(fromWhatMethod: string): Promise<void> {
+        const msg = ERROR_MSG.CANT_USE_IN_READ_ONLY(fromWhatMethod);
+        Logger.warn(msg);
+        return Promise.reject(msg);
+    }
 
     static getDefaultOptions(): Partial<IBaseControlOptions> {
         return {

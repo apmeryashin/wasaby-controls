@@ -1,11 +1,11 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import {_companies} from 'Controls-demo/Lookup/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Lookup/MultipleInput/Template');
 import selectorTemplateWithTabs = require('Controls-demo/Lookup/FlatListSelectorWithTabs/FlatListSelectorWithTabs');
 
-export default class extends Control{
+export default class extends Control {
     protected _template: TemplateFunction = controlTemplate;
     protected _selectedKeyCustomPlaceholder: any = [];
     protected _source: Memory;

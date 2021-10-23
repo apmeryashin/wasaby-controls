@@ -93,17 +93,17 @@ class ResultsRow extends Row<null> {
         super.setColspanCallback(ResultsRow._convertColspanCallback(colspanCallback));
     }
 
-    private static _convertColspanCallback(colspanCallback: TResultsColspanCallback): TColspanCallback {
-        return colspanCallback ? (item, column, columnIndex, isEditing) => {
-            return colspanCallback(column, columnIndex);
-        } : undefined;
-    }
-
     protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IResultsRowOptions> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             metaResults: this.getMetaResults()
         };
+    }
+
+    private static _convertColspanCallback(colspanCallback: TResultsColspanCallback): TColspanCallback {
+        return colspanCallback ? (item, column, columnIndex, isEditing) => {
+            return colspanCallback(column, columnIndex);
+        } : undefined;
     }
 
     //endregion

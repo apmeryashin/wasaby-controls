@@ -76,7 +76,7 @@ export default class Reload {
            } else if (oldItem) {
                 this._removeItem(options, key);
            } else if (newItem) {
-               this._addItem(options, newItem)
+               this._addItem(options, newItem);
            }
         });
         oldItems.setEventRaising(true, true);
@@ -122,7 +122,7 @@ export default class Reload {
         const oldItems = options.items;
         const sorting = options.sorting;
         if (sorting) {
-            let index = this._sortItems(oldItems, sorting, newItem);
+            const index = this._sortItems(oldItems, sorting, newItem);
             oldItems.add(newItem, index);
         } else {
             oldItems.add(newItem, 0);
@@ -130,8 +130,8 @@ export default class Reload {
     }
 
     private _sortItems(items, sorting, newItem): void {
-        let orderMap = this._getOrderMap(sorting);
-        let dataMap = this._getDataMap(items, orderMap);
+        const orderMap = this._getOrderMap(sorting);
+        const dataMap = this._getDataMap(items, orderMap);
         let resultIndex = -1;
 
         const order = dataMap.find((a) => {
@@ -154,14 +154,14 @@ export default class Reload {
     }
 
     private _getOrderMap(sorting) {
-        let orderMap = [];
+        const orderMap = [];
         let field;
         sorting.forEach((sortingConfig) => {
             field = Object.keys(sortingConfig)[0];
             orderMap.push({
                 field,
                 order: sortingConfig[field].toUpperCase() === SORT_DESC ? -1 : 1
-            })
+            });
         });
         return orderMap;
     }

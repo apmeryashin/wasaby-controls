@@ -25,15 +25,15 @@ import 'css!Controls/operationsPopup';
     * @public
     *
     */
-   var ReportDialog = Control.extend({
+var ReportDialog = Control.extend({
       _template: template,
       _message: null,
       _beforeMount: function(cfg) {
          if (cfg.operationsCount === cfg.operationsSuccess) {
             this._message = format({
                count: cfg.operationsCount,
-               record: rk("запись(-и,-ей)", cfg.operationsCount),
-               process: rk("обработана(-ы)", "ReportDialog", cfg.operationsCount)
+               record: rk('запись(-и,-ей)', cfg.operationsCount),
+               process: rk('обработана(-ы)', 'ReportDialog', cfg.operationsCount)
             }, rk('$count$s$ $record$s$ успешно $process$s$'));
          } else if (!cfg.errors || !cfg.errors.length) {
             this._message = rk('Выполнение операции завершилось ошибкой');
@@ -75,5 +75,4 @@ import 'css!Controls/operationsPopup';
     * @name Controls/_operationsPopup/ReportDialog#footerContentTemplate
     * @cfg {Function} Template displayed at the bottom of the dialog.
     */
-   export = ReportDialog;
-
+export = ReportDialog;

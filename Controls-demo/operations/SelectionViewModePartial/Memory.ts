@@ -18,8 +18,8 @@ function getById(items, id) {
 }
 
 function getChildren(items, parent) {
-   return items.filter(function (item) {
-      return isChildByNode(item, items, parent)
+   return items.filter(function(item) {
+      return isChildByNode(item, items, parent);
    });
 }
 
@@ -27,8 +27,8 @@ function isChildByNode(item, items, nodeId) {
    let isChild = nodeId === null || nodeId === undefined;
 
    if (!isChild) {
-      for (let currentItem = item; currentItem['Раздел'] !== null; currentItem = getById(items, currentItem['Раздел'])) {
-         if (nodeId === currentItem['Раздел']) {
+      for (let currentItem = item; currentItem.Раздел !== null; currentItem = getById(items, currentItem.Раздел)) {
+         if (nodeId === currentItem.Раздел) {
             isChild = true;
             break;
          }
@@ -39,17 +39,17 @@ function isChildByNode(item, items, nodeId) {
 }
 
 function isSelected(item, items, selection) {
-   let selected = selection.get('marked');
+   const selected = selection.get('marked');
 
-   return includes(selected, item.id) || getChildren(items, item.id).filter(function (item) {
+   return includes(selected, item.id) || getChildren(items, item.id).filter(function(item) {
          return includes(selected, item.id);
       }).length;
 }
 
 function getFullPath(items, currentRoot) {
-   let path = [];
+   const path = [];
 
-   for (let currentNode = getById(items, currentRoot); currentNode; currentNode = getById(items, currentNode['Раздел'])) {
+   for (let currentNode = getById(items, currentRoot); currentNode; currentNode = getById(items, currentNode.Раздел)) {
       path.push(currentNode);
    }
 
@@ -61,24 +61,24 @@ function getFullPath(items, currentRoot) {
 
 export default class extends Memory {
    query(query) {
-      let items = this._$data;
-      let filter = query.getWhere();
-      let selection = filter.SelectionWithPath;
-      let parent = filter['Раздел'] instanceof Array ? filter['Раздел'][0] : filter['Раздел'];
+      const items = this._$data;
+      const filter = query.getWhere();
+      const selection = filter.SelectionWithPath;
+      const parent = filter.Раздел instanceof Array ? filter.Раздел[0] : filter.Раздел;
 
       if (selection) {
-         let isAllSelected = selection.get('marked').includes(null) && selection.get('excluded').includes(null);
+         const isAllSelected = selection.get('marked').includes(null) && selection.get('excluded').includes(null);
 
-         query.where(function (item) {
+         query.where(function(item) {
             item = getById(items, item.get('id'));
             if (isSelected(item, items, selection) && isChildByNode(item, items, parent) ||
-               isAllSelected && item['Раздел'] === null && !includes(selection.get('excluded'), item.id)) {
+               isAllSelected && item.Раздел === null && !includes(selection.get('excluded'), item.id)) {
 
                return true;
             }
          });
       } else {
-         query.where(function (item) {
+         query.where(function(item) {
             if (parent !== undefined) {
                return item.get('Раздел') === parent;
             } else {
@@ -88,11 +88,11 @@ export default class extends Memory {
       }
 
       return super.query(...arguments).addCallback((data) => {
-         let originalGetAll = data.getAll;
+         const originalGetAll = data.getAll;
 
-         data.getAll = function () {
-            let result = originalGetAll.apply(this, arguments);
-            let meta = result.getMetaData();
+         data.getAll = function() {
+            const result = originalGetAll.apply(this, arguments);
+            const meta = result.getMetaData();
 
             if (parent !== undefined && parent !== null) {
                meta.path = getFullPath(items, parent);
@@ -105,4 +105,4 @@ export default class extends Memory {
          return data;
       });
    }
-};
+}

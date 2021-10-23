@@ -1,5 +1,5 @@
 import {INumberOptions} from 'Controls/decorator';
-import IEditingTemplateOptions from './EditingTemplate'
+import IEditingTemplateOptions from './EditingTemplate';
 
 /**
  * Шаблон для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту} числовых полей в {@link Controls/list:View плоских списках}.
@@ -36,4 +36,4 @@ import IEditingTemplateOptions from './EditingTemplate'
  */
 export default interface INumberEditingTemplateOptions extends INumberOptions, IEditingTemplateOptions {
     readonly '[Controls/_list/interface/INumberEditingTemplateOptions]': boolean;
-};
+}

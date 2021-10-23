@@ -3,7 +3,6 @@ import Template = require('wml!Controls-demo/SwitchableArea/DemoSwitchableArea')
 import asyncItem = require('wml!Controls-demo/SwitchableArea/resources/contentAsync');
 import secondContent = require('wml!Controls-demo/SwitchableArea/resources/contentDop');
 
-
 export default class SwitchableArea extends Control {
     protected _template: TemplateFunction = Template;
     protected _items: any = {};

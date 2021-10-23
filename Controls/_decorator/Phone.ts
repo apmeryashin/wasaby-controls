@@ -69,7 +69,7 @@ class Phone extends Control<IPhoneOptions> {
         if (data) {
             return data.value;
         }
-        return ''
+        return '';
     }
 
     static getOptionTypes() {

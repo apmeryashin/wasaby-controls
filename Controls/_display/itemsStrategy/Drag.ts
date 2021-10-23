@@ -282,7 +282,7 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
             // targetIndex и startIndex не могут быть больше itemsCount.
             // Это может произойти, например, если выделили несколько записей в конце списка и потащили за последнюю,
             // тогда перетаскиваемые записи скроются, но индексы были посчитаны до скрытия и будут указывать за пределы.
-            let targetIndex = options.targetIndex < itemsCount
+            const targetIndex = options.targetIndex < itemsCount
                 ? this._getIndexGivenFilter(options.targetIndex, options.filterMap)
                 : itemsCount - 1;
             const startIndex = options.startIndex < itemsCount ? options.startIndex : itemsCount - 1;

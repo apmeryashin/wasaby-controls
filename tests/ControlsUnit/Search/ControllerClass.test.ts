@@ -5,7 +5,7 @@ import {Memory, QueryWhereExpression} from 'Types/source';
 import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
 import {RecordSet} from 'Types/collection';
-import {ISearchControllerOptions} from "Controls/_search/ControllerClass";
+import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 
 const getMemorySource = (): Memory => {
    return new Memory({
@@ -194,11 +194,11 @@ describe('Controls/search:ControllerClass', () => {
          });
 
          await searchController.search('testSearchValue');
-         assert.ok(searchController.getFilter()['Разворот']);
+         assert.ok(searchController.getFilter().Разворот);
 
          const filter = searchController.reset(true);
-         assert.ok(filter['Разворот']);
-         assert.ok(filter['usePages']);
+         assert.ok(filter.Разворот);
+         assert.ok(filter.usePages);
 
          sourceController.setFilter({
             Разворот: 'Без разворота'
@@ -206,7 +206,7 @@ describe('Controls/search:ControllerClass', () => {
 
          await searchController.search('testSearchValue');
          const filter = searchController.reset(true);
-         assert.ok(!filter['usePages']);
+         assert.ok(!filter.usePages);
       });
 
       describe('startingWith: root', () => {
@@ -233,9 +233,9 @@ describe('Controls/search:ControllerClass', () => {
             });
          }
 
-         it('root before search should saved after reset search', async() => {
+         it('root before search should saved after reset search', async () => {
             const sourceController = getSourceController(getHierarchyOptions());
-            let searchControllerOptions = {
+            const searchControllerOptions = {
                sourceController,
                ...getHierarchyOptions()
             };
@@ -244,13 +244,13 @@ describe('Controls/search:ControllerClass', () => {
             await searchController.search('testSearchValue');
             assert.ok(sourceController.getRoot() === null);
             assert.ok(searchController.getRoot() === null);
-            assert.ok(sourceController.getFilter()['parentProperty'] === null);
+            assert.ok(sourceController.getFilter().parentProperty === null);
 
             searchController.reset(true);
             assert.ok(searchController.getRoot() === 'testRoot');
          });
 
-         it('update root while searching', async() => {
+         it('update root while searching', async () => {
             const sourceController = getSourceController(getHierarchyOptions());
             let searchControllerOptions = {
                sourceController,
@@ -266,7 +266,7 @@ describe('Controls/search:ControllerClass', () => {
             assert.ok(searchController.getRoot() === 'myRoot');
          });
 
-         it('update with same root while searching', async() => {
+         it('update with same root while searching', async () => {
             const sourceController = getSourceController(getHierarchyOptions());
             let searchControllerOptions = {
                sourceController,

@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/Decorators/Deco
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
-import {DecoratedEditing} from "Controls-demo/gridNew/DemoHelpers/Data/DecoratedEditing";
+import {DecoratedEditing} from 'Controls-demo/gridNew/DemoHelpers/Data/DecoratedEditing';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

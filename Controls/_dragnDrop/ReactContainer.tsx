@@ -62,7 +62,6 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     private _endDragNDropTimer: number = null;
     private _draggedKey: string = null;
     private _instanceId: string = 'inst_' + Guid.create();
-    static contextType = DragNDropContext;
 
     constructor(props) {
         super(props);
@@ -297,6 +296,11 @@ class ReactContainer extends React.Component<IReactContainerProps> {
         this._registerMouseUp();
     }
 
+    getInstanceId() {
+        return this._instanceId;
+    }
+    static contextType = DragNDropContext;
+
     private static SHIFT_LIMIT: number = 4;
     private static IE_MOUSEMOVE_FIX_DELAY: number = 50;
 
@@ -329,10 +333,6 @@ class ReactContainer extends React.Component<IReactContainerProps> {
                 selection.empty();
             }
         }
-    }
-
-    getInstanceId() {
-        return this._instanceId;
     }
 
     private static _getDragOffset(moveEvent: MouseEvent, startEvent: MouseEvent): ICords {

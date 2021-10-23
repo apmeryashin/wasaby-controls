@@ -81,7 +81,7 @@ describe('Controls/itemActions/Controller/MenuItemAction', () => {
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : null,
-            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback : null,
             contextMenuConfig: options ? options.contextMenuConfig : null,
             iconSize: options ? options.iconSize : 'm',
             editingItem: options ? options.editingItem : null,

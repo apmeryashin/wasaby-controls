@@ -65,7 +65,6 @@ export type IVirtualScrollMode = 'remove' | 'hide';
  * @see Controls/interface:INavigation#navigation
  */
 
-
 /**
  * @event Происходит при использовании виртуального скролла, когда список находится в такой позиции, что сверху и снизу списка есть скрытые (или доступные для загрузки) элементы.
  * @remark По этому событию скрывается контент {@link Controls/scroll:VirtualScrollContainer} с опцией position, соответствующей параметру в событии.

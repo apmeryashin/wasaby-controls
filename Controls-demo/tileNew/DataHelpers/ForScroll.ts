@@ -17,7 +17,7 @@ function template(key: number, image: string): IData {
     return {
         key,
         type: null,
-        title: `Запись с ключом #${key}${image ? ' и картинкой': ''}`,
+        title: `Запись с ключом #${key}${image ? ' и картинкой' : ''}`,
         description: 'Шаблон 5.1 или 5.3 в зависимости от набора записей в RecordSet',
         gradientColor: '#FFF',
         titleLines: 1,

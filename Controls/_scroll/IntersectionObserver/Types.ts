@@ -1,4 +1,4 @@
-import {IControlOptions} from "UI/Base";
+import {IControlOptions} from 'UI/Base';
 
 export interface IIntersectionObserverObject {
    instId: string;
@@ -7,7 +7,7 @@ export interface IIntersectionObserverObject {
    threshold: number[];
    rootMargin: string;
    data: any;
-   handler: Function
+   handler: Function;
 }
 
 export interface IIntersectionObserverOptions {

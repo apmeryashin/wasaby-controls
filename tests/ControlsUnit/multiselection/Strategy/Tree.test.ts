@@ -9,7 +9,7 @@ import { RecordSet } from 'Types/collection';
 import { ITreeOptions, Tree, TreeItem } from 'Controls/display';
 import GroupItem from 'Controls/_display/GroupItem';
 import { SearchGridCollection } from 'Controls/searchBreadcrumbsGrid';
-import TreeGridCollection from "Controls/_treeGrid/display/TreeGridCollection";
+import TreeGridCollection from 'Controls/_treeGrid/display/TreeGridCollection';
 
 function initTest(
     items: object[],
@@ -74,7 +74,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       recursiveSelection: false
    });
 
-   function toArrayKeys(array: TreeItem<Model>[]): number[] {
+   function toArrayKeys(array: Array<TreeItem<Model>>): number[] {
       return array.map((el) => el.key).sort((e1, e2) => e1 < e2 ? -1 : 1);
    }
 
@@ -607,7 +607,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
    describe('selectRange', () => {
       it('without expanded nodes', () => {
-         let selection = strategy.selectRange(model.getItems());
+         const selection = strategy.selectRange(model.getItems());
          assert.deepEqual(selection.selected, [1, 2, 3, 4, 5, 6, 7]);
          assert.deepEqual(selection.excluded, []);
       });
@@ -616,7 +616,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          items[0].setExpanded(true);
          items[1].setNode(true);
          items[1].setExpanded(true);
-         let selection = strategy.selectRange(items);
+         const selection = strategy.selectRange(items);
          assert.deepEqual(selection.selected, [3, 4, 5, 6, 7]);
          assert.deepEqual(selection.excluded, []);
       });
@@ -763,7 +763,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             ]
          });
 
-         let res = strategy.getSelectionForModel({selected: [1], excluded: [112]});
+         const res = strategy.getSelectionForModel({selected: [1], excluded: [112]});
          assert.deepEqual(toArrayKeys(res.get(true)), [111]);
          assert.deepEqual(toArrayKeys(res.get(false)), [112]);
          assert.deepEqual(toArrayKeys(res.get(null)), []);
@@ -796,7 +796,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             ]
          });
 
-         let res = strategy.getSelectionForModel({selected: [], excluded: []});
+         const res = strategy.getSelectionForModel({selected: [], excluded: []});
          assert.deepEqual(toArrayKeys(res.get(true)), []);
          assert.deepEqual(toArrayKeys(res.get(false)), [1, 2]);
          assert.deepEqual(toArrayKeys(res.get(null)), []);
@@ -829,7 +829,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             ]
          });
 
-         let res = strategy.getSelectionForModel({selected: [111], excluded: []});
+         const res = strategy.getSelectionForModel({selected: [111], excluded: []});
          assert.deepEqual(toArrayKeys(res.get(true)), []);
          assert.deepEqual(toArrayKeys(res.get(false)), []);
          assert.deepEqual(toArrayKeys(res.get(null)), [1]);
@@ -1210,7 +1210,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                   {id: 12, parent: 1, node: null},
                   {id: 2, parent: null, node: true},
                   {id: 21, parent: 2, node: null},
-                  {id: 22, parent: 2, node: null},
+                  {id: 22, parent: 2, node: null}
                ]
             }),
             root: null,
@@ -1467,7 +1467,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                   }
                   assert.isFalse(throwedError);
                });
-            })
+            });
 
             describe('selectionCountMode=node', () => {
                it('selectionType=leaf', () => {
@@ -1488,8 +1488,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                   }
                   assert.isTrue(throwedError);
                });
-            })
-         })
+            });
+         });
       });
    });
 
@@ -1745,7 +1745,6 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          });
       });
    });
-
 
    describe('recursiveSelection', () => {
       describe('leaf', () => {

@@ -19,6 +19,6 @@ export default class extends Control<IControlOptions> {
         }
     }
     protected _readSucessHandler(event: SyntheticEvent, record: Model): void {
-        this._record = record
+        this._record = record;
     }
 }

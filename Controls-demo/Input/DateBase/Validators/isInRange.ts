@@ -7,7 +7,7 @@ export default function isInRange(args): boolean {
     if (args.doNotValidate) {
         return true;
     }
-   if (args.value && dateUtils.isValidDate(args.value)) {
+    if (args.value && dateUtils.isValidDate(args.value)) {
         if (args.startValue && args.value < args.startValue) {
             result = false;
         }
@@ -16,5 +16,5 @@ export default function isInRange(args): boolean {
         }
    }
 
-   return result || rk(`Введенное значение должно быть больше ${formatDate(args.startValue, formatDate.FULL_DATE)} и меньше ${formatDate(args.endValue, formatDate.FULL_DATE)}`);
+    return result || rk(`Введенное значение должно быть больше ${formatDate(args.startValue, formatDate.FULL_DATE)} и меньше ${formatDate(args.endValue, formatDate.FULL_DATE)}`);
 }

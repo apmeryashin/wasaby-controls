@@ -1,4 +1,4 @@
-import {IColumn, IHeaderCell} from "Controls/grid";
+import {IColumn, IHeaderCell} from 'Controls/grid';
 
 interface IDataForShow {
     key: number;
@@ -9,7 +9,6 @@ interface IDataForShow {
     auto: string;
     maxContent: string;
 }
-
 
 export const CrossBrowserWidths = {
     getData(): IDataForShow[] {

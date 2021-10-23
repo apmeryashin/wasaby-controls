@@ -16,7 +16,7 @@ export function getDefaultOptions() {
     return {
         valueValidators: [],
         validateByFocusOut: true
-    }
+    };
 }
 
 export function getOptionTypes() {

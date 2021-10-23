@@ -11,10 +11,10 @@ const SEARCH_DELAY = 500;
 export default class PositionSourceMemory extends Memory {
     query(query?: Query<unknown>): Promise<DataSet> {
         const filter = query.getWhere();
-        let limit = query.getLimit();
+        const limit = query.getLimit();
 
         const isSearch = query.getWhere().title !== undefined;
-        let isPrepend = typeof filter['key<='] !== 'undefined';
+        const isPrepend = typeof filter['key<='] !== 'undefined';
         const isPosition = typeof filter['key~'] !== 'undefined';
         let position = filter['key<='] || filter['key>='] || filter['key~'] || 0;
 

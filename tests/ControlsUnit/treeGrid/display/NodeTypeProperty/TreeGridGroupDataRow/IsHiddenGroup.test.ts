@@ -2,8 +2,8 @@ import {assert} from 'chai';
 import {TGroupNodeVisibility, TreeGridCollection} from 'Controls/treeGrid';
 import {RecordSet} from 'Types/collection';
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
-import * as sinon from "sinon";
-import {Model} from "Types/entity";
+import * as sinon from 'sinon';
+import {Model} from 'Types/entity';
 
 describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/IsHiddenGroup', () => {
     let recordSet: RecordSet;

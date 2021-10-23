@@ -15,7 +15,7 @@ export const DATA = [{
     isDocument: true,
     width: 300,
     isShadow: true
-},{
+}, {
     id: 1,
     parent: null,
     type: null,

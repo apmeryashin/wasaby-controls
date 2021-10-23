@@ -82,7 +82,7 @@ class Controller extends BaseController {
             const newHeight = item.heightForRestoreAfterResize;
             item.position.height = newHeight;
             container.style.height = newHeight + 'px';
-            let maxHeight = item.position.maxHeight;
+            const maxHeight = item.position.maxHeight;
             if (maxHeight < newHeight) {
                 item.position.maxHeight = newHeight;
                 container.style.maxHeight = newHeight + 'px';

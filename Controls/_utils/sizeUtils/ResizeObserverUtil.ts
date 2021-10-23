@@ -1,7 +1,6 @@
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {constants} from 'Env/Env';
 
-
 export enum RESIZE_OBSERVER_BOX {
     contentBox = 'content-box',
     borderBox = 'border-box',

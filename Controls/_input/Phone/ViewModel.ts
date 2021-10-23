@@ -11,14 +11,14 @@ import {FormatBuilder, Formatter, phoneMask, REPLACER, FORMAT_MASK_CHARS} from '
 var _private = {
     NOT_PHONE_NUMBER_SYMBOLS_REGEXP: /[^0-9+]/g,
 
-    updateFormat: function (self, value) {
+    updateFormat: function(self, value) {
         var mask = phoneMask(value);
 
         self._format = FormatBuilder.getFormat(mask, FORMAT_MASK_CHARS, REPLACER);
         self._nextVersion();
     },
 
-    prepareData: function (result) {
+    prepareData: function(result) {
         var position = result.position;
 
         return {
@@ -33,13 +33,13 @@ var _private = {
 var ViewModel = BaseViewModel.extend({
     _format: null,
 
-    _convertToValue: function (displayValue) {
+    _convertToValue: function(displayValue) {
         _private.updateFormat(this, displayValue);
 
         return Formatter.clearData(this._format, displayValue).value;
     },
 
-    _convertToDisplayValue: function (value) {
+    _convertToDisplayValue: function(value) {
         const stringValue = value === null ? '' : value;
 
         _private.updateFormat(this, stringValue);
@@ -51,10 +51,10 @@ var ViewModel = BaseViewModel.extend({
         if (data) {
             return data.value;
         }
-        return ''
+        return '';
     },
 
-    handleInput: function (splitValue, inputType) {
+    handleInput: function(splitValue, inputType) {
         // Let the user past phone numbers from buffer in any format. Clear data from unnecessary characters.
         splitValue.insert = splitValue.insert.replace(_private.NOT_PHONE_NUMBER_SYMBOLS_REGEXP, '');
         /**
@@ -86,7 +86,7 @@ var ViewModel = BaseViewModel.extend({
         return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
     },
 
-    isFilled: function () {
+    isFilled: function() {
         var value = this._value === null ? '' : this._value;
         var mask = phoneMask(value);
         var keysRegExp = new RegExp('[' + Object.keys(FORMAT_MASK_CHARS).join('|') + ']', 'g');
@@ -95,7 +95,7 @@ var ViewModel = BaseViewModel.extend({
         return value.length === maskOfKeys.length;
     },
 
-    moveCarriageToEnd: function () {
+    moveCarriageToEnd: function() {
         this.selection = this.displayValue.length;
         this._nextVersion();
         this._shouldBeChanged = true;
@@ -103,4 +103,3 @@ var ViewModel = BaseViewModel.extend({
 });
 
 export = ViewModel;
-

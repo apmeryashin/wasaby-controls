@@ -11,7 +11,7 @@ describe('Controls/viewCommands:PartialReload', () => {
         return new RecordSet({
             rawData,
             keyProperty: 'key'
-        })
+        });
     };
 
     beforeEach(() => {
@@ -54,7 +54,7 @@ describe('Controls/viewCommands:PartialReload', () => {
             return {
                 load: () => Promise.resolve(selectedItems)
             };
-        }
+        };
     });
 
     it('item is changed', async () => {

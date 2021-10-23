@@ -3,7 +3,6 @@ import { assert } from 'chai';
 import { TreeItem, Search as SearchCollection, Tree, IItemsStrategy, itemsStrategy, BreadcrumbsItem, SearchSeparator } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
 
-
 // Данные
 
 /* В виде иерархии

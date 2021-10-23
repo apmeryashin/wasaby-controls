@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import {
-    GridHeaderCell,
+    GridHeaderCell
 } from 'Controls/grid';
 
 describe('Controls/display:HeaderCell', () => {
@@ -17,7 +17,7 @@ describe('Controls/display:HeaderCell', () => {
                     getHeaderConfig: () => [headerColumnConfig],
                     hasMultiSelectColumn: () => false
                 },
-                column: headerColumnConfig,
+                column: headerColumnConfig
             });
             assert.equal('right', cell.getAlign());
             assert.equal('bottom', cell.getVAlign());
@@ -34,7 +34,7 @@ describe('Controls/display:HeaderCell', () => {
                     getHeaderConfig: () => [headerColumnConfig],
                     hasMultiSelectColumn: () => false
                 },
-                column: headerColumnConfig,
+                column: headerColumnConfig
             });
             assert.equal('right', cell.getAlign());
             assert.equal('bottom', cell.getVAlign());
@@ -54,7 +54,7 @@ describe('Controls/display:HeaderCell', () => {
                     getHeaderConfig: () => [headerColumnConfig],
                     hasMultiSelectColumn: () => false
                 },
-                column: headerColumnConfig,
+                column: headerColumnConfig
             });
             assert.equal('right', cell.getAlign());
             assert.equal('center', cell.getVAlign());
@@ -74,7 +74,7 @@ describe('Controls/display:HeaderCell', () => {
                     getHeaderConfig: () => [headerColumnConfig],
                     hasMultiSelectColumn: () => false
                 },
-                column: headerColumnConfig,
+                column: headerColumnConfig
             });
             assert.equal('center', cell.getAlign());
             assert.equal('bottom', cell.getVAlign());

@@ -27,7 +27,7 @@ interface IStickyColumnsParams {
     stickyColumn ?: object;
 }
 
-interface IPrepareLadderParams extends IStickyColumnsParams{
+interface IPrepareLadderParams extends IStickyColumnsParams {
     ladderProperties: string[];
     startIndex: number;
     stopIndex: number;
@@ -197,7 +197,7 @@ export function getStickyColumn(params: IStickyColumnsParams): IStickyColumn {
         }
     }
     if (result && !(result.property instanceof Array)) {
-        result.property = [result.property]
+        result.property = [result.property];
     }
     return result;
 }

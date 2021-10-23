@@ -50,8 +50,8 @@ interface IView extends Control<IViewOptions> {
     );
 
     _getStickyLadderCellsCount: (options: IViewOptions) => number;
-    _hasItemActionsCell(options: IViewOptions): boolean;
     _notify: (eventName: string, args?: unknown[], options?: {bubbling?: boolean}) => void;
+    _hasItemActionsCell(options: IViewOptions): boolean;
     getListModel(): DestroyableMixin & {
         setStickyColumnsCount(stickyColumnsCount: number): void;
     };

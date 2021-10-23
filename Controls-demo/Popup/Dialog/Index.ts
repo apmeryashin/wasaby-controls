@@ -21,7 +21,7 @@ class PopupDialog extends Control<IControlOptions> {
         this._children.dialog.open({
             opener: this._children.button5,
             templateOptions: {
-                footerContentTemplate: 'wml!Controls-demo/Popup/Opener/resources/footer',
+                footerContentTemplate: 'wml!Controls-demo/Popup/Opener/resources/footer'
             },
             modal: true,
             maxHeight: 700,

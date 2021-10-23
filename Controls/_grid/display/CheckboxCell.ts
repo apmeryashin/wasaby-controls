@@ -43,7 +43,7 @@ export default class CheckboxCell<
             wrapperClasses += this._getCheckboxCellPaddingClasses();
         }
 
-        let backgroundColorWrapperClasses = this._getBackgroundColorWrapperClasses(
+        const backgroundColorWrapperClasses = this._getBackgroundColorWrapperClasses(
             backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle
         );
         wrapperClasses += ` ${backgroundColorWrapperClasses}`;

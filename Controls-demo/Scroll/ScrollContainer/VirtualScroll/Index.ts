@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Scroll/ScrollContainer/VirtualScroll/Template');
 import {Memory} from 'Types/source';
 import {generateData} from '../../../list_new/DemoHelpers/DataCatalog';
-import {Countries} from "Controls-demo/gridNew/DemoHelpers/Data/Countries";
+import {Countries} from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 class DemoSource extends Memory {
     pending: Promise<any>;
@@ -48,7 +48,6 @@ export default class SlowVirtualScrollDemo extends Control<IControlOptions> {
             this.count++;
         }
     });
-
 
     protected _beforeMount(): void {
         this._navigation = {

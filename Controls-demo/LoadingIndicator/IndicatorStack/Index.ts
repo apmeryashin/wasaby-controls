@@ -7,6 +7,7 @@ class IndicatorStack extends Control<IControlOptions> {
 
     private _firstId = null;
     private _secondId = null;
+    private _overlayId = null;
     protected _firstOpen(): void {
         const cfg = {
             id: this._firstId,
@@ -32,10 +33,9 @@ class IndicatorStack extends Control<IControlOptions> {
         };
         this._secondId = this._notify('showIndicator', [cfg], { bubbling: true });
     }
-    private _overlayId = null;
     protected _overlay(): void {
         const delay = 3000;
-        let promise = new Promise((resolve) => {
+        const promise = new Promise((resolve) => {
             setTimeout(() => {
                 resolve();
             }, delay);
@@ -51,11 +51,11 @@ class IndicatorStack extends Control<IControlOptions> {
 
     }
     private _interval(id, delay): void {
-        let self = this;
+        const self = this;
         setTimeout(() => {
             if (delay > 1000) {
                 delay -= 1000;
-                let cfg = {
+                const cfg = {
                     id: id,
                     overlay: 'dark',
                     message: 'The indicator will close after ' + delay / 1000,
@@ -63,8 +63,7 @@ class IndicatorStack extends Control<IControlOptions> {
                 };
                 self._overlayId = self._notify('showIndicator', [cfg], { bubbling: true });
                 self._interval(self._overlayId, delay);
-            }
-            else {
+            } else {
                 self._notify('hideIndicator', [this._overlayId], {bubbling: true});
             }
         }, 1000);

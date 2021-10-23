@@ -10,15 +10,15 @@ const SCROLL_CONTAINERS_SELECTOR = '.controls-Scroll, .controls-Scroll-Container
 enum SCROLL_POSITION {
    top = 'top',
    bottom = 'bottom',
-   center = 'center',
+   center = 'center'
 }
 
 function getScrollableParents(element: HTMLElement, stickyHeaderElement: Element): HTMLElement[] {
-   let scrollableParents: HTMLElement[] = [];
+   const scrollableParents: HTMLElement[] = [];
    let currentElement = element.parentElement;
 
    while (currentElement) {
-      let currentStyle = window.getComputedStyle(currentElement);
+      const currentStyle = window.getComputedStyle(currentElement);
 
       if ((currentStyle.overflowY === 'auto'
           || currentStyle.overflowY === 'scroll'
@@ -180,7 +180,7 @@ export function scrollToElement(element: HTMLElement, toBottomOrPosition?: Boole
    // Если будут подобные ошибки, то можно будет попробовать сделать по умолчанию waitInitialization = true.
    // Эта логика правильнее, но может сломать существующие сценарии.
    if (waitInitialization) {
-      const promises: Promise<void>[] = [];
+      const promises: Array<Promise<void>> = [];
       for (const parent of scrollableParent) {
          const scrollContainer = getScrollContainerByElement(parent);
          // В начале дождемся полного маутинга скролл контейнера, чтобы рассчитался скроллСтейт и заголовки были

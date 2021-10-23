@@ -6,7 +6,7 @@ export const Readable = [
 
 export const Editable = [
     {actionName: 'Controls/actions:Remove'},
-    {actionName: 'Controls/actions:Move'},
+    {actionName: 'Controls/actions:Move'}
 ];
 
 export const Full = [

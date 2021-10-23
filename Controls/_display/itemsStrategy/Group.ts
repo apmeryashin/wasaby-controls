@@ -9,7 +9,7 @@ import {
 } from 'Types/entity';
 import {mixin} from 'Types/util';
 import {CrudEntityKey} from 'Types/source';
-import {Logger} from "UI/Utils";
+import {Logger} from 'UI/Utils';
 /**
  * Набор констант, используемых при работе с {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировкой элементов}.
  * @class Controls/list:groupConstants
@@ -80,31 +80,6 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
-    /**
-     * @typedef {Object} Options
-     * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
-     * @property {Function(Types/_collection/Item, Number, *)} handler Метод, возвращающий группу элемента
-     */
-
-    /**
-     * Опции конструктора
-     */
-    protected _options: IOptions<S, T>;
-
-    /**
-     * Группы
-     */
-    protected _groups: Array<GroupItem<IGroup>> = [];
-
-    /**
-     * Индекс в в стратегии -> оригинальный индекс
-     */
-    protected _itemsOrder: number[];
-
-    constructor(options: IOptions<S, T>) {
-        super();
-        this._options = options;
-    }
 
     /**
      * Sets the function which returns the group id for every element
@@ -127,10 +102,6 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         return this.items.filter((item) => item['[Controls/_display/GroupItem]']) as Array<GroupItem<IGroup>>;
     }
 
-    // region IItemsStrategy
-
-    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
-
     get options(): IItemsStrategyOptions<S, T> {
         return this.source.options;
     }
@@ -148,6 +119,35 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         const items = this._getItems();
 
         return itemsOrder.map((index) => items[index]);
+    }
+    /**
+     * @typedef {Object} Options
+     * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+     * @property {Function(Types/_collection/Item, Number, *)} handler Метод, возвращающий группу элемента
+     */
+
+    /**
+     * Опции конструктора
+     */
+    protected _options: IOptions<S, T>;
+
+    /**
+     * Группы
+     */
+    protected _groups: Array<GroupItem<IGroup>> = [];
+
+    /**
+     * Индекс в в стратегии -> оригинальный индекс
+     */
+    protected _itemsOrder: number[];
+
+    // region IItemsStrategy
+
+    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
+
+    constructor(options: IOptions<S, T>) {
+        super();
+        this._options = options;
     }
 
     at(index: number): T {

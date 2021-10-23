@@ -165,7 +165,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const emptySelectionObject: ISelectionObject = {
                 selected: [],
                 excluded: []
-            }
+            };
             return controller.move(emptySelectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: DataSet) => {})
                 .catch(() => {

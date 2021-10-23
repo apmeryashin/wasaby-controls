@@ -40,4 +40,3 @@ export default class TreeChildren<S, T = TreeItem<S>> extends List<T> {
 
 TreeChildren.prototype['[Controls/_display/TreeChildren]'] = true;
 TreeChildren.prototype._$owner = null;
-

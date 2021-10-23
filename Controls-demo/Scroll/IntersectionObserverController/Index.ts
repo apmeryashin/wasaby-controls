@@ -4,7 +4,7 @@ import controlTemplate = require('wml!Controls-demo/Scroll/IntersectionObserverC
 export default class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
     private _logs: string = '';
-    private _intersectHandler = (e, entries) =>{
+    private _intersectHandler = (e, entries) => {
         for (let i = 0; i < entries.length; i++) {
             this._logs += ' Обновился контент номер' + entries[i].data;
         }

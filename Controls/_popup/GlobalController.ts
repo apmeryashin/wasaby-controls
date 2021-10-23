@@ -21,7 +21,7 @@ class GlobalController {
     private _getManagerWrapperController() {
         // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
         // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
-        let ManagerWrapperControllerMod = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+        const ManagerWrapperControllerMod = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
         return requirejs.defined(ManagerWrapperControllerMod) ? requirejs(ManagerWrapperControllerMod).default : null;
     }
 
@@ -41,8 +41,8 @@ class GlobalController {
 
     closeInfoBoxHandler(event, withDelay?: boolean) {
         // TODO: fixed by https://online.sbis.ru/doc/d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-        let activeInf = this._activeInfobox && this._activeInfobox.get ? this._activeInfobox.get(0) : this._activeInfobox;
-        let eventTarget = event.target && event.target.get ? event.target.get(0) : event.target;
+        const activeInf = this._activeInfobox && this._activeInfobox.get ? this._activeInfobox.get(0) : this._activeInfobox;
+        const eventTarget = event.target && event.target.get ? event.target.get(0) : event.target;
         if (activeInf === eventTarget) {
             this._activeInfobox = null;
             this.closeInfoBox(withDelay);
@@ -144,7 +144,7 @@ class GlobalController {
     }
 
     registerGlobalPopup() {
-        let ManagerWrapperController = this._getManagerWrapperController();
+        const ManagerWrapperController = this._getManagerWrapperController();
         // COMPATIBLE: В слое совместимости для каждого окна с vdom шаблоном создается Global.js. Это нужно для работы
         // событий по открытию глобальный окон (openInfobox, etc). Но глобальные опенеры должны быть одни для всех из
         // созданных Global.js. Код ниже делает создание глобальных опенеров единоразовым, при создании второго и
@@ -156,7 +156,7 @@ class GlobalController {
     }
 
     registerGlobalPopupEmpty() {
-        let ManagerWrapperController = this._getManagerWrapperController();
+        const ManagerWrapperController = this._getManagerWrapperController();
         if (ManagerWrapperController && ManagerWrapperController.getGlobalPopup() === this) {
             ManagerWrapperController.registerGlobalPopup(null);
         }

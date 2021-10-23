@@ -104,9 +104,9 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
                     enumerator._$position === 15) {
                     return {
                         isSticked: () => true
-                    }
+                    };
                 }
-            }
+            };
             collection.getEnumerator = () => enumerator;
 
             const iteratedIndices = [];
@@ -140,7 +140,6 @@ describe('Controls/_display/controllers/VirtualScroll', () => {
             assert.deepEqual(iteratedIndices, [1, 5, 6, 7, 8, 9]);
         });
     });
-
 
     describe('getStartIndex()', () => {
         it('returns start index', () => {

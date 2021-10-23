@@ -189,7 +189,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     private _displayFilter(
-        itemContents: Model | string,
+        itemContents: Model | string
     ): boolean {
         if (itemContents instanceof Model) {
             const group = itemContents.get(PROPERTY_GROUP_FIELD) || itemContents.get(this._options.groupProperty);

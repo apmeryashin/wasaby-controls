@@ -3,9 +3,9 @@ import * as coreMerge from 'Core/core-merge';
 import * as coreClone from 'Core/core-clone';
 import RangeSelectrionControllerTmpl = require('wml!Controls/_dateRange/Controllers/RangeSelectionController');
 import IRangeSelectable from './../interfaces/IRangeSelectable';
-import {constants} from "Env/Env";
-import keyboardPeriodController from "../Utils/keyboardPeriodController";
-import {date as formatDate} from "Types/formatter";
+import {constants} from 'Env/Env';
+import keyboardPeriodController from '../Utils/keyboardPeriodController';
+import {date as formatDate} from 'Types/formatter';
 
 /**
  * Контроллер, реализующий выделение элементов от одного до другого.
@@ -256,7 +256,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
    }
 
    protected _processSingleSelection(item): void {
-      let range = this._getDisplayedRangeEdges(item);
+      const range = this._getDisplayedRangeEdges(item);
       this._selectionBaseValue = null;
       this._selectionHoveredValue = null;
       this._startValue = this._displayedStartValue = range[0];
@@ -323,7 +323,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @protected
     */
    private _startRangeSelection(item): void {
-      let range = this._getDisplayedRangeEdges(item),
+      const range = this._getDisplayedRangeEdges(item),
           start = range[0],
           end = range[1];
 
@@ -343,7 +343,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @protected
     */
    private _stopRangeSelection(item): void {
-      let range = this._getDisplayedRangeEdges(item);
+      const range = this._getDisplayedRangeEdges(item);
       this._notify('beforeSelectionEnded', [range[0], range[1]]);
       this._selectionProcessing = false;
       this._selectionBaseValue = null;
@@ -392,7 +392,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @private
     */
    private _getDisplayedRangeIfChanged(item): [] {
-      let range = this._getDisplayedRangeEdges(item);
+      const range = this._getDisplayedRangeEdges(item);
       if (this._displayedStartValue !== range[0] || this._displayedEndValue !== range[1]) {
          return range;
       }

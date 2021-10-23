@@ -13,7 +13,7 @@ import entity = require('Types/entity');
  * @private
  */
 var BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
-    constructor: function (cfg) {
+    constructor: function(cfg) {
         this._options = cfg;
     },
 
@@ -30,7 +30,7 @@ var BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.Ver
         throw new Error(`BaseViewModel#resetCachedItemData is not implemented for ${this._moduleName}`);
     },
 
-    destroy: function () {
+    destroy: function() {
         entity.ObservableMixin.prototype.destroy.apply(this, arguments);
         this._options = null;
     }

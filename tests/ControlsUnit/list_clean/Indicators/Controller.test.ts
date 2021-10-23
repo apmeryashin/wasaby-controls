@@ -227,7 +227,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionReset();
@@ -240,7 +240,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             const {collection, controller} = initTest([{id: 1}], {});
             controller.startDisplayPortionedSearch('bottom');
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.onCollectionReset();
@@ -258,7 +258,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -292,7 +292,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionAdd();
@@ -312,7 +312,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -400,7 +400,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -439,13 +439,13 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.destroy(); // уничтожаем все таймеры
         });
 
-        it('should hide indicator if it was displayed',async () => {
+        it('should hide indicator if it was displayed', async () => {
             const {controller} = initTest([{id: 1}], {});
             // запустили таймер
             controller.displayGlobalIndicator(0);
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
 
             // олжно вернуть false, т.к. индикатор отображен
             assert.isTrue(controller.shouldHideGlobalIndicator());
@@ -473,7 +473,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.displayGlobalIndicator(0);
             // ждем пока отобразится индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.hideGlobalIndicator();
@@ -482,7 +482,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.destroy(); // уничтожаем все таймеры
         });
 
-        it('should reset timer of display indicator', async() => {
+        it('should reset timer of display indicator', async () => {
             const {collection, controller} = initTest([{id: 1}], {});
             assert.isNotOk(collection.getGlobalIndicator());
 
@@ -490,7 +490,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.hideGlobalIndicator(); // прерываем таймер
 
             // дожидается 2с и убеждаемся что индикатор так и не показался
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры

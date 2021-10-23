@@ -14,4 +14,4 @@ export default function linkWrap(value, parent) {
         return wrapLinksInString(value, parent);
     }
     return value;
-};
+}

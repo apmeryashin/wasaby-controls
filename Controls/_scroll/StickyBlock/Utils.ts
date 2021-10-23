@@ -26,7 +26,7 @@ export const enum SHADOW_VISIBILITY {
 export const enum SHADOW_VISIBILITY_BY_CONTROLLER {
     visible = 'visible',
     hidden = 'hidden',
-    auto = 'auto',
+    auto = 'auto'
 }
 
 /**

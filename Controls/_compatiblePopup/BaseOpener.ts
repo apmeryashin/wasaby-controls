@@ -84,7 +84,7 @@ const BaseOpener = {
       if (cfg.closeButtonStyle || cfg.closeButtonViewMode) {
          cfg.templateOptions.closeButtonViewMode = cfg.closeButtonStyle || cfg.closeButtonViewMode;
       }
-      if (cfg.hasOwnProperty('closeButtonTransparent')){
+      if (cfg.hasOwnProperty('closeButtonTransparent')) {
          cfg.templateOptions.closeButtonTransparent = cfg.closeButtonTransparent;
       }
       if (cfg.record) { // от RecordFloatArea

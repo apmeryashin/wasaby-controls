@@ -1019,7 +1019,7 @@ export default class Explorer extends Control<IExplorerOptions> {
 
         if (action instanceof Promise) {
             return action.then(() => {
-                this._setViewModeSync(viewMode, cfg)
+                this._setViewModeSync(viewMode, cfg);
             });
         }
 

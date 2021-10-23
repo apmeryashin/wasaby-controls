@@ -75,7 +75,7 @@ describe('Controls/_listRender/View', () => {
                 }
             };
 
-            let newCfg = {
+            const newCfg = {
                 ...defaultCfg,
                 items: defaultCfg.items.clone()
             };
@@ -196,7 +196,7 @@ describe('Controls/_listRender/View', () => {
 
         // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
         it('should prevent default context menu', () => {
-            let stubOpenPopup = stub(Sticky, 'openPopup').callsFake((config: IStickyPopupOptions) => (
+            const stubOpenPopup = stub(Sticky, 'openPopup').callsFake((config: IStickyPopupOptions) => (
                 Promise.resolve('fake')
             ));
             view._onItemContextMenu(null, item, fakeEvent);
@@ -208,7 +208,7 @@ describe('Controls/_listRender/View', () => {
         // Должен устанавливать contextMenuConfig при инициализации itemActionsController
         it('should set contextMenuConfig to itemActionsController', async () => {
             let popupConfig;
-            let stubOpenPopup = stub(Sticky, 'openPopup').callsFake((config: IStickyPopupOptions) => {
+            const stubOpenPopup = stub(Sticky, 'openPopup').callsFake((config: IStickyPopupOptions) => {
                 popupConfig = config;
                 return Promise.resolve(config);
             });
@@ -266,11 +266,9 @@ describe('Controls/_listRender/View', () => {
             });
             view._itemActionsMenuId = 'megaPopup';
             view._itemActionsController = {
-                setActiveItem(item: IItemActionsItem) {
-                },
-                deactivateSwipe(): void {
-                }
-            }
+                setActiveItem(item: IItemActionsItem) {/* FIXME: sinon mock */},
+                deactivateSwipe(): void {/* FIXME: sinon mock */}
+            };
             view._itemActionsMenuCloseHandler(null, null);
             assert.isTrue(isPopupCloseCalled);
         });
@@ -323,8 +321,7 @@ describe('Controls/_listRender/View', () => {
 
         it('_onItemActionMouseDown', () => {
             view._itemActionsController = {
-                prepareActionsMenuConfig(): void {
-                }
+                prepareActionsMenuConfig(): void {/* FIXME: sinon mock */}
             };
 
             view._onItemActionMouseDown({}, view._collection.getItemBySourceKey(1), null, {});

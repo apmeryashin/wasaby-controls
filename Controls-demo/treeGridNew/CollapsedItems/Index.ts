@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/CollapsedItems/CollapsedItems';
 import {CrudEntityKey, HierarchicalMemory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {Gadgets} from "Controls-demo/treeGridNew/DemoHelpers/Data/Gadgets";
+import {Gadgets} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Gadgets';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
@@ -37,7 +37,7 @@ export default class extends Control {
                key: 31, title: 'Leaf 31', Раздел: 3, 'Раздел@': null, Раздел$: null
            }
       ];
-      this._viewSource = new HierarchicalMemory({
+       this._viewSource = new HierarchicalMemory({
          keyProperty: 'key',
          data,
          parentProperty: 'parent'

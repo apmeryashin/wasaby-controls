@@ -74,7 +74,6 @@ const ITEMACTIONS_POSITION_CLASSES = {
     topRight: 'controls-itemActionsV_position_topRight'
 };
 
-
 /**
  * Элемент коллекции
  * @mixes Types/entity:DestroyableMixin
@@ -772,7 +771,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         const stickyVerticalPosition = stickyCallback ? 'top' : 'topBottom';
         return {
             vertical: stickyVerticalPosition
-        }
+        };
     }
 
     protected _isSupportSticky(): boolean {
@@ -1156,7 +1155,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _getLeftSpacingContentClasses(): string {
         if (this._isDefaultRenderMultiSelect()) {
-            return ` controls-ListView__itemContent_withCheckboxes`;
+            return ' controls-ListView__itemContent_withCheckboxes';
         } else {
             return ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}`;
         }

@@ -115,7 +115,7 @@ export = simpleExtend.extend({
             return 'bottom';
          default:
              Logger.error('Controls/_scroll/StickyBlock/Model: Unexpected target');
-            return 'bottom';
+             return 'bottom';
       }
    },
 

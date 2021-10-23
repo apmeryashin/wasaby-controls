@@ -2,7 +2,7 @@ import {
     ICellPadding,
     IColumn,
     IColumnSeparatorSizeConfig,
-    TColumnSeparatorSize,
+    TColumnSeparatorSize
 } from './interface/IColumn';
 
 import {IHeaderCell, THeader} from './interface/IHeaderCell';
@@ -185,7 +185,6 @@ export default class HeaderRow extends Row<null> {
                 (columnIndex > 1 &&
                     this._$columnsConfig[columnIndex - 1].startColumn === column.startColumn &&
                     column.startColumn !== undefined) ? 2 : 1);
-
 
             const prevColumnConfig = this._$columnsConfig[prevColumnIndex];
             const columnSeparatorSize = this._getHeaderColumnSeparatorSize(prevColumnConfig, prevColumnIndex);

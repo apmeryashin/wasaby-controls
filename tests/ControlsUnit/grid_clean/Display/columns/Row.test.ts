@@ -47,7 +47,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
             assert.isArray(gridRow.getColumns());
             assert.equal(gridRow.getColumns().length, 0);
         });
-    })
+    });
 
     describe('.setColumnsConfig()', () => {
         it('[DATA] => [DATA]', () => {

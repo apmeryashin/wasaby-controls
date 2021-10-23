@@ -19,12 +19,12 @@ describe('Controls/filterPanel:ViewModel', () => {
 
         it('editingObject is updated', () => {
             viewModel.resetFilterItem('owners');
-            assert.isNull(viewModel._editingObject['owners']);
+            assert.isNull(viewModel._editingObject.owners);
         });
 
         it('filterItem textValue is updated', () => {
             viewModel.resetFilterItem('owners');
-            assert.equal(viewModel._groupItems['owners'].textValue, '');
+            assert.equal(viewModel._groupItems.owners.textValue, '');
         });
     });
 

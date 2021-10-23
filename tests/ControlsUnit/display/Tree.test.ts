@@ -769,7 +769,7 @@ describe('Controls/_display/Tree', () => {
                 parentProperty: 'pid'
             });
             assert.strictEqual(display.getNext(display.at(0)), undefined);
-        })
+        });
     });
 
     describe('.getPrevious()', () => {
@@ -1193,7 +1193,6 @@ describe('Controls/_display/Tree', () => {
 
                 assert.deepEqual(given, []);
             });
-
 
             it('should fire after call setRootEnumerable with change to true', () => {
                 const given = [];
@@ -2068,7 +2067,7 @@ describe('Controls/_display/Tree', () => {
            });
        });
 
-        describe('recount hasChildrenByRecordSet', () => {
+       describe('recount hasChildrenByRecordSet', () => {
             it('recount by add', () => {
                 const rs = new RecordSet({
                     rawData: [
@@ -2141,7 +2140,7 @@ describe('Controls/_display/Tree', () => {
                     rawData: {id: 21, hasChildren: false, node: null, pid: 2},
                     keyProperty: 'id'
                 }));
-                rs.getRecordById(2).set('node', true)
+                rs.getRecordById(2).set('node', true);
 
                 assert.isTrue(tree.getItemBySourceKey(2).hasChildrenByRecordSet());
             });
@@ -2377,7 +2376,7 @@ describe('Controls/_display/Tree', () => {
            assert.equal(tree.getItems().length, 4);
        });
 
-        it('when toggle node, recount only one node footer', () => {
+       it('when toggle node, recount only one node footer', () => {
             const rs = new RecordSet({
                 rawData: [
                     {id: 1, node: true, pid: 0},
@@ -2435,7 +2434,7 @@ describe('Controls/_display/Tree', () => {
             assert.instanceOf(removedItems[1], TreeGridNodeFooterRow); // добавился футер
         });
 
-        it('not create node footers, if not has more and nodeTemplate', () => {
+       it('not create node footers, if not has more and nodeTemplate', () => {
             const rs = new RecordSet({
                 rawData: [
                     {id: 1, node: true, pid: 0},
@@ -2461,7 +2460,7 @@ describe('Controls/_display/Tree', () => {
             assert.isNotOk(hasNodeFooter);
         });
 
-        it('create footers if set nodeFooterTemplate', () => {
+       it('create footers if set nodeFooterTemplate', () => {
             const rs = new RecordSet({
                 rawData: [
                     {id: 1, node: true, pid: 0},
@@ -2492,7 +2491,7 @@ describe('Controls/_display/Tree', () => {
             assert.isTrue(hasNodeFooter);
         });
 
-        it('rebuild all node footers when pass flag', () => {
+       it('rebuild all node footers when pass flag', () => {
             const rs = new RecordSet({
                 rawData: [
                     {id: 1, node: true, pid: 0},
@@ -2529,7 +2528,7 @@ describe('Controls/_display/Tree', () => {
             assert.equal(tree.getItemBySourceKey(1).getNodeFooter(), nodeFooters[0]);
         });
 
-        it('right link in node footer and node', () => {
+       it('right link in node footer and node', () => {
             const rs = new RecordSet({
                 rawData: [
                     {id: 1, node: true, pid: 0},
@@ -2562,7 +2561,7 @@ describe('Controls/_display/Tree', () => {
             assert.equal(node.getNodeFooter(), nodeFooter);
         });
 
-        it('recount footers when changed hasMoreStorage', () => {
+       it('recount footers when changed hasMoreStorage', () => {
             const rs = new RecordSet({
                 rawData: [
                     {id: 1, node: true, pid: 0},
@@ -2625,7 +2624,7 @@ describe('Controls/_display/Tree', () => {
             });
             const tree = getTree(rs);
             assert.isTrue(tree._displayExpanderPadding);
-        })
+        });
 
         it('expander icon is none', () => {
             const rs = new RecordSet({
@@ -2636,7 +2635,7 @@ describe('Controls/_display/Tree', () => {
             });
             const tree = getTree(rs, {expanderIcon: 'none'});
             assert.isFalse(tree._displayExpanderPadding);
-        })
+        });
 
         it('custom expander position', () => {
             const rs = new RecordSet({
@@ -2647,7 +2646,7 @@ describe('Controls/_display/Tree', () => {
             });
             const tree = getTree(rs, {expanderPosition: 'custom'});
             assert.isFalse(tree._displayExpanderPadding);
-        })
+        });
 
         it('expander visibility is hasChildren', () => {
             const rs = new RecordSet({
@@ -2662,7 +2661,7 @@ describe('Controls/_display/Tree', () => {
             rs.at(0).set('hasChildren', true);
 
             assert.isTrue(tree._displayExpanderPadding);
-        })
+        });
 
         it('update all items', () => {
             const rs = new RecordSet({
@@ -2680,15 +2679,15 @@ describe('Controls/_display/Tree', () => {
             const newItem = new Model({
                 rawData: {id: 3, hasChildren: false, node: true, pid: 0},
                 keyProperty: 'id'
-            })
-            rs.add(newItem)
+            });
+            rs.add(newItem);
 
             assert.isTrue(tree.hasNode());
             assert.equal(tree.getItemBySourceKey(1).getVersion(), 3);
             assert.equal(tree.getItemBySourceKey(2).getVersion(), 4); // 4 - т.к. еще изменился lastItem
             assert.isTrue(tree.getItemBySourceKey(1).shouldDisplayExpanderPadding());
             assert.isTrue(tree.getItemBySourceKey(2).shouldDisplayExpanderPadding());
-        })
+        });
     });
 
     describe('parent', () => {
@@ -2748,7 +2747,7 @@ describe('Controls/_display/Tree', () => {
                 rawData: {id: 3, hasChildren: false, node:  false, pid: null, group: 1},
                 keyProperty: 'id'
             });
-            assert.doesNotThrow(rs.add.bind(rs,newItem));
+            assert.doesNotThrow(rs.add.bind(rs, newItem));
             newItem = rs.getRecordById(3);
             assert.doesNotThrow(newItem.set.bind(newItem, 'pid', 0));
             assert.isOk(tree.getItemBySourceKey(3));

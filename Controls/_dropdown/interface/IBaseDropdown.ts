@@ -7,7 +7,7 @@ import {Record} from 'Types/entity';
 export type TKey = string|number|null;
 
 export interface IDropdownSourceOptions {
-    source?: ICrudPlus
+    source?: ICrudPlus;
 }
 
 export interface IBaseDropdownOptions extends IControlOptions, ISourceOptions,

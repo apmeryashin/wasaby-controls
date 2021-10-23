@@ -18,7 +18,7 @@ export default class extends Control<IControlOptions> {
                 'apple',
                 'aser'
             ];
-        }, 20)
+        }, 20);
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

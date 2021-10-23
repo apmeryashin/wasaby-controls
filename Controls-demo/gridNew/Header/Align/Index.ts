@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/Header/Align/Align';
 import {Memory} from 'Types/source';
 import { IHeaderCell } from 'Controls/grid';
 import { IColumn } from 'Controls/grid';
-import {Countries} from "Controls-demo/gridNew/DemoHelpers/Data/Countries";
+import {Countries} from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

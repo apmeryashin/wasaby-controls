@@ -353,7 +353,6 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
     }
 }
 
-
 /**
  * @name Controls/_history/Service#historyId
  * @cfg {String} Уникальный идентификатор <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервиса истории</a>.

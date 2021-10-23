@@ -10,7 +10,7 @@ import {
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {Stack, CalmTimer} from 'Controls/popup';
 import {NewSourceController} from 'Controls/dataSource';
-import {default as IBackgroundStyle, IBackgroundStyleOptions} from "Controls/_interface/IBackgroundStyle";
+import {default as IBackgroundStyle, IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
 import {RecordSet} from 'Types/collection';
 
 export type TKey = string|number|null;
@@ -166,4 +166,3 @@ export default interface IMenuControl {
  * @see sourceProperty
  * @see additionalProperty
  */
-

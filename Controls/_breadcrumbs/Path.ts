@@ -119,7 +119,6 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         return this._arrowWidth + dotsWidth;
     }
 
-
     private _prepareData(options: IBreadCrumbsOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
         if (this._items && this._items.length > 0) {
             this._width = width;

@@ -10,7 +10,6 @@ class StateBar extends Control<IControlOptions> {
     protected _data100: object[];
     protected _data4020: object[];
     protected _data104050: object[];
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 
     protected _beforeMount(): void {
         this._data0 = [{
@@ -57,6 +56,7 @@ class StateBar extends Control<IControlOptions> {
             style: 'danger'
         }];
     }
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
 export default StateBar;

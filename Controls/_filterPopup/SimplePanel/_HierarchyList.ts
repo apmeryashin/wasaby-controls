@@ -65,7 +65,7 @@ class HierarchyList extends Control<IControlOptions> {
 
     _checkBoxClickHandler(event, index, keys) {
         let eventName = 'checkBoxClick';
-        let setKeys = () => {
+        const setKeys = () => {
             if (keys === undefined) {
                 this._selectedKeys[index] = [];
             } else {
@@ -93,7 +93,7 @@ class HierarchyList extends Control<IControlOptions> {
     }
 
     private _getFolders(items: RecordSet, nodeProperty: string): IHierarchyListFolder {
-        let folders = {};
+        const folders = {};
         factory(items).each((item) => {
             if (item.get(nodeProperty)) {
                 folders[item.getKey()] = item;
@@ -125,7 +125,7 @@ class HierarchyList extends Control<IControlOptions> {
     }
 
     private _getSelectedKeys(selectedKeys, folders: IHierarchyListFolder, emptyKey): IHierarchyListKeys {
-        let clonedKeys = {};
+        const clonedKeys = {};
         factory(folders).each((folder, index: string) => {
             if (selectedKeys[index] === undefined || selectedKeys[index] === emptyKey) {
                 clonedKeys[index] = [];
@@ -137,7 +137,7 @@ class HierarchyList extends Control<IControlOptions> {
     }
 
     private _getNodeItems(folders: IHierarchyListFolder, {items, keyProperty, parentProperty}) {
-        let nodeItems = {};
+        const nodeItems = {};
         factory(folders).each((folder, index) => {
             const records = new RecordSet({
                 keyProperty,

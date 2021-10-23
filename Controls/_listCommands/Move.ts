@@ -20,7 +20,7 @@ export default class Move implements IAction {
     private _options: IMoveActionOptions;
 
     constructor(options: IMoveActionOptions) {
-        this._options = options
+        this._options = options;
     }
 
     execute(meta: Partial<IMoveActionOptions>): Promise<void | DataSet> {

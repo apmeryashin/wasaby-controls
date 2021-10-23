@@ -69,7 +69,7 @@ export default class TreeNodeFooterItem extends TreeItem<null> {
 
     protected _getLeftSpacingContentClasses(): string {
         if (this._isDefaultRenderMultiSelect()) {
-            return ` controls-ListView__itemContent_withCheckboxes`;
+            return ' controls-ListView__itemContent_withCheckboxes';
         } else {
             return ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}`;
         }

@@ -38,7 +38,6 @@ class Root extends Control {
         });
     }
 
-
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Menu/Menu'];
 }
 export default Root;

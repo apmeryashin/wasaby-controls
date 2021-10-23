@@ -4,7 +4,7 @@ import {Memory} from 'Types/source';
 import {getActionsForContacts as getItemActions} from '../../../list_new/DemoHelpers/ItemActionsCatalog';
 import { IColumn } from 'Controls/grid';
 import { IItemAction } from 'Controls/itemActions';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

@@ -50,7 +50,7 @@ describe('Controls/_tabs/Buttons/Marker', () => {
         marker.setSelectedIndex(0);
 
         assert.strictEqual(marker.getWidth(), 10, 'Wrong width if selected item is set');
-        assert.strictEqual(marker.getOffset(), 10,'Wrong offset if selected item is set');
+        assert.strictEqual(marker.getOffset(), 10, 'Wrong offset if selected item is set');
     });
 
     describe('setSelectedIndex', () => {
@@ -58,10 +58,10 @@ describe('Controls/_tabs/Buttons/Marker', () => {
             const marker: Marker = new Marker();
             let changed: boolean;
             marker.updatePosition(elements, baseElement);
-            changed = marker.setSelectedIndex(0)
+            changed = marker.setSelectedIndex(0);
             assert.isTrue(changed);
             const version: number = marker.getVersion();
-            changed = marker.setSelectedIndex(0)
+            changed = marker.setSelectedIndex(0);
             assert.isFalse(changed);
             assert.strictEqual(marker.getVersion(), version);
         });
@@ -77,7 +77,7 @@ describe('Controls/_tabs/Buttons/Marker', () => {
 
             assert.notEqual(marker.getVersion(), version);
             assert.strictEqual(marker.getWidth(), 30, 'Wrong width');
-            assert.strictEqual(marker.getOffset(), 30,'Wrong offset');
+            assert.strictEqual(marker.getOffset(), 30, 'Wrong offset');
         });
 
     });
@@ -89,10 +89,10 @@ describe('Controls/_tabs/Buttons/Marker', () => {
             marker.setSelectedIndex(0);
 
             marker.setAlign(AUTO_ALIGN.right);
-            assert.strictEqual(marker.getOffset(), 0,'Wrong left. align = right');
+            assert.strictEqual(marker.getOffset(), 0, 'Wrong left. align = right');
 
             marker.setAlign(AUTO_ALIGN.auto);
-            assert.strictEqual(marker.getOffset(), 10,'Wrong left. align = auto');
+            assert.strictEqual(marker.getOffset(), 10, 'Wrong left. align = auto');
 
         });
     });

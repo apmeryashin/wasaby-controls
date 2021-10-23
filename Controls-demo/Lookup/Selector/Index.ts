@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import {_companies} from 'Controls-demo/Lookup/DemoHelpers/DataCatalog';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';

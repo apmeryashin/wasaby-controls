@@ -15,7 +15,7 @@ var EMPTY_CAPTIONS = {
 };
 
 export default {
-    getDefaultOptions: function () {
+    getDefaultOptions: function() {
         return {
             viewMode: 'selector',
 
@@ -35,7 +35,7 @@ export default {
              */
             nextArrowVisibility: false,
 
-            prevArrowVisibility: false,
+            prevArrowVisibility: false
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
@@ -51,7 +51,7 @@ export default {
 
     EMPTY_CAPTIONS: EMPTY_CAPTIONS,
 
-    getOptionTypes: function () {
+    getOptionTypes: function() {
         return {
             nextArrowVisibility: descriptor(Boolean),
             prevArrowVisibility: descriptor(Boolean),

@@ -210,7 +210,7 @@ export default class View extends Control<IViewControlOptions> {
        */
       const changedFields = this._editObject.getChanged();
       if (changedFields) {
-         changedFields.forEach((field) =>{
+         changedFields.forEach((field) => {
             this._options.editObject.set(field, this._editObject.get(field));
          });
       }

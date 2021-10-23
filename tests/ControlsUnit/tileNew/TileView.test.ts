@@ -101,12 +101,12 @@ describe('Controls/_tile/TileView', () => {
             tileView.saveOptions({...cfg, needShowEmptyTemplate: false});
             CssClassesAssert.include(tileView._getViewClasses(), 'controls-TileView__itemPaddingContainer');
         });
-    })
+    });
 
     describe('_getItemsPaddingContainerClasses', () => {
         it('_getItemsPaddingContainerClasses', () => {
             tileView.saveOptions({});
-            let classes = tileView._getItemsPaddingContainerClasses();
+            const classes = tileView._getItemsPaddingContainerClasses();
             CssClassesAssert.include(classes, 'controls-TileView__itemPaddingContainer');
             CssClassesAssert.include(classes, 'controls-TileView__itemsPaddingContainer_spacingLeft_default');
             CssClassesAssert.include(classes, 'controls-TileView__itemsPaddingContainer_spacingRight_default');

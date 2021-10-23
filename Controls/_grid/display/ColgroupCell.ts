@@ -25,7 +25,7 @@ export default class ColgroupCell<T extends Model = Model>
         let bodyClasses = 'controls-Grid__colgroup-column';
 
         if (this.isMultiSelectColumn()) {
-            bodyClasses += ` controls-Grid__colgroup-columnMultiSelect`;
+            bodyClasses += ' controls-Grid__colgroup-columnMultiSelect';
         }
         return bodyClasses;
     }

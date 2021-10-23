@@ -1,6 +1,5 @@
 export type BorderStyle = 'success' | 'secondary' | 'warning';
 
-
 export interface IBorderStyleOptions {
     borderStyle: BorderStyle;
 }

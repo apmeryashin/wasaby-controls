@@ -1,4 +1,4 @@
-import {date as formatDate} from "Types/formatter";
+import {date as formatDate} from 'Types/formatter';
 
 export function getFormattedCaption(date: Date): string {
     const currentYear = new Date().getFullYear();

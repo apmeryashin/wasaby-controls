@@ -6,8 +6,8 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
  * @author Санников К.А.
  */
 export default interface IApplication extends IHTML {
-    readonly '[Controls/_interface/IApplication]': boolean
-};
+    readonly '[Controls/_interface/IApplication]': boolean;
+}
 
 /**
  * @name Controls/_interface/IApplication#scripts
@@ -100,15 +100,15 @@ export default interface IApplication extends IHTML {
  */
 
 export interface IAttributes {
-    [index: string]: string | undefined
+    [index: string]: string | undefined;
 }
 
-export type HeadJson = [string, Record<string, string>][];
+export type HeadJson = Array<[string, Record<string, string>]>;
 
 export interface IApplicationOptions extends IHTMLOptions {
-    scripts?: Array<IAttributes>;
-    links?: Array<IAttributes>;
-    meta?: Array<IAttributes>;
+    scripts?: IAttributes[];
+    links?: IAttributes[];
+    meta?: IAttributes[];
     headJson?: HeadJson;
     title?: string;
     zoom?: TZoomSize;

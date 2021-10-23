@@ -62,7 +62,7 @@ export interface IMenuOptions {
     template: string;
 }
 
- export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
+export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions, IFilterOptions, IHeightOptions {
     /**

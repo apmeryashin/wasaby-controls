@@ -96,7 +96,7 @@ function getFirstChild(jsonNode) {
    return result;
 }
 
-function createLinkNode(href: string, text: string = href, isEmail: boolean = false): Array<any> {
+function createLinkNode(href: string, text: string = href, isEmail: boolean = false): any[] {
     const tagName = 'a';
     const attributes = {
         href: isEmail ? 'mailto:' + href : href
@@ -279,8 +279,8 @@ export function needDecorate(jsonNode, parentNode) {
    }
 
     // такая проверка, потому что первым ребёнком может оказаться строка, и проверка на === может ошибиться.
-    const isFirstChild = !needDecorateParentNodeSet.has(parentNode);
-    needDecorateParentNodeSet.add(parentNode);
+   const isFirstChild = !needDecorateParentNodeSet.has(parentNode);
+   needDecorateParentNodeSet.add(parentNode);
 
    if (isFirstChild) {
       // Check all links in parentNode from the end to current, set attribute '__needDecorate' for all of them.
@@ -293,11 +293,11 @@ export function needDecorate(jsonNode, parentNode) {
       for (let i = parentNode.length - 1; i >= firstChildIndex; --i) {
          const nodeToCheck = parentNode[i];
          if (isTextNode(nodeToCheck)) {
-            let stringReplacer: any[] | string = wrapLinksInString(nodeToCheck, parentNode);
+            const stringReplacer: any[] | string = wrapLinksInString(nodeToCheck, parentNode);
             localStringReplacersArray.unshift(stringReplacer);
             if (Array.isArray(stringReplacer) && canBeDecorated) {
                for (let j = stringReplacer.length - 1; j > 0; --j) {
-                  let subNode = stringReplacer[j];
+                  const subNode = stringReplacer[j];
                   if (isTextNode(subNode)) {
                      canBeDecorated = (canBeDecorated && onlySpacesRegExp.test(subNode)) ||
                         startsWIthNewlineRegExp.test(subNode);
@@ -408,7 +408,7 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
 
 export function parseLinks(stringNode: string, needToCreateLinkNode: boolean): [any[] | string, boolean] {
    let linkParseExec = linkParseRegExp.exec(stringNode);
-   let result: any[]|string = [];
+   const result: any[]|string = [];
    let hasAnyLink: boolean = false;
    result.push([]);
 
@@ -473,7 +473,7 @@ export function getLinks(string: string): string[] {
    let linkParseResult = linkParseRegExp.exec(string);
 
    while (linkParseResult !== null) {
-      let [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
+      const [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
       let linkToPush: string[] | string;
 
       if (linkToCheck) {
@@ -503,7 +503,7 @@ export function getLinks(string: string): string[] {
  * @return {boolean, string | string[]}
  */
 export function normalizeLink(linkToCheck: string, linkDomain: string, ending: string,
-   linkPrefix: string, match: string, needToCreateLinkNode: boolean):
+                              linkPrefix: string, match: string, needToCreateLinkNode: boolean):
    [boolean, string | string[]] {
    const isEndingPartOfDomain = characterRegExp.test(ending) && linkToCheck === linkPrefix;
    if (isEndingPartOfDomain) {

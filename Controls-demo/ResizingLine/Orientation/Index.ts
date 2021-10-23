@@ -67,9 +67,9 @@ export default class ResizingLine extends Control<IControlOptions> {
     private static MIN_SIZE: number = 50;
     private static MAX_SIZE: number = 80;
 
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/ResizingLine/Orientation/Style'];
+
     private static _limit(value: number): number {
         return  Math.max(ResizingLine.MIN_SIZE, Math.min(value, ResizingLine.MAX_SIZE));
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/ResizingLine/Orientation/Style'];
 }

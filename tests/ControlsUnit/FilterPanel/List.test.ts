@@ -80,7 +80,7 @@ describe('Controls/filterPanel:ListEditor', () => {
             options.filter = listEditor._options.filter;
             options.multiSelect = true;
             listEditor._beforeUpdate(options);
-            assert.notEqual(listEditor._filter['id'], newPropertyValue);
+            assert.notEqual(listEditor._filter.id, newPropertyValue);
         });
 
         it('_beforeUpdate with same value in propertyValue', () => {
@@ -91,7 +91,7 @@ describe('Controls/filterPanel:ListEditor', () => {
 
             listEditor._selectedKeys = [2];
             listEditor._beforeUpdate(options);
-            assert.notEqual(listEditor._filter['id'], newPropertyValue);
+            assert.notEqual(listEditor._filter.id, newPropertyValue);
         });
     });
 

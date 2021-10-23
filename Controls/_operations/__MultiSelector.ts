@@ -303,7 +303,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    }
 
    protected _onMenuItemActivate(event: SyntheticEvent<'menuItemActivate'>, item: Model): void {
-      let itemId: string = item.get('id');
+      const itemId: string = item.get('id');
 
       this._notify('selectedTypeChanged', [itemId], {
          bubbling: true

@@ -35,7 +35,6 @@ const MIN_COUNT_OF_LETTER = 3;
  * @demo Controls-demo/BreadCrumbs/FontSize/Index
  */
 
-
 class BreadCrumbsView extends Control<IControlOptions> {
     protected _template: TemplateFunction =  template;
     protected _itemsTemplate: TemplateFunction = itemsTemplate;
@@ -43,6 +42,8 @@ class BreadCrumbsView extends Control<IControlOptions> {
     protected _popupIsOpen: boolean = false;
     private _menuOpener: StickyOpener;
     protected _items: Record[];
+
+    protected _applyHighlighter = applyHighlighter;
 
     protected _beforeMount(options): void {
         this._items = options.visibleItems;
@@ -111,9 +112,9 @@ class BreadCrumbsView extends Control<IControlOptions> {
                     const newItem = {};
                     item.each((field) => {
                         newItem[field] = item.get(field);
-                        newItem['indentation'] = index;
-                        newItem['displayProperty'] = this._options.displayProperty;
-                        newItem['readOnly'] = this._options.readOnly;
+                        newItem.indentation = index;
+                        newItem.displayProperty = this._options.displayProperty;
+                        newItem.readOnly = this._options.readOnly;
                     });
                     return newItem;
                 }),
@@ -158,8 +159,6 @@ class BreadCrumbsView extends Control<IControlOptions> {
             }
     }
 
-    protected _applyHighlighter = applyHighlighter;
-
     private _onHoveredItemChanged(event: SyntheticEvent<Event>, item): void {
         this._notify('hoveredItemChanged', [item]);
     }
@@ -170,6 +169,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
             this._menuOpener.close();
         }
     }
+    static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
 
     static getDefaultOptions() {
         return {
@@ -179,7 +179,6 @@ class BreadCrumbsView extends Control<IControlOptions> {
             fontSize: 'xs'
         };
     }
-    static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
 }
 
 Object.defineProperty(BreadCrumbsView, 'defaultProps', {

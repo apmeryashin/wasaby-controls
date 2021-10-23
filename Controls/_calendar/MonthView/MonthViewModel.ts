@@ -38,7 +38,7 @@ export default class MonthViewModel extends VersionableMixin {
     }
 
     updateOptions(options) {
-        let state = this._normalizeState(options),
+        const state = this._normalizeState(options),
             changed = this._isStateChanged(state);
         this._state = state;
         if (changed) {
@@ -226,7 +226,7 @@ export default class MonthViewModel extends VersionableMixin {
         state = state || this._state;
         /* Опция _date устаналивается только(!) в демках, для возможности протестировать
          визуальное отображение текущей даты */
-        let obj = {},
+        const obj = {},
             today = this._state._date ?
                 DateUtil.normalizeDate(this._state._date) :
                 DateUtil.normalizeDate(new this._state.dateConstructor()),

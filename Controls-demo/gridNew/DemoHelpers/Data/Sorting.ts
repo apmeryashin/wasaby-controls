@@ -1,5 +1,5 @@
-import {IColumnRes} from "Controls-demo/gridNew/DemoHelpers/DataCatalog";
-import {IHeaderCell} from "Controls/_grid/display/interface/IHeaderCell";
+import {IColumnRes} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
+import {IHeaderCell} from 'Controls/_grid/display/interface/IHeaderCell';
 
 export const Sorting = {
     getColumns: (): IColumnRes[] => [
@@ -61,4 +61,4 @@ export const Sorting = {
             align: 'right'
         }
     ]
-}
+};

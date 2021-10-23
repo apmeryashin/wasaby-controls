@@ -94,7 +94,6 @@ export default class Row<TContents extends Model = Model>
         }
     }
 
-
     setMarked(marked: boolean, silent?: boolean): void {
         const changed = marked !== this.isMarked();
         super.setMarked(marked, silent);

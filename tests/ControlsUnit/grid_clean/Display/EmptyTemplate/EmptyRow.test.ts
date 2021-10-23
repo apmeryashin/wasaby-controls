@@ -1,4 +1,4 @@
-import {assert} from "chai";
+import {assert} from 'chai';
 import {GridCollection, GridEmptyRow} from 'Controls/grid';
 
 describe('Controls/grid_clean/Display/EmptyTemplate/EmptyRow', () => {

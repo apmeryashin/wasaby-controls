@@ -294,7 +294,7 @@ function concat(original: IParsedNumber, options: INumberDisplay & INumberLength
         value.push(decimalSplitter);
     }
 
-    const additionalZeros = options.useAdditionToMaxPrecision ? options.precision - original.fractional.length: 0;
+    const additionalZeros = options.useAdditionToMaxPrecision ? options.precision - original.fractional.length : 0;
 
     return {
         value: join(value, position, additionalZeros),

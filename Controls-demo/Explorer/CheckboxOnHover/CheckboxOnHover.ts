@@ -10,12 +10,12 @@ class Demo extends Control {
     protected _template = template;
     _viewSource: HierarchicalMemory;
     _viewSourceDynamic: HierarchicalMemory;
-    _selectedKeys: Array<number> = [];
-    _selectedKeys1: Array<number> = [];
-    _selectedKeys2: Array<number> = [];
-    _selectedKeys3: Array<number> = [];
-    _selectedKeys4: Array<number> = [];
-    _excludedKeys: Array<number> = [];
+    _selectedKeys: number[] = [];
+    _selectedKeys1: number[] = [];
+    _selectedKeys2: number[] = [];
+    _selectedKeys3: number[] = [];
+    _selectedKeys4: number[] = [];
+    _excludedKeys: number[] = [];
     _itemActions: Array<{
         id: number;
         icon: string;
@@ -242,7 +242,6 @@ class Demo extends Control {
         }
         return group;
     }
-
 
     static _styles: string[] = ['Controls-demo/Explorer/Demo/Demo'];
 }

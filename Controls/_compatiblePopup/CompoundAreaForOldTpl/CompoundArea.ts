@@ -273,7 +273,6 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-
    // AreaAbstract.js::getReadyDeferred
    // getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
    // не завершится деферред
@@ -444,7 +443,7 @@ var CompoundArea = CompoundContainer.extend([
          this._beforeClosePendingDeferred = null;
       }
 
-      if(this.__parentFromCfg && this.__parentFromCfg.unregisterChildControl){
+      if (this.__parentFromCfg && this.__parentFromCfg.unregisterChildControl) {
          this.__parentFromCfg.unregisterChildControl(this);
       }
       this.__parentFromCfg = null;
@@ -731,23 +730,31 @@ var CompoundArea = CompoundContainer.extend([
       if (commandName === 'close' || commandName === 'hide') {
          this.close(arg);
          return true; // команда close не должна всплывать выше окна
-      } if (commandName === 'ok') {
+      }
+      if (commandName === 'ok') {
          this.close(true);
          return true; // команда ok не должна всплывать выше окна
-      } if (commandName === 'cancel') {
+      }
+      if (commandName === 'cancel') {
          this.close(false);
          return true; // команда cancel не должна всплывать выше окна
-      } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
+      }
+      if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
          return this.save(arg);
-      } if (commandName === 'rebuildTitleBar') {
+      }
+      if (commandName === 'rebuildTitleBar') {
          return this._rebuildTitleBar(arg);
-      } if (this._options._mode === 'recordFloatArea' && commandName === 'delete') {
+      }
+      if (this._options._mode === 'recordFloatArea' && commandName === 'delete') {
          return this.delRecord(arg);
-      } if (commandName === 'print') {
+      }
+      if (commandName === 'print') {
          return this.print(arg);
-      } if (commandName === 'printReport') {
+      }
+      if (commandName === 'printReport') {
          return this.printReport(arg);
-      } if (commandName === 'resize' || commandName === 'resizeYourself') {
+      }
+      if (commandName === 'resize' || commandName === 'resizeYourself') {
          this._notifyVDOM('controlResize', null, { bubbling: true });
       } else if (commandName === 'registerPendingOperation' || commandName === 'unregisterPendingOperation') {
          // перехватываем обработку операций только если CompoundControl не умеет обрабатывать их сам
@@ -966,7 +973,7 @@ var CompoundArea = CompoundContainer.extend([
                self._options.newRecord = record.getKey() === null;
             }
             self._record = record;
-            self._notify('onChangeRecord', record, oldRecord);// Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+            self._notify('onChangeRecord', record, oldRecord); // Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
          },
          result;
       result = this._notify('onBeforeChangeRecord', record, oldRecord);
@@ -1026,7 +1033,6 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-
    setReadOnly: function(isReadOnly) {
       if (!this.isDestroyed()) {
          this._isReadOnly = isReadOnly;
@@ -1042,7 +1048,6 @@ var CompoundArea = CompoundContainer.extend([
    isReadOnly: function() {
       return this._isReadOnly;
    },
-
 
    setSaveDiffOnly: function() {
       DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
@@ -1368,7 +1373,7 @@ var CompoundArea = CompoundContainer.extend([
          Logger.error('Lib/Mixins/PendingOperationParentMixin: ' + message, this);
       }
 
-      this._childPendingOperations = [];// cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
+      this._childPendingOperations = []; // cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
       if (this._allChildrenPendingOperation) {
          this._allChildrenPendingOperation = null;
          this._unregisterPendingOperation(operation);
@@ -1644,20 +1649,20 @@ var CompoundArea = CompoundContainer.extend([
    _toggleLinkedViewEvents: function(sub) {
       this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
    },
-   setLinkedView: function (linkedView) {
+   setLinkedView: function(linkedView) {
       var multiSelectChanged;
       const multiselect = this._options.multiSelect || false; // Если опция не задана по умолчанию false
       /* Отпишемся у старой view от событий */
-      if(this._linkedView && this._linkedView !== linkedView) {
+      if (this._linkedView && this._linkedView !== linkedView) {
          this._toggleLinkedViewEvents(false);
       }
       this._linkedView = linkedView;
 
-      if (linkedView){
+      if (linkedView) {
          multiSelectChanged = this._linkedView.getMultiselect() !== multiselect;
          this._toggleLinkedViewEvents(true);
 
-         if(multiSelectChanged) {
+         if (multiSelectChanged) {
             this._linkedView.setMultiselect(multiselect);
          }
 
@@ -1693,10 +1698,10 @@ var CompoundArea = CompoundContainer.extend([
       this._changeSelectionHandler = this._changeSelectionHandler.bind(this);
       var childControls = this.getChildControls();
 
-      for(var i = 0, l = childControls.length; i < l; i++){
+      for (var i = 0, l = childControls.length; i < l; i++) {
          var childControl = childControls[i];
 
-         if(cInstance.instanceOfModule(childControl, 'SBIS3.CONTROLS/ListView')){
+         if (cInstance.instanceOfModule(childControl, 'SBIS3.CONTROLS/ListView')) {
             this.setLinkedView(childControl);
             break;
          }

@@ -31,29 +31,6 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
-    /**
-     * @typedef {Object} Options
-     * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
-     * @property {Array.<Function>} handlers Пользовательские методы сортировки
-     */
-
-    /**
-     * Опции конструктора
-     */
-    protected _options: IOptions<S, T>;
-
-    /**
-     * Индекс в в стратегии -> оригинальный индекс
-     */
-    protected _itemsOrder: number[];
-
-    constructor(options: IOptions<S, T>) {
-        super();
-        if (!options || !(options.handlers instanceof Array)) {
-            throw new TypeError('Option "handlers" should be an instance of Array');
-        }
-        this._options = {...options};
-    }
 
     // region Public members
 
@@ -74,12 +51,6 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         this._options.handlers = value;
     }
 
-    // endregion
-
-    // region IItemsStrategy
-
-    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
-
     get options(): IItemsStrategyOptions<S, T> {
         return this.source.options;
     }
@@ -93,6 +64,35 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         const itemsOrder = this._getItemsOrder();
 
         return itemsOrder.map((index) => items[index]);
+    }
+    /**
+     * @typedef {Object} Options
+     * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+     * @property {Array.<Function>} handlers Пользовательские методы сортировки
+     */
+
+    /**
+     * Опции конструктора
+     */
+    protected _options: IOptions<S, T>;
+
+    /**
+     * Индекс в в стратегии -> оригинальный индекс
+     */
+    protected _itemsOrder: number[];
+
+    // endregion
+
+    // region IItemsStrategy
+
+    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
+
+    constructor(options: IOptions<S, T>) {
+        super();
+        if (!options || !(options.handlers instanceof Array)) {
+            throw new TypeError('Option "handlers" should be an instance of Array');
+        }
+        this._options = {...options};
     }
 
     at(index: number): T {

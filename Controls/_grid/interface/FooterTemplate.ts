@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения подвала {@link Controls/grid:View таблицы}.
- * 
+ *
  * @class Controls/_grid/interface/FooterTemplate
  * @author Авраменко А.С.
  * @see Controls/grid:View#footerTemplate
@@ -29,4 +29,3 @@ export default interface IFooterTemplateOptions {
      */
     contentTemplate?: string;
  }
- 

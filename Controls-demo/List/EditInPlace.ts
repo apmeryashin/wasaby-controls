@@ -71,14 +71,13 @@ const devices = [
       id: 8,
       title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 17'
    }
-]
-
+];
 
 function createDevicesData(keys: number[]) {
    return {
       keyProperty: 'id',
       data: keys.map((key) => devices.find((device) => device.id === key)).map((item, index) => ({...item, id: index + 1}))
-   }
+   };
 }
 
 export default class EditInPlace extends Control {

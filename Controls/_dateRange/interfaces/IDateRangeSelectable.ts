@@ -28,7 +28,7 @@ const minRange = {
 };
 
 export = {
-   getDefaultOptions: function () {
+   getDefaultOptions: function() {
       var options = IRangeSelectable.getDefaultOptions();
 
       /**
@@ -136,7 +136,7 @@ export = {
 
    minRange,
 
-   getOptionTypes: function () {
+   getOptionTypes: function() {
       var optionsTypes = IRangeSelectable.getOptionTypes();
       optionsTypes.selectionType = entity.descriptor(String).oneOf(Object.keys(selectionTypes));
       return optionsTypes;

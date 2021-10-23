@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require("wml!Controls-demo/dateRange/LiteSelector/ChoosePeriod/Template");
+import template = require('wml!Controls-demo/dateRange/LiteSelector/ChoosePeriod/Template');
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;

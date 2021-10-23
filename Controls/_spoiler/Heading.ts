@@ -26,7 +26,6 @@ type TCaptions = string | string[];
 type TView = 'expanded' | 'collapsed';
 type TIcon = 'ExpandLight' | 'CollapseLight';
 
-
 export interface IHeadingOptions extends IControlOptions, IExpandableOptions, IFontSizeOptions, ITooltipOptions,
     IFontWeightOptions, IFontColorStyleOptions {
     /**

@@ -1,4 +1,4 @@
-﻿import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Date as WSDate, DateTime as WSDateTime, Time as WSTime} from 'Types/entity';
@@ -152,7 +152,7 @@ class BaseInput extends Control<IDateBaseOptions> {
     }
 
     protected _onKeyDown(event: SyntheticEvent<KeyboardEvent>): void {
-        let key = event.nativeEvent.keyCode;
+        const key = event.nativeEvent.keyCode;
         if (key === constants.key.insert && !event.nativeEvent.shiftKey && !event.nativeEvent.ctrlKey && !this._options.readOnly) {
             // on Insert button press current date should be inserted in field
             this._model.setCurrentDate();
@@ -166,8 +166,8 @@ class BaseInput extends Control<IDateBaseOptions> {
         if (key === constants.key.plus || key === constants.key.minus) {
             // on +/- buttons press date should be increased or decreased in field by one day if date is not empty
             if (this._model.value) {
-                let delta = key === constants.key.plus ? 1 : -1;
-                let localDate = new this._dateConstructor(this._model.value);
+                const delta = key === constants.key.plus ? 1 : -1;
+                const localDate = new this._dateConstructor(this._model.value);
                 localDate.setDate(this._model.value.getDate() + delta);
                 this._model.value = localDate;
                 this._notify('inputCompleted', [this._model.value, this._model.textValue]);

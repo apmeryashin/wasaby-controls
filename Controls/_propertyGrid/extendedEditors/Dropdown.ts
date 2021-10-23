@@ -4,7 +4,7 @@ import CheckboxGroupTemplate = require('wml!Controls/_propertyGrid/extendedEdito
 import IEditor from 'Controls/_propertyGrid/IEditor';
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 
-interface IDropdownEditorOptions extends IEditorOptions{
+interface IDropdownEditorOptions extends IEditorOptions {
     editorMode: string;
     propertyValue: number[]|string[];
 }

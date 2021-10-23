@@ -31,6 +31,22 @@ export default abstract class Abstract<S, T extends CollectionItem<S> = Collecti
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
+
+    get options(): IOptions<S, T> {
+        return {...this._options};
+    }
+
+    get source(): IItemsStrategy<S, T> {
+        return null;
+    }
+
+    get count(): number {
+        throw new Error('Property must be implemented');
+    }
+
+    get items(): T[] {
+        return this._getItems();
+    }
     /**
      * @typedef {Object} Options
      * @property {Boolean} localize Алиас зависимости или конструктора элементов проекции
@@ -52,29 +68,13 @@ export default abstract class Abstract<S, T extends CollectionItem<S> = Collecti
      */
     protected _options: IOptions<S, T>;
 
-    constructor(options: IOptions<S, T>) {
-        super();
-        this._options = options;
-    }
-
     // region IItemsStrategy
 
     readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
-    get options(): IOptions<S, T> {
-        return {...this._options};
-    }
-
-    get source(): IItemsStrategy<S, T> {
-        return null;
-    }
-
-    get count(): number {
-        throw new Error('Property must be implemented');
-    }
-
-    get items(): T[] {
-        return this._getItems();
+    constructor(options: IOptions<S, T>) {
+        super();
+        this._options = options;
     }
 
     at(index: number): T {

@@ -29,7 +29,7 @@ const generateErrorMessage = () => {
     const message = `Получение размеров текста было вызвано до загрузки данных с размерами. Для корректной работы
         необходимо вызвать метод loadFontWidthConstants`;
     Logger.error(`Utils/getFontWidth: ${message}`);
-}
+};
 
 const getFontWidthWithFonts = (font, value: string, size: number) => {
     let text = value;
@@ -38,7 +38,7 @@ const getFontWidthWithFonts = (font, value: string, size: number) => {
     }
     let textWidth = 0;
     for (let i = 0; i < text.length; i++) {
-        const charWidth = font[size][text[i]] || font[size]['default']; // default усредненное значение символа, которого нет в словаре
+        const charWidth = font[size][text[i]] || font[size].default; // default усредненное значение символа, которого нет в словаре
         textWidth += charWidth;
     }
     return textWidth;

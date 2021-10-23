@@ -25,7 +25,7 @@ describe('Controls/list:View', () => {
                             beginEdit:  () => Promise.resolve(),
                             beginAdd:   () => Promise.resolve(),
                             cancelEdit: () => Promise.resolve(),
-                            commitEdit: () => Promise.resolve(),
+                            commitEdit: () => Promise.resolve()
                         }
                     };
 

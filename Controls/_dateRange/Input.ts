@@ -216,7 +216,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
     }
 
     protected _startFieldInputControlHandler(event: SyntheticEvent, value: unknown,
-                                   displayValue: string, selection: ISelection): void {
+                                             displayValue: string, selection: ISelection): void {
         if (selection.end === displayValue.length) {
             this._children.endValueField.activate({enableScreenKeyboard: true});
         }

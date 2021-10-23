@@ -10,7 +10,7 @@ import {Bus as EventBus} from 'Env/Event';
 
 export default class Global extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    private _globalController: GlobalController = new GlobalController();;
+    private _globalController: GlobalController = new GlobalController();
 
     protected _afterMount(): void {
         this._globalController.registerGlobalPopup();

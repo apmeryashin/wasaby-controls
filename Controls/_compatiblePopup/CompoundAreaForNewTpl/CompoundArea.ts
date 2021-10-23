@@ -359,7 +359,7 @@ const moduleClass = CompoundControl.extend({
          if (emitter && emitter.getInstanceId()) {
             const index = this._getListenerIndex(emitter);
             if (typeof index === 'number') {
-               this._listeners.splice(index, 1);``
+               this._listeners.splice(index, 1); '';
             }
          }
          ManagerWrapperController.unregisterListener(event, eventName, emitter);

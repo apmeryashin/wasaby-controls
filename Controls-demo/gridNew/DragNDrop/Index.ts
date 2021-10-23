@@ -7,8 +7,8 @@ import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import { TItemsReadyCallback } from 'Controls-demo/types';
-import {DnD} from "Controls-demo/gridNew/DemoHelpers/Data/DnD";
-import {ItemsEntity} from "Controls/dragnDrop";
+import {DnD} from 'Controls-demo/gridNew/DemoHelpers/Data/DnD';
+import {ItemsEntity} from 'Controls/dragnDrop';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

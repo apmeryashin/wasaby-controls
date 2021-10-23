@@ -5,7 +5,7 @@ import * as ParallelDeferred from 'Core/ParallelDeferred';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
-import {ValidationStatus} from "Controls/interface";
+import {ValidationStatus} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/validate';
 import {SyntheticEvent} from 'UI/Vdom';

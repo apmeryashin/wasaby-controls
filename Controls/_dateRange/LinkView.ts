@@ -1,9 +1,9 @@
 import {LinkView as LinkViewBase, ILinkView as ILinkViewBase} from 'Controls/date';
-import dateControlsUtils from "Controls/_dateRange/Utils";
+import dateControlsUtils from 'Controls/_dateRange/Utils';
 import {IDateRangeOptions} from 'Controls/_dateRange/interfaces/IDateRange';
 import rk = require('i18n!Controls');
-import DateRangeModel from "Controls/_dateRange/DateRangeModel";
-import {EventUtils} from "UI/Events";
+import DateRangeModel from 'Controls/_dateRange/DateRangeModel';
+import {EventUtils} from 'UI/Events';
 
 interface ILinkView extends IDateRangeOptions, ILinkViewBase {
 }

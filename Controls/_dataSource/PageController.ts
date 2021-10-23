@@ -27,7 +27,7 @@ interface IPrefetchData {
             prefetchData: unknown;
             prefetchPromise: unknown;
         }
-    }
+    };
 }
 
 /**

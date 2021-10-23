@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/ItemTemplate/NoClickable/NoClickable';
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {Countries} from "Controls-demo/gridNew/DemoHelpers/Data/Countries";
+import {Countries} from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 const MAXINDEX = 5;
 

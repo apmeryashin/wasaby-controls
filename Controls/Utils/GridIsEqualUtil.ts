@@ -35,7 +35,6 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
    return true;
 }
 
-
 /**
  * Сравнивает две шаблонные опции Wasaby шаблона. Проверяет все опции, от которых зависит шаблон, аналогично проверке синхронизатора.
  * @param oldTemplate Стары
@@ -55,7 +54,7 @@ function isEqualTemplates(oldTemplate: TemplateFunction, newTemplate: TemplateFu
       if (flatComparator) {
          return flatComparator(oldTemplate, newTemplate);
       } else {
-         return oldTemplate === newTemplate
+         return oldTemplate === newTemplate;
       }
    } else {
       if (oldTemplate.length !== newTemplate.length) {
@@ -93,10 +92,10 @@ function isEqualWithSkip(obj1: object, obj2: object, fieldsOptions?: Record<stri
    if (fieldsOptions) {
       Object.keys(fieldsOptions).forEach((key) => {
          _fieldsOptions[key] = () => true;
-      })
+      });
    }
 
-   return isEqual(obj1, obj2, _fieldsOptions)
+   return isEqual(obj1, obj2, _fieldsOptions);
 }
 
 export {

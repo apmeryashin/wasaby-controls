@@ -23,7 +23,7 @@ export default Control.extend({
      * @function
      * @name Controls/_list/BaseAction#validate
      */
-   validate(items: Array|ISelectionObject): boolean {
+   validate(items: any[]|ISelectionObject): boolean {
       let resultValidate: boolean = true;
 
       if (items instanceof Array && !items.length || items.selected && !items.selected.length) {

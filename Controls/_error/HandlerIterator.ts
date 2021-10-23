@@ -24,7 +24,7 @@ export default class HandlerIterator {
      * Выполнять по очереди обработчики ошибок, пока какой-нибудь из них не вернёт результат.
      */
     getViewConfig(
-        [handler, ...restHandlers]: (ErrorHandler | string)[],
+        [handler, ...restHandlers]: Array<ErrorHandler | string>,
         config: IErrorHandlerConfig
     ): Promise<ErrorViewConfig | void> {
         if (!handler) {

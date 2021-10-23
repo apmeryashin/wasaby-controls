@@ -3,7 +3,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ExplorerMemory from 'Controls-demo/Explorer/ExplorerMemory';
 import * as template from 'wml!Controls-demo/Explorer/SearchExpand';
 
-
 interface ISearchExpandData {
    id: number;
    parent: number;

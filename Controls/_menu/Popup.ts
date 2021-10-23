@@ -86,7 +86,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         }
         if (options.searchParam) {
             const depPromise = SEARCH_DEPS.map((dep) => {
-                return import(dep)
+                return import(dep);
             });
             return Promise.all(depPromise);
         }
@@ -303,7 +303,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         selectedKeys: [],
         backgroundStyle: 'default',
         hoverBackgroundStyle: 'default'
-    }
+    };
 }
 
 /**

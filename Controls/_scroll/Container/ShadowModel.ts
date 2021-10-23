@@ -19,7 +19,7 @@ const enum SHADOW_TYPE {
 const upperDirection = {
     vertical: 'Vertical',
     horizontal: 'Horizontal'
-}
+};
 
 const AUTO = 'auto';
 
@@ -165,7 +165,7 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
         let visibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
         if (this._visibilityByInnerComponents !== SHADOW_VISIBILITY.AUTO) {
             visibility = this._visibilityByInnerComponents;
-        } else if(!this._getShadowEnable() || !this._getVisibleByState(this._scrollState)) {
+        } else if (!this._getShadowEnable() || !this._getVisibleByState(this._scrollState)) {
             visibility = SHADOW_VISIBILITY.HIDDEN;
         }
         return visibility;

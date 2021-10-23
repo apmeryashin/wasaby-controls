@@ -712,7 +712,7 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         this._updateObserversStyles(options.offsetTop, options.shadowVisibility);
     }
 
-    private _updateStyle(position: POSITION,fixedZIndex: number,
+    private _updateStyle(position: POSITION, fixedZIndex: number,
                          zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): void {
         const style = this._getStyle(position, fixedZIndex, zIndex, offsetTop, isIosZIndexOptimized, task1177692247);
         if (this._style !== style) {
@@ -720,9 +720,9 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _getStyle(positionFromOptions: POSITION,fixedZIndex: number,
+    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number,
                         zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): string {
-        let offset: number = 0;
+        const offset: number = 0;
         let container: HTMLElement;
         let top: number;
         let left: number;

@@ -1,6 +1,6 @@
-import {IColumn} from "Controls/_grid/display/interface/IColumn";
+import {IColumn} from 'Controls/_grid/display/interface/IColumn';
 import * as resTpl from 'wml!Controls-demo/gridNew/EditInPlace/EditingCell/resultsTpl';
-import { IHeaderCell } from "Controls/grid";
+import { IHeaderCell } from 'Controls/grid';
 
 export interface IEditingData {
     key: number | string;
@@ -150,12 +150,12 @@ export const Editing = {
         {
             displayProperty: 'title',
             width: '180px',
-            template: `wml!Controls-demo/gridNew/EditInPlace/Size/${size}/_cellEditor`,
+            template: `wml!Controls-demo/gridNew/EditInPlace/Size/${size}/_cellEditor`
         },
         {
             displayProperty: 'description',
             width: '100px',
-            template: `wml!Controls-demo/gridNew/EditInPlace/Size/${size}/_cellEditor`,
+            template: `wml!Controls-demo/gridNew/EditInPlace/Size/${size}/_cellEditor`
         }
     ],
     getEditingColumnsValidation: () => [
@@ -194,4 +194,4 @@ export const Editing = {
             title: 'Title'
         }
     ]
-}
+};

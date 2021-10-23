@@ -1,10 +1,10 @@
-import {IHeaderCell} from "Controls/_grid/display/interface/IHeaderCell";
-import {IColumn} from "Controls/_grid/display/interface/IColumn";
+import {IHeaderCell} from 'Controls/_grid/display/interface/IHeaderCell';
+import {IColumn} from 'Controls/_grid/display/interface/IColumn';
 import * as baseEditor from 'wml!Controls-demo/gridNew/EditInPlace/Decorators/baseEditor';
 import * as moneyEditor from 'wml!Controls-demo/gridNew/EditInPlace/Decorators/moneyEditor';
 import * as numberEditor from 'wml!Controls-demo/gridNew/EditInPlace/Decorators/numberEditor';
 import * as defaultEditor from 'wml!Controls-demo/gridNew/EditInPlace/Decorators/defaultEditor';
-import { IEditingData } from "./Editing";
+import { IEditingData } from './Editing';
 
 export const DecoratedEditing = {
     getDecoratedEditingData: (): IEditingData[] => [
@@ -58,4 +58,4 @@ export const DecoratedEditing = {
             template: defaultEditor
         }
     ]
-}
+};

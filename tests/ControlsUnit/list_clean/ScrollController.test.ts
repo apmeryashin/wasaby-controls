@@ -327,7 +327,6 @@ describe('Controls/list_clean/ScrollController', () => {
         });
     });
 
-
     describe('inertialScrolling', () => {
         let clock;
         beforeEach(() => {
@@ -346,7 +345,7 @@ describe('Controls/list_clean/ScrollController', () => {
         const collection = new Collection({
             collection: items
         });
-        let options = {
+        const options = {
             collection,
             virtualScrollConfig: {},
             needScrollCalculation: false
@@ -360,7 +359,7 @@ describe('Controls/list_clean/ScrollController', () => {
         it('callAfterScrollStopped', () => {
 
             let callbackCalled = false;
-            let callback = () => {
+            const callback = () => {
                 callbackCalled = true;
             };
             controller.callAfterScrollStopped(callback);

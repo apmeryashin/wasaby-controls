@@ -9,7 +9,7 @@ import MonthViewModel from './MonthView/MonthViewModel';
 import dotTplFn = require('wml!Controls/_calendar/MonthView/MonthView');
 import dayTemplate = require('wml!Controls/_calendar/MonthView/dayTemplate');
 import dayHeaderTemplate = require('wml!Controls/_calendar/MonthView/dayHeaderTemplate');
-import captionTemplate = require("wml!Controls/_calendar/MonthView/captionTemplate");
+import captionTemplate = require('wml!Controls/_calendar/MonthView/captionTemplate');
 
 import IMonth from './interfaces/IMonth';
 
@@ -130,7 +130,6 @@ export default class MonthView extends Control<IControlOptions> {
       this._month = DateUtil.normalizeMonth(this._month);
       this._showWeekdays = options.showWeekdays;
    }
-
 
    static getOptionTypes(): object {
       return IMonth.getOptionTypes();

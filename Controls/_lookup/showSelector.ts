@@ -28,7 +28,7 @@ function getTemplateOptions(self, multiSelect) {
         selectedItems: self._lookupController?.getItems().clone(),
         multiSelect: multiSelect,
         handlers: {
-            onSelectComplete: function (event, result) {
+            onSelectComplete: function(event, result) {
                 self._opener.close();
                 if (self._options.isCompoundTemplate) {
                     self._selectCallback(null, result);

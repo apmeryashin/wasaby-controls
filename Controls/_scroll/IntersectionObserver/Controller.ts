@@ -44,7 +44,7 @@ class IntersectionObserverController extends Control<IIntersectionObserverContro
     }
 
     protected _beforeUnmount(): void {
-        if(this._observer) {
+        if (this._observer) {
             this._observer.destroy();
             this._observer = null;
         }

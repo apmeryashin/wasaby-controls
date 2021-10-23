@@ -20,7 +20,7 @@ const rawData = [
 const columns = [
     { displayProperty: 'col1', resultsTemplate: 'mockResultsTemplate1' },
     { displayProperty: 'col2', resultsTemplate: 'mockResultsTemplate2' },
-    { displayProperty: 'col3', resultsTemplate: 'mockResultsTemplate3' },
+    { displayProperty: 'col3', resultsTemplate: 'mockResultsTemplate3' }
 ];
 
 describe('Controls/grid_clean/Display/ResultsColspan', () => {
@@ -46,7 +46,7 @@ describe('Controls/grid_clean/Display/ResultsColspan', () => {
             resultsPosition: 'top'
         });
 
-        let columnItems = gridCollection.getResults().getColumns();
+        const columnItems = gridCollection.getResults().getColumns();
         assert.strictEqual(columnItems.length, 3);
         assert.strictEqual(columnItems[0].getColspan(), 1);
         assert.strictEqual(columnItems[0].getColspanStyles(), '');
@@ -66,7 +66,7 @@ describe('Controls/grid_clean/Display/ResultsColspan', () => {
             resultsColspanCallback: () => 'end'
         });
 
-        let columnItems = gridCollection.getResults().getColumns();
+        const columnItems = gridCollection.getResults().getColumns();
         assert.strictEqual(columnItems.length, 1);
         assert.strictEqual(columnItems[0].getColspan(), 3);
         assert.strictEqual(columnItems[0].getColspanStyles(), 'grid-column: 1 / 4;');
@@ -82,7 +82,7 @@ describe('Controls/grid_clean/Display/ResultsColspan', () => {
             resultsColspanCallback: (column, columnIndex) => columnIndex === 1 ? 'end' : undefined
         });
 
-        let columnItems = gridCollection.getResults().getColumns();
+        const columnItems = gridCollection.getResults().getColumns();
         assert.strictEqual(columnItems.length, 2);
         assert.strictEqual(columnItems[0].getColspan(), 1);
         assert.strictEqual(columnItems[0].getColspanStyles(), '');
@@ -100,7 +100,7 @@ describe('Controls/grid_clean/Display/ResultsColspan', () => {
             resultsColspanCallback: (column, columnIndex) => columnIndex === 2 ? 'end' : undefined
         });
 
-        let columnItems = gridCollection.getResults().getColumns();
+        const columnItems = gridCollection.getResults().getColumns();
         assert.strictEqual(columnItems.length, 3);
         assert.strictEqual(columnItems[0].getColspan(), 1);
         assert.strictEqual(columnItems[0].getColspanStyles(), '');

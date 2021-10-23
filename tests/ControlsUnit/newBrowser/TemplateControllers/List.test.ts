@@ -16,4 +16,4 @@ describe('Controls/_newBrowser/TemplateControllers/List', () => {
         assert.equal(controller.imageViewMode, 'circle');
         assert.equal(controller.imageProperty, 'image');
     });
-})
+});

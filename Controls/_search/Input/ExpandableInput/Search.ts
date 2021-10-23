@@ -6,7 +6,7 @@ import {IRenderOptions, IPaddingOptions, ITagOptions} from 'Controls/interface';
 import {Input} from 'Controls/search';
 import 'css!Controls/search';
 
- interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
+interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
  IRenderOptions, IPaddingOptions, ITagOptions {
    /**
     * @name Controls/_search/Input/ExpandableInput/ExpandableInput#inlineWidth

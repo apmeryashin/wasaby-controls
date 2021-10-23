@@ -111,7 +111,7 @@ function getDataForComplexScroll(): Array<{key: number, title: string, withList:
             title: 'Сложный элемент 8',
             withList: true
         }
-    ]
+    ];
 }
 function getCursorData(): Array<{key: number, value: string, cursor?: 'default' | 'pointer', hovered: boolean}> {
     return [

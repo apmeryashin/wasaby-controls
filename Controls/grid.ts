@@ -14,7 +14,7 @@ import * as TableTemplate from 'wml!Controls/_grid/Render/table/GridView';
 //  но быстрее по времени.
 //  По словам Макса Крылова это ничего не сломает, если на функцию навесить флаги ядра.
 //  Найти нормальное решение по https://online.sbis.ru/opendoc.html?guid=41a8dbab-93bb-4bc0-8533-6b12c0ec6d8d
-const ItemTemplate = function () {
+const ItemTemplate = function() {
     return isFullGridSupport() ? GridItemTemplate.apply(this, arguments) : TableItemTemplate.apply(this, arguments);
 };
 ItemTemplate.stable = true;

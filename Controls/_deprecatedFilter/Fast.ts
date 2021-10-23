@@ -83,7 +83,7 @@ var _private = {
    loadItemsFromSource: function(instance, {source, keyProperty, filter, navigation, historyId, dataLoadCallback}, withHistory = true) {
       // As the data source can be history source, then you need to merge the filter
       return _private.getSourceController(instance, {source, navigation, keyProperty, historyId}).addCallback((sourceController) => {
-         let queryFilter = withHistory ? historyUtils.getSourceFilter(filter, instance._source) : filter;
+         const queryFilter = withHistory ? historyUtils.getSourceFilter(filter, instance._source) : filter;
          sourceController.setFilter(queryFilter);
          return sourceController.load().addCallback((items) => {
              instance._items = items;
@@ -206,7 +206,7 @@ var _private = {
        }
    },
 
-   onSelectorResult: function (curConfig, selectedItems) {
+   onSelectorResult: function(curConfig, selectedItems) {
       var newItems = _private.getNewItems(curConfig, selectedItems);
       _private.updateHistory(curConfig, chain.factory(selectedItems).toArray());
       _private.setItems(curConfig, newItems);
@@ -282,7 +282,7 @@ var _private = {
    },
 
    getKeysLoad: function(config, keys) {
-      let result = [];
+      const result = [];
       chain.factory(keys).each(function(key) {
          if (key !== undefined && !config._items.getRecordById(key) && !(key === null && config.emptyText)) {
             result.push(key);
@@ -298,15 +298,15 @@ var _private = {
    },
 
    loadNewItems: function(self, items, configs) {
-      let pDef = new pDeferred();
+      const pDef = new pDeferred();
       chain.factory(items).each(function(item, index) {
-         let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
+         const keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value : [item.value]);
          if (keys.length) {
-            let itemProperties = clone(getPropValue(item, 'properties'));
-            let properties = {source: itemProperties.source};
+            const itemProperties = clone(getPropValue(item, 'properties'));
+            const properties = {source: itemProperties.source};
             properties.filter = itemProperties.filter || {};
             properties.filter[itemProperties.keyProperty] = keys;
-            let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
+            const result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
                // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
                if (itemProperties.dataLoadCallback) {
                   itemProperties.dataLoadCallback(items);
@@ -324,7 +324,7 @@ var _private = {
    },
 
    hasSelectorTemplate: function(configs) {
-      let hasSelectorTemplate = configs.find((config) => {
+      const hasSelectorTemplate = configs.find((config) => {
          if (config.selectorTemplate) {
             return true;
          }
@@ -423,7 +423,7 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
    _selectorOpenCallback() {
       const value = getPropValue(this._items.at(this.lastOpenIndex), 'value');
       const selectedKeys = value instanceof Array ? value : [value];
-      let selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
+      const selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
          const itemId = item.getKey();
          return itemId !== null && selectedKeys.includes(itemId);
       }).value();
@@ -510,7 +510,7 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
    },
 
    _onSelectorTemplateResult: function(event, items) {
-      let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._indexOpenedFilter].initSelectorItems, items, this._indexOpenedFilter]) || items;
+      const resultSelectedItems = this._notify('selectorCallback', [this._configs[this._indexOpenedFilter].initSelectorItems, items, this._indexOpenedFilter]) || items;
       this._onResult(event, 'selectorResult', resultSelectedItems);
    },
 

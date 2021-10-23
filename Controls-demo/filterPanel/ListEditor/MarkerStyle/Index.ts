@@ -22,7 +22,7 @@ export default class extends Control {
             data: departments,
             keyProperty: 'id',
             filter: (item, queryFilter) => {
-                const emptyField = []
+                const emptyField = [];
                 let addToData = true;
                 for (const filterField in queryFilter) {
                     if (queryFilter.hasOwnProperty(filterField) && addToData) {
