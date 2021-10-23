@@ -57,7 +57,7 @@ describe('Controls/_dataSource/DataLoader/PropertyGridProvider', () => {
             name: 'pg',
             type: 'propertyGrid',
             editorOptions: {
-                typeDescription: typeDescription
+                typeDescription
             }
         });
         const resultLoad = await new Loader().load({

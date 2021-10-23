@@ -30,11 +30,11 @@ export default interface IDisplayedRanges {
  * @example
  * Отображаем два периода. С минус бесконечности до декабря 16 и с января 18 до декабрь 18. Ленту можно проскроллить
  * максимум до декабря 18. Между 16 и 18 годом бует отображаться одна загрушка {@link stubTemplate} вместо 12 месяцев.
- * 
+ *
  * <pre class="brush: js">
  * _displayedRanges: [[null, new Date(2016, 11)], [new Date(2018, 0), new Date(2018, 11)]]
  * </pre>
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.calendar:MonthList

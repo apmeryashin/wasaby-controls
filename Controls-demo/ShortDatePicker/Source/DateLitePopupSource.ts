@@ -6,7 +6,7 @@ import {Base as dateUtils} from 'Controls/dateUtils';
 class DateLitePopupSource extends Memory {
     private _$keyProperty: string = 'id';
 
-    public query(query) {
+    query(query) {
         let
             offset = query.getOffset(),
             where = query.getWhere(),

@@ -164,21 +164,21 @@ describe('Controls/scroll:Container', () => {
             canScroll: true,
             isOptimizeShadowEnabled: true,
             isOptimizeShadowEnabledAfterMouseEnter: false,
-            optimizeShadowClass: optimizeShadowClass,
+            optimizeShadowClass,
             optimizeShadowClassAfterMouseEnter: ''
         }, {
             shadowMode: SHADOW_MODE.MIXED,
             canScroll: false,
             isOptimizeShadowEnabled: true,
             isOptimizeShadowEnabledAfterMouseEnter: true,
-            optimizeShadowClass: optimizeShadowClass,
+            optimizeShadowClass,
             optimizeShadowClassAfterMouseEnter: optimizeShadowClass
         }, {
             shadowMode: SHADOW_MODE.CSS,
             canScroll: true,
             isOptimizeShadowEnabled: true,
             isOptimizeShadowEnabledAfterMouseEnter: true,
-            optimizeShadowClass: optimizeShadowClass,
+            optimizeShadowClass,
             optimizeShadowClassAfterMouseEnter: optimizeShadowClass
         }].forEach((test) => {
             it(`${test.shadowMode}, canScroll ${test.canScroll}`, () => {

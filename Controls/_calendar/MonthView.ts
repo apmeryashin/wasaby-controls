@@ -41,9 +41,9 @@ import 'css!Controls/calendar';
 
 const defaultOptions = {
    ...IMonth.getDefaultOptions(),
-   dayTemplate: dayTemplate,
-   dayHeaderTemplate: dayHeaderTemplate,
-   captionTemplate: captionTemplate,
+   dayTemplate,
+   dayHeaderTemplate,
+   captionTemplate,
    dateConstructor: WSDate,
    newMode: true
 };
@@ -114,7 +114,7 @@ export default class MonthView extends Control<IControlOptions> {
     }
 
    private _updateView(options): void {
-      var newMonth = options.month || new options.dateConstructor();
+      let newMonth = options.month || new options.dateConstructor();
 
       // localization can change in runtime, take the actual translation of the months each time the component
       // is initialized. In the array, the days of the week are in the same order as the return values

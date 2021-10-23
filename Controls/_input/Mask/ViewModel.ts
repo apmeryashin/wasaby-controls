@@ -8,8 +8,8 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
        * @private
        * @author Красильников А.С.
        */
-var _private = {
-         updateFormatMaskChars: function(self, formatMaskChars) {
+let _private = {
+         updateFormatMaskChars(self, formatMaskChars) {
             if (self._formatMaskChars === formatMaskChars) {
                return;
             }
@@ -18,14 +18,14 @@ var _private = {
             self.formatMaskCharsRegExp = new RegExp('[' + Object.keys(formatMaskChars).join('') + ']', 'g');
          },
 
-         prepareSplitValue: function(result) {
-            var position = result.position;
-            var before = result.value.substring(0, position);
-            var after = result.value.substring(position, result.value.length);
+         prepareSplitValue(result) {
+            let position = result.position;
+            let before = result.value.substring(0, position);
+            let after = result.value.substring(position, result.value.length);
 
             return {
-               before: before,
-               after: after,
+               before,
+               after,
                insert: '',
                delete: ''
             };

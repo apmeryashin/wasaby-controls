@@ -341,7 +341,7 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * <!-- MyModule/addTemplateDeleted.wml -->
  * <Controls.filterPopup:Link caption="item.textValue"/>
  * </pre>
- * 
+ *
  * <pre class="brush: js; highlight: [23]">
  * // JavaScript
  * this._items = [

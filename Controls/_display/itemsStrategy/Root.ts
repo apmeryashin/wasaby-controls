@@ -12,7 +12,7 @@ interface IOptions<S, T> {
  * @class Controls/_display/ItemsStrategy/Root
  * @mixes Types/entity:DestroyableMixin
  * @mixes Types/entity:SerializableMixin
- * 
+ *
  * @author Авраменко А.С.
  * @private
  */

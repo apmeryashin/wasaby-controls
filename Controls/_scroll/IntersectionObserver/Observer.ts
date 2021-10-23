@@ -86,9 +86,9 @@ export default class StickyHeaderResizeObserver {
 
    private _createObserver(root: HTMLElement, threshold: number[], rootMargin: string): IntersectionObserver {
       return new IntersectionObserver(this._intersectionObserverHandler.bind(this), {
-         root: root,
-         threshold: threshold,
-         rootMargin: rootMargin
+         root,
+         threshold,
+         rootMargin
       });
    }
 

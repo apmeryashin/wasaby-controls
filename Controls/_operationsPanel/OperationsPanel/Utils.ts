@@ -10,17 +10,17 @@ import {Record} from 'Types/entity';
 import {DOMUtil, getWidth} from 'Controls/sizeUtils';
 import {constants} from 'Env/Env';
 
-var MENU_WIDTH = 0;
+let MENU_WIDTH = 0;
 
-var _private = {
-      initializeConstants: function(theme: string) {
+let _private = {
+      initializeConstants(theme: string) {
          if (!MENU_WIDTH) {
             const iconClass = `icon-medium icon-SettingsNew controls-Toolbar__menu_spacing-small_theme-${theme}`;
             MENU_WIDTH = constants.isBrowserPlatform && getWidth(`<i class="${iconClass}"/></span>`);
          }
       },
 
-      getContentTemplate: function(item, itemTemplate, itemTemplateProperty) {
+      getContentTemplate(item, itemTemplate, itemTemplateProperty) {
          let contentTemplate = null;
          if (itemTemplateProperty && item) {
             contentTemplate = item.get(itemTemplateProperty);
@@ -31,7 +31,7 @@ var _private = {
          return contentTemplate;
       },
 
-      getItemsSizes: function(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
+      getItemsSizes(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
          const itemsMark = [];
          let item;
          let buttonTemplateOptions;
@@ -70,7 +70,7 @@ var _private = {
          return buttonOptions;
       },
 
-      setShowType: function(items, type) {
+      setShowType(items, type) {
          items.each(function(item) {
             item.set('showType', type);
          });
@@ -78,8 +78,8 @@ var _private = {
    };
 
 export = {
-      fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
-         var
+      fillItemsType(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
+         let
             itemsSizes,
             currentWidth,
             visibleItemsKeys = [];
@@ -105,7 +105,7 @@ export = {
                _private.setShowType(items, showType.MENU);
                currentWidth += MENU_WIDTH;
 
-               for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
+               for (let i = visibleItemsKeys.length - 1; i >= 0; i--) {
                   items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
                   currentWidth -= itemsSizes[i];
                }

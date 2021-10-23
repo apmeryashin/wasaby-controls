@@ -44,10 +44,10 @@ describe('Controls/grid_clean/Display/Ladder/Row/Colspan', () => {
                     ...mockedCollection,
                     getGridColumnsConfig: () => columnsConfig
                 },
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 stickyLadder: {
-                    'prop1': {headingStyle: 'style'},
-                    'prop2': {headingStyle: 'style'}
+                    prop1: {headingStyle: 'style'},
+                    prop2: {headingStyle: 'style'}
                 },
                 gridColumnsConfig: columnsConfig,
                 contents: record
@@ -74,7 +74,7 @@ describe('Controls/grid_clean/Display/Ladder/Row/Colspan', () => {
                     getGridColumnsConfig: () => columnsConfig
                 },
                 colspanCallback: () => 'end',
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 gridColumnsConfig: columnsConfig,
                 contents: record
             });
@@ -102,7 +102,7 @@ describe('Controls/grid_clean/Display/Ladder/Row/Colspan', () => {
                     getGridColumnsConfig: () => columnsConfig
                 },
                 colspanCallback: () => 2,
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 gridColumnsConfig: columnsConfig,
                 contents: record
             });

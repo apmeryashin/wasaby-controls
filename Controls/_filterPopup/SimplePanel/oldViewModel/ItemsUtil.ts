@@ -2,9 +2,9 @@ import displayLib = require('Controls/display');
 import cInstance = require('Core/core-instance');
 import Utils = require('Types/util');
 
-var ItemsUtil = {
-    getDefaultDisplayFlat: function(items, cfg, filter) {
-        var projCfg = {};
+let ItemsUtil = {
+    getDefaultDisplayFlat(items, cfg, filter) {
+        let projCfg = {};
         projCfg.keyProperty = cfg.keyProperty;
         if (cfg.groupingKeyCallback) {
             projCfg.group = cfg.groupingKeyCallback;
@@ -26,7 +26,7 @@ var ItemsUtil = {
         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
     },
 
-    getPropertyValue: function(itemContents, field) {
+    getPropertyValue(itemContents, field) {
         if (!(itemContents instanceof Object)) {
             return itemContents;
         } else {
@@ -35,12 +35,12 @@ var ItemsUtil = {
     },
 
     // TODO это наверное к Лехе должно уехать
-    getDisplayItemById: function(display, id, keyProperty) {
-        var list = display.getCollection();
+    getDisplayItemById(display, id, keyProperty) {
+        let list = display.getCollection();
         if (cInstance.instanceOfModule(list, 'Types/collection:RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
         } else {
-            var resItem;
+            let resItem;
             display.each(function(item, i) {
                 if (ItemsUtil.getPropertyValue(item.getContents(), keyProperty) == id) {
                     resItem = item;
@@ -50,8 +50,8 @@ var ItemsUtil = {
         }
     },
 
-    getFirstItem: function(display) {
-        var
+    getFirstItem(display) {
+        let
             itemIdx = 0,
             item,
             itemsCount = display.getCount();
@@ -64,8 +64,8 @@ var ItemsUtil = {
         }
     },
 
-    getLastItem: function(display) {
-        var
+    getLastItem(display) {
+        let
             itemIdx = display.getCount() - 1,
             item;
         while (itemIdx >= 0) {
@@ -77,7 +77,7 @@ var ItemsUtil = {
         }
     },
 
-    getDisplayItemKey: function(dispItem, keyProperty) {
+    getDisplayItemKey(dispItem, keyProperty) {
         let contents = dispItem.getContents();
 
         if (contents instanceof Array) {

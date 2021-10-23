@@ -10,11 +10,11 @@ import {Serializer} from 'UI/State';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 
-var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
-var DEFAULT_FILTER = '{}';
+let historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
+let DEFAULT_FILTER = '{}';
 
-var _private = {
-   isOldPinned: function(data) {
+let _private = {
+   isOldPinned(data) {
       return !JSON.parse(data, _private.getSerialize().desirialize).hasOwnProperty('linkText');
    },
 
@@ -26,9 +26,9 @@ var _private = {
        });
    },
 
-   deleteOldPinned: function(self, history, query) {
+   deleteOldPinned(self, history, query) {
       const toDelete = [];
-      const hSource = _private.getSourceByMeta(self, {'$_pinned': true});
+      const hSource = _private.getSourceByMeta(self, {$_pinned: true});
       factory(history.pinned).each((pinItem) => {
         if (!pinItem.get('ObjectData') || _private.isOldPinned(pinItem.get('ObjectData'))) {
            toDelete.push(new Promise((resolve) => {
@@ -47,8 +47,8 @@ var _private = {
       return !toDelete.length;
    },
 
-   getSourceByMeta: function(self, meta) {
-      for (var i in meta) {
+   getSourceByMeta(self, meta) {
+      for (let i in meta) {
          if (meta.hasOwnProperty(i)) {
             if (historyMetaFields.indexOf(i) !== -1) {
                return self.historySource;
@@ -58,21 +58,21 @@ var _private = {
       return self.originSource;
    },
 
-   deserialize: function(self, data) {
+   deserialize(self, data) {
       return JSON.parse(data, this.getSerialize(self).deserialize);
    },
 
-   initHistory: function(self, data) {
+   initHistory(self, data) {
       if (data.getRow) {
-         var rows = data.getRow();
-         var pinned = rows.get('pinned');
-         var recent = rows.get('recent');
-         var frequent = rows.get('frequent');
-         var client = rows.get('client');
+         let rows = data.getRow();
+         let pinned = rows.get('pinned');
+         let recent = rows.get('recent');
+         let frequent = rows.get('frequent');
+         let client = rows.get('client');
 
          self._history = {
-            pinned: pinned,
-            recent: recent
+            pinned,
+            recent
          };
          if (client) {
             self._history.client = client;
@@ -84,8 +84,8 @@ var _private = {
       }
    },
 
-   getItemsWithHistory: function(self, history) {
-      var items = new collection.RecordSet({
+   getItemsWithHistory(self, history) {
+      let items = new collection.RecordSet({
          adapter: new entity.adapter.Sbis(),
          keyProperty: 'ObjectId'
       });
@@ -107,7 +107,7 @@ var _private = {
       return items;
    },
 
-   getRawItem: function(item, format) {
+   getRawItem(item, format) {
       const rawData = {
          d: [
             item.getId(),
@@ -121,13 +121,13 @@ var _private = {
          ]
       };
       return new entity.Model({
-         rawData: rawData,
+         rawData,
          adapter: item.getAdapter(),
-         format: format
+         format
       });
    },
 
-   fillItems: function(history, items, historyType, checkCallback) {
+   fillItems(history, items, historyType, checkCallback) {
       let item;
       const filteredItems = factory(history).filter((element) => {
          return !items.getRecordById(element.getId()) && checkCallback(element);
@@ -143,7 +143,7 @@ var _private = {
       });
    },
 
-   fillFavoritePinned: function(self, history, items) {
+   fillFavoritePinned(self, history, items) {
       let isClient;
       _private.fillItems(history.pinned, items, 'pinned', (item) => {
          isClient = history.client.getRecordById(item.getId());
@@ -154,19 +154,19 @@ var _private = {
       });
    },
 
-   fillPinned: function(self, history, items) {
+   fillPinned(self, history, items) {
       _private.fillItems(history.pinned, items, 'pinned', (item) => {
          return item.get('ObjectData') !== DEFAULT_FILTER;
       });
    },
 
-   fillClient: function(self, history, items) {
+   fillClient(self, history, items) {
       _private.fillItems(history.client, items, 'client', (item) => {
          return item.get('ObjectData') !== DEFAULT_FILTER;
       });
    },
 
-   fillRecent: function(self, history, items) {
+   fillRecent(self, history, items) {
       const pinnedCount = self.historySource._$pinned !== false ? history.pinned.getCount() : 0;
       const maxLength = self.historySource._$recent - pinnedCount - 1;
       let currentCount = 0;
@@ -181,20 +181,20 @@ var _private = {
       });
    },
 
-   addProperty: function(self, record, name, type, defaultValue) {
+   addProperty(self, record, name, type, defaultValue) {
       if (record.getFormat().getFieldIndex(name) === -1) {
          record.addField({
-            name: name,
-            type: type,
-            defaultValue: defaultValue
+            name,
+            type,
+            defaultValue
          });
       }
    },
 
-   updateFavorite: function(self, data, meta) {
+   updateFavorite(self, data, meta) {
       const hService = _private.getSourceByMeta(self, meta);
       const metaPin = {
-         '$_pinned': true,
+         $_pinned: true,
          isClient: meta.isClient
       };
 
@@ -214,7 +214,7 @@ var _private = {
       return hService.update(data, metaPin);
    },
 
-   deleteClient: function(self, item) {
+   deleteClient(self, item) {
       const client = self._history.client;
       _private.deleteHistoryItem(client, item.getId());
       _private.deleteHistoryItem(self._history.recent, item.getId());
@@ -223,7 +223,7 @@ var _private = {
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
 
-   addClient: function(self, item) {
+   addClient(self, item) {
       const clientItem = self._history.client.getRecordById(item.getId());
       if (!clientItem) {
          self._history.client.add(_private.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId')));
@@ -232,7 +232,7 @@ var _private = {
       }
    },
 
-   updatePinned: function(self, item, meta) {
+   updatePinned(self, item, meta) {
       const isPinned = !!meta.$_pinned;
       const pinned = self._history.pinned;
       item.set('pinned', isPinned);
@@ -250,21 +250,21 @@ var _private = {
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
 
-   updateDataItem: function(item, ObjectData) {
+   updateDataItem(item, ObjectData) {
       item.set('ObjectData', ObjectData);
    },
 
-    deleteHistoryItem: function(history, id) {
+    deleteHistoryItem(history, id) {
        const hItem = history.getRecordById(id);
        if (hItem) {
           history.remove(hItem);
        }
     },
 
-   updateRecent: function(self, item) {
-      var id = item.getId();
-      var recent = self._history.recent;
-      var records;
+   updateRecent(self, item) {
+      let id = item.getId();
+      let recent = self._history.recent;
+      let records;
 
       _private.deleteHistoryItem(recent, id);
 
@@ -273,7 +273,7 @@ var _private = {
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
 
-   getRawHistoryItem: function(self, id, objectData, hId?) {
+   getRawHistoryItem(self, id, objectData, hId?) {
       return new entity.Model({
          rawData: {
             d: [id, objectData, hId || self.historySource.getHistoryId()],
@@ -295,13 +295,13 @@ var _private = {
       });
    },
 
-   findHistoryItem: function(self, data) {
-      var history = self._history;
+   findHistoryItem(self, data) {
+      let history = self._history;
 
       return this.findItem(self, history.pinned, data) || this.findItem(self, history.recent, data) || null;
    },
 
-   findItem: function(self, items, data) {
+   findItem(self, items, data) {
       let item = null;
       let objectData;
       const deserialize = _private.getSerialize().deserialize;
@@ -333,7 +333,7 @@ var _private = {
    // идентификатор в сериалайзере на клиенте может совпасть с идентификатором сохранённым в истории
    // и мы по итогу получим некорректный результат
    // Для этого всегда создаём новый инстанс Serializer'a
-   getSerialize: function() {
+   getSerialize() {
       return new Serializer();
    },
 
@@ -392,7 +392,7 @@ var _private = {
  * </pre>
  */
 
-var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
+let Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    _history: null,
    _serialize: false,
    '[Types/_source/ICrud]': true,
@@ -402,17 +402,17 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       this.historySource = cfg.historySource;
    },
 
-   create: function(meta) {
+   create(meta) {
       return _private.getSourceByMeta(this, meta).create(meta);
    },
 
-   read: function(key, meta) {
+   read(key, meta) {
       return _private.getSourceByMeta(this, meta).read(key, meta);
    },
 
-   update: function(data, meta) {
-      var self = this;
-      var serData, item;
+   update(data, meta) {
+      let self = this;
+      let serData, item;
 
       if (meta.hasOwnProperty('$_pinned')) {
          _private.updatePinned(this, data, meta);
@@ -427,7 +427,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          item = _private.findHistoryItem(self, data);
          if (item) {
             meta = {
-               '$_history': true
+               $_history: true
             };
             _private.updateRecent(this, item);
             _private.getSourceByMeta(this, meta).update(item, meta);
@@ -449,7 +449,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       return _private.getSourceByMeta(this, meta).update(data, meta);
    },
 
-   remove: function(data, meta) {
+   remove(data, meta) {
       const hService = _private.getSourceByMeta(this, meta);
       if (meta.isClient) {
          _private.deleteClient(this, data);
@@ -469,7 +469,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       return _private.getSourceByMeta(this, meta).destroy(id, meta);
    },
 
-   query: function(query) {
+   query(query) {
       const self = this;
       const where = query.getWhere();
       let newItems;
@@ -513,7 +513,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     * Returns a set of items sorted by history
     * @returns {RecordSet}
     */
-   getItems: function() {
+   getItems() {
       return _private.getItemsWithHistory(this, this._history);
    },
 
@@ -521,7 +521,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     * Returns a set of recent items
     * @returns {RecordSet}
     */
-   getRecent: function() {
+   getRecent() {
       return this._history.recent;
    },
 
@@ -533,7 +533,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     * Returns a deserialized history object
     * @returns {Object}
     */
-   getDataObject: function(data) {
+   getDataObject(data) {
       return _private.deserialize(this, data.get('ObjectData'));
    },
 

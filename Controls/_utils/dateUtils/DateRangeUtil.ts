@@ -31,7 +31,7 @@ export function getRangeValueValidators(validators?: Function[] | object[], rang
             }
             return _validator.bind(null, {
                 ...(args || {}),
-                value: value
+                value
             });
         })
     ];

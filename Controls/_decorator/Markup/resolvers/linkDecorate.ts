@@ -14,7 +14,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
- * define("MyControl", ["UI/Base", "wml!MyControl", "Controls/decorator"], 
+ * define("MyControl", ["UI/Base", "wml!MyControl", "Controls/decorator"],
  * function(Base, template, decorator) {
  *    class MyControl extends Control<IControlOptions> {
  *       _template: template,
@@ -22,7 +22,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *       _json:
  *          [
  *             [
- *                ["p", 
+ *                ["p",
  *                   &#160;
  *                   // Ссылка, подходящая для декорирования, сразу в json
  *                   ["a",
@@ -30,7 +30,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *                      "https://ya.ru"
  *                   ]
  *                ],
- *                ["p", 
+ *                ["p",
  *                   &#160;
  *                   // Ссылка, не подходящая для декорирования, сразу в json
  *                   ["a",
@@ -38,9 +38,9 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *                      "www.google.com"
  *                   ]
  *                ],
- *                ["pre", 
+ *                ["pre",
  *                   &#160;
- *                   // Не подходящая и подходящая ссылки прямо в plain/text строке, 
+ *                   // Не подходящая и подходящая ссылки прямо в plain/text строке,
  *                   //положенной в тег pre для отображения переноса строки \n
  *                   "     www.google.com\nhttps://ya.ru"
  *                ]
@@ -50,9 +50,9 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *   return ModuleClass;
  * });
  * </pre>
- * 
+ *
  * Результат:
- * 
+ *
  * <pre class="brush: html">
  * <div>
  *    <p>

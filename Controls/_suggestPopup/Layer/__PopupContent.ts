@@ -4,7 +4,7 @@ import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 import 'css!Controls/suggestPopup';
 import 'css!Controls/suggest';
 
-var _private = {
+let _private = {
    getBorderWidth(container?: HTMLElement): number {
       return container ? Number(getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '') * 2) : 0;
    },
@@ -18,7 +18,7 @@ var _private = {
    }
 };
 
-var __PopupContent = Control.extend({
+let __PopupContent = Control.extend({
 
    _template: template,
    _positionFixed: false,
@@ -102,7 +102,7 @@ var __PopupContent = Control.extend({
       this._forceUpdate();
    },
 
-   resize: function() {
+   resize() {
       if (this._reverseList) {
          this._children.scrollContainer.scrollToBottom();
       }

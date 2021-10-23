@@ -69,62 +69,62 @@ class ScenarioSecond extends Control<IControlOptions> {
             parentProperty: 'parent',
             data: [{
                 id: 1,
-                'parent': null,
+                parent: null,
                 'parent@': true,
                 title: 'Оборудование'
             }, {
                 id: 2,
-                'parent': 1,
+                parent: 1,
                 'parent@': true,
                 title: '05. Торговое оборудование '
             }, {
                 id: 3,
-                'parent': 2,
+                parent: 2,
                 'parent@': true,
                 title: 'Кассовые аппараты'
             }, {
                 id: 4,
-                'parent': 3,
+                parent: 3,
                 'parent@': true,
                 title: 'Контрольно кассовые машины'
             }, {
                 id: 5,
-                'parent': 4,
+                parent: 4,
                 'parent@': true,
                 title: 'Онлайн кассы'
             }, {
                 id: 6,
-                'parent': 5,
+                parent: 5,
                 'parent@': true,
                 title: '02. Онлайн-кассы в соответствии с 54-ФЗ '
             }, {
                 id: 7,
-                'parent': 6,
+                parent: 6,
                 'parent@': true,
                 title: '10. Комплекты модернизации'
             }, {
                 id: 8,
-                'parent': 7,
+                parent: 7,
                 'parent@': true,
                 title: 'Под заказ'
             }, {
                 id: 9,
-                'parent': 8,
+                parent: 8,
                 'parent@': true,
                 title: 'С фискальным накопителем '
             }, {
                 id: 10,
-                'parent': 9,
+                parent: 9,
                 'parent@': true,
                 title: '01. Фискальные регистраторы Viki Print'
             }, {
                 id: 11,
-                'parent': 10,
+                parent: 10,
                 'parent@': true,
                 title: 'С фискальным накопителем на 36 мес.'
             }, {
                 id: 12,
-                'parent': 11,
+                parent: 11,
                 'parent@': null,
                 title: 'Фискальный регистратор Viki Print 57 Plus Ф',
                 price: 28490,

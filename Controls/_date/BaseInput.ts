@@ -77,13 +77,13 @@ class BaseInput extends Control<IDateBaseOptions> {
     protected _controlName: string = 'DateBase';
 
     protected _formatMaskChars = {
-        'D': '[0-9]',
-        'M': '[0-9]',
-        'Y': '[0-9]',
-        'H': '[0-9]',
-        'm': '[0-9]',
-        's': '[0-9]',
-        'U': '[0-9]'
+        D: '[0-9]',
+        M: '[0-9]',
+        Y: '[0-9]',
+        H: '[0-9]',
+        m: '[0-9]',
+        s: '[0-9]',
+        U: '[0-9]'
     };
 
     protected _model: Model;

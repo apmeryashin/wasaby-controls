@@ -26,10 +26,10 @@ export default class extends Control {
    protected _beforeMount() {
       this._source = new Memory({
          data: _companies,
-         filter: function(item, queryFilter) {
-            var selectionFilterFn = function(item, filter) {
-               var isSelected = false;
-               var itemId = item.get('id');
+         filter(item, queryFilter) {
+            let selectionFilterFn = function(item, filter) {
+               let isSelected = false;
+               let itemId = item.get('id');
 
                filter.selection.get('marked').forEach(function(selectedId) {
                   if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
@@ -39,7 +39,7 @@ export default class extends Control {
 
                return isSelected;
             };
-            var normalFilterFn = MemorySourceFilter();
+            let normalFilterFn = MemorySourceFilter();
             return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
          },
          idProperty: 'id'

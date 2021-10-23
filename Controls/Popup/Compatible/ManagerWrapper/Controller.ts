@@ -8,16 +8,16 @@ export default {
    _managerWrapper: null,
    _globalPopup: null,
    _theme: undefined,
-   registerManager: function(ManagerWrapper) {
+   registerManager(ManagerWrapper) {
       this._managerWrapper = ManagerWrapper;
    },
-   registerGlobalPopup: function(GlobalPopup) {
+   registerGlobalPopup(GlobalPopup) {
       this._globalPopup = GlobalPopup;
    },
-   getManagerWrapper: function() {
+   getManagerWrapper() {
       return this._managerWrapper;
    },
-   getGlobalPopup: function() {
+   getGlobalPopup() {
       return this._globalPopup;
    },
    getTheme(): string {
@@ -27,29 +27,29 @@ export default {
       this._theme = theme;
       this._managerWrapper?.setTheme(theme);
    },
-   registerGlobalPopupOpeners: function(GlobalPopupOpeners) {
+   registerGlobalPopupOpeners(GlobalPopupOpeners) {
       this._globalPopupOpeners = GlobalPopupOpeners;
    },
-   getGlobalPopupOpeners: function() {
+   getGlobalPopupOpeners() {
       return this._globalPopupOpeners;
    },
-   scrollHandler: function(container) {
+   scrollHandler(container) {
       if (this._managerWrapper) {
          this._managerWrapper._scrollHandler(container);
       }
    },
-   registerListener: function(event, registerType, component, callback) {
+   registerListener(event, registerType, component, callback) {
       if (this._managerWrapper) {
          this._managerWrapper.registerListener(event, registerType, component, callback);
       }
    },
-   unregisterListener: function(event, registerType, component) {
+   unregisterListener(event, registerType, component) {
       if (this._managerWrapper) {
          this._managerWrapper.unregisterListener(event, registerType, component);
       }
    },
 
-   getMaxZIndex: function() {
+   getMaxZIndex() {
       if (this._managerWrapper) {
          return this._managerWrapper.getMaxZIndex();
       }

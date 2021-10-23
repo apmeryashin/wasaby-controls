@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения строки {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/ итогов} в {@link Controls/grid:View таблице}.
- *  
+ *
  * @class Controls/_grid/interface/ResultsTemplate
  * @author Авраменко А.С.
  * @see Controls/grid:View#resultsTemplate
@@ -28,7 +28,7 @@
 export default interface IResultsTemplateOptions {
    /**
     * @name Controls/_grid/interface/ResultsTemplate#contentTemplate
-    * @cfg {String|TemplateFunction} Пользовательский шаблон, описывающий содержимое строки итогов. 
+    * @cfg {String|TemplateFunction} Пользовательский шаблон, описывающий содержимое строки итогов.
     * @default undefined
     */
    contentTemplate?: string;

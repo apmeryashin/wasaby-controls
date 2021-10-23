@@ -15,7 +15,7 @@ const CONSTRUCTORS_FOR_TYPE_INVERTING = {
 };
 
 export = {
-   addSubArray: function(array: any[], items: any[]): any[] {
+   addSubArray(array: any[], items: any[]): any[] {
       items.forEach((item) => {
          if (!this.hasInArray(array, item)) {
             array.push(item);
@@ -25,7 +25,7 @@ export = {
       return array;
    },
 
-   removeSubArray: function(array: any[], items: any[]): any[] {
+   removeSubArray(array: any[], items: any[]): any[] {
       let index: number;
       items.forEach((item) => {
          index = this.invertTypeIndexOf(array, item);
@@ -43,7 +43,7 @@ export = {
     * @param arrayTwo
     * @returns {{added: Array, removed: Array}}
     */
-   getArrayDifference: function(arrayOne: any[], arrayTwo: any[]): IDifferenceArrays {
+   getArrayDifference(arrayOne: any[], arrayTwo: any[]): IDifferenceArrays {
       const result: IDifferenceArrays = {};
 
       result.removed = arrayOne.filter((item) => {
@@ -57,11 +57,11 @@ export = {
       return result;
    },
 
-   hasInArray: function(array: any[], elem: unknown): boolean {
+   hasInArray(array: any[], elem: unknown): boolean {
       return this.invertTypeIndexOf(array, elem) !== -1;
    },
 
-   invertTypeIndexOf: function(array: any[], elem: unknown): number {
+   invertTypeIndexOf(array: any[], elem: unknown): number {
       let index: number = array.indexOf(elem);
 
       if (index === -1) {
@@ -79,7 +79,7 @@ export = {
       return index;
    },
 
-   getIntersection: function(firstCollection, secondCollection) {
+   getIntersection(firstCollection, secondCollection) {
       return firstCollection.filter((key) => {
          return secondCollection.includes(key);
       });

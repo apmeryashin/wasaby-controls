@@ -32,9 +32,9 @@ interface IRawDataElem {
  * @extends UI/Base:Control
  * @author Герасимов Александр
  * @demo Controls-demo/Container/Enum
- * 
+ *
  * @public
- */ 
+ */
 
 class EnumAdapter extends Control<IEnumAdapterOptions> {
 

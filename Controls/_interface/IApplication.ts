@@ -22,7 +22,7 @@ export default interface IApplication extends IHTML {
  * </pre>
  */
 
-/** 
+/**
  * @name Controls/_interface/IApplication#links
  * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
  * @example
@@ -53,7 +53,7 @@ export default interface IApplication extends IHTML {
  * </pre>
  */
 
-/** 
+/**
  * @name Controls/_interface/IApplication#headJson
  * @deprecated Используйте одну из опций: {@link scripts} или {@link links}.
  * @cfg {object} Разметка, которая будет встроена в содержимое тега head.

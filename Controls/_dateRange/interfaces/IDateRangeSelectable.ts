@@ -21,15 +21,15 @@ export interface IDateRangeSelectableOptions {
  * @public
  * @author Красильников А.С.
  */
-const selectionTypes = coreMerge({'quantum': 'quantum'}, IRangeSelectable.SELECTION_TYPES);
+const selectionTypes = coreMerge({quantum: 'quantum'}, IRangeSelectable.SELECTION_TYPES);
 const minRange = {
    day: 'day',
    month: 'month'
 };
 
 export = {
-   getDefaultOptions: function() {
-      var options = IRangeSelectable.getDefaultOptions();
+   getDefaultOptions() {
+      let options = IRangeSelectable.getDefaultOptions();
 
       /**
        * @typedef {Object} Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges
@@ -136,8 +136,8 @@ export = {
 
    minRange,
 
-   getOptionTypes: function() {
-      var optionsTypes = IRangeSelectable.getOptionTypes();
+   getOptionTypes() {
+      let optionsTypes = IRangeSelectable.getOptionTypes();
       optionsTypes.selectionType = entity.descriptor(String).oneOf(Object.keys(selectionTypes));
       return optionsTypes;
    }

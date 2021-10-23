@@ -10,7 +10,7 @@ describe('Controls/grid_clean/display/GridCollection/hasItemActionsSeparatedCell
                 rawData: items,
                 keyProperty: 'id'
             }),
-            columnScroll: columnScroll,
+            columnScroll,
             columns: [{}, {}]
         });
     };

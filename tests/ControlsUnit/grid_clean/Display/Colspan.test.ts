@@ -64,7 +64,7 @@ describe('Controls/grid_clean/Display/Colspan', () => {
 
     beforeEach(() => {
         collection = new RecordSet({
-            rawData: rawData,
+            rawData,
             keyProperty: 'key'
         });
     });

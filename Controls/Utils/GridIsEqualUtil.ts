@@ -13,7 +13,7 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
    if (obj1.length !== obj2.length) {
       return false;
    }
-   for (var i = 0; i < obj1.length; i++) {
+   for (let i = 0; i < obj1.length; i++) {
       const props = [];
       for (const field1 in obj1[i]) {
          props.push(field1);

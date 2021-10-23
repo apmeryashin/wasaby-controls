@@ -20,9 +20,9 @@ export default interface ISorting {
  * @cfg {Array.<Object>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/sorting/ сортировки}.
  * @remark
  * Допустимы значения направления сортировки ASC/DESC.
- * 
+ *
  * Если в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ конфигурации ячейки шапки} задать свойство {@link Controls/grid:IHeaderCell#sortingProperty sortingProperty}, то в шапке таблицы в конкретной ячейке будет отображаться кнопка для изменения сортировки. Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/sorting/ здесь}.
- * 
+ *
  * Выбранную сортировку можно сохранять. Для этого используют опцию {@link Controls/grid:IPropStorage#propStorageId propStorageId}.
  * @example
  * <pre class="brush: js; highlight: [2,4]">
@@ -33,9 +33,9 @@ export default interface ISorting {
  *    this._columns = [{displayProperty: 'name'}, { displayProperty: 'price'}, {displayProperty: 'balance'}]
  * }
  * </pre>
- * 
+ *
  * И связать опцию sorting со свойством контрола.
- * 
+ *
  * <pre class="brush: html; highlight: [5]">
  * <!-- WML -->
  * <Controls.grid:View

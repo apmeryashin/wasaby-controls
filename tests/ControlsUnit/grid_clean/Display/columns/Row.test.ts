@@ -35,10 +35,10 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     ...mockedCollection,
                     getGridColumnsConfig: () => columnsConfig
                 },
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 stickyLadder: {
-                    'prop1': {headingStyle: 'style'},
-                    'prop2': {headingStyle: 'style'}
+                    prop1: {headingStyle: 'style'},
+                    prop2: {headingStyle: 'style'}
                 },
                 gridColumnsConfig: columnsConfig,
                 contents: record
@@ -57,7 +57,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     ...mockedCollection,
                     getGridColumnsConfig: () => columnsConfig
                 },
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 gridColumnsConfig: columnsConfig,
                 contents: record
             });
@@ -84,7 +84,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     getGridColumnsConfig: () => columnsConfig
                 },
                 gridColumnsConfig: columnsConfig,
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 contents: record
             });
 
@@ -106,7 +106,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     ...mockedCollection,
                     getGridColumnsConfig: () => columnsConfig
                 },
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 gridColumnsConfig: columnsConfig,
                 contents: record
             });

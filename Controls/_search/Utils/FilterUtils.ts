@@ -1,7 +1,7 @@
 const SERVICE_FILTERS = {
     HIERARCHY: {
-        'Разворот': 'С разворотом',
-        'usePages': 'full'
+        Разворот: 'С разворотом',
+        usePages: 'full'
     }
 };
 
@@ -13,7 +13,7 @@ function _assignServiceFilters(searchController, filter: object, forced): void {
 
 function _deleteServiceFilters(options, filter: object): void {
     if (options.parentProperty) {
-        for (var i in SERVICE_FILTERS.HIERARCHY) {
+        for (let i in SERVICE_FILTERS.HIERARCHY) {
             if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
                 delete filter[i];
             }

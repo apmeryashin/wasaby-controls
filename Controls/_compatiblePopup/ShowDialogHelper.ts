@@ -3,9 +3,9 @@ import moduleStubs = require('Core/moduleStubs');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {Logger} from 'UI/Utils';
 
-var _private = {
-   prepareDeps: function(config) {
-      var dependencies = ['Controls/popup'];
+let _private = {
+   prepareDeps(config) {
+      let dependencies = ['Controls/popup'];
       if (config.isStack === true) {
          dependencies.push('Controls/popupTemplate');
          config._path = 'StackController';
@@ -28,16 +28,16 @@ var _private = {
    }
 };
 
-var DialogHelper = {
-   open: function(path, config) {
-      var result = moduleStubs.requireModule(path).addCallback(function(Component) {
+let DialogHelper = {
+   open(path, config) {
+      let result = moduleStubs.requireModule(path).addCallback(function(Component) {
          if (isNewEnvironment()) {
-            var dfr = new Deferred();
-            var deps = _private.prepareDeps(config);
+            let dfr = new Deferred();
+            let deps = _private.prepareDeps(config);
             requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(CompatiblePopup) {
                CompatiblePopup.load().addCallback(function() {
                   require(deps, function(popup, Strategy) {
-                     var CoreTemplate = require(config.template);
+                     let CoreTemplate = require(config.template);
                      config._initCompoundArea = function(compoundArea) {
                         dfr && dfr.callback(compoundArea);
                         dfr = null;

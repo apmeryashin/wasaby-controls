@@ -5,15 +5,15 @@
  * @property {Function} [compile] Class list object in which key is a name of class and the value is a flag
  * indicates whether to add a class.
  */
-type CssClassListChain = {
+interface CssClassListChain {
     classList: ClassListObject;
     add(className: string, shouldAdd?: boolean): CssClassListChain;
     compile(classListObject?: ClassListObject): string;
-};
+}
 
-type ClassListObject = {
+interface ClassListObject {
     [key: string]: boolean;
-};
+}
 
 class StaticCssClassList {
 

@@ -45,7 +45,7 @@ const DEPEND_TEMPLATES = [
    'footerContentTemplate'
 ];
 
-export default class _Controller implements IDropdownController {
+export default class Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
    protected _options: IDropdownControllerOptions = null;
@@ -751,7 +751,7 @@ export default class _Controller implements IDropdownController {
          draggable: this._options.menuDraggable
       };
       const config = {
-         templateOptions: Object.assign(baseConfig, templateOptions),
+         templateOptions: {...baseConfig, ...templateOptions},
          className: this._options.popupClassName + ` controls_dropdownPopup_theme-${this._options.theme}
           controls_popupTemplate_theme-${this._options.theme}`,
          template: 'Controls/menu:Popup',
@@ -783,7 +783,7 @@ export default class _Controller implements IDropdownController {
    }
 }
 
-_Controller.getDefaultOptions = function getDefaultOptions() {
+Controller.getDefaultOptions = function getDefaultOptions() {
    return {
       filter: {},
       selectedKeys: [],
@@ -791,16 +791,16 @@ _Controller.getDefaultOptions = function getDefaultOptions() {
    };
 };
 
-Object.defineProperty(_Controller, 'defaultProps', {
+Object.defineProperty(Controller, 'defaultProps', {
    enumerable: true,
    configurable: true,
 
    get(): object {
-      return _Controller.getDefaultOptions();
+      return Controller.getDefaultOptions();
    }
 });
 
-_Controller.getOptionTypes = function getOptionTypes() {
+Controller.getOptionTypes = function getOptionTypes() {
    return {
       selectedKeys: descriptor(Array)
    };

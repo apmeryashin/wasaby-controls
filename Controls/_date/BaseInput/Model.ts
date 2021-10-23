@@ -9,13 +9,13 @@ const SPACE = ' ';
 const VALID_PARTIAL_DATE_REGEXP = new RegExp('/^[0 ' + SPACE + ']{2}\.[0 ' + SPACE + '/s]{2}\.\d{2,4}$/');
 const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
 
-var _private = {
-      updateLastValue: function(self) {
+let _private = {
+      updateLastValue(self) {
          if (dateUtils.isValidDate(self._value)) {
             self._lastValue = self._value;
          }
       },
-      updateValue: function(self, value) {
+      updateValue(self, value) {
          const oldValue = self._value,
             oldTextValue = self._textValue;
          self._value = value;
@@ -28,7 +28,7 @@ var _private = {
             self._nextVersion();
          }
       },
-      updateDisplayValue: function(self, displayValue) {
+      updateDisplayValue(self, displayValue) {
          const normalizedDisplayValue = displayValue.replace(ALL_SPACES_REGEXP, self._replacer);
          const oldTextValue = self._textValue;
          self._value = self._stringValueConverter.getValueByString(normalizedDisplayValue);
@@ -56,7 +56,7 @@ var _private = {
     * @author Красильников А.С.
     * @public
     */
-var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
+let ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
       _value: null,
       _lastValue: null,
@@ -65,7 +65,7 @@ var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.Versi
       _inputMode: null,
       _replacer: ' ',
 
-      constructor: function(options) {
+      constructor(options) {
          ModuleClass.superclass.constructor.apply(this, arguments);
          this._stringValueConverter = new StringValueConverter();
          this._stringValueConverter.update({
@@ -90,7 +90,7 @@ var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.Versi
        * Updates model fields.
        * @param options
        */
-      update: function(options) {
+      update(options) {
          this._stringValueConverter.update({
             replacer: this._replacer,
             mask: options.mask,
@@ -171,7 +171,7 @@ var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.Versi
        * Autocomplete not full text value.
        * @param textValue
        */
-      autocomplete: function(textValue, autocompleteType) {
+      autocomplete(textValue, autocompleteType) {
          this._nextVersion();
          this._textValue = textValue;
          this.value = this._stringValueConverter.getValueByString(textValue, this._lastValue, autocompleteType, this._inputMode);
@@ -185,7 +185,7 @@ var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.Versi
             }
          }
       },
-      setCurrentDate: function() {
+      setCurrentDate() {
          this.value = this._stringValueConverter.getCurrentDate(this._lastValue, this._mask);
       }
 

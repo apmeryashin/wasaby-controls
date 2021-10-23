@@ -18,14 +18,14 @@ export const Master = {
             name: 'Входящие',
             counter: '5',
             'Раздел@': true,
-            'Раздел': null,
+            Раздел: null,
             sourceType: 'incoming',
             group: 'CONTROLS_HIDDEN_GROUP'
          },
          {
             id: '3',
             'Раздел@': false,
-            'Раздел': 0,
+            Раздел: 0,
             name: 'Входящие задачи',
             counter: '16',
             sourceType: 'incomingTasks',
@@ -34,7 +34,7 @@ export const Master = {
          {
             id: '2',
             'Раздел@': null,
-            'Раздел': 0,
+            Раздел: 0,
             name: 'Планы',
             counter: '3',
             sourceType: 'plans',
@@ -43,7 +43,7 @@ export const Master = {
          {
             id: '10',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Критические ошибки',
             counter: '2',
             sourceType: 'criticalBugs',
@@ -52,7 +52,7 @@ export const Master = {
          {
             id: '14',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Срочные задачи',
             counter: '5',
             sourceType: 'hotTasks',
@@ -61,7 +61,7 @@ export const Master = {
          {
             id: '4',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Задачи от Андрея Б.',
             counter: '84',
             sourceType: 'andrewBTasks',
@@ -70,7 +70,7 @@ export const Master = {
          {
             id: '6',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Задачи от Дмитрия К.',
             counter: '5',
             sourceType: 'dmitriyKTasks',
@@ -79,7 +79,7 @@ export const Master = {
          {
             id: '9',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Повышение',
             counter: '4',
             sourceType: 'levelUp',
@@ -90,14 +90,14 @@ export const Master = {
             name: 'Поручения',
             counter: '2',
             'Раздел@': false,
-            'Раздел': null,
+            Раздел: null,
             sourceType: 'instructions',
             group: '21.5100'
          },
          {
             id: '5',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Задачи от Андрея С.',
             counter: '1',
             sourceType: 'andrewSTasks',
@@ -106,7 +106,7 @@ export const Master = {
          {
             id: '7',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Задачи от Александра Г.',
             counter: undefined,
             sourceType: 'alexGTasks',
@@ -115,7 +115,7 @@ export const Master = {
          {
             id: '8',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Отложенные',
             counter: '99',
             sourceType: 'postponed',
@@ -124,7 +124,7 @@ export const Master = {
          {
             id: '11',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Задачи вынесенные из вехи',
             counter: '74',
             sourceType: 'postponedTasks',
@@ -133,7 +133,7 @@ export const Master = {
          {
             id: '12',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: '3.18.710',
             counter: '5',
             sourceType: '3.18.710',
@@ -142,7 +142,7 @@ export const Master = {
          {
             id: '13',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'TODO',
             counter: '5',
             sourceType: 'todoTasks',
@@ -152,7 +152,7 @@ export const Master = {
          {
             id: '15',
             'Раздел@': null,
-            'Раздел': null,
+            Раздел: null,
             name: 'Прочие',
             counter: '5',
             sourceType: 'otherTasks',

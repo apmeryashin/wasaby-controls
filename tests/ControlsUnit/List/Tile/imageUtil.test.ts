@@ -5,21 +5,21 @@ function mockHTMLElement(width, height) {
     return {
         classList: {
             _classList: [],
-            add: function(className) {
+            add(className) {
                 this._classList.push(className);
             },
-            remove: function(className) {
+            remove(className) {
                 this._classList.splice(this._classList.indexOf(className), 1);
             },
-            contains: function(className) {
+            contains(className) {
                 return this._classList.indexOf(className) >= 0;
             }
         },
         style: {},
-        getBoundingClientRect: function() {
+        getBoundingClientRect() {
             return {
-                width: width,
-                height: height
+                width,
+                height
             };
         }
     };

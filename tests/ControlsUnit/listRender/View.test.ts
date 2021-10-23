@@ -129,7 +129,7 @@ describe('Controls/_listRender/View', () => {
                 getContents: () => ({
                     getKey: () => 2
                 }),
-                setActive: function() {
+                setActive() {
                     this._$active = true;
                 },
                 getActions: () => ({
@@ -243,10 +243,10 @@ describe('Controls/_listRender/View', () => {
                 getEditingConfig: () => null,
                 setActionsTemplateConfig: () => null,
                 getItemBySourceKey: () => item,
-                setActiveItem: function(_item) {
+                setActiveItem(_item) {
                     this._$activeItem = _item;
                 },
-                getActiveItem: function() {
+                getActiveItem() {
                     return this._$activeItem;
                 },
                 at: () => item,

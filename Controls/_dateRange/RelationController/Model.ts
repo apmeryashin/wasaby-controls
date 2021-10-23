@@ -10,7 +10,7 @@ const enum SLIDE_DATE_TYPE {
 }
 
 class ModuleClass {
-    public ranges: Date[][];
+    ranges: Date[][];
     private _steps: number[];
     private _relationMode: String;
     private _dateConstructor: Function;
@@ -90,7 +90,7 @@ class ModuleClass {
     }
 
     private _autoRelation(ranges, updatedRange, changedRangeIndex) {
-        var periodType;
+        let periodType;
 
         periodType = getPeriodType(updatedRange[0], updatedRange[1]);
 
@@ -120,7 +120,7 @@ class ModuleClass {
     }
 
     private _updateRelation(updatedPeriodType, updatedStartValue, startValue, capacityChanged) {
-        var step;
+        let step;
 
         // The linking is turned on only if we switch to year mode and this means that the offset between periods
         // is a multiple of years in any case, or if the bit width has not changed and the step between periods
@@ -160,7 +160,7 @@ class ModuleClass {
 
     private _resetSteps(step) {
         this._steps = [];
-        for (var i = 0; i < this.ranges.length - 1; i++) {
+        for (let i = 0; i < this.ranges.length - 1; i++) {
             this._steps.push(step);
         }
     }
@@ -170,7 +170,7 @@ class ModuleClass {
     }
 
     protected _getChangedIndex(ranges: Date[]): number {
-        for (var i in this.ranges) {
+        for (let i in this.ranges) {
             if (!dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) || !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])) {
                 return parseInt(i, 10);
             }
@@ -179,9 +179,9 @@ class ModuleClass {
     }
 
     private _getRangesFromOptions(options) {
-        var ranges = [],
+        let ranges = [],
             i, j;
-        for (var field in options) {
+        for (let field in options) {
             i = null;
             if (field.indexOf('startValue') === 0) {
                 i = parseInt(field.slice(10), 10);

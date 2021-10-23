@@ -4,12 +4,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контрол настраивает Controls/scroll:Container на перехват клавиш "up", "down", "page up", "page down", "home", "end" по умолчанию.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less переменные тем оформления}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/scroll/keyboard/ руководство разработчика}
- * 
+ *
  * @extends UI/Base:Control
  * @author Шипин А.А.
  * @public

@@ -13,7 +13,7 @@ import dateControlsUtils from './../Utils';
  * @interface Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @public
  */
-var EMPTY_CAPTIONS = {
+let EMPTY_CAPTIONS = {
     NOT_SPECIFIED: rk('Не указан'),
     NOT_SELECTED: rk('Не выбран'),
     WITHOUT_DUE_DATE: rk('Бессрочно', 'ShortForm'),
@@ -21,7 +21,7 @@ var EMPTY_CAPTIONS = {
 };
 
 export default {
-    getDefaultOptions: function() {
+    getDefaultOptions() {
         return {
 
             /**
@@ -138,9 +138,9 @@ export default {
         };
     },
 
-    EMPTY_CAPTIONS: EMPTY_CAPTIONS,
+    EMPTY_CAPTIONS,
 
-    getOptionTypes: function() {
+    getOptionTypes() {
         return {
             chooseMonths: descriptor(Boolean),
             chooseQuarters: descriptor(Boolean),

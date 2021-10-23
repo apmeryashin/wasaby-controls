@@ -17,8 +17,8 @@ function getDisplay(items, parentProperty, nodeProperty, root) {
       cachedDisplay = new Tree({
           collection: items,
           keyProperty: items.getKeyProperty(),
-          parentProperty: parentProperty,
-          nodeProperty: nodeProperty,
+          parentProperty,
+          nodeProperty,
           root: root !== undefined ? root : null
       });
       cachedVersion = items.getVersion();
@@ -30,7 +30,7 @@ function getDisplay(items, parentProperty, nodeProperty, root) {
 }
 
 function getSiblingItem(direction, item, items, parentProperty, nodeProperty, root) {
-    var
+    let
        result,
        display,
        itemIndex,

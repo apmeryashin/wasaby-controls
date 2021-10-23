@@ -37,7 +37,7 @@ export default class extends Control {
     }
 
     protected selectorCallback(event, currentItems, newItems) {
-        var
+        let
             indexForReplace = -1,
             newItem = newItems.at(newItems.getCount() - 1),
             propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';

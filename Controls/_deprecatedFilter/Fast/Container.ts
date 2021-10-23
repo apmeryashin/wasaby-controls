@@ -16,7 +16,7 @@ import template = require('wml!Controls/_deprecatedFilter/Fast/Container');
  * @extends UI/Base:Control
  * @public
  * @author Герасимов А.М.
- * 
+ *
  * @deprecated Данный контрол устарел и будет удалён.
  */
 
@@ -31,15 +31,15 @@ import template = require('wml!Controls/_deprecatedFilter/Fast/Container');
  * @class Controls/_filter/Fast/Container
  * @extends UI/Base:Control
  * @author Герасимов А.М.
- * 
+ *
  * @public
  */
 
-var Container = Control.extend(/** @lends Controls/_filter/Fast/Container.prototype */{
+let Container = Control.extend(/** @lends Controls/_filter/Fast/Container.prototype */{
 
    _template: template,
 
-   _itemsChanged: function(event, items) {
+   _itemsChanged(event, items) {
       this._notify('filterItemsChanged', [items], {bubbling: true});
    }
 });

@@ -7,7 +7,7 @@ import {descriptor} from 'Types/entity';
  * @public
  * @author Красильников А.С.
  */
-var EMPTY_CAPTIONS = {
+let EMPTY_CAPTIONS = {
     NOT_SPECIFIED: rk('Не указан'),
     NOT_SELECTED: rk('Не выбран'),
     WITHOUT_DUE_DATE: rk('Бессрочно', 'ShortForm'),
@@ -15,7 +15,7 @@ var EMPTY_CAPTIONS = {
 };
 
 export default {
-    getDefaultOptions: function() {
+    getDefaultOptions() {
         return {
             viewMode: 'selector',
 
@@ -49,9 +49,9 @@ export default {
         };
     },
 
-    EMPTY_CAPTIONS: EMPTY_CAPTIONS,
+    EMPTY_CAPTIONS,
 
-    getOptionTypes: function() {
+    getOptionTypes() {
         return {
             nextArrowVisibility: descriptor(Boolean),
             prevArrowVisibility: descriptor(Boolean),

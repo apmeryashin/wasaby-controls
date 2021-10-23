@@ -13,10 +13,10 @@ function getContainer() {
 
 function getHeader() {
     return {
-        getOffset: function() {
+        getOffset() {
             return 0;
         },
-        getHeaderContainer: function() {
+        getHeaderContainer() {
             return this._container;
         },
         _id: getNextStickyId(),
@@ -73,13 +73,13 @@ describe('SizeAndVisibilityObserver', () => {
             header.getChildrenHeaders = function() {
                 return [{
                     inst: {
-                        getHeaderContainer: function() {
+                        getHeaderContainer() {
                             return 'container1';
                         }
                     }
                 }, {
                     inst: {
-                        getHeaderContainer: function() {
+                        getHeaderContainer() {
                             return 'container2';
                         }
                     }
@@ -115,7 +115,7 @@ describe('SizeAndVisibilityObserver', () => {
         it('should call _getGroupByHeader and resizeHandler if header is group', function() {
             const header = {
                 id: 1,
-                getHeaderContainer: function() {
+                getHeaderContainer() {
                     return this._container;
                 }
             };
@@ -149,7 +149,7 @@ describe('SizeAndVisibilityObserver', () => {
         it('should call _resizeHeadersCallback with correct operation', () => {
             const header = {
                 index: 1,
-                getHeaderContainer: function() {
+                getHeaderContainer() {
                     return this._container;
                 }
             };

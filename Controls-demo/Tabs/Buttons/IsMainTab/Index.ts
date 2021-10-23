@@ -18,7 +18,7 @@ export default class TabButtonsDemo extends Control {
 
         this._items = new RecordSet({
             keyProperty: 'id',
-            rawData: rawData
+            rawData
         });
     }
 

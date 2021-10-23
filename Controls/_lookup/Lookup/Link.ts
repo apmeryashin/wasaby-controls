@@ -14,7 +14,7 @@ import 'css!Controls/lookup';
  * @implements Controls/interface:ICaption
  * @implements Controls/interface:IHeight
  * @implements Controls/interface:IUnderline
- * 
+ *
  * @demo Controls-demo/Lookup/MultipleInputNew/MultipleInputNew
  *
  * @public

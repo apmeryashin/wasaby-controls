@@ -376,11 +376,11 @@ export function getDecoratedLink(jsonNode): any[]|string {
       ) + '&id=0&srv=1';
 
    return ['span',
-      { 'class': decoratedLinkClasses.wrap },
+      { class: decoratedLinkClasses.wrap },
       ['a',
          newLinkAttributes,
          ['img',
-            { 'class': decoratedLinkClasses.image, alt: newLinkAttributes.href, src: image }
+            { class: decoratedLinkClasses.image, alt: newLinkAttributes.href, src: image }
          ]
       ]
    ];
@@ -516,7 +516,7 @@ export function normalizeLink(linkToCheck: string, linkDomain: string, ending: s
    if (needToCreateLinkNode) {
       const result = isWrongDomain ? match : createLinkNode(
          (linkPrefix ? 'http://' : '') + linkToCheck, linkToCheck);
-   
+
       return [isCorrectLink, result];
    }
 

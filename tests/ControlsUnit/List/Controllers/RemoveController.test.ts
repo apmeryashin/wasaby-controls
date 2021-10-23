@@ -114,7 +114,7 @@ describe('Controls/list_clean/RemoveController', () => {
 
     it('remove() should remove when correct source set via update', () => {
         controller = new RemoveController({source: undefined});
-        controller.updateOptions({source: source});
+        controller.updateOptions({source});
         return resolveRemove(controller, selectionObject).then((result: boolean) => {
 
             // Ожидаем, что удаление пройдёт успешно
@@ -124,7 +124,7 @@ describe('Controls/list_clean/RemoveController', () => {
 
     it('removeWithConfirmation() should remove when correct source set via update', () => {
         controller = new RemoveController({source: undefined});
-        controller.updateOptions({source: source});
+        controller.updateOptions({source});
         const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, selectionObject).then((result: boolean) => {
 

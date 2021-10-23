@@ -7,7 +7,7 @@ import 'css!Controls/decorator';
 
    /**
     * Контрол служит для вставки вёрстки в формате JsonML в шаблон.
-    * 
+    *
     * <a href="/doc/platform/developmentapl/service-development/service-contract/logic/json-markup-language/markup/">Руководство разработчика.</a>
     * @remark
     * Полезные ссылки:
@@ -88,20 +88,20 @@ class MarkupDecorator extends Control<IControlOptions> {
     * @typedef {Object}
     * @name ValidHtml
     * @property {Object} validNodes Набор тегов, которые будут вставляться версткой. Формат: {tagName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
-    * @property {Object} validAttributes Набор разрешенных атрибутов, которые попадут в результат. Формат: {attributeName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>. 
+    * @property {Object} validAttributes Набор разрешенных атрибутов, которые попадут в результат. Формат: {attributeName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
     */
 
    /**
     * @name Controls/_decorator/Markup#validHtml
     * @cfg {ValidHtml} Опция для переопределения разрешённых тегов и атрибутов. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
     * @example
-    * Рассмотрим пример, в котором вставляется верстка с картинкой и текстом. 
-    * 
+    * Рассмотрим пример, в котором вставляется верстка с картинкой и текстом.
+    *
     * <pre>
     * <!-- Control.wml -->
     * <Controls.decorator:Markup value="{{ json }}" validHtml="{{ validHtml }}" />
     * </pre>
-    * 
+    *
     * <pre>
     * // Control.js
     * ...
@@ -112,7 +112,7 @@ class MarkupDecorator extends Control<IControlOptions> {
     *          <p>some text</p>
     *       </div>
     *    `);
-    * 
+    *
     *    this.validHtml = {
     *       validNodes: {
     *          img: true,
@@ -128,7 +128,7 @@ class MarkupDecorator extends Control<IControlOptions> {
     * }
     * ...
     * </pre>
-    * 
+    *
     * В данном примере опция validHtml разрешает в качестве верстки использовать только блочные теги div и картинки img, а также указан набор разрешенных атрибутов: src, alt, height и width. Это значит, что картинка будет вставлена версткой, а параграф будет экранирован и вставлен строкой.
     *
     */
