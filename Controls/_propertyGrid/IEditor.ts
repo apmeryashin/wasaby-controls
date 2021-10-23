@@ -24,6 +24,8 @@ export default interface IEditor {
      * @param {Event} event Event description.
      * @param {*} value New value of property.
      */
+
+    propertyValue?: unknown;
 }
 
 /**

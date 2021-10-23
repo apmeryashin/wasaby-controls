@@ -17,9 +17,6 @@ interface IInfoBoxThemeConstants {
     MAX_WIDTH?: number;
 }
 
-interface IInfoBoxItem extends IStickyItem {
-}
-
 interface IInfoBoxSide {
     t: string;
     r: string;
@@ -83,7 +80,7 @@ class InfoBoxController extends StickyController {
     _checkHiddenId: number | null = null;
     TYPE: string = 'InfoBox';
 
-    elementCreated(item: IInfoBoxItem, container: HTMLDivElement): boolean {
+    elementCreated(item: IStickyItem, container: HTMLDivElement): boolean {
         const isTargetVisible = this._isTargetVisible(item);
         // Only one popup can be opened
         if (this._openedPopupId) {
@@ -125,11 +122,11 @@ class InfoBoxController extends StickyController {
         return true;
     }
 
-    resizeInner(item: IInfoBoxItem, container: HTMLDivElement): boolean {
+    resizeInner(item: IStickyItem, container: HTMLDivElement): boolean {
         return super.elementUpdated(item, container);
     }
 
-    elementDestroyed(item: IInfoBoxItem): Promise<null> {
+    elementDestroyed(item: IStickyItem): Promise<null> {
         if (item.id === this._openedPopupId) {
             clearInterval(this._checkHiddenId);
             this._openedPopupId = null;
@@ -139,11 +136,11 @@ class InfoBoxController extends StickyController {
     }
 
     // Инфобокс закрывается всегда при драге на странице, только если драг не в нем.
-    dragNDropOnPage(item: IInfoBoxItem, container: HTMLDivElement, isInsideDrag: boolean): boolean {
+    dragNDropOnPage(item: IStickyItem, container: HTMLDivElement, isInsideDrag: boolean): boolean {
         return !isInsideDrag;
     }
 
-    getDefaultConfig(item: IInfoBoxItem): Promise<void> {
+    getDefaultConfig(item: IStickyItem): Promise<void> {
         super.getDefaultConfig.apply(this, arguments);
         const defaultPosition: IPopupPosition = {
             left: -10000,
@@ -172,7 +169,7 @@ class InfoBoxController extends StickyController {
         });
     }
 
-    prepareConfig(item: IInfoBoxItem, container?: HTMLElement): IInfoBoxItem {
+    prepareConfig(item: IStickyItem, container?: HTMLElement): IStickyItem {
         cMerge(item.popupOptions, this._prepareInfoboxConfig(item.popupOptions.position, item.popupOptions.target));
         return super.prepareConfig.apply(this, arguments);
     }
@@ -198,7 +195,7 @@ class InfoBoxController extends StickyController {
     }
 
     // Return the configuration prepared for StickyStrategy
-    private _prepareInfoboxConfig(position: string, target: HTMLDivElement): IInfoBoxItem {
+    private _prepareInfoboxConfig(position: string, target: HTMLDivElement): IStickyItem {
         const side: string = position[0];
         const alignSide: string = position[1];
         const topOrBottomSide: boolean = side === 't' || side === 'b';
@@ -246,7 +243,7 @@ class InfoBoxController extends StickyController {
         }
     }
 
-    private _removeHiddenElement(item: IInfoBoxItem): boolean {
+    private _removeHiddenElement(item: IStickyItem): boolean {
         const targetHidden: boolean = !!this._getTargetNode(item).closest('.ws-hidden');
         if (targetHidden) {
             Controller.remove(item.id);

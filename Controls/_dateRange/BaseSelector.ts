@@ -4,15 +4,12 @@ import {EventUtils} from 'UI/Events';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 
-export interface IDateRangeBaseSelectorOptions extends IBaseSelectorOptions {
-}
-
-export default class DateRangeBaseSelector extends BaseSelector<IDateRangeBaseSelectorOptions> {
+export default class DateRangeBaseSelector extends BaseSelector<IBaseSelectorOptions> {
     protected _startValue: Date | null;
     protected _endValue: Date | null;
     protected _rangeModel: DateRangeModel = null;
 
-    protected _beforeMount(options: IDateRangeBaseSelectorOptions): void {
+    protected _beforeMount(options: IBaseSelectorOptions): void {
         this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         EventUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
         this._updateRangeModel(options);
@@ -23,12 +20,12 @@ export default class DateRangeBaseSelector extends BaseSelector<IDateRangeBaseSe
         this._rangeModel.destroy();
     }
 
-    protected _beforeUpdate(options: IDateRangeBaseSelectorOptions): void {
+    protected _beforeUpdate(options: IBaseSelectorOptions): void {
         this._updateRangeModel(options);
         super._beforeUpdate(options);
     }
 
-    protected _updateRangeModel(options: IDateRangeBaseSelectorOptions): void {
+    protected _updateRangeModel(options: IBaseSelectorOptions): void {
         this._rangeModel.update(options);
     }
 
@@ -47,3 +44,7 @@ export default class DateRangeBaseSelector extends BaseSelector<IDateRangeBaseSe
         this._rangeModel.setRange(startValue, endValue);
     }
 }
+
+export {
+    IBaseSelectorOptions as IDateRangeBaseSelectorOptions
+};
