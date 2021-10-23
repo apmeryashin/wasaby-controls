@@ -23,7 +23,7 @@ describe('Controls/grid_clean/Display/Ladder/StickyLadderCell/StickyHeaderClasse
         let firstLadderLength = 0;
         const gridDataRow = new GridStickyLadderCell({
             owner: {
-                getStickyLadder: () => { return { first: { ladderLength: firstLadderLength }, second: { ladderLength: 1 } } },
+                getStickyLadder: () => ({ first: { ladderLength: firstLadderLength }, second: { ladderLength: 1 } }),
                 getStickyLadderProperties: () => ['first', 'second'],
                 hasHeader: () => false,
                 getResultsPosition: () => '',
@@ -39,7 +39,7 @@ describe('Controls/grid_clean/Display/Ladder/StickyLadderCell/StickyHeaderClasse
         let firstLadderLength = 0;
         const gridDataRow = new GridStickyLadderCell({
             owner: {
-                getStickyLadder: () => { return { first: { ladderLength: firstLadderLength }, second: { ladderLength: 1 } } },
+                getStickyLadder: () => ({ first: { ladderLength: firstLadderLength }, second: { ladderLength: 1 } }),
                 getStickyLadderProperties: () => ['first', 'second'],
                 hasHeader: () => true,
                 getResultsPosition: () => 'top',

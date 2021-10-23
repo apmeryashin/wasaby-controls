@@ -26,7 +26,7 @@ describe('Controls/grid_clean/GridView', () => {
                 footer: () => '',
                 itemPadding: {}
             };
-            let gridView = new GridView(gridOptions);
+            const gridView = new GridView(gridOptions);
             await gridView._beforeMount(gridOptions);
             assert.strictEqual(gridView.getListModel().getVersion(), 0, 'Version must be equals zero! No other variants!');
         });
@@ -45,7 +45,7 @@ describe('Controls/grid_clean/GridView', () => {
                 columns: [{}],
                 itemPadding: {},
                 columnScroll: true,
-                listModel: new GridCollection(collectionOptions),
+                listModel: new GridCollection(collectionOptions)
             };
             const gridView = new GridView(gridOptions);
 

@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/Searching/PortionedSearch/PortionedSearch';
 import PortionedSearchMemory from './PortionedSearchMemory';
-import {SyntheticEvent} from "UI/Vdom";
+import {SyntheticEvent} from 'UI/Vdom';
 import { Memory } from 'Types/source';
 
 export default class extends Control {

@@ -546,7 +546,7 @@ export default class View extends Control<IViewOptions> {
             contents = contents[(contents as any).length - 1];
         }
         return contents;
-    };
+    }
 
     static getDefaultOptions(): Partial<IViewOptions> {
         return {

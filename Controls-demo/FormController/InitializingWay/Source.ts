@@ -1,5 +1,5 @@
-import { Model } from "Types/entity";
-import { Memory } from "Types/source";
+import { Model } from 'Types/entity';
+import { Memory } from 'Types/source';
 
 const ASYNC_TIMEOUT = 1000;
 

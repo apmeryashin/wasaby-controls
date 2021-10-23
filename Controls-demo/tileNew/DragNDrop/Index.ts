@@ -34,13 +34,13 @@ export default class extends Control {
       return new Dnd.ItemsEntity({
          items: items,
          title: firstItem.get('title'),
-         image: firstItem.get('image'),
+         image: firstItem.get('image')
       });
-   };
+   }
 
    protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
       this._children.listMover.moveItems(entity.getItems(), target, position);
-   };
+   }
 
    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -175,8 +175,9 @@ export class ViewModel extends BaseViewModel {
 
     private static _maxValueOfMinutesAndSeconds: number = 59;
 
-    private static _formatTimesUnits(initialValue: Array<number
-                                         | string>, timesUnits: ITimeUnits[], mask: string): string {
+    private static _formatTimesUnits(initialValue: Array<number | string>,
+                                     timesUnits: ITimeUnits[],
+                                     mask: string): string {
         return timesUnits.reduce((format, item) => {
             const countTimeUnits: number | null = ViewModel._countTimeUnits(mask, item.regExp);
 
@@ -237,7 +238,7 @@ export class ViewModel extends BaseViewModel {
         let result: string = str;
         const zerosMatch = str.match(/^(0*)\d/);
         if (zerosMatch) {
-            const count = zerosMatch[1].length
+            const count = zerosMatch[1].length;
             result = ViewModel._replacer.repeat(count) + str.slice(count);
         }
         return result;

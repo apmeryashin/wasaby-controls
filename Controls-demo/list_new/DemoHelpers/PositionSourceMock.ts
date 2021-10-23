@@ -3,7 +3,7 @@ import {DataSet, Memory, Query} from 'Types/source';
 interface IItem {
     key: string;
     title: string;
-    group: string
+    group: string;
 }
 
 const MIN = 0;
@@ -20,7 +20,7 @@ export class PositionSourceMock extends Memory {
         const items: IItem[] = [];
         let position = filter['key<='] || filter['key>='] || filter['key~'] || '100';
 
-        let hasMoreFull = {before: true, after: true};
+        const hasMoreFull = {before: true, after: true};
         let hasMore = true;
 
         if (position === -1) {

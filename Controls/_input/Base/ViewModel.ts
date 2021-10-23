@@ -4,8 +4,7 @@ import simpleExtend = require('Core/core-simpleExtend');
 import { VersionableMixin } from 'Types/entity';
 import {isEqual} from 'Types/object';
 
-
-      const _private = {
+const _private = {
          setValue(self, value) {
             if (self._value !== value) {
                const oldValue = self._value;
@@ -35,7 +34,7 @@ import {isEqual} from 'Types/object';
          }
       };
 
-      const ViewModel = simpleExtend.extend([VersionableMixin], {
+const ViewModel = simpleExtend.extend([VersionableMixin], {
          _convertToValue(displayValue) {
             return displayValue;
          },
@@ -44,7 +43,7 @@ import {isEqual} from 'Types/object';
             return value === null ? '' : value;
          },
 
-         _getStartingPosition () {
+         _getStartingPosition() {
             return this.displayValue.length;
          },
 
@@ -169,5 +168,4 @@ import {isEqual} from 'Types/object';
          }
       });
 
-      export = ViewModel;
-
+export = ViewModel;

@@ -1,4 +1,4 @@
-import { TemplateFunction } from "UI/Base";
+import { TemplateFunction } from 'UI/Base';
 
 export interface IDraggableOptions {
     itemsDragNDrop?: boolean;

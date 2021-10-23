@@ -8,10 +8,10 @@ describe('Controls/_display:GridHeaderRow', () => {
         assert.equal(
             headerRow.getItemClasses({ theme: 'themeName' }),
             'controls-Grid__header'
-        )
+        );
     });
 
-    it('should add multiselect with rowspan if it is multi-line header', function () {
+    it('should add multiselect with rowspan if it is multi-line header', function() {
         const header = [{}];
         const headerRow = new GridHeaderRow({
             owner: {

@@ -137,7 +137,7 @@ export default class MonthsSource extends Memory {
 
             this._each(
                 items,
-                function (item) {
+                function(item) {
                     adapter.add(item);
                 }
             );

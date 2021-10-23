@@ -1,7 +1,7 @@
 import 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderMultilineDateTime';
 import 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderMultilineName';
 
-import {IData} from "Controls-demo/gridNew/DemoHelpers/DataCatalog";
+import {IData} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 
 export const MultilineLadder = {
     getData: (): IData[] => [
@@ -187,4 +187,4 @@ export const MultilineLadder = {
             title: 'Имя'
         }
     ]
-}
+};

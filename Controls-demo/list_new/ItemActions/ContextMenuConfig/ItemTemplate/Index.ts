@@ -11,7 +11,7 @@ interface IItemActionWithTemplate extends IItemAction {
    menuItemTemplate?: TemplateFunction;
    fileInfo?: {
       prettySize: string
-   }
+   };
 }
 
 interface ISrcData {

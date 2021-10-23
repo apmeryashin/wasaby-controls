@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from "wml!Controls-demo/toggle/Tumbler/ReadOnly/ReadOnly";
+import * as Template from 'wml!Controls-demo/toggle/Tumbler/ReadOnly/ReadOnly';
 import {RecordSet} from 'Types/collection';
 
 export default class extends Control {

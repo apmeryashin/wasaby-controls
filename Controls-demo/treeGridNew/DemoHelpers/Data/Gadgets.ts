@@ -1,4 +1,4 @@
-import {IData} from "Controls-demo/treeGridNew/DemoHelpers/Interface";
+import {IData} from 'Controls-demo/treeGridNew/DemoHelpers/Interface';
 
 export const Gadgets = {
     getData(): IData[] {
@@ -28,5 +28,5 @@ export const Gadgets = {
                 key: 3, title: 'Node 3', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: false
             }
         ];
-    },
+    }
 };

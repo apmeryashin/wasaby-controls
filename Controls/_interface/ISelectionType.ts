@@ -40,7 +40,7 @@ export interface ISelectionTypeOptions {
 
 export default interface ISelectionType {
     readonly '[Controls/_interface/ISelectionType]': boolean;
-};
+}
 
 /**
  * @typedef {String} SelectionType

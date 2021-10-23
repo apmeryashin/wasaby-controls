@@ -12,7 +12,7 @@ import monthTmpl = require('wml!Controls/_shortDatePicker/monthTemplate');
 import {Logger} from 'UI/Utils';
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 import 'css!Controls/shortDatePicker';
-import {SyntheticEvent} from "Vdom/Vdom";
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 const MAX_VISIBLE_YEARS = 14;
 

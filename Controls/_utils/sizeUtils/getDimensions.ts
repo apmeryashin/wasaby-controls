@@ -1,6 +1,6 @@
 import DimensionsMeasurer from 'Controls/_utils/sizeUtils/DimensionsMeasurer';
 
-function getVisibleChildren(element: HTMLElement): Array<HTMLElement> {
+function getVisibleChildren(element: HTMLElement): HTMLElement[] {
     return Array.prototype.filter.call(element.children, (child: HTMLElement) => {
         // https://drafts.csswg.org/cssom-view/#dom-htmlelement-offsetparent
         // offsetParent is null if:

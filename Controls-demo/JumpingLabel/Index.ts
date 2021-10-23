@@ -14,6 +14,7 @@ class JumpingLabel extends Control<IControlOptions> {
         idProperty: 'id',
         filter: (item) => Boolean(item)
     });
+    protected _template: TemplateFunction = controlTemplate;
     protected _beforeMount(): void {
         this._selectorTemplate = {
             templateName: selectorTemplate,
@@ -25,7 +26,6 @@ class JumpingLabel extends Control<IControlOptions> {
             }
         };
     }
-    protected _template: TemplateFunction = controlTemplate;
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 

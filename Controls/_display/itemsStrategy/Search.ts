@@ -122,35 +122,6 @@ export default class SearchStrategy<S extends Model, T extends TreeItem<S> = Tre
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
-    /**
-     * Constructor options
-     */
-    protected _options: IOptions<S, T>;
-
-    /**
-     * Map from leaf to its decorator: TreeItem -> TreeItemDecorator
-     */
-    protected _treeItemToDecorator: Map<T, TreeItemDecorator<S>> = new Map<T, TreeItemDecorator<S>>();
-
-    /**
-     * Map from node to its breadcrumbs: TreeItem -> BreadcrumbsItem
-     */
-    protected _treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>> = new Map<T, BreadcrumbsItem<S>>();
-
-    constructor(options: IOptions<S, T>) {
-        super();
-        this._options = options;
-    }
-
-    destroy(): void {
-        super.destroy();
-        this._treeItemToDecorator = null;
-        this._treeItemToBreadcrumbs = null;
-    }
-
-    // region IItemsStrategy
-
-    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
     get options(): IItemsStrategyOptions<S, T> {
         return this.source.options;
@@ -166,6 +137,35 @@ export default class SearchStrategy<S extends Model, T extends TreeItem<S> = Tre
 
     get items(): T[] {
         return this._getItems() as T[];
+    }
+    /**
+     * Constructor options
+     */
+    protected _options: IOptions<S, T>;
+
+    /**
+     * Map from leaf to its decorator: TreeItem -> TreeItemDecorator
+     */
+    protected _treeItemToDecorator: Map<T, TreeItemDecorator<S>> = new Map<T, TreeItemDecorator<S>>();
+
+    /**
+     * Map from node to its breadcrumbs: TreeItem -> BreadcrumbsItem
+     */
+    protected _treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>> = new Map<T, BreadcrumbsItem<S>>();
+
+    // region IItemsStrategy
+
+    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
+
+    constructor(options: IOptions<S, T>) {
+        super();
+        this._options = options;
+    }
+
+    destroy(): void {
+        super.destroy();
+        this._treeItemToDecorator = null;
+        this._treeItemToBreadcrumbs = null;
     }
 
     at(index: number): T {

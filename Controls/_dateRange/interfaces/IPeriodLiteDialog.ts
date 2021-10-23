@@ -21,7 +21,7 @@ var EMPTY_CAPTIONS = {
 };
 
 export default {
-    getDefaultOptions: function () {
+    getDefaultOptions: function() {
         return {
 
             /**
@@ -140,7 +140,7 @@ export default {
 
     EMPTY_CAPTIONS: EMPTY_CAPTIONS,
 
-    getOptionTypes: function () {
+    getOptionTypes: function() {
         return {
             chooseMonths: descriptor(Boolean),
             chooseQuarters: descriptor(Boolean),

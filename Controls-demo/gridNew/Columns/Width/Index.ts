@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/Columns/Width/Width';
 import {Memory} from 'Types/source';
 import { IHeaderCell } from 'Controls/grid';
 import { IColumn } from 'Controls/grid';
-import {CrossBrowserWidths} from "Controls-demo/gridNew/DemoHelpers/Data/CrossbrowserWidths";
+import {CrossBrowserWidths} from 'Controls-demo/gridNew/DemoHelpers/Data/CrossbrowserWidths';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

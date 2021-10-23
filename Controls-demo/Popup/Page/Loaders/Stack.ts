@@ -21,7 +21,7 @@ export function getConfig({widgetSource}): object {
             loadDataMethod: (cfg) => {
                 return widgetSource.query().then((data) => {
                     const widgetsData = {};
-                    data.getAll().forEach(element => {
+                    data.getAll().forEach((element) => {
                         widgetsData[element.getKey()] = element.getRawData();
                     });
                     return widgetsData;

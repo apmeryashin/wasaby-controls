@@ -115,4 +115,3 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       ok(suggestClosed);
    });
 });
-

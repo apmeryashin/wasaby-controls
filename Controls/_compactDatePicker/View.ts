@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_compactDatePicker/View';
 import {Date as WSDate} from 'Types/entity';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import {Utils as DateControlsUtils, DateRangeModel, IDateRangeOptions} from 'Controls/dateRange';
-import {IDisplayedRangesOptions} from "Controls/interface";
+import {IDisplayedRangesOptions} from 'Controls/interface';
 import {getFormattedCaption} from 'Controls/_compactDatePicker/Utils';
 import 'css!Controls/compactDatePicker';
 

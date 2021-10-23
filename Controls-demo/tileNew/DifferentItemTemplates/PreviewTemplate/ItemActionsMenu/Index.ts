@@ -4,7 +4,6 @@ import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from 'Controls-demo/tileNew/DataHelpers/DataCatalog';
 import {TItemActionShowType} from 'Controls/itemActions';
 
-
 const DATA = Gadgets.getPreviewItems();
 
 const ACTIONS = [

@@ -32,7 +32,6 @@ interface IInputOptions extends IBaseDropdownOptions, IValidationStatusOptions {
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
-
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
  * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.

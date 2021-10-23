@@ -1,4 +1,4 @@
-import {deepStrictEqual} from "assert";
+import {deepStrictEqual} from 'assert';
 import InputContainer from 'Controls/_jumpingLabel/InputContainer';
 
 describe('Controls/_jumpingLabel/InputContainer', () => {
@@ -27,14 +27,14 @@ describe('Controls/_jumpingLabel/InputContainer', () => {
             });
             it('_showFromAbove after use _setShowFromAbove on the _beforeMount', () => {
                 const inputContainer = new InputContainer();
-                inputContainer._beforeMount({value:item.value})
+                inputContainer._beforeMount({value: item.value});
                 const showFromAbove = inputContainer._showFromAbove;
                 deepStrictEqual(showFromAbove, item.result);
             });
             it('_showFromAbove after use _setShowFromAbove on the _beforeUpdate', () => {
                 const inputContainer = new InputContainer();
-                inputContainer._options = {value:'someValue'};
-                inputContainer._beforeUpdate({value:item.value})
+                inputContainer._options = {value: 'someValue'};
+                inputContainer._beforeUpdate({value: item.value});
                 const showFromAbove = inputContainer._showFromAbove;
                 deepStrictEqual(showFromAbove, item.result);
             });

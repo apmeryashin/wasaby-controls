@@ -78,7 +78,6 @@ export default class Panel extends Control<IControlOptions> {
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  */
 
-
 /**
  * @event Происходит при клике на элемент.
  * @name Controls/_operations/Panel#itemClick

@@ -5,7 +5,7 @@ import 'wml!Controls-demo/gridNew/Header/Multiheader/VerticalAlign/VerticalAlign
 import { IColumn } from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
-import {MultiHeader} from "Controls-demo/gridNew/DemoHelpers/Data/MultiHeader";
+import {MultiHeader} from 'Controls-demo/gridNew/DemoHelpers/Data/MultiHeader';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

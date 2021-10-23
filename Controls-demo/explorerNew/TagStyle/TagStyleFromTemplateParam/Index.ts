@@ -13,7 +13,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _viewSource: Memory;
     protected _root: null | number = null;
-    protected _header: Array<{title: string}>
+    protected _header: Array<{title: string}>;
 
     // Номер выбранной колонки
     protected _currentColumnIndex: number = null;

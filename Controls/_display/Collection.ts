@@ -3391,7 +3391,7 @@ export default class Collection<
             contentTemplate: options.footerTemplate,
             style: this.getStyle(),
             theme: this.getTheme()
-        }
+        };
     }
     //endregion
 

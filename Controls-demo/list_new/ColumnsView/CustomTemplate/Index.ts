@@ -31,7 +31,7 @@ export default class RenderDemo extends Control {
         this._items = items;
     }
     private removeItems(): void {
-        let items = this._selectedKeys;
+        const items = this._selectedKeys;
         let item;
         for (var i = 0; i < items.length; i++) {
             item = this._items.getRecordById(items[i]);

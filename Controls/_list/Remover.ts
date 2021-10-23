@@ -4,7 +4,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 import {Remove as RemoveAction} from 'Controls/listCommands';
 import {getItemsBySelection} from 'Controls/baseList';
 import {Logger} from 'UI/Utils';
-import {ISelectionObject} from "Controls/_interface/ISelectionType";
+import {ISelectionObject} from 'Controls/_interface/ISelectionType';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
@@ -15,7 +15,7 @@ interface IOptions {
 }
 
 var _private = {
-    removeFromItems: function (self, keys) {
+    removeFromItems: function(self, keys) {
         var item;
         self._items.setEventRaising(false, true);
         for (var i = 0; i < keys.length; i++) {
@@ -27,13 +27,13 @@ var _private = {
         self._items.setEventRaising(true, true);
     },
 
-    beforeItemsRemove: function (self, keys) {
+    beforeItemsRemove: function(self, keys) {
         const beforeItemsRemoveResult = self._notify('beforeItemsRemove', [keys]);
         return beforeItemsRemoveResult instanceof Deferred || beforeItemsRemoveResult instanceof Promise ?
             beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
     },
 
-    afterItemsRemove: function (self, keys, result) {
+    afterItemsRemove: function(self, keys, result) {
         var afterItemsRemoveResult = self._notify('afterItemsRemove', [keys, result]);
 
         // According to the standard, after moving the items, you need to unselect all in the table view.
@@ -98,13 +98,13 @@ var _private = {
  */
 
 var Remover = BaseAction.extend({
-    _beforeMount: function (options, context) {
+    _beforeMount: function(options, context) {
         _private.updateDataOptions(this, options, context.dataOptions);
         Logger.warn('Controls/list:Remover: Класс устарел и будет удалён.' +
             ' Используйте методы интерфейса Controls/list:IRemovableList, который по умолчанию подключен в списки.', this);
     },
 
-    _beforeUpdate: function (options, context) {
+    _beforeUpdate: function(options, context) {
         _private.updateDataOptions(this, options, context.dataOptions);
     },
 
@@ -163,7 +163,7 @@ FIXME: Нельзя отсюда убирать контекст и заменя
   </div>
 </Controls.list:DataContainer>
  */
-Remover.contextTypes = function () {
+Remover.contextTypes = function() {
     return {
         dataOptions: dataOptions
     };

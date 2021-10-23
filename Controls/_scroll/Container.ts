@@ -363,7 +363,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         event.stopImmediatePropagation();
 
         let isChanged: boolean = false;
-        for (let position in shadowsVisibility) {
+        for (const position in shadowsVisibility) {
             if (this._shadows[position] &&
                 this._shadows[position].getVisibilityByInnerComponents() !== shadowsVisibility[position]) {
                 isChanged = true;

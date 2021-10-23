@@ -26,9 +26,9 @@ export interface IInfoBoxPopupOptions extends IValidationStatusOptions, IControl
     template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     templateOptions?: any;
     message?: string;
-    zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     zIndex?: number; // TODO Compatible
     position?: string; // TODO старое, надо удалить
+    zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
 }
 
 export interface IInfoBoxOpener {

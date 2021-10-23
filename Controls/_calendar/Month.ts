@@ -26,7 +26,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
  *
  */
 
-export interface IMonthControlOptions extends IControlOptions, IMonthOptions{
+export interface IMonthControlOptions extends IControlOptions, IMonthOptions {
 }
 
 export default class Month extends Control<IMonthControlOptions> {

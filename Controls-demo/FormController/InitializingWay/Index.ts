@@ -79,14 +79,14 @@ export default class extends Control {
         const initializingWay = this._initializingWay[0];
         const cfg = {
             template: initializingWay === 'preload' ? null : 'Controls-demo/FormController/InitializingWay/Popup/Template',
-            pageId: initializingWay === 'preload' ? 'stackTemplate': null,
+            pageId: initializingWay === 'preload' ? 'stackTemplate' : null,
             width: 900,
             opener: this,
             templateOptions: {
                 initializingWay,
                 source: this._source
             }
-        }
+        };
         if (initializingWay !== 'create' && initializingWay !== 'delayedCreate') {
             cfg.templateOptions.key = item.getKey();
             cfg.templateOptions.record = item;

@@ -246,7 +246,7 @@ export default abstract class Row<T extends Model = Model> {
 
         const isVisibleForLadder = !ladder ||
             !ladder[ladderProperty] ||
-            (stickyProperty === ladderProperty || !stickyProperty) && ladder[ladderProperty].ladderLength >= 1
+            (stickyProperty === ladderProperty || !stickyProperty) && ladder[ladderProperty].ladderLength >= 1;
         if (!isVisibleForLadder) {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
         }

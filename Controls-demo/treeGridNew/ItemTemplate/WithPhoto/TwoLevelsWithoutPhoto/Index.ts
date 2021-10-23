@@ -2,7 +2,7 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/ItemTemplate/WithPhoto/TwoLevelsWithoutPhoto/TwoLevelsWithoutPhoto';
 import {CrudEntityKey, HierarchicalMemory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {WithPhoto} from "Controls-demo/treeGridNew/DemoHelpers/Data/WithPhoto";
+import {WithPhoto} from 'Controls-demo/treeGridNew/DemoHelpers/Data/WithPhoto';
 
 export default class extends Control<IControlOptions> {
    protected _template: TemplateFunction = Template;

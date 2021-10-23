@@ -5,8 +5,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFontColorStyleOptions} from 'Controls/interface';
 import {isLeftMouseButton} from 'Controls/popup';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {descriptor} from "Types/entity";
-import dateControlsUtils from "../_date/Utils";
+import {descriptor} from 'Types/entity';
+import dateControlsUtils from '../_date/Utils';
 import {Range as dateRangeUtils} from 'Controls/dateUtils';
 import ICaptionOptions from 'Controls/_date/interface/ICaption';
 import * as itemTemplate from 'wml!Controls/_date/LinkView/itemTemplate';
@@ -115,8 +115,8 @@ class LinkView<T extends ILinkView> extends Control<T> {
             this._options.captionFormatter !== options.captionFormatter) {
             const opts = options || this._options;
             let captionFormatter;
-            let startValue = options.value;
-            let endValue = options.value;
+            const startValue = options.value;
+            const endValue = options.value;
 
             if (opts.captionFormatter) {
                 captionFormatter = opts.captionFormatter;
@@ -163,7 +163,7 @@ LinkView.getOptionTypes = () => {
     return {
         ...IDateLinkView.getOptionTypes(),
         captionFormatter: descriptor(Function)
-    }
-}
+    };
+};
 
 export default LinkView;

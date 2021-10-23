@@ -5,7 +5,6 @@ import * as linkDecorateUtils from './Markup/resources/linkDecorateUtils';
 import {delay} from 'Types/function';
 import 'css!Controls/decorator';
 
-
    /**
     * Контрол служит для вставки вёрстки в формате JsonML в шаблон.
     * 
@@ -30,7 +29,7 @@ import 'css!Controls/decorator';
     * @public
     */
 
-   class MarkupDecorator extends Control<IControlOptions> {
+class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
 
       _contextMenuHandler(event: SyntheticEvent<MouseEvent>): void {
@@ -85,7 +84,6 @@ import 'css!Controls/decorator';
     * @cfg {Object} Внешние данные для tagResolver.
     */
 
-
    /**
     * @typedef {Object}
     * @name ValidHtml
@@ -134,4 +132,4 @@ import 'css!Controls/decorator';
     * В данном примере опция validHtml разрешает в качестве верстки использовать только блочные теги div и картинки img, а также указан набор разрешенных атрибутов: src, alt, height и width. Это значит, что картинка будет вставлена версткой, а параграф будет экранирован и вставлен строкой.
     *
     */
-   export default MarkupDecorator;
+export default MarkupDecorator;

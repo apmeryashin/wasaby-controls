@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/treeGridNew/EditInPlace/RowEditor/R
 import * as ColumnTemplate from 'wml!Controls-demo/treeGridNew/EditInPlace/RowEditor/ColumnTemplate';
 import {HierarchicalMemory} from 'Types/source';
 import { IColumn, TColspanCallbackResult } from 'Controls/grid';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

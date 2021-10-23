@@ -131,7 +131,7 @@ describe('Controls/tree/TreeControl', () => {
 
             await new Promise((resolve) => {
                 togglePromise.then(() => resolve(true)).catch(() => resolve(false));
-            }).then(isToggledSuccess => {
+            }).then((isToggledSuccess) => {
                 assert.isFalse(isToggledSuccess);
             });
         });

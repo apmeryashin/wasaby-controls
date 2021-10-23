@@ -168,7 +168,7 @@ export const data = {
         }
     ]),
     getDefaultLeftItems() {
-        const rawData = this.getDefaultItems()
+        const rawData = this.getDefaultItems();
         for (const item of rawData) {
             item.align = 'left';
         }

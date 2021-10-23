@@ -65,7 +65,7 @@ function isHistorySource(source) {
 }
 
 function deleteHistorySourceFromConfig(initConfig, sourceField) {
-   let configs = CoreClone(initConfig);
+   const configs = CoreClone(initConfig);
    factory(configs).each((config) => {
       if (isHistorySource(config[sourceField])) {
          delete config[sourceField];
@@ -88,7 +88,7 @@ function getUniqItems(items1, items2, keyProperty) {
    const resultItems = items1.clone();
    resultItems.prepend(items2);
 
-   let uniqItems = factory(resultItems).filter((item, index) => {
+   const uniqItems = factory(resultItems).filter((item, index) => {
       if (resultItems.getIndexByValue(keyProperty, item.get(keyProperty)) === index) {
          return item;
       }

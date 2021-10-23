@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/BreadCrumbs/backButtonFontSize/Template');
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;

@@ -49,11 +49,11 @@ export default class OperationsPanelContainer extends Control<IOperationsPanelCo
     }
 
     protected _afterMount(): void {
-        this._notify('operationsPanelOpen', [],{bubbling: true});
+        this._notify('operationsPanelOpen', [], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
-        this._notify('operationsPanelClose', [],{bubbling: true});
+        this._notify('operationsPanelClose', [], {bubbling: true});
     }
 
     private _getSelectedKeysCount(options: IOperationsPanelContainerOptions, selectedKeys: number[]|string[]): number {

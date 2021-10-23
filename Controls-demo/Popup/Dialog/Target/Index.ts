@@ -15,7 +15,6 @@ const baseDialogConfig = {
 
 class RestrictiveContainer extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
-    static _styles: string[] = [, 'Controls-demo/Controls-demo'];
     private _dialogOpener: DialogOpener = new DialogOpener();
 
     protected openDialog(): void {
@@ -39,5 +38,6 @@ class RestrictiveContainer extends Control<IControlOptions> {
         config.className = 'Controls-demo__DialogTargetOffset';
         this._dialogOpener.open(config);
     }
+    static _styles: string[] = [, 'Controls-demo/Controls-demo'];
 }
 export default RestrictiveContainer;

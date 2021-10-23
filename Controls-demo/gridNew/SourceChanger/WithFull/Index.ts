@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/SourceChanger/WithFull/With
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {ChangeSourceData} from "Controls-demo/gridNew/DemoHelpers/Data/ChangeSource";
+import {ChangeSourceData} from 'Controls-demo/gridNew/DemoHelpers/Data/ChangeSource';
 
 const data = ChangeSourceData.getData1();
 const data2 = ChangeSourceData.getData2();

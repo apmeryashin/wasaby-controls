@@ -12,7 +12,7 @@ var
          * @param storeKey Key to store list of collapsed groups
          * @returns {Core/Deferred}
          */
-        storeCollapsedGroups: function (groups, storeKey) {
+        storeCollapsedGroups: function(groups, storeKey) {
             var
                 preparedGroups = JSON.stringify(groups);
             return USER.set(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey, preparedGroups);

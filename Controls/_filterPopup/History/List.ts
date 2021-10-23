@@ -19,7 +19,7 @@ import 'css!Controls/filterPopup';
 const MAX_NUMBER_ITEMS = 5;
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
-interface IHistoryListOptions extends IControlOptions{
+interface IHistoryListOptions extends IControlOptions {
    items: RecordSet;
    filterItems: IFilterItem[];
    saveMode: 'pinned'|'favorite';

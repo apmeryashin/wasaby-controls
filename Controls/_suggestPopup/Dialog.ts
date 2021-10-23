@@ -25,7 +25,7 @@ import 'Controls/popupTemplate';
        * @public
        */
 
-      var List = Control.extend({
+var List = Control.extend({
 
          _template: template,
          _resizeTimeout: null,
@@ -41,6 +41,4 @@ import 'Controls/popupTemplate';
          }
 
       });
-      export = List;
-
-
+export = List;

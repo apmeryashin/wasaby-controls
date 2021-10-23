@@ -5,4 +5,3 @@
     * @property {Number} scrollTop The number of pixels that an element's content is scrolled vertically.
     * @property {Number} scrollHeight The height of an element's content, including content not visible on the screen due to overflow.
     */
-

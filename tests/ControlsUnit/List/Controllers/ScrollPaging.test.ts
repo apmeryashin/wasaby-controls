@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as sinon from 'sinon'
+import * as sinon from 'sinon';
 import {default as ScrollPaging} from 'Controls/_baseList/Controllers/ScrollPaging';
 
 describe('Controls/Controllers/ScrollPaging', () => {

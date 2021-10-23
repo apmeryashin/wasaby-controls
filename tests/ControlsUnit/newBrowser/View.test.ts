@@ -7,7 +7,7 @@ describe('Controls/_newBrowser:View', () => {
     let browserInstance;
     let items;
     let context;
-    let listConfiguration = getDefaultViewCfg();
+    const listConfiguration = getDefaultViewCfg();
     beforeEach(() => {
         items = new RecordSet({
             rawData: [{

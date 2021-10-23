@@ -45,7 +45,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
  * @public
  */
 
- export default interface IColumnTemplateOptions {
+export default interface IColumnTemplateOptions {
    /**
     * @cfg {String|TemplateFunction} Пользовательский шаблон для отображения содержимого ячейки.
     * @see Controls/grid:IGridControl#showEditArrow

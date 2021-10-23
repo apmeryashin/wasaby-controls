@@ -143,7 +143,7 @@ export default class ControllerBase<T extends IControllerBase> extends Control<T
      * @protected
      */
     protected _startFormOperations(command: string): Promise<void> {
-        const resultPromises: Promise<void>[] = [];
+        const resultPromises: Array<Promise<void>> = [];
         this._formOperationsStorage = this._formOperationsStorage.filter((operation: IFormOperation) => {
             if (operation.isDestroyed()) {
                 return false;

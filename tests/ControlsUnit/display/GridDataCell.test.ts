@@ -112,7 +112,7 @@ describe('Controls/display/GridDataCell', () => {
         it('should add columnSeparatorSize based on grid\'s columnSeparatorSize', () => {
             const row = getGridRow();
             row.setColumnSeparatorSize('s');
-            cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
+            cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;
             const wrapperClasses = cell.getWrapperClasses('default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
         });
@@ -120,7 +120,7 @@ describe('Controls/display/GridDataCell', () => {
         it('should add columnSeparatorSize based on current column\'s left columnSeparatorSize', () => {
             columns[1].columnSeparatorSize = {left: 's', right: null};
             const row = getGridRow();
-            cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
+            cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;
             const wrapperClasses = cell.getWrapperClasses( 'default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s');
         });

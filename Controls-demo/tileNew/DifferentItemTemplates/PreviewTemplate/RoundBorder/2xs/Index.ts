@@ -11,7 +11,6 @@ export default class extends Control {
     protected _selectedKeys: string[] = [];
     protected _roundBorder = {'tl': '2xs', 'tr': '2xs', 'br': '2xs', 'bl': '2xs'};
 
-
     protected _itemActions: any[] = Gadgets.getPreviewActions();
 
     protected _beforeMount(): void {

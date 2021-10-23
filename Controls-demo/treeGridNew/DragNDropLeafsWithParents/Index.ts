@@ -7,7 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
 import { IColumn } from 'Controls/grid';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 const data = [
     {
@@ -17,7 +17,7 @@ const data = [
         rating: '8.5',
         parent: null,
         type: true,
-        hasChild: true,
+        hasChild: true
     },
     {
         key: 15,
@@ -25,7 +25,7 @@ const data = [
         parent: 1,
         rating: '9.2',
         type: true,
-        hasChild: true,
+        hasChild: true
     },
     {
         key: 151,

@@ -10,8 +10,8 @@ const enum SLIDE_DATE_TYPE {
 }
 
 class ModuleClass {
-    public ranges: Array<Array<Date>>;
-    private _steps: Array<number>;
+    public ranges: Date[][];
+    private _steps: number[];
     private _relationMode: String;
     private _dateConstructor: Function;
 
@@ -40,7 +40,7 @@ class ModuleClass {
                 this._relationMode = relationMode;
             } else {
                 oldRelationMode = this._relationMode;
-                this._autoRelation(this.ranges,[start, end], changedRangeIndex);
+                this._autoRelation(this.ranges, [start, end], changedRangeIndex);
             }
             newRanges = this._getUpdatedRanges(
                 this.ranges,
@@ -84,7 +84,7 @@ class ModuleClass {
     }
 
     private _shift(delta) {
-        this.ranges = this.ranges.map(function (range) {
+        this.ranges = this.ranges.map(function(range) {
             return Range.shiftPeriod(range[0], range[1], delta);
         });
     }
@@ -98,7 +98,7 @@ class ModuleClass {
             this._relationMode = 'byCapacity';
         }
 
-         if (ranges.length > 2 || this._relationMode === 'normal') {
+        if (ranges.length > 2 || this._relationMode === 'normal') {
             return;
          }
 
@@ -111,10 +111,10 @@ class ModuleClass {
             capacityChanged = updatedPeriodType !== getPeriodType(ranges[changedRangeIndex][0], ranges[changedRangeIndex][1]);
         }
 
-         if (changedRangeIndex < ranges.length - 1) {
+        if (changedRangeIndex < ranges.length - 1) {
             this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged);
          }
-         if (/**this._options.onlyByCapacity &&**/ changedRangeIndex > 0) {
+        if (/**this._options.onlyByCapacity &&**/ changedRangeIndex > 0) {
             this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex - 1][0], capacityChanged);
          }
     }
@@ -169,7 +169,7 @@ class ModuleClass {
         return end.getFullYear() * 12 + end.getMonth() - start.getFullYear() * 12 - start.getMonth();
     }
 
-    protected _getChangedIndex(ranges: Array<Date>): number {
+    protected _getChangedIndex(ranges: Date[]): number {
         for (var i in this.ranges) {
             if (!dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) || !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])) {
                 return parseInt(i, 10);
@@ -209,7 +209,7 @@ class ModuleClass {
     }
 
     private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
-        let selectionType:SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months,
+        let selectionType: SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months,
             start = newRange[0],
             end = newRange[1],
             oldStart = ranges[rangeIndex][0],

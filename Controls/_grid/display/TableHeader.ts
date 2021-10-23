@@ -6,7 +6,7 @@ import TableHeaderRow from './TableHeaderRow';
  */
 export default class TableHeader extends Header {
     getBodyClasses(): string {
-        return `controls-Grid__header`;
+        return 'controls-Grid__header';
     }
 
     getRow(): never {
@@ -55,5 +55,5 @@ Object.assign(TableHeader.prototype, {
     '[Controls/_display/grid/TableHeader]': true,
     _moduleName: 'Controls/grid:GridTableHeader',
     _instancePrefix: 'grid-table-header-',
-    _rowModule: 'Controls/grid:GridTableHeaderRow',
+    _rowModule: 'Controls/grid:GridTableHeaderRow'
 });

@@ -6,7 +6,7 @@ import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {CollectionItem, Collection} from 'Controls/display';
 import {constants} from 'Env/Env';
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
 import 'css!Controls/list';
 import 'css!Controls/itemActions';
 import 'css!Controls/CommonClasses';

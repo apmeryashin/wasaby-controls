@@ -8,7 +8,7 @@ import cInstance = require('Core/core-instance');
  * @author Красильников А.С.
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
- * 
+ *
  * Аргументы функции:
  *
  * * value — проверяемое значение.
@@ -32,7 +32,7 @@ import cInstance = require('Core/core-instance');
  * </pre>
  *
  */
-export = function (args) {
+export = function(args) {
    // Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
    if (args.doNotValidate) {
       return true;

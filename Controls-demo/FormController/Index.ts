@@ -96,7 +96,7 @@ class FormController extends Control<IControlOptions> {
     private _update(): Promise<any> {
         return this._children.formControllerInst.update();
     }
-    private _delete():Promise<any> {
+    private _delete(): Promise<any> {
         return this._children.formControllerInst.delete();
     }
 

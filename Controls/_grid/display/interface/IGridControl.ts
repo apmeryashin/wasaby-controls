@@ -552,7 +552,6 @@ export interface IGridControl extends IList {
  * @default hasdata
  */
 
-
 /**
  * @name Controls/_grid/display/interface/IGridControl#editArrowVisibilityCallback
  * @cfg {Function} Функция обратного вызова для управления видимостью кнопки редактирования.
@@ -587,7 +586,6 @@ export interface IGridControl extends IList {
  * @markdown
  * @see colspanCallback
  */
-
 
 /**
  * @typedef {Object} Controls/_grid/display/interface/IGridControl/IEmptyTemplateColumn

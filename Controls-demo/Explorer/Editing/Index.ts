@@ -1,6 +1,6 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/Explorer/Editing/Editing"
-import Memory = require('Controls-demo/Explorer/ExplorerMemory')
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/Explorer/Editing/Editing';
+import Memory = require('Controls-demo/Explorer/ExplorerMemory');
 import {Gadgets} from '../../explorerNew/DataHelpers/DataCatalog';
 
 export default class extends Control {
@@ -11,7 +11,7 @@ export default class extends Control {
     _beforeMount() {
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: Gadgets.getData(),
+            data: Gadgets.getData()
         });
     }
 

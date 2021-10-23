@@ -5,7 +5,7 @@ import {TColspanCallbackResult} from 'Controls/grid';
 import {IGroupNodeColumn} from 'Controls/treeGrid';
 
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeHistoryId/NodeHistoryType/NodeHistoryType';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 // Патч нужен, чтобы демка не выдавала ошибки
 import 'Controls-demo/Utils/WebApiScopePatch';

@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import controlTemplate = require('wml!Controls-demo/LookupNew/Input/ShowSelector/Index');
 import selectorTemplate = require('Controls-demo/Lookup/FlatListSelector/FlatListSelector');

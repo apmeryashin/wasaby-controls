@@ -110,6 +110,10 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     protected _isFullGridSupport: boolean = isFullGridSupport();
     protected _footer: FooterRow;
 
+    protected abstract _$emptyTemplateOptions: object;
+
+    protected abstract _$itemActionsPosition: TItemActionsPosition;
+
     protected constructor(options: IOptions) {
         const supportLadder = GridLadderUtil.isSupportLadder(this._$ladderProperties);
         if (supportLadder) {
@@ -681,10 +685,6 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     abstract getTheme(): string;
 
     abstract getItems(): T[];
-
-    protected abstract _$emptyTemplateOptions: object;
-
-    protected abstract _$itemActionsPosition: TItemActionsPosition;
 
     protected abstract _nextVersion(): void;
 

@@ -65,7 +65,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    it('_afterUpdate', function() {
       let configActivate;
       let activated = false;
-      let lookup = new Lookup();
+      const lookup = new Lookup();
 
       lookup._suggestState = false;
       lookup._needSetFocusInInput = true;
@@ -111,10 +111,10 @@ describe('Controls/_lookup/BaseLookupView', function() {
 
    it('_choose', function() {
       let itemAdded = false;
-      let lookup = new Lookup();
+      const lookup = new Lookup();
       let isActivated = false;
       let lastValueAtNotify;
-      let selectedItem = {id: 1};
+      const selectedItem = {id: 1};
 
       lookup.saveOptions({});
       lookup._isInputVisible = false;
@@ -227,7 +227,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
 
    it('_keyDown', function() {
       var
-         isNotifyShowSelector= false,
+         isNotifyShowSelector = false,
          isNotifyRemoveItems = false,
          lookup = new Lookup(),
          eventBackspace = {
@@ -411,7 +411,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_isShowCollection', function() {
-      let lookup = new Lookup();
+      const lookup = new Lookup();
 
       lookup._maxVisibleItems = 1;
       lookup._options = {

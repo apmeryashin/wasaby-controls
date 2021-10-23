@@ -136,7 +136,7 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(!!baseControl._listViewModel.getCollapsedGroups());
         });
     });
-    describe('handleKeyDown', async() => {
+    describe('handleKeyDown', async () => {
         const baseControlCfg = await getCorrectBaseControlConfigAsync({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
@@ -1320,7 +1320,7 @@ describe('Controls/list_clean/BaseControl', () => {
             it('sourceController load error', async () => {
                 let sourceControllerOptions = getBaseControlOptionsWithEmptyItems();
                 const sourceController = new NewSourceController(sourceControllerOptions);
-                let baseControlOptions = {...sourceControllerOptions, sourceController};
+                const baseControlOptions = {...sourceControllerOptions, sourceController};
                 const baseControl = new BaseControl(baseControlOptions);
                 await sourceController.reload();
                 await baseControl._beforeMount(baseControlOptions);
@@ -1371,7 +1371,7 @@ describe('Controls/list_clean/BaseControl', () => {
             });
 
             it('_beforeUpdate with new source should reset scroll', async () => {
-                let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+                const baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
 
                 const baseControl = new BaseControl(baseControlOptions);

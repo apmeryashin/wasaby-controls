@@ -29,18 +29,6 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
 
-    protected _options: IOptions<S, T>;
-    private _addingItemIndex?: number;
-
-    constructor(options: IOptions<S, T>) {
-        super();
-        this._options = options;
-    }
-
-    // region IItemsStrategy
-
-    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
-
     get source(): IItemsStrategy<S, T> {
         return this._options.source;
     }
@@ -66,6 +54,18 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
             items.splice(addItemIndex, 0, this._options.item);
             return items;
         }
+    }
+
+    protected _options: IOptions<S, T>;
+    private _addingItemIndex?: number;
+
+    // region IItemsStrategy
+
+    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
+
+    constructor(options: IOptions<S, T>) {
+        super();
+        this._options = options;
     }
 
     at(index: number): T {
@@ -136,6 +136,14 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
         return this._addingItemIndex;
     }
 
+    // region SerializableMixin
+
+    _getSerializableState(state: ISerializableState): ISerializableState {
+        const resultState = SerializableMixin.prototype._getSerializableState.call(this, state);
+        resultState.$options = this._options;
+        return resultState;
+    }
+
     private static _calculateIndex<S extends Model, T extends CollectionItem<S>>(
         options: IOptions<S, T>,
         source: IItemsStrategy<S, T>
@@ -188,14 +196,6 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
             });
             return index;
         }
-    }
-
-    // region SerializableMixin
-
-    _getSerializableState(state: ISerializableState): ISerializableState {
-        const resultState = SerializableMixin.prototype._getSerializableState.call(this, state);
-        resultState.$options = this._options;
-        return resultState;
     }
 
     // endregion

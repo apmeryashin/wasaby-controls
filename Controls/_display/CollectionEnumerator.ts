@@ -21,7 +21,6 @@ export default class CollectionEnumerator<T> extends mixin<
     OptionsToPropertyMixin,
     IndexedEnumeratorMixin
 ) implements IEnumerator<T> {
-    protected readonly _moduleName: string;
 
     get items(): T[] {
         if (!this._itemsCache) {
@@ -29,6 +28,7 @@ export default class CollectionEnumerator<T> extends mixin<
         }
         return this._itemsCache;
     }
+    protected readonly _moduleName: string;
 
     // region IEnumerator
 
@@ -87,32 +87,6 @@ export default class CollectionEnumerator<T> extends mixin<
         if (!(this._$sortMap instanceof Array)) {
             throw new TypeError(this._moduleName + '::constructor(): sort map should be instance of an Array');
         }
-    }
-
-    // endregion
-
-    // region Statics
-
-    /**
-     * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
-     * @param sortMap Индекс после сортировки -> индекс элемента проекции
-     * @param filterMap Индекс элемента проекции -> прошел фильтр
-     * @return Порядковый индекс -> индекс элемента проекции
-     * @public
-     * @static
-     */
-    static getAssociativeMap(sortMap: number[], filterMap: boolean[]): number[] {
-        const result = [];
-        let index;
-
-        for (let i = 0; i < sortMap.length; i++) {
-            index = sortMap[i];
-            if (filterMap[index]) {
-                result.push(index);
-            }
-        }
-
-        return result;
     }
 
     getCurrent(): T {
@@ -311,6 +285,32 @@ export default class CollectionEnumerator<T> extends mixin<
         } else {
             this._current = undefined;
         }
+    }
+
+    // endregion
+
+    // region Statics
+
+    /**
+     * Возвращает массив соответствия порядкового индекса и индекса элемента проекции
+     * @param sortMap Индекс после сортировки -> индекс элемента проекции
+     * @param filterMap Индекс элемента проекции -> прошел фильтр
+     * @return Порядковый индекс -> индекс элемента проекции
+     * @public
+     * @static
+     */
+    static getAssociativeMap(sortMap: number[], filterMap: boolean[]): number[] {
+        const result = [];
+        let index;
+
+        for (let i = 0; i < sortMap.length; i++) {
+            index = sortMap[i];
+            if (filterMap[index]) {
+                result.push(index);
+            }
+        }
+
+        return result;
     }
 
     // endregion

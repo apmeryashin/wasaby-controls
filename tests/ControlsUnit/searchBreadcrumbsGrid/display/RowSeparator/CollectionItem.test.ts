@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import { RecordSet } from "Types/collection";
-import { SearchGridCollection } from "Controls/searchBreadcrumbsGrid";
+import { RecordSet } from 'Types/collection';
+import { SearchGridCollection } from 'Controls/searchBreadcrumbsGrid';
 
 interface IData {
     id: number;

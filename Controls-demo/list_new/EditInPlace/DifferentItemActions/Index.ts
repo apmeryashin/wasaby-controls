@@ -21,7 +21,7 @@ export default class extends Control {
 
     protected _itemActionVisibilityCallback(action: IItemAction, item: Model, isEditing): boolean {
         if (isEditing) {
-            return action.id === 2 || action.showType === showType.MENU
+            return action.id === 2 || action.showType === showType.MENU;
         } else {
             return true;
         }

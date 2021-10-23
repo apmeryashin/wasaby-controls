@@ -144,14 +144,14 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
         this._notify('itemClick', [item]);
     }
 
+    static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
+
     static getDefaultOptions() {
         return {
             displayProperty: 'title',
             fontSize: 'xs'
         };
     }
-
-    static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
 }
 
 Object.defineProperty(MultilinePath, 'defaultProps', {

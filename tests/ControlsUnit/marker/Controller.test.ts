@@ -68,7 +68,7 @@ describe('Controls/marker/Controller', () => {
       });
 
       it('change markerVisibility to hidden', () => {
-         controller.setMarkedKey(1)
+         controller.setMarkedKey(1);
 
          controller.updateOptions({
             model, markerVisibility: 'hidden'

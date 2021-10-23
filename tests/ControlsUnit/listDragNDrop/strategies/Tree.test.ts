@@ -231,9 +231,9 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(4));
 
             const targetNode = model.getItemBySourceKey(2);
-            let mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
+            const mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
 
-            let newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
                index: 2,
                position: 'before',

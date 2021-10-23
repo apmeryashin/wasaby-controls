@@ -68,7 +68,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     updateOptions(options: IScrollbarsOptions): void {
-        for (let scrollbar of Object.keys(this._models)) {
+        for (const scrollbar of Object.keys(this._models)) {
             // Будем показывать скроллбар до тех пор, пока пользователь не воспользовался колесиком мышки, даже если
             // прикладник задал опцию scrollbarVisible=false.
             // Таким образом пользователи без колесика мышки смогут скроллить контент.
@@ -86,7 +86,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     _updateContainerSizes(): void {
         let changed: boolean = false;
         if (this._newState) {
-            for (let scrollbar of Object.keys(this._models)) {
+            for (const scrollbar of Object.keys(this._models)) {
                 changed = this._models[scrollbar].updatePosition(this._newState) || changed;
             }
         }
@@ -136,7 +136,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             return;
         }
         let changed: boolean = false;
-        for (let scrollbar of Object.keys(this._models)) {
+        for (const scrollbar of Object.keys(this._models)) {
             changed = this._models[scrollbar].updateContentSize(this._newState) || changed;
         }
 
@@ -178,7 +178,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
 
     setOffsets(offsets: Offsets, needUpdate: boolean = true): void {
         let changed: boolean = false;
-        for (let scrollbar of Object.keys(this._models)) {
+        for (const scrollbar of Object.keys(this._models)) {
             changed = this._models[scrollbar].setOffsets(offsets) || changed;
         }
         if (changed && needUpdate) {

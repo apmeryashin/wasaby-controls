@@ -32,7 +32,7 @@ const data = [
         title: 'Летнее кафе',
         parent: null,
         status: '',
-        image: ``,
+        image: '',
         type: true
     },
     {

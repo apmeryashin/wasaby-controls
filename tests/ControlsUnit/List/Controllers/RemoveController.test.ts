@@ -8,9 +8,9 @@ import {Memory} from 'Types/source';
 import {RemoveController} from 'Controls/list';
 import {ISelectionObject} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
-import {EntityKey} from "Types/_source/ICrud";
-import Query from "Types/_source/Query";
-import DataSet from "Types/_source/DataSet";
+import {EntityKey} from 'Types/_source/ICrud';
+import Query from 'Types/_source/Query';
+import DataSet from 'Types/_source/DataSet';
 
 const data = [
     {
@@ -48,13 +48,13 @@ const data = [
 function resolveRemoveWithConfirmation(controller: RemoveController, selectionObject: ISelectionObject) {
     return new Promise((resolve) => {
         controller.removeWithConfirmation(selectionObject).then(() => resolve(true)).catch(() => resolve(false));
-    })
+    });
 }
 
 function resolveRemove(controller: RemoveController, selectionObject: ISelectionObject) {
     return new Promise((resolve) => {
         controller.remove(selectionObject).then(() => resolve(true)).catch(() => resolve(false));
-    })
+    });
 }
 
 describe('Controls/list_clean/RemoveController', () => {
@@ -88,7 +88,7 @@ describe('Controls/list_clean/RemoveController', () => {
 
     afterEach(() => {
         sandBox.restore();
-    })
+    });
 
     it('remove() should not remove without source', () => {
         controller = new RemoveController({source: undefined});
@@ -201,7 +201,7 @@ describe('Controls/list_clean/RemoveController', () => {
         const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 5);
             return Promise.resolve();
-        })
+        });
 
         return resolveRemove(controller, correctSelection).then((result: boolean) => {
 
@@ -219,7 +219,7 @@ describe('Controls/list_clean/RemoveController', () => {
         };
         controller = new RemoveController({source});
         const spyQuery = sandBox.spy(source, 'query');
-        const spyDestroy = sandBox.spy(source, 'destroy')
+        const spyDestroy = sandBox.spy(source, 'destroy');
         const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 
@@ -245,7 +245,7 @@ describe('Controls/list_clean/RemoveController', () => {
         const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 2);
             return Promise.resolve();
-        })
+        });
         controller = new RemoveController({source});
         return resolveRemove(controller, correctSelection).then((result: boolean) => {
 
@@ -263,7 +263,7 @@ describe('Controls/list_clean/RemoveController', () => {
         };
         controller = new RemoveController({source});
         const spyQuery = sandBox.spy(source, 'query');
-        const spyDestroy = sandBox.spy(source, 'destroy')
+        const spyDestroy = sandBox.spy(source, 'destroy');
         const stubConfirmation = sandBox.stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 
@@ -289,7 +289,7 @@ describe('Controls/list_clean/RemoveController', () => {
         const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 2);
             return Promise.resolve();
-        })
+        });
         controller = new RemoveController({source});
         return resolveRemove(controller, correctSelection).then((result: boolean) => {
 

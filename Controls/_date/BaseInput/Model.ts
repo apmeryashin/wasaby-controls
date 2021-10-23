@@ -9,7 +9,7 @@ const SPACE = ' ';
 const VALID_PARTIAL_DATE_REGEXP = new RegExp('/^[0 ' + SPACE + ']{2}\.[0 ' + SPACE + '/s]{2}\.\d{2,4}$/');
 const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
 
-   var _private = {
+var _private = {
       updateLastValue: function(self) {
          if (dateUtils.isValidDate(self._value)) {
             self._lastValue = self._value;
@@ -56,7 +56,7 @@ const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
     * @author Красильников А.С.
     * @public
     */
-   var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
+var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
       _value: null,
       _lastValue: null,
@@ -100,7 +100,7 @@ const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
          if (this._mask !== options.mask || !dateUtils.isDatesEqual(this._value, options.value) || this._displayValue !== options.displayValue) {
             this._mask = options.mask;
             if (options.displayValue) {
-               _private.updateDisplayValue(this, options.displayValue)
+               _private.updateDisplayValue(this, options.displayValue);
             } else {
                _private.updateValue(this, options.value);
             }
@@ -191,5 +191,4 @@ const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
 
    });
 
-   export = ModuleClass;
-
+export = ModuleClass;

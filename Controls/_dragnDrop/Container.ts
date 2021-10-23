@@ -492,7 +492,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnd
  */
 
-
 /**
  * @event Происходит при завершении перемещения объекта на странице.
  * @name Controls/_dragnDrop/Container#documentDragEnd
@@ -543,7 +542,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnd
  */
 
-
 /**
  * @event Происходит, когда пользователь начинает перемещение объект в текущем контроллере.
  * @name Controls/_dragnDrop/Container#dragStart
@@ -590,7 +588,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnd
  */
 
-
 /**
  * @event Происходит после того, как пользователь закончил перемещение объекта в текущем контроллере.
  * @name Controls/_dragnDrop/Container#dragEnd
@@ -635,7 +632,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see documentDragEnd
  * @see dragStart
  */
-
 
 /**
  * @event Происходит после перемещения объекта внутри контроллера.
@@ -685,7 +681,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragMove
  */
 
-
 /**
  * @event Происходит после перемещения объекта за пределы контроллера.
  * @name Controls/_dragnDrop/Container#dragLeave
@@ -733,7 +728,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnter
  * @see dragMove
  */
-
 
 /**
  * @event Происходит при перемещении объекта на странице.

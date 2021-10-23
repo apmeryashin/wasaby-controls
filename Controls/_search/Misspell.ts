@@ -29,7 +29,7 @@ import 'css!Controls/search';
  * @author Крайнов Д.О.
  */
 
-class Misspell extends Control<IControlOptions & ICaption> implements ICaption{
+class Misspell extends Control<IControlOptions & ICaption> implements ICaption {
    protected _template: TemplateFunction = template;
 
    readonly '[Controls/_interface/ICaption]': true;

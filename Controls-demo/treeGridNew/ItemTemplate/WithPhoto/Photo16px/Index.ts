@@ -2,8 +2,8 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/ItemTemplate/WithPhoto/Photo16px/Photo16px';
 import {CrudEntityKey, HierarchicalMemory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {WithPhoto} from "Controls-demo/treeGridNew/DemoHelpers/Data/WithPhoto";
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {WithPhoto} from 'Controls-demo/treeGridNew/DemoHelpers/Data/WithPhoto';
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control<IControlOptions> {
    protected _template: TemplateFunction = Template;

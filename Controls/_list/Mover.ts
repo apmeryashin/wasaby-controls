@@ -8,7 +8,6 @@ import {Move as MoveAction, IMoveActionOptions} from 'Controls/listCommands';
 import {Model} from 'Types/entity';
 import {LOCAL_MOVE_POSITION} from 'Types/source';
 
-
 // @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
 //   selectedTypeChanged даже от MultiSelect
 //  https://online.sbis.ru/doc/0445b971-8675-42ef-b2bc-e68d7f82e0ac
@@ -24,11 +23,11 @@ const DEFAULT_SORTING_ORDER = 'asc';
 var _private = {
     moveItems(self, items, target, position) {
         const useAction = _private.useAction(items);
-        const afterItemsMove = function (result) {
+        const afterItemsMove = function(result) {
             _private.afterItemsMove(self, items, target, position, result);
             return result;
-        }
-        return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
+        };
+        return _private.beforeItemsMove(self, items, target, position).addCallback(function(beforeItemsMoveResult) {
             if (useAction) {
                 return self._action.execute({
                     selection: _private.convertItemsToISelectionObject(items),
@@ -41,7 +40,7 @@ var _private = {
             if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
                 return _private.moveInItems(self, items, target, position);
             } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-                return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
+                return _private.moveInSource(self, items, target, position).addCallback(function(moveResult) {
                     _private.moveInItems(self, items, target, position);
                     return moveResult;
                 });
@@ -49,12 +48,12 @@ var _private = {
         }).addBoth(afterItemsMove);
     },
 
-    beforeItemsMove: function (self, items, target, position) {
+    beforeItemsMove: function(self, items, target, position) {
         var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
-    afterItemsMove: function (self, items, target, position, result) {
+    afterItemsMove: function(self, items, target, position, result) {
         self._notify('afterItemsMove', [items, target, position, result]);
 
         // According to the standard, after moving the items, you need to unselect all in the table view.
@@ -67,7 +66,7 @@ var _private = {
         });
     },
 
-    moveInItems: function (self, items, target, position) {
+    moveInItems: function(self, items, target, position) {
         if (position === LOCAL_MOVE_POSITION.On) {
             _private.hierarchyMove(self, items, target);
         } else {
@@ -75,7 +74,7 @@ var _private = {
         }
     },
 
-    reorderMove: function (self, items, target, position) {
+    reorderMove: function(self, items, target, position) {
         var
            movedIndex,
            movedItem,
@@ -84,7 +83,7 @@ var _private = {
            targetItem = _private.getModelByItem(self, targetId),
            targetIndex = self._items.getIndex(targetItem);
 
-        items.forEach(function (item) {
+        items.forEach(function(item) {
             movedItem = _private.getModelByItem(self, item);
             if (movedItem) {
                 if (position === LOCAL_MOVE_POSITION.Before) {
@@ -112,9 +111,9 @@ var _private = {
         });
     },
 
-    hierarchyMove: function (self, items, target) {
+    hierarchyMove: function(self, items, target) {
         var targetId = _private.getIdByItem(self, target);
-        items.forEach(function (item) {
+        items.forEach(function(item) {
             item = _private.getModelByItem(self, item);
             if (item) {
                 item.set(self._options.parentProperty, targetId);
@@ -122,9 +121,9 @@ var _private = {
         });
     },
 
-    moveInSource: function (self, items, target, position) {
+    moveInSource: function(self, items, target, position) {
         const targetId = _private.getIdByItem(self, target);
-        const idArray = items.map(function (item) {
+        const idArray = items.map(function(item) {
             return _private.getIdByItem(self, item);
         });
 
@@ -138,7 +137,7 @@ var _private = {
         });
     },
 
-    moveItemToSiblingPosition: function (self, item, position) {
+    moveItemToSiblingPosition: function(self, item, position) {
         const target = _private.getTargetItem(self, item, position);
         return target ? self.moveItems([item], target, position) : Deferred.success();
     },
@@ -183,10 +182,10 @@ var _private = {
         return result;
     },
 
-    updateDataOptions: function (self, newOptions, contextDataOptions) {
+    updateDataOptions: function(self, newOptions, contextDataOptions) {
         self._items = newOptions.items || contextDataOptions?.items;
 
-        let controllerOptions: Partial<IMoveActionOptions> = {
+        const controllerOptions: Partial<IMoveActionOptions> = {
             parentProperty: newOptions.parentProperty
         };
         if (contextDataOptions) {
@@ -218,7 +217,7 @@ var _private = {
         self._action = new MoveAction(controllerOptions as IMoveActionOptions);
     },
 
-    checkItem: function (self, item, target, position) {
+    checkItem: function(self, item, target, position) {
         var
             key,
             parentsMap,
@@ -242,7 +241,7 @@ var _private = {
         return true;
     },
 
-    getParentsMap: function (self, id) {
+    getParentsMap: function(self, id) {
         var
             item,
             toMap = [],
@@ -261,7 +260,7 @@ var _private = {
             item = items.getRecordById(id);
         }
         if (path) {
-            path.forEach(function (elem) {
+            path.forEach(function(elem) {
                 if (toMap.indexOf(elem.get(self._keyProperty)) === -1) {
                     toMap.push('' + elem.get(self._keyProperty));
                 }
@@ -270,11 +269,11 @@ var _private = {
         return toMap;
     },
 
-    getModelByItem: function (self, item) {
+    getModelByItem: function(self, item) {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item : self._items.getRecordById(item);
     },
 
-    getIdByItem: function (self, item) {
+    getIdByItem: function(self, item) {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
@@ -296,7 +295,7 @@ var _private = {
     },
 
     prepareMovedItems(self, items) {
-        let result = [];
+        const result = [];
         items.forEach(function(item) {
             result.push(_private.getIdByItem(self, item));
         });
@@ -332,7 +331,7 @@ var _private = {
                 templateOptions,
                 eventHandlers: {
                     onResult: (target: Model) => {
-                        resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On))
+                        resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On));
                     }
                 }
             });
@@ -340,19 +339,19 @@ var _private = {
     },
 
     convertItemsToISelectionObject(item): ISelectionObject {
-        let selectionObject: ISelectionObject
+        let selectionObject: ISelectionObject;
         if (item.selected) {
             selectionObject = item;
         } else if (item.selectedKeys) {
             selectionObject = {
                 selected: item.selectedKeys,
-                excluded: item.excludedKeys,
-            }
+                excluded: item.excludedKeys
+            };
         } else if (item.forEach) {
             selectionObject = {
                 selected: item,
                 excluded: undefined
-            }
+            };
         }
         return selectionObject;
     },
@@ -407,21 +406,21 @@ var Mover = BaseAction.extend({
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
     _template: Template,
-    _beforeMount: function (options) {
+    _beforeMount: function(options) {
         _private.updateDataOptions(this, options, options._dataOptionsValue);
         Logger.warn('Controls/list:Mover: Класс устарел и буден удалён.' +
             ' Используйте методы интерфейса Controls/list:IMovableList, который по умолчанию подключен в списки.', this);
     },
 
-    _beforeUpdate: function (options) {
+    _beforeUpdate: function(options) {
         _private.updateDataOptions(this, options, options._dataOptionsValue);
     },
 
-    moveItemUp: function (item) {
+    moveItemUp: function(item) {
         return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.Before);
     },
 
-    moveItemDown: function (item) {
+    moveItemDown: function(item) {
         return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.After);
     },
 
@@ -433,7 +432,7 @@ var Mover = BaseAction.extend({
         if (_private.useAction(items)) {
             return _private.moveItems(self, items, target, position);
         } else {
-            return _private.getItemsBySelection.call(this, items).addCallback(function (items) {
+            return _private.getItemsBySelection.call(this, items).addCallback(function(items) {
                 items = items.filter((item) => {
                     return _private.checkItem(self, item, target, position);
                 });
@@ -464,7 +463,7 @@ var Mover = BaseAction.extend({
     }
 });
 
-Mover.getDefaultOptions = function () {
+Mover.getDefaultOptions = function() {
     return {
         sortingOrder: DEFAULT_SORTING_ORDER
     };

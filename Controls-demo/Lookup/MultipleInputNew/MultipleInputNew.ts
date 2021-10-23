@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import * as template from 'wml!Controls-demo/Lookup/MultipleInputNew/MultipleInputNew';
 import * as companyTemplate from 'wml!Controls-demo/Lookup/MultipleInputNew/companyPlaceholder';

@@ -16,7 +16,7 @@ import 'css!Controls/lookup';
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
 const JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
 
-export interface ISelectedCollectionOptions extends IControlOptions{
+export interface ISelectedCollectionOptions extends IControlOptions {
    displayProperty: string;
    items: RecordSet;
    maxVisibleItems: number;

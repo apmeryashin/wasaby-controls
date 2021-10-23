@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from "wml!Controls-demo/explorerNew/Search/Search";
+import * as Template from 'wml!Controls-demo/explorerNew/Search/Search';
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import {HierarchicalMemory, Memory} from 'Types/source';
 import {IColumn} from 'Controls/grid';
@@ -30,7 +30,7 @@ export default class extends Control {
             handler: (item) => {
                 this._children.remover.removeItems([item.getKey()]);
             }
-        },
+        }
     ];
 
     protected _beforeMount(): void {

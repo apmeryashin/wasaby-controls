@@ -100,11 +100,10 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
         // В противном случае просто возвращаем текущий root
         if (this._breadCrumbsItems && this._breadCrumbsItems.length) {
             return this._breadCrumbsItems[0].get(this._parentProperty);
-        }
-        else {
+        } else {
             return this._root;
         }
-    };
+    }
 
     private _dragItemsFromRoot(dragItems: TKey[]): boolean {
         let itemFromRoot = true;
@@ -135,7 +134,7 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
     }
 
     private _setBreadCrumbsItems(options): void {
-        let dataOptions = BreadCrumbsContainer._getContextOptions(options);
+        const dataOptions = BreadCrumbsContainer._getContextOptions(options);
 
         const isUpdated = this._updateSourceControllerSubscribe(options, dataOptions);
 
@@ -145,7 +144,7 @@ export default class BreadCrumbsContainer extends Control<IContainerOptions> {
     }
 
     private _updateSourceControllerSubscribe(options, dataOptions): boolean {
-        let sourceController = options.sourceController || dataOptions?.sourceController;
+        const sourceController = options.sourceController || dataOptions?.sourceController;
         if (this._sourceController !== sourceController) {
             this._subscribeItemsChanged(sourceController);
             return true;

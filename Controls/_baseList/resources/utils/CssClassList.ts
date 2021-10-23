@@ -40,16 +40,15 @@ class StaticCssClassList {
         /// @ts-ignore
         classListObj = this.classList || classList;
 
-        for (let className in classListObj) {
+        for (const className in classListObj) {
             if (classListObj[className] !== false) {
-                classListString += `${className} `
+                classListString += `${className} `;
             }
         }
 
         return classListString.trim();
     }
 }
-
 
 /**
  * A util helps to combine CSS classes.
@@ -110,18 +109,6 @@ class CssClassList {
     }
 
     /**
-     * Adds class expression in class list given by chain.
-     * @param {String} className Name of class
-     * @param {Boolean} [shouldAdd=true] Should add a to class list
-     * @return {CssClassListChain}
-     * @static
-     * @public
-     */
-    static add(className: string, shouldAdd: boolean = true): CssClassListChain {
-        return StaticCssClassList.add(className, shouldAdd);
-    }
-
-    /**
      * Returns class list.
      * Adds class only if the value of its key in class list object is true.
      * @remark Note, that method returns copy of instances' class list.
@@ -150,6 +137,18 @@ class CssClassList {
      */
     compile(): string {
         return StaticCssClassList.compile(this._classList);
+    }
+
+    /**
+     * Adds class expression in class list given by chain.
+     * @param {String} className Name of class
+     * @param {Boolean} [shouldAdd=true] Should add a to class list
+     * @return {CssClassListChain}
+     * @static
+     * @public
+     */
+    static add(className: string, shouldAdd: boolean = true): CssClassListChain {
+        return StaticCssClassList.add(className, shouldAdd);
     }
 
     /**

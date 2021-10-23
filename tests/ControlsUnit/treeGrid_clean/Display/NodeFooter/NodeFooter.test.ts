@@ -5,8 +5,8 @@ import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import { Model } from 'Types/entity';
 import {TreeItem } from 'Controls/display';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
-import {RecordSet} from "Types/collection";
-import {TreeGridCollection} from "Controls/treeGrid";
+import {RecordSet} from 'Types/collection';
+import {TreeGridCollection} from 'Controls/treeGrid';
 
 describe('Controls/_display/itemsStrategy/NodeFooter', () => {
     function getSource<S = Model, T = TreeItem>(wraps: T[]): IItemsStrategy<S, T> {

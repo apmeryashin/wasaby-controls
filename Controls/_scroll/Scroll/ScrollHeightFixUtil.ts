@@ -1,6 +1,6 @@
 import {constants, detection} from 'Env/Env';
 
-      var _private = {
+var _private = {
 
          /**
           * Расчитать функцию расчета значения для css свойства overflow.
@@ -24,7 +24,7 @@ import {constants, detection} from 'Env/Env';
          }
       };
 
-      export = {
+export = {
          _private: _private,
 
          calcHeightFix: _private.calcHeightFixFn

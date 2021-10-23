@@ -93,7 +93,7 @@ export default class Flat<
      * @param {CrudEntityKey[]} selectedKeys Ключи выбранных записей
      */
     getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[] {
-        let selectedItems = [];
+        const selectedItems = [];
 
         const items = this._model.getCollection();
         selectedKeys.forEach((key) => {

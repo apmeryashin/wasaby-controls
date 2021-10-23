@@ -1,4 +1,4 @@
-import {BaseSelector, IBaseSelectorOptions} from "Controls/date";
+import {BaseSelector, IBaseSelectorOptions} from 'Controls/date';
 import DateRangeModel from './DateRangeModel';
 import {EventUtils} from 'UI/Events';
 import {SyntheticEvent} from 'Vdom/Vdom';

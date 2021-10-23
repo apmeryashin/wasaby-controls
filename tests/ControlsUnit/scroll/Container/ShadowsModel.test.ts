@@ -4,7 +4,7 @@ import {
     SHADOW_VISIBILITY
 } from 'Controls/_scroll/Container/Interface/IShadows';
 import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
-import {SCROLL_POSITION} from "Controls/_scroll/Utils/Scroll";
+import {SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
 
 describe('Controls/scroll:Container ShadowsModel', () => {
     const positions = ['top', 'bottom'];
@@ -23,12 +23,12 @@ describe('Controls/scroll:Container ShadowsModel', () => {
                     scrollOrientation: test.scrollOrientation
                 });
                 assert.hasAllKeys(component._models, test.positions);
-                for (let position of test.positions) {
+                for (const position of test.positions) {
                     assert.isFalse(component._models[position].isEnabled);
                     assert.isFalse(component._models[position].isVisible);
                 }
             });
-        })
+        });
     });
 
     describe('updateScrollState', () => {
@@ -45,7 +45,7 @@ describe('Controls/scroll:Container ShadowsModel', () => {
             title: 'should not show shadows if shadow visibility is hidden',
             options: {
                 topShadowVisibility: SHADOW_VISIBILITY.HIDDEN,
-                bottomShadowVisibility: SHADOW_VISIBILITY.HIDDEN,
+                bottomShadowVisibility: SHADOW_VISIBILITY.HIDDEN
             },
             args: {
                 verticalPosition: 'middle',
@@ -71,7 +71,7 @@ describe('Controls/scroll:Container ShadowsModel', () => {
             },
             isEnabled: true,
             isTopVisible: false,
-            isBottomVisible: true,
+            isBottomVisible: true
         }, {
             title: 'should show top shadow',
             options: {},
@@ -81,7 +81,7 @@ describe('Controls/scroll:Container ShadowsModel', () => {
             },
             isEnabled: true,
             isTopVisible: true,
-            isBottomVisible: false,
+            isBottomVisible: false
         }].forEach((test) => {
             it(test.title, () => {
                 const component = new ShadowsModel({
@@ -91,12 +91,12 @@ describe('Controls/scroll:Container ShadowsModel', () => {
                 });
                 component.updateScrollState(test.args);
                 if ('isEnabled' in test) {
-                    for (let position of positions) {
+                    for (const position of positions) {
                         assert.strictEqual(component._models[position].isEnabled, test.isEnabled, `isEnabled, ${position}`);
                     }
                 }
                 if ('isVisible' in test) {
-                    for (let position of positions) {
+                    for (const position of positions) {
                         assert.strictEqual(component._models[position].isVisible, test.isVisible, `isVisible, ${position}`);
                     }
                 }

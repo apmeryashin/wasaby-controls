@@ -150,7 +150,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
             assert.include(columnItems[0].getWrapperClasses(THEME), 'controls-Grid__cell_spacingRight');
 
             assert.notInclude(columnItems[1].getWrapperClasses(THEME), 'controls-Grid__cell_spacingFirstCol');
-            assert.include(columnItems[1].getWrapperClasses(THEME),'controls-Grid__cell_spacingLeft');
+            assert.include(columnItems[1].getWrapperClasses(THEME), 'controls-Grid__cell_spacingLeft');
             assert.notInclude(columnItems[1].getWrapperClasses(THEME), 'controls-Grid__cell_spacingLastCol');
             assert.include(columnItems[1].getWrapperClasses(THEME), 'controls-Grid__cell_spacingRight');
 
@@ -199,10 +199,10 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                             start: 1,
                             end: 3
                         }
-                    }
+                    };
                 },
                 isSticked: () => false
-            }
+            };
 
             const headerRow = new GridHeaderRow({
                 columnsConfig: header,
@@ -257,7 +257,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                             start: 1,
                             end: 3
                         }
-                    }
+                    };
                 },
                 isSticked: () => false
             };
@@ -316,10 +316,10 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
                             start: 1,
                             end: 3
                         }
-                    }
+                    };
                 },
                 isSticked: () => false
-            }
+            };
 
             const headerRow = new GridHeaderRow({
                 columnsConfig: header,

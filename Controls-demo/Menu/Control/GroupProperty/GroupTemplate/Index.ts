@@ -20,7 +20,6 @@ class GroupTemplate extends Control {
         });
     }
 
-
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default GroupTemplate;

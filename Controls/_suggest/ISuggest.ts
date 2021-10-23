@@ -1,4 +1,4 @@
-import ISuggest from "Controls/interface/ISuggest";
+import ISuggest from 'Controls/interface/ISuggest';
 
 /**
  * Интерфейс для Input.Suggest.

@@ -154,7 +154,7 @@ export const data = {
             contrastBackground: true,
             title: 'Обсудить',
             '@parent': true,
-            parent: null,
+            parent: null
         }, {
             id: '7',
             showType: showType.MENU,

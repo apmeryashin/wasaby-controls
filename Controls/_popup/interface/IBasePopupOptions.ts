@@ -281,6 +281,12 @@ export interface IBasePopupOptions {
      */
     dataLoaders?: IDataLoader[][];
     restrictiveContainer?: string;
+
+    actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
+    zIndex?: number; // TODO Compatible
+    isCompoundTemplate?: boolean; // TODO Compatible
+    _type?: string; // TODO Compatible
+    isHelper?: boolean; // TODO удалить после перехода со статических методов на хелперы
     /**
      * @cfg Функция, позволяющая высчитать z-index окна вручную.
      * @remark
@@ -313,12 +319,6 @@ export interface IBasePopupOptions {
      * </pre>
      */
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
-
-    actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
-    zIndex?: number; // TODO Compatible
-    isCompoundTemplate?: boolean; // TODO Compatible
-    _type?: string; // TODO Compatible
-    isHelper?: boolean; // TODO удалить после перехода со статических методов на хелперы
 }
 
 /*

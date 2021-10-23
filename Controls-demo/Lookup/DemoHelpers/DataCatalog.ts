@@ -114,4 +114,4 @@ export {
    _departments,
    _equipment,
    _companies
-}
+};

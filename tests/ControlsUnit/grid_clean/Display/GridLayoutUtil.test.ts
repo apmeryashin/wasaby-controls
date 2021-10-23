@@ -51,4 +51,3 @@ describe('Controls/grid_clean/_display/utils/GridLayoutUtil', () => {
         });
     });
 });
-

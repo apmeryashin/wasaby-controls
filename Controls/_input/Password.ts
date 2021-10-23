@@ -106,7 +106,7 @@ class Password extends Base {
     }
 
     protected _toggleVisibilityHandler(): void {
-        let passwordVisible = !this._passwordVisible;
+        const passwordVisible = !this._passwordVisible;
 
         this._passwordVisible = passwordVisible;
         this._forceUpdate();

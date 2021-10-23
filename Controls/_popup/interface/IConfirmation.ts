@@ -17,8 +17,8 @@ export interface IConfirmationOptions extends IConfirmationFooterOptions, IContr
  * @author Красильников А.С.
  */
 export interface IConfirmationOpener {
-    open(templateOptions: IConfirmationOptions): Promise<boolean | undefined>;
     readonly '[Controls/_popup/interface/IConfirmationOpener]': boolean;
+    open(templateOptions: IConfirmationOptions): Promise<boolean | undefined>;
 }
 
 /**

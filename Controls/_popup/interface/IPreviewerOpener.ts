@@ -1,8 +1,6 @@
 import { IOpener } from 'Controls/_popup/interface/IBaseOpener';
 import { IStickyPopupOptions } from 'Controls/_popup/interface/ISticky';
 
-
-
 export interface IPreviewerPopupOptions extends IStickyPopupOptions {
     id?: string;
     closingTimerId?: number;

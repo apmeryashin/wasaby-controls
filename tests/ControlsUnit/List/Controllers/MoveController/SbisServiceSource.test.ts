@@ -19,7 +19,7 @@ const sbisServiceSource: Partial<SbisService> = {
         return {
             move: 'move',
             list: 'list'
-        }
+        };
     },
     move(items: CrudEntityKey[], target: CrudEntityKey, meta?: IHashMap<any>): Promise<void> {
         return Promise.resolve();

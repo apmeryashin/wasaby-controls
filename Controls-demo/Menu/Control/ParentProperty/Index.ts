@@ -72,7 +72,6 @@ class ParentProperty extends Control {
         }
     }
 
-
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default ParentProperty;

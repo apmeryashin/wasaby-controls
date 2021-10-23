@@ -21,7 +21,6 @@ import {Entity} from 'Controls/dragnDrop';
 import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
 
-
 interface IInitialScrollPosition {
     vertical: SCROLL_POSITION.START | SCROLL_POSITION.END;
     horizontal: SCROLL_POSITION.START | SCROLL_POSITION.END;
@@ -927,7 +926,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 clearTimeout(this._scrollMoveTimer);
             }
 
-            this._scrollMoveTimer = setTimeout(() => {
+        this._scrollMoveTimer = setTimeout(() => {
                 // Т.к код выполняется асинхронно, может получиться, что контрол к моменту вызова функции уже
                 // уничтожился
                 if (!this._isUnmounted) {
@@ -1153,7 +1152,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     private _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string,
-                           correctingHeight: number = 0): void {
+                                   correctingHeight: number = 0): void {
         // На это событие должен реагировать только ближайший скролл контейнер.
         // В противном случае произойдет подскролл в ненужном контейнере
         event.stopPropagation();
@@ -1203,7 +1202,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _logScrollPosition(scrollTop: number, scrollLeft: number): void {
         if (ContainerBase._debug) {
-            let msg:string = `Controls/scroll:ContainerBase: изменение положения скролла.`;
+            let msg: string = 'Controls/scroll:ContainerBase: изменение положения скролла.';
 
             if (this._lastLogState.top !== scrollTop) {
                 msg += ` По вертикали: новое ${scrollTop}, старое ${this._lastLogState.top}.`;
@@ -1219,9 +1218,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         }
     }
 
-    private _logSizes(state:IScrollState, oldState: IScrollState): void {
+    private _logSizes(state: IScrollState, oldState: IScrollState): void {
         if (ContainerBase._debug) {
-            let msg:string = '';
+            let msg: string = '';
 
             for (const field of ['clientHeight', 'scrollHeight', 'clientWidth', 'scrollWidth']) {
                 if (state[field] !== oldState[field]) {
@@ -1239,7 +1238,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     static setDebug(debug: boolean): void {
         ContainerBase._debug = debug;
     }
-
 
     static getOptionTypes(): object {
         return {

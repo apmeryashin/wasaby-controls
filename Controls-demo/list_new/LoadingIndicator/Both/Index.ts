@@ -1,8 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/LoadingIndicator/Both/Both';
 import Memory from './Memory';
-import {SyntheticEvent} from "UI/Vdom";
-import {Memory as DefaultMemory} from "Types/source";
+import {SyntheticEvent} from 'UI/Vdom';
+import {Memory as DefaultMemory} from 'Types/source';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -24,7 +24,7 @@ export default class extends Control {
                     keyProperty: 'id',
                     data: [
                         {id: 'few-items', title: 'Мало записей'},
-                        {id: 'more-items', title: 'Много записей'},
+                        {id: 'more-items', title: 'Много записей'}
                     ]
                 }),
                 displayProperty: 'title',

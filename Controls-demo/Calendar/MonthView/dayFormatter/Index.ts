@@ -4,6 +4,8 @@ import controlTemplate = require('wml!Controls-demo/Calendar/MonthView/dayFormat
 class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
 
+    private _month: Date = new Date(2019, 2);
+
     private _dayFormatter = (date): object => {
         if (date.getDate() === 22) {
             return {
@@ -27,8 +29,6 @@ class Index extends Control<IControlOptions> {
         }
         return {};
     }
-
-    private _month: Date = new Date(2019, 2);
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

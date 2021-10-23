@@ -193,12 +193,12 @@ describe('Controls/_itemActions/Controller', () => {
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : null,
-            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
-            contextMenuConfig: options ? options.contextMenuConfig: null,
-            iconSize: options ? options.iconSize: 'm',
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback : null,
+            contextMenuConfig: options ? options.contextMenuConfig : null,
+            iconSize: options ? options.iconSize : 'm',
             editingItem: options ? options.editingItem : null,
             itemActionsVisibility: options ? options.itemActionsVisibility : 'onhover',
-            actionMode: "strict"
+            actionMode: 'strict'
         };
     }
 
@@ -410,7 +410,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should assign itemActions for editig item that is not in collection', () => {
             const list = new RecordSet({
                 keyProperty: 'id',
-                rawData: [{id: 100, name: 'Philip J. Fry', gender: 'M', itemActions: []},]
+                rawData: [{id: 100, name: 'Philip J. Fry', gender: 'M', itemActions: []}]
             });
             const editingItem = new CollectionItem<Record>({contents: list.at(0)});
             editingItem.setEditing(true, editingItem.getContents());
@@ -643,7 +643,7 @@ describe('Controls/_itemActions/Controller', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',
                 icon: '',
-                showType: TItemActionShowType.TOOLBAR,
+                showType: TItemActionShowType.TOOLBAR
             };
             let recordWithCorrectType = false;
             const editArrowVisibilityCallback = (record: Model) => {
@@ -672,7 +672,7 @@ describe('Controls/_itemActions/Controller', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',
                 icon: '',
-                showType: TItemActionShowType.TOOLBAR,
+                showType: TItemActionShowType.TOOLBAR
             };
             const editArrowVisibilityCallback = () => true;
             itemActionsController.update(initializeControllerOptions({
@@ -687,7 +687,7 @@ describe('Controls/_itemActions/Controller', () => {
             const item = itemActionsController.getSwipeItem();
             assert.exists(item, 'Swipe activation should set swiped item');
             assert.equal(item.getActions().showed[0].id, 'view', 'First action should be \'editArrow\'');
-        })
+        });
 
         // T2.12 При вызове getSwipeItem() контроллер должен возвращать true
         // вне зависимости оттипа анимации и направления свайпа.
@@ -730,7 +730,7 @@ describe('Controls/_itemActions/Controller', () => {
                     return true;
                 }
             };
-            itemActionsClone.splice(3, 0,{
+            itemActionsClone.splice(3, 0, {
                 id: 9,
                 icon: 'icon-SuperIcon',
                 title: 'Super puper',

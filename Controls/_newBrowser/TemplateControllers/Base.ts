@@ -4,7 +4,6 @@ import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
 import {mixin} from 'Types/util';
 import {TreeItem} from 'Controls/display';
 
-
 export interface ITemplateProperties {
     descriptionProperty: string;
     gradientColorProperty: string;

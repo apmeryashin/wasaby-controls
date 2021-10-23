@@ -65,7 +65,7 @@ export function getItemsBySelection(
     let result;
     let selectedItems = [];
 
-    if(items) {
+    if (items) {
         selection.selected.forEach((key) => {
             item = items.getRecordById(key);
             if (item) {

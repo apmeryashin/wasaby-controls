@@ -2,7 +2,7 @@ import {stub} from 'sinon';
 import {assert} from 'chai';
 import {DOMUtil} from 'Controls/sizeUtils';
 
-function ClassList(): void {};
+function ClassList(): void {}
 ClassList.prototype = [];
 // @ts-ignore
 ClassList.prototype.add = ClassList.prototype.push;

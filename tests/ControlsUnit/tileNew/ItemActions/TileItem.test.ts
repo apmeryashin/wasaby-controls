@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { TileCollectionItem } from 'Controls/tile';
-import {CssClassesAssert} from "ControlsUnit/CustomAsserts";
+import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 
 describe('Controls/_tile/display/mixins/TileItem', () => {
     describe('.getActionMode', () => {

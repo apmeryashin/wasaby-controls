@@ -9,10 +9,9 @@ class Popup extends Control<IControlOptions> {
     protected _minHeight: number = 200;
     protected _resizeHeight: number = 400;
     protected _resizeWidth: number = 600;
-    protected _enlargeButton: string = "Увеличить";
-    protected _reduceButton: string = "Уменьшить";
-    protected _buttonCaption: string = "Увеличить";
-    static _styles: string[] = ['Controls-demo/Popup/Dialog/ResizeDirection/Popup', 'Controls-demo/Controls-demo'];
+    protected _enlargeButton: string = 'Увеличить';
+    protected _reduceButton: string = 'Уменьшить';
+    protected _buttonCaption: string = 'Увеличить';
 
     protected _handleResizeClick(): void {
         if (this._height === 200 && this._width === 300) {
@@ -25,5 +24,6 @@ class Popup extends Control<IControlOptions> {
             this._buttonCaption = this._enlargeButton;
         }
     }
+    static _styles: string[] = ['Controls-demo/Popup/Dialog/ResizeDirection/Popup', 'Controls-demo/Controls-demo'];
 }
 export default Popup;

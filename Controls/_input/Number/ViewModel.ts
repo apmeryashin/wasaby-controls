@@ -122,7 +122,7 @@ class ViewModel extends BaseViewModel<string | number, IViewModelOptions> {
             return false;
         }
 
-        const trimmedValue:string = Formatter.trimTrailingZeros(this._displayValue, leaveOneZero);
+        const trimmedValue: string = Formatter.trimTrailingZeros(this._displayValue, leaveOneZero);
 
         if (this._displayValue !== trimmedValue) {
             this._displayValue = trimmedValue;

@@ -7,25 +7,25 @@ const rawData = [
         key: 1,
         col1: 'c1-1',
         col2: 'с2-1',
-        col3: 'с3-1',
+        col3: 'с3-1'
     },
     {
         key: 2,
         col1: 'c1-2',
         col2: 'с2-2',
-        col3: 'с3-2',
+        col3: 'с3-2'
     },
     {
         key: 3,
         col1: 'c1-3',
         col2: 'с2-3',
-        col3: 'с3-3',
+        col3: 'с3-3'
     },
     {
         key: 4,
         col1: 'c1-4',
         col2: 'с2-4',
-        col3: 'с3-4',
+        col3: 'с3-4'
     }
 ];
 const columns = [
@@ -284,7 +284,7 @@ describe('Controls/grid_clean/Display/Colspan', () => {
         assert.strictEqual(columnItems[2].getColspanStyles(), '');
 
         // first item with editing
-        gridCollection.at(0).setEditing(true)
+        gridCollection.at(0).setEditing(true);
         columnItems = gridCollection.at(0).getColumns();
         assert.strictEqual(columnItems.length, 3);
         assert.strictEqual(columnItems[0].getColspan(), 1);
@@ -333,7 +333,7 @@ describe('Controls/grid_clean/Display/Colspan', () => {
         assert.strictEqual(columnItems[0].getColspanStyles(), 'grid-column: 1 / 4;');
 
         // first item with editing
-        gridCollection.at(0).setEditing(true)
+        gridCollection.at(0).setEditing(true);
         columnItems = gridCollection.at(0).getColumns();
         assert.strictEqual(columnItems.length, 1);
         assert.strictEqual(columnItems[0].getColspan(), 3);
@@ -392,7 +392,7 @@ describe('Controls/grid_clean/Display/Colspan', () => {
         assert.strictEqual(columnItems[1].getColspanStyles(), 'grid-column: 2 / 5;');
 
         // first item with editing
-        gridCollection.at(0).setEditing(true)
+        gridCollection.at(0).setEditing(true);
         columnItems = gridCollection.at(0).getColumns();
         assert.strictEqual(columnItems.length, 2);
         assert.strictEqual(columnItems[0].getColspan(), 1);

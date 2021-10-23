@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from "wml!Controls-demo/toggle/Tumbler/MainCounterStyle/MainCounterStyle";
+import * as Template from 'wml!Controls-demo/toggle/Tumbler/MainCounterStyle/MainCounterStyle';
 import {RecordSet} from 'Types/collection';
 
 interface CounterStyleItem {
@@ -13,8 +13,8 @@ export default class extends Control {
     protected _selectedKey: string = '1';
 
     protected _beforeMount(): void {
-        const styles = ['secondary', 'primary', 'warning', 'danger', 'unaccented', 'link', 'label', 'info', 'default']
-        styles.forEach(style=>{
+        const styles = ['secondary', 'primary', 'warning', 'danger', 'unaccented', 'link', 'label', 'info', 'default'];
+        styles.forEach((style) => {
             this._items.push({
                 style,
                 items: new RecordSet({

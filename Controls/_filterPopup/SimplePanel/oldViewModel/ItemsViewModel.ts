@@ -262,7 +262,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
         // The key of breadcrumbs row is the key of the last item in the crumbs.
         if (dispItem.getContents() instanceof Array) {
-            let breadCrumbs = dispItem.getContents();
+            const breadCrumbs = dispItem.getContents();
             itemData.key = ItemsUtil.getPropertyValue(breadCrumbs[breadCrumbs.length - 1], this.getKeyProperty());
         } else {
             itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this.getKeyProperty());

@@ -1,7 +1,7 @@
 export default function timeout(args): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve()
+            resolve();
         }, 5000);
     });
 }

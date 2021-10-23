@@ -44,7 +44,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 secondTitle: 'тест6',
                 parent: 5
             }
-        ].map(function (item) {
+        ].map(function(item) {
             return new Model({
                 rawData: item,
                 keyProperty: 'id'

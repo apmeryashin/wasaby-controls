@@ -28,7 +28,7 @@ import 'css!Controls/lookup';
  * @author Крайнов Д.О.
  */
 
-      var itemHiddenTemplate = Control.extend({
+var itemHiddenTemplate = Control.extend({
          _template: template,
 
          _beforeMount: function(options) {
@@ -46,4 +46,4 @@ import 'css!Controls/lookup';
             this._options.clickCallback('crossClick', item);
          }
       });
-      export = itemHiddenTemplate;
+export = itemHiddenTemplate;

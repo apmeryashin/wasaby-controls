@@ -3,10 +3,9 @@ import {IVersionable, VersionableMixin} from 'Types/entity';
 import {POSITION} from './Type';
 import ShadowModel from './ShadowModel';
 import {IShadowsOptions, IShadowsVisibilityByInnerComponents, SHADOW_VISIBILITY} from './Interface/IShadows';
-import {IScrollState} from "../Utils/ScrollState";
-import {Offsets} from "./ScrollbarModel";
+import {IScrollState} from '../Utils/ScrollState';
+import {Offsets} from './ScrollbarModel';
 import ContainerBase from 'Controls/_scroll/ContainerBase';
-
 
 export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': true;
@@ -28,13 +27,13 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
     }
 
     updateOptions(options: IShadowsOptions): void {
-        for (let shadow of Object.keys(this._models)) {
+        for (const shadow of Object.keys(this._models)) {
             this._models[shadow].updateOptions(options);
         }
     }
 
     updateScrollState(scrollState: IScrollState, needUpdate: boolean = true): void {
-        for (let shadow of Object.keys(this._models)) {
+        for (const shadow of Object.keys(this._models)) {
             const isStateChanged = this._models[shadow].updateScrollState(scrollState);
             if (isStateChanged && needUpdate) {
                 this._nextVersion();

@@ -487,7 +487,7 @@ export class Controller {
         }
         this._collection.each((item) => {
             const itemChanged = this._updateActionsOnParticularItem(item);
-            hasChanges = hasChanges || itemChanged
+            hasChanges = hasChanges || itemChanged;
         });
         if (editingItem) {
             this._updateActionsOnParticularItem(editingItem);

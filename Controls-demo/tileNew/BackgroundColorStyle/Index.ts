@@ -13,7 +13,7 @@ export default class extends Control {
         preparedData[0].image = null;
         preparedData[0].isDocument = undefined;
         preparedData[1].image = null;
-        preparedData[2].image = explorerImages[3]
+        preparedData[2].image = explorerImages[3];
 
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',

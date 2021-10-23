@@ -23,7 +23,7 @@ import {IObservable} from 'Types/collection';
 import {TGroupNodeVisibility} from '../interface/ITreeGrid';
 import {ITreeGridOptions} from '../TreeGridView';
 import NodeFooterStrategy from './itemsStrategy/NodeFooter';
-import NodeFooter from "Controls/_display/itemsStrategy/NodeFooter";
+import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -216,7 +216,7 @@ export default class TreeGridCollection<
         return resultItemIndex === this.getIndex(item);
     }
 
-    protected _handleAfterCollectionChange(changedItems: ISessionItems<T>[], changeAction?: string): void {
+    protected _handleAfterCollectionChange(changedItems: Array<ISessionItems<T>>, changeAction?: string): void {
         super._handleAfterCollectionChange(changedItems, changeAction);
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
@@ -348,7 +348,7 @@ export default class TreeGridCollection<
     // endregion itemsFactoryResolver
 
     protected _hasItemsToCreateResults(): boolean {
-        let rootItems = this.getChildrenByRecordSet(this.getRoot().getContents());
+        const rootItems = this.getChildrenByRecordSet(this.getRoot().getContents());
         // Если единственный узел в списке - группа, показываем строку итогов
         // в зависимости от наличия его дочерних узлов
         if (rootItems.length === 1 &&

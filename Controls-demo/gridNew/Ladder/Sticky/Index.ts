@@ -8,7 +8,7 @@ import * as Template from 'wml!Controls-demo/gridNew/Ladder/Sticky/Sticky';
 import * as ResultsTpl from 'wml!Controls-demo/gridNew/Ladder/Sticky/ResultsCell';
 
 import {ListItems} from 'Controls/dragnDrop';
-import {Tasks} from "Controls-demo/gridNew/DemoHelpers/Data/Tasks";
+import {Tasks} from 'Controls-demo/gridNew/DemoHelpers/Data/Tasks';
 
 interface IStickyLadderColumn {
     template: string;

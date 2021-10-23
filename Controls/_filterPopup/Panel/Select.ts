@@ -115,4 +115,3 @@ Object.defineProperty(FilterSelect, 'defaultProps', {
  * </pre>
  */
 export default FilterSelect;
-

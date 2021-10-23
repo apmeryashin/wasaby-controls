@@ -67,4 +67,3 @@ export default interface IItemTemplateOptions {
     */
    border?: boolean;
 }
-

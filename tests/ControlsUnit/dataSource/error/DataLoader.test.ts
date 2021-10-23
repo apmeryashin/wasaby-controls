@@ -1,5 +1,5 @@
 import {ICrud, Memory, PrefetchProxy} from 'Types/source';
-import {deepStrictEqual} from "assert";
+import {deepStrictEqual} from 'assert';
 
 import {DataLoader} from 'Controls/_dataSource/error';
 import {useFakeTimers} from 'sinon';

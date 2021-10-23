@@ -141,10 +141,10 @@ class Store implements IStore {
         });
         // сеттер и геттер для публичного поля
         Object.defineProperty(state, propertyName, {
-            set: function () {
+            set: function() {
                 // do nothing
             },
-            get: function () {
+            get: function() {
                 return this['_' + propertyName].value;
             },
             enumerable: true

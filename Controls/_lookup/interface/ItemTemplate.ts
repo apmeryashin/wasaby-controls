@@ -75,4 +75,3 @@ export default interface IItemTemplateOptions {
      */
     style?: string;
  }
-

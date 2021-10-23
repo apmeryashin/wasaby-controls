@@ -16,7 +16,7 @@ function getIconSize(options) {
                break;
          }
       } else {
-         sizes.forEach(function (size) {
+         sizes.forEach(function(size) {
             if (options.icon.indexOf('icon-' + size) !== -1) {
                iconSize = size;
             }
@@ -25,7 +25,7 @@ function getIconSize(options) {
       return iconSize;
    }
 
-   function cssStyleGeneration(options) {
+function cssStyleGeneration(options) {
       // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
       let offsetClassName = 'controls-MenuButton_' + options.viewMode;
 
@@ -50,6 +50,6 @@ function getIconSize(options) {
       return offsetClassName;
    }
 
-   export = {
+export = {
       cssStyleGeneration
    };

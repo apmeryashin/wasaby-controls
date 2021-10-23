@@ -100,4 +100,4 @@ export default function linkDecorate(value, parent) {
         result = value;
     }
     return result;
-};
+}

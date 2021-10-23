@@ -5,8 +5,8 @@
  * - Проверка наличия элемента в массиве
  */
 interface IDifferenceArrays {
-   added: Array,
-   removed: Array
+   added: any[];
+   removed: any[];
 }
 
 const CONSTRUCTORS_FOR_TYPE_INVERTING = {
@@ -15,7 +15,7 @@ const CONSTRUCTORS_FOR_TYPE_INVERTING = {
 };
 
 export = {
-   addSubArray: function(array: Array, items: Array): Array {
+   addSubArray: function(array: any[], items: any[]): any[] {
       items.forEach((item) => {
          if (!this.hasInArray(array, item)) {
             array.push(item);
@@ -25,7 +25,7 @@ export = {
       return array;
    },
 
-   removeSubArray: function(array: Array, items: Array): Array {
+   removeSubArray: function(array: any[], items: any[]): any[] {
       let index: number;
       items.forEach((item) => {
          index = this.invertTypeIndexOf(array, item);
@@ -43,8 +43,8 @@ export = {
     * @param arrayTwo
     * @returns {{added: Array, removed: Array}}
     */
-   getArrayDifference: function(arrayOne: Array, arrayTwo: Array): IDifferenceArrays {
-      let result: IDifferenceArrays = {};
+   getArrayDifference: function(arrayOne: any[], arrayTwo: any[]): IDifferenceArrays {
+      const result: IDifferenceArrays = {};
 
       result.removed = arrayOne.filter((item) => {
          return !this.hasInArray(arrayTwo, item);
@@ -57,11 +57,11 @@ export = {
       return result;
    },
 
-   hasInArray: function(array: Array, elem: unknown): boolean {
+   hasInArray: function(array: any[], elem: unknown): boolean {
       return this.invertTypeIndexOf(array, elem) !== -1;
    },
 
-   invertTypeIndexOf: function(array: Array, elem: unknown): number {
+   invertTypeIndexOf: function(array: any[], elem: unknown): number {
       let index: number = array.indexOf(elem);
 
       if (index === -1) {

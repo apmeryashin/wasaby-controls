@@ -90,6 +90,8 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
         data: Data
     };
 
+    _notifyHandler = EventUtils.tmplNotify;
+
     protected _beforeMount(options): void {
         this._viewModelConstructor = this._getModelConstructor();
     }
@@ -199,8 +201,6 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
     _clearSelection(): void {
         this._children.listControl.clearSelection();
     }
-
-    _notifyHandler = EventUtils.tmplNotify;
 
     static getDefaultOptions(): object {
         return {

@@ -1,5 +1,5 @@
-import TreeCheckboxCell from "Controls/_treeGrid/display/TreeCheckboxCell";
-import {CssClassesAssert} from "ControlsUnit/CustomAsserts";
+import TreeCheckboxCell from 'Controls/_treeGrid/display/TreeCheckboxCell';
+import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 
 describe('Controls/_treeGrid/display/TreeGridNodeFooterCell', () => {
     let mockedOwner;

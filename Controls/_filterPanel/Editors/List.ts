@@ -82,7 +82,6 @@ export interface IListEditorOptions extends
  * @default default
  */
 
-
 /**
  * @name Controls/_filterPanel/Editors/List#style
  * @cfg {String} Стиль отображения чекбокса в списке.
@@ -367,7 +366,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     private _addSyntheticItemsToOriginItems(
         items: RecordSet,
-        {emptyText, emptyKey, selectedAllText, selectedAllKey}: IListEditorOptions,
+        {emptyText, emptyKey, selectedAllText, selectedAllKey}: IListEditorOptions
     ): void {
         if (emptyText && !items.getRecordById(emptyKey)) {
             this._prependItem(emptyKey, emptyText);

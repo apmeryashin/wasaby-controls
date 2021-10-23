@@ -1,5 +1,5 @@
-import {assert} from "chai";
-import {RecordSet} from "Types/collection";
+import {assert} from 'chai';
+import {RecordSet} from 'Types/collection';
 import { TreeTileCollection } from 'Controls/treeTile';
 
 describe('Controls/_treeTile/display/TreeTileCollection', () => {

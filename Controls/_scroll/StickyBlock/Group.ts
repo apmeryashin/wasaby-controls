@@ -109,7 +109,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     get offsetTop(): number {
-        return this._options.offsetTop
+        return this._options.offsetTop;
     }
 
     set top(value: number) {
@@ -123,7 +123,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     get shadowVisibility(): SHADOW_VISIBILITY {
         // TODO: сделать чтобы видимость теней явно задавалась через опцию на группе.
         // https://online.sbis.ru/opendoc.html?guid=4e5cd2c6-a2ec-4619-b9c4-fafbb21fc4b8
-        for (let id in this._headers) {
+        for (const id in this._headers) {
             const shadowVisibility = this._headers[id].inst.shadowVisibility;
             if (shadowVisibility === SHADOW_VISIBILITY.visible ||
                 shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
@@ -143,12 +143,12 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     getChildrenHeaders(): TRegisterEventData[] {
-        return Object.keys(this._headers).map(id => this._headers[id]);
+        return Object.keys(this._headers).map((id) => this._headers[id]);
     }
 
     setSyncDomOptimization(value: boolean): void {
         if (this._syncDomOptimization !== value) {
-            for (let id in this._headers) {
+            for (const id in this._headers) {
                 this._headers[id].inst.setSyncDomOptimization(value);
             }
         }
@@ -159,7 +159,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         this._offset[position] = value;
 
         if (this._initialized || !this._options.calculateHeadersOffsets) {
-            for (let id in this._headers) {
+            for (const id in this._headers) {
                 const positionValue: number = this._headers[id][position] + value;
                 this._headers[id].inst[position] = positionValue;
             }
@@ -184,7 +184,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         event.stopImmediatePropagation();
         if (!fixedHeaderData.isFakeFixed) {
             if (!!fixedHeaderData.fixedPosition) {
-                const headersIds: number[] = this._stickyHeadersIds[fixedHeaderData.fixedPosition]
+                const headersIds: number[] = this._stickyHeadersIds[fixedHeaderData.fixedPosition];
                 headersIds.push(fixedHeaderData.id);
                 // Если это не первый заголовок в группе, то группа уже знает надо ли отображить тень,
                 // сообщим это заголовку.
@@ -290,7 +290,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                     id: this._index,
                     inst: this,
                     position: data.position,
-                    mode: data.mode,
+                    mode: data.mode
                 }, true], {bubbling: true});
                 this._isRegistry = true;
             }

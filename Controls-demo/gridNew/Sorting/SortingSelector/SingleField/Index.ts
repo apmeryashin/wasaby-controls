@@ -18,7 +18,7 @@ export default class extends Control {
         this._sortingParamsWithoutIcon = [
             {
                 title: 'По сумме',
-                paramName: 'sum',
+                paramName: 'sum'
             }
         ];
         this._sorting.push({sum: 'ASC'});

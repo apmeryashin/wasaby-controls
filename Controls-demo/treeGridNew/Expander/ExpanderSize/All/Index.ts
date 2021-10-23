@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/Expander/ExpanderSize/All/All';
 import {CrudEntityKey, Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {Gadgets} from "Controls-demo/treeGridNew/DemoHelpers/Data/Gadgets";
+import {Gadgets} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Gadgets';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;

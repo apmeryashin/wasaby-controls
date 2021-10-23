@@ -81,7 +81,7 @@ class FieldTemplate extends Control<IControlOptions> {
         }
     });
 
-    protected _template: TemplateFunction = controlTemplate
+    protected _template: TemplateFunction = controlTemplate;
 
     private _toLowerCase(event: SyntheticEvent<MouseEvent>, stateName: string): void {
         this[stateName] = this[stateName].toLowerCase();

@@ -61,7 +61,7 @@ class List extends Control<ISimplePanelListOptions> {
         if (this._isNeedUpdateSelectedKeys(event.target, item)) {
             this._selectionChanged = true;
             this._updateSelection(this._listModel, item, this._options.resetValue);
-            let selectedKeys = this._listModel.getSelectedKeys().slice().sort();
+            const selectedKeys = this._listModel.getSelectedKeys().slice().sort();
             this._notify('checkBoxClick', [selectedKeys]);
         } else {
             this._notify('itemClick', [[item.get(this._options.keyProperty)]]);
@@ -143,6 +143,5 @@ class List extends Control<ISimplePanelListOptions> {
         this._notify('moreButtonClick', [selectedItems]);
     }
 }
-
 
 export = List;

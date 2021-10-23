@@ -1,4 +1,4 @@
-export function applyHighlighter(highlighters: Array<any>): string {
+export function applyHighlighter(highlighters: any[]): string {
     let result: string = '';
 
     const args = arguments;

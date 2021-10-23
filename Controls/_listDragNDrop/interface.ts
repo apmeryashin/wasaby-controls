@@ -91,5 +91,5 @@ export abstract class BaseDragStrategy<
 
    abstract calculatePosition(params: IDragStrategyParams<P>): P;
 
-   abstract getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[]
+   abstract getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[];
 }

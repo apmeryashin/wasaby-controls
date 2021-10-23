@@ -4,7 +4,7 @@ import CoreClone = require('Core/core-clone');
 const differentFields = ['id', 'visibility'];
 
 function convertToFilterSource(detailPanelItems) {
-    let filterSource = CoreClone(detailPanelItems);
+    const filterSource = CoreClone(detailPanelItems);
     factory(filterSource).each(function(filterSourceItem, index) {
         for (var property in filterSourceItem) {
             if (filterSourceItem.hasOwnProperty(property)) {
@@ -22,7 +22,7 @@ function convertToFilterSource(detailPanelItems) {
 }
 
 function convertToDetailPanelItems(filterSource) {
-    let detailPanelItems = CoreClone(filterSource);
+    const detailPanelItems = CoreClone(filterSource);
     factory(detailPanelItems).each(function(detailPanelItem, index) {
         for (var property in detailPanelItem) {
             if (detailPanelItem.hasOwnProperty(property)) {

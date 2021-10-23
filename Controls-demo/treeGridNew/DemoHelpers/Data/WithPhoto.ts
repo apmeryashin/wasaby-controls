@@ -1,6 +1,6 @@
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
-import {IData} from "Controls-demo/treeGridNew/DemoHelpers/Interface";
-import {IColumn} from "Controls/_grid/display/interface/IColumn";
+import {IData} from 'Controls-demo/treeGridNew/DemoHelpers/Interface';
+import {IColumn} from 'Controls/_grid/display/interface/IColumn';
 import * as CntTpl from 'wml!Controls-demo/treeGridNew/ItemTemplate/WithPhoto/content';
 import * as CntTwoLvlTpl from 'wml!Controls-demo/treeGridNew/ItemTemplate/WithPhoto/contentTwoLvl';
 
@@ -86,5 +86,5 @@ export const WithPhoto = {
                 width: ''
             }
         ];
-    },
-}
+    }
+};

@@ -10,9 +10,9 @@ import {Record} from 'Types/entity';
 import {DOMUtil, getWidth} from 'Controls/sizeUtils';
 import {constants} from 'Env/Env';
 
-   var MENU_WIDTH = 0;
+var MENU_WIDTH = 0;
 
-   var _private = {
+var _private = {
       initializeConstants: function(theme: string) {
          if (!MENU_WIDTH) {
             const iconClass = `icon-medium icon-SettingsNew controls-Toolbar__menu_spacing-small_theme-${theme}`;
@@ -71,13 +71,13 @@ import {constants} from 'Env/Env';
       },
 
       setShowType: function(items, type) {
-         items.each(function (item) {
+         items.each(function(item) {
             item.set('showType', type);
          });
       }
    };
 
-   export = {
+export = {
       fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
          var
             itemsSizes,
@@ -96,7 +96,7 @@ import {constants} from 'Env/Env';
             _private.setShowType(items, showType.TOOLBAR);
          } else {
             itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
-            currentWidth = itemsSizes.reduce(function (acc, width) {
+            currentWidth = itemsSizes.reduce(function(acc, width) {
                return acc + width;
             }, 0);
 

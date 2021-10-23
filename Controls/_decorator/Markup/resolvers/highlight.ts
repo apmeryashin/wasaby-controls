@@ -66,7 +66,7 @@
          return value;
       }
 
-      let newValue = [[]];
+      const newValue = [[]];
       let j = 0;
       let substringNotToHighlight;
       let substringToHighlight;
@@ -86,5 +86,4 @@
       }
 
       return newValue;
-   };
-
+   }

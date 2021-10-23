@@ -32,9 +32,9 @@ describe('Controls/scroll:Container', () => {
 
     describe('_beforeMount', () => {
         [{
-            shadowMode: SHADOW_MODE.CSS,
+            shadowMode: SHADOW_MODE.CSS
         }, {
-            shadowMode: SHADOW_MODE.MIXED,
+            shadowMode: SHADOW_MODE.MIXED
         }].forEach((options) => {
             it(`should initialize with css shadows. Options ${JSON.stringify(options)}`, () => {
                 const component = createComponent(Container, options);
@@ -43,7 +43,7 @@ describe('Controls/scroll:Container', () => {
         });
 
         [{
-            shadowMode: SHADOW_MODE.JS,
+            shadowMode: SHADOW_MODE.JS
         }, {
             shadowMode: SHADOW_MODE.MIXED,
             bottomShadowVisibility: SHADOW_VISIBILITY.VISIBLE,
@@ -105,7 +105,7 @@ describe('Controls/scroll:Container', () => {
             compatibility.touch = true;
             component._afterMount({}, {});
             sinon.assert.called(component._stickyHeaderController.init);
-            compatibility.touch = touch
+            compatibility.touch = touch;
         });
 
         it('should init sticky header controller if shadows are forced enabled.', () => {
@@ -213,7 +213,7 @@ describe('Controls/scroll:Container', () => {
             verticalPosition: 'start',
             horizontalPosition: 'start',
             canVerticalScroll: true,
-            canHorizontalScroll: true,
+            canHorizontalScroll: true
         };
 
         it('should update _scrollCssClass, scrollOrientation: "vertical"', () => {
@@ -248,7 +248,7 @@ describe('Controls/scroll:Container', () => {
             component._container = {
                 offsetHeight: 100
             };
-            component._scrollbars._scrollContainerStyles = ''
+            component._scrollbars._scrollContainerStyles = '';
             component._scrollModel = {
                 clone: () => {
                     return 0;
@@ -512,13 +512,13 @@ describe('Controls/scroll:Container', () => {
     describe('_updateShadowVisibility', () => {
         const event = {
             stopImmediatePropagation: () => undefined
-        }
+        };
 
         it('should stop event propagation', () => {
             const component = createComponent(Container, {});
             const event = {
                 stopImmediatePropagation: sinon.stub()
-            }
+            };
             sinon.stub(component, '_updateStateAndGenerateEvents');
             component._updateShadowVisibility(
                 event, { top: SHADOW_VISIBILITY.HIDDEN, bottom: SHADOW_VISIBILITY.HIDDEN });

@@ -271,39 +271,39 @@ export default class Cell<
         templateHighlightOnHover?: boolean,
         templateHoverBackgroundStyle?: string): string {
     const hasColumnScroll = this._$owner.hasColumnScroll();
-        const hoverBackgroundStyle = this._$column.hoverBackgroundStyle ||
+    const hoverBackgroundStyle = this._$column.hoverBackgroundStyle ||
             templateHoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
-        let wrapperClasses = '';
+    let wrapperClasses = '';
 
-        if (this._$isHidden && this._$owner.isFullGridSupport()) {
+    if (this._$isHidden && this._$owner.isFullGridSupport()) {
             return 'ws-hidden';
         }
 
-        wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
-        wrapperClasses += this._getWrapperSeparatorClasses();
+    wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
+    wrapperClasses += this._getWrapperSeparatorClasses();
 
-        if (hasColumnScroll) {
+    if (hasColumnScroll) {
         } else {
             wrapperClasses += ' controls-Grid__cell_fit';
         }
 
-        if (this.isEditing()) {
+    if (this.isEditing()) {
             wrapperClasses += ' controls-Grid__row-cell-editing';
         }
 
-        let backgroundColorWrapperClasses = this._getBackgroundColorWrapperClasses(
+    const backgroundColorWrapperClasses = this._getBackgroundColorWrapperClasses(
             backgroundColorStyle, templateHighlightOnHover, hoverBackgroundStyle
         );
-        wrapperClasses += ` ${backgroundColorWrapperClasses}`;
+    wrapperClasses += ` ${backgroundColorWrapperClasses}`;
 
-        if (this._$owner.hasColumnScroll()) {
+    if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
         }
 
-        wrapperClasses += ' js-controls-ListView__measurableContainer';
+    wrapperClasses += ' js-controls-ListView__measurableContainer';
 
-        return wrapperClasses;
+    return wrapperClasses;
     }
 
     protected _getBackgroundColorWrapperClasses(

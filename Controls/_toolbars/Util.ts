@@ -2,7 +2,7 @@ import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {ButtonTemplate, IButtonOptions, defaultHeight, defaultFontColorStyle, getDefaultOptions} from 'Controls/buttons';
 import {Abstract as ChainAbstract, factory} from 'Types/chain';
-import {ICrudPlus} from "Types/source";
+import {ICrudPlus} from 'Types/source';
 import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {CrudWrapper} from 'Controls/dataSource';

@@ -142,9 +142,9 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     }
 
     private _onCollectionItemChange(event: EventObject,
-                            item: Model,
-                            index: number,
-                            properties?: object): void {
+                                    item: Model,
+                                    index: number,
+                                    properties?: object): void {
         // Изменение элемента, поменяли _imageProperty в записи в RecordSet
         if (this._options.imageProperty && this._options.imageProperty in properties) {
             this._updateDisplayImage(this._items, this._options.imageProperty, false);

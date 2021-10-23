@@ -11,7 +11,6 @@ const baseStackConfig = {
 
 class RestrictiveContainer extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
-    static _styles: string[] = ['Controls-demo/Popup/Stack/RestrictiveContainer/Index', 'Controls-demo/Controls-demo'];
     private _stackOpener: StackOpener;
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
@@ -26,5 +25,6 @@ class RestrictiveContainer extends Control<IControlOptions> {
     protected _openRestrictiveStackHandler(): void {
         this._stackOpener.open(baseStackConfig);
     }
+    static _styles: string[] = ['Controls-demo/Popup/Stack/RestrictiveContainer/Index', 'Controls-demo/Controls-demo'];
 }
 export default RestrictiveContainer;

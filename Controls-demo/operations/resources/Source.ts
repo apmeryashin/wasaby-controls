@@ -30,7 +30,7 @@ function getChildrenCount(id, items, excluded): number {
     return childCount;
 }
 
-function isInExcluded(id:string|number, excluded: number[]|string[]): boolean {
+function isInExcluded(id: string|number, excluded: number[]|string[]): boolean {
   return excluded.includes(id + '') || excluded.includes(+id);
 }
 
@@ -77,4 +77,4 @@ export default class extends Memory {
             }, 1000);
         });
     }
-};
+}

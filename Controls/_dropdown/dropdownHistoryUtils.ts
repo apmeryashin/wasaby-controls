@@ -25,7 +25,7 @@ function createHistorySource(source, options) {
 }
 
 function getSource(source, options) {
-   let historyLoad = new Deferred();
+   const historyLoad = new Deferred();
    const historyId = options.historyId;
 
    if (!historyId || isHistorySource(source)) {

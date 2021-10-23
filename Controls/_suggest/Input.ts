@@ -127,7 +127,6 @@ var Suggest = Control.extend({
 
 });
 
-
 // <editor-fold desc="OptionsDesc">
 
 Suggest.getOptionTypes = getOptionTypes;

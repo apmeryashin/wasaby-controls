@@ -238,7 +238,7 @@ export default class Button extends BaseDropdown {
             hasIconPin: this._hasIconPin,
             allowPin: true,
             markerVisibility: 'hidden',
-            trigger: options.menuPopupTrigger,
+            trigger: options.menuPopupTrigger
         }
         };
     }

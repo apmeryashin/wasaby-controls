@@ -72,4 +72,3 @@ export default interface IFilterChanged extends IFilter {
  * </pre>
  * @see filter
  */
-

@@ -120,7 +120,7 @@ export default {
                     [options.displayProperty]: '...',
                     [options.keyProperty]: 'dots'
                 },
-                keyProperty: options.keyProperty,
+                keyProperty: options.keyProperty
             });
 
             secondContainerItems.push({

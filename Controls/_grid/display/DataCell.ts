@@ -26,7 +26,7 @@ import {IColumn, IDisplayTypeOptions} from 'Controls/_grid/display/interface/ICo
 interface IContentRenderOptions extends IFontColorStyleOptions, IFontSizeOptions,
     IFontWeightOptions, ISearchValueOptions {
     displayTypeOptions: IDisplayTypeOptions;
-    value: string | number
+    value: string | number;
 }
 
 export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions {
@@ -249,7 +249,7 @@ export default class DataCell<T extends Model = Model, TOwner extends DataRow<T>
      * Возвращает CSS класс для передачи в шаблон tag
      */
     getTagClasses(): string {
-        return `controls-Grid__cell_tag`;
+        return 'controls-Grid__cell_tag';
     }
 
     // endregion

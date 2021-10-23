@@ -193,7 +193,7 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
             assert.exists(emptyGridRow, 'Empty grid row not created.');
             const emptyRowColumns = emptyGridRow.getColumns();
             assert.strictEqual(emptyRowColumns.length, 1, 'Empty grid row columns is not valid.');
-            assert.strictEqual(collection.getEmptyGridRow().getColumns()[0].getWrapperStyles(), 'grid-column: 1 / 5;')
+            assert.strictEqual(collection.getEmptyGridRow().getColumns()[0].getWrapperStyles(), 'grid-column: 1 / 5;');
         });
     });
 });
@@ -227,7 +227,7 @@ function checkCollectionItems(collection: GridCollection<any>, resultItems: any[
                 throw new Error(originalError + `. itemIndex: ${index}, columnIndex: ${columnIndex}`);
             }
         });
-    })
+    });
 
     // check items count
     assert.strictEqual(itemsCount, expectedItemsCount);

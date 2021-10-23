@@ -19,7 +19,6 @@ const config = {
 
 class RestrictiveContainer extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
-    static _styles: string[] = ['Controls-demo/Popup/SlidingPanel/RestrictiveContainer/Index', 'Controls-demo/Controls-demo'];
     private _opener: SlidingPanelOpener = new SlidingPanelOpener({
         isAdaptive: false
     });
@@ -35,5 +34,6 @@ class RestrictiveContainer extends Control<IControlOptions> {
         }
         this._opener.open(popupConfig);
     }
+    static _styles: string[] = ['Controls-demo/Popup/SlidingPanel/RestrictiveContainer/Index', 'Controls-demo/Controls-demo'];
 }
 export default RestrictiveContainer;

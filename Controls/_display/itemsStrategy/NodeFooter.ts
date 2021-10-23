@@ -2,7 +2,7 @@ import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import TreeItem from '../TreeItem';
 import Tree, { TNodeFooterVisibilityCallback } from '../Tree';
 import {Model} from 'Types/entity';
-import {TemplateFunction} from "UI/Base";
+import {TemplateFunction} from 'UI/Base';
 
 interface IOptions<S, T extends TreeItem<S>> {
     source: IItemsStrategy<S, T>;
@@ -14,7 +14,7 @@ interface IOptions<S, T extends TreeItem<S>> {
 interface ISortOptions<S, T extends TreeItem<S>> {
     display: Tree<S, T>;
     nodeFooterModule?: string;
-    nodeFooters: Array<T>;
+    nodeFooters: T[];
     hasNodeFooterViewConfig: boolean;
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
 }

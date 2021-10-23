@@ -78,7 +78,7 @@ const ListView = Control.extend(
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
            // TODO при полном переходе на новую модель нужно переписать, уберется параметр changesType
-           this._onListChangeFnc = (event, changesType, action, newItems) => {
+            this._onListChangeFnc = (event, changesType, action, newItems) => {
                if (this._destroyed) {
                    return;
                }
@@ -415,11 +415,11 @@ const ListView = Control.extend(
 
         // endregion Indicators
 
-        setHoveredItem: function (item) {
+        setHoveredItem: function(item) {
             this._listModel.setHoveredItem(item);
         },
 
-        getHoveredItem: function () {
+        getHoveredItem: function() {
             return this._listModel.getHoveredItem();
         },
 

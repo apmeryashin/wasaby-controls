@@ -1,4 +1,4 @@
-import {IHeaderCell} from "Controls/_grid/display/interface/IHeaderCell";
+import {IHeaderCell} from 'Controls/_grid/display/interface/IHeaderCell';
 
 export const MultiHeader = {
     getHeader1: (): IHeaderCell[] => [
@@ -152,4 +152,4 @@ export const MultiHeader = {
             endColumn: 6
         }
     ]
-}
+};

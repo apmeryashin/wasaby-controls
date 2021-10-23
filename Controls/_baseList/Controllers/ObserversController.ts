@@ -22,7 +22,7 @@ export interface IObserversControllerOptions {
     viewElement?: Control;
     topTriggerElement?: HTMLElement;
     bottomTriggerElement?: HTMLElement;
-    intersectionHandler: (event: TIntersectionEvent) => void
+    intersectionHandler: (event: TIntersectionEvent) => void;
 }
 
 export const DEFAULT_TRIGGER_OFFSET = 0.3;

@@ -23,14 +23,14 @@ describe('Controls/progress:StateBar', () => {
             };
             const applyNewStateMock = sandbox.mock(stateBar).expects('_applyNewState');
             stateBar._beforeMount({...options});
-            assert.isTrue(applyNewStateMock.calledOnceWith(options), 'Не вызван метод _applyNewState')
+            assert.isTrue(applyNewStateMock.calledOnceWith(options), 'Не вызван метод _applyNewState');
         });
     });
 
     describe('_beforeUpdate', () => {
         it('Вызов метода _applyNewState при обновлении опций', () => {
             stateBar._options = {
-                data: [{value: 20, style: 'success'}, {value: 30, style: 'danger'}],
+                data: [{value: 20, style: 'success'}, {value: 30, style: 'danger'}]
             };
             const newOptions = {
                 data: [{value: 10}],

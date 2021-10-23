@@ -13,7 +13,7 @@ import 'css!Controls/search';
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
 const SEARCH_BY_CLICK_THROTTLE = 300;
 
-let _private = {
+const _private = {
     isVisibleResetButton() {
         return !!this._viewModel.displayValue && !this._options.readOnly;
     },
@@ -129,7 +129,7 @@ class Search extends Base {
     protected _initProperties(): void {
         super._initProperties.apply(this, arguments);
 
-        let CONTROL_NAME = 'Search';
+        const CONTROL_NAME = 'Search';
         this._field.scope.controlName = CONTROL_NAME;
         this._readOnlyField.scope.controlName = CONTROL_NAME;
 
@@ -212,7 +212,7 @@ class Search extends Base {
 
     private _trimValue(): void {
         if (this._options.trim) {
-            let trimmedValue = this._viewModel.displayValue.trim();
+            const trimmedValue = this._viewModel.displayValue.trim();
 
             if (trimmedValue !== this._viewModel.displayValue) {
                 this._viewModel.displayValue = trimmedValue;
@@ -228,7 +228,7 @@ class Search extends Base {
     static _private = _private;
 
     static getDefaultOptions(): object {
-       let defaultOptions = Base.getDefaultOptions();
+       const defaultOptions = Base.getDefaultOptions();
        defaultOptions.borderVisibility = 'visible';
        defaultOptions.contrastBackground = false;
        defaultOptions.trim = false;
@@ -242,7 +242,7 @@ class Search extends Base {
     }
 
     static getOptionTypes(): object {
-       let optionTypes = Base.getOptionTypes();
+       const optionTypes = Base.getOptionTypes();
 
        optionTypes.maxLength = descriptor(Number, null);
        optionTypes.trim = descriptor(Boolean);

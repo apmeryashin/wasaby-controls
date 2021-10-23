@@ -81,7 +81,6 @@ export const _getWindowHeight = (element?: HTMLElement): number => {
     return constants.isBrowserPlatform && DimensionsMeasurer.getWindowDimensions(element).innerHeight;
 };
 
-
 const calcSizes = (params = {}): object => {
     const isPercentValue = (value) => (typeof value === 'string') && value.includes('%');
     const calcPercent = (windowSize, percent) => windowSize * percent / 100;

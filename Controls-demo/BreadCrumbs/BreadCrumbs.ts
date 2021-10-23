@@ -96,7 +96,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 secondTitle: 'тест6',
                 parent: 5
             }
-        ].map(function (item) {
+        ].map(function(item) {
             return new Model({
                 rawData: item,
                 keyProperty: 'id'
@@ -106,7 +106,7 @@ class BreadCrumbs extends Control<IControlOptions> {
             id: 1,
             title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
             secondTitle: 'тест1'
-        }].map(function (item) {
+        }].map(function(item) {
             return new Model({
                 rawData: item,
                 keyProperty: 'id'
@@ -120,7 +120,7 @@ class BreadCrumbs extends Control<IControlOptions> {
             id: 6,
             title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
             secondTitle: 'тест6'
-        }].map(function (item) {
+        }].map(function(item) {
             return new Model({
                 rawData: item,
                 keyProperty: 'id'
@@ -131,7 +131,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 id: 6,
                 title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                 secondTitle: 'тест6'
-            }].map(function (item) {
+            }].map(function(item) {
             return new Model({
                 rawData: item,
                 keyProperty: 'id'
@@ -142,7 +142,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 id: 1,
                 title: 'Record3eqweqweqeqweqweedsadeqweqewqeqwqewqeqweqweqw',
                 secondTitle: 'тест6'
-            }].map(function (item) {
+            }].map(function(item) {
             return new Model({
                 rawData: item,
                 keyProperty: 'id'
@@ -193,7 +193,7 @@ class BreadCrumbs extends Control<IControlOptions> {
                 secondTitle: 'тест6',
                 parent: 5
             }
-        ].map(function (item) {
+        ].map(function(item) {
             return new Model({
                 rawData: item,
                 keyProperty: 'id'

@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/breadCrumbs_new/FontColorStyle/FontColorStyle');
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
 
 class FontColorStyle extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;

@@ -44,7 +44,6 @@ export interface IMarkerStrategy {
  */
 export interface IMarkerListOptions {
 
-
    /**
     * @name Controls/_marker/interface/IMarkerList#markerVisibility
     * @cfg {Controls/_marker/interface/IMarkerList/TVisibility.typedef} Режим отображения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.

@@ -2,11 +2,11 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/Footer/SeparatedFooter/SeparatedFooter';
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {IItemAction} from "Controls/_itemActions/interface/IItemAction";
+import {IItemAction} from 'Controls/_itemActions/interface/IItemAction';
 import {
     getActionsForContacts as getItemActions,
     getMoreActions
-} from "Controls-demo/list_new/DemoHelpers/ItemActionsCatalog";
+} from 'Controls-demo/list_new/DemoHelpers/ItemActionsCatalog';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 export default class extends Control {

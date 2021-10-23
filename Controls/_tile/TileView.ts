@@ -20,7 +20,7 @@ const AVAILABLE_CONTAINER_VERTICAL_PADDINGS = ['null', 'default'];
 const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 'xs', 's', 'm', 'l', 'xl', '2xl'];
 const AVAILABLE_ITEM_PADDINGS = ['null', 'default', '3xs', '2xs', 'xs', 's', 'm'];
 
-type TActionMenuViewMode = 'menu'|'preview'
+type TActionMenuViewMode = 'menu'|'preview';
 
 export interface ITileAspectOptions {
     tileSize: TTileSize;

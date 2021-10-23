@@ -21,5 +21,5 @@ export default class NodeFooter extends TreeItem {
 Object.assign(NodeFooter.prototype, {
     '[Controls/display:NodeFooter]': true,
     _moduleName: 'Controls/display:NodeFooter',
-    _instancePrefix: 'tree-node-footer-',
+    _instancePrefix: 'tree-node-footer-'
 });

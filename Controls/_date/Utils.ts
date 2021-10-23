@@ -38,7 +38,7 @@ const Utils = {
     */
    getWeekdaysCaptions: function() {
       if (!weekdaysCaptions || localeCode !== locales.current.code) {
-         localeCode = locales.current.code
+         localeCode = locales.current.code;
          const daysSmall = locales.current.config.daysSmall;
          const days = daysSmall.slice(1);
          days.push(daysSmall[0]);

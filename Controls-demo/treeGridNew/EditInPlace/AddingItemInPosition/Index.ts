@@ -55,7 +55,7 @@ export default class extends Control {
                 parent,
                 type: null
             }
-        })
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

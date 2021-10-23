@@ -146,7 +146,6 @@ describe('Controls/list/display/RowSeparator/CollectionItem', () => {
             assert.isTrue(collection.at(0).isTopSeparatorEnabled()); // set true
         });
 
-
         // 2.4 Записи добавились через prepend
         it('RecordSet + prepend + newDesign', () => {
             const recordSet = new RecordSet({ rawData: [{id: 1}, {id: 2}], keyProperty: 'id' });

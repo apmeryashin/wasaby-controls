@@ -45,7 +45,7 @@ function getDataLoader(dataLoaderOptions?: IDataLoaderOptions): DataLoader {
 
 describe('Controls/dataSource:loadData', () => {
 
-    it('loadData', async() => {
+    it('loadData', async () => {
         const loadDataConfig = {
             source: getSource()
         };

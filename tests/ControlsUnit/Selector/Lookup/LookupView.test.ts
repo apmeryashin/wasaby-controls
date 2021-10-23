@@ -255,7 +255,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('_isInputActive', function() {
-      let lookup = new Lookup();
+      const lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(lookup._isInputActive({

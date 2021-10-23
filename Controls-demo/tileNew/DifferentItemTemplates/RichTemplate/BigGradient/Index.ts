@@ -81,7 +81,7 @@ export default class extends Control {
         this._itemActions = Gadgets.getActions();
         this._itemsReadyCallback = (items: RecordSet) => {
             this._items = items;
-        }
+        };
     }
 
     protected _hideImages() {

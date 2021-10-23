@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/treeGridNew/NodeFooter/MoreFontColo
 import {HierarchicalMemory} from 'Types/source';
 import {IColumn} from 'Controls/grid';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -138,6 +138,6 @@ export default class extends Control {
     }
 
     static _styles: string[] = [
-        'Controls-demo/Controls-demo',
+        'Controls-demo/Controls-demo'
     ];
 }
