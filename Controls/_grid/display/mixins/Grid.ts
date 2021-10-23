@@ -33,7 +33,9 @@ import {IGridAbstractColumn} from './../interface/IGridAbstractColumn';
 export type THeaderVisibility = 'visible' | 'hasdata';
 export type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
 
-export type ISortItem = { [p: string]: string };
+export interface ISortItem {
+    [p: string]: string;
+}
 
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
 

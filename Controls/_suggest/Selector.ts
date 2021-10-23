@@ -7,9 +7,9 @@ import {object} from 'Types/util';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
 import 'css!Controls/suggest';
 
-var _private = {
-   loadSelectedItem: function(self, options) {
-      var filter = {};
+let _private = {
+   loadSelectedItem(self, options) {
+      let filter = {};
       filter[options.keyProperty] = options.selectedKey;
       self._crudWrapper = new CrudWrapper({
          source: options.source
@@ -20,25 +20,25 @@ var _private = {
       });
    },
 
-   setValue: function(self, item, displayProperty) {
-      var value = object.getPropertyValue(item, displayProperty);
+   setValue(self, item, displayProperty) {
+      let value = object.getPropertyValue(item, displayProperty);
       _private.updateValue(self, value);
    },
 
-   updateValue: function(self, value) {
+   updateValue(self, value) {
       self._value = value;
    },
 
-   prepareSuggestTemplate: function(displayProperty, suggestTemplate) {
-      var suggestTemplateConfig = { templateOptions: { displayProperty: displayProperty } };
+   prepareSuggestTemplate(displayProperty, suggestTemplate) {
+      let suggestTemplateConfig = { templateOptions: { displayProperty } };
       return Merge(suggestTemplateConfig, suggestTemplate);
    },
 
-   createHistorySource: function(historyId, source) {
+   createHistorySource(historyId, source) {
       return new Source({
          originSource: source,
          historySource: new Service({
-            historyId: historyId
+            historyId
          })
       });
    }
@@ -79,13 +79,13 @@ var _private = {
  *
  * @public
  */
-var Suggest = Control.extend({
+let Suggest = Control.extend({
 
    _template: template,
    _suggestState: false,
    _searchValue: '',
 
-   _beforeMount: function(options, context, receivedState) {
+   _beforeMount(options, context, receivedState) {
       this._suggestTemplate = _private.prepareSuggestTemplate(options.displayProperty, options.suggestTemplate);
       if (options.historyId) {
          this._historySource = _private.createHistorySource(options.historyId, options.source);
@@ -100,7 +100,7 @@ var Suggest = Control.extend({
       }
    },
 
-   _changeValueHandler: function(event, value) {
+   _changeValueHandler(event, value) {
       if (value !== this._value) {
          _private.updateValue(this, value);
          this._searchValue = value;
@@ -109,7 +109,7 @@ var Suggest = Control.extend({
       }
    },
 
-   _choose: function(event, item) {
+   _choose(event, item) {
       this.activate({enableScreenKeyboard: true});
       _private.updateValue(this, item.get(this._options.displayProperty) || '');
       if (this._options.historyId && item.get(this._options.keyProperty) !== undefined) {
@@ -120,7 +120,7 @@ var Suggest = Control.extend({
       this._notify('valueChanged', [this._value]);
    },
 
-   _beforeUpdate: function(newOptions) {
+   _beforeUpdate(newOptions) {
       if (newOptions.source !== this._options.source && newOptions.historyId) {
          this._historySource = _private.createHistorySource(newOptions.historyId, newOptions.source);
       }
@@ -134,7 +134,7 @@ var Suggest = Control.extend({
 
       if (newOptions.selectedKey !== undefined && (newOptions.selectedKey !== this._options.selectedKey ||
          newOptions.source !== this._options.source)) {
-         var self = this;
+         let self = this;
          return _private.loadSelectedItem(this, newOptions).addCallback(function(items) {
             _private.updateValue(self, self._value);
             self._forceUpdate();
@@ -143,7 +143,7 @@ var Suggest = Control.extend({
       }
    },
 
-   _open: function() {
+   _open() {
       if (!this._options.autoDropDown) {
          this._suggestState = !this._suggestState;
       } else if (this._suggestState) {
@@ -152,11 +152,11 @@ var Suggest = Control.extend({
       this.activate();
    },
 
-   _suggestStateChanged: function(event, value) {
+   _suggestStateChanged(event, value) {
       this._suggestState = value;
    },
 
-   _deactivated: function() {
+   _deactivated() {
       this._suggestState = false;
    }
 

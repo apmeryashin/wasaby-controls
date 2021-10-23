@@ -71,7 +71,7 @@ export default class extends Control {
     protected _itemsReadyCallback: Function;
     protected _itemActions: IItemAction[];
     protected _items: RecordSet;
-    
+
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',

@@ -87,7 +87,7 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
          return richItems;
     }
 
-    public updateData(items: TItems): TItems {
+    updateData(items: TItems): TItems {
         const extData: object = {};
 
         if (this._viewMode === 'year') {

@@ -25,17 +25,17 @@ import 'Controls/popupTemplate';
        * @public
        */
 
-var List = Control.extend({
+let List = Control.extend({
 
          _template: template,
          _resizeTimeout: null,
 
-         _beforeUnmount: function() {
+         _beforeUnmount() {
             clearTimeout(this._resizeTimeout);
             this._resizeTimeout = null;
          },
 
-         _itemClick: function(event, item) {
+         _itemClick(event, item) {
             this._notify('sendResult', [item], { bubbling: true });
             this._notify('close', [], { bubbling: true });
          }

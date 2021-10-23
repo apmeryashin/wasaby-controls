@@ -20,7 +20,7 @@ describe('Controls/grid_clean/Display/EmptyTemplate/UpdateOption', () => {
 
     beforeEach(() => {
         collection = new RecordSet({
-            rawData: rawData,
+            rawData,
             keyProperty: 'key'
         });
     });

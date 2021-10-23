@@ -12,7 +12,7 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
  * Контрол служит только для отображения галочки, он не реагирует на какие-либо события и сам не стреляет событиями
  * @class Controls/_toggle/CheckboxMarker
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/CheckboxMarker/Index
@@ -29,7 +29,7 @@ class CheckboxMarker extends Control<ICheckboxMarkerOptions> {
  * @remark
  * * True - Разрешено устанавливать третье состояние.
  * * False - Не разрешено устанавливать третье состояние.
- * 
+ *
  * Если установлен режим triState, то значение {@link value} может быть "null".
  */
 /**

@@ -28,20 +28,20 @@ import 'css!Controls/lookup';
  * @author Крайнов Д.О.
  */
 
-var itemHiddenTemplate = Control.extend({
+let itemHiddenTemplate = Control.extend({
          _template: template,
 
-         _beforeMount: function(options) {
+         _beforeMount(options) {
             // Clone in order to delete items from the list when clicking on the cross.
             this._items = options.items.clone();
          },
 
-         _itemClick: function(event, item) {
+         _itemClick(event, item) {
             this._options.clickCallback('itemClick', item);
             this._notify('close', [], {bubbling: true});
          },
 
-         _crossClick: function(event, item) {
+         _crossClick(event, item) {
             this._items.remove(item);
             this._options.clickCallback('crossClick', item);
          }

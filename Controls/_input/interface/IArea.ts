@@ -49,9 +49,9 @@ export interface IAreaOptions extends ITextOptions {
  * @remark
  * true - Оптимизированные тени.
  * false - Не оптимизированные тени.
- * 
+ *
  * Отключите оптимизированные тени, если:
- * 
+ *
  * * У {@link Controls/input:Area} непрозрачный фон.
  * * Controls/input:Area находится в элементе с непрозрачным фоном.
  */

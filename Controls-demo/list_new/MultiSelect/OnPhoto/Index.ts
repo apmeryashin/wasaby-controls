@@ -14,6 +14,6 @@ export default class extends Control {
             data: getData()
         });
     }
-    
+
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

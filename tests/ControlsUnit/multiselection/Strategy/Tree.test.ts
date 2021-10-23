@@ -58,7 +58,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       selectDescendants: false,
       selectAncestors: false,
       rootId: null,
-      model: model,
+      model,
       selectionType: 'all',
       selectionCountMode: 'all',
       recursiveSelection: false
@@ -68,7 +68,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       selectDescendants: true,
       selectAncestors: true,
       rootId: null,
-      model: model,
+      model,
       selectionType: 'all',
       selectionCountMode: 'all',
       recursiveSelection: false
@@ -686,7 +686,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
               selectDescendants: true,
               selectAncestors: true,
               rootId: null,
-              model: model,
+              model,
              selectionType: 'all',
              recursiveSelection: false
           });
@@ -1113,7 +1113,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
              selectAncestors: true,
              selectDescendants: true,
              rootId: null,
-             model: model,
+             model,
              selectionType: 'all',
             recursiveSelection: false
          });
@@ -1157,7 +1157,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: true,
             selectAncestors: true,
             rootId: null,
-            model: model,
+            model,
             selectionType: 'leaf',
             recursiveSelection: true
          });
@@ -1536,7 +1536,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: false,
             selectAncestors: false,
             rootId: 5,
-            model: model
+            model
          });
          assert.isTrue(strategy._rootChanged);
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
@@ -1560,7 +1560,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: false,
             selectAncestors: false,
             rootId: null,
-            model: model,
+            model,
             selectionType: 'all',
             recursiveSelection: false
          });
@@ -1574,7 +1574,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: false,
             selectAncestors: false,
             rootId: 5,
-            model: model
+            model
          });
          assert.isTrue(strategy._rootChanged);
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
@@ -1590,7 +1590,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: true,
             selectAncestors: true,
             rootId: null,
-            model: model,
+            model,
             selectionType: 'leaf',
             recursiveSelection: false
          });
@@ -1640,7 +1640,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                selectDescendants: true,
                selectAncestors: true,
                rootId: null,
-               model: model,
+               model,
                selectionType: 'leaf',
                recursiveSelection: false
             });
@@ -1663,7 +1663,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: true,
             selectAncestors: true,
             rootId: null,
-            model: model,
+            model,
             selectionType: 'node',
             recursiveSelection: false
          });
@@ -1713,7 +1713,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                selectDescendants: true,
                selectAncestors: true,
                rootId: null,
-               model: model,
+               model,
                selectionType: 'node',
                recursiveSelection: false
             });
@@ -1731,7 +1731,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: true,
             selectAncestors: true,
             rootId: null,
-            model: model,
+            model,
             selectionType: 'allBySelectAction',
             recursiveSelection: false
          });
@@ -1752,7 +1752,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: true,
             selectAncestors: true,
             rootId: null,
-            model: model,
+            model,
             selectionType: 'leaf',
             recursiveSelection: true
          });
@@ -1802,7 +1802,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                selectDescendants: true,
                selectAncestors: true,
                rootId: null,
-               model: model,
+               model,
                selectionType: 'leaf',
                recursiveSelection: true
             });

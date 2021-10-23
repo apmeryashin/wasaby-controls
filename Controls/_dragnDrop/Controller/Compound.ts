@@ -33,8 +33,8 @@ export default class Compound extends Control<IControlOptions> {
          // Оборачиваем построение шаблона в Promise для унификации синхронных и асинхронных шаблонов.
          if (!this._draggingTemplate) {
             this._draggingTemplate = Promise.resolve(draggingTemplateWrapper({
-               draggingTemplateOptions: draggingTemplateOptions,
-               draggingTemplate: draggingTemplate
+               draggingTemplateOptions,
+               draggingTemplate
             })).then((result) => {
                const draggingTemplate = $(result);
                draggingTemplate.appendTo(document.body);
@@ -73,8 +73,8 @@ export default class Compound extends Control<IControlOptions> {
    private _updatePosition(draggingTemplateOptions): void {
       this._draggingTemplate.then((draggingTemplate) => {
          draggingTemplate.css({
-            'top': draggingTemplateOptions.position.y + draggingTemplateOptions.draggingTemplateOffset,
-            'left': draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset
+            top: draggingTemplateOptions.position.y + draggingTemplateOptions.draggingTemplateOffset,
+            left: draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset
          });
       });
    }

@@ -47,16 +47,16 @@ export const enum MODE {
     notsticky = 'notsticky'
 }
 
-export type TRegisterEventData = {
+export interface TRegisterEventData {
    id: number;
    inst?: StickyBlock;
    container: HTMLElement;
    position?: string;
    mode?: string;
    shadowVisibility: SHADOW_VISIBILITY;
-};
+}
 
-export type IFixedEventData = {
+export interface IFixedEventData {
    // Id заголовка
    id: number;
    // Позиция фиксации: сверху или снизу
@@ -72,7 +72,7 @@ export type IFixedEventData = {
     // но нужно инициировать событие fixed, чтобы пользовательские контролы могли обработать случившееся.
     // Флаг устанавливается дабы исключить обработку этого события в StickyHeader/Group и StickyHeader/Controller.
    isFakeFixed: boolean;
-};
+}
 
 export interface IOffset {
     top: number;

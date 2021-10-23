@@ -38,7 +38,7 @@ export = function(args) {
       return true;
    }
 
-   var isEmpty = false;
+   let isEmpty = false;
 
    switch (typeof args.value) {
       case 'string':

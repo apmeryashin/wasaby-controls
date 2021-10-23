@@ -56,7 +56,7 @@ class IndicatorStack extends Control<IControlOptions> {
             if (delay > 1000) {
                 delay -= 1000;
                 const cfg = {
-                    id: id,
+                    id,
                     overlay: 'dark',
                     message: 'The indicator will close after ' + delay / 1000,
                     delay: 0

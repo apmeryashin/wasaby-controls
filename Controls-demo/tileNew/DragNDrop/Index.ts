@@ -29,10 +29,10 @@ export default class extends Control {
    }
 
    protected _dragStart(_, items: number[]): RecordSet {
-      var firstItem = this._itemsFirst.getRecordById(items[0]);
+      let firstItem = this._itemsFirst.getRecordById(items[0]);
 
       return new Dnd.ItemsEntity({
-         items: items,
+         items,
          title: firstItem.get('title'),
          image: firstItem.get('image')
       });

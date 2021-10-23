@@ -120,7 +120,7 @@ const source = new RecordSet<IPropertyGridItem>({
 });
 const collection = new PropertyGridCollection<Model>({
     collection: source,
-    editingObject: editingObject,
+    editingObject,
     parentProperty: 'Раздел',
     nodeProperty: 'Раздел@',
     keyProperty: PROPERTY_NAME_FIELD,

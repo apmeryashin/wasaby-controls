@@ -34,7 +34,7 @@ export default class extends Control {
             columnIndex: 0,
             item: new entityRecord({
                 rawData: {
-                    key: key,
+                    key,
                     title: '',
                     description: '',
                     price: '',

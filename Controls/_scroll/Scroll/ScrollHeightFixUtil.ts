@@ -1,13 +1,13 @@
 import {constants, detection} from 'Env/Env';
 
-var _private = {
+let _private = {
 
          /**
           * Расчитать функцию расчета значения для css свойства overflow.
           * @param container
           * @return {boolean}
           */
-         calcHeightFixFn: function(container) {
+         calcHeightFixFn(container) {
 
             if (detection.firefox) {
                if (constants.isBrowserPlatform && container) {
@@ -25,7 +25,7 @@ var _private = {
       };
 
 export = {
-         _private: _private,
+         _private,
 
          calcHeightFix: _private.calcHeightFixFn
       };

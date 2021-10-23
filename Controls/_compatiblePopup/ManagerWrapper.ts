@@ -77,12 +77,12 @@ export default class ManagerWrapper extends Control<IControlOptions> {
    private _beforePopupDestroyedHandler(): void {
       // Контрол ловим событие и вызывает обработчик в GlobalPopup.
       // На текущий момент у PopupGlobal нет возможности самому ловить событие.
-      var PopupGlobal = this._children.PopupGlobal;
+      let PopupGlobal = this._children.PopupGlobal;
       PopupGlobal._popupBeforeDestroyedHandler.apply(PopupGlobal, arguments);
    }
 
    private _toggleWindowHandlers(subscribe: boolean): void {
-      var actionName = subscribe ? 'addEventListener' : 'removeEventListener';
+      let actionName = subscribe ? 'addEventListener' : 'removeEventListener';
       window[actionName]('scroll', this._scrollPage);
       window[actionName]('resize', this._resizePage);
       window[actionName]('mousemove', this._mousemovePage);
@@ -133,7 +133,7 @@ export default class ManagerWrapper extends Control<IControlOptions> {
 
    private _mouseDownHandler(event): void {
       this._eventRegistratorHandler('mousedownDetect', event);
-      var Manager = ControllerPopup.getManager();
+      let Manager = ControllerPopup.getManager();
       if (Manager) {
          Manager.mouseDownHandler(event);
       }
@@ -158,7 +158,7 @@ export default class ManagerWrapper extends Control<IControlOptions> {
    private _listenersSubscribe(method, event, registerType, component, callback): void {
       if (!this._destroyed) {
          // Вызываю обработчики всех регистраторов, регистратор сам поймет, нужно ли обрабатывать событие
-         var registrators = [
+         let registrators = [
             'scrollDetect',
             'resizeDetect',
             'mousemoveDetect',
@@ -167,7 +167,7 @@ export default class ManagerWrapper extends Control<IControlOptions> {
             'mousedownDetect',
             'mouseupDetect'
          ];
-         for (var i = 0; i < registrators.length; i++) {
+         for (let i = 0; i < registrators.length; i++) {
             this._children[registrators[i]][method](event, registerType, component, callback);
          }
       }

@@ -49,7 +49,7 @@ describe('Controls/_lookup/Button/', (): void => {
          }
       };
       // @ts-ignore
-      button._children = { 'selectorOpener': { open: setTrue.bind(this, assert) } };
+      button._children = { selectorOpener: { open: setTrue.bind(this, assert) } };
       // @ts-ignore
       button._itemClickHandler();
       assert.isFalse(isShowSelector);

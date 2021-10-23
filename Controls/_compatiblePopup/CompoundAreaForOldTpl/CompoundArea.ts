@@ -20,7 +20,7 @@ import {constants, detection, coreDebug} from 'Env/Env';
 import 'css!Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
-   var idx = arrayFindIndex(array, function(op) {
+   let idx = arrayFindIndex(array, function(op) {
       return op === operation;
    });
    array.splice(idx, 1);
@@ -30,15 +30,15 @@ function finishResultOk(result) {
    return !(result instanceof Error || result === false);
 }
 
-var allProducedPendingOperations = [];
-var invisibleRe = /ws-invisible/ig;
-var hiddenRe = /ws-hidden/ig;
+let allProducedPendingOperations = [];
+let invisibleRe = /ws-invisible/ig;
+let hiddenRe = /ws-hidden/ig;
 let DialogRecord;
 
 /**
  * Слой совместимости для открытия старых шаблонов в новых попапах
  * */
-var CompoundArea = CompoundContainer.extend([
+let CompoundArea = CompoundContainer.extend([
    InstantiableMixin,
    LikeWindowMixin
 ], {
@@ -62,7 +62,7 @@ var CompoundArea = CompoundContainer.extend([
    _baseAfterUpdate: null,
    _popupController: null,
 
-   _beforeMount: function(_options) {
+   _beforeMount(_options) {
       CompoundArea.superclass._beforeMount.apply(this, arguments);
 
       this._hasRightPanel = Controller.hasRightPanel();
@@ -128,7 +128,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _shouldUpdate: function(popupOptions) {
+   _shouldUpdate(popupOptions) {
       if (popupOptions._compoundId !== this._compoundId) {
          this._childConfig = this._options.templateOptions || {};
          this._childControlName = this._options.template;
@@ -136,8 +136,8 @@ var CompoundArea = CompoundContainer.extend([
          this._compoundId = popupOptions._compoundId;
       }
       if (this._options.canMaximize) {
-         var maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
-         var templateComponent = this._getTemplateComponent();
+         let maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
+         let templateComponent = this._getTemplateComponent();
          this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.maximizeButtonVisibility || false);
          const maximizedButtonClass = ' ws-float-area-has-maximized-button';
          if (popupOptions.maximizeButtonVisibility) {
@@ -156,20 +156,20 @@ var CompoundArea = CompoundContainer.extend([
       return false;
    },
 
-   _onBeforeNavigate: function(event, activeElement, isIconClick) {
+   _onBeforeNavigate(event, activeElement, isIconClick) {
       if (!isIconClick) {
          this.close();
       }
    },
 
-   _changeMaximizedMode: function(event) {
+   _changeMaximizedMode(event) {
       event.stopPropagation();
-      var state = this.getContainer().hasClass('ws-float-area-maximized-mode');
+      let state = this.getContainer().hasClass('ws-float-area-maximized-mode');
       this._notifyVDOM('maximized', [!state], { bubbling: true });
    },
 
-   rebuildChildControl: function() {
-      var
+   rebuildChildControl() {
+      let
          self = this,
          rebuildDeferred;
 
@@ -219,11 +219,11 @@ var CompoundArea = CompoundContainer.extend([
       return this._isPopupCreated;
    },
 
-   getIsStack: function() {
+   getIsStack() {
       return this._options.type === 'stack';
    },
 
-   getShowOnControlsReady: function() {
+   getShowOnControlsReady() {
       return true;
    },
 
@@ -244,7 +244,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _getDialogClasses: function() {
+   _getDialogClasses() {
       // При fixed таргета нет => совместимость определяет это окно как type === 'dialog' и использует его позиционирование
       // Но на самом диалоге такой опции нет, т.к. это опция FloatArea => в этом случае класс диалога не вешаем
       if (this._options.type === 'dialog' && !this._options.fixed) {
@@ -253,10 +253,10 @@ var CompoundArea = CompoundContainer.extend([
       return '';
    },
 
-   _fixIos: function() {
+   _fixIos() {
       // крутейшая бага, айпаду не хватает перерисовки.
       // уже с такой разбирались, подробности https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
-      var container = this._childControl && this._childControl.getContainer();
+      let container = this._childControl && this._childControl.getContainer();
 
       // не вызывается браузерная перерисовка. вызываю вручную
       if (container && constants.browser.isMobileIOS) {
@@ -276,7 +276,7 @@ var CompoundArea = CompoundContainer.extend([
    // AreaAbstract.js::getReadyDeferred
    // getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
    // не завершится деферред
-   _getReadyDeferred: function() {
+   _getReadyDeferred() {
       if (this._childControl.getReadyDeferred) {
          const def = this._childControl.getReadyDeferred();
          if (cInstance.instanceOfModule(def, 'Core/Deferred') && !def.isReady()) {
@@ -304,7 +304,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _callCallbackCreated: function() {
+   _callCallbackCreated() {
       // До инициализации старого контрола окно могли закрыть (позвали close в конструкторе шаблона).
       // В этом случае логический родитель уже почищен, защищаюсь, чтобы код совместимости не падал.
       if (!this._logicParent) {
@@ -312,7 +312,7 @@ var CompoundArea = CompoundContainer.extend([
       }
       this._logicParent.callbackCreated && this._logicParent.callbackCreated();
       this._logicParent.waitForPopupCreated = false;
-      var self = this;
+      let self = this;
       if (this._waitClose) {
          this._waitClose = false;
          this.close();
@@ -354,17 +354,17 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _afterMount: function(cfg) {
+   _afterMount(cfg) {
       this._options = cfg;
       this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
 
       this.getContainer().toggleClass('ws-float-area-has-close-button', false);
 
-      var self = this;
+      let self = this;
 
       // wsControl нужно установить до того, как запустим автофокусировку.
       // Потому что она завязана в том числе и на этом свойстве
-      var container = self.getContainer()[0];
+      let container = self.getContainer()[0];
       container.wsControl = self;
 
       // Заполнять нужно раньше чем позовется doAutofocus ниже.
@@ -437,7 +437,7 @@ var CompoundArea = CompoundContainer.extend([
       this.listener = this._children.listener;
    },
 
-   _beforeUnmount: function() {
+   _beforeUnmount() {
       if (this._beforeClosePendingDeferred && !this._beforeClosePendingDeferred.isReady()) {
          this._beforeClosePendingDeferred.callback();
          this._beforeClosePendingDeferred = null;
@@ -468,17 +468,17 @@ var CompoundArea = CompoundContainer.extend([
       return true;
    },
 
-   _isValidTarget: function(target) {
-      var isValid = !target || target instanceof jQuery || (typeof Node !== 'undefined' && target instanceof Node);
+   _isValidTarget(target) {
+      let isValid = !target || target instanceof jQuery || (typeof Node !== 'undefined' && target instanceof Node);
       if (!isValid) {
          Logger.error(this._moduleName, 'Передано некорректное значение опции target', this);
       }
       return isValid;
    },
 
-   _trackTarget: function(track) {
-      var target = this._options.target;
-      var self = this;
+   _trackTarget(track) {
+      let target = this._options.target;
+      let self = this;
 
       // Защита от неправильно переданной опции target
       if (!this._options.trackTarget || !target || !this._isValidTarget(target)) {
@@ -600,10 +600,10 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _setCustomHeader: function() {
-      var hasHeader = !!this._options.caption;
+   _setCustomHeader() {
+      let hasHeader = !!this._options.caption;
       const headerPaddingClass = ' controls-CompoundArea-headerPadding';
-      var customHeaderContainer = this._getCustomHeaderContainer();
+      let customHeaderContainer = this._getCustomHeaderContainer();
       if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
          if (customHeaderContainer.length) {
             if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
@@ -638,7 +638,7 @@ var CompoundArea = CompoundContainer.extend([
       return this.isVisible();
    },
 
-   setSize: function(sizes) {
+   setSize(sizes) {
       if (sizes.width) {
          this.getContainer().width(sizes.width);
       }
@@ -648,31 +648,31 @@ var CompoundArea = CompoundContainer.extend([
       this._notifyVDOM('controlResize', null, { bubbling: true });
    },
 
-   setCaption: function(newTitle) {
+   setCaption(newTitle) {
       this._setCaption(newTitle);
    },
 
-   setTitle: function(newTitle) {
+   setTitle(newTitle) {
       this._setCaption(newTitle);
    },
 
-   _setCaption: function(newTitle) {
-      var titleContainer = $('.ws-float-area-title', this.getContainer());
+   _setCaption(newTitle) {
+      let titleContainer = $('.ws-float-area-title', this.getContainer());
       if (titleContainer.length) {
          titleContainer.text(newTitle);
       }
    },
 
-   _getCustomHeaderContainer: function() {
-      var customHeader = $('.ws-window-titlebar-custom', this._childControl.getContainer());
+   _getCustomHeaderContainer() {
+      let customHeader = $('.ws-window-titlebar-custom', this._childControl.getContainer());
 
       // Ищем кастомную шапку только на первом уровне вложенности шаблона.
       // Внутри могут лежать другие шаблоны, которые могут использоваться отдельно в панелях,
       // На таких шаблонах есть свой ws-titlebar-custom, который не нужно учитывать.
       if (customHeader.length) {
-         var nesting = 0;
-         var parent;
-         for (var i = 0; i < customHeader.length; i++) {
+         let nesting = 0;
+         let parent;
+         for (let i = 0; i < customHeader.length; i++) {
             parent = customHeader[i];
 
             // Ищем класс с кастомным заголовком, с вложенностью не более 5. 5 вычислено эмпирическим путем
@@ -682,7 +682,7 @@ var CompoundArea = CompoundContainer.extend([
                nesting++;
             }
             if (nesting < 5) {
-               var cH = $(customHeader[i]);
+               let cH = $(customHeader[i]);
                cH.addClass('ws-window-titlebar');
                return cH;
             }
@@ -692,40 +692,40 @@ var CompoundArea = CompoundContainer.extend([
       return [];
    },
 
-   _headerMouseDown: function(event) {
-      var dialogTemplate = this._children.DialogTemplate;
+   _headerMouseDown(event) {
+      let dialogTemplate = this._children.DialogTemplate;
 
       // Если мы кликнули в контрол в шапке - то работаем с этим контролом.
       // d'n'd работает, когда кликнули непосредственно в шапку
-      var isClickedInControl = $(event.target).wsControl() !== this;
+      let isClickedInControl = $(event.target).wsControl() !== this;
       if (dialogTemplate && !isClickedInControl) {
          dialogTemplate._startDragNDrop(new SyntheticEvent(event));
       }
    },
 
-   _prependCustomHeader: function(customHead) {
-      var container = $('.controls-DialogTemplate, .controls-StackTemplate', this.getContainer());
+   _prependCustomHeader(customHead) {
+      let container = $('.controls-DialogTemplate, .controls-StackTemplate', this.getContainer());
       container.prepend(customHead.addClass('controls-CompoundArea-custom-header'));
       this.getContainer().addClass('controls-CompoundArea-headerPadding');
       if (this._options.type === 'dialog') {
-         var height = customHead.height();
+         let height = customHead.height();
          $('.controls-DialogTemplate', this.getContainer()).css('padding-top', height);
       }
    },
 
-   _rebuildTitleBar: function() {
+   _rebuildTitleBar() {
       this._removeCustomHeader();
       this._setCustomHeader();
       return true; // команда rebuildTitleBar не должна всплывать выше окна
    },
 
-   _removeCustomHeader: function() {
-      var customTitles = this.getContainer().find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
+   _removeCustomHeader() {
+      let customTitles = this.getContainer().find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
       customTitles.remove();
    },
 
-   handleCommand: function(commandName, args) {
-      var arg = args[0];
+   handleCommand(commandName, args) {
+      let arg = args[0];
 
       if (commandName === 'close' || commandName === 'hide') {
          this.close(arg);
@@ -771,12 +771,12 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _resizeHandler: function() {
+   _resizeHandler() {
       if (this._childControl) {
          this._childControl._notifyOnSizeChanged();
       }
    },
-   closeHandler: function(e, arg) {
+   closeHandler(e, arg) {
       e.stopPropagation();
       if (this._options._mode === 'recordFloatArea') {
          this._confirmationClose(arg);
@@ -784,8 +784,8 @@ var CompoundArea = CompoundContainer.extend([
          this.close(arg);
       }
    },
-   _confirmationClose: function(arg) {
-      var self = this;
+   _confirmationClose(arg) {
+      let self = this;
       if (!this._options.readOnly && this.getRecord().isChanged()) { // Запрашиваем подтверждение если сделали close()
          self._openConfirmDialog(false, true).addCallback(function(result) {
             switch (result) {
@@ -806,16 +806,16 @@ var CompoundArea = CompoundContainer.extend([
          this.close(arg);
       }
    },
-   _mouseenterHandler: function() {
+   _mouseenterHandler() {
       if (this._options.hoverTarget) {
          clearTimeout(this._hoverTimer);
          this._hoverTimer = null;
       }
    },
-   _mouseleaveHandler: function(event) {
+   _mouseleaveHandler(event) {
       // Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
       if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
-         var _this = this;
+         let _this = this;
 
          this._hoverTimer = setTimeout(function() {
             _this.hide();
@@ -824,7 +824,7 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    // По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
-   _isLinkedPanel: function(event) {
+   _isLinkedPanel(event) {
       const target = $(event.nativeEvent.relatedTarget);
       const compoundArea = target.closest('.controls-CompoundArea');
       let opener;
@@ -855,13 +855,13 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    // TODO https://online.sbis.ru/opendoc.html?guid=06867738-a18d-46e4-9904-f6528ba5fcf0
-   _checkLink: function(opener) {
+   _checkLink(opener) {
       while (opener && opener._moduleName !== this._moduleName) {
          opener = opener.getParent && opener.getParent();
       }
       return opener === this;
    },
-   _keyDown: function(event: SyntheticEvent<KeyboardEvent>) {
+   _keyDown(event: SyntheticEvent<KeyboardEvent>) {
       const nativeEvent = event.nativeEvent;
       const closingByKeys = !nativeEvent.shiftKey && nativeEvent.keyCode === constants.key.esc;
       const targetInEditInPlace = Boolean(event.target.closest('.controls-editInPlace'));
@@ -881,19 +881,19 @@ var CompoundArea = CompoundContainer.extend([
          event.stopPropagation();
       }
    },
-   _keyUp: function(event) {
+   _keyUp(event) {
       if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === constants.key.esc) {
          event.stopPropagation();
       }
    },
 
-   _windowResize: function() {
+   _windowResize() {
       if (this._childControl) {
          this._childControl._onResizeHandler();
       }
    },
 
-   _setCompoundAreaOptions: function(newOptions, popupOptions) {
+   _setCompoundAreaOptions(newOptions, popupOptions) {
       if (newOptions.record) { // recordFloatArea
          this._record = newOptions.record;
       }
@@ -902,10 +902,10 @@ var CompoundArea = CompoundContainer.extend([
       this._childConfig = newOptions.templateOptions || {};
    },
 
-   reload: function() {
+   reload() {
       if (this._popupOptions) {
          // set new sizes for popup
-         var popupCfg = this._getManagerConfig();
+         let popupCfg = this._getManagerConfig();
          if (popupCfg && this._popupOptions.minWidth && this._popupOptions.maxWidth) {
             popupCfg.popupOptions.minWidth = this._popupOptions.minWidth;
             popupCfg.popupOptions.maxWidth = this._popupOptions.maxWidth;
@@ -915,40 +915,40 @@ var CompoundArea = CompoundContainer.extend([
       this._removeCustomHeader();
       this.rebuildChildControl();
    },
-   setTemplate: function(template, templateOptions) {
+   setTemplate(template, templateOptions) {
       if (templateOptions) {
          this._childConfig = templateOptions;
       }
       this._childControlName = template;
       return this.rebuildChildControl();
    },
-   getCurrentTemplateName: function() {
+   getCurrentTemplateName() {
       return this._childControlName;
    },
 
    /* from api floatArea, window */
 
-   getParent: function() {
+   getParent() {
       return this.__parentFromCfg || null;
    },
-   getOpener: function() {
+   getOpener() {
       return this.__openerFromCfg || null;
    },
 
-   getTemplateName: function() {
+   getTemplateName() {
       return this._template;
    },
 
    /* start RecordFloatArea */
-   getRecord: function() {
+   getRecord() {
       return this._record || this._options.record || this._options.templateOptions && this._options.templateOptions.record;
    },
-   isNewRecord: function() {
+   isNewRecord() {
       return this._options.newRecord;
    },
 
-   setRecord: function(record, noConfirm) {
-      var self = this;
+   setRecord(record, noConfirm) {
+      let self = this;
       if (!noConfirm) {
          this.openConfirmDialog(true).addCallback(function(result) {
             if (result) {
@@ -959,8 +959,8 @@ var CompoundArea = CompoundContainer.extend([
          this._setRecord(record);
       }
    },
-   _setRecord: function(record) {
-      var oldRecord = this.getRecord(),
+   _setRecord(record) {
+      let oldRecord = this.getRecord(),
          context = this.getLinkedContext(),
          self = this,
          setRecordFunc = function() {
@@ -979,8 +979,8 @@ var CompoundArea = CompoundContainer.extend([
       result = this._notify('onBeforeChangeRecord', record, oldRecord);
       cDeferred.callbackWrapper(result, setRecordFunc.bind(this));
    },
-   openConfirmDialog: function(noHide) {
-      var self = this,
+   openConfirmDialog(noHide) {
+      let self = this,
          deferred = new cDeferred();
       this._displaysConfirmDialog = true;
       deferred.addCallback(function(result) {
@@ -1025,7 +1025,7 @@ var CompoundArea = CompoundContainer.extend([
       }
       return deferred;
    },
-   _confirmDialogToCloseActions: function(deferred, noHide) {
+   _confirmDialogToCloseActions(deferred, noHide) {
       // EventBus.channel('navigation').unsubscribe('onBeforeNavigate', this._onBeforeNavigate, this);
       deferred.callback(true);
       if (!noHide) {
@@ -1033,7 +1033,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   setReadOnly: function(isReadOnly) {
+   setReadOnly(isReadOnly) {
       if (!this.isDestroyed()) {
          this._isReadOnly = isReadOnly;
          if (this._childControl) {
@@ -1045,93 +1045,93 @@ var CompoundArea = CompoundContainer.extend([
          }
       }
    },
-   isReadOnly: function() {
+   isReadOnly() {
       return this._isReadOnly;
    },
 
-   setSaveDiffOnly: function() {
+   setSaveDiffOnly() {
       DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
    },
-   ok: function() {
+   ok() {
       if (this._options.popupComponent === 'recordFloatArea') {
          DialogRecord.prototype.ok.apply(this, arguments);
       } else {
          this.close(true);
       }
    },
-   _setEnabledForChildControls: function() {
+   _setEnabledForChildControls() {
       DialogRecord.prototype._setEnabledForChildControls.apply(this, arguments);
    },
-   _showLoadingIndicator: function() {
+   _showLoadingIndicator() {
       DialogRecord.prototype._showLoadingIndicator.apply(this, arguments);
    },
-   _hideLoadingIndicator: function() {
+   _hideLoadingIndicator() {
       DialogRecord.prototype._hideLoadingIndicator.apply(this, arguments);
    },
-   isAllReady: function() {
+   isAllReady() {
       return DialogRecord.prototype.isAllReady.apply(this, arguments);
    },
-   getReports: function() {
+   getReports() {
       return DialogRecord.prototype.getReports.apply(this, arguments);
    },
-   _printMenuItemsIsChanged: function() {
+   _printMenuItemsIsChanged() {
       return DialogRecord.prototype._printMenuItemsIsChanged.apply(this, arguments);
    },
-   _createPrintMenu: function() {
+   _createPrintMenu() {
       return DialogRecord.prototype._createPrintMenu.apply(this, arguments);
    },
-   showReportList: function() {
+   showReportList() {
       return DialogRecord.prototype.showReportList.apply(this, arguments);
    },
-   printReport: function() {
+   printReport() {
       return DialogRecord.prototype.printReport.apply(this, arguments);
    },
-   _showReport: function() {
+   _showReport() {
       return DialogRecord.prototype._showReport.apply(this, arguments);
    },
-   print: function() {
+   print() {
       return DialogRecord.prototype.print.apply(this, arguments);
    },
-   _hideWindow: function() {
+   _hideWindow() {
    },
-   _getTitle: function() {
+   _getTitle() {
       return document.title;
    },
 
-   _openConfirmDialog: function() {
+   _openConfirmDialog() {
       return DialogRecord.prototype._openConfirmDialog.apply(this, arguments);
    },
-   isSaved: function() {
+   isSaved() {
       return DialogRecord.prototype.isSaved.apply(this, []);
    },
-   _unbindBeforeUnload: function() {
+   _unbindBeforeUnload() {
       DialogRecord.prototype._unbindBeforeUnload.apply(this);
    },
-   _beforeUnloadHandler: function() {
+   _beforeUnloadHandler() {
       return DialogRecord.prototype._beforeUnloadHandler.apply(this);
    },
-   subscribeOnBeforeUnload: function() {
+   subscribeOnBeforeUnload() {
       DialogRecord.prototype.subscribeOnBeforeUnload.apply(this);
    },
-   unsubscribeOnBeforeUnload: function() {
+   unsubscribeOnBeforeUnload() {
       DialogRecord.prototype.unsubscribeOnBeforeUnload.apply(this);
    },
-   updateRecord: function() {
+   updateRecord() {
       return DialogRecord.prototype.updateRecord.apply(this, arguments);
    },
-   save: function() {
+   save() {
       return DialogRecord.prototype.save.apply(this, arguments);
    },
-   delRecord: function() {
+   delRecord() {
       return DialogRecord.prototype.delRecord.apply(this, arguments);
    },
-   _processError: function(error) {
+   _processError(error) {
       DialogRecord.prototype._processError.apply(this, [error]);
    },
 
    /* end RecordFloatArea */
 
-   isVisible: function() {
+   isVisible() {
       if (this._options.autoShow === false) {
          const popupContainer = this._container.parentElement;
          const isHidden = popupContainer?.classList.contains('ws-hidden');
@@ -1140,11 +1140,11 @@ var CompoundArea = CompoundContainer.extend([
       return true;
    },
 
-   show: function() {
+   show() {
       this._toggleVisible(true);
    },
 
-   hide: function() {
+   hide() {
       this.close();
    },
    _createBeforeCloseHandlerPending(): void {
@@ -1165,7 +1165,7 @@ var CompoundArea = CompoundContainer.extend([
          }
       }], { bubbling: true });
    },
-   close: function(arg) {
+   close(arg) {
       if (!this.isDestroyed()) {
          // Если из обработчика на onBeforeClose вызвали повторное закрытие с новыми аргументами,
          // То защита не даст повторно запустить закрытие окна, но актуальные аргументы обработать нужно.
@@ -1209,7 +1209,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _toggleVisibleClass: function(className, visible) {
+   _toggleVisibleClass(className, visible) {
       className = className || '';
       if (visible) {
          className = className.replace(hiddenRe, '');
@@ -1218,8 +1218,8 @@ var CompoundArea = CompoundContainer.extend([
       }
       return className;
    },
-   _toggleVisible: function(visible) {
-      var
+   _toggleVisible(visible) {
+      let
          prevVisible = this._isVisible,
          popupContainer = this.getContainer().closest('.controls-Popup')[0],
          id = this._getPopupId(),
@@ -1267,7 +1267,7 @@ var CompoundArea = CompoundContainer.extend([
             // Также проставим флаг, обозначающий что попап скрыт на время пересчета позиции
             popupConfig.isHiddenForRecalc = true;
 
-            var popupAfterUpdated = function popupAfterUpdated(item, container) {
+            let popupAfterUpdated = function popupAfterUpdated(item, container) {
                changeVisible();
                if (item.isHiddenForRecalc) {
                   // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
@@ -1308,8 +1308,8 @@ var CompoundArea = CompoundContainer.extend([
          }
       }
    },
-   setOffset: function(newOffset) {
-      var popupConfig = this._getManagerConfig();
+   setOffset(newOffset) {
+      let popupConfig = this._getManagerConfig();
       if (popupConfig) {
          popupConfig.popupOptions.offset = popupConfig.popupOptions.offset || {};
 
@@ -1319,22 +1319,22 @@ var CompoundArea = CompoundContainer.extend([
          Controller.update(this._getPopupId(), popupConfig.popupOptions);
       }
    },
-   _getManagerConfig: function() {
-      var id = this._getPopupId();
+   _getManagerConfig() {
+      let id = this._getPopupId();
       return id ? Controller.find(id) : undefined;
    },
-   _getPopupId: function() {
-      var popupContainer = this.getContainer().closest('.controls-Popup')[0];
-      var control;
+   _getPopupId() {
+      let popupContainer = this.getContainer().closest('.controls-Popup')[0];
+      let control;
       if (popupContainer) {
          control = getClosestControl(popupContainer);
       }
       return control?._options.id;
    },
-   _getTemplateComponent: function() {
+   _getTemplateComponent() {
       return this._childControl;
    },
-   destroy: function() {
+   destroy() {
       if (this.isDestroyed()) {
          return;
       }
@@ -1359,11 +1359,11 @@ var CompoundArea = CompoundContainer.extend([
          this._popupController._modifiedByCompoundArea = false;
       }
 
-      var ops = this._producedPendingOperations;
+      let ops = this._producedPendingOperations;
       while (ops.length > 0) {
          this._unregisterPendingOperation(ops[0]);
       }
-      var
+      let
          operation = this._allChildrenPendingOperation,
          message;
 
@@ -1388,15 +1388,15 @@ var CompoundArea = CompoundContainer.extend([
       CompoundArea.superclass.destroy.apply(this, arguments);
    },
 
-   _clearInformationOnParentFromCfg: function() {
-      var
+   _clearInformationOnParentFromCfg() {
+      let
          parent = this.__parentFromCfg,
          id = this._id,
          name = this._options.name,
          tabindex = this._options.tabindex;
 
       if (parent._childsMapId) {
-         var mapId = parent._childsMapId[id];
+         let mapId = parent._childsMapId[id];
          if (typeof mapId !== 'undefined') {
             if (parent._childControls) {
                delete parent._childControls[mapId];
@@ -1417,7 +1417,7 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   _unregisterEventListener: function() {
+   _unregisterEventListener() {
       const listener = this.listener;
       this.listener = null;
       // Tell event listener to unregister from its Registrar to
@@ -1425,20 +1425,20 @@ var CompoundArea = CompoundContainer.extend([
       listener._notify('unregister', ['controlResize', listener], { bubbling: true });
    },
 
-   _removeOpFromCollections: function(operation) {
+   _removeOpFromCollections(operation) {
       removeOperation(operation, this._producedPendingOperations);
       removeOperation(operation, allProducedPendingOperations);
    },
 
-   _registerPendingOperation: function(name, finishFunc, registerTarget) {
-      var
+   _registerPendingOperation(name, finishFunc, registerTarget) {
+      let
          name = this._moduleName ? this._moduleName + '/' + name : name,
          operation = {
-            name: name,
-            finishFunc: finishFunc,
+            name,
+            finishFunc,
             cleanup: null,
             control: this,
-            registerTarget: registerTarget
+            registerTarget
          };
 
       operation.cleanup = this._removeOpFromCollections.bind(this, operation);
@@ -1451,7 +1451,7 @@ var CompoundArea = CompoundContainer.extend([
       return operation;
    },
 
-   _unregisterPendingOperation: function(operation) {
+   _unregisterPendingOperation(operation) {
       operation.cleanup();
 
       if (operation.registerTarget) {
@@ -1459,16 +1459,16 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   getAllPendingOperations: function() {
+   getAllPendingOperations() {
       return allProducedPendingOperations;
    },
 
-   getPendingOperations: function() {
+   getPendingOperations() {
       return this._producedPendingOperations;
    },
 
-   _registerChildPendingOperation: function(operation) {
-      var name, finishFunc;
+   _registerChildPendingOperation(operation) {
+      let name, finishFunc;
 
       this._childPendingOperations.push(operation);
 
@@ -1482,8 +1482,8 @@ var CompoundArea = CompoundContainer.extend([
       return true;
    },
 
-   _unregisterChildPendingOperation: function(operation) {
-      var
+   _unregisterChildPendingOperation(operation) {
+      let
          childOps = this._childPendingOperations,
          allChildrenPendingOperation;
 
@@ -1499,11 +1499,11 @@ var CompoundArea = CompoundContainer.extend([
       }
       return true;
    },
-   finishChildPendingOperations: function(needSavePendings) {
-      var
+   finishChildPendingOperations(needSavePendings) {
+      let
          self = this,
          checkFn = function(prevResult) {
-            var
+            let
                childOps = self._childPendingOperations,
                result, allChildrenPendingOperation;
 
@@ -1552,7 +1552,7 @@ var CompoundArea = CompoundContainer.extend([
       return this._finishPendingQueue;
    },
 
-   getChildPendingOperations: function() {
+   getChildPendingOperations() {
       return this._childPendingOperations;
    },
 
@@ -1563,8 +1563,8 @@ var CompoundArea = CompoundContainer.extend([
     * @returns {Boolean} "true", если добавление операции в очередь успешно.
     * @see waitAllPendingOperations
     */
-   addPendingOperation: function(dOperation) {
-      var result = !!(dOperation && (dOperation instanceof cDeferred));
+   addPendingOperation(dOperation) {
+      let result = !!(dOperation && (dOperation instanceof cDeferred));
       if (result) {
          this._pending.push(dOperation);
          this._pendingTrace.push(coreDebug.getStackTrace());
@@ -1572,24 +1572,24 @@ var CompoundArea = CompoundContainer.extend([
       }
       return result;
    },
-   _finishAllPendingsWithSave: function() {
+   _finishAllPendingsWithSave() {
       this._pending.forEach(function(pending) {
          pending.callback(true);
       });
    },
 
-   moveToTop: function() {},
+   moveToTop() {},
 
    /**
     * Получение информации о добавленных пендингах, включая информацию, откуда был добавлен пендинг
     * @returns {Array} Массив объектов, хранящих пендинг и информацию, откуда был добавлен пендинг
     */
-   getAllPendingInfo: function() {
-      var res = [],
+   getAllPendingInfo() {
+      let res = [],
          self = this;
       this._pending.forEach(function(pending, index) {
          res.push({
-            pending: pending,
+            pending,
             trace: self._pendingTrace[index]
          });
       });
@@ -1608,7 +1608,7 @@ var CompoundArea = CompoundContainer.extend([
     * @returns {Boolean} "true", если добавление в очередь ожидающих успешно.
     * @see addPendingOperation
     */
-   waitAllPendingOperations: function(dNotify) {
+   waitAllPendingOperations(dNotify) {
       if (dNotify && (dNotify instanceof cDeferred) && !dNotify.isReady()) {
          if (this._pending.length === 0) {
             dNotify.callback();
@@ -1619,8 +1619,8 @@ var CompoundArea = CompoundContainer.extend([
       }
       return false;
    },
-   _checkPendingOperations: function(res) {
-      var totalOps = this._pending.length, result;
+   _checkPendingOperations(res) {
+      let totalOps = this._pending.length, result;
 
       // Сперва отберем Deferred, которые завершились
       result = this._pending.filter(function(dfr) {
@@ -1646,11 +1646,11 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    // SBIS3.CONTROLS/Mixins/SelectorMixin
-   _toggleLinkedViewEvents: function(sub) {
+   _toggleLinkedViewEvents(sub) {
       this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
    },
-   setLinkedView: function(linkedView) {
-      var multiSelectChanged;
+   setLinkedView(linkedView) {
+      let multiSelectChanged;
       const multiselect = this._options.multiSelect || false; // Если опция не задана по умолчанию false
       /* Отпишемся у старой view от событий */
       if (this._linkedView && this._linkedView !== linkedView) {
@@ -1666,7 +1666,7 @@ var CompoundArea = CompoundContainer.extend([
             this._linkedView.setMultiselect(multiselect);
          }
 
-         var currentSelectedKeys = this._options.currentSelectedKeys || [];
+         let currentSelectedKeys = this._options.currentSelectedKeys || [];
 
          if (currentSelectedKeys.length) {
             if (multiselect) {
@@ -1677,11 +1677,11 @@ var CompoundArea = CompoundContainer.extend([
          }
       }
    },
-   getLinkedView: function() {
+   getLinkedView() {
       return this._linkedView;
    },
-   _changeSelectionHandler: function(event, result) {
-      var linkedView = this.getLinkedView(),
+   _changeSelectionHandler(event, result) {
+      let linkedView = this.getLinkedView(),
           item = result.item;
       if (linkedView.getSelectedKeys().length) {
          return;
@@ -1691,15 +1691,15 @@ var CompoundArea = CompoundContainer.extend([
       }
       this.close([result.item]);
    },
-   _registerLinkedView: function() {
+   _registerLinkedView() {
       if (!this._options.closeCallback) {
          return;
       }
       this._changeSelectionHandler = this._changeSelectionHandler.bind(this);
-      var childControls = this.getChildControls();
+      let childControls = this.getChildControls();
 
-      for (var i = 0, l = childControls.length; i < l; i++) {
-         var childControl = childControls[i];
+      for (let i = 0, l = childControls.length; i < l; i++) {
+         let childControl = childControls[i];
 
          if (cInstance.instanceOfModule(childControl, 'SBIS3.CONTROLS/ListView')) {
             this.setLinkedView(childControl);
@@ -1707,7 +1707,7 @@ var CompoundArea = CompoundContainer.extend([
          }
       }
    },
-   _callCloseCallback: function(value) {
+   _callCloseCallback(value) {
       if (this._options && typeof this._options.closeCallback === 'function') {
          this._options.closeCallback(value);
       }

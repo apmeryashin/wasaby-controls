@@ -116,29 +116,29 @@ export default class extends Control {
    protected showSelector(event, selectedTab) {
       this._children.directoriesLookup.showSelector({
          templateOptions: {
-            selectedTab: selectedTab
+            selectedTab
          }
       });
    }
 
    protected showSelectorCustomPlaceholder(event, type) {
-      var
+      let
           items = this._itemsCustomPlaceholder,
           countItems = items && items.getCount(),
           parent = countItems ? items.at(countItems - 1).get('id') : null,
           templateOptions = {
-             parent: parent,
-             type: type,
+             parent,
+             type,
              multiSelect: false
           };
 
       this._children.lookupCustomPlaceholder.showSelector({
-         templateOptions: templateOptions
+         templateOptions
       });
    }
 
    protected showSelectorCustomPlaceholder2(event, type) {
-      var
+      let
           templatesOptions = {
              company: {
                 headingCaption: 'Выберите организацию (+длинный текст для проверки, что caption обрезается)',
@@ -175,7 +175,7 @@ export default class extends Control {
    }
 
    protected _placeholderKeyCallback2(items, linkName) {
-      var placeholderKey = 'all';
+      let placeholderKey = 'all';
 
       if (items && items.getCount()) {
          if (items.at(0).has('department')) {
@@ -189,7 +189,7 @@ export default class extends Control {
    }
 
    protected selectorCallback(event, currentItems, newItems) {
-      var
+      let
           indexForReplace = -1,
           newItem = newItems.at(newItems.getCount() - 1),
           propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';

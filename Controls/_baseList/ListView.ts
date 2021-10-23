@@ -22,7 +22,7 @@ export interface IListViewOptions {
 const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
 const _private = {
-    checkDeprecated: function(cfg, self) {
+    checkDeprecated(cfg, self) {
         if (cfg.contextMenuEnabled !== undefined) {
             Logger.warn('IList: Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".', self);
         }
@@ -40,12 +40,12 @@ const _private = {
         }
     },
 
-    resizeNotifyOnListChanged: function(self) {
+    resizeNotifyOnListChanged(self) {
        // command to scroll watcher
        self._notify('controlResize', [], {bubbling: true});
     },
 
-    setHoveredItem: function(self, itemData, nativeEvent) {
+    setHoveredItem(self, itemData, nativeEvent) {
         // setHoveredItem вызывается с задержкой, поэтому список уже может задестроиться
         // Не надо посылать ховер по элементам, которые нельзя выбирать
         if (self._destroyed || (itemData && itemData.SelectableItem === false)) {
@@ -55,7 +55,7 @@ const _private = {
         const item = itemData?.item;
         if (item !== self._hoveredItem) {
             self._hoveredItem = item;
-            var container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
+            let container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
             self._notify('hoveredItemChanged', [item, container]);
         }
     }
@@ -74,7 +74,7 @@ const ListView = Control.extend(
         _callbackAfterUpdate: null,
         _forTemplate: null,
 
-        constructor: function() {
+        constructor() {
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
            // TODO при полном переходе на новую модель нужно переписать, уберется параметр changesType
@@ -161,7 +161,7 @@ const ListView = Control.extend(
             }
         },
 
-        _beforeMount: function(newOptions) {
+        _beforeMount(newOptions) {
             _private.checkDeprecated(newOptions, this);
             if (newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
@@ -176,14 +176,14 @@ const ListView = Control.extend(
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
 
-        _beforeUnmount: function() {
+        _beforeUnmount() {
             if (this._listModel && !this._listModel.destroyed) {
                 this._listModel.unsubscribe('onCollectionChange', this._onListChangeFnc);
                 this._listModel.unsubscribe('indexesChanged', this._onIndexesChanged);
             }
         },
 
-        _beforeUpdate: function(newOptions) {
+        _beforeUpdate(newOptions) {
             this._updateInProgress = true;
             this._waitingComponentDidUpdate = true;
             if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
@@ -258,11 +258,11 @@ const ListView = Control.extend(
             }
         },
 
-        onViewResized: function() {
+        onViewResized() {
             _private.resizeNotifyOnListChanged(this);
         },
 
-        _componentDidMount: function() {
+        _componentDidMount() {
             this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
             // todo костыль до тех пор, пока не перейдем на отслеживание ресайза через нативное событие в двух основныых
             // местах - в окнах и в scrollContainer'e.
@@ -272,18 +272,18 @@ const ListView = Control.extend(
             }
         },
 
-        _afterRender: function() {
+        _afterRender() {
             if (this._pendingRedraw) {
                 this.onViewResized();
             }
             this._pendingRedraw = false;
         },
 
-        getItemsContainer: function() {
+        getItemsContainer() {
             return this._children.itemsContainer;
         },
 
-        _onItemClick: function(e, dispItem) {
+        _onItemClick(e, dispItem) {
             // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
             // событий itemClick, itemMouseDown по нативному клику, но по какой-то причине
             // невозможно остановить всплытие события через stopPropagation
@@ -300,17 +300,17 @@ const ListView = Control.extend(
                     return;
                 }
 
-                var item = dispItem.getContents();
+                let item = dispItem.getContents();
                 this._notify('itemClick', [item, e]);
             }
         },
 
-        _onGroupClick: function(e, dispItem) {
-            var item = dispItem.getContents();
+        _onGroupClick(e, dispItem) {
+            let item = dispItem.getContents();
             this._notify('groupClick', [item, e]);
         },
 
-        _onItemContextMenu: function(event, itemData) {
+        _onItemContextMenu(event, itemData) {
            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
                 this._notify('itemContextMenu', [itemData, event, false]);
            }
@@ -328,7 +328,7 @@ const ListView = Control.extend(
             }
         },
 
-        _onItemSwipe: function(event, itemData) {
+        _onItemSwipe(event, itemData) {
             if (event.nativeEvent.direction === 'left') {
                 this.activate();
             }
@@ -336,11 +336,11 @@ const ListView = Control.extend(
             event.stopPropagation();
         },
 
-        _onRowDeactivated: function(event, eventOptions) {
+        _onRowDeactivated(event, eventOptions) {
             this._notify('rowDeactivated', [eventOptions]);
         },
 
-        _onItemMouseDown: function(event, itemData) {
+        _onItemMouseDown(event, itemData) {
             if (itemData['[Controls/_display/GroupItem]']) {
                 event.stopPropagation();
                 return;
@@ -367,23 +367,23 @@ const ListView = Control.extend(
             this._notify('itemMouseUp', [itemData, e]);
         },
 
-        _onItemMouseEnter: function(event, itemData) {
+        _onItemMouseEnter(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
             this._debouncedSetHoveredItem(this, itemData, event);
         },
 
         // TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
         // которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
-        _onItemMouseLeave: function(event, itemData) {
+        _onItemMouseLeave(event, itemData) {
             this._notify('itemMouseLeave', [itemData, event]);
             this._debouncedSetHoveredItem(this, null);
         },
 
-        _onItemMouseMove: function(event, itemData) {
+        _onItemMouseMove(event, itemData) {
             this._notify('itemMouseMove', [itemData, event]);
         },
 
-        _onItemWheel: function(event) {
+        _onItemWheel(event) {
         },
 
         // region Indicators
@@ -415,11 +415,11 @@ const ListView = Control.extend(
 
         // endregion Indicators
 
-        setHoveredItem: function(item) {
+        setHoveredItem(item) {
             this._listModel.setHoveredItem(item);
         },
 
-        getHoveredItem: function() {
+        getHoveredItem() {
             return this._listModel.getHoveredItem();
         },
 

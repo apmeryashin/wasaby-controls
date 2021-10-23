@@ -26,9 +26,9 @@ function getPopupOptions(self): IStackPopupOptions | IDialogPopupOptions {
 function getTemplateOptions(self, multiSelect) {
     return {
         selectedItems: self._lookupController?.getItems().clone(),
-        multiSelect: multiSelect,
+        multiSelect,
         handlers: {
-            onSelectComplete: function(event, result) {
+            onSelectComplete(event, result) {
                 self._opener.close();
                 if (self._options.isCompoundTemplate) {
                     self._selectCallback(null, result);

@@ -52,7 +52,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
    });
 
    it('_calculateSizes', function() {
-      var
+      let
          availableWidthCollection = 200,
          lookupView = new Lookup();
 
@@ -68,7 +68,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
    });
 
    it('_isInputVisible', function() {
-      var lookupView = new Lookup();
+      let lookupView = new Lookup();
 
       lookupView._items = getItems(5);
       lookupView._options.maxVisibleItems = 5;
@@ -82,7 +82,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
    });
 
    it('_isNeedCalculatingSizes', function() {
-      var lookupView = new Lookup();
+      let lookupView = new Lookup();
 
       lookupView._items = getItems(0);
       ok(!lookupView._isNeedCalculatingSizes({}));

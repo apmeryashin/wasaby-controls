@@ -18,8 +18,8 @@ import CalendarUtils from './Utils';
  * @public
  * @noShow
  */
-var _private = {
-   setStartValue: function(self, value) {
+let _private = {
+   setStartValue(self, value) {
       const startValueResetTime = Base.normalizeDate(self._startValue);
       if (Base.isDatesEqual(startValueResetTime, value)) {
          return false;
@@ -28,7 +28,7 @@ var _private = {
       self._nextVersion();
       return true;
    },
-   setEndValue: function(self, value) {
+   setEndValue(self, value) {
       const endValueResetTime = Base.normalizeDate(self._endValue);
       if (Base.isDatesEqual(endValueResetTime, value)) {
          return false;
@@ -37,30 +37,30 @@ var _private = {
       self._nextVersion();
       return true;
    },
-   notifyRangeChanged: function(self, start: Date, end: Date): void {
+   notifyRangeChanged(self, start: Date, end: Date): void {
       self._notify('rangeChanged', [start, end]);
    },
-   createDate: function(self, date: Date): void {
+   createDate(self, date: Date): void {
       return new self._dateConstructor(date);
    }
 };
 
 // TODO: Переделать на класс
 
-var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
+let ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
    _options: null,
    _dateConstructor: DateTime,
 
-   constructor: function(cfg) {
+   constructor(cfg) {
       ModuleClass.superclass.constructor.apply(this, arguments);
       if (cfg && cfg.dateConstructor) {
          this._dateConstructor = cfg.dateConstructor;
       }
    },
 
-   update: function(options) {
+   update(options) {
       this._options = options;
-      var changed = false;
+      let changed = false;
       if (options.hasOwnProperty('startValue') && !Base.isDatesEqual(options.startValue, this._startValue)) {
          this._startValue = options.startValue;
          changed = true;
@@ -94,8 +94,8 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
-   setRange: function(startValue, endValue) {
-      var changed = false;
+   setRange(startValue, endValue) {
+      let changed = false;
       if (_private.setStartValue(this, startValue)) {
          this._notify('startValueChanged', [startValue]);
          changed = true;
@@ -188,7 +188,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
-   shiftForward: function() {
+   shiftForward() {
       this._shiftRange(Range.SHIFT_DIRECTION.FORWARD);
    },
 
@@ -196,7 +196,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     * If a period of several whole months, quarters, six months, or years is selected,
     * it shifts it for the same period back.
     */
-   shiftBack: function() {
+   shiftBack() {
       this._shiftRange(Range.SHIFT_DIRECTION.BACK);
    },
 

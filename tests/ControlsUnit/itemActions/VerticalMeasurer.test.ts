@@ -128,7 +128,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
 
         describe('without title', () => {
             it('small row, only menu should be drawn', () => {
-                var result = {
+                let result = {
                     itemActionsSize: 'm',
                     itemActions: {
                         all: actions,

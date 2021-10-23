@@ -7,7 +7,10 @@ import {DependencyTimer} from 'Controls/popup';
 import {RecordSet} from 'Types/collection';
 import {IStickyPopupOptions} from 'Controls/popup';
 
-export type DropdownReceivedState = {items?: RecordSet, history?: RecordSet};
+export interface DropdownReceivedState {
+    items?: RecordSet;
+    history?: RecordSet;
+}
 
 export abstract class BaseDropdown extends Control<IControlOptions, DropdownReceivedState> {
     protected _controller: IDropdownController = null;

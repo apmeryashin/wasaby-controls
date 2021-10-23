@@ -13,7 +13,7 @@ describe('getItemsHeightsData', () => {
                     height: 100
                 };
             },
-            closest: function() {}
+            closest() {}
         };
     };
     before(() => {

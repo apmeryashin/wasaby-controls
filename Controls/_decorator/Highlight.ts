@@ -236,7 +236,7 @@ class Highlight extends Control<IHighlightOptions> {
         if (foundLength === 0) {
             result.push({
                 type: 'plain',
-                value: value
+                value
             });
 
             return result;

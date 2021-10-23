@@ -114,7 +114,7 @@ export default interface ILookup {
  *     on:showSelector="_showSelectorHandler()">
  * </Controls.lookup:Input>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * // JavaScript
  * _loadParams: function() {
@@ -148,7 +148,7 @@ export default interface ILookup {
  *     on:showSelector="_showSelectorHandler()">
  * </Controls.lookup:Input>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * // JavaScript
  * _loadParams: function() {

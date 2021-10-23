@@ -21,7 +21,7 @@ const lowerValidHtml = {
     validAttributes: lowerValidAttributes
 };
 
-var markupGenerator,
+let markupGenerator,
       defCollection,
       control,
       resolver,
@@ -29,19 +29,19 @@ var markupGenerator,
       resolverMode,
       currentValidHtml,
       linkAttributesMap = {
-         'action': true,
-         'background': true,
-         'cite': true,
-         'codebase': true,
-         'formaction': true,
-         'href': true,
-         'icon': true,
-         'longdesc': true,
-         'manifest': true,
-         'poster': true,
-         'profile': true,
-         'src': true,
-         'usemap': true
+         action: true,
+         background: true,
+         cite: true,
+         codebase: true,
+         formaction: true,
+         href: true,
+         icon: true,
+         longdesc: true,
+         manifest: true,
+         poster: true,
+         profile: true,
+         src: true,
+         usemap: true
       },
       startOfGoodLinks = [
          'data:image(//|\/)[^;]+;base64[^"]+',
@@ -150,7 +150,7 @@ function validAttributesInsertion(targetAttributes: object,
    }
 
 function recursiveMarkup(value, attrsToDecorate, key, parent?) {
-      var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
+      let valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
       if (isString(valueToBuild)) {
@@ -168,7 +168,7 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       }
       wasResolved = value !== valueToBuild;
       resolverMode ^= wasResolved;
-      var children = [];
+      let children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
             children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild));
@@ -181,7 +181,7 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       const attrs = {
             attributes: {},
             events: {},
-            key: key
+            key
          };
       const validNodesValue = isKeyExist(currentValidHtml.validNodes, tagName);
       let additionalValidAttributes;
@@ -203,7 +203,7 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 
-var template = function(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
+let template = function(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
       markupGenerator = thelpers.createGenerator(isVdom, forceCompatible, generatorConfig);
       defCollection = {
          id: [],
@@ -220,11 +220,11 @@ var template = function(data, attr, context, isVdom, sets, forceCompatible, gene
          addEventListener(events, 'on:contextmenu', '_contextMenuHandler');
          addEventListener(events, 'on:copy', '_copyHandler');
       }
-      var elements = [],
+      let elements = [],
          key = (attr && attr.key) || '_',
          attrsToDecorate = {
             attributes: attr.attributes,
-            events: events,
+            events,
             context: attr.context
          },
          oldEscape,

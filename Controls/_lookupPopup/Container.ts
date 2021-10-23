@@ -30,27 +30,27 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selectionType: TSelectionType;
 }
 
-var SELECTION_TYPES = ['all', 'leaf', 'node'];
+let SELECTION_TYPES = ['all', 'leaf', 'node'];
 
-var _private = {
-   getFilteredItems: function(items, filterFunc) {
+let _private = {
+   getFilteredItems(items, filterFunc) {
       return chain.factory(items).filter(filterFunc).value();
    },
 
-   getKeysByItems: function(items, keyProperty) {
+   getKeysByItems(items, keyProperty) {
       return chain.factory(items).reduce(function(result, item) {
          result.push(item.get(keyProperty));
          return result;
       }, []);
    },
 
-   getFilterFunction: function(func) {
+   getFilterFunction(func) {
       return func ? func : function() {
          return true;
       };
    },
 
-   getSelectedKeys: function(options): TKey[] {
+   getSelectedKeys(options): TKey[] {
        let selectedKeys;
 
        if (options.selectedItems && options.selectedItems.getCount()) {
@@ -70,20 +70,20 @@ var _private = {
       return options.selectedItems || new List();
    },
 
-   getCrudWrapper: function(source) {
+   getCrudWrapper(source) {
       return new CrudWrapper({
-         source: source
+         source
       });
    },
 
-   getEmptyItems: function(currentItems) {
+   getEmptyItems(currentItems) {
       /* make clone and clear to save items format */
-      var emptyItems = currentItems.clone();
+      let emptyItems = currentItems.clone();
       emptyItems.clear();
       return emptyItems;
    },
 
-   getValidSelectionType: function(selectionType) {
+   getValidSelectionType(selectionType) {
       let type;
 
       if (SELECTION_TYPES.indexOf(selectionType) !== -1) {
@@ -168,12 +168,12 @@ var _private = {
       return resultFilter;
    },
 
-   prepareResult: function(result, initialSelection, keyProperty, selectCompleteInitiator) {
+   prepareResult(result, initialSelection, keyProperty, selectCompleteInitiator) {
       return {
          resultSelection: result,
-         initialSelection: initialSelection,
-         keyProperty: keyProperty,
-         selectCompleteInitiator: selectCompleteInitiator
+         initialSelection,
+         keyProperty,
+         selectCompleteInitiator
       };
    },
 
@@ -356,7 +356,7 @@ var _private = {
 * @public
 * @author Герасимов Александр Максимович
 */
-var Container = Control.extend({
+let Container = Control.extend({
 
    _template: template,
    _selectedKeys: null,
@@ -447,15 +447,15 @@ var Container = Control.extend({
       return loadPromise;
    },
 
-   _selectedKeysChanged: function(event, selectedKeys, added, removed) {
+   _selectedKeysChanged(event, selectedKeys, added, removed) {
       this._notify('selectedKeysChanged', [selectedKeys, added, removed], {bubbling: true});
    },
 
-   _excludedKeysChanged: function(event, excludedKey, added, removed) {
+   _excludedKeysChanged(event, excludedKey, added, removed) {
       this._notify('excludedKeysChanged', [excludedKey, added, removed], {bubbling: true});
    },
 
-   _selectCompleteHandler: function() {
+   _selectCompleteHandler() {
       this._selectCompleteInitiator = true;
    }
 });

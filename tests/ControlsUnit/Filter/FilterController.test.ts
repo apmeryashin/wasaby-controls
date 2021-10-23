@@ -195,8 +195,8 @@ describe('Controls/filter:ControllerClass', () => {
         ];
         filterController.updateFilterItems(newFilterItems);
         assert.deepEqual(filterController.getFilter(), {
-            'testId1': 'value1',
-            'testId2': 'value2'
+            testId1: 'value1',
+            testId2: 'value2'
         });
         assert.deepEqual(filterController.getFilterButtonItems(), newFilterItems);
     });
@@ -246,8 +246,8 @@ describe('Controls/filter:ControllerClass', () => {
             });
 
             assert.deepEqual(filterController.getFilter(), {
-                'Разворот': 'С разворотом',
-                'usePages': 'full',
+                Разворот: 'С разворотом',
+                usePages: 'full',
                 title: 'test'
             });
 

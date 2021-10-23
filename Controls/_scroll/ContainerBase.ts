@@ -347,8 +347,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             return;
         }
         this.onScrollContainer({
-            scrollTop: scrollTop,
-            scrollLeft: scrollLeft
+            scrollTop,
+            scrollLeft
         });
     }
 

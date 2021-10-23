@@ -25,30 +25,30 @@ function nodeToJson(node) {
 
       // Element node, in jsonML it is an array.
       if (node.nodeType === Node.ELEMENT_NODE) {
-         var json = [];
+         let json = [];
 
          // json[0] is a tag name.
-         var tagName = node.nodeName.toLowerCase();
+         let tagName = node.nodeName.toLowerCase();
          json[0] = tagName;
 
          // If node has attributes, they are located in json[1].
-         var nodeAttributes = node.attributes;
+         let nodeAttributes = node.attributes;
          if (nodeAttributes.length) {
-            var jsonAttributes = {};
-            for (var i = 0; i < nodeAttributes.length; ++i) {
+            let jsonAttributes = {};
+            for (let i = 0; i < nodeAttributes.length; ++i) {
                jsonAttributes[nodeAttributes[i].name] = nodeAttributes[i].value;
             }
             json[1] = jsonAttributes;
          }
 
          // After that convert child nodes and push them to array.
-         var firstChild;
+         let firstChild;
          if (node.hasChildNodes()) {
-            var childNodes = node.childNodes,
+            let childNodes = node.childNodes,
                child;
 
             // Recursive converting of children.
-            for (var i = 0; i < childNodes.length; ++i) {
+            for (let i = 0; i < childNodes.length; ++i) {
                child = nodeToJson(childNodes[i]);
                if (!i) {
                   firstChild = child;
@@ -83,7 +83,7 @@ function nodeToJson(node) {
     * @param html {String}
     * @returns {Array}
     */
-var htmlToJson = function(html) {
+let htmlToJson = function(html) {
       if (!constants.isBrowserPlatform) {
          IoC.resolve('ILogger')
             .error('Controls/_decorator/Markup/Converter' , 'htmlToJson method doesn\'t work on server-side');
@@ -135,7 +135,7 @@ var htmlToJson = function(html) {
    /**
     * Преобразует json-строки в строки формата html.
     * @name Controls/_decorator/Markup/Converter#jsonToHtml
-    * @function 
+    * @function
     * @param json {Array} Json на основе JsonML.
     * @param tagResolver {Function} точно как в {@link Controls/_decorator/Markup#tagResolver}.
     * @param resolverParams {Object} точно как в {@link Controls/_decorator/Markup#resolverParams}.
@@ -150,13 +150,13 @@ var htmlToJson = function(html) {
     * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
     * @returns {String}
     */
-var jsonToHtml = function(json, tagResolver?, resolverParams?) {
-      var generatorConfig = getGeneratorConfig();
-      var result = template({
+let jsonToHtml = function(json, tagResolver?, resolverParams?) {
+      let generatorConfig = getGeneratorConfig();
+      let result = template({
          _options: {
             value: json,
-            tagResolver: tagResolver,
-            resolverParams: resolverParams
+            tagResolver,
+            resolverParams
          },
          _isMarkupConverter: true,
          _moduleName: 'Controls/decorator:Converter'
@@ -167,7 +167,7 @@ var jsonToHtml = function(json, tagResolver?, resolverParams?) {
    /**
     * Преобразует json-массив в его копию по значению во всех узлах.
     * @name Controls/_decorator/Markup/Converter#deepCopyJson
-    * @function 
+    * @function
     * @param json
     * @return {Array}
     */
@@ -178,14 +178,14 @@ var jsonToHtml = function(json, tagResolver?, resolverParams?) {
     * @param json
     * @return {Array}
     */
-var deepCopyJson = function(json) {
+let deepCopyJson = function(json) {
       return objectMerge([], json, { clone: true });
    };
 
-var MarkupConverter = {
-      htmlToJson: htmlToJson,
-      jsonToHtml: jsonToHtml,
-      deepCopyJson: deepCopyJson
+let MarkupConverter = {
+      htmlToJson,
+      jsonToHtml,
+      deepCopyJson
    };
 
 export = MarkupConverter;

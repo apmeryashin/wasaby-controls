@@ -11,7 +11,7 @@ import {deepStrictEqual, ok, notStrictEqual, strictEqual} from 'assert';
 import * as sinon from 'sinon';
 
 function getItems(countItems: number): List<unknown> {
-   for (var items = []; countItems; countItems--) {
+   for (let items = []; countItems; countItems--) {
       items.push(new Model({
          rawData: {id: countItems},
          keyProperty: 'id'
@@ -153,14 +153,14 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_deactivated', function() {
-      var lookup = getLookup();
+      let lookup = getLookup();
       lookup._suggestState = true;
       lookup._deactivated();
       ok(!lookup._suggestState);
    });
 
    it('_suggestStateChanged', function() {
-      var lookup = getLookup();
+      let lookup = getLookup();
 
       lookup._beforeMount({selectedKeys: []});
       lookup._suggestState = true;
@@ -180,7 +180,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_determineAutoDropDown', function() {
-      var lookup = new Lookup();
+      let lookup = new Lookup();
       lookup._items = getItems(1);
       lookup._isInputVisible = function() {
          return false;
@@ -198,7 +198,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_onMouseDownShowSelector', function() {
-      var lookup = getLookup();
+      let lookup = getLookup();
 
       lookup._getFieldWrapperWidth = () => {};
       lookup._suggestState = true;
@@ -208,7 +208,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_onClickClearRecords', function() {
-      var
+      let
          configActivate,
          activated = false,
          lookup = new Lookup();
@@ -226,7 +226,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_keyDown', function() {
-      var
+      let
          isNotifyShowSelector = false,
          isNotifyRemoveItems = false,
          lookup = new Lookup(),
@@ -285,7 +285,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_openInfoBox', function() {
-      var
+      let
          config = {},
          isNotifyOpenPopup = false,
          lookup = getLookup();
@@ -315,7 +315,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_closeInfoBox', function() {
-      var
+      let
          isNotifyClosePopup = false,
          lookup = new Lookup();
 

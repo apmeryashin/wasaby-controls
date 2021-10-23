@@ -46,7 +46,7 @@ export function stickyLadderCellsCount(columns, stickyColumn, isDragging): numbe
     return !isFullGridSupport() || isDragging ? 0 : ( getStickyColumn({ stickyColumn, columns })?.property.length || 0 );
 }
 export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
-    var
+    let
         fIdx, idx, item, prevItem,
         ladderProperties = params.ladderProperties,
         stickyColumn = getStickyColumn(params),
@@ -173,8 +173,8 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         }
     }
     return {
-        ladder: ladder,
-        stickyLadder: stickyLadder
+        ladder,
+        stickyLadder
     };
 }
 
@@ -186,7 +186,7 @@ export function getStickyColumn(params: IStickyColumnsParams): IStickyColumn {
             property: params.stickyColumn.property
         };
     } else if (params.columns) {
-        for (var idx = 0; idx < params.columns.length; idx++) {
+        for (let idx = 0; idx < params.columns.length; idx++) {
             if (params.columns[idx].stickyProperty) {
                 result = {
                     index: idx,

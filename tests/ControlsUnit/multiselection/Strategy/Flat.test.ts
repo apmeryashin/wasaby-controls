@@ -18,7 +18,7 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    const model = new Collection({collection: items, keyProperty: 'id'});
 
-   const strategy = new FlatSelectionStrategy({ model: model });
+   const strategy = new FlatSelectionStrategy({ model });
 
    describe('select', () => {
       it('not selected', () => {

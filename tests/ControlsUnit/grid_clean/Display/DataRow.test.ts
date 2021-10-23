@@ -29,7 +29,7 @@ describe('Controls/grid_clean/Display/DataRow', () => {
 
     beforeEach(() => {
         record = new Model({
-            rawData: rawData,
+            rawData,
             keyProperty: 'key'
         });
     });
@@ -47,7 +47,7 @@ describe('Controls/grid_clean/Display/DataRow', () => {
         const gridRow = new GridDataRow({
             owner: mockedCollection,
             gridColumnsConfig: columnsConfig,
-            columnsConfig: columnsConfig,
+            columnsConfig,
             contents: record
         });
 
@@ -57,7 +57,7 @@ describe('Controls/grid_clean/Display/DataRow', () => {
         assert.strictEqual(columns[1].getInstanceId(), '1_column_1');
 
         const newRecord = new Model({
-            rawData: rawData,
+            rawData,
             keyProperty: 'key'
         });
 
@@ -168,7 +168,7 @@ describe('Controls/grid_clean/Display/DataRow', () => {
                 })
             },
             gridColumnsConfig: columnsConfig,
-            columnsConfig: columnsConfig,
+            columnsConfig,
             contents: record
         });
 
@@ -192,7 +192,7 @@ describe('Controls/grid_clean/Display/DataRow', () => {
                 getItemEditorTemplate: () => 'ITEM_EDITOR_TEMPLATE'
             },
             gridColumnsConfig: columnsConfig,
-            columnsConfig: columnsConfig,
+            columnsConfig,
             contents: record
         });
 

@@ -18,7 +18,7 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
 /**
  * Абстрактная стратегия получения элементов проекции
  * @class Controls/_display/ItemsStrategy/Abstract
- * 
+ *
  * @mixes Types/entity:DestroyableMixin
  * @mixes Types/entity:SerializableMixin
  * @author Авраменко А.С.

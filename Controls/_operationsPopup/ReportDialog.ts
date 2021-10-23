@@ -25,10 +25,10 @@ import 'css!Controls/operationsPopup';
     * @public
     *
     */
-var ReportDialog = Control.extend({
+let ReportDialog = Control.extend({
       _template: template,
       _message: null,
-      _beforeMount: function(cfg) {
+      _beforeMount(cfg) {
          if (cfg.operationsCount === cfg.operationsSuccess) {
             this._message = format({
                count: cfg.operationsCount,
@@ -44,7 +44,7 @@ var ReportDialog = Control.extend({
             }, rk('$errors$s$ из $count$s$ операций были обработаны с ошибкой'));
          }
       },
-      _onCloseClick: function() {
+      _onCloseClick() {
          this._notify('close', [], {bubbling: true});
       }
    });

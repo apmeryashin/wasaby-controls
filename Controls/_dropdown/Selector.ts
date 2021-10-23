@@ -59,7 +59,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:ISearch
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
@@ -82,7 +82,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:ISelectorDialog
  * @mixes Controls/dropdown:IGrouped
  * @implements Controls/interface:ITextValue
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/dropdown_new/Input/Source/Index

@@ -24,7 +24,7 @@ const getConfig = (options: IListenerOptions): IListenerOptions => {
  * Позволяет реагировать на события родителя, использующего {@link Controls/events:Register} в своем шаблоне.
  * @class Controls/_event/Listener
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @remark
  * Подробнее о работе с контролом читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">здесь</a>.

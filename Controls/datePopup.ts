@@ -184,7 +184,7 @@ export default class DatePopup extends Control implements EventProxyMixin {
         if (options.selectionType === 'quantum') {
             if ('years' in options.ranges) {
                 this._yearRangeSelectionType = options.selectionType;
-                this._yearRangeQuantum = {'years': options.ranges.years};
+                this._yearRangeQuantum = {years: options.ranges.years};
             } else {
                 this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
             }

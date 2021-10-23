@@ -6,16 +6,16 @@ import locales = require('Core/helpers/i18n/locales');
 import {Date as WSDate, DateTime} from 'Types/entity';
 import {Base as DateUtil} from 'Controls/dateUtils';
 
-var localeCode = locales.current.code;
-var weekdaysCaptions;
+let localeCode = locales.current.code;
+let weekdaysCaptions;
 
 const enum WEEKS_MODE {
    current = 'current',
    extended = 'extended'
 }
 
-var getDayRange = function(startDate, endDate, quantum) {
-   var date = new WSDate(startDate);
+let getDayRange = function(startDate, endDate, quantum) {
+   let date = new WSDate(startDate);
    if (startDate <= endDate) {
       date.setDate(date.getDate() + quantum - 1);
       return [startDate, date];
@@ -36,7 +36,7 @@ const Utils = {
     * Returns the list of days of the week
     * @returns {Array}
     */
-   getWeekdaysCaptions: function() {
+   getWeekdaysCaptions() {
       if (!weekdaysCaptions || localeCode !== locales.current.code) {
          localeCode = locales.current.code;
          const daysSmall = locales.current.config.daysSmall;
@@ -65,7 +65,7 @@ const Utils = {
     * @param emptyCaption
     * @returns {*}
     */
-   formatDateRangeCaption: function(startValue, endValue, emptyCaption) {
+   formatDateRangeCaption(startValue, endValue, emptyCaption) {
       // As an empty value, use the non-breaking space @nbsp; ('\ xA0') that would not make layout
       return getFormattedDateRange(
          startValue,
@@ -86,8 +86,8 @@ const Utils = {
     * @param {Number} month месяц
     * @returns {Number}
     */
-   getFirstDayOffset: function(year, month) {
-      var
+   getFirstDayOffset(year, month) {
+      let
          date = new WSDate(year, month ? month - 1 : 0),
          day = date.getDay();
 
@@ -100,7 +100,7 @@ const Utils = {
     * @param {Number} month месяц
     * @returns {Number}
     */
-   getDaysInMonth: function(year, month) {
+   getDaysInMonth(year, month) {
       return new WSDate(year, month, 0).getDate();
    },
 
@@ -110,8 +110,8 @@ const Utils = {
     * @param {Number} month
     * @returns {Number}
     */
-   getWeeksInMonth: function(year, month) {
-      var
+   getWeeksInMonth(year, month) {
+      let
          days = this.getDaysInMonth(year, month),
          offset = this.getFirstDayOffset(year, month);
 
@@ -126,7 +126,7 @@ const Utils = {
     * @variant extended Возвращает массив из 6 недель. Возвращает первую неделю текущего месяца, последнюю полную неделю, и если текущий месяц включает менее 6 недель, то недели следующего месяца.
     * @returns {Array}
     */
-   getWeeksArray: function(date: Date, mode: WEEKS_MODE, dateConstructor: Function = WSDate): Date[][] {
+   getWeeksArray(date: Date, mode: WEEKS_MODE, dateConstructor: Function = WSDate): Date[][] {
       const
          weeksArray: [] = [],
          year: number = date.getFullYear(),
@@ -149,8 +149,8 @@ const Utils = {
       return weeksArray;
    },
 
-   updateRangeByQuantum: function(baseDate, date, quantum) {
-      var lastQuantumLength, lastQuantumType,
+   updateRangeByQuantum(baseDate, date, quantum) {
+      let lastQuantumLength, lastQuantumType,
          days, start, end, i, date2;
 
       if ('days' in quantum) {
@@ -227,7 +227,7 @@ const Utils = {
       }
    },
 
-   updateRangeByWorkdays: function(date: Date): Date[] {
+   updateRangeByWorkdays(date: Date): Date[] {
       let weekDay = date.getDay();
       if (weekDay === 0) {
          // Нумирование начинается с воскресения, присвоем ему индекс последнего для удобства

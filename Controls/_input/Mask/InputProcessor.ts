@@ -1,6 +1,6 @@
 import {FormatBuilder, Formatter} from 'Controls/decorator';
 
-var
+let
          _private = {
 
             /**
@@ -14,7 +14,7 @@ var
              *    }|undefined
              * }
              */
-            getDataBySplitValue: function(format, splitValue) {
+            getDataBySplitValue(format, splitValue) {
                const data = Formatter.formatData(format, {
                   value: splitValue.before + splitValue.after,
                   carriagePosition: splitValue.before.length
@@ -34,8 +34,8 @@ var
              * @param clearData чистые данные.
              * @return {Object}
              */
-            getClearSplitValue: function(splitValue, clearData) {
-               var
+            getClearSplitValue(splitValue, clearData) {
+               let
                   clearSplitValue = {},
                   start = 0, position;
 
@@ -61,8 +61,8 @@ var
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            insert: function(format, clearSplitValue, replacer) {
-               var char, oldClearSplitValue, newClearSplitValue, data, result;
+            insert(format, clearSplitValue, replacer) {
+               let char, oldClearSplitValue, newClearSplitValue, data, result;
 
                oldClearSplitValue = {
                   before: clearSplitValue.before,
@@ -70,7 +70,7 @@ var
                };
 
                // Будем добавлять по 1 символу, потому что вставка должна работать так же как и ввод по 1 символу.
-               for (var i = 0; i < clearSplitValue.insert.length; i++) {
+               for (let i = 0; i < clearSplitValue.insert.length; i++) {
                   char = clearSplitValue.insert[i];
 
                   /**
@@ -120,7 +120,7 @@ var
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            delete: function(format, clearSplitValue, replacer) {
+            delete(format, clearSplitValue, replacer) {
                return _private.getDataBySplitValue(format, {
                   before: clearSplitValue.before,
                   after: clearSplitValue.delete.replace(/./g, replacer) + clearSplitValue.after
@@ -134,8 +134,8 @@ var
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            deleteForward: function(format, clearSplitValue, replacer) {
-               var newClearSplitValue;
+            deleteForward(format, clearSplitValue, replacer) {
+               let newClearSplitValue;
 
                if (clearSplitValue.delete) {
                   newClearSplitValue = {
@@ -159,8 +159,8 @@ var
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            deleteBackward: function(format, clearSplitValue, replacer) {
-               var newClearSplitValue;
+            deleteBackward(format, clearSplitValue, replacer) {
+               let newClearSplitValue;
 
                if (clearSplitValue.delete) {
                   newClearSplitValue = {

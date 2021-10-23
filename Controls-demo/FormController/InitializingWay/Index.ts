@@ -91,7 +91,7 @@ export default class extends Control {
             cfg.templateOptions.key = item.getKey();
             cfg.templateOptions.record = item;
         }
-        
+
         return cfg;
     }
 }

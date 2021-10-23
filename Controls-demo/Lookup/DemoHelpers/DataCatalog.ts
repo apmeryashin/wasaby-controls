@@ -103,8 +103,8 @@ const _companies = [
 function getLongData() {
    const data = [];
 
-   for (var id = 10; id < 100; id++) {
-      data.push({id: id, department: 'Разработка', owner: 'Новиков Д.В.', title: 'Разработка'});
+   for (let id = 10; id < 100; id++) {
+      data.push({id, department: 'Разработка', owner: 'Новиков Д.В.', title: 'Разработка'});
    }
 
    return data;

@@ -17,7 +17,7 @@ describe('Controls/grid_clean/Display/FooterRow', () => {
         const footerRow = new GridFooterRow({
             owner: mockedCollection,
             columnsConfig: footerColumnsConfig,
-            gridColumnsConfig: gridColumnsConfig
+            gridColumnsConfig
         });
 
         assert.equal(footerRow.getColumns().length, 3);

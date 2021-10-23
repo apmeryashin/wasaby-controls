@@ -34,7 +34,7 @@ export default interface IEditor {
  * <!-- WML -->
  * <Controls.dropdown:Selector on:selectedKeysChanged="_selectedKeysChanged()" selectedKeys="{{_options.propertyValue}}"/>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * // TypeScript
  * import { Control, TemplateFunction } from 'UI/Base';
@@ -47,7 +47,7 @@ export default interface IEditor {
  *       this._notify('propertyValueChanged', [selectedKeys], {bubbling: true});
  *    }
  * }
- * 
- * export default MyEditor; 
+ *
+ * export default MyEditor;
  * </pre>
  */

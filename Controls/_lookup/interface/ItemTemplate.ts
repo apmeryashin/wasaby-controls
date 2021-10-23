@@ -11,7 +11,7 @@
  *
  * Если вы переопределите contentTemplate/crossTemplate, вы не будете уведомлены о событиях itemClick/crossClick.
  * Для правильной работы необходимо пометить свой контент классами:
- * 
+ *
  * * js-controls-SelectedCollection__item__caption
  * * js-controls-SelectedCollection__item__cross
  *

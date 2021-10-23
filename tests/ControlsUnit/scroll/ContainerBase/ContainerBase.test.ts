@@ -8,7 +8,7 @@ import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
 import * as Env from 'Env/Env';
 
-var global = (function() { return this || (0 || eval)('this'); })();
+let global = (function() { return this || (0 || eval)('this'); })();
 
 function getBoundingClientRectMock() {
    return { height: 30, width: 50};
@@ -150,7 +150,7 @@ describe('Controls/scroll:ContainerBase', () => {
                getBoundingClientRect: getBoundingClientRectMock
             },
             userContent: {
-               children: children
+               children
             }
          };
          control._afterMount();
@@ -186,7 +186,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control._state = {
          };
          control._children = {
-            content: content,
+            content,
             userContent: {
                children: [{
                   classList: {
@@ -298,7 +298,7 @@ describe('Controls/scroll:ContainerBase', () => {
          };
 
          control._children = {
-            content: content,
+            content,
             userContent: {
                children: [{
                   classList: {

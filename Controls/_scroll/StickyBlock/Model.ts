@@ -54,7 +54,7 @@ export = simpleExtend.extend({
     * @param {Object} config.bottomTarget DOM element
     * @param {String} config.position Sticky position
     */
-   constructor: function(config) {
+   constructor(config) {
       this._intersection = {};
       this._topTarget = config.topTarget;
       // Необходимость двух нижних обсёрверов описана в методе _updateStateIntersection.
@@ -64,7 +64,7 @@ export = simpleExtend.extend({
       this._updateStateIntersection = this._updateStateIntersection.bind(this);
    },
 
-   update: function(entries: IntersectionObserverEntry[]) {
+   update(entries: IntersectionObserverEntry[]) {
       entries.forEach((entry) => {
          if (entry.target === this._bottomLeftTarget) {
             this._intersectingBottomLeft = entry.isIntersecting;
@@ -81,7 +81,7 @@ export = simpleExtend.extend({
       this._fixedPosition = this._getFixedPosition();
    },
 
-   destroy: function() {
+   destroy() {
       this._updateStateIntersection = undefined;
    },
 
@@ -89,7 +89,7 @@ export = simpleExtend.extend({
     * @param {IntersectionObserverEntry} entry
     * @private
     */
-   _updateStateIntersection: function(entry: IntersectionObserverEntry): void {
+   _updateStateIntersection(entry: IntersectionObserverEntry): void {
       const position = this._getTarget(entry);
       let isIntersecting = entry.isIntersecting;
       // Будем обновлять состояние зафиксированности для observerBottom по левому и правому обсёрверу.
@@ -106,7 +106,7 @@ export = simpleExtend.extend({
     * @returns {TrackedTarget} The name of the intersection target.
     * @private
     */
-   _getTarget: function(entry) {
+   _getTarget(entry) {
       switch (entry.target) {
          case this._topTarget:
             return 'top';
@@ -124,7 +124,7 @@ export = simpleExtend.extend({
     * @returns {String} Determines whether the content is fixed.
     * @private
     */
-   _getFixedPosition: function() {
+   _getFixedPosition() {
       let result = '';
 
       if (this._position.vertical && this._position.vertical?.indexOf('top') !== -1 && !this._intersection.top && this._intersection.bottom) {

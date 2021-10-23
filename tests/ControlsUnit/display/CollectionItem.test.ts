@@ -446,7 +446,7 @@ describe('Controls/_display/CollectionItem', () => {
                 given.item = item;
                 given.property = property;
             },
-            getHoverBackgroundStyle: function() {}
+            getHoverBackgroundStyle() {}
         };
 
         const item = new CollectionItem({ owner });
@@ -465,7 +465,7 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getWrapperClasses()', () => {
         const owner = {
             notifyItemChange(): void {},
-            getHoverBackgroundStyle: function() {},
+            getHoverBackgroundStyle() {},
             getEditingBackgroundStyle: () => 'default',
             isFirstItem: () => false,
             isLastItem: () => false,
@@ -503,9 +503,9 @@ describe('Controls/_display/CollectionItem', () => {
             getRightPadding(): string { return '#rightSpacing#'; },
             getMultiSelectVisibility(): string { return multiSelectVisibility; },
             getMultiSelectPosition(): string { return 'default'; },
-            getRowSeparatorSize: function() { return ''; },
-            isLastItem: function() { return false; },
-            getNavigation: function() { return {
+            getRowSeparatorSize() { return ''; },
+            isLastItem() { return false; },
+            getNavigation() { return {
                 view: 'page'
             }; }
         };

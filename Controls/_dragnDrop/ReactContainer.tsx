@@ -192,7 +192,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
         } else if (this.props.onDocumentDragStart) {
             this.props.onDocumentDragStart(eventName, ...args);
         }
-        
+
         EventBus.channel('dragnDrop').notify(eventName, ...args);
     }
 

@@ -139,7 +139,7 @@ const ActualApi = {
 
    // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
    // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
-   iconColorFromOptIconToIconStyle: function(icon) {
+   iconColorFromOptIconToIconStyle(icon) {
       const iconStyleFromIconOpt = /icon-[eadhp][a-z]+/.exec(icon);
       let newIconStyle = '';
       if (iconStyleFromIconOpt) {
@@ -151,7 +151,7 @@ const ActualApi = {
       }
       return '';
    },
-   itemsSetOldIconStyle: function(items) {
+   itemsSetOldIconStyle(items) {
       items.forEach((item) => {
          if (item.get('icon') && !item.get('iconStyle')) {
             const newIconStyle = this.iconColorFromOptIconToIconStyle(item.get('icon'));

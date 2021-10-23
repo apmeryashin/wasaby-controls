@@ -9,7 +9,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory = null;
     protected _selectedKeys: string[] = [];
-    protected _roundBorder = {'tl': '3xs', 'tr': '3xs', 'br': '3xs', 'bl': '3xs'};
+    protected _roundBorder = {tl: '3xs', tr: '3xs', br: '3xs', bl: '3xs'};
 
     protected _itemActions: any[] = Gadgets.getPreviewActions();
 

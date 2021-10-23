@@ -74,7 +74,7 @@ export default interface ISource {
  *     })
  * }
  * </pre>
- * @see 
+ * @see
  * @see Types/source:ICrud
  */
 /*

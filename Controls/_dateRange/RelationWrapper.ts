@@ -4,7 +4,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 /**
  * Обертка для контрола выбора периодов, с помощью которой периоды могут быть связаны.
  * Используется в сочетании с {@link Controls/_dateRange/RelationController RelationController}.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_dateRange.less переменные тем оформления}
@@ -12,7 +12,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @class Controls/_dateRange/RelationWrapper
  * @extends UI/Base:Control
  *
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/RelationController
@@ -26,7 +26,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @class Controls/_dateRange/RelationWrapper
  * @extends UI/Base:Control
  *
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/RelationController

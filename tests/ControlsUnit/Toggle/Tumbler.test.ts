@@ -63,7 +63,7 @@ describe('Controls/toggle:Tumbler', () => {
             })
         });
         control._children = {
-            'TumblerButton0': {
+            TumblerButton0: {
                 getBoundingClientRect: () => {
                     return {
                         width: 10,
@@ -73,7 +73,7 @@ describe('Controls/toggle:Tumbler', () => {
                     };
                 }
             },
-            'TumblerButton1': {
+            TumblerButton1: {
                 getBoundingClientRect: () => {
                     return {
                         width: 30,

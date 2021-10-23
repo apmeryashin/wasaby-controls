@@ -7,7 +7,7 @@ class NotificationBase extends Notification {
     protected _template: TemplateFunction = template;
 
    protected _beforeMount(options): void {
-      var _this = this;
+      let _this = this;
 
       _this._contentTemplateOptions = options.contentTemplateOptions;
 

@@ -64,8 +64,8 @@ function getContentsVerticalDimensions(element: HTMLElement, clear?: boolean): I
         const bottom = getOffsetTop(bottomItem) + getBoundingClientRect(bottomItem, clear).height;
         return {
             height: bottom - top,
-            top: top,
-            bottom: bottom
+            top,
+            bottom
         };
     }
 }

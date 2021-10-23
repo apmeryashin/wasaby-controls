@@ -162,7 +162,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('_isNeedCalculatingSizes', function() {
-      var lookup = new Lookup();
+      let lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(!lookup._isNeedCalculatingSizes({
@@ -203,7 +203,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('_isInputVisible', function() {
-      var lookup = new Lookup();
+      let lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(lookup._isInputVisible({
@@ -281,7 +281,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('_calculatingSizes', function() {
-      var
+      let
       // min width const 4 * FIELD_WRAPPER_MIN_HEIGHT = 100;
          FIELD_WRAPPER_MIN_HEIGHT = 25,
          FIELD_WRAPPER_WIDTH = 300,
@@ -289,7 +289,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          COUNTER_WIDTH = 20,
          MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
 
-      var
+      let
          lookup = new Lookup(),
          getItemsSizesLastRow = lookup._getItemsSizesLastRow,
          getCounterWidth = lookup._getCounterWidth,
@@ -322,7 +322,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       lookup._fieldWrapperMinHeight = FIELD_WRAPPER_MIN_HEIGHT;
 
       lookup._getItemsSizesLastRow = function() {
-         var numberItems = lookup._items.getCount();
+         let numberItems = lookup._items.getCount();
 
          if (newOptions.multiLine) {
 
@@ -386,7 +386,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('getCollectionOptions', function() {
-      var standardOptions = {
+      let standardOptions = {
          itemTemplate: 'testItemTemplate',
          readOnly: 'testReadOnly',
          displayProperty: 'testReadOnly',
@@ -397,7 +397,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          items: undefined
       };
 
-      var controlOptions = {
+      let controlOptions = {
          itemTemplate: 'testItemTemplate',
          readOnly: 'testReadOnly',
          displayProperty: 'testReadOnly',

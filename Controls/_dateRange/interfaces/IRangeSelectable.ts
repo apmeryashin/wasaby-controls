@@ -15,7 +15,7 @@ const selectionTypes = {
 };
 
 export default {
-    getDefaultOptions: function() {
+    getDefaultOptions() {
         return {
 
             // TODO: имеет ли смысл оставлять опуию selectionType? selectionType: 'single', это частный случай quantum: {days: [1]}
@@ -40,7 +40,7 @@ export default {
 
     SELECTION_TYPES: selectionTypes,
 
-    getOptionTypes: function() {
+    getOptionTypes() {
         return {
             selectionType: descriptor(String).oneOf(Object.keys(selectionTypes))
         };

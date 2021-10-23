@@ -18,7 +18,7 @@ import {isEqualItems} from 'Controls/dataSource';
  * @private
  */
 
-var _private = {
+let _private = {
     isFullCacheResetAction(action: string) {
         return (
             action === collection.IObservable.ACTION_REMOVE ||
@@ -42,8 +42,8 @@ var _private = {
         }
         return result;
     },
-    getDisplayFilter: function(data, cfg) {
-        var
+    getDisplayFilter(data, cfg) {
+        let
             filter = [];
         if (cfg.itemsFilterMethod) {
             filter.push(cfg.itemsFilterMethod);
@@ -51,7 +51,7 @@ var _private = {
         return filter;
     }
 };
-var ItemsViewModel = BaseViewModel.extend({
+let ItemsViewModel = BaseViewModel.extend({
     _display: null,
     _items: null,
     _itemDataCache: null,
@@ -61,7 +61,7 @@ var ItemsViewModel = BaseViewModel.extend({
     _prefixItemVersion: null,
     _updateIndexesCallback: null,
 
-    constructor: function(cfg) {
+    constructor(cfg) {
         this._prefixItemVersion = 0;
         this._itemDataCache = {};
         ItemsViewModel.superclass.constructor.apply(this, arguments);
@@ -88,17 +88,17 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    _prepareDisplay: function(items, cfg) {
-        var
+    _prepareDisplay(items, cfg) {
+        let
             filter = this.getDisplayFilter(this.prepareDisplayFilterData(), cfg);
         return ItemsUtil.getDefaultDisplayFlat(items, cfg, filter);
     },
 
-    setSupportVirtualScroll: function(value) {
+    setSupportVirtualScroll(value) {
         this._options.supportVirtualScroll = value;
     },
 
-    _isSupportVirtualScroll: function() {
+    _isSupportVirtualScroll() {
         return this._options.supportVirtualScroll;
     },
 
@@ -106,7 +106,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return startIndex;
     },
     _getEndIndexForReset(): number {
-        var endIndex;
+        let endIndex;
         if (this._isSupportVirtualScroll()) {
             endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
@@ -120,11 +120,11 @@ var ItemsViewModel = BaseViewModel.extend({
         this._endIndex = this._getEndIndexForReset();
     },
 
-    isEnd: function() {
+    isEnd() {
         return this._curIndex < this._endIndex;
     },
 
-    isShouldBeDrawnItem: function() {
+    isShouldBeDrawnItem() {
         return this._startIndex <= this._curIndex && this._curIndex <= this._stopIndex;
     },
 
@@ -132,7 +132,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this._updateIndexesCallback = updateIndexesCallback;
     },
 
-    setIndexes: function(newStartIndex: number, stopIndex: number): boolean {
+    setIndexes(newStartIndex: number, stopIndex: number): boolean {
         let
             newStopIndex = Math.min(stopIndex, this.getCount()),
             isUpdated = false;
@@ -150,8 +150,8 @@ var ItemsViewModel = BaseViewModel.extend({
         return isUpdated;
     },
 
-    isLast: function() {
-        var lastIndex;
+    isLast() {
+        let lastIndex;
         if (this._isSupportVirtualScroll()) {
             lastIndex = this._stopIndex - 1;
         } else {
@@ -160,12 +160,12 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._curIndex === lastIndex;
     },
 
-    goToNext: function() {
+    goToNext() {
         this._curIndex++;
     },
 
-    getCurrent: function() {
-        var dispItem = this._display.at(this._curIndex);
+    getCurrent() {
+        let dispItem = this._display.at(this._curIndex);
         return this.getItemDataByItem(dispItem);
     },
 
@@ -217,7 +217,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
 
-    nextModelVersion: function(notUpdatePrefixItemVersion, changesType) {
+    nextModelVersion(notUpdatePrefixItemVersion, changesType) {
         this._nextModelVersion(notUpdatePrefixItemVersion, changesType);
     },
 
@@ -229,14 +229,14 @@ var ItemsViewModel = BaseViewModel.extend({
         return '' + item;
     },
 
-    _calcItemVersion: function(item) {
-        var
+    _calcItemVersion(item) {
+        let
             version = '' + this._prefixItemVersion;
         version += this._getItemVersion(item);
         return version;
     },
 
-    getItemDataByItem: function(dispItem) {
+    getItemDataByItem(dispItem) {
         const cacheKey = this._getDisplayItemCacheKey(dispItem);
         const display = this.getDisplay();
 
@@ -244,7 +244,7 @@ var ItemsViewModel = BaseViewModel.extend({
             return this.getCachedItemData(cacheKey);
         }
 
-        var
+        let
             self = this,
             itemData = {
                 getPropValue: ItemsUtil.getPropertyValue,
@@ -331,7 +331,7 @@ var ItemsViewModel = BaseViewModel.extend({
         });
     },
 
-    setFilter: function(filter) {
+    setFilter(filter) {
         this._display.setFilter(filter);
         this.nextModelVersion();
     },
@@ -342,14 +342,14 @@ var ItemsViewModel = BaseViewModel.extend({
         };
     },
 
-    getDisplayFilter: function(data, cfg) {
+    getDisplayFilter(data, cfg) {
         const filters = _private.getDisplayFilter(data, cfg);
         if (cfg.groupingKeyCallback || cfg.groupProperty) {
             filters.push(this.displayFilterGroups.bind({ collapsedGroups: data.collapsedGroups }));
         }
         return filters;
     },
-    displayFilterGroups: function(item, index, displayItem) {
+    displayFilterGroups(item, index, displayItem) {
         return (item ? (item === groupConstants.hiddenGroup || !item.get) : true) || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
     },
     setGroupProperty(groupProperty: string): void {
@@ -372,8 +372,8 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    getNext: function() {
-        var
+    getNext() {
+        let
             itemIndex = this._curIndex + 1,
             dispItem = this._display.at(itemIndex);
         return {
@@ -381,27 +381,27 @@ var ItemsViewModel = BaseViewModel.extend({
             keyProperty: this.getKeyProperty(),
             index: itemIndex,
             item: dispItem.getContents(),
-            dispItem: dispItem
+            dispItem
         };
     },
 
-    getCurrentIndex: function() {
+    getCurrentIndex() {
         return this._curIndex;
     },
 
-    getItemById: function(id: string | number, keyProperty: string, withFilter: boolean = true) {
+    getItemById(id: string | number, keyProperty: string, withFilter: boolean = true) {
         return this._display ? this._display.getItemBySourceKey(id, withFilter) : undefined;
     },
 
-    getItemBySourceKey: function(id) {
+    getItemBySourceKey(id) {
         return this.getItemById(id);
     },
 
-    getCount: function() {
+    getCount() {
         return this._display ? this._display.getCount() : 0;
     },
 
-    _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+    _onCollectionChange(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
 
         /**
@@ -431,10 +431,10 @@ var ItemsViewModel = BaseViewModel.extend({
         this._notify('onAfterCollectionChange');
     },
 
-    _onBeginCollectionChange: function() {
+    _onBeginCollectionChange() {
         // method may be implemented
     },
-    _onEndCollectionChange: function() {
+    _onEndCollectionChange() {
         // method may be implemented
     },
 
@@ -471,7 +471,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return shouldUpdate;
     },
 
-    _convertItemKeyToCacheKey: function(itemKey) {
+    _convertItemKeyToCacheKey(itemKey) {
         // Model can have an item with the key 1 and a group with the key "1".
         // We need to differentiate between them in cache, so we add an _str postfix
         // to the string ids (for cache only)
@@ -480,30 +480,30 @@ var ItemsViewModel = BaseViewModel.extend({
         }
         return itemKey;
     },
-    _getDisplayItemCacheKey: function(dispItem) {
+    _getDisplayItemCacheKey(dispItem) {
         const key = ItemsUtil.getDisplayItemKey(dispItem, this.getKeyProperty());
         return this._convertItemKeyToCacheKey(key);
     },
-    isCachedItemData: function(itemKey) {
+    isCachedItemData(itemKey) {
         return (
             typeof itemKey !== 'undefined' &&
             typeof this._itemDataCache[itemKey] !== 'undefined'
         );
     },
-    getCachedItemData: function(itemKey) {
+    getCachedItemData(itemKey) {
         return this._itemDataCache[itemKey];
     },
-    setCachedItemData: function(itemKey, cache) {
+    setCachedItemData(itemKey, cache) {
         this._itemDataCache[itemKey] = cache;
     },
-    resetCachedItemData: function(itemKey?) {
+    resetCachedItemData(itemKey?) {
         if (typeof itemKey !== 'undefined') {
             delete this._itemDataCache[itemKey];
         } else {
             this._itemDataCache = {};
         }
     },
-    _resetCacheOnChange: function(changesType, changedItems?) {
+    _resetCacheOnChange(changesType, changedItems?) {
         if (
             changesType === 'indexesChanged' ||
             changesType === 'itemActionsUpdated'
@@ -522,7 +522,7 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    _isGroup: function(item) {
+    _isGroup(item) {
         return item ? (item === groupConstants.hiddenGroup || !item.get) : true;
     },
 
@@ -579,16 +579,16 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
-    getItems: function() {
+    getItems() {
         return this._items;
     },
 
     // для совместимости с новой моделью
-    getCollection: function() {
+    getCollection() {
         return this.getItems();
     },
 
-    appendItems: function(items) {
+    appendItems(items) {
         let shouldAppend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
@@ -607,12 +607,12 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    mergeItems: function(items, options) {
-        options = Object.assign({ remove: false }, options || {});
+    mergeItems(items, options) {
+        options = { remove: false, ...(options || {})};
         this._items.merge(items, options);
     },
 
-    prependItems: function(items) {
+    prependItems(items) {
         let shouldPrepend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
@@ -658,11 +658,11 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._display ? this._display.at(index) : undefined;
     },
 
-    getDisplay: function() {
+    getDisplay() {
         return this._display;
     },
 
-    destroy: function() {
+    destroy() {
         ItemsViewModel.superclass.destroy.apply(this, arguments);
         if (this._display) {
             this._display.destroy();

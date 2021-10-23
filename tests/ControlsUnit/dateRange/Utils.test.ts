@@ -8,39 +8,39 @@ describe('Controls/_dateRange/Utils', () => {
             const resp = Utils.getWeekdaysCaptions();
             const captions = [
                 {
-                    'caption': 'пн',
-                    'weekend': false,
-                    'day': 0
+                    caption: 'пн',
+                    weekend: false,
+                    day: 0
                 },
                 {
-                    'caption': 'вт',
-                    'weekend': false,
-                    'day': 1
+                    caption: 'вт',
+                    weekend: false,
+                    day: 1
                 },
                 {
-                    'caption': 'ср',
-                    'weekend': false,
-                    'day': 2
+                    caption: 'ср',
+                    weekend: false,
+                    day: 2
                 },
                 {
-                    'caption': 'чт',
-                    'weekend': false,
-                    'day': 3
+                    caption: 'чт',
+                    weekend: false,
+                    day: 3
                 },
                 {
-                    'caption': 'пт',
-                    'weekend': false,
-                    'day': 4
+                    caption: 'пт',
+                    weekend: false,
+                    day: 4
                 },
                 {
-                    'caption': 'сб',
-                    'weekend': true,
-                    'day': 5
+                    caption: 'сб',
+                    weekend: true,
+                    day: 5
                 },
                 {
-                    'caption': 'вс',
-                    'weekend': true,
-                    'day': 6
+                    caption: 'вс',
+                    weekend: true,
+                    day: 6
                 }
             ];
             assert.deepEqual(resp, captions);

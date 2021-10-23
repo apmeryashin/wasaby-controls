@@ -191,7 +191,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    public closeSubMenu(): void {
+    closeSubMenu(): void {
         this._closeSubMenu();
     }
 

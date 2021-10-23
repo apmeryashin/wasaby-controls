@@ -53,7 +53,7 @@ function getFilter(filter, source) {
 
 export = {
    getSourceFilter: getFilter,
-   isHistorySource: isHistorySource,
-   getSource: getSource,
-   getMetaHistory: getMetaHistory
+   isHistorySource,
+   getSource,
+   getMetaHistory
 };
