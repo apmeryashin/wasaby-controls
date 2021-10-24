@@ -14,8 +14,8 @@ export default class extends Control {
             data: options.items,
             filter: (item, queryFilter) => {
                 if (queryFilter.selection) {
-                    let itemId = String(item.get('id'));
-                    let marked = queryFilter.selection.get('marked');
+                    const itemId = String(item.get('id'));
+                    const marked = queryFilter.selection.get('marked');
                     let isSelected = false;
                     marked.forEach(function(selectedId) {
                         if (String(selectedId) === itemId) {

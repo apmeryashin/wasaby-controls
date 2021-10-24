@@ -25,7 +25,7 @@ import 'css!Controls/operationsPopup';
     * @public
     *
     */
-let ReportDialog = Control.extend({
+const ReportDialog = Control.extend({
       _template: template,
       _message: null,
       _beforeMount(cfg) {

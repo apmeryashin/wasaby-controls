@@ -17,10 +17,10 @@ import {HistoryUtils as FilterHistoryUtils} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import 'css!Controls/deprecatedFilter';
 
-let getPropValue = Utils.object.getPropertyValue.bind(Utils);
-let setPropValue = Utils.object.setPropertyValue.bind(Utils);
+const getPropValue = Utils.object.getPropertyValue.bind(Utils);
+const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
-let _private = {
+const _private = {
 
    prepareItems(self, items) {
       if (!cInstance.instanceOfModule(items, 'Types/collection:List')) {
@@ -66,7 +66,7 @@ let _private = {
     },
 
    getItemPopupConfig(properties) {
-      let itemConfig = {};
+      const itemConfig = {};
       itemConfig.keyProperty = properties.keyProperty;
       itemConfig.displayProperty = properties.displayProperty;
       itemConfig.itemTemplate = properties.itemTemplate;
@@ -96,7 +96,7 @@ let _private = {
    },
 
    loadItems(self, item, index) {
-      let properties = getPropValue(item, 'properties');
+      const properties = getPropValue(item, 'properties');
 
       self._configs[index] = Merge(self._configs[index] || {}, _private.getItemPopupConfig(properties));
 
@@ -118,9 +118,9 @@ let _private = {
          self._loadDeferred.cancel();
          self._loadDeferred = null;
       }
-      let pDef = new pDeferred();
+      const pDef = new pDeferred();
       chain.factory(self._items).each(function(item, index) {
-         let result = _private.loadItems(self, item, index);
+         const result = _private.loadItems(self, item, index);
          pDef.push(result);
       });
       self._loadDeferred = pDef.done().getResult();
@@ -144,7 +144,7 @@ let _private = {
    },
 
    getFilter(items) {
-      let filter = {};
+      const filter = {};
       chain.factory(items).each(function(item) {
          if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
             filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
@@ -165,12 +165,12 @@ let _private = {
    },
 
    selectItems(items) {
-      let self = this,
-         selectedKeys = [];
+      const self = this;
+      const selectedKeys = [];
 
       // Get keys of selected items
       chain.factory(items).each(function(item) {
-         let key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
+         const key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
          if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue') &&
              // select empty item
              !(self._configs[self.lastOpenIndex].emptyText && key === null)) {
@@ -184,9 +184,9 @@ let _private = {
    },
 
    getNewItems(config, selectedItems) {
-      let newItems = [],
-         curItems = config._items,
-         keyProperty = config.keyProperty;
+      const newItems = [];
+      const curItems = config._items;
+      const keyProperty = config.keyProperty;
 
       chain.factory(selectedItems).each(function(item) {
          if (!curItems.getRecordById(item.get(keyProperty))) {
@@ -207,7 +207,7 @@ let _private = {
    },
 
    onSelectorResult(curConfig, selectedItems) {
-      let newItems = _private.getNewItems(curConfig, selectedItems);
+      const newItems = _private.getNewItems(curConfig, selectedItems);
       _private.updateHistory(curConfig, chain.factory(selectedItems).toArray());
       _private.setItems(curConfig, newItems);
 
@@ -382,7 +382,7 @@ let _private = {
  * @public
  * @author Герасимов А.М.
  */
-let Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
+const Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
    _template: template,
    _configs: null,
    _items: null,
@@ -462,8 +462,8 @@ let Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
          this._children.DropdownOpener.open(config, this);
       };
 
-      let selectedKeys = getPropValue(this._items.at(index), 'value');
-      let templateOptions = {
+      const selectedKeys = getPropValue(this._items.at(index), 'value');
+      const templateOptions = {
          source: new PrefetchProxy({
             target: this._configs[index]._source,
             data: {
@@ -482,7 +482,7 @@ let Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       };
       const className = (this._options.popupClassName || (this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup')) +
           ` controls_popupTemplate_theme-${this._options.theme} controls_dropdownPopup_theme-${this._options.theme} controls_filter_theme-${this._options.theme}`;
-      let config = {
+      const config = {
          templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
          className,
          fittingMode: {
@@ -521,10 +521,10 @@ let Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
    },
 
    _setText() {
-      let self = this;
+      const self = this;
       chain.factory(this._configs).each(function(config, index) {
-         let sKey = getPropValue(self._items.at(index), 'value'),
-            text = [];
+         let sKey = getPropValue(self._items.at(index), 'value');
+         const text = [];
          if (!(sKey instanceof Array)) {
             sKey = [sKey];
          }
@@ -557,7 +557,7 @@ let Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       if (this._children.DropdownOpener.isOpened()) {
          this._children.DropdownOpener.close();
       }
-      let newValue = getPropValue(this._items.at(index), 'resetValue');
+      const newValue = getPropValue(this._items.at(index), 'resetValue');
       setPropValue(this._items.at(index), 'value', newValue);
       _private.setTextValue(this._items.at(index), '');
       _private.notifyChanges(this, this._items);

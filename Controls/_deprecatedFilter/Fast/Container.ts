@@ -35,7 +35,7 @@ import template = require('wml!Controls/_deprecatedFilter/Fast/Container');
  * @public
  */
 
-let Container = Control.extend(/** @lends Controls/_filter/Fast/Container.prototype */{
+const Container = Control.extend(/** @lends Controls/_filter/Fast/Container.prototype */{
 
    _template: template,
 

@@ -445,7 +445,9 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         return false;
     }
 
-    protected _calculateSizes(options: ILookupInputOptions): void { }
+    protected _calculateSizes(options: ILookupInputOptions): void {
+        /* For override */
+    }
 
     protected _isInputVisible(options: ILookupInputOptions): boolean {
         return !!(this._isEmpty() || options.multiSelect);

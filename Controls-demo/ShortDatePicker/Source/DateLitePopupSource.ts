@@ -7,9 +7,9 @@ class DateLitePopupSource extends Memory {
     private _$keyProperty: string = 'id';
 
     query(query) {
-        let offset = query.getOffset();
-        let where = query.getWhere();
-        let limit = query.getLimit() || 1;
+        const offset = query.getOffset();
+        const where = query.getWhere();
+        const limit = query.getLimit() || 1;
         let executor;
 
         executor = (function() {

@@ -45,9 +45,9 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
             return Promise.resolve(null);
         }
 
-        let loadedDatesIds: number[] = this._getLoadedDatesIds()
+        const loadedDatesIds: number[] = this._getLoadedDatesIds()
                 .map((dateId) =>  monthListUtils.idToDate(dateId).getTime());
-        let newDatesIds: number[] = dates.filter((date) => loadedDatesIds.indexOf(date) === -1);
+        const newDatesIds: number[] = dates.filter((date) => loadedDatesIds.indexOf(date) === -1);
         let start: Date;
         let end: Date;
 
@@ -66,7 +66,7 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
 
     private _getQuery(start: Date, end: Date): Query {
         let length: number = Range.getPeriodLengthInMonths(start, end);
-        let query: Query = new Query();
+        const query: Query = new Query();
 
         if (this._viewMode === 'year') {
             end.setMonth(11);

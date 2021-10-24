@@ -102,9 +102,8 @@ export function getOffset(parentElement: HTMLElement, element: HTMLElement, posi
    parentElement = (parentElement && parentElement.get) ? parentElement.get(0) : parentElement;
    element = (element && element.get) ? element.get(0) : element;
 
-   const
-       offset = getDimensions(element),
-       parentOffset = getDimensions(parentElement);
+   const offset = getDimensions(element);
+   const parentOffset = getDimensions(parentElement);
    if (position === 'top') {
       return offset.top - parentOffset.top;
    } else if (position === 'bottom') {

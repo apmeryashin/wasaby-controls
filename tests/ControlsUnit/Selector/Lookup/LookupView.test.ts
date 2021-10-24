@@ -162,7 +162,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('_isNeedCalculatingSizes', function() {
-      let lookup = new Lookup();
+      const lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(!lookup._isNeedCalculatingSizes({
@@ -203,7 +203,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('_isInputVisible', function() {
-      let lookup = new Lookup();
+      const lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(lookup._isInputVisible({
@@ -282,17 +282,17 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
 
    it('_calculatingSizes', () => {
       // min width const 4 * FIELD_WRAPPER_MIN_HEIGHT = 100;
-      let FIELD_WRAPPER_MIN_HEIGHT = 25;
-      let FIELD_WRAPPER_WIDTH = 300;
-      let ITEM_WIDTH = 50;
-      let COUNTER_WIDTH = 20;
-      let MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
+      const FIELD_WRAPPER_MIN_HEIGHT = 25;
+      const FIELD_WRAPPER_WIDTH = 300;
+      const ITEM_WIDTH = 50;
+      const COUNTER_WIDTH = 20;
+      const MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
 
-      let lookup = new Lookup();
-      let getItemsSizesLastRow = lookup._getItemsSizesLastRow;
-      let getCounterWidth = lookup._getCounterWidth;
-      let initializeConstants = lookup._initializeConstants;
-      let newOptions = {
+      const lookup = new Lookup();
+      const getItemsSizesLastRow = lookup._getItemsSizesLastRow;
+      const getCounterWidth = lookup._getCounterWidth;
+      const initializeConstants = lookup._initializeConstants;
+      const newOptions = {
          maxVisibleItems: 7,
          multiSelect: true,
          multiLine: false,
@@ -338,7 +338,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       lookup._getCounterWidth = () => {
          return COUNTER_WIDTH;
       };
-      lookup._initializeConstants = () => {};
+      lookup._initializeConstants = () => {/* FIXME: sinon mock */};
 
       newOptions.multiSelect = true;
       lookup._calculateSizes(newOptions);
@@ -384,7 +384,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    });
 
    it('getCollectionOptions', () => {
-      let standardOptions = {
+      const standardOptions = {
          itemTemplate: 'testItemTemplate',
          readOnly: 'testReadOnly',
          displayProperty: 'testReadOnly',
@@ -395,7 +395,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          items: undefined
       };
 
-      let controlOptions = {
+      const controlOptions = {
          itemTemplate: 'testItemTemplate',
          readOnly: 'testReadOnly',
          displayProperty: 'testReadOnly',

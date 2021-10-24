@@ -39,7 +39,9 @@ const DialogHelper = {
                   require(deps, function(popup, Strategy) {
                      const CoreTemplate = require(config.template);
                      config._initCompoundArea = function(compoundArea) {
-                        dfr && dfr.callback(compoundArea);
+                        if (dfr) {
+                            dfr.callback(compoundArea);
+                        }
                         dfr = null;
                      };
                      popup.BaseOpener.showDialog(

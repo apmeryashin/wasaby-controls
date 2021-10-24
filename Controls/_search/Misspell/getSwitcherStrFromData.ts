@@ -1,7 +1,7 @@
-let SWITCHED_STR_FIELD = 'switchedStr';
+const SWITCHED_STR_FIELD = 'switchedStr';
 
 export = function(data) {
-   let metaData = data && data.getMetaData();
+   const metaData = data && data.getMetaData();
    if (metaData && metaData.hasOwnProperty(SWITCHED_STR_FIELD)) {
       return metaData[SWITCHED_STR_FIELD];
    }

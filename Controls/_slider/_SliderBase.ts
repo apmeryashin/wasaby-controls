@@ -86,7 +86,9 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
         this._onDragNDropHandler(e, dragObject);
     }
 
-    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {}
+    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {
+        /* For override */
+    }
 
     static getDefaultOptions() {
         return {

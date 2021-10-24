@@ -3,12 +3,6 @@ import { GridDataCell } from 'Controls/grid';
 import {CssClassesAssert as cAssert} from './../../../CustomAsserts';
 
 describe('Controls/grid_clean/Display/DataCell/isEditing', () => {
-    beforeEach(() => {
-    });
-
-    afterEach(() => {
-    });
-
     describe('single editable cell', () => {
         const mockedOwner = {
                 getHoverBackgroundStyle: () => 'default',

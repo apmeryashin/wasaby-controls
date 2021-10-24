@@ -13,8 +13,6 @@ if (constants.isBrowserPlatform) {
      */
 
     ((window, document) => {
-        'use strict';
-
         // Exits early if all IntersectionObserver and IntersectionObserverEntry
         // features are natively supported.
 
@@ -84,12 +82,12 @@ if (constants.isBrowserPlatform) {
          * @param {Function} callback The function to be invoked after intersection
          *     changes have queued. The function is not invoked if the queue has
          *     been emptied by calling the `takeRecords` method.
-         * @param {Object=} opt_options Optional configuration options.
+         * @param {Object=} optOptions Optional configuration options.
          * @constructor
          */
-        function IntersectionObserver(callback, opt_options) {
+        function IntersectionObserver(callback, optOptions) {
 
-            const options = opt_options || {};
+            const options = optOptions || {};
 
             if (typeof callback != 'function') {
                 throw new Error('callback must be a function');
@@ -202,12 +200,12 @@ if (constants.isBrowserPlatform) {
          * returns a sorted array of unique threshold values. If a value is not
          * between 0 and 1 and error is thrown.
          * @private
-         * @param {Array|number=} opt_threshold An optional threshold value or
+         * @param {Array|number=} optThreshold An optional threshold value or
          *     a list of threshold values, defaulting to [0].
          * @return {Array} A sorted list of unique and valid threshold values.
          */
-        IntersectionObserver.prototype._initThresholds = function(opt_threshold) {
-            let threshold = opt_threshold || [0];
+        IntersectionObserver.prototype._initThresholds = function(optThreshold) {
+            let threshold = optThreshold || [0];
             if (!Array.isArray(threshold)) {
                 threshold = [threshold];
             }
@@ -226,13 +224,13 @@ if (constants.isBrowserPlatform) {
          * the value and unit properties. If any of the values are not properly
          * formatted or use a unit other than px or %, and error is thrown.
          * @private
-         * @param {string=} opt_rootMargin An optional rootMargin value,
+         * @param {string=} optRootMargin An optional rootMargin value,
          *     defaulting to '0px'.
          * @return {Array<Object>} An array of margin objects with the keys
          *     value and unit.
          */
-        IntersectionObserver.prototype._parseRootMargin = function(opt_rootMargin) {
-            const marginString = opt_rootMargin || '0px';
+        IntersectionObserver.prototype._parseRootMargin = function(optRootMargin) {
+            const marginString = optRootMargin || '0px';
             const margins = marginString.split(/\s+/).map(function(margin) {
                 const parts = /^(-?\d*\.?\d+)(px|%)$/.exec(margin);
                 if (!parts) {
@@ -598,12 +596,12 @@ if (constants.isBrowserPlatform) {
          * @param {Node} node The DOM node to add the event handler to.
          * @param {string} event The event name.
          * @param {Function} fn The event handler to add.
-         * @param {boolean} opt_useCapture Optionally adds the even to the capture
+         * @param {boolean} optUseCapture Optionally adds the even to the capture
          *     phase. Note: this only works in modern browsers.
          */
-        function addEvent(node, event, fn, opt_useCapture) {
+        function addEvent(node, event, fn, optUseCapture) {
             if (typeof node.addEventListener == 'function') {
-                node.addEventListener(event, fn, opt_useCapture || false);
+                node.addEventListener(event, fn, optUseCapture || false);
             } else if (typeof node.attachEvent == 'function') {
                 node.attachEvent('on' + event, fn);
             }
@@ -614,12 +612,12 @@ if (constants.isBrowserPlatform) {
          * @param {Node} node The DOM node to remove the event handler from.
          * @param {string} event The event name.
          * @param {Function} fn The event handler to remove.
-         * @param {boolean} opt_useCapture If the event handler was added with this
+         * @param {boolean} optUseCapture If the event handler was added with this
          *     flag set to true, it should be set to true here in order to remove it.
          */
-        function removeEvent(node, event, fn, opt_useCapture) {
+        function removeEvent(node, event, fn, optUseCapture) {
             if (typeof node.removeEventListener == 'function') {
-                node.removeEventListener(event, fn, opt_useCapture || false);
+                node.removeEventListener(event, fn, optUseCapture || false);
             } else if (typeof node.detatchEvent == 'function') {
                 node.detatchEvent('on' + event, fn);
             }

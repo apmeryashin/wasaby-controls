@@ -285,7 +285,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         // Попытка вызвать move() с некорректным filter
         it ('should not move with incorrect filter (source)', () => {
             const spyMove = sandbox.spy(source, 'move');
-            return controller.move(selectionObject, () => {}, 4, LOCAL_MOVE_POSITION.On)
+            return controller.move(selectionObject, () => {/* FIXME: sinon mock */}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
@@ -593,7 +593,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
             )));
             controller = new MoveController({...cfg, source});
-            return controller.moveWithDialog(selectionObject, () => {})
+            return controller.moveWithDialog(selectionObject, () => {/* FIXME: sinon mock */})
                 .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;

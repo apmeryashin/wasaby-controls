@@ -127,7 +127,7 @@ export default class StringValueConverter {
         let hours = baseValue.getHours();
         let minutes = baseValue.getMinutes();
         let seconds = baseValue.getSeconds();
-        let now = new Date();
+        const now = new Date();
         if (mask.indexOf('YYYY') > -1) {
             year = now.getFullYear();
         } else if (mask.indexOf('YY') > -1) {
@@ -208,8 +208,8 @@ export default class StringValueConverter {
     }
 
     private _updateModelByMask(valueModel: object, str: string): object {
-        let maskItems = this._mask.split(/[.: /]/g);
-        let strItems = str.split(/[.: /]/g);
+        const maskItems = this._mask.split(/[.: /]/g);
+        const strItems = str.split(/[.: /]/g);
         let i;
         let valueObject;
 
@@ -230,15 +230,17 @@ export default class StringValueConverter {
     }
 
     private _updateModel(valueModel: object, str: string): object {
-        let map = {
+        const map = {
                 date: 1,
                 month: 2,
                 year: 3,
                 hours: 4,
                 minutes: 5,
                 seconds: 6
-            },
-            strItems, i, valueObject;
+            };
+        let strItems;
+        let i;
+        let valueObject;
 
         strItems = RE_MASK.exec(str);
         if (!strItems) {
@@ -295,8 +297,8 @@ export default class StringValueConverter {
     }
 
     private _autocomplete(valueModel, autocompleteType = 'default', inputType = 'default', required: boolean = false): void {
-        let now = new Date();
-        let maskType = getMaskType(this._mask);
+        const now = new Date();
+        const maskType = getMaskType(this._mask);
         let item;
         let itemValue;
         let isZeroAtBeginning;

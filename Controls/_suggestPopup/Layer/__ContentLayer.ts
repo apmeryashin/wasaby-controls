@@ -6,7 +6,7 @@ import template = require('wml!Controls/_suggestPopup/Layer/__ContentLayer');
 import 'css!Controls/suggestPopup';
 import 'css!Controls/suggest';
 
-let _private = {
+const _private = {
    getSizes(self, dropDownContainer?: HTMLElement): object {
       const boundingClientToJSON = (bc) => {
          let resultObj = {};
@@ -126,7 +126,7 @@ let _private = {
    }
 };
 
-let __ContentLayer = Control.extend({
+const ContentLayer = Control.extend({
 
    _template: template,
    _height: '0px',
@@ -176,6 +176,6 @@ let __ContentLayer = Control.extend({
    }
 
 });
-__ContentLayer._private = _private;
+ContentLayer._private = _private;
 
-export default __ContentLayer;
+export default ContentLayer;

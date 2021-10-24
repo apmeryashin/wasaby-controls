@@ -228,6 +228,7 @@ const ListView = Control.extend(
 
         // Сброс к изначальному состоянию без ремаунта, например при reload'е.
         reset(params: {keepScroll?: boolean} = {}): void {
+            /* For override  */
         },
 
         _resolveItemTemplate(options) {
@@ -384,6 +385,7 @@ const ListView = Control.extend(
         },
 
         _onItemWheel(event) {
+            /* For override  */
         },
 
         // region Indicators

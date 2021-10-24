@@ -35,7 +35,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
          return  fieldWrapperWidth;
       };
       delete lookupView._initializeConstants;
-      lookupView._initializeConstants = () => {};
+      lookupView._initializeConstants = () => {/* FIXME: sinon mock */};
 
       lookupView._items =  getItems(3);
       strictEqual(lookupView._getAvailableWidthCollection({
@@ -52,8 +52,8 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
    });
 
    it('_calculateSizes', function() {
-      let availableWidthCollection = 200;
-      let lookupView = new Lookup({});
+      const availableWidthCollection = 200;
+      const lookupView = new Lookup({});
 
       lookupView._getAvailableWidthCollection = function() {
          return availableWidthCollection;
@@ -67,7 +67,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
    });
 
    it('_isInputVisible', function() {
-      let lookupView = new Lookup();
+      const lookupView = new Lookup();
 
       lookupView._items = getItems(5);
       lookupView._options.maxVisibleItems = 5;
@@ -81,7 +81,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
    });
 
    it('_isNeedCalculatingSizes', function() {
-      let lookupView = new Lookup();
+      const lookupView = new Lookup();
 
       lookupView._items = getItems(0);
       ok(!lookupView._isNeedCalculatingSizes({}));

@@ -231,6 +231,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @private
     */
    protected _prepareState(state): void {
+       /* For override  */
    }
 
    /**

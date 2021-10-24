@@ -1,7 +1,7 @@
    // Find all indexes if search value in string.
    function allIndexesOf(str, searchValue) {
-      let i = str.indexOf(searchValue),
-         result = [];
+      let i = str.indexOf(searchValue);
+      const result = [];
       while (i !== -1) {
          result.push(i);
          i += searchValue.length;

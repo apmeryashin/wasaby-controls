@@ -61,6 +61,7 @@ function getStickyElementOffset(stickyElement: HTMLElement,
    stickyElement.style.position = 'relative';
    stickyElement.style.top = '0px';
 
+    // tslint:disable-next-line:prefer-const
    let { top, height } = getDimensions(stickyElement);
    // В IE, в отличие от Chrome, getBoundingClientRect возвращает нецелочисленные значения top
    top = Math.round(top);
@@ -92,6 +93,7 @@ function getOffset(element: HTMLElement): { top: number; bottom: number } {
          bottom: elementDimensions.clientHeight
       };
    } else {
+       // tslint:disable-next-line:prefer-const
       let { top, height } = getDimensions(element);
       // В IE, в отличие от Chrome, getBoundingClientRect возвращает нецелочисленные значения top
       top = Math.round(top);

@@ -150,7 +150,6 @@ class StateIndicator extends Control<IStateIndicatorOptions> {
    private _calculateColorState(opts: IStateIndicatorOptions, _colors: string[], _numSectors: number): number[] {
       const colorValues = [];
       let correctScale: number = opts.scale;
-      let sectorSize: number;
       let curSector = 0;
       let totalSectorsUsed = 0;
       let maxSectorsPerValue = 0;

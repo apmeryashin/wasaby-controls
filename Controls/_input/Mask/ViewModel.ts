@@ -181,9 +181,8 @@ class ViewModel extends BaseViewModel {
          }
 
          private _getCarriageDefaultPosition(currentPosition?: number): number {
-            let
-               position,
-               isFiled;
+            let position;
+            let isFiled;
 
             if (this.options.replacer) {
                position = this.displayValue.indexOf(this.options.replacer);

@@ -20,7 +20,7 @@ import {BEFORE_ITEMS_MOVE_RESULT, IMoveItemsParams} from './interface/IMoverAndR
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
-let _private = {
+const _private = {
     moveItems(self, items, target, position) {
         const useAction = _private.useAction(items);
         const afterItemsMove = function(result) {
@@ -49,7 +49,7 @@ let _private = {
     },
 
     beforeItemsMove(self, items, target, position) {
-        let beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
+        const beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
@@ -77,9 +77,9 @@ let _private = {
     reorderMove(self, items, target, position) {
         let movedIndex;
         let movedItem;
-        let parentProperty = self._options.parentProperty;
-        let targetId = _private.getIdByItem(self, target);
-        let targetItem = _private.getModelByItem(self, targetId);
+        const parentProperty = self._options.parentProperty;
+        const targetId = _private.getIdByItem(self, target);
+        const targetItem = _private.getModelByItem(self, targetId);
         let targetIndex = self._items.getIndex(targetItem);
 
         items.forEach(function(item) {
@@ -111,7 +111,7 @@ let _private = {
     },
 
     hierarchyMove(self, items, target) {
-        let targetId = _private.getIdByItem(self, target);
+        const targetId = _private.getIdByItem(self, target);
         items.forEach(function(item) {
             item = _private.getModelByItem(self, item);
             if (item) {
@@ -218,7 +218,7 @@ let _private = {
     checkItem(self, item, target, position) {
         let key;
         let parentsMap;
-        let movedItem = _private.getModelByItem(self, item);
+        const movedItem = _private.getModelByItem(self, item);
 
         if (target !== null) {
             target = _private.getModelByItem(self, target);
@@ -240,9 +240,9 @@ let _private = {
 
     getParentsMap(self, id) {
         let item;
-        let toMap = [];
-        let items = self._items;
-        let path = items.getMetaData().path;
+        const toMap = [];
+        const items = self._items;
+        const path = items.getMetaData().path;
 
         item = items.getRecordById(id);
         while (item) {
@@ -397,7 +397,7 @@ let _private = {
  * @author Авраменко А.С.
  */
 
-let Mover = BaseAction.extend({
+const Mover = BaseAction.extend({
     _action: null,
     _moveDialogTemplate: null,
     _moveDialogOptions: null,

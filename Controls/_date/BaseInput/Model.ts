@@ -16,8 +16,8 @@ const _private = {
          }
       },
       updateValue(self, value) {
-         const oldValue = self._value,
-            oldTextValue = self._textValue;
+         const oldValue = self._value;
+         const oldTextValue = self._textValue;
          self._value = value;
 
          _private.updateLastValue(self);

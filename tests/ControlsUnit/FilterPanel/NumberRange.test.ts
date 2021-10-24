@@ -10,7 +10,7 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
         let textValue = null;
         const event = {
             target: {
-                closest: () => {}
+                closest: () => {/* FIXME: sinon mock */}
             }
         };
         numberRangeEditor._notify = (eventName, extendedValue) => {
@@ -47,7 +47,7 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
         const numberRangeEditor = new NumberRangeEditor({});
         const event = {
             target: {
-                closest: () => {}
+                closest: () => {/* FIXME: sinon mock */}
             }
         };
         numberRangeEditor._applyButtonSticky = new StickyOpener();
@@ -75,7 +75,7 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
         let changesNotified = false;
         const event = {
             target: {
-                closest: () => {}
+                closest: () => {/* FIXME: sinon mock */}
             }
         };
         numberRangeEditor._notify = (actionName: string) => {

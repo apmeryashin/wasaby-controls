@@ -44,8 +44,8 @@ function nodeToJson(node) {
          // After that convert child nodes and push them to array.
          let firstChild;
          if (node.hasChildNodes()) {
-            let childNodes = node.childNodes,
-               child;
+            const childNodes = node.childNodes;
+            let child;
 
             // Recursive converting of children.
             for (let i = 0; i < childNodes.length; ++i) {
@@ -97,12 +97,12 @@ const htmlToJson = function(html) {
          return [[], html];
       }
 
-      let div = document.createElement('div'),
-         rootNode,
-         rootNodeTagName,
-         rootNodeAttributes,
-         hasRootTag,
-         result;
+      let div = document.createElement('div');
+      let rootNode;
+      let rootNodeTagName;
+      let rootNodeAttributes;
+      let hasRootTag;
+      let result;
       div.innerHTML = html.trim();
       hasRootTag = div.innerHTML[0] === '<';
       result = nodeToJson(div).slice(1);

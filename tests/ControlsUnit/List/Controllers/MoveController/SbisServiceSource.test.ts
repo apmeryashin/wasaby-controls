@@ -285,7 +285,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         // Попытка вызвать move() с некорректным filter
         it ('should not move with incorrect filter (sbisService)', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
-            return controller.move(selectionObject, () => {}, 4, LOCAL_MOVE_POSITION.On)
+            return controller.move(selectionObject, () => {/* FIXME: sinon mock */}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
@@ -431,7 +431,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with position === LOCAL_MOVE_POSITION.Before', () => {
             const spyMove = sandbox.spy(sbisServiceSource, 'move');
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -460,7 +460,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     return Promise.resolve();
                 });
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -493,7 +493,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     return Promise.resolve();
                 });
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -508,7 +508,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyConfirmation = sandbox.spy(popup.Confirmation, 'openPopup');
             // @ts-ignore
             return controller.moveWithDialog(['1', '2', '2'], {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch((error) => {
                     callCatch = true;
                     assert.notEqual(error, 'FAKE');
@@ -528,7 +528,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyConfirmation = sandbox.spy(popup.Confirmation, 'openPopup');
             // @ts-ignore
             return controller.moveWithDialog(undefined, {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch((error) => {
                     callCatch = true;
                     assert.notEqual(error, 'FAKE');
@@ -553,7 +553,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const stubConfirmation = sandbox.stub(popup.Confirmation, 'openPopup').callsFake((args) => Promise.resolve(true));
             // @ts-ignore
             return controller.moveWithDialog(correctSelection, {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -659,8 +659,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 })))
             )));
             controller = new MoveController({...cfg, source: (sbisServiceSource as SbisService)});
-            return controller.moveWithDialog(selectionObject, () => {})
-                .then((result: DataSet) => {})
+            return controller.moveWithDialog(selectionObject, () => {/* FIXME: sinon mock */})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })

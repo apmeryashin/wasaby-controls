@@ -278,6 +278,7 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
 
    it('.avatarItem', () => {
       assert.isNotOk(strategy.avatarItem);
+       // tslint:disable-next-line:no-unused-expression
       strategy.items;
       assert.equal(strategy.avatarItem.getContents(), display.getItemBySourceKey(1).getContents());
    });

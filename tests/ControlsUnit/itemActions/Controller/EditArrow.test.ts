@@ -67,7 +67,7 @@ function mockCollection(item: IItemActionsItem): IItemActionsCollection {
         setActionsTemplateConfig(state: IItemActionsTemplateConfig): void {
             this.actionsTemplateConfig = state;
         },
-        nextVersion: () => {}
+        nextVersion: () => {/* FIXME: sinon mock */}
     } as undefined as IItemActionsCollection;
 }
 

@@ -156,7 +156,7 @@ export default class extends Control {
 
    protected _itemsChanged(event, items) {
       let parentId;
-      let correctKeys = [];
+      const correctKeys = [];
       if (items.at(0) && items.at(0).get('parent')) {
          items.clear();
       } else {
@@ -186,10 +186,9 @@ export default class extends Control {
    }
 
    protected selectorCallback(event, currentItems, newItems) {
-      let
-          indexForReplace = -1,
-          newItem = newItems.at(newItems.getCount() - 1),
-          propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';
+      let indexForReplace = -1;
+      const newItem = newItems.at(newItems.getCount() - 1);
+      const propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';
 
       // Определяем, добавить элемент или заменить
       currentItems.each(function(item, index) {

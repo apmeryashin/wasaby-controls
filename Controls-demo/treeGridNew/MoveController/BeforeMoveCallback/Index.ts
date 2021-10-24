@@ -58,7 +58,7 @@ export default class extends Control {
              .then(() => {
                   this._children.treeGrid.reload();
               })
-             .catch(() => {});
+             .catch(() => {/* FIXME: sinon mock */});
       }
    }
 

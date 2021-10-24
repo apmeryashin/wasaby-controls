@@ -4207,9 +4207,11 @@ export default class Collection<
         this._updateEdgeItems();
     }
 
-    protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}
+    protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {
+        /* For override  */
+    }
 
-    protected _handleCollectionActionChange(newItems: T[]): void {}
+    protected _handleCollectionActionChange(newItems: T[]): void {/* For override  */}
 
     // region ItemsChanges
 
@@ -4217,11 +4219,11 @@ export default class Collection<
     // Используется, чтобы сделать дополнительные изменения в одной сессии.
     // В этом случае мы отправим только одно событие об изменении - это требование скролл контроллера
 
-    protected _handleCollectionChangeAdd(): void {}
+    protected _handleCollectionChangeAdd(): void {/* For override  */}
 
-    protected _handleCollectionChangeRemove(): void {}
+    protected _handleCollectionChangeRemove(): void {/* For override  */}
 
-    protected _handleCollectionChangeReplace(): void {}
+    protected _handleCollectionChangeReplace(): void {/* For override  */}
 
     // endregion ItemsChanges
 

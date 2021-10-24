@@ -7,8 +7,8 @@ const mockedCollection = {
     hasMultiSelectColumn: () => false,
     hasItemActionsSeparatedCell: () => false,
     getIndex: () => 0,
-    notifyItemChange: () => {},
-    getItemEditorTemplate: () => {},
+    notifyItemChange: () => {/* FIXME: sinon mock */},
+    getItemEditorTemplate: () => {/* FIXME: sinon mock */},
     isFullGridSupport: () => true,
     hasColumnScroll: () => false
 } as GridCollection<Model>;

@@ -91,9 +91,8 @@ const Utils = {
     * @returns {Number}
     */
    getFirstDayOffset(year, month) {
-      const
-         date = new WSDate(year, month ? month - 1 : 0),
-         day = date.getDay();
+      const date = new WSDate(year, month ? month - 1 : 0);
+      const day = date.getDay();
 
       return day ? day - 1 : 6; // Воскресенье 0-й день
    },
@@ -115,9 +114,8 @@ const Utils = {
     * @returns {Number}
     */
    getWeeksInMonth(year, month) {
-      const
-         days = this.getDaysInMonth(year, month),
-         offset = this.getFirstDayOffset(year, month);
+      const days = this.getDaysInMonth(year, month);
+      const offset = this.getFirstDayOffset(year, month);
 
       return Math.ceil((days + offset) / 7);
    },
@@ -131,11 +129,10 @@ const Utils = {
     * @returns {Array}
     */
    getWeeksArray(date: Date, mode: WEEKS_MODE, dateConstructor: Function = WSDate): Date[][] {
-      const
-         weeksArray: [] = [],
-         year: number = date.getFullYear(),
-         month: number = date.getMonth() + 1,
-         weeksInMonth: number = mode === WEEKS_MODE.extended ? 6 : this.getWeeksInMonth(year, month);
+      const weeksArray: [] = [];
+      const year: number = date.getFullYear();
+      const month: number = date.getMonth() + 1;
+      const weeksInMonth: number = mode === WEEKS_MODE.extended ? 6 : this.getWeeksInMonth(year, month);
 
       let
          monthDate: number = this.getFirstDayOffset(year, month) * -1 + 1;
@@ -154,8 +151,13 @@ const Utils = {
    },
 
    updateRangeByQuantum(baseDate, date, quantum) {
-      let lastQuantumLength, lastQuantumType,
-         days, start, end, i, date2;
+      let lastQuantumLength;
+      let lastQuantumType;
+      let days;
+      let start;
+      let end;
+      let i;
+      let date2;
 
       if ('days' in quantum) {
          lastQuantumType = 'days';

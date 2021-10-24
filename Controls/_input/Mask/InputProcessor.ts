@@ -34,8 +34,9 @@ const InputProcessor = {
      * @return {Object}
      */
     getClearSplitValue(splitValue, clearData) {
-        let clearSplitValue = {};
-        let start = 0, position;
+        const clearSplitValue = {};
+        let start = 0;
+        let position;
 
         clearSplitValue.before = clearData.value.substring(start, clearData.positions[splitValue.before.length]);
         start = clearSplitValue.before.length;

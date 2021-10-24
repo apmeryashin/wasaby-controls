@@ -11,7 +11,9 @@ import * as ListData from 'ControlsUnit/ListData';
 import { Model } from 'Types/entity';
 
 describe('Controls/marker/Controller', () => {
-   let controller, model, items;
+   let controller;
+   let model;
+   let items;
 
    beforeEach(() => {
       items = new RecordSet({

@@ -79,10 +79,9 @@ const _private = {
 
 export = {
       fillItemsType(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
-         let
-            itemsSizes,
-            currentWidth,
-            visibleItemsKeys = [];
+         let itemsSizes;
+         let currentWidth;
+         const visibleItemsKeys = [];
 
          actualItems(items);
 

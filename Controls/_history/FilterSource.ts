@@ -412,7 +412,8 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
    update(data, meta) {
       const self = this;
-      let serData, item;
+      let serData;
+      let item;
 
       if (meta.hasOwnProperty('$_pinned')) {
          _private.updatePinned(this, data, meta);

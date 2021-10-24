@@ -17,14 +17,18 @@ export default function scheduleCallbackAfterRedraw(
    let oldAU = instance._afterUpdate;
 
    instance._beforeUpdate = function() {
-      oldBU && oldBU.apply(instance, arguments);
+      if (oldBU) {
+          oldBU.apply(instance, arguments);
+      }
       instance._beforeUpdate = oldBU;
       oldBU = null;
       hasUpdated = true;
    };
 
    instance._afterUpdate = function() {
-      oldAU && oldAU.apply(instance, arguments);
+      if (oldAU) {
+          oldAU.apply(instance, arguments);
+      }
       if (hasUpdated) {
          instance._afterUpdate = oldAU;
          oldAU = null;

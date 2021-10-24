@@ -131,6 +131,7 @@ describe('Controls/_display/itemsStrategy/NodeFooter', () => {
             nodeFooterVisibilityCallback: () => true,
             nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow'
         });
+        // tslint:disable-next-line:no-unused-expression
         strategy.items;
 
         assert.isFalse(calledForNodeWithMore);

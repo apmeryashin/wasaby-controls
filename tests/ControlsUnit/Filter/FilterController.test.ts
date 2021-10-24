@@ -116,8 +116,8 @@ describe('Controls/filter:ControllerClass', () => {
 
         const addToHistoryStub = sandbox.stub(controller, '_addToHistory');
         sandbox.stub(controller, '_deleteCurrentFilterFromHistory');
-        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {});
-        sandbox.replace(Prefetch, 'applyPrefetchFromItems', () => {});
+        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {/* FIXME: sinon mock */});
+        sandbox.replace(Prefetch, 'applyPrefetchFromItems', () => {/* FIXME: sinon mock */});
 
         controller.handleDataLoad();
         assert.isFalse(controller._isFilterChanged);
@@ -138,8 +138,8 @@ describe('Controls/filter:ControllerClass', () => {
             })
         });
         sandbox.stub(controller, '_deleteCurrentFilterFromHistory');
-        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {});
-        sandbox.replace(controller, '_addToHistory', () => {});
+        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {/* FIXME: sinon mock */});
+        sandbox.replace(controller, '_addToHistory', () => {/* FIXME: sinon mock */});
 
         controller.handleDataLoad(items);
         assert.ok(controller.getFilter().PrefetchSessionId === 'testId');

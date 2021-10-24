@@ -85,7 +85,7 @@ describe('Controls/display/GridDataCell', () => {
                 isActive: () => false,
                 getRowSeparatorSize: () => 's',
                 getEditingConfig: () => ({}),
-                getItemEditorTemplate: () => {},
+                getItemEditorTemplate: () => {/* FIXME: sinon mock */},
                 isFullGridSupport: () => true
             } as undefined as GridCollection<Model>;
             return new GridDataRow({

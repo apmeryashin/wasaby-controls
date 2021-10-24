@@ -485,9 +485,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _canScroll(date: Date): boolean {
         const itemContainer: HTMLElement = this._findElementByDate(date);
 
-        let itemDimensions: ClientRect,
-            containerDimensions: ClientRect,
-            scrollTop: number;
+        let itemDimensions: ClientRect;
+        let containerDimensions: ClientRect;
+        let scrollTop: number;
 
         if (!itemContainer) {
             return false;
@@ -517,7 +517,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _findElementByDate(date: Date): HTMLElement {
-        let element: HTMLElement | null;
         const templates = {
             day: {
                 condition: date.getDate() !== 1,

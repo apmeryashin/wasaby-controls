@@ -283,10 +283,9 @@ export default class Cell<
     wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
     wrapperClasses += this._getWrapperSeparatorClasses();
 
-    if (hasColumnScroll) {
-        } else {
-            wrapperClasses += ' controls-Grid__cell_fit';
-        }
+    if (!hasColumnScroll) {
+        wrapperClasses += ' controls-Grid__cell_fit';
+    }
 
     if (this.isEditing()) {
             wrapperClasses += ' controls-Grid__row-cell-editing';
