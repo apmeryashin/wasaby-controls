@@ -121,14 +121,13 @@ export default class StringValueConverter {
 
     getCurrentDate(baseValue, mask): DateTime | Date {
         baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1904, 0, 1);
-        let
-            year = baseValue.getFullYear(),
-            month = baseValue.getMonth(),
-            date = baseValue.getDate(),
-            hours = baseValue.getHours(),
-            minutes = baseValue.getMinutes(),
-            seconds = baseValue.getSeconds(),
-            now = new Date();
+        let year = baseValue.getFullYear();
+        let month = baseValue.getMonth();
+        let date = baseValue.getDate();
+        let hours = baseValue.getHours();
+        let minutes = baseValue.getMinutes();
+        let seconds = baseValue.getSeconds();
+        let now = new Date();
         if (mask.indexOf('YYYY') > -1) {
             year = now.getFullYear();
         } else if (mask.indexOf('YY') > -1) {
@@ -174,10 +173,9 @@ export default class StringValueConverter {
     }
 
     private _getFullYearBy2DigitsYear(valueYear: number): number {
-        const
-            curYear = (new Date()).getFullYear(),
-            shortCurYear = curYear % 100,
-            curCentury = (curYear - shortCurYear);
+        const curYear = (new Date()).getFullYear();
+        const shortCurYear = curYear % 100;
+        const curCentury = (curYear - shortCurYear);
 
         // Если год задаётся двумя числами, то считаем что это текущий век
         // если год меньше или равен текущему году + 10, иначе это прошлый век.
@@ -210,9 +208,10 @@ export default class StringValueConverter {
     }
 
     private _updateModelByMask(valueModel: object, str: string): object {
-        let maskItems = this._mask.split(/[.: /]/g),
-            strItems = str.split(/[.: /]/g),
-            i, valueObject;
+        let maskItems = this._mask.split(/[.: /]/g);
+        let strItems = str.split(/[.: /]/g);
+        let i;
+        let valueObject;
 
         for (i = 0; i < maskItems.length; i++) {
             valueObject = valueModel[MASK_MAP[maskItems[i]]];
@@ -296,9 +295,11 @@ export default class StringValueConverter {
     }
 
     private _autocomplete(valueModel, autocompleteType = 'default', inputType = 'default', required: boolean = false): void {
-        let now = new Date(),
-            maskType = getMaskType(this._mask),
-            item, itemValue, isZeroAtBeginning;
+        let now = new Date();
+        let maskType = getMaskType(this._mask);
+        let item;
+        let itemValue;
+        let isZeroAtBeginning;
 
         const getDate = function(autocompliteDefaultDate) {
             autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();

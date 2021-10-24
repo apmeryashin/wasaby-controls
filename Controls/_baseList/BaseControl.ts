@@ -2761,8 +2761,8 @@ const _private = {
         }
     },
     getDragOffset(moveEvent, startEvent): object {
-        const moveEventXY = _private.getPageXY(moveEvent),
-            startEventXY = _private.getPageXY(startEvent);
+        const moveEventXY = _private.getPageXY(moveEvent);
+        const startEventXY = _private.getPageXY(startEvent);
 
         return {
             y: moveEventXY.y - startEventXY.y,

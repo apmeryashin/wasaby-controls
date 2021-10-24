@@ -75,13 +75,12 @@ let _private = {
     },
 
     reorderMove(self, items, target, position) {
-        let
-           movedIndex,
-           movedItem,
-           parentProperty = self._options.parentProperty,
-           targetId = _private.getIdByItem(self, target),
-           targetItem = _private.getModelByItem(self, targetId),
-           targetIndex = self._items.getIndex(targetItem);
+        let movedIndex;
+        let movedItem;
+        let parentProperty = self._options.parentProperty;
+        let targetId = _private.getIdByItem(self, target);
+        let targetItem = _private.getModelByItem(self, targetId);
+        let targetIndex = self._items.getIndex(targetItem);
 
         items.forEach(function(item) {
             movedItem = _private.getModelByItem(self, item);
@@ -151,12 +150,11 @@ let _private = {
      * @private
      */
     getTargetItem(self, item, position: LOCAL_MOVE_POSITION): Model {
-        let
-            result,
-            display,
-            itemIndex,
-            siblingItem,
-            itemFromProjection;
+        let result;
+        let display;
+        let itemIndex;
+        let siblingItem;
+        let itemFromProjection;
 
         // В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
         // В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
@@ -218,10 +216,9 @@ let _private = {
     },
 
     checkItem(self, item, target, position) {
-        let
-            key,
-            parentsMap,
-            movedItem = _private.getModelByItem(self, item);
+        let key;
+        let parentsMap;
+        let movedItem = _private.getModelByItem(self, item);
 
         if (target !== null) {
             target = _private.getModelByItem(self, target);
@@ -242,11 +239,10 @@ let _private = {
     },
 
     getParentsMap(self, id) {
-        let
-            item,
-            toMap = [],
-            items = self._items,
-            path = items.getMetaData().path;
+        let item;
+        let toMap = [];
+        let items = self._items;
+        let path = items.getMetaData().path;
 
         item = items.getRecordById(id);
         while (item) {

@@ -8,18 +8,18 @@ import {FormatBuilder, Formatter, phoneMask, REPLACER, FORMAT_MASK_CHARS} from '
  * @author Красильников А.С.
  */
 
-let _private = {
+const _private = {
     NOT_PHONE_NUMBER_SYMBOLS_REGEXP: /[^0-9+]/g,
 
     updateFormat(self, value) {
-        let mask = phoneMask(value);
+        const mask = phoneMask(value);
 
         self._format = FormatBuilder.getFormat(mask, FORMAT_MASK_CHARS, REPLACER);
         self._nextVersion();
     },
 
     prepareData(result) {
-        let position = result.position;
+        const position = result.position;
 
         return {
             before: result.value.substring(0, position),
@@ -30,7 +30,7 @@ let _private = {
     }
 };
 
-let ViewModel = BaseViewModel.extend({
+const ViewModel = BaseViewModel.extend({
     _format: null,
 
     _convertToValue(displayValue) {
@@ -87,10 +87,10 @@ let ViewModel = BaseViewModel.extend({
     },
 
     isFilled() {
-        let value = this._value === null ? '' : this._value;
-        let mask = phoneMask(value);
-        let keysRegExp = new RegExp('[' + Object.keys(FORMAT_MASK_CHARS).join('|') + ']', 'g');
-        let maskOfKeys = mask.match(keysRegExp);
+        const value = this._value === null ? '' : this._value;
+        const mask = phoneMask(value);
+        const keysRegExp = new RegExp('[' + Object.keys(FORMAT_MASK_CHARS).join('|') + ']', 'g');
+        const maskOfKeys = mask.match(keysRegExp);
 
         return value.length === maskOfKeys.length;
     },

@@ -169,9 +169,8 @@ let CompoundArea = CompoundContainer.extend([
    },
 
    rebuildChildControl() {
-      let
-         self = this,
-         rebuildDeferred;
+      let self = this;
+      let rebuildDeferred;
 
       self._childConfig._compoundArea = self;
 
@@ -960,28 +959,27 @@ let CompoundArea = CompoundContainer.extend([
       }
    },
    _setRecord(record) {
-      let oldRecord = this.getRecord(),
-         context = this.getLinkedContext(),
-         self = this,
-         setRecordFunc = function() {
-            if (self._options.clearContext) {
-               context.setContextData(record);
-            } else {
-               context.replaceRecord(record);
-            }
-            if (self.isNewRecord()) {
-               self._options.newRecord = record.getKey() === null;
-            }
-            self._record = record;
-            self._notify('onChangeRecord', record, oldRecord); // Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
-         },
-         result;
-      result = this._notify('onBeforeChangeRecord', record, oldRecord);
+      let oldRecord = this.getRecord();
+      let context = this.getLinkedContext();
+      let self = this;
+      let setRecordFunc = () => {
+          if (self._options.clearContext) {
+              context.setContextData(record);
+          } else {
+              context.replaceRecord(record);
+          }
+          if (self.isNewRecord()) {
+              self._options.newRecord = record.getKey() === null;
+          }
+          self._record = record;
+          self._notify('onChangeRecord', record, oldRecord); // Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+      };
+      let result = this._notify('onBeforeChangeRecord', record, oldRecord);
       cDeferred.callbackWrapper(result, setRecordFunc.bind(this));
    },
    openConfirmDialog(noHide) {
-      let self = this,
-         deferred = new cDeferred();
+      let self = this;
+      let deferred = new cDeferred();
       this._displaysConfirmDialog = true;
       deferred.addCallback(function(result) {
          self._notify('onConfirmDialogSelect', result);
@@ -1219,12 +1217,11 @@ let CompoundArea = CompoundContainer.extend([
       return className;
    },
    _toggleVisible(visible) {
-      let
-         prevVisible = this._isVisible,
-         popupContainer = this.getContainer().closest('.controls-Popup')[0],
-         id = this._getPopupId(),
-         popupConfig = this._getManagerConfig(),
-         self = this;
+      let prevVisible = this._isVisible;
+      let popupContainer = this.getContainer().closest('.controls-Popup')[0];
+      let id = this._getPopupId();
+      let popupConfig = this._getManagerConfig();
+      let self = this;
 
       if (popupConfig) {
          // Удалим или поставим ws-hidden в зависимости от переданного аргумента
@@ -1363,9 +1360,8 @@ let CompoundArea = CompoundContainer.extend([
       while (ops.length > 0) {
          this._unregisterPendingOperation(ops[0]);
       }
-      let
-         operation = this._allChildrenPendingOperation,
-         message;
+      let operation = this._allChildrenPendingOperation;
+      let message;
 
       if (this._isFinishingChildOperations) {
          message = 'У контрола ' + this._moduleName + ' (name = ' + this.getName() + ', id = ' + this.getId() + ') вызывается метод destroy, ' +
@@ -1389,11 +1385,10 @@ let CompoundArea = CompoundContainer.extend([
    },
 
    _clearInformationOnParentFromCfg() {
-      let
-         parent = this.__parentFromCfg,
-         id = this._id,
-         name = this._options.name,
-         tabindex = this._options.tabindex;
+      let parent = this.__parentFromCfg;
+      let id = this._id;
+      let name = this._options.name;
+      let tabindex = this._options.tabindex;
 
       if (parent._childsMapId) {
          let mapId = parent._childsMapId[id];
@@ -1431,15 +1426,14 @@ let CompoundArea = CompoundContainer.extend([
    },
 
    _registerPendingOperation(name, finishFunc, registerTarget) {
-      let
-         name = this._moduleName ? this._moduleName + '/' + name : name,
-         operation = {
-            name,
-            finishFunc,
-            cleanup: null,
-            control: this,
-            registerTarget
-         };
+      let name = this._moduleName ? this._moduleName + '/' + name : name;
+      let operation = {
+          name,
+          finishFunc,
+          cleanup: null,
+          control: this,
+          registerTarget
+      };
 
       operation.cleanup = this._removeOpFromCollections.bind(this, operation);
       if (operation.registerTarget) {
@@ -1468,7 +1462,8 @@ let CompoundArea = CompoundContainer.extend([
    },
 
    _registerChildPendingOperation(operation) {
-      let name, finishFunc;
+      let name;
+      let finishFunc;
 
       this._childPendingOperations.push(operation);
 
@@ -1483,9 +1478,8 @@ let CompoundArea = CompoundContainer.extend([
    },
 
    _unregisterChildPendingOperation(operation) {
-      let
-         childOps = this._childPendingOperations,
-         allChildrenPendingOperation;
+      let childOps = this._childPendingOperations;
+      let allChildrenPendingOperation;
 
       if (childOps.length > 0) {
          removeOperation(operation, childOps);
@@ -1503,9 +1497,9 @@ let CompoundArea = CompoundContainer.extend([
       let
          self = this,
          checkFn = function(prevResult) {
-            let
-               childOps = self._childPendingOperations,
-               result, allChildrenPendingOperation;
+            let childOps = self._childPendingOperations;
+            let result;
+            let allChildrenPendingOperation;
 
             function cleanupFirst() {
                if (childOps.length > 0) {
@@ -1585,8 +1579,8 @@ let CompoundArea = CompoundContainer.extend([
     * @returns {Array} Массив объектов, хранящих пендинг и информацию, откуда был добавлен пендинг
     */
    getAllPendingInfo() {
-      let res = [],
-         self = this;
+      let res = [];
+      let self = this;
       this._pending.forEach(function(pending, index) {
          res.push({
             pending,
@@ -1620,7 +1614,8 @@ let CompoundArea = CompoundContainer.extend([
       return false;
    },
    _checkPendingOperations(res) {
-      let totalOps = this._pending.length, result;
+      let totalOps = this._pending.length;
+      let result;
 
       // Сперва отберем Deferred, которые завершились
       result = this._pending.filter(function(dfr) {
@@ -1681,8 +1676,8 @@ let CompoundArea = CompoundContainer.extend([
       return this._linkedView;
    },
    _changeSelectionHandler(event, result) {
-      let linkedView = this.getLinkedView(),
-          item = result.item;
+      let linkedView = this.getLinkedView();
+      let item = result.item;
       if (linkedView.getSelectedKeys().length) {
          return;
       }

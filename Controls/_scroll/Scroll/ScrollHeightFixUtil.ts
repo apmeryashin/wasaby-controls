@@ -1,6 +1,6 @@
 import {constants, detection} from 'Env/Env';
 
-let _private = {
+const _private = {
 
          /**
           * Расчитать функцию расчета значения для css свойства overflow.

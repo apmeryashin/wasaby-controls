@@ -170,7 +170,7 @@ class ModuleClass {
     }
 
     protected _getChangedIndex(ranges: Date[]): number {
-        for (let i in this.ranges) {
+        for (const i in this.ranges) {
             if (!dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) || !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])) {
                 return parseInt(i, 10);
             }
@@ -181,7 +181,7 @@ class ModuleClass {
     private _getRangesFromOptions(options) {
         let ranges = [],
             i, j;
-        for (let field in options) {
+        for (const field in options) {
             if (options.hasOwnProperty(field)) {
                 i = null;
                 if (field.indexOf('startValue') === 0) {

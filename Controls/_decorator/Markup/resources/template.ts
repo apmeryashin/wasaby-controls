@@ -4,6 +4,7 @@ import {Logger} from 'UI/Utils';
 import {constants} from 'Env/Env';
 import { _FocusAttrs } from 'UI/Focus';
 
+/* tslint:disable */
 const lowerValidNodes = Object.assign(
     ...Object.keys(validHtml.validNodes).map((key) => {
         return { [key.toLowerCase()]: validHtml.validNodes[key] };
@@ -168,7 +169,7 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       }
       wasResolved = value !== valueToBuild;
       resolverMode ^= wasResolved;
-      let children = [];
+      const children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
             children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild));
@@ -203,7 +204,7 @@ function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 
-let template = function(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
+const template = function(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
       markupGenerator = thelpers.createGenerator(isVdom, forceCompatible, generatorConfig);
       defCollection = {
          id: [],

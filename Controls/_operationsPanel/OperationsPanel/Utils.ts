@@ -12,7 +12,7 @@ import {constants} from 'Env/Env';
 
 let MENU_WIDTH = 0;
 
-let _private = {
+const _private = {
       initializeConstants(theme: string) {
          if (!MENU_WIDTH) {
             const iconClass = `icon-medium icon-SettingsNew controls-Toolbar__menu_spacing-small_theme-${theme}`;

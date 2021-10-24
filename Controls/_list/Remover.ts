@@ -14,7 +14,7 @@ interface IOptions {
     items?: RecordSet;
 }
 
-let _private = {
+const _private = {
     removeFromItems(self, keys) {
         let item;
         self._items.setEventRaising(false, true);
@@ -34,7 +34,7 @@ let _private = {
     },
 
     afterItemsRemove(self, keys, result) {
-        let afterItemsRemoveResult = self._notify('afterItemsRemove', [keys, result]);
+        const afterItemsRemoveResult = self._notify('afterItemsRemove', [keys, result]);
 
         // According to the standard, after moving the items, you need to unselect all in the table view.
         // The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
@@ -97,7 +97,7 @@ let _private = {
  * @author Авраменко А.С.
  */
 
-let Remover = BaseAction.extend({
+const Remover = BaseAction.extend({
     _beforeMount(options, context) {
         _private.updateDataOptions(this, options, context.dataOptions);
         Logger.warn('Controls/list:Remover: Класс устарел и будет удалён.' +

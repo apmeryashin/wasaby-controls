@@ -37,13 +37,12 @@ export default class extends Control {
     }
 
     protected selectorCallback(event, currentItems, newItems) {
-        let
-            indexForReplace = -1,
-            newItem = newItems.at(newItems.getCount() - 1),
-            propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';
+        let indexForReplace = -1;
+        let newItem = newItems.at(newItems.getCount() - 1);
+        let propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';
 
         // Определяем, добавить элемент или заменить
-        currentItems.each(function(item, index) {
+        currentItems.each((item, index) => {
             if (item.has(propName)) {
                 indexForReplace = index;
             }

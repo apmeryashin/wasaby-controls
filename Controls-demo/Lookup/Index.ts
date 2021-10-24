@@ -122,15 +122,14 @@ export default class extends Control {
    }
 
    protected showSelectorCustomPlaceholder(event, type) {
-      let
-          items = this._itemsCustomPlaceholder,
-          countItems = items && items.getCount(),
-          parent = countItems ? items.at(countItems - 1).get('id') : null,
-          templateOptions = {
-             parent,
-             type,
-             multiSelect: false
-          };
+      const items = this._itemsCustomPlaceholder;
+      const countItems = items && items.getCount();
+      const parent = countItems ? items.at(countItems - 1).get('id') : null;
+      const templateOptions = {
+          parent,
+          type,
+          multiSelect: false
+      };
 
       this._children.lookupCustomPlaceholder.showSelector({
          templateOptions
@@ -138,8 +137,7 @@ export default class extends Control {
    }
 
    protected showSelectorCustomPlaceholder2(event, type) {
-      let
-          templatesOptions = {
+      const templatesOptions = {
              company: {
                 headingCaption: 'Выберите организацию (+длинный текст для проверки, что caption обрезается)',
                 source:  this._source
@@ -157,9 +155,8 @@ export default class extends Control {
    }
 
    protected _itemsChanged(event, items) {
-      let
-          parentId,
-          correctKeys = [];
+      let parentId;
+      let correctKeys = [];
       if (items.at(0) && items.at(0).get('parent')) {
          items.clear();
       } else {

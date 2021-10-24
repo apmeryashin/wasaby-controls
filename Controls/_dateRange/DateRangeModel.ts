@@ -18,7 +18,7 @@ import CalendarUtils from './Utils';
  * @public
  * @noShow
  */
-let _private = {
+const _private = {
    setStartValue(self, value) {
       const startValueResetTime = Base.normalizeDate(self._startValue);
       if (Base.isDatesEqual(startValueResetTime, value)) {
@@ -47,7 +47,7 @@ let _private = {
 
 // TODO: Переделать на класс
 
-let ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
+const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
    _options: null,
    _dateConstructor: DateTime,
 
@@ -109,7 +109,7 @@ let ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
-   _hitsDisplayedRange(date: Date, index: Number): boolean {
+   _hitsDisplayedRange(date: Date, index: number): boolean {
       // Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
       // то можно бесконечно переключать период.
       return this._options.displayedRanges[index][0] <= date &&
@@ -154,7 +154,9 @@ let ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       const adjacentArray = this._options.displayedRanges[arrayIndex + direction];
 
       if (this._options.displayedRanges[arrayIndex + direction]) {
-         let year, startValueMonth, endValueMonth;
+         let year;
+         let startValueMonth;
+         let endValueMonth;
          const monthsInYear = 12;
          if (direction === 1) {
             startValueMonth = 0;

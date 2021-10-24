@@ -1,6 +1,6 @@
 import isEmpty = require('Core/helpers/Object/isEmpty');
 
-let Utils = {
+const Utils = {
 
    /**
     * Returns the list of days of the week

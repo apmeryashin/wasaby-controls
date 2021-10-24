@@ -133,9 +133,8 @@ let ItemsViewModel = BaseViewModel.extend({
     },
 
     setIndexes(newStartIndex: number, stopIndex: number): boolean {
-        let
-            newStopIndex = Math.min(stopIndex, this.getCount()),
-            isUpdated = false;
+        let newStopIndex = Math.min(stopIndex, this.getCount());
+        let isUpdated = false;
 
         if (this._startIndex !== newStartIndex || this._stopIndex !== newStopIndex) {
             this._startIndex = newStartIndex;
@@ -244,21 +243,20 @@ let ItemsViewModel = BaseViewModel.extend({
             return this.getCachedItemData(cacheKey);
         }
 
-        let
-            self = this,
-            itemData = {
-                getPropValue: ItemsUtil.getPropertyValue,
-                style: this._options.style,
-                keyProperty: this.getKeyProperty(),
-                index: this._display.getIndex(dispItem),
-                item: dispItem.getContents(),
-                dispItem,
-                theme: this.getTheme(),
-                _preferVersionAPI: true,
-                getVersion(): string {
-                    return self._calcItemVersion(itemData.item, itemData.key);
-                }
-            };
+        let self = this;
+        let itemData = {
+            getPropValue: ItemsUtil.getPropertyValue,
+            style: this._options.style,
+            keyProperty: this.getKeyProperty(),
+            index: this._display.getIndex(dispItem),
+            item: dispItem.getContents(),
+            dispItem,
+            theme: this.getTheme(),
+            _preferVersionAPI: true,
+            getVersion(): string {
+                return self._calcItemVersion(itemData.item, itemData.key);
+            }
+        };
 
         // The key of breadcrumbs row is the key of the last item in the crumbs.
         if (dispItem.getContents() instanceof Array) {
@@ -373,9 +371,8 @@ let ItemsViewModel = BaseViewModel.extend({
     },
 
     getNext() {
-        let
-            itemIndex = this._curIndex + 1,
-            dispItem = this._display.at(itemIndex);
+        let itemIndex = this._curIndex + 1;
+        let dispItem = this._display.at(itemIndex);
         return {
             getPropValue: ItemsUtil.getPropertyValue,
             keyProperty: this.getKeyProperty(),

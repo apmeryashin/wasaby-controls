@@ -280,28 +280,26 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       }));
    });
 
-   it('_calculatingSizes', function() {
-      let
+   it('_calculatingSizes', () => {
       // min width const 4 * FIELD_WRAPPER_MIN_HEIGHT = 100;
-         FIELD_WRAPPER_MIN_HEIGHT = 25,
-         FIELD_WRAPPER_WIDTH = 300,
-         ITEM_WIDTH = 50,
-         COUNTER_WIDTH = 20,
-         MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
+      let FIELD_WRAPPER_MIN_HEIGHT = 25;
+      let FIELD_WRAPPER_WIDTH = 300;
+      let ITEM_WIDTH = 50;
+      let COUNTER_WIDTH = 20;
+      let MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
 
-      let
-         lookup = new Lookup(),
-         getItemsSizesLastRow = lookup._getItemsSizesLastRow,
-         getCounterWidth = lookup._getCounterWidth,
-         initializeConstants = lookup._initializeConstants,
-         newOptions = {
-            maxVisibleItems: 7,
-            multiSelect: true,
-            multiLine: false,
-            readOnly: false,
-            fontSize: 's',
-            theme: 'testTheme'
-         };
+      let lookup = new Lookup();
+      let getItemsSizesLastRow = lookup._getItemsSizesLastRow;
+      let getCounterWidth = lookup._getCounterWidth;
+      let initializeConstants = lookup._initializeConstants;
+      let newOptions = {
+         maxVisibleItems: 7,
+         multiSelect: true,
+         multiLine: false,
+         readOnly: false,
+         fontSize: 's',
+         theme: 'testTheme'
+      };
 
       const sandbox = createSandbox();
 
@@ -321,7 +319,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       lookup._fieldWrapperWidth = FIELD_WRAPPER_WIDTH;
       lookup._fieldWrapperMinHeight = FIELD_WRAPPER_MIN_HEIGHT;
 
-      lookup._getItemsSizesLastRow = function() {
+      lookup._getItemsSizesLastRow = () => {
          let numberItems = lookup._items.getCount();
 
          if (newOptions.multiLine) {
@@ -337,10 +335,10 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          return new Array(numberItems).fill(ITEM_WIDTH);
       };
 
-      lookup._getCounterWidth = function() {
+      lookup._getCounterWidth = () => {
          return COUNTER_WIDTH;
       };
-      lookup._initializeConstants = function() {};
+      lookup._initializeConstants = () => {};
 
       newOptions.multiSelect = true;
       lookup._calculateSizes(newOptions);
@@ -385,7 +383,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       lookup._initializeConstants = initializeConstants;
    });
 
-   it('getCollectionOptions', function() {
+   it('getCollectionOptions', () => {
       let standardOptions = {
          itemTemplate: 'testItemTemplate',
          readOnly: 'testReadOnly',
@@ -405,7 +403,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          theme: 'default'
       };
 
-      const lookup = new Lookup();
+      const lookup = new Lookup({});
 
       deepStrictEqual(lookup._getCollectionOptions(controlOptions, 10, '10px'), standardOptions);
 

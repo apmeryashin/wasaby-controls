@@ -207,14 +207,13 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._suggestState);
    });
 
-   it('_onClickClearRecords', function() {
-      let
-         configActivate,
-         activated = false,
-         lookup = new Lookup();
+   it('_onClickClearRecords', () => {
+      let configActivate;
+      let activated = false;
+      let lookup = new Lookup();
 
       lookup._beforeMount({selectedKeys: []});
-      lookup.activate = function(config) {
+      lookup.activate = (config) => {
          configActivate = config;
          activated = true;
       };
@@ -226,23 +225,22 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_keyDown', function() {
-      let
-         isNotifyShowSelector = false,
-         isNotifyRemoveItems = false,
-         lookup = new Lookup(),
-         eventBackspace = {
-            nativeEvent: {
-               keyCode: constants.key.backspace
-            }
-         },
-         eventNotBackspace = {
-            nativeEvent: {}
-         },
-         eventF2 = {
-            nativeEvent: {
-               keyCode: 113
-            }
-         };
+      let isNotifyShowSelector = false;
+      let isNotifyRemoveItems = false;
+      let lookup = new Lookup();
+      let eventBackspace = {
+          nativeEvent: {
+              keyCode: constants.key.backspace
+          }
+      };
+      let eventNotBackspace = {
+          nativeEvent: {}
+      };
+      let eventF2 = {
+          nativeEvent: {
+              keyCode: 113
+          }
+      };
 
       lookup._removeItem = (item) => {
          isNotifyRemoveItems = true;
@@ -285,10 +283,9 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_openInfoBox', function() {
-      let
-         config = {},
-         isNotifyOpenPopup = false,
-         lookup = getLookup();
+      let config = {};
+      let isNotifyOpenPopup = false;
+      let lookup = getLookup();
 
       lookup._suggestState = true;
       lookup._getContainer = function() {
@@ -315,9 +312,8 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_closeInfoBox', function() {
-      let
-         isNotifyClosePopup = false,
-         lookup = new Lookup();
+      let isNotifyClosePopup = false;
+      let lookup = new Lookup();
 
       lookup._infoboxOpened = true;
       lookup._notify = function(eventName) {
@@ -392,9 +388,8 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_isInputActive', function() {
-      let
-         inputIsVisible = true,
-         lookup = new Lookup();
+      let inputIsVisible = true;
+      let lookup = new Lookup();
       lookup._items = getItems(0);
 
       lookup._isInputVisible = function() {
@@ -432,9 +427,8 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_itemClick', function() {
-      let
-         isNotifyItemClick = false,
-         lookup = getLookup();
+      let isNotifyItemClick = false;
+      let lookup = getLookup();
 
       lookup._suggestState = true;
       lookup._notify = function(eventName) {
@@ -475,12 +469,11 @@ describe('Controls/_lookup/BaseLookupView', function() {
    });
 
    it('_resize', function() {
-      let
-         lookupView = new Lookup(),
-         oldFieldWrapperWidth = 500,
-         newFieldWrapperWidth = 500,
-         isCalculatingSizes = false,
-         wrapperWidthCalled = false;
+      let lookupView = new Lookup({});
+      let oldFieldWrapperWidth = 500;
+      let newFieldWrapperWidth = 500;
+      let isCalculatingSizes = false;
+      let wrapperWidthCalled = false;
 
       lookupView._isNeedCalculatingSizes = () => true;
       lookupView._getFieldWrapperWidth = (recount) => {

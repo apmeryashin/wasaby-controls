@@ -64,10 +64,10 @@ if (constants.isBrowserPlatform) {
             this.isIntersecting = !!entry.intersectionRect;
 
             // Calculates the intersection ratio.
-            let targetRect = this.boundingClientRect;
-            let targetArea = targetRect.width * targetRect.height;
-            let intersectionRect = this.intersectionRect;
-            let intersectionArea = intersectionRect.width * intersectionRect.height;
+            const targetRect = this.boundingClientRect;
+            const targetArea = targetRect.width * targetRect.height;
+            const intersectionRect = this.intersectionRect;
+            const intersectionArea = intersectionRect.width * intersectionRect.height;
 
             // Sets intersection ratio.
             if (targetArea) {
@@ -89,7 +89,7 @@ if (constants.isBrowserPlatform) {
          */
         function IntersectionObserver(callback, opt_options) {
 
-            let options = opt_options || {};
+            const options = opt_options || {};
 
             if (typeof callback != 'function') {
                 throw new Error('callback must be a function');
@@ -142,7 +142,7 @@ if (constants.isBrowserPlatform) {
          * @param {Element} target The DOM element to observe.
          */
         IntersectionObserver.prototype.observe = function(target) {
-            let isTargetAlreadyObserved = this._observationTargets.some(function(item) {
+            const isTargetAlreadyObserved = this._observationTargets.some(function(item) {
                 return item.element == target;
             });
 
@@ -192,7 +192,7 @@ if (constants.isBrowserPlatform) {
          * @return {Array} The currently queued entries.
          */
         IntersectionObserver.prototype.takeRecords = function() {
-            let records = this._queuedEntries.slice();
+            const records = this._queuedEntries.slice();
             this._queuedEntries = [];
             return records;
         };
@@ -232,9 +232,9 @@ if (constants.isBrowserPlatform) {
          *     value and unit.
          */
         IntersectionObserver.prototype._parseRootMargin = function(opt_rootMargin) {
-            let marginString = opt_rootMargin || '0px';
-            let margins = marginString.split(/\s+/).map(function(margin) {
-                let parts = /^(-?\d*\.?\d+)(px|%)$/.exec(margin);
+            const marginString = opt_rootMargin || '0px';
+            const margins = marginString.split(/\s+/).map(function(margin) {
+                const parts = /^(-?\d*\.?\d+)(px|%)$/.exec(margin);
                 if (!parts) {
                     throw new Error('rootMargin must be specified in pixels or percent');
                 }
@@ -308,18 +308,18 @@ if (constants.isBrowserPlatform) {
          * @private
          */
         IntersectionObserver.prototype._checkForIntersections = function() {
-            let rootIsInDom = this._rootIsInDom();
-            let rootRect = rootIsInDom ? this._getRootRect() : getEmptyRect();
+            const rootIsInDom = this._rootIsInDom();
+            const rootRect = rootIsInDom ? this._getRootRect() : getEmptyRect();
 
             this._observationTargets.forEach(function(item) {
-                let target = item.element;
-                let targetRect = getBoundingClientRect(target);
-                let rootContainsTarget = this._rootContainsTarget(target);
-                let oldEntry = item.entry;
-                let intersectionRect = rootIsInDom && rootContainsTarget &&
+                const target = item.element;
+                const targetRect = getBoundingClientRect(target);
+                const rootContainsTarget = this._rootContainsTarget(target);
+                const oldEntry = item.entry;
+                const intersectionRect = rootIsInDom && rootContainsTarget &&
                     this._computeTargetAndRootIntersection(target, rootRect);
 
-                let newEntry = item.entry = new IntersectionObserverEntry({
+                const newEntry = item.entry = new IntersectionObserverEntry({
                     time: now(),
                     target,
                     boundingClientRect: targetRect,
@@ -370,14 +370,14 @@ if (constants.isBrowserPlatform) {
                     return;
                 }
 
-                let targetRect = getBoundingClientRect(target);
+                const targetRect = getBoundingClientRect(target);
                 let intersectionRect = targetRect;
                 let parent = getParentNode(target);
                 let atRoot = false;
 
                 while (!atRoot) {
                     let parentRect = null;
-                    let parentComputedStyle = parent.nodeType == 1
+                    const parentComputedStyle = parent.nodeType == 1
                         ? window.getComputedStyle(parent) : {};
 
                     // If the parent isn't displayed, an intersection can't happen.
@@ -449,8 +449,8 @@ if (constants.isBrowserPlatform) {
                 rootRect = getBoundingClientRect(this.root);
             } else {
                 // Use <html>/<body> instead of window since scroll bars affect size.
-                let html = document.documentElement;
-                let body = document.body;
+                const html = document.documentElement;
+                const body = document.body;
                 rootRect = {
                     top: 0,
                     left: 0,
@@ -470,11 +470,11 @@ if (constants.isBrowserPlatform) {
          * @private
          */
         IntersectionObserver.prototype._expandRectByRootMargin = function(rect) {
-            let margins = this._rootMarginValues.map(function(margin, i) {
+            const margins = this._rootMarginValues.map(function(margin, i) {
                 return margin.unit == 'px' ? margin.value
                     : margin.value * (i % 2 ? rect.width : rect.height) / 100;
             });
-            let newRect = {
+            const newRect = {
                 top: rect.top - margins[0],
                 right: rect.right + margins[1],
                 bottom: rect.bottom + margins[2],
@@ -501,9 +501,9 @@ if (constants.isBrowserPlatform) {
 
                 // To make comparing easier, an entry that has a ratio of 0
                 // but does not actually intersect is given a value of -1
-                let oldRatio = oldEntry && oldEntry.isIntersecting
+                const oldRatio = oldEntry && oldEntry.isIntersecting
                     ? oldEntry.intersectionRatio || 0 : -1;
-                let newRatio = newEntry.isIntersecting
+                const newRatio = newEntry.isIntersecting
                     ? newEntry.intersectionRatio || 0 : -1;
 
                 // Ignore unchanged ratios
@@ -512,7 +512,7 @@ if (constants.isBrowserPlatform) {
                 }
 
                 for (let i = 0; i < this.thresholds.length; i++) {
-                    let threshold = this.thresholds[i];
+                    const threshold = this.thresholds[i];
 
                     // Return true if an entry matches a threshold or if the new ratio
                     // and the old ratio are on the opposite sides of a threshold.
@@ -558,7 +558,7 @@ if (constants.isBrowserPlatform) {
          * @private
          */
         IntersectionObserver.prototype._unregisterInstance = function() {
-            let index = registry.indexOf(this);
+            const index = registry.indexOf(this);
             if (index != -1) {
                 registry.splice(index, 1);
             }
@@ -633,12 +633,12 @@ if (constants.isBrowserPlatform) {
          *     is found.
          */
         function computeRectIntersection(rect1, rect2) {
-            let top = Math.max(rect1.top, rect2.top);
-            let bottom = Math.min(rect1.bottom, rect2.bottom);
-            let left = Math.max(rect1.left, rect2.left);
-            let right = Math.min(rect1.right, rect2.right);
-            let width = right - left;
-            let height = bottom - top;
+            const top = Math.max(rect1.top, rect2.top);
+            const bottom = Math.min(rect1.bottom, rect2.bottom);
+            const left = Math.max(rect1.left, rect2.left);
+            const right = Math.min(rect1.right, rect2.right);
+            const width = right - left;
+            const height = bottom - top;
 
             return (width >= 0 && height >= 0) && {
                 top,
@@ -725,7 +725,7 @@ if (constants.isBrowserPlatform) {
          * @return {Node|null} The parent node or null if no parent exists.
          */
         function getParentNode(node) {
-            let parent = node.parentNode;
+            const parent = node.parentNode;
 
             if (parent && parent.nodeType == 11 && parent.host) {
                 // If the parent is a shadow root, return the host element.

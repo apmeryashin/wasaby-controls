@@ -21,7 +21,9 @@ describe('Controls/_multiselection/Controller', () => {
       keyProperty: 'id'
    });
 
-   let controller, model, strategy;
+   let controller;
+   let model;
+   let strategy;
 
    beforeEach(() => {
       model = new Collection({

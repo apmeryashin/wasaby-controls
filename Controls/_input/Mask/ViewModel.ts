@@ -8,7 +8,7 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
        * @private
        * @author Красильников А.С.
        */
-let _private = {
+const _private = {
          updateFormatMaskChars(self, formatMaskChars) {
             if (self._formatMaskChars === formatMaskChars) {
                return;
@@ -19,9 +19,9 @@ let _private = {
          },
 
          prepareSplitValue(result) {
-            let position = result.position;
-            let before = result.value.substring(0, position);
-            let after = result.value.substring(position, result.value.length);
+            const position = result.position;
+            const before = result.value.substring(0, position);
+            const after = result.value.substring(position, result.value.length);
 
             return {
                before,

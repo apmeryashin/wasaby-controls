@@ -412,10 +412,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return;
         }
 
-        const
-            time = entry.data.date.getTime(),
-            index = this._displayedDates.indexOf(time),
-            isDisplayed = index !== -1;
+        const time = entry.data.date.getTime();
+        const index = this._displayedDates.indexOf(time);
+        const isDisplayed = index !== -1;
 
         if (entry.nativeEntry.isIntersecting && entry.nativeEntry.intersectionRatio >= this._options.itemDataLoadRatio &&
                 !isDisplayed && entry.data.type === ITEM_TYPES.body) {

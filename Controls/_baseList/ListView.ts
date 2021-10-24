@@ -55,7 +55,7 @@ const _private = {
         const item = itemData?.item;
         if (item !== self._hoveredItem) {
             self._hoveredItem = item;
-            let container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
+            const container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
             self._notify('hoveredItemChanged', [item, container]);
         }
     }
@@ -300,13 +300,13 @@ const ListView = Control.extend(
                     return;
                 }
 
-                let item = dispItem.getContents();
+                const item = dispItem.getContents();
                 this._notify('itemClick', [item, e]);
             }
         },
 
         _onGroupClick(e, dispItem) {
-            let item = dispItem.getContents();
+            const item = dispItem.getContents();
             this._notify('groupClick', [item, e]);
         },
 

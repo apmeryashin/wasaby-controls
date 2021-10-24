@@ -13,8 +13,8 @@ const enum WEEKS_MODE {
    extended = 'extended'
 }
 
-let getDayRange = function(startDate, endDate, quantum) {
-   let date = new WSDate(startDate);
+const getDayRange = function(startDate, endDate, quantum) {
+   const date = new WSDate(startDate);
    if (startDate <= endDate) {
       date.setDate(date.getDate() + quantum - 1);
       return [startDate, date];
@@ -29,7 +29,7 @@ let getDayRange = function(startDate, endDate, quantum) {
  * @public
  * @author Красильников А.С.
  */
-let Utils = {
+const Utils = {
 
    /**
     * Возвращает список названий дней недели.
@@ -91,7 +91,7 @@ let Utils = {
     * @returns {Number}
     */
    getFirstDayOffset(year, month) {
-      let
+      const
          date = new WSDate(year, month ? month - 1 : 0),
          day = date.getDay();
 
@@ -115,7 +115,7 @@ let Utils = {
     * @returns {Number}
     */
    getWeeksInMonth(year, month) {
-      let
+      const
          days = this.getDaysInMonth(year, month),
          offset = this.getFirstDayOffset(year, month);
 

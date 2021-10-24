@@ -52,9 +52,8 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
    });
 
    it('_calculateSizes', function() {
-      let
-         availableWidthCollection = 200,
-         lookupView = new Lookup();
+      let availableWidthCollection = 200;
+      let lookupView = new Lookup({});
 
       lookupView._getAvailableWidthCollection = function() {
          return availableWidthCollection;
