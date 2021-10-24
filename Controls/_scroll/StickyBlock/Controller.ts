@@ -131,10 +131,9 @@ class StickyHeaderController {
                      considerOffsetTop: boolean = true): number {
         // type, предпологается, в будущем будет иметь еще одно значение, при котором будет высчитываться
         // высота всех зафиксированных на текущий момент заголовков.
-        let
-            height: number = 0,
-            replaceableHeight: number = 0,
-            header;
+        let height: number = 0;
+        let replaceableHeight: number = 0;
+        let header;
         let hasOffsetTop: boolean = false;
         const headers = this._headersStack;
         for (const headerId of headers[position]) {
@@ -637,15 +636,13 @@ class StickyHeaderController {
     }
 
     private _updateFixedInitially(position: POSITION): void {
-        const
-            container: HTMLElement = this._container,
-            headersStack: number[] = this._headersStack[position],
-            content: HTMLCollection = container.children,
-            contentContainer: HTMLElement = position === POSITION.top ? content[0] : content[content.length - 1];
+        const container: HTMLElement = this._container;
+        const headersStack: number[] = this._headersStack[position];
+        const content: HTMLCollection = container.children;
+        const contentContainer: Element = position === POSITION.top ? content[0] : content[content.length - 1];
 
-        let
-            headersHeight: number = 0,
-            headerInst: StickyBlock;
+        let headersHeight: number = 0;
+        let headerInst: StickyBlock;
 
         for (const headerId: number of headersStack) {
             headerInst = this._headers[headerId].inst;
@@ -731,9 +728,9 @@ class StickyHeaderController {
         this._resetSticky();
 
         fastUpdate.measure(() => {
-            let header: IRegisterEventData,
-                curHeader: IRegisterEventData,
-                prevHeader: IRegisterEventData;
+            let header: IRegisterEventData;
+            let curHeader: IRegisterEventData;
+            let prevHeader: IRegisterEventData;
 
             // Проверяем, имеет ли заголовок в родителях прямых родителей предыдущих заголовков.
             // Если имеет, значит заголовки находятся в одном контейнере -> высчитываем offset и добавляем к заголовку.

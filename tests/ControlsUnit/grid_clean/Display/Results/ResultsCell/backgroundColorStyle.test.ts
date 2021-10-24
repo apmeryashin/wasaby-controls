@@ -70,8 +70,14 @@ describe('Controls/grid/Display/Results/ResultsCell/backgroundColorStyle', () =>
         // + backgroundColorStyle
         // = backgroundColorStyle
         it('+backgroundStyle=default, +style=default, +backgroundColorStyle', () => {
-            cell = new GridResultsCell({ owner, column: { width: ''}, backgroundStyle: 'default', theme: 'default', style: 'default' });
-            cAssert.include(cell.getWrapperClasses( 'blue',  false),
+            cell = new GridResultsCell({
+                owner,
+                column: {width: ''},
+                backgroundStyle: 'default',
+                theme: 'default',
+                style: 'default'
+            });
+            cAssert.include(cell.getWrapperClasses('blue', false),
                 'controls-background-blue');
             cAssert.notInclude(cell.getWrapperClasses('blue', false),
                 ['controls-background-default']);

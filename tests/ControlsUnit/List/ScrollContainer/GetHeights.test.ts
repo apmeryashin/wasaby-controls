@@ -13,14 +13,14 @@ describe('getItemsHeightsData', () => {
                     height: 100
                 };
             },
-            closest() {}
+            closest() {/* FIXME: sinon mock */}
         };
     };
     before(() => {
         isNode = typeof document === 'undefined';
         if (isNode) {
                 global.window = {
-                    getComputedStyle: () => {}
+                    getComputedStyle: () => {/* FIXME: sinon mock */}
                 };
             }
     });

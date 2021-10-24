@@ -144,7 +144,7 @@ describe('Controls/search:ControllerClass', () => {
    });
 
    it('search with searchStartCallback', async () => {
-      const sourceController = getSourceController({
+      sourceController = getSourceController({
          source: new Memory()
       });
       let searchStarted = false;
@@ -183,7 +183,7 @@ describe('Controls/search:ControllerClass', () => {
       });
 
       it('filter with "Разворот"', async () => {
-         const sourceController = getSourceController();
+         sourceController = getSourceController();
          const searchController = getSearchController({
             parentProperty: 'Раздел',
             sourceController
@@ -234,7 +234,7 @@ describe('Controls/search:ControllerClass', () => {
          }
 
          it('root before search should saved after reset search', async () => {
-            const sourceController = getSourceController(getHierarchyOptions());
+            sourceController = getSourceController(getHierarchyOptions());
             const searchControllerOptions = {
                sourceController,
                ...getHierarchyOptions()
@@ -251,7 +251,7 @@ describe('Controls/search:ControllerClass', () => {
          });
 
          it('update root while searching', async () => {
-            const sourceController = getSourceController(getHierarchyOptions());
+            sourceController = getSourceController(getHierarchyOptions());
             let searchControllerOptions = {
                sourceController,
                ...getHierarchyOptions()
@@ -267,7 +267,7 @@ describe('Controls/search:ControllerClass', () => {
          });
 
          it('update with same root while searching', async () => {
-            const sourceController = getSourceController(getHierarchyOptions());
+            sourceController = getSourceController(getHierarchyOptions());
             let searchControllerOptions = {
                sourceController,
                ...getHierarchyOptions()
@@ -429,7 +429,7 @@ describe('Controls/search:ControllerClass', () => {
    it('search with filterOnSearchCallback option', async () => {
       const filter = {};
       const source = getMemorySource();
-      const sourceController = new NewSourceController({
+      sourceController = new NewSourceController({
          source
       });
       await sourceController.reload();
@@ -454,11 +454,11 @@ describe('Controls/search:ControllerClass', () => {
          source.query = () => {
             return Promise.reject();
          };
-         const sourceController = getSourceController({
+         sourceController = getSourceController({
             source
          });
          const searchController = getSearchController({sourceController});
-         await searchController.search('testSearchValue').catch(() => {});
+         await searchController.search('testSearchValue').catch(() => {/* FIXME: sinon mock */});
          assert.deepStrictEqual(
              sourceController.getFilter(),
              {
@@ -483,7 +483,7 @@ describe('Controls/search:ControllerClass', () => {
             root: 'testRoot',
             startingWith: 'root'
          };
-         const sourceController = getSourceController({
+         sourceController = getSourceController({
             source: new Memory(),
             ...hierarchyOptions
          });
@@ -504,7 +504,7 @@ describe('Controls/search:ControllerClass', () => {
       });
 
       it('search with expandedItems', async () => {
-         let sourceController = getSourceController({
+         sourceController = getSourceController({
             source: new Memory(),
             expandedItems: ['test']
          });
@@ -522,7 +522,7 @@ describe('Controls/search:ControllerClass', () => {
       });
 
       it('inputSearchValue changed while search is in process', async () => {
-         const sourceController = getSourceController();
+         sourceController = getSourceController();
          const searchController = getSearchController({sourceController});
          const searchPromise = searchController.search('testSearchValue');
          searchController.setInputSearchValue('newInputSearchValue');

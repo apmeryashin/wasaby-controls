@@ -12,7 +12,7 @@ import {constants} from 'Env/Env';
 
 let MENU_WIDTH = 0;
 
-let _private = {
+const _private = {
       initializeConstants(theme: string) {
          if (!MENU_WIDTH) {
             const iconClass = `icon-medium icon-SettingsNew controls-Toolbar__menu_spacing-small_theme-${theme}`;
@@ -71,7 +71,7 @@ let _private = {
       },
 
       setShowType(items, type) {
-         items.each(function(item) {
+         items.each((item) => {
             item.set('showType', type);
          });
       }
@@ -79,14 +79,13 @@ let _private = {
 
 export = {
       fillItemsType(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
-         let
-            itemsSizes,
-            currentWidth,
-            visibleItemsKeys = [];
+         let itemsSizes;
+         let currentWidth;
+         const visibleItemsKeys = [];
 
          actualItems(items);
 
-         items.each(function(item) {
+         items.each((item) => {
             if (!item.get(parentProperty)) {
                visibleItemsKeys.push(item.get(keyProperty));
             }
@@ -96,7 +95,7 @@ export = {
             _private.setShowType(items, showType.TOOLBAR);
          } else {
             itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
-            currentWidth = itemsSizes.reduce(function(acc, width) {
+            currentWidth = itemsSizes.reduce((acc, width) => {
                return acc + width;
             }, 0);
 

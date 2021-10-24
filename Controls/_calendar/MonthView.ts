@@ -114,7 +114,7 @@ export default class MonthView extends Control<IControlOptions> {
     }
 
    private _updateView(options): void {
-      let newMonth = options.month || new options.dateConstructor();
+      const newMonth = options.month || new options.dateConstructor();
 
       // localization can change in runtime, take the actual translation of the months each time the component
       // is initialized. In the array, the days of the week are in the same order as the return values

@@ -38,8 +38,8 @@ export default class MonthViewModel extends VersionableMixin {
     }
 
     updateOptions(options) {
-        const state = this._normalizeState(options),
-            changed = this._isStateChanged(state);
+        const state = this._normalizeState(options);
+        const changed = this._isStateChanged(state);
         this._state = state;
         if (changed) {
             this._validateWeeksArray();
@@ -52,10 +52,10 @@ export default class MonthViewModel extends VersionableMixin {
     }
 
     _prepareClass(scope, fontColorStyle, backgroundStyle, borderStyle, fontWeight): string {
-        let textColorClass = 'controls-MonthView__textColor',
-            backgroundColorClass = 'controls-MonthView__backgroundColor',
-            backgroundColorClassRangeHovered,
-            css = [];
+        let textColorClass = 'controls-MonthView__textColor';
+        let backgroundColorClass = 'controls-MonthView__backgroundColor';
+        let backgroundColorClassRangeHovered;
+        const css = [];
 
         if (scope.isCurrentMonth) {
             textColorClass += '-currentMonthDay';
@@ -226,12 +226,12 @@ export default class MonthViewModel extends VersionableMixin {
         state = state || this._state;
         /* Опция _date устаналивается только(!) в демках, для возможности протестировать
          визуальное отображение текущей даты */
-        const obj = {},
-            today = this._state._date ?
-                DateUtil.normalizeDate(this._state._date) :
-                DateUtil.normalizeDate(new this._state.dateConstructor()),
-            firstDateOfMonth = DateUtil.getStartOfMonth(date),
-            lastDateOfMonth = DateUtil.getEndOfMonth(date);
+        const obj = {};
+        const today = this._state._date ?
+            DateUtil.normalizeDate(this._state._date) :
+            DateUtil.normalizeDate(new this._state.dateConstructor());
+        const firstDateOfMonth = DateUtil.getStartOfMonth(date);
+        const lastDateOfMonth = DateUtil.getEndOfMonth(date);
 
         obj.readOnly = state.readOnly;
         if (!obj.readOnly && this._isDayAvailable) {

@@ -323,9 +323,9 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
                 return source.query(test.query.limit(test.limit || LIMIT)).then((resp) => {
                     resp = resp.getAll().getRawData();
                     assert.lengthOf(resp, test.resp.length);
-                    resp.forEach((item, i) => {
-                        assert.strictEqual(item.id, test.resp[i].id);
-                        assert.strictEqual(item.type, test.resp[i].type);
+                    resp.forEach((item, idx) => {
+                        assert.strictEqual(item.id, test.resp[idx].id);
+                        assert.strictEqual(item.type, test.resp[idx].type);
                     });
                 });
             });

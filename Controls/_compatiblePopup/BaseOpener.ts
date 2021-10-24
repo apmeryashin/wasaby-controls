@@ -49,9 +49,8 @@ const BaseOpener = {
    _prepareConfigForOldTemplate(cfg, templateClass): void {
       let rightOffset = cfg.isStack ? this._getTargetRightCoords() : 0;
       rightOffset += RIGHT_PANEL_WIDTH;
-      let
-         templateOptions = this._getTemplateOptions(templateClass),
-         parentContext;
+      const templateOptions = this._getTemplateOptions(templateClass);
+      let parentContext;
 
       cfg.templateOptions = {
          templateOptions: cfg.templateOptions || cfg.componentOptions || {},
@@ -232,8 +231,8 @@ const BaseOpener = {
    },
 
    _prepareContext(cfg, parentContext) {
-      let destroyDef = new Deferred(),
-         destrFunc = function() {
+      let destroyDef = new Deferred();
+      const destrFunc = function() {
             // Защита от двойного вызова обработчика
             // Обработчик зовется два раза:
             // Сначала из _notifyCompound, а потом из eventBus

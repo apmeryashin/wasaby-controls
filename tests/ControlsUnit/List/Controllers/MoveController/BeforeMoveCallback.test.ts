@@ -136,7 +136,7 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
 
         return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -156,7 +156,7 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
 
         return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -176,7 +176,7 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
 
         return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -196,7 +196,7 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
 
         return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -216,7 +216,7 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
 
         return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })

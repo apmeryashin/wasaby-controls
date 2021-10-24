@@ -25,7 +25,7 @@ import 'Controls/popupTemplate';
        * @public
        */
 
-let List = Control.extend({
+const List = Control.extend({
 
          _template: template,
          _resizeTimeout: null,

@@ -58,7 +58,12 @@ describe('Controls/grid/Display/Cell/background/hoverBackgroundStyle', () => {
         });
 
         it('column.hoverBackgroundStyle=transparent', () => {
-            cell = new GridCell({ owner, column: { width: '', hoverBackgroundStyle: 'transparent'}, theme: 'default', style: 'default' });
+            cell = new GridCell({
+                owner,
+                column: {width: '', hoverBackgroundStyle: 'transparent'},
+                theme: 'default',
+                style: 'default'
+            });
             cAssert.notInclude(cell.getWrapperClasses(undefined, true),
                 'controls-Grid__row-cell-background-hover-default');
         });
@@ -92,12 +97,14 @@ describe('Controls/grid/Display/Cell/background/hoverBackgroundStyle', () => {
         });
 
         // Если на шаблоне выключен ховер для всей строки, то нет смысла подсвечивать какую-то одну
+        // tslint:disable-next-line:max-line-length
         it('templateHighlightOnHover=false, templateHoverBackgroundStyle=custom2, column.hoverBackgroundStyle=custom', () => {
             cell = new GridCell({ owner, column: { width: '', hoverBackgroundStyle: 'custom'} });
             cAssert.notInclude(cell.getContentClasses( undefined, 'default', false, true, 'custom2'),
                 'controls-Grid__item_background-hover_custom');
         });
 
+        // tslint:disable-next-line:max-line-length
         it('templateHighlightOnHover=true, templateHoverBackgroundStyle=custom2, column.hoverBackgroundStyle=custom', () => {
             cell = new GridCell({ owner, column: { width: '', hoverBackgroundStyle: 'custom'} });
             cAssert.include(cell.getContentClasses(undefined, 'default', true, true, 'custom2'),

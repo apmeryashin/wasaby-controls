@@ -101,7 +101,7 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
     }
 
     protected _keyDownHandler() {
-
+        /* For override  */
     }
 
     protected _getModelConstructor(): string|Function {

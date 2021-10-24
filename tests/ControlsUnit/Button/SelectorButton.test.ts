@@ -23,9 +23,9 @@ describe('Controls/_lookup/Button/', (): void => {
       maxVisibleItems: 2
    };
 
-   const getButton = (config: ITestOptions): SelectorButton => {
-      const selButton: SelectorButton = new SelectorButton(config);
-      selButton.saveOptions(config);
+   const getButton = (cfg: ITestOptions): SelectorButton => {
+      const selButton: SelectorButton = new SelectorButton(cfg);
+      selButton.saveOptions(cfg);
       return selButton;
    };
 

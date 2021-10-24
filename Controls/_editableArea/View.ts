@@ -10,7 +10,6 @@ import 'css!Controls/CommonClasses';
 import 'css!Controls/editableArea';
 import 'css!Controls/list';
 
-'use strict';
 /**
  * Контроллер для <a href="/doc/platform/developmentapl/interface-development/controls/input-elements/input/edit/">редактирования по месту в полях ввода</a>.
  *

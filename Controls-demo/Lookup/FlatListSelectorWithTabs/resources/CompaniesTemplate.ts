@@ -9,24 +9,26 @@ export default class extends Control {
     protected _source: Memory;
     protected _keyProperty: string = 'id';
     protected _beforeMount(options) {
-        let keyProperty = this._keyProperty;
+        const keyProperty = this._keyProperty;
         this._filter = {...options.filter};
         this._source = new Memory({
             data: _companies,
             filter(item, queryFilter) {
-                let selectionFilterFn = function(item, filter) {
+                const selectionFilterFn = (optItem, filter) => {
                     let isSelected = false;
-                    let itemId = item.get('id');
+                    const itemId = optItem.get('id');
 
-                    filter.selection.get('marked').forEach(function(selectedId) {
-                        if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
+                    filter.selection.get('marked').forEach((selectedId) => {
+                        if (selectedId === itemId || (
+                            selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1
+                        )) {
                             isSelected = true;
                         }
                     });
 
                     return isSelected;
                 };
-                let normalFilterFn = MemorySourceFilter();
+                const normalFilterFn = MemorySourceFilter();
 
                 return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
             },

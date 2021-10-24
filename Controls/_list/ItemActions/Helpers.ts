@@ -30,12 +30,11 @@ function getDisplay(items, parentProperty, nodeProperty, root) {
 }
 
 function getSiblingItem(direction, item, items, parentProperty, nodeProperty, root) {
-    let
-       result,
-       display,
-       itemIndex,
-       siblingItem,
-       itemFromProjection;
+    let result;
+    let display;
+    let itemIndex;
+    let siblingItem;
+    let itemFromProjection;
 
     // В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
     // В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,

@@ -21,5 +21,8 @@ export default class extends Control {
         });
     }
 
-    static _styles: string[] = ['Controls-demo/treeGridNew/ItemTemplate/WithPhoto/styles', 'Controls-demo/Controls-demo'];
+    static _styles: string[] = [
+        'Controls-demo/treeGridNew/ItemTemplate/WithPhoto/styles',
+        'Controls-demo/Controls-demo'
+    ];
 }

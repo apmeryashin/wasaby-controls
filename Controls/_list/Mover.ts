@@ -20,14 +20,14 @@ import {BEFORE_ITEMS_MOVE_RESULT, IMoveItemsParams} from './interface/IMoverAndR
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
-let _private = {
+const _private = {
     moveItems(self, items, target, position) {
         const useAction = _private.useAction(items);
-        const afterItemsMove = function(result) {
+        const afterItemsMove = (result) => {
             _private.afterItemsMove(self, items, target, position, result);
             return result;
         };
-        return _private.beforeItemsMove(self, items, target, position).addCallback(function(beforeItemsMoveResult) {
+        return _private.beforeItemsMove(self, items, target, position).addCallback((beforeItemsMoveResult) => {
             if (useAction) {
                 return self._action.execute({
                     selection: _private.convertItemsToISelectionObject(items),
@@ -40,7 +40,7 @@ let _private = {
             if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
                 return _private.moveInItems(self, items, target, position);
             } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-                return _private.moveInSource(self, items, target, position).addCallback(function(moveResult) {
+                return _private.moveInSource(self, items, target, position).addCallback((moveResult) => {
                     _private.moveInItems(self, items, target, position);
                     return moveResult;
                 });
@@ -49,7 +49,7 @@ let _private = {
     },
 
     beforeItemsMove(self, items, target, position) {
-        let beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
+        const beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
@@ -75,15 +75,14 @@ let _private = {
     },
 
     reorderMove(self, items, target, position) {
-        let
-           movedIndex,
-           movedItem,
-           parentProperty = self._options.parentProperty,
-           targetId = _private.getIdByItem(self, target),
-           targetItem = _private.getModelByItem(self, targetId),
-           targetIndex = self._items.getIndex(targetItem);
+        let movedIndex;
+        let movedItem;
+        const parentProperty = self._options.parentProperty;
+        const targetId = _private.getIdByItem(self, target);
+        const targetItem = _private.getModelByItem(self, targetId);
+        let targetIndex = self._items.getIndex(targetItem);
 
-        items.forEach(function(item) {
+        items.forEach((item) => {
             movedItem = _private.getModelByItem(self, item);
             if (movedItem) {
                 if (position === LOCAL_MOVE_POSITION.Before) {
@@ -112,8 +111,8 @@ let _private = {
     },
 
     hierarchyMove(self, items, target) {
-        let targetId = _private.getIdByItem(self, target);
-        items.forEach(function(item) {
+        const targetId = _private.getIdByItem(self, target);
+        items.forEach((item) => {
             item = _private.getModelByItem(self, item);
             if (item) {
                 item.set(self._options.parentProperty, targetId);
@@ -123,7 +122,7 @@ let _private = {
 
     moveInSource(self, items, target, position) {
         const targetId = _private.getIdByItem(self, target);
-        const idArray = items.map(function(item) {
+        const idArray = items.map((item) => {
             return _private.getIdByItem(self, item);
         });
 
@@ -151,12 +150,11 @@ let _private = {
      * @private
      */
     getTargetItem(self, item, position: LOCAL_MOVE_POSITION): Model {
-        let
-            result,
-            display,
-            itemIndex,
-            siblingItem,
-            itemFromProjection;
+        let result;
+        let display;
+        let itemIndex;
+        let siblingItem;
+        let itemFromProjection;
 
         // В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
         // В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
@@ -218,10 +216,9 @@ let _private = {
     },
 
     checkItem(self, item, target, position) {
-        let
-            key,
-            parentsMap,
-            movedItem = _private.getModelByItem(self, item);
+        let key;
+        let parentsMap;
+        const movedItem = _private.getModelByItem(self, item);
 
         if (target !== null) {
             target = _private.getModelByItem(self, target);
@@ -242,11 +239,10 @@ let _private = {
     },
 
     getParentsMap(self, id) {
-        let
-            item,
-            toMap = [],
-            items = self._items,
-            path = items.getMetaData().path;
+        let item;
+        const toMap = [];
+        const items = self._items;
+        const path = items.getMetaData().path;
 
         item = items.getRecordById(id);
         while (item) {
@@ -260,7 +256,7 @@ let _private = {
             item = items.getRecordById(id);
         }
         if (path) {
-            path.forEach(function(elem) {
+            path.forEach((elem) => {
                 if (toMap.indexOf(elem.get(self._keyProperty)) === -1) {
                     toMap.push('' + elem.get(self._keyProperty));
                 }
@@ -296,7 +292,7 @@ let _private = {
 
     prepareMovedItems(self, items) {
         const result = [];
-        items.forEach(function(item) {
+        items.forEach((item) => {
             result.push(_private.getIdByItem(self, item));
         });
         return result;
@@ -401,7 +397,7 @@ let _private = {
  * @author Авраменко А.С.
  */
 
-let Mover = BaseAction.extend({
+const Mover = BaseAction.extend({
     _action: null,
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
@@ -432,7 +428,7 @@ let Mover = BaseAction.extend({
         if (_private.useAction(items)) {
             return _private.moveItems(self, items, target, position);
         } else {
-            return _private.getItemsBySelection.call(this, items).addCallback(function(items) {
+            return _private.getItemsBySelection.call(this, items).addCallback((items) => {
                 items = items.filter((item) => {
                     return _private.checkItem(self, item, target, position);
                 });
@@ -463,11 +459,9 @@ let Mover = BaseAction.extend({
     }
 });
 
-Mover.getDefaultOptions = function() {
-    return {
-        sortingOrder: DEFAULT_SORTING_ORDER
-    };
-};
+Mover.getDefaultOptions = () => ({
+    sortingOrder: DEFAULT_SORTING_ORDER
+});
 
 Object.defineProperty(Mover, 'defaultProps', {
    enumerable: true,

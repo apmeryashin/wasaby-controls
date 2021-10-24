@@ -51,25 +51,22 @@ export default class MonthsSource extends Memory {
     }
 
     query(query: Query)/*: ExtendPromise<DataSet>*/ {
-        let
-            offset = query.getOffset(),
-            where = query.getWhere(),
-            limit = query.getLimit() || 1,
-            executor;
+        const offset = query.getOffset();
+        const where = query.getWhere();
+        const limit = query.getLimit() || 1;
+        let executor;
 
         executor = (() => {
-            let
-                adapter = this.getAdapter().forTable(),
-                items = [],
-                monthEqual = where['id~'],
-                monthGt = where['id>='],
-                monthLt = where['id<='],
-                month = monthEqual || monthGt || monthLt,
-                delta: number = 1,
-                before: boolean = true,
-                monthHeader: Date,
-                period: Date[]
-            ;
+            const adapter = this.getAdapter().forTable();
+            let items = [];
+            const monthEqual = where['id~'];
+            const monthGt = where['id>='];
+            const monthLt = where['id<='];
+            let month = monthEqual || monthGt || monthLt;
+            let delta: number = 1;
+            let before: boolean = true;
+            let monthHeader: Date;
+            let period: Date[];
 
             month = monthListUtils.idToDate(month, this._dateConstructor);
 
@@ -137,7 +134,7 @@ export default class MonthsSource extends Memory {
 
             this._each(
                 items,
-                function(item) {
+                (item) => {
                     adapter.add(item);
                 }
             );

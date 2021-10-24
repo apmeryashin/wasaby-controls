@@ -77,12 +77,12 @@ export default class ManagerWrapper extends Control<IControlOptions> {
    private _beforePopupDestroyedHandler(): void {
       // Контрол ловим событие и вызывает обработчик в GlobalPopup.
       // На текущий момент у PopupGlobal нет возможности самому ловить событие.
-      let PopupGlobal = this._children.PopupGlobal;
+      const PopupGlobal = this._children.PopupGlobal;
       PopupGlobal._popupBeforeDestroyedHandler.apply(PopupGlobal, arguments);
    }
 
    private _toggleWindowHandlers(subscribe: boolean): void {
-      let actionName = subscribe ? 'addEventListener' : 'removeEventListener';
+      const actionName = subscribe ? 'addEventListener' : 'removeEventListener';
       window[actionName]('scroll', this._scrollPage);
       window[actionName]('resize', this._resizePage);
       window[actionName]('mousemove', this._mousemovePage);
@@ -133,7 +133,7 @@ export default class ManagerWrapper extends Control<IControlOptions> {
 
    private _mouseDownHandler(event): void {
       this._eventRegistratorHandler('mousedownDetect', event);
-      let Manager = ControllerPopup.getManager();
+      const Manager = ControllerPopup.getManager();
       if (Manager) {
          Manager.mouseDownHandler(event);
       }
@@ -158,7 +158,7 @@ export default class ManagerWrapper extends Control<IControlOptions> {
    private _listenersSubscribe(method, event, registerType, component, callback): void {
       if (!this._destroyed) {
          // Вызываю обработчики всех регистраторов, регистратор сам поймет, нужно ли обрабатывать событие
-         let registrators = [
+         const registrators = [
             'scrollDetect',
             'resizeDetect',
             'mousemoveDetect',

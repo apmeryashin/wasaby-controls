@@ -7,20 +7,19 @@ class DateLitePopupSource extends Memory {
     private _$keyProperty: string = 'id';
 
     query(query) {
-        let
-            offset = query.getOffset(),
-            where = query.getWhere(),
-            limit = query.getLimit() || 1,
-            executor;
+        const offset = query.getOffset();
+        const where = query.getWhere();
+        const limit = query.getLimit() || 1;
+        let executor;
 
         executor = (function() {
-            let adapter = this.getAdapter().forTable(),
-                items = [],
-                monthEqual = where['id~'],
-                monthGt = where['id>='],
-                monthLt = where['id<='],
-                month = monthEqual || monthGt || monthLt,
-                deferred = new Deferred();
+            const adapter = this.getAdapter().forTable();
+            const monthEqual = where['id~'];
+            const monthGt = where['id>='];
+            const monthLt = where['id<='];
+            const deferred = new Deferred();
+            let month = monthEqual || monthGt || monthLt;
+            let items = [];
 
             if (month) {
                 month = formatter.dateFromSql(month);
@@ -46,7 +45,7 @@ class DateLitePopupSource extends Memory {
 
             this._each(
                 items,
-                function(item) {
+                (item) => {
                     adapter.add(item);
                 }
             );
@@ -55,7 +54,7 @@ class DateLitePopupSource extends Memory {
                 total: monthEqual ? { before: true, after: true } : true
             });
 
-            setTimeout(function() {
+            setTimeout(() => {
                 deferred.callback(items);
             }, 300);
 

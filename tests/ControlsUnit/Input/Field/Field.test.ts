@@ -37,8 +37,8 @@ describe('Controls/input:Field', () => {
         let eventName;
         beforeEach(() => {
             eventName = null;
-            ctrl._notifyEvent = function(name) {
-                eventName = name;
+            ctrl._notifyEvent = (optName) => {
+                eventName = optName;
             };
         });
         it('Yes', () => {

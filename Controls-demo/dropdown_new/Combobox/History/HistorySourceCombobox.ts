@@ -55,13 +55,13 @@ function createMemory(): Source {
     const query = new Query().where({
         $_history: true
     });
-    hs._$historySource.query = function() {
+    hs._$historySource.query = () => {
         return Promise.resolve(srcData);
     };
     // Заглушка, чтобы демка не ломилась не сервис истории
-    hs._$historySource.update = function() {
-        return {};
-    };
+    // tslint:disable-next-line:ban-ts-ignore
+    // @ts-ignore
+    hs._$historySource.update = () => ({});
     hs.query(query);
     hs._$historySource.query();
     return hs;

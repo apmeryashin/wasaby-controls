@@ -2,9 +2,9 @@ import displayLib = require('Controls/display');
 import cInstance = require('Core/core-instance');
 import Utils = require('Types/util');
 
-let ItemsUtil = {
+const ItemsUtil = {
     getDefaultDisplayFlat(items, cfg, filter) {
-        let projCfg = {};
+        const projCfg = {};
         projCfg.keyProperty = cfg.keyProperty;
         if (cfg.groupingKeyCallback) {
             projCfg.group = cfg.groupingKeyCallback;
@@ -36,12 +36,12 @@ let ItemsUtil = {
 
     // TODO это наверное к Лехе должно уехать
     getDisplayItemById(display, id, keyProperty) {
-        let list = display.getCollection();
+        const list = display.getCollection();
         if (cInstance.instanceOfModule(list, 'Types/collection:RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
         } else {
             let resItem;
-            display.each(function(item, i) {
+            display.each((item) => {
                 if (ItemsUtil.getPropertyValue(item.getContents(), keyProperty) == id) {
                     resItem = item;
                 }
@@ -51,10 +51,9 @@ let ItemsUtil = {
     },
 
     getFirstItem(display) {
-        let
-            itemIdx = 0,
-            item,
-            itemsCount = display.getCount();
+        let itemIdx = 0;
+        let item;
+        const itemsCount = display.getCount();
         while (itemIdx < itemsCount) {
             item = display.at(itemIdx).getContents();
             if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
@@ -65,9 +64,8 @@ let ItemsUtil = {
     },
 
     getLastItem(display) {
-        let
-            itemIdx = display.getCount() - 1,
-            item;
+        let itemIdx = display.getCount() - 1;
+        let item;
         while (itemIdx >= 0) {
             item = display.at(itemIdx).getContents();
             if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {

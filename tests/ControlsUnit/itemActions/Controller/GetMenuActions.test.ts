@@ -3,7 +3,13 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-import {IItemAction, TItemActionShowType, IItemActionsCollection, IItemActionsItem, Controller as ItemActionsController} from 'Controls/itemActions';
+import {
+    IItemAction,
+    TItemActionShowType,
+    IItemActionsCollection,
+    IItemActionsItem,
+    Controller as ItemActionsController
+} from 'Controls/itemActions';
 import {IControllerOptions} from '../../../../Controls/_itemActions/Controller';
 import {ICollectionOptions, Collection} from 'Controls/display';
 

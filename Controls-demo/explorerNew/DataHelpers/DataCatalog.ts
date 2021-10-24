@@ -7,6 +7,8 @@ import { IHeaderCell } from 'Controls/grid';
 import {IColumn} from 'Controls/grid';
 import {groupConstants} from 'Controls/list';
 
+// tslint:disable:max-line-length
+
 export interface IData {
     id: number;
     parent: null | number;

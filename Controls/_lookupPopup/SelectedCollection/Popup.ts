@@ -28,7 +28,7 @@ import 'css!Controls/lookup';
  * @author Крайнов Д.О.
  */
 
-let itemHiddenTemplate = Control.extend({
+const itemHiddenTemplate = Control.extend({
          _template: template,
 
          _beforeMount(options) {

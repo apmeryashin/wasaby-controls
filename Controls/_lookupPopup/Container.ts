@@ -30,24 +30,22 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selectionType: TSelectionType;
 }
 
-let SELECTION_TYPES = ['all', 'leaf', 'node'];
+const SELECTION_TYPES = ['all', 'leaf', 'node'];
 
-let _private = {
+const _private = {
    getFilteredItems(items, filterFunc) {
       return chain.factory(items).filter(filterFunc).value();
    },
 
    getKeysByItems(items, keyProperty) {
-      return chain.factory(items).reduce(function(result, item) {
+      return chain.factory(items).reduce((result, item) => {
          result.push(item.get(keyProperty));
          return result;
       }, []);
    },
 
    getFilterFunction(func) {
-      return func ? func : function() {
-         return true;
-      };
+      return func ? func : () => true;
    },
 
    getSelectedKeys(options): TKey[] {
@@ -78,7 +76,7 @@ let _private = {
 
    getEmptyItems(currentItems) {
       /* make clone and clear to save items format */
-      let emptyItems = currentItems.clone();
+      const emptyItems = currentItems.clone();
       emptyItems.clear();
       return emptyItems;
    },
@@ -356,7 +354,7 @@ let _private = {
 * @public
 * @author Герасимов Александр Максимович
 */
-let Container = Control.extend({
+const Container = Control.extend({
 
    _template: template,
    _selectedKeys: null,

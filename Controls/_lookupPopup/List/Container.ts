@@ -95,7 +95,7 @@ const _private = {
    },
 
    getItemActionVisibilityCallback(options) {
-      return function(action, item) {
+      return (action, item) => {
          let showByOptions;
          let showByItemType;
 

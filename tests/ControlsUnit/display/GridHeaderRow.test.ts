@@ -11,7 +11,7 @@ describe('Controls/_display:GridHeaderRow', () => {
         );
     });
 
-    it('should add multiselect with rowspan if it is multi-line header', function() {
+    it('should add multiselect with rowspan if it is multi-line header', () => {
         const header = [{}];
         const headerRow = new GridHeaderRow({
             owner: {
@@ -20,7 +20,7 @@ describe('Controls/_display:GridHeaderRow', () => {
                 getHeaderConfig: () => header,
                 getGridColumnsConfig: () => [{}],
                 isFullGridSupport: () => true,
-                getStickyColumnsCount: () => {}
+                getStickyColumnsCount: () => {/* FIXME: sinon mock */}
             },
             columnsConfig: header,
             gridColumnsConfig: [{}],

@@ -11,6 +11,7 @@ describe('Controls/_display/collection/Initializing', () => {
         const recordSet = new RecordSet({ rawData: [] });
         const subscribeSpy = sandbox.spy(recordSet, 'subscribe');
 
+        // tslint:disable-next-line:no-unused-expression
         new Collection({
             keyProperty: 'id',
             collection: recordSet
@@ -31,6 +32,7 @@ describe('Controls/_display/collection/Initializing', () => {
 
         const subscribeSpy = sandbox.spy(metaResults, 'subscribe');
 
+        // tslint:disable-next-line:no-unused-expression
         new Collection({
             keyProperty: 'id',
             collection: recordSet

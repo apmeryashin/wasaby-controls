@@ -116,8 +116,8 @@ describe('Controls/filter:ControllerClass', () => {
 
         const addToHistoryStub = sandbox.stub(controller, '_addToHistory');
         sandbox.stub(controller, '_deleteCurrentFilterFromHistory');
-        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {});
-        sandbox.replace(Prefetch, 'applyPrefetchFromItems', () => {});
+        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {/* FIXME: sinon mock */});
+        sandbox.replace(Prefetch, 'applyPrefetchFromItems', () => {/* FIXME: sinon mock */});
 
         controller.handleDataLoad();
         assert.isFalse(controller._isFilterChanged);
@@ -138,8 +138,8 @@ describe('Controls/filter:ControllerClass', () => {
             })
         });
         sandbox.stub(controller, '_deleteCurrentFilterFromHistory');
-        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {});
-        sandbox.replace(controller, '_addToHistory', () => {});
+        sandbox.replace(Prefetch, 'getPrefetchParamsForSave', () => {/* FIXME: sinon mock */});
+        sandbox.replace(controller, '_addToHistory', () => {/* FIXME: sinon mock */});
 
         controller.handleDataLoad(items);
         assert.ok(controller.getFilter().PrefetchSessionId === 'testId');
@@ -383,7 +383,7 @@ describe('Controls/filter:ControllerClass', () => {
             assert.isFalse(result === items);
         });
 
-        it('items if function', function() {
+        it('items if function', () => {
              const returnOptFunc = () => [{
                    id: 'testId',
                    value: '',
@@ -399,17 +399,17 @@ describe('Controls/filter:ControllerClass', () => {
             value: 'testValue',
             resetValue: ''
         }];
-        it('items is array, with history', function() {
+        it('items is array, with history', () => {
             const result = ControllerClass._getItemsByOption(items, history);
             assert.deepEqual(result, history);
             assert.isFalse(result === items);
         });
 
-        it('items is function, with history', function() {
-            const returnOptFunc = function(history) {
+        it('items is function, with history', () => {
+            const returnOptFunc = (optHistory) => {
                return [{
                   id: 'testId',
-                  value: history[0].value,
+                  value: optHistory[0].value,
                   resetValue: ''
                }];
             };

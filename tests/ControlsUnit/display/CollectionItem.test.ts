@@ -446,7 +446,7 @@ describe('Controls/_display/CollectionItem', () => {
                 given.item = item;
                 given.property = property;
             },
-            getHoverBackgroundStyle() {}
+            getHoverBackgroundStyle() {/* FIXME: sinon mock */}
         };
 
         const item = new CollectionItem({ owner });
@@ -464,8 +464,8 @@ describe('Controls/_display/CollectionItem', () => {
 
     it('.getWrapperClasses()', () => {
         const owner = {
-            notifyItemChange(): void {},
-            getHoverBackgroundStyle() {},
+            notifyItemChange(): void {/* FIXME: sinon mock */},
+            getHoverBackgroundStyle() {/* FIXME: sinon mock */},
             getEditingBackgroundStyle: () => 'default',
             isFirstItem: () => false,
             isLastItem: () => false,
@@ -495,13 +495,12 @@ describe('Controls/_display/CollectionItem', () => {
     });
 
     it('.getContentClasses()', () => {
-        let multiSelectVisibility: string;
         const owner = {
             getTopPadding(): string { return '#topSpacing#'; },
             getBottomPadding(): string { return '#bottomSpacing#'; },
             getLeftPadding(): string { return '#leftSpacing#'; },
             getRightPadding(): string { return '#rightSpacing#'; },
-            getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getMultiSelectVisibility: () => undefined,
             getMultiSelectPosition(): string { return 'default'; },
             getRowSeparatorSize() { return ''; },
             isLastItem() { return false; },
@@ -725,12 +724,14 @@ describe('Controls/_display/CollectionItem', () => {
         // CSS класс для позиционирования опций записи.
 
         // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (старая модель)
+        // tslint:disable-next-line:max-line-length
         it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
             const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 'null'}, 'default');
             assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
         });
 
         // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (новая модель)
+        // tslint:disable-next-line:max-line-length
         it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
             item.getOwner().setItemPadding({top: 'null', bottom: 'null'});
             const result = item.getItemActionPositionClasses('inside', null, undefined, 'default');
@@ -743,6 +744,7 @@ describe('Controls/_display/CollectionItem', () => {
             assert.equal(result, ' controls-itemActionsV_position_bottomRight controls-itemActionsV_padding-bottom_default ');
         });
 
+        // tslint:disable-next-line:max-line-length
         // Если опции внутри строки и itemActionsClass задан, возвращает класс, добавляющий выравнивание согласно itemActionsClass и itemPadding
         it('getItemActionPositionClasses() should return classes for bottom-right positioning when itemActionClass is set', () => {
             const result = item.getItemActionPositionClasses('inside', 'controls-itemActionsV_position_topRight', {top: 'null', bottom: 's'}, 'default');
@@ -787,7 +789,10 @@ describe('Controls/_display/CollectionItem', () => {
             });
 
             it('hover classes for input', () => {
-                CssClassesAssert.notInclude(item.getEditorViewTemplateClasses(), 'controls-EditingTemplateText_enabled');
+                CssClassesAssert.notInclude(
+                    item.getEditorViewTemplateClasses(),
+                    'controls-EditingTemplateText_enabled'
+                );
                 CssClassesAssert.notInclude(item.getEditorViewTemplateClasses({}), 'controls-EditingTemplateText_enabled');
                 CssClassesAssert.notInclude(item.getEditorViewTemplateClasses({enabled: false}), 'controls-EditingTemplateText_enabled');
                 CssClassesAssert.include(item.getEditorViewTemplateClasses({enabled: true}), 'controls-EditingTemplateText_enabled');

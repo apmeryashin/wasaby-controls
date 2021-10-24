@@ -209,9 +209,12 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     }
 
     private _callValidators(validators: Function[], validateConfig?: IValidateConfig) {
-        let validationResult = null,
-            errors = [],
-            validatorResult, validator, resultDeferred, index;
+        let validationResult = null;
+        let errors = [];
+        let validatorResult;
+        let validator;
+        let resultDeferred;
+        let index;
 
         const parallelDeferred = new ParallelDeferred();
         const validatorsForCheck = [].concat(validators);

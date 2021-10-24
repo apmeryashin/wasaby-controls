@@ -9,7 +9,7 @@ import {detection} from 'Env/Env';
 import 'css!Controls/suggestPopup';
 import 'css!Controls/suggest';
 
-let _private = {
+const _private = {
    openPopup(self, opener, options): void {
        // !!closeOnOutsideClick не добавлять, иначе саггест закрывается при клике на саггест
       const dynamicConfig = {
@@ -36,7 +36,7 @@ let _private = {
    }
 };
 
-let __PopupLayer = Control.extend({
+const PopupLayer = Control.extend({
 
    _template: template,
 
@@ -90,6 +90,6 @@ let __PopupLayer = Control.extend({
    }
 });
 
-__PopupLayer._private = _private;
+PopupLayer._private = _private;
 
-export default __PopupLayer;
+export default PopupLayer;

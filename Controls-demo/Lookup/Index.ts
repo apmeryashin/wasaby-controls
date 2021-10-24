@@ -15,8 +15,10 @@ export default class extends Control {
    protected _selectedKeyCustomPlaceholder: any = [];
    protected _selectedKeysReadOnly: any = ['Иванова Зинаида Михайловна, ИП'];
    protected _selectedKeysMultiSelectReadOnly: any = ['Иванова Зинаида Михайловна, ИП', 'Все юридические лица', 'Наша компания'];
-   protected _selectedKeysMultiLineReadOnly = ['Иванова Зинаида Михайловна, ИП', 'Все юридические лица', 'Наша компания',
-      'Сбербанк-Финанс, ООО', 'Петросоюз-Континент, ООО', 'Альфа Директ сервис, ОАО', 'АК "ТРАНСНЕФТЬ", ОАО', 'Ромашка, ООО'];
+   protected _selectedKeysMultiLineReadOnly = [
+       'Иванова Зинаида Михайловна, ИП', 'Все юридические лица', 'Наша компания',
+       'Сбербанк-Финанс, ООО', 'Петросоюз-Континент, ООО',
+       'Альфа Директ сервис, ОАО', 'АК "ТРАНСНЕФТЬ", ОАО', 'Ромашка, ООО'];
    protected _selectedKeyLink: any = [];
    protected _selectedKeysDirectories: any = [];
    protected _source: Memory;
@@ -122,15 +124,14 @@ export default class extends Control {
    }
 
    protected showSelectorCustomPlaceholder(event, type) {
-      let
-          items = this._itemsCustomPlaceholder,
-          countItems = items && items.getCount(),
-          parent = countItems ? items.at(countItems - 1).get('id') : null,
-          templateOptions = {
-             parent,
-             type,
-             multiSelect: false
-          };
+      const items = this._itemsCustomPlaceholder;
+      const countItems = items && items.getCount();
+      const parent = countItems ? items.at(countItems - 1).get('id') : null;
+      const templateOptions = {
+          parent,
+          type,
+          multiSelect: false
+      };
 
       this._children.lookupCustomPlaceholder.showSelector({
          templateOptions
@@ -138,8 +139,7 @@ export default class extends Control {
    }
 
    protected showSelectorCustomPlaceholder2(event, type) {
-      let
-          templatesOptions = {
+      const templatesOptions = {
              company: {
                 headingCaption: 'Выберите организацию (+длинный текст для проверки, что caption обрезается)',
                 source:  this._source
@@ -157,13 +157,12 @@ export default class extends Control {
    }
 
    protected _itemsChanged(event, items) {
-      let
-          parentId,
-          correctKeys = [];
+      let parentId;
+      const correctKeys = [];
       if (items.at(0) && items.at(0).get('parent')) {
          items.clear();
       } else {
-         items.each(function(item) {
+         items.each((item) => {
             correctKeys.push(item.get('id'));
             parentId = item.get('parent');
             if (parentId && correctKeys.indexOf(parentId) === -1) {
@@ -189,13 +188,12 @@ export default class extends Control {
    }
 
    protected selectorCallback(event, currentItems, newItems) {
-      let
-          indexForReplace = -1,
-          newItem = newItems.at(newItems.getCount() - 1),
-          propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';
+      let indexForReplace = -1;
+      const newItem = newItems.at(newItems.getCount() - 1);
+      const propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';
 
       // Определяем, добавить элемент или заменить
-      currentItems.each(function(item, index) {
+      currentItems.each((item, index) => {
          if (item.has(propName)) {
             indexForReplace = index;
          }

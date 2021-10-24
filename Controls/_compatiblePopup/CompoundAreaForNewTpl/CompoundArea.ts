@@ -21,7 +21,7 @@ import 'css!Controls/compatiblePopup';
 
 /**
  * Слой совместимости для открытия новых шаблонов в старых попапах
- * */
+ */
 // Наследование от CompoundControl
 const moduleClass = CompoundControl.extend({
    _dotTplFn: template,
@@ -255,8 +255,12 @@ const moduleClass = CompoundControl.extend({
       const self = this;
       self._baseAfterMount = self._vDomTemplate._afterMount;
       self._vDomTemplate._afterMount = function() {
-         self._options.onOpenHandlerEvent && self._options.onOpenHandlerEvent('onOpen');
-         self._options.onOpenHandler && self._options.onOpenHandler('onOpen');
+         if (self._options.onOpenHandlerEvent) {
+             self._options.onOpenHandlerEvent('onOpen');
+         }
+         if (self._options.onOpenHandler) {
+             self._options.onOpenHandler('onOpen');
+         }
          self._baseAfterMount.apply(this, arguments);
          if (self._options._initCompoundArea) {
             self._notifyOnSizeChanged(self, self);
@@ -269,7 +273,9 @@ const moduleClass = CompoundControl.extend({
             self.sendCommand('close');
             self.popupBeforeDestroyed();
          } else if (self._options.catchFocus) {
-            self._vDomTemplate.activate && self._vDomTemplate.activate();
+            if (self._vDomTemplate.activate) {
+                self._vDomTemplate.activate();
+            }
          }
       };
    },
@@ -284,7 +290,9 @@ const moduleClass = CompoundControl.extend({
             // костыль от дубровина не позволяет перерисовать окно, если prevHeight > текущей высоты.
             // Логику в панели не меняю, решаю на стороне совместимости
             self._panel._prevHeight = 0;
-            self._panel._recalcPosition && self._panel._recalcPosition();
+            if (self._panel._recalcPosition) {
+                self._panel._recalcPosition();
+            }
             self._panel.getContainer().closest('.ws-float-area').removeClass('ws-invisible');
             self._isNewOptions = false;
          }
@@ -323,8 +331,12 @@ const moduleClass = CompoundControl.extend({
       });
    },
    _callCloseHandler() {
-      this._options.onCloseHandler && this._options.onCloseHandler(this._result);
-      this._options.onCloseHandlerEvent && this._options.onCloseHandlerEvent('onClose', [this._result]);
+      if (this._options.onCloseHandler) {
+          this._options.onCloseHandler(this._result);
+      }
+      if (this._options.onCloseHandlerEvent) {
+          this._options.onCloseHandlerEvent('onClose', [this._result]);
+      }
    },
    _onFocusOutHandler(event, destroyed, focusedControl) {
       // если фокус уходит со старой панели на новый контрол, старых механизм не будет вызван, нужно вручную звать onaActivateWindow
@@ -340,10 +352,13 @@ const moduleClass = CompoundControl.extend({
       }
    },
    _onResultHandler() {
-      this._result = Array.prototype.slice.call(arguments, 1); // first arg - event;
-
-      this._options.onResultHandler && this._options.onResultHandler.apply(this, this._result);
-      this._options.onResultHandlerEvent && this._options.onResultHandlerEvent('onResult', this._result);
+       this._result = Array.prototype.slice.call(arguments, 1); // first arg - event;
+       if (this._options.onResultHandler) {
+           this._options.onResultHandler.apply(this, this._result);
+       }
+       if (this._options.onResultHandlerEvent) {
+           this._options.onResultHandlerEvent('onResult', this._result);
+       }
    },
    _onRegisterHandler(event, eventName, emitter, handler) {
       // Пробрасываю событие о регистрации listener'ов до регистраторов, которые лежат в managerWrapper и физически
@@ -359,7 +374,7 @@ const moduleClass = CompoundControl.extend({
          if (emitter && emitter.getInstanceId()) {
             const index = this._getListenerIndex(emitter);
             if (typeof index === 'number') {
-               this._listeners.splice(index, 1); '';
+               this._listeners.splice(index, 1);
             }
          }
          ManagerWrapperController.unregisterListener(event, eventName, emitter);
@@ -380,7 +395,9 @@ const moduleClass = CompoundControl.extend({
    },
 
    onBringToFront() {
-      this._vDomTemplate && this._vDomTemplate.activate();
+      if (this._vDomTemplate) {
+          this._vDomTemplate.activate();
+      }
    },
 
    _getFloatAreaStackRootCoords() {

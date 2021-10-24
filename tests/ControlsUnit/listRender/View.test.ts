@@ -290,7 +290,8 @@ describe('Controls/_listRender/View', () => {
             markerVisibility: 'visible',
             markedKey: 2
         };
-        let view, notifySpy;
+        let view;
+        let notifySpy;
         beforeEach(() => {
             view = new View(cfg);
             notifySpy = spy(view, '_notify');

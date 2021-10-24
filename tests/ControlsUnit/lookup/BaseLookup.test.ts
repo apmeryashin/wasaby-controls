@@ -143,7 +143,8 @@ describe('Controls/lookup:Input', () => {
 
         it('item added', async () => {
             const lookup = await getBaseLookup();
-            let added, deleted;
+            let added;
+            let deleted;
             lookup._options.selectedKeys = [1];
             lookup._lookupController.getSelectedKeys = () => [1, 3];
             lookup._notify = (action, data) => {
@@ -159,7 +160,8 @@ describe('Controls/lookup:Input', () => {
 
         it('item deleted and added', async () => {
             const lookup = await getBaseLookup();
-            let added, deleted;
+            let added;
+            let deleted;
             lookup._options.selectedKeys = [1, 4, 5];
             lookup._lookupController.getSelectedKeys = () => [1, 4, 6];
             lookup._notify = (action, data) => {
@@ -175,7 +177,7 @@ describe('Controls/lookup:Input', () => {
 
     });
 
-    describe('_selectCallback', function() {
+    describe('_selectCallback', () => {
         it('_selectCallback with items', async () => {
             const lookup = await getBaseLookup({
                 multiSelect: true

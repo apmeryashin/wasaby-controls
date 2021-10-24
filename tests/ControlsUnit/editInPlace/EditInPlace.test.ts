@@ -452,6 +452,7 @@ describe('Controls/_editInPlace/EditInPlace', () => {
 
                 it('skip editing second item and go to first', () => {
                     editInPlace.updateOptions({
+                        // tslint:disable-next-line:max-line-length
                         onBeforeBeginEdit: (params) => params.options.item.getKey() === 2 ? CONSTANTS.GOTOPREV : undefined
                     });
                     // Try start editing item with key 2
@@ -476,8 +477,9 @@ describe('Controls/_editInPlace/EditInPlace', () => {
             describe('go to next', () => {
 
                 it('skip editing first item and go to second', () => {
+                    const callback = (params) => params.options.item.getKey() === 1 ? CONSTANTS.GOTONEXT : undefined;
                     editInPlace.updateOptions({
-                        onBeforeBeginEdit: (params) => params.options.item.getKey() === 1 ? CONSTANTS.GOTONEXT : undefined
+                        onBeforeBeginEdit: callback
                     });
                     // Try start editing item with key 1
                     return editInPlace.edit({item: collection.at(0).contents}).then(() => {
@@ -1009,7 +1011,7 @@ describe('Controls/_editInPlace/EditInPlace', () => {
             editInPlace.updateOptions({
                 onBeforeEndEdit: () => {
                     onBeforeEndEditCalled = true;
-                    return new Promise(() => {});
+                    return new Promise(() => {/* FIXME: sinon mock */});
                 }
             });
             return editInPlace.cancel(true).then((res) => {

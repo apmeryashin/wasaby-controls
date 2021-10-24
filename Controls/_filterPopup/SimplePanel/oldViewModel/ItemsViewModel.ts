@@ -18,7 +18,7 @@ import {isEqualItems} from 'Controls/dataSource';
  * @private
  */
 
-let _private = {
+const _private = {
     isFullCacheResetAction(action: string) {
         return (
             action === collection.IObservable.ACTION_REMOVE ||
@@ -43,7 +43,7 @@ let _private = {
         return result;
     },
     getDisplayFilter(data, cfg) {
-        let
+        const
             filter = [];
         if (cfg.itemsFilterMethod) {
             filter.push(cfg.itemsFilterMethod);
@@ -51,7 +51,7 @@ let _private = {
         return filter;
     }
 };
-let ItemsViewModel = BaseViewModel.extend({
+const ItemsViewModel = BaseViewModel.extend({
     _display: null,
     _items: null,
     _itemDataCache: null,
@@ -89,7 +89,7 @@ let ItemsViewModel = BaseViewModel.extend({
     },
 
     _prepareDisplay(items, cfg) {
-        let
+        const
             filter = this.getDisplayFilter(this.prepareDisplayFilterData(), cfg);
         return ItemsUtil.getDefaultDisplayFlat(items, cfg, filter);
     },
@@ -133,9 +133,8 @@ let ItemsViewModel = BaseViewModel.extend({
     },
 
     setIndexes(newStartIndex: number, stopIndex: number): boolean {
-        let
-            newStopIndex = Math.min(stopIndex, this.getCount()),
-            isUpdated = false;
+        const newStopIndex = Math.min(stopIndex, this.getCount());
+        let isUpdated = false;
 
         if (this._startIndex !== newStartIndex || this._stopIndex !== newStopIndex) {
             this._startIndex = newStartIndex;
@@ -165,7 +164,7 @@ let ItemsViewModel = BaseViewModel.extend({
     },
 
     getCurrent() {
-        let dispItem = this._display.at(this._curIndex);
+        const dispItem = this._display.at(this._curIndex);
         return this.getItemDataByItem(dispItem);
     },
 
@@ -244,21 +243,20 @@ let ItemsViewModel = BaseViewModel.extend({
             return this.getCachedItemData(cacheKey);
         }
 
-        let
-            self = this,
-            itemData = {
-                getPropValue: ItemsUtil.getPropertyValue,
-                style: this._options.style,
-                keyProperty: this.getKeyProperty(),
-                index: this._display.getIndex(dispItem),
-                item: dispItem.getContents(),
-                dispItem,
-                theme: this.getTheme(),
-                _preferVersionAPI: true,
-                getVersion(): string {
-                    return self._calcItemVersion(itemData.item, itemData.key);
-                }
-            };
+        const self = this;
+        const itemData = {
+            getPropValue: ItemsUtil.getPropertyValue,
+            style: this._options.style,
+            keyProperty: this.getKeyProperty(),
+            index: this._display.getIndex(dispItem),
+            item: dispItem.getContents(),
+            dispItem,
+            theme: this.getTheme(),
+            _preferVersionAPI: true,
+            getVersion(): string {
+                return self._calcItemVersion(itemData.item, itemData.key);
+            }
+        };
 
         // The key of breadcrumbs row is the key of the last item in the crumbs.
         if (dispItem.getContents() instanceof Array) {
@@ -373,9 +371,8 @@ let ItemsViewModel = BaseViewModel.extend({
     },
 
     getNext() {
-        let
-            itemIndex = this._curIndex + 1,
-            dispItem = this._display.at(itemIndex);
+        const itemIndex = this._curIndex + 1;
+        const dispItem = this._display.at(itemIndex);
         return {
             getPropValue: ItemsUtil.getPropertyValue,
             keyProperty: this.getKeyProperty(),

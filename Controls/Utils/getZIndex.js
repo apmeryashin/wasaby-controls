@@ -2,7 +2,6 @@
  * Created by as.krasilnikov on 29.10.2018.
  */
 define('Controls/Utils/getZIndex', ['Core/helpers/isNewEnvironment', 'Env/Env'], function(isNewEnvironment, Env) {
-   'use strict';
    /* eslint-disable */
    // z-index 110 обусловлен тем, что в контенте страницы могут лежать платформенные компоненты с
    // zindex: 100 (switchableArea в tabControl'e). Попытки ограничить контент z-index'a на OnlineBaseInnerMinCoreView

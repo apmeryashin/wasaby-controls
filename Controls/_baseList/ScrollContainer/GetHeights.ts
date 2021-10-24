@@ -51,7 +51,7 @@ export function getElementByKey(itemsContainer: HTMLElement, key: number | strin
     let result = null;
     for (let i = 0, len = itemsContainer.children.length; i < len; i++) {
         // должно быть именно двойное равно чтоб не приводились типы
-        // tslint:disable-next-line
+        // tslint:disable-next-line:triple-equals
         if (itemsContainer.children[i].getAttribute('key') == key) {
             result = itemsContainer.children[i];
             break;

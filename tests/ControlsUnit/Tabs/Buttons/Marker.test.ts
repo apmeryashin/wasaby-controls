@@ -68,7 +68,6 @@ describe('Controls/_tabs/Buttons/Marker', () => {
 
         it('should update model and version if selectedIndex changed', () => {
             const marker: Marker = new Marker();
-            let changed: boolean;
             marker.updatePosition(elements, baseElement);
             marker.setSelectedIndex(0);
 

@@ -5,8 +5,6 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'Controls/search';
 
-'use strict';
-
 /**
  * Строка поиска с автодополнением, позволяет пользователю вводить однострочный текст.
  *
@@ -44,7 +42,7 @@ import 'Controls/search';
  * @public
  */
 
-let Suggest = Control.extend({
+const Suggest = Control.extend({
 
    _template: template,
    _suggestState: false,
@@ -108,12 +106,10 @@ let Suggest = Control.extend({
 });
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3,
-      suggestState: false
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3,
+    suggestState: false
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

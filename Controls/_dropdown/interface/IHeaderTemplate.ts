@@ -113,9 +113,9 @@
  * _beforeMount: function() {
  *    this._source = new source.Memory ({
  *       data: [{ key: 1, title: 'Task', '@parent': true, parent: null },
-                { key: 2, title: 'Error in the development', '@parent': false, parent: null },
-                { key: 3, title: 'Commission', parent: 1 },
-                { key: 4, title: 'Coordination', parent: 1, '@parent': true, caption: 'Node header caption' }
+ *              { key: 2, title: 'Error in the development', '@parent': false, parent: null },
+ *              { key: 3, title: 'Commission', parent: 1 },
+ *              { key: 4, title: 'Coordination', parent: 1, '@parent': true, caption: 'Node header caption' }
  *       ],
  *       keyProperty: 'key'
  *    });

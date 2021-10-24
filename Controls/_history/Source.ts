@@ -593,7 +593,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
             return Promise.resolve(this._updatePinned(data, meta));
         }
         if (meta.hasOwnProperty('$_history')) {
-            return Promise.resolve(this._updateRecent(data, meta).catch(() => {}));
+            return Promise.resolve(this._updateRecent(data, meta).catch(() => undefined));
         }
         return this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(data, meta);
     }

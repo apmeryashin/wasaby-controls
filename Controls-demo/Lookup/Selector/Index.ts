@@ -27,11 +27,11 @@ export default class extends Control {
       this._source = new Memory({
          data: _companies,
          filter(item, queryFilter) {
-            let selectionFilterFn = function(item, filter) {
+            const selectionFilterFn = (optItem, filter) => {
                let isSelected = false;
-               let itemId = item.get('id');
+               const itemId = optItem.get('id');
 
-               filter.selection.get('marked').forEach(function(selectedId) {
+               filter.selection.get('marked').forEach((selectedId) => {
                   if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
                      isSelected = true;
                   }
@@ -39,7 +39,7 @@ export default class extends Control {
 
                return isSelected;
             };
-            let normalFilterFn = MemorySourceFilter();
+            const normalFilterFn = MemorySourceFilter();
             return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
          },
          idProperty: 'id'
@@ -55,7 +55,7 @@ export default class extends Control {
       this._selectedKeys4 = [];
       this._selectedKeys5 = [];
       this._selectedKeys6 = ['Альфа Директ сервис, ОАО'];
-      this._selectedKeysAll = factory(_companies).map(function(item) {
+      this._selectedKeysAll = factory(_companies).map((item) => {
          return item.id;
       }).value();
       this._selectedKeysAll2 = this._selectedKeysAll.slice();

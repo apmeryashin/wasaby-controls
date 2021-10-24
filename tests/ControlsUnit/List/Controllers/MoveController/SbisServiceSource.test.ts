@@ -126,7 +126,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should not move "after" with invalid selection', () => {
             // @ts-ignore
             return controller.move(['1', '2', '2'], {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -141,7 +141,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         // Попытка вызвать move() с selection===undefined
         it ('should not move "after" with undefined selection', () => {
             return controller.move(undefined, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -160,7 +160,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 excluded: []
             };
             return controller.move(emptySelectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -252,7 +252,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     return Promise.resolve(dataSet);
                 });
             return controller.move(correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -269,7 +269,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should not move to undefined target', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
             return controller.move(selectionObject, {myProp: 'test'}, undefined, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -285,8 +285,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         // Попытка вызвать move() с некорректным filter
         it ('should not move with incorrect filter (sbisService)', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
-            return controller.move(selectionObject, () => {}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+            return controller.move(selectionObject, () => {/* FIXME: sinon mock */}, 4, LOCAL_MOVE_POSITION.On)
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -304,7 +304,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
             // @ts-ignore
             return controller.move(selectionObject, {}, 4, 'incorrect')
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -344,7 +344,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with target === null', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
             return controller.move(selectionObject, {}, null, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -361,7 +361,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should not move "Before"/"After" to null target', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
             return controller.move(selectionObject, {myProp: 'test'}, null, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -380,7 +380,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
             // @ts-ignore
             return controller.move(selectionObject, {}, 4, undefined)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -397,7 +397,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with position === LOCAL_MOVE_POSITION.On', () => {
             const spyCall = sandbox.spy(sbisServiceSource, 'call');
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.On)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -414,7 +414,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with position === LOCAL_MOVE_POSITION.After', () => {
             const spyMove = sandbox.spy(sbisServiceSource, 'move');
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.After)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -431,7 +431,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
         it ('should move with position === LOCAL_MOVE_POSITION.Before', () => {
             const spyMove = sandbox.spy(sbisServiceSource, 'move');
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -460,7 +460,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     return Promise.resolve();
                 });
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -493,7 +493,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                     return Promise.resolve();
                 });
             return controller.move(selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
-                .then((result: DataSet) => {})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -508,14 +508,15 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyConfirmation = sandbox.spy(popup.Confirmation, 'openPopup');
             // @ts-ignore
             return controller.moveWithDialog(['1', '2', '2'], {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch((error) => {
                     callCatch = true;
                     assert.notEqual(error, 'FAKE');
                 })
                 .finally(() => {
 
-                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    // Ожидаю. что перемещение провалится из-за ошибки,
+                    // брошенной в контроллере на этапе открытия диалога
                     sinonAssert.called(stubLoggerError);
                     sinonAssert.notCalled(spyConfirmation);
                     assert.isTrue(callCatch);
@@ -528,7 +529,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const spyConfirmation = sandbox.spy(popup.Confirmation, 'openPopup');
             // @ts-ignore
             return controller.moveWithDialog(undefined, {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch((error) => {
                     callCatch = true;
                     assert.notEqual(error, 'FAKE');
@@ -553,7 +554,7 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             const stubConfirmation = sandbox.stub(popup.Confirmation, 'openPopup').callsFake((args) => Promise.resolve(true));
             // @ts-ignore
             return controller.moveWithDialog(correctSelection, {myProp: 'test'})
-                .then(() => {})
+                .then(() => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })
@@ -659,8 +660,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 })))
             )));
             controller = new MoveController({...cfg, source: (sbisServiceSource as SbisService)});
-            return controller.moveWithDialog(selectionObject, () => {})
-                .then((result: DataSet) => {})
+            return controller.moveWithDialog(selectionObject, () => {/* FIXME: sinon mock */})
+                .then((result: DataSet) => {/* FIXME: sinon mock */})
                 .catch(() => {
                     callCatch = true;
                 })

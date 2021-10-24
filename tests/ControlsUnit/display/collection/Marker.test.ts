@@ -10,15 +10,16 @@ describe('Controls/display/collection/Marker', () => {
             collection: new RecordSet({ rawData: [ {id: 1} ], keyProperty: 'id' })
         });
 
-        const onCollectionChange = (event: SyntheticEvent, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
-            assert.equal(action, IObservable.ACTION_CHANGE);
-            assert.equal(newItems.length, 1);
-            assert.equal(newItems[0].getContents().getKey(), 1);
-            assert.equal(newItems.properties, 'marked');
-            assert.equal(oldItems.length, 1);
-            assert.equal(oldItems[0].getContents().getKey(), 1);
-            assert.equal(oldItems.properties, 'marked');
-        };
+        const onCollectionChange =
+            (event: SyntheticEvent, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+                assert.equal(action, IObservable.ACTION_CHANGE);
+                assert.equal(newItems.length, 1);
+                assert.equal(newItems[0].getContents().getKey(), 1);
+                assert.equal(newItems.properties, 'marked');
+                assert.equal(oldItems.length, 1);
+                assert.equal(oldItems[0].getContents().getKey(), 1);
+                assert.equal(oldItems.properties, 'marked');
+            };
         collection.subscribe('onCollectionChange', onCollectionChange);
         collection.setMarkedKey(1, true);
     });

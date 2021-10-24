@@ -1048,7 +1048,8 @@ describe('Controls/_itemActions/Controller', () => {
                 }
             }));
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            const config =
+                itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             // @ts-ignore
             assert.equal(config.templateOptions.iconSize, 'm', 'default iconSize has not been applied');
         });
@@ -1089,6 +1090,7 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T3.9. Для Контекстного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list
+        // tslint:disable-next-line:max-line-length
         it('should set config.className with value controls-ItemActions__popup__list when parentAction isn\'t set', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
@@ -1097,6 +1099,7 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T3.10. Для Дополнительного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list
+        // tslint:disable-next-line:max-line-length
         it('should set config.className with value controls-ItemActions__popup__list when parentAction.isMenu===true', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();

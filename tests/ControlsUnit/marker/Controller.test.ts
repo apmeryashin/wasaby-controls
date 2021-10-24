@@ -11,7 +11,9 @@ import * as ListData from 'ControlsUnit/ListData';
 import { Model } from 'Types/entity';
 
 describe('Controls/marker/Controller', () => {
-   let controller, model, items;
+   let controller;
+   let model;
+   let items;
 
    beforeEach(() => {
       items = new RecordSet({
@@ -277,13 +279,23 @@ describe('Controls/marker/Controller', () => {
 
          it('collapse node with marker at depth of several nodes', () => {
             controller.setMarkedKey(3);
-            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(2), model.getItemBySourceKey(3), model.getItemBySourceKey(4), model.getItemBySourceKey(5)]);
+            const newMarkedKey = controller.onCollectionRemove(
+                 0,
+                 [
+                     model.getItemBySourceKey(2),
+                     model.getItemBySourceKey(3),
+                     model.getItemBySourceKey(4),
+                     model.getItemBySourceKey(5)
+                 ]);
             assert.equal(newMarkedKey, 1);
          });
 
          it('collapse node without marker', () => {
             controller.setMarkedKey(5);
-            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
+            const newMarkedKey = controller.onCollectionRemove(
+                0,
+                [model.getItemBySourceKey(3), model.getItemBySourceKey(4)]
+            );
             assert.equal(newMarkedKey, 5);
          });
 

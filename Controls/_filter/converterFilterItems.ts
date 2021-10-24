@@ -5,8 +5,8 @@ const differentFields = ['id', 'visibility'];
 
 function convertToFilterSource(detailPanelItems) {
     const filterSource = CoreClone(detailPanelItems);
-    factory(filterSource).each(function(filterSourceItem, index) {
-        for (let property in filterSourceItem) {
+    factory(filterSource).each((filterSourceItem, index) => {
+        for (const property in filterSourceItem) {
             if (filterSourceItem.hasOwnProperty(property)) {
                 if (differentFields.indexOf(property) !== -1) {
                     delete filterSourceItem[property];
@@ -23,8 +23,8 @@ function convertToFilterSource(detailPanelItems) {
 
 function convertToDetailPanelItems(filterSource) {
     const detailPanelItems = CoreClone(filterSource);
-    factory(detailPanelItems).each(function(detailPanelItem, index) {
-        for (let property in detailPanelItem) {
+    factory(detailPanelItems).each((detailPanelItem, index) => {
+        for (const property in detailPanelItem) {
             if (detailPanelItem.hasOwnProperty(property)) {
                 if (differentFields.indexOf(property) !== -1) {
                     delete detailPanelItem[property];

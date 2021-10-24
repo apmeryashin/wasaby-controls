@@ -62,8 +62,8 @@ export default class RangeSelectionController extends Control<IControlOptions> {
    }
 
    protected _beforeUpdate(options): void {
-      let isSelectionProcessingExtChanged,
-          changed;
+      let isSelectionProcessingExtChanged;
+      let changed;
 
       options = coreMerge({}, options);
 
@@ -231,6 +231,7 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @private
     */
    protected _prepareState(state): void {
+       /* For override  */
    }
 
    /**
@@ -323,9 +324,9 @@ export default class RangeSelectionController extends Control<IControlOptions> {
     * @protected
     */
    private _startRangeSelection(item): void {
-      const range = this._getDisplayedRangeEdges(item),
-          start = range[0],
-          end = range[1];
+      const range = this._getDisplayedRangeEdges(item);
+      const start = range[0];
+      const end = range[1];
 
       this._notify('onBeforeSelectionStarted', [start, end]);
       this._selectionProcessing = true;

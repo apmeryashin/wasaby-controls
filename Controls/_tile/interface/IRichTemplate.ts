@@ -276,12 +276,12 @@ export default interface IRichTemplateOptions {
      additionalPanelTemplate?: TemplateFunction;
 
     /**
-    * @cfg {String} Соотношение сторон изображения в формате x:y, где x-ширина, y-высота.
+     * @cfg {String} Соотношение сторон изображения в формате x:y, где x-ширина, y-высота.
      * Например, для получения широкого изображения можно использовать значение 16:9.
-    * @default 1:1
-    *
-    * @see imageSize
-    */
+     * @default 1:1
+     *
+     * @see imageSize
+     */
     imageProportion?: string;
 
     /**

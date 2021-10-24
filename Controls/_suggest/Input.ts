@@ -57,7 +57,7 @@ import 'css!Controls/suggest';
  * @demo Controls-demo/Suggest_new/Input/DisplayProperty/DisplayProperty
  * @author Gerasimov A.M.
  */
-let Suggest = Control.extend({
+const Suggest = Control.extend({
 
    _template: template,
    _notifyHandler: EventUtils.tmplNotify,
@@ -130,11 +130,9 @@ let Suggest = Control.extend({
 // <editor-fold desc="OptionsDesc">
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

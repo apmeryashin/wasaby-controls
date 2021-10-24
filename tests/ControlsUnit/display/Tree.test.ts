@@ -2117,7 +2117,12 @@ describe('Controls/_display/Tree', () => {
                 let item = tree.getItemBySourceKey(2);
                 assert.isTrue(item.shouldDisplayExpanderPadding());
 
-                tree = getTree(rs, {hasChildrenProperty: '', groupProperty: 'group', expanderVisibility: 'hasChildren', collapsedGroups: ['group-1']});
+                tree = getTree(rs, {
+                    hasChildrenProperty: '',
+                    groupProperty: 'group',
+                    expanderVisibility: 'hasChildren',
+                    collapsedGroups: ['group-1']
+                });
                 item = tree.getItemBySourceKey(2);
                 assert.isTrue(item.shouldDisplayExpanderPadding());
             });
@@ -2401,7 +2406,7 @@ describe('Controls/_display/Tree', () => {
                 nodeFooterTemplate: () => ''
             });
 
-            const onCollectionChange = spy(() => {});
+            const onCollectionChange = spy(() => {/* FIXME: sinon mock */});
             tree.subscribe('onCollectionChange', onCollectionChange);
 
             // вернули узел 1

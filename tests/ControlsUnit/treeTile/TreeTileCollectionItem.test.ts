@@ -52,7 +52,10 @@ describe('Controls/_treeTile/display/TreeTileCollectionItem', () => {
     describe('getTitleWrapperClasses', () => {
         it('small', () => {
             const item = new TreeTileCollectionItem({node: true});
-            CssClassesAssert.include(item.getTitleWrapperClasses('small'), 'controls-TileView__smallTemplate_title_node');
+            CssClassesAssert.include(
+                item.getTitleWrapperClasses('small'),
+                'controls-TileView__smallTemplate_title_node'
+            );
         });
         it('preview', () => {
             const item = new TreeTileCollectionItem({node: true});

@@ -2,7 +2,8 @@ import coreInstance = require('Core/core-instance');
 import Merge = require('Core/core-merge');
 import * as Deferred from 'Core/Deferred';
 
-let HistorySource, HistoryService;
+let HistorySource;
+let HistoryService;
 
 function getMetaHistory() {
    return {

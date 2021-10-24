@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 export const responsibleData = [
     {id: 1, title: 'Структура организации', '@parent': true, parent: null},
     {id: 2, title: 'Директор', '@parent': null, parent: null},

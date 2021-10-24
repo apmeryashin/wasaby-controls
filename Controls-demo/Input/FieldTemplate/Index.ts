@@ -72,7 +72,7 @@ class FieldTemplate extends Control<IControlOptions> {
             { id: 59, title: 'Spielberg Ekaterina Maximovna' }
         ],
         filter(item, searchValue) {
-            let title = searchValue.title;
+            const title = searchValue.title;
 
             if (title) {
                 return item.get('title').indexOf(title) !== -1;

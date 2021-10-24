@@ -1,7 +1,7 @@
 import {DataSet, QueryNavigationType} from 'Types/source';
 import ExtDataModel from 'Controls/_calendar/MonthList/ExtDataModel';
 
-describe('Controls/_calendar/MonthList/ExtDataModel', function() {
+describe('Controls/_calendar/MonthList/ExtDataModel', () => {
     let options;
 
     beforeEach(() => {
@@ -13,11 +13,10 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
        };
     });
 
-    describe('invalidatePeriod', function() {
+    describe('invalidatePeriod', () => {
         it('should update data field', () => {
-            let
-                model,
-                query;
+            let model;
+            let query;
 
             model = new ExtDataModel(options);
             model._data = {
@@ -38,7 +37,7 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
         });
     });
 
-    describe('getQuery', function() {
+    describe('getQuery', () => {
         [{
             caption: 'should return correct query object for viewMode: "month"',
             viewMode: 'month',
@@ -55,9 +54,8 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
             limit: 24
         }].forEach((test) => {
             it(test.caption, () => {
-                let
-                    model,
-                    query;
+                let model;
+                let query;
 
                 options.viewMode = test.viewMode;
                 model = new ExtDataModel(options);
@@ -70,7 +68,7 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
         });
     });
 
-    describe('_updateData', function() {
+    describe('_updateData', () => {
         [{
             caption: 'should update data object for viewMode: "month"',
             viewMode: 'month',
@@ -128,15 +126,14 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
             updatedData: {
                 '2019-01-01': [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]]
             }
-        }].forEach(function(test) {
-            it(test.caption, function() {
-                let
-                    model,
-                    dataSet = new DataSet({
-                        rawData: { data: test.rawData },
-                        itemsProperty: 'data',
-                        keyProperty: 'id'
-                    });
+        }].forEach((test) => {
+            it(test.caption, () => {
+                let model;
+                const dataSet = new DataSet({
+                    rawData: {data: test.rawData},
+                    itemsProperty: 'data',
+                    keyProperty: 'id'
+                });
                 options.viewMode = test.viewMode;
                 model = new ExtDataModel(options);
                 model._updateData(dataSet);

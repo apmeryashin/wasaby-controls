@@ -16,7 +16,7 @@ function getIconSize(options) {
                break;
          }
       } else {
-         sizes.forEach(function(size) {
+         sizes.forEach((size) => {
             if (options.icon.indexOf('icon-' + size) !== -1) {
                iconSize = size;
             }

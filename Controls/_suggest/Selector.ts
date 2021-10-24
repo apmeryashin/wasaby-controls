@@ -7,9 +7,9 @@ import {object} from 'Types/util';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
 import 'css!Controls/suggest';
 
-let _private = {
+const _private = {
    loadSelectedItem(self, options) {
-      let filter = {};
+      const filter = {};
       filter[options.keyProperty] = options.selectedKey;
       self._crudWrapper = new CrudWrapper({
          source: options.source
@@ -21,7 +21,7 @@ let _private = {
    },
 
    setValue(self, item, displayProperty) {
-      let value = object.getPropertyValue(item, displayProperty);
+      const value = object.getPropertyValue(item, displayProperty);
       _private.updateValue(self, value);
    },
 
@@ -30,7 +30,7 @@ let _private = {
    },
 
    prepareSuggestTemplate(displayProperty, suggestTemplate) {
-      let suggestTemplateConfig = { templateOptions: { displayProperty } };
+      const suggestTemplateConfig = { templateOptions: { displayProperty } };
       return Merge(suggestTemplateConfig, suggestTemplate);
    },
 
@@ -79,7 +79,7 @@ let _private = {
  *
  * @public
  */
-let Suggest = Control.extend({
+const Suggest = Control.extend({
 
    _template: template,
    _suggestState: false,
@@ -134,8 +134,8 @@ let Suggest = Control.extend({
 
       if (newOptions.selectedKey !== undefined && (newOptions.selectedKey !== this._options.selectedKey ||
          newOptions.source !== this._options.source)) {
-         let self = this;
-         return _private.loadSelectedItem(this, newOptions).addCallback(function(items) {
+         const self = this;
+         return _private.loadSelectedItem(this, newOptions).addCallback((items) => {
             _private.updateValue(self, self._value);
             self._forceUpdate();
             return items;
@@ -163,17 +163,15 @@ let Suggest = Control.extend({
 });
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3,
-      borderVisibility: 'partial',
-      suggestState: false,
-      suggestTemplate: {
-         templateName: 'Controls/suggestPopup:SuggestTemplate'
-      },
-      footerTemplate: null
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3,
+    borderVisibility: 'partial',
+    suggestState: false,
+    suggestTemplate: {
+        templateName: 'Controls/suggestPopup:SuggestTemplate'
+    },
+    footerTemplate: null
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

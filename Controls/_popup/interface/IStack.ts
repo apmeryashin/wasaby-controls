@@ -166,7 +166,7 @@ export interface IStackOpener extends IOpener {
 * @cfg {Number} Width of popup.
 */
 
-    /**
+/**
  * @name Controls/_popup/interface/IStackOpener#maxWidth
  * @cfg {Number} Максимально допустимая ширина стекового окна.
  * @remark

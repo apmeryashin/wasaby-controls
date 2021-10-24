@@ -394,7 +394,7 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @cfg {Controls/buttons:TButtonStyle} Стиль отображения кнопки применения фильтрации.
  */
 
- /**
+/**
  * @name Controls/_filterPopup/interface/IFilterPanel#groupProperty
  * @cfg {String} Имя параметра, содержащего название группы элемента. Поддерживается группировка только в блоке "Еще можно отобрать".
  * @demo Controls-demo/Filter_new/DetailPanel/GroupProperty/Index

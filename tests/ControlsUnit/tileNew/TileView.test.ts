@@ -10,7 +10,9 @@ import {SyntheticEvent} from 'UI/Vdom';
 import TileCollectionItem from 'Controls/_tile/display/TileCollectionItem';
 
 describe('Controls/_tile/TileView', () => {
-    let tileView, model, cfg;
+    let tileView;
+    let model;
+    let cfg;
     beforeEach(() => {
         model = new TileCollection({
             tileMode: 'static',

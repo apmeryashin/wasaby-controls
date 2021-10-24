@@ -84,7 +84,7 @@ class ModuleClass {
     }
 
     private _shift(delta) {
-        this.ranges = this.ranges.map(function(range) {
+        this.ranges = this.ranges.map((range) => {
             return Range.shiftPeriod(range[0], range[1], delta);
         });
     }
@@ -102,9 +102,9 @@ class ModuleClass {
             return;
          }
 
-        const updatedStartValue = updatedRange[0],
-            updatedEndValue = updatedRange[1],
-            updatedPeriodType = getPeriodType(updatedStartValue, updatedEndValue);
+        const updatedStartValue = updatedRange[0];
+        const updatedEndValue = updatedRange[1];
+        const updatedPeriodType = getPeriodType(updatedStartValue, updatedEndValue);
 
         let capacityChanged = false;
         if (this._rangeIsNotEmpty(ranges[changedRangeIndex])) {
@@ -114,7 +114,7 @@ class ModuleClass {
         if (changedRangeIndex < ranges.length - 1) {
             this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged);
          }
-        if (/**this._options.onlyByCapacity &&**/ changedRangeIndex > 0) {
+        if (/* this._options.onlyByCapacity && */ changedRangeIndex > 0) {
             this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex - 1][0], capacityChanged);
          }
     }
@@ -170,7 +170,7 @@ class ModuleClass {
     }
 
     protected _getChangedIndex(ranges: Date[]): number {
-        for (let i in this.ranges) {
+        for (const i in this.ranges) {
             if (!dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) || !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])) {
                 return parseInt(i, 10);
             }
@@ -179,9 +179,10 @@ class ModuleClass {
     }
 
     private _getRangesFromOptions(options) {
-        let ranges = [],
-            i, j;
-        for (let field in options) {
+        const ranges = [];
+        let i;
+        let j;
+        for (const field in options) {
             if (options.hasOwnProperty(field)) {
                 i = null;
                 if (field.indexOf('startValue') === 0) {
@@ -211,16 +212,23 @@ class ModuleClass {
     }
 
     private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
-        let selectionType: SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months,
-            start = newRange[0],
-            end = newRange[1],
-            oldStart = ranges[rangeIndex][0],
-            oldEnd = ranges[rangeIndex][1],
-            respRanges = [],
-            periodType, periodLength, oldPeriodType, oldPeriodLength,
-            step, capacityChanged, control, lastDate, i;
+        let selectionType: SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months;
+        const start = newRange[0];
+        const end = newRange[1];
+        const oldStart = ranges[rangeIndex][0];
+        const oldEnd = ranges[rangeIndex][1];
+        const respRanges = [];
+        let periodType;
+        let periodLength;
+        let oldPeriodType;
+        let oldPeriodLength;
+        let step;
+        let capacityChanged;
+        let control;
+        let lastDate;
+        let i;
 
-        const getStep = (number) => {
+        const getStep = (value) => {
             let newStep;
             if (selectionType === SLIDE_DATE_TYPE.days) {
                 return periodLength;
@@ -230,7 +238,7 @@ class ModuleClass {
             // and the month of the periods differ or step is not aligned to the new capacity,
             // then we also set adjacent periods.
             const isStepDivides = (stepLength: number) => {
-                return steps[number] % stepLength === 0;
+                return steps[value] % stepLength === 0;
             };
 
             const monthsAreEqual = start.getMonth() === oldStart?.getMonth();
@@ -241,7 +249,7 @@ class ModuleClass {
                     periodLength > oldPeriodLength &&  (!monthsAreEqual || !isStepDivides(periodLength)))) {
                 newStep = periodLength;
             } else {
-                newStep = steps[number] || periodLength;
+                newStep = steps[value] || periodLength;
             }
 
             if (newStep < periodLength) {
