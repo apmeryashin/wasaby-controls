@@ -1,0 +1,22 @@
+{
+   "extends": "./tslint.json",
+   "linterOptions": {
+      "exclude": [
+         "application/**/*.*",
+         "build-ui/**/*.*",
+         "node_modules/**/*.*"
+      ]
+   },
+   "rules": {
+      "no-shadowed-variable": false,
+      "triple-equals": false,
+      "no-parameter-reassignment": false,
+      "ban-ts-ignore": false,
+      "no-magic-numbers": false,
+      "no-console": false,
+      "max-line-length": false,
+      "ban-types": false,
+      "no-any": false,
+      "typedef": false
+   }
+}
