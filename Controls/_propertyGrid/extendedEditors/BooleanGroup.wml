@@ -12,6 +12,7 @@
                         icons="{{[button.icon + ' icon-small']}}"
                         iconStyle="secondary"
                         tooltip="{{button.tooltip}}"
+                        validationStatus="{{_options.validationStatus}}"
                         on:valueChanged="_valueChangedHandler(index)"/>
         </Controls.Container.Async>
     </ws:for>
