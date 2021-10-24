@@ -45,7 +45,7 @@ class DateLitePopupSource extends Memory {
 
             this._each(
                 items,
-                function(item) {
+                (item) => {
                     adapter.add(item);
                 }
             );
@@ -54,7 +54,7 @@ class DateLitePopupSource extends Memory {
                 total: monthEqual ? { before: true, after: true } : true
             });
 
-            setTimeout(function() {
+            setTimeout(() => {
                 deferred.callback(items);
             }, 300);
 

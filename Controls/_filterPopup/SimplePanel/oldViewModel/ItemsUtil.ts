@@ -41,7 +41,7 @@ const ItemsUtil = {
             return display.getItemBySourceItem(list.getRecordById(id));
         } else {
             let resItem;
-            display.each(function(item, i) {
+            display.each((item) => {
                 if (ItemsUtil.getPropertyValue(item.getContents(), keyProperty) == id) {
                     resItem = item;
                 }

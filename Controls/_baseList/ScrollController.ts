@@ -89,11 +89,11 @@ export default class ScrollController {
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
     // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
-    // tslint:disable-next-line
+    // tslint:disable-next-line:no-any
     protected _options: any;
 
     // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
-    // tslint:disable-next-line
+    // tslint:disable-next-line:no-any
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
         if (options.needScrollCalculation && options.virtualScrollConfig) {

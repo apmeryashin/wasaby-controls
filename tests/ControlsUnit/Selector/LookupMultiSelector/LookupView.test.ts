@@ -27,11 +27,11 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       const placeholder = 'testPlaceholder';
       // Избавимся от работы с версткой
       delete getWidthUtil.getWidth;
-      getWidthUtil.getWidth = function() {
+      getWidthUtil.getWidth = () => {
          return placeholderWidth;
       };
       delete lookupView._getFieldWrapperWidth;
-      lookupView._getFieldWrapperWidth = function() {
+      lookupView._getFieldWrapperWidth = () => {
          return  fieldWrapperWidth;
       };
       delete lookupView._initializeConstants;
@@ -51,11 +51,11 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       getWidthUtil.getWidth = originGetWidth;
    });
 
-   it('_calculateSizes', function() {
+   it('_calculateSizes', () => {
       const availableWidthCollection = 200;
       const lookupView = new Lookup({});
 
-      lookupView._getAvailableWidthCollection = function() {
+      lookupView._getAvailableWidthCollection = () => {
          return availableWidthCollection;
       };
       lookupView._items = getItems(2);
@@ -66,7 +66,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       strictEqual(lookupView._availableWidthCollection, availableWidthCollection);
    });
 
-   it('_isInputVisible', function() {
+   it('_isInputVisible', () => {
       const lookupView = new Lookup();
 
       lookupView._items = getItems(5);
@@ -80,7 +80,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       ok(!!!lookupView._isInputVisible(lookupView._options));
    });
 
-   it('_isNeedCalculatingSizes', function() {
+   it('_isNeedCalculatingSizes', () => {
       const lookupView = new Lookup();
 
       lookupView._items = getItems(0);

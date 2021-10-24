@@ -123,7 +123,7 @@ const DropdownViewModel = BaseViewModel.extend({
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty || 'title'
             });
-            this._itemsModel.subscribe('onListChange', function() {
+            this._itemsModel.subscribe('onListChange', () => {
                self._nextVersion();
             });
             this._hierarchy = new entity.relation.Hierarchy({
@@ -287,7 +287,7 @@ const DropdownViewModel = BaseViewModel.extend({
             let hasAdditional = false;
 
             if (this._options.additionalProperty && this._options.rootKey === null) {
-               this._options.items.each(function(item) {
+               this._options.items.each((item) => {
                   if (!hasAdditional) {
                      hasAdditional = item.get(self._options.additionalProperty) && !_private.isHistoryItem(item);
                   }

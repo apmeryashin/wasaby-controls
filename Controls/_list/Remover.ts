@@ -163,10 +163,8 @@ FIXME: Нельзя отсюда убирать контекст и заменя
   </div>
 </Controls.list:DataContainer>
  */
-Remover.contextTypes = function() {
-    return {
-        dataOptions
-    };
-};
+Remover.contextTypes = () => ({
+    dataOptions
+});
 
 export = Remover;

@@ -20,7 +20,7 @@ import {constants, detection, coreDebug} from 'Env/Env';
 import 'css!Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
-   const idx = arrayFindIndex(array, function(op) {
+   const idx = arrayFindIndex(array, (op) => {
       return op === operation;
    });
    array.splice(idx, 1);
@@ -183,7 +183,7 @@ const CompoundArea = CompoundContainer.extend([
          EnvEvent.Bus.globalChannel().notify('onFloatAreaCreating', this);
          self.setEnabled(self._enabled);
       });
-      self.once('onAfterLoad', function() {
+      self.once('onAfterLoad', () => {
          EnvEvent.Bus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
       });
 
@@ -260,12 +260,12 @@ const CompoundArea = CompoundContainer.extend([
       // не вызывается браузерная перерисовка. вызываю вручную
       if (container && constants.browser.isMobileIOS) {
          container = container.get ? container.get(0) : container;
-         setTimeout(function() {
+         setTimeout(() => {
             container.style.webkitTransform = 'scale(1)';
 
             // Если внутри контейнера верстка написана абсолютами с большой вложенностью, ios при scale(1) просто ее не показывает.
             // Пример ошибки https://online.sbis.ru/opendoc.html?guid=bb492dee-cc34-4e60-9174-5224ef47f047
-            setTimeout(function() {
+            setTimeout(() => {
                container.style.webkitTransform = '';
             }, 200);
          }, 100);
@@ -320,7 +320,7 @@ const CompoundArea = CompoundContainer.extend([
       } else {
           self._setCustomContentAsync();
           self._registerLinkedView();
-          runDelayed(function() {
+          runDelayed(() => {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
             // панели, т. к. этот callback вызывается уже после полного цикла создания
             // старой области, и фокус могли проставить с прикладной стороны (в onInit,
@@ -418,9 +418,9 @@ const CompoundArea = CompoundContainer.extend([
       self._trackTarget(true);
       self._createBeforeCloseHandlerPending();
 
-      self.rebuildChildControl().addCallback(function() {
-         runDelayed(function() {
-            runDelayed(function() {
+      self.rebuildChildControl().addCallback(() => {
+         runDelayed(() => {
+            runDelayed(() => {
                self._notifyCompound('onResize');
             });
          });
@@ -492,7 +492,7 @@ const CompoundArea = CompoundContainer.extend([
       if (track) {
          trackElement(target)
             .subscribe('onMove',
-               function(event, offset, isInitial) {
+               (event, offset, isInitial) => {
                   if (!self.isDestroyed() && !isInitial) {
                      if (self._options.closeOnTargetScroll) {
                         // 1. Если показалась клавиатура, то не реагируем на onMove таргета
@@ -511,7 +511,7 @@ const CompoundArea = CompoundContainer.extend([
                   }
                })
             .subscribe('onVisible',
-               function(event, visibility) {
+               (event, visibility) => {
                   if (!self.isDestroyed() && !visibility) {
                      // После правок на шаблон совместимости перестал вешаться класс. Вешается на окно.
                      const parentVdomPopup = $(self._options.target).closest('.controls-Popup');
@@ -788,10 +788,10 @@ const CompoundArea = CompoundContainer.extend([
    _confirmationClose(arg) {
       const self = this;
       if (!this._options.readOnly && this.getRecord().isChanged()) { // Запрашиваем подтверждение если сделали close()
-         self._openConfirmDialog(false, true).addCallback(function(result) {
+         self._openConfirmDialog(false, true).addCallback((result) => {
             switch (result) {
                case 'yesButton': {
-                  self.updateRecord().addCallback(function() {
+                  self.updateRecord().addCallback(() => {
                      self.close(arg);
                   });
                   break;
@@ -818,7 +818,7 @@ const CompoundArea = CompoundContainer.extend([
       if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
          const _this = this;
 
-         this._hoverTimer = setTimeout(function() {
+         this._hoverTimer = setTimeout(() => {
             _this.hide();
          }, 1000);
       }
@@ -951,7 +951,7 @@ const CompoundArea = CompoundContainer.extend([
    setRecord(record, noConfirm) {
       const self = this;
       if (!noConfirm) {
-         this.openConfirmDialog(true).addCallback(function(result) {
+         this.openConfirmDialog(true).addCallback((result) => {
             if (result) {
                self._setRecord(record);
             }
@@ -983,21 +983,21 @@ const CompoundArea = CompoundContainer.extend([
       const self = this;
       const deferred = new cDeferred();
       this._displaysConfirmDialog = true;
-      deferred.addCallback(function(result) {
+      deferred.addCallback((result) => {
          self._notify('onConfirmDialogSelect', result);
          self._displaysConfirmDialog = false;
          return result;
       });
       if ((self.getRecord().isChanged() && !self.isSaved()) || self._recordIsChanged) {
-         this._openConfirmDialog(false, true).addCallback(function(result) {
+         this._openConfirmDialog(false, true).addCallback((result) => {
             switch (result) {
                case 'yesButton': {
                   if (self._result === undefined) {
                      self._result = true;
                   }
-                  self.updateRecord().addCallback(function() {
+                  self.updateRecord().addCallback(() => {
                      self._confirmDialogToCloseActions(deferred, noHide);
-                  }).addErrback(function() {
+                  }).addErrback(() => {
                      deferred.callback(false);
                   });
                   break;
@@ -1276,7 +1276,7 @@ const CompoundArea = CompoundContainer.extend([
                   // Перед тем как снять ws-insivible - пересчитаем размеры попапа, т.к. верстка могла измениться
                   self._notifyVDOM('controlResize', [], { bubbling: true });
 
-                  runDelayed(function() {
+                  runDelayed(() => {
                      item.popupOptions.className = item.popupOptions.className.replace(invisibleRe, '');
                      container.className = container.className.replace(invisibleRe, '');
                      if (self._options.catchFocus) {
@@ -1498,7 +1498,7 @@ const CompoundArea = CompoundContainer.extend([
    },
    finishChildPendingOperations(needSavePendings) {
       const self = this;
-      const checkFn = function(prevResult) {
+      const checkFn = (prevResult) => {
             const childOps = self._childPendingOperations;
             let result;
             let allChildrenPendingOperation;
@@ -1512,12 +1512,12 @@ const CompoundArea = CompoundContainer.extend([
             if (finishResultOk(prevResult) && childOps.length > 0) {
                result = childOps[0].finishFunc(needSavePendings);
                if (result instanceof cDeferred) {
-                  result.addCallback(function(res) {
+                  result.addCallback((res) => {
                      if (finishResultOk(res)) {
                         cleanupFirst();
                      }
                      return checkFn(res);
-                  }).addErrback(function(res) {
+                  }).addErrback((res) => {
                      return checkFn(res);
                   });
                } else {
@@ -1569,7 +1569,7 @@ const CompoundArea = CompoundContainer.extend([
       return result;
    },
    _finishAllPendingsWithSave() {
-      this._pending.forEach(function(pending) {
+      this._pending.forEach((pending) => {
          pending.callback(true);
       });
    },
@@ -1583,7 +1583,7 @@ const CompoundArea = CompoundContainer.extend([
    getAllPendingInfo() {
       const res = [];
       const self = this;
-      this._pending.forEach(function(pending, index) {
+      this._pending.forEach((pending, index) => {
          res.push({
             pending,
             trace: self._pendingTrace[index]
@@ -1620,12 +1620,12 @@ const CompoundArea = CompoundContainer.extend([
       let result;
 
       // Сперва отберем Deferred, которые завершились
-      result = this._pending.filter(function(dfr) {
+      result = this._pending.filter((dfr) => {
          return dfr.isReady();
       });
 
       // Затем получим их результаты
-      result = result.map(function(dfr) {
+      result = result.map((dfr) => {
          return dfr.getResult();
       });
 

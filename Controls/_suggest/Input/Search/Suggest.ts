@@ -106,12 +106,10 @@ const Suggest = Control.extend({
 });
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3,
-      suggestState: false
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3,
+    suggestState: false
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

@@ -23,11 +23,11 @@ const DEFAULT_SORTING_ORDER = 'asc';
 const _private = {
     moveItems(self, items, target, position) {
         const useAction = _private.useAction(items);
-        const afterItemsMove = function(result) {
+        const afterItemsMove = (result) => {
             _private.afterItemsMove(self, items, target, position, result);
             return result;
         };
-        return _private.beforeItemsMove(self, items, target, position).addCallback(function(beforeItemsMoveResult) {
+        return _private.beforeItemsMove(self, items, target, position).addCallback((beforeItemsMoveResult) => {
             if (useAction) {
                 return self._action.execute({
                     selection: _private.convertItemsToISelectionObject(items),
@@ -40,7 +40,7 @@ const _private = {
             if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
                 return _private.moveInItems(self, items, target, position);
             } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-                return _private.moveInSource(self, items, target, position).addCallback(function(moveResult) {
+                return _private.moveInSource(self, items, target, position).addCallback((moveResult) => {
                     _private.moveInItems(self, items, target, position);
                     return moveResult;
                 });
@@ -82,7 +82,7 @@ const _private = {
         const targetItem = _private.getModelByItem(self, targetId);
         let targetIndex = self._items.getIndex(targetItem);
 
-        items.forEach(function(item) {
+        items.forEach((item) => {
             movedItem = _private.getModelByItem(self, item);
             if (movedItem) {
                 if (position === LOCAL_MOVE_POSITION.Before) {
@@ -112,7 +112,7 @@ const _private = {
 
     hierarchyMove(self, items, target) {
         const targetId = _private.getIdByItem(self, target);
-        items.forEach(function(item) {
+        items.forEach((item) => {
             item = _private.getModelByItem(self, item);
             if (item) {
                 item.set(self._options.parentProperty, targetId);
@@ -122,7 +122,7 @@ const _private = {
 
     moveInSource(self, items, target, position) {
         const targetId = _private.getIdByItem(self, target);
-        const idArray = items.map(function(item) {
+        const idArray = items.map((item) => {
             return _private.getIdByItem(self, item);
         });
 
@@ -256,7 +256,7 @@ const _private = {
             item = items.getRecordById(id);
         }
         if (path) {
-            path.forEach(function(elem) {
+            path.forEach((elem) => {
                 if (toMap.indexOf(elem.get(self._keyProperty)) === -1) {
                     toMap.push('' + elem.get(self._keyProperty));
                 }
@@ -292,7 +292,7 @@ const _private = {
 
     prepareMovedItems(self, items) {
         const result = [];
-        items.forEach(function(item) {
+        items.forEach((item) => {
             result.push(_private.getIdByItem(self, item));
         });
         return result;
@@ -428,7 +428,7 @@ const Mover = BaseAction.extend({
         if (_private.useAction(items)) {
             return _private.moveItems(self, items, target, position);
         } else {
-            return _private.getItemsBySelection.call(this, items).addCallback(function(items) {
+            return _private.getItemsBySelection.call(this, items).addCallback((items) => {
                 items = items.filter((item) => {
                     return _private.checkItem(self, item, target, position);
                 });
@@ -459,11 +459,9 @@ const Mover = BaseAction.extend({
     }
 });
 
-Mover.getDefaultOptions = function() {
-    return {
-        sortingOrder: DEFAULT_SORTING_ORDER
-    };
-};
+Mover.getDefaultOptions = () => ({
+    sortingOrder: DEFAULT_SORTING_ORDER
+});
 
 Object.defineProperty(Mover, 'defaultProps', {
    enumerable: true,

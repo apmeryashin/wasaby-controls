@@ -84,7 +84,7 @@ class ModuleClass {
     }
 
     private _shift(delta) {
-        this.ranges = this.ranges.map(function(range) {
+        this.ranges = this.ranges.map((range) => {
             return Range.shiftPeriod(range[0], range[1], delta);
         });
     }

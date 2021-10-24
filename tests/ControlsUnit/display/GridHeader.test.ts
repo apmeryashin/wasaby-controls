@@ -9,7 +9,7 @@ describe('Controls/grid:GridHeader', () => {
             isFullGridSupport: () => isFullGridSupport
         });
 
-        it('should sticky header if options.stickyHeader === true in full grid support browsers', function() {
+        it('should sticky header if options.stickyHeader === true in full grid support browsers', () => {
             const header = new GridHeader({
                 owner: getOwnerMock(true, true),
                 columnsConfig: [{}],
@@ -18,7 +18,7 @@ describe('Controls/grid:GridHeader', () => {
             assert.isTrue(header.isSticked());
         });
 
-        it('should not sticky header if options.stickyHeader === false in full grid support browsers', function() {
+        it('should not sticky header if options.stickyHeader === false in full grid support browsers', () => {
             const header = new GridHeader({
                 owner: getOwnerMock(false, true),
                 columnsConfig: [{}],
@@ -27,7 +27,7 @@ describe('Controls/grid:GridHeader', () => {
             assert.isFalse(header.isSticked());
         });
 
-        it('should not sticky header in browsers without grid support', function() {
+        it('should not sticky header in browsers without grid support', () => {
             const header = new GridHeader({
                 owner: getOwnerMock(true, false),
                 columnsConfig: [{}],
@@ -38,7 +38,7 @@ describe('Controls/grid:GridHeader', () => {
     });
 
     describe('.isMultiline()', () => {
-        it('should returns false for solo row header', function() {
+        it('should returns false for solo row header', () => {
             const header = new GridHeader({
                 owner: {},
                 columnsConfig: [{}],
@@ -53,7 +53,7 @@ describe('Controls/grid:GridHeader', () => {
             isFullGridSupport: () => true
         });
 
-        it('should returns GridHeaderRow', function() {
+        it('should returns GridHeaderRow', () => {
             const header = new GridHeader({
                 owner: getOwnerMock(),
                 columnsConfig: [{}],
@@ -69,7 +69,7 @@ describe('Controls/grid:GridHeader', () => {
             isFullGridSupport: () => true
         });
 
-        it('simple header', function() {
+        it('simple header', () => {
             const header = new GridHeader({
                 owner: getOwnerMock(),
                 columnsConfig: [{}, {}],
@@ -81,7 +81,7 @@ describe('Controls/grid:GridHeader', () => {
             }, header.getBounds());
         });
 
-        it('two line header', function() {
+        it('two line header', () => {
             const header = new GridHeader({
                 owner: getOwnerMock(),
                 columnsConfig: [
@@ -97,7 +97,7 @@ describe('Controls/grid:GridHeader', () => {
             }, header.getBounds());
         });
 
-        it('invalid configuration', function() {
+        it('invalid configuration', () => {
             const header = new GridHeader({
                 owner: getOwnerMock(),
                 columnsConfig: [

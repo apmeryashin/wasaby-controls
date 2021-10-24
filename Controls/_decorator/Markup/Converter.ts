@@ -83,7 +83,7 @@ function nodeToJson(node) {
     * @param html {String}
     * @returns {Array}
     */
-const htmlToJson = function(html) {
+const htmlToJson = (html) => {
       if (!constants.isBrowserPlatform) {
          IoC.resolve('ILogger')
             .error('Controls/_decorator/Markup/Converter' , 'htmlToJson method doesn\'t work on server-side');
@@ -150,7 +150,7 @@ const htmlToJson = function(html) {
     * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
     * @returns {String}
     */
-const jsonToHtml = function(json, tagResolver?, resolverParams?) {
+const jsonToHtml = (json, tagResolver?, resolverParams?) => {
       const generatorConfig = getGeneratorConfig();
       const result = template({
          _options: {
@@ -178,7 +178,7 @@ const jsonToHtml = function(json, tagResolver?, resolverParams?) {
     * @param json
     * @return {Array}
     */
-const deepCopyJson = function(json) {
+const deepCopyJson = (json) => {
       return objectMerge([], json, { clone: true });
    };
 

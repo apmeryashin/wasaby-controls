@@ -33,8 +33,8 @@ function getLookup(): Lookup {
    return lookup;
 }
 
-describe('Controls/_lookup/BaseLookupView', function() {
-   it('_beforeMount', function() {
+describe('Controls/_lookup/BaseLookupView', () => {
+   it('_beforeMount', () => {
       const lookup = new Lookup();
       let options;
 
@@ -62,7 +62,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       strictEqual(lookup._getInputValue(options), 'test');
    });
 
-   it('_afterUpdate', function() {
+   it('_afterUpdate', () => {
       let configActivate;
       let activated = false;
       const lookup = new Lookup();
@@ -70,7 +70,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       lookup._suggestState = false;
       lookup._needSetFocusInInput = true;
       lookup._options.items = getItems(0);
-      lookup.activate = function(config) {
+      lookup.activate = (config) => {
          configActivate = config;
          activated = true;
       };
@@ -93,13 +93,13 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(lookup._suggestState);
    });
 
-   it('_changeValueHandler', function() {
+   it('_changeValueHandler', () => {
       const lookup = new Lookup();
       let newValue = [];
 
       lookup.saveOptions(Lookup.getDefaultOptions());
 
-      lookup._notify = function(event, value) {
+      lookup._notify = (event, value) => {
          if (event === 'valueChanged') {
             newValue = value;
          }
@@ -109,7 +109,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       strictEqual(lookup._inputValue, 1);
    });
 
-   it('_choose', function() {
+   it('_choose', () => {
       let itemAdded = false;
       const lookup = new Lookup();
       let isActivated = false;
@@ -118,11 +118,11 @@ describe('Controls/_lookup/BaseLookupView', function() {
 
       lookup.saveOptions({});
       lookup._isInputVisible = false;
-      lookup._addItem = function(value) {
+      lookup._addItem = (value) => {
          lastValueAtNotify = value;
          itemAdded = true;
       };
-      lookup.activate = function() {
+      lookup.activate = () => {
          isActivated = true;
 
          // activate input before add.
@@ -152,14 +152,14 @@ describe('Controls/_lookup/BaseLookupView', function() {
       strictEqual(lastValueAtNotify, selectedItem);
    });
 
-   it('_deactivated', function() {
+   it('_deactivated', () => {
       const lookup = getLookup();
       lookup._suggestState = true;
       lookup._deactivated();
       ok(!lookup._suggestState);
    });
 
-   it('_suggestStateChanged', function() {
+   it('_suggestStateChanged', () => {
       const lookup = getLookup();
 
       lookup._beforeMount({selectedKeys: []});
@@ -168,7 +168,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._suggestState);
 
       lookup._suggestState = true;
-      lookup._isInputVisible = function() {
+      lookup._isInputVisible = () => {
          return true;
       };
       lookup._suggestStateChanged({}, true);
@@ -179,16 +179,16 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._suggestState);
    });
 
-   it('_determineAutoDropDown', function() {
+   it('_determineAutoDropDown', () => {
       const lookup = new Lookup();
       lookup._items = getItems(1);
-      lookup._isInputVisible = function() {
+      lookup._isInputVisible = () => {
          return false;
       };
       lookup._options.autoDropDown = true;
       ok(!lookup._determineAutoDropDown());
       lookup._items.clear();
-      lookup._isInputVisible = function() {
+      lookup._isInputVisible = () => {
          return true;
       };
       ok(lookup._determineAutoDropDown());
@@ -197,7 +197,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._determineAutoDropDown());
    });
 
-   it('_onMouseDownShowSelector', function() {
+   it('_onMouseDownShowSelector', () => {
       const lookup = getLookup();
 
       lookup._getFieldWrapperWidth = () => {/* FIXME: sinon mock */};
@@ -224,7 +224,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       strictEqual(configActivate, undefined);
    });
 
-   it('_keyDown', function() {
+   it('_keyDown', () => {
       let isNotifyShowSelector = false;
       let isNotifyRemoveItems = false;
       const lookup = new Lookup();
@@ -282,17 +282,17 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(isNotifyShowSelector);
    });
 
-   it('_openInfoBox', function() {
+   it('_openInfoBox', () => {
       const config = {};
       let isNotifyOpenPopup = false;
       const lookup = getLookup();
 
       lookup._suggestState = true;
-      lookup._getContainer = function() {
+      lookup._getContainer = () => {
          return {offsetWidth: 100};
       };
       lookup._getOffsetForInfobox = () => 5;
-      lookup._notify = function(eventName) {
+      lookup._notify = (eventName) => {
          if (eventName === 'openInfoBox') {
             isNotifyOpenPopup = true;
          }
@@ -311,12 +311,12 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(isNotifyOpenPopup);
    });
 
-   it('_closeInfoBox', function() {
+   it('_closeInfoBox', () => {
       let isNotifyClosePopup = false;
       const lookup = new Lookup();
 
       lookup._infoboxOpened = true;
-      lookup._notify = function(eventName) {
+      lookup._notify = (eventName) => {
          if (eventName === 'closeInfoBox') {
             isNotifyClosePopup = true;
          }
@@ -327,7 +327,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(isNotifyClosePopup);
    });
 
-   it('resetInputValue', function() {
+   it('resetInputValue', () => {
       const lookup = new Lookup();
       const sandbox = sinon.createSandbox();
       const stub = sandbox.stub(lookup, '_notify');
@@ -365,7 +365,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(forceUpdateCalled);
    });
 
-   it('activate', function() {
+   it('activate', () => {
       let isActivate = false;
       const lookup = new Lookup();
 
@@ -387,12 +387,12 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._needSetFocusInInput);
    });
 
-   it('_isInputActive', function() {
+   it('_isInputActive', () => {
       let inputIsVisible = true;
       const lookup = new Lookup();
       lookup._items = getItems(0);
 
-      lookup._isInputVisible = function() {
+      lookup._isInputVisible = () => {
          return inputIsVisible;
       };
 
@@ -405,7 +405,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._isInputActive({readOnly: true}));
    });
 
-   it('_isShowCollection', function() {
+   it('_isShowCollection', () => {
       const lookup = new Lookup();
 
       lookup._maxVisibleItems = 1;
@@ -426,12 +426,12 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!!!lookup._isShowCollection());
    });
 
-   it('_itemClick', function() {
+   it('_itemClick', () => {
       let isNotifyItemClick = false;
       const lookup = getLookup();
 
       lookup._suggestState = true;
-      lookup._notify = function(eventName) {
+      lookup._notify = (eventName) => {
          if (eventName === 'itemClick') {
             isNotifyItemClick = true;
          }
@@ -468,7 +468,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._needSetFocusInInput);
    });
 
-   it('_resize', function() {
+   it('_resize', () => {
       const lookupView = new Lookup({});
       const oldFieldWrapperWidth = 500;
       let newFieldWrapperWidth = 500;

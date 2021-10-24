@@ -110,7 +110,7 @@ if (constants.isBrowserPlatform) {
             // Public properties.
             this.thresholds = this._initThresholds(options.threshold);
             this.root = options.root || null;
-            this.rootMargin = this._rootMarginValues.map(function(margin) {
+            this.rootMargin = this._rootMarginValues.map((margin) => {
                 return margin.value + margin.unit;
             }).join(' ');
         }
@@ -140,9 +140,7 @@ if (constants.isBrowserPlatform) {
          * @param {Element} target The DOM element to observe.
          */
         IntersectionObserver.prototype.observe = function(target) {
-            const isTargetAlreadyObserved = this._observationTargets.some(function(item) {
-                return item.element == target;
-            });
+            const isTargetAlreadyObserved = this._observationTargets.some((item) => item.element == target);
 
             if (isTargetAlreadyObserved) {
                 return;
@@ -164,10 +162,7 @@ if (constants.isBrowserPlatform) {
          */
         IntersectionObserver.prototype.unobserve = function(target) {
             this._observationTargets =
-                this._observationTargets.filter(function(item) {
-
-                    return item.element != target;
-                });
+                this._observationTargets.filter((item) => item.element != target);
             if (!this._observationTargets.length) {
                 this._unmonitorIntersections();
                 this._unregisterInstance();
@@ -204,13 +199,13 @@ if (constants.isBrowserPlatform) {
          *     a list of threshold values, defaulting to [0].
          * @return {Array} A sorted list of unique and valid threshold values.
          */
-        IntersectionObserver.prototype._initThresholds = function(optThreshold) {
+        IntersectionObserver.prototype._initThresholds = (optThreshold) => {
             let threshold = optThreshold || [0];
             if (!Array.isArray(threshold)) {
                 threshold = [threshold];
             }
 
-            return threshold.sort().filter(function(t, i, a) {
+            return threshold.sort().filter((t, i, a) => {
                 if (typeof t != 'number' || isNaN(t) || t < 0 || t > 1) {
                     throw new Error('threshold must be a number between 0 and 1 inclusively');
                 }
@@ -229,9 +224,9 @@ if (constants.isBrowserPlatform) {
          * @return {Array<Object>} An array of margin objects with the keys
          *     value and unit.
          */
-        IntersectionObserver.prototype._parseRootMargin = function(optRootMargin) {
+        IntersectionObserver.prototype._parseRootMargin = (optRootMargin) => {
             const marginString = optRootMargin || '0px';
-            const margins = marginString.split(/\s+/).map(function(margin) {
+            const margins = marginString.split(/\s+/).map((margin) => {
                 const parts = /^(-?\d*\.?\d+)(px|%)$/.exec(margin);
                 if (!parts) {
                     throw new Error('rootMargin must be specified in pixels or percent');
@@ -468,7 +463,7 @@ if (constants.isBrowserPlatform) {
          * @private
          */
         IntersectionObserver.prototype._expandRectByRootMargin = function(rect) {
-            const margins = this._rootMarginValues.map(function(margin, i) {
+            const margins = this._rootMarginValues.map((margin, i) => {
                 return margin.unit == 'px' ? margin.value
                     : margin.value * (i % 2 ? rect.width : rect.height) / 100;
             });
@@ -581,9 +576,9 @@ if (constants.isBrowserPlatform) {
          */
         function throttle(fn, timeout) {
             let timer = null;
-            return function() {
+            return () => {
                 if (!timer) {
-                    timer = setTimeout(function() {
+                    timer = setTimeout(() => {
                         fn();
                         timer = null;
                     }, timeout);

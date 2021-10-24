@@ -13,6 +13,8 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {detection} from 'Env/Env';
 import 'css!Controls/deprecatedFilter';
 
+// tslint:disable
+
 const _private = {
    getText(items) {
       const textArr = [];

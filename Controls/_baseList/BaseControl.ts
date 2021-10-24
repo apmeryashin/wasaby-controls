@@ -975,7 +975,7 @@ const _private = {
                         if (_private.isPagingNavigation(self._options.navigation)) {
                             self._currentPage = 1;
                         }
-                        self._finishScrollToEdgeOnDrawItems = function() {
+                        self._finishScrollToEdgeOnDrawItems = () => {
                             self._currentPage = 1;
                             self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                             self._notify('doScroll', ['top'], { bubbling: true });

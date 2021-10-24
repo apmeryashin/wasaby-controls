@@ -303,7 +303,7 @@ export default class StringValueConverter {
         let itemValue;
         let isZeroAtBeginning;
 
-        const getDate = function(autocompliteDefaultDate) {
+        const getDate = (autocompliteDefaultDate) => {
             autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
             if (autocompleteType === 'start') {
                 return 1;
@@ -314,7 +314,7 @@ export default class StringValueConverter {
             }
         };
 
-        const setValue = function(obj, value) {
+        const setValue = (obj, value) => {
             if (!obj.valid) {
                 obj.value = value;
                 obj.valid = true;

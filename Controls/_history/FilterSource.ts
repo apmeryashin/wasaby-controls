@@ -311,7 +311,7 @@ const _private = {
          поэтому сравниваем десериализованные объекты */
       let itemData = JSON.parse(JSON.stringify(data, _private.getSerialize().serialize), deserialize);
 
-      items.forEach(function(element) {
+      items.forEach((element) => {
          objectData = element.get('ObjectData');
          let deserializedData = objectData && JSON.parse(objectData, _private.getSerialize().deserialize);
          if (itemData && deserializedData) {
@@ -437,7 +437,7 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
          serData = JSON.stringify(data, _private.getSerialize(this).serialize);
 
-         return _private.getSourceByMeta(this, meta).update(serData, meta).addCallback(function(dataSet) {
+         return _private.getSourceByMeta(this, meta).update(serData, meta).addCallback((dataSet) => {
             if (dataSet) {
                _private.updateRecent(
                    self,

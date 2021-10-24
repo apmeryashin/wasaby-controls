@@ -34,7 +34,7 @@ describe('SizeAndVisibilityObserver', () => {
     let component;
     let container;
 
-    beforeEach(function() {
+    beforeEach(() => {
         global.document = {
             body: {}
         };
@@ -50,7 +50,7 @@ describe('SizeAndVisibilityObserver', () => {
         // sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
         global.document = undefined;
     });
@@ -62,16 +62,16 @@ describe('SizeAndVisibilityObserver', () => {
         });
     });
 
-    describe('_getStickyHeaderElements', function() {
+    describe('_getStickyHeaderElements', () => {
 
-        it('should returns [header.container]', function() {
+        it('should returns [header.container]', () => {
             const header = getHeader();
             component._getStickyHeaderElements(header);
             assert.deepEqual(component._getStickyHeaderElements(header), [header.getHeaderContainer()]);
         });
-        it('should returns array of all headers in group', function() {
+        it('should returns array of all headers in group', () => {
             const header = getHeader();
-            header.getChildrenHeaders = function() {
+            header.getChildrenHeaders = () => {
                 return [{
                     inst: {
                         getHeaderContainer() {
@@ -113,7 +113,7 @@ describe('SizeAndVisibilityObserver', () => {
             assert.equal(component._elementsHeight.length, entries.length);
         });
 
-        it('should call _getGroupByHeader and resizeHandler if header is group', function() {
+        it('should call _getGroupByHeader and resizeHandler if header is group', () => {
             const header = {
                 id: 1,
                 getHeaderContainer() {

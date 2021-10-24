@@ -105,14 +105,14 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       sandbox.restore();
    });
 
-   it('getInputMinWidth', function() {
+   it('getInputMinWidth', () => {
       const lookup = new Lookup();
       strictEqual(lookup._getInputMinWidth(330, 30, 24), 96);
       strictEqual(lookup._getInputMinWidth(330, 30, 30), 100);
       strictEqual(lookup._getInputMinWidth(150, 30, 24), 40);
    });
 
-   it('getMaxVisibleItems', function() {
+   it('getMaxVisibleItems', () => {
       const lookup = new Lookup();
       const items = [1, 2, 3, 4, 5];
       const itemsSizes = [5, 10, 25, 40, 15];
@@ -122,7 +122,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       deepStrictEqual(lookup._getMaxVisibleItems(items, itemsSizes, 999), items.length);
    });
 
-   it('getLastSelectedItems', function() {
+   it('getLastSelectedItems', () => {
       const item = new Model({
          rawData: {id: 1},
          keyProperty: 'id'
@@ -140,7 +140,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       deepStrictEqual(lookup._getLastSelectedItems(items, 10), [item, item2]);
    });
 
-   it('isShowCounter', function() {
+   it('isShowCounter', () => {
       const lookup = new Lookup();
       ok(lookup._isShowCounter(true, 10, 5));
       ok(!lookup._isShowCounter(true, 10, 20));
@@ -148,20 +148,20 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       ok(!lookup._isShowCounter(false, 1));
    });
 
-   it('getInputWidth', function() {
+   it('getInputWidth', () => {
       const lookup = new Lookup();
       strictEqual(lookup._getInputWidth(400, 200, 100), undefined);
       strictEqual(lookup._getInputWidth(400, 200, 300), 200);
    });
 
-   it('getMultiLineState', function() {
+   it('getMultiLineState', () => {
       const lookup = new Lookup();
       ok(lookup._getMultiLineState(200, 100, true));
       ok(!lookup._getMultiLineState(200, 300, true));
       ok(lookup._getMultiLineState(200, 300, false));
    });
 
-   it('_isNeedCalculatingSizes', function() {
+   it('_isNeedCalculatingSizes', () => {
       const lookup = new Lookup();
 
       lookup._items = getItems(0);
@@ -202,7 +202,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       }));
    });
 
-   it('_isInputVisible', function() {
+   it('_isInputVisible', () => {
       const lookup = new Lookup();
 
       lookup._items = getItems(0);
@@ -254,7 +254,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       }));
    });
 
-   it('_isInputActive', function() {
+   it('_isInputActive', () => {
       const lookup = new Lookup();
 
       lookup._items = getItems(0);
