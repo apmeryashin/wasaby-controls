@@ -11,6 +11,7 @@
                 icons="{{[button.icon + ' icon-small']}}"
                 iconStyle="secondary"
                 tooltip="{{button.tooltip}}"
+                validationStatus="{{_options.validationStatus}}"
                 on:valueChanged="_valueChangedHandler(index)"/>
     </ws:for>
 </div>
