@@ -288,7 +288,12 @@ describe('Controls/list_clean/ScrollController', () => {
             const controller = new ScrollController(options);
             let applyScrollTopCallbackCalled = false;
             const applyScrollTopCallback = () => applyScrollTopCallbackCalled = true;
-            controller.scrollPositionChange({scrollTop: 0, scrollHeight: 100, clientHeight: 50, applyScrollTopCallback}, true);
+            controller.scrollPositionChange({
+                scrollTop: 0,
+                scrollHeight: 100,
+                clientHeight: 50,
+                applyScrollTopCallback
+            }, true);
             assert.isFalse(applyScrollTopCallbackCalled);
         });
     });

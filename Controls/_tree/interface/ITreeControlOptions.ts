@@ -426,9 +426,9 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.tree:View
-      source="{{_viewSource}}"
-      parentProperty="parent"
-      nodeProperty="type" />
+ *    source="{{_viewSource}}"
+ *    parentProperty="parent"
+ *    nodeProperty="type" />
  * </pre>
  *
  * <pre class="brush: js">
@@ -453,7 +453,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  *                 title: 'Smartphones1',
  *                 parent: 1,
  *                 type: true,
-                   rating: '9.2',hasChild: true
+ *                 rating: '9.2',hasChild: true
  *             },
  *         ]
  *     });

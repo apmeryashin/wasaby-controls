@@ -4,21 +4,21 @@ import template = require('wml!Controls/_search/Misspell');
 import 'css!Controls/search';
 
 /**
-  * Контрол, отображающий подсказку, если в запросе при поиске найдена и исправлена опечатка.
-  *
-  * @remark
-  * Полезные ссылки:
-  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
-  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия}
-  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/search/change-layout/ Поиск со сменой раскладки}
-  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_search.less переменные тем оформления}
-  *
-  * @implements Controls/interface:ICaption
-  * @extends UI/Base:Control
-  *
-  * @public
-  * @author Крайнов Д.О.
-  */
+ * Контрол, отображающий подсказку, если в запросе при поиске найдена и исправлена опечатка.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/search/change-layout/ Поиск со сменой раскладки}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_search.less переменные тем оформления}
+ *
+ * @implements Controls/interface:ICaption
+ * @extends UI/Base:Control
+ *
+ * @public
+ * @author Крайнов Д.О.
+ */
 /*
  * //TODO KONGO A control that displays a tooltip if misspell was in search text was found.
  *

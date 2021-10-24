@@ -557,8 +557,8 @@ describe('Controls/suggest', () => {
          }
 
          inputContainer._setFilter({}, inputContainer._options);
-         inputContainer._notify = (event, val) => {
-            if (event === 'suggestStateChanged') {
+         inputContainer._notify = (nEvent, val) => {
+            if (nEvent === 'suggestStateChanged') {
                suggestState = val[0] as boolean;
             }
          };

@@ -6,7 +6,7 @@
 /**
  * @name Controls/_interface/IRUM#RUMEnabled
  * @cfg {Boolean} Позволяет включить сбор RUM-статистики
-*/
+ */
 
 /**
  * @name Controls/_interface/IRUM#pageName

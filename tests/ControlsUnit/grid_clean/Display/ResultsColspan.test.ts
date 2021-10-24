@@ -72,6 +72,7 @@ describe('Controls/grid_clean/Display/ResultsColspan', () => {
         assert.strictEqual(columnItems[0].getColspanStyles(), 'grid-column: 1 / 4;');
     });
 
+    // tslint:disable-next-line:max-line-length
     it('Initialize with resultsColspanCallback = (column, columnIndex) => columnIndex === 1 ? "end" : undefined ', () => {
         const gridCollection = new GridCollection({
             collection,
@@ -90,6 +91,7 @@ describe('Controls/grid_clean/Display/ResultsColspan', () => {
         assert.strictEqual(columnItems[1].getColspanStyles(), 'grid-column: 2 / 4;');
     });
 
+    // tslint:disable-next-line:max-line-length
     it('Initialize with resultsColspanCallback = (column, columnIndex) => columnIndex === 2 ? "end" : undefined ', () => {
         const gridCollection = new GridCollection({
             collection,

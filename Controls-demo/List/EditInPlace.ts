@@ -76,7 +76,8 @@ const devices = [
 function createDevicesData(keys: number[]) {
    return {
       keyProperty: 'id',
-      data: keys.map((key) => devices.find((device) => device.id === key)).map((item, index) => ({...item, id: index + 1}))
+      data: keys.map((key) => devices
+          .find((device) => device.id === key)).map((item, index) => ({...item, id: index + 1}))
    };
 }
 

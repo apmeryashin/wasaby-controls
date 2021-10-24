@@ -561,10 +561,10 @@ export default class Lookup extends BaseLookupInput {
  */
 
 /**
-* @name Controls/_lookup/Lookup#fontSize
-* @cfg
-* @demo Controls-demo/LookupNew/Input/FontSize/Index
-*/
+ * @name Controls/_lookup/Lookup#fontSize
+ * @cfg
+ * @demo Controls-demo/LookupNew/Input/FontSize/Index
+ */
 
 /**
  * @name Controls/_lookup/Lookup#toolbarItems

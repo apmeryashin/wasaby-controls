@@ -15,8 +15,10 @@ export default class extends Control {
    protected _selectedKeyCustomPlaceholder: any = [];
    protected _selectedKeysReadOnly: any = ['Иванова Зинаида Михайловна, ИП'];
    protected _selectedKeysMultiSelectReadOnly: any = ['Иванова Зинаида Михайловна, ИП', 'Все юридические лица', 'Наша компания'];
-   protected _selectedKeysMultiLineReadOnly = ['Иванова Зинаида Михайловна, ИП', 'Все юридические лица', 'Наша компания',
-      'Сбербанк-Финанс, ООО', 'Петросоюз-Континент, ООО', 'Альфа Директ сервис, ОАО', 'АК "ТРАНСНЕФТЬ", ОАО', 'Ромашка, ООО'];
+   protected _selectedKeysMultiLineReadOnly = [
+       'Иванова Зинаида Михайловна, ИП', 'Все юридические лица', 'Наша компания',
+       'Сбербанк-Финанс, ООО', 'Петросоюз-Континент, ООО',
+       'Альфа Директ сервис, ОАО', 'АК "ТРАНСНЕФТЬ", ОАО', 'Ромашка, ООО'];
    protected _selectedKeyLink: any = [];
    protected _selectedKeysDirectories: any = [];
    protected _source: Memory;

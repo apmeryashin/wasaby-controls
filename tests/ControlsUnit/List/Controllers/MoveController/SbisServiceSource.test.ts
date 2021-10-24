@@ -515,7 +515,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 })
                 .finally(() => {
 
-                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    // Ожидаю. что перемещение провалится из-за ошибки,
+                    // брошенной в контроллере на этапе открытия диалога
                     sinonAssert.called(stubLoggerError);
                     sinonAssert.notCalled(spyConfirmation);
                     assert.isTrue(callCatch);

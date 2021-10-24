@@ -91,11 +91,11 @@ describe('Controls/_display/Collection', () => {
 
     describe('.constructor()', () => {
         it('should use filter from options', () => {
-            const list = new List({
+            list = new List({
                 items: [1, 2, 3, 4]
             });
 
-            const display = new CollectionDisplay({
+            display = new CollectionDisplay({
                 collection: list,
                 filter: (item) => item === 3
             });
@@ -109,7 +109,7 @@ describe('Controls/_display/Collection', () => {
         });
 
         it('should use group from options', () => {
-            const list = new List({
+            list = new List({
                 items: [
                     {id: 1, group: 1},
                     {id: 2, group: 2},
@@ -117,7 +117,7 @@ describe('Controls/_display/Collection', () => {
                     {id: 4, group: 3}
                 ]
             });
-            const display = new CollectionDisplay({
+            display = new CollectionDisplay({
                 collection: list,
                 group: (item) => item.group
             });

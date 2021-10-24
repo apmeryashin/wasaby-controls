@@ -1056,7 +1056,10 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             entryPath: []
          });
 
-         const res = strategy.getSelectionForModel({selected: [null], excluded: [null, 11]}, undefined, undefined, 'sad');
+         const res = strategy.getSelectionForModel({
+             selected: [null],
+             excluded: [null, 11]
+         }, undefined, undefined, 'sad');
          assert.deepEqual(toArrayKeys(res.get(true)), [211]);
          assert.deepEqual(toArrayKeys(res.get(null)), [21]);
          assert.deepEqual(toArrayKeys(res.get(false)), [1, 11]);

@@ -1,5 +1,7 @@
 import * as MemorySourceData from 'Controls-demo/Utils/MemorySourceData';
 
+// tslint:disable:max-line-length
+
 const _departmentsDataLong = MemorySourceData.departments.concat(getLongData());
 const _departments = [
    { id: 1, title: 'Разработка', department: 'Разработка', owner: 'Новиков Д.В.' },

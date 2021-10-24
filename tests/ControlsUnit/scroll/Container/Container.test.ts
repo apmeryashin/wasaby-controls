@@ -238,7 +238,7 @@ describe('Controls/scroll:Container', () => {
             component._updateState(state);
             assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hideNativeScrollbar_ff-ie-edge controls-Scroll-ContainerBase__scroll_vertical');
         });
-        it('should update _scrollCssClass, scrollOrientation: "verticalHorizontal"', () => { // controls-Scroll-ContainerBase__scroll_vertical
+        it('should update _scrollCssClass, scrollOrientation: "verticalHorizontal"', () => {
             const component = createComponent(Container, {scrollOrientation: 'verticalHorizontal'});
             component._children = {
                 content: {

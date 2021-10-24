@@ -37,7 +37,7 @@ let DialogRecord;
 
 /**
  * Слой совместимости для открытия старых шаблонов в новых попапах
- * */
+ */
 const CompoundArea = CompoundContainer.extend([
    InstantiableMixin,
    LikeWindowMixin

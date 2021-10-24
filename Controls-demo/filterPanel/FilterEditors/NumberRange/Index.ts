@@ -29,7 +29,8 @@ export default class extends Control {
                     if (queryFilter.hasOwnProperty(filterField) && item.get(filterField)) {
                         const filterValue = queryFilter[filterField];
                         const itemValue = item.get(filterField);
-                        addToData = ((itemValue >= filterValue[0] || !filterValue[0]) && (itemValue <= filterValue[1] || !filterValue[1]));
+                        addToData = ((itemValue >= filterValue[0] || !filterValue[0])
+                            && (itemValue <= filterValue[1] || !filterValue[1]));
                     }
                 }
                 return addToData;

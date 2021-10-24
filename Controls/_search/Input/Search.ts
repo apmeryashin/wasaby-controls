@@ -351,7 +351,7 @@ Object.defineProperty(Search, 'defaultProps', {
  * @see style
  */
 
- /**
+/**
  * Сбрасывает значение в строке поиска
  * @name  Controls/_search/Input/Search#reset
  * @function

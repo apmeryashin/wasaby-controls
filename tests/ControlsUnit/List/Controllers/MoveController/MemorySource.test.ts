@@ -57,6 +57,7 @@ function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => P
         };
     }
     return function FakeDialogOpener(): any {
+        // tslint:disable-next-line:no-shadowed-variable
         function FakeDialogOpener(): any {
             this._popupId = null;
             this.open = function(popupOptions: popup.IBasePopupOptions): Promise<void> {
@@ -467,7 +468,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 })
                 .finally(() => {
 
-                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    // Ожидаю. что перемещение провалится из-за ошибки,
+                    // брошенной в контроллере на этапе открытия диалога
                     sinonAssert.called(stubLoggerError);
                     sinonAssert.notCalled(spyConfirmation);
                     assert.isTrue(callCatch);
@@ -487,7 +489,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 })
                 .finally(() => {
 
-                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    // Ожидаю. что перемещение провалится из-за ошибки,
+                    // брошенной в контроллере на этапе открытия диалога
                     sinonAssert.called(stubLoggerError);
                     sinonAssert.notCalled(spyConfirmation);
                     assert.isTrue(callCatch);

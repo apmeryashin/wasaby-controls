@@ -76,8 +76,14 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         // + backgroundColorStyle
         // = backgroundColorStyle
         it('+backgroundStyle=default, +style=default, +backgroundColorStyle', () => {
-            cell = new GridHeaderCell({ owner, column, backgroundStyle: 'default', theme: 'default', style: 'default' });
-            cAssert.include(cell.getWrapperClasses( 'blue'),
+            cell = new GridHeaderCell({
+                owner,
+                column,
+                backgroundStyle: 'default',
+                theme: 'default',
+                style: 'default'
+            });
+            cAssert.include(cell.getWrapperClasses('blue'),
                 'controls-background-blue');
             cAssert.notInclude(cell.getWrapperClasses('blue'),
                 ['controls-background-default']);
@@ -116,9 +122,14 @@ describe('Controls/grid_clean/Display/header/BackgroundColor/HeaderCell', () => 
         // - backgroundColorStyle
         // = backgroundStyle
         it('+backgroundStyle=default, +style=default, -backgroundColorStyle', () => {
-            cell = new GridHeaderCell({ owner, column, backgroundStyle: 'default', theme: 'default', style: 'default' });
-            cAssert.include(cell.getWrapperClasses(undefined),
-                'controls-background-default');
+            cell = new GridHeaderCell({
+                owner,
+                column,
+                backgroundStyle: 'default',
+                theme: 'default',
+                style: 'default'
+            });
+            cAssert.include(cell.getWrapperClasses(undefined), 'controls-background-default');
         });
 
         // + backgroundStyle=default

@@ -185,15 +185,19 @@ class Demo extends Control<IControlOptions> {
         };
     }
 
-    protected _resultHandler(data: { formControllerEvent: string, record: Model, additionalData: {isNewRecord: boolean}}): void {
-        if (data.formControllerEvent === 'update') {
-            if (data.additionalData.isNewRecord) {
-                RecordSynchronizer.addRecord(data.record, { at: 0}, this._items);
+    protected _resultHandler(optData: {
+        formControllerEvent: string,
+        record: Model,
+        additionalData: { isNewRecord: boolean }
+    }): void {
+        if (optData.formControllerEvent === 'update') {
+            if (optData.additionalData.isNewRecord) {
+                RecordSynchronizer.addRecord(optData.record, { at: 0}, this._items);
             } else {
-                RecordSynchronizer.mergeRecord(data.record, this._items, data.record.get('id'));
+                RecordSynchronizer.mergeRecord(optData.record, this._items, optData.record.get('id'));
             }
-        } else if (data.formControllerEvent === 'delete') {
-            RecordSynchronizer.deleteRecord(this._items, data.record.get('id'));
+        } else if (optData.formControllerEvent === 'delete') {
+            RecordSynchronizer.deleteRecord(this._items, optData.record.get('id'));
         }
     }
 

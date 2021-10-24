@@ -70,7 +70,13 @@ describe('Controls/grid/Display/Footer/FooterCell/backgroundColorStyle', () => {
         // + backgroundColorStyle
         // = backgroundColorStyle
         it('+backgroundStyle=default, +style=default, +backgroundColorStyle', () => {
-            cell = new GridFooterCell({ owner, column: { width: ''}, backgroundStyle: 'default', theme: 'default', style: 'default' });
+            cell = new GridFooterCell({
+                owner,
+                column: {width: ''},
+                backgroundStyle: 'default',
+                theme: 'default',
+                style: 'default'
+            });
             cAssert.include(cell.getWrapperClasses('blue',  false),
                 'controls-background-blue');
             cAssert.notInclude(cell.getWrapperClasses( 'blue',  false),

@@ -31,6 +31,7 @@ describe('Controls.Validate:isValidDateRange', () => {
         endValue: new Date(2018, 0),
         resp: errorMessage
     }].forEach((test) => {
+        // tslint:disable-next-line:max-line-length
         it(`should return ${test.resp} for period ${JSON.stringify(test.startValue)} - ${JSON.stringify(test.endValue)}`, () => {
             assert.equal(isValidDateRange({
                 startValue: test.startValue,
