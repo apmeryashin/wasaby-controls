@@ -107,7 +107,8 @@ function getMemoryWithHierarchyItems(): Memory {
     });
 }
 
-function getPagingNavigation(hasMore: boolean = false, pageSize: number = 1): INavigationOptionValue<INavigationPageSourceConfig> {
+function getPagingNavigation(hasMore: boolean = false, pageSize: number = 1)
+    : INavigationOptionValue<INavigationPageSourceConfig> {
     return {
         source: 'page',
         sourceConfig: {
@@ -696,8 +697,8 @@ describe('Controls/dataSource:SourceController', () => {
             const controller = getController({
                 navigation: getPagingNavigation(false)
             });
-            const items = await controller.reload();
-            controller.setItems(items as RecordSet);
+            const itemsRS = await controller.reload();
+            controller.setItems(itemsRS as RecordSet);
 
             const controllerDestroyStub = stub(controller._navigationController, 'destroy');
             await controller.reload();

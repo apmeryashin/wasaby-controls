@@ -137,7 +137,7 @@
  * </pre>
  */
 
- /**
+/**
  * @name Controls/dropdown:ItemTemplate#additionalTextTemplate
  * @cfg {String|TemplateFunction|undefined} Устанавливает пользовательский шаблон, который отображается под основным контентом элемента и используется для вывода дополнительного текста (комментария).
  * @default undefined

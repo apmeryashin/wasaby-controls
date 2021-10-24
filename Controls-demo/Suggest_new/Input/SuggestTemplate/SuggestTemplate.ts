@@ -5,6 +5,7 @@ import * as ExplorerMemory from 'Controls-demo/Explorer/ExplorerMemory';
 import {_departmentsDataLong, _treeData} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/SuggestTemplate');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplate');
+// tslint:disable-next-line:max-line-length
 import suggestTemplateGrid = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplateGrid');
 import suggestTemplateTreeGrid = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplateTreeGrid');
 

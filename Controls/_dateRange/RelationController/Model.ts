@@ -114,7 +114,7 @@ class ModuleClass {
         if (changedRangeIndex < ranges.length - 1) {
             this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged);
          }
-        if (/**this._options.onlyByCapacity &&**/ changedRangeIndex > 0) {
+        if (/* this._options.onlyByCapacity && */ changedRangeIndex > 0) {
             this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex - 1][0], capacityChanged);
          }
     }

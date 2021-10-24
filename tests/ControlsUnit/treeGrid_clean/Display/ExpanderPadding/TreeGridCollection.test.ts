@@ -23,7 +23,10 @@ describe('treeGrid/Display/ExpanderPadding/TreeGridCollection', () => {
             });
 
             const headerCell = treeGridCollection.getHeader().getRow().getColumns()[0];
-            CssClassesAssert.notInclude(headerCell.getContentClasses(), 'controls-TreeGridView__expanderPadding-default');
+            CssClassesAssert.notInclude(
+                headerCell.getContentClasses(),
+                'controls-TreeGridView__expanderPadding-default'
+            );
 
             recordSet.getRecordById(1).set('node', true);
             treeGridCollection.hasNode(); // ленивый подсчет, вызываем его

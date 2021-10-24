@@ -19,7 +19,9 @@ export default class extends Control {
                     const itemId = optItem.get('id');
 
                     filter.selection.get('marked').forEach((selectedId) => {
-                        if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
+                        if (selectedId === itemId || (
+                            selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1
+                        )) {
                             isSelected = true;
                         }
                     });

@@ -338,7 +338,7 @@ describe('Controls/browser:Browser', () => {
                 it('search query returns error', async () => {
                     let dataErrorProcessed = false;
                     let propagationStopped = false;
-                    const eventMock = {
+                    const localEventMock = {
                         stopPropagation: () => {
                             propagationStopped = true;
                         }
@@ -356,7 +356,7 @@ describe('Controls/browser:Browser', () => {
                         return Promise.reject(error);
                     };
 
-                    await browser._search(eventMock, 'test');
+                    await browser._search(localEventMock, 'test');
                     assert.isTrue(dataErrorProcessed);
                     assert.isTrue(propagationStopped);
                     assert.isFalse(browser._loading);
@@ -1109,7 +1109,9 @@ describe('Controls/browser:Browser', () => {
                     }
                 ];
                 await browser._beforeUpdate(browserOptions);
-                assert.isTrue(notifyStub.withArgs('filterChanged', [{filterField: 'test', filterField2: '' }]).calledOnce);
+                assert.isTrue(
+                    notifyStub.withArgs('filterChanged', [{filterField: 'test', filterField2: '' }]).calledOnce
+                );
                 assert.deepStrictEqual(browser._filter, {filterField: 'test', filterField2: ''});
             });
         });

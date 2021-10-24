@@ -120,8 +120,12 @@ describe('Controls/scroll:Container ScrollbarsModel', () => {
                 model.updateScrollState(scrollState, { offsetHeight: 50 });
                 model.updatePlaceholdersSize(test.placeholders);
 
-                assert.strictEqual(model._models.vertical.position, scrollState.scrollTop + (test.placeholders.top || 0));
-                assert.strictEqual(model._models.horizontal.position, scrollState.scrollLeft + (test.placeholders.left || 0));
+                assert.strictEqual(
+                    model._models.vertical.position,
+                    scrollState.scrollTop + (test.placeholders.top || 0)
+                );
+                assert.strictEqual(model._models.horizontal.position,
+                    scrollState.scrollLeft + (test.placeholders.left || 0));
                 assert.strictEqual(model._models.vertical.contentSize,
                     scrollState.scrollHeight + (test.placeholders.top || 0) + (test.placeholders.bottom || 0));
                 assert.strictEqual(model._models.horizontal.contentSize,

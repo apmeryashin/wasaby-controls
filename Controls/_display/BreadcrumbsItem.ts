@@ -76,8 +76,8 @@ export default class BreadcrumbsItem<T extends Model = Model> extends Collection
     }
 
     /**
-    * Returns branch level in tree
-    */
+     * Returns branch level in tree
+     */
     getLevel(): number {
         const first = this._first;
         return first ? first.getLevel() : 0;

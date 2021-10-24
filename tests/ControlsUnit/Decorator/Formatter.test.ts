@@ -3,6 +3,7 @@ import {abbreviateNumber} from 'Controls/_decorator/resources/Formatter';
 
 describe('Controls/decorator:__Formatter', () => {
     describe.skip('.abbreviateNumber()', () => {
+        // tslint:disable:max-line-length
         const cases = [
             {testName: 'Значение null', value: null, abbreviationType: 'long', expected: '0'},
             {testName: 'Длинная аббревиатура', value: 1240450, abbreviationType: 'long', expected: '1,2 млн'},
@@ -18,6 +19,7 @@ describe('Controls/decorator:__Formatter', () => {
             {testName: 'Длинная аббревиатура с отрицательным числом, неподходящим для аббревиатуры', value: -500, abbreviationType: 'long', expected: '-500'},
             {testName: 'Короткая аббревиатура с отрицательным числом, неподходящим для аббревиатуры', value: -500, abbreviationType: 'short', expected: '-500'}
         ];
+        // tslint:enable:max-line-length
 
         cases.forEach((item) => {
             it(item.testName, () => {

@@ -1385,6 +1385,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 assert.isFalse(baseControl._resetScrollAfterReload);
             });
 
+            // tslint:disable-next-line:max-line-length
             it('_beforeMount without source and sourceController, then _beforeUpdate with sourceController', async () => {
                 let baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 let afterReloadCallbackCalled = false;
@@ -1542,7 +1543,12 @@ describe('Controls/list_clean/BaseControl', () => {
                 const baseControl = new BaseControl({});
 
                 aAssert.isSame(
-                    baseControl._getFooterSpacingClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
+                    baseControl._getFooterSpacingClasses({
+                        multiSelectVisibility,
+                        style,
+                        multiSelectPosition,
+                        itemPadding
+                    }),
                     `${expectedResult}`
                 );
             });

@@ -1,4 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+// tslint:disable-next-line:max-line-length
 import controlTemplate = require('wml!Controls-demo/dropdown_new/Input/ItemTemplate/AdditionalTextTemplate/Simple/Index');
 import {Memory} from 'Types/source';
 

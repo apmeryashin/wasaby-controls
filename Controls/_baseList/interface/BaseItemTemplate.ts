@@ -26,14 +26,14 @@ export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions
  * @public
  */
 /**
-* @name Controls/_list/interface/IBaseItemTemplate#highlightOnHover
-* @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
-* @remark
-* В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
-* Дополнительно о подсветке строки читайте {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight здесь}.
-* @default true
-* @demo Controls-demo/list_new/ItemTemplate/NoHighlightOnHover/Index
-*/
+ * @name Controls/_list/interface/IBaseItemTemplate#highlightOnHover
+ * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
+ * @remark
+ * В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
+ * Дополнительно о подсветке строки читайте {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight здесь}.
+ * @default true
+ * @demo Controls-demo/list_new/ItemTemplate/NoHighlightOnHover/Index
+ */
 /**
  * @name Controls/_list/interface/IBaseItemTemplate#cursor
  * @cfg {Controls/_list/interface/IBaseItemTemplate/TCursor.typedef} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
@@ -41,14 +41,14 @@ export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions
  * @demo Controls-demo/list_new/ItemTemplate/Clickable/Index
  */
 /**
-* @name Controls/_list/interface/IBaseItemTemplate#marker
-* @cfg {Boolean} Позволяет отключить видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера} для отдельной записи списка.
-* @default true
-* @demo Controls-demo/list_new/ItemTemplate/Marker/Index В следующем примере выделение маркером отключено для первой записи.
-* @remark Отключение видимости маркера для всех записей описано {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/#all здесь}.
-* @see markerClassName
-* @see Controls/marker:IMarkerList#markerVisibility
-*/
+ * @name Controls/_list/interface/IBaseItemTemplate#marker
+ * @cfg {Boolean} Позволяет отключить видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера} для отдельной записи списка.
+ * @default true
+ * @demo Controls-demo/list_new/ItemTemplate/Marker/Index В следующем примере выделение маркером отключено для первой записи.
+ * @remark Отключение видимости маркера для всех записей описано {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/#all здесь}.
+ * @see markerClassName
+ * @see Controls/marker:IMarkerList#markerVisibility
+ */
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/ItemActionsClass
  * @description Классы, с помощью которых задается {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ позиционирование панели опций записи} внутри элемента.
