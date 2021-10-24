@@ -20,7 +20,7 @@ describe('Controls/_display:GridHeaderRow', () => {
                 getHeaderConfig: () => header,
                 getGridColumnsConfig: () => [{}],
                 isFullGridSupport: () => true,
-                getStickyColumnsCount: () => {}
+                getStickyColumnsCount: () => {/* FIXME: sinon mock */}
             },
             columnsConfig: header,
             gridColumnsConfig: [{}],

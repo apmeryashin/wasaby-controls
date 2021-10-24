@@ -1,6 +1,5 @@
-const
-    reDateMaskChars: RegExp = /[YMD]+/,
-    reTimeMaskChars: RegExp = /[Hms]+/;
+const reDateMaskChars: RegExp = /[YMD]+/;
+const reTimeMaskChars: RegExp = /[Hms]+/;
 
 export const DATE_MASK_TYPE = 'date';
 export const TIME_MASK_TYPE = 'time';

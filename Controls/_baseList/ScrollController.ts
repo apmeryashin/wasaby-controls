@@ -845,8 +845,10 @@ export default class ScrollController {
         this._resetInEnd = resetInEnd;
     }
 
-    destroy() {
-        this._options.collection && this._options.collection.setIndexes(0, 0);
+    destroy(): void {
+        if (this._options.collection) {
+            this._options.collection.setIndexes(0, 0);
+        }
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {

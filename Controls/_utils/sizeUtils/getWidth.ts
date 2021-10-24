@@ -47,7 +47,9 @@ export function getWidth(element: HTMLElement | string): number {
 
     // Откладываем удаление элемента, чтобы не пересчитвывать лишний раз DOM и быстрее отобразить страницу
     setTimeout(() => {
-        constants.isBrowserPlatform && document.body.removeChild(measurer);
+        if (constants.isBrowserPlatform) {
+            document.body.removeChild(measurer);
+        }
     });
     return width;
 }

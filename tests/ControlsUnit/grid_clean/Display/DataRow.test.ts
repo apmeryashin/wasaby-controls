@@ -17,11 +17,11 @@ const mockedCollection = {
     hasItemActionsSeparatedCell: () => false,
     getGridColumnsConfig: () => columns,
     getIndex: () => 0,
-    notifyItemChange: () => {},
-    getItemEditorTemplate: () => {},
+    notifyItemChange: () => {/* FIXME: sinon mock */},
+    getItemEditorTemplate: () => {/* FIXME: sinon mock */},
     hasColumnScroll: () => false,
     isFullGridSupport: () => true,
-    getItemEditorTemplateOptions: () => {}
+    getItemEditorTemplateOptions: () => {/* FIXME: sinon mock */}
 } as GridCollection<Model>;
 
 describe('Controls/grid_clean/Display/DataRow', () => {

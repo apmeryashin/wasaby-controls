@@ -31,7 +31,8 @@ function getHeader() {
 }
 
 describe('SizeAndVisibilityObserver', () => {
-    let component, container;
+    let component;
+    let container;
 
     beforeEach(function() {
         global.document = {
@@ -54,8 +55,8 @@ describe('SizeAndVisibilityObserver', () => {
         global.document = undefined;
     });
 
-    describe('constructor', function() {
-        it('should set _headers', function() {
+    describe('constructor', () => {
+        it('should set _headers', () => {
             component = new SizeAndVisibilityObserver(() => undefined, () => undefined, {1: 'test'});
             assert.equal(component._headers[1], 'test');
         });

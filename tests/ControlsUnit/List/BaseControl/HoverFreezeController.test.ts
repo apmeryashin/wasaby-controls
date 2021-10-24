@@ -44,8 +44,8 @@ describe('Controls/_baseList/BaseControl/HoverFreezeController', () => {
         // @ts-ignore
         baseControl._hoverFreezeController = {
             getCurrentItemKey: () => 1,
-            startFreezeHoverTimeout: (): void => {},
-            setDelayedHoverItem: (): void => {}
+            startFreezeHoverTimeout: (): void => {/* FIXME: sinon mock */},
+            setDelayedHoverItem: (): void => {/* FIXME: sinon mock */}
         };
     });
 

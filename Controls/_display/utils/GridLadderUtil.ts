@@ -46,16 +46,20 @@ export function stickyLadderCellsCount(columns, stickyColumn, isDragging): numbe
     return !isFullGridSupport() || isDragging ? 0 : ( getStickyColumn({ stickyColumn, columns })?.property.length || 0 );
 }
 export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
-    let
-        fIdx, idx, item, prevItem,
-        ladderProperties = params.ladderProperties,
-        stickyColumn = getStickyColumn(params),
-        supportLadder = isSupportLadder(ladderProperties),
-        supportSticky = !!stickyColumn,
-        stickyProperties = [],
-        ladder = {}, ladderState = {}, stickyLadder = {},
-        stickyLadderState = {},
-        hasColumnScroll = params.hasColumnScroll;
+    let fIdx;
+    let idx;
+    let item;
+    let prevItem;
+    const ladderProperties = params.ladderProperties;
+    const stickyColumn = getStickyColumn(params);
+    const supportLadder = isSupportLadder(ladderProperties);
+    const supportSticky = !!stickyColumn;
+    let stickyProperties = [];
+    const ladder = {};
+    const ladderState = {};
+    const stickyLadder = {};
+    const stickyLadderState = {};
+    const hasColumnScroll = params.hasColumnScroll;
 
     let mainLadderProperty;
 

@@ -117,6 +117,7 @@ export function calculateFormattedNumber(
 ): string | IPaths {
     const formattedValue = toFormat(toString(value, precision), precision);
 
+    // tslint:disable-next-line:prefer-const
     let [integer, fraction] = splitValueIntoParts(formattedValue);
 
     if (abbreviationType === 'long') {
@@ -171,6 +172,7 @@ function toString(value: TValue, precision: number): string {
 }
 
 function splitValueIntoParts(value: string): string[] {
+    // tslint:disable-next-line:prefer-const
     let [integer, fraction] = value.split('.');
     if (fraction) {
         fraction = '.' + fraction;

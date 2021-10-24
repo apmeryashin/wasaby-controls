@@ -1009,7 +1009,7 @@ describe('Controls/_editInPlace/EditInPlace', () => {
             editInPlace.updateOptions({
                 onBeforeEndEdit: () => {
                     onBeforeEndEditCalled = true;
-                    return new Promise(() => {});
+                    return new Promise(() => {/* FIXME: sinon mock */});
                 }
             });
             return editInPlace.cancel(true).then((res) => {

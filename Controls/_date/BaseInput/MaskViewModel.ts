@@ -11,9 +11,9 @@ const DEFAULT_YEAR_STR = '1904';
 
 class ModuleClass extends MaskViewModel {
     protected handleInput(splitValue, inputType) {
-        let _stringValueConverter = new StringValueConverter({replacer: this.options.replacer}),
-            date,
-            textLength;
+        const _stringValueConverter = new StringValueConverter({replacer: this.options.replacer});
+        let date;
+        let textLength;
         if (splitValue.insert.length > 1) {
             date = _stringValueConverter.getValueByString(splitValue.insert);
         }

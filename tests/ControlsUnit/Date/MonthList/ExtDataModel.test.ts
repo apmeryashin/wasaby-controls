@@ -15,9 +15,8 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
 
     describe('invalidatePeriod', function() {
         it('should update data field', () => {
-            let
-                model,
-                query;
+            let model;
+            let query;
 
             model = new ExtDataModel(options);
             model._data = {
@@ -55,9 +54,8 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
             limit: 24
         }].forEach((test) => {
             it(test.caption, () => {
-                let
-                    model,
-                    query;
+                let model;
+                let query;
 
                 options.viewMode = test.viewMode;
                 model = new ExtDataModel(options);
@@ -130,13 +128,12 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
             }
         }].forEach(function(test) {
             it(test.caption, function() {
-                let
-                    model,
-                    dataSet = new DataSet({
-                        rawData: { data: test.rawData },
-                        itemsProperty: 'data',
-                        keyProperty: 'id'
-                    });
+                let model;
+                const dataSet = new DataSet({
+                    rawData: {data: test.rawData},
+                    itemsProperty: 'data',
+                    keyProperty: 'id'
+                });
                 options.viewMode = test.viewMode;
                 model = new ExtDataModel(options);
                 model._updateData(dataSet);

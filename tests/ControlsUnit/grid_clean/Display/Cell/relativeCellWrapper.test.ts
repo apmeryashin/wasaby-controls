@@ -4,12 +4,11 @@ import {assert} from 'chai';
 
 describe('Controls/grid/Display/Cell/relativeCellWrapper', () => {
     let cell: GridCell<Model, GridRow<Model>>;
-    let hoverBackgroundStyle: string;
     let owner;
 
     beforeEach(() => {
         owner = {
-            getHoverBackgroundStyle: () => hoverBackgroundStyle,
+            getHoverBackgroundStyle: () => undefined,
             getTopPadding: () => 'default',
             getBottomPadding: () => 'default',
             getLeftPadding: () => 'default',

@@ -69,11 +69,15 @@ export default class TreeItemDecorator<T> extends TreeItem<T> implements IGroupN
     }
 
     setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
-        this._$source && this._$source.setEditing(editing, editingContents, silent);
+        if (this._$source) {
+            this._$source.setEditing(editing, editingContents, silent);
+        }
     }
 
     acceptChanges(): void {
-        this._$source && this._$source.acceptChanges();
+        if (this._$source) {
+            this._$source.acceptChanges();
+        }
     }
 
     // endregion

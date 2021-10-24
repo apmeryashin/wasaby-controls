@@ -39,10 +39,6 @@ export default class extends Control {
         }];
     }
 
-    protected _afterRender(): void {
-        this._children.list.scrollToItem;
-    }
-
     protected _longLoadChangedHandler(event: SyntheticEvent, newValue: boolean): void {
         this._viewSource.setLongLoad(newValue);
         this._fastLoad = false;

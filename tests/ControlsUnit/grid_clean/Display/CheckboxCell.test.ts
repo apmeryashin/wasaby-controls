@@ -4,12 +4,6 @@ import {CssClassesAssert as cAssert} from './../../CustomAsserts';
 import CheckboxCell from 'Controls/_grid/display/CheckboxCell';
 
 describe('Controls/grid_clean/Display/DataCell', () => {
-    beforeEach(() => {
-    });
-
-    afterEach(() => {
-    });
-
     describe('getWrapperClasses', () => {
         const mockedOwner = {
             getHoverBackgroundStyle: () => 'default',

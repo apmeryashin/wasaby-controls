@@ -10,7 +10,7 @@ import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import entity = require('Types/entity');
 
-let _private = {
+const _private = {
          filterHierarchy(item) {
             let parent;
             if (!this._options.parentProperty || !this._options.nodeProperty || !item.get) {
@@ -28,7 +28,8 @@ let _private = {
          },
 
          filterAdditional(item) {
-            let isAdditional, isHistory;
+            let isAdditional;
+            let isHistory;
 
             if (!this._options.additionalProperty || this._expanded === true || !item.get) {
                return true;
@@ -45,8 +46,8 @@ let _private = {
             if (!nextItem.get) {
                return false;
             }
-            let itemInHistory = _private.isHistoryItem(item) && !hasParent;
-            let nextItemInHistory = _private.isHistoryItem(nextItem);
+            const itemInHistory = _private.isHistoryItem(item) && !hasParent;
+            const nextItemInHistory = _private.isHistoryItem(nextItem);
             return itemInHistory && !nextItemInHistory;
          },
 
@@ -106,12 +107,12 @@ let _private = {
          }
    };
 
-let DropdownViewModel = BaseViewModel.extend({
+const DropdownViewModel = BaseViewModel.extend({
          _itemsModel: null,
          _expanded: false,
 
          constructor(cfg) {
-            let self = this;
+            const self = this;
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
@@ -138,9 +139,9 @@ let DropdownViewModel = BaseViewModel.extend({
          },
 
          updateSelection(item) {
-            let key = item.get(this._options.keyProperty);
+            const key = item.get(this._options.keyProperty);
             if (this._options.selectedKeys.indexOf(key) !== -1) {
-               let index = this._options.selectedKeys.indexOf(key);
+               const index = this._options.selectedKeys.indexOf(key);
                this._options.selectedKeys.splice(index, 1);
                // In the dropdown list with a multiselect, emptyText (item with key null) is required.
                if (!this._options.selectedKeys.length) {
@@ -167,7 +168,7 @@ let DropdownViewModel = BaseViewModel.extend({
          },
 
          getDisplayFilter() {
-            let filter = [];
+            const filter = [];
             filter.push(_private.filterHierarchy.bind(this));
             filter.push(_private.filterAdditional.bind(this));
             return filter;
@@ -210,7 +211,7 @@ let DropdownViewModel = BaseViewModel.extend({
          },
 
          getCurrent() {
-            let itemsModelCurrent = this._itemsModel.getCurrent();
+            const itemsModelCurrent = this._itemsModel.getCurrent();
 
             // if we had group element we should return it without changes
             if (itemsModelCurrent.isGroup) {
@@ -272,9 +273,9 @@ let DropdownViewModel = BaseViewModel.extend({
             if (!this._options.parentProperty || !this._options.nodeProperty) {
                return false;
             }
-            let display = this._itemsModel._display;
+            const display = this._itemsModel._display;
             for (let i = 0; i < display.getCount(); i++) {
-               let item = display.at(i).getContents();
+               const item = display.at(i).getContents();
                if (item.get && item.get(this._options.nodeProperty)) {
                   return true;
                }
@@ -282,7 +283,7 @@ let DropdownViewModel = BaseViewModel.extend({
             return false;
          },
          hasAdditional() {
-            let self = this;
+            const self = this;
             let hasAdditional = false;
 
             if (this._options.additionalProperty && this._options.rootKey === null) {
@@ -313,11 +314,11 @@ let DropdownViewModel = BaseViewModel.extend({
          },
          getEmptyItem() {
             if (this._options.emptyText) {
-               let emptyItem = {};
-               let itemData = {};
+               const emptyItem = {};
+               const itemData = {};
                itemData[this._options.displayProperty] = this._options.emptyText;
                itemData[this._options.keyProperty] = this._options.emptyKey !== undefined ? this._options.emptyKey : null;
-               let item = new entity.Model({
+               const item = new entity.Model({
                   rawData: itemData
                });
                emptyItem.item = item;

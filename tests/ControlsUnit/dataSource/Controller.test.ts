@@ -522,7 +522,7 @@ describe('Controls/dataSource:SourceController', () => {
             const loadPromise = controller.load();
 
             controller._loadPromise.cancel();
-            await loadPromise.catch(() => {});
+            await loadPromise.catch(() => {/* FIXME: sinon mock */});
 
             ok(controller._loadPromise);
         });

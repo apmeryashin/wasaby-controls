@@ -10,10 +10,10 @@ import {Serializer} from 'UI/State';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 
-let historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
-let DEFAULT_FILTER = '{}';
+const historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
+const DEFAULT_FILTER = '{}';
 
-let _private = {
+const _private = {
    isOldPinned(data) {
       return !JSON.parse(data, _private.getSerialize().desirialize).hasOwnProperty('linkText');
    },
@@ -48,7 +48,7 @@ let _private = {
    },
 
    getSourceByMeta(self, meta) {
-      for (let i in meta) {
+      for (const i in meta) {
          if (meta.hasOwnProperty(i)) {
             if (historyMetaFields.indexOf(i) !== -1) {
                return self.historySource;
@@ -64,11 +64,11 @@ let _private = {
 
    initHistory(self, data) {
       if (data.getRow) {
-         let rows = data.getRow();
-         let pinned = rows.get('pinned');
-         let recent = rows.get('recent');
-         let frequent = rows.get('frequent');
-         let client = rows.get('client');
+         const rows = data.getRow();
+         const pinned = rows.get('pinned');
+         const recent = rows.get('recent');
+         const frequent = rows.get('frequent');
+         const client = rows.get('client');
 
          self._history = {
             pinned,
@@ -85,7 +85,7 @@ let _private = {
    },
 
    getItemsWithHistory(self, history) {
-      let items = new collection.RecordSet({
+      const items = new collection.RecordSet({
          adapter: new entity.adapter.Sbis(),
          keyProperty: 'ObjectId'
       });
@@ -262,8 +262,8 @@ let _private = {
     },
 
    updateRecent(self, item) {
-      let id = item.getId();
-      let recent = self._history.recent;
+      const id = item.getId();
+      const recent = self._history.recent;
       let records;
 
       _private.deleteHistoryItem(recent, id);
@@ -296,7 +296,7 @@ let _private = {
    },
 
    findHistoryItem(self, data) {
-      let history = self._history;
+      const history = self._history;
 
       return this.findItem(self, history.pinned, data) || this.findItem(self, history.recent, data) || null;
    },
@@ -392,7 +392,7 @@ let _private = {
  * </pre>
  */
 
-let Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
+const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    _history: null,
    _serialize: false,
    '[Types/_source/ICrud]': true,
@@ -411,8 +411,9 @@ let Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    },
 
    update(data, meta) {
-      let self = this;
-      let serData, item;
+      const self = this;
+      let serData;
+      let item;
 
       if (meta.hasOwnProperty('$_pinned')) {
          _private.updatePinned(this, data, meta);

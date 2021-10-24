@@ -9,15 +9,15 @@ const SPACE = ' ';
 const VALID_PARTIAL_DATE_REGEXP = new RegExp('/^[0 ' + SPACE + ']{2}\.[0 ' + SPACE + '/s]{2}\.\d{2,4}$/');
 const MONTH_DAY_PART_REGEXP = /^(.*)\.\d{2,4}$/;
 
-let _private = {
+const _private = {
       updateLastValue(self) {
          if (dateUtils.isValidDate(self._value)) {
             self._lastValue = self._value;
          }
       },
       updateValue(self, value) {
-         const oldValue = self._value,
-            oldTextValue = self._textValue;
+         const oldValue = self._value;
+         const oldTextValue = self._textValue;
          self._value = value;
 
          _private.updateLastValue(self);
@@ -56,7 +56,7 @@ let _private = {
     * @author Красильников А.С.
     * @public
     */
-let ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
+const ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
       _value: null,
       _lastValue: null,

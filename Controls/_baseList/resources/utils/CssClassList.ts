@@ -33,9 +33,8 @@ class StaticCssClassList {
     }
 
     static compile(classList: IClassListObject = {}): string {
-        let
-            classListString = '',
-            classListObj: IClassListObject;
+        let classListString = '';
+        let classListObj: IClassListObject;
 
         /// @ts-ignore
         classListObj = this.classList || classList;

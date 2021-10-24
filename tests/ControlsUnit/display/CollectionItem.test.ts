@@ -446,7 +446,7 @@ describe('Controls/_display/CollectionItem', () => {
                 given.item = item;
                 given.property = property;
             },
-            getHoverBackgroundStyle() {}
+            getHoverBackgroundStyle() {/* FIXME: sinon mock */}
         };
 
         const item = new CollectionItem({ owner });
@@ -464,8 +464,8 @@ describe('Controls/_display/CollectionItem', () => {
 
     it('.getWrapperClasses()', () => {
         const owner = {
-            notifyItemChange(): void {},
-            getHoverBackgroundStyle() {},
+            notifyItemChange(): void {/* FIXME: sinon mock */},
+            getHoverBackgroundStyle() {/* FIXME: sinon mock */},
             getEditingBackgroundStyle: () => 'default',
             isFirstItem: () => false,
             isLastItem: () => false,
@@ -495,13 +495,12 @@ describe('Controls/_display/CollectionItem', () => {
     });
 
     it('.getContentClasses()', () => {
-        let multiSelectVisibility: string;
         const owner = {
             getTopPadding(): string { return '#topSpacing#'; },
             getBottomPadding(): string { return '#bottomSpacing#'; },
             getLeftPadding(): string { return '#leftSpacing#'; },
             getRightPadding(): string { return '#rightSpacing#'; },
-            getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getMultiSelectVisibility: () => undefined,
             getMultiSelectPosition(): string { return 'default'; },
             getRowSeparatorSize() { return ''; },
             isLastItem() { return false; },

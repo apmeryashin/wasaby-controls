@@ -102,12 +102,12 @@ class Palette extends Control<IControlOptions> {
         s /= 100;
         l /= 100;
 
-        let c = (1 - Math.abs(2 * l - 1)) * s,
-            x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-            m = l - c / 2,
-            r = 0,
-            g = 0,
-            b = 0;
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        const m = l - c / 2;
+        let r = 0;
+        let g = 0;
+        let b = 0;
 
         if (0 <= h && h < 60) {
             r = c; g = x; b = 0;

@@ -19,7 +19,7 @@ import {
 type TValue = string | number | null;
 type TAbbreviationType = 'none' | 'short' | 'long';
 type TUnderline = 'hovered' | 'none';
-type RoundingFn = (number: string, precision: number) => string;
+type RoundingFn = (value: string, precision: number) => string;
 
 export type RoundMode = 'round' | 'trunc';
 
@@ -56,7 +56,7 @@ export function calculateFontColorStyle(stroked: boolean, options: INumberOption
 }
 
 export function calculateFormattedNumber(
-    number: string | number | null,
+    value: string | number | null,
     useGrouping: boolean,
     roundMode: RoundMode,
     fractionSize: string,
@@ -64,7 +64,7 @@ export function calculateFormattedNumber(
     showEmptyDecimals: boolean,
     format: INumberOptions
 ): string {
-    let strNumber = toString(number);
+    let strNumber = toString(value);
 
     if (strNumber === '') {
         return '';
@@ -106,16 +106,16 @@ export function calculateFormattedNumber(
     return strNumber;
 }
 
-const round: RoundingFn = (number, precision) => {
-    return toString(parseFloat(number).toFixed(precision));
+const round: RoundingFn = (value, precision) => {
+    return toString(parseFloat(value).toFixed(precision));
 };
 
-const trunc: RoundingFn = (number, precision) => {
+const trunc: RoundingFn = (value, precision) => {
     if (precision) {
         const regExp = new RegExp(`-?\\d+.?\\d{0,${precision}}`);
 
-        return  String.prototype.match.call(number, regExp)[0];
+        return  String.prototype.match.call(value, regExp)[0];
     } else {
-        return  toString(Math.trunc(parseFloat(number)));
+        return  toString(Math.trunc(parseFloat(value)));
     }
 };

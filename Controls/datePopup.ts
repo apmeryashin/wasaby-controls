@@ -303,8 +303,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     _endValuePickerChanged(e: SyntheticEvent, value: Date): void {
-        let startValue = this._rangeModel.startValue,
-            endValue = value;
+        let startValue = this._rangeModel.startValue;
+        let endValue = value;
         if (this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single) {
             startValue = value;
         } else if (dateUtils.isValidDate(value) && !this.isMaskWithDays(this._mask)) {

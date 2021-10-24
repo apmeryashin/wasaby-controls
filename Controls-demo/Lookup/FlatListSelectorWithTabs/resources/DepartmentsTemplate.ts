@@ -14,9 +14,9 @@ export default class extends Control {
         this._source = new Memory({
             data: _departments,
             filter(item, queryFilter) {
-                let selectionFilterFn = function(item, filter) {
+                const selectionFilterFn = function(item, filter) {
                     let isSelected = false;
-                    let itemId = item.get('department');
+                    const itemId = item.get('department');
 
                     filter.selection.get('marked').forEach(function(selectedId) {
                         if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
@@ -26,7 +26,7 @@ export default class extends Control {
 
                     return isSelected;
                 };
-                let normalFilterFn = MemorySourceFilter();
+                const normalFilterFn = MemorySourceFilter();
 
                 return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
             },

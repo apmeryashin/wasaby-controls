@@ -412,10 +412,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return;
         }
 
-        const
-            time = entry.data.date.getTime(),
-            index = this._displayedDates.indexOf(time),
-            isDisplayed = index !== -1;
+        const time = entry.data.date.getTime();
+        const index = this._displayedDates.indexOf(time);
+        const isDisplayed = index !== -1;
 
         if (entry.nativeEntry.isIntersecting && entry.nativeEntry.intersectionRatio >= this._options.itemDataLoadRatio &&
                 !isDisplayed && entry.data.type === ITEM_TYPES.body) {
@@ -486,9 +485,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _canScroll(date: Date): boolean {
         const itemContainer: HTMLElement = this._findElementByDate(date);
 
-        let itemDimensions: ClientRect,
-            containerDimensions: ClientRect,
-            scrollTop: number;
+        let itemDimensions: ClientRect;
+        let containerDimensions: ClientRect;
+        let scrollTop: number;
 
         if (!itemContainer) {
             return false;
@@ -518,7 +517,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _findElementByDate(date: Date): HTMLElement {
-        let element: HTMLElement | null;
         const templates = {
             day: {
                 condition: date.getDate() !== 1,

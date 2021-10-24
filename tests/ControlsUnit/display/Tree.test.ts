@@ -2401,7 +2401,7 @@ describe('Controls/_display/Tree', () => {
                 nodeFooterTemplate: () => ''
             });
 
-            const onCollectionChange = spy(() => {});
+            const onCollectionChange = spy(() => {/* FIXME: sinon mock */});
             tree.subscribe('onCollectionChange', onCollectionChange);
 
             // вернули узел 1

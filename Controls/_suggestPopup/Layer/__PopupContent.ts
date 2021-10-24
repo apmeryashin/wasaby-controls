@@ -4,7 +4,7 @@ import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 import 'css!Controls/suggestPopup';
 import 'css!Controls/suggest';
 
-let _private = {
+const _private = {
    getBorderWidth(container?: HTMLElement): number {
       return container ? Number(getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '') * 2) : 0;
    },
@@ -18,7 +18,7 @@ let _private = {
    }
 };
 
-let __PopupContent = Control.extend({
+const PopupContent = Control.extend({
 
    _template: template,
    _positionFixed: false,
@@ -30,7 +30,7 @@ let __PopupContent = Control.extend({
    _shouldScrollToBottom: false,
 
    _beforeUpdate(newOptions): void {
-      __PopupContent.superclass._beforeUpdate.apply(this, arguments);
+      PopupContent.superclass._beforeUpdate.apply(this, arguments);
 
       const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.direction.vertical === 'top';
 
@@ -81,7 +81,7 @@ let __PopupContent = Control.extend({
       if (options.target) {
          this._suggestWidth = _private.getSuggestWidth(options.target[0] || options.target);
       }
-      __PopupContent.superclass._beforeMount.apply(this, arguments);
+      PopupContent.superclass._beforeMount.apply(this, arguments);
    },
 
    _afterMount(): void {
@@ -108,6 +108,6 @@ let __PopupContent = Control.extend({
       }
    }
 });
-__PopupContent._private = _private;
+PopupContent._private = _private;
 
-export default __PopupContent;
+export default PopupContent;

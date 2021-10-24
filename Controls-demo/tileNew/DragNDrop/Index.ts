@@ -29,7 +29,7 @@ export default class extends Control {
    }
 
    protected _dragStart(_, items: number[]): RecordSet {
-      let firstItem = this._itemsFirst.getRecordById(items[0]);
+      const firstItem = this._itemsFirst.getRecordById(items[0]);
 
       return new Dnd.ItemsEntity({
          items,

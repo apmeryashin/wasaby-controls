@@ -2761,8 +2761,8 @@ const _private = {
         }
     },
     getDragOffset(moveEvent, startEvent): object {
-        const moveEventXY = _private.getPageXY(moveEvent),
-            startEventXY = _private.getPageXY(startEvent);
+        const moveEventXY = _private.getPageXY(moveEvent);
+        const startEventXY = _private.getPageXY(startEvent);
 
         return {
             y: moveEventXY.y - startEventXY.y,
@@ -3800,7 +3800,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const loadStarted = newOptions.loading && !this._options.loading;
         const loadedBySourceController = this._loadedBySourceController;
-        let updateResult;
         let isItemsResetFromSourceController = false;
 
         const isSourceControllerLoadingNow =
@@ -4148,7 +4147,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         this._spaceBlocked = false;
 
         this._updateBaseControlModel(newOptions);
-        return updateResult;
     }
 
     reloadItem(
@@ -4230,6 +4228,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     protected _afterReloadCallback(options, loadedList: RecordSet): void {
+        /* FIXME: sinon mock */
     }
     protected _getColumnsCount(): number {
         return 0;
@@ -5971,7 +5970,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    protected _keyDownHandler(event): boolean | void {}
+    protected _keyDownHandler(event): boolean | void {/* For override  */}
 
     protected _getViewClasses(addShowActionsClass: boolean, addHoverEnabledClass: boolean, uniqueId: string): string  {
         const classes: string[] = [];
@@ -6045,7 +6044,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
     }
 
-    _draggingItemMouseMove(item: CollectionItem, event: SyntheticEvent): void { }
+    _draggingItemMouseMove(item: CollectionItem, event: SyntheticEvent): void {/* For override  */}
 
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
@@ -6378,7 +6377,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     // Уйдет когда будем наследоваться от baseControl
-    protected _getItemsContainer(): HTMLElement {}
+    protected _getItemsContainer(): HTMLElement {/* For override  */}
     getItemsContainer() {
         return this._getItemsContainer();
     }

@@ -2,9 +2,8 @@ import cDeferred = require('Core/Deferred');
 import {Logger} from 'UI/Utils';
 import {USER} from 'ParametersWebAPI/Scope';
 
-let
-    PREFIX_STORE_KEY_COLLAPSED_GROUP = 'LIST_COLLAPSED_GROUP_',
-    GroupUtil = {
+const PREFIX_STORE_KEY_COLLAPSED_GROUP = 'LIST_COLLAPSED_GROUP_';
+const GroupUtil = {
 
         /**
          * Store collapsed groups to UserConfig
@@ -13,7 +12,7 @@ let
          * @returns {Core/Deferred}
          */
         storeCollapsedGroups(groups, storeKey) {
-            let
+            const
                 preparedGroups = JSON.stringify(groups);
             return USER.set(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey, preparedGroups);
         },

@@ -80,7 +80,9 @@ export default class Slider extends Control<IControlOptions> {
             // Необходимо что бы браузер пересчитал верстку, что бы контейнеры переместились в нужные позиции.
             // В тестах нет dom и соответсвенно ссылок на контейнеры
             if (this._children.container0 && this._children.container1) {
+                // tslint:disable-next-line:no-unused-expression
                 this._children.container0.offsetWidth;
+                // tslint:disable-next-line:no-unused-expression
                 this._children.container1.offsetWidth;
             }
 

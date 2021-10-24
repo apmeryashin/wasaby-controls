@@ -723,15 +723,12 @@ export default class StickyBlock extends Control<IStickyHeaderOptions> {
     protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number,
                         zIndex: number, offsetTop: number, isIosZIndexOptimized: boolean, task1177692247?, task1181007458?): string {
         const offset: number = 0;
-        let container: HTMLElement;
         let top: number;
         let left: number;
         let bottom: number;
         let right: number;
         let fixedPosition: POSITION;
-        let styles: CSSStyleDeclaration;
         let style: string = '';
-        let minHeight: number;
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было

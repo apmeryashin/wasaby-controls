@@ -20,7 +20,7 @@ import {BEFORE_ITEMS_MOVE_RESULT, IMoveItemsParams} from './interface/IMoverAndR
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
-let _private = {
+const _private = {
     moveItems(self, items, target, position) {
         const useAction = _private.useAction(items);
         const afterItemsMove = function(result) {
@@ -49,7 +49,7 @@ let _private = {
     },
 
     beforeItemsMove(self, items, target, position) {
-        let beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
+        const beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
@@ -75,13 +75,12 @@ let _private = {
     },
 
     reorderMove(self, items, target, position) {
-        let
-           movedIndex,
-           movedItem,
-           parentProperty = self._options.parentProperty,
-           targetId = _private.getIdByItem(self, target),
-           targetItem = _private.getModelByItem(self, targetId),
-           targetIndex = self._items.getIndex(targetItem);
+        let movedIndex;
+        let movedItem;
+        const parentProperty = self._options.parentProperty;
+        const targetId = _private.getIdByItem(self, target);
+        const targetItem = _private.getModelByItem(self, targetId);
+        let targetIndex = self._items.getIndex(targetItem);
 
         items.forEach(function(item) {
             movedItem = _private.getModelByItem(self, item);
@@ -112,7 +111,7 @@ let _private = {
     },
 
     hierarchyMove(self, items, target) {
-        let targetId = _private.getIdByItem(self, target);
+        const targetId = _private.getIdByItem(self, target);
         items.forEach(function(item) {
             item = _private.getModelByItem(self, item);
             if (item) {
@@ -151,12 +150,11 @@ let _private = {
      * @private
      */
     getTargetItem(self, item, position: LOCAL_MOVE_POSITION): Model {
-        let
-            result,
-            display,
-            itemIndex,
-            siblingItem,
-            itemFromProjection;
+        let result;
+        let display;
+        let itemIndex;
+        let siblingItem;
+        let itemFromProjection;
 
         // В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
         // В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
@@ -218,10 +216,9 @@ let _private = {
     },
 
     checkItem(self, item, target, position) {
-        let
-            key,
-            parentsMap,
-            movedItem = _private.getModelByItem(self, item);
+        let key;
+        let parentsMap;
+        const movedItem = _private.getModelByItem(self, item);
 
         if (target !== null) {
             target = _private.getModelByItem(self, target);
@@ -242,11 +239,10 @@ let _private = {
     },
 
     getParentsMap(self, id) {
-        let
-            item,
-            toMap = [],
-            items = self._items,
-            path = items.getMetaData().path;
+        let item;
+        const toMap = [];
+        const items = self._items;
+        const path = items.getMetaData().path;
 
         item = items.getRecordById(id);
         while (item) {
@@ -401,7 +397,7 @@ let _private = {
  * @author Авраменко А.С.
  */
 
-let Mover = BaseAction.extend({
+const Mover = BaseAction.extend({
     _action: null,
     _moveDialogTemplate: null,
     _moveDialogOptions: null,

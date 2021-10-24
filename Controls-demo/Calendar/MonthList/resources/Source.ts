@@ -16,24 +16,19 @@ class Source extends Memory {
     protected _isRed: boolean = true;
 
     query(query: Query) {
-        const
-            offset = query.getOffset(),
-            where = query.getWhere(),
-            limit = query.getLimit() || 1,
-            executor;
-
-        executor = (() => {
-            const
-                adapter = this.getAdapter().forTable(),
-                monthEqual = where['id~'],
-                monthGt = where['id>='],
-                monthLt = where['id<='],
-                deferred = new Deferred();
-            let
-                items = [],
-                month = monthEqual || monthGt || monthLt,
-                extData,
-                daysInMonth;
+        const offset = query.getOffset();
+        const where = query.getWhere();
+        const limit = query.getLimit() || 1;
+        const executor = (() => {
+            const adapter = this.getAdapter().forTable();
+            const monthEqual = where['id~'];
+            const monthGt = where['id>='];
+            const monthLt = where['id<='];
+            const deferred = new Deferred();
+            let items = [];
+            let month = monthEqual || monthGt || monthLt;
+            let extData;
+            let daysInMonth;
 
             if (month) {
                 month = dateFromSql(month);
@@ -70,7 +65,7 @@ class Source extends Memory {
 
             this._each(
                 items,
-                function(item) {
+                (item) => {
                     adapter.add(item);
                 }
             );

@@ -7,7 +7,7 @@ import {descriptor} from 'Types/entity';
  * @public
  * @author Красильников А.С.
  */
-let EMPTY_CAPTIONS = {
+const EMPTY_CAPTIONS = {
     NOT_SPECIFIED: rk('Не указан'),
     NOT_SELECTED: rk('Не выбран'),
     WITHOUT_DUE_DATE: rk('Бессрочно', 'ShortForm'),

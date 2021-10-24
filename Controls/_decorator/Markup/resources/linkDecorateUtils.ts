@@ -413,6 +413,7 @@ export function parseLinks(stringNode: string, needToCreateLinkNode: boolean): [
    result.push([]);
 
    while (linkParseExec !== null) {
+       // tslint:disable-next-line:prefer-const
       let [match, email, emailDomain, link, simpleLinkPrefix, simpleLinkDomain, ending, noLink] = linkParseExec;
       const position = linkParseExec.index;
       linkParseExec = linkParseRegExp.exec(stringNode);
@@ -464,13 +465,13 @@ export function parseLinks(stringNode: string, needToCreateLinkNode: boolean): [
 
 /**
  * Ищет в строке ссылки и возвращает массив найденных ссылок
- * @param {string} string
+ * @param {string} stringVal
  * @return {string[]}
  */
-export function getLinks(string: string): string[] {
+export function getLinks(stringVal: string): string[] {
    const result: string[] = [];
    let isCorrectLink: boolean = false;
-   let linkParseResult = linkParseRegExp.exec(string);
+   let linkParseResult = linkParseRegExp.exec(stringVal);
 
    while (linkParseResult !== null) {
       const [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
@@ -485,7 +486,7 @@ export function getLinks(string: string): string[] {
          }
       }
 
-      linkParseResult = linkParseRegExp.exec(string);
+      linkParseResult = linkParseRegExp.exec(stringVal);
    }
 
    return result;

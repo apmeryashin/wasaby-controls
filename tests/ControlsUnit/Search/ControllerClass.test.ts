@@ -458,7 +458,7 @@ describe('Controls/search:ControllerClass', () => {
             source
          });
          const searchController = getSearchController({sourceController});
-         await searchController.search('testSearchValue').catch(() => {});
+         await searchController.search('testSearchValue').catch(() => {/* FIXME: sinon mock */});
          assert.deepStrictEqual(
              sourceController.getFilter(),
              {

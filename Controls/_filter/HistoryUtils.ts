@@ -15,7 +15,7 @@ import {getStore} from 'Application/Env';
 const HISTORY_SOURCE_STORAGE_ID = 'CONTROLS_HISTORY_SOURCE_STORE';
 
 function createHistorySource(cfg) {
-   let historySourceData = {
+   const historySourceData = {
       historyId: cfg.historyId,
       pinned: true,
 

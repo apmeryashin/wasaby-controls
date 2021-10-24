@@ -689,9 +689,8 @@ export default class Controller implements IDropdownController {
    }
 
    private _getItemsTemplates(options) {
-      const
-          templates = {},
-          itemTemplateProperty = options.itemTemplateProperty;
+      const templates = {};
+      const itemTemplateProperty = options.itemTemplateProperty;
 
       if (itemTemplateProperty) {
          this._items.each(function(item) {

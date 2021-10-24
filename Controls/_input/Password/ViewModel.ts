@@ -9,7 +9,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
        * @author Красильников А.С.
        */
 
-let _private = {
+const _private = {
          replaceOnAsterisks(value) {
             return '•'.repeat(value.length);
          },
@@ -25,7 +25,7 @@ let _private = {
          }
       };
 
-let ViewModel = BaseViewModel.extend({
+const ViewModel = BaseViewModel.extend({
          _convertToDisplayValue(value: string | null) {
             const curValue = ViewModel.superclass._convertToDisplayValue.call(this, value);
             const replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
@@ -35,13 +35,13 @@ let ViewModel = BaseViewModel.extend({
          },
 
          handleInput(splitValue, inputType) {
-            let replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
+            const replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
 
             if (replaceWithAsterisks) {
                _private.adjustSplitValue(splitValue, this._value || '');
             }
 
-            let result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
+            const result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
 
             this._displayValue = _private.calcDisplayValue(replaceWithAsterisks, this._value);
             this._nextVersion();

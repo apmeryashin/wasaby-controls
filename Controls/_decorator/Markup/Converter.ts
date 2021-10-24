@@ -28,13 +28,13 @@ function nodeToJson(node) {
          let json = [];
 
          // json[0] is a tag name.
-         let tagName = node.nodeName.toLowerCase();
+         const tagName = node.nodeName.toLowerCase();
          json[0] = tagName;
 
          // If node has attributes, they are located in json[1].
-         let nodeAttributes = node.attributes;
+         const nodeAttributes = node.attributes;
          if (nodeAttributes.length) {
-            let jsonAttributes = {};
+            const jsonAttributes = {};
             for (let i = 0; i < nodeAttributes.length; ++i) {
                jsonAttributes[nodeAttributes[i].name] = nodeAttributes[i].value;
             }
@@ -44,8 +44,8 @@ function nodeToJson(node) {
          // After that convert child nodes and push them to array.
          let firstChild;
          if (node.hasChildNodes()) {
-            let childNodes = node.childNodes,
-               child;
+            const childNodes = node.childNodes;
+            let child;
 
             // Recursive converting of children.
             for (let i = 0; i < childNodes.length; ++i) {
@@ -83,7 +83,7 @@ function nodeToJson(node) {
     * @param html {String}
     * @returns {Array}
     */
-let htmlToJson = function(html) {
+const htmlToJson = function(html) {
       if (!constants.isBrowserPlatform) {
          IoC.resolve('ILogger')
             .error('Controls/_decorator/Markup/Converter' , 'htmlToJson method doesn\'t work on server-side');
@@ -97,12 +97,12 @@ let htmlToJson = function(html) {
          return [[], html];
       }
 
-      let div = document.createElement('div'),
-         rootNode,
-         rootNodeTagName,
-         rootNodeAttributes,
-         hasRootTag,
-         result;
+      let div = document.createElement('div');
+      let rootNode;
+      let rootNodeTagName;
+      let rootNodeAttributes;
+      let hasRootTag;
+      let result;
       div.innerHTML = html.trim();
       hasRootTag = div.innerHTML[0] === '<';
       result = nodeToJson(div).slice(1);
@@ -150,9 +150,9 @@ let htmlToJson = function(html) {
     * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
     * @returns {String}
     */
-let jsonToHtml = function(json, tagResolver?, resolverParams?) {
-      let generatorConfig = getGeneratorConfig();
-      let result = template({
+const jsonToHtml = function(json, tagResolver?, resolverParams?) {
+      const generatorConfig = getGeneratorConfig();
+      const result = template({
          _options: {
             value: json,
             tagResolver,
@@ -178,11 +178,11 @@ let jsonToHtml = function(json, tagResolver?, resolverParams?) {
     * @param json
     * @return {Array}
     */
-let deepCopyJson = function(json) {
+const deepCopyJson = function(json) {
       return objectMerge([], json, { clone: true });
    };
 
-let MarkupConverter = {
+const MarkupConverter = {
       htmlToJson,
       jsonToHtml,
       deepCopyJson

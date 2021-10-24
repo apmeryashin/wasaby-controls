@@ -13,9 +13,9 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {detection} from 'Env/Env';
 import 'css!Controls/deprecatedFilter';
 
-let _private = {
+const _private = {
    getText(items) {
-      let textArr = [];
+      const textArr = [];
 
       chain.factory(items).each(function(item) {
          if (_private.isItemChanged(item) && !Utils.object.getPropertyValue(item, 'isFast')
@@ -159,7 +159,7 @@ let _private = {
  * @author Герасимов А.М.
  *
  */
-let FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype */{
+const FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype */{
 
    _template: template,
    _oldPanelOpener: null,
@@ -208,7 +208,7 @@ let FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
    },
 
    openDetailPanel() {
-      let self = this;
+      const self = this;
       if (!this._options.readOnly) {
          if (!detection.isMobileIOS) {
             RegisterUtil(this, 'scroll', this._handleScroll.bind(this), {listenAll: true});

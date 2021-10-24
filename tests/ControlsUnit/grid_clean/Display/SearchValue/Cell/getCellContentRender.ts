@@ -2,7 +2,9 @@ import Cell from 'Controls/_grid/display/Cell';
 import { assert } from 'chai';
 
 describe('Controls/_grid/display/Cell/getCellContentRender', () => {
-    let searchValue, contents;
+    let searchValue;
+    let contents;
+
     const owner = {
         getSearchValue: () => searchValue,
         getContents: () => contents,

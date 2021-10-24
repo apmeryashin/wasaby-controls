@@ -21,7 +21,9 @@ describe('Controls/_multiselection/Controller', () => {
       keyProperty: 'id'
    });
 
-   let controller, model, strategy;
+   let controller;
+   let model;
+   let strategy;
 
    beforeEach(() => {
       model = new Collection({
@@ -1052,7 +1054,8 @@ describe('Controls/_multiselection/Controller', () => {
          ],
          keyProperty: 'id'
       });
-      let readonlyModel, controllerWithReadonly;
+      let readonlyModel;
+      let controllerWithReadonly;
 
       beforeEach(() => {
          readonlyModel = new Collection({
@@ -1212,7 +1215,9 @@ describe('Controls/_multiselection/Controller', () => {
          keyProperty: 'id'
       });
 
-      let model, controller, strategy;
+      let model;
+      let controller;
+      let strategy;
 
       beforeEach(() => {
          model = new SearchGridCollection({

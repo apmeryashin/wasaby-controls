@@ -173,7 +173,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return isAllSelected;
    }
 
-   reset() {}
+   reset() {
+       /* For override */
+   }
 
    /**
     * Проверяет присутствует ли в selected значение "Выбрано все"

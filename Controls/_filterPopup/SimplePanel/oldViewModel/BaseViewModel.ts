@@ -12,7 +12,7 @@ import entity = require('Types/entity');
  * @author Авраменко А.С.
  * @private
  */
-let BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
+const BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
     constructor(cfg) {
         this._options = cfg;
     },

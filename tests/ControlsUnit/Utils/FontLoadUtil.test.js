@@ -7,7 +7,7 @@ define(['Controls/_breadcrumbs/resources/FontLoadUtil'], function(FontLoadUtil) 
          return new Promise(function(resolve) {
 
             FontLoadUtil.waitForFontLoad('test', () => true).addCallback(function() {
-               assert.isTrue(FontLoadUtil.__loadedFonts.test);
+               assert.isTrue(FontLoadUtil.LOADED_FONTS.test);
                resolve();
             });
          });

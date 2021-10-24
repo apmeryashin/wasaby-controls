@@ -8,7 +8,7 @@ import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
 import * as Env from 'Env/Env';
 
-let global = (function() { return this || (0 || eval)('this'); })();
+const global = (function() { return this || (0 || eval)('this'); })();
 
 function getBoundingClientRectMock() {
    return { height: 30, width: 50};
