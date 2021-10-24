@@ -17,6 +17,8 @@ import {HistoryUtils as FilterHistoryUtils} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import 'css!Controls/deprecatedFilter';
 
+// tslint:disable
+
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 

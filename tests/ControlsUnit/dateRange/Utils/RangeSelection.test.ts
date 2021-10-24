@@ -1,7 +1,7 @@
 import utils from 'Controls/_dateRange/Utils/RangeSelection';
 
-describe('Controls/_dateRange/Utils/RangeSelection', function() {
-    describe('prepareSelectionClass', function() {
+describe('Controls/_dateRange/Utils/RangeSelection', () => {
+    describe('prepareSelectionClass', () => {
         const date: Date = new Date(2019, 0, 1);
         [{
             args: {

@@ -177,7 +177,7 @@ describe('Controls/lookup:Input', () => {
 
     });
 
-    describe('_selectCallback', function() {
+    describe('_selectCallback', () => {
         it('_selectCallback with items', async () => {
             const lookup = await getBaseLookup({
                 multiSelect: true

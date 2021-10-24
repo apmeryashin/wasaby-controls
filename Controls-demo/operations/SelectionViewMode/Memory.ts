@@ -18,7 +18,7 @@ function getById(items, id) {
 }
 
 function getChildren(items, parent) {
-   return items.filter(function(item) {
+   return items.filter((item) => {
       return isChildByNode(item, items, parent);
    });
 }
@@ -41,9 +41,7 @@ function isChildByNode(item, items, nodeId) {
 function isSelected(item, items, selection) {
    const selected = selection.get('marked');
 
-   return includes(selected, item.id) || getChildren(items, item.id).filter(function(item) {
-         return includes(selected, item.id);
-      }).length;
+   return includes(selected, item.id) || getChildren(items, item.id).filter((ch) => includes(selected, ch.id)).length;
 }
 
 function getFullPath(items, currentRoot) {
@@ -69,7 +67,7 @@ export default class extends Memory {
       if (selection) {
          const isAllSelected = selection.get('marked').includes(null) && selection.get('excluded').includes(null);
 
-         query.where(function(item) {
+         query.where((item) => {
             item = getById(items, item.get('id'));
             if (isSelected(item, items, selection) && isChildByNode(item, items, parent) ||
                isAllSelected && item.Раздел === null && !includes(selection.get('excluded'), item.id)) {
@@ -78,7 +76,7 @@ export default class extends Memory {
             }
          });
       } else {
-         query.where(function(item) {
+         query.where((item) => {
             if (parent !== undefined) {
                return item.get('Раздел') === parent;
             } else {

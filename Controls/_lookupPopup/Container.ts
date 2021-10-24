@@ -38,16 +38,14 @@ const _private = {
    },
 
    getKeysByItems(items, keyProperty) {
-      return chain.factory(items).reduce(function(result, item) {
+      return chain.factory(items).reduce((result, item) => {
          result.push(item.get(keyProperty));
          return result;
       }, []);
    },
 
    getFilterFunction(func) {
-      return func ? func : function() {
-         return true;
-      };
+      return func ? func : () => true;
    },
 
    getSelectedKeys(options): TKey[] {

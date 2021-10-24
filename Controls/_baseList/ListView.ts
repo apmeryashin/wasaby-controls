@@ -466,12 +466,10 @@ const ListView = Control.extend(
         }
     });
 
-ListView.getDefaultOptions = function() {
-    return {
-        contextMenuVisibility: true,
-        markerVisibility: 'onactivated'
-    };
-};
+ListView.getDefaultOptions = () => ({
+    contextMenuVisibility: true,
+    markerVisibility: 'onactivated'
+});
 
 Object.defineProperty(ListView, 'defaultProps', {
    enumerable: true,

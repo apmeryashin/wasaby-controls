@@ -130,11 +130,9 @@ const Suggest = Control.extend({
 // <editor-fold desc="OptionsDesc">
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

@@ -108,15 +108,13 @@ export default class Grid extends List {
     }
 }
 
-Grid.getDefaultOptions = function() {
-   return {
-       stickyHeader: true,
-       stickyColumnsCount: 1,
-       rowSeparatorSize: null,
-       columnSeparatorSize: null,
-       isFullGridSupport: isFullGridSupport()
-   };
-};
+Grid.getDefaultOptions = () => ({
+    stickyHeader: true,
+    stickyColumnsCount: 1,
+    rowSeparatorSize: null,
+    columnSeparatorSize: null,
+    isFullGridSupport: isFullGridSupport()
+});
 
 Object.defineProperty(Grid, 'defaultProps', {
    enumerable: true,

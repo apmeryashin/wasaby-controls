@@ -146,7 +146,7 @@ export default class EditInPlace extends Control {
             };
          case 3:
             return new Promise((result) => {
-               setTimeout(function() {
+               setTimeout(() => {
                   result({
                      item: new Model({
                         keyProperty: 'id',
@@ -182,7 +182,7 @@ export default class EditInPlace extends Control {
 
    _deferredItemAdd() {
       return new Promise((result) => {
-         setTimeout(function() {
+         setTimeout(() => {
             result({
                item: new Model({
                   keyProperty: 'id',

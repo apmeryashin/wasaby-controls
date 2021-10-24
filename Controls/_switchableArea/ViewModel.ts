@@ -29,7 +29,7 @@ export default class ViewModel {
         // TODO https://online.sbis.ru/opendoc.html?guid=c206e7a9-9d96-4a20-b386-d44d0f8ef4dc.
         // Запоминаем все загруженные вкладки
         if (this._items) {
-            factory(this._items).each(function(item) {
+            factory(this._items).each((item) => {
                 if (item.get) {
                     if (item.get('loaded')) {
                         loadedItems.push(item.get('key'));

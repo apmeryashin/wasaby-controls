@@ -14,11 +14,11 @@ export default class extends Control {
         this._source = new Memory({
             data: _companies,
             filter(item, queryFilter) {
-                const selectionFilterFn = function(item, filter) {
+                const selectionFilterFn = (optItem, filter) => {
                     let isSelected = false;
-                    const itemId = item.get('id');
+                    const itemId = optItem.get('id');
 
-                    filter.selection.get('marked').forEach(function(selectedId) {
+                    filter.selection.get('marked').forEach((selectedId) => {
                         if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
                             isSelected = true;
                         }

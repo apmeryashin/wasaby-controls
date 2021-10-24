@@ -870,7 +870,7 @@ function getCalculatedFilter(config) {
             fastFilterItems: this._$fastFilterItems
         });
         return items;
-    }).addErrback(function(err) {
+    }).addErrback((err) => {
         def.errback(err);
         return err;
     });

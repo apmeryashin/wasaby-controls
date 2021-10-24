@@ -6,7 +6,7 @@ const setPropValue = objectUtils.setPropertyValue;
 
 export function hasResetValue(items) {
       let hasReset = false;
-      factory(items).each(function(item) {
+      factory(items).each((item) => {
          if (hasReset) {
             return;
          }

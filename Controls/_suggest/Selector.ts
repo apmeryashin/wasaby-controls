@@ -135,7 +135,7 @@ const Suggest = Control.extend({
       if (newOptions.selectedKey !== undefined && (newOptions.selectedKey !== this._options.selectedKey ||
          newOptions.source !== this._options.source)) {
          const self = this;
-         return _private.loadSelectedItem(this, newOptions).addCallback(function(items) {
+         return _private.loadSelectedItem(this, newOptions).addCallback((items) => {
             _private.updateValue(self, self._value);
             self._forceUpdate();
             return items;
@@ -163,17 +163,15 @@ const Suggest = Control.extend({
 });
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3,
-      borderVisibility: 'partial',
-      suggestState: false,
-      suggestTemplate: {
-         templateName: 'Controls/suggestPopup:SuggestTemplate'
-      },
-      footerTemplate: null
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3,
+    borderVisibility: 'partial',
+    suggestState: false,
+    suggestTemplate: {
+        templateName: 'Controls/suggestPopup:SuggestTemplate'
+    },
+    footerTemplate: null
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

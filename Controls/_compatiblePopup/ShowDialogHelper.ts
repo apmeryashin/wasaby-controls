@@ -30,15 +30,15 @@ const _private = {
 
 const DialogHelper = {
    open(path, config) {
-      const result = moduleStubs.requireModule(path).addCallback(function(Component) {
+      const result = moduleStubs.requireModule(path).addCallback((Component) => {
          if (isNewEnvironment()) {
             let dfr = new Deferred();
             const deps = _private.prepareDeps(config);
-            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(CompatiblePopup) {
-               CompatiblePopup.load().addCallback(function() {
-                  require(deps, function(popup, Strategy) {
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (CompatiblePopup) => {
+               CompatiblePopup.load().addCallback(() => {
+                  require(deps, (popup, Strategy) => {
                      const CoreTemplate = require(config.template);
-                     config._initCompoundArea = function(compoundArea) {
+                     config._initCompoundArea = (compoundArea) => {
                         if (dfr) {
                             dfr.callback(compoundArea);
                         }
@@ -47,7 +47,7 @@ const DialogHelper = {
                      popup.BaseOpener.showDialog(
                         CoreTemplate, config, config._path ? Strategy[config._path] : Strategy
                      );
-                  }, function(err) {
+                  }, (err) => {
                      Logger.error(`Не удалось загрузить модули для открытия окна: ${err.requireModules.join(',')}`);
                   });
                });

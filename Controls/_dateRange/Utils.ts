@@ -13,7 +13,7 @@ const enum WEEKS_MODE {
    extended = 'extended'
 }
 
-const getDayRange = function(startDate, endDate, quantum) {
+const getDayRange = (startDate, endDate, quantum) => {
    const date = new WSDate(startDate);
    if (startDate <= endDate) {
       date.setDate(date.getDate() + quantum - 1);
@@ -47,7 +47,7 @@ const Utils = {
          const days = daysSmall.slice(1);
          days.push(daysSmall[0]);
 
-         weekdaysCaptions = days.map(function(value, index) {
+         weekdaysCaptions = days.map((value, index) => {
             return {caption: value, weekend: index === 5 || index === 6, day: index};
          });
       }

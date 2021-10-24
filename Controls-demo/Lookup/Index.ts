@@ -160,7 +160,7 @@ export default class extends Control {
       if (items.at(0) && items.at(0).get('parent')) {
          items.clear();
       } else {
-         items.each(function(item) {
+         items.each((item) => {
             correctKeys.push(item.get('id'));
             parentId = item.get('parent');
             if (parentId && correctKeys.indexOf(parentId) === -1) {
@@ -191,7 +191,7 @@ export default class extends Control {
       const propName = newItem.getIdProperty() === 'id' ? 'city' : 'department';
 
       // Определяем, добавить элемент или заменить
-      currentItems.each(function(item, index) {
+      currentItems.each((item, index) => {
          if (item.has(propName)) {
             indexForReplace = index;
          }

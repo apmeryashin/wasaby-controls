@@ -32,8 +32,9 @@ import cInstance = require('Core/core-instance');
  * </pre>
  *
  */
-export = function(args) {
-   // Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
+function validate(args) {
+   // Если передали в аргументах doNotValidate, значит возвращаем true
+   // (параметр нужен для опционального включения/отключения валидатора)
    if (args.doNotValidate) {
       return true;
    }
@@ -68,4 +69,6 @@ export = function(args) {
    return isEmpty ?
       rk('Поле обязательно для заполнения') :
       true;
-};
+}
+
+export = validate;
