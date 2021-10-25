@@ -7,6 +7,7 @@ import {IBackgroundStyle, IBackgroundStyleOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject} from 'Controls/dragnDrop';
 import 'css!Controls/popupTemplate';
+import {DimensionsMeasurer} from "Controls/sizeUtils";
 
 const enum POSITION {
     RIGHT = 'right',
@@ -77,12 +78,13 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
                 const isRightPosition = options.stickyPosition.direction?.horizontal === 'left';
                 let popupRight;
                 if (isRightPosition) {
-                    popupRight = window?.innerWidth - options.stickyPosition.position.right;
+                    popupRight = options.stickyPosition.position.right;
                 } else {
-                    popupRight = options.stickyPosition.position.left + options.stickyPosition.sizes.width;
+                    const windowWidth = DimensionsMeasurer.getWindowDimensions(this._container).innerWidth;
+                    popupRight = windowWidth - (options.stickyPosition.position.left + options.stickyPosition.sizes.width);
                 }
-                const isOutside = popupRight > window?.innerWidth - this._getCloseButtonWidth();
-                this._closeBtnPosition = isOutside ? POSITION.LEFT : POSITION.RIGHT;
+                const isFits = popupRight < this._getCloseButtonWidth();
+                this._closeBtnPosition = isFits ? POSITION.LEFT : POSITION.RIGHT;
             }
         }
     }
