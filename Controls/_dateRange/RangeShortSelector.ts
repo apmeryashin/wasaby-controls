@@ -1,12 +1,11 @@
 import BaseSelector from './BaseSelector';
-import {Date as WSDate, descriptor} from 'Types/entity';
-import ILinkView from './interfaces/ILinkView';
+import {Date as WSDate} from 'Types/entity';
+import {ILinkViewDefaultOptions} from 'Controls/date';
 import {ICrud} from 'Types/source';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dateRange/RangeShortSelector/RangeShortSelector');
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/dateRange';
 
 interface IRangeShortSelectorOptions extends IControlOptions {
@@ -37,7 +36,7 @@ interface IRangeShortSelectorOptions extends IControlOptions {
  * @class Controls/_dateRange/RangeShortSelector
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
- * @implements Controls/dateRange:ILinkView
+ * @implements Controls/date:ILinkViewDefaultOptions
  * @mixes Controls/dateRange:IPeriodLiteDialog
  * @implements Controls/dateRange:IDateRange
  * @implements Controls/interface:IDisplayedRanges
@@ -64,7 +63,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     protected _template: TemplateFunction = template;
     protected _fittingMode: string = 'overflow';
 
-    EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
+    EMPTY_CAPTIONS: object = ILinkViewDefaultOptions.EMPTY_CAPTIONS;
 
     protected _getPopupOptions(): IStickyPopupOptions {
         let className;
@@ -150,8 +149,8 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     static getDefaultOptions(): object {
         return {
             ...IPeriodLiteDialog.getDefaultOptions(),
-            ...ILinkView.getDefaultOptions(),
-            emptyCaption: ILinkView.EMPTY_CAPTIONS.NOT_SPECIFIED,
+            ...ILinkViewDefaultOptions.getDefaultOptions(),
+            emptyCaption: ILinkViewDefaultOptions.EMPTY_CAPTIONS.NOT_SPECIFIED,
             dateConstructor: WSDate
         };
     }
@@ -159,7 +158,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     static getOptionTypes(): object {
         return {
             ...IPeriodLiteDialog.getOptionTypes(),
-            ...ILinkView.getOptionTypes()
+            ...ILinkViewDefaultOptions.getOptionTypes()
         };
     }
 }

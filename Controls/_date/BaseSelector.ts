@@ -5,11 +5,13 @@ import LinkView from './LinkView';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import {IFontSizeOptions} from 'Controls/interface';
 import {IDatePopupTypeOptions} from 'Controls/_date/interface/IDatePopupType';
+import {IDateConstructorOptions} from 'Controls/interface';
+import IValueOptions from 'Controls/_date/interface/IValue';
 
-export interface IBaseSelectorOptions extends IControlOptions, IFontSizeOptions, IDatePopupTypeOptions {
+export interface IBaseSelectorOptions extends IControlOptions, IFontSizeOptions, IDatePopupTypeOptions,
+    IDateConstructorOptions, IValueOptions {
     prevArrowVisibility: boolean;
     nextArrowVisibility: boolean;
-    dateConstructor: Function;
 }
 
 export default class BaseSelector<T extends IBaseSelectorOptions> extends Control<T> {
@@ -49,6 +51,10 @@ export default class BaseSelector<T extends IBaseSelectorOptions> extends Contro
         }
     }
 
+    shiftPeriod(delta: number): void {
+        this._children.linkView.shiftPeriod(delta);
+    }
+
     shiftBack(): void {
         this._children.linkView.shiftBack();
     }
@@ -63,10 +69,6 @@ export default class BaseSelector<T extends IBaseSelectorOptions> extends Contro
 
     protected _notifyValueChanged(value: Date): void {
         this._notify('valueChanged', [value]);
-    }
-
-    shiftPeriod(delta: number): void {
-        this._children.linkView.shiftPeriod(delta);
     }
 
     closePopup(): void {

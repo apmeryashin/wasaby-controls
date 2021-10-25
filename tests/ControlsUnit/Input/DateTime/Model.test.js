@@ -17,7 +17,7 @@ define([
    describe('Controls/_date/BaseInput/Model', function() {
       describe('constructor', function() {
          it('should initialize internal fields', function() {
-            let model = new DateTimeModel(options);
+            let model = new DateTimeModel.default(options);
 
             assert.strictEqual(model._mask, options.mask);
             assert.strictEqual(model.value, options.value);
@@ -31,7 +31,7 @@ define([
 
          it('should update value fields if value changed', function() {
             let sandbox = sinon.sandbox.create(),
-               model = new DateTimeModel(options),
+               model = new DateTimeModel.default(options),
                newDate = new Date(2019, 1, 2);
 
             sandbox.stub(model, '_notify');
@@ -53,7 +53,7 @@ define([
                dateConstructor: Date
             };
             const sandbox = sinon.sandbox.create(),
-               model = new DateTimeModel(options);
+               model = new DateTimeModel.default(options);
 
             sandbox.stub(model, '_notify');
             model.update(cMerge({ displayValue: '02.01.21' }, options, { preferSource: true }));
@@ -71,7 +71,7 @@ define([
       describe('.value', function() {
 
          it('should update native and text value', function() {
-            let model = new DateTimeModel(options),
+            let model = new DateTimeModel.default(options),
                newDate = new Date(2019, 1, 2);
 
             model.value = newDate;
@@ -86,7 +86,7 @@ define([
       describe('.textValue', function() {
 
          it('should update native and text value', function() {
-            let model = new DateTimeModel(options),
+            let model = new DateTimeModel.default(options),
                newTextValue = '02.02.2019',
                newDate = new Date(2019, 1, 2);
 
@@ -99,7 +99,7 @@ define([
          });
 
          it('should set Invalid Date if text value not full', function() {
-            let model = new DateTimeModel(options),
+            let model = new DateTimeModel.default(options),
                newTextValue = '02.0 .2019';
 
             model.textValue = newTextValue;
@@ -112,7 +112,7 @@ define([
          it('should not generate valueChanged event if the text value changed from one invalid date to another', function() {
             let
                sandbox = sinon.sandbox.create(),
-               model = new DateTimeModel(options);
+               model = new DateTimeModel.default(options);
             model.textValue = '02.0 .2019';
             sandbox.stub(model, '_notify');
             model.textValue = '02.99.2019';
@@ -125,7 +125,7 @@ define([
       describe('.autocomplete', function() {
 
          it('should update native and text value', function() {
-            let model = new DateTimeModel(options),
+            let model = new DateTimeModel.default(options),
                newTextValue = '02.02.2019',
                newDate = new Date(2019, 1, 2);
 
@@ -142,7 +142,7 @@ define([
       describe('.setCurrentDate', function() {
 
          it('should set current date in value', function() {
-            let model = new DateTimeModel(options);
+            let model = new DateTimeModel.default(options);
             let clock = sinon.useFakeTimers(new Date(2019, 0, 2, 3, 4, 5, 6), 'Date');
             model.setCurrentDate();
             assert.strictEqual((new Date(2019, 0, 2)).getTime(), model.value.getTime());

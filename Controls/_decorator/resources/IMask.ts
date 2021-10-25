@@ -86,7 +86,7 @@ export interface IMaskOptions {
     *
     * @see formatMaskChars
     */
-    mask: string;
+    mask?: string;
     /**
      * @name Controls/_decorator/resources/IMask#replacer
      * @cfg {String} Символ, который будет отображаться, если ничего не введено.
@@ -116,7 +116,7 @@ export interface IMaskOptions {
     *    If you erase everything from input, the field will change from '12.34' to '  .  '.
     * </pre>
     */
-    replacer: string;
+    replacer?: string;
     /**
      * @name Controls/_decorator/resources/IMask#formatMaskChars
      * @cfg {Object} Объект, где ключи — символы маски, а значения — регулярные выражения, которые будут использоваться для фильтрации вводимых символов для соответствующих ключей.
@@ -159,7 +159,7 @@ export interface IMaskOptions {
     *    <Controls.input:Mask mask="+\?d (ddd) ddd-dd-dd" formatMaskChars="{{ _formatMaskChars }}"/>
     * </pre>
     */
-    formatMaskChars: IFormatMaskChars;
+    formatMaskChars?: IFormatMaskChars;
 }
 
 export function getDefaultMaskOptions(): Partial<IMaskOptions> {
