@@ -1,12 +1,12 @@
-define('Controls-demo/Buttons/Menu/Menu', [
+define('Controls-demo/dropdown_new/Menu/Menu', [
    'UI/Base',
-   'wml!Controls-demo/Buttons/Menu/Menu',
+   'wml!Controls-demo/dropdown_new/Menu/Menu',
    'Types/source',
    'Controls/list',
    'Controls-demo/dropdown_new/Button/HistoryId/historySourceMenu',
 
-   'wml!Controls-demo/Buttons/Menu/itemTemplateSub',
-   'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
+   'wml!Controls-demo/dropdown_new/Menu/itemTemplateSub',
+   'wml!Controls-demo/dropdown_new/Menu/itemTemplateComment'
 ], function(Base, template, source, ControlsConstants, HistorySourceMenu) {
    'use strict';
 
@@ -309,7 +309,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          }
       }
    );
-   ModuleClass._styles = ['Controls-demo/Buttons/Menu/Menu'];
+   ModuleClass._styles = ['Controls-demo/dropdown_new/Menu/Menu'];
 
    return ModuleClass;
 });
