@@ -9,7 +9,7 @@ import 'css!Controls/progress';
  * Интерфейс конфигурации сектора.
  * @interface Controls/progress:IStateBarSector
  * @public
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 export interface IStateBarSector {
 
@@ -45,7 +45,7 @@ export interface IStateBarSector {
  * Интерфейс опций для {@link Controls/progress:StateBar}.
  * @interface Controls/progress:IStateBar
  * @public
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  */
 export interface IStateBarOptions extends IControlOptions {
 
@@ -108,7 +108,7 @@ export interface IStateBarOptions extends IControlOptions {
  *
  * @extends UI/Base:Control
  * @implements Controls/progress:IStateBarOptions
- * @author Колесов В.А.
+ * @author Мочалов М.А.
  *
  * @public
  * @demo Controls-demo/progress/StateBar/Index
