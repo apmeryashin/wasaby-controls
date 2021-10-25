@@ -24,6 +24,7 @@ import {
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { SyntheticEvent } from 'UI/Vdom';
 import { CrudEntityKey } from 'Types/source';
+import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
 
 type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>;
 type IDoScrollUtil = (scrollTop: number) => void;
@@ -51,6 +52,7 @@ interface IListVirtualScrollControllerOptions {
 
 export class ListVirtualScrollController {
     private _collection: Collection;
+    private _itemSizeProperty: string;
 
     private _scrollToElementUtil: IScrollToElementUtil;
     private _doScrollUtil: IDoScrollUtil;
@@ -70,6 +72,7 @@ export class ListVirtualScrollController {
 
     constructor(options: IListVirtualScrollControllerOptions) {
         this._collection = options.collection;
+        this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
@@ -138,6 +141,7 @@ export class ListVirtualScrollController {
                 break;
             }
             case IObservable.ACTION_RESET: {
+                this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
                 this._scrollController.resetItems(
                     totalCount,
                     this._hasMoreUtil('backward'),
@@ -209,9 +213,10 @@ export class ListVirtualScrollController {
             bottomTriggerOffsetCoefficient: 0,
 
             scrollPosition: 0,
-            viewportSize: 0,
+            viewportSize: options.virtualScrollConfig.viewportHeight || 0,
             contentSize: 0,
             totalCount,
+            givenItemsSizes: this._getGivenItemsSizes(),
 
             indexesInitializedCallback: (range: IItemsRange): void => {
                 this._scheduleUpdateItemsSizes({
@@ -362,5 +367,27 @@ export class ListVirtualScrollController {
                 );
                 break;
         }
+    }
+
+    private _getGivenItemsSizes(): IItemsSizes|null {
+        if (!this._itemSizeProperty) {
+            return null;
+        }
+
+        const itemsSizes: IItemsSizes = this._collection.getItems()
+            .map((it) => {
+                const itemSize = {
+                    height: it.getContents().get(this._itemSizeProperty),
+                    offsetTop: 0
+                }
+
+                if (!itemSize.height) {
+                    throw new Error(`Controls/baseList:BaseControl | Задана опция itemHeightProperty, но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
+                }
+
+                return itemSize;
+            });
+
+        return itemsSizes;
     }
 }

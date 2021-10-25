@@ -1,6 +1,6 @@
 import {
     getActiveElementIndexByScrollPosition,
-    getRangeByIndex,
+    getRangeByIndex, getRangeByItemsSizes,
     getRangeByScrollPosition,
     shiftRangeBySegment
 } from './CalculatorUtil';
@@ -34,6 +34,12 @@ export interface ICalculatorBaseOptions {
     contentSize: number;
     totalCount: number;
 
+    /**
+     * Размеры элементов заданные прикладниками.
+     * Берем их из рекордсета по itemHeightProperty.
+     */
+    givenItemsSizes: IItemsSizes;
+
     virtualScrollConfig: IVirtualScrollConfig;
 }
 
@@ -62,6 +68,7 @@ export interface IPlaceholders {
  */
 export class Calculator {
     private _itemsSizes: IItemsSizes;
+    private _givenItemsSizes: IItemsSizes;
     private _triggersOffsets: ITriggersOffsets;
     private _virtualScrollConfig: IVirtualScrollConfig;
     private _scrollPosition: number;
@@ -74,6 +81,7 @@ export class Calculator {
 
     constructor(options: ICalculatorOptions) {
         this._itemsSizes = options.itemsSizes;
+        this._givenItemsSizes = options.givenItemsSizes;
         this._triggersOffsets = options.triggersOffsets;
         this._scrollPosition = options.scrollPosition;
         this._totalCount = options.totalCount;
@@ -115,6 +123,10 @@ export class Calculator {
      */
     updateItemsSizes(itemsSizes: IItemsSizes): void {
         this._itemsSizes = itemsSizes;
+    }
+
+    updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
+        this._givenItemsSizes = itemsSizes;
     }
 
     getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
@@ -433,11 +445,20 @@ export class Calculator {
 
         this._totalCount = totalCount;
 
-        this._range = getRangeByIndex({
-            pageSize: this._virtualScrollConfig.pageSize,
-            start: 0,
-            totalCount: this._totalCount
-        });
+        if (this._givenItemsSizes) {
+            this._range = getRangeByItemsSizes({
+                start: 0,
+                totalCount: this._totalCount,
+                viewportSize: this._viewportSize,
+                itemsSizes: this._givenItemsSizes
+            });
+        } else {
+            this._range = getRangeByIndex({
+                pageSize: this._virtualScrollConfig.pageSize,
+                start: 0,
+                totalCount: this._totalCount
+            });
+        }
 
         this._updatePlaceholders(this._range);
 

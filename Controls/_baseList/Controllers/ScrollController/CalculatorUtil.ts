@@ -11,6 +11,13 @@ export interface IGetRangeByIndexParams {
     totalCount: number;
 }
 
+export interface IGetRangeByItemsSizesParams {
+    start: number;
+    totalCount: number;
+    viewportSize: number;
+    itemsSizes: IItemsSizes;
+}
+
 export interface IShiftRangeBySegmentParams {
     pageSize: number;
     totalCount: number;
@@ -85,6 +92,51 @@ export function getRangeByIndex(params: IGetRangeByIndexParams): IItemsRange {
     }
 
     return result;
+}
+
+/**
+ * Расчет видимых индексов от заранее высчитанных высот.
+ * @remark
+ * Используется для оптимизаций частных случаев, когда построить один лишний элемент будет очень дорого,
+ * например если один элемент это огромный пункт с кучей контролов внутри)
+ * @param {IGetRangeByItemsSizesParams} params
+ */
+export function getRangeByItemsSizes(params: IGetRangeByItemsSizesParams): IItemsRange {
+    const itemsSizes = params.itemsSizes;
+    let sumHeight = 0;
+    let start: number = params.start;
+    let end: number;
+
+    // Пытаемся посчитать endIndex взяв за начало переданный startIndex
+    for (let i = start; i < params.totalCount; i++) {
+        const itemSize = itemsSizes[i].height;
+        if (sumHeight + itemSize <= params.viewportSize) {
+            sumHeight += itemSize;
+        } else {
+            end = i;
+            break;
+        }
+    }
+
+    // Если endIndex не посчитался или равен последнему элементу, то
+    // считаем наоборот - startIndex исходя из того что endIndex указывает на последний элемент
+    if (typeof end === 'undefined' || end === params.totalCount - 1) {
+        end = params.totalCount - 1;
+        sumHeight = 0;
+
+        for (let i = end; i > 0; i--) {
+            const itemSize = itemsSizes[i].height;
+
+            if (sumHeight + itemSize <= params.viewportSize) {
+                sumHeight += itemSize;
+            } else {
+                start = i;
+                break;
+            }
+        }
+    }
+
+    return { startIndex: start, endIndex: end};
 }
 
 /**

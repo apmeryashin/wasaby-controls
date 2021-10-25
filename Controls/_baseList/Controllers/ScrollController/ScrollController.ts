@@ -1,4 +1,4 @@
-import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
+import {IItemsSizes, IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
 import {
     TIntersectionEvent,
     IObserversControllerBaseOptions,
@@ -130,7 +130,8 @@ export class ScrollController {
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
-            contentSize: options.contentSize
+            contentSize: options.contentSize,
+            givenItemsSizes: options.givenItemsSizes
         });
 
         this._indexesInitializedCallback(this._calculator.getRange());
@@ -204,6 +205,10 @@ export class ScrollController {
 
     updateItemsSizes(itemsRange: IItemsRange): void {
         this._updateItemsSizes(itemsRange);
+    }
+
+    updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
+        this._calculator.updateGivenItemsSizes(itemsSizes);
     }
 
     contentResized(contentSize: number): void {
