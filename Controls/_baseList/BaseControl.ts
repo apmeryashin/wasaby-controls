@@ -3434,12 +3434,16 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
         _private.handleListScrollSync(this, params.scrollTop);
 
-        const result = this._scrollController?.scrollPositionChange({
-            ...params,
-            topTriggerOffset: this._observersController?.getTriggerOffsets().top,
-            bottomTriggerOffset: this._observersController?.getTriggerOffsets().bottom
-        }, false);
-        _private.handleScrollControllerResult(this, result);
+        if (this._useNewScroll) {
+            this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
+        } else {
+            const result = this._scrollController?.scrollPositionChange({
+                ...params,
+                topTriggerOffset: this._observersController?.getTriggerOffsets().top,
+                bottomTriggerOffset: this._observersController?.getTriggerOffsets().bottom
+            }, false);
+            _private.handleScrollControllerResult(this, result);
+        }
     }
 
     scrollMoveHandler(params: unknown): void {
@@ -3533,10 +3537,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     protected _viewResize(): void {
         if (this._isMounted) {
             const container = this._children.viewContainer || this._container[0] || this._container;
-            this._viewSize = _private.getViewSize(this, true);
+            const contentSize = _private.getViewSize(this, true);
+            this._viewSize = contentSize;
 
             if (this._listVirtualScrollController) {
-                this._listVirtualScrollController.viewResized();
+                this._listVirtualScrollController.contentResized(contentSize);
             }
 
             /**
@@ -3644,6 +3649,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             doScrollUtil: (scrollTop: number) => {
                 this._notify('doScroll', [scrollTop, true], { bubbling: true });
+            },
+
+            activeElementChangedCallback: (activeElementIndex) => {
+                this._notify('activeElementChanged', [activeElementIndex]);
             },
 
             itemsEndedCallback: (direction: IScrollControllerDirection): void => {

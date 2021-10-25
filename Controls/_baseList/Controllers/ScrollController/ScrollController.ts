@@ -127,10 +127,11 @@ export class ScrollController {
         this._calculator = new Calculator({
             triggersOffsets: this._observersController.getTriggersOffsets(),
             itemsSizes: this._itemsSizesController.getItemsSizes(),
-            scrollTop: options.scrollTop,
+            scrollPosition: options.scrollPosition,
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
-            viewportSize: options.viewportSize
+            viewportSize: options.viewportSize,
+            contentSize: options.contentSize
         });
 
         this._indexesInitializedCallback(this._calculator.getRange());
@@ -198,8 +199,9 @@ export class ScrollController {
         this._updateItemsSizes(itemsRange);
     }
 
-    viewResized(): void {
+    contentResized(contentSize: number): void {
         this._updateItemsSizes();
+        this._calculator.setContentSize(contentSize);
     }
 
     private _updateItemsSizes(itemsRange?: IItemsRange): void {
@@ -313,7 +315,7 @@ export class ScrollController {
      * @param position
      */
     scrollPositionChange(position: number): void {
-        const result = this._calculator.shiftActiveElementIndexToScrollPosition(position);
+        const result = this._calculator.scrollPositionChange(position);
         this._processActiveElementIndexChanged(result);
     }
 
@@ -374,8 +376,6 @@ export class ScrollController {
      * @private
      */
     private _processCalculatorResult(result: ICalculatorResult): void {
-        this._processActiveElementIndexChanged(result);
-
         if (result.environmentChanged) {
             this._environmentChangedCallback({
                 afterPlaceholderSize: result.afterPlaceholderSize,

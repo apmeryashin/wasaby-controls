@@ -1,25 +1,40 @@
 import type { IItemsSizes } from './ItemsSizeController';
 import type { IDirection, IItemsRange } from './ScrollController';
+import type { IPlaceholders } from './Calculator';
 
-export interface IGetRangeBaseParams {
+const MIN_RATIO_INDEX_LINE = 0.15;
+const MAX_RATIO_INDEX_LINE = 0.85;
+
+export interface IGetRangeByIndexParams {
+    start: number;
     pageSize: number;
     totalCount: number;
 }
 
-export interface IGetRangeByIndexParams extends IGetRangeBaseParams {
-    start: number;
-}
-
-export interface IShiftRangeBySegmentParams extends IGetRangeBaseParams {
+export interface IShiftRangeBySegmentParams {
+    pageSize: number;
+    totalCount: number;
     segmentSize: number;
     direction: IDirection;
     currentRange: IItemsRange;
 }
 
-export interface IGetRangeByPositionParams extends IGetRangeBaseParams {
+export interface IGetByPositionParams {
+    pageSize: number;
+    totalCount: number;
     itemsSizes: IItemsSizes;
     scrollPosition: number;
     triggerOffset: number;
+}
+
+export interface IGetActiveElementIndexByPosition {
+    totalCount: number;
+    itemsSizes: IItemsSizes;
+    scrollPosition: number;
+    viewportSize: number;
+    contentSize: number;
+    placeholders: IPlaceholders;
+    currentRange: IItemsRange;
 }
 
 /**
@@ -74,9 +89,9 @@ export function getRangeByIndex(params: IGetRangeByIndexParams): IItemsRange {
 
 /**
  * Рассчет видимых индексов от позиции скролла
- * @param {IGetRangeByPositionParams} params
+ * @param {IGetByPositionParams} params
  */
-export function getRangeByScrollPosition(params: IGetRangeByPositionParams): IItemsRange {
+export function getRangeByScrollPosition(params: IGetByPositionParams): IItemsRange {
     const { pageSize, totalCount, itemsSizes, triggerOffset, scrollPosition } = params;
 
     let start: number = 0;
@@ -111,50 +126,56 @@ export function getRangeByScrollPosition(params: IGetRangeByPositionParams): IIt
     return { startIndex: start, endIndex: end };
 }
 
-export function getActiveElementIndexByPosition(params: IGetRangeByPositionParams): number {
-    // todo это всё надо переписывать
+/**
+ * Расчёт активного элемента от позиции скролла
+ * @param {IGetActiveElementIndexByPosition} params
+ */
+export function getActiveElementIndexByScrollPosition(params: IGetActiveElementIndexByPosition): number {
+    const { viewportSize, contentSize, scrollPosition, itemsSizes, placeholders, totalCount, currentRange } = params;
 
-    /*
-    const {viewport, scroll} = this._containerHeightsData;
-    let fixedScrollTop: number;
+    let fixedScrollPosition: number;
 
-    // На тач устройствах scroll может заходить за пределы границ контейнера,
-    // такие ситуации нужно корректировать под крайние максимальные и минимальные значения
-    // scrollTop
-    if (scrollTop < 0) {
-        fixedScrollTop = 0;
-    } else if (viewport + scrollTop > scroll) {
-        fixedScrollTop = scroll - viewport;
+    // На тач устройствах scroll может заходить за пределы границ контейнера.
+    // Такие ситуации нужно корректировать под крайние максимальные и минимальные значения scrollTop
+    if (scrollPosition < 0) {
+        fixedScrollPosition = 0;
+    } else if (viewportSize + scrollPosition > contentSize) {
+        fixedScrollPosition = contentSize - viewportSize;
     } else {
-        fixedScrollTop = scrollTop;
+        fixedScrollPosition = scrollPosition;
     }
 
-    if (!this._itemsCount) {
+    if (!totalCount) {
         return undefined;
-    } else if (this.isRangeOnEdge('up') && fixedScrollTop === 0) {
-        return this._range.start;
-    } else if (this.isRangeOnEdge('down') && fixedScrollTop + viewport === scroll) {
-        return this._range.stop - 1;
+    } else if (isRangeOnEdge('backward', currentRange, totalCount)
+        && fixedScrollPosition === 0) {
+        return currentRange.startIndex;
+    } else if (isRangeOnEdge('forward', currentRange, totalCount)
+        && fixedScrollPosition + viewportSize === contentSize) {
+        return currentRange.endIndex - 1;
     } else {
-        let itemIndex;
-        const { itemsOffsets } = this._itemsHeightData;
-        const placeholders = this._getPlaceholders();
-        const scrollTopWithPlaceholder = fixedScrollTop + placeholders.top;
-        const knownContentHeight = scroll + placeholders.bottom + placeholders.top;
-        const indexLineRatio = scrollTopWithPlaceholder / (knownContentHeight - viewport);
+        let activeElementIndex;
+        const scrollTopWithPlaceholder = fixedScrollPosition + placeholders.top;
+        const knownContentHeight = contentSize + placeholders.bottom + placeholders.top;
+        const indexLineRatio = scrollTopWithPlaceholder / (knownContentHeight - viewportSize);
         const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
-        for (let i = this._range.start ; i < this._range.stop; i++) {
-            if (itemsOffsets[i] < (fixedScrollTop + viewport * indexLine)) {
-                itemIndex = i;
+        for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
+            if (itemsSizes[i].offsetTop < (fixedScrollPosition + viewportSize * indexLine)) {
+                activeElementIndex = i;
             } else {
                 break;
             }
         }
 
-        return itemIndex;
+        return activeElementIndex;
     }
-    */
+}
 
-    return 0;
+/**
+ * Проверяет что диапазон находится на переданном краю
+ * @param edge
+ */
+function isRangeOnEdge(edge: IDirection, range: IItemsRange, totalCount: number): boolean {
+    return edge === 'backward' ? range.startIndex === 0 : range.endIndex === totalCount;
 }

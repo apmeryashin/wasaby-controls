@@ -13,7 +13,8 @@ import {
     IEdgeItem,
     IIndexesChangedParams,
     IItemsEndedCallback,
-    IDirection, IScheduledRestoreScrollParams
+    IScheduledRestoreScrollParams,
+    IActiveElementChangedChangedCallback
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { SyntheticEvent } from 'UI/Vdom';
 import { CrudEntityKey } from 'Types/source';
@@ -37,6 +38,7 @@ interface IListVirtualScrollControllerOptions {
     doScrollUtil: IDoScrollUtil;
 
     itemsEndedCallback: IItemsEndedCallback;
+    activeElementChangedCallback: IActiveElementChangedChangedCallback;
 }
 
 export class ListVirtualScrollController {
@@ -44,8 +46,6 @@ export class ListVirtualScrollController {
 
     private _scrollToElementUtil: IScrollToElementUtil;
     private _doScrollUtil: IDoScrollUtil;
-
-    private _itemsEndedCallback: IItemsEndedCallback;
 
     private _scrollController: ScrollController;
 
@@ -65,8 +65,6 @@ export class ListVirtualScrollController {
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
 
-        this._itemsEndedCallback = options.itemsEndedCallback;
-
         this._createScrollController(options);
     }
 
@@ -85,6 +83,10 @@ export class ListVirtualScrollController {
 
     virtualScrollPositionChange(position: number): void {
         this._scrollController.scrollToVirtualPosition(position);
+    }
+
+    scrollPositionChange(position: number): void {
+        this._scrollController.scrollPositionChange(position);
     }
 
     collectionChange(action: string,
@@ -159,8 +161,8 @@ export class ListVirtualScrollController {
         return this._scrollToPage('backward');
     }
 
-    viewResized(): void {
-        this._scrollController.viewResized();
+    contentResized(contentSize: number): void {
+        this._scrollController.contentResized(contentSize);
     }
 
     viewportResized(viewportSize: number): void {
@@ -183,8 +185,9 @@ export class ListVirtualScrollController {
             topTriggerOffsetCoefficient: 0,
             bottomTriggerOffsetCoefficient: 0,
 
-            scrollTop: 0,
+            scrollPosition: 0,
             viewportSize: 0,
+            contentSize: 0,
             totalCount,
 
             indexesInitializedCallback: (range: IItemsRange): void => {
@@ -198,13 +201,8 @@ export class ListVirtualScrollController {
             environmentChangedCallback(params: IEnvironmentChangedParams): void {
                 console.error('environmentChangedCallback', params);
             },
-            activeElementChangedCallback(activeElementIndex: number): void {
-                console.error('activeElementChangedCallback', activeElementIndex);
-            },
-            itemsEndedCallback: (direction: IDirection) => {
-                console.error('itemsEndedCallback', direction);
-                this._itemsEndedCallback(direction);
-            }
+            activeElementChangedCallback: options.activeElementChangedCallback,
+            itemsEndedCallback: options.itemsEndedCallback
         });
 
         this._scrollController.resetItems(totalCount);
@@ -228,7 +226,7 @@ export class ListVirtualScrollController {
             border: edgeVisibleItem.border,
             borderDistance: edgeVisibleItem.borderDistance,
             direction: edgeVisibleItem.direction
-        }
+        };
         this._scheduleScroll({
             type: 'restoreScroll',
             params: restoreScrollParams
@@ -268,8 +266,8 @@ export class ListVirtualScrollController {
                             index: this._collection.getIndexByKey(restoreScrollParams.key),
                             border: restoreScrollParams.border,
                             borderDistance: restoreScrollParams.borderDistance,
-                            direction: restoreScrollParams.direction,
-                        }
+                            direction: restoreScrollParams.direction
+                        };
                         const newScrollTop = this._scrollController.getScrollTopToEdgeItem(edgeItem);
                         this._doScrollUtil(newScrollTop);
                     }
