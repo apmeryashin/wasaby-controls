@@ -15,13 +15,25 @@ import * as Merge from 'Core/core-merge';
 import 'css!Controls/dropdown';
 import 'css!Controls/CommonClasses';
 
+export interface IMenuPopupTriggerOptions {
+    /**
+     * @name Controls/dropdown:IMenuPopupTrigger#menuPopupTrigger
+     * @cfg {String} Название события, которое запускает открытие или закрытие меню.
+     * @variant click Открытие кликом по контенту. Закрытие кликом "мимо" — не по контенту или шаблону.
+     * @variant hover Открытие по ховеру — по наведению курсора на контент. Закрытие по ховеру — по навердению курсора на контент или шаблон.
+     * @default click
+     * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
+     */
+    menuPopupTrigger?: 'click' | 'hover';
+}
+
 /**
  * Интерфейс опций для {@link Controls/dropdown:Button}.
  * @interface Controls/dropdown:IButton
  * @public
  * @author Герасимов А.М.
  */
-export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
+export interface IButtonBaseOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
     additionalProperty?: string;
     /**
      * @name Controls/dropdown:IButton#lazyItemsLoading
@@ -72,15 +84,6 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
      * @default true
      */
     showHeader?: boolean;
-    /**
-     * @name Controls/dropdown:IButton#menuPopupTrigger
-     * @cfg {String} Название события, которое запускает открытие или закрытие меню.
-     * @variant click Открытие кликом по контенту. Закрытие кликом "мимо" — не по контенту или шаблону.
-     * @variant hover Открытие по ховеру — по наведению курсора на контент. Закрытие по ховеру — по навердению курсора на контент или шаблон.
-     * @default click
-     * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
-     */
-    menuPopupTrigger?: 'click' | 'hover';
 
     /**
      * @name Controls/_dropdown/Button#reloadOnOpen
@@ -114,6 +117,7 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
     reloadOnOpen?: boolean;
 }
 
+export interface IButtonOptions extends IButtonBaseOptions, IMenuPopupTriggerOptions {}
 /**
  * Контрол "Кнопка с меню".
  *
@@ -136,6 +140,7 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
  * @mixes Controls/dropdown:IBaseDropdown
  * @mixes Controls/dropdown:IGrouped
  * @mixes Controls/dropdown:IButton
+ * @mixes Controls/dropdown:IMenuPopupTrigger
  * @implements Controls/interface:ISource
  * @implements Controls/interface:IIconStyle
  * @implements Controls/interface:IFontColorStyle
