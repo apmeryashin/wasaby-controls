@@ -457,7 +457,7 @@ export default class Cell<
         const fontColorStyle = this.config.fontColorStyle || templateFontColorStyle;
         const fontSize = this.config.fontSize || templateFontSize;
         const fontWeight = this.config.fontWeight || templateFontWeight;
-        let contentClasses = ' ';
+        let contentClasses = '';
         if (fontColorStyle) {
             contentClasses += ` controls-text-${fontColorStyle}`;
         }

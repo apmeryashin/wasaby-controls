@@ -57,7 +57,8 @@ export default abstract class GroupCell<T> {
      */
     protected _getBaseLineClasses(templateFontSize?: TFontSize): string {
         let classes = ' controls-ListView__groupContent_baseline ';
-        if (templateFontSize && ['m', 'l', 'xl', '2xl', '3xl', '4xl'].indexOf(templateFontSize) !== -1) {
+        if (templateFontSize &&
+            templateFontSize !== 's' && templateFontSize !== 'xs' && templateFontSize !== 'inherit') {
             classes += ` controls-ListView__groupContent_baseline_${templateFontSize}`;
         } else {
             classes += ' controls-ListView__groupContent_baseline_default';
