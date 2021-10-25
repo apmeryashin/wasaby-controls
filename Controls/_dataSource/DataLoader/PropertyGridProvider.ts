@@ -1,7 +1,7 @@
 import {IDataLoadProvider, IBaseLoadDataConfig} from 'Controls/_dataSource/DataLoader/IDataLoadProvider';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {IProperty} from 'Controls/propertyGrid';
-import ListProvider from 'Controls/_dataSource/DataLoader/ListProvider';
+import {NewSourceController} from 'Controls/dataSource';
 
 export interface ILoadPropertyGridDataConfig extends IBaseLoadDataConfig {
     id?: string;
@@ -25,7 +25,7 @@ class PropertyGridProvider implements IDataLoadProvider<ILoadPropertyGridDataCon
         ).catch((error) => error);
     }
 
-    private _getLoadPromisesFromDescription(description: IProperty[]): any {
+    private _getLoadPromisesFromDescription(description: IProperty[]): Array<Promise<IProperty>> {
         const loadPromises = [];
         description.forEach((property: IProperty) => {
             if (property.type && property.type === 'list') {
@@ -43,8 +43,14 @@ class PropertyGridProvider implements IDataLoadProvider<ILoadPropertyGridDataCon
     }
 
     private _loadList(property: IProperty): Promise<IProperty> {
-        return new ListProvider().load(property.editorOptions).then((loadResult) => {
-            property.editorOptions.items = loadResult.sourceController.getItems();
+        return new NewSourceController({
+            source: property.editorOptions.source,
+            filter: property.editorOptions.filter,
+            keyProperty: property.editorOptions.keyProperty,
+            navigation: property.editorOptions.navigation,
+            parentProperty: property.editorOptions.parentProperty
+        }).load().then((loadResult) => {
+            property.editorOptions.items = loadResult;
             return property;
         });
     }
