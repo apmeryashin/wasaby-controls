@@ -254,8 +254,7 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
             }
             return resultFilter;
         };
-        const resultDescription = object.clone(description);
-        return resultDescription.map((property) => {
+        return description.map((property) => {
             if (property.type === 'list' || property.editorTemplateName === 'Controls/filterPanel:ListEditor') {
                 property.type = 'list';
                 const propertyChanged = !isEqual(property.value, property.resetValue);
