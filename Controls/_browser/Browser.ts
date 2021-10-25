@@ -155,7 +155,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (Browser._checkLoadResult(this._listsOptions, receivedState as IReceivedState[])) {
             this._updateFilterAndFilterItems(options);
             this._defineShadowVisibility(receivedState[0].data);
-            this._setItemsAndUpdateContext();
+            this._setItemsAndUpdateContext(options);
             if (options.source && options.dataLoadCallback) {
                 options.dataLoadCallback(receivedState[0].data);
             }
@@ -168,7 +168,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 this._defineShadowVisibility(result[0].data);
 
                 if (Browser._checkLoadResult(this._listsOptions, result as IReceivedState[])) {
-                    this._setItemsAndUpdateContext();
+                    this._setItemsAndUpdateContext(options);
                     return result.map(({data, historyItems}) => {
                         return {
                             historyItems,
@@ -541,9 +541,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._rootChangedRegister;
     }
 
-    private _setItemsAndUpdateContext(): void {
+    private _setItemsAndUpdateContext(options: IBrowserOptions): void {
         this._updateItemsOnState();
-        this._subscribeOnSourceControllerEvents();
+        this._subscribeOnControllersEvents(options);
         this._updateContext();
     }
 
@@ -555,6 +555,26 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
         sourceController.subscribe('sortingChanged', this._sortingChanged.bind(this));
         sourceController.subscribe('itemsChanged', this._itemsChanged);
+    }
+
+    private _subscribeOnFilterControllerEvents(options: IBrowserOptions): void {
+        // Для совместимости, пока контролы вынуждены работать и от опций и от настроек на странице
+        // + пока нет виджета filter/View
+        this._dataLoader.getFilterController().subscribe('filterSourceChanged', (filterSource) => {
+            this._updateFilterAndFilterItems(options);
+
+            if (options.useStore) {
+                Store.dispatch('filterSource', filterSource);
+            }
+        });
+    }
+
+    private _subscribeOnControllersEvents(options: IBrowserOptions): void {
+        this._subscribeOnSourceControllerEvents();
+
+        if (this._hasFilterSourceInOptions(options)) {
+            this._subscribeOnFilterControllerEvents(options);
+        }
     }
 
     private _updateItemsOnState(): void {
@@ -704,7 +724,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._listsOptions.forEach(({id, filterButtonSource, fastFilterSource}) => {
             if (filterButtonSource || fastFilterSource) {
                 this._dataLoader.getFilterController(id).updateFilterItems(items);
-                this._updateFilterAndFilterItems(this._options);
                 this._contextState = {
                     ...this._contextState,
                     filter: this._filter
