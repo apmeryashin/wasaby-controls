@@ -4,7 +4,7 @@
 import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
-import {constants, IoC} from 'Env/Env';
+import {constants, IoC, cookie} from 'Env/Env';
 import { getGeneratorConfig } from 'UI/Base';
 
 const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
@@ -151,6 +151,11 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @returns {String}
     */
    var jsonToHtml = function(json, tagResolver?, resolverParams?) {
+      // Вычисление шаблона должно производиться без слоя совместимости
+      // https://online.sbis.ru/opendoc.html?guid=9108459a-bd21-48cb-8c1a-1d847e29f33a
+      const prevDisableCompat = cookie.get('disableCompat');
+      cookie.set('disableCompat', 'true');
+
       var generatorConfig = getGeneratorConfig();
       var result = template({
          _options: {
@@ -161,6 +166,9 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
          _isMarkupConverter: true,
          _moduleName: 'Controls/decorator:Converter'
       }, {}, {}, false, undefined, false, generatorConfig);
+
+      cookie.set('disableCompat', prevDisableCompat);
+
       return result;
    };
 
