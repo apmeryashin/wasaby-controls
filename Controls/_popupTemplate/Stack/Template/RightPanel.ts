@@ -10,12 +10,12 @@ interface IRightPanelOptions extends IControlOptions {
 
 export default class RightPanel extends Control<IRightPanelOptions> {
     protected _template: TemplateFunction = template;
-    protected _rightBottomTemplate: boolean;
+    protected _rightBottomTemplate: string;
     protected _isOutsidePanel: boolean = true;
 
     protected _beforeMount(options: IRightPanelOptions): void {
-        this._rightBottomTemplate = ManagerController.hasRightPanel();
-        if (!this._rightBottomTemplate && options.toolbarContentTemplate) {
+        this._rightBottomTemplate = ManagerController.getRightPanelBottomTemplate();
+        if (!ManagerController.hasRightPanel() && options.toolbarContentTemplate) {
             this._isOutsidePanel = false;
         }
     }
