@@ -20,6 +20,7 @@ import { CrudEntityKey } from 'Types/source';
 
 type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>;
 type IDoScrollUtil = (scrollTop: number) => void;
+type IHasMoreUtil = (direction: IDirection) => boolean;
 
 interface IListVirtualScrollControllerOptions {
     collection: Collection;
@@ -35,6 +36,7 @@ interface IListVirtualScrollControllerOptions {
 
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
+    hasMoreUtil: IHasMoreUtil;
 
     itemsEndedCallback: IItemsEndedCallback;
 }
@@ -44,6 +46,7 @@ export class ListVirtualScrollController {
 
     private _scrollToElementUtil: IScrollToElementUtil;
     private _doScrollUtil: IDoScrollUtil;
+    private _hasMoreUtil: IHasMoreUtil;
 
     private _itemsEndedCallback: IItemsEndedCallback;
 
@@ -64,6 +67,7 @@ export class ListVirtualScrollController {
 
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
+        this._hasMoreUtil = options.hasMoreUtil;
 
         this._itemsEndedCallback = options.itemsEndedCallback;
 
@@ -76,6 +80,15 @@ export class ListVirtualScrollController {
 
     setListContainer(listContainer: HTMLElement): void {
         this._scrollController.setListContainer(listContainer);
+    }
+
+    afterMountListControl(): void {
+        if (
+            !this._collection.getCount() ||
+            !this._hasMoreUtil('forward') && this._hasMoreUtil('backward')
+        ) {
+            this._scrollController.displayTrigger('backward');
+        }
     }
 
     afterRenderListControl(hasNotRenderedChanges: boolean): void {
@@ -116,7 +129,11 @@ export class ListVirtualScrollController {
                 break;
             }
             case IObservable.ACTION_RESET: {
-                this._scrollController.resetItems(totalCount);
+                this._scrollController.resetItems(
+                    totalCount,
+                    this._hasMoreUtil('backward'),
+                    this._hasMoreUtil('forward')
+                );
                 break;
             }
         }
@@ -179,7 +196,6 @@ export class ListVirtualScrollController {
             itemsQuerySelector: options.itemsQuerySelector,
             triggersQuerySelector: options.triggersQuerySelector,
 
-            triggersVisibility: undefined,
             topTriggerOffsetCoefficient: 0,
             bottomTriggerOffsetCoefficient: 0,
 
@@ -207,7 +223,11 @@ export class ListVirtualScrollController {
             }
         });
 
-        this._scrollController.resetItems(totalCount);
+        this._scrollController.resetItems(
+            totalCount,
+            this._hasMoreUtil('backward'),
+            this._hasMoreUtil('forward')
+        );
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {

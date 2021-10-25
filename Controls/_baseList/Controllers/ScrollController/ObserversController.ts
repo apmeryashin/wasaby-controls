@@ -1,10 +1,6 @@
 import { EdgeIntersectionObserver } from 'Controls/scroll';
 import { Control } from 'UI/Base';
-
-export interface ITriggersVisibility {
-    top: boolean;
-    bottom: boolean;
-}
+import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 
 export type TIntersectionEvent = 'bottomIn' | 'bottomOut' | 'topIn' | 'topOut';
 
@@ -20,8 +16,6 @@ export interface IObserversControllerBaseOptions {
     listContainer: HTMLElement;
     viewportSize: number;
     triggersQuerySelector: string;
-    // TODO нужно ли
-    triggersVisibility: ITriggersVisibility;
     topTriggerOffsetCoefficient: number;
     bottomTriggerOffsetCoefficient: number;
 }
@@ -60,6 +54,8 @@ export class ObserversController {
 
     private _observer: EdgeIntersectionObserver;
     private _observersCallback: TObserversCallback;
+
+    private _firstTimeGettingTrigger: boolean = true;
 
     constructor(options: IObserversControllerOptions) {
         this._listControl = options.listControl;
@@ -124,9 +120,43 @@ export class ObserversController {
         return this.getTriggersOffsets();
     }
 
+    displayTrigger(direction: IDirection): void {
+        const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
+        if (trigger.style.display === 'none') {
+            trigger.style.display = '';
+        }
+    }
+
+    hideTrigger(direction: IDirection): void {
+        const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
+        if (trigger.style.display !== 'none') {
+            trigger.style.display = 'none';
+        }
+    }
+
     getTriggersOffsets(): ITriggersOffsets {
         return this._triggersOffsets;
     }
+
+    // region OnCollectionChange
+
+    resetItems(totalCount: number, hasMoreToBackward: boolean, hasMoreToForward: boolean): ITriggersOffsets {
+        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
+        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
+        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
+        // Также сбрасываем triggerOffset если после ресета в сторону есть данные, чтобы
+        // первая подгрузка была только при скролле к самому краю
+        const hasItems = !!totalCount;
+        this.setResetBackwardTriggerOffset(!hasItems || hasMoreToBackward);
+        this.setResetForwardTriggerOffset(!hasItems || hasMoreToForward);
+        // если есть данные и вперед и назад, то скрываем триггер назад, т.к. в первую очередь грузим вперед
+        if (hasMoreToBackward && hasMoreToForward) {
+            this.hideTrigger('backward');
+        }
+        return this.getTriggersOffsets();
+    }
+
+    // endregion OnCollectionChange
 
     private _recalculateOffsets(): void {
         const newTopTriggerOffset = this._resetBackwardTriggerOffset
@@ -141,15 +171,23 @@ export class ObserversController {
             bottom: newBottomTriggerOffset
         };
 
-        // Для горизонтального скролла нужно будет поправить этот код (поодержка left, right)
-        this._triggers[0].style.top = `${this._triggersOffsets.top}px`;
-        this._triggers[1].style.bottom = `${this._triggersOffsets.bottom}px`;
+        if (this._triggers && this._triggers.length) {
+            // Для горизонтального скролла нужно будет поправить этот код (поодержка left, right)
+            this._triggers[0].style.top = `${this._triggersOffsets.top}px`;
+            this._triggers[1].style.bottom = `${this._triggersOffsets.bottom}px`;
+        }
     }
 
     private _updateTriggers(): void {
         this._triggers = Array.from(
             this._listContainer.querySelectorAll(this._triggersQuerySelector)
         );
+
+        // при первом получении триггеров сразу же скрываем верхний, чтобы избежать ненужных подгрузок.
+        if (this._firstTimeGettingTrigger) {
+            this.hideTrigger('backward');
+            this._firstTimeGettingTrigger = false;
+        }
 
         this._observer = new EdgeIntersectionObserver(
             this._listControl,
