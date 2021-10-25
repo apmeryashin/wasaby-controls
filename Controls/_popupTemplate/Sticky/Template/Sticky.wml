@@ -27,6 +27,7 @@
                 controls-StickyTemplate__close_button_position-{{_closeBtnPosition}}
                 controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header_top-spacing-{{ _options.closeButtonTopSpacing === 'none' ? 'none' : 'default' }} "
                                                      viewMode="{{_options.closeButtonViewMode}}"
+                                                     name="closeButton"
                                                      on:click="close()"/>
             </ws:if>
         </ws:else>
