@@ -14,8 +14,6 @@ const enum POSITION {
     DEFAULT = 'default'
 }
 
-const MIN_RIGHT_OFFSET = 30;
-
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateOptions, IBackgroundStyleOptions {
     shadowVisible?: boolean;
     stickyPosition?: object;
@@ -63,21 +61,28 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         }
     }
 
+    protected _getCloseButtonWidth(): number {
+        if (this._children.hasOwnProperty('closeButton')) {
+            return this._children.closeButton._container?.offsetWidth;
+        }
+        return 0;
+    }
+
     protected _updateCloseBtnPosition(options: IStickyTemplateOptions): void {
         if (options.stickyPosition && options.closeButtonViewMode === 'external') {
             // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
             if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
                 this._closeBtnPosition =  POSITION.RIGHT;
             } else {
-                const openerLeft = options.stickyPosition.targetPosition.left;
-                const popupLeft = options.stickyPosition.position.left;
-                // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
-                const popupOffset = (options.stickyPosition.sizes.width -
-                    options.stickyPosition.targetPosition.width) / 2;
-                const isReverted = (popupLeft + popupOffset) !== openerLeft;
-                const isOutside = popupLeft + options.stickyPosition.sizes.width >
-                    window?.innerWidth - MIN_RIGHT_OFFSET;
-                this._closeBtnPosition = isReverted || isOutside ? POSITION.LEFT : POSITION.RIGHT;
+                const isRightPosition = options.stickyPosition.targetPoint?.horizontal === 'right';
+                let popupRight;
+                if (isRightPosition) {
+                    popupRight = window?.innerWidth - options.stickyPosition.position.right;
+                } else {
+                    popupRight = options.stickyPosition.position.left + options.stickyPosition.sizes.width;
+                }
+                const isOutside = popupRight > window?.innerWidth - this._getCloseButtonWidth();
+                this._closeBtnPosition = isOutside ? POSITION.LEFT : POSITION.RIGHT;
             }
         }
     }
