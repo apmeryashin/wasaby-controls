@@ -9,7 +9,8 @@ import {
     ItemsFactory,
     IItemActionsTemplateConfig,
     IHasMoreData,
-    ISessionItems
+    ISessionItems,
+    IEditingConfig
 } from 'Controls/display';
 import {
     GridGroupRow,
@@ -278,6 +279,11 @@ export default class TreeGridCollection<
             this._$headerModel = null;
         }
         this._nextVersion();
+    }
+
+    setEditingConfig(config: IEditingConfig): void {
+        super.setEditingConfig(config);
+        this._updateItemsProperty('setEditingConfig', config, 'setEditingConfig');
     }
 
     protected _removeItems(start: number, count?: number): T[] {

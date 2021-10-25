@@ -274,5 +274,18 @@ describe('Controls/grid_clean/Display/Collection', () => {
                 assert.equal(gridCollection.getEmptyGridRow().getColumns()[0].config, emptyColumnsConfig[0]);
             });
         });
+
+        it('editingConfig', () => {
+            const gridCollection = new GridCollection({
+                collection: [{ key: 1 }],
+                keyProperty: 'key',
+                columns: [{displayProperty: 'id'}],
+                editingConfig: {}
+            });
+
+            assert.equal(gridCollection.getItems()[0].getVersion(), 0);
+            gridCollection.setEditingConfig({mode: 'cell'});
+            assert.equal(gridCollection.getItems()[0].getVersion(), 1);
+        });
     });
 });

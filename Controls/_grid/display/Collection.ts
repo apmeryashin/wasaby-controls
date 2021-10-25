@@ -4,7 +4,8 @@ import {
     Collection as BaseCollection,
     ItemsFactory,
     IItemActionsTemplateConfig,
-    GridLadderUtil, IHasMoreData
+    GridLadderUtil, IHasMoreData,
+    IEditingConfig
 } from 'Controls/display';
 
 import GroupRow from './GroupRow';
@@ -176,6 +177,11 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
             this._$headerModel = null;
         }
         this._nextVersion();
+    }
+
+    setEditingConfig(config: IEditingConfig): void {
+        super.setEditingConfig(config);
+        this._updateItemsProperty('setEditingConfig', config, 'setEditingConfig');
     }
 
     // endregion
