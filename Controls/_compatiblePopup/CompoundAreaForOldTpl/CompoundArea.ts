@@ -1630,7 +1630,7 @@ const CompoundArea = CompoundContainer.extend([
       });
 
       // If every waiting op is completed
-      if (result.length == totalOps) {
+      if (result.length === totalOps) {
          this._pending = [];
          this._pendingTrace = [];
          while (this._waiting.length > 0) {

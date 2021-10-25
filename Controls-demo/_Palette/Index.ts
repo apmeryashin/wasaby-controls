@@ -105,9 +105,9 @@ class Palette extends Control<IControlOptions> {
         const c = (1 - Math.abs(2 * l - 1)) * s;
         const x = c * (1 - Math.abs((h / 60) % 2 - 1));
         const m = l - c / 2;
-        let r = 0;
-        let g = 0;
-        let b = 0;
+        let r: string | number = 0;
+        let g: string | number = 0;
+        let b: string | number = 0;
 
         if (0 <= h && h < 60) {
             r = c; g = x; b = 0;
@@ -130,13 +130,13 @@ class Palette extends Control<IControlOptions> {
         g = g.toString(16);
         b = b.toString(16);
 
-        if (r.length == 1) {
+        if (r.length === 1) {
             r = '0' + r;
         }
-        if (g.length == 1) {
+        if (g.length === 1) {
             g = '0' + g;
         }
-        if (b.length == 1) {
+        if (b.length === 1) {
             b = '0' + b;
         }
 
