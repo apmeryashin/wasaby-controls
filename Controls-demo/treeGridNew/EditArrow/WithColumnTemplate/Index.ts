@@ -1,5 +1,4 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
 
 import { IColumn } from 'Controls/grid';
@@ -8,7 +7,6 @@ import * as Template from 'wml!Controls-demo/treeGridNew/EditArrow/WithColumnTem
 import * as TreeMemory from 'Controls-demo/List/Tree/TreeMemory';
 import * as memorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import { TreeData, TreeColumnsWithTemplate, TreeHeader } from 'Controls-demo/treeGridNew/EditArrow/resources/resources';
-import { IHeaderCell } from 'Controls/grid';
 
 export default class WithColumnTemplate extends Control<IControlOptions> {
     _template: TemplateFunction = Template;
@@ -33,10 +31,8 @@ export default class WithColumnTemplate extends Control<IControlOptions> {
         }
     }
 
-    _editArrowClick(e: SyntheticEvent, item: Model): void {
-        console.log(item);
-    }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/treeGridNew/EditArrow/resources/EditArrow'];
-
+    static _styles: string[] = [
+        'Controls-demo/Controls-demo',
+        'Controls-demo/treeGridNew/EditArrow/resources/EditArrow'
+    ];
 }
