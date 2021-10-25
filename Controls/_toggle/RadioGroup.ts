@@ -38,6 +38,7 @@ export interface IRadioGroupOptions extends IControlOptions,
  * @implements Controls/interface:ISource
  * @implements Controls/interface:ISingleSelectable
  * @implements Controls/interface:IValidationStatus
+ * @implements Controls/interface:IHierarchy
  * @implements Controls/toggle:IToggleGroup
  *
  * @public
@@ -188,6 +189,12 @@ export default Radio;
  * @name Controls/_toggle/RadioGroup#direction
  * @cfg
  * @demo Controls-demo/toggle/RadioGroup/Direction/Index
+ */
+
+/**
+ * @name Controls/_toggle/RadioGroup#parentProperty
+ * @cfg
+ * @demo Controls-demo/toggle/RadioGroup/ParentProperty/Index
  */
 
 /**

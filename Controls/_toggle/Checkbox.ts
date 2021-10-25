@@ -322,22 +322,27 @@ Object.defineProperty(Checkbox, 'defaultProps', {
  */
 /**
  * @name Controls/_toggle/Checkbox#icon
+ * @cfg
  * @demo Controls-demo/toggle/Checkbox/Icon/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#iconSize
+ * @cfg
  * @demo Controls-demo/toggle/Checkbox/Icon/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#iconStyle
+ * @cfg
  * @demo Controls-demo/toggle/Checkbox/Icon/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#contrastBackground
+ * @cfg
  * @demo Controls-demo/toggle/Checkbox/ContrastBackground/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#resetValue
+ * @cfg
  * @demo Controls-demo/toggle/Checkbox/ResetValue/Index
  */
 export default Checkbox;

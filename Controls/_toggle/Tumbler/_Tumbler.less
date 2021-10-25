@@ -45,7 +45,7 @@
 
       .for(@variants, {
          &-@{_item} {
-            height: ~"var(--inline_height_@{_item})";
+            height: ~"calc(var(--inline_height_@{_item}) - 2 * var(--button_offset_tumbler))";
          }
       });
    }
