@@ -8,7 +8,7 @@ import DateRangeSelectorConsumer from 'Controls/_dateRange/_DateRangeSelectorCon
  * @class Controls/_dateRange/RangeSelectorConsumer
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
- * @implements Controls/dateRange:ILinkView
+ * @implements Controls/date:ILinkViewDefaultOptions
  * @implements Controls/dateRange:IDateRange
  * @implements Controls/dateRange:IDatePickerSelectors
  * @implements Controls/dateRange:IDayTemplate
