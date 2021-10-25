@@ -62,6 +62,8 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
             classes += ` controls-Grid__cell_spacingLastCol_${this._$owner.getRightPadding()}`;
         }
 
+        classes += ' controls-ListView__groupContent_height';
+
         classes += this._getContentAlignClasses();
         classes += ' controls-ListView__groupContent';
         return classes;
