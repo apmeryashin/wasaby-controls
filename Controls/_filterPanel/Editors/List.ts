@@ -15,7 +15,7 @@ import {
     TKey,
     IHierarchyOptions
 } from 'Controls/interface';
-import {IList, MultiSelectCircleTemplate} from 'Controls/list';
+import {IList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
 import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
@@ -128,7 +128,6 @@ export interface IListEditorOptions extends
 
 class ListEditor extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
-    protected _circleTemplate: TemplateFunction = MultiSelectCircleTemplate;
     protected _columns: object[] = null;
     protected _popupOpener: StackOpener|DialogOpener = null;
     protected _items: RecordSet = null;
@@ -399,9 +398,9 @@ class ListEditor extends Control<IListEditorOptions> {
         }
     }
 
-    private _setMarkedKey(selectedKeys: string[]|number[], {emptyKey, selectedAllKey}: IListEditorOptions): void {
+    private _setMarkedKey(selectedKeys: string[]|number[], {emptyKey, selectedAllKey, multiSelect}: IListEditorOptions): void {
         const resetKey = emptyKey !== undefined ? emptyKey : selectedAllKey;
-        if (selectedKeys) {
+        if (selectedKeys && !multiSelect) {
             this._markedKey = !selectedKeys.length || selectedKeys[0] === resetKey ? resetKey : selectedKeys[0];
         }
     }
