@@ -95,7 +95,7 @@ export default class Reload {
                 const entryPath = oldItems.getMetaData()?.ENTRY_PATH;
                 // После перемещения записи восстановим позицию в entryPath для selection'a
                 if (entryPath) {
-                    const currentPosition = entryPath.find((item) => item.id == newItem.getKey());
+                    const currentPosition = entryPath.find((item) => String(item.id) === String(newItem.getKey()));
                     currentPosition.parent = newParentId;
                 }
             }
@@ -195,6 +195,7 @@ export default class Reload {
             // Считаем любое не-null больше null
             return 1;
         }
+        // tslint:disable-next-line:triple-equals
         if (a == b) {
             return 0;
         }

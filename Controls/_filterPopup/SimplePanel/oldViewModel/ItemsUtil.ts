@@ -42,7 +42,7 @@ const ItemsUtil = {
         } else {
             let resItem;
             display.each((item) => {
-                if (ItemsUtil.getPropertyValue(item.getContents(), keyProperty) == id) {
+                if (String(ItemsUtil.getPropertyValue(item.getContents(), keyProperty)) === String(id)) {
                     resItem = item;
                 }
             });

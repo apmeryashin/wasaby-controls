@@ -89,11 +89,11 @@ if (constants.isBrowserPlatform) {
 
             const options = optOptions || {};
 
-            if (typeof callback != 'function') {
+            if (typeof callback !== 'function') {
                 throw new Error('callback must be a function');
             }
 
-            if (options.root && options.root.nodeType != 1) {
+            if (options.root && options.root.nodeType !== 1) {
                 throw new Error('root must be an Element');
             }
 
@@ -140,13 +140,13 @@ if (constants.isBrowserPlatform) {
          * @param {Element} target The DOM element to observe.
          */
         IntersectionObserver.prototype.observe = function(target) {
-            const isTargetAlreadyObserved = this._observationTargets.some((item) => item.element == target);
+            const isTargetAlreadyObserved = this._observationTargets.some((item) => item.element === target);
 
             if (isTargetAlreadyObserved) {
                 return;
             }
 
-            if (!(target && target.nodeType == 1)) {
+            if (!(target && target.nodeType === 1)) {
                 throw new Error('target must be an Element');
             }
 
@@ -162,7 +162,7 @@ if (constants.isBrowserPlatform) {
          */
         IntersectionObserver.prototype.unobserve = function(target) {
             this._observationTargets =
-                this._observationTargets.filter((item) => item.element != target);
+                this._observationTargets.filter((item) => item.element !== target);
             if (!this._observationTargets.length) {
                 this._unmonitorIntersections();
                 this._unregisterInstance();
@@ -206,7 +206,7 @@ if (constants.isBrowserPlatform) {
             }
 
             return threshold.sort().filter((t, i, a) => {
-                if (typeof t != 'number' || isNaN(t) || t < 0 || t > 1) {
+                if (typeof t !== 'number' || isNaN(t) || t < 0 || t > 1) {
                     throw new Error('threshold must be a number between 0 and 1 inclusively');
                 }
                 return t !== a[i - 1];
@@ -359,7 +359,7 @@ if (constants.isBrowserPlatform) {
             function(target, rootRect) {
 
                 // If the element isn't displayed, an intersection can't happen.
-                if (window.getComputedStyle(target).display == 'none') {
+                if (window.getComputedStyle(target).display === 'none') {
                     return;
                 }
 
@@ -370,15 +370,15 @@ if (constants.isBrowserPlatform) {
 
                 while (!atRoot) {
                     let parentRect = null;
-                    const parentComputedStyle = parent.nodeType == 1
+                    const parentComputedStyle = parent.nodeType === 1
                         ? window.getComputedStyle(parent) : {};
 
                     // If the parent isn't displayed, an intersection can't happen.
-                    if (parentComputedStyle.display == 'none') {
+                    if (parentComputedStyle.display === 'none') {
                         return;
                     }
 
-                    if (parent == this.root || parent == document) {
+                    if (parent === this.root || parent === document) {
                         atRoot = true;
                         parentRect = rootRect;
                     } else {
@@ -386,9 +386,9 @@ if (constants.isBrowserPlatform) {
                         // or <html> element, update the intersection rect.
                         // Note: <body> and <html> cannot be clipped to a rect that's not also
                         // the document rect, so no need to compute a new intersection.
-                        if (parent != document.body &&
-                            parent != document.documentElement &&
-                            parentComputedStyle.overflow != 'visible') {
+                        if (parent !== document.body &&
+                            parent !== document.documentElement &&
+                            parentComputedStyle.overflow !== 'visible') {
                             parentRect = getBoundingClientRect(parent);
                         }
                     }
@@ -464,7 +464,7 @@ if (constants.isBrowserPlatform) {
          */
         IntersectionObserver.prototype._expandRectByRootMargin = function(rect) {
             const margins = this._rootMarginValues.map((margin, i) => {
-                return margin.unit == 'px' ? margin.value
+                return margin.unit === 'px' ? margin.value
                     : margin.value * (i % 2 ? rect.width : rect.height) / 100;
             });
             const newRect = {
@@ -509,7 +509,7 @@ if (constants.isBrowserPlatform) {
 
                     // Return true if an entry matches a threshold or if the new ratio
                     // and the old ratio are on the opposite sides of a threshold.
-                    if (threshold == oldRatio || threshold == newRatio ||
+                    if (threshold === oldRatio || threshold === newRatio ||
                         threshold < oldRatio !== threshold < newRatio) {
                         return true;
                     }
@@ -552,7 +552,7 @@ if (constants.isBrowserPlatform) {
          */
         IntersectionObserver.prototype._unregisterInstance = function() {
             const index = registry.indexOf(this);
-            if (index != -1) {
+            if (index !== -1) {
                 registry.splice(index, 1);
             }
         };
@@ -595,9 +595,9 @@ if (constants.isBrowserPlatform) {
          *     phase. Note: this only works in modern browsers.
          */
         function addEvent(node, event, fn, optUseCapture) {
-            if (typeof node.addEventListener == 'function') {
+            if (typeof node.addEventListener === 'function') {
                 node.addEventListener(event, fn, optUseCapture || false);
-            } else if (typeof node.attachEvent == 'function') {
+            } else if (typeof node.attachEvent === 'function') {
                 node.attachEvent('on' + event, fn);
             }
         }
@@ -611,9 +611,9 @@ if (constants.isBrowserPlatform) {
          *     flag set to true, it should be set to true here in order to remove it.
          */
         function removeEvent(node, event, fn, optUseCapture) {
-            if (typeof node.removeEventListener == 'function') {
+            if (typeof node.removeEventListener === 'function') {
                 node.removeEventListener(event, fn, optUseCapture || false);
-            } else if (typeof node.detatchEvent == 'function') {
+            } else if (typeof node.detatchEvent === 'function') {
                 node.detatchEvent('on' + event, fn);
             }
         }
@@ -702,7 +702,7 @@ if (constants.isBrowserPlatform) {
         function containsDeep(parent, child) {
             let node = child;
             while (node) {
-                if (node == parent) {
+                if (node === parent) {
                     return true;
                 }
 
@@ -720,7 +720,7 @@ if (constants.isBrowserPlatform) {
         function getParentNode(node) {
             const parent = node.parentNode;
 
-            if (parent && parent.nodeType == 11 && parent.host) {
+            if (parent && parent.nodeType === 11 && parent.host) {
                 // If the parent is a shadow root, return the host element.
                 return parent.host;
             }
