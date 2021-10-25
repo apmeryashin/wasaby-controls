@@ -62,6 +62,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return !!content || this.needMoreButton();
     }
 
+    isSticked(): boolean {
+        return false;
+    }
+
     getMoreFontColorStyle(): string {
         return this._$moreFontColorStyle;
     }
