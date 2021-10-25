@@ -507,8 +507,21 @@
 
 /* endregion ItemActions display */
 
-.controls-ListView__groupContent_height {
-   min-height: var(--grouping_height_list);
+.controls-ListView__groupContent_baseline {
+   &::before {
+      content: '\200b';
+   }
+
+   &_default::before {
+      font-size: var(--font-size_m);
+   }
+
+   @variants:  m, l, xl, 2xl, 3xl, 4xl;
+   .for(@variants, { &_@{_item} {
+      &::before {
+         font-size: ~"var(--font-size_@{_item})";
+      }
+   }});
 }
 
 .controls-ListView__groupContent_height_withItemActions {

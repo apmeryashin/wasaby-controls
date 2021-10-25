@@ -56,11 +56,11 @@ export default abstract class GroupCell<T> {
      * @private
      */
     protected _getBaseLineClasses(templateFontSize?: TFontSize): string {
-        let classes = '';
-        if (templateFontSize && ['3xl', '4xl', '5xl'].indexOf(templateFontSize) !== -1) {
-            classes += ` controls-Grid__row-cell__content_baseline_${templateFontSize}`;
+        let classes = ' controls-ListView__groupContent_baseline ';
+        if (templateFontSize && ['m', 'l', 'xl', '2xl', '3xl', '4xl'].indexOf(templateFontSize) !== -1) {
+            classes += ` controls-ListView__groupContent_baseline_${templateFontSize}`;
         } else {
-            classes += ' controls-Grid__row-cell__content_baseline_default';
+            classes += ' controls-ListView__groupContent_baseline_default';
         }
         return classes;
     }
