@@ -1,6 +1,6 @@
 import {FormatBuilder, Formatter} from 'Controls/decorator';
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
-import BaseViewModel = require('Controls/_input/Base/ViewModel');
+import {ViewModel as BaseViewModel} from 'Controls/_input/Base/ViewModel';
 import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
 
       /**

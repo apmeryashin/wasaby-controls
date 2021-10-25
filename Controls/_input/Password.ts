@@ -1,6 +1,6 @@
 import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
 import {descriptor} from 'Types/entity';
-import * as ViewModel from 'Controls/_input/Password/ViewModel';
+import {ViewModel} from 'Controls/_input/Password/ViewModel';
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/input';
@@ -181,7 +181,7 @@ export default Password;
  * @cfg
  * @example
  * Сохраняем данные о пользователе и текущее время при отправке формы.
- * 
+ *
  * <pre class="brush: html; highlight: [4]">
  * <!-- WML -->
  * <form action="Auth.php" name="form">
@@ -190,7 +190,7 @@ export default Password;
  *     <Controls.buttons:Button on:click="_saveUser()" caption="Отправить"/>
  * </form>
  * </pre>
- * 
+ *
  * <pre class="brush: js; highlight: [4,11]">
  * // TypeScript
  * export class Form extends Control<IControlOptions, void> {
