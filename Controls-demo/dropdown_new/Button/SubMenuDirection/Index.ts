@@ -70,7 +70,7 @@ class SubMenuDirection extends Control<IControlOptions> {
       });
    }
 
-   static _styles: string[] = ['Controls-demo/Buttons/Menu/Menu'];
+   static _styles: string[] = ['Controls-demo/dropdown_new/Menu/Menu'];
 }
 
 export default SubMenuDirection;
