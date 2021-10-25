@@ -204,6 +204,8 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
             this._percentageDifferences[maxDeviationIndex] -= correctScale;
          }
       } else if (sum !== maxPercentValue && totalSectorsUsed === _numSectors) {
+         // При округлении в расчетах может быть ситуация, когда все сектора заполнены,
+         // но сумма не равна максимальной, в этом случае 1 сектор оставляем пустым
          colorValues.splice(longestValueStart, 1);
       }
       return colorValues;
