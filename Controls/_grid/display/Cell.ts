@@ -405,7 +405,6 @@ export default class Cell<
         //  https://online.sbis.ru/opendoc.html?guid=deef0d24-dd6a-4e24-8782-5092e949a3d9
         let contentClasses = 'controls-Grid__row-cell__content js-controls-ListView__editingTarget';
 
-        contentClasses += ' controls-Grid__row-cell__content_baseline_default';
         contentClasses += ` controls-Grid__row-cell_cursor-${cursor}`;
 
         contentClasses += this._getHorizontalPaddingClasses(this._$column.cellPadding);
@@ -457,7 +456,7 @@ export default class Cell<
         const fontColorStyle = this.config.fontColorStyle || templateFontColorStyle;
         const fontSize = this.config.fontSize || templateFontSize;
         const fontWeight = this.config.fontWeight || templateFontWeight;
-        let contentClasses = '';
+        let contentClasses = ' controls-Grid__row-cell__content_baseline_default';
         if (fontColorStyle) {
             contentClasses += ` controls-text-${fontColorStyle}`;
         }

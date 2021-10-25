@@ -7,6 +7,10 @@ import {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/Group
 
 import DataCell from './DataCell';
 import GroupRow from './GroupRow';
+import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
+import {TFontSize} from 'Controls/_interface/IFontSize';
+import {TFontWeight} from 'Controls/_interface/IFontWeight';
+import {TTextTransform} from 'Controls/_interface/ITextTransform';
 
 export interface IOptions<T> {
     owner: GroupRow<T>;
@@ -50,7 +54,6 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
 
     getContentClasses(): string {
         let classes = '';
-        classes += ' controls-Grid__row-cell__content_baseline_default';
 
         if (this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;
@@ -61,7 +64,27 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
 
         classes += this._getContentAlignClasses();
         classes += ' controls-ListView__groupContent';
-        classes += ' controls-ListView__groupContent_height';
+        return classes;
+    }
+
+    /**
+     * Добавляет CSS классы для стилизации текста в заголовке группы
+     * Настройки из groupNodeConfig по умолчанию имеют больший приоритет, т.к. это настройки заголовка группы
+     * Настройки из конфига колонки в этом случае на втором месте
+     * Настройки из шаблона в этом случае имеют самый низкий приолритет, т.к. это настройки Controls/treeGrid:ItemTemplate
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight Насыщенность шрифта
+     * @param templateTextTransform Преобразование шрифта
+     */
+    getContentTextWrapperClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight,
+                                 templateTextTransform?: TTextTransform): string {
+        let classes = this.getContentTextStylingClasses(templateFontColorStyle, templateFontSize,
+            templateFontWeight, templateTextTransform);
+
+        classes += this._getBaseLineClasses(templateFontSize);
         return classes;
     }
 

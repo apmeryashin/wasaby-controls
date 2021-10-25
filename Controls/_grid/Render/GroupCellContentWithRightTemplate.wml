@@ -8,26 +8,28 @@ TODO Нужно удалить этот шаблон, когда починим 
         <div class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
     </ws:if>
     <ws:if data="{{ textVisible !== false && (gridColumn || itemData).isContentCell() }}">
-        <div class="{{ (gridColumn || itemData).getContentTextClasses(separatorVisibility, textAlign) }}
-                    {{ (gridColumn || itemData).getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}
-                    {{ (gridColumn || itemData).getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle) }}"
-             attr:data-qa="{{ item.listElementName }}-expander">
-            <ws:if data="{{ contentTemplate }}">
-                <ws:partial template="{{ contentTemplate }}"
-                            item="{{ item || itemData }}"
-                            itemData="{{ item || itemData }}"
-                            results="{{ (gridColumn || itemData).getMetaResults() }}"
-                            column="{{ (gridColumn || itemData) }}"/>
-            </ws:if>
-            <ws:else>
-                {{ (gridColumn || itemData).getDefaultDisplayValue() }}
-            </ws:else>
+        <div class="{{ (gridColumn || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}">
+            <div class="{{ (gridColumn || itemData).getContentTextClasses(separatorVisibility, textAlign) }}
+                        {{ (gridColumn || itemData).getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle) }}"
+                 attr:data-qa="{{ item.listElementName }}-expander">
+                <ws:if data="{{ contentTemplate }}">
+                    <ws:partial template="{{ contentTemplate }}"
+                                item="{{ item || itemData }}"
+                                itemData="{{ item || itemData }}"
+                                results="{{ (gridColumn || itemData).getMetaResults() }}"
+                                column="{{ (gridColumn || itemData) }}"/>
+                </ws:if>
+                <ws:else>
+                    {{ (gridColumn || itemData).getDefaultDisplayValue() }}
+                </ws:else>
+            </div>
         </div>
     </ws:if>
     <ws:if data="{{ (gridColumn || itemData).shouldDisplayRightSeparator(separatorVisibility, textVisible, columnAlignGroup, textAlign) }}">
         <div class="controls-ListView__groupSeparator
                 {{ textVisible !== false && (gridColumn || itemData).isContentCell() ? 'controls-ListView__groupSeparator-right' }}">&nbsp;</div>
     </ws:if>
+
     <ws:if data="{{ !!rightTemplate && (!(gridColumn || itemData).isContentCell() || item.getColspanGroup()) }}">
         <div attr:class="{{ (gridColumn || itemData).getRightTemplateClasses(separatorVisibility, textVisible, columnAlignGroup, textAlign) }}">
         <ws:partial template="{{ rightTemplate }}"

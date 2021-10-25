@@ -78,19 +78,23 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
      * Настройки из шаблона в этом случае имеют самый низкий приолритет, т.к. это настройки Controls/treeGrid:ItemTemplate
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
-     * @param templateFontWeight жирность шрифта
+     * @param templateFontWeight Насыщенность шрифта
      * @param templateTextTransform Преобразование шрифта
      */
-    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+    getContentTextWrapperClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,
                                  templateFontWeight?: TFontWeight,
                                  templateTextTransform?: TTextTransform): string {
+        let classes = '';
         const config = this.getColumnConfig() as IGroupNodeColumn;
         const fontColorStyle = config.groupNodeConfig?.fontSize || config.fontColorStyle || templateFontColorStyle;
         const fontSize = config.groupNodeConfig?.fontSize || config.fontSize || templateFontSize;
         const fontWeight = config.groupNodeConfig?.fontWeight || config.fontWeight || templateFontWeight;
         const textTransform = config.groupNodeConfig?.textTransform || templateTextTransform;
-        return super.getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight, textTransform);
+
+        classes += this.getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight, textTransform);
+        classes += this._getBaseLineClasses(templateFontSize);
+        return classes;
     }
 
     // region Аспект "Ячейка группы"

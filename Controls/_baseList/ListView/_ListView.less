@@ -520,16 +520,13 @@
    align-items: center;
    min-width: 0;
    flex-grow: 1;
-   line-height: 1;
 }
 
 .controls-ListView__groupSeparator {
    height: var(--grouping_separator_thickness_list);
    background-color: var(--grouping_separator_color_list);
-   min-width: 10%;
    flex-grow: 1;
    flex-shrink: 1;
-   font-size: var(--grouping_expander_icon-size_list);
 }
 
 .controls-ListView__groupSeparator-left {
@@ -548,8 +545,12 @@
    color: var(--grouping_expander_text-color_list);
 }
 
+.controls-ListView__groupContent-text_wrapper {
+   display: inline-flex;
+   align-items: baseline;
+}
+
 .controls-ListView__groupContent-text {
-   display: inline-block;
    white-space: nowrap;
    flex-shrink: 1;
    user-select: none;

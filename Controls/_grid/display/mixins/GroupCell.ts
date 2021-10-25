@@ -21,7 +21,7 @@ export default abstract class GroupCell<T> {
      * Настройки из шаблона по умолчанию имеют больший приоритет, т.к. обычные группы настраиваются через шаблон Controls/grid:GroupTemplate.
      * @param templateFontColorStyle Цвет шрифта
      * @param templateFontSize Размер шрифта
-     * @param templateFontWeight жирность шрифта
+     * @param templateFontWeight Насыщенность шрифта
      * @param templateTextTransform Преобразование шрифта
      */
     getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
@@ -29,6 +29,7 @@ export default abstract class GroupCell<T> {
                                  templateFontWeight?: TFontWeight,
                                  templateTextTransform?: TTextTransform): string {
         let classes = '';
+        classes += 'controls-ListView__groupContent-text_wrapper';
         if (templateFontSize) {
             classes += ` controls-fontsize-${templateFontSize}`;
         } else {
@@ -45,6 +46,21 @@ export default abstract class GroupCell<T> {
         if (templateTextTransform) {
             classes += ` controls-ListView__groupContent_textTransform_${templateTextTransform}` +
                        ` controls-ListView__groupContent_textTransform_${templateTextTransform}_${templateFontSize || 's'}`;
+        }
+        return classes;
+    }
+
+    /**
+     * Классы для настройки базовой линии группы.
+     * @param templateFontSize
+     * @private
+     */
+    protected _getBaseLineClasses(templateFontSize?: TFontSize): string {
+        let classes = '';
+        if (templateFontSize && ['3xl', '4xl', '5xl'].indexOf(templateFontSize) !== -1) {
+            classes += ` controls-Grid__row-cell__content_baseline_${templateFontSize}`;
+        } else {
+            classes += ' controls-Grid__row-cell__content_baseline_default';
         }
         return classes;
     }
