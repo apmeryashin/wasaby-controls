@@ -1,4 +1,4 @@
-<Controls.calendar:MonthList class="controls-CompactDatePicker__month-list"
+<Controls.calendar:MonthList attr:class="controls-CompactDatePicker__month-list"
                              attr:data-qa="controls-CompactDatePicker__month-list"
                              viewMode="month"
                              hoveredStartValue="{{ null }}"
