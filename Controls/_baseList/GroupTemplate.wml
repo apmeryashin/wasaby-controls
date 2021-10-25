@@ -1,3 +1,4 @@
+<!-- TODO перенсти задание классов в методы модели-->
 <ws:template name="localGroupTemplate">
    <div attr:class="controls-ListView__itemV {{ (item || itemData).isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
       <div attr:class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
@@ -8,26 +9,28 @@
             <div attr:class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
          </ws:if>
          <ws:if data="{{ textVisible !== false }}">
-            <div attr:class="controls-ListView__groupContent-text
-                          {{ fontSize ? ' controls-fontsize-' + fontSize : ' controls-ListView__groupContent-text_default' }}
-                          {{ fontWeight ? ' controls-fontweight-' + fontWeight }}
-                          {{ fontColorStyle ? ' controls-text-' + fontColorStyle : ' controls-ListView__groupContent-text_color_default' }}
-                          {{ textTransform ? ' controls-ListView__groupContent_textTransform_' + textTransform +
-                             ' controls-ListView__groupContent_textTransform_' + textTransform + '_' + (fontSize || 's') }}
-                          {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander' +
-                          (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
-						  ' controls-ListView__groupExpander-iconStyle_' + (iconStyle || 'default') +
-                          ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +
-                          (!(item || itemData).isExpanded() ?
-                          ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?
-                          ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'') }}"
-                 attr:data-qa="{{ item.listElementName }}-expander">
-               <ws:if data="{{ !!contentTemplate }}">
-                  <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
-               </ws:if>
-               <ws:else>
-                  {{ (item || itemData).getContents() }}
-               </ws:else>
+            <div class="{{ fontSize ? ' controls-fontsize-' + fontSize : ' controls-ListView__groupContent-text_default' }}
+                        {{ fontWeight ? ' controls-fontweight-' + fontWeight }}
+                        {{ fontColorStyle ? ' controls-text-' + fontColorStyle : ' controls-ListView__groupContent-text_color_default' }}
+                        {{ textTransform ? ' controls-ListView__groupContent_textTransform_' + textTransform +
+                          ' controls-ListView__groupContent_textTransform_' + textTransform + '_' + (fontSize || 's') }}
+                        {{ templateFontSize ? 'controls-ListView__groupContent_baseline_' + templateFontSize : 'controls-ListView__groupContent_baseline_default' }}">
+               <div attr:class="controls-ListView__groupContent-text
+                             {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander' +
+                             (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
+                             ' controls-ListView__groupExpander-iconStyle_' + (iconStyle || 'default') +
+                             ' controls-ListView__groupExpander-iconSize_' + (iconSize || 'default') +
+                             (!(item || itemData).isExpanded() ?
+                             ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?
+                             ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'') }}"
+                    attr:data-qa="{{ item.listElementName }}-expander">
+                  <ws:if data="{{ !!contentTemplate }}">
+                     <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
+                  </ws:if>
+                  <ws:else>
+                     {{ (item || itemData).getContents() }}
+                  </ws:else>
+               </div>
             </div>
          </ws:if>
          <ws:if data="{{ separator !== false && separatorVisibility !== false && (textAlign !== 'right' || textVisible === false) }}">
