@@ -74,7 +74,7 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
                 this._closeBtnPosition =  POSITION.RIGHT;
             } else {
-                const isRightPosition = options.stickyPosition.targetPoint?.horizontal === 'right';
+                const isRightPosition = options.stickyPosition.direction?.horizontal === 'left';
                 let popupRight;
                 if (isRightPosition) {
                     popupRight = window?.innerWidth - options.stickyPosition.position.right;
