@@ -2,6 +2,7 @@ import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionIt
 import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './ExpandableMixin';
 import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
+import GroupMixin from './GroupMixin';
 
 interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
 }
@@ -15,10 +16,12 @@ interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions
  */
 export default class GroupItem<T> extends mixin<
     CollectionItem<any>,
-    ExpandableMixin
+    ExpandableMixin,
+    GroupMixin
 >(
     CollectionItem,
-    ExpandableMixin
+    ExpandableMixin,
+    GroupMixin
 ) {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
     readonly '[Controls/_display/GroupItem]': true;
