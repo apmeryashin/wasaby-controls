@@ -505,6 +505,24 @@ describe('Controls/dataSource:SourceController', () => {
             ok(controller.getItems().at(0).get('key') !== undefined);
             ok(controller.getItems().at(0).get('title') === undefined);
         });
+
+        it('dataLoad event', async () => {
+            const options = getControllerOptions();
+            const controller = getController(options);
+            let dataLoadEventFired = false;
+            await controller.reload();
+
+            controller.subscribe('dataLoad', () => {
+                dataLoadEventFired = true;
+            });
+
+            await controller.load();
+            ok(dataLoadEventFired);
+
+            dataLoadEventFired = false;
+            await controller.load('down', 'testKey');
+            ok(!dataLoadEventFired);
+        });
     });
 
     describe('cancelLoading', () => {

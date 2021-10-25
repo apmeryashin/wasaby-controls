@@ -1068,7 +1068,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             this._nodeDataMoreLoadCallback();
         }
 
-        if (loadedInCurrentRoot || direction) {
+        if (loadedInCurrentRoot) {
             dataLoadCallbackResult = this._notify('dataLoad', result, direction);
         }
 
