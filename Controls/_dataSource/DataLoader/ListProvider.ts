@@ -22,7 +22,7 @@ import {Logger} from 'UI/Utils';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
-import PropertyGridProvider from 'Controls/_dataSource/DataLoader/PropertyGridProvider';
+import {IProperty} from 'Controls/propertyGrid';
 
 const QUERY_PARAMS_LOAD_TIMEOUT = 5000;
 
@@ -174,13 +174,15 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
         });
     }
 
-    private _loadFilterData(filterSource: IFilterItem[], historyId: string): Promise<FilterController> {
+    private _loadFilterData(filterSource: IFilterItem[], historyId: string): Promise<IFilterItem[] | IProperty[]> {
         const filterStructure = this._prepareFilterSource(filterSource);
-        return new PropertyGridProvider().load({
-            id: 'filter',
-            typeDescription: filterStructure,
-            afterLoadCallback: null
-        });
+        return import('Controls/dataSource').then(({PropertyGridProvider}) => {
+            return new PropertyGridProvider().load({
+                id: 'filter',
+                typeDescription: filterStructure,
+                afterLoadCallback: null
+            });
+        })
     }
 
     private _loadData(
