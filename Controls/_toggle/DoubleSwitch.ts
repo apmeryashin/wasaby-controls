@@ -153,6 +153,7 @@ Object.defineProperty(DoubleSwitch, 'defaultProps', {
 
 /**
  * @name Controls/_toggle/DoubleSwitch#tooltip
+ * @cfg
  * @demo Controls-demo/toggle/DoubleSwitch/Tooltip/Index
  */
 
