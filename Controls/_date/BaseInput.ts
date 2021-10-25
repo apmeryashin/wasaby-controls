@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Date as WSDate, DateTime as WSDateTime, Time as WSTime} from 'Types/entity';
-import * as Model from 'Controls/_date/BaseInput/Model';
+import Model from 'Controls/_date/BaseInput/Model';
 import {
     DATE_MASK_TYPE,
     DATE_TIME_MASK_TYPE,
@@ -179,7 +179,7 @@ class BaseInput extends Control<IDateBaseOptions> {
         this._model.destroy();
     }
 
-    private _updateDateConstructor(options, oldOptions): void {
+    private _updateDateConstructor(options: IDateBaseOptions, oldOptions?: IDateBaseOptions): void {
         if (!oldOptions || options.mask !== oldOptions.mask) {
             this._dateConstructor = options.dateConstructor || this._getDateConstructor(options.mask);
         }
