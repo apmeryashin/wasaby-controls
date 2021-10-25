@@ -20,6 +20,9 @@ import {getState} from 'Controls/_dataSource/Controller/State';
 import {isLoaded, loadAsync, loadSync} from 'WasabyLoader/ModulesLoader';
 import {Logger} from 'UI/Utils';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
+import {object} from 'Types/util';
+import {isEqual} from 'Types/object';
+import {IProperty} from 'Controls/propertyGrid';
 
 const QUERY_PARAMS_LOAD_TIMEOUT = 5000;
 
@@ -131,12 +134,9 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
                 Logger.info('Controls/dataSource:loadData: Данные сортировки не загрузились за 1 секунду');
             });
         }
-
-        if (loadConfig.actions) {
-            operationsPromise = loadAsync('Controls/operations').then((operations) => {
-                return new operations.ControllerClass({});
-            });
-        }
+        operationsPromise = loadAsync('Controls/operations').then((operations) => {
+            return new operations.ControllerClass({});
+        });
 
         return Promise.all([
             filterPromise,
@@ -144,50 +144,125 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
             operationsPromise
         ]).then(([, sortingPromiseResult, operationsController]: [TFilter, ISortingOptions, any]) => {
             const sorting = sortingPromiseResult ? sortingPromiseResult.sorting : loadConfig.sorting;
+            let loadFilterDataPromise;
             const sourceController = ListProvider.getSourceController({
                 ...loadConfig,
                 sorting,
                 filter: filterController ? filterController.getFilter() : loadConfig.filter,
                 loadTimeout: loadDataTimeout
             });
-
-            return new Promise((resolve) => {
-                if (loadConfig.source) {
-                    sourceController.reload(undefined, true)
-                        .catch((error) => error)
-                        .finally(() => {
-                            resolve(
-                                this._getLoadResult(
-                                    loadConfig,
-                                    sourceController,
-                                    filterController,
-                                    filterHistoryItems,
-                                    operationsController
-                                )
-                            );
-                        });
-                } else {
-                    resolve(
-                        this._getLoadResult(
-                            loadConfig,
-                            sourceController,
-                            filterController,
-                            filterHistoryItems,
-                            operationsController
-                        )
-                    );
-                }
-            }).then((result: ILoadDataResult) => {
-                if (!result.source && result.historyItems) {
-                    result.sourceController.setFilter(result.filter);
-                }
-                return result;
+            const loadDataPromise = this._loadData(
+                loadConfig,
+                sourceController,
+                filterController,
+                filterHistoryItems,
+                operationsController
+            );
+            if (this._isNeedLoadFilterData(filterController.getFilterButtonItems())) {
+                loadFilterDataPromise = this._loadFilterData(
+                    filterController.getFilterButtonItems(),
+                    loadConfig.historyId
+                );
+            }
+            const loadPromises = [loadDataPromise];
+            if (loadFilterDataPromise) {
+                loadPromises.push(loadFilterDataPromise);
+            }
+            return Promise.all(loadPromises).then(([dataResult, filterResult]) => {
+                return dataResult;
             });
+        });
+    }
+
+    private _loadFilterData(filterSource: IFilterItem[], historyId: string): Promise<IFilterItem[] | IProperty[]> {
+        const filterStructure = this._prepareFilterSource(filterSource);
+        return import('Controls/dataSource').then(({PropertyGridProvider}) => {
+            return new PropertyGridProvider().load({
+                id: 'filter',
+                typeDescription: filterStructure,
+                afterLoadCallback: null
+            });
+        })
+    }
+
+    private _loadData(
+        loadConfig: ILoadDataConfig,
+        sourceController: NewSourceController,
+        filterController: FilterController,
+        historyItems: IFilterItem[],
+        operationsController: OperationsController
+    ): Promise<ILoadDataResult> {
+        return new Promise((resolve) => {
+            if (loadConfig.source) {
+                sourceController.reload(undefined, true)
+                    .catch((error) => error)
+                    .finally(() => {
+                        resolve(
+                            this._getLoadResult(
+                                loadConfig,
+                                sourceController,
+                                filterController,
+                                historyItems,
+                                operationsController
+                            )
+                        );
+                    });
+            } else {
+                resolve(
+                    this._getLoadResult(
+                        loadConfig,
+                        sourceController,
+                        filterController,
+                        historyItems,
+                        operationsController
+                    )
+                );
+            }
+        }).then((result: ILoadDataResult) => {
+            if (!result.source && result.historyItems) {
+                result.sourceController.setFilter(result.filter);
+            }
+            return result;
         });
     }
 
     private _isNeedPrepareFilter(loadDataConfig: ILoadDataConfig): boolean {
         return !!(loadDataConfig.filterButtonSource || loadDataConfig.fastFilterSource || loadDataConfig.searchValue);
+    }
+
+    private _isNeedLoadFilterData(filterSource: IFilterItem[]): boolean {
+        return filterSource.some((item: IFilterItem) => {
+            return item?.editorOptions.editorTemplateName === 'Controls/filterPanel:ListEditor';
+        });
+    }
+
+    private _prepareFilterSource(
+        description: IFilterItem[]
+    ): IFilterItem[] {
+        const getFilter = (
+            property: IFilterItem,
+            filter: Record<string, any>,
+            propertyChanged: boolean
+        ): Record<string, any> => {
+            const resultFilter = filter || {};
+            const editorOptions = property.editorOptions;
+            if (propertyChanged) {
+                resultFilter[editorOptions.keyProperty] = property.value;
+            }
+            if (editorOptions.historyId) {
+                resultFilter.historyIds = [editorOptions.historyId];
+            }
+            return resultFilter;
+        };
+        const resultDescription = object.clone(description);
+        return resultDescription.map((property) => {
+            if (property.type === 'list' || property.editorTemplateName === 'Controls/filterPanel:ListEditor') {
+                property.type = 'list';
+                const propertyChanged = !isEqual(property.value, property.resetValue);
+                property.editorOptions.filter = getFilter(property, property.editorOptions.filter, propertyChanged);
+            }
+            return property;
+        });
     }
 
     private _getFilterControllerWithHistoryFromLoader(loadConfig: ILoadDataConfig): Promise<IFilterResult> {

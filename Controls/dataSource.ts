@@ -35,7 +35,7 @@ export {
 export {default as calculatePath, Path} from 'Controls/_dataSource/calculatePath';
 export {isEqualItems} from './_dataSource/Controller';
 export {default as NavigationController} from './_dataSource/NavigationController';
-export {ILoadPropertyGridDataConfig} from './_dataSource/DataLoader/PropertyGridProvider';
+export {default as PropertyGridProvider} from './_dataSource/DataLoader/PropertyGridProvider';
 export {
     ILoadDataCustomConfig
 } from './_dataSource/DataLoader/CustomProvider';
