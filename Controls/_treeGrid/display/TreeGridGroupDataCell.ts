@@ -56,7 +56,6 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
 
     getContentClasses(): string {
         let classes = '';
-        classes += ' controls-Grid__row-cell__content_baseline_default';
         classes += this._getHorizontalPaddingClasses(this._$column.cellPadding);
         if (this._$owner.hasMultiSelectColumn() && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}`;
