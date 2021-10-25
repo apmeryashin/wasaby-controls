@@ -117,7 +117,6 @@ export class ScrollController {
             listControl: options.listControl,
             listContainer: options.listContainer,
             triggersQuerySelector: options.triggersQuerySelector,
-            triggersVisibility: options.triggersVisibility,
             viewportSize: options.viewportSize,
             topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
             bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
@@ -148,6 +147,14 @@ export class ScrollController {
     getElement(key: CrudEntityKey): HTMLElement {
         return this._itemsSizesController.getElement(key);
     }
+
+    // region Triggers
+
+    displayTrigger(direction: IDirection): void {
+        this._observersController.displayTrigger(direction);
+    }
+
+    // endregion Triggers
 
     // region Update DOM elements
 
@@ -258,14 +265,12 @@ export class ScrollController {
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
      * @param totalCount Общее кол-во элементов в коллекции
+     * @param hasMoreToBackward
+     * @param hasMoreToForward
      */
-    resetItems(totalCount: number): void {
-        if (!totalCount) {
-            // для пустого списка сбрасываем оффсет триггеров, чтобы триггеры не уехали за пределы списка.
-            this._observersController.setResetBackwardTriggerOffset(true);
-            this._observersController.setResetForwardTriggerOffset(true);
-            this._calculator.setTriggerOffsets(this._observersController.getTriggersOffsets());
-        }
+    resetItems(totalCount: number, hasMoreToBackward: boolean, hasMoreToForward: boolean): void {
+        const triggerOffsets = this._observersController.resetItems(totalCount, hasMoreToBackward, hasMoreToForward);
+        this._calculator.setTriggerOffsets(triggerOffsets);
 
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);
         this._calculator.updateItemsSizes(itemsSizes);
@@ -331,6 +336,10 @@ export class ScrollController {
      * @private
      */
     private _observersCallback(eventName: TIntersectionEvent): void {
+        if (eventName === 'bottomOut' || eventName === 'topOut') {
+            return;
+        }
+
         let direction: IDirection;
         if (eventName === 'bottomIn') {
             direction = 'forward';

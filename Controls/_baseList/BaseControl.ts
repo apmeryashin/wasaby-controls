@@ -746,7 +746,7 @@ const _private = {
                     if (viewportFilled) {
                         self._indicatorsController.displayTopIndicator(true);
                     } else {
-                        self._observersController.displayTrigger(self._children.listView?.getTopLoadingTrigger());
+                        self._observersController?.displayTrigger(self._children.listView?.getTopLoadingTrigger());
                     }
                 }
                 // если больше нет данных заканчиваем порцоннный поиск
@@ -1529,7 +1529,7 @@ const _private = {
                         // Также сбрасываем triggerOffset если после ресета в сторону есть данные, чтобы
                         // первая подгрузка была только при скролле к самому краю
                         const hasItems = self._listViewModel && !self._listViewModel.destroyed && !!self._listViewModel.getCount();
-                        self._observersController.setResetTriggerOffsets(
+                        self._observersController?.setResetTriggerOffsets(
                             !hasItems || self._hasMoreData('up'),
                             !hasItems || self._hasMoreData('down'),
                             self._children.listView?.getTopLoadingTrigger(),
@@ -1537,7 +1537,7 @@ const _private = {
                         );
                         // если есть данные и вверх и вниз, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
                         if (self._hasMoreData('up') && self._hasMoreData('down') && self._options.attachLoadTopTriggerToNull) {
-                            self._observersController.hideTrigger(self._children.listView?.getTopLoadingTrigger());
+                            self._observersController?.hideTrigger(self._children.listView?.getTopLoadingTrigger());
                         }
                         break;
                     case IObservable.ACTION_ADD:
@@ -1547,7 +1547,7 @@ const _private = {
                         // Вверх вставляют данные, только если список не пустой, т.к. в пустой список можно вставить только вниз
                         const isEmpty = self._listViewModel.getCount() - newItems.length;
                         const direction = newItemsIndex <= self._listViewModel.getStartIndex() && !isEmpty ? 'up' : 'down';
-                        self._observersController.clearResetTriggerOffset(
+                        self._observersController?.clearResetTriggerOffset(
                             direction,
                             self._children.listView?.getTopLoadingTrigger(),
                             self._children.listView?.getBottomLoadingTrigger()
@@ -3655,6 +3655,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('activeElementChanged', [activeElementIndex]);
             },
 
+            hasMoreUtil: (direction) => {
+                const compatibleDirection = direction === 'forward' ? 'down' : 'up';
+                return this._hasMoreData(compatibleDirection);
+            },
+
             itemsEndedCallback: (direction: IScrollControllerDirection): void => {
                 console.error('BaseControl.itemsEndedCallback', direction);
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
@@ -3669,6 +3674,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._useNewScroll) {
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
+            this._listVirtualScrollController.afterMountListControl();
         }
 
         if (constants.isBrowserPlatform) {
@@ -3742,7 +3748,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             _private.changeSelection(this, controller.getSelection());
         }
 
-        this._observersController = new ObserversController(this._getObserversControllerOptions(this._options));
+        if (!this._useNewScroll) {
+            this._observersController = new ObserversController(this._getObserversControllerOptions(this._options));
+        }
 
         // После создания observersController'а нужно обновить scrollController:
         // для вычисления сдвига виртуального скролла нужно знать об отступах триггеров
@@ -3751,7 +3759,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         // Если верхний индикатор не будет показан, то сразу же показываем триггер,
         // чтобы в кейсе когда нет данных после моунта инициировать их загрузку
         if (!this._indicatorsController.shouldDisplayTopIndicator()) {
-            this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+            this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
         }
 
         // на мобильных устройствах не сработает mouseEnter, поэтому ромашку сверху добавляем сразу после моунта
@@ -3772,7 +3780,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             ) {
                 // скроллить не нужно, т.к. не куда, ведь элементы не занимают весь вьюПорт
                 this._indicatorsController.displayTopIndicator(false);
-                this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
             }
         }
 
@@ -6618,11 +6626,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         const scrollAndShowTrigger = () => {
             if (this._scrollTop) {
                 // если уже список проскроллен, то не нужно скроллить к первому элементу
-                this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
             } else {
                 const scrollResult = this._scrollToFirstItem();
                 scrollResult.then(() => {
-                    this._observersController.displayTrigger(this._children.listView?.getTopLoadingTrigger());
+                    this._observersController?.displayTrigger(this._children.listView?.getTopLoadingTrigger());
                 });
             }
         };
