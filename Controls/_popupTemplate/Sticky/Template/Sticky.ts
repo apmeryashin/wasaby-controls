@@ -83,8 +83,8 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
                     const windowWidth = DimensionsMeasurer.getWindowDimensions(this._container).innerWidth;
                     popupRight = windowWidth - (options.stickyPosition.position.left + options.stickyPosition.sizes.width);
                 }
-                const isFits = popupRight < this._getCloseButtonWidth();
-                this._closeBtnPosition = isFits ? POSITION.LEFT : POSITION.RIGHT;
+                const isFits = popupRight > this._getCloseButtonWidth();
+                this._closeBtnPosition = isFits ? POSITION.RIGHT : POSITION.LEFT;
             }
         }
     }
