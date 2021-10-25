@@ -1,18 +1,25 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as coreMerge from 'Core/core-merge';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import StringValueConverter from 'Controls/_date/BaseInput/StringValueConverter';
 import IBaseInputMask from 'Controls/_date/interface/IBaseInputMask';
 import {EventUtils} from 'UI/Events';
 import {Popup as PopupUtil} from 'Controls/dateUtils';
 import {ICalendarButtonVisibleOptions} from 'Controls/_date/interface/ICalendarButtonVisible';
+import BaseInput from 'Controls/_date/BaseInput';
+import getDatePopupName from 'Controls/_date/Utils/getPopupName';
+import IValueOptions from 'Controls/_date/interface/IValue';
+import {IValueValidatorsOptions} from 'Controls/_date/interface/IValueValidators';
+import {IMaskOptions} from 'Controls/decorator';
+import {IDatePopupTypeOptions} from 'Controls/_date/interface/IDatePopupType';
+import {IDateConstructorOptions} from 'Controls/interface';
 import 'css!Controls/input';
 import 'css!Controls/CommonClasses';
 import 'css!Controls/date';
 
 import template = require('wml!Controls/_date/Input/Input');
+import {StickyOpener} from "Controls/popup";
 
-interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions {
+interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions, IDatePopupTypeOptions,
+    IValueOptions, IValueValidatorsOptions, IMaskOptions, IDateConstructorOptions {
 }
 
 /**
@@ -45,24 +52,21 @@ interface IDateInput extends ICalendarButtonVisibleOptions, IControlOptions {
  */
 
 class Input extends Control<IDateInput> {
-    _template: TemplateFunction = template;
-    _proxyEvent: Function = EventUtils.tmplNotify;
-    _shouldValidate: boolean = false;
+    protected _template: TemplateFunction = template;
+    protected _proxyEvent: Function = EventUtils.tmplNotify;
+    private _shouldValidate: boolean = false;
+    private _stickyOpener: StickyOpener;
+    protected _children: {
+        input: BaseInput;
+    }
     private _state: string;
 
     protected _beforeMount(): void {
         this._stateChangedCallback = this._stateChangedCallback.bind(this);
+        this._stickyOpener = new StickyOpener({closeOnOutsideClick: true, actionOnScroll: 'close'});
     }
 
     openPopup(): void {
-        // TODO: Перевести на улититу, после того как переведем контрол в либу _date. Сейчас появляется
-        //  циклическая зависимость.
-        const getPopupName = (datePopupType: string) => {
-            if (datePopupType === 'compactDatePicker') {
-                return 'Controls/compactDatePicker:View';
-            }
-            return 'Controls/datePopup';
-        };
         const value = PopupUtil.getFormattedSingleSelectionValue(this._options.value);
         let className;
         if (this._options.datePopupType === 'datePicker') {
@@ -74,7 +78,7 @@ class Input extends Control<IDateInput> {
         const cfg = {
             ...PopupUtil.getCommonOptions(this),
             target: this._container,
-            template: getPopupName(this._options.datePopupType),
+            template: getDatePopupName(this._options.datePopupType),
             className,
             templateOptions: {
                 ...PopupUtil.getTemplateOptions(this),
@@ -84,13 +88,12 @@ class Input extends Control<IDateInput> {
                 dayTemplate: this._options.dayTemplate,
                 headerType: 'input',
                 closeButtonEnabled: true,
-                ranges: this._options.ranges,
                 startValueValidators: this._options.valueValidators,
                 state: this._state,
                 stateChangedCallback: this._stateChangedCallback
             }
         };
-        this._children.opener.open(cfg);
+        this._stickyOpener.open(cfg);
     }
 
     _afterUpdate(): void {
@@ -116,13 +119,17 @@ class Input extends Control<IDateInput> {
         });
         const textValue = stringValueConverter.getStringByValue(startValue);
         this._notify('valueChanged', [startValue, textValue]);
-        this._children.opener?.close();
+        this.closePopup();
         this._notify('inputCompleted', [startValue, textValue]);
         /**
          * Вызываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
          * Валидация срабатывает раньше, чем значение меняется, поэтому откладываем ее до _afterUpdate
          */
         this._shouldValidate = true;
+    }
+
+    closePopup(): void {
+        this._stickyOpener.close();
     }
 
     protected _inputMouseDownHandler(event: Event): void {
@@ -142,7 +149,7 @@ class Input extends Control<IDateInput> {
     }
 
     static getOptionTypes(): object {
-        return coreMerge({}, IBaseInputMask.getOptionTypes());
+        return IBaseInputMask.getOptionTypes();
     }
 }
 

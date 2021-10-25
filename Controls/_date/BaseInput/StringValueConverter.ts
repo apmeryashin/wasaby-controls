@@ -5,8 +5,10 @@ import {date as DateFormatter} from 'Types/formatter';
 import {Range, Base as dateUtils} from 'Controls/dateUtils';
 import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
 import {INPUT_MODE} from 'Controls/input';
+import {IDateConstructorOptions} from 'Controls/interface';
+import {IMaskOptions} from "Controls/decorator";
 
-const MASK_MAP: object = {
+const MASK_MAP = {
     YY: 'year',
     YYYY: 'year',
     MM: 'month',
@@ -16,25 +18,37 @@ const MASK_MAP: object = {
     ss: 'seconds'
 };
 
+interface IValueModelItem {
+    str: string;
+    value: number;
+    valid: boolean;
+}
+
+interface IValueModel {
+    year: IValueModelItem;
+    month: IValueModelItem;
+    date: IValueModelItem;
+    hours: IValueModelItem;
+    minutes: IValueModelItem;
+    seconds: IValueModelItem;
+}
+
 const RE_NUMBERS: RegExp = /\d/;
 const RE_MASK: RegExp = /^(?:(\d{1,2})(?:[./](\d{1,2})(?:[./]((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:[./](\d{3}))?)?)?$/;
 
-export interface IStringValueConverter {
-    mask?: string;
+export interface IStringValueConverter extends IDateConstructorOptions, IMaskOptions {
     yearSeparatesCenturies?: DateTime;
-    dateConstructor?: DateTime | Date;
-    replacer?: string;
 }
 
 export default class StringValueConverter {
-    _mask: string;
-    _replacer: string;
-    _replacerRegExp: RegExp;
-    _replacerBetweenCharsRegExp: RegExp;
-    _dateConstructor: DateTime | Date;
-    _yearSeparatesCenturies: DateTime;
+    private _mask: string;
+    private _replacer: string;
+    private _replacerRegExp: RegExp;
+    private _replacerBetweenCharsRegExp: RegExp;
+    private _dateConstructor: Function;
+    private _yearSeparatesCenturies: DateTime;
 
-    constructor(options: IStringValueConverter = {}) {
+    constructor(options?: IStringValueConverter) {
         this.update(options);
     }
 
@@ -42,7 +56,7 @@ export default class StringValueConverter {
      * Updates converter settings.
      * @param options
      */
-    update(options: IStringValueConverter): void {
+    update(options: IStringValueConverter = {}): void {
         this._yearSeparatesCenturies = options.yearSeparatesCenturies;
         this._mask = options.mask;
         this._dateConstructor = options.dateConstructor || Date;
@@ -57,6 +71,7 @@ export default class StringValueConverter {
     /**
      * Returns the text displayed value
      * @param value
+     * @param mask
      * @returns {*}
      */
     getStringByValue(value: Date, mask?: string): string {
@@ -88,7 +103,8 @@ export default class StringValueConverter {
      * @param required
      * @returns {Date} Date object
      */
-    getValueByString(str, baseValue, autoCompleteType, inputType, required): DateTime | Date {
+    getValueByString(str: string, baseValue?: Date, autoCompleteType?: string,
+                     inputType?: string, required?: boolean): DateTime | Date {
         let valueModel;
 
         if (this._isEmpty(str)) {
@@ -119,7 +135,7 @@ export default class StringValueConverter {
         return new this._dateConstructor('Invalid');
     }
 
-    getCurrentDate(baseValue, mask): DateTime | Date {
+    getCurrentDate(baseValue: Date, mask: string): DateTime | Date {
         baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1904, 0, 1);
         let
             year = baseValue.getFullYear(),
@@ -164,7 +180,7 @@ export default class StringValueConverter {
         return value && RE_NUMBERS.test(value) && value.indexOf(this._replacer) > -1;
     }
 
-    private _isValueModelFilled(valueModel): boolean {
+    private _isValueModelFilled(valueModel: IValueModel): boolean {
         for (const value in valueModel) {
             if (valueModel.hasOwnProperty(value) && valueModel[value].valid === false) {
                 return false;
@@ -192,7 +208,7 @@ export default class StringValueConverter {
         return fullYear;
     }
 
-    private _parseString(str: string): object {
+    private _parseString(str: string): IValueModel {
         let valueModel = {
             year: {str: null, value: 1904, valid: false},
             month: {str: null, value: 0, valid: false},
@@ -209,7 +225,7 @@ export default class StringValueConverter {
         return valueModel;
     }
 
-    private _updateModelByMask(valueModel: object, str: string): object {
+    private _updateModelByMask(valueModel: IValueModel, str: string): IValueModel {
         let maskItems = this._mask.split(/[.: /]/g),
             strItems = str.split(/[.: /]/g),
             i, valueObject;
@@ -230,7 +246,7 @@ export default class StringValueConverter {
         return valueModel;
     }
 
-    private _updateModel(valueModel: object, str: string): object {
+    private _updateModel(valueModel: IValueModel, str: string): IValueModel {
         let map = {
                 date: 1,
                 month: 2,
@@ -261,7 +277,7 @@ export default class StringValueConverter {
         return valueModel;
     }
 
-    private _fillFromBaseValue(valueModel, baseValue): void {
+    private _fillFromBaseValue(valueModel: IValueModel, baseValue: Date): void {
         baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1904, 0, 1);
 
         if (valueModel.year.str === null) {
@@ -298,14 +314,14 @@ export default class StringValueConverter {
             maskType = getMaskType(this._mask),
             item, itemValue, isZeroAtBeginning;
 
-        let getDate = function (autocompliteDefaultDate) {
-            autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
+        let getDate = function (autocompleteDefaultDate?: Date) {
+            const defaultDate = autocompleteDefaultDate || now.getDate();
             if (autocompleteType === 'start') {
                 return 1;
             } else if (autocompleteType === 'end') {
                 return dateUtils.getEndOfMonth(new Date(valueModel.year.value, valueModel.month.value)).getDate();
             } else {
-                return autocompliteDefaultDate;
+                return defaultDate;
             }
         };
 
@@ -425,10 +441,12 @@ export default class StringValueConverter {
      * @param autoCorrect If true, then corrects the date if the wrong values of its elements are passed,
      * otherwise it returns null. If a date greater than the maximum date in the current month is transmitted,
      * the maximum date will be set.
+     * @param dateConstructor
      * @returns {Date}
      * @private
      */
-    private _createDate(year, month, date, hours, minutes, seconds, autoCorrect, dateConstructor): DateTime | Date {
+    private _createDate(year: number, month: number, date: number, hours: number, minutes: number, seconds: number,
+                        autoCorrect: boolean, dateConstructor: Function): DateTime | Date {
         let endDateOfMonth;
 
         if (autoCorrect) {
@@ -454,7 +472,8 @@ export default class StringValueConverter {
         return new dateConstructor(year, month, date, hours, minutes, seconds);
     }
 
-    private _isValidDate(year, month, date, hours, minutes, seconds): boolean {
+    private _isValidDate(year: number, month: number, date: number, hours: number,
+                         minutes: number, seconds: number): boolean {
         let lastMonthDay = dateUtils.getEndOfMonth(new Date(year, month)).getDate();
         return seconds < 60 && minutes < 60 && hours < 24 && month < 12 && month >= 0 &&
             date <= lastMonthDay && date > 0;

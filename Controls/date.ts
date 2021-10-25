@@ -19,11 +19,13 @@ export {IDatePopupTypeOptions} from 'Controls/_date/interface/IDatePopupType';
 export {default as getDatePopupName} from 'Controls/_date/Utils/getPopupName';
 export {IBaseSelectorOptions} from 'Controls/_date/BaseSelector';
 export {ILinkView} from 'Controls/_date/LinkView';
+import ILinkViewDefaultOptions from 'Controls/_date/interface/ILinkView';
 export {default as ICaptionOptions} from 'Controls/_date/interface/ICaption';
 export {default as IBaseInputMask} from 'Controls/_date/interface/IBaseInputMask';
 export {default as StringValueConverter} from 'Controls/_date/BaseInput/StringValueConverter';
 export {ICalendarButtonVisibleOptions} from 'Controls/_date/interface/ICalendarButtonVisible';
 
 export {
-    MonthCaptionTemplate
+    MonthCaptionTemplate,
+    ILinkViewDefaultOptions
 }
