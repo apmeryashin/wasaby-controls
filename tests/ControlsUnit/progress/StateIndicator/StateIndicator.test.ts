@@ -1,6 +1,5 @@
 import {StateIndicator} from 'Controls/progress';
 import {assert} from 'chai';
-import {Logger} from 'UI/Utils';
 
 describe('Controls/progress:StateBar', () => {
 
