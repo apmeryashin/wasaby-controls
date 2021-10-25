@@ -331,3 +331,19 @@ Object.defineProperty(MultiSelector, 'defaultProps', {
       return MultiSelector.getDefaultOptions();
    }
 });
+
+/**
+ * @name Controls/_operations/SimpleMultiSelector#selectedKeysCount
+ * @cfg {Number} Счётчик отмеченных записей.
+ * @example
+ * <pre class="brush: html">
+ *    <Controls.operations:SimpleMultiSelector selectedKeysCount="{{10}}"/>
+ * </pre>
+ */
+
+/**
+ * @event Происходит при выборе из выпадающего списка, который открывается при клике на кнопку "Отметить".
+ * @name Controls/_operations/SimpleMultiSelector#selectedTypeChanged
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} selectedType Идентификатор выбранного пункта
+ */
