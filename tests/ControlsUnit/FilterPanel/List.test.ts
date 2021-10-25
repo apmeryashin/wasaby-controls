@@ -9,11 +9,12 @@ describe('Controls/filterPanel:ListEditor', () => {
         const navigation = {
             pageSize: 3
         };
+        const keyProperty = 'id';
         const getEditorOptions = () => {
             return {
                 propertyValue: [1],
                 filter: {},
-                keyProperty: 'id',
+                keyProperty,
                 navigation
             };
         };
@@ -22,7 +23,7 @@ describe('Controls/filterPanel:ListEditor', () => {
             return {
                 propertyValue: [],
                 filter: {},
-                keyProperty: 'id',
+                keyProperty,
                 navigation
             };
         };
@@ -38,6 +39,15 @@ describe('Controls/filterPanel:ListEditor', () => {
             const listEditor = new ListEditor({});
             listEditor._beforeMount(getEditorOptions());
             assert.isNull(listEditor._navigation);
+            assert.deepEqual(listEditor._filter[keyProperty], [1]);
+        });
+
+        it('propertyValue is equal to resetValue', () => {
+            const listEditor = new ListEditor({});
+            const options = getEditorOptions();
+            options.resetValue = [1];
+            listEditor._beforeMount(options);
+            assert.isUndefined(listEditor._filter[keyProperty]);
         });
 
         it('propertyValue is empty', () => {

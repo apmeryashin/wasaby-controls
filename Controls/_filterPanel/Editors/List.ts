@@ -49,6 +49,7 @@ export interface IListEditorOptions extends
     emptyText?: string;
     selectedAllKey: string;
     selectedAllText?: string;
+    resetValue?: number[]|string[];
 }
 
 /**
@@ -388,9 +389,9 @@ class ListEditor extends Control<IListEditorOptions> {
         this._items.prepend([emptyItem]);
     }
 
-    private _setFilter(selectedKeys: string[]|number[], {filter, historyId, keyProperty}: IListEditorOptions): void {
+    private _setFilter(selectedKeys: string[]|number[], {filter, historyId, keyProperty, resetValue}: IListEditorOptions): void {
         this._filter = {...filter};
-        if (selectedKeys && selectedKeys.length) {
+        if (selectedKeys && selectedKeys.length && !isEqual(resetValue, selectedKeys)) {
             this._filter[keyProperty] = selectedKeys;
         }
         if (historyId) {

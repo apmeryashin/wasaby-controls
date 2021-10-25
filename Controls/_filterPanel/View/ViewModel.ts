@@ -66,6 +66,7 @@ export default class FilterViewModel extends mixin<VersionableMixin>(Versionable
                     viewMode: item.viewMode,
                     filterViewMode: this._options.filterViewMode,
                     name: item.name,
+                    resetValue: item.resetValue,
                     style: this._options.style,
                     emptyText: item.emptyText,
                     emptyKey: item.emptyKey,
