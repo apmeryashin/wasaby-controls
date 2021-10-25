@@ -1,5 +1,11 @@
 import { Control } from 'UI/Base';
-import { CollectionItem, Collection, TItemKey } from 'Controls/display';
+import {
+    CollectionItem,
+    Collection,
+    TItemKey,
+    VirtualScrollHideController,
+    VirtualScrollController
+} from 'Controls/display';
 import { Model } from 'Types/entity';
 import { IObservable } from 'Types/collection';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
@@ -69,6 +75,7 @@ export class ListVirtualScrollController {
         this._doScrollUtil = options.doScrollUtil;
         this._hasMoreUtil = options.hasMoreUtil;
 
+        this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
     }
 
@@ -340,5 +347,20 @@ export class ListVirtualScrollController {
         const item = this._collection.getItemBySourceIndex(itemIndex);
         const itemKey = item.getContents().getKey();
         return this.scrollToItem(itemKey).then(() => itemKey);
+    }
+
+    private _setCollectionIterator(mode: 'remove' | 'hide'): void {
+        switch (mode) {
+            case 'hide':
+                VirtualScrollHideController.setup(
+                    this._collection as unknown as VirtualScrollHideController.IVirtualScrollHideCollection
+                );
+                break;
+            default:
+                VirtualScrollController.setup(
+                    this._collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+                break;
+        }
     }
 }
