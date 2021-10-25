@@ -187,6 +187,7 @@ class StateIndicator extends Control<IStateIndicatorOptions> {
       // if we count more sectors, than we have in indicator, trim the longest value
       if (totalSectorsUsed  > _numSectors ) {
          excess = totalSectorsUsed - _numSectors;
+         totalSectorsUsed -= excess;
          colorValues.splice(longestValueStart, excess);
       }
       let sum: number = 0;
@@ -201,6 +202,10 @@ class StateIndicator extends Control<IStateIndicatorOptions> {
             totalSectorsUsed++;
             this._percentageDifferences[maxDeviationIndex] -= correctScale;
          }
+      } else if (sum !== maxPercentValue && totalSectorsUsed === _numSectors) {
+         // При округлении в расчетах может быть ситуация, когда все сектора заполнены,
+         // но сумма не равна максимальной, в этом случае 1 сектор оставляем пустым
+         colorValues.splice(longestValueStart, 1);
       }
       return colorValues;
    }
