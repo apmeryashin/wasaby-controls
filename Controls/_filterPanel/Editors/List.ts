@@ -208,7 +208,7 @@ class ListEditor extends Control<IListEditorOptions> {
             const itemkey = item.get(this._options.keyProperty);
             const itemIndex = selectedKeysArray.indexOf(itemkey);
             if (itemIndex !== -1) {
-                selectedKeysArray.splice(itemIndex);
+                selectedKeysArray.splice(itemIndex, 1);
             } else {
                 if (itemkey === this._options.emptyKey || itemkey === this._options.selectedAllKey) {
                     selectedKeysArray = [itemkey];
