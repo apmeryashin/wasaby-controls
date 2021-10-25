@@ -645,7 +645,6 @@
 
   "--width_filterViewPanel": "280px",
   "--heading_height_filterViewPanel": "40px",
-  "--heading-default_height_filterViewPanel": "30px",
   "--apply-button_image_filterViewPanel": "url('../Controls-default-theme/img/Union.svg')",
   "--apply-button_width_filterViewPanel": "80px",
   "--group_height_filterViewPanel": "18px",
