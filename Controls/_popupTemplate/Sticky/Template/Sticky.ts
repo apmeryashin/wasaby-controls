@@ -46,16 +46,13 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
     readonly '[Controls/_interface/IBackgroundStyle]': boolean;
 
     protected _template: TemplateFunction = template;
-    protected _headerTheme: string;
     protected _closeBtnPosition: POSITION = POSITION.DEFAULT;
     protected _dragging: boolean = false;
 
     protected _beforeMount(options: IPopupTemplateOptions): void {
-        this._headerTheme = StickyTemplate._getTheme();
     }
 
     protected _beforeUpdate(options: IPopupTemplateOptions): void {
-        this._headerTheme = StickyTemplate._getTheme();
         this._updateCloseBtnPosition(options);
         if (options.stickyPosition && options.stickyPosition.direction &&
             this._options.stickyPosition.direction !== options.stickyPosition.direction) {
