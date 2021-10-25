@@ -11,4 +11,10 @@
                                           bind:endValue="_endValue"
                                           datePopupType="compactDatePicker"/>
     </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">datePopupType=shortDatePicker</div>
+        <Controls.dateRange:RangeSelector bind:startValue="_startValue"
+                                          bind:endValue="_endValue"
+                                          datePopupType="shortDatePicker"/>
+    </div>
 </div>

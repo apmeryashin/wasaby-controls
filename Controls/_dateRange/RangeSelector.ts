@@ -9,6 +9,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import {MonthCaptionTemplate} from 'Controls/date';
 import {getDatePopupName, IDatePopupTypeOptions} from 'Controls/date';
+import IPeriodLiteDialog from 'Controls/_dateRange/interfaces/IPeriodLiteDialog';
 import 'css!Controls/dateRange';
 
 interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelectorOptions, IDatePopupTypeOptions {
@@ -70,6 +71,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     protected _monthCaptionTemplate: TemplateFunction = MonthCaptionTemplate;
     protected _emptyCaption: string;
     EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
+    protected _fittingMode: string = 'overflow';
 
     protected _beforeMount(options: IRangeSelector): void {
         this._updateValues(options);
@@ -127,14 +129,20 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         super._updateRangeModel.call(this, opts);
     }
 
-    protected _getPopupOptions(): IStickyPopupOptions {
-        const container = this._children.linkView.getPopupTarget();
-        const ranges = this._options.ranges;
+    private _getPopupClassName(): string {
         let className = '';
-        if (this._options.popupClassName) {
-            className += `${this._options.popupClassName} `;
-        }
-        if (this._options.datePopupType === 'datePicker') {
+        if (this._options.datePopupType === 'shortDatePicker') {
+            if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
+                className = `controls-DateRangeSelectorLite__picker-years_fontSize-${this._getFontSizeClass()} controls_popupTemplate_theme-${this._options.theme}`;
+            } else {
+                className = 'controls-DateRangeSelectorLite__picker-normal';
+            }
+            className += ` controls_shortDatePicker_theme-${this._options.theme}`;
+        } else if (this._options.datePopupType === 'compactDatePicker') {
+            className += `controls_compactDatePicker_theme-${ this._options.theme } ` +
+                'controls-CompactDatePicker__selector-margin';
+        } else {
+            const ranges = this._options.ranges;
             className += `controls_datePicker_theme-${ this._options.theme } controls-DatePopup__selector-marginTop_fontSize-${this._getFontSizeClass()}`;
             if ((ranges && ('days' in ranges || 'weeks' in ranges)) ||
                 ((!ranges || isEmpty(ranges)) && this._options.minRange === 'day')) {
@@ -142,10 +150,38 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             } else {
                 className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn';
             }
-        } else {
-            className += `controls_compactDatePicker_theme-${ this._options.theme } ` +
-                'controls-CompactDatePicker__selector-margin';
         }
+
+        if (this._options.popupClassName) {
+            className += ` ${this._options.popupClassName}`;
+        }
+
+        className += ` controls_theme-${this._options.theme}`;
+
+        return className;
+    }
+
+    private _getAdditionalPopupOptions(): object | void {
+        if (this._options.datePopupType === 'shortDatePicker') {
+            return {
+                fittingMode: {
+                    vertical: this._fittingMode,
+                    horizontal: 'overflow'
+                },
+                direction: {
+                    horizontal: 'center'
+                },
+                eventHandlers: {
+                    onResult: this._sendResultHandler.bind(this)
+                },
+                targetPoint: { horizontal: 'left' }
+            }
+        }
+    }
+
+    protected _getPopupOptions(): IStickyPopupOptions {
+        const container = this._children.linkView.getPopupTarget();
+
         let value = {};
         if (this._options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
             value = PopupUtil.getFormattedSingleSelectionValue(this._rangeModel.startValue || this._startValue);
@@ -154,7 +190,8 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
             ...PopupUtil.getCommonOptions(this),
             target: container,
             template: getDatePopupName(this._options.datePopupType),
-            className,
+            className: this._getPopupClassName(),
+            ...this._getAdditionalPopupOptions(),
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
                 ...value,
@@ -175,9 +212,25 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
                 _displayDate: this._options._displayDate,
                 rangeSelectedCallback: this._options.rangeSelectedCallback,
                 state: this._state,
-                stateChangedCallback: this._stateChangedCallback
+                stateChangedCallback: this._stateChangedCallback,
+                chooseMonths: this._options.chooseMonths,
+                chooseQuarters: this._options.chooseQuarters,
+                chooseHalfyears: this._options.chooseHalfyears,
+                chooseYears: this._options.chooseYears,
+                monthTemplate: this._options.monthTemplate,
+                headerContentTemplate: this._options.headerContentTemplate,
+                itemTemplate: this._options.itemTemplate,
             }
         };
+    }
+
+    protected _sendResultHandler(fittingMode: string): void {
+        if (typeof fittingMode === 'string') {
+            this._fittingMode = fittingMode;
+            this.openPopup();
+        } else {
+            super._onResult(...arguments);
+        }
     }
 
     _resetButtonClickHandler(): void {
@@ -185,8 +238,27 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     }
 
     _mouseEnterHandler(): void {
-        const loadCss = (datePopup) => datePopup.default.loadCSS();
-        this._startDependenciesTimer('Controls/datePopup', loadCss);
+        let libName;
+        switch (this._options.datePopupType) {
+            case 'shortDatePicker':
+                libName = 'Controls/shortDatePicker';
+                break;
+            case 'compactDatePicker':
+                libName = 'Controls/compactDatePicker';
+                break;
+            default:
+                libName = 'Controls/datePopup';
+                break;
+        }
+
+        const loadCss = (popup) => {
+            if (popup.default) {
+                return popup.default.loadCSS();
+            } else {
+                return popup.View.loadCSS()
+            }
+        }
+        this._startDependenciesTimer(libName, loadCss);
     }
 
     shiftBack(): void {
@@ -200,6 +272,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     static getDefaultOptions(): object {
         return {
             minRange: 'day',
+            ...IPeriodLiteDialog.getDefaultOptions(),
             ...ILinkView.getDefaultOptions(),
             ...IDateRangeSelectable.getDefaultOptions(),
             datePopupType: 'datePicker'
