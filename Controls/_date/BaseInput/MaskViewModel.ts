@@ -10,6 +10,8 @@ const DEFAULT_YEAR_NUM = 1904;
 const DEFAULT_YEAR_STR = '1904';
 
 class ModuleClass extends MaskViewModel {
+    // При вводе в поле даты мы всегда должны заменять пустое место на символ, а не 'толкать' остальные цифры вперед
+    protected _shouldNotShiftReplacer: boolean = true;
     protected handleInput(splitValue, inputType) {
         let _stringValueConverter = new StringValueConverter({replacer: this.options.replacer}),
             date,
