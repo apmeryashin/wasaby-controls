@@ -708,8 +708,10 @@ const _private = {
                 }
 
                 _private.tryLoadToDirectionAgain(self, addedItems);
-                if (self._isMounted && self._scrollController) {
-                    self.stopBatchAdding();
+                if (!this._useNewScroll) {
+                    if (self._isMounted && self._scrollController) {
+                        self.stopBatchAdding();
+                    }
                 }
 
                 _private.prepareFooter(self, self._options, self._sourceController);
@@ -980,7 +982,9 @@ const _private = {
             // к началу или концу, от этого прыжка его состояние не может
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
-            self._scrollController.setResetInEnd(direction === 'down');
+            if (!self._useNewScroll) {
+                self._scrollController.setResetInEnd(direction === 'down');
+            }
             self._reload(self._options, navigationQueryConfig).then(() => {
                 self._shouldNotResetPagingCache = false;
 
@@ -1097,9 +1101,10 @@ const _private = {
             if (pagingPadding === null) {
                 pagingPadding = self._isPagingPadding() ? PAGING_PADDING : 0;
             }
-            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result,
-                pagingPadding),
-                !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
+            const scrollControllerHeight = this._useNewScroll ? 0 :
+                (!self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, pagingPadding),
+                scrollControllerHeight);
             const proportion = (scrollHeight / viewportSize);
 
             if (proportion > 0) {
@@ -1204,8 +1209,10 @@ const _private = {
             }
         };
         self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData);
-        if (scrollPagingConfig.pagingMode === 'numbers') {
-            self._scrollController.setSegmentSize(self._scrollPagingCtr.getItemsCountOnPage());
+        if (!self._useNewScroll) {
+            if (scrollPagingConfig.pagingMode === 'numbers') {
+                self._scrollController.setSegmentSize(self._scrollPagingCtr.getItemsCountOnPage());
+            }
         }
         return Promise.resolve(self._scrollPagingCtr);
     },
@@ -1445,8 +1452,9 @@ const _private = {
                 }
             }
 
-            // scrollController должен пересчитываться до indicatorsController, т.к. индикаторы зависят от виртуального скролла
-            if (self._scrollController) {
+            // scrollController должен пересчитываться до indicatorsController,
+            // т.к. индикаторы зависят от виртуального скролла
+            if (!self._useNewScroll && self._scrollController) {
                 if (action) {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
                     const collectionStopIndex = self._listViewModel.getStopIndex();
@@ -2041,7 +2049,7 @@ const _private = {
             this._indicatorsController.hideGlobalIndicator();
         }
 
-        if (this._isMounted && this._scrollController) {
+        if (this._isMounted && this._scrollController && !this._useNewScroll) {
             _private.notifyVirtualNavigation(this, this._scrollController, this._sourceController);
             this.startBatchAdding(direction);
             return this._scrollController.getScrollStopPromise();
@@ -2166,6 +2174,11 @@ const _private = {
             self._currentPage = self._pagingCfg.pagesCount;
             self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
         }
+
+        if (self._useNewScroll) {
+            return;
+        }
+
         if (self._finishScrollToEdgeOnDrawItems) {
 
             // Если для подскролла в конец делали reload, то индексы виртуального скролла
@@ -2525,6 +2538,9 @@ const _private = {
     },
 
     setMarkerAfterScrolling(self: BaseControl, scrollTop: number): void {
+        if (self._useNewScroll) {
+            return;
+        }
         // TODO вручную обрабатывать pagedown и делать stop propagation
         self._setMarkerAfterScroll = false;
         const hasItems = self._items ? !!self._items.getCount() : false;
@@ -3438,12 +3454,10 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
     }
 
     scrollMoveSyncHandler(params: IScrollParams): void {
-
-        _private.handleListScrollSync(this, params.scrollTop);
-
         if (this._useNewScroll) {
             this._listVirtualScrollController.scrollPositionChange(params.scrollTop);
         } else {
+            _private.handleListScrollSync(this, params.scrollTop);
             const result = this._scrollController?.scrollPositionChange({
                 ...params,
                 topTriggerOffset: this._observersController?.getTriggerOffsets().top,

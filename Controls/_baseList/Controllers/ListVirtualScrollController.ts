@@ -80,6 +80,7 @@ export class ListVirtualScrollController {
 
     private _itemsRangeScheduledSizeUpdate: IItemsRange;
     private _scheduledScrollParams: IScheduledScrollParams;
+    private _scheduledUpdateHasItemsOutRange: IHasItemsOutRange;
 
     /**
      * Колбэк, который вызывается когда завершился скролл к элементу. Скролл к элементу вызывается асинхронно.
@@ -112,6 +113,7 @@ export class ListVirtualScrollController {
 
     afterRenderListControl(hasNotRenderedChanges: boolean): void {
         this._updateItemsSizes();
+        this._handleScheduledUpdateHasItemsOutRange();
         this._handleScheduledScroll(hasNotRenderedChanges);
     }
 
@@ -242,8 +244,7 @@ export class ListVirtualScrollController {
                 this._updatePlaceholdersUtil(placeholders);
             },
             hasItemsOutRangeChangedCallback: (hasItemsOutRange: IHasItemsOutRange): void => {
-                this._updateShadowsUtil(hasItemsOutRange);
-                this._updateVirtualNavigationUtil(hasItemsOutRange);
+                this._scheduleUpdateHasItemsOutRange(hasItemsOutRange);
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
             itemsEndedCallback: options.itemsEndedCallback
@@ -279,6 +280,18 @@ export class ListVirtualScrollController {
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {
         this._itemsRangeScheduledSizeUpdate = itemsRange;
+    }
+
+    private _scheduleUpdateHasItemsOutRange(hasItemsOutRange: IHasItemsOutRange): void {
+        this._scheduledUpdateHasItemsOutRange = hasItemsOutRange;
+    }
+
+    private _handleScheduledUpdateHasItemsOutRange(): void {
+        const hasItemsOutRange = this._scheduledUpdateHasItemsOutRange;
+        if (hasItemsOutRange) {
+            this._updateShadowsUtil(hasItemsOutRange);
+            this._updateVirtualNavigationUtil(hasItemsOutRange);
+        }
     }
 
     private _updateItemsSizes(): void {
