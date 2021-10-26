@@ -637,6 +637,12 @@ export default abstract class Row<T extends Model = Model> {
 
     //endregion
 
+    setEditingConfig(): void {
+        // Хранить конфиг пока нет необходимости до отказа от owner.
+        // После отказа, конфиг будет хранится на строке/передаваться в опциях
+        this._nextVersion();
+    }
+
     //region TMP. Проброс от owner'a
     hasMultiSelectColumn(): boolean {
         return this._$owner.hasMultiSelectColumn();

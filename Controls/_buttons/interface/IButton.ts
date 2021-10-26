@@ -72,7 +72,6 @@ export interface IButton extends IContrastBackground {
  * @remark
  * Стиль может влиять на цвет фона или цвет границы для различных значений режима отображения (см. {@link Controls/buttons:Button#viewMode viewMode}).
  * @demo Controls-demo/Buttons/ButtonStyle/Index
- * @demo Controls-demo/Buttons/ButtonStyleFull/Index
  * @example
  * Кнопка со стилем "Primary" с иконкой по умолчанию.
  * <pre class="brush: html; highlight: [4]">
@@ -98,4 +97,10 @@ export interface IButton extends IContrastBackground {
  * <pre>
  *    <Controls.buttons:Button viewMode="button" buttonStyle="primary"/>
  * </pre>
+ */
+
+/**
+ * @name Controls/_buttons/interface/IButton#translucent
+ * @cfg {Boolean} Режим полупрозрачного отображения кнопки.
+ * @default false
  */

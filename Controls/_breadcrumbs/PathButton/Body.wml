@@ -28,6 +28,7 @@
          keyProperty="{{_options.keyProperty}}"
          nodeProperty="{{_options.nodeProperty}}"
          parentProperty="{{_options.parentProperty}}"
+         hasChildrenProperty="{{_options.hasChildrenProperty}}"
 
          expanderIcon="hiddenNode"
          expanderVisibility="hasChildren"

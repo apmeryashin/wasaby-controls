@@ -14,7 +14,6 @@ export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
 export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelectable';
 export {default as IDayTemplate} from './_interface/IDayTemplate';
 export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteDialog';
-export {default as ILinkView} from './_dateRange/interfaces/ILinkView';
 export {default as WeekdayFormatter} from './_dateRange/WeekdayFormatter';
 export {default as keyboardPeriodController} from './_dateRange/Utils/keyboardPeriodController';
 export {default as DateRangeContextProvider} from './_dateRange/DateRangeContextProvider';
@@ -41,7 +40,6 @@ export {
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
  * @includes IInput Controls/_dateRange/interfaces/IInput
- * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
  * @includes IRangeSelectable Controls/_dateRange/interfaces/IRangeSelectable
@@ -67,7 +65,6 @@ export {
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
  * @includes IInput Controls/_dateRange/interfaces/IInput
- * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
  * @includes Utils Controls/_dateRange/Utils

@@ -152,6 +152,28 @@ define(
                   });
                });
             });
+               it('needShowMenu: one item with showType=menu-toolbar', function() {
+                  return new Promise((resolve) => {
+                     toolbar._beforeMount({
+                        keyProperty: 'id',
+                        source: new sourceLib.Memory({
+                        keyProperty: 'id',
+                        data: [
+                           {
+                              id: '1',
+                              title: 'Запись 1',
+                              parent: null,
+                              '@parent': null
+                           },
+                        ]
+                     }),
+                     }).addCallback(() => {
+                        assert.equal(!!toolbar._needShowMenu, false);
+                        assert.equal(toolbar._items.getCount(), 1);
+                        resolve();
+                     });
+                  });
+               });
             it('click toolbar item', function() {
                let isNotify = false;
                let eventResult = null;

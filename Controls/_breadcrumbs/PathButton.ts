@@ -14,6 +14,29 @@ import * as template from 'wml!Controls/_breadcrumbs/PathButton/PathButton';
  * @demo Controls-demo/breadCrumbs_new/PathButton/Index
  *
  * @extends UI/Base:Control
+ * @implements Controls/interface:ISource
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IFilter
+ * @implements Controls/tree:ITreeControl
+ *
+ * @ignoreOptions dataLoadCallback
+ * @ignoreOptions dataLoadErrback
+ * @ignoreOptions nodeHistoryId
+ * @ignoreOptions nodeHistoryType
+ * @ignoreOptions expandByItemClick
+ * @ignoreOptions expandedItems
+ * @ignoreOptions collapsedItems
+ * @ignoreOptions nodeFooterTemplate
+ * @ignoreOptions nodeFooterVisibilityCallback
+ * @ignoreOptions searchBreadCrumbsItemTemplate
+ * @ignoreOptions expanderVisibility
+ * @ignoreOptions nodeLoadCallback
+ * @ignoreOptions deepReload
+ * @ignoreOptions selectAncestors
+ * @ignoreOptions selectDescendants
+ * @ignoreOptions markItemByExpanderClick
+ * @ignoreOptions expanderSize
+ * @ignoreOptions expanderPosition
  *
  * @public
  * @author Уфимцев Д.Ю.
@@ -104,7 +127,8 @@ export default class PathButton extends Control<IPathButton> {
             keyProperty: this._options.keyProperty,
             nodeProperty: this._options.nodeProperty,
             parentProperty: this._options.parentProperty,
-            displayProperty: this._options.displayProperty
+            displayProperty: this._options.displayProperty,
+            hasChildrenProperty: this._options.hasChildrenProperty
         };
     }
 

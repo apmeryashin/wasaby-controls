@@ -49,6 +49,7 @@ export interface IListEditorOptions extends
     emptyText?: string;
     selectedAllKey: string;
     selectedAllText?: string;
+    resetValue?: number[]|string[];
 }
 
 /**
@@ -208,7 +209,7 @@ class ListEditor extends Control<IListEditorOptions> {
             const itemkey = item.get(this._options.keyProperty);
             const itemIndex = selectedKeysArray.indexOf(itemkey);
             if (itemIndex !== -1) {
-                selectedKeysArray.splice(itemIndex);
+                selectedKeysArray.splice(itemIndex, 1);
             } else {
                 if (itemkey === this._options.emptyKey || itemkey === this._options.selectedAllKey) {
                     selectedKeysArray = [itemkey];
@@ -389,9 +390,9 @@ class ListEditor extends Control<IListEditorOptions> {
         this._items.prepend([emptyItem]);
     }
 
-    private _setFilter(selectedKeys: string[]|number[], {filter, historyId, keyProperty}: IListEditorOptions): void {
+    private _setFilter(selectedKeys: string[]|number[], {filter, historyId, keyProperty, resetValue}: IListEditorOptions): void {
         this._filter = {...filter};
-        if (selectedKeys && selectedKeys.length) {
+        if (selectedKeys && selectedKeys.length && !isEqual(resetValue, selectedKeys)) {
             this._filter[keyProperty] = selectedKeys;
         }
         if (historyId) {

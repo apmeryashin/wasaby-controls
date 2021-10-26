@@ -1,7 +1,7 @@
 import BaseSelector, {IBaseSelectorOptions} from './BaseSelector';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import {IDateRangeOptions} from './interfaces/IDateRange';
-import ILinkView from './interfaces/ILinkView';
+import {ILinkViewDefaultOptions} from 'Controls/date';
 import IDateRangeSelectable = require('./interfaces/IDateRangeSelectable');
 import componentTmpl = require('wml!Controls/_dateRange/RangeSelector/RangeSelector');
 import {Popup as PopupUtil, Base as dateUtils} from 'Controls/dateUtils';
@@ -26,7 +26,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @class Controls/_dateRange/RangeSelector
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
- * @implements Controls/dateRange:ILinkView
+ * @implements Controls/date:ILinkViewDefaultOptions
  * @implements Controls/dateRange:IDateRange
  * @implements Controls/dateRange:IDatePickerSelectors
  * @implements Controls/dateRange:IDayTemplate
@@ -51,7 +51,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  *
  * @class Controls/_dateRange/RangeSelector
  * @extends UI/Base:Control
- * @implements Controls/dateRange:ILinkView
+ * @implements Controls/date:ILinkViewDefaultOptions
  * @implements Controls/interface:IFontSize
  * @implements Controls/dateRange:IDateRangeSelectable
  *
@@ -70,7 +70,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     protected _template: TemplateFunction = componentTmpl;
     protected _monthCaptionTemplate: TemplateFunction = MonthCaptionTemplate;
     protected _emptyCaption: string;
-    EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
+    EMPTY_CAPTIONS: object = ILinkViewDefaultOptions.EMPTY_CAPTIONS;
     protected _fittingMode: string = 'overflow';
 
     protected _beforeMount(options: IRangeSelector): void {
@@ -272,7 +272,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         return {
             minRange: 'day',
             ...IPeriodLiteDialog.getDefaultOptions(),
-            ...ILinkView.getDefaultOptions(),
+            ...ILinkViewDefaultOptions.getDefaultOptions(),
             ...IDateRangeSelectable.getDefaultOptions(),
             datePopupType: 'datePicker'
         };
@@ -281,7 +281,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     static getOptionTypes(): object {
         return {
             ...IDateRangeSelectable.getOptionTypes(),
-            ...ILinkView.getOptionTypes()
+            ...ILinkViewDefaultOptions.getOptionTypes()
         };
     }
 }

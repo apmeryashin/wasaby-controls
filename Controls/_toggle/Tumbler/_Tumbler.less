@@ -36,7 +36,6 @@
 }
 
 .controls-Tumbler__wrapper_horizontal {
-   padding: var(--button_offset_tumbler) 0;
    padding-left: var(--button_offset_tumbler);
 
    .controls-Tumbler__button {
@@ -45,7 +44,7 @@
 
       .for(@variants, {
          &-@{_item} {
-            height: ~"var(--inline_height_@{_item})";
+            height: ~"calc(var(--inline_height_@{_item}) - 2 * var(--button_offset_tumbler))";
          }
       });
    }

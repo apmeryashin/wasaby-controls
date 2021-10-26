@@ -55,8 +55,4 @@
             </span>
         </span>
     </ws:if>
-   <Controls.popup:Sticky name="opener"
-                                 closeOnOutsideClick="{{true}}"
-                                 actionOnScroll="close">
-   </Controls.popup:Sticky>
 </div>

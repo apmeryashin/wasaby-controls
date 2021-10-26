@@ -663,10 +663,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
                this._searchResolverController && this._searchResolverController.clearTimer();
                this._loadDependencies(newOptions).addCallback(() => {
-                  this._resolveLoad(this._searchValue, newOptions).then(() => {
+                  this._resolveLoad(this._searchValue, newOptions).then((result) => {
                      // Проверка нужна из-за асинхронщины, которая возникает при моментальном расфокусе поля ввода, что
                      // вызывает setCloseState, но загрузка все равно выполняется и появляется невидимый попап.
-                     if (this._inputActive) {
+                     if (this._inputActive && !(result instanceof Error)) {
                         this._suggestOpened = newOptions.suggestState;
                      }
                   }).catch((error) => {
@@ -813,7 +813,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._resolveLoad();
    }
 
-   private async _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet | void> {
+   private _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet | void> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
@@ -845,6 +845,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
              .catch((error) => {
                 this._hideIndicator();
                 this._searchErrback(error);
+                return error;
              });
       } else {
          return this._performLoad(options);
@@ -870,7 +871,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                return recordSet as RecordSet;
             }
          }
-      }).catch((e) => this._searchErrback(e));
+      }).catch((e) => {
+         this._searchErrback(e);
+         return e;
+      });
    }
 
    private _getSearchResolverOptions(options: IInputControllerOptions): ISearchResolverOptions {

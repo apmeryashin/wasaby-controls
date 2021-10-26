@@ -12,6 +12,7 @@
          nodeProperty="{{nodeProperty}}"
          parentProperty="{{parentProperty}}"
          displayProperty="{{displayProperty}}"
+         hasChildrenProperty="{{hasChildrenProperty}}"
       />
    </ws:bodyContentTemplate>
 </Controls.popupSliding:Template>

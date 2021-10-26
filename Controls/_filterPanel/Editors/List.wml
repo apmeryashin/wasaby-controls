@@ -17,6 +17,7 @@
                     itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                     parentProperty="{{_options.parentProperty}}"
                     nodeProperty="{{_options.nodeProperty}}"
+                    expandedItems="{{_options.expandedItems}}"
                     root="{{_options.root}}"
                     style="{{_options.style}}"
                     attr:class="controls_toggle_theme-{{_options.theme}} controls-EditorList_style-{{_options.style}}"
