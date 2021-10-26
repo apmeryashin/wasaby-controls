@@ -175,6 +175,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
         this._containerLoadedResolve();
         this._containerLoaded = true;
+
+        if (detection.isMac) {
+            // ResizeObserver на Mac не реагирует на изменение padding, если не задана высота через height из-за этого
+            // не происходит обновления пейджинга.
+            this._paging?.update(this._scrollModel);
+        }
     }
 
     protected _isPagingVisible(options: IContainerOptions): boolean {
