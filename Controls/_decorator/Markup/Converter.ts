@@ -173,6 +173,8 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
       } catch (error) {
          IoC.resolve('ILogger')
              .error('Controls/_decorator/Markup/Converter', error.message);
+      } finally {
+         setDisableCompatForMarkupDecorator(false);
       }
 
       return result;
