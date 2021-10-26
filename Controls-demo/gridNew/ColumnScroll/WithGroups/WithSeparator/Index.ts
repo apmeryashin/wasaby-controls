@@ -9,7 +9,6 @@ import * as Template from 'wml!Controls-demo/gridNew/ColumnScroll/WithGroups/Wit
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _separatorVisibility: boolean = false;
     protected _columns: IColumn[] = [
         ...Tasks.getDefaultColumns(),
         {
@@ -28,10 +27,6 @@ export default class extends Control {
             keyProperty: 'key',
             data: Tasks.getData()
         });
-    }
-
-    protected _onToggleSeparatorVisibility(): void {
-        this._separatorVisibility = !this._separatorVisibility;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
