@@ -205,7 +205,7 @@ export class StickyController extends BaseController {
 
         // Синхронно ставлю новую позицию, чтобы не было прыжков при изменении контента
         const verticalPosition = item.position.top ? 'top' : 'bottom';
-        const revertVerticalPosition = item.position.top ? 'bottom' : 'top';
+        const revertVerticalPosition = item.position.top !== undefined ? 'bottom' : 'top';
         container.style[verticalPosition] = item.position[verticalPosition] + 'px';
         container.style[revertVerticalPosition] = 'auto';
 
