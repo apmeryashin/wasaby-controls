@@ -4,6 +4,7 @@ import {HierarchicalMemory} from 'Types/source';
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImages';
 import {groupConstants} from 'Controls/list';
 import {Model} from 'Types/entity';
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
     protected _template: TemplateFunction = template;

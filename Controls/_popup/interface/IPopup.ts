@@ -109,7 +109,7 @@ export interface IPopupController {
 
     elementAfterUpdatedWrapper(item: IPopupItem, container: HTMLElement): boolean;
 
-    beforeElementDestroyed(item: IPopupItem, container: HTMLElement): void;
+    beforeElementDestroyed(item: IPopupItem, container: HTMLElement): boolean;
 
     elementDestroyedWrapper(item: IPopupItem, container: HTMLElement): Promise<void>;
 

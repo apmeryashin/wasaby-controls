@@ -44,6 +44,7 @@
 
 <ws:if data="{{(item || itemData).isSticked()}}">
    <Controls.scroll:StickyBlock backgroundStyle="{{ backgroundStyle }}"
+                                fixedZIndex="{{3}}"
                                 _isIosZIndexOptimized="{{ (item || itemData).isIosZIndexOptimized() }}"
                                 attr:class="controls-ListView__group"
                                 attr:data-qa="{{ (item || itemData).listElementName }}">

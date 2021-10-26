@@ -217,7 +217,7 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
       it('limit, has more data, limit > itemsCount', () => {
          const selection = { selected: [null], excluded: [] };
          const count = strategy.getCount(selection, true, 4);
-         assert.equal(count, 4);
+         assert.equal(count, null);
       });
 
       it('limit, one separated selected, hasMoreData', () => {
