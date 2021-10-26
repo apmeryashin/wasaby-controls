@@ -84,6 +84,7 @@ export interface IOptions<S extends Model = Model> extends ICollectionItemOption
     tileWidth: number;
     tileFitProperty: string;
     tileWidthProperty: string;
+    tileHeightProperty: string;
     roundBorder: ITileRoundBorder;
     imageProperty: string;
     imageFit: TImageFit;
@@ -124,6 +125,8 @@ export default abstract class TileItem<T extends Model = Model> {
     protected _$tileWidth: number;
 
     protected _$tileWidthProperty: string;
+
+    protected _$tileHeightProperty: string;
 
     protected _$tileFitProperty: string;
 
@@ -211,6 +214,14 @@ export default abstract class TileItem<T extends Model = Model> {
      */
     getTileWidthProperty(): string {
         return this._$tileWidthProperty;
+    }
+
+    /**
+     * Возвращает название свойства на рекорде, которое содержит высоту плитки
+     * @return {string} Название свойства
+     */
+    getTileHeightProperty(): string {
+        return this._$tileHeightProperty;
     }
 
     /**
@@ -1299,10 +1310,15 @@ export default abstract class TileItem<T extends Model = Model> {
                     flex-basis: ${flexBasis}px;
                 `;
             } else {
+
+                // TODO: Временно для реализации макета по задаче:
+                // https://online.sbis.ru/opendoc.html?guid=8a7ac746-af65-49e8-8d06-e3c7488a2598
+                const customHeightData = this.getContents().get(this.getTileHeightProperty());
+                const height = customHeightData ? customHeightData : this.getTileHeight();
                 return `
                     -ms-flex-preferred-size: ${flexBasis}px;
                     flex-basis: ${flexBasis}px;
-                    height: ${this.getTileHeight()}px;
+                    height: ${height}px;
                     max-width: ${width}px;
                 `;
             }
@@ -2105,6 +2121,7 @@ Object.assign(TileItem.prototype, {
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$tileWidth: DEFAULT_TILE_WIDTH,
     _$tileWidthProperty: '',
+    _$tileHeightProperty: '',
     _$tileFitProperty: '',
     _$tileScalingMode: 'none',
     _$imageProperty: '',

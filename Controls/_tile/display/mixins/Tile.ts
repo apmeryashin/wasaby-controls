@@ -50,6 +50,8 @@ export default abstract class Tile<
 
     protected _$tileWidthProperty: string;
 
+    protected _$tileHeightProperty: string;
+
     protected _$tileFitProperty: string;
 
     protected _$tileScalingMode: TTileScalingMode;
@@ -162,6 +164,14 @@ export default abstract class Tile<
      */
     getTileWidthProperty(): string {
         return this._$tileWidthProperty;
+    }
+
+    /**
+     * Возвращает название свойства на рекорде, которое содержит высоту плитки
+     * @return {string} Название свойства
+     */
+    getTileHeightProperty(): string {
+        return this._$tileHeightProperty;
     }
 
     /**
@@ -521,6 +531,7 @@ export default abstract class Tile<
         params.tileWidth = this.getTileWidth();
         params.tileFitProperty = this.getTileFitProperty();
         params.tileWidthProperty = this.getTileWidthProperty();
+        params.tileHeightProperty = this.getTileHeightProperty();
         params.roundBorder = this.getRoundBorder();
         params.imageProperty = this.getImageProperty();
         params.imageFit = this.getImageFit();
@@ -559,6 +570,7 @@ Object.assign(Tile.prototype, {
     _$imageUrlResolver: null,
     _$tileScalingMode: 'none',
     _$tileWidthProperty: '',
+    _$tileHeightProperty: '',
     _$tileFitProperty: '',
     _$itemsContainerPadding: null,
     _$roundBorder: null,
