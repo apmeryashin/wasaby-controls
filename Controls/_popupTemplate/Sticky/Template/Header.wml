@@ -19,7 +19,9 @@
       <ws:if data="{{_options.closeButtonVisibility}}">
          <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
             controls-StickyTemplate__close_button_position-{{_options.closeBtnPosition}}
-            {{_options.verticalDirection === 'top' ? 'controls-StickyTemplate__close_button-default-without-header' : 'controls-StickyTemplate__close_button-with-header'}}"
+            {{_options.verticalDirection === 'top' ?
+             'controls-StickyTemplate__close_button-default-without-header_top-spacing-' + (_options.closeButtonTopSpacing === 'none' ? 'none' : 'default') :
+              'controls-StickyTemplate__close_button-with-header'}}"
                                               viewMode="{{_options.closeButtonViewMode}}"
                                               on:click="close()"/>
       </ws:if>
