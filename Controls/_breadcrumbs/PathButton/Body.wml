@@ -7,6 +7,8 @@
          viewMode="link"
          icon="icon-Home2"
          iconSize="s"
+         iconStyle="primary"
+         fontColorStyle="primary"
          caption="{[На главную]}"
          on:click="_goToRoot()"
       />
