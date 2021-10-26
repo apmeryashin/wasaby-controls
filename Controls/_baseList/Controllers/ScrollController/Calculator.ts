@@ -306,7 +306,7 @@ export class Calculator {
             pageSize: this._virtualScrollConfig.pageSize,
             scrollPosition,
             totalCount: this._totalCount,
-            triggerOffset: this._triggersOffsets.top
+            triggerOffset: this._triggersOffsets.backward
         });
 
         this._updatePlaceholders(this._range);

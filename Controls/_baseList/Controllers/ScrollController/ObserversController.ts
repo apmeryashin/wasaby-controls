@@ -5,8 +5,13 @@ import type { IDirection } from 'Controls/_baseList/Controllers/ScrollController
 export type TIntersectionEvent = 'bottomIn' | 'bottomOut' | 'topIn' | 'topOut';
 
 export interface ITriggersOffsets {
-    top: number;
-    bottom: number;
+    backward: number;
+    forward: number;
+}
+
+export interface ITriggersVisibility {
+    backward: boolean;
+    forward: boolean;
 }
 
 export type TObserversCallback = (event: TIntersectionEvent) => void;
@@ -16,6 +21,7 @@ export interface IObserversControllerBaseOptions {
     listContainer: HTMLElement;
     viewportSize: number;
     triggersQuerySelector: string;
+    triggersVisibility: ITriggersVisibility;
     topTriggerOffsetCoefficient: number;
     bottomTriggerOffsetCoefficient: number;
 }
@@ -39,9 +45,10 @@ export class ObserversController {
     private _backwardTriggerOffsetCoefficient: number;
     private _forwardTriggerOffsetCoefficient: number;
 
+    private _triggersVisibility: ITriggersVisibility;
     private _triggersOffsets: ITriggersOffsets = {
-        top: 0,
-        bottom: 0
+        backward: 0,
+        forward: 0
     };
 
     /**
@@ -55,13 +62,12 @@ export class ObserversController {
     private _observer: EdgeIntersectionObserver;
     private _observersCallback: TObserversCallback;
 
-    private _firstTimeGettingTrigger: boolean = true;
-
     constructor(options: IObserversControllerOptions) {
         this._listControl = options.listControl;
         this._listContainer = options.listContainer;
         this._viewportSize = options.viewportSize;
         this._triggersQuerySelector = options.triggersQuerySelector;
+        this._triggersVisibility = options.triggersVisibility;
         this._observersCallback = options.observersCallback;
 
         this._backwardTriggerOffsetCoefficient = options.topTriggerOffsetCoefficient;
@@ -120,39 +126,47 @@ export class ObserversController {
         return this.getTriggersOffsets();
     }
 
-    displayTrigger(direction: IDirection): void {
-        const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
-        if (trigger.style.display === 'none') {
-            trigger.style.display = '';
-        }
-    }
-
-    hideTrigger(direction: IDirection): void {
-        const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
-        if (trigger.style.display !== 'none') {
-            trigger.style.display = 'none';
-        }
-    }
-
     getTriggersOffsets(): ITriggersOffsets {
         return this._triggersOffsets;
     }
 
+    // region TriggerVisibility
+
+    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
+        if (this._triggersVisibility.backward !== triggersVisibility.backward) {
+            this._setTriggerVisibility('backward', triggersVisibility.backward);
+        }
+        if (this._triggersVisibility.forward !== triggersVisibility.forward) {
+            this._setTriggerVisibility('backward', triggersVisibility.forward);
+        }
+
+        this._triggersVisibility = triggersVisibility;
+    }
+
+    private _setTriggerVisibility(direction: IDirection, visible: boolean): void {
+        const trigger = direction === 'forward' ? this._triggers[1] : this._triggers[0];
+
+        if (trigger.style.display !== 'none' && trigger.style.display !== '') {
+            throw new Error('Controls/_baseList/Controllers/ScrollController/ObserversController::_setTriggerVisibility | ' +
+                'В стиле триггера невозможное значение display. Нужно проверить стили и классы навешанные на триггеры.');
+        }
+
+        const currentVisible = trigger.style.display === '';
+        if (!currentVisible && visible) {
+            trigger.style.display = '';
+        } else if (currentVisible && !visible) {
+            trigger.style.display = 'none';
+        }
+    }
+
+    // endregion TriggerVisibility
+
     // region OnCollectionChange
 
-    resetItems(totalCount: number, hasMoreToBackward: boolean, hasMoreToForward: boolean): ITriggersOffsets {
-        // Если после reset коллекции элементов не осталось - необходимо сбросить отступы триггерам.
-        // Делаем это именно тут, чтобы попасть в единый цикл отрисовки с коллекцией.
-        // Пересчёт после отрисовки с пустой коллекцией не подходит, т.к. уже словим событие скрытия триггера.
-        // Также сбрасываем triggerOffset если после ресета в сторону есть данные, чтобы
-        // первая подгрузка была только при скролле к самому краю
-        const hasItems = !!totalCount;
-        this.setResetBackwardTriggerOffset(!hasItems || hasMoreToBackward);
-        this.setResetForwardTriggerOffset(!hasItems || hasMoreToForward);
-        // если есть данные и вперед и назад, то скрываем триггер назад, т.к. в первую очередь грузим вперед
-        if (hasMoreToBackward && hasMoreToForward) {
-            this.hideTrigger('backward');
-        }
+    resetItems(totalCount: number): ITriggersOffsets {
+        // Сбрасываем оффсет у триггеров, чтобы после перезагрузки первая подгрузка была при скролле к самому краю
+        this.setResetBackwardTriggerOffset(true);
+        this.setResetForwardTriggerOffset(true);
         return this.getTriggersOffsets();
     }
 
@@ -167,14 +181,14 @@ export class ObserversController {
             : this._viewportSize * this._forwardTriggerOffsetCoefficient;
 
         this._triggersOffsets = {
-            top: newTopTriggerOffset,
-            bottom: newBottomTriggerOffset
+            backward: newTopTriggerOffset,
+            forward: newBottomTriggerOffset
         };
 
         if (this._triggers && this._triggers.length) {
             // Для горизонтального скролла нужно будет поправить этот код (поодержка left, right)
-            this._triggers[0].style.top = `${this._triggersOffsets.top}px`;
-            this._triggers[1].style.bottom = `${this._triggersOffsets.bottom}px`;
+            this._triggers[0].style.top = `${this._triggersOffsets.backward}px`;
+            this._triggers[1].style.bottom = `${this._triggersOffsets.forward}px`;
         }
     }
 
@@ -183,11 +197,8 @@ export class ObserversController {
             this._listContainer.querySelectorAll(this._triggersQuerySelector)
         );
 
-        // при первом получении триггеров сразу же скрываем верхний, чтобы избежать ненужных подгрузок.
-        if (this._firstTimeGettingTrigger) {
-            this.hideTrigger('backward');
-            this._firstTimeGettingTrigger = false;
-        }
+        this._triggers[0].style.display = this._triggersVisibility.backward ? '' : 'none';
+        this._triggers[1].style.display = this._triggersVisibility.forward ? '' : 'none';
 
         this._observer = new EdgeIntersectionObserver(
             this._listControl,

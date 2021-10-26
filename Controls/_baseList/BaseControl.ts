@@ -3359,6 +3359,14 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 newItemsIndex,
                 removedItems,
                 removedItemsIndex);
+
+            // TODO по идее это нужно делать после релоада.
+            if (action === IObservable.ACTION_RESET) {
+                // если есть данные и вниз и вверх, то скрываем триггер вверх, т.к. в первую очередь грузим вниз
+                if (this._hasMoreData('down') && this._hasMoreData('up')) {
+                    this._listVirtualScrollController.setTriggersVisibility({ backward: false, forward: true });
+                }
+            }
         }
     }
     protected _afterCollectionReset(): void {
@@ -3635,7 +3643,9 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
             triggersQuerySelector: LOADING_TRIGGER_SELECTOR,
             itemsQuerySelector: options.itemsSelector,
 
-            triggersVisibility: undefined,
+            triggersVisibility: { backward: !this._hasMoreData('up'), forward: true },
+            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
+            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
 
             totalCount: this._listViewModel.getCount(),
 
@@ -3655,11 +3665,6 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 this._notify('activeElementChanged', [activeElementIndex]);
             },
 
-            hasMoreUtil: (direction) => {
-                const compatibleDirection = direction === 'forward' ? 'down' : 'up';
-                return this._hasMoreData(compatibleDirection);
-            },
-
             itemsEndedCallback: (direction: IScrollControllerDirection): void => {
                 console.error('BaseControl.itemsEndedCallback', direction);
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
@@ -3674,7 +3679,13 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         if (this._useNewScroll) {
             this._listVirtualScrollController.setItemsContainer(this._getItemsContainer());
             this._listVirtualScrollController.setListContainer(this._container);
-            this._listVirtualScrollController.afterMountListControl();
+
+            if (
+                !this._listViewModel.getCount() ||
+                !this._hasMoreData('down') && this._hasMoreData('up')
+            ) {
+                this._listVirtualScrollController.setTriggersVisibility({ backward: true, forward: true });
+            }
         }
 
         if (constants.isBrowserPlatform) {

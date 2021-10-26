@@ -25,10 +25,10 @@ import {
 import { SyntheticEvent } from 'UI/Vdom';
 import { CrudEntityKey } from 'Types/source';
 import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
+import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 
 type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>;
 type IDoScrollUtil = (scrollTop: number) => void;
-type IHasMoreUtil = (direction: IDirection) => boolean;
 
 interface IListVirtualScrollControllerOptions {
     collection: Collection;
@@ -42,9 +42,12 @@ interface IListVirtualScrollControllerOptions {
     triggersQuerySelector: string;
     itemsQuerySelector: string;
 
+    triggersVisibility: ITriggersVisibility;
+    topTriggerOffsetCoefficient: number;
+    bottomTriggerOffsetCoefficient: number;
+
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
-    hasMoreUtil: IHasMoreUtil;
 
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
@@ -56,7 +59,6 @@ export class ListVirtualScrollController {
 
     private _scrollToElementUtil: IScrollToElementUtil;
     private _doScrollUtil: IDoScrollUtil;
-    private _hasMoreUtil: IHasMoreUtil;
 
     private _scrollController: ScrollController;
 
@@ -76,7 +78,6 @@ export class ListVirtualScrollController {
 
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
-        this._hasMoreUtil = options.hasMoreUtil;
 
         this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
@@ -88,15 +89,6 @@ export class ListVirtualScrollController {
 
     setListContainer(listContainer: HTMLElement): void {
         this._scrollController.setListContainer(listContainer);
-    }
-
-    afterMountListControl(): void {
-        if (
-            !this._collection.getCount() ||
-            !this._hasMoreUtil('forward') && this._hasMoreUtil('backward')
-        ) {
-            this._scrollController.displayTrigger('backward');
-        }
     }
 
     afterRenderListControl(hasNotRenderedChanges: boolean): void {
@@ -142,11 +134,7 @@ export class ListVirtualScrollController {
             }
             case IObservable.ACTION_RESET: {
                 this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-                this._scrollController.resetItems(
-                    totalCount,
-                    this._hasMoreUtil('backward'),
-                    this._hasMoreUtil('forward')
-                );
+                this._scrollController.resetItems(totalCount);
                 break;
             }
         }
@@ -197,6 +185,10 @@ export class ListVirtualScrollController {
         this._scrollController.viewportResized(viewportSize);
     }
 
+    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
+        this._scrollController.setTriggersVisibility(triggersVisibility);
+    }
+
     private _createScrollController(options: IListVirtualScrollControllerOptions): void {
         const totalCount = this._collection.getCount();
         this._scrollController = new ScrollController({
@@ -209,8 +201,9 @@ export class ListVirtualScrollController {
             itemsQuerySelector: options.itemsQuerySelector,
             triggersQuerySelector: options.triggersQuerySelector,
 
-            topTriggerOffsetCoefficient: 0,
-            bottomTriggerOffsetCoefficient: 0,
+            triggersVisibility: options.triggersVisibility,
+            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
+            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
 
             scrollPosition: 0,
             viewportSize: options.virtualScrollConfig.viewportHeight || 0,
@@ -233,11 +226,7 @@ export class ListVirtualScrollController {
             itemsEndedCallback: options.itemsEndedCallback
         });
 
-        this._scrollController.resetItems(
-            totalCount,
-            this._hasMoreUtil('backward'),
-            this._hasMoreUtil('forward')
-        );
+        this._scrollController.resetItems(totalCount);
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
