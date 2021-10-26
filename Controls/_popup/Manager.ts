@@ -221,22 +221,22 @@ class Manager {
         const item = this.find(id);
         if (item) {
             const itemContainer = this._getItemContainer(id);
-            // TODO: https://online.sbis.ru/opendoc.html?guid=7a963eb8-1566-494f-903d-f2228b98f25c
-            item.controller.beforeElementDestroyed(item, itemContainer);
-            return new Promise((resolve) => {
-                this._closeChilds(item).then(() => {
-                    this._finishPendings(id, null, null, () => {
-                        this._removeElement(item, itemContainer).then(() => {
-                            resolve();
-                            const parentItem = this.find(item.parentId);
-                            this._closeChildHandler(parentItem);
+            const needClose = item.controller.beforeElementDestroyed(item, itemContainer);
+            if (needClose) {
+                return new Promise((resolve) => {
+                    this._closeChilds(item).then(() => {
+                        this._finishPendings(id, null, null, () => {
+                            this._removeElement(item, itemContainer).then(() => {
+                                resolve();
+                                const parentItem = this.find(item.parentId);
+                                this._closeChildHandler(parentItem);
+                            });
                         });
                     });
                 });
-            });
-        } else {
-            return Promise.resolve();
+            }
         }
+        return Promise.resolve();
     }
 
     /**
