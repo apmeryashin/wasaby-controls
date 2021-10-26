@@ -35,12 +35,11 @@ class HierarchyLookup extends Control {
 
     protected _itemsChanged(event, items): void {
         if (items) {
-            const self = this;
             const selectedKeys = {};
             factory(items).each((item) => {
-                const parentId = item.get(self._options.parentProperty) || item.get(self._options.keyProperty);
+                const parentId = item.get(this._options.parentProperty) || item.get(this._options.keyProperty);
                 selectedKeys[parentId] = selectedKeys[parentId] || [];
-                selectedKeys[parentId].push(item.get(self._options.keyProperty));
+                selectedKeys[parentId].push(item.get(this._options.keyProperty));
             });
             this._notify('selectedKeysChanged', [selectedKeys]);
         }

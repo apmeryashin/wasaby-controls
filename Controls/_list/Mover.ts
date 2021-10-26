@@ -421,19 +421,18 @@ const Mover = BaseAction.extend({
     },
 
     moveItems(items: []|IMoveItemsParams, target, position): Promise<any> {
-        const self = this;
         if (target === undefined) {
             return Deferred.success();
         }
         if (_private.useAction(items)) {
-            return _private.moveItems(self, items, target, position);
+            return _private.moveItems(this, items, target, position);
         } else {
             return _private.getItemsBySelection.call(this, items).addCallback((items) => {
                 items = items.filter((item) => {
-                    return _private.checkItem(self, item, target, position);
+                    return _private.checkItem(this, item, target, position);
                 });
                 if (items.length) {
-                    return _private.moveItems(self, items, target, position);
+                    return _private.moveItems(this, items, target, position);
                 } else {
                     return Deferred.success();
                 }

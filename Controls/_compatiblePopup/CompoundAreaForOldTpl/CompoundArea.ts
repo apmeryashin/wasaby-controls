@@ -71,7 +71,8 @@ const CompoundArea = CompoundContainer.extend([
 
       this._className = `controls-CompoundArea controls_popupTemplate_theme-${_options.theme}`;
       if (_options.type !== 'base') {
-         this._className += (_options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
+          // Старые шаблоны завязаны селекторами на этот класс.
+         this._className += (_options.type === 'stack') ? ' ws-float-area' : ' ws-window';
       }
 
       // Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
@@ -138,7 +139,9 @@ const CompoundArea = CompoundContainer.extend([
       if (this._options.canMaximize) {
          const maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
          const templateComponent = this._getTemplateComponent();
-         this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.maximizeButtonVisibility || false);
+         this.getContainer().toggleClass(
+             'ws-float-area-has-maximized-button', popupOptions.maximizeButtonVisibility || false
+         );
          const maximizedButtonClass = ' ws-float-area-has-maximized-button';
          if (popupOptions.maximizeButtonVisibility) {
             this._className += maximizedButtonClass;
@@ -169,44 +172,44 @@ const CompoundArea = CompoundContainer.extend([
    },
 
    rebuildChildControl() {
-      const self = this;
       let rebuildDeferred;
 
-      self._childConfig._compoundArea = self;
+      this._childConfig._compoundArea = this;
 
-      self.once('onInit', function() {
+      this.once('onInit', () => {
          // _initCompoundArea должен быть вызван после уничтожения старого childControl (если он есть), но перед
          // созданием нового, поэтому делаем на onInit
-         if (self._options._initCompoundArea) {
-            self._options._initCompoundArea(self);
+         if (this._options._initCompoundArea) {
+            this._options._initCompoundArea(this);
          }
          EnvEvent.Bus.globalChannel().notify('onFloatAreaCreating', this);
-         self.setEnabled(self._enabled);
+         this.setEnabled(this._enabled);
       });
-      self.once('onAfterLoad', () => {
-         EnvEvent.Bus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
+      this.once('onAfterLoad', () => {
+         // StickyHeaderMediator listens for onWindowCreated
+         EnvEvent.Bus.globalChannel().notify('onWindowCreated', this);
       });
 
-      rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
-      self._logicParent.waitForPopupCreated = true;
-      self._isPopupCreated = false;
-      self._waitReadyDeferred = true;
+      rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(this, arguments);
+      this._logicParent.waitForPopupCreated = true;
+      this._isPopupCreated = false;
+      this._waitReadyDeferred = true;
       rebuildDeferred.addCallback(() => {
-         self._getReadyDeferred();
-         self._fixIos();
+         this._getReadyDeferred();
+         this._fixIos();
          runDelayed(() => {
             // Если до момента показа ребенок уже потерт, то закрываем окно.
-            if (self._childControl) {
-               self._childControl._notifyOnSizeChanged();
-               self._notifyManagerPopupCreated();
+            if (this._childControl) {
+               this._childControl._notifyOnSizeChanged();
+               this._notifyManagerPopupCreated();
                runDelayed(() => {
-                  self._isPopupCreated = true;
-                  if (!self._waitReadyDeferred) { // Если попап создан и отработал getReadyDeferred - начинаем показ
-                     self._callCallbackCreated();
+                  this._isPopupCreated = true;
+                  if (!this._waitReadyDeferred) { // Если попап создан и отработал getReadyDeferred - начинаем показ
+                     this._callCallbackCreated();
                   }
                });
             } else {
-               self._notifyVDOM('close', null, { bubbling: true });
+               this._notifyVDOM('close', null, { bubbling: true });
             }
          });
       });
@@ -244,7 +247,8 @@ const CompoundArea = CompoundContainer.extend([
    },
 
    _getDialogClasses() {
-      // При fixed таргета нет => совместимость определяет это окно как type === 'dialog' и использует его позиционирование
+      // При fixed таргета нет => совместимость определяет это окно как type === 'dialog'
+      // и использует его позиционирование
       // Но на самом диалоге такой опции нет, т.к. это опция FloatArea => в этом случае класс диалога не вешаем
       if (this._options.type === 'dialog' && !this._options.fixed) {
          return ' ws-window-content';
@@ -254,7 +258,8 @@ const CompoundArea = CompoundContainer.extend([
 
    _fixIos() {
       // крутейшая бага, айпаду не хватает перерисовки.
-      // уже с такой разбирались, подробности https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
+      // уже с такой разбирались, подробности
+      // https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
       let container = this._childControl && this._childControl.getContainer();
 
       // не вызывается браузерная перерисовка. вызываю вручную
@@ -263,7 +268,8 @@ const CompoundArea = CompoundContainer.extend([
          setTimeout(() => {
             container.style.webkitTransform = 'scale(1)';
 
-            // Если внутри контейнера верстка написана абсолютами с большой вложенностью, ios при scale(1) просто ее не показывает.
+            // Если внутри контейнера верстка написана абсолютами с большой вложенностью,
+            // ios при scale(1) просто ее не показывает.
             // Пример ошибки https://online.sbis.ru/opendoc.html?guid=bb492dee-cc34-4e60-9174-5224ef47f047
             setTimeout(() => {
                container.style.webkitTransform = '';
@@ -313,13 +319,12 @@ const CompoundArea = CompoundContainer.extend([
           this._logicParent.callbackCreated();
       }
       this._logicParent.waitForPopupCreated = false;
-      const self = this;
       if (this._waitClose) {
          this._waitClose = false;
          this.close();
       } else {
-          self._setCustomContentAsync();
-          self._registerLinkedView();
+          this._setCustomContentAsync();
+          this._registerLinkedView();
           runDelayed(() => {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
             // панели, т. к. этот callback вызывается уже после полного цикла создания
@@ -329,11 +334,11 @@ const CompoundArea = CompoundContainer.extend([
             // фокус.
 
             if (
-               self._options.catchFocus &&
-               self.getContainer().length &&
-               !self.getContainer()[0].contains(document.activeElement)
+               this._options.catchFocus &&
+               this.getContainer().length &&
+               !this.getContainer()[0].contains(document.activeElement)
             ) {
-               doAutofocus(self.getContainer());
+               doAutofocus(this.getContainer());
             }
          });
       }
@@ -361,67 +366,66 @@ const CompoundArea = CompoundContainer.extend([
 
       this.getContainer().toggleClass('ws-float-area-has-close-button', false);
 
-      const self = this;
-
       // wsControl нужно установить до того, как запустим автофокусировку.
       // Потому что она завязана в том числе и на этом свойстве
-      const container = self.getContainer()[0];
-      container.wsControl = self;
+      const container = this.getContainer()[0];
+      container.wsControl = this;
 
       // Заполнять нужно раньше чем позовется doAutofocus ниже.
       // doAutofocus спровоцирует уход фокуса, старый менеджер будет проверять связи и звать метод getOpener,
       // который в совместимости возвращает данные с состояния. если они не заполнены, будут проблемы с проверкой связи.
-      self.__openerFromCfg = self._options.__openerFromCfg;
-      self._parent = self._options._logicParent;
-      self._logicParent = self._options._logicParent;
+      this.__openerFromCfg = this._options.__openerFromCfg;
+      this._parent = this._options._logicParent;
+      this._logicParent = this._options._logicParent;
 
       // Переведем фокус сразу на окно, после построения шаблона уже сфокусируем внутренности
-      // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
+      // Если этого не сделать, то во время построения окна, при уничтожении контролов в
+      // других областях запустится восстановление фокуса,
       // которое восстановит его в последнюю активную область.
-      if (self._options.catchFocus) {
-         doAutofocus(self.getContainer());
+      if (this._options.catchFocus) {
+         doAutofocus(this.getContainer());
       }
 
       // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
       // определена ветка в которой для vdom контролов используется новая система фокусов, а в случае
       // CompoundArea мы точно знаем, что внутри находится CompoundControl и фокус нужно распространять
       // по правилам AreaAbstract.compatible для контролов WS3
-      self.detectNextActiveChildControl = self._oldDetectNextActiveChildControl;
+      this.detectNextActiveChildControl = this._oldDetectNextActiveChildControl;
 
-      self._childConfig = self._options.templateOptions || {};
-      self._compoundId = self._options._compoundId;
+      this._childConfig = this._options.templateOptions || {};
+      this._compoundId = this._options._compoundId;
 
-      self._pending = self._pending || [];
-      self._pendingTrace = self._pendingTrace || [];
-      self._waiting = self._waiting || [];
+      this._pending = this._pending || [];
+      this._pendingTrace = this._pendingTrace || [];
+      this._waiting = this._waiting || [];
 
-      self.__parentFromCfg = self._options.__parentFromCfg;
+      this.__parentFromCfg = this._options.__parentFromCfg;
 
       // getParent() возвращает правильного предка, но у предка не зареган потомок.
       // регаем в предке CompoundArea и содержимое начинает искаться по getChildControlByName
-      if (self.__parentFromCfg && self._registerToParent) {
-         self._registerToParent(self.__parentFromCfg);
+      if (this.__parentFromCfg && this._registerToParent) {
+         this._registerToParent(this.__parentFromCfg);
       }
 
-      self._options.parent = null;
+      this._options.parent = null;
 
-      self._notifyVDOM = self._notify;
-      self._notify = self._notifyCompound;
+      this._notifyVDOM = this._notify;
+      this._notify = this._notifyCompound;
 
-      self._subscribeOnResize();
+      this._subscribeOnResize();
 
-      self._windowResize = self._windowResize.bind(self);
+      this._windowResize = this._windowResize.bind(this);
       if (constants.isBrowserPlatform) {
-         window.addEventListener('resize', self._windowResize);
+         window.addEventListener('resize', this._windowResize);
       }
 
-      self._trackTarget(true);
-      self._createBeforeCloseHandlerPending();
+      this._trackTarget(true);
+      this._createBeforeCloseHandlerPending();
 
-      self.rebuildChildControl().addCallback(() => {
+      this.rebuildChildControl().addCallback(() => {
          runDelayed(() => {
             runDelayed(() => {
-               self._notifyCompound('onResize');
+               this._notifyCompound('onResize');
             });
          });
       });
@@ -429,7 +433,8 @@ const CompoundArea = CompoundContainer.extend([
       // В рознице для шапки используется отдельная тема.
       // В ситуации, когда крестик позиционируется вне шапки, задаем ему класс с переменными темы шапки
       // https://online.sbis.ru/opendoc.html?guid=b1dd3531-a18a-4ff5-85c7-edd6563d82e7
-      const closeButton = $('.controls-DialogTemplate__close-button_without_head .controls-Button__close', this.getContainer());
+      const closeButton =
+          $('.controls-DialogTemplate__close-button_without_head .controls-Button__close', this.getContainer());
       if (closeButton.length) {
          closeButton.removeClass('controls_popupTemplate_theme-' + this._options.theme);
          closeButton.addClass('controls_popupTemplate_theme-' + Controller.getPopupHeaderTheme());
@@ -479,7 +484,6 @@ const CompoundArea = CompoundContainer.extend([
 
    _trackTarget(track) {
       const target = this._options.target;
-      const self = this;
 
       // Защита от неправильно переданной опции target
       if (!this._options.trackTarget || !target || !this._isValidTarget(target)) {
@@ -493,33 +497,33 @@ const CompoundArea = CompoundContainer.extend([
          trackElement(target)
             .subscribe('onMove',
                (event, offset, isInitial) => {
-                  if (!self.isDestroyed() && !isInitial) {
-                     if (self._options.closeOnTargetScroll) {
+                  if (!this.isDestroyed() && !isInitial) {
+                     if (this._options.closeOnTargetScroll) {
                         // 1. Если показалась клавиатура, то не реагируем на onMove таргета
                         // 2. После скрытия клавиатуры тоже не реагируем.
-                        if (!self._isIosKeyboardVisible()) {
-                           if (!self._isKeyboardVisible) {
-                              self.close();
+                        if (!this._isIosKeyboardVisible()) {
+                           if (!this._isKeyboardVisible) {
+                              this.close();
                            } else {
-                              self._isKeyboardVisible = false;
+                              this._isKeyboardVisible = false;
                            }
                         }
                      } else {
                         // Перепозиционируемся
-                        self._notifyVDOM('controlResize', [], { bubbling: true });
+                        this._notifyVDOM('controlResize', [], { bubbling: true });
                      }
                   }
                })
             .subscribe('onVisible',
                (event, visibility) => {
-                  if (!self.isDestroyed() && !visibility) {
+                  if (!this.isDestroyed() && !visibility) {
                      // После правок на шаблон совместимости перестал вешаться класс. Вешается на окно.
-                     const parentVdomPopup = $(self._options.target).closest('.controls-Popup');
+                     const parentVdomPopup = $(this._options.target).closest('.controls-Popup');
                      // Вдомные стековые окна, если перекрыты другими окнами из стека, скрываются через ws-hidden.
                      // PopupMixin реагирует на скритие таргета и закрывается.
                      // Делаю фикс, чтобы в этом случае попап миксин не закрывался
                      if (!parentVdomPopup.length || !parentVdomPopup.hasClass('ws-hidden')) {
-                        self.close();
+                        this.close();
                      }
                   }
                });
@@ -605,7 +609,8 @@ const CompoundArea = CompoundContainer.extend([
       const hasHeader = !!this._options.caption;
       const headerPaddingClass = ' controls-CompoundArea-headerPadding';
       let customHeaderContainer = this._getCustomHeaderContainer();
-      if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
+      if (hasHeader ||
+          (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
          if (customHeaderContainer.length) {
             if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
@@ -786,19 +791,18 @@ const CompoundArea = CompoundContainer.extend([
       }
    },
    _confirmationClose(arg) {
-      const self = this;
       if (!this._options.readOnly && this.getRecord().isChanged()) { // Запрашиваем подтверждение если сделали close()
-         self._openConfirmDialog(false, true).addCallback((result) => {
+         this._openConfirmDialog(false, true).addCallback((result) => {
             switch (result) {
                case 'yesButton': {
-                  self.updateRecord().addCallback(() => {
-                     self.close(arg);
+                  this.updateRecord().addCallback(() => {
+                     this.close(arg);
                   });
                   break;
                }
                case 'noButton': {
-                  self.getRecord().rollback();
-                  self.close(arg);
+                  this.getRecord().rollback();
+                  this.close(arg);
                   break;
                }
             }
@@ -816,10 +820,9 @@ const CompoundArea = CompoundContainer.extend([
    _mouseleaveHandler(event) {
       // Если ховер ушел в панель связанную с текущей по опенерам - не запускаем таймер на закрытие
       if (this._options.hoverTarget && !this._isLinkedPanel(event)) {
-         const _this = this;
 
          this._hoverTimer = setTimeout(() => {
-            _this.hide();
+             this.hide();
          }, 1000);
       }
    },
@@ -942,18 +945,20 @@ const CompoundArea = CompoundContainer.extend([
 
    /* start RecordFloatArea */
    getRecord() {
-      return this._record || this._options.record || this._options.templateOptions && this._options.templateOptions.record;
+      return this._record ||
+          this._options.record ||
+          this._options.templateOptions &&
+          this._options.templateOptions.record;
    },
    isNewRecord() {
       return this._options.newRecord;
    },
 
    setRecord(record, noConfirm) {
-      const self = this;
       if (!noConfirm) {
          this.openConfirmDialog(true).addCallback((result) => {
             if (result) {
-               self._setRecord(record);
+               this._setRecord(record);
             }
          });
       } else {
@@ -963,48 +968,47 @@ const CompoundArea = CompoundContainer.extend([
    _setRecord(record) {
       const oldRecord = this.getRecord();
       const context = this.getLinkedContext();
-      const self = this;
       const setRecordFunc = () => {
-          if (self._options.clearContext) {
+          if (this._options.clearContext) {
               context.setContextData(record);
           } else {
               context.replaceRecord(record);
           }
-          if (self.isNewRecord()) {
-              self._options.newRecord = record.getKey() === null;
+          if (this.isNewRecord()) {
+              this._options.newRecord = record.getKey() === null;
           }
-          self._record = record;
-          self._notify('onChangeRecord', record, oldRecord); // Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+          this._record = record;
+          // Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+          this._notify('onChangeRecord', record, oldRecord);
       };
       const result = this._notify('onBeforeChangeRecord', record, oldRecord);
       cDeferred.callbackWrapper(result, setRecordFunc.bind(this));
    },
    openConfirmDialog(noHide) {
-      const self = this;
       const deferred = new cDeferred();
       this._displaysConfirmDialog = true;
       deferred.addCallback((result) => {
-         self._notify('onConfirmDialogSelect', result);
-         self._displaysConfirmDialog = false;
+         this._notify('onConfirmDialogSelect', result);
+         this._displaysConfirmDialog = false;
          return result;
       });
-      if ((self.getRecord().isChanged() && !self.isSaved()) || self._recordIsChanged) {
+      if ((this.getRecord().isChanged() && !this.isSaved()) || this._recordIsChanged) {
          this._openConfirmDialog(false, true).addCallback((result) => {
             switch (result) {
                case 'yesButton': {
-                  if (self._result === undefined) {
-                     self._result = true;
+                  if (this._result === undefined) {
+                     this._result = true;
                   }
-                  self.updateRecord().addCallback(() => {
-                     self._confirmDialogToCloseActions(deferred, noHide);
+                  this.updateRecord().addCallback(() => {
+                     this._confirmDialogToCloseActions(deferred, noHide);
                   }).addErrback(() => {
                      deferred.callback(false);
                   });
                   break;
                }
                case 'noButton': {
-                  if (self._result === undefined) {
-                     self._result = false;
+                  if (this._result === undefined) {
+                     this._result = false;
                   }
 
                   /**
@@ -1012,7 +1016,7 @@ const CompoundArea = CompoundContainer.extend([
                    * Положили rollback обратно, поля связи уже так себя вести не должны, а rollback реально нужен
                    * Оставляем возможность проводить сохранение записи в прикладном коде. По задаче Алены(см коммент вверху) ошибка не повторяется, т.к. там уже юзают formController
                    */
-                  self._confirmDialogToCloseActions(deferred, noHide);
+                  this._confirmDialogToCloseActions(deferred, noHide);
                   break;
                }
                default: {
@@ -1021,7 +1025,7 @@ const CompoundArea = CompoundContainer.extend([
             }
          });
       } else {
-         self._confirmDialogToCloseActions(deferred, noHide);
+         this._confirmDialogToCloseActions(deferred, noHide);
       }
       return deferred;
    },
@@ -1149,18 +1153,17 @@ const CompoundArea = CompoundContainer.extend([
       this.close();
    },
    _createBeforeCloseHandlerPending(): void {
-      const self = this;
       this._beforeClosePendingDeferred = new cDeferred();
-      self._notifyVDOM('registerPending', [this._beforeClosePendingDeferred, {
+      this._notifyVDOM('registerPending', [this._beforeClosePendingDeferred, {
          showLoadingIndicator: false,
-         validateCompatible(): boolean {
-            if (cInstance.instanceOfModule(self._childControl, 'SBIS3.CONTROLS/FormController')) {
+         validateCompatible: (): boolean => {
+            if (cInstance.instanceOfModule(this._childControl, 'SBIS3.CONTROLS/FormController')) {
                // _beforeCloseHandlerResult = true выставляется, если не отменили закрытие на onBeforeClose,
                // соответственно второй раз закрытие звать не нужно
-               if (self._beforeCloseHandlerResult !== true) {
-                  self.close();
+               if (this._beforeCloseHandlerResult !== true) {
+                  this.close();
                }
-               return !self._beforeCloseHandlerResult;
+               return !this._beforeCloseHandlerResult;
             }
             return false;
          }
@@ -1224,10 +1227,9 @@ const CompoundArea = CompoundContainer.extend([
       const popupContainer = this.getContainer().closest('.controls-Popup')[0];
       const id = this._getPopupId();
       const popupConfig = this._getManagerConfig();
-      const self = this;
 
       if (popupConfig) {
-         // Удалим или поставим ws-hidden в зависимости от переданного аргумента
+           // Удалим или поставим ws-hidden в зависимости от переданного аргумента
          popupConfig.popupOptions.className = this._toggleVisibleClass(popupConfig.popupOptions.className, visible);
 
          // Сразу обновим список классов на контейнере, чтобы при пересинхронизации он не "прыгал"
@@ -1245,12 +1247,12 @@ const CompoundArea = CompoundContainer.extend([
          }
 
          const changeVisible = () => {
-            self._isVisible = visible;
+            this._isVisible = visible;
 
             if (visible !== prevVisible) {
                // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
                // стреляя событием onAfterVisibilityChange
-               self._notifyCompound('onAfterVisibilityChange', visible, prevVisible);
+               this._notifyCompound('onAfterVisibilityChange', visible, prevVisible);
                // обновляю в замыкании, чтобы повторные вызова не приводили к
                // прохождению проверки visible !== prevVisible
                prevVisible = visible;
@@ -1267,22 +1269,22 @@ const CompoundArea = CompoundContainer.extend([
             // Также проставим флаг, обозначающий что попап скрыт на время пересчета позиции
             popupConfig.isHiddenForRecalc = true;
 
-            const popupAfterUpdated = function popupAfterUpdated(item, container) {
+            const popupAfterUpdated = (item, container) => {
                changeVisible();
                if (item.isHiddenForRecalc) {
                   // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
                   item.isHiddenForRecalc = false;
 
                   // Перед тем как снять ws-insivible - пересчитаем размеры попапа, т.к. верстка могла измениться
-                  self._notifyVDOM('controlResize', [], { bubbling: true });
+                  this._notifyVDOM('controlResize', [], { bubbling: true });
 
                   runDelayed(() => {
                      item.popupOptions.className = item.popupOptions.className.replace(invisibleRe, '');
                      container.className = container.className.replace(invisibleRe, '');
-                     if (self._options.catchFocus) {
+                     if (this._options.catchFocus) {
                         // автофокусировка теперь здесь, после того как все выехало, оживилось и отобразилось
                         // если звать автофокусировку в момент когда контейнер visibility: hidden, не сфокусируется!
-                        doAutofocus(self.getContainer());
+                        doAutofocus(this.getContainer());
                      }
                   });
                }
@@ -1293,8 +1295,8 @@ const CompoundArea = CompoundContainer.extend([
             // CompoundArea
             if (!popupConfig.controller._modifiedByCompoundArea) {
                popupConfig.controller._modifiedByCompoundArea = true;
-               self._popupController = popupConfig.controller;
-               self._baseAfterUpdate = popupConfig.controller._elementAfterUpdated;
+               this._popupController = popupConfig.controller;
+               this._baseAfterUpdate = popupConfig.controller._elementAfterUpdated;
                popupConfig.controller._elementAfterUpdated = callNext(
                   popupConfig.controller._elementAfterUpdated,
                   popupAfterUpdated
@@ -1302,7 +1304,7 @@ const CompoundArea = CompoundContainer.extend([
             }
 
             // если не попадаем в elementAfterUpdated потому что он случился раньше, то попадаем хотя бы по таймауту
-            setTimeout(popupAfterUpdated.bind(self, popupConfig, popupContainer), 2000);
+            setTimeout(popupAfterUpdated.bind(this, popupConfig, popupContainer), 2000);
          } else {
             changeVisible();
          }
@@ -1372,7 +1374,8 @@ const CompoundArea = CompoundContainer.extend([
          Logger.error('Lib/Mixins/PendingOperationParentMixin: ' + message, this);
       }
 
-      this._childPendingOperations = []; // cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
+      // cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
+      this._childPendingOperations = [];
       if (this._allChildrenPendingOperation) {
          this._allChildrenPendingOperation = null;
          this._unregisterPendingOperation(operation);
@@ -1497,9 +1500,8 @@ const CompoundArea = CompoundContainer.extend([
       return true;
    },
    finishChildPendingOperations(needSavePendings) {
-      const self = this;
       const checkFn = (prevResult) => {
-            const childOps = self._childPendingOperations;
+            const childOps = this._childPendingOperations;
             let result;
             let allChildrenPendingOperation;
 
@@ -1527,12 +1529,12 @@ const CompoundArea = CompoundContainer.extend([
                   result = checkFn(result);
                }
             } else {
-               allChildrenPendingOperation = self._allChildrenPendingOperation;
+               allChildrenPendingOperation = this._allChildrenPendingOperation;
                if (childOps.length === 0 && allChildrenPendingOperation) {
-                  self._allChildrenPendingOperation = null;
-                  self._unregisterPendingOperation(allChildrenPendingOperation);
+                  this._allChildrenPendingOperation = null;
+                  this._unregisterPendingOperation(allChildrenPendingOperation);
                }
-               self._isFinishingChildOperations = false;
+               this._isFinishingChildOperations = false;
                result = prevResult;
             }
             return result;
@@ -1582,11 +1584,10 @@ const CompoundArea = CompoundContainer.extend([
     */
    getAllPendingInfo() {
       const res = [];
-      const self = this;
       this._pending.forEach((pending, index) => {
          res.push({
             pending,
-            trace: self._pendingTrace[index]
+            trace: this._pendingTrace[index]
          });
       });
       return res;
@@ -1683,7 +1684,10 @@ const CompoundArea = CompoundContainer.extend([
       if (linkedView.getSelectedKeys().length) {
          return;
       }
-      if (cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS/Mixins/TreeMixin') && item.get(linkedView.getNodeProperty())) {
+      if (
+          cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS/Mixins/TreeMixin') &&
+          item.get(linkedView.getNodeProperty())
+      ) {
          return;
       }
       this.close([result.item]);

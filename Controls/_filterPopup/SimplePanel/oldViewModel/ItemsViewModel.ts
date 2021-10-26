@@ -243,7 +243,6 @@ const ItemsViewModel = BaseViewModel.extend({
             return this.getCachedItemData(cacheKey);
         }
 
-        const self = this;
         const itemData = {
             getPropValue: ItemsUtil.getPropertyValue,
             style: this._options.style,
@@ -253,9 +252,7 @@ const ItemsViewModel = BaseViewModel.extend({
             dispItem,
             theme: this.getTheme(),
             _preferVersionAPI: true,
-            getVersion(): string {
-                return self._calcItemVersion(itemData.item, itemData.key);
-            }
+            getVersion: (): string => this._calcItemVersion(itemData.item, itemData.key)
         };
 
         // The key of breadcrumbs row is the key of the last item in the crumbs.

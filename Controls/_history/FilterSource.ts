@@ -148,7 +148,8 @@ const _private = {
       _private.fillItems(history.pinned, items, 'pinned', (item) => {
          isClient = history.client.getRecordById(item.getId());
 
-         // TODO Delete item, that pinned before new favorite. Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+         // TODO Delete item, that pinned before new favorite.
+         //  Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
          const data = item.get('ObjectData');
          return !isClient && !_private.isOldPinned(data) && data !== DEFAULT_FILTER;
       });
@@ -307,8 +308,9 @@ const _private = {
       const deserialize = _private.getSerialize().deserialize;
 
       /* В значении фильтра могут быть сложные объекты (record, дата и т.д.)
-         При сериализации сложных объектов добавляется id инстанса и два одинаковых объекта сериализуются в разные строки,
-         поэтому сравниваем десериализованные объекты */
+       * При сериализации сложных объектов добавляется id инстанса и два одинаковых объекта сериализуются в разные строки,
+       * поэтому сравниваем десериализованные объекты
+       * */
       let itemData = JSON.parse(JSON.stringify(data, _private.getSerialize().serialize), deserialize);
 
       items.forEach((element) => {
@@ -411,7 +413,6 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    },
 
    update(data, meta) {
-      const self = this;
       let serData;
       let item;
 
@@ -425,7 +426,7 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          _private.updateFavorite(this, data, meta);
       }
       if (meta.hasOwnProperty('$_addFromData')) {
-         item = _private.findHistoryItem(self, data);
+         item = _private.findHistoryItem(this, data);
          if (item) {
             meta = {
                $_history: true
@@ -439,10 +440,11 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
          return _private.getSourceByMeta(this, meta).update(serData, meta).addCallback((dataSet) => {
             if (dataSet) {
-               _private.updateRecent(
-                   self,
-                   _private.getRawHistoryItem(self, dataSet.getRawData(), serData, item ? item.get('HistoryId') : self.historySource.getHistoryId())
-               );
+                const hId = item ? item.get('HistoryId') : this.historySource.getHistoryId();
+                _private.updateRecent(
+                    this,
+                    _private.getRawHistoryItem(this, dataSet.getRawData(), serData, hId)
+                );
             }
             return dataSet?.getRawData() || '';
          });
@@ -471,15 +473,14 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    },
 
    query(query) {
-      const self = this;
       const where = query.getWhere();
       let newItems;
 
       if (where && where.$_history === true) {
          const prepareHistory = () => {
-            newItems = _private.getItemsWithHistory(self, self._history);
-            self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-            self._loadDef.callback(
+            newItems = _private.getItemsWithHistory(this, this._history);
+            this.historySource.saveHistory(this.historySource.getHistoryId(), this._history);
+            this._loadDef.callback(
                 new sourceLib.DataSet({
                    rawData: newItems.getRawData(),
                    keyProperty: newItems.getKeyProperty()
@@ -487,11 +488,11 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             );
          };
 
-         if (!self._loadDef || self._loadDef.isReady()) {
-            self._loadDef = new Deferred();
+         if (!this._loadDef || this._loadDef.isReady()) {
+            this._loadDef = new Deferred();
 
-            self.historySource.query().addCallback((data) => {
-               _private.initHistory(self, data);
+            this.historySource.query().addCallback((data) => {
+               _private.initHistory(this, data);
                prepareHistory();
             }).addErrback((error): Promise<sourceLib.DataSet> => {
                _private.initHistory(this, new sourceLib.DataSet({
@@ -505,9 +506,9 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
                return error;
             });
          }
-         return self._loadDef;
+         return this._loadDef;
       }
-      return self.originSource.query(query);
+      return this.originSource.query(query);
    },
 
    /**
