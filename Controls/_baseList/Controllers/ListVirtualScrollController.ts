@@ -75,6 +75,7 @@ export class ListVirtualScrollController {
 
     private _collection: Collection;
     private _itemSizeProperty: string;
+    private _keepScrollPosition: boolean = false;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     private readonly _doScrollUtil: IDoScrollUtil;
@@ -135,6 +136,14 @@ export class ListVirtualScrollController {
         this._scrollController.scrollPositionChange(position);
     }
 
+    enableKeepScrollPosition(): void {
+        this._keepScrollPosition = true;
+    }
+
+    disableKeepScrollPosition(): void {
+        this._keepScrollPosition = false;
+    }
+
     collectionChange(action: string,
                      newItems: Array<CollectionItem<Model>>,
                      newItemsIndex: number,
@@ -165,7 +174,7 @@ export class ListVirtualScrollController {
             }
             case IObservable.ACTION_RESET: {
                 this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
-                this._scrollController.resetItems(totalCount);
+                this._scrollController.resetItems(totalCount, this._keepScrollPosition);
                 break;
             }
         }
@@ -260,7 +269,7 @@ export class ListVirtualScrollController {
             itemsEndedCallback: options.itemsEndedCallback
         });
 
-        this._scrollController.resetItems(totalCount);
+        this._scrollController.resetItems(totalCount, false);
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {

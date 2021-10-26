@@ -278,15 +278,16 @@ export class ScrollController {
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
      * @param totalCount Общее кол-во элементов в коллекции
+     * @param keepPosition Нужно ли сохранить текущию позицию
      */
-    resetItems(totalCount: number): void {
+    resetItems(totalCount: number, keepPosition: boolean): void {
         const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);
         this._calculator.updateItemsSizes(itemsSizes);
 
-        const result = this._calculator.resetItems(totalCount);
+        const result = this._calculator.resetItems(totalCount, keepPosition);
         this._processCalculatorResult(result);
     }
 

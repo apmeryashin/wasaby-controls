@@ -407,7 +407,11 @@ const _private = {
             // и вернуться к началу списка, иначе браузер будет пытаться восстановить
             // scrollTop, догружая новые записи после сброса.
             self._resetScrollAfterReload = !self._keepScrollAfterReload;
-            self._keepScrollAfterReload = false;
+            if (self._useNewScroll) {
+                self._listVirtualScrollController.disableKeepScrollPosition();
+            } else {
+                self._keepScrollAfterReload = false;
+            }
         }
     },
 
@@ -5115,7 +5119,11 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
         }
 
         if (keepScroll) {
-            this._keepScrollAfterReload = true;
+            if (this._useNewScroll) {
+                this._listVirtualScrollController.enableKeepScrollPosition();
+            } else {
+                this._keepScrollAfterReload = true;
+            }
             if (!sourceConfig) {
                 if (this._options.navigation?.source === 'position') {
                     const maxLimit = Math.max(this._options.navigation.sourceConfig.limit, this._items.getCount());

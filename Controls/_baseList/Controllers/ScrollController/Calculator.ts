@@ -179,8 +179,11 @@ export class Calculator {
                 // нижняя граница - это верхняя + размер viewPort
                 edgeBorder += viewportHeight;
             }
+
             // запоминаем для восстановления скрола либо граничный элемент, либо просто самый последний.
-            if (itemBorderBottom >= edgeBorder || this._itemsSizes.indexOf(item) === this._itemsSizes.length - 1) {
+            const nextItem = this._itemsSizes[index + 1];
+            const isLastFilledItemSize = index === this._itemsSizes.length - 1 || item.size && !nextItem.size;
+            if (itemBorderBottom >= edgeBorder || isLastFilledItemSize) {
                 let borderDistance;
                 let border;
                 if (direction === 'forward') {
@@ -432,17 +435,17 @@ export class Calculator {
      * Обрабатывает пересоздание всех элементов коллекции.
      * Пересчитываем виртуальный диапазон, placeholders, сбрасывает старые размеры элементов.
      * @param totalCount Новое кол-во элементов
+     * @param keepPosition Нужно ли сохранить текущию позицию
      */
-    resetItems(totalCount: number): ICalculatorResult {
+    resetItems(totalCount: number, keepPosition: boolean): ICalculatorResult {
         const oldRange = this._range;
 
         this._totalCount = totalCount;
 
-        this._totalCount = totalCount;
-
+        const startIndex = keepPosition ? this._range.startIndex : 0;
         if (this._givenItemsSizes) {
             this._range = getRangeByItemsSizes({
-                start: 0,
+                start: startIndex,
                 totalCount: this._totalCount,
                 viewportSize: this._viewportSize,
                 itemsSizes: this._givenItemsSizes
@@ -450,7 +453,7 @@ export class Calculator {
         } else {
             this._range = getRangeByIndex({
                 pageSize: this._virtualScrollConfig.pageSize,
-                start: 0,
+                start: startIndex,
                 totalCount: this._totalCount
             });
         }
