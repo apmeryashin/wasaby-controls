@@ -25,7 +25,7 @@
       "test:coverage": "wasaby-cli --tasks=startTest --node --coverage",
       "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish .",
       "lintless": "stylelint \"Controls/**/*.less\"",
-      "lint-new": "tslint -c ./tslint_new.json -p ./tsconfig.json -t stylish -q",
+      "lint-new": "tslint -c ./tslint_new.json -p ./tsconfig.json -t stylish",
       "lint-new-fix": "tslint -c ./tslint_new.json -p ./tsconfig.json --fix",
       "fallback": "node ./Controls-default-theme/JenerateFallback",
       "update-cli-store": "wasaby-cli --tasks=initStore",
@@ -40,9 +40,13 @@
       "concurrently": "^5.3.0",
       "eslint": "^5.7.0",
       "husky": "^7.0.4",
+      "lint-staged": "^11.2.4",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
       "tslint": "^5.18.0",
       "wasaby-cli": "git+https://platform-git.sbis.ru/saby/wasaby-cli.git#rc-22.1000"
+   },
+   "lint-staged": {
+      "*.ts": "tslint -c ./tslint_new.json -p ./tsconfig.json -q"
    }
 }
