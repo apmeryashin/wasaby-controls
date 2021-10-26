@@ -41,7 +41,8 @@ class GlobalController {
 
     closeInfoBoxHandler(event, withDelay?: boolean) {
         // TODO: fixed by https://online.sbis.ru/doc/d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-        const activeInf = this._activeInfobox && this._activeInfobox.get ? this._activeInfobox.get(0) : this._activeInfobox;
+        const activeInf = this._activeInfobox && this._activeInfobox.get ?
+            this._activeInfobox.get(0) : this._activeInfobox;
         const eventTarget = event.target && event.target.get ? event.target.get(0) : event.target;
         if (activeInf === eventTarget) {
             this._activeInfobox = null;

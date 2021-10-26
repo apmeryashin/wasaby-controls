@@ -26,7 +26,9 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         templateHighlightOnHover?: boolean,
         templateHoverBackgroundStyle?: string
     ): string {
-        let classes = super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle);
+        let classes = super.getWrapperClasses(
+            backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle
+        );
 
         if (this._$owner.isDragTargetNode()) {
             classes += ' controls-TreeGridView__dragTargetNode';

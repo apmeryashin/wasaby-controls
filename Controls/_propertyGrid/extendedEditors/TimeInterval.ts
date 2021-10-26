@@ -25,7 +25,8 @@ class TimeIntervalEditor extends Control<ITimeIntervalEditorOptions> implements 
     protected _beforeMount(options: ITimeIntervalEditorOptions): void {
         // StringValueConverter требуется, т.к. система типов не умеет определять и сериализовывать
         // значения типа TimeInterval, хотя такой тип там выделен
-        // будет правиться по ошибке в 21.2100 https://online.sbis.ru/opendoc.html?guid=d7d07873-f7fc-4cb6-9e44-e681473530e5
+        // будет правиться по ошибке в 21.2100
+        // https://online.sbis.ru/opendoc.html?guid=d7d07873-f7fc-4cb6-9e44-e681473530e5
         this._stringValueConverter = new StringValueConverter({
             replacer: ' ',
             mask: options.mask,

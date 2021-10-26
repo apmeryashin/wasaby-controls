@@ -33,7 +33,9 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
             Utils.getNativeEventPageX(nativeEvent);
         const box = this._children.area.getBoundingClientRect();
         const windowDimensions = DimensionsMeasurer.getWindowDimensions(this._children.area);
-        const ratio = this._getRatio(this._options.direction, target, box, windowDimensions.pageXOffset, windowDimensions.pageYOffset);
+        const ratio = this._getRatio(
+            this._options.direction, target, box, windowDimensions.pageXOffset, windowDimensions.pageYOffset
+        );
         return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
     }
 

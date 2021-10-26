@@ -148,7 +148,8 @@ const _private = {
       _private.fillItems(history.pinned, items, 'pinned', (item) => {
          isClient = history.client.getRecordById(item.getId());
 
-         // TODO Delete item, that pinned before new favorite. Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+         // TODO Delete item, that pinned before new favorite.
+         //  Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
          const data = item.get('ObjectData');
          return !isClient && !_private.isOldPinned(data) && data !== DEFAULT_FILTER;
       });
@@ -307,8 +308,9 @@ const _private = {
       const deserialize = _private.getSerialize().deserialize;
 
       /* В значении фильтра могут быть сложные объекты (record, дата и т.д.)
-         При сериализации сложных объектов добавляется id инстанса и два одинаковых объекта сериализуются в разные строки,
-         поэтому сравниваем десериализованные объекты */
+       * При сериализации сложных объектов добавляется id инстанса и два одинаковых объекта сериализуются в разные строки,
+       * поэтому сравниваем десериализованные объекты
+       * */
       let itemData = JSON.parse(JSON.stringify(data, _private.getSerialize().serialize), deserialize);
 
       items.forEach((element) => {
@@ -439,10 +441,11 @@ const Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
          return _private.getSourceByMeta(this, meta).update(serData, meta).addCallback((dataSet) => {
             if (dataSet) {
-               _private.updateRecent(
-                   self,
-                   _private.getRawHistoryItem(self, dataSet.getRawData(), serData, item ? item.get('HistoryId') : self.historySource.getHistoryId())
-               );
+                const hId = item ? item.get('HistoryId') : self.historySource.getHistoryId();
+                _private.updateRecent(
+                    self,
+                    _private.getRawHistoryItem(self, dataSet.getRawData(), serData, hId)
+                );
             }
             return dataSet?.getRawData() || '';
          });

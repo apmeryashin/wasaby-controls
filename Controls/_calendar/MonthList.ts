@@ -138,7 +138,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             if (receivedState) {
                 this._extData.updateData(receivedState);
             } else {
-                const displayedDates = this._getDisplayedRanges(normalizedPosition, options.virtualPageSize, options.viewMode);
+                const displayedDates =
+                    this._getDisplayedRanges(normalizedPosition, options.virtualPageSize, options.viewMode);
                 return this._extData.enrichItems(displayedDates).catch((error: Error) => this._errorHandler(error));
             }
         }
@@ -378,27 +379,37 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                     // При этом возникает разница между boundingClientRect.bottom и rootBounds.top
                     // вплоть до 1.5 пикселей в зависимости от зума. Из-за этого неправильно расчитывается текущая дата.
                     if (boundingClientRect.bottom - rootBounds.top >= SCALE_ROUNDING_ERROR_FIX) {
-                        // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
+                        // If the bottom of the container lies at or below the top of
+                        // the scrolled container, then we found the right date
                         date = entryDate;
                         break;
                     } else if (rootBounds.top - boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
                         // If the container is completely invisible and lies on top of the scrolled area,
                         // then the next container may intersect with the scrolled area.
-                        // We save the date, and check the following. This condition branch is needed,
-                        // because a situation is possible when the container partially intersected from above, climbed up,
-                        // persecuted, and the lower container approached the upper edge and its intersection did not change.
+                        // We save the date, and check the following. This condition branch is needed, because a
+                        // situation is possible when the container partially intersected from above, climbed up,
+                        // persecuted, and the lower container approached the upper edge and its intersection
+                        // did not change.
                         const delta: number = this._options.order === 'asc' ? 1 : -1;
                         if (this._options.viewMode === VIEW_MODE.year) {
-                            date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
+                            date = new this._options.dateConstructor(
+                                entryDate.getFullYear() + delta, entryDate.getMonth()
+                            );
                         } else {
-                            date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
+                            date = new this._options.dateConstructor(
+                                entryDate.getFullYear(), entryDate.getMonth() + delta
+                            );
                         }
                     }
                 }
             }
         }
 
-        if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate) && !this._lastPositionFromOptions) {
+        if (
+            date &&
+            !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate) &&
+            !this._lastPositionFromOptions
+        ) {
             this._lastNotifiedPositionChangedDate = date;
             this._displayedPosition = date;
             this._notify('positionChanged', [date]);
@@ -407,7 +418,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _updateDisplayedItems(entry: IntersectionObserverSyntheticEntry): void {
 
-        // TODO: убрать `!entry.data` после https://online.sbis.ru/opendoc.html?guid=fee96058-62bc-4af3-8a74-b9d3b680f8ef
+        // TODO: убрать `!entry.data` после
+        //  https://online.sbis.ru/opendoc.html?guid=fee96058-62bc-4af3-8a74-b9d3b680f8ef
         if (!this._options.source || !entry.data) {
             return;
         }
@@ -416,8 +428,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         const index = this._displayedDates.indexOf(time);
         const isDisplayed = index !== -1;
 
-        if (entry.nativeEntry.isIntersecting && entry.nativeEntry.intersectionRatio >= this._options.itemDataLoadRatio &&
-                !isDisplayed && entry.data.type === ITEM_TYPES.body) {
+        if (
+            entry.nativeEntry.isIntersecting &&
+            entry.nativeEntry.intersectionRatio >= this._options.itemDataLoadRatio &&
+            !isDisplayed && entry.data.type === ITEM_TYPES.body
+        ) {
             this._displayedDates.push(time);
             this._enrichItemsDebounced();
         } else if (!entry.nativeEntry.isIntersecting && isDisplayed && entry.data.type === ITEM_TYPES.body) {

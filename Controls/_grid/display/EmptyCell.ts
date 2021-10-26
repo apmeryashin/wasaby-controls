@@ -41,7 +41,9 @@ class EmptyCell extends mixin<
         return classes;
     }
 
-    getContentClasses(topSpacing: string = 'default', bottomSpacing: string = 'default', align: TContentAlign = 'center'): string {
+    getContentClasses(topSpacing: string = 'default',
+                      bottomSpacing: string = 'default',
+                      align: TContentAlign = 'center'): string {
         let classes;
 
         // todo https://online.sbis.ru/opendoc.html?guid=024784a6-cc47-4d1a-9179-08c897edcf72

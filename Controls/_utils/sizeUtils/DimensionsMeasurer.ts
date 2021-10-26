@@ -223,7 +223,9 @@ class DimensionsMeasurer {
         };
     }
 
-    protected _getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent, scaleToBodyZoom: boolean, zoom?: number): IMouseCoords {
+    protected _getMouseCoordsByMouseEvent(event: MouseEvent | TouchEvent,
+                                          scaleToBodyZoom: boolean,
+                                          zoom?: number): IMouseCoords {
         const eventType = event.type;
         const target = scaleToBodyZoom ? document?.body : event.target;
         const zoomValue = zoom || this.getZoomValue(target);

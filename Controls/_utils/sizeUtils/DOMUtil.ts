@@ -35,18 +35,22 @@ export function width(container: HTMLElement | unknown): number {
     let computedStyle;
     let containerWidth;
 
-    // toDO Проверка на jQuery до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+    // toDO Проверка на jQuery до исправления этой ошибки
+    //  https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+    // tslint:disable-next-line:ban-ts-ignore
     // @ts-ignore
     if (window.jQuery && container instanceof window.jQuery) {
         containerWidth = container.width();
 
+        // tslint:disable-next-line:ban-ts-ignore
         // @ts-ignore
     } else if (container instanceof window.Node) {
         containerWidth = container.clientWidth;
 
         if (window.getComputedStyle) {
             computedStyle = window.getComputedStyle(container);
-            containerWidth -= parseInt(computedStyle.paddingLeft, DECIMAL) + parseInt(computedStyle.paddingRight, DECIMAL);
+            containerWidth -=
+                parseInt(computedStyle.paddingLeft, DECIMAL) + parseInt(computedStyle.paddingRight, DECIMAL);
         }
     }
 

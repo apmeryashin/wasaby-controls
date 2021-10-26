@@ -266,7 +266,11 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
      * @remark Запуск добавления может быть отменен. Для этого из функции обратного вызова IEditInPlaceOptions.onBeforeBeginEdit необхобимо вернуть константу отмены.
      */
     add(userOptions: IBeginEditUserOptions = {},
-        options: { addPosition: TAddPosition, targetItem?: Model, columnIndex?: number } = { addPosition: 'bottom' }): TAsyncOperationResult {
+        options: {
+            addPosition: TAddPosition,
+            targetItem?: Model,
+            columnIndex?: number
+        } = {addPosition: 'bottom'}): TAsyncOperationResult {
         return this._endPreviousAndBeginEdit(userOptions, {
             isAdd: true,
             addPosition: options.addPosition,
@@ -350,7 +354,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         return this._collectionEditor.getPrevEditableItem(fromItem);
     }
 
-    private _endPreviousAndBeginEdit(userOptions: IBeginEditUserOptions, options: IBeginEditOptions): TAsyncOperationResult {
+    private _endPreviousAndBeginEdit(userOptions: IBeginEditUserOptions,
+                                     options: IBeginEditOptions): TAsyncOperationResult {
         const editingItem = this._getEditingItem()?.contents;
 
         if (this._isTargetEditing(userOptions.item, options.columnIndex)) {
@@ -399,8 +404,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
 
             // Пропуск начала редактирования текущей записи.
-            // Игнорироем начало редактирования текущей, находим следуюшую редактируемую запись и пробуем начать ее редактирование.
-            // Добавление не пропускается.
+            // Игнорироем начало редактирования текущей, находим следуюшую редактируемую запись и пробуем
+            // начать ее редактирование. Добавление не пропускается.
             if (
                 (callbackResult === CONSTANTS.NEXT_COLUMN || callbackResult === CONSTANTS.PREV_COLUMN) ||
                 (!isAdd && (callbackResult === CONSTANTS.GOTONEXT || callbackResult === CONSTANTS.GOTOPREV))
@@ -446,7 +451,9 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
         };
 
-        const tryEditNext = (position: Exclude<CONSTANTS, CONSTANTS.CANCEL>, _userOptions, _options): TAsyncOperationResult | CONSTANTS.CANCEL => {
+        const tryEditNext = (position: Exclude<CONSTANTS, CONSTANTS.CANCEL>,
+                             _userOptions,
+                             _options): TAsyncOperationResult | CONSTANTS.CANCEL => {
             let current;
             if (_userOptions?.item) {
                 current = this._options.collection.getItemBySourceKey(_userOptions.item.getKey());
@@ -457,7 +464,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
             let next;
             if (position === CONSTANTS.GOTONEXT || position === CONSTANTS.GOTOPREV) {
-                next = position === CONSTANTS.GOTONEXT ? this.getNextEditableItem(current) : this.getPrevEditableItem(current);
+                next = position === CONSTANTS.GOTONEXT ?
+                    this.getNextEditableItem(current) : this.getPrevEditableItem(current);
             } else {
                 next = current;
                 if (typeof _options.columnIndex === 'number') {
@@ -483,7 +491,9 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         return this._operationsPromises.begin;
     }
 
-    private _endEdit(commit: boolean, commitStrategy: 'hasChanges' | 'all' = 'all', force: boolean = false): void | TAsyncOperationResult {
+    private _endEdit(commit: boolean,
+                     commitStrategy: 'hasChanges' | 'all' = 'all',
+                     force: boolean = false): void | TAsyncOperationResult {
         const editingCollectionItem = this._getEditingItem();
 
         if (!editingCollectionItem) {
@@ -502,7 +512,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             if (this._options.onBeforeEndEdit) {
                 let sourceIndex;
                 if (this._addParams.targetItem) {
-                    const collectionIndex = this._options.collection.getCollection().getIndex(this._addParams.targetItem);
+                    const collectionIndex =
+                        this._options.collection.getCollection().getIndex(this._addParams.targetItem);
                     sourceIndex = collectionIndex + (this._addParams.addPosition === 'bottom' ? 1 : 0);
                 }
 

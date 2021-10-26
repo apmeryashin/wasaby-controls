@@ -63,7 +63,8 @@ export default class StringValueConverter {
         let dateString: string = '';
         if (dateUtils.isValidDate(value)) {
             const actualMask: string = this._mask || mask;
-            // Если дата имеет тип ДатаВремя, то при передачи на клиент она будет сконвертирована в часовой пояс клиента.
+            // Если дата имеет тип ДатаВремя, то при передачи на клиент она будет
+            // сконвертирована в часовой пояс клиента.
             // На сервере отрендерим дату в том же часовом поясе.
             // По факту тут проврка на DateTime.
             // instanceOfModule(value, 'Types/entity:DateTime') не подходит т.к. Date и Time наследуются от DateTime,
@@ -296,7 +297,10 @@ export default class StringValueConverter {
         }
     }
 
-    private _autocomplete(valueModel, autocompleteType = 'default', inputType = 'default', required: boolean = false): void {
+    private _autocomplete(valueModel,
+                          autocompleteType = 'default',
+                          inputType = 'default',
+                          required: boolean = false): void {
         const now = new Date();
         const maskType = getMaskType(this._mask);
         let item;

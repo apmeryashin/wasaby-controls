@@ -1,4 +1,4 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+﻿import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Date as WSDate, DateTime as WSDateTime, Time as WSTime} from 'Types/entity';
@@ -153,7 +153,12 @@ class BaseInput extends Control<IDateBaseOptions> {
 
     protected _onKeyDown(event: SyntheticEvent<KeyboardEvent>): void {
         const key = event.nativeEvent.keyCode;
-        if (key === constants.key.insert && !event.nativeEvent.shiftKey && !event.nativeEvent.ctrlKey && !this._options.readOnly) {
+        if (
+            key === constants.key.insert &&
+            !event.nativeEvent.shiftKey &&
+            !event.nativeEvent.ctrlKey &&
+            !this._options.readOnly
+        ) {
             // on Insert button press current date should be inserted in field
             this._model.setCurrentDate();
             this._notify('inputCompleted', [this._model.value, this._model.textValue]);

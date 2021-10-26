@@ -78,7 +78,12 @@ const _private = {
    };
 
 export = {
-      fillItemsType(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
+      fillItemsType(keyProperty,
+                    parentProperty,
+                    items, availableWidth,
+                    theme, defaultItemTemplate,
+                    itemTemplateProperty
+      ) {
          let itemsSizes;
          let currentWidth;
          const visibleItemsKeys = [];
@@ -94,7 +99,9 @@ export = {
          if (visibleItemsKeys.length <= 1) {
             _private.setShowType(items, showType.TOOLBAR);
          } else {
-            itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
+            itemsSizes = _private.getItemsSizes(
+                items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty
+            );
             currentWidth = itemsSizes.reduce((acc, width) => {
                return acc + width;
             }, 0);
@@ -105,7 +112,9 @@ export = {
                currentWidth += MENU_WIDTH;
 
                for (let i = visibleItemsKeys.length - 1; i >= 0; i--) {
-                  items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
+                  items
+                      .getRecordById(visibleItemsKeys[i])
+                      .set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
                   currentWidth -= itemsSizes[i];
                }
             } else {

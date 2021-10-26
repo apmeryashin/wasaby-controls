@@ -44,7 +44,9 @@ import {Logger} from 'UI/Utils';
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
-const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
+const VERSION_UPDATE_ITEM_PROPERTIES = [
+    'editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'
+];
 const REBUILD_ITEM_PROPERTIES = ['expanded', 'contents'];
 
 /**
@@ -2621,7 +2623,9 @@ export default class Collection<
 
         if (lastItem !== this._lastItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                this._updateBottomItemSeparator(this._lastItem, lastItem, noMoreData && this._shouldAddEdgeSeparator(), silent);
+                this._updateBottomItemSeparator(
+                    this._lastItem, lastItem, noMoreData && this._shouldAddEdgeSeparator(), silent
+                );
             }
             this._updateLastItem(this._lastItem, lastItem, silent);
         }
@@ -2649,7 +2653,10 @@ export default class Collection<
         this._firstItem = newItem;
     }
 
-    private _updateBottomItemSeparator(oldItem: CollectionItem, newItem: CollectionItem, newState: boolean, silent?: boolean): void {
+    private _updateBottomItemSeparator(oldItem: CollectionItem,
+                                       newItem: CollectionItem,
+                                       newState: boolean,
+                                       silent?: boolean): void {
         if (oldItem) {
             oldItem.setBottomSeparatorEnabled(false, silent);
         }
@@ -2658,7 +2665,10 @@ export default class Collection<
         }
     }
 
-    private _updateTopItemSeparator(oldItem: CollectionItem, newItem: CollectionItem, newState: boolean, silent?: boolean): void {
+    private _updateTopItemSeparator(oldItem: CollectionItem,
+                                    newItem: CollectionItem,
+                                    newState: boolean,
+                                    silent?: boolean): void {
         if (oldItem) {
             oldItem.setTopSeparatorEnabled(true, silent);
         }
@@ -3297,7 +3307,8 @@ export default class Collection<
                                    silent?: boolean): boolean {
         let wasUpdated = false;
         this._getItems().forEach((item: CollectionItem<S>) => {
-            // todo Разобраться, почему item === undefined по https://online.sbis.ru/opendoc.html?guid=9018fdea-5de1-4b89-9f48-fb8ded0673cd
+            // todo Разобраться, почему item === undefined по
+            //  https://online.sbis.ru/opendoc.html?guid=9018fdea-5de1-4b89-9f48-fb8ded0673cd
             if (item && (!conditionProperty || item[conditionProperty])) {
                 item[updateMethodName](newPropertyValue, silent);
                 wasUpdated = true;
@@ -3695,7 +3706,8 @@ export default class Collection<
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
-                const isAddingItem = this.getStrategyInstance(AddStrategy) && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                const isAddingItem = this.getStrategyInstance(AddStrategy)
+                    && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
                 result = isAddingItem || filter(
                     item.getContents(),
                     index,

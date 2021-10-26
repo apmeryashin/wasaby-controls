@@ -63,7 +63,9 @@ export class RemoveController {
      * @param {Number} selectedKeysCount - количество выбранных записей.
      * @returns {Promise}
      */
-    removeWithConfirmation(selection: ISelectionObject, filter: TFilterObject = {}, selectedKeysCount?: number): Promise<void> {
+    removeWithConfirmation(selection: ISelectionObject,
+                           filter: TFilterObject = {},
+                           selectedKeysCount?: number): Promise<void> {
         if (!selectedKeysCount && selection?.selected?.length === 1 && selection.selected[0] !== null) {
             selectedKeysCount = 1;
         }

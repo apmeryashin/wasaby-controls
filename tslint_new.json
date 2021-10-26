@@ -8,13 +8,15 @@
       ]
    },
    "rules": {
-      "no-shadowed-variable": false,
       "triple-equals": false,
+      "no-console": false,
+
+      "no-conditional-assignment": false,
+      "no-this-assignment": false,
+      "no-shadowed-variable": false,
       "no-parameter-reassignment": false,
       "ban-ts-ignore": false,
       "no-magic-numbers": false,
-      "no-console": false,
-      "max-line-length": false,
       "ban-types": false,
       "no-any": false,
       "typedef": false

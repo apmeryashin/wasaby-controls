@@ -21,7 +21,10 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 class SingleSelection extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
 
-    protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: number[]|string[], added: number[]|string[], deleted: number[]|string[]): void {
+    protected _handleSelectedKeysChanged(event: SyntheticEvent,
+                                         keys: number[]|string[],
+                                         added: number[]|string[],
+                                         deleted: number[]|string[]): void {
         event.stopPropagation();
         const selectedKey = added.length ? added[0] : deleted[0];
         this._notify('selectedKeyChanged', [selectedKey], {bubbling: true});

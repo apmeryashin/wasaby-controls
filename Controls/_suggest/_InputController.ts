@@ -826,7 +826,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                        .then((recordSet) => {
                           this._loadEnd(recordSet);
 
-                          if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
+                          if (
+                              recordSet instanceof RecordSet &&
+                              this._shouldShowSuggest(recordSet) &&
+                              (this._inputActive || this._tabsSelectedKey !== null)
+                          ) {
                              this._setItems(recordSet);
                              if (this._options.dataLoadCallback) {
                                 this._options.dataLoadCallback(recordSet);

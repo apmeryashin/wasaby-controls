@@ -21,7 +21,11 @@ class RegisterClass {
        this._register = options.register;
     }
 
-    register(event: Event, registerType: string, component: Control, callback: Function, config: IRegisterClassConfig = {}): void {
+    register(event: Event,
+             registerType: string,
+             component: Control,
+             callback: Function,
+             config: IRegisterClassConfig = {}): void {
        if (registerType === this._register) {
            const componentId = component.getInstanceId();
            this._registry[componentId] = {

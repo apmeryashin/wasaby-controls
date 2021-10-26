@@ -41,7 +41,9 @@ class Strategy {
      * @param restrictiveContainerCoords координаты контейнера внутри которого позиционируемся
      * @param resizeType Не пустой, если пересчет позиции происходит при ресайзе окна браузера или контента внутри попапа
      */
-    getPosition(item: ISlidingPanelItem, restrictiveContainerCoords?: TRestrictiveContainerCoords, resizeType?: ResizeType): IPopupPosition {
+    getPosition(item: ISlidingPanelItem,
+                restrictiveContainerCoords?: TRestrictiveContainerCoords,
+                resizeType?: ResizeType): IPopupPosition {
         const windowHeight = this._getWindowHeight();
         const {position: popupPosition = {}, popupOptions} = item;
         const {
@@ -50,8 +52,10 @@ class Strategy {
                 autoHeight
             } = {}
         } = popupOptions;
-        const maxHeight = this._getHeightWithoutOverflow(this.getMaxHeight(item, restrictiveContainerCoords), windowHeight);
-        const minHeight = this._getHeightWithoutOverflow(this.getMinHeight(item, restrictiveContainerCoords), maxHeight);
+        const maxHeight =
+            this._getHeightWithoutOverflow(this.getMaxHeight(item, restrictiveContainerCoords), windowHeight);
+        const minHeight =
+            this._getHeightWithoutOverflow(this.getMinHeight(item, restrictiveContainerCoords), maxHeight);
         const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
         const heightInitialized = initialHeight !== undefined;
         let height;
@@ -119,7 +123,8 @@ class Strategy {
      * Запуск анимации показа окна
      * @param item
      */
-    getShowingPosition(item: ISlidingPanelItem, restrictiveContainerCoords: TRestrictiveContainerCoords): IPopupPosition {
+    getShowingPosition(item: ISlidingPanelItem,
+                       restrictiveContainerCoords: TRestrictiveContainerCoords): IPopupPosition {
         const positionOption = item.popupOptions.slidingPanelOptions.position;
         const position = this.getPosition(item, restrictiveContainerCoords);
         this._setInvertedPosition(position, positionOption, this._getWindowHeight() - item.sizes.height);
@@ -130,28 +135,32 @@ class Strategy {
      * Запуск анимации сворачивания окна
      * @param item
      */
-    getHidingPosition(item: ISlidingPanelItem, restrictiveContainerCoords: TRestrictiveContainerCoords): IPopupPosition {
+    getHidingPosition(item: ISlidingPanelItem,
+                      restrictiveContainerCoords: TRestrictiveContainerCoords): IPopupPosition {
         const positionOption = item.popupOptions.slidingPanelOptions.position;
         const position = this.getPosition(item, restrictiveContainerCoords);
         position[positionOption] = -item.sizes.height;
         return  position;
     }
 
-    getMaxHeight({popupOptions: {slidingPanelOptions}}: ISlidingPanelItem, restrictiveContainerCoords: TRestrictiveContainerCoords): number {
+    getMaxHeight({popupOptions: {slidingPanelOptions}}: ISlidingPanelItem,
+                 restrictiveContainerCoords: TRestrictiveContainerCoords): number {
         const {heightList, maxHeight} = slidingPanelOptions;
         const windowHeight = this._getWindowHeight();
         const computedMaxHeight = heightList ? heightList[heightList.length - 1] : maxHeight;
         return this._getHeightWithoutOverflow(computedMaxHeight || windowHeight, windowHeight);
     }
 
-    getMinHeight({popupOptions: {slidingPanelOptions}}: ISlidingPanelItem, restrictiveContainerCoords: TRestrictiveContainerCoords): number {
+    getMinHeight({popupOptions: {slidingPanelOptions}}: ISlidingPanelItem,
+                 restrictiveContainerCoords: TRestrictiveContainerCoords): number {
         const {heightList, minHeight} = slidingPanelOptions;
         const windowHeight = this._getWindowHeight();
         const computedMinHeight = heightList ? heightList[0] : minHeight;
         return this._getHeightWithoutOverflow(computedMinHeight, windowHeight);
     }
 
-    getPositionAfterDrag(item: ISlidingPanelItem, restrictiveContainerCoords: TRestrictiveContainerCoords): IPopupPosition {
+    getPositionAfterDrag(item: ISlidingPanelItem,
+                         restrictiveContainerCoords: TRestrictiveContainerCoords): IPopupPosition {
         const {popupOptions, position} = item;
         const heightList = popupOptions.slidingPanelOptions?.heightList;
         if (heightList) {

@@ -97,7 +97,11 @@ const ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.Ver
             dateConstructor: options.dateConstructor,
             yearSeparatesCenturies: options._yearSeparatesCenturies
          });
-         if (this._mask !== options.mask || !dateUtils.isDatesEqual(this._value, options.value) || this._displayValue !== options.displayValue) {
+         if (
+             this._mask !== options.mask ||
+             !dateUtils.isDatesEqual(this._value, options.value) ||
+             this._displayValue !== options.displayValue
+         ) {
             this._mask = options.mask;
             if (options.displayValue) {
                _private.updateDisplayValue(this, options.displayValue);
@@ -174,7 +178,9 @@ const ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.Ver
       autocomplete(textValue, autocompleteType) {
          this._nextVersion();
          this._textValue = textValue;
-         this.value = this._stringValueConverter.getValueByString(textValue, this._lastValue, autocompleteType, this._inputMode);
+         this.value = this._stringValueConverter.getValueByString(
+             textValue, this._lastValue, autocompleteType, this._inputMode
+         );
          if (dateUtils.isValidDate(this.value)) {
             this._textValue = this._stringValueConverter.getStringByValue(this.value);
          } else if (this._inputMode === INPUT_MODE.partial && !!this._textValue.match(VALID_PARTIAL_DATE_REGEXP)) {

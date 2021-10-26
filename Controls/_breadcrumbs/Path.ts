@@ -119,7 +119,9 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         return this._arrowWidth + dotsWidth;
     }
 
-    private _prepareData(options: IBreadCrumbsOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
+    private _prepareData(options: IBreadCrumbsOptions,
+                         width: number,
+                         getTextWidth: Function = this._getTextWidth): void {
         if (this._items && this._items.length > 0) {
             this._width = width;
             this._calculateBreadCrumbsToDraw(this._items, options, getTextWidth);
@@ -130,9 +132,13 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         return getFontWidth(text, size);
     }
 
-    private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
+    private _calculateBreadCrumbsToDraw(items: Record[],
+                                        options: IBreadCrumbsOptions,
+                                        getTextWidth: Function = this._getTextWidth): void {
         if (items?.length) {
-            this._visibleItems = this.calculateBreadcrumbsUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
+            this._visibleItems = this.calculateBreadcrumbsUtil.calculateItemsWithDots(
+                items, options, 0, this._width, this._dotsWidth, getTextWidth
+            );
             this._visibleItems[0].hasArrow = false;
         } else {
             this._visibleItems = [];

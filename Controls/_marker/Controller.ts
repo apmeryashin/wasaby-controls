@@ -17,7 +17,9 @@ export class Controller {
 
    constructor(options: IOptions) {
       const markerStrategy = options.markerStrategy || SingleColumnStrategy;
-      this._markerStrategy = new markerStrategy({model: options.model, moveMarkerOnScrollPaging: options.moveMarkerOnScrollPaging});
+      this._markerStrategy = new markerStrategy(
+          {model: options.model, moveMarkerOnScrollPaging: options.moveMarkerOnScrollPaging}
+      );
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
       this._markedKey = options.markedKey;
@@ -47,7 +49,9 @@ export class Controller {
          }
       }
       const markerStrategy = options.markerStrategy || SingleColumnStrategy;
-      this._markerStrategy = new markerStrategy({model: options.model, moveMarkerOnScrollPaging: options.moveMarkerOnScrollPaging});
+      this._markerStrategy = new markerStrategy(
+         {model: options.model, moveMarkerOnScrollPaging: options.moveMarkerOnScrollPaging}
+      );
       this._markerVisibility = options.markerVisibility;
    }
 
@@ -148,7 +152,9 @@ export class Controller {
       // поэтому на скрытых элементах нужно сбросить состояние marked
       removedItems.forEach((item) => item.Markable && item.setMarked(false, true));
 
-      const removeMarkedItem = !!removedItems.find((it) => it.Markable && it.getContents().getKey() === this._markedKey);
+      const removeMarkedItem = !!removedItems.find(
+          (it) => it.Markable && it.getContents().getKey() === this._markedKey
+      );
       if (!removeMarkedItem) {
          return this._markedKey;
       }
@@ -159,7 +165,8 @@ export class Controller {
       // TODO нужно только для дерева, можно подумать над наследованием
       if (removedItems[0] instanceof TreeItem && this._markedKey !== undefined && this._markedKey !== null) {
          const parent = removedItems[0].getParent();
-         // На корневой узел ставить маркер нет смысла, т.к. в этом случае должно отработать именно удаление элементов, а не скрытие
+         // На корневой узел ставить маркер нет смысла, т.к. в этом случае
+          // должно отработать именно удаление элементов, а не скрытие
          if (parent && parent !== this._model.getRoot() && parent.Markable) {
             const parentItem = parent.getContents();
             if (parentItem) {
@@ -208,7 +215,8 @@ export class Controller {
       let newMarkedKey = this._markedKey;
       // при ресете маркер пересчитаем, только когда маркер всегда виден или виден по активации и маркер был до ресета
       const needRecalculateMarker = this._markerVisibility === Visibility.Visible
-          || this._markerVisibility === Visibility.OnActivated && this._markedKey !== null && this._markedKey !== undefined;
+          || this._markerVisibility === Visibility.OnActivated &&
+          this._markedKey !== null && this._markedKey !== undefined;
       if (needRecalculateMarker && this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
          newMarkedKey = this._getFirstItemKey();
       }

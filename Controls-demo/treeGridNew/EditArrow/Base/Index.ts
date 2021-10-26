@@ -32,6 +32,8 @@ export default class Base extends Control<IControlOptions> {
         console.log(item);
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/treeGridNew/EditArrow/resources/EditArrow'];
-
+    static _styles: string[] = [
+        'Controls-demo/Controls-demo',
+        'Controls-demo/treeGridNew/EditArrow/resources/EditArrow'
+    ];
 }

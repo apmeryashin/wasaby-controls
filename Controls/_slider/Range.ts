@@ -103,7 +103,9 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
       this._startValue = options.startValue === undefined ?
                                                 options.minValue : Math.max(options.minValue, options.startValue);
       this._value = undefined;
-      this._pointData = [{name: 'pointStart', position: 0}, {name: 'pointEnd', position: 100}, {name: 'tooltip', position: 0}];
+      this._pointData = [
+          {name: 'pointStart', position: 0}, {name: 'pointEnd', position: 100}, {name: 'tooltip', position: 0}
+      ];
       this._lineData = {position: 0, width: 100};
       this._render(options.minValue, options.maxValue, this._startValue, this._endValue);
    }
@@ -115,9 +117,14 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
          this._scaleData = Utils.getScaleData( options.minValue, options.maxValue, options.scaleStep,
              options.scaleLabelFormatter);
       }
-      if (this._options.hasOwnProperty('startValue') && this._options.hasOwnProperty('endValue')) {
-         this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
-         this._startValue = options.startValue === undefined ? options.minValue : Math.max(options.minValue, options.startValue);
+      if (
+          this._options.hasOwnProperty('startValue') &&
+          this._options.hasOwnProperty('endValue')
+      ) {
+         this._endValue = options.endValue === undefined ?
+             options.maxValue : Math.min(options.maxValue, options.endValue);
+         this._startValue = options.startValue === undefined ?
+             options.minValue : Math.max(options.minValue, options.startValue);
       } else {
          this._endValue = Math.min(options.maxValue, this._endValue);
          this._startValue = Math.max(options.minValue, this._startValue);

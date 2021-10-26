@@ -167,7 +167,9 @@ class ViewModel extends BaseViewModel<string | number, IViewModelOptions> {
         return {value, carriagePosition};
     }
 
-    private static _pasteInIntegerPart(text: IText, parsedNumber: Parser.IParsedNumber, splitterPosition: number): void {
+    private static _pasteInIntegerPart(text: IText,
+                                       parsedNumber: Parser.IParsedNumber,
+                                       splitterPosition: number): void {
         text.value = paste(text.value, parsedNumber.integer, text.carriagePosition);
 
         if (parsedNumber.fractional) {

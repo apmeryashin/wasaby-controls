@@ -167,7 +167,9 @@ class ViewModel extends BaseViewModel {
             this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format, this.newValue);
+            const result = InputProcessor.input(
+                splitValue, inputType, this.options.replacer, this._format, this._format, this.newValue
+            );
             return result;
          }
 

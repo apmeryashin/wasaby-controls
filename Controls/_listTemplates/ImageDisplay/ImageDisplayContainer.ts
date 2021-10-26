@@ -73,7 +73,9 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         this._onCollectionItemChange = this._onCollectionItemChange.bind(this);
     }
 
-    protected _beforeMount(options?: IImageDisplayContainerOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+    protected _beforeMount(options?: IImageDisplayContainerOptions,
+                           contexts?: object,
+                           receivedState?: void): Promise<void> | void {
         this._imagePosition = options.imagePosition;
         this._imageViewMode = options.imageViewMode;
         this._columns = options.columns;

@@ -72,10 +72,14 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             // Будем показывать скроллбар до тех пор, пока пользователь не воспользовался колесиком мышки, даже если
             // прикладник задал опцию scrollbarVisible=false.
             // Таким образом пользователи без колесика мышки смогут скроллить контент.
+            const scrollbarVisible =
+                options.scrollbarVisible || (!ScrollbarsModel.wheelEventHappened && !this._useNativeScrollbar);
             this._models[scrollbar].updateOptions({
-                ...options, scrollbarVisible: options.scrollbarVisible || (!ScrollbarsModel.wheelEventHappened && !this._useNativeScrollbar)
+                ...options,
+                scrollbarVisible
             });
-            // nextVersion нужен только для IE, т.к в нем долго грузится WheelEventSetting (см. afterMount Container.ts).
+            // nextVersion нужен только для IE, т.к в нем долго грузится WheelEventSetting
+            // (см. afterMount Container.ts).
             // В хроме же из-за этого возникают лишние синхронизации.
             if (detection.isIE) {
                 this._nextVersion();

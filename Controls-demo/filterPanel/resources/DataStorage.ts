@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 export const departments = [
     {id: 1, department: 'Разработка', owner: 'Новиков Д.В.', title: 'Разработка', amount: 1},
     {id: 2, department: 'Продвижение СБИС', owner: 'Кошелев А.Е.', title: 'Продвижение СБИС', amount: 10},

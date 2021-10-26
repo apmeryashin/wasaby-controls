@@ -1,4 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
+// tslint:disable-next-line:max-line-length
 import * as Template from 'wml!Controls-demo/treeGridNew/RowSeparator/WithMultiHeaderAndFooter/WithMultiHeaderAndFooter';
 import {HierarchicalMemory} from 'Types/source';
 import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';

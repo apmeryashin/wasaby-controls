@@ -272,7 +272,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _isOpened(config?: ILoadingIndicatorOptions): boolean {
-        // config is not required parameter. If config object is empty we should always create new Indicator due to absence of ID field in config
+        // config is not required parameter. If config object is empty we should
+        // always create new Indicator due to absence of ID field in config
         if (!config) {
             return false;
         }

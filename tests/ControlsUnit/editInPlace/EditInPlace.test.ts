@@ -918,7 +918,10 @@ describe('Controls/_editInPlace/EditInPlace', () => {
 
             return editInPlace.add({item: newItem}).then(() => {
                 return editInPlace.cancel().then(() => {
-                    assert.isTrue(onBeforeBeginEditCalled && onAfterBeginEditCalled && onBeforeEndEditCalled && onAfterEndEditCalled);
+                    assert.isTrue(
+                        onBeforeBeginEditCalled && onAfterBeginEditCalled
+                        && onBeforeEndEditCalled && onAfterEndEditCalled
+                    );
                 });
             });
         });

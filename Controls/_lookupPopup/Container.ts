@@ -343,7 +343,8 @@ const _private = {
 * Must used inside Controls/lookupPopup:Controller.
 * In one Controls/lookupPopup:Controller can be used some Containers.
 *
-* More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
+* More information you can read
+* <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
 *
 * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
 *

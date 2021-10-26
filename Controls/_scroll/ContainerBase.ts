@@ -1074,7 +1074,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    private _scrollTo(scrollPosition: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL, smooth: boolean): void {
+    private _scrollTo(scrollPosition: number,
+                      direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL,
+                      smooth: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
         let scrollOrientation;
 

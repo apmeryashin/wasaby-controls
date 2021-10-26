@@ -61,7 +61,8 @@
 * @remark
 * To determine the template, you should call the base template 'Controls/dropdown:HeaderTemplate'.
 * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-* By default, the base template 'Controls/dropdown:HeaderTemplate' will display caption and icon, if they are set. You can change the following options:
+* By default, the base template 'Controls/dropdown:HeaderTemplate'
+* will display caption and icon, if they are set. You can change the following options:
 * <ul>
 *     <li>caption - header text,</li>
 *     <li>icon - header icon.</li>

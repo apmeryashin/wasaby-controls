@@ -71,7 +71,8 @@ const CompoundArea = CompoundContainer.extend([
 
       this._className = `controls-CompoundArea controls_popupTemplate_theme-${_options.theme}`;
       if (_options.type !== 'base') {
-         this._className += (_options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
+          // Старые шаблоны завязаны селекторами на этот класс.
+         this._className += (_options.type === 'stack') ? ' ws-float-area' : ' ws-window';
       }
 
       // Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
@@ -138,7 +139,9 @@ const CompoundArea = CompoundContainer.extend([
       if (this._options.canMaximize) {
          const maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
          const templateComponent = this._getTemplateComponent();
-         this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.maximizeButtonVisibility || false);
+         this.getContainer().toggleClass(
+             'ws-float-area-has-maximized-button', popupOptions.maximizeButtonVisibility || false
+         );
          const maximizedButtonClass = ' ws-float-area-has-maximized-button';
          if (popupOptions.maximizeButtonVisibility) {
             this._className += maximizedButtonClass;
@@ -184,7 +187,8 @@ const CompoundArea = CompoundContainer.extend([
          self.setEnabled(self._enabled);
       });
       self.once('onAfterLoad', () => {
-         EnvEvent.Bus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
+         // StickyHeaderMediator listens for onWindowCreated
+         EnvEvent.Bus.globalChannel().notify('onWindowCreated', self);
       });
 
       rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
@@ -244,7 +248,8 @@ const CompoundArea = CompoundContainer.extend([
    },
 
    _getDialogClasses() {
-      // При fixed таргета нет => совместимость определяет это окно как type === 'dialog' и использует его позиционирование
+      // При fixed таргета нет => совместимость определяет это окно как type === 'dialog'
+      // и использует его позиционирование
       // Но на самом диалоге такой опции нет, т.к. это опция FloatArea => в этом случае класс диалога не вешаем
       if (this._options.type === 'dialog' && !this._options.fixed) {
          return ' ws-window-content';
@@ -254,7 +259,8 @@ const CompoundArea = CompoundContainer.extend([
 
    _fixIos() {
       // крутейшая бага, айпаду не хватает перерисовки.
-      // уже с такой разбирались, подробности https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
+      // уже с такой разбирались, подробности
+      // https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
       let container = this._childControl && this._childControl.getContainer();
 
       // не вызывается браузерная перерисовка. вызываю вручную
@@ -263,7 +269,8 @@ const CompoundArea = CompoundContainer.extend([
          setTimeout(() => {
             container.style.webkitTransform = 'scale(1)';
 
-            // Если внутри контейнера верстка написана абсолютами с большой вложенностью, ios при scale(1) просто ее не показывает.
+            // Если внутри контейнера верстка написана абсолютами с большой вложенностью,
+            // ios при scale(1) просто ее не показывает.
             // Пример ошибки https://online.sbis.ru/opendoc.html?guid=bb492dee-cc34-4e60-9174-5224ef47f047
             setTimeout(() => {
                container.style.webkitTransform = '';
@@ -376,7 +383,8 @@ const CompoundArea = CompoundContainer.extend([
       self._logicParent = self._options._logicParent;
 
       // Переведем фокус сразу на окно, после построения шаблона уже сфокусируем внутренности
-      // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
+      // Если этого не сделать, то во время построения окна, при уничтожении контролов в
+      // других областях запустится восстановление фокуса,
       // которое восстановит его в последнюю активную область.
       if (self._options.catchFocus) {
          doAutofocus(self.getContainer());
@@ -429,7 +437,8 @@ const CompoundArea = CompoundContainer.extend([
       // В рознице для шапки используется отдельная тема.
       // В ситуации, когда крестик позиционируется вне шапки, задаем ему класс с переменными темы шапки
       // https://online.sbis.ru/opendoc.html?guid=b1dd3531-a18a-4ff5-85c7-edd6563d82e7
-      const closeButton = $('.controls-DialogTemplate__close-button_without_head .controls-Button__close', this.getContainer());
+      const closeButton =
+          $('.controls-DialogTemplate__close-button_without_head .controls-Button__close', this.getContainer());
       if (closeButton.length) {
          closeButton.removeClass('controls_popupTemplate_theme-' + this._options.theme);
          closeButton.addClass('controls_popupTemplate_theme-' + Controller.getPopupHeaderTheme());
@@ -605,7 +614,8 @@ const CompoundArea = CompoundContainer.extend([
       const hasHeader = !!this._options.caption;
       const headerPaddingClass = ' controls-CompoundArea-headerPadding';
       let customHeaderContainer = this._getCustomHeaderContainer();
-      if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
+      if (hasHeader ||
+          (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
          if (customHeaderContainer.length) {
             if ($('.ws-float-area-title', customHeaderContainer).length === 0) {
                customHeaderContainer.prepend('<div class="ws-float-area-title">' + this._options.caption + '</div>');
@@ -942,7 +952,10 @@ const CompoundArea = CompoundContainer.extend([
 
    /* start RecordFloatArea */
    getRecord() {
-      return this._record || this._options.record || this._options.templateOptions && this._options.templateOptions.record;
+      return this._record ||
+          this._options.record ||
+          this._options.templateOptions &&
+          this._options.templateOptions.record;
    },
    isNewRecord() {
       return this._options.newRecord;
@@ -974,7 +987,8 @@ const CompoundArea = CompoundContainer.extend([
               self._options.newRecord = record.getKey() === null;
           }
           self._record = record;
-          self._notify('onChangeRecord', record, oldRecord); // Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+          // Отдаем запись, хотя здесь ее можно получить простым getRecord + старая запись
+          self._notify('onChangeRecord', record, oldRecord);
       };
       const result = this._notify('onBeforeChangeRecord', record, oldRecord);
       cDeferred.callbackWrapper(result, setRecordFunc.bind(this));
@@ -1372,7 +1386,8 @@ const CompoundArea = CompoundContainer.extend([
          Logger.error('Lib/Mixins/PendingOperationParentMixin: ' + message, this);
       }
 
-      this._childPendingOperations = []; // cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
+      // cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола
+      this._childPendingOperations = [];
       if (this._allChildrenPendingOperation) {
          this._allChildrenPendingOperation = null;
          this._unregisterPendingOperation(operation);
@@ -1683,7 +1698,10 @@ const CompoundArea = CompoundContainer.extend([
       if (linkedView.getSelectedKeys().length) {
          return;
       }
-      if (cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS/Mixins/TreeMixin') && item.get(linkedView.getNodeProperty())) {
+      if (
+          cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS/Mixins/TreeMixin') &&
+          item.get(linkedView.getNodeProperty())
+      ) {
          return;
       }
       this.close([result.item]);

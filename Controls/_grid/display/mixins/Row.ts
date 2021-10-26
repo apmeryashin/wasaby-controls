@@ -295,9 +295,13 @@ export default abstract class Row<T extends Model = Model> {
         if (addEmptyCellsForStickyLadder) {
             if (stickyLadderCellsCount) {
                 const params = {owner: this, isLadderCell: true, column: {}};
-                this._$columnItems.splice(1, 0, new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}}));
+                this._$columnItems.splice(
+                    1, 0, new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}})
+                );
                 if (stickyLadderCellsCount === 2) {
-                    this._$columnItems = ([new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}})]).concat(this._$columnItems);
+                    this._$columnItems = ([
+                        new stickyLadderCellCtor({...params, column: {...this.getGridColumnsConfig()[0]}})
+                    ]).concat(this._$columnItems);
                 }
             }
             return;
@@ -461,7 +465,8 @@ export default abstract class Row<T extends Model = Model> {
 
         for (
             let columnIndex = 0, resultTotalLength = 0;
-            (columnIndex < columns.length) && (skipColumns ? true : (resultTotalLength < this.getGridColumnsConfig().length));
+            (columnIndex < columns.length) &&
+            (skipColumns ? true : (resultTotalLength < this.getGridColumnsConfig().length));
             columnIndex++
         ) {
             const column = columns[columnIndex];
@@ -473,7 +478,10 @@ export default abstract class Row<T extends Model = Model> {
                 colspan++;
             }
 
-            if (((prepareStickyLadderCellsStrategy === 'colspan'  || colspan > 1) && columnIndex === 0)  && this.isFullGridSupport()) {
+            if (
+                ((prepareStickyLadderCellsStrategy === 'colspan'  || colspan > 1) && columnIndex === 0) &&
+                this.isFullGridSupport()
+            ) {
                 const stickyLadderProperties = this.getStickyLadderProperties(this.getGridColumnsConfig()[0]);
                 stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
                 colspan += stickyLadderCellsCount;

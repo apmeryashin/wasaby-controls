@@ -49,7 +49,12 @@ class DateRangeEditor extends Control<IControlOptions> {
         event.stopPropagation();
         const caption = this.getCaption(startValue, endValue);
         this._notify('textValueChanged', [caption]);
-        if (!startValue && !endValue && this._options.resetValue || isEqual([startValue, endValue], this._options.resetValue)) {
+        if (
+            !startValue &&
+            !endValue &&
+            this._options.resetValue ||
+            isEqual([startValue, endValue], this._options.resetValue)
+        ) {
             this._notify('rangeChanged', [this._options.resetValue[0], this._options.resetValue[1]]);
         } else {
             this._notify('rangeChanged', [startValue, endValue]);
