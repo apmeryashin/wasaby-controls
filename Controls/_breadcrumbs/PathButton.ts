@@ -97,7 +97,8 @@ export default class PathButton extends Control<IPathButton> {
                     horizontal: 'right'
                 },
                 offset: {
-                    horizontal: -8
+                    horizontal: -8,
+                    vertical: -9
                 }
             },
 
