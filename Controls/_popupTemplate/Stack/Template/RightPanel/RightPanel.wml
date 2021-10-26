@@ -30,7 +30,7 @@
 
       <ws:if data="{{_rightBottomTemplate}}">
          <Controls.Container.Async templateName="{{_rightBottomTemplate}}" templateOptions="{{_options.rightPanelOptions}}" attr:class="controls-padding_bottom-xs">
-               <ws:partial template="{{content.resolvedTemplate}}" stack="{{true}}"/>
+               <ws:partial template="{{content.resolvedTemplate}}" getTemplateName="{{_getTemplateName}}" stack="{{true}}"/>
          </Controls.Container.Async>
       </ws:if>
    </div>
