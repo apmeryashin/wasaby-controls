@@ -4,7 +4,6 @@ import {IPreviewer, IPreviewerOptions} from 'Controls/_popup/interface/IPreviewe
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import PreviewerOpener from './Opener/Previewer';
-import {goUpByControlTree} from 'UI/Focus';
 import 'css!Controls/popup';
 import template = require('wml!Controls/_popup/Previewer/Previewer');
 import {CalmTimer} from 'Controls/_popup/utils/FastOpen';
@@ -216,21 +215,11 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
                 break;
             case 'mouseleave':
                 const isHoverType = this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick';
-                if (isHoverType && !this._isLinkedPreviewer(event)) {
+                if (isHoverType) {
                     this._debouncedAction('_close', [event]);
                 }
                 break;
         }
-    }
-
-    private _isLinkedPreviewer(event: SyntheticEvent<MouseEvent>): boolean {
-        const parentControls = goUpByControlTree(event.nativeEvent.relatedTarget);
-        for (let i = 0; i < parentControls.length; i++) {
-            if (parentControls[i] === this) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private _closeHandler(): void {
