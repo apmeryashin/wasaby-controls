@@ -21,14 +21,14 @@ export default class MoveViewCommand {
         this._options = options;
     }
 
-    _moveToSiblingPosition(id: TKey): void {
-        const targetItem = this._getTargetItemById(id);
+    _moveToSiblingPosition(id: TKey, target: Model): void {
+        const targetItem = target || this._getTargetItemById(id);
         return targetItem ? this._move(targetItem, [id]) : null;
     }
 
     execute(): void {
         if (this._options.direction !== LOCAL_MOVE_POSITION.On) {
-            this._moveToSiblingPosition(this._options.items[0]);
+            this._moveToSiblingPosition(this._options.items[0], this._options.target);
         } else {
             return this._move();
         }
@@ -48,30 +48,32 @@ export default class MoveViewCommand {
         const parentProperty = this._options.parentProperty;
         let targetIndex = collection.getIndex(target);
 
-        items.forEach((item): void => {
-            if (item) {
-                if (direction === LOCAL_MOVE_POSITION.Before) {
-                    targetIndex = collection.getIndex(target);
-                }
+        if (targetIndex !== -1) {
+            items.forEach((item): void => {
+                if (item) {
+                    if (direction === LOCAL_MOVE_POSITION.Before) {
+                        targetIndex = collection.getIndex(target);
+                    }
 
-                movedIndex = collection.getIndex(item);
-                if (movedIndex === -1) {
-                    collection.add(item);
-                    movedIndex = collection.getCount() - 1;
-                }
+                    movedIndex = collection.getIndex(item);
+                    if (movedIndex === -1) {
+                        collection.add(item);
+                        movedIndex = collection.getCount() - 1;
+                    }
 
-                if (parentProperty && target.get(parentProperty) !== item.get(parentProperty)) {
-                    item.set(parentProperty, target.get(parentProperty));
-                }
+                    if (parentProperty && target.get(parentProperty) !== item.get(parentProperty)) {
+                        item.set(parentProperty, target.get(parentProperty));
+                    }
 
-                if (direction === LOCAL_MOVE_POSITION.After && targetIndex < movedIndex) {
-                    targetIndex = (targetIndex + 1) < collection.getCount() ? targetIndex + 1 : collection.getCount();
-                } else if (direction === LOCAL_MOVE_POSITION.Before && targetIndex > movedIndex) {
-                    targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
+                    if (direction === LOCAL_MOVE_POSITION.After && targetIndex < movedIndex) {
+                        targetIndex = (targetIndex + 1) < collection.getCount() ? targetIndex + 1 : collection.getCount();
+                    } else if (direction === LOCAL_MOVE_POSITION.Before && targetIndex > movedIndex) {
+                        targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
+                    }
+                    collection.move(movedIndex, targetIndex);
                 }
-                collection.move(movedIndex, targetIndex);
-            }
-        });
+            });
+        }
     }
 
     private _getTargetItemById(id: TKey): Model | void {

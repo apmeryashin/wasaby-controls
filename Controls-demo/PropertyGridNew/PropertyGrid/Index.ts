@@ -45,17 +45,17 @@ export default class Demo extends Control<IControlOptions> {
                 {
                     name: 'tileView',
                     caption: 'Список плиткой',
-                    group: 'boolean'
+                    group: 'text'
                 },
                 {
                     caption: 'URL',
                     name: 'siteUrl',
-                    group: 'string'
+                    group: 'text'
                 },
                 {
                     caption: 'Тип фона',
                     name: 'backgroundType',
-                    group: 'enum',
+                    group: 'text',
                     editorClass: 'controls-demo-pg-enum-editor'
                 },
                 {
@@ -121,6 +121,10 @@ export default class Demo extends Control<IControlOptions> {
             return false;
         }
         return true;
+    }
+
+    protected _dragEnd(event, entity, target, position): void {
+        this._children.propertyGrid.moveItems(entity.getItems(), target, position);
     }
 
     static _styles: string[] = ['Controls-demo/PropertyGridNew/PropertyGrid'];

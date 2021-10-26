@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import * as cInstance from 'Core/core-instance';
 import {GroupItem, CollectionItem} from 'Controls/display';
 import {IObservable, RecordSet} from 'Types/collection';
 import {Model, Record as entityRecord} from 'Types/entity';
@@ -10,13 +11,13 @@ import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions, TEditingObject} from 'Controls/_propertyGrid/IPropertyGrid';
 import {Move as MoveViewCommand, AtomicRemove as RemoveViewCommand} from 'Controls/viewCommands';
-import {Move as MoveCommand} from 'Controls/listCommands';
+import {IMoveActionOptions, Move as MoveAction, Move as MoveCommand} from 'Controls/listCommands';
 import {default as IPropertyGridItem} from './IProperty';
 import {
     PROPERTY_GROUP_FIELD,
     PROPERTY_TOGGLE_BUTTON_ICON_FIELD
 } from './Constants';
-import {groupConstants as constView} from '../list';
+import {groupConstants as constView, IList} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
 import PropertyGridCollectionItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
@@ -33,7 +34,17 @@ import {
 } from 'Controls/multiselection';
 import {isEqual} from 'Types/object';
 import {ISelectionObject, TKey} from 'Controls/interface';
-import {LOCAL_MOVE_POSITION, Memory} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION, Memory} from 'Types/source';
+import {detection} from 'Env/Env';
+import {TouchDetect} from 'Env/Touch';
+import {IDragObject, ItemsEntity} from 'Controls/dragnDrop';
+import {DndController, FlatStrategy, IDragStrategyParams, TreeStrategy} from 'Controls/listDragNDrop';
+import {DimensionsMeasurer} from 'Controls/sizeUtils';
+import {FlatSiblingStrategy} from "Controls/_baseList/Strategies/FlatSiblingStrategy";
+
+const DRAGGING_OFFSET = 10;
+const DRAG_SHIFT_LIMIT = 4;
+const IE_MOUSEMOVE_FIX_DELAY = 50;
 
 export type TToggledEditors = Record<string, boolean>;
 type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem<Model>>;
@@ -88,6 +99,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _itemActionSticky: StickyOpener;
     private _collapsedGroupsChanged: boolean = false;
     private _editingObject: TEditingObject = null;
+    private _dndController: DndController;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         const {selectedKeys} = options;
@@ -148,6 +160,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._notify('controlResize', [], {bubbling: true});
             this._collapsedGroupsChanged = false;
         }
+    }
+
+    protected _afterMount(): void {
+        this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
+        this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+    }
+
+    protected _beforeUnmount(): void {
+        this._notify('unregister', ['documentDragStart', this], {bubbling: true});
+        this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
     }
 
     private _getCollection(options: IPropertyGridOptions): TPropertyGridCollection {
@@ -272,8 +294,66 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
-    _hoveredItemChanged(e: SyntheticEvent<Event>, item: PropertyGridCollectionItem<Model>): void {
-        this._listModel.setHoveredItem(item);
+    protected _itemMouseDown(
+        event: SyntheticEvent<Event>,
+        displayItem: PropertyGridCollectionItem<Model>,
+        clickEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        this._mouseDownItemKey = displayItem.getContents().getKey();
+        if (this._unprocessedDragEnteredItem) {
+            this._unprocessedDragEnteredItem = null;
+        }
+        if (!this._options.readOnly && this._options.itemsDragNDrop) {
+            this._startDragNDrop(clickEvent, displayItem);
+        }
+    }
+
+    _itemMouseUp(e, displayItem, domEvent): void {
+        let key = displayItem.getContents().getKey();
+        if (this._mouseDownItemKey === key) {
+            if (domEvent.nativeEvent.button === 1 ||
+                domEvent.nativeEvent.button === 0 && (
+                    detection.isMac && domEvent.nativeEvent.metaKey || !detection.isMac && domEvent.nativeEvent.ctrlKey
+                )) {
+                const url = displayItem.item.get(this._options.urlProperty);
+                if (url) {
+                    window.open(url);
+                    this._onLastMouseUpWasOpenUrl = domEvent.nativeEvent.button === 0;
+                }
+            }
+
+            // TODO избавиться по задаче https://online.sbis.ru/opendoc.html?guid=7f63bbd1-3cb9-411b-81d7-b578d27bf289
+            // Ключ перетаскиваемой записи мы запоминаем на mouseDown, но днд начнется только после смещения на 4px и не факт, что он вообще начнется
+            // Если сработал mouseUp, то днд точно не сработает и draggedKey нам уже не нужен
+            this._draggedKey = null;
+            // контроллер создается на mouseDown, но драг может и не начаться, поэтому контроллер уже не нужен
+            if (this._dndController && !this._dndController.isDragging()) {
+                this._dndController = null;
+            }
+        }
+
+        this._mouseDownItemKey = undefined;
+        this._onLastMouseUpWasDrag = this._dndController && this._dndController.isDragging();
+        this._notify('itemMouseUp', [displayItem.item, domEvent.nativeEvent]);
+    }
+
+    _itemMouseEnter(event: SyntheticEvent<Event>,
+                    displayItem: PropertyGridCollectionItem<Model>,
+                    enterEvent: SyntheticEvent<MouseEvent>): void {
+        if (this._dndController) {
+            this._listModel.setHoveredItem(null);
+            this._unprocessedDragEnteredItem = displayItem;
+            this._processItemMouseEnterWithDragNDrop(displayItem);
+        } else if (!this._dndController || !this._dndController.isDragging()) {
+            this._listModel.setHoveredItem(displayItem);
+        }
+    }
+
+    _itemMouseLeave(event, displayItem, nativeEvent) {
+        this._listModel.setHoveredItem(null);
+        if (this._dndController) {
+            this._unprocessedDragEnteredItem = null;
+        }
     }
 
     protected _mouseEnterHandler(): void {
@@ -495,6 +575,372 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         }
     }
 
+    _documentDragStart(dragObject: IDragObject): void {
+        if (this._options.readOnly || !this._options.itemsDragNDrop || !(dragObject && dragObject.entity)) {
+            return;
+        }
+
+        if (this._insideDragging) {
+            this._dragStart(dragObject, this._draggedKey);
+        }
+        this._documentDragging = true;
+    }
+
+    _dragStart(dragObject: IDragObject, draggedKey: CrudEntityKey): void {
+        this._dndController.startDrag(dragObject.entity);
+
+        // Cобытие mouseEnter на записи может сработать до dragStart.
+        // И тогда перемещение при наведении не будет обработано.
+        // В таком случае обрабатываем наведение на запись сейчас.
+        // TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+        if (this._unprocessedDragEnteredItem) {
+            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
+        }
+
+        // Показываем плашку, если утащили мышь за пределы списка, до того как выполнился запрос за перетаскиваемыми записями
+        if (this._options.draggingTemplate && this._listModel.isDragOutsideList()) {
+            this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+        }
+    }
+
+    _dragLeave(): void {
+        this._insideDragging = false;
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndController
+        if (this._dndController && this._dndController.isDragging()) {
+            const draggableItem = this._dndController.getDraggableItem();
+            if (draggableItem && this._listModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
+                const newPosition = this._dndController.calculateDragPosition({targetItem: null});
+                this._dndController.setDragPosition(newPosition);
+            } else {
+                // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
+                this._dndController.endDrag();
+            }
+        }
+        this._listModel.setDragOutsideList(true);
+    }
+
+    _dragEnter(dragObject: IDragObject): void {
+        this._insideDragging = true;
+        if (this._documentDragging) {
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        }
+        this._listModel.setDragOutsideList(false);
+
+        // Не нужно начинать dnd, если и так идет процесс dnd
+        if (this._dndController?.isDragging()) {
+            return;
+        }
+
+        if (this._documentDragging) {
+            if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
+                const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+
+                if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                    // Создаем перетаскиваемый элемент, т.к. в другом списке его нет.
+                    const draggableItem = this._listModel.createItem({contents: dragEnterResult});
+                    // если мы утащим в другой список, то в нем нужно создать контроллер
+                    this._dndController = this._createDndController(this._listModel, draggableItem, this._options);
+                    this._dndController.startDrag(dragObject.entity);
+
+                    let startPosition;
+                    if (this._listModel.getCount()) {
+                        const lastItem = this._listModel.getLast();
+                        startPosition = {
+                            index: this._listModel.getIndex(lastItem),
+                            dispItem: lastItem,
+                            position: 'after'
+                        };
+                    } else {
+                        startPosition = {
+                            index: 0,
+                            dispItem: draggableItem,
+                            position: 'before'
+                        };
+                    }
+
+                    // задаем изначальную позицию в другом списке
+                    this._dndController.setDragPosition(startPosition);
+                } else if (dragEnterResult === true) {
+                    this._dndController = this._createDndController(this._listModel, null, this._options);
+                    this._dndController.startDrag(dragObject.entity);
+                }
+            }
+        }
+    }
+
+    _documentDragEnd(dragObject: IDragObject): void {
+        // Флаг _documentDragging проставляется во всех списках, он говорит что где-то началось перетаскивание записи
+        // и при mouseEnter возможно придется начать днд. Поэтому сбрасываем флаг не зависимо от isDragging
+        this._documentDragging = false;
+
+        // событие documentDragEnd может долететь до списка, в котором нет модели
+        if (!this._listModel || !this._dndController || !this._dndController.isDragging()) {
+            return;
+        }
+
+        let dragEndResult: Promise<any> | undefined;
+        if (this._insideDragging && this._dndController) {
+            const targetPosition = this._dndController.getDragPosition();
+            if (targetPosition && targetPosition.dispItem) {
+                dragEndResult = this._notify('dragEnd', [
+                    dragObject.entity,
+                    targetPosition.dispItem.getContents(),
+                    targetPosition.position
+                ]);
+            }
+
+            // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
+            // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
+            // _private.removeShowActionsClass(this);
+        }
+
+        const endDrag = () => {
+            this._dndController.endDrag();
+            this._dndController = null;
+        };
+
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndController
+        // endDrag нужно вызывать только после события dragEnd,
+        // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
+        if (this._dndController) {
+            if (dragEndResult instanceof Promise) {
+                // this._displayGlobalIndicator();
+                dragEndResult.finally(() => {
+                    endDrag();
+                    // if (this._indicatorsController.shouldHideGlobalIndicator()) {
+                    //     this._indicatorsController.hideGlobalIndicator();
+                    // }
+                });
+            } else {
+                endDrag();
+            }
+        }
+
+        this._insideDragging = false;
+        this._draggedKey = null;
+        this._listModel.setDragOutsideList(false);
+    }
+
+    private _startDragNDrop(event: SyntheticEvent<MouseEvent>, draggableItem: PropertyGridCollectionItem<Model>): void {
+        if (DndController.canStartDragNDrop(undefined, event, TouchDetect.getInstance().isTouch())) {
+            const draggableKey = draggableItem.getContents().getKey();
+
+            this._dndController = this._createDndController(this._listModel, draggableItem, this._options);
+            let dragStartResult = this._notify('dragStart', [[draggableKey], draggableKey]);
+
+            if (dragStartResult === undefined) {
+                // Чтобы для работы dnd было достаточно опции itemsDragNDrop=true
+                dragStartResult = new ItemsEntity({items: [draggableKey]});
+            }
+
+            if (dragStartResult) {
+                if (this._options.dragControlId) {
+                    dragStartResult.dragControlId = this._options.dragControlId;
+                }
+
+                this._dragEntity = dragStartResult;
+                this._draggedKey = draggableKey;
+                this._startEvent = event.nativeEvent;
+
+                this._clearSelectedText(this._startEvent);
+                if (this._startEvent && this._startEvent.target) {
+                    this._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
+                }
+
+                this._registerMouseMove();
+                this._registerMouseUp();
+            }
+        }
+    }
+
+    private _clearSelectedText(event): void {
+        if (event.type === 'mousedown') {
+            // снимаем выделение с текста иначе не будут работать клики,
+            // а выделение не будет сниматься по клику из за preventDefault
+            const selection = window.getSelection();
+            if (selection.removeAllRanges) {
+                selection.removeAllRanges();
+            } else if (selection.empty) {
+                selection.empty();
+            }
+        }
+    }
+
+    private _dragNDropEnded(event: SyntheticEvent): void {
+        if (this._dndController && this._dndController.isDragging()) {
+            const dragObject = this._getDragObject(event.nativeEvent, this._startEvent);
+            this._notify('_documentDragEnd', [dragObject], {bubbling: true});
+        }
+        if (this._startEvent && this._startEvent.target) {
+            this._startEvent.target.classList.remove('controls-DragNDrop__dragTarget');
+        }
+        this._unregisterMouseMove();
+        this._unregisterMouseUp();
+        this._dragEntity = null;
+        this._startEvent = null;
+    }
+
+    private _getDragObject(mouseEvent?, startEvent?): IDragObject {
+        const result: IDragObject = {
+            entity: this._dragEntity
+        };
+        if (mouseEvent && startEvent) {
+            result.domEvent = mouseEvent;
+            result.position = this._getPageXY(mouseEvent);
+            result.offset = this._getDragOffset(mouseEvent, startEvent);
+            result.draggingTemplateOffset = DRAGGING_OFFSET;
+        }
+        return result;
+    }
+
+    private _registerMouseMove(): void {
+        this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
+        this._notify('register', ['touchmove', this, this._onTouchMove], {bubbling: true});
+    }
+
+    private _unregisterMouseMove(): void {
+        this._notify('unregister', ['mousemove', this], {bubbling: true});
+        this._notify('unregister', ['touchmove', this], {bubbling: true});
+    }
+
+    private _registerMouseUp(): void {
+        this._notify('register', ['mouseup', this, this._onMouseUp], {bubbling: true});
+        this._notify('register', ['touchend', this, this._onMouseUp], {bubbling: true});
+    }
+
+    private _unregisterMouseUp(): void {
+        this._notify('unregister', ['mouseup', this], {bubbling: true});
+        this._notify('unregister', ['touchend', this], {bubbling: true});
+    }
+
+    private _onMouseMove(event): void {
+        // В яндекс браузере каким то образом пришел nativeEvent === null, после чего
+        // упала ошибка в коде ниже и страница стала некликабельной. Повторить ошибку не получилось
+        // добавляем защиту на всякий случай.
+        if (event.nativeEvent) {
+            if (detection.isIE) {
+                this._onMouseMoveIEFix(event);
+            } else {
+                // Check if the button is pressed while moving.
+                if (!event.nativeEvent.buttons) {
+                    this._dragNDropEnded(event);
+                }
+            }
+
+            // Не надо вызывать onMove если не нажата кнопка мыши.
+            // Кнопка мыши может быть не нажата в 2 случаях:
+            // 1) Мышь увели за пределы браузера, там отпустили и вернули в браузер
+            // 2) Баг IE, который подробнее описан в методе _onMouseMoveIEFix
+            if (event.nativeEvent.buttons) {
+                this._onMove(event.nativeEvent);
+            }
+        }
+    }
+
+    private _onMove(nativeEvent): void {
+        if (this._startEvent) {
+            const dragObject = this._getDragObject(nativeEvent, this._startEvent);
+            if ((!this._dndController || !this._dndController.isDragging()) && this._isDragStarted(this._startEvent, nativeEvent)) {
+                this._insideDragging = true;
+                this._notify('_documentDragStart', [dragObject], {bubbling: true});
+            }
+            if (this._dndController && this._dndController.isDragging()) {
+                // Проставляем правильное значение флага. Если в начале днд резко утащить за пределы списка,
+                // то может не отработать mouseLeave и флаг не проставится
+                const moveOutsideList = !(this._container[0] || this._container).contains(nativeEvent.target);
+                if (moveOutsideList !== this._listModel.isDragOutsideList()) {
+                    this._listModel.setDragOutsideList(moveOutsideList);
+                }
+
+                this._notify('dragMove', [dragObject]);
+                if (this._options.draggingTemplate && this._listModel.isDragOutsideList()) {
+                    this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+                }
+            }
+        }
+    }
+
+    private _getPageXY(event): object {
+        return DimensionsMeasurer.getMouseCoordsByMouseEvent(event.nativeEvent ? event.nativeEvent : event);
+    }
+
+    private _isDragStarted(startEvent, moveEvent): boolean {
+        const offset = this._getDragOffset(moveEvent, startEvent);
+        return Math.abs(offset.x) > DRAG_SHIFT_LIMIT || Math.abs(offset.y) > DRAG_SHIFT_LIMIT;
+    }
+
+    private _getDragOffset(moveEvent, startEvent): object {
+        const moveEventXY = this._getPageXY(moveEvent),
+            startEventXY = this._getPageXY(startEvent);
+
+        return {
+            y: moveEventXY.y - startEventXY.y,
+            x: moveEventXY.x - startEventXY.x
+        };
+    }
+
+    private _onMouseUp(event): void {
+        if (this._startEvent) {
+            this._dragNDropEnded(event);
+        }
+    }
+
+    private _onMouseMoveIEFix(event): void {
+        // In IE strange bug, the cause of which could not be found. During redrawing of the table the MouseMove
+        // event at which buttons = 0 shoots. In 10 milliseconds we will check that the button is not pressed.
+        if (!event.nativeEvent.buttons && !this._endDragNDropTimer) {
+            this._endDragNDropTimer = setTimeout(() => {
+                this._dragNDropEnded(event);
+            }, IE_MOUSEMOVE_FIX_DELAY);
+        } else {
+            clearTimeout(this._endDragNDropTimer);
+            this._endDragNDropTimer = null;
+        }
+    }
+
+    private _createDndController(
+        model: TPropertyGridCollection,
+        draggableItem: CollectionItem,
+        options: any
+    ): DndController<IDragStrategyParams> {
+        let strategy;
+        if (options.parentProperty) {
+            strategy = TreeStrategy;
+        } else {
+            strategy = FlatStrategy;
+        }
+        return new DndController(model, draggableItem, strategy);
+    }
+
+    private _processItemMouseEnterWithDragNDrop(item): void {
+        let dragPosition;
+        const targetItem = item;
+        if (this._dndController.isDragging()) {
+            dragPosition = this._dndController.calculateDragPosition({targetItem});
+            if (dragPosition) {
+                const changeDragTarget = this._notify('changeDragTarget', [this._dndController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
+                if (changeDragTarget !== false) {
+                    this._dndController.setDragPosition(dragPosition);
+                }
+            }
+            this._unprocessedDragEnteredItem = null;
+        }
+    }
+
+    private _getMoveAction(): MoveAction {
+        return new MoveAction(this._prepareMoveActionOptions());
+    }
+
+    private _prepareMoveActionOptions(): IMoveActionOptions {
+        return {
+            parentProperty: this._options.parentProperty,
+            keyProperty: this._options.keyProperty,
+            siblingStrategy:  new FlatSiblingStrategy({
+                collection: this._listModel
+            })
+        };
+    }
+
     validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
@@ -527,7 +973,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
-    _getMoveViewCommand(keys: TKey[], direction: LOCAL_MOVE_POSITION, target?: Model): MoveViewCommand {
+    _getMoveViewCommand(keys: TKey[],
+                        direction: LOCAL_MOVE_POSITION,
+                        target?: Model): MoveViewCommand {
         return new MoveViewCommand({
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
@@ -555,6 +1003,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             }).then((result) => result && this._getRemoveViewCommand(resultSelection).execute({}));
         }
         return this._getRemoveViewCommand(resultSelection).execute({});
+    }
+
+    moveItems(keys: TKey[], target: Model, position: LOCAL_MOVE_POSITION): void {
+        return this._getMoveViewCommand(keys, position, target).execute();
     }
 
     moveItemUp(key: TKey): void {
