@@ -45,8 +45,10 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
     ): string {
         let wrapperClasses = '';
 
-        wrapperClasses += this._getWrapperBaseClasses(templateHighlightOnHover);
-        wrapperClasses += this._getWrapperSeparatorClasses();
+        wrapperClasses += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
+        wrapperClasses += ` controls-Grid__row-cell_${this.getStyle()}`;
+        wrapperClasses += ' controls-Grid__no-rowSeparator';
+        wrapperClasses += ' controls-Grid__row-cell_withRowSeparator_size-null';
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses()}`;
@@ -85,16 +87,13 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
                                  templateFontSize?: TFontSize,
                                  templateFontWeight?: TFontWeight,
                                  templateTextTransform?: TTextTransform): string {
-        let classes = '';
         const config = this.getColumnConfig() as IGroupNodeColumn;
         const fontColorStyle = config.groupNodeConfig?.fontSize || config.fontColorStyle || templateFontColorStyle;
         const fontSize = config.groupNodeConfig?.fontSize || config.fontSize || templateFontSize;
         const fontWeight = config.groupNodeConfig?.fontWeight || config.fontWeight || templateFontWeight;
         const textTransform = config.groupNodeConfig?.textTransform || templateTextTransform;
 
-        classes += super.getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform);
-        classes += this._getBaseLineClasses(templateFontSize);
-        return classes;
+        return super.getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform);
     }
 
     // region Аспект "Ячейка группы"
@@ -111,20 +110,6 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
         if (expanderVisible !== false) {
             classes += ' js-controls-Tree__row-expander';
         }
-        return classes;
-    }
-
-    protected _getWrapperSeparatorClasses(): string {
-        let classes = '';
-        classes += ' controls-Grid__no-rowSeparator';
-        classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
-        return classes;
-    }
-
-    protected _getWrapperBaseClasses(templateHighlightOnHover: boolean): string {
-        let classes = '';
-        classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
-        classes += ` controls-Grid__row-cell_${this.getStyle()}`;
         return classes;
     }
 

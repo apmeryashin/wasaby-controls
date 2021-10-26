@@ -8,7 +8,8 @@ TODO Нужно удалить этот шаблон, когда починим 
         <div class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
     </ws:if>
     <ws:if data="{{ textVisible !== false && (gridColumn || itemData).isContentCell() }}">
-        <div class="{{ (gridColumn || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}">
+        <div class="{{ (gridColumn || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}
+                    {{ (gridColumn || itemData).getBaseLineClasses(fontSize) }}">
             <div class="{{ (gridColumn || itemData).getContentTextClasses(separatorVisibility, textAlign) }}
                         {{ (gridColumn || itemData).getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle) }}"
                  attr:data-qa="{{ item.listElementName }}-expander">

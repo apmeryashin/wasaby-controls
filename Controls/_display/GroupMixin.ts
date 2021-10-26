@@ -44,11 +44,14 @@ export default abstract class GroupMixin {
     }
 
     /**
-     * CSS классы обёртки текста заголовка группы.
-     * @param templateFontColorStyle
-     * @param templateFontSize
-     * @param templateFontWeight
-     * @param templateTextTransform
+     * Добавляет CSS классы обёртки текста в заголовке группы
+     * Настройки из groupNodeConfig по умолчанию имеют больший приоритет, т.к. это настройки заголовка группы
+     * Настройки из конфига колонки в этом случае на втором месте
+     * Настройки из шаблона в этом случае имеют самый низкий приолритет, т.к. это настройки Controls/treeGrid:ItemTemplate
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight Насыщенность шрифта
+     * @param templateTextTransform Преобразование шрифта
      */
     getContentTextWrapperClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,
@@ -107,7 +110,7 @@ export default abstract class GroupMixin {
      * @param templateFontSize
      * @private
      */
-    protected _getBaseLineClasses(templateFontSize?: TFontSize): string {
+    getBaseLineClasses(templateFontSize?: TFontSize): string {
         let classes = ' controls-ListView__groupContent_baseline ';
         if (templateFontSize &&
             templateFontSize !== 's' && templateFontSize !== 'xs' && templateFontSize !== 'inherit') {

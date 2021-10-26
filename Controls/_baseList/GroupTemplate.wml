@@ -7,7 +7,8 @@
             <div attr:class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
          </ws:if>
          <ws:if data="{{ textVisible !== false }}">
-            <div class="{{ (item || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}">
+            <div class="{{ (item || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}
+                        {{ (item || itemData).getBaseLineClasses(fontSize) }}">
                <div attr:class="{{ (item || itemData).getContentTextClasses(separatorVisibility, textAlign) }}
                                 {{ (item || itemData).getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle) }}"
                     attr:data-qa="{{ item.listElementName }}-expander">
