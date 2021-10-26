@@ -109,7 +109,7 @@ export function getRangeByItemsSizes(params: IGetRangeByItemsSizesParams): IItem
 
     // Пытаемся посчитать endIndex взяв за начало переданный startIndex
     for (let i = start; i < params.totalCount; i++) {
-        const itemSize = itemsSizes[i].height;
+        const itemSize = itemsSizes[i].size;
         if (sumHeight + itemSize <= params.viewportSize) {
             sumHeight += itemSize;
         } else {
@@ -125,7 +125,7 @@ export function getRangeByItemsSizes(params: IGetRangeByItemsSizesParams): IItem
         sumHeight = 0;
 
         for (let i = end; i > 0; i--) {
-            const itemSize = itemsSizes[i].height;
+            const itemSize = itemsSizes[i].size;
 
             if (sumHeight + itemSize <= params.viewportSize) {
                 sumHeight += itemSize;
@@ -150,8 +150,8 @@ export function getRangeByScrollPosition(params: IGetByPositionParams): IItemsRa
     let end: number;
     let tempPlaceholderSize = 0;
 
-    while (tempPlaceholderSize + itemsSizes[start].height <= scrollPosition - triggerOffset) {
-        tempPlaceholderSize += itemsSizes[start].height;
+    while (tempPlaceholderSize + itemsSizes[start].size <= scrollPosition - triggerOffset) {
+        tempPlaceholderSize += itemsSizes[start].size;
         start++;
     }
     if (pageSize) {
@@ -213,7 +213,7 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
         const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (itemsSizes[i].offsetTop < (fixedScrollPosition + viewportSize * indexLine)) {
+            if (itemsSizes[i].offset < (fixedScrollPosition + viewportSize * indexLine)) {
                 activeElementIndex = i;
             } else {
                 break;

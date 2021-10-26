@@ -366,11 +366,11 @@ export class ListVirtualScrollController {
         const itemsSizes: IItemsSizes = this._collection.getItems()
             .map((it) => {
                 const itemSize = {
-                    height: it.getContents().get(this._itemSizeProperty),
-                    offsetTop: 0
+                    size: it.getContents().get(this._itemSizeProperty),
+                    offset: 0
                 }
 
-                if (!itemSize.height) {
+                if (!itemSize.size) {
                     throw new Error(`Controls/baseList:BaseControl | Задана опция itemHeightProperty, но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
                 }
 

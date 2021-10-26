@@ -10,8 +10,8 @@ export interface IItemsSizesControllerOptions {
 }
 
 export interface IItemSize {
-    height: number;
-    offsetTop: number;
+    size: number;
+    offset: number;
 }
 
 export type IItemsSizes = IItemSize[];
@@ -105,8 +105,8 @@ export class ItemsSizesController {
 
                 itemsElements.forEach((element: HTMLElement) => {
                     this._itemsSizes[position] = {
-                        height: getDimensions(element).height,
-                        offsetTop: getOffsetTop(element)
+                        size: getDimensions(element).height,
+                        offset: getOffsetTop(element)
                     };
                     position++;
                 });
@@ -120,8 +120,8 @@ export class ItemsSizesController {
 
     private static _getEmptyItemSize(): IItemSize {
         return {
-            offsetTop: 0,
-            height: 0
+            offset: 0,
+            size: 0
         };
     }
 }

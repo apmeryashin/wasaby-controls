@@ -130,22 +130,19 @@ export class Calculator {
     }
 
     getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
-        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
-        // const compensation = getOffsetTop(itemsContainer);
-
         let scrollTop = 0;
 
         const item = this._itemsSizes[edgeItem.index];
         if (item) {
             if (edgeItem.direction === 'backward') {
                 if (edgeItem.border === 'forward') {
-                    scrollTop = item.offsetTop + (item.height - edgeItem.borderDistance);
+                    scrollTop = item.offset + (item.size - edgeItem.borderDistance);
                 } else {
-                    scrollTop = item.offsetTop + edgeItem.borderDistance;
+                    scrollTop = item.offset + edgeItem.borderDistance;
                 }
             } else {
                 const viewportHeight = this._viewportSize;
-                scrollTop = item.offsetTop + edgeItem.borderDistance - viewportHeight;
+                scrollTop = item.offset + edgeItem.borderDistance - viewportHeight;
             }
         }
 
@@ -171,7 +168,7 @@ export class Calculator {
         let edgeItemParams: IEdgeItem;
 
         this._itemsSizes.some((item, index) => {
-            const itemBorderBottom = Math.round(item.offsetTop) + Math.round(item.height);
+            const itemBorderBottom = Math.round(item.offset) + Math.round(item.size);
 
             // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
             let edgeBorder = scrollPosition + topCompensation;
@@ -189,15 +186,15 @@ export class Calculator {
                     // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
                     const bottomViewportBorder = scrollPosition + viewportHeight;
                     border = 'backward';
-                    borderDistance = bottomViewportBorder - item.offsetTop;
+                    borderDistance = bottomViewportBorder - item.offset;
                 } else {
                     // запись - выше, чем верхняя граница viewPort
-                    if (scrollPosition >= item.offsetTop) {
+                    if (scrollPosition >= item.offset) {
                         border = 'forward';
                         borderDistance = itemBorderBottom - scrollPosition;
                     } else {
                         border = 'backward';
-                        borderDistance = scrollPosition - item.offsetTop;
+                        borderDistance = scrollPosition - item.offset;
                     }
                 }
                 edgeItemParams = {
