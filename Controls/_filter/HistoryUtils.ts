@@ -1,8 +1,6 @@
 import {Service as HistoryService, FilterSource as HistorySource, Constants} from 'Controls/history';
 import {factory} from 'Types/chain';
 import * as CoreClone from 'Core/core-clone';
-
-import {CrudWrapper} from 'Controls/dataSource';
 import {factory as CollectionFactory} from 'Types/collection';
 import entity = require('Types/entity');
 import collection = require('Types/collection');
@@ -47,14 +45,12 @@ function getHistorySource(cfg) {
 
 function loadHistoryItems(historyConfig) {
    const source = getHistorySource(historyConfig);
-   const crudWrapper = new CrudWrapper({source});
-   return crudWrapper.query({
-      filter: {
-         $_history: true
-      }
-   }).then((items) => {
+   const query = new sourceLib.Query().where({
+      $_history: true
+   });
+   return source.query(query).then((dataSet) => {
       return new collection.RecordSet({
-         rawData: items.getRawData(),
+         rawData: dataSet.getAll().getRawData(),
          adapter: new entity.adapter.Sbis()
       });
    });
@@ -121,7 +117,6 @@ function getItemsWithHistory(oldItems, newItems, sourceController, source, keyPr
 export {
    loadHistoryItems,
    getHistorySource,
-   destroyHistorySource,
    isHistorySource,
    getItemsWithHistory,
    getUniqItems,
