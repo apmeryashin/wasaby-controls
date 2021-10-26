@@ -8,15 +8,16 @@
          </ws:if>
          <ws:if data="{{ textVisible !== false }}">
             <div class="{{ (item || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}">
-            <div attr:class="{{ (item || itemData).getContentTextClasses(separatorVisibility, textAlign) }}
-                             {{ (item || itemData).getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle) }}"
-                 attr:data-qa="{{ item.listElementName }}-expander">
-               <ws:if data="{{ !!contentTemplate }}">
-                  <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
-               </ws:if>
-               <ws:else>
-                  {{ (item || itemData).getContents() }}
-               </ws:else>
+               <div attr:class="{{ (item || itemData).getContentTextClasses(separatorVisibility, textAlign) }}
+                                {{ (item || itemData).getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle) }}"
+                    attr:data-qa="{{ item.listElementName }}-expander">
+                  <ws:if data="{{ !!contentTemplate }}">
+                     <ws:partial template="{{ contentTemplate }}" item="{{ item }}" itemData="{{ itemData }}" />
+                  </ws:if>
+                  <ws:else>
+                     {{ (item || itemData).getContents() }}
+                  </ws:else>
+               </div>
             </div>
          </ws:if>
          <ws:if data="{{ (item || itemData).shouldDisplayRightSeparator(separatorVisibility, textVisible, textAlign) }}">
