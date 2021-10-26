@@ -493,7 +493,8 @@ const GridView = ListView.extend([ColumnScrollViewMixin], {
  */
 Object.defineProperty(GridView.prototype, 'listInstanceName', {
     value: 'controls-Grid',
-    writable: false
+    writable: false,
+    sorting: null
 });
 
 export default GridView;
