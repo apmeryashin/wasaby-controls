@@ -43,7 +43,7 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  */
 
 /**
- * @name Controls/_toggle/Tumbler#inlineHeight
+ * @name Controls/_toggle/Chips#inlineHeight
  * @cfg {String}
  * @demo Controls-demo/toggle/Chips/inlineHeight/Index
  */
