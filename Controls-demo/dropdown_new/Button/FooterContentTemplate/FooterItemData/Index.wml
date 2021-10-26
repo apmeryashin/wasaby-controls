@@ -4,7 +4,7 @@
             source="{{_menuSource}}"
             keyProperty="id"
             displayProperty="title"
-            footerTemplate="wml!Controls-demo/dropdown_new/Button/FooterContentTemplate/FooterItemData/footer">
+            footerContentTemplate="wml!Controls-demo/dropdown_new/Button/FooterContentTemplate/FooterItemData/footer">
         <ws:footerItemData icon="icon-AddButtonNew" iconSize="s"/>
     </Controls.dropdown:Button>
 </div>

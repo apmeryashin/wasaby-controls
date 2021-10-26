@@ -78,7 +78,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:INavigation
  * @mixes Controls/Input/interface/IValidation
  * @implements Controls/interface:IMultiSelectable
- * @mixes Controls/dropdown:IFooterTemplate
  * @mixes Controls/dropdown:IHeaderTemplate
  * @implements Controls/interface:ISelectorDialog
  * @mixes Controls/dropdown:IGrouped

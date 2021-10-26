@@ -385,12 +385,12 @@
                  caption="Add"
                  source="{{_createMemory([])}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo-ButtonsMenu__noItems">
-            <ws:footerTemplate>
+            <ws:footerContentTemplate>
                <Controls.buttons:Button
                        viewMode="link"
                        caption="+ Add"
                        attr:class="ControlsDemo-ButtonsMenu-footerTpl"/>
-            </ws:footerTemplate>
+            </ws:footerContentTemplate>
          </Controls.dropdown:Button>
       </div>
    </div>

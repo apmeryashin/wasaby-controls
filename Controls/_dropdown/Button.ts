@@ -134,7 +134,6 @@ export interface IButtonOptions extends IButtonBaseOptions, IMenuPopupTriggerOpt
  * @mixes Controls/menu:IMenuControl
  * @mixes Controls/menu:IMenuBase
  * @mixes Controls/dropdown:IBaseDropdown
- * @mixes Controls/dropdown:IFooterTemplate
  * @mixes Controls/dropdown:IHeaderTemplate
  * @mixes Controls/dropdown:IIconSize
  * @mixes Controls/dropdown:IBaseDropdown
@@ -169,7 +168,6 @@ export interface IButtonOptions extends IButtonBaseOptions, IMenuPopupTriggerOpt
  * @mixes Controls/menu:IMenuControl
  * @mixes Controls/menu:IMenuBase
  * @mixes Controls/dropdown:IBaseDropdown
- * @mixes Controls/dropdown:IFooterTemplate
  * @mixes Controls/dropdown:IHeaderTemplate
  * @mixes Controls/dropdown:IIconSize
  * @mixes Controls/dropdown:IBaseDropdown
