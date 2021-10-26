@@ -60,6 +60,8 @@ export interface IPlaceholders {
     bottom: number;
 }
 
+const RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT = 4;
+
 /**
  * Класс предназначен для:
  *  - сбора, хранения и актуализации любых параметров scroll: scrollTop, размер viewPort, элементов и контента;
@@ -229,7 +231,7 @@ export class Calculator {
                 currentRange: this._range,
                 direction,
                 pageSize: this._virtualScrollConfig.pageSize,
-                segmentSize: this._virtualScrollConfig.segmentSize,
+                segmentSize: this._getSegmentSize(),
                 totalCount: this._totalCount
             });
 
@@ -488,5 +490,15 @@ export class Calculator {
             afterPlaceholderSize: this._placeholders.bottom,
             environmentChanged: true // todo Calc it!
         };
+    }
+
+    private _getSegmentSize(): number {
+        let segmentSize = this._virtualScrollConfig.segmentSize;
+        if (!segmentSize) {
+            if (!segmentSize) {
+                segmentSize = Math.ceil(this._virtualScrollConfig.pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT);
+            }
+        }
+        return segmentSize;
     }
 }
