@@ -43,7 +43,7 @@ export default class extends Control {
         });
     }
 
-    protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+    protected _colspanCallback(item: Model): TColspanCallbackResult {
         if (typeof item === 'string' || item.get('nodeType') === 'group') {
             return 'end';
         }

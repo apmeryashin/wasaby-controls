@@ -626,8 +626,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const markerController = this._getMarkerController(this._options);
         const markedKey = markerController.getMarkedKey();
         const selectedItem = this._listModel.getItemBySourceKey(markedKey);
-        if (selectedItem &&
-            (MenuControl._isFixedItem(selectedItem.getContents()) || this._isSingleSelectionItem(selectedItem.getContents()))) {
+        if (
+            selectedItem &&
+            (
+                MenuControl._isFixedItem(selectedItem.getContents()) ||
+                this._isSingleSelectionItem(selectedItem.getContents())
+            )
+        ) {
             markerController.setMarkedKey(undefined);
         }
         const selection = selectionController.toggleItem(key);

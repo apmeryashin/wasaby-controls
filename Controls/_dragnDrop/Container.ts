@@ -191,7 +191,9 @@ class Container extends Control<IContainerOptions> {
     private _onMove(nativeEvent: MouseEvent): void {
         if (this._startEvent) {
             const dragObject: IDragObject = this._getDragObject(nativeEvent, this._startEvent);
-            const dragStarted: boolean = Container._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
+            const dragStarted: boolean = Container._isDragStarted(
+                this._startEvent, nativeEvent, this._startImmediately
+            );
             if (!this._documentDragging && dragStarted) {
                 this._insideDragging = true;
                 this._notify('_documentDragStart', [dragObject], {bubbling: true});
@@ -200,7 +202,11 @@ class Container extends Control<IContainerOptions> {
                 this._currentEvent = nativeEvent;
                 this._notify('dragMove', [dragObject]);
                 if (this._options.draggingTemplate) {
-                    this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+                    this._notify(
+                        '_updateDraggingTemplate',
+                        [dragObject, this._options.draggingTemplate],
+                        {bubbling: true}
+                    );
                 }
             }
         }

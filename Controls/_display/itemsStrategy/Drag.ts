@@ -203,7 +203,8 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
                 if (startingDraggableItem) {
                     const startingDraggableItemKey = startingDraggableItem.getContents().getKey();
 
-                    // если item перемещается, но перемещение начали не за него, то запоминаем его индекс в наборе скрытых элементов
+                    // если item перемещается, но перемещение начали не за него,
+                    // то запоминаем его индекс в наборе скрытых элементов
                     if (itemKey !== startingDraggableItemKey) {
                         this._hiddenIndexes.push(index);
                     }

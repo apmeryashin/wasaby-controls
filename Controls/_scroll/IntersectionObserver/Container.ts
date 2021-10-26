@@ -43,7 +43,9 @@ class  IntersectionObserverContainer extends Control<IIntersectionObserverContai
    }
 
    protected _beforeUnmount(): void {
-      this._notify('intersectionObserverUnregister', [this.getInstanceId(), this._options.observerName], { bubbling: true });
+      this._notify(
+          'intersectionObserverUnregister', [this.getInstanceId(), this._options.observerName], {bubbling: true}
+      );
    }
 }
 

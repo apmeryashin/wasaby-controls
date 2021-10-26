@@ -513,6 +513,7 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
  * @markdown
  */
 
+// tslint:disable:max-line-length
 //#region Чистовой вариант доки. Использовать его, когда станет возможно отнаследовать интерфейс.
 
 // import {IEditableList, IEditingConfig} from 'Controls/list';
@@ -670,3 +671,4 @@ type TBeforeEndEditEventResult = TBeforeBeginEditEventSyncResult | Promise<TBefo
 // }
 
 //#endregion
+// tslint:enable:max-line-length

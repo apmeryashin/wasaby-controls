@@ -2,6 +2,7 @@ import { Control, TemplateFunction } from 'UI/Base';
 import { Memory } from 'Types/source';
 import { IColumn } from 'Controls/grid';
 
+// tslint:disable-next-line:max-line-length
 import * as Template from 'wml!Controls-demo/gridNew/Grouped/RightTemplate/WithoutSeparator/TextAlignLeft/TextAlignLeft';
 import {Tasks} from 'Controls-demo/gridNew/DemoHelpers/Data/Tasks';
 

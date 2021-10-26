@@ -361,7 +361,8 @@ export default class SearchStrategy<S extends Model, T extends TreeItem<S> = Tre
                         if (itsDescendant) {
                             parent = item.getParent();
                         } else {
-                            parent = currentBreadcrumbs['[Controls/_display/SearchSeparator]'] ? display.getRoot() : currentBreadcrumbs;
+                            parent = currentBreadcrumbs['[Controls/_display/SearchSeparator]']
+                                ? display.getRoot() : currentBreadcrumbs;
                         }
 
                         decoratedItem = create(options.treeItemDecoratorModule, {

@@ -17,6 +17,7 @@
                      pathButtonNodeProperty="{{_options.nodeProperty}}"
                      pathButtonParentProperty="{{_options.parentProperty}}"
                      pathButtonDisplayProperty="{{_options.displayProperty}}"
+                     pathButtonHasChildrenProperty="{{_options.hasChildrenProperty}}"
 
                      attr:class="controls-Explorer__Path"
                      on:backButtonClick="_notifyHandler('backButtonClick')"

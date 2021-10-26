@@ -187,7 +187,9 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             options.minLines !== this._options.minLines ||
             options.contrastBackground !== this._options.contrastBackground
         ) {
-            this._border = Render._detectToBorder(options.borderVisibility, options.minLines, options.contrastBackground);
+            this._border = Render._detectToBorder(
+                options.borderVisibility, options.minLines, options.contrastBackground
+            );
         }
         if (options.fontWeight !== this._options.fontWeight || options.fontSize !== this._options.fontSize) {
             this._fontWeight = Render._getFontWeight(options.fontWeight, options.fontSize);
@@ -218,7 +220,9 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         return detection.isIE || (detection.isWinXP && detection.yandex);
     }
 
-    private static _detectToBorder(borderVisibility: TBorderVisibility | IBorderVisibilityArea, minLines: number, contrastBackground: boolean): IBorder {
+    private static _detectToBorder(borderVisibility: TBorderVisibility | IBorderVisibilityArea,
+                                   minLines: number,
+                                   contrastBackground: boolean): IBorder {
         switch (borderVisibility) {
             case 'visible':
                 return {

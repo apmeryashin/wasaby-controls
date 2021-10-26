@@ -39,6 +39,14 @@ class PreviewerController extends StickyController {
         return false;
     }
 
+    beforeElementDestroyed(item: IStickyItem, container: HTMLElement): boolean {
+        // Если у previewer есть дочерние окна, то не закрываем его, иначе дочерние тоже закроются.
+        if (item.childs.length) {
+            return false;
+        }
+        return super.beforeElementDestroyed(item, container);;
+    }
+
     private _isLinkedPopup(previewerItem: IStickyItem): boolean {
         let item: IPopupItem = previewerItem;
         const parents = [];

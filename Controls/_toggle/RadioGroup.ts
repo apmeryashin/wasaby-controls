@@ -74,7 +74,9 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
    protected _crudWrapper: CrudWrapper;
    protected _groups: object = {};
 
-   protected _beforeMount(options: IRadioGroupOptions, context: object, receivedState: RecordSet): void|Promise<RecordSet> {
+   protected _beforeMount(options: IRadioGroupOptions,
+                          context: object,
+                          receivedState: RecordSet): void|Promise<RecordSet> {
       this._selectKeyChanged = this._selectKeyChanged.bind(this);
       this._isSelected = this._isSelected.bind(this);
       if (receivedState) {
@@ -124,7 +126,8 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
       const parent = this._options.parentProperty ?
           this._items.getRecordById(this._options.selectedKey).get(this._options.parentProperty) : null;
       if (parent) {
-         return this._items.getRecordById(parent).get(this._options.keyProperty) === item.get(this._options.keyProperty);
+         const parentKey = this._items.getRecordById(parent).get(this._options.keyProperty);
+         return parentKey === item.get(this._options.keyProperty);
       }
       return false;
    }

@@ -50,14 +50,16 @@ const _private = {
 
     beforeItemsMove(self, items, target, position) {
         const beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
-        return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
+        return beforeItemsMoveResult instanceof Promise ?
+            beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
     afterItemsMove(self, items, target, position, result) {
         self._notify('afterItemsMove', [items, target, position, result]);
 
         // According to the standard, after moving the items, you need to unselect all in the table view.
-        // The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
+        // The table view and Mover are in a common container (Control.Container.MultiSelector)
+        // and do not know about each other.
         // The only way to affect the selection in the table view is to send the selectedTypeChanged event.
         // You need a schema in which Mover will not work directly with the selection.
         // Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
@@ -96,7 +98,8 @@ const _private = {
                 }
 
                 if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
-                    // if the movement was in order and hierarchy at the same time, then you need to update parentProperty
+                    // if the movement was in order and hierarchy at the same time,
+                    // then you need to update parentProperty
                     movedItem.set(parentProperty, targetItem.get(parentProperty));
                 }
 
@@ -170,7 +173,8 @@ const _private = {
                 root: self._options.root !== undefined ? self._options.root : null
             });
             itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
-            siblingItem = display[position === LOCAL_MOVE_POSITION.Before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            siblingItem =
+                display[position === LOCAL_MOVE_POSITION.Before ? 'getPrevious' : 'getNext'](itemFromProjection);
             result = siblingItem ? siblingItem.getContents() : null;
         } else {
             itemIndex = self._items.getIndex(_private.getModelByItem(self, item));
@@ -405,7 +409,8 @@ const Mover = BaseAction.extend({
     _beforeMount(options) {
         _private.updateDataOptions(this, options, options._dataOptionsValue);
         Logger.warn('Controls/list:Mover: Класс устарел и буден удалён.' +
-            ' Используйте методы интерфейса Controls/list:IMovableList, который по умолчанию подключен в списки.', this);
+            ' Используйте методы интерфейса Controls/list:IMovableList, ' +
+            'который по умолчанию подключен в списки.', this);
     },
 
     _beforeUpdate(options) {

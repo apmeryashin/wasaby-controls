@@ -12,7 +12,8 @@ let cachedDisplay;
 let cachedVersion;
 
 function getDisplay(items, parentProperty, nodeProperty, root) {
-   // Кешируем проекцию, т.к. её создание тежеловесная операция, а данный метод будет вызываться для каждой записи в списке.
+   // Кешируем проекцию, т.к. её создание тежеловесная операция,
+   // а данный метод будет вызываться для каждой записи в списке.
    if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedVersion !== items.getVersion()) {
       cachedDisplay = new Tree({
           collection: items,
@@ -180,8 +181,10 @@ const helpers = {
         const siblingItem = getSiblingItem(direction, item, items, parentProperty, nodeProperty, root);
 
         return !!siblingItem &&
-            (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) && // items in the same folder
-            (!nodeProperty || siblingItem.get(nodeProperty) === item.get(nodeProperty)); // items of the same type
+            // items in the same folder
+            (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) &&
+            // items of the same type
+            (!nodeProperty || siblingItem.get(nodeProperty) === item.get(nodeProperty));
     }
 };
 

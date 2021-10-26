@@ -313,7 +313,8 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
             // Create group with this groupId if necessary
             if (groupsId.indexOf(groupId) === -1) {
                 const isCollapsed = options.collapsedGroups && options.collapsedGroups.indexOf(groupId) !== -1;
-                const isFirstStickedGroup = this._isFirstVisibleGroup(groupsId, groupId) && options.display.isStickyHeader();
+                const isFirstStickedGroup =
+                    this._isFirstVisibleGroup(groupsId, groupId) && options.display.isStickyHeader();
                 const additionalParams = display?.getAdditionalGroupConstructorParams() || {};
                 const group = new options.groupConstructor({
                     owner: display as any,

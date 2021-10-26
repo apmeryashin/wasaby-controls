@@ -5,14 +5,19 @@ import 'css!Controls/popupTemplate';
 
 interface IRightPanelOptions extends IControlOptions {
     maximizeButtonClickCallback?: () => void;
+    toolbarContentTemplate: TemplateFunction;
 }
 
 export default class RightPanel extends Control<IRightPanelOptions> {
     protected _template: TemplateFunction = template;
     protected _rightBottomTemplate: string;
+    protected _isOutsidePanel: boolean = true;
 
-    protected _beforeMount(): void {
+    protected _beforeMount(options: IRightPanelOptions): void {
         this._rightBottomTemplate = ManagerController.getRightPanelBottomTemplate();
+        if (!ManagerController.hasRightPanel() && options.toolbarContentTemplate) {
+            this._isOutsidePanel = false;
+        }
     }
 
     protected _maximizeButtonClickHandler(): void {

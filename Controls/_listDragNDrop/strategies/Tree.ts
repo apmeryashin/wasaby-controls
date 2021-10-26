@@ -45,7 +45,13 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
 
         const moveTileNodeToLeaves = this._model['[Controls/_tile/Tile]'] && this._draggableItem.isNode()
             && targetItem && !targetItem.isNode();
-        if (targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode() && !moveTileNodeToLeaves && mouseOffsetInTargetItem) {
+        if (
+            targetItem &&
+            targetItem['[Controls/_display/TreeItem]'] &&
+            targetItem.isNode() &&
+            !moveTileNodeToLeaves &&
+            mouseOffsetInTargetItem
+        ) {
             result = this._calculatePositionRelativeNode(targetItem, mouseOffsetInTargetItem);
         } else {
             // В плитке нельзя смешивать узлы и листья, если перетаскивают узел в листья, то мы не меняем позицию
@@ -63,7 +69,12 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
         // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра, т.к
         // если перетаскивают не в узел, то нам вернут рекорд из которого мы создадим draggableItem
         // В плитке лист мы можем перенести только внутрь узла
-        if (!this._draggableItem || this._model['[Controls/_tile/Tile]'] && !this._draggableItem.isNode() && targetItem.isNode()) {
+        if (
+            !this._draggableItem ||
+            this._model['[Controls/_tile/Tile]'] &&
+            !this._draggableItem.isNode() &&
+            targetItem.isNode()
+        ) {
             relativePosition = 'on';
         } else {
             if (mouseOffsetInTargetItem) {

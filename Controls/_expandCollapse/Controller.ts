@@ -233,7 +233,8 @@ export class Controller {
             const items = removedItems.filter((it) => it['[Controls/_display/TreeItem]'] && it.isNode() !== null);
             let removedKeys = items.map((it) => it.getContents().getKey());
             // отфильтровываем скрытые записи
-            removedKeys = removedKeys.filter((it) => !this._model.getCollection().getRecordById(it) && it !== ALL_EXPANDED_VALUE);
+            removedKeys =
+                removedKeys.filter((it) => !this._model.getCollection().getRecordById(it) && it !== ALL_EXPANDED_VALUE);
 
             if (this._options.expandedItems?.length) {
                 const newExpandedItems = this._options.expandedItems.slice();

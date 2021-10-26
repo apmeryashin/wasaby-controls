@@ -73,7 +73,11 @@ export {
     TNavigationButtonSize,
     TNavigationButtonView
 } from './_interface/INavigation';
-export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
+export {
+    default as IDisplayedRanges,
+    IDisplayedRangesOptions,
+    TDisplayedRangesItem
+} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch, ISearchOptions} from './_interface/ISearch';
 export {default as ISearchValue, ISearchValueOptions} from './_interface/ISearchValue';

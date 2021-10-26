@@ -4,7 +4,6 @@ import {IPreviewer, IPreviewerOptions} from 'Controls/_popup/interface/IPreviewe
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import PreviewerOpener from './Opener/Previewer';
-import {goUpByControlTree} from 'UI/Focus';
 import 'css!Controls/popup';
 import template = require('wml!Controls/_popup/Previewer/Previewer');
 import {CalmTimer} from 'Controls/_popup/utils/FastOpen';
@@ -165,7 +164,10 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMouseleaveHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (!this._options.readOnly && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
+        if (
+            !this._options.readOnly &&
+            (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')
+        ) {
             this._calmTimer.stop();
             if (this._isPopupOpened()) {
                 this._debouncedAction('_close', [event]);
@@ -176,8 +178,12 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMousemoveHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (!this._options.readOnly && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
-            // Устанавливаем старое значение таймера, так при небольших значениях, окно может открыться когда этого не нужно
+        if (
+            !this._options.readOnly &&
+            (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')
+        ) {
+            // Устанавливаем старое значение таймера, так при небольших значениях,
+            // окно может открыться когда этого не нужно
             // https://online.sbis.ru/opendoc.html?guid=55ca4037-ae40-44f4-a10f-ac93ddf990b1
             this._calmTimer.start(CALM_DELAY, event);
         }
@@ -216,21 +222,11 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
                 break;
             case 'mouseleave':
                 const isHoverType = this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick';
-                if (isHoverType && !this._isLinkedPreviewer(event)) {
+                if (isHoverType) {
                     this._debouncedAction('_close', [event]);
                 }
                 break;
         }
-    }
-
-    private _isLinkedPreviewer(event: SyntheticEvent<MouseEvent>): boolean {
-        const parentControls = goUpByControlTree(event.nativeEvent.relatedTarget);
-        for (let i = 0; i < parentControls.length; i++) {
-            if (parentControls[i] === this) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private _closeHandler(): void {

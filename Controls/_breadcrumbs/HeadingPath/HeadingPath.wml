@@ -60,6 +60,7 @@
                         nodeProperty="{{_options.pathButtonNodeProperty}}"
                         parentProperty="{{_options.pathButtonParentProperty}}"
                         displayProperty="{{_options.pathButtonDisplayProperty}}"
+                        hasChildrenProperty="{{_options.pathButtonHasChildrenProperty}}"
                         on:pathChanged="_onPathChanged()"
                         attr:class="controls-BreadCrumbsPath__pathButton"
                      />

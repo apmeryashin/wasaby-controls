@@ -243,7 +243,8 @@ describe('Controls/list_clean/RemoveController', () => {
             keyProperty: 'id',
             rawData: [{id: 1}, {id: 2}, {id: 5}]
         })));
-        const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
+        const stubDestroy = sandBox.stub(source, 'destroy')
+            .callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 2);
             return Promise.resolve();
         });
@@ -287,7 +288,8 @@ describe('Controls/list_clean/RemoveController', () => {
             keyProperty: 'id',
             rawData: [{id: 1}, {id: 2}, {id: 5}]
         })));
-        const stubDestroy = sandBox.stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
+        const stubDestroy = sandBox.stub(source, 'destroy')
+            .callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 2);
             return Promise.resolve();
         });

@@ -6,7 +6,12 @@ const SERVICE_FILTERS = {
 };
 
 function _assignServiceFilters(searchController, filter: object, forced): void {
-    if (forced || searchController._options && searchController._options.parentProperty && searchController._viewMode !== 'search' ) {
+    if (
+        forced ||
+        searchController._options &&
+        searchController._options.parentProperty &&
+        searchController._viewMode !== 'search'
+    ) {
         Object.assign(filter, SERVICE_FILTERS.HIERARCHY);
     }
 }

@@ -7,7 +7,10 @@ export default class EdgeIntersectionObserver {
     private _bottomTriggerElement: HTMLElement;
     private _handler: Function;
 
-    constructor(component: Control, handler: Function, topTriggerElement: HTMLElement, bottomTriggerElement: HTMLElement) {
+    constructor(component: Control,
+                handler: Function,
+                topTriggerElement: HTMLElement,
+                bottomTriggerElement: HTMLElement) {
         this._component = component;
         this._handler = handler;
         this._topTriggerElement = topTriggerElement;
@@ -30,7 +33,9 @@ export default class EdgeIntersectionObserver {
         }
     }
     private _unobserve(position): void {
-        this._component._notify('intersectionObserverUnregister', [`${this._component.getInstanceId()}-${position}`], {bubbling: true});
+        this._component._notify(
+            'intersectionObserverUnregister', [`${this._component.getInstanceId()}-${position}`], {bubbling: true}
+        );
     }
 
     protected _observeHandler(item: SyntheticEntry): void {

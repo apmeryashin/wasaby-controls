@@ -548,9 +548,11 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         const readOnlyField: HTMLElement | void = this._getReadOnlyField();
 
         if (field) {
-            // Если ничего не введено в поле ввода, то вычисляем размеры placeholder, и если он больше ширины поля ввода, добавляем tooltip
+            // Если ничего не введено в поле ввода, то вычисляем размеры placeholder, и если он
+            // больше ширины поля ввода, добавляем tooltip
             // Сейчас нельзя использовать одинаковую логику для определения необходимости отображения tooltip,
-            // так как при введенном значении, происходит поиск наличия скролла, а для placeholder, текс обрезается через overflow
+            // так как при введенном значении, происходит поиск наличия скролла, а
+            // для placeholder, текст обрезается через overflow
             if (!tooltip && typeof this._options.placeholder === 'string') {
                 if (field._container) {
                     tooltip = this._options.placeholder;

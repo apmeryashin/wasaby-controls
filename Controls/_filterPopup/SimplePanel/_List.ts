@@ -72,11 +72,13 @@ class List extends Control {
 
     _openSelectorDialog() {
         const selectorTemplate = this._options.selectorTemplate;
-        const selectorOpener = this._options.selectorTemplate.mode === 'dialog' ? this._options.dialogOpener : this._options.selectorOpener;
+        const selectorOpener = this._options.selectorTemplate.mode === 'dialog' ?
+            this._options.dialogOpener : this._options.selectorOpener;
         const selectorDialogResult = this._options.selectorDialogResult;
         const selectedItems = [];
 
-        // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
+        // TODO: Selector/Controller сейчас не поддерживает работу с ключами:
+        //  https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
         factory(this._listModel.getSelectedKeys()).each((key) => {
             if (key !== undefined && key !== null && this._options.selectorItems.getRecordById(key)) {
                 selectedItems.push(this._options.selectorItems.getRecordById(key));
@@ -113,7 +115,11 @@ class List extends Control {
         const clickOnEmptyItem = item.get(this._options.keyProperty) === this._options.emptyKey;
         const clickOnCheckBox = target.closest('.controls-Menu__row-checkbox');
         const clickOnFolder = item.get(this._options.nodeProperty);
-        return this._options.multiSelect && !clickOnEmptyItem && (clickOnCheckBox || this._selectionChanged) && !clickOnFolder;
+        return this._options.multiSelect &&
+            !clickOnEmptyItem && (
+                clickOnCheckBox || this._selectionChanged
+            ) &&
+            !clickOnFolder;
     }
 
     private _updateSelection(listModel: typeof DropdownViewModel, item: Model, resetValue: unknown): void {

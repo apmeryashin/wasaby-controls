@@ -149,7 +149,7 @@ class LinkView<T extends ILinkView> extends Control<T> {
         return {
             ...IDateLinkView.getOptionTypes(),
             captionFormatter: descriptor(Function)
-        }
+        };
     }
 }
 

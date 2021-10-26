@@ -71,7 +71,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         bottom: 0
     };
     protected _isShadowVisible: boolean = false;
-    protected _isShadowVisibleByController: { top: SHADOW_VISIBILITY_BY_CONTROLLER; bottom: SHADOW_VISIBILITY_BY_CONTROLLER; } = {
+    protected _isShadowVisibleByController: {
+        top: SHADOW_VISIBILITY_BY_CONTROLLER;
+        bottom: SHADOW_VISIBILITY_BY_CONTROLLER;
+    } = {
         top: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
         bottom: SHADOW_VISIBILITY_BY_CONTROLLER.auto
     };
@@ -205,8 +208,13 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                         this._headers[fixedHeaderData.id].inst.updateShadowVisible([]);
                     }
                 }
-            } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
-                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
+            } else if (
+                !!fixedHeaderData.prevPosition &&
+                this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1
+            ) {
+                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(
+                    this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1
+                );
             }
         }
 
@@ -233,7 +241,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         if (this._isShadowVisible !== isShadowVisible) {
             this._isShadowVisible = isShadowVisible;
             if (isShadowVisible) {
-               this._updateShadowVisible(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom), needFakeFixedNotify);
+               this._updateShadowVisible(
+                   this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom), needFakeFixedNotify
+               );
             } else {
                this._updateShadowVisible([], needFakeFixedNotify);
             }

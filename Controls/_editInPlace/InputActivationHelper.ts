@@ -158,7 +158,8 @@ export class InputActivationHelper {
         const target = document.elementFromPoint(this._clickItemInfo.clientX, this._clickItemInfo.clientY) as TEditable;
         const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
 
-        // В отличае от простых полей ввода, для которых можно сэмулировать ввод фокуса, у более сложных (например комбобокс),
+        // В отличае от простых полей ввода, для которых можно сэмулировать ввод фокуса,
+        // у более сложных (например комбобокс),
         // это не приведет к должному результату.
         // Не активируем его.
         // return true; означает, что все что можно предпринять для активации контрола было сделано.

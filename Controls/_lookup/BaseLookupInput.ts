@@ -217,13 +217,18 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
-        if ((this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) && this._suggestState) {
+        if (
+            (this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) &&
+            this._suggestState
+        ) {
             this.closeSuggest();
         }
     }
 
     private _determineAutoDropDown(): boolean {
-        return this._options.autoDropDown && this._isInputActive(this._options);
+        return this._options.autoDropDown &&
+               this._isInputActive(this._options) &&
+               (this._isEmpty() || this._options.multiSelect);
     }
 
     private _resize(): void {

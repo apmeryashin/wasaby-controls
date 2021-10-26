@@ -529,7 +529,9 @@ export class Controller {
     private _getMenuActions(item: IItemActionsItem, parentAction: IShownItemAction): IItemAction[] {
         const contents = Controller._getItemContents(item);
         const actionsObject = item.getActions();
-        const visibleActions = actionsObject && actionsObject.all && this._filterVisibleActions(actionsObject.all, contents, item.isEditing());
+        const visibleActions = actionsObject &&
+            actionsObject.all &&
+            this._filterVisibleActions(actionsObject.all, contents, item.isEditing());
         if (visibleActions) {
             // Кроме как intersection all vs showed мы не можем знать, какие опции Measurer скрыл под кнопку "Ещё",
             // Поэтому для свайпнутой записи имеет смысл показывать в меню те опции, которые отсутствуют в showed
@@ -539,7 +541,8 @@ export class Controller {
             // см. https://online.sbis.ru/opendoc.html?guid=b5751217-3833-441f-9eb6-53526625bc0c
             if (item.isSwiped() && parentAction.isMenu) {
                 return visibleActions.filter((action) => (
-                    !this._hasActionInArray(action, actionsObject.showed) || action.showType !== TItemActionShowType.TOOLBAR)
+                    !this._hasActionInArray(action, actionsObject.showed) ||
+                    action.showType !== TItemActionShowType.TOOLBAR)
                 );
             }
             return visibleActions.filter((action) => (
@@ -912,7 +915,9 @@ export class Controller {
         actionMode: string
     ): boolean {
         const oldActionsObject = item.getActions();
-        if (!oldActionsObject || (actionsObject && !this._isMatchingActions(oldActionsObject, actionsObject, actionMode, item.isSwiped()))) {
+        if (!oldActionsObject ||
+            (actionsObject && !this._isMatchingActions(oldActionsObject, actionsObject, actionMode, item.isSwiped()))
+        ) {
             item.setActions(actionsObject, true);
             return true;
         }

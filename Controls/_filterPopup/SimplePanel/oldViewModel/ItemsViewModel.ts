@@ -345,7 +345,8 @@ const ItemsViewModel = BaseViewModel.extend({
         return filters;
     },
     displayFilterGroups(item, index, displayItem) {
-        return (item ? (item === groupConstants.hiddenGroup || !item.get) : true) || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
+        return (item ? (item === groupConstants.hiddenGroup || !item.get) : true) ||
+            !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
     },
     setGroupProperty(groupProperty: string): void {
         const display = this.getDisplay();
@@ -417,7 +418,9 @@ const ItemsViewModel = BaseViewModel.extend({
             changesType = 'loadingPercentChanged';
         }
 
-        this._nextModelVersion(shouldNotUpdatePrefix, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+        this._nextModelVersion(
+            shouldNotUpdatePrefix, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex
+        );
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
 
@@ -432,7 +435,9 @@ const ItemsViewModel = BaseViewModel.extend({
         // method may be implemented
     },
 
-    _execUpdateSubscriptionOnMetaChange(items: RecordSet, command: 'subscribe' | 'unsubscribe', isRecordSetEqual?: boolean): void {
+    _execUpdateSubscriptionOnMetaChange(items: RecordSet,
+                                        command: 'subscribe' | 'unsubscribe',
+                                        isRecordSetEqual?: boolean): void {
         if (items && cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             if (!isRecordSetEqual) {
                 items[command]('onPropertyChange', this._onMetaDataChanged);
@@ -445,7 +450,9 @@ const ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    _updateSubscriptionOnMetaChange(oldItems: RecordSet | null, newItems: RecordSet | null, isRecordSetEqual?: boolean): void {
+    _updateSubscriptionOnMetaChange(oldItems: RecordSet | null,
+                                    newItems: RecordSet | null,
+                                    isRecordSetEqual?: boolean): void {
         this._execUpdateSubscriptionOnMetaChange(oldItems, 'unsubscribe', isRecordSetEqual);
         this._execUpdateSubscriptionOnMetaChange(newItems, 'subscribe', isRecordSetEqual);
     },
@@ -565,7 +572,15 @@ const ItemsViewModel = BaseViewModel.extend({
             // Необходимо нотифицировать о ресете модели отсюда, иначе никто этого не сделает
             // и об изменениях модели никто не узнает. Вследствие этого скакнет virtualScroll
             // https://online.sbis.ru/opendoc.html?guid=569a3c15-462f-4765-b624-c913baed1a57
-            this._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET, this.getDisplay().getItems(), 0, [], 0);
+            this._notify(
+                'onListChange',
+                'collectionChanged',
+                collection.IObservable.ACTION_RESET,
+                this.getDisplay().getItems(),
+                0,
+                [],
+                0
+            );
         }
         if (this._options.itemsSetCallback) {
             this._options.itemsSetCallback(this._items);
@@ -675,7 +690,8 @@ const ItemsViewModel = BaseViewModel.extend({
     setHasMoreData(hasMoreDataObject: object): boolean {
         const display = this.getDisplay();
         if (display) {
-            const hasMoreData = hasMoreDataObject instanceof Object ? hasMoreDataObject.up || hasMoreDataObject.down : hasMoreDataObject;
+            const hasMoreData = hasMoreDataObject instanceof Object ?
+                hasMoreDataObject.up || hasMoreDataObject.down : hasMoreDataObject;
             return this._display.setHasMoreData(hasMoreData);
         }
     },

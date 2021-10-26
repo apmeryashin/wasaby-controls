@@ -6,10 +6,12 @@ import 'css!Controls/suggest';
 
 const _private = {
    getBorderWidth(container?: HTMLElement): number {
+       // tslint:disable-next-line:max-line-length
       return container ? Number(getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '') * 2) : 0;
    },
 
    getPopupOffsets(container?: HTMLElement): number {
+       // tslint:disable-next-line:max-line-length
       return container ? Math.abs(getComputedStyle(container, null).getPropertyValue('margin-left').replace('px', '') * 2) : 0;
    },
 

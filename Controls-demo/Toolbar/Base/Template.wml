@@ -16,6 +16,14 @@
         />
     </div>
     <div class="controlsDemo__cell">
+        <div class="controls-text-label">Пример тулбара из одного элемента с любым значением опции showType.</div>
+        <Controls.toolbars:View
+                items="{{_toolButtonsSource2}}"
+                keyProperty="id"
+                on:itemClick="_itemClick()"
+        />
+    </div>
+    <div class="controlsDemo__cell">
         <div class="controls-text-label">Пример тулбара из кнопок readOnly</div>
         <Controls.toolbars:View
                 source="{{_buttonsSource}}"

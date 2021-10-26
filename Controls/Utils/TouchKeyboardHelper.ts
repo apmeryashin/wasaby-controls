@@ -59,7 +59,9 @@ const TouchKeyboardHelper = {
             if (!this.isPortrait() && window.screen.availHeight / window.innerHeight > twiceCoef) {
                return 0;
             }
-            return windowDimensions.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
+            return windowDimensions.innerHeight * (
+                this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape
+            );
          }
       }
       return 0;
@@ -79,7 +81,13 @@ const TouchKeyboardHelper = {
       // Для определения того, что клавиатура показалась и нужно на это отреагировать, в application можно проверять,
       // Куда пришел фокус, если это input/textarea/contenteditable, то через emitter/listener сообщать
       // об этом дочерним компонентам. Костыль актуален только для старых контролов, на вдом отключил.
-      if (!isNewEnvironment() && !notConsiderFocusPosition && !isVisible && constants.isBrowserPlatform && document.activeElement) {
+      if (
+          !isNewEnvironment() &&
+          !notConsiderFocusPosition &&
+          !isVisible &&
+          constants.isBrowserPlatform &&
+          document.activeElement
+      ) {
          const isInput = document.activeElement.tagName === 'INPUT';
          const isTextArea = document.activeElement.tagName === 'TEXTAREA';
          const isContentEditable = document.activeElement.getAttribute('contenteditable') === 'true';

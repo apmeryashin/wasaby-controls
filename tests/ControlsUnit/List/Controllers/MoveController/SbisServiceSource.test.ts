@@ -536,7 +536,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
                 })
                 .finally(() => {
 
-                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    // Ожидаю. что перемещение провалится из-за ошибки,
+                    // брошенной в контроллере на этапе открытия диалога
                     sinonAssert.called(stubLoggerError);
                     sinonAssert.notCalled(spyConfirmation);
                     assert.isTrue(callCatch);
@@ -551,7 +552,8 @@ describe('Controls/list_clean/MoveController/MemorySource', () => {
             };
             // to prevent popup open
             sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener(() => Promise.reject('FAKE')));
-            const stubConfirmation = sandbox.stub(popup.Confirmation, 'openPopup').callsFake((args) => Promise.resolve(true));
+            const stubConfirmation = sandbox.stub(popup.Confirmation, 'openPopup')
+                .callsFake((args) => Promise.resolve(true));
             // @ts-ignore
             return controller.moveWithDialog(correctSelection, {myProp: 'test'})
                 .then(() => {/* FIXME: sinon mock */})

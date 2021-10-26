@@ -145,7 +145,9 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     private _onMove(nativeEvent: MouseEvent): void {
         if (this._startEvent) {
             const dragObject: IDragObject = this._getDragObject(nativeEvent, this._startEvent);
-            const dragStarted: boolean = ReactContainer._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
+            const dragStarted: boolean = ReactContainer._isDragStarted(
+                this._startEvent, nativeEvent, this._startImmediately
+            );
             if (!this._documentDragging && dragStarted) {
                 this._insideDragging = true;
                 this.context.documentDragStart(dragObject);

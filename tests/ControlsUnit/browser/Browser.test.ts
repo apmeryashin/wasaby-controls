@@ -1542,7 +1542,12 @@ describe('Controls/browser:Browser', () => {
                 title: 'test',
                 testSearchParam: 'test'
             };
-            const options = {...getBrowserOptions(), searchParam: 'testSearchParam', searchValue: 'testSearchValue', filter};
+            const options = {
+                ...getBrowserOptions(),
+                searchParam: 'testSearchParam',
+                searchValue: 'testSearchValue',
+                filter
+            };
             const browser = getBrowser(options);
             await browser._beforeMount(options);
             browser.saveOptions(options);

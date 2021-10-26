@@ -95,7 +95,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     InstantiableMixin,
     SerializableMixin,
     ItemCompatibilityListViewModel
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable, IItemActionsItem, IEnumerableItem, IEdgeRowSeparatorItem {
+) implements IInstantiable, IVersionable, ICollectionItem,
+    ICollectionItemStyled, IItemCompatibilityListViewModel,
+    IEditableCollectionItem, IMarkable, IItemActionsItem,
+    IEnumerableItem, IEdgeRowSeparatorItem {
 
     // region IInstantiable
 
@@ -406,7 +409,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     protected _getMultiSelectAccessibility(): boolean|null {
-        const value = object.getPropertyValue<boolean|null>(this.getContents(), this._$multiSelectAccessibilityProperty);
+        const value = object.getPropertyValue<boolean|null>(
+            this.getContents(), this._$multiSelectAccessibilityProperty
+        );
         return value === undefined ? true : value;
     }
 
@@ -1030,7 +1035,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param itemActionsClass
      * @param itemPadding @deprecated
      */
-    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}): string {
+    getItemActionPositionClasses(itemActionsPosition: string,
+                                 itemActionsClass: string,
+                                 itemPadding: {top?: string, bottom?: string}): string {
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
         const result: string[] = [];
         if (itemPadding === undefined) {

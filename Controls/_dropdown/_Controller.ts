@@ -149,7 +149,12 @@ export default class Controller implements IDropdownController {
       if (selectedKeysChanged && newOptions.navigation) {
          newKeys = this._getUnloadedKeys(this._items, newOptions);
       }
-      if (!newOptions.sourceController && (newOptions.source && (sourceChanged || !this._sourceController)) || navigationChanged || filterChanged) {
+      if (
+          !newOptions.sourceController &&
+          (newOptions.source && (sourceChanged || !this._sourceController)) ||
+          navigationChanged ||
+          filterChanged
+      ) {
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
@@ -296,7 +301,8 @@ export default class Controller implements IDropdownController {
    handleSelectorResult(selectedItems: RecordSet): void {
       const newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
 
-      // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
+      // From selector dialog records may return not yet been loaded,
+       // so we save items in the history and then load data.
       if (isHistorySource(this._source)) {
          if (newItems.length) {
             this._sourceController = null;

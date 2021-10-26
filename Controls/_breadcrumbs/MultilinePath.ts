@@ -51,7 +51,9 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
     private _isFontsLoaded: boolean = false;
     private _isPathMounted: boolean = false;
 
-    protected _beforeMount(options?: IMultilinePathOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
+    protected _beforeMount(options?: IMultilinePathOptions,
+                           contexts?: object,
+                           receivedState?: IReceivedState): Promise<IReceivedState> | void {
         this._items = dataConversion(options.items, this._moduleName);
         if (!options.containerWidth) {
             Logger.warn('Опция containerWidth не задана. Контрол может работать некорректно', this);
@@ -108,7 +110,9 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
         }
     }
 
-    private _loadFontsCallback(options: IMultilinePathOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
+    private _loadFontsCallback(options: IMultilinePathOptions,
+                               width: number,
+                               getTextWidth: Function = this._getTextWidth): void {
         if (this._items && this._items.length > 0) {
             this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
             this._prepareData(options, width, getTextWidth);
@@ -128,11 +132,16 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
         return ARROW_WIDTH + dotsWidth;
     }
 
-    private _calculateBreadCrumbsToDraw(items: Record[], options: IMultilinePathOptions, getTextWidth: Function = this._getTextWidth): void {
-        const firstContainerData = BreadCrumbsUtil.calculateItemsWithShrinkingLast(items, options, this._width, getTextWidth);
+    private _calculateBreadCrumbsToDraw(items: Record[],
+                                        options: IMultilinePathOptions,
+                                        getTextWidth: Function = this._getTextWidth): void {
+        const firstContainerData =
+            BreadCrumbsUtil.calculateItemsWithShrinkingLast(items, options, this._width, getTextWidth);
         this._indexEdge = firstContainerData.indexEdge;
         this._visibleItemsFirst = firstContainerData.visibleItems;
-        this._visibleItemsSecond = BreadCrumbsUtil.calculateItemsWithDots(items, options, this._indexEdge, this._width, this._dotsWidth, getTextWidth);
+        this._visibleItemsSecond = BreadCrumbsUtil.calculateItemsWithDots(
+            items, options, this._indexEdge, this._width, this._dotsWidth, getTextWidth
+        );
     }
 
     private _getTextWidth(text: string, size: string  = 'xs'): number {

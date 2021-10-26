@@ -113,7 +113,8 @@ export default class HeaderRow extends Row<null> {
             const factory = this.getColumnsFactory();
             let totalColspan = 0;
             this._$columnItems = this._$columnsConfig.map((column, index) => {
-                const isFixed = (this.isMultiline() ? (column.startColumn - 1) : totalColspan) < this.getStickyColumnsCount();
+                const isFixed =
+                    (this.isMultiline() ? (column.startColumn - 1) : totalColspan) < this.getStickyColumnsCount();
                 totalColspan += (column.endColumn - column.startColumn) || 1;
                 return factory({
                     column,
@@ -218,15 +219,17 @@ export default class HeaderRow extends Row<null> {
 
     setSorting(sorting: ISortItem[]): void {
         this._$sorting = sorting;
-        this._$columnItems.forEach((cell) => {
-            // Пропускаем колонку для операций над записью
-            if ((cell as ItemActionsCell).ItemActionsCell) {
-                return;
-            }
-            const cellSorting = this._getSortingBySortingProperty((cell as HeaderCell).getSortingProperty());
-            (cell as HeaderCell).setSorting(cellSorting);
-        });
-        this._nextVersion();
+        if (this._$columnItems) {
+            this._$columnItems.forEach((cell) => {
+                // Пропускаем колонку для операций над записью
+                if ((cell as ItemActionsCell).ItemActionsCell) {
+                    return;
+                }
+                const cellSorting = this._getSortingBySortingProperty((cell as HeaderCell).getSortingProperty());
+                (cell as HeaderCell).setSorting(cellSorting);
+            });
+            this._nextVersion();
+        }
     }
 
     private _getSortingBySortingProperty(property: string): string {

@@ -74,7 +74,8 @@ const moduleClass = CompoundControl.extend({
       BaseOpener.getManager();
 
       const panel = this._panel;
-      const isStack = panel && panel._moduleName === 'Lib/Control/FloatArea/FloatArea' && panel._options.isStack === true;
+      const isStack =
+          panel && panel._moduleName === 'Lib/Control/FloatArea/FloatArea' && panel._options.isStack === true;
       if (isStack && ManagerController.hasRightPanel()) {
          this.getContainer().closest('.controls-compoundAreaNew__floatArea').addClass('controls-compoundAreaNew__floatArea_with-right-panel controls_popupTemplate_theme-default');
       }
@@ -97,7 +98,8 @@ const moduleClass = CompoundControl.extend({
             import('Vdom/Vdom')
          ];
 
-         // Совместимость используется только на онлайне. Могу напрямую зарекваерить контроллер Лобастова для получения конфига
+         // Совместимость используется только на онлайне.
+         // Могу напрямую зарекваерить контроллер Лобастова для получения конфига
          const isBilling = document.body.classList.contains('billing-page');
          // Совместимость есть на онлайне и в биллинге. В биллинге нет ViewSettings и движения границ
          if (isBilling) {
@@ -141,7 +143,8 @@ const moduleClass = CompoundControl.extend({
             parent: this,
             popupOptions: this._getNewPopupOptions()
          };
-         // todo откатил потому что упала ошибка https://online.sbis.ru/opendoc.html?guid=d8cc1098-3d3a-4fed-800c-81b4e6ed2319
+         // todo откатил потому что упала ошибка
+         //  https://online.sbis.ru/opendoc.html?guid=d8cc1098-3d3a-4fed-800c-81b4e6ed2319
          if (this._options.isWS3Compatible) {
             wrapperOptions.iWantBeWS3 = true;
          }
@@ -341,7 +344,8 @@ const moduleClass = CompoundControl.extend({
       }
    },
    _onFocusOutHandler(event, destroyed, focusedControl) {
-      // если фокус уходит со старой панели на новый контрол, старых механизм не будет вызван, нужно вручную звать onaActivateWindow
+      // если фокус уходит со старой панели на новый контрол,
+      // старых механизм не будет вызван, нужно вручную звать onaActivateWindow
       if (focusedControl) {
          if (focusedControl._template) {
             if (!focusedControl._doneCompat) {
@@ -474,7 +478,8 @@ const moduleClass = CompoundControl.extend({
       };
 
       // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
-      item.popupOptions.width = this._maximized ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
+      item.popupOptions.width = this._maximized
+          ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
       const width = StackStrategy.getPosition(coords, item).width;
 
       const newOptions = clone(this._options.templateOptions);
@@ -542,7 +547,8 @@ const moduleClass = CompoundControl.extend({
       if (this._vDomTemplate) {
          this._isNewOptions = true;
 
-         // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
+         // Скроем окно перед установкой новых данных. покажем его после того,
+         // как новые данные отрисуются и окно перепозиционируется
          // Если панель стековая, то не скрываем, т.к. позиция окна не изменится.
          if (this._panel._moduleName !== 'Lib/Control/FloatArea/FloatArea' || this._panel._options.isStack !== true) {
             this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
@@ -575,7 +581,8 @@ const moduleClass = CompoundControl.extend({
          // потому что тогда FloatAreaManager решит, что фокус ушел туда и закроет текущую панель
 
          // активируем только если фокус уходит в wasaby-контрол. если в панели лежит старый контрол и фокус уходит на
-         // него, он сам позовет setActive для предков. а если здесь звать setActive система позовет setActive(false) для контрола получившего фокус
+         // него, он сам позовет setActive для предков. а если здесь звать setActive
+         // система позовет setActive(false) для контрола получившего фокус
          if (curContainer.contains(toContainer) && activationTarget._$to._template) {
             this.setActive(true, activationTarget.isShiftKey, true, activationTarget._$to);
          }

@@ -31,7 +31,8 @@ export default class TableHeader extends Header {
             // Строки в grid layout начинаются с 1, индексация строк - с нуля. Приводим индексы.
             let rowIndex = column.startRow - 1;
 
-            // Если все ячейки в конфигурации начинаются не с первой строки, то мы игнорируем эти пустые строки, удаляя их.
+            // Если все ячейки в конфигурации начинаются не с первой строки,
+            // то мы игнорируем эти пустые строки, удаляя их.
             // Строки в grid layout начинаются с 1, компенсируем this._$headerBounds.row.start на 1.
             if (this._$headerBounds.row.start - 1 > 0) {
                 rowIndex -= (this._$headerBounds.row.start - 1);

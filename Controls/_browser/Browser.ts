@@ -177,6 +177,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                         };
                     });
                 } else {
+                    this._subscribeOnControllersEvents(options);
                     this._updateContext();
                     return result[0].error;
                 }
@@ -443,11 +444,19 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             sourceController.setExpandedItems(newOptions.expandedItems);
         }
 
-        if (isChanged && isInputSearchValueLongerThenMinSearchLength && hasSearchValueInOptions && !newOptions.searchValue) {
+        if (
+            isChanged &&
+            isInputSearchValueLongerThenMinSearchLength &&
+            hasSearchValueInOptions &&
+            !newOptions.searchValue) {
             this._inputSearchValue = '';
         }
 
-        if ((hasSearchValueInOptions && searchValueOptionsChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
+        if (
+            (hasSearchValueInOptions && searchValueOptionsChanged) ||
+            options.searchParam !== newOptions.searchParam ||
+            options.startingWith !== newOptions.startingWith
+        ) {
             if (!methodResult && newOptions.searchParam) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
@@ -622,7 +631,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const searchController = this._getSearchControllerSync();
 
         if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
-            this._notify('expandedItemsChanged', [this._getSearchControllerSync().getExpandedItemsForOpenRoot(root, items)]);
+            this._notify(
+                'expandedItemsChanged', [this._getSearchControllerSync().getExpandedItemsForOpenRoot(root, items)]
+            );
 
             if (!this._deepReload) {
                 this._deepReload = true;
@@ -796,7 +807,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._getOperationsController().selectionTypeChanged(typeName, limit);
     }
 
-    protected _selectedKeysCountChanged(e: SyntheticEvent, count: number|null, isAllSelected: boolean, id?: string): void {
+    protected _selectedKeysCountChanged(e: SyntheticEvent,
+                                        count: number|null,
+                                        isAllSelected: boolean, id?: string): void {
         e.stopPropagation();
         const result = this._getOperationsController().updateSelectedKeysCount(count, isAllSelected, id);
         this._selectedKeysCount = result.count;
@@ -911,11 +924,11 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _getFilterControllerOptions(options: IBrowserOptions): IFilterControllerOptions {
         const {filterButtonSource, filterController} = options;
-       return {
-           ...options,
-           searchValue: this._getSearchValue(options),
-           historySaveCallback: this._historySaveCallback.bind(this),
-           filterButtonSource: filterButtonSource || filterController?.getFilterButtonItems()
+        return {
+            ...options,
+            searchValue: this._getSearchValue(options),
+            historySaveCallback: this._historySaveCallback.bind(this),
+            filterButtonSource: filterButtonSource || filterController?.getFilterButtonItems()
         } as IFilterControllerOptions;
     }
 

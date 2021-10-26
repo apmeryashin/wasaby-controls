@@ -80,7 +80,8 @@ export class StickyStrategy {
          } else {
             this._invertPosition(popupCfg, direction);
             const revertPosition = this._getPosition(popupCfg, targetCoords, direction, targetElement, zoom);
-            let revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition, direction, targetElement);
+            let revertPositionOverflow =
+                this._checkOverflow(popupCfg, targetCoords, revertPosition, direction, targetElement);
             if (revertPositionOverflow > 0) {
                if ((positionOverflow <= revertPositionOverflow)) {
                   this._invertPosition(popupCfg, direction);
@@ -94,7 +95,8 @@ export class StickyStrategy {
                   // Fix position and overflow, if the revert position is outside of the window,
                   // but it can be position in the visible area
                   this._fixPosition(revertPosition, targetCoords);
-                  revertPositionOverflow = this._checkOverflow(popupCfg, targetCoords, revertPosition, direction, targetElement);
+                  revertPositionOverflow =
+                      this._checkOverflow(popupCfg, targetCoords, revertPosition, direction, targetElement);
                   if (revertPositionOverflow > 0 ) {
                      this._restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
                   }
@@ -253,8 +255,11 @@ export class StickyStrategy {
       }
    }
 
-   private _calculateFixedModePosition(popupCfg: IStickyPositionConfig, property: TSizeProperty, targetCoords: ITargetCoords,
-                                       position: IPopupPosition, positionOverflow: number): IPopupPosition {
+   private _calculateFixedModePosition(popupCfg: IStickyPositionConfig,
+                                       property: TSizeProperty,
+                                       targetCoords: ITargetCoords,
+                                       position: IPopupPosition,
+                                       positionOverflow: number): IPopupPosition {
       this._restrictContainer(position, property, popupCfg, positionOverflow);
       return position;
    }
@@ -439,7 +444,8 @@ export class StickyStrategy {
     * @returns
     */
    private _getMargins(popupCfg: IStickyPositionConfig, direction: TDirection, zoom: number = 1): number {
-      const margins = popupCfg.sizes.margins && popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] || 0;
+      const margins =
+          popupCfg.sizes.margins && popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] || 0;
       const offset = popupCfg.offset[direction] || 0;
       return (margins + offset) * zoom;
    }

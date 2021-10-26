@@ -155,7 +155,8 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _afterMount(): void {
-        // В 5000 поправится при переходе на новый стандарт по задаче: https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
+        // В 5000 поправится при переходе на новый стандарт по задаче:
+        // https://online.sbis.ru/opendoc.html?guid=d1ad38ec-0c45-4ec9-a7b5-fd4782207c6a
         if (this._selectedKeys.length) {
             this._notify('propertyValueChanged', [this._getExtendedValue()], {bubbling: true});
         }
@@ -389,7 +390,8 @@ class ListEditor extends Control<IListEditorOptions> {
         this._items.prepend([emptyItem]);
     }
 
-    private _setFilter(selectedKeys: string[]|number[], {filter, historyId, keyProperty, resetValue}: IListEditorOptions): void {
+    private _setFilter(selectedKeys: string[]|number[],
+                       {filter, historyId, keyProperty, resetValue}: IListEditorOptions): void {
         this._filter = {...filter};
         if (selectedKeys && selectedKeys.length && !isEqual(resetValue, selectedKeys)) {
             this._filter[keyProperty] = selectedKeys;

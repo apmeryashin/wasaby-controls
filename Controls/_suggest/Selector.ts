@@ -129,7 +129,9 @@ const Suggest = Control.extend({
       }
 
       if (newOptions.suggestTemplate !== this._options.suggestTemplate) {
-         this._suggestTemplate = _private.prepareSuggestTemplate(newOptions.displayProperty, newOptions.suggestTemplate);
+         this._suggestTemplate = _private.prepareSuggestTemplate(
+             newOptions.displayProperty, newOptions.suggestTemplate
+         );
       }
 
       if (newOptions.selectedKey !== undefined && (newOptions.selectedKey !== this._options.selectedKey ||

@@ -20,7 +20,12 @@ export default class extends Control {
         data: Excel.getData()
     });
 
-    _onBeforeBeginEdit(options: { item?: Model }, item: Model, isAdd: boolean, columnIndex: number): typeof editing.CANCEL | void {
+    _onBeforeBeginEdit(
+        options: { item?: Model },
+        item: Model,
+        isAdd: boolean,
+        columnIndex: number
+    ): typeof editing.CANCEL | void {
         if (columnIndex === NOT_EDITABLE_COLUMN_INDEX) {
             return editing.CANCEL;
         }

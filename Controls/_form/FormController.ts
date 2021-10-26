@@ -522,7 +522,9 @@ class FormController extends ControllerBase<IFormController> {
     }
 
     delete(destroyMetaData: unknown, config?: ICrudConfig): Promise<Model | undefined> {
-        const resultProm = this._crudController.delete(this._record, destroyMetaData || this._options.destroyMetaData, config);
+        const resultProm = this._crudController.delete(
+            this._record, destroyMetaData || this._options.destroyMetaData, config
+        );
 
         return resultProm.then((record) => {
             this._setRecord(null);

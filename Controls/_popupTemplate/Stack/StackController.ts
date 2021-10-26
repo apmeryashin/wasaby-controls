@@ -160,7 +160,8 @@ class StackController extends BaseController {
         let minSavedWidth = !isMoreThanMid ? newValue : item.minSavedWidth;
         let maxSavedWidth = isMoreThanMid ? newValue : item.maxSavedWidth;
 
-        // Если расстояние между сохраненными ширинами меньше MIN_DISTANCE, то одну из сохраненных ширин сбрасываем, чтобы
+        // Если расстояние между сохраненными ширинами меньше MIN_DISTANCE,
+        // то одну из сохраненных ширин сбрасываем, чтобы
         // разворот по кнопке был более заметным.
         if (maxSavedWidth - minSavedWidth < MIN_DISTANCE) {
             if (isMoreThanMid) {
@@ -563,7 +564,8 @@ class StackController extends BaseController {
             }
         });
 
-        const isVisible = this._getWindowSize(container).width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
+        const isVisible =
+            this._getWindowSize(container).width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
 
         if (isVisible !== this._sideBarVisible) {
             this._sideBarVisible = isVisible;

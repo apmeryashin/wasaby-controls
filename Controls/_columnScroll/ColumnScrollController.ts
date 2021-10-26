@@ -254,8 +254,9 @@ export default class ColumnScrollController {
             shadowStyles += 'left: ' + this._fixedColumnsWidth + 'px;';
         }
         if (this._options.isEmptyTemplateShown) {
-            const emptyTemplate = this._scrollContainer.getElementsByClassName('js-controls-GridView__emptyTemplate')[0] as HTMLDivElement;
-            shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
+            const emptyTemplate =
+                this._scrollContainer.getElementsByClassName('js-controls-GridView__emptyTemplate')[0];
+            shadowStyles += 'height: ' + (emptyTemplate as HTMLDivElement).offsetTop + 'px;';
         }
         return shadowStyles;
     }
@@ -291,11 +292,16 @@ export default class ColumnScrollController {
             this._drawTransform(0);
 
             newContentSize = this._contentContainer.scrollWidth;
-            newContainerSize = isFullGridSupport ? this._contentContainer.offsetWidth : this._scrollContainer.offsetWidth;
+            newContainerSize = isFullGridSupport ? this._contentContainer.offsetWidth
+                : this._scrollContainer.offsetWidth;
         } else {
             newContentSize = calculatedSizes.contentContainerSize;
             newContainerSize = calculatedSizes.scrollContainerSize;
-            if (this._contentSize === newContentSize && this._containerSize === newContainerSize && this._fixedColumnsWidth === calculatedSizes.fixedColumnsWidth) {
+            if (
+                this._contentSize === newContentSize &&
+                this._containerSize === newContainerSize &&
+                this._fixedColumnsWidth === calculatedSizes.fixedColumnsWidth
+            ) {
                 return false;
             }
         }
@@ -317,7 +323,9 @@ export default class ColumnScrollController {
             this._scrollPosition -= (newContainerSize + this._scrollPosition) - newContentSize;
         }
 
-        this._contentSizeForHScroll = isFullGridSupport ? this._contentSize - this._fixedColumnsWidth : this._contentSize;
+        this._contentSizeForHScroll = isFullGridSupport
+            ? this._contentSize - this._fixedColumnsWidth
+            : this._contentSize;
         this._drawTransform(this._scrollPosition, hasSizesPreSet);
 
         if (!hasSizesPreSet) {
@@ -372,7 +380,9 @@ export default class ColumnScrollController {
 
     private _updateFixedColumnWidth(isFullGridSupport: boolean): void {
         this._fixedColumnsWidth = !this._options.stickyColumnsCount ? 0 : this._options.getFixedPartWidth();
-        this._scrollWidth = isFullGridSupport ? this._scrollContainer.offsetWidth - this._fixedColumnsWidth : this._scrollContainer.offsetWidth;
+        this._scrollWidth = isFullGridSupport
+            ? this._scrollContainer.offsetWidth - this._fixedColumnsWidth
+            : this._scrollContainer.offsetWidth;
     }
 
     private _fixSafariBug(): void {
@@ -581,7 +591,8 @@ export default class ColumnScrollController {
          * свойстве detail, но на него нельзя подписаться.
          * TODO: https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
          */
-        return (isFirefox ? Math.sign(delta) * WHEEL_DELTA_INCREASE_COEFFICIENT : delta) * WHEEL_SCROLLING_SMOOTH_COEFFICIENT;
+        const correctDelta = (isFirefox ? Math.sign(delta) * WHEEL_DELTA_INCREASE_COEFFICIENT : delta);
+        return correctDelta * WHEEL_SCROLLING_SMOOTH_COEFFICIENT;
     }
 
     getSizes() {
@@ -619,10 +630,12 @@ export default class ColumnScrollController {
         // Для этого округляем в соответствующую направлению скролла
         // сторону (у ячейкислева в меньшую, справа в большую, а у скроллконтейнера наоборот).
         if (columnRect.right > scrollableRect.right) {
-            const newScrollPosition = this._scrollPosition + (Math.round(columnRect.right) - Math.floor(scrollableRect.right));
+            const newScrollPosition =
+                this._scrollPosition + (Math.round(columnRect.right) - Math.floor(scrollableRect.right));
             return Math.min(newScrollPosition, this.getScrollLength());
         } else if (columnRect.left < scrollableRect.left) {
-            const newScrollPosition = this._scrollPosition - (Math.floor(scrollableRect.left) - Math.round(columnRect.left));
+            const newScrollPosition =
+                this._scrollPosition - (Math.floor(scrollableRect.left) - Math.round(columnRect.left));
             return Math.max(0, newScrollPosition);
         }
         return this._scrollPosition;
@@ -654,7 +667,9 @@ export default class ColumnScrollController {
         }
     }
 
-    shouldDrawColumnScroll(viewContainers, getFixedPartWidth, isFullGridSupport: boolean): IShouldDrawColumnScrollResult {
+    shouldDrawColumnScroll(viewContainers,
+                           getFixedPartWidth,
+                           isFullGridSupport: boolean): IShouldDrawColumnScrollResult {
         this._drawTransform(0, true);
         const res = ColumnScrollController.shouldDrawColumnScroll(viewContainers, getFixedPartWidth, isFullGridSupport);
         this._drawTransform(this._scrollPosition, true);
@@ -678,7 +693,9 @@ export default class ColumnScrollController {
             + ` js-controls-ColumnScroll__shadow_position-${position}`;
     }
 
-    static shouldDrawColumnScroll(viewContainers, getFixedPartWidth, isFullGridSupport: boolean): IShouldDrawColumnScrollResult {
+    static shouldDrawColumnScroll(viewContainers,
+                                  getFixedPartWidth,
+                                  isFullGridSupport: boolean): IShouldDrawColumnScrollResult {
             const calcResult = () => {
                 let contentContainerSize = 0;
                 let scrollContainerSize = 0;
@@ -689,7 +706,8 @@ export default class ColumnScrollController {
                     Logger.error('Header is missing!');
                 } else {
                     contentContainerSize = viewContainers.grid.scrollWidth;
-                    scrollContainerSize = isFullGridSupport ? viewContainers.grid.offsetWidth : viewContainers.gridWrapper.offsetWidth;
+                    scrollContainerSize = isFullGridSupport
+                        ? viewContainers.grid.offsetWidth : viewContainers.gridWrapper.offsetWidth;
                     fixedColumnsWidth = getFixedPartWidth(viewContainers.gridWrapper, header);
                 }
                 return {

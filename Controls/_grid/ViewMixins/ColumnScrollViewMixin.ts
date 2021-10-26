@@ -88,7 +88,8 @@ const hasCheckboxColumn = (options: Partial<IAbstractViewOptions>): boolean => {
     return options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 };
 
-export const isSizeAffectsOptionsChanged = (newOptions: Partial<IAbstractViewOptions>, oldOptions: Partial<IAbstractViewOptions>): boolean => {
+export const isSizeAffectsOptionsChanged = (newOptions: Partial<IAbstractViewOptions>,
+                                            oldOptions: Partial<IAbstractViewOptions>): boolean => {
     const changedOptions = _Options.getChangedOptions(newOptions, oldOptions);
 
     // Если ничего не изменилось, то утилита вернет null
@@ -299,7 +300,10 @@ const scrollToColumnEdge = (self): void => {
     }
 };
 
-const setScrollPosition = (self: TColumnScrollViewMixin, position: number, immediate?: boolean, useAnimation?: boolean): void => {
+const setScrollPosition = (self: TColumnScrollViewMixin,
+                           position: number,
+                           immediate?: boolean,
+                           useAnimation?: boolean): void => {
     const oldScrollPosition = self._$columnScrollController.getScrollPosition();
     const newPosition = self._$columnScrollController.setScrollPosition(position, immediate, useAnimation);
     if (oldScrollPosition !== newPosition) {
@@ -319,7 +323,9 @@ const recalculateSizes = (self: TColumnScrollViewMixin, viewOptions, calcedSizes
     const wasUpdated = self._$columnScrollController.updateSizes(calcedSizes);
 
     if (wasUpdated) {
-        const {contentSizeForHScroll, scrollWidth, containerSize, contentSize} = self._$columnScrollController.getSizes();
+        const {
+            contentSizeForHScroll, scrollWidth, containerSize, contentSize
+        } = self._$columnScrollController.getSizes();
         const scrollPosition = self._$columnScrollController.getScrollPosition();
 
         self._$columnScrollEmptyViewMaxWidth = containerSize;
@@ -635,7 +641,8 @@ export const ColumnScrollViewMixin: TColumnScrollViewMixin = {
             // Стили должны быть применены незамедлительно, в не через requestAnimationFrame,
             // иначе нативный подскролл сработает раньше, затем подскролл горизонтального скролла.
             const currentPosition = this._$columnScrollController.getScrollPosition();
-            const newScrollPosition = this._$columnScrollController.getScrollPositionToColumnRectEdge(cell.getBoundingClientRect());
+            const newScrollPosition =
+                this._$columnScrollController.getScrollPositionToColumnRectEdge(cell.getBoundingClientRect());
 
             if (currentPosition !== newScrollPosition) {
                 setScrollPosition(this, newScrollPosition, true);

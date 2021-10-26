@@ -37,7 +37,8 @@ const _private = {
         const afterItemsRemoveResult = self._notify('afterItemsRemove', [keys, result]);
 
         // According to the standard, after moving the items, you need to unselect all in the table view.
-        // The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
+        // The table view and Mover are in a common container (Control.Container.MultiSelector)
+        // and do not know about each other.
         // The only way to affect the selection in the table view is to send the selectedTypeChanged event.
         // You need a schema in which Mover will not work directly with the selection.
         // Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
@@ -62,7 +63,14 @@ const _private = {
         // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         return keys instanceof Array
             ? Promise.resolve(keys)
-            : getItemsBySelection(keys, self._source, self._items, self._filter, null, self._options.selectionTypeForAllSelected);
+            : getItemsBySelection(
+                keys,
+                self._source,
+                self._items,
+                self._filter,
+                null,
+                self._options.selectionTypeForAllSelected
+            );
     }
 };
 
@@ -101,7 +109,8 @@ const Remover = BaseAction.extend({
     _beforeMount(options, context) {
         _private.updateDataOptions(this, options, context.dataOptions);
         Logger.warn('Controls/list:Remover: Класс устарел и будет удалён.' +
-            ' Используйте методы интерфейса Controls/list:IRemovableList, который по умолчанию подключен в списки.', this);
+            ' Используйте методы интерфейса Controls/list:IRemovableList, который ' +
+            'по умолчанию подключен в списки.', this);
     },
 
     _beforeUpdate(options, context) {

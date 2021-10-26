@@ -1579,7 +1579,9 @@ export default abstract class TileItem<T extends Model = Model> {
      * Должен ли отрисоваться заголовок
      * @param {TTileItem} itemType Тип элемента
      */
-    shouldDisplayTitle(itemType: TTileItem = 'default', titlePosition: TTitlePosition = 'underImage', imageViewMode: TImageViewMode = 'rectangle'): boolean {
+    shouldDisplayTitle(itemType: TTileItem = 'default',
+                       titlePosition: TTitlePosition = 'underImage',
+                       imageViewMode: TImageViewMode = 'rectangle'): boolean {
         switch (itemType) {
             case 'default':
                 return !!this.getDisplayValue() || this.hasVisibleActions() || this.isEditing();
