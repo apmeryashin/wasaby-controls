@@ -177,6 +177,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                         };
                     });
                 } else {
+                    this._subscribeOnControllersEvents(options);
                     this._updateContext();
                     return result[0].error;
                 }
