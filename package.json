@@ -47,6 +47,6 @@
       "wasaby-cli": "git+https://platform-git.sbis.ru/saby/wasaby-cli.git#rc-22.1000"
    },
    "lint-staged": {
-      "*.ts": "tslint -c ./tslint_new.json -p ./tsconfig.json -q"
+      "*.ts": "tslint -c ./tslint_new.json -p ./tsconfig.json -t codeFrame -q"
    }
 }
