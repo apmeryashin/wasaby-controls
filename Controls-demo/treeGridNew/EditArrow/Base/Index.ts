@@ -1,6 +1,4 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-import { SyntheticEvent } from 'Vdom/Vdom';
-import { Model } from 'Types/entity';
 
 import { IColumn } from 'Controls/grid';
 
@@ -26,10 +24,6 @@ export default class Base extends Control<IControlOptions> {
         });
         this._columns = TreeColumns;
         this._header = TreeHeader;
-    }
-
-    _editArrowClick(e: SyntheticEvent, item: Model): void {
-        console.log(item);
     }
 
     static _styles: string[] = [

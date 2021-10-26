@@ -1,12 +1,12 @@
-define('Controls-demo/Buttons/Menu/Menu', [
+define('Controls-demo/dropdown_new/Menu/Menu', [
    'UI/Base',
-   'wml!Controls-demo/Buttons/Menu/Menu',
+   'wml!Controls-demo/dropdown_new/Menu/Menu',
    'Types/source',
    'Controls/list',
    'Controls-demo/dropdown_new/Button/HistoryId/historySourceMenu',
 
-   'wml!Controls-demo/Buttons/Menu/itemTemplateSub',
-   'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
+   'wml!Controls-demo/dropdown_new/Menu/itemTemplateSub',
+   'wml!Controls-demo/dropdown_new/Menu/itemTemplateComment'
 ], function(Base, template, source, ControlsConstants, HistorySourceMenu) {
    'use strict';
 
@@ -62,9 +62,9 @@ define('Controls-demo/Buttons/Menu/Menu', [
 
             this._subParagraphItems = [
                { id: 1, title: 'Sales report' },
-               { id: 2, title: 'Property Warehouse, Arum, Ltd., 17 March`16', myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub' },
-               { id: 3, title: 'Main warehouse, Media companies, LLC, 02 Feb`16', myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub' },
-               { id: 4, title: 'Main warehouse, Our organization, I quarter', myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub' },
+               { id: 2, title: 'Property Warehouse, Arum, Ltd., 17 March`16', myTemplate: 'wml!Controls-demo/dropdown_new/Menu/itemTemplateSub' },
+               { id: 3, title: 'Main warehouse, Media companies, LLC, 02 Feb`16', myTemplate: 'wml!Controls-demo/dropdown_new/Menu/itemTemplateSub' },
+               { id: 4, title: 'Main warehouse, Our organization, I quarter', myTemplate: 'wml!Controls-demo/dropdown_new/Menu/itemTemplateSub' },
                { id: 5, title: 'Dynamics of sales' },
                { id: 6, title: 'Balance sheet' },
                { id: 7, title: 'Turnover Statement' },
@@ -76,21 +76,21 @@ define('Controls-demo/Buttons/Menu/Menu', [
                   id: 1,
                   title: 'Create in internal editor',
                   comment: 'The internal editor provides a wide range of automatic fill settings',
-                  myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
+                  myTemplate: 'wml!Controls-demo/dropdown_new/Menu/itemTemplateComment'
                },
                {
                   id: 2,
                   title: 'Create office documents in the editor',
                   comment: 'Word is more familiar, but does not support all the features of automatic filling',
-                  myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
+                  myTemplate: 'wml!Controls-demo/dropdown_new/Menu/itemTemplateComment'
                },
-               { id: 3, title: 'Download ready printed form', myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment' },
+               { id: 3, title: 'Download ready printed form', myTemplate: 'wml!Controls-demo/dropdown_new/Menu/itemTemplateComment' },
                { id: 4, title: 'Select a printed form' },
                {
                   id: 5,
                   title: 'Request documents from the user',
                   comment: 'During the processing you can request to download the necessary documents, for example, scans, photos',
-                  myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
+                  myTemplate: 'wml!Controls-demo/dropdown_new/Menu/itemTemplateComment'
                }
             ];
 
@@ -309,7 +309,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          }
       }
    );
-   ModuleClass._styles = ['Controls-demo/Buttons/Menu/Menu'];
+   ModuleClass._styles = ['Controls-demo/dropdown_new/Menu/Menu'];
 
    return ModuleClass;
 });

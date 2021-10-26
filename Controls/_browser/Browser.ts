@@ -4,7 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as SearchController} from 'Controls/search';
 import {IFilterItem} from 'Controls/filter';
-import {IFilterControllerOptions, IFilterHistoryData} from 'Controls/_filter/ControllerClass';
+import FilterControllerClass, {IFilterControllerOptions, IFilterHistoryData} from 'Controls/_filter/ControllerClass';
 import {EventUtils} from 'UI/Events';
 import {RecordSet} from 'Types/collection';
 import { IContextOptionsValue } from 'Controls/context';
@@ -59,6 +59,7 @@ export interface IListConfiguration extends IControlOptions, ISearchOptions, ISo
     fastFilterSource?: unknown;
     historyItems?: IFilterItem[];
     sourceController?: SourceController;
+    filterController?: FilterControllerClass;
     id?: string;
 }
 
@@ -568,7 +569,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     private _subscribeOnFilterControllerEvents(options: IBrowserOptions): void {
         // Для совместимости, пока контролы вынуждены работать и от опций и от настроек на странице
         // + пока нет виджета filter/View
-        this._dataLoader.getFilterController().subscribe('filterSourceChanged', (filterSource) => {
+        this._dataLoader.getFilterController().subscribe('filterSourceChanged', (event, filterSource) => {
             this._updateFilterAndFilterItems(options);
 
             if (options.useStore) {
@@ -921,10 +922,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private _getFilterControllerOptions(options: IBrowserOptions): IFilterControllerOptions {
+        const {filterButtonSource, filterController} = options;
        return {
            ...options,
            searchValue: this._getSearchValue(options),
-           historySaveCallback: this._historySaveCallback.bind(this)
+           historySaveCallback: this._historySaveCallback.bind(this),
+           filterButtonSource: filterButtonSource || filterController?.getFilterButtonItems()
         } as IFilterControllerOptions;
     }
 

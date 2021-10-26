@@ -36,16 +36,13 @@ interface IDragObject {
 class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTemplate {
     '[Controls/_popupTemplate/interface/IPopupTemplate]': boolean = true;
     protected _template: TemplateFunction = template;
-    protected _headerTheme: string;
     protected _dragState: string;
 
     protected _beforeMount(options: IDialogTemplateOptions): void {
-        this._prepareTheme();
         this._setDragStateByOptions(options);
     }
 
     protected _beforeUpdate(options: IDialogTemplateOptions): void {
-        this._prepareTheme();
         if (options.draggable !== this._options.draggable) {
             this._setDragStateByOptions(options);
         }
@@ -67,10 +64,6 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
 
     private _setDragStateByOptions(options: IDialogTemplateOptions): void {
         this._dragState = options.draggable ? 'draggable' : 'not-draggable';
-    }
-
-    private _prepareTheme(): void {
-        this._headerTheme = ManagerController.getPopupHeaderTheme();
     }
 
     protected _onMouseDown(event: SyntheticEvent<MouseEvent>): void {

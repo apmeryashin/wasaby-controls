@@ -96,6 +96,7 @@ export interface ICheckboxGroupOptions extends IControlOptions,
 
 /**
  * @name Controls/_toggle/CheckboxGroup#parentProperty
+ * @cfg
  * @demo Controls-demo/toggle/CheckboxGroup/ParentProperty/Index
  */
 

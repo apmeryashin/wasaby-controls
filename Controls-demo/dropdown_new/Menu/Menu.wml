@@ -73,7 +73,7 @@
          <Controls.dropdown:Button
                  keyProperty="id"
                  caption="Topic +"
-                 itemTemplate="wml!Controls-demo/Buttons/Menu/itemTemplateComment"
+                 itemTemplate="wml!Controls-demo/dropdown_new/Menu/itemTemplateComment"
                  buttonStyle="primary"
                  dropdownClassName="demo-menu"
                  viewMode="button"
