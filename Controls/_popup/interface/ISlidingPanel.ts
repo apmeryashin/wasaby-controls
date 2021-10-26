@@ -118,6 +118,7 @@ export interface ISlidingPanel {
  * @property {String} restrictiveContainer Определяет селектор контейнера в рамаках которого будет строиться шторка.
  * Шторка будет вписываться в данный контейнер по ширине, но открываться будет от низа экрана.
  * Пример задания: '.my-super-class'
+ * Демо-пример: https://pre-test-wi.sbis.ru/materials/viewdemo/Controls-demo/Popup/SlidingPanel/RestrictiveContainer/Index
  */
 
 /**
