@@ -4,8 +4,9 @@
 import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
-import {constants, IoC, cookie} from 'Env/Env';
+import {constants, IoC} from 'Env/Env';
 import { getGeneratorConfig } from 'UI/Base';
+import {setDisableCompatForMarkupDecorator} from 'UICommon/Executor';
 
 const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
 /**
@@ -151,25 +152,32 @@ const htmlToJson = (html) => {
     * @returns {String}
     */
 const jsonToHtml = (json, tagResolver?, resolverParams?) => {
-      // Вычисление шаблона должно производиться без слоя совместимости
-      // https://online.sbis.ru/opendoc.html?guid=9108459a-bd21-48cb-8c1a-1d847e29f33a
-      const prevDisableCompat = cookie.get('disableCompat');
-      cookie.set('disableCompat', 'true');
+        let result;
+        try {
+            // Вычисление шаблона должно производиться без слоя совместимости
+            // https://online.sbis.ru/opendoc.html?guid=9108459a-bd21-48cb-8c1a-1d847e29f33a
+            setDisableCompatForMarkupDecorator(true);
 
-      const generatorConfig = getGeneratorConfig();
-      const result = template({
-         _options: {
-            value: json,
-            tagResolver,
-            resolverParams
-         },
-         _isMarkupConverter: true,
-         _moduleName: 'Controls/decorator:Converter'
-      }, {}, {}, false, undefined, false, generatorConfig);
+            const generatorConfig = getGeneratorConfig();
+            result = template({
+                _options: {
+                    value: json,
+                    tagResolver: tagResolver,
+                    resolverParams: resolverParams
+                },
+                _isMarkupConverter: true,
+                _moduleName: 'Controls/decorator:Converter'
+            }, {}, {}, false, undefined, false, generatorConfig);
 
-      cookie.set('disableCompat', prevDisableCompat);
+            setDisableCompatForMarkupDecorator(false);
+        } catch (error) {
+            IoC.resolve('ILogger')
+                .error('Controls/_decorator/Markup/Converter', error.message);
+        } finally {
+            setDisableCompatForMarkupDecorator(false);
+        }
 
-      return result;
+        return result;
    };
 
    /**
