@@ -193,11 +193,12 @@ export default class FilterControllerClass extends mixin<
 
     updateFilterItems(items: IFilterItem[]): void {
         const currentFilterButtonItems = this._$filterButtonItems;
+        const currentFastFilterItems = this._$fastFilterItems;
 
         this._updateFilterItems(items);
         this._applyItemsToFilter(this._$filter, items);
 
-        if (!isEqual(currentFilterButtonItems, this._$filterButtonItems)) {
+        if (!isEqual(currentFilterButtonItems, this._$filterButtonItems) || !isEqual(currentFastFilterItems, this._$fastFilterItems)) {
             this._notify('filterSourceChanged', this._$filterButtonItems);
         }
 
