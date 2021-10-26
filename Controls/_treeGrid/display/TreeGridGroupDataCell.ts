@@ -1,10 +1,11 @@
 import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {mixin} from 'Types/util';
-import {GridGroupCellMixin, IGridRowOptions} from 'Controls/grid';
+import {GroupMixin} from 'Controls/display';
+import {IGridRowOptions} from 'Controls/grid';
 import TreeGridDataCell, {ITreeGridDataCellOptions} from 'Controls/_treeGrid/display/TreeGridDataCell';
 import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
-import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
+import {TFontColorStyle, TFontSize, TFontWeight, TIconSize, TIconStyle, TTextTransform} from 'Controls/interface';
 
 const GROUP_CELL_TEMPLATE = 'Controls/treeGrid:GroupColumnTemplate';
 
@@ -16,8 +17,8 @@ export interface ITreeGridGroupDataCell extends ITreeGridDataCellOptions<Model> 
  * Ячейка строки с данными, которая отображается в виде группы
  */
 export default class TreeGridGroupDataCell<T extends Model = Model> extends mixin<
-    TreeGridDataCell<T>, GridGroupCellMixin<T>
->(TreeGridDataCell, GridGroupCellMixin) {
+    TreeGridDataCell<T>, GroupMixin
+>(TreeGridDataCell, GroupMixin) {
     readonly '[Controls/treeGrid:TreeGridGroupDataCell]': boolean;
 
     protected readonly _$column: IGroupNodeColumn;
@@ -63,8 +64,9 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
         classes += this._getContentAlignClasses();
         classes += ' controls-ListView__groupContent';
 
+        classes += ' controls-ListView__groupContent_height';
         if (this.shouldDisplayItemActions()) {
-            classes += 'controls-ListView__groupContent_height_withItemActions';
+            classes += '_withItemActions';
         }
         return classes;
     }
@@ -99,6 +101,31 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
 
     isExpanded(): boolean {
         return this._$isExpanded;
+    }
+
+    getExpanderClasses(expanderVisible: boolean = true,
+                       expanderAlign: 'right' | 'left' = 'left',
+                       iconSize: TIconSize,
+                       iconStyle: TIconStyle): string {
+        let classes = super.getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle);
+        if (expanderVisible !== false) {
+            classes += ' js-controls-Tree__row-expander';
+        }
+        return classes;
+    }
+
+    protected _getWrapperSeparatorClasses(): string {
+        let classes = '';
+        classes += ' controls-Grid__no-rowSeparator';
+        classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
+        return classes;
+    }
+
+    protected _getWrapperBaseClasses(templateHighlightOnHover: boolean): string {
+        let classes = '';
+        classes += ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
+        classes += ` controls-Grid__row-cell_${this.getStyle()}`;
+        return classes;
     }
 
     // endregion Аспект "Ячейка группы"

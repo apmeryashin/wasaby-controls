@@ -43,7 +43,8 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
 
     it('getContentClasses should return group cell content classes', () => {
         CssClassesAssert.include(getGroupCell().getContentClasses(), [
-            'controls-ListView__groupContent']);
+            'controls-ListView__groupContent',
+            'controls-ListView__groupContent_height']);
     });
 
     it('should contain styling classes when styling options are set', () => {
