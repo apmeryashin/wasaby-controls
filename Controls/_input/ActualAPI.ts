@@ -1,7 +1,7 @@
 import {Logger} from 'UI/Utils';
 import {constants} from 'Env/Env';
 
-export function inlineHeight(size: string, inlineHeight: string, msg: boolean = true): string {
+export function inlineHeight(size: string, inlineHeightParam: string, msg: boolean = true): string {
     if (size) {
         if (constants.isBrowserPlatform && msg) {
             Logger.error('Используется устаревшая опция size. ' +
@@ -10,12 +10,12 @@ export function inlineHeight(size: string, inlineHeight: string, msg: boolean = 
         }
         return size;
     }
-    if (inlineHeight) {
-        return inlineHeight;
+    if (inlineHeightParam) {
+        return inlineHeightParam;
     }
 }
 
-export function fontColorStyle(fontStyle: string, fontColorStyle: string, msg: boolean = true): string {
+export function fontColorStyle(fontStyle: string, fontColorStyleParam: string, msg: boolean = true): string {
     if (fontStyle) {
         if (constants.isBrowserPlatform && msg) {
             Logger.error('Используется устаревшая опция fontStyle. ' +
@@ -24,12 +24,12 @@ export function fontColorStyle(fontStyle: string, fontColorStyle: string, msg: b
         }
         return fontStyle;
     }
-    if (fontColorStyle) {
-        return fontColorStyle;
+    if (fontColorStyleParam) {
+        return fontColorStyleParam;
     }
 }
 
-export function fontSize(fontStyle: string, fontSize: string, msg: boolean = true): string {
+export function fontSize(fontStyle: string, fontSizeParam: string, msg: boolean = true): string {
     if (fontStyle) {
         let result;
         if (fontStyle === 'primary' || fontStyle === 'secondary') {
@@ -42,8 +42,8 @@ export function fontSize(fontStyle: string, fontSize: string, msg: boolean = tru
         }
         return result || 'm';
     }
-    if (fontSize) {
-        return fontSize;
+    if (fontSizeParam) {
+        return fontSizeParam;
     }
 }
 
@@ -53,9 +53,9 @@ export function generateStates(self: object, options: object): void {
     self._fontSize = inlineHeight(options.fontStyle, options.fontSize, false);
 }
 
-export function validationStatus(style: string, validationStatus: string): string {
-    if (validationStatus) {
-        return validationStatus;
+export function validationStatus(style: string, validationStatusParam: string): string {
+    if (validationStatusParam) {
+        return validationStatusParam;
     }
 
     switch (style) {

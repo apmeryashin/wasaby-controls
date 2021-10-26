@@ -59,11 +59,11 @@ export function calculateIntegerClass(
     fontWeight: string,
     currency: string,
     currencyPosition: string,
-    isDisplayFractionPath: boolean
+    isDisplayFractionPathParam: boolean
 ): string {
     return `${fontSize ? 'controls-fontsize-' + fontSize : ''} ${fontColorStyle ? ' controls-text-' + fontColorStyle : ''}
             ${fontWeight ? ' controls-fontweight-' + fontWeight : ''} ${currency && currencyPosition === 'left' ? ' controls-margin_left-2xs' : ''}
-            ${currency && currencyPosition === 'right' && !isDisplayFractionPath ? ' controls-margin_right-2xs' : ''}`;
+            ${currency && currencyPosition === 'right' && !isDisplayFractionPathParam ? ' controls-margin_right-2xs' : ''}`;
 }
 
 export function calculateFractionClass(

@@ -329,7 +329,7 @@ export default class View extends Control<IViewOptions> {
         const startIndex = this._collection.getStartIndex();
         return isMenuClick ? this._targetItem : Array.prototype.filter.call(
             container.querySelector('.controls-ListView__itemV').parentNode.children,
-            (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
+            (elem: HTMLElement) => elem.className.includes('controls-ListView__itemV')
         )[itemIndex - startIndex];
     }
 

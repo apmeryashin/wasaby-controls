@@ -37,9 +37,9 @@ export default {
         let firstContainerItems = [];
         if (items.length <= 2) {
             // Если крошек меньше двух, располагаем их в первом контейнере
-            firstContainerItems = items.map((item, index, items) => {
-                const withOverflow = items[index].get(options.displayProperty).length > 3;
-                return PrepareDataUtil.getItemData(index, items, false, withOverflow);
+            firstContainerItems = items.map((item, index, arr) => {
+                const withOverflow = arr[index].get(options.displayProperty).length > 3;
+                return PrepareDataUtil.getItemData(index, arr, false, withOverflow);
             });
             return {
                 visibleItems: firstContainerItems,

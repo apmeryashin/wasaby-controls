@@ -232,8 +232,8 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         }
 
         // Create map from utilitary array
-        for (let index = 0, count = sorted.length; index < count; index++) {
-            map.push(sorted[index].collectionIndex);
+        for (let idx = 0, count = sorted.length; idx < count; idx++) {
+            map.push(sorted[idx].collectionIndex);
         }
 
         return map;

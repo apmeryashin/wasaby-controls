@@ -46,14 +46,14 @@ const SELECTION_MARKED_FIELD = 'marked';
  * @returns {Boolean}
  */
 
-function filter(item: Model, filter: object, idProperty: string): boolean {
+function filter(item: Model, filterObj: object, idProperty: string): boolean {
    let result: boolean = true;
    let hasIdInMarked: boolean = false;
 
-   if (filter[FILTER_SELECTION_FIELD]) {
+   if (filterObj[FILTER_SELECTION_FIELD]) {
       const itemId = item.get(idProperty);
 
-      filter[FILTER_SELECTION_FIELD].get(SELECTION_MARKED_FIELD).forEach((markedId: string|number) => {
+      filterObj[FILTER_SELECTION_FIELD].get(SELECTION_MARKED_FIELD).forEach((markedId: string|number) => {
          if (!hasIdInMarked && String(markedId) === String(itemId)) {
             hasIdInMarked = true;
          }

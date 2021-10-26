@@ -53,8 +53,8 @@ class FormController extends Control<IControlOptions> {
         });
         });
 
-        result.then((result) => {
-            return result;
+        result.then((promiseResult) => {
+            return promiseResult;
         }, (error) => {
             return error;
         });
@@ -84,8 +84,8 @@ class FormController extends Control<IControlOptions> {
             return e;
         });
         });
-        result.then((result) => {
-            return result;
+        result.then((promiseResult) => {
+            return promiseResult;
             },
             (error) => {
             return error;
@@ -159,14 +159,14 @@ class FormController extends Control<IControlOptions> {
 
         // запросим еще данные прямо из dataSource и обновим dataSourceRecordString
         const def = this._dataSource.read(this._key);
-        def.then((record) => {
-            if (!record) {
+        def.then((loadedRecord) => {
+            if (!loadedRecord) {
                 return '';
             }
-            if (!record.getRawData()) {
+            if (!loadedRecord.getRawData()) {
                 return '';
             }
-            this.dataSourceRecordString = record.getRawData();
+            this.dataSourceRecordString = loadedRecord.getRawData();
             this._forceUpdate();
         }, (e) => {
             this.dataSourceRecordString = '';

@@ -3701,18 +3701,18 @@ export default class Collection<
         let prevGroupPosition = -1;
         let prevGroupHasMembers = false;
         let match;
-        const isMatch = (item, index, position, hasMembers?: boolean) => {
+        const isMatch = (itemLocal, indexLocal, positionLocal, hasMembers?: boolean) => {
             let result = true;
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
                 const isAddingItem = this.getStrategyInstance(AddStrategy)
-                    && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                    && this.getStrategyInstance(AddStrategy).getAddingItem() === itemLocal;
                 result = isAddingItem || filter(
-                    item.getContents(),
-                    index,
-                    item,
-                    position,
+                    itemLocal.getContents(),
+                    indexLocal,
+                    itemLocal,
+                    positionLocal,
                     hasMembers,
                     prevGroup
                 );
@@ -3722,16 +3722,16 @@ export default class Collection<
             }
             return result;
         };
-        const applyMatch = (match, index) => {
-            const oldMatch = filterMap[index];
-            if (match === oldMatch) {
+        const applyMatch = (matchLocal, indexLocal) => {
+            const oldMatch = filterMap[indexLocal];
+            if (matchLocal === oldMatch) {
                 return false;
             }
-            if (match) {
-                filterMap[index] = match;
+            if (matchLocal) {
+                filterMap[indexLocal] = matchLocal;
                 return true;
             } else if (oldMatch !== undefined) {
-                filterMap[index] = match;
+                filterMap[indexLocal] = matchLocal;
                 return true;
             }
             return false;
@@ -4063,14 +4063,14 @@ export default class Collection<
         // Notify changes by the diff
         if (diff.length) {
             this._notifyBeforeCollectionChange();
-            this._extractPacksByList(this, diff, (items, index) => {
+            this._extractPacksByList(this, diff, (itemsLocal, indexLocal) => {
                 this._notifyCollectionChangeBySession(
                     session,
                     IObservable.ACTION_CHANGE,
-                    items,
-                    index,
-                    items,
-                    index
+                    itemsLocal,
+                    indexLocal,
+                    itemsLocal,
+                    indexLocal
                 );
             });
             this._handleAfterCollectionChange(items);
@@ -4097,14 +4097,14 @@ export default class Collection<
         this._extractPacksByList(
             this,
             changedItems,
-            (pack, index) => {
+            (pack, idx) => {
                 this._notifyCollectionChangeBySession(
                     session,
                     IObservable.ACTION_CHANGE,
                     pack,
-                    index,
+                    idx,
                     pack,
-                    index
+                    idx
                 );
             }
         );

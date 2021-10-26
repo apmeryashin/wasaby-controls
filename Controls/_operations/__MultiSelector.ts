@@ -193,10 +193,10 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       const {selectedKeys, excludedKeys, selectedKeysCount, operationsController, selectedCountConfig} = options;
       const selection = this._getSelection(selectedKeys, excludedKeys);
       const count = (counterConfigChanged && selectedKeysCount !== 0) ? null : selectedKeysCount;
-      const getCountCallback = (count, isAllSelected) => {
-         this._menuCaption = this._getMenuCaption(selection, count, isAllSelected);
+      const getCountCallback = (itemsCount, isAllSelected) => {
+         this._menuCaption = this._getMenuCaption(selection, itemsCount, isAllSelected);
          this._sizeChanged = true;
-         operationsController?.setSelectedKeysCount(count);
+         operationsController?.setSelectedKeysCount(itemsCount);
       };
       const needUpdateCount = !selectedCountConfig || !counterConfigChanged ||
           this._isCorrectCount(count) || !options.isAllSelected;
@@ -209,8 +209,8 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
          // хотя можно было это сделать за одну синхронизацию
          if (getCountResult instanceof Promise) {
             return getCountResult
-                .then((count) => {
-                   getCountCallback(count, this._options.isAllSelected);
+                .then((itemsCount) => {
+                   getCountCallback(itemsCount, this._options.isAllSelected);
                 })
                 .catch((error) => error);
          } else {

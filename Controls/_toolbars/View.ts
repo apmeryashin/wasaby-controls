@@ -261,8 +261,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getSourceForMenu(item: TItem): Promise<unknown> {
         if (this._options.menuSource) {
-            return this._getMenuSource(item).then((source) => {
-                return source;
+            return this._getMenuSource(item).then((menuSource) => {
+                return menuSource;
             });
         }
         const source = this._getSynchronousSourceForMenu();

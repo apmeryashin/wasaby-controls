@@ -69,49 +69,49 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         return {};
     }
 
-    function processLadder(params) {
-        const value = params.value;
-        const prevValue = params.prevValue;
-        const state = params.state;
-        const hasMainLadder = !!(params.mainLadder?.ladderLength);
+    function processLadder(ladderParams) {
+        const value = ladderParams.value;
+        const prevValue = ladderParams.prevValue;
+        const state = ladderParams.state;
+        const hasMainLadder = !!(ladderParams.mainLadder?.ladderLength);
 
         // isEqual works with any types
         if (isEqual(value, prevValue) && !hasMainLadder) {
             state.ladderLength++;
         } else {
-            params.ladder.ladderLength = state.ladderLength;
+            ladderParams.ladder.ladderLength = state.ladderLength;
             state.ladderLength = 1;
         }
     }
 
-    function processStickyLadder(params) {
-        processLadder(params);
-        if (params.ladder.ladderLength && isFullGridSupport()) {
-            params.ladder.headingStyle = 'grid-row: span ' + params.ladder.ladderLength;
+    function processStickyLadder(ladderParams) {
+        processLadder(ladderParams);
+        if (ladderParams.ladder.ladderLength && isFullGridSupport()) {
+            ladderParams.ladder.headingStyle = 'grid-row: span ' + ladderParams.ladder.ladderLength;
 
             // Для лесенки, если включен горизонтальный скролл, нужно делать z-index больше,
             // чем у застиканных колонок. Иначе её содержимое будет находиться позади.
             if (hasColumnScroll) {
-                params.ladder.headingStyle += '; z-index: 4;';
+                ladderParams.ladder.headingStyle += '; z-index: 4;';
             }
         }
     }
 
     function getValidPrev({display, index}) {
         let newIndex = index;
-        let item = display.at(newIndex);
-        while (newIndex > 0 && item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
-            item = display.at(--newIndex);
+        let itemLocal = display.at(newIndex);
+        while (newIndex > 0 && itemLocal['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+            itemLocal = display.at(--newIndex);
         }
-        return {index: newIndex, item};
+        return {index: newIndex, item: itemLocal};
     }
     function getValidCurrent({display, index}) {
         let newIndex = index;
-        let item = display.at(newIndex);
-        while (newIndex < display.getCount() - 1 && item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
-            item = display.at(++newIndex);
+        let itemLocal = display.at(newIndex);
+        while (newIndex < display.getCount() - 1 && itemLocal['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+            itemLocal = display.at(++newIndex);
         }
-        return {index: newIndex, item};
+        return {index: newIndex, item: itemLocal};
     }
 
     if (supportLadder) {

@@ -17,6 +17,7 @@
  * @public
  * @author Угриновский Н.В.
  */
+// tslint:disable-next-line:no-shadowed-variable
 const innerText = function innerText(value, parent) {
    if (typeof value === 'string') {
       return parent ? value : [[], value];
@@ -36,6 +37,7 @@ const innerText = function innerText(value, parent) {
    }
    return '';
 };
+// tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 innerText.__noNeedEscapeString = true;
 

@@ -101,9 +101,12 @@ export class StickyController extends BaseController {
             // If popupOptions has new sizes, calculate position using them.
             // Else calculate position using current container sizes.
             this._updateSizes(item.positionConfig, item.popupOptions);
-            const targetCoords = this._getTargetCoords(item, item.positionConfig.sizes);
 
-            item.position = StickyStrategy.getPosition(item.positionConfig, targetCoords, this._getTargetNode(item));
+            item.position = StickyStrategy.getPosition(
+                item.positionConfig,
+                this._getTargetCoords(item, item.positionConfig.sizes),
+                this._getTargetNode(item)
+            );
 
             if (item.popupOptions.className) {
                 item.popupOptions.className = item.popupOptions.className.replace(/controls-StickyTemplate-visibility(\S*|)/g, '');

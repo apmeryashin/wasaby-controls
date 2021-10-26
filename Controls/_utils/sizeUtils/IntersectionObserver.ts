@@ -85,6 +85,7 @@ if (constants.isBrowserPlatform) {
          * @param {Object=} optOptions Optional configuration options.
          * @constructor
          */
+        // tslint:disable-next-line:no-shadowed-variable
         function IntersectionObserver(callback, optOptions) {
 
             const options = optOptions || {};

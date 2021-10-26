@@ -432,12 +432,12 @@ const Mover = BaseAction.extend({
         if (_private.useAction(items)) {
             return _private.moveItems(this, items, target, position);
         } else {
-            return _private.getItemsBySelection.call(this, items).addCallback((items) => {
-                items = items.filter((item) => {
+            return _private.getItemsBySelection.call(this, items).addCallback((selectItems) => {
+                selectItems = selectItems.filter((item) => {
                     return _private.checkItem(this, item, target, position);
                 });
-                if (items.length) {
-                    return _private.moveItems(this, items, target, position);
+                if (selectItems.length) {
+                    return _private.moveItems(this, selectItems, target, position);
                 } else {
                     return Deferred.success();
                 }
@@ -451,8 +451,8 @@ const Mover = BaseAction.extend({
                 if (_private.useAction(items)) {
                     return _private.openMoveDialog(this, items);
                 } else {
-                    return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
-                        _private.openMoveDialog(this, _private.prepareMovedItems(this, items))
+                    return _private.getItemsBySelection.call(this, items).addCallback((selectItems: []) => (
+                        _private.openMoveDialog(this, _private.prepareMovedItems(this, selectItems))
                     ));
                 }
             }

@@ -8,10 +8,10 @@ import * as operations from 'Controls/operations';
 import {process} from 'Controls/error';
 import {RecordSet} from 'Types/collection';
 
-export function selectionToRecord(selection: ISelectionObject, adapter: adapter.IAdapter,
+export function selectionToRecord(selection: ISelectionObject, rsAdapter: adapter.IAdapter,
                                   type: TSelectionType): TSelectionRecord {
     const recursive = selection.recursive === undefined ? true : selection.recursive;
-    return operations.selectionToRecord(selection, adapter, type, recursive);
+    return operations.selectionToRecord(selection, rsAdapter, type, recursive);
 }
 /**
  * @typedef {Object} ISelectionObject

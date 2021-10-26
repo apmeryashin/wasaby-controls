@@ -15,8 +15,8 @@ export default class Compound extends Control<IControlOptions> {
       if (['mousemove', 'touchmove', 'mouseup', 'touchend'].indexOf(eventName) !== -1) {
          if (handler) {
             this._compoundHandlers = this._compoundHandlers || {};
-            this._compoundHandlers[eventName] = (event) => {
-               handler.apply(emitter, [new SyntheticEvent(event)]);
+            this._compoundHandlers[eventName] = (e) => {
+               handler.apply(emitter, [new SyntheticEvent(e)]);
             };
             document.body.addEventListener(eventName, this._compoundHandlers[eventName]);
          } else if (this._compoundHandlers && this._compoundHandlers[eventName]) {
@@ -36,12 +36,12 @@ export default class Compound extends Control<IControlOptions> {
                draggingTemplateOptions,
                draggingTemplate
             })).then((result) => {
-               const draggingTemplate = $(result);
-               draggingTemplate.appendTo(document.body);
+               const draggingTemplateLocal = $(result);
+               draggingTemplateLocal.appendTo(document.body);
 
                // На старых страницах стартовый z-index всплывающих окон 1050. Сделаем наш z-index заведомо больше.
-               draggingTemplate.css('z-index', ZINDEX_FOR_OLD_PAGE);
-               return draggingTemplate;
+               draggingTemplateLocal.css('z-index', ZINDEX_FOR_OLD_PAGE);
+               return draggingTemplateLocal;
             });
          } else {
             this._updatePosition(draggingTemplateOptions);

@@ -127,6 +127,7 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
         let current;
         let path;
 
+        // tslint:disable-next-line:no-shadowed-variable
         const iterator = (search, parent, path) => {
             const isArray = parent instanceof Array;
             const isList = parent['[Types/_collection/IList]'];
@@ -137,17 +138,17 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
             let children;
             let sub;
 
-            let index = 0;
+            let idx = 0;
             for (;;) {
                 if (isArray) {
-                    isLast = parent.length <= index;
+                    isLast = parent.length <= idx;
                     if (!isLast) {
-                        item = parent[index];
+                        item = parent[idx];
                     }
                 } else if (isList) {
-                    isLast = parent.getCount() <= index;
+                    isLast = parent.getCount() <= idx;
                     if (!isLast) {
-                        item = parent.at(index);
+                        item = parent.at(idx);
                     }
                 } else if (isEnumerable) {
                     if (!enumerator) {
@@ -165,21 +166,21 @@ export default class MaterializedPath<S, T extends CollectionItem<S> = Collectio
                 }
 
                 if (search === current) {
-                    return path.concat(index);
+                    return path.concat(idx);
                 }
 
                 current++;
 
                 children = object.getPropertyValue(item, childrenProperty);
                 if (children instanceof Object) {
-                    sub = iterator(search, children, path.concat(index));
+                    sub = iterator(search, children, path.concat(idx));
                     if (sub) {
                         return sub;
                     }
 
                 }
 
-                index++;
+                idx++;
             }
         };
 

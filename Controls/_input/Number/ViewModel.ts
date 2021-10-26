@@ -55,22 +55,22 @@ class ViewModel extends BaseViewModel<string | number, IViewModelOptions> {
 
     protected _createText(splitValue: ISplitValue, inputType: InputType): IText {
         if (ViewModel._isEnteredSplitter(splitValue)) {
-            const text: IText = {
+            const newText: IText = {
                 value: splitValue.before + splitValue.after,
                 carriagePosition: splitValue.before.length
             };
             if (this._displayValue.includes(decimalSplitter)) {
-                const splitterPosition: number = text.value.indexOf(decimalSplitter);
+                const splitterPosition: number = newText.value.indexOf(decimalSplitter);
 
                 if (splitterPosition !== -1) {
-                    text.carriagePosition = splitterPosition + 1;
+                    newText.carriagePosition = splitterPosition + 1;
                 }
             } else if (this._options.precision !== 0) {
-                text.value = this._displayValue === '' ? '0.0' : this._displayValue + '.0';
-                text.carriagePosition = text.value.length - 1;
+                newText.value = this._displayValue === '' ? '0.0' : this._displayValue + '.0';
+                newText.carriagePosition = newText.value.length - 1;
             }
 
-            return text;
+            return newText;
         }
 
         ViewModel._handleRemovalLiteral(splitValue, inputType);
@@ -112,9 +112,9 @@ class ViewModel extends BaseViewModel<string | number, IViewModelOptions> {
             return text;
         }
 
-        const parsedNumber: Parser.IParsedNumber = Parser.parse(text.value, this._options);
+        const parsedNumberResult: Parser.IParsedNumber = Parser.parse(text.value, this._options);
 
-        return format(parsedNumber, this._options, text.carriagePosition);
+        return format(parsedNumberResult, this._options, text.carriagePosition);
     }
 
     trimTrailingZeros(leaveOneZero: boolean): boolean {

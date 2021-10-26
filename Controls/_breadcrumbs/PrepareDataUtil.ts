@@ -11,8 +11,8 @@ export default {
         };
     },
     drawBreadCrumbsItems(items: Record[], arrow: boolean = false): any[] {
-        return items.map((item, index, items) => {
-            return this.getItemData(index, items, arrow);
+        return items.map((item, index, array) => {
+            return this.getItemData(index, array, arrow);
         });
     }
 };

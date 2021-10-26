@@ -39,6 +39,7 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
          this._sources = sources;
          this._errorViewConfig = receivedState.errorViewConfig;
       } else if (sources) {
+         // tslint:disable-next-line:no-shadowed-variable
          return DataLoader.load(sources, requestTimeout).then(({sources, errors}) => {
             const errorsCount = errors.length;
 

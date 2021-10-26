@@ -52,8 +52,8 @@ export default class Global extends Control<IControlOptions> {
         return this._globalController.isPreviewerOpenedHandler(event);
     }
 
-    protected _openDialogHandler(event, template, templateOptions, opener = null): Promise<unknown> {
-        return this._globalController.openDialogHandler(event, template, templateOptions, opener);
+    protected _openDialogHandler(event, tmpl, templateOptions, opener = null): Promise<unknown> {
+        return this._globalController.openDialogHandler(event, tmpl, templateOptions, opener);
     }
 
     private _popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer): void {

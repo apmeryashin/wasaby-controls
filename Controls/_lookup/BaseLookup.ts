@@ -101,8 +101,8 @@ export default abstract class
         const selectResult =
             this._notify('selectorCallback', [this._lookupController.getItems(), result]) ||
             result;
-        const selectCallback = (result) => {
-            this._lookupController.setItemsAndSaveToHistory(result as SelectedItems);
+        const selectCallback = (selectRes) => {
+            this._lookupController.setItemsAndSaveToHistory(selectRes as SelectedItems);
             this._afterItemsChanged();
         };
 

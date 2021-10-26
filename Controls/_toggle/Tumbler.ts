@@ -1,4 +1,4 @@
-import * as template from 'wml!Controls/_toggle/Tumbler/Tumbler';
+import * as Template from 'wml!Controls/_toggle/Tumbler/Tumbler';
 import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import ButtonGroupBase, {IButtonGroupOptions} from 'Controls/_toggle/ButtonGroupBase';
@@ -216,7 +216,7 @@ interface ITumblerOptions extends IButtonGroupOptions, IItemTemplateOptions {}
  */
 
 class Tumbler extends ButtonGroupBase<ITumblerOptions> {
-    protected _template: TemplateFunction = template;
+    protected _template: TemplateFunction = Template;
     protected _backgroundPosition: IBackgroundPosition = {isEmpty: true};
 
     protected _beforeUpdate(newOptions: ITumblerOptions): void {

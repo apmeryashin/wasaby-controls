@@ -919,11 +919,11 @@ const CompoundArea = CompoundContainer.extend([
       this._removeCustomHeader();
       this.rebuildChildControl();
    },
-   setTemplate(template, templateOptions) {
+   setTemplate(tmpl, templateOptions) {
       if (templateOptions) {
          this._childConfig = templateOptions;
       }
-      this._childControlName = template;
+      this._childControlName = tmpl;
       return this.rebuildChildControl();
    },
    getCurrentTemplateName() {
