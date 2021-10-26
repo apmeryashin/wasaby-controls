@@ -6,11 +6,13 @@ import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtual
 import {
     ScrollController,
     IItemsRange,
-    IEnvironmentChangedParams,
+    IDirection,
     IPageDirection,
     IScheduledScrollParams,
     IScheduledScrollToElementParams,
     IEdgeItem,
+    IPlaceholders,
+    IHasItemsOutRange,
     IIndexesChangedParams,
     IItemsEndedCallback,
     IScheduledRestoreScrollParams,
@@ -19,8 +21,16 @@ import {
 import { SyntheticEvent } from 'UI/Vdom';
 import { CrudEntityKey } from 'Types/source';
 
+export interface IShadowVisibility {
+    backward: boolean;
+    forward: boolean;
+}
+
 type IScrollToElementUtil = (container: HTMLElement, toBottom: boolean, force: boolean) => Promise<void>;
 type IDoScrollUtil = (scrollTop: number) => void;
+type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
+type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
+type IUpdateVirtualNavigationUtil = (hasItems: IHasItemsOutRange) => void;
 type IHasMoreUtil = (direction: IDirection) => boolean;
 
 interface IListVirtualScrollControllerOptions {
@@ -35,6 +45,9 @@ interface IListVirtualScrollControllerOptions {
     triggersQuerySelector: string;
     itemsQuerySelector: string;
 
+    updateShadowsUtil: IUpdateShadowsUtil;
+    updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
+    updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
     hasMoreUtil: IHasMoreUtil;
@@ -46,8 +59,11 @@ interface IListVirtualScrollControllerOptions {
 export class ListVirtualScrollController {
     private _collection: Collection;
 
-    private _scrollToElementUtil: IScrollToElementUtil;
-    private _doScrollUtil: IDoScrollUtil;
+    private readonly _scrollToElementUtil: IScrollToElementUtil;
+    private readonly _doScrollUtil: IDoScrollUtil;
+    private readonly _updateShadowsUtil: IUpdateShadowsUtil;
+    private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
+    private readonly _updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
     private _hasMoreUtil: IHasMoreUtil;
 
     private _scrollController: ScrollController;
@@ -68,6 +84,9 @@ export class ListVirtualScrollController {
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
         this._hasMoreUtil = options.hasMoreUtil;
+        this._updateShadowsUtil = options.updateShadowsUtil;
+        this._updatePlaceholdersUtil = options.updatePlaceholdersUtil;
+        this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
 
         this._createScrollController(options);
     }
@@ -214,8 +233,12 @@ export class ListVirtualScrollController {
                 this._collection.setIndexes(range.startIndex, range.endIndex);
             },
             indexesChangedCallback: this._indexesChangedCallback.bind(this),
-            environmentChangedCallback(params: IEnvironmentChangedParams): void {
-                console.error('environmentChangedCallback', params);
+            placeholdersChangedCallback: (placeholders: IPlaceholders): void => {
+                this._updatePlaceholdersUtil(placeholders);
+            },
+            hasItemsOutRangeChangedCallback: (hasItemsOutRange: IHasItemsOutRange): void => {
+                this._updateShadowsUtil(hasItemsOutRange);
+                this._updateVirtualNavigationUtil(hasItemsOutRange);
             },
             activeElementChangedCallback: options.activeElementChangedCallback,
             itemsEndedCallback: options.itemsEndedCallback
@@ -251,8 +274,6 @@ export class ListVirtualScrollController {
             type: 'restoreScroll',
             params: restoreScrollParams
         });
-
-        console.error('indexChangedCallback', params);
     }
 
     private _scheduleUpdateItemsSizes(itemsRange: IItemsRange): void {

@@ -25,14 +25,6 @@ export interface IActiveElementIndex {
     activeElementIndex: number;
 }
 
-export interface IEnvironmentChangedParams {
-    hasItemsBackward: boolean;
-    hasItemsForward: boolean;
-
-    beforePlaceholderSize: number;
-    afterPlaceholderSize: number;
-}
-
 export type IScheduledScrollType = 'restoreScroll' | 'scrollToElement';
 
 interface IBaseEdgeItem {
@@ -60,19 +52,31 @@ export interface IScheduledScrollParams {
     params: IScheduledRestoreScrollParams | IScheduledScrollToElementParams;
 }
 
+export interface IPlaceholders {
+    backward: number;
+    forward: number;
+}
+
+export interface IHasItemsOutRange {
+    backward: boolean;
+    forward: boolean;
+}
+
 export type IDirection = 'backward' | 'forward';
 
 export type IPageDirection = 'backward' | 'forward' | 'start' | 'end';
 
 export type IIndexesChangedCallback = (params: IIndexesChangedParams) => void;
 
-export type IEnvironmentChangedCallback = (params: IEnvironmentChangedParams) => void;
-
 export type IActiveElementChangedChangedCallback = (activeElementIndex: number) => void;
 
 export type IItemsEndedCallback = (direction: IDirection) => void;
 
 export type IIndexesInitializedCallback = (range: IItemsRange) => void;
+
+export type IHasItemsOutRangeChangedCallback = (hasItems: IHasItemsOutRange) => void;
+
+export type IPlaceholdersChangedCallback = (placeholders: IPlaceholders) => void;
 
 export interface IScrollControllerOptions extends
     IItemsSizesControllerOptions,
@@ -81,7 +85,8 @@ export interface IScrollControllerOptions extends
     indexesInitializedCallback: IIndexesInitializedCallback;
     indexesChangedCallback: IIndexesChangedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
-    environmentChangedCallback: IEnvironmentChangedCallback;
+    hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+    placeholdersChangedCallback: IPlaceholdersChangedCallback;
     itemsEndedCallback: IItemsEndedCallback;
 }
 
@@ -97,13 +102,15 @@ export class ScrollController {
     private readonly _calculator: Calculator;
     private readonly _indexesChangedCallback: IIndexesChangedCallback;
     private readonly _activeElementChangedCallback: IActiveElementChangedChangedCallback;
-    private readonly _environmentChangedCallback: IEnvironmentChangedCallback;
+    private readonly _hasItemsOutRangeChangedCallback: IHasItemsOutRangeChangedCallback;
+    private readonly _placeholdersChangedCallback: IPlaceholdersChangedCallback;
     private readonly _itemsEndedCallback: IItemsEndedCallback;
     private readonly _indexesInitializedCallback: IIndexesInitializedCallback;
 
     constructor(options: IScrollControllerOptions) {
         this._indexesChangedCallback = options.indexesChangedCallback;
-        this._environmentChangedCallback = options.environmentChangedCallback;
+        this._hasItemsOutRangeChangedCallback = options.hasItemsOutRangeChangedCallback;
+        this._placeholdersChangedCallback = options.placeholdersChangedCallback;
         this._activeElementChangedCallback = options.activeElementChangedCallback;
         this._itemsEndedCallback = options.itemsEndedCallback;
         this._indexesInitializedCallback = options.indexesInitializedCallback;
@@ -385,12 +392,17 @@ export class ScrollController {
      * @private
      */
     private _processCalculatorResult(result: ICalculatorResult): void {
-        if (result.environmentChanged) {
-            this._environmentChangedCallback({
-                afterPlaceholderSize: result.afterPlaceholderSize,
-                beforePlaceholderSize: result.beforePlaceholderSize,
-                hasItemsBackward: result.hasItemsBackward,
-                hasItemsForward: result.hasItemsForward
+        if (result.placeholdersChanged) {
+            this._placeholdersChangedCallback({
+                backward: result.backwardPlaceholderSize,
+                forward: result.forwardPlaceholderSize
+            });
+        }
+
+        if (result.hasItemsOutRangeChanged) {
+            this._hasItemsOutRangeChangedCallback({
+                backward: result.hasItemsOutRangeBackward,
+                forward: result.hasItemsOutRangeForward
             });
         }
 

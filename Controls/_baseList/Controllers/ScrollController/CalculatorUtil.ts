@@ -1,6 +1,5 @@
 import type { IItemsSizes } from './ItemsSizeController';
-import type { IDirection, IItemsRange } from './ScrollController';
-import type { IPlaceholders } from './Calculator';
+import type { IDirection, IItemsRange, IPlaceholders } from './ScrollController';
 
 const MIN_RATIO_INDEX_LINE = 0.15;
 const MAX_RATIO_INDEX_LINE = 0.85;
@@ -35,6 +34,12 @@ export interface IGetActiveElementIndexByPosition {
     contentSize: number;
     placeholders: IPlaceholders;
     currentRange: IItemsRange;
+}
+
+export interface IGetSizesByRangeParams {
+    range: IItemsRange;
+    itemsSizes: IItemsSizes;
+    totalCount: number;
 }
 
 /**
@@ -155,8 +160,8 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
         return currentRange.endIndex - 1;
     } else {
         let activeElementIndex;
-        const scrollTopWithPlaceholder = fixedScrollPosition + placeholders.top;
-        const knownContentHeight = contentSize + placeholders.bottom + placeholders.top;
+        const scrollTopWithPlaceholder = fixedScrollPosition + placeholders.backward;
+        const knownContentHeight = contentSize + placeholders.forward + placeholders.backward;
         const indexLineRatio = scrollTopWithPlaceholder / (knownContentHeight - viewportSize);
         const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
@@ -174,8 +179,49 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
 
 /**
  * Проверяет что диапазон находится на переданном краю
- * @param edge
+ * @param {IDirection} edge
+ * @param {IItemsRange} range
+ * @param {number} totalCount
  */
 function isRangeOnEdge(edge: IDirection, range: IItemsRange, totalCount: number): boolean {
     return edge === 'backward' ? range.startIndex === 0 : range.endIndex === totalCount;
+}
+
+/**
+ * Рассчитывает плейсхолдеры для переданного диапазона
+ * @param {IGetSizesByRangeParams} params
+ */
+export function getPlaceholdersByRange(params: IGetSizesByRangeParams): IPlaceholders {
+    const { range, itemsSizes, totalCount } = params;
+
+    const backward = getItemsSizesSum({
+        range: { startIndex: 0, endIndex: range.startIndex },
+        itemsSizes,
+        totalCount
+    });
+    const forward = getItemsSizesSum({
+        range: { startIndex: range.endIndex, endIndex: totalCount },
+        itemsSizes,
+        totalCount
+    });
+
+    return { backward, forward };
+}
+
+/**
+ * Возвращает сумму высот элементов из указанного диапазона
+ * @param {IGetSizesByRangeParams} params
+ */
+function getItemsSizesSum(params: IGetSizesByRangeParams): number {
+    const { range, itemsSizes, totalCount } = params;
+    const fixedStartIndex = Math.max(range.startIndex, 0);
+    const fixedEndIndex = Math.min(range.endIndex, totalCount);
+
+    let result = 0;
+
+    for (let idx = fixedStartIndex; idx < fixedEndIndex; idx++) {
+        result += itemsSizes[idx].height || 0;
+    }
+
+    return result;
 }

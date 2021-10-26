@@ -83,7 +83,6 @@ import {IEditableListOption} from './interface/IEditableList';
 import {default as ScrollController, IScrollParams} from './ScrollController';
 
 import { ListVirtualScrollController } from './Controllers/ListVirtualScrollController';
-import type { IDirection as IScrollControllerDirection } from './Controllers/ScrollController/ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
@@ -902,7 +901,7 @@ const _private = {
         return result;
     },
 
-    loadToDirectionIfNeed(self, direction, filter) {
+    loadToDirectionIfNeed(self, direction, filter?: {}) {
         const sourceController = self._sourceController;
         const hasMoreData = self._hasMoreData(direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation, self._options.virtualScrollConfig) ?
@@ -3639,7 +3638,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
 
             totalCount: this._listViewModel.getCount(),
 
-            scrollToElementUtil: (container: HTMLElement, toBottom: boolean, force: boolean): Promise<void> => {
+            scrollToElementUtil: (container, toBottom, force): Promise<void> => {
                 return this._notify(
                     'scrollToElement',
                     [{ itemContainer: container, toBottom, force }],
@@ -3647,8 +3646,61 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 ) as Promise<void>;
             },
 
-            doScrollUtil: (scrollTop: number) => {
+            doScrollUtil: (scrollTop) => {
                 this._notify('doScroll', [scrollTop, true], { bubbling: true });
+            },
+
+            updatePlaceholdersUtil: (placeholders) => {
+                const convertedPlaceholders = {
+                    up: placeholders.backward,
+                    down: placeholders.forward
+                };
+                this._notify('updatePlaceholdersSize', [convertedPlaceholders], {bubbling: true});
+            },
+
+            updateShadowsUtil: (hasItemsOutRange) => {
+                const collection = this._listViewModel;
+                const navigation = this._options.navigation;
+                const itemsCount = collection?.getCount();
+                const shadowVisibleByNavigation = _private.needShowShadowByNavigation(navigation, itemsCount);
+                const topShadowVisibleByPortionedSearch = _private.allowLoadMoreByPortionedSearch(this, 'up');
+                const bottomShadowVisibleByPortionedSearch = _private.allowLoadMoreByPortionedSearch(this, 'down');
+
+                const topShadowVisible = hasItemsOutRange.backward || shadowVisibleByNavigation &&
+                    topShadowVisibleByPortionedSearch && itemsCount && this._hasMoreData('up');
+                const bottomShadowVisible = hasItemsOutRange.forward || shadowVisibleByNavigation &&
+                    bottomShadowVisibleByPortionedSearch && itemsCount && this._hasMoreData('down');
+
+                this._notify('updateShadowMode', [{
+                    top: topShadowVisible ? 'visible' : 'auto',
+                    bottom: bottomShadowVisible ? 'visible' : 'auto'
+                }], {bubbling: true});
+            },
+
+            updateVirtualNavigationUtil: (hasItemsOutRange) => {
+                // Список, скрытый на другой вкладке не должен нотифаить о таких изменениях
+                if (this._container?.closest('.ws-hidden')) {
+                    return;
+                }
+
+                const topEnabled = hasItemsOutRange.backward || this._hasMoreData('up');
+                const bottomEnabled = hasItemsOutRange.forward || this._hasMoreData('down');
+
+                if (topEnabled) {
+                    this._notify('enableVirtualNavigation', ['top'], { bubbling: true });
+                } else {
+                    this._notify('disableVirtualNavigation', ['top'], { bubbling: true });
+                }
+
+                if (bottomEnabled) {
+                    this._notify('enableVirtualNavigation', ['bottom'], { bubbling: true });
+                    // todo зачем?
+                    // self._bottomVisible = false;
+                } else {
+                    this._notify('disableVirtualNavigation', ['bottom'], { bubbling: true });
+                    // todo зачем?
+                    // self._bottomVisible = true;
+                }
             },
 
             activeElementChangedCallback: (activeElementIndex) => {
@@ -3660,8 +3712,7 @@ export default class BaseControl<TOptions extends IBaseControlOptions = IBaseCon
                 return this._hasMoreData(compatibleDirection);
             },
 
-            itemsEndedCallback: (direction: IScrollControllerDirection): void => {
-                console.error('BaseControl.itemsEndedCallback', direction);
+            itemsEndedCallback: (direction): void => {
                 const compatibleDirection = direction === 'forward' ? 'down' : 'up';
                 _private.loadToDirectionIfNeed(this, compatibleDirection);
             }
