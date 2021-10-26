@@ -52,25 +52,25 @@ export default abstract class GroupMixin {
      * @param templateFontSize Размер шрифта
      * @param templateFontWeight Насыщенность шрифта
      * @param templateTextTransform Преобразование шрифта
+     * @param separatorVisibility Видимость разделтителя
      */
     getContentTextWrapperClasses(templateFontColorStyle?: TFontColorStyle,
                                  templateFontSize?: TFontSize,
                                  templateFontWeight?: TFontWeight,
-                                 templateTextTransform?: TTextTransform): string {
+                                 templateTextTransform?: TTextTransform,
+                                 separatorVisibility?: boolean): string {
         let classes = 'controls-ListView__groupContent-text_wrapper';
         classes += this.getContentTextStylingClasses(templateFontColorStyle, templateFontSize,
             templateFontWeight, templateTextTransform);
-        return classes;
-    }
-
-    getContentTextClasses(separatorVisibility: boolean,
-                          textAlign: 'right' | 'left'): string {
-        let classes = 'controls-ListView__groupContent-text';
-        classes += ` controls-ListView__groupContent_${textAlign || 'center'}`;
-
         if (separatorVisibility === false) {
             classes += ' controls-ListView__groupContent-withoutGroupSeparator';
         }
+        return classes;
+    }
+
+    getContentTextClasses(textAlign: 'right' | 'left'): string {
+        let classes = 'controls-ListView__groupContent-text';
+        classes += ` controls-ListView__groupContent_${textAlign || 'center'}`;
         return classes;
     }
 

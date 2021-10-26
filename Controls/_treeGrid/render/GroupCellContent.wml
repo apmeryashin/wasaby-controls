@@ -4,9 +4,9 @@
             <div class="controls-ListView__groupSeparator controls-ListView__groupSeparator-left">&nbsp;</div>
         </ws:if>
         <ws:if data="{{ groupNodeConfig.textVisible !== false }}">
-            <div class="{{ (gridColumn || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform) }}
+            <div class="{{ (gridColumn || itemData).getContentTextWrapperClasses(fontColorStyle, fontSize, fontWeight, textTransform, groupNodeConfig.separatorVisibility) }}
                         {{ (gridColumn || itemData).getBaseLineClasses(fontSize) }}">
-                <div class="{{ (gridColumn || itemData).getContentTextClasses(groupNodeConfig.separatorVisibility, groupNodeConfig.textAlign) }}
+                <div class="{{ (gridColumn || itemData).getContentTextClasses(groupNodeConfig.textAlign) }}
                             {{ (gridColumn || itemData).getExpanderClasses(groupNodeConfig.expanderVisible, groupNodeConfig.expanderAlign, groupNodeConfig.iconSize, groupNodeConfig.iconStyle) }}"
                      attr:data-qa="{{ item.listElementName }}-expander">
                     <ws:if data="{{ groupNodeConfig.contentTemplate }}">
