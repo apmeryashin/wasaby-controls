@@ -15,6 +15,7 @@ export interface IBody extends IControlOptions {
     nodeProperty: string;
     parentProperty: string;
     displayProperty: string;
+    hasChildrenProperty: string;
 }
 
 /**
