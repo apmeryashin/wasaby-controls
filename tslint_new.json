@@ -9,8 +9,6 @@
    },
    "rules": {
       "ban-types": false,
-      "ban-ts-ignore": false,
-      "no-any": false,
       "typedef": false
    }
 }
