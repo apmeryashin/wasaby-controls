@@ -507,6 +507,23 @@
 
 /* endregion ItemActions display */
 
+.controls-ListView__groupContent_baseline {
+   &::before {
+      content: '\200b';
+   }
+
+   &_default::before {
+      font-size: var(--font-size_m);
+   }
+
+   @variants:  m, l, xl, 2xl, 3xl, 4xl;
+   .for(@variants, { &_@{_item} {
+      &::before {
+         font-size: ~"var(--font-size_@{_item})";
+      }
+   }});
+}
+
 .controls-ListView__groupContent_height {
    min-height: var(--grouping_height_list);
 }
@@ -520,16 +537,13 @@
    align-items: center;
    min-width: 0;
    flex-grow: 1;
-   line-height: 1;
 }
 
 .controls-ListView__groupSeparator {
    height: var(--grouping_separator_thickness_list);
    background-color: var(--grouping_separator_color_list);
-   min-width: 10%;
    flex-grow: 1;
    flex-shrink: 1;
-   font-size: var(--grouping_expander_icon-size_list);
 }
 
 .controls-ListView__groupSeparator-left {
@@ -548,8 +562,15 @@
    color: var(--grouping_expander_text-color_list);
 }
 
+.controls-ListView__groupContent-text_wrapper {
+   display: inline-flex;
+   align-items: baseline;
+   flex-grow: 1;
+   flex-shrink: 1;
+   overflow: hidden;
+}
+
 .controls-ListView__groupContent-text {
-   display: inline-block;
    white-space: nowrap;
    flex-shrink: 1;
    user-select: none;
@@ -603,6 +624,7 @@
 .controls-ListView__groupExpander::before,
 .controls-ListView__groupExpander::after {
    font-family: TensorFont;
+   line-height: 1;
 }
 
 .controls-ListView__groupExpander_left::before {
@@ -866,18 +888,6 @@
          background-color: var(--master_item_hover_background-color_list);
       }
    }
-}
-
-.controls-ListView__groupContent_align-left {
-   justify-content: flex-start;
-}
-
-.controls-ListView__groupContent_align-right {
-   justify-content: flex-end;
-}
-
-.controls-ListView__groupContent_align-center {
-   justify-content: center;
 }
 
 .ws-is-hover .controls-ListView__highlightOnHover_default:hover {
