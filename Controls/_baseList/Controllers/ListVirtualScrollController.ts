@@ -12,7 +12,6 @@ import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtual
 import {
     ScrollController,
     IItemsRange,
-    IDirection,
     IPageDirection,
     IScheduledScrollParams,
     IScheduledScrollToElementParams,
@@ -390,7 +389,7 @@ export class ListVirtualScrollController {
                 const itemSize = {
                     size: it.getContents().get(this._itemSizeProperty),
                     offset: 0
-                }
+                };
 
                 if (!itemSize.size) {
                     throw new Error(`Controls/baseList:BaseControl | Задана опция itemHeightProperty, но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
