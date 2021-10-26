@@ -173,8 +173,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
                 },
                 eventHandlers: {
                     onResult: this._sendResultHandler.bind(this)
-                },
-                targetPoint: { horizontal: 'left' }
+                }
             }
         }
     }
