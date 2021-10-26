@@ -1,37 +1,37 @@
 <div class="controls_filterPanel_theme-{{_options.theme}}
             controls_filter_theme-{{_options.theme}} controls-FilterViewPanel">
-   <Controls.scroll:Container attr:class="controls-FilterViewPanel__scroll">
-      <ws:if data="{{_viewModel.hasBasicItems()}}">
-         <ws:if data="{{_options.viewMode === 'filterPanelStack'}}">
-            <Controls.scroll:StickyBlock backgroundStyle="transparent">
-               <div class="controls-FilterViewPanel__header
-                        controls-FilterViewPanel__header_backgroundStyle-{{_options.backgroundStyle}}">
-                  <Controls.icon:Icon icon="icon-FilterNew"
-                                      attr:class="controls-FilterViewPanel__filter-icon"/>
-                  <Controls.heading:Title caption="{{rk('Отбираются')}}"
-                                          fontSize="3xl"
-                                          readOnly="{{true}}"
-                                          fontColorStyle="secondary"
-                                          attr:class="controls-FilterViewPanel__filter-caption"/>
-                  <Controls.buttons:Button viewMode="functionalButton"
-                                           icon="icon-Yes"
-                                           iconSize="s"
-                                           iconStyle="contrast"
-                                           buttonStyle="success"
-                                           caption="{{null}}"
-                                           inlineHeight="m"
-                                           attr:class="controls-FilterViewPanel__applyButton controls-FilterViewPanel_header__applyButton"
-                                           on:click="_applyFilter()"/>
-                  <ws:if data="{{!_viewModel.isFilterReseted()}}">
-                     <Controls.buttons:Button viewMode="linkButton"
-                                              caption="{{rk('Сбросить')}}"
-                                              fontColorStyle="label"
-                                              fontSize="xs"
-                                              on:click="_resetFilter()"/>
-                  </ws:if>
-               </div>
-            </Controls.scroll:StickyBlock>
-         </ws:if>
+    <Controls.scroll:Container attr:class="controls-FilterViewPanel__scroll">
+        <ws:if data="{{_viewModel.hasBasicItems()}}">
+            <ws:if data="{{_options.viewMode === 'filterPanelStack'}}">
+                <Controls.scroll:StickyBlock backgroundStyle="transparent">
+                    <div class="controls-FilterViewPanel__header
+                            controls-FilterViewPanel__header_backgroundStyle-{{_options.backgroundStyle}}">
+                        <Controls.icon:Icon icon="icon-FilterNew"
+                                            attr:class="controls-FilterViewPanel__filter-icon"/>
+                        <Controls.heading:Title caption="{{rk('Отбираются')}}"
+                                                fontSize="3xl"
+                                                readOnly="{{true}}"
+                                                fontColorStyle="secondary"
+                                                attr:class="controls-FilterViewPanel__filter-caption"/>
+                        <Controls.buttons:Button viewMode="functionalButton"
+                                                 icon="icon-Yes"
+                                                 iconSize="s"
+                                                 iconStyle="contrast"
+                                                 buttonStyle="success"
+                                                 caption="{{null}}"
+                                                 inlineHeight="m"
+                                                 attr:class="controls-FilterViewPanel__applyButton controls-FilterViewPanel_header__applyButton"
+                                                 on:click="_applyFilter()"/>
+                        <ws:if data="{{!_viewModel.isFilterReseted()}}">
+                            <Controls.buttons:Button viewMode="linkButton"
+                                                     caption="{{rk('Сбросить')}}"
+                                                     fontColorStyle="label"
+                                                     fontSize="xs"
+                                                     on:click="_resetFilter()"/>
+                        </ws:if>
+                    </div>
+                </Controls.scroll:StickyBlock>
+            </ws:if>
 
          <Controls.propertyGrid:PropertyGrid
                  editingObject="{{_viewModel.getEditingObject()}}"
@@ -43,7 +43,8 @@
                  on:groupClick="_groupClick()"
                  attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid-{{_options.backgroundStyle}}
                           controls-FilterViewPanel__propertyGrid_viewMode-{{_options.viewMode}}">
-            <ws:itemTemplate>
+             <ws:itemsContainerPadding top="m" left="xl" right="xl" bottom="null"/>
+             <ws:itemTemplate>
                <ws:partial template="Controls/propertyGrid:ItemTemplate"
                            attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate
                                        controls-FilterViewPanel__propertyGrid_itemTemplate_style-{{_options.style}}"/>
