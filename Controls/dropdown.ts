@@ -4,7 +4,6 @@
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
  * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
  * @includes GroupTemplate Controls/dropdown:GroupTemplate
- * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes inputDefaultContentTemplate Controls/dropdown:inputDefaultContentTemplate
  * @includes IIconSize Controls/_dropdown/interface/IIconSize
@@ -19,7 +18,6 @@
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
  * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
  * @includes GroupTemplate Controls/dropdown:GroupTemplate
- * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Selector/resources/defaultContentTemplate
  * @includes IIconSize Controls/_dropdown/interface/IIconSize
