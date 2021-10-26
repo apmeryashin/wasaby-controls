@@ -9,24 +9,24 @@
 }
 
 .controls-Button_buttonGroup_style-buttonGroupSelected {
-   background-color: var(--item_selected_color);
+   background: var(--item_selected_color);
    border-color: var(--item_selected_color);
 }
 
 .controls-Button_buttonGroup_style-readOnly-buttonGroupSelected {
-   background-color: var(--readonly_marker_color_switcher);
+   background: var(--readonly_marker_color_switcher);
    border-color: var(--readonly_marker_color_switcher);
    color: var(--contrast_text-color);
 }
 
 .controls-Button_buttonGroup_style-buttonGroupUnselected,
 .controls-Button_buttonGroup_style-readOnly-buttonGroupUnselected {
-   background-color: var(--background-color);
+   background: var(--default_contrast_background-color_button);
    box-sizing: border-box;
 }
 
 .controls-Button_buttonGroup_style-buttonGroupUnselected {
-   box-shadow: var(--box-shadow_ToolbarBox);
+   box-shadow: var(--box-shadow_contrast-button);
 }
 
 .controls-Button_buttonGroup_style-readOnly-buttonGroupUnselected {
@@ -35,7 +35,7 @@
 
 .ws-is-hover {
    .controls-Button_buttonGroup_style-buttonGroupUnselected:hover {
-      border-color: var(--unaccented_hover_border-color);
+      border-color: var(--default_hover_border-color_button);
    }
 }
 

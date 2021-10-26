@@ -2,7 +2,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/Input/DateBase/DisplayValue/Template';
 
-
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
 

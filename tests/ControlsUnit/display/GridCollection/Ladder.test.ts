@@ -9,7 +9,7 @@ const displayProperties = ['first', 'second', 'third'];
 
 const ladderProperties = ['firstSticky', 'secondSticky'];
 
-const columns_count2 = [{
+const COLUMNS_COUNT_2 = [{
     displayProperty: displayProperties[0],
     stickyProperty: ladderProperties,
     width: '100px'
@@ -18,7 +18,7 @@ const columns_count2 = [{
     width: '200px'
 }];
 
-const columns_count3 = [{
+const COLUMNS_COUNT_3 = [{
     displayProperty: displayProperties[0],
     stickyProperty: ladderProperties,
     width: '100px'
@@ -63,13 +63,13 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
 
         it('Initialize', () => {
             // initialize test result
-            const resultItems = result_items10_columns2_withoutMultiSelect;
+            const resultItems = RESULT_ITEMS_10_COLUMNS_2_WITHOUT_MULTI_SELECT;
 
             // initialize collection
             const collection = new GridCollection({
                 collection: rs,
                 keyProperty,
-                columns: columns_count2,
+                columns: COLUMNS_COUNT_2,
                 ladderProperties
             });
             VirtualScrollController.setup(collection as unknown as VirtualScrollController.IVirtualScrollCollection);
@@ -85,13 +85,13 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
 
         it('Indexes changed to 0..5', () => {
             // initialize test result
-            const resultItems = result_items5_columns2_withoutMultiSelect;
+            const resultItems = RESULT_ITEMS_5_COLUMNS_2_WITHOUT_MULTI_SELECT;
 
             // initialize collection
             const collection = new GridCollection({
                 collection: rs,
                 keyProperty,
-                columns: columns_count2,
+                columns: COLUMNS_COUNT_2,
                 ladderProperties
             });
             VirtualScrollController.setup(collection as unknown as VirtualScrollController.IVirtualScrollCollection);
@@ -107,18 +107,18 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
 
         it('Columns count changed from 2 to 3', () => {
             // initialize test result
-            const resultItems = result_items10_columns3_withoutMultiSelect;
+            const resultItems = RESULT_ITEMS_10_COLUMNS_3_WITHOUT_MULTI_SELECT;
 
             // initialize collection
             const collection = new GridCollection({
                 collection: rs,
                 keyProperty,
-                columns: columns_count2,
+                columns: COLUMNS_COUNT_2,
                 ladderProperties
             });
             VirtualScrollController.setup(collection as unknown as VirtualScrollController.IVirtualScrollCollection);
             collection.setIndexes(0, itemsCount);
-            collection.setColumns(columns_count3);
+            collection.setColumns(COLUMNS_COUNT_3);
 
             // test
             try {
@@ -130,13 +130,13 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
 
         it('Indexes sets to 0..5. Set multiSelectVisibility to "visible"', () => {
             // initialize test result
-            const resultItems = result_items5_columns2_withMultiSelect;
+            const resultItems = RESULT_ITEMS_5_COLUMNS_2_WITH_MULTI_SELECT;
 
             // initialize collection
             const collection = new GridCollection({
                 collection: rs,
                 keyProperty,
-                columns: columns_count2,
+                columns: COLUMNS_COUNT_2,
                 ladderProperties
             });
             VirtualScrollController.setup(collection as unknown as VirtualScrollController.IVirtualScrollCollection);
@@ -153,13 +153,13 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
 
         it('Indexes sets to 0..10. Index changed to 0..5. Set multiSelectVisibility to "visible". Remove item with index=2.', () => {
             // initialize test result
-            const resultItems = result_items5_columns2_withMultiSelect_afterRemoveItem;
+            const resultItems = RESULT_ITEMS_5_COLUMNS_2_WITH_MULTI_SELECT_AFTER_REMOVE_ITEMS;
 
             // initialize collection
             const collection = new GridCollection({
                 collection: rs,
                 keyProperty,
-                columns: columns_count2,
+                columns: COLUMNS_COUNT_2,
                 ladderProperties
             });
             VirtualScrollController.setup(collection as unknown as VirtualScrollController.IVirtualScrollCollection);
@@ -184,7 +184,7 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
                     keyProperty
                 }),
                 keyProperty,
-                columns: columns_count2,
+                columns: COLUMNS_COUNT_2,
                 ladderProperties,
                 emptyTemplate: () => '<div>EMPTY ROW</div>'
             });
@@ -193,7 +193,7 @@ describe('Controls/display/GridCollection/StickyLadder', () => {
             assert.exists(emptyGridRow, 'Empty grid row not created.');
             const emptyRowColumns = emptyGridRow.getColumns();
             assert.strictEqual(emptyRowColumns.length, 1, 'Empty grid row columns is not valid.');
-            assert.strictEqual(collection.getEmptyGridRow().getColumns()[0].getWrapperStyles(), 'grid-column: 1 / 5;')
+            assert.strictEqual(collection.getEmptyGridRow().getColumns()[0].getWrapperStyles(), 'grid-column: 1 / 5;');
         });
     });
 });
@@ -227,13 +227,13 @@ function checkCollectionItems(collection: GridCollection<any>, resultItems: any[
                 throw new Error(originalError + `. itemIndex: ${index}, columnIndex: ${columnIndex}`);
             }
         });
-    })
+    });
 
     // check items count
     assert.strictEqual(itemsCount, expectedItemsCount);
 }
 
-const result_items10_columns2_withoutMultiSelect = [{
+const RESULT_ITEMS_10_COLUMNS_2_WITHOUT_MULTI_SELECT = [{
     columns: [
         { constructorName: 'StickyLadderCell', wrapperStyles: 'grid-row: span 5' },
         { constructorName: 'DataCell' },
@@ -283,7 +283,7 @@ const result_items10_columns2_withoutMultiSelect = [{
         { constructorName: 'DataCell' }]
 }];
 
-const result_items5_columns2_withoutMultiSelect = [{
+const RESULT_ITEMS_5_COLUMNS_2_WITHOUT_MULTI_SELECT = [{
     columns: [
         { constructorName: 'StickyLadderCell', wrapperStyles: 'grid-row: span 5' },
         { constructorName: 'DataCell' },
@@ -309,7 +309,7 @@ const result_items5_columns2_withoutMultiSelect = [{
         { constructorName: 'DataCell' }]
 }];
 
-const result_items5_columns2_withMultiSelect = [{
+const RESULT_ITEMS_5_COLUMNS_2_WITH_MULTI_SELECT = [{
     columns: [
         { constructorName: 'CheckboxCell' },
         { constructorName: 'StickyLadderCell', wrapperStyles: 'grid-row: span 5' },
@@ -340,7 +340,7 @@ const result_items5_columns2_withMultiSelect = [{
         { constructorName: 'DataCell' }]
 }];
 
-const result_items5_columns2_withMultiSelect_afterRemoveItem = [{
+const RESULT_ITEMS_5_COLUMNS_2_WITH_MULTI_SELECT_AFTER_REMOVE_ITEMS = [{
     columns: [
         { constructorName: 'CheckboxCell' },
         { constructorName: 'StickyLadderCell', wrapperStyles: 'grid-row: span 4' },
@@ -373,7 +373,7 @@ const result_items5_columns2_withMultiSelect_afterRemoveItem = [{
         { constructorName: 'DataCell' }]
 }];
 
-const result_items10_columns3_withoutMultiSelect = [{
+const RESULT_ITEMS_10_COLUMNS_3_WITHOUT_MULTI_SELECT = [{
     columns: [
         { constructorName: 'StickyLadderCell', wrapperStyles: 'grid-row: span 5' },
         { constructorName: 'DataCell' },

@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/Grouped/groupHistoryId/grou
 import {Memory} from 'Types/source';
 import {IColumn} from 'Controls/grid';
 import { UserConfig } from 'EnvConfig/Config';
-import {Tasks} from "Controls-demo/gridNew/DemoHelpers/Data/Tasks";
+import {Tasks} from 'Controls-demo/gridNew/DemoHelpers/Data/Tasks';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

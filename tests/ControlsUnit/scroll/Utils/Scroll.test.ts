@@ -37,14 +37,14 @@ describe('Controls/_scroll/Utils/Scroll', () => {
             direction: SCROLL_DIRECTION.VERTICAL,
             state: {
                 scrollTop: 20,
-                scrollLeft: undefined,
+                scrollLeft: undefined
             },
             position: 20
         }, {
             direction: SCROLL_DIRECTION.HORIZONTAL,
             state: {
                 scrollTop: undefined,
-                scrollLeft: 20,
+                scrollLeft: 20
             },
             position: 20
         }].forEach((test, i: number) => {
@@ -60,14 +60,14 @@ describe('Controls/_scroll/Utils/Scroll', () => {
             direction: SCROLL_DIRECTION.VERTICAL,
             state: {
                 clientHeight: 20,
-                clientWidth: undefined,
+                clientWidth: undefined
             },
             size: 20
         }, {
             direction: SCROLL_DIRECTION.HORIZONTAL,
             state: {
                 clientHeight: undefined,
-                clientWidth: 20,
+                clientWidth: 20
             },
             size: 20
         }].forEach((test, i: number) => {
@@ -83,14 +83,14 @@ describe('Controls/_scroll/Utils/Scroll', () => {
             direction: SCROLL_DIRECTION.VERTICAL,
             state: {
                 scrollHeight: 20,
-                scrollWidth: undefined,
+                scrollWidth: undefined
             },
             size: 20
         }, {
             direction: SCROLL_DIRECTION.HORIZONTAL,
             state: {
                 scrollHeight: undefined,
-                scrollWidth: 20,
+                scrollWidth: 20
             },
             size: 20
         }].forEach((test, i: number) => {

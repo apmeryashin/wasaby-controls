@@ -5,8 +5,8 @@ import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import { Model } from 'Types/entity';
 import {TreeItem } from 'Controls/display';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
-import {RecordSet} from "Types/collection";
-import {TreeGridCollection} from "Controls/treeGrid";
+import {RecordSet} from 'Types/collection';
+import {TreeGridCollection} from 'Controls/treeGrid';
 
 describe('Controls/_display/itemsStrategy/NodeFooter', () => {
     function getSource<S = Model, T = TreeItem>(wraps: T[]): IItemsStrategy<S, T> {
@@ -39,7 +39,7 @@ describe('Controls/_display/itemsStrategy/NodeFooter', () => {
             invalidate(): void {
                 this.invalidated = true;
             },
-            reset(): void {}
+            reset(): void {/* FIXME: sinon mock */}
         };
     }
 
@@ -73,7 +73,8 @@ describe('Controls/_display/itemsStrategy/NodeFooter', () => {
         strategy = new NodeFooter({
             display: tree,
             source,
-            nodeFooterVisibilityCallback: () => true
+            nodeFooterVisibilityCallback: () => true,
+            nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow'
         });
     });
 
@@ -127,8 +128,10 @@ describe('Controls/_display/itemsStrategy/NodeFooter', () => {
         strategy = new NodeFooter({
             display: tree,
             source,
-            nodeFooterVisibilityCallback: () => true
+            nodeFooterVisibilityCallback: () => true,
+            nodeFooterModule: 'Controls/treeGrid:TreeGridNodeFooterRow'
         });
+        // tslint:disable-next-line:no-unused-expression
         strategy.items;
 
         assert.isFalse(calledForNodeWithMore);

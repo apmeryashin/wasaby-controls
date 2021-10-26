@@ -1,6 +1,5 @@
 import {IColumn} from 'Controls/grid';
 import {IBaseGroupTemplate} from 'Controls/baseList';
-
 /**
  * Интерфейс колонки списка с иерархической группировкой.
  * @interface Controls/_treeGrid/interface/IGroupNodeColumn
@@ -11,11 +10,6 @@ import {IBaseGroupTemplate} from 'Controls/baseList';
 export interface IGroupNodeColumn extends IColumn {
     /**
      * @cfg {Controls/list:IBaseGroupTemplate} Конфигурация шаблона группы для текущей колонки
-     * @description
-     * Если конфигурация указана, то для узлов, у которых в {@link Controls/_treeGrid/interface/ITreeGrid#nodeTypeProperty nodeTypeProperty} содержится значение 'group',
-     * содержимое колонки будет выведено с использованием шаблона группы.
-     * Если конфигурация не указана, то содержимое колонки будет выведено с использовыаанием шаблона, переданного в
-     * параметре {@link Controls/grid:IColumn#template template}.
      * В конфигурации поддерживаются все свойства шаблона группы.
      * @example
      *

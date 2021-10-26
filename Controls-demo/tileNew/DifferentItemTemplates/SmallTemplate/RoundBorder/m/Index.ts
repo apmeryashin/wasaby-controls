@@ -9,7 +9,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory = null;
     protected _selectedKeys: string[] = [];
-    protected _roundBorder = {'tl': 'm', 'tr': 'm', 'br': 'm', 'bl': 'm'};
+    protected _roundBorder = {tl: 'm', tr: 'm', br: 'm', bl: 'm'};
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({

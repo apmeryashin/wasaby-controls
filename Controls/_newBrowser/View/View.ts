@@ -48,6 +48,18 @@ const DEFAULT_BACKGROUND_COLOR = '#ffffff';
  */
 export default class View extends Control<IOptions, IReceivedState> {
 
+    /**
+     * Текущий режим отображения списка в detail-колонке.
+     */
+    get viewMode(): DetailViewMode {
+        // Режим 'search' самый приоритетный. Во всех остальных случаях
+        // используем либо явно заданный _userViewMode либо текущий _viewMode,
+        // полученный из метаданных
+        return this._viewMode === DetailViewMode.search
+            ? this._viewMode
+            : (this._userViewMode || this._viewMode);
+    }
+
     //region ⽥ fields
     /**
      * Шаблон отображения компонента
@@ -77,18 +89,6 @@ export default class View extends Control<IOptions, IReceivedState> {
      */
     protected _masterVisibility: MasterVisibilityEnum;
     protected _newMasterVisibility: MasterVisibilityEnum;
-
-    /**
-     * Текущий режим отображения списка в detail-колонке.
-     */
-    get viewMode(): DetailViewMode {
-        // Режим 'search' самый приоритетный. Во всех остальных случаях
-        // используем либо явно заданный _userViewMode либо текущий _viewMode,
-        // полученный из метаданных
-        return this._viewMode === DetailViewMode.search
-            ? this._viewMode
-            : (this._userViewMode || this._viewMode);
-    }
 
     // Пользовательский режим отображения, задается опцией сверху
     private _userViewMode: DetailViewMode;
@@ -366,7 +366,7 @@ export default class View extends Control<IOptions, IReceivedState> {
             imageProperty: options.detail.imageProperty,
             gradientColorProperty: options.detail.gradientColorProperty,
             descriptionProperty: options.detail.descriptionProperty
-        }
+        };
         this._tileCfg = new TileController({
             listConfiguration: this._listConfiguration,
             templateProperties
@@ -529,6 +529,12 @@ export default class View extends Control<IOptions, IReceivedState> {
         return super._notify(eventName, args, options);
     }
 
+    static defaultProps: Partial<IOptions> = {
+        master: {
+            visibility: MasterVisibilityEnum.hidden
+        }
+    };
+
     //endregion
 
     //region • static utils
@@ -547,12 +553,6 @@ export default class View extends Control<IOptions, IReceivedState> {
 
         return MasterVisibilityEnum.hidden;
     }
-
-    static defaultProps: Partial<IOptions> = {
-        master: {
-            visibility: MasterVisibilityEnum.hidden
-        }
-    };
 
     //endregion
     static contextTypes(): object {

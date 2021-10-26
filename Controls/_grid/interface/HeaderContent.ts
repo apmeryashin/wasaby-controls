@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ ячейки заголовка} в {@link Controls/grid:View таблице}.
- *  
+ *
  * @class Controls/_grid/interface/HeaderContent
  * @author Авраменко А.С.
  * @see Controls/grid:IGridControl/HeaderCell.typedef
@@ -54,10 +54,10 @@ export default interface IHeaderContentOptions {
     *    </ws:header>
     * </Controls.grid:View>
     * </pre>
-    * 
+    *
     * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
     * <pre class="brush: html">
-    * <!-- file1.wml --> 
+    * <!-- file1.wml -->
     * <Controls.grid:View source="{{_viewSource}}" columns="{{_columns}}">
     *    <ws:header>
     *       <ws:Array>
@@ -70,7 +70,7 @@ export default interface IHeaderContentOptions {
     *    </ws:header>
     * </Controls.grid:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * <ws:partial template="Controls/grid:HeaderContent" scope="{{_options}}">
@@ -79,11 +79,11 @@ export default interface IHeaderContentOptions {
     *    </ws:contentTemplate>
     * </ws:partial>
     * </pre>
-    * 
+    *
     * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
-    * 
+    *
     * <pre class="brush: html">
-    * <!-- file1.wml --> 
+    * <!-- file1.wml -->
     * <Controls.grid:View source="{{_viewSource}}" columns="{{_columns}}">
     *    <ws:header>
     *       <ws:Array>
@@ -100,7 +100,7 @@ export default interface IHeaderContentOptions {
     *    </ws:header>
     * </Controls.grid:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * {{contentTemplate.column.config.title}}

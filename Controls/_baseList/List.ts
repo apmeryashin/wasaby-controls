@@ -35,6 +35,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/interface/IGroupedList
  * @implements Controls/list:IVirtualScrollConfig
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/list:IClickableView
  * @implements Controls/list:IReloadableList
  * @implements Controls/marker:IMarkerList
@@ -60,6 +61,7 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/interface:ISelectFields
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:ISorting
  * @implements Controls/list:IEditableList
@@ -77,7 +79,8 @@ import {IReloadItemOptions} from 'Controls/_baseList/interface/IList';
  * @demo Controls-demo/list_new/Base/Index
  */
 
-export default class List extends Control /** @lends Controls/_list/List.prototype */ implements IMovableList, IRemovableList {
+export default class List extends Control /** @lends Controls/_list/List.prototype */
+implements IMovableList, IRemovableList {
     protected _template: TemplateFunction = template;
     protected _viewName = viewName;
     protected _viewTemplate: unknown = ListControl;
@@ -88,6 +91,8 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
         data: Data
     };
 
+    _notifyHandler = EventUtils.tmplNotify;
+
     protected _beforeMount(options): void {
         this._viewModelConstructor = this._getModelConstructor();
     }
@@ -97,7 +102,7 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
     }
 
     protected _keyDownHandler() {
-
+        /* For override  */
     }
 
     protected _getModelConstructor(): string|Function {
@@ -197,8 +202,6 @@ export default class List extends Control /** @lends Controls/_list/List.prototy
     _clearSelection(): void {
         this._children.listControl.clearSelection();
     }
-
-    _notifyHandler = EventUtils.tmplNotify;
 
     static getDefaultOptions(): object {
         return {

@@ -62,7 +62,9 @@ function correctSign(parsedNumber: IParsedNumber, {onlyPositive}: INumberSign, c
     return position;
 }
 
-function correctIntegerPart(parsedNumber: IParsedNumber, options: INumberLength & INumberDisplay, carriagePosition: number): number {
+function correctIntegerPart(parsedNumber: IParsedNumber,
+                            options: INumberLength & INumberDisplay,
+                            carriagePosition: number): number {
     const needlessChars: number = calcNeedlessChars(parsedNumber, 'integer', options);
     const positionRelativeIntegerPart: number = getPositionRelativePart(parsedNumber, 'integer', carriagePosition);
 
@@ -71,10 +73,11 @@ function correctIntegerPart(parsedNumber: IParsedNumber, options: INumberLength 
         relative: positionRelativeIntegerPart
     }, needlessChars);
 
-    const position: number = shouldBeFractional(parsedNumber.fractional, options) ? moveIntegerToFractional(parsedNumber, {
-        value: limitedValue.movedValue,
-        carriagePosition: limitedValue.position
-    }, limitedValue.value) : limitedValue.position;
+    const position: number = shouldBeFractional(parsedNumber.fractional, options) ?
+        moveIntegerToFractional(parsedNumber, {
+            value: limitedValue.movedValue,
+            carriagePosition: limitedValue.position
+        }, limitedValue.value) : limitedValue.position;
 
     const processedData: IText = handleInsignificantZero(
         options, {
@@ -294,7 +297,7 @@ function concat(original: IParsedNumber, options: INumberDisplay & INumberLength
         value.push(decimalSplitter);
     }
 
-    const additionalZeros = options.useAdditionToMaxPrecision ? options.precision - original.fractional.length: 0;
+    const additionalZeros = options.useAdditionToMaxPrecision ? options.precision - original.fractional.length : 0;
 
     return {
         value: join(value, position, additionalZeros),

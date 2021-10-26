@@ -37,10 +37,10 @@ class FormController extends Control<IControlOptions> {
         const result = new Promise((resolve, reject) => {
         finishDef.then((finishResult) => {
             const createDef = self._children.formControllerInst.create(initValues);
-            createDef.then((result) => {
+            createDef.then((cbResult) => {
                 self.idCount++;
                 resolve(true);
-                return result;
+                return cbResult;
             }, (error) => {
                 Env.IoC.resolve('ILogger').error('FormController example', '', error);
                 reject(error);
@@ -96,7 +96,7 @@ class FormController extends Control<IControlOptions> {
     private _update(): Promise<any> {
         return this._children.formControllerInst.update();
     }
-    private _delete():Promise<any> {
+    private _delete(): Promise<any> {
         return this._children.formControllerInst.delete();
     }
 

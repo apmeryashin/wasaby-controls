@@ -1,15 +1,14 @@
 import BaseSelector, {IBaseSelectorOptions} from './BaseSelector';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import {IDateRangeOptions} from './interfaces/IDateRange';
-import ILinkView from './interfaces/ILinkView';
+import {ILinkViewDefaultOptions} from 'Controls/date';
 import IDateRangeSelectable = require('./interfaces/IDateRangeSelectable');
 import componentTmpl = require('wml!Controls/_dateRange/RangeSelector/RangeSelector');
 import {Popup as PopupUtil, Base as dateUtils} from 'Controls/dateUtils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
-import * as monthCaptionTemplate from 'wml!Controls/_dateRange/DateSelector/monthCaptionTemplate';
-import {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
-import getPopupName from 'Controls/_dateRange/Utils/getPopupName';
+import {MonthCaptionTemplate} from 'Controls/date';
+import {getDatePopupName, IDatePopupTypeOptions} from 'Controls/date';
 import 'css!Controls/dateRange';
 
 interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelectorOptions, IDatePopupTypeOptions {
@@ -26,14 +25,13 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  * @class Controls/_dateRange/RangeSelector
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
- * @implements Controls/dateRange:ILinkView
+ * @implements Controls/date:ILinkViewDefaultOptions
  * @implements Controls/dateRange:IDateRange
  * @implements Controls/dateRange:IDatePickerSelectors
  * @implements Controls/dateRange:IDayTemplate
  * @implements Controls/dateRange:IDateRangeSelectable
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IFontSize
- * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/dateRange:ICaptionFormatter
@@ -52,7 +50,7 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  *
  * @class Controls/_dateRange/RangeSelector
  * @extends UI/Base:Control
- * @implements Controls/dateRange:ILinkView
+ * @implements Controls/date:ILinkViewDefaultOptions
  * @implements Controls/interface:IFontSize
  * @implements Controls/dateRange:IDateRangeSelectable
  *
@@ -69,9 +67,9 @@ interface IRangeSelector extends IControlOptions, IDateRangeOptions, IBaseSelect
  */
 export default class RangeSelector extends BaseSelector<IRangeSelector> {
     protected _template: TemplateFunction = componentTmpl;
-    protected _monthCaptionTemplate: TemplateFunction = monthCaptionTemplate;
+    protected _monthCaptionTemplate: TemplateFunction = MonthCaptionTemplate;
     protected _emptyCaption: string;
-    EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
+    EMPTY_CAPTIONS: object = ILinkViewDefaultOptions.EMPTY_CAPTIONS;
 
     protected _beforeMount(options: IRangeSelector): void {
         this._updateValues(options);
@@ -155,7 +153,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
         return {
             ...PopupUtil.getCommonOptions(this),
             target: container,
-            template: getPopupName(this._options.datePopupType),
+            template: getDatePopupName(this._options.datePopupType),
             className,
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
@@ -202,7 +200,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     static getDefaultOptions(): object {
         return {
             minRange: 'day',
-            ...ILinkView.getDefaultOptions(),
+            ...ILinkViewDefaultOptions.getDefaultOptions(),
             ...IDateRangeSelectable.getDefaultOptions(),
             datePopupType: 'datePicker'
         };
@@ -211,7 +209,7 @@ export default class RangeSelector extends BaseSelector<IRangeSelector> {
     static getOptionTypes(): object {
         return {
             ...IDateRangeSelectable.getOptionTypes(),
-            ...ILinkView.getOptionTypes()
+            ...ILinkViewDefaultOptions.getOptionTypes()
         };
     }
 }

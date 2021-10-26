@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require("wml!Controls-demo/dateRange/LinkView/FontSize/FontSize");
+import template = require('wml!Controls-demo/dateRange/LinkView/FontSize/FontSize');
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;

@@ -4,7 +4,7 @@ import {IMultilinePathOptions} from './MultilinePath';
 import PrepareDataUtil from './PrepareDataUtil';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 
-//TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
+// TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 export const ARROW_WIDTH = 16;
 export const PADDING_RIGHT = 2;
 
@@ -15,7 +15,9 @@ export default {
     getTextWidth(text: string, size: string  = 'xs'): number {
         return getFontWidth(text, size);
     },
-    getItemsWidth(items: Record[], options: IMultilinePathOptions, getTextWidth: Function = this.getTextWidth): number[] {
+    getItemsWidth(items: Record[],
+                  options: IMultilinePathOptions,
+                  getTextWidth: Function = this.getTextWidth): number[] {
         const itemsWidth = [];
         items.forEach((item, index) => {
             const itemTitleWidth = getTextWidth(item.get(options.displayProperty), options.fontSize);
@@ -24,7 +26,11 @@ export default {
         });
         return itemsWidth;
     },
-    calculateItemsWithShrinkingLast(items: Record[], options: IMultilinePathOptions, width: number, getTextWidth: Function = this.getTextWidth): {visibleItems: Record[], indexEdge: number} {
+    calculateItemsWithShrinkingLast(items: Record[],
+                                    options: IMultilinePathOptions,
+                                    width: number,
+                                    getTextWidth: Function = this.getTextWidth
+    ): {visibleItems: Record[], indexEdge: number} {
         const itemsWidth = this.getItemsWidth(items, options, getTextWidth);
         let indexEdge = 0;
         let visibleItems;
@@ -74,7 +80,12 @@ export default {
         }
         return 0;
     },
-    calculateItemsWithDots(items: Record[], options: IBreadCrumbsOptions, indexEdge: number, width: number, dotsWidth: number, getTextWidth: Function = this.getTextWidth): Record[] {
+    calculateItemsWithDots(items: Record[],
+                           options: IBreadCrumbsOptions,
+                           indexEdge: number,
+                           width: number,
+                           dotsWidth: number,
+                           getTextWidth: Function = this.getTextWidth): Record[] {
         const crumbsItems = items || [];
         let secondContainerWidth = 0;
         let shrinkItemIndex;
@@ -84,7 +95,9 @@ export default {
         }
         // Сначала пробуем замылить предпоследнюю крошку
         secondContainerWidth -= itemsWidth[crumbsItems.length - 2];
-        const minWidthOfPenultimateItem = crumbsItems.length > 2 ? this.getMinWidth(crumbsItems, options, crumbsItems.length - 2, getTextWidth) : undefined;
+        const minWidthOfPenultimateItem = crumbsItems.length > 2
+            ? this.getMinWidth(crumbsItems, options, crumbsItems.length - 2, getTextWidth)
+            : undefined;
         secondContainerWidth += minWidthOfPenultimateItem;
         // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
         if (secondContainerWidth > width && crumbsItems.length > 2) {
@@ -112,7 +125,9 @@ export default {
             // заполняем крошками, которые влезли, второй контейнер (не считая последней)
             for (let j = indexEdge; j <= index; j++) {
                 const itemTitle = crumbsItems[j].get(options.displayProperty) || '';
-                secondContainerItems.push(PrepareDataUtil.getItemData(j, crumbsItems, true, j === index && itemTitle.length > 3));
+                secondContainerItems.push(
+                    PrepareDataUtil.getItemData(j, crumbsItems, true, j === index && itemTitle.length > 3)
+                );
             }
             // добавляем точки
             const dotsItem = new Model({
@@ -120,7 +135,7 @@ export default {
                     [options.displayProperty]: '...',
                     [options.keyProperty]: 'dots'
                 },
-                keyProperty: options.keyProperty,
+                keyProperty: options.keyProperty
             });
 
             secondContainerItems.push({
@@ -138,7 +153,8 @@ export default {
             const secondContainerItems = [];
             const preLastItemTitle = crumbsItems?.[crumbsItems.length - 2]?.get(options.displayProperty) || '';
             for (let j = indexEdge; j < crumbsItems.length; j++) {
-                secondContainerItems.push(PrepareDataUtil.getItemData(j, crumbsItems, true, j === crumbsItems.length - 2 && preLastItemTitle.length > 3));
+                const withOverflow = j === crumbsItems.length - 2 && preLastItemTitle.length > 3;
+                secondContainerItems.push(PrepareDataUtil.getItemData(j, crumbsItems, true, withOverflow));
             }
             if (secondContainerItems.length <= 2) {
                 secondContainerItems.forEach((item) => {

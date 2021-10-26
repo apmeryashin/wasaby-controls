@@ -26,7 +26,7 @@ describe('Controls/grid_clean/GridView', () => {
                 footer: () => '',
                 itemPadding: {}
             };
-            let gridView = new GridView(gridOptions);
+            const gridView = new GridView(gridOptions);
             await gridView._beforeMount(gridOptions);
             assert.strictEqual(gridView.getListModel().getVersion(), 0, 'Version must be equals zero! No other variants!');
         });
@@ -45,13 +45,13 @@ describe('Controls/grid_clean/GridView', () => {
                 columns: [{}],
                 itemPadding: {},
                 columnScroll: true,
-                listModel: new GridCollection(collectionOptions),
+                listModel: new GridCollection(collectionOptions)
             };
             const gridView = new GridView(gridOptions);
 
             // MOCK COLUMN SCROLL MIXIN. IT WORKS WITH DOM.
-            gridView._columnScrollOnViewBeforeMount = () => {};
-            gridView._columnScrollOnViewDidMount = () => {};
+            gridView._columnScrollOnViewBeforeMount = () => {/* FIXME: sinon mock */};
+            gridView._columnScrollOnViewDidMount = () => {/* FIXME: sinon mock */};
             // EMULATE THAT COLUMN SCROLL NEEDED AND CREATED
             gridView.isColumnScrollVisible = () => true;
             // END MOCK
@@ -71,8 +71,8 @@ describe('Controls/grid_clean/GridView', () => {
 
         beforeEach(() => {
             mockListViewModel = {
-                subscribe: () => {},
-                setItemPadding: () => {},
+                subscribe: () => {/* FIXME: sinon mock */},
+                setItemPadding: () => {/* FIXME: sinon mock */},
                 isDragging: () => false
             };
             options = { listModel: mockListViewModel, isFullGridSupport: true };
@@ -120,8 +120,8 @@ describe('Controls/grid_clean/GridView', () => {
                 listModel: {
                     getFooter: () => fakeFooter,
                     getResults: () => fakeResults,
-                    subscribe: () => {},
-                    setItemPadding: () => {},
+                    subscribe: () => {/* FIXME: sinon mock */},
+                    setItemPadding: () => {/* FIXME: sinon mock */},
                     getResultsPosition: () => resultsPosition,
                     isDragging: () => false
                 }};
@@ -164,10 +164,22 @@ describe('Controls/grid_clean/GridView', () => {
             gridView._container = {
                 getElementsByClassName: (className) => {
                     if (className === 'controls-Grid__header') {
-                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 100}), closest: () => undefined }];
+                        return [
+                            {
+                                getComputedStyle: () => '',
+                                getBoundingClientRect: () => ({height: 100}),
+                                closest: () => undefined
+                            }
+                        ];
                     }
                     if (className === 'controls-Grid__results') {
-                        return [{getComputedStyle: () => '', getBoundingClientRect: () => ({height: 50}), closest: () => undefined }];
+                        return [
+                            {
+                                getComputedStyle: () => '',
+                                getBoundingClientRect: () => ({height: 50}),
+                                closest: () => undefined
+                            }
+                        ];
                     }
                 },
                 closest: () => undefined
@@ -242,8 +254,7 @@ describe('Controls/grid_clean/GridView', () => {
             setItemEditorTemplateOptions: (value) => {
                 itemEditorTemplateOptions = value;
             },
-            setColspanGroup: () => {
-            }
+            setColspanGroup: () => {/* FIXME: sinon mock */}
         };
 
         gridView._beforeUpdate({itemEditorTemplateOptions: 'newValue'});

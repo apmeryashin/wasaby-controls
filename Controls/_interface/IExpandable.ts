@@ -12,7 +12,7 @@ export interface IExpandableOptions {
  * Interface for components with switchable state of extensibility.
  * @public
  * @author Авраменко А.С.
- */ 
+ */
 export default interface IExpandable {
    readonly '[Controls/_toggle/interface/IExpandable]': boolean;
 }

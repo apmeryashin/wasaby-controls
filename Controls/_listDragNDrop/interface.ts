@@ -33,7 +33,8 @@ export interface IDraggableItem<S extends Model = Model> {
  * @public
  * @author Панихин К.А.
  */
-export interface IDraggableCollection<P = IDragPosition<IDraggableItem>> extends IBaseCollection<Model, ICollectionItem> {
+export interface IDraggableCollection<P = IDragPosition<IDraggableItem>>
+    extends IBaseCollection<Model, ICollectionItem> {
    setDragPosition(position: P): void;
    setDraggedItems(draggableItem: IDraggableItem, draggedItemKeys: CrudEntityKey[]): void;
    resetDraggedItems(): void;
@@ -91,5 +92,5 @@ export abstract class BaseDragStrategy<
 
    abstract calculatePosition(params: IDragStrategyParams<P>): P;
 
-   abstract getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[]
+   abstract getDraggableKeys(selectedKeys: CrudEntityKey[]): CrudEntityKey[];
 }

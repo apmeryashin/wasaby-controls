@@ -19,7 +19,7 @@ export default class extends Control {
                     const itemId = String(item.get('id'));
                     const marked = queryFilter.selection.get('marked');
                     let isSelected = false;
-                    marked.forEach(function (selectedId) {
+                    marked.forEach((selectedId) => {
                         if (String(selectedId) === itemId) {
                             isSelected = true;
                         }

@@ -41,7 +41,9 @@ export default class ScrollBar extends Control<IScrollBarOptions> {
     }
 
     // Аналогично this.setScrollPosition, та же причина существования
-    setSizes(params: {contentSize?: number, maxScrollPosition?: number, scrollWidth?: number, scrollPosition?: number}): void {
+    setSizes(
+        params: { contentSize?: number, maxScrollPosition?: number, scrollWidth?: number, scrollPosition?: number }
+    ): void {
         let shouldRecalcSizes = false;
 
         if (typeof params.contentSize !== 'undefined' && this._contentSize !== params.contentSize) {
@@ -91,8 +93,7 @@ export default class ScrollBar extends Control<IScrollBarOptions> {
         if (!this._isArrowActive(direction)) {
             return;
         }
-        const delta = this._scrollWidth - this._scrollWidth / 10 ;
-        const newScrollPosition = this._position + (direction === 'left' ? -delta : delta);
+        const newScrollPosition = this._position + (direction === 'left' ? -this._scrollWidth : this._scrollWidth);
         this._updateScrollPosition(newScrollPosition);
     }
 

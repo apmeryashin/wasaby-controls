@@ -120,7 +120,7 @@ export default class SizeAndVisibilityObserver {
                 if (this._isHeaderOfGroup(header.index)) {
                     groupHeader = this._getGroupByHeader(header);
                     const groupInUpdateGroups = this._groupInObject(groupHeader, updateGroups);
-                    if (!groupInUpdateGroups) {
+                    if (!groupInUpdateGroups && groupHeader) {
                         updateGroups[groupHeader.id] = groupHeader;
                     }
                 }
@@ -196,7 +196,7 @@ export default class SizeAndVisibilityObserver {
 
     private _getStickyHeaderElements(header: StickyBlock): NodeListOf<HTMLElement> {
         if (header.getChildrenHeaders) {
-            return header.getChildrenHeaders().map(h => h.inst.getHeaderContainer());
+            return header.getChildrenHeaders().map((h) => h.inst.getHeaderContainer());
         } else {
             return [header.getHeaderContainer()];
         }

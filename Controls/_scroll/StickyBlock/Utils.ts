@@ -26,7 +26,7 @@ export const enum SHADOW_VISIBILITY {
 export const enum SHADOW_VISIBILITY_BY_CONTROLLER {
     visible = 'visible',
     hidden = 'hidden',
-    auto = 'auto',
+    auto = 'auto'
 }
 
 /**
@@ -47,16 +47,16 @@ export const enum MODE {
     notsticky = 'notsticky'
 }
 
-export type TRegisterEventData = {
+export interface IRegisterEventData {
    id: number;
    inst?: StickyBlock;
    container: HTMLElement;
    position?: string;
    mode?: string;
    shadowVisibility: SHADOW_VISIBILITY;
-};
+}
 
-export type IFixedEventData = {
+export interface IFixedEventData {
    // Id заголовка
    id: number;
    // Позиция фиксации: сверху или снизу
@@ -72,7 +72,7 @@ export type IFixedEventData = {
     // но нужно инициировать событие fixed, чтобы пользовательские контролы могли обработать случившееся.
     // Флаг устанавливается дабы исключить обработку этого события в StickyHeader/Group и StickyHeader/Controller.
    isFakeFixed: boolean;
-};
+}
 
 export interface IOffset {
     top: number;
@@ -98,13 +98,12 @@ export function _lastId(): number {
 }
 
 export function getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION): number {
-   //TODO redo after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+   // TODO redo after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
    parentElement = (parentElement && parentElement.get) ? parentElement.get(0) : parentElement;
    element = (element && element.get) ? element.get(0) : element;
 
-   const
-       offset = getDimensions(element),
-       parentOffset = getDimensions(parentElement);
+   const offset = getDimensions(element);
+   const parentOffset = getDimensions(parentElement);
    if (position === 'top') {
       return offset.top - parentOffset.top;
    } else if (position === 'bottom') {
@@ -116,7 +115,8 @@ export function getOffset(parentElement: HTMLElement, element: HTMLElement, posi
    }
 }
 
-export function validateIntersectionEntries(entries: IntersectionObserverEntry[], rootContainer: HTMLElement): IntersectionObserverEntry[] {
+export function validateIntersectionEntries(entries: IntersectionObserverEntry[],
+                                            rootContainer: HTMLElement): IntersectionObserverEntry[] {
     const newEntries: IntersectionObserverEntry[] = [];
     for (const entry: IntersectionObserverEntry of entries) {
         // После создания элемента иногда приходит событие с неправильными нулевыми размерами.

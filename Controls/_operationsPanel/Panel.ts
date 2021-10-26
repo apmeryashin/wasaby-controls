@@ -6,6 +6,7 @@ import {DialogOpener} from 'Controls/popup';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import Store from 'Controls/Store';
 import {TKey} from 'Controls/interface';
+import {isEqual} from 'Types/object';
 
 export enum TOperationsPanelPosition {
     LIST_HEADER= 'listHeader',
@@ -55,10 +56,11 @@ export default class extends Control<IOperationsPanelOptions> {
     }
 
     protected _beforeUpdate(options: IOperationsPanelOptions): void {
-        if (this._options.selectedKeys !== options.selectedKeys ||
-            this._options.excludedKeys !== options.excludedKeys ||
-            this._options.selectedKeysCount !== options.selectedKeysCount
-        ) {
+        const currentOptions = this._options;
+        if (currentOptions.selectedKeys !== options.selectedKeys ||
+            currentOptions.excludedKeys !== options.excludedKeys ||
+            currentOptions.selectedKeysCount !== options.selectedKeysCount ||
+            !isEqual(currentOptions.selectedCountConfig, options.selectedCountConfig)) {
             this._openCloud(options);
             if (this._shouldOpenMenu(options)) {
                 this._operationsController.setOperationsMenuVisible(true);
@@ -98,6 +100,7 @@ export default class extends Control<IOperationsPanelOptions> {
         this._getDialogOpener().open({
             template: 'Controls/operationsPanel:Cloud',
             className: this._getPanelOffsetClasses(options.position, options.theme),
+            autofocus: false,
             opener: this,
             propStorageId: options.propStorageId,
             templateOptions: {

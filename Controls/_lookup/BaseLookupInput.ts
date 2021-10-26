@@ -217,13 +217,18 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
-        if ((this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) && this._suggestState) {
+        if (
+            (this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) &&
+            this._suggestState
+        ) {
             this.closeSuggest();
         }
     }
 
     private _determineAutoDropDown(): boolean {
-        return this._options.autoDropDown && this._isInputActive(this._options);
+        return this._options.autoDropDown &&
+               this._isInputActive(this._options) &&
+               (this._isEmpty() || this._options.multiSelect);
     }
 
     private _resize(): void {
@@ -256,7 +261,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _isInputActive(options: ILookupInputOptions): boolean {
-        return !options.readOnly && this._isInputVisible(options) && (this._isEmpty() || options.multiSelect);
+        return !options.readOnly && this._isInputVisible(options);
     }
 
     private _openInfoBox(event: SyntheticEvent, config: IHashMap<unknown>): void {
@@ -321,9 +326,9 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         this._notify('itemClick', [item, nativeEvent]);
     }
 
-    private _keyDown(event: SyntheticEvent, keyboardEvent): void {
+    private _keyDown(event: SyntheticEvent): void {
         const items = this._items;
-        const keyCodeEvent = keyboardEvent.nativeEvent.keyCode;
+        const keyCodeEvent = event.nativeEvent.keyCode;
         const hasValueInInput = this._getInputValue(this._options);
 
         if (keyCodeEvent === KEY_CODE_F2) {
@@ -445,7 +450,9 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         return false;
     }
 
-    protected _calculateSizes(options: ILookupInputOptions): void { }
+    protected _calculateSizes(options: ILookupInputOptions): void {
+        /* For override */
+    }
 
     protected _isInputVisible(options: ILookupInputOptions): boolean {
         return !!(this._isEmpty() || options.multiSelect);

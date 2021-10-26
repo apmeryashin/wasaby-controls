@@ -131,7 +131,7 @@ describe('Controls/tree/TreeControl', () => {
 
             await new Promise((resolve) => {
                 togglePromise.then(() => resolve(true)).catch(() => resolve(false));
-            }).then(isToggledSuccess => {
+            }).then((isToggledSuccess) => {
                 assert.isFalse(isToggledSuccess);
             });
         });
@@ -151,18 +151,21 @@ describe('Controls/tree/TreeControl', () => {
         });
 
         describe('root = null', () => {
+            // tslint:disable-next-line:max-line-length
             it('marker setted to collapsed root folder(1), root=null => default add position = current root(null)', () => {
                 const treeControl = createTreeControl();
                 treeControl.setMarkedKey(1);
                 assert.equal(treeControl.getMarkedNodeKey(), null);
             });
 
+            // tslint:disable-next-line:max-line-length
             it('marker setted to expanded root folder(1), root=null => default add position = expanded folder(1)', () => {
                 const treeControl = createTreeControl(DEFAULT_DATA, { expandedItems: [1] });
                 treeControl.setMarkedKey(1);
                 assert.equal(treeControl.getMarkedNodeKey(), 1);
             });
 
+            // tslint:disable-next-line:max-line-length
             it('marker setted to expanded root folder(2), root=null => default add position = expanded folder(2)', () => {
                 const treeControl = createTreeControl(DEFAULT_DATA, { expandedItems: [1, 2] });
                 treeControl.setMarkedKey(2);

@@ -32,8 +32,8 @@ export default class extends Control {
                this._children.view.reload();
             });
          }
-      },
-   ]
+      }
+   ];
 
    protected _beforeMount(): void {
       this._viewSource = new HierarchicalMemory({

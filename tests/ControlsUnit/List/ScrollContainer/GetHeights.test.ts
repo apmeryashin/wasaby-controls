@@ -3,7 +3,7 @@ import {assert} from 'chai';
 
 describe('getItemsHeightsData', () => {
     let isNode;
-    let createElement = (hidden: boolean) => {
+    const createElement = (hidden: boolean) => {
         return {
             classList: {
                 contains: () => hidden
@@ -11,29 +11,29 @@ describe('getItemsHeightsData', () => {
             getBoundingClientRect: () => {
                 return {
                     height: 100
-                }
+                };
             },
-            closest: function (){}
-        }
-    }
+            closest() {/* FIXME: sinon mock */}
+        };
+    };
     before(() => {
         isNode = typeof document === 'undefined';
-            if (isNode) {
+        if (isNode) {
                 global.window = {
-                    getComputedStyle: () => {}
+                    getComputedStyle: () => {/* FIXME: sinon mock */}
                 };
             }
     });
     it('getItemsHeightsData', () => {
-        let container = {
+        const container = {
             children: [true, true, false, false, false].map(createElement)
-        }
+        };
         assert.deepEqual(getItemsHeightsData(container as any as HTMLElement).itemsHeights, [100, 100, 100]);
         assert.deepEqual(getItemsHeightsData(container as any as HTMLElement).itemsOffsets, [0, 100, 200]);
     });
 
     it('getItemsHeightsData useQuerySelector', () => {
-        let container = {
+        const container = {
             children: [],
             querySelectorAll: () => {
                 return [true, true, false, false, false].map(createElement);

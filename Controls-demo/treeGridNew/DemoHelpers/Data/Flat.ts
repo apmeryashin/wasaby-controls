@@ -330,4 +330,4 @@ export const Flat = {
             partial: [23415.454, 56151, 57774]
         };
     }
-}
+};

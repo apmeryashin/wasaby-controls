@@ -2,7 +2,7 @@ import { createSandbox } from 'sinon';
 import { Model } from 'Types/entity';
 import { GridHeader, GridHeaderRow, IGridHeaderRowOptions, GridCollection, GridCell, GridRow } from 'Controls/grid';
 
-import {assert} from "chai";
+import {assert} from 'chai';
 
 describe('Controls/grid_clean/Display/header/HeaderRow', () => {
     const columns = [{ width: '1px' }];

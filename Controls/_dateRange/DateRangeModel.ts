@@ -18,8 +18,8 @@ import CalendarUtils from './Utils';
  * @public
  * @noShow
  */
-var _private = {
-   setStartValue: function(self, value) {
+const _private = {
+   setStartValue(self, value) {
       const startValueResetTime = Base.normalizeDate(self._startValue);
       if (Base.isDatesEqual(startValueResetTime, value)) {
          return false;
@@ -28,7 +28,7 @@ var _private = {
       self._nextVersion();
       return true;
    },
-   setEndValue: function(self, value) {
+   setEndValue(self, value) {
       const endValueResetTime = Base.normalizeDate(self._endValue);
       if (Base.isDatesEqual(endValueResetTime, value)) {
          return false;
@@ -37,28 +37,30 @@ var _private = {
       self._nextVersion();
       return true;
    },
-   notifyRangeChanged: function(self, start: Date, end: Date): void {
+   notifyRangeChanged(self, start: Date, end: Date): void {
       self._notify('rangeChanged', [start, end]);
    },
-   createDate: function(self, date: Date): void {
+   createDate(self, date: Date): void {
       return new self._dateConstructor(date);
    }
 };
 
-var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
+// TODO: Переделать на класс
+
+const ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
    _options: null,
    _dateConstructor: DateTime,
 
-   constructor: function(cfg) {
+   constructor(cfg) {
       ModuleClass.superclass.constructor.apply(this, arguments);
       if (cfg && cfg.dateConstructor) {
          this._dateConstructor = cfg.dateConstructor;
       }
    },
 
-   update: function(options) {
+   update(options) {
       this._options = options;
-      var changed = false;
+      let changed = false;
       if (options.hasOwnProperty('startValue') && !Base.isDatesEqual(options.startValue, this._startValue)) {
          this._startValue = options.startValue;
          changed = true;
@@ -92,8 +94,8 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
-   setRange: function(startValue, endValue) {
-      var changed = false;
+   setRange(startValue, endValue) {
+      let changed = false;
       if (_private.setStartValue(this, startValue)) {
          this._notify('startValueChanged', [startValue]);
          changed = true;
@@ -107,7 +109,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
-   _hitsDisplayedRange(date: Date, index: Number): boolean {
+   _hitsDisplayedRange(date: Date, index: number): boolean {
       // Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
       // то можно бесконечно переключать период.
       return this._options.displayedRanges[index][0] <= date &&
@@ -152,7 +154,9 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       const adjacentArray = this._options.displayedRanges[arrayIndex + direction];
 
       if (this._options.displayedRanges[arrayIndex + direction]) {
-         let year, startValueMonth, endValueMonth;
+         let year;
+         let startValueMonth;
+         let endValueMonth;
          const monthsInYear = 12;
          if (direction === 1) {
             startValueMonth = 0;
@@ -186,7 +190,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
-   shiftForward: function() {
+   shiftForward() {
       this._shiftRange(Range.SHIFT_DIRECTION.FORWARD);
    },
 
@@ -194,14 +198,14 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     * If a period of several whole months, quarters, six months, or years is selected,
     * it shifts it for the same period back.
     */
-   shiftBack: function() {
+   shiftBack() {
       this._shiftRange(Range.SHIFT_DIRECTION.BACK);
    },
 
    _prepareRange(): Date[] {
       let range;
       if (this._hasRanges() && this._options.rangeSelectedCallback) {
-         //Если заданы кванты вместе с rangeSelectedCallback, то мы должны сначала подстроить дату под них
+         // Если заданы кванты вместе с rangeSelectedCallback, то мы должны сначала подстроить дату под них
          range = CalendarUtils.updateRangeByQuantum(this.startValue, this.startValue, this._options.ranges);
       } else if (this._options.selectionType === 'workdays') {
          range = CalendarUtils.updateRangeByWorkdays(this.startValue);

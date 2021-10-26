@@ -5,7 +5,7 @@ import {IFormatMaskChars} from '../resources/IMask';
 export const REPLACER: string = '';
 
 export const FORMAT_MASK_CHARS: IFormatMaskChars = {
-    'd': '[0-9]',
+    d: '[0-9]',
     '+': '[+]'
 };
 

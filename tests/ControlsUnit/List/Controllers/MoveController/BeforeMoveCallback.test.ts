@@ -4,10 +4,10 @@ import {CrudEntityKey, Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import * as clone from 'Core/core-clone';
 import {ISelectionObject} from 'Controls/interface';
-import {Dialog} from 'Controls/popup';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {Logger} from 'UI/Utils';
+import * as popup from 'Controls/popup';
 
 const data = [
     {
@@ -50,6 +50,35 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
     let spySourceQuery: any;
     let source: Memory;
     let sandbox: any;
+    let callCatch: boolean;
+
+    function getFakeDialogOpener(openFunction?: (args: popup.IBasePopupOptions) => Promise<any>): Function {
+        if (!openFunction) {
+            openFunction = (args): Promise<any> => {
+                return Promise.resolve(args.eventHandlers.onResult(null));
+            };
+        }
+        function FakeDialogOpener(): any {
+            return function _ctor(): any {
+                this._popupId = null;
+                this.open = function(popupOptions: popup.IBasePopupOptions): Promise<void> {
+                    return new Promise((resolve, reject) => {
+                        this._popupId = 'POPUP_ID';
+                        return openFunction(popupOptions);
+                    });
+                };
+                this.close = function(): void {
+                    this._popupId = null;
+                    FakeDialogOpener.closeCallCount++;
+                };
+                this.isOpened = function(): boolean {
+                    return !!this._popupId;
+                };
+            };
+        }
+        FakeDialogOpener.closeCallCount = 0;
+        return FakeDialogOpener;
+    }
 
     function createFakeModel(rawData: {id: number, folder: number, 'folder@': boolean}): Model {
         return new Model({
@@ -92,6 +121,8 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
 
         // to prevent throwing console error
         stubLoggerError = sandbox.stub(Logger, 'error').callsFake((message, errorPoint, errorInfo) => ({}));
+
+        callCatch = false;
     });
 
     afterEach(() => {
@@ -99,15 +130,13 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
     });
 
     it('-beforeMoveCallback; call moveInSource', () => {
-        const moveController = getMoveController();
-        let callCatch = false;
-        sandbox.stub(Dialog, 'openPopup').callsFake((args) => {
+        sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => {
             return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
-        });
+        }));
 
-        return moveController
+        return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -121,15 +150,13 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
     });
     it('beforeMoveCallback => true; call moveInSource', () => {
         beforeMoveCallback = (selection: ISelectionObject, target: Model | CrudEntityKey) => true;
-        let callCatch = false;
-        const moveController = getMoveController();
-        sandbox.stub(Dialog, 'openPopup').callsFake((args) => {
+        sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => {
             return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
-        });
+        }));
 
-        return moveController
+        return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -143,15 +170,13 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
     });
     it('beforeMoveCallback => Promise.resolve(); call moveInSource', () => {
         beforeMoveCallback = (selection: ISelectionObject, target: Model | CrudEntityKey) => Promise.resolve();
-        let callCatch = false;
-        const moveController = getMoveController();
-        sandbox.stub(Dialog, 'openPopup').callsFake((args) => {
+        sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => {
             return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
-        });
+        }));
 
-        return moveController
+        return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -165,15 +190,13 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
     });
     it('beforeMoveCallback => false; don\'t call moveInSource', () => {
         beforeMoveCallback = (selection: ISelectionObject, target: Model | CrudEntityKey) => false;
-        let callCatch = false;
-        const moveController = getMoveController();
-        sandbox.stub(Dialog, 'openPopup').callsFake((args) => {
+        sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => {
             return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
-        });
+        }));
 
-        return moveController
+        return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })
@@ -187,15 +210,13 @@ describe('Controls/List/Controllers/MoveController/BeforeMoveCallback', () => {
     });
     it('beforeMoveCallback => Promise<false>; don\'t call moveInSource', () => {
         beforeMoveCallback = (selection: ISelectionObject, target: Model | CrudEntityKey) => Promise.reject();
-        let callCatch = false;
-        const moveController = getMoveController();
-        sandbox.stub(Dialog, 'openPopup').callsFake((args) => {
+        sandbox.replaceGetter(popup, 'DialogOpener', getFakeDialogOpener((args) => {
             return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
-        });
+        }));
 
-        return moveController
+        return getMoveController()
             .moveWithDialog(selectionObject)
-            .then((result) => {})
+            .then((result) => {/* FIXME: sinon mock */})
             .catch(() => {
                 callCatch = true;
             })

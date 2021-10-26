@@ -22,7 +22,7 @@ export interface IObserversControllerOptions {
     viewElement?: Control;
     topTriggerElement?: HTMLElement;
     bottomTriggerElement?: HTMLElement;
-    intersectionHandler: (event: TIntersectionEvent) => void
+    intersectionHandler: (event: TIntersectionEvent) => void;
 }
 
 export const DEFAULT_TRIGGER_OFFSET = 0.3;
@@ -247,10 +247,8 @@ export default class ObserversController {
             topTriggerOffset = topIndicatorDisplayed ? 0 : 1;
         } else {
             const maxTopOffset = Math.min(this._scrollTop + this._viewportHeight / 2, viewHeight / 2);
-            topTriggerOffset = Math.min(
-                (viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0) * this._topTriggerOffsetCoefficient,
-                maxTopOffset
-            );
+            const correctHeight = viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0;
+            topTriggerOffset = Math.min(correctHeight * this._topTriggerOffsetCoefficient, maxTopOffset);
         }
 
         if (this._resetBottomTriggerOffset || !this._model.getCount()) {
@@ -259,11 +257,8 @@ export default class ObserversController {
         } else {
             const scrollBottom = Math.max(viewHeight - this._scrollTop - this._viewportHeight, 0);
             const maxBottomOffset =  Math.min(scrollBottom + this._viewportHeight / 2, viewHeight / 2);
-
-            bottomTriggerOffset = Math.min(
-                (viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0) * this._bottomTriggerOffsetCoefficient,
-                maxBottomOffset
-            );
+            const correctHeight = viewHeight && this._viewportHeight ? Math.min(viewHeight, this._viewportHeight) : 0;
+            bottomTriggerOffset = Math.min(correctHeight * this._bottomTriggerOffsetCoefficient, maxBottomOffset);
         }
 
         /*

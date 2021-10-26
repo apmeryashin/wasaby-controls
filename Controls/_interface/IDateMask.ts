@@ -33,7 +33,7 @@ export default interface IDateMask {
  * @example
  * В этом примере маска позволяет вводить только дату. После того как пользователь ввел “01:01:2018”,
  * в атребуте _inputValue будет значение равное 01.01:2018 00:00.000
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.input.Date bind:value="_inputValue" mask="DD.MM.YYYY"/>
@@ -47,7 +47,7 @@ export default interface IDateMask {
  *
  * В следующем примере значение в поле ввода инициализировано датой со временем. После того как пользователь ввел
  * "01:01:2018", в атребуте _inputValue будет значение равное "01.01.2018 14:15.000".
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.input.Date bind:value="_inputValue" mask=”DD.MM.YYYY”/>

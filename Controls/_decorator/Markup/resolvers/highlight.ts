@@ -1,7 +1,7 @@
    // Find all indexes if search value in string.
    function allIndexesOf(str, searchValue) {
-      let i = str.indexOf(searchValue),
-         result = [];
+      let i = str.indexOf(searchValue);
+      const result = [];
       while (i !== -1) {
          result.push(i);
          i += searchValue.length;
@@ -30,16 +30,16 @@
     *    return ModuleClass;
     * });
     * </pre>
-    * 
+    *
     * <pre class="brush: wml">
     * <Controls.decorator:Markup
     *     value="{{ json }}"
     *     tagResolver="{{ tagResolver }}"
     *     resolverParams="{{ resolverParams }}" />
     * </pre>
-    * 
-    * В результате выполнения кода слово "моя" будет подсвечено. 
-    * 
+    *
+    * В результате выполнения кода слово "моя" будет подсвечено.
+    *
     */
 
    /*
@@ -51,7 +51,7 @@
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
     * @author Угриновский Н.В.
-    */    
+    */
    export default function highlight(value, parent, resolverParams) {
       // Resolve only strings and only if text to highlight exists and not empty.
       if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {
@@ -66,7 +66,7 @@
          return value;
       }
 
-      let newValue = [[]];
+      const newValue = [[]];
       let j = 0;
       let substringNotToHighlight;
       let substringToHighlight;
@@ -78,7 +78,7 @@
          if (substringNotToHighlight) {
             newValue.push(substringNotToHighlight);
          }
-         newValue.push(['span', { 'class': 'controls-MarkupDecorator_highlight' }, substringToHighlight]);
+         newValue.push(['span', { class: 'controls-MarkupDecorator_highlight' }, substringToHighlight]);
       }
       substringNotToHighlight = value.substring(j);
       if (substringNotToHighlight) {
@@ -86,5 +86,4 @@
       }
 
       return newValue;
-   };
-
+   }

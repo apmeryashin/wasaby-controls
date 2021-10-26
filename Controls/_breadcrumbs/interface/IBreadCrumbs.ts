@@ -96,7 +96,9 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
  * @cfg {BackgroundStyle} Префикс стиля для настройки фона внутренних компонентов хлебных крошек.
  * @default default
  * @remark
- * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
+ * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a>
+ * поддерживаются любые произвольные значения опции.
+ * @demo Controls-demo/BreadCrumbs/backgroundStyle/Index
  */
 
 /**

@@ -4,12 +4,14 @@ import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 import 'css!Controls/suggestPopup';
 import 'css!Controls/suggest';
 
-var _private = {
+const _private = {
    getBorderWidth(container?: HTMLElement): number {
+       // tslint:disable-next-line:max-line-length
       return container ? Number(getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '') * 2) : 0;
    },
 
    getPopupOffsets(container?: HTMLElement): number {
+       // tslint:disable-next-line:max-line-length
       return container ? Math.abs(getComputedStyle(container, null).getPropertyValue('margin-left').replace('px', '') * 2) : 0;
    },
 
@@ -18,7 +20,7 @@ var _private = {
    }
 };
 
-var __PopupContent = Control.extend({
+const PopupContent = Control.extend({
 
    _template: template,
    _positionFixed: false,
@@ -30,7 +32,7 @@ var __PopupContent = Control.extend({
    _shouldScrollToBottom: false,
 
    _beforeUpdate(newOptions): void {
-      __PopupContent.superclass._beforeUpdate.apply(this, arguments);
+      PopupContent.superclass._beforeUpdate.apply(this, arguments);
 
       const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.direction.vertical === 'top';
 
@@ -81,7 +83,7 @@ var __PopupContent = Control.extend({
       if (options.target) {
          this._suggestWidth = _private.getSuggestWidth(options.target[0] || options.target);
       }
-      __PopupContent.superclass._beforeMount.apply(this, arguments);
+      PopupContent.superclass._beforeMount.apply(this, arguments);
    },
 
    _afterMount(): void {
@@ -102,12 +104,12 @@ var __PopupContent = Control.extend({
       this._forceUpdate();
    },
 
-   resize: function() {
+   resize() {
       if (this._reverseList) {
          this._children.scrollContainer.scrollToBottom();
       }
    }
 });
-__PopupContent._private = _private;
+PopupContent._private = _private;
 
-export default __PopupContent;
+export default PopupContent;

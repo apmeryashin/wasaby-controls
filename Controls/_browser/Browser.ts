@@ -4,7 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as SearchController} from 'Controls/search';
 import {IFilterItem} from 'Controls/filter';
-import {IFilterControllerOptions, IFilterHistoryData} from 'Controls/_filter/ControllerClass';
+import FilterControllerClass, {IFilterControllerOptions, IFilterHistoryData} from 'Controls/_filter/ControllerClass';
 import {EventUtils} from 'UI/Events';
 import {RecordSet} from 'Types/collection';
 import { IContextOptionsValue } from 'Controls/context';
@@ -59,6 +59,7 @@ export interface IListConfiguration extends IControlOptions, ISearchOptions, ISo
     fastFilterSource?: unknown;
     historyItems?: IFilterItem[];
     sourceController?: SourceController;
+    filterController?: FilterControllerClass;
     id?: string;
 }
 
@@ -155,7 +156,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         if (Browser._checkLoadResult(this._listsOptions, receivedState as IReceivedState[])) {
             this._updateFilterAndFilterItems(options);
             this._defineShadowVisibility(receivedState[0].data);
-            this._setItemsAndUpdateContext();
+            this._setItemsAndUpdateContext(options);
             if (options.source && options.dataLoadCallback) {
                 options.dataLoadCallback(receivedState[0].data);
             }
@@ -168,7 +169,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                 this._defineShadowVisibility(result[0].data);
 
                 if (Browser._checkLoadResult(this._listsOptions, result as IReceivedState[])) {
-                    this._setItemsAndUpdateContext();
+                    this._setItemsAndUpdateContext(options);
                     return result.map(({data, historyItems}) => {
                         return {
                             historyItems,
@@ -176,6 +177,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
                         };
                     });
                 } else {
+                    this._subscribeOnControllersEvents(options);
                     this._updateContext();
                     return result[0].error;
                 }
@@ -320,19 +322,23 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions): void | Promise<RecordSet> {
+        const currentOptions = this._options;
         return this._loadDependencies(newOptions, () => {
-            return this._beforeUpdateInternal(newOptions);
+            return this._beforeUpdateInternal(newOptions, currentOptions);
         });
     }
 
-    protected _beforeUpdateInternal(newOptions: IBrowserOptions): void | Promise<RecordSet> {
+    protected _beforeUpdateInternal(
+        newOptions: IBrowserOptions,
+        currentOptions: IBrowserOptions
+    ): void | Promise<RecordSet> {
         if (newOptions.listsOptions) {
             const listsIdsAreEqual = newOptions.listsOptions.every(({id}) => {
                 return this._listsOptions.find((listOption) => {
                     return listOption.id === id;
                 });
             });
-            if (!isEqual(newOptions.listsOptions, this._options.listsOptions)) {
+            if (!isEqual(newOptions.listsOptions, currentOptions.listsOptions)) {
                 this._listsOptions = Browser._getListsOptions(newOptions);
             }
             if (!listsIdsAreEqual) {
@@ -340,14 +346,14 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             }
             this._listsOptions.forEach((options, index) => {
                 this._update(
-                    {...this._options, ...this._options.listsOptions[index]},
+                    {...currentOptions, ...currentOptions.listsOptions[index]},
                     {...newOptions, ...options},
                     options.id
                 );
             });
         } else {
             this._listsOptions = Browser._getListsOptions(newOptions);
-            return this._update(this._options, newOptions);
+            return this._update(currentOptions, newOptions);
         }
     }
 
@@ -438,11 +444,19 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             sourceController.setExpandedItems(newOptions.expandedItems);
         }
 
-        if (isChanged && isInputSearchValueLongerThenMinSearchLength && hasSearchValueInOptions && !newOptions.searchValue) {
+        if (
+            isChanged &&
+            isInputSearchValueLongerThenMinSearchLength &&
+            hasSearchValueInOptions &&
+            !newOptions.searchValue) {
             this._inputSearchValue = '';
         }
 
-        if ((hasSearchValueInOptions && searchValueOptionsChanged) || options.searchParam !== newOptions.searchParam || options.startingWith !== newOptions.startingWith) {
+        if (
+            (hasSearchValueInOptions && searchValueOptionsChanged) ||
+            options.searchParam !== newOptions.searchParam ||
+            options.startingWith !== newOptions.startingWith
+        ) {
             if (!methodResult && newOptions.searchParam) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
@@ -470,8 +484,8 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         }
     }
 
-    private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {
-        return this._callSearchController((searchController) => {
+    private _updateSearchController(newOptions: IBrowserOptions): Promise<unknown> {
+        return this._getSearchController().then((searchController): unknown => {
             if (this._destroyed) {
                 return Promise.resolve();
             }
@@ -491,7 +505,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
             } else {
                 return Promise.resolve(updateSearchControllerResult);
             }
-        }) as Promise<void>;
+        });
     }
 
     private _afterSourceLoad(sourceController: SourceController, options: IBrowserOptions): void {
@@ -537,9 +551,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._rootChangedRegister;
     }
 
-    private _setItemsAndUpdateContext(): void {
+    private _setItemsAndUpdateContext(options: IBrowserOptions): void {
         this._updateItemsOnState();
-        this._subscribeOnSourceControllerEvents();
+        this._subscribeOnControllersEvents(options);
         this._updateContext();
     }
 
@@ -551,6 +565,26 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         sourceController.subscribe('dataLoadStarted', this._dataLoadStart.bind(this));
         sourceController.subscribe('sortingChanged', this._sortingChanged.bind(this));
         sourceController.subscribe('itemsChanged', this._itemsChanged);
+    }
+
+    private _subscribeOnFilterControllerEvents(options: IBrowserOptions): void {
+        // Для совместимости, пока контролы вынуждены работать и от опций и от настроек на странице
+        // + пока нет виджета filter/View
+        this._dataLoader.getFilterController().subscribe('filterSourceChanged', (event, filterSource) => {
+            this._updateFilterAndFilterItems(options);
+
+            if (options.useStore) {
+                Store.dispatch('filterSource', filterSource);
+            }
+        });
+    }
+
+    private _subscribeOnControllersEvents(options: IBrowserOptions): void {
+        this._subscribeOnSourceControllerEvents();
+
+        if (this._hasFilterSourceInOptions(options)) {
+            this._subscribeOnFilterControllerEvents(options);
+        }
     }
 
     private _updateItemsOnState(): void {
@@ -597,7 +631,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         const searchController = this._getSearchControllerSync();
 
         if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
-            this._notify('expandedItemsChanged', [this._getSearchControllerSync().getExpandedItemsForOpenRoot(root, items)]);
+            this._notify(
+                'expandedItemsChanged', [this._getSearchControllerSync().getExpandedItemsForOpenRoot(root, items)]
+            );
 
             if (!this._deepReload) {
                 this._deepReload = true;
@@ -623,7 +659,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         return this._viewMode === 'search';
     }
 
-    protected _dataLoadStart(event: SyntheticEvent, key: TKey, direction: Direction): void {
+    protected _dataLoadStart(event: SyntheticEvent, direction: Direction): void {
         if (!direction) {
             this._loading = true;
         }
@@ -632,13 +668,20 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>, id?: string): void {
         event?.stopPropagation();
 
+        const hasFilterInOptions = Browser._hasInOptions(this._options, ['filter']);
         const listOptions = this._getListOptionsById(id);
         this._dataLoader.getFilterController()?.setFilter(filter);
         if (listOptions && id) {
             listOptions.filter = listOptions.filter || filter;
         }
-        if (!Browser._hasInOptions(this._options, ['filter']) || !this._options.task1182865383) {
+        if (!hasFilterInOptions || !this._options.task1182865383) {
             this._filter = filter;
+        }
+        if (!hasFilterInOptions) {
+            // _filter - состояние, которое используется, когда не передают опцию filter.
+            // это состояние не рекативное, т.к. в шаблоне не используется
+            // из-за этого необходимо звать _forceUpdate
+            this._forceUpdate();
         }
         this._notify('filterChanged', [filter, id]);
     }
@@ -693,7 +736,6 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._listsOptions.forEach(({id, filterButtonSource, fastFilterSource}) => {
             if (filterButtonSource || fastFilterSource) {
                 this._dataLoader.getFilterController(id).updateFilterItems(items);
-                this._updateFilterAndFilterItems(this._options);
                 this._contextState = {
                     ...this._contextState,
                     filter: this._filter
@@ -765,7 +807,9 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
         this._getOperationsController().selectionTypeChanged(typeName, limit);
     }
 
-    protected _selectedKeysCountChanged(e: SyntheticEvent, count: number|null, isAllSelected: boolean, id?: string): void {
+    protected _selectedKeysCountChanged(e: SyntheticEvent,
+                                        count: number|null,
+                                        isAllSelected: boolean, id?: string): void {
         e.stopPropagation();
         const result = this._getOperationsController().updateSelectedKeysCount(count, isAllSelected, id);
         this._selectedKeysCount = result.count;
@@ -843,7 +887,7 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
 
     private _getSourceControllerOptions(options: IListConfiguration): ISourceControllerOptions {
         const root = options.id ? options.root : this._root;
-        const filter = options.id ? options.filter : this._filter;
+        const filter = options.id && this._listsOptions?.length > 1 ? options.filter : this._filter;
         return {
             filter,
             navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
@@ -879,10 +923,12 @@ export default class Browser extends Control<IBrowserOptions, TReceivedState> {
     }
 
     private _getFilterControllerOptions(options: IBrowserOptions): IFilterControllerOptions {
-       return {
-           ...options,
-           searchValue: this._getSearchValue(options),
-           historySaveCallback: this._historySaveCallback.bind(this)
+        const {filterButtonSource, filterController} = options;
+        return {
+            ...options,
+            searchValue: this._getSearchValue(options),
+            historySaveCallback: this._historySaveCallback.bind(this),
+            filterButtonSource: filterButtonSource || filterController?.getFilterButtonItems()
         } as IFilterControllerOptions;
     }
 

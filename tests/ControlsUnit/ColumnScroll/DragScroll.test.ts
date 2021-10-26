@@ -5,7 +5,7 @@ describe('Controls/columnScroll/dragScroll', () => {
     it('should not prevent default on touch start', () => {
         const dragScroll = new DragScroll({});
         const event = {
-            preventDefault: () => {throw Error('preventDefault shouldn\'t be called.')},
+            preventDefault: () => {throw Error('preventDefault shouldn\'t be called.'); },
             nativeEvent: {
                 touches: [{
                     clientX: 0,
@@ -13,7 +13,7 @@ describe('Controls/columnScroll/dragScroll', () => {
                 }]
             },
             target: {
-                closest: (selector) => selector === 'controls-DragNDrop__notDraggable' ? true : false,
+                closest: (selector) => selector === 'controls-DragNDrop__notDraggable' ? true : false
             }
         };
         assert.doesNotThrow(() => {

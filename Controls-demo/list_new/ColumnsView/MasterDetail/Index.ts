@@ -14,7 +14,6 @@ import {Model} from 'Types/entity';
 import { IColumn } from 'Controls/grid';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 
-
 export default class RenderDemo extends Control {
     protected _template: TemplateFunction = template;
     protected gridColumns: IColumn[] = [{

@@ -6,6 +6,7 @@
                                     fontColorStyle="default"
                                     selectedKeys="{{_options.propertyValue}}"
                                     style="filterPanel"
+                                    attr:class="ws-ellipsis"
                                     on:textValueChanged="_handleTextValueChanged()"
                                     on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
     </ws:editorTemplate>

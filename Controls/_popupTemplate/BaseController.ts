@@ -99,8 +99,9 @@ abstract class BaseController implements IPopupController {
         return false;
     }
 
-    beforeElementDestroyed(item: IPopupItem, container: HTMLElement): void {
+    beforeElementDestroyed(item: IPopupItem, container: HTMLElement): boolean {
         item.popupState = this.POPUP_STATE_START_DESTROYING;
+        return true;
     }
 
     elementDestroyedWrapper(item: IPopupItem, container: HTMLElement): Promise<void> {
@@ -213,6 +214,7 @@ abstract class BaseController implements IPopupController {
     }
 
     workspaceResize(): boolean {
+        DimensionsMeasurer.resetCache(); // После изменения размеров страницы сбросим кэш, т.к. zoom мог поменяться
         return false;
     }
 
@@ -317,7 +319,7 @@ abstract class BaseController implements IPopupController {
             } else {
                 position = item.popupOptions.target;
             }
-            let {x, y} = position;
+            const {x, y} = position;
             const size = 1;
             const positionCfg = {
                 direction: {
@@ -425,7 +427,9 @@ abstract class BaseController implements IPopupController {
 
     private static rootContainers = {};
 
-    static getRootContainerCoords(item: IPopupItem, baseRootSelector: string, rightOffset?: number): IPopupPosition | void {
+    static getRootContainerCoords(item: IPopupItem,
+                                  baseRootSelector: string,
+                                  rightOffset?: number): IPopupPosition | void {
         const getRestrictiveContainer = (popupItem: IPopupItem) => {
             if (popupItem.popupOptions.restrictiveContainer) {
                 return popupItem.popupOptions.restrictiveContainer;

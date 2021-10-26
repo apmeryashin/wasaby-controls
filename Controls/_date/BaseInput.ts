@@ -2,7 +2,7 @@
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Date as WSDate, DateTime as WSDateTime, Time as WSTime} from 'Types/entity';
-import * as Model from 'Controls/_date/BaseInput/Model';
+import Model from 'Controls/_date/BaseInput/Model';
 import {
     DATE_MASK_TYPE,
     DATE_TIME_MASK_TYPE,
@@ -59,6 +59,7 @@ const VALID_PARTIAL_DATE = /^(0{2}| {2})\.(0{2}| {2})\.\d{2,4}$/;
  * @mixes Controls/input:IBase
  * @mixes Controls/input:IBorderVisibility
  * @implements Controls/interface:IInputPlaceholder
+ * @implements Controls/date:IValue
  * @mixes Controls/input:IValueValidators
  * @mixes Controls/input:IInputDisplayValueValidators
  *
@@ -76,13 +77,13 @@ class BaseInput extends Control<IDateBaseOptions> {
     protected _controlName: string = 'DateBase';
 
     protected _formatMaskChars = {
-        'D': '[0-9]',
-        'M': '[0-9]',
-        'Y': '[0-9]',
-        'H': '[0-9]',
-        'm': '[0-9]',
-        's': '[0-9]',
-        'U': '[0-9]'
+        D: '[0-9]',
+        M: '[0-9]',
+        Y: '[0-9]',
+        H: '[0-9]',
+        m: '[0-9]',
+        s: '[0-9]',
+        U: '[0-9]'
     };
 
     protected _model: Model;
@@ -114,7 +115,8 @@ class BaseInput extends Control<IDateBaseOptions> {
         if (this._model.value !== options.value) {
             this.setValidationResult(null);
         }
-        if (options.value !== this._options.value || options.displayValue !== this._options.displayValue) {
+        if (options.value !== this._options.value || options.displayValue !== this._options.displayValue ||
+            options.mask !== this._options.mask) {
             this._model.update({
                 ...options,
                 dateConstructor: this._dateConstructor
@@ -150,17 +152,27 @@ class BaseInput extends Control<IDateBaseOptions> {
     }
 
     protected _onKeyDown(event: SyntheticEvent<KeyboardEvent>): void {
-        let key = event.nativeEvent.keyCode;
-        if (key === constants.key.insert && !event.nativeEvent.shiftKey && !event.nativeEvent.ctrlKey && !this._options.readOnly) {
+        const key = event.nativeEvent.keyCode;
+        if (
+            key === constants.key.insert &&
+            !event.nativeEvent.shiftKey &&
+            !event.nativeEvent.ctrlKey &&
+            !this._options.readOnly
+        ) {
             // on Insert button press current date should be inserted in field
             this._model.setCurrentDate();
             this._notify('inputCompleted', [this._model.value, this._model.textValue]);
+            // В IE при нажатии на кнопку insert включается поведение, при котором впередистоящие символы начинают
+            // перезаписываться при вводе. Из-за этого контрол не понимает какое действие произошло,
+            // т.к. при обычном вводе числа, значение в инпуте меняется по другому (например, значение 12.12.12,
+            // при вводе 1 станет 112.12.12). Отключим это поведение.
+            event.preventDefault();
         }
         if (key === constants.key.plus || key === constants.key.minus) {
             // on +/- buttons press date should be increased or decreased in field by one day if date is not empty
             if (this._model.value) {
-                let delta = key === constants.key.plus ? 1 : -1;
-                let localDate = new this._dateConstructor(this._model.value);
+                const delta = key === constants.key.plus ? 1 : -1;
+                const localDate = new this._dateConstructor(this._model.value);
                 localDate.setDate(this._model.value.getDate() + delta);
                 this._model.value = localDate;
                 this._notify('inputCompleted', [this._model.value, this._model.textValue]);
@@ -172,7 +184,7 @@ class BaseInput extends Control<IDateBaseOptions> {
         this._model.destroy();
     }
 
-    private _updateDateConstructor(options, oldOptions): void {
+    private _updateDateConstructor(options: IDateBaseOptions, oldOptions?: IDateBaseOptions): void {
         if (!oldOptions || options.mask !== oldOptions.mask) {
             this._dateConstructor = options.dateConstructor || this._getDateConstructor(options.mask);
         }

@@ -18,7 +18,7 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    const model = new Collection({collection: items, keyProperty: 'id'});
 
-   const strategy = new FlatSelectionStrategy({ model: model });
+   const strategy = new FlatSelectionStrategy({ model });
 
    describe('select', () => {
       it('not selected', () => {
@@ -123,7 +123,7 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    describe('selectRange', () => {
       it('select range', () => {
-         let selection = strategy.selectRange(model.getItems());
+         const selection = strategy.selectRange(model.getItems());
          assert.deepEqual(selection.selected, [1, 2, 3]);
          assert.deepEqual(selection.excluded, []);
       });
@@ -217,7 +217,7 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
       it('limit, has more data, limit > itemsCount', () => {
          const selection = { selected: [null], excluded: [] };
          const count = strategy.getCount(selection, true, 4);
-         assert.equal(count, 4);
+         assert.equal(count, null);
       });
 
       it('limit, one separated selected, hasMoreData', () => {

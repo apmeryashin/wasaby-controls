@@ -145,7 +145,7 @@ export default class Collection<
 
     private setColumnOnItem(offset: number, item: T, index: number): void {
         if (!item.isDragged()) {
-            let indexWithOffset = this._dragColumn === null
+            const indexWithOffset = this._dragColumn === null
                 ? index + this._addingColumnsCounter + offset
                 : this._dragColumn;
             const column = this._columnsStrategy.calcColumn(this, indexWithOffset, this._$columnsCount);
@@ -198,7 +198,7 @@ export default class Collection<
         return !done;
     }
 
-    processRemoving(removedItemsIndex: number, removedItems: CollectionItem<Model>[]): void {
+    processRemoving(removedItemsIndex: number, removedItems: Array<CollectionItem<Model>>): void {
         const removedItemsIndexes = removedItems.map((item, index) => {
             const column = item.getColumn();
             const columnIndex = this._columnsIndexes[column].findIndex((elem) => elem === (index + removedItemsIndex));

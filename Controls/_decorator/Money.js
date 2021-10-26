@@ -198,6 +198,11 @@ define('Controls/_decorator/Money', ['UI/Executor', 'Controls/_decorator/resourc
  */
 
 /**
+ * @name Controls/_decorator/IMoney#showEmptyDecimals
+ * @default true
+ */
+
+/**
  * Тип данных для форматируемого значения
  * @typedef {String | Number | Null} Controls/_decorator/IMoney/TValue
  */

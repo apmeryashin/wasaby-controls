@@ -2,7 +2,7 @@ import {
     ICellPadding,
     IColumn,
     IColumnSeparatorSizeConfig,
-    TColumnSeparatorSize,
+    TColumnSeparatorSize
 } from './interface/IColumn';
 
 import {IHeaderCell, THeader} from './interface/IHeaderCell';
@@ -113,7 +113,8 @@ export default class HeaderRow extends Row<null> {
             const factory = this.getColumnsFactory();
             let totalColspan = 0;
             this._$columnItems = this._$columnsConfig.map((column, index) => {
-                const isFixed = (this.isMultiline() ? (column.startColumn - 1) : totalColspan) < this.getStickyColumnsCount();
+                const isFixed =
+                    (this.isMultiline() ? (column.startColumn - 1) : totalColspan) < this.getStickyColumnsCount();
                 totalColspan += (column.endColumn - column.startColumn) || 1;
                 return factory({
                     column,
@@ -186,7 +187,6 @@ export default class HeaderRow extends Row<null> {
                     this._$columnsConfig[columnIndex - 1].startColumn === column.startColumn &&
                     column.startColumn !== undefined) ? 2 : 1);
 
-
             const prevColumnConfig = this._$columnsConfig[prevColumnIndex];
             const columnSeparatorSize = this._getHeaderColumnSeparatorSize(prevColumnConfig, prevColumnIndex);
             const previousColumn: IColumn = {
@@ -219,7 +219,17 @@ export default class HeaderRow extends Row<null> {
 
     setSorting(sorting: ISortItem[]): void {
         this._$sorting = sorting;
-        this._reinitializeColumns(true);
+        if (this._$columnItems) {
+            this._$columnItems.forEach((cell) => {
+                // Пропускаем колонку для операций над записью
+                if ((cell as ItemActionsCell).ItemActionsCell) {
+                    return;
+                }
+                const cellSorting = this._getSortingBySortingProperty((cell as HeaderCell).getSortingProperty());
+                (cell as HeaderCell).setSorting(cellSorting);
+            });
+            this._nextVersion();
+        }
     }
 
     private _getSortingBySortingProperty(property: string): string {

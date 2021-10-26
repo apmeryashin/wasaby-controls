@@ -98,21 +98,27 @@ describe('Controls/input:__Util', () => {
         });
     });
     describe('.transliterateSelectedText()', () => {
+        // tslint:disable:max-line-length
         const cases = [
             {testName: 'Без выделения текста', revertedText: 'Hello', value: 'Руддщ', expected: 'Hello'},
             {testName: 'С выделением текста', revertedText: 'уд', value: 'Hello', selection: {start: 1, end: 3}, expected: 'Hудlo'},
             {testName: 'С выделением всего текста', revertedText: 'Руддщ', value: 'Hello', selection: {start: 0, end: 5}, expected: 'Руддщ'}
         ];
+        // tslint:enable:max-line-length
+
         const transliterateSelectedText = transliterate._transliterateSelectedText;
 
         cases.forEach((item) => {
             it(item.testName, () => {
-                assert.equal(transliterateSelectedText(item.revertedText, item.value, item.selection),
-                    item.expected);
+                assert.equal(
+                    transliterateSelectedText(item.revertedText, item.value, item.selection),
+                    item.expected
+                );
             });
         });
     });
     describe('.transliterateInput()', () => {
+        // tslint:disable:max-line-length
         const cases = [
             {testName: 'Курсор в конце строки (текст не совпадает с транслитерацией)', value: 'Hello', selection: {start: 5, end: 5}, locale: 'ru-Ru', expected: 'Руддщ'},
             {testName: 'Курсор в конце строки (текст совпадает с транслитерацией)', value: 'Hello', selection: {start: 5, end: 5}, locale: 'en-En', expected: 'Руддщ'},
@@ -121,6 +127,7 @@ describe('Controls/input:__Util', () => {
             {testName: 'Выделен весь текст (текст не совпадает с транслитерацией)', value: 'Hello', selection: {start: 0, end: 5}, locale: 'ru-RU', expected: 'Руддщ'},
             {testName: 'Выделен весь текст (текст совпадает с транслитерацией)', value: 'Hello', selection: {start: 0, end: 5}, locale: 'en-En', expected: 'Руддщ'}
         ];
+        // tslint:enable:max-line-length
         cases.forEach((item) => {
             const i18 = sinon.createSandbox();
             it(item.testName, (done) => {

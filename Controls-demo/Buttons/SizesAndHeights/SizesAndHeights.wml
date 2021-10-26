@@ -1,34 +1,46 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=s, fontSize=xs</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="s" fontSize="xs"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="s" fontSize="xs"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=s, fontSize=s</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="s" fontSize="s"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="s" fontSize="s"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=m, fontSize=m, iconSize=s</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="m" fontSize="m" icon="icon-Author" iconSize="s"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="m" fontSize="m" icon="icon-Author" iconSize="s"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=l, fontSize=l, iconSize=s</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="l" fontSize="l" icon="icon-Author" iconSize="s"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="l" fontSize="l" icon="icon-Author" iconSize="s"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=xl, fontSize=xl, iconSize=m</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="xl" fontSize="xl" icon="icon-Author" iconSize="m"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="xl" fontSize="xl" icon="icon-Author" iconSize="m"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=2xl, fontSize=2xl, iconSize=m</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="2xl" fontSize="2xl" icon="icon-Author" iconSize="m"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="2xl" fontSize="2xl" icon="icon-Author" iconSize="m"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=2xl, fontSize=3xl, iconSize=l</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="2xl" fontSize="3xl" icon="icon-Author" iconSize="l"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="2xl" fontSize="3xl" icon="icon-Author" iconSize="l"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label">inlineHeight=2xl, fontSize=4xl, iconSize=l</div>
-        <Controls.buttons:Button caption="Button" inlineHeight="2xl" fontSize="4xl" icon="icon-Author" iconSize="l"></Controls.buttons:Button>
+        <Controls.buttons:Button caption="Button" inlineHeight="2xl" fontSize="4xl" icon="icon-Author" iconSize="l"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">inlineHeight=3xl, fontSize=4xl, iconSize=l</div>
+        <Controls.buttons:Button caption="Button" inlineHeight="3xl" fontSize="4xl" icon="icon-Author" iconSize="l"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">inlineHeight=4xl, fontSize=4xl, iconSize=l</div>
+        <Controls.buttons:Button caption="Button" inlineHeight="4xl" fontSize="4xl" icon="icon-Author" iconSize="l"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label">inlineHeight=5xl, fontSize=4xl, iconSize=l</div>
+        <Controls.buttons:Button caption="Button" inlineHeight="5xl" fontSize="4xl" icon="icon-Author" iconSize="l"/>
     </div>
 </div>

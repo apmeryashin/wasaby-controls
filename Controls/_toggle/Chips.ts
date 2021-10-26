@@ -21,9 +21,11 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * @extends UI/Base:Control
  * @implements Controls/interface:IMultiSelectable
  * @implements Controls/interface:IItems
+ * @implements Controls/interface:IHeight
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/toggle/Chips/Index
+ * @demo Controls-demo/toggle/Chips/ManyContent/Index
  */
 
 /**
@@ -31,7 +33,7 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  * @cfg {string} Расположение элементов в контейнере.
  * @variant horizontal Элементы расположены один за другим (горизонтально).
  * @variant vertical Элементы расположены один под другим (вертикально).
- * @default vertical
+ * @default horizontal
  * @demo Controls-demo/toggle/Chips/Direction/Index
  * @example
  * Вертикальная ориентация.
@@ -41,7 +43,7 @@ export interface IChipsOptions extends IMultiSelectableOptions, IControlOptions,
  */
 
 /**
- * @name Controls/_toggle/Tumbler#inlineHeight
+ * @name Controls/_toggle/Chips#inlineHeight
  * @cfg {String}
  * @demo Controls-demo/toggle/Chips/inlineHeight/Index
  */
@@ -153,7 +155,8 @@ class Chips extends Control<IChipsOptions> {
     static defaultProps: Partial<IChipsOptions> = {
         keyProperty: 'id',
         itemTemplate,
-        inlineHeight: 'm'
+        inlineHeight: 'm',
+        direction: 'horizontal'
     };
 }
 

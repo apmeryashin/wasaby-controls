@@ -5,8 +5,7 @@ describe('Controls/filterPanel:ViewModel', () => {
     describe('resetFilterItem', () => {
         const source = [
             {
-                group: 'owners',
-                name: 'owner',
+                name: 'owners',
                 value: 'Test owner',
                 textValue: 'Test owner',
                 resetValue: null
@@ -20,20 +19,19 @@ describe('Controls/filterPanel:ViewModel', () => {
 
         it('editingObject is updated', () => {
             viewModel.resetFilterItem('owners');
-            assert.isNull(viewModel._editingObject['owner']);
+            assert.isNull(viewModel._editingObject.owners);
         });
 
         it('filterItem textValue is updated', () => {
             viewModel.resetFilterItem('owners');
-            assert.equal(viewModel._groupItems['owners'].textValue, '');
+            assert.equal(viewModel._groupItems.owners.textValue, '');
         });
     });
 
     describe('resetFilter', () => {
         const source = [
             {
-                group: 'owners',
-                name: 'owner',
+                name: 'owners',
                 value: 'Test owner',
                 textValue: 'Test owner',
                 resetValue: null,
@@ -58,8 +56,7 @@ describe('Controls/filterPanel:ViewModel', () => {
     describe('setEditingObjectValue', () => {
         const source = [
             {
-                group: 'owners',
-                name: 'owner',
+                name: 'owners',
                 value: 'Test owner',
                 textValue: 'Test owner',
                 resetValue: null
@@ -76,7 +73,7 @@ describe('Controls/filterPanel:ViewModel', () => {
                 value: 'New owner',
                 textValue: 'New text owner'
             };
-            viewModel.setEditingObjectValue('owner', editorValue);
+            viewModel.setEditingObjectValue('owners', editorValue);
 
             const item = viewModel._source[0];
             assert.equal(item.value, 'New owner');
@@ -87,8 +84,7 @@ describe('Controls/filterPanel:ViewModel', () => {
     describe('setEditingObject', () => {
         const source = [
             {
-                group: 'owners',
-                name: 'owner',
+                name: 'owners',
                 value: null,
                 textValue: 'Test owner',
                 resetValue: null
@@ -113,8 +109,7 @@ describe('Controls/filterPanel:ViewModel', () => {
     describe('handleGroupClick', () => {
         const source = [
             {
-                group: 'owners',
-                name: 'owner',
+                name: 'owners',
                 value: null,
                 textValue: 'Test owner',
                 resetValue: null

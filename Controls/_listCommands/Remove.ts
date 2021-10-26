@@ -32,7 +32,9 @@ export default class Remove implements IAction {
         });
     }
 
-    private _getProvider(providerName: string = 'Controls/listCommands:RemoveProviderWithConfirm'): Promise<IRemoveProvider> {
+    private _getProvider(
+        providerName: string = 'Controls/listCommands:RemoveProviderWithConfirm'
+    ): Promise<IRemoveProvider> {
         return ModulesLoader.loadAsync(providerName).then((provider) => {
             return new provider();
         });

@@ -7,14 +7,14 @@ import 'Controls/toggle';
 
 /**
  * Редактор для логического типа данных.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less переменные тем оформления}
- * 
+ *
  * @extends UI/Base:Control
  * @implements Controls/propertyGrid:IEditor
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -23,7 +23,7 @@ import 'Controls/toggle';
  * Editor for boolean type.
  * @extends UI/Base:Control
  * @implements Controls/propertyGrid:IEditor
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */

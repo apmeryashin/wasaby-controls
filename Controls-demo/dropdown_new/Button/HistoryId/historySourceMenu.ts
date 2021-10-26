@@ -3,7 +3,6 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {Source, Service} from 'Controls/history';
 
-
 function getHistoryData() {
     return {
         pinned: {
@@ -33,7 +32,7 @@ function getHistoryData() {
                 {n: 'HistoryId', t: 'Строка'}
             ]
         }
-    }
+    };
 }
 
 export function getItems(): any[] {
@@ -113,7 +112,7 @@ class HistorySourceMenu extends Source {
         const pinned = this._srcData.getRow().get('pinned');
         const recent = this._srcData.getRow().get('recent');
         let historyItem;
-        if (meta['$_pinned']) {
+        if (meta.$_pinned) {
             historyItem = new Model({
                 rawData: {
                     d: [String(item.getKey()), item.getKey()],
@@ -123,9 +122,9 @@ class HistorySourceMenu extends Source {
                 adapter: pinned.getAdapter()
             });
             pinned.append([historyItem]);
-        } else if (meta['$_pinned'] === false) {
+        } else if (meta.$_pinned === false) {
             pinned.remove(pinned.getRecordById(item.getKey()));
-        } else if (meta['$_history'] && !recent.getRecordById(item.getKey())) {
+        } else if (meta.$_history && !recent.getRecordById(item.getKey())) {
             historyItem = new Model({
                 rawData: {
                     d: [String(item.getKey()), item.getKey()],

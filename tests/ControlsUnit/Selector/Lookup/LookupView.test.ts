@@ -105,14 +105,14 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       sandbox.restore();
    });
 
-   it('getInputMinWidth', function() {
+   it('getInputMinWidth', () => {
       const lookup = new Lookup();
       strictEqual(lookup._getInputMinWidth(330, 30, 24), 96);
       strictEqual(lookup._getInputMinWidth(330, 30, 30), 100);
       strictEqual(lookup._getInputMinWidth(150, 30, 24), 40);
    });
 
-   it('getMaxVisibleItems', function() {
+   it('getMaxVisibleItems', () => {
       const lookup = new Lookup();
       const items = [1, 2, 3, 4, 5];
       const itemsSizes = [5, 10, 25, 40, 15];
@@ -122,7 +122,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       deepStrictEqual(lookup._getMaxVisibleItems(items, itemsSizes, 999), items.length);
    });
 
-   it('getLastSelectedItems', function() {
+   it('getLastSelectedItems', () => {
       const item = new Model({
          rawData: {id: 1},
          keyProperty: 'id'
@@ -140,7 +140,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       deepStrictEqual(lookup._getLastSelectedItems(items, 10), [item, item2]);
    });
 
-   it('isShowCounter', function() {
+   it('isShowCounter', () => {
       const lookup = new Lookup();
       ok(lookup._isShowCounter(true, 10, 5));
       ok(!lookup._isShowCounter(true, 10, 20));
@@ -148,21 +148,21 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       ok(!lookup._isShowCounter(false, 1));
    });
 
-   it('getInputWidth', function() {
+   it('getInputWidth', () => {
       const lookup = new Lookup();
       strictEqual(lookup._getInputWidth(400, 200, 100), undefined);
       strictEqual(lookup._getInputWidth(400, 200, 300), 200);
    });
 
-   it('getMultiLineState', function() {
+   it('getMultiLineState', () => {
       const lookup = new Lookup();
       ok(lookup._getMultiLineState(200, 100, true));
       ok(!lookup._getMultiLineState(200, 300, true));
       ok(lookup._getMultiLineState(200, 300, false));
    });
 
-   it('_isNeedCalculatingSizes', function() {
-      var lookup = new Lookup();
+   it('_isNeedCalculatingSizes', () => {
+      const lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(!lookup._isNeedCalculatingSizes({
@@ -202,8 +202,8 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       }));
    });
 
-   it('_isInputVisible', function() {
-      var lookup = new Lookup();
+   it('_isInputVisible', () => {
+      const lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(lookup._isInputVisible({
@@ -250,12 +250,12 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       ok(lookup._isInputVisible({
          placeholder: 'test',
          placeholderVisibility: 'empty',
-			readOnly: true
+            readOnly: true
       }));
    });
 
-   it('_isInputActive', function() {
-      let lookup = new Lookup();
+   it('_isInputActive', () => {
+      const lookup = new Lookup();
 
       lookup._items = getItems(0);
       ok(lookup._isInputActive({
@@ -280,28 +280,26 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       }));
    });
 
-   it('_calculatingSizes', function() {
-      var
+   it('_calculatingSizes', () => {
       // min width const 4 * FIELD_WRAPPER_MIN_HEIGHT = 100;
-         FIELD_WRAPPER_MIN_HEIGHT = 25,
-         FIELD_WRAPPER_WIDTH = 300,
-         ITEM_WIDTH = 50,
-         COUNTER_WIDTH = 20,
-         MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
+      const FIELD_WRAPPER_MIN_HEIGHT = 25;
+      const FIELD_WRAPPER_WIDTH = 300;
+      const ITEM_WIDTH = 50;
+      const COUNTER_WIDTH = 20;
+      const MAX_ITEMS_IN_ONE_ROW = FIELD_WRAPPER_WIDTH / ITEM_WIDTH;
 
-      var
-         lookup = new Lookup(),
-         getItemsSizesLastRow = lookup._getItemsSizesLastRow,
-         getCounterWidth = lookup._getCounterWidth,
-         initializeConstants = lookup._initializeConstants,
-         newOptions = {
-            maxVisibleItems: 7,
-            multiSelect: true,
-            multiLine: false,
-            readOnly: false,
-            fontSize: 's',
-            theme: 'testTheme'
-         };
+      const lookup = new Lookup();
+      const getItemsSizesLastRow = lookup._getItemsSizesLastRow;
+      const getCounterWidth = lookup._getCounterWidth;
+      const initializeConstants = lookup._initializeConstants;
+      const newOptions = {
+         maxVisibleItems: 7,
+         multiSelect: true,
+         multiLine: false,
+         readOnly: false,
+         fontSize: 's',
+         theme: 'testTheme'
+      };
 
       const sandbox = createSandbox();
 
@@ -321,8 +319,8 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       lookup._fieldWrapperWidth = FIELD_WRAPPER_WIDTH;
       lookup._fieldWrapperMinHeight = FIELD_WRAPPER_MIN_HEIGHT;
 
-      lookup._getItemsSizesLastRow = function() {
-         var numberItems = lookup._items.getCount();
+      lookup._getItemsSizesLastRow = () => {
+         let numberItems = lookup._items.getCount();
 
          if (newOptions.multiLine) {
 
@@ -337,10 +335,10 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          return new Array(numberItems).fill(ITEM_WIDTH);
       };
 
-      lookup._getCounterWidth = function() {
+      lookup._getCounterWidth = () => {
          return COUNTER_WIDTH;
       };
-      lookup._initializeConstants = function() {};
+      lookup._initializeConstants = () => {/* FIXME: sinon mock */};
 
       newOptions.multiSelect = true;
       lookup._calculateSizes(newOptions);
@@ -385,8 +383,8 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
       lookup._initializeConstants = initializeConstants;
    });
 
-   it('getCollectionOptions', function() {
-      var standardOptions = {
+   it('getCollectionOptions', () => {
+      const standardOptions = {
          itemTemplate: 'testItemTemplate',
          readOnly: 'testReadOnly',
          displayProperty: 'testReadOnly',
@@ -397,7 +395,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          items: undefined
       };
 
-      var controlOptions = {
+      const controlOptions = {
          itemTemplate: 'testItemTemplate',
          readOnly: 'testReadOnly',
          displayProperty: 'testReadOnly',
@@ -405,7 +403,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
          theme: 'default'
       };
 
-      const lookup = new Lookup();
+      const lookup = new Lookup({});
 
       deepStrictEqual(lookup._getCollectionOptions(controlOptions, 10, '10px'), standardOptions);
 

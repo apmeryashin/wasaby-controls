@@ -1,7 +1,6 @@
 import coreMerge = require('Core/core-merge');
 import entity = require('Types/entity');
 import IRangeSelectable from './IRangeSelectable';
-'use strict';
 
 export type TSelectionType = 'range' | 'single' | 'quantum' | 'disable';
 
@@ -21,15 +20,15 @@ export interface IDateRangeSelectableOptions {
  * @public
  * @author Красильников А.С.
  */
-const selectionTypes = coreMerge({'quantum': 'quantum'}, IRangeSelectable.SELECTION_TYPES);
+const selectionTypes = coreMerge({quantum: 'quantum'}, IRangeSelectable.SELECTION_TYPES);
 const minRange = {
    day: 'day',
    month: 'month'
 };
 
 export = {
-   getDefaultOptions: function () {
-      var options = IRangeSelectable.getDefaultOptions();
+   getDefaultOptions() {
+      const options = IRangeSelectable.getDefaultOptions();
 
       /**
        * @typedef {Object} Controls/_dateRange/interfaces/IDateRangeSelectable/Ranges
@@ -136,8 +135,8 @@ export = {
 
    minRange,
 
-   getOptionTypes: function () {
-      var optionsTypes = IRangeSelectable.getOptionTypes();
+   getOptionTypes() {
+      const optionsTypes = IRangeSelectable.getOptionTypes();
       optionsTypes.selectionType = entity.descriptor(String).oneOf(Object.keys(selectionTypes));
       return optionsTypes;
    }

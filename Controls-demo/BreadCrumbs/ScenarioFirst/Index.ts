@@ -44,7 +44,7 @@ class ScenarioFirst extends Control<IControlOptions> {
             parentProperty: 'parent',
             data: [{
                 id: 1,
-                'parent': null,
+                parent: null,
                 'parent@': true,
                 department: 'Разработка',
                 head: 'Новиков Д.В.',
@@ -53,7 +53,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 counterCaption: 4
             }, {
                 id: 11,
-                'parent': 1,
+                parent: 1,
                 'parent@': null,
                 name: 'Новиков Дмитрий',
                 photo: scenariosImages.Novikov,
@@ -61,7 +61,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 phone: '2300'
             }, {
                 id: 12,
-                'parent': 1,
+                parent: 1,
                 'parent@': true,
                 department: 'sbis.Communication',
                 head: 'Боровиков К.С.',
@@ -70,7 +70,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 counterCaption: 3
             }, {
                 id: 121,
-                'parent': 12,
+                parent: 12,
                 'parent@': null,
                 name: 'Боровиков Кирилл',
                 photo: scenariosImages.Borovikov,
@@ -78,7 +78,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 phone: '2500'
             }, {
                 id: 122,
-                'parent': 12,
+                parent: 12,
                 'parent@': true,
                 department: 'sbis.Communication и соц.сеть',
                 head: 'Жукова О.В.',
@@ -86,7 +86,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 counterCaption: 2
             }, {
                 id: 1221,
-                'parent': 122,
+                parent: 122,
                 'parent@': null,
                 name: 'Жукова Ольга',
                 photo: scenariosImages.Zhukova,
@@ -94,7 +94,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 phone: '2562'
             }, {
                 id: 1222,
-                'parent': 122,
+                parent: 122,
                 'parent@': true,
                 department: 'Проектирование',
                 head: 'Жукова О.В.',
@@ -102,14 +102,14 @@ class ScenarioFirst extends Control<IControlOptions> {
                 counterCaption: 1
             }, {
                 id: 12221,
-                'parent': 1222,
+                parent: 1222,
                 'parent@': true,
                 department: 'Проектирование мобильного приложения',
                 countOfEmployees: 1,
                 counterCaption: 1
             }, {
                 id: 122211,
-                'parent': 12221,
+                parent: 12221,
                 'parent@': null,
                 name: 'Белоконь Дарья',
                 photo: scenariosImages.Belokon,
@@ -168,37 +168,37 @@ class ScenarioFirst extends Control<IControlOptions> {
             parentProperty: 'parent',
             data: [{
                 id: 1,
-                'parent': null,
+                parent: null,
                 'parent@': true,
                 title: '05. Торговое оборудование'
             }, {
                 id: 12,
-                'parent': 1,
+                parent: 1,
                 'parent@': true,
                 title: '02. Онлайн-кассы для 54-ФЗ'
             }, {
                 id: 121,
-                'parent': 12,
+                parent: 12,
                 'parent@': true,
                 title: '10. Комплекты модернизации'
             }, {
                 id: 1211,
-                'parent': 121,
+                parent: 121,
                 'parent@': true,
                 title: 'Под заказ'
             }, {
                 id: 12111,
-                'parent': 1211,
+                parent: 1211,
                 'parent@': true,
                 title: '01. Фискальные регистраторы Viki Print'
             }, {
                 id: 121111,
-                'parent': 12111,
+                parent: 12111,
                 'parent@': true,
                 title: 'С фискальным накопителем на 36 мес.'
             }, {
                 id: 1211111,
-                'parent': 121111,
+                parent: 121111,
                 'parent@': null,
                 title: 'Фискальный регистратор Viki Print 57 Plus Ф',
                 price: 28490,

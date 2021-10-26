@@ -136,7 +136,7 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(!!baseControl._listViewModel.getCollapsedGroups());
         });
     });
-    describe('handleKeyDown', async() => {
+    describe('handleKeyDown', async () => {
         const baseControlCfg = await getCorrectBaseControlConfigAsync({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
@@ -1003,7 +1003,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl.saveOptions(baseControlCfg);
             baseControl._children = {
                 listView: {
-                    getItemsContainer: () => {}
+                    getItemsContainer: () => {/* FIXME: sinon mock */}
                 }
             };
 
@@ -1148,8 +1148,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 isEditing() {
                     return true;
                 },
-                updateOptions() {
-                }
+                updateOptions() {/* FIXME: sinon mock */}
             };
 
             baseControl._beforeUpdate({
@@ -1195,7 +1194,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl.saveOptions(cfg);
             await baseControl._beforeMount(cfg);
             const e = {
-                stopPropagation: () => {}
+                stopPropagation: () => {/* FIXME: sinon mock */}
             };
             const item = {};
             const originalEvent = {
@@ -1321,7 +1320,7 @@ describe('Controls/list_clean/BaseControl', () => {
             it('sourceController load error', async () => {
                 let sourceControllerOptions = getBaseControlOptionsWithEmptyItems();
                 const sourceController = new NewSourceController(sourceControllerOptions);
-                let baseControlOptions = {...sourceControllerOptions, sourceController};
+                const baseControlOptions = {...sourceControllerOptions, sourceController};
                 const baseControl = new BaseControl(baseControlOptions);
                 await sourceController.reload();
                 await baseControl._beforeMount(baseControlOptions);
@@ -1335,7 +1334,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     return Promise.reject(error);
                 };
                 sourceController.updateOptions(sourceControllerOptions);
-                await sourceController.reload().catch(() => {});
+                await sourceController.reload().catch(() => {/* FIXME: sinon mock */});
                 baseControlOptions.source = new Memory();
                 baseControlOptions.loading = true;
                 assert.doesNotThrow(() => {
@@ -1372,7 +1371,7 @@ describe('Controls/list_clean/BaseControl', () => {
             });
 
             it('_beforeUpdate with new source should reset scroll', async () => {
-                let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+                const baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
 
                 const baseControl = new BaseControl(baseControlOptions);
@@ -1386,6 +1385,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 assert.isFalse(baseControl._resetScrollAfterReload);
             });
 
+            // tslint:disable-next-line:max-line-length
             it('_beforeMount without source and sourceController, then _beforeUpdate with sourceController', async () => {
                 let baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 let afterReloadCallbackCalled = false;
@@ -1543,7 +1543,12 @@ describe('Controls/list_clean/BaseControl', () => {
                 const baseControl = new BaseControl({});
 
                 aAssert.isSame(
-                    baseControl._getFooterSpacingClasses({ multiSelectVisibility, style, multiSelectPosition, itemPadding }),
+                    baseControl._getFooterSpacingClasses({
+                        multiSelectVisibility,
+                        style,
+                        multiSelectPosition,
+                        itemPadding
+                    }),
                     `${expectedResult}`
                 );
             });

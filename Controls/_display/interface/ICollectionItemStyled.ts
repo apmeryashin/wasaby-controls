@@ -35,5 +35,7 @@ export interface ICollectionItemStyled {
      * @param itemActionsClass
      * @param itemPadding
      */
-    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}): string;
+    getItemActionPositionClasses(itemActionsPosition: string,
+                                 itemActionsClass: string,
+                                 itemPadding: {top?: string, bottom?: string}): string;
 }

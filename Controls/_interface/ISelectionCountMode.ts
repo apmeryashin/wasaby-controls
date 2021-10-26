@@ -11,7 +11,6 @@ export interface ISelectionCountModeOptions {
     selectionCountMode?: TSelectionCountMode;
 }
 
-
 /**
  * @typedef {String} SelectionCountMode
  * @variant all Подсчитываются все виды записей.

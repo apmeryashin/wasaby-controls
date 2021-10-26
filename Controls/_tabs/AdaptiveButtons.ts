@@ -223,7 +223,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
                 rawData[rawData.length - 1] = items.getRecordById(options.selectedKey).getRawData();
             }
         }
-        rawData.forEach(item => {
+        rawData.forEach((item) => {
             item.canShrink = false;
         });
         // чтобы ужималась

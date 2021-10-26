@@ -73,7 +73,9 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         this._onCollectionItemChange = this._onCollectionItemChange.bind(this);
     }
 
-    protected _beforeMount(options?: IImageDisplayContainerOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+    protected _beforeMount(options?: IImageDisplayContainerOptions,
+                           contexts?: object,
+                           receivedState?: void): Promise<void> | void {
         this._imagePosition = options.imagePosition;
         this._imageViewMode = options.imageViewMode;
         this._columns = options.columns;
@@ -84,11 +86,12 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         }
     }
 
-    private _updateDisplayImage(items, imageProperty) {
+    private _updateDisplayImage(items, imageProperty, isResetState) {
         if (imageProperty) {
-            const newDisplayImage = ImageDisplayContainer._hasImage(items, imageProperty);
-            if (this._hasItemWithImage !== newDisplayImage) {
-                this._hasItemWithImage = newDisplayImage;
+            if (isResetState) {
+                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
+            } else if (!this._hasItemWithImage) {
+                this._hasItemWithImage = ImageDisplayContainer._hasImage(items, imageProperty);
             }
         }
     }
@@ -106,7 +109,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
             this._columns = this._getPatchedColumns(options.columns);
         }
         if (options.imageProperty !== this._options.imageProperty) {
-            this._updateDisplayImage(this._items, options.imageProperty);
+            this._updateDisplayImage(this._items, options.imageProperty, true);
             if (!options.imageProperty) {
                 this._unsubscribeToCollectionChange(this._items, this._onCollectionItemChange);
             }
@@ -120,7 +123,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     private _itemsReadyCallback(items: RecordSet): void {
         this._items = items;
         this._subscribeToCollectionChange(this._items, this._onCollectionItemChange);
-        this._updateDisplayImage(this._items, this._options.imageProperty);
+        this._updateDisplayImage(this._items, this._options.imageProperty, true);
 
         if (this._options.itemsReadyCallback) {
             this._options.itemsReadyCallback(items);
@@ -131,19 +134,22 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
         if (!this._items) {
             this._items = items;
         }
-        this._updateDisplayImage(this._items, this._options.imageProperty);
+
+        const isResetState = !direction;
+        this._updateDisplayImage(items, this._options.imageProperty, isResetState);
+
         if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback(items, direction);
         }
     }
 
     private _onCollectionItemChange(event: EventObject,
-                            item: Model,
-                            index: number,
-                            properties?: object): void {
+                                    item: Model,
+                                    index: number,
+                                    properties?: object): void {
         // Изменение элемента, поменяли _imageProperty в записи в RecordSet
         if (this._options.imageProperty && this._options.imageProperty in properties) {
-            this._updateDisplayImage(this._items, this._options.imageProperty);
+            this._updateDisplayImage(this._items, this._options.imageProperty, false);
         }
     }
 
@@ -158,7 +164,7 @@ export default class ImageDisplayContainer extends Control<IImageDisplayContaine
     private _getPatchedColumns(columns: TColumns): TColumns {
         let newColumns = columns;
         if (columns) {
-            newColumns = object.clone(columns);
+            newColumns = object.clonePlain(columns);
             newColumns.forEach((column) => {
                 const templateOptions: {imageViewMode?: string} = column.templateOptions || {};
                 templateOptions.imageViewMode = this._getImageViewMode(templateOptions.imageViewMode);

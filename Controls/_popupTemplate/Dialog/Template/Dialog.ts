@@ -36,21 +36,25 @@ interface IDragObject {
 class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTemplate {
     '[Controls/_popupTemplate/interface/IPopupTemplate]': boolean = true;
     protected _template: TemplateFunction = template;
-    protected _headerTheme: string;
+    protected _dragState: string;
 
     protected _beforeMount(options: IDialogTemplateOptions): void {
-        this._prepareTheme();
+        this._setDragStateByOptions(options);
     }
 
     protected _beforeUpdate(options: IDialogTemplateOptions): void {
-        this._prepareTheme();
+        if (options.draggable !== this._options.draggable) {
+            this._setDragStateByOptions(options);
+        }
     }
 
-    private _onDragEnd(): void {
+    protected _onDragEnd(): void {
+        this._setDragStateByOptions(this._options);
         this._notify('popupDragEnd', [], {bubbling: true});
     }
 
-    private _onDragMove(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
+    protected _onDragMove(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
+        this._dragState = 'dragging';
         this._notify('popupDragStart', [dragObject.offset], {bubbling: true});
     }
 
@@ -58,14 +62,19 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         this._notify('close', [], {bubbling: true});
     }
 
-    private _prepareTheme(): void {
-        this._headerTheme = ManagerController.getPopupHeaderTheme();
+    private _setDragStateByOptions(options: IDialogTemplateOptions): void {
+        this._dragState = options.draggable ? 'draggable' : 'not-draggable';
     }
 
     protected _onMouseDown(event: SyntheticEvent<MouseEvent>): void {
         if (this._needStartDrag(event)) {
+            this._dragState = 'drag-start';
             this._startDragNDrop(event);
         }
+    }
+
+    protected _onMouseUp(): void {
+        this._setDragStateByOptions(this._options);
     }
 
     protected _getRoundClass(): string {

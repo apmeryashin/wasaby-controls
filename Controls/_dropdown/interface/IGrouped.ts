@@ -20,7 +20,7 @@ export interface IGroupedOptions {
      * @markdown
      * @remark
      * Позволяет установить пользовательский шаблон отображения заголовка группы (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/dropdown:GroupTemplate}. Шаблон Controls/dropdown:GroupTemplate поддерживает параметры, с помощью которых можно изменить отображение заголовка группы.
-     * 
+     *
      * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию groupTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/dropdown:GroupTemplate.
      * @demo Controls-demo/Menu/Control/GroupProperty/GroupTemplate/Index
      * @see groupProperty

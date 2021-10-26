@@ -175,8 +175,8 @@ class Panel extends Control<ISimplePanelOptions> {
     static getDefaultOptions(): Partial<ISimplePanelOptions> {
         return {
             itemTemplate: defaultItemTemplate
-        }
-    };
+        };
+    }
 }
 
 Object.defineProperty(Panel, 'defaultProps', {

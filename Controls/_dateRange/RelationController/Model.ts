@@ -10,8 +10,8 @@ const enum SLIDE_DATE_TYPE {
 }
 
 class ModuleClass {
-    public ranges: Array<Array<Date>>;
-    private _steps: Array<number>;
+    ranges: Date[][];
+    private _steps: number[];
     private _relationMode: String;
     private _dateConstructor: Function;
 
@@ -40,7 +40,7 @@ class ModuleClass {
                 this._relationMode = relationMode;
             } else {
                 oldRelationMode = this._relationMode;
-                this._autoRelation(this.ranges,[start, end], changedRangeIndex);
+                this._autoRelation(this.ranges, [start, end], changedRangeIndex);
             }
             newRanges = this._getUpdatedRanges(
                 this.ranges,
@@ -84,13 +84,13 @@ class ModuleClass {
     }
 
     private _shift(delta) {
-        this.ranges = this.ranges.map(function (range) {
+        this.ranges = this.ranges.map((range) => {
             return Range.shiftPeriod(range[0], range[1], delta);
         });
     }
 
     private _autoRelation(ranges, updatedRange, changedRangeIndex) {
-        var periodType;
+        let periodType;
 
         periodType = getPeriodType(updatedRange[0], updatedRange[1]);
 
@@ -98,29 +98,35 @@ class ModuleClass {
             this._relationMode = 'byCapacity';
         }
 
-         if (ranges.length > 2 || this._relationMode === 'normal') {
+        if (ranges.length > 2 || this._relationMode === 'normal') {
             return;
          }
 
-        const updatedStartValue = updatedRange[0],
-            updatedEndValue = updatedRange[1],
-            updatedPeriodType = getPeriodType(updatedStartValue, updatedEndValue);
+        const updatedStartValue = updatedRange[0];
+        const updatedEndValue = updatedRange[1];
+        const updatedPeriodType = getPeriodType(updatedStartValue, updatedEndValue);
 
         let capacityChanged = false;
         if (this._rangeIsNotEmpty(ranges[changedRangeIndex])) {
-            capacityChanged = updatedPeriodType !== getPeriodType(ranges[changedRangeIndex][0], ranges[changedRangeIndex][1]);
+            capacityChanged = updatedPeriodType !== getPeriodType(
+                ranges[changedRangeIndex][0], ranges[changedRangeIndex][1]
+            );
         }
 
-         if (changedRangeIndex < ranges.length - 1) {
-            this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged);
+        if (changedRangeIndex < ranges.length - 1) {
+            this._updateRelation(
+                updatedPeriodType, updatedStartValue, ranges[changedRangeIndex + 1][0], capacityChanged
+            );
          }
-         if (/**this._options.onlyByCapacity &&**/ changedRangeIndex > 0) {
-            this._updateRelation(updatedPeriodType, updatedStartValue, ranges[changedRangeIndex - 1][0], capacityChanged);
+        if (/* this._options.onlyByCapacity && */ changedRangeIndex > 0) {
+            this._updateRelation(
+                updatedPeriodType, updatedStartValue, ranges[changedRangeIndex - 1][0], capacityChanged
+            );
          }
     }
 
     private _updateRelation(updatedPeriodType, updatedStartValue, startValue, capacityChanged) {
-        var step;
+        let step;
 
         // The linking is turned on only if we switch to year mode and this means that the offset between periods
         // is a multiple of years in any case, or if the bit width has not changed and the step between periods
@@ -133,7 +139,8 @@ class ModuleClass {
            this._relationMode = 'normal';
 
            // We update steps for calculation of the periods in other controls.
-           // If the digit capacity has changed, then adjacent periods are included and the step must be equal to this period.
+           // If the digit capacity has changed, then adjacent periods are
+           // included and the step must be equal to this period.
            if (capacityChanged) {
               step = getPeriodLengthInMonthByType(updatedPeriodType);
            } else {
@@ -160,7 +167,7 @@ class ModuleClass {
 
     private _resetSteps(step) {
         this._steps = [];
-        for (var i = 0; i < this.ranges.length - 1; i++) {
+        for (let i = 0; i < this.ranges.length - 1; i++) {
             this._steps.push(step);
         }
     }
@@ -169,9 +176,12 @@ class ModuleClass {
         return end.getFullYear() * 12 + end.getMonth() - start.getFullYear() * 12 - start.getMonth();
     }
 
-    protected _getChangedIndex(ranges: Array<Date>): number {
-        for (var i in this.ranges) {
-            if (!dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) || !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])) {
+    protected _getChangedIndex(ranges: Date[]): number {
+        for (const i in this.ranges) {
+            if (
+                !dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) ||
+                !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])
+            ) {
                 return parseInt(i, 10);
             }
         }
@@ -179,22 +189,25 @@ class ModuleClass {
     }
 
     private _getRangesFromOptions(options) {
-        var ranges = [],
-            i, j;
-        for (var field in options) {
-            i = null;
-            if (field.indexOf('startValue') === 0) {
-                i = parseInt(field.slice(10), 10);
-                j = 0;
-            } else if (field.indexOf('endValue') === 0) {
-                i = parseInt(field.slice(8), 10);
-                j = 1;
-            }
-            if (i !== null) {
-                if (!ranges[i]) {
-                    ranges[i] = [];
+        const ranges = [];
+        let i;
+        let j;
+        for (const field in options) {
+            if (options.hasOwnProperty(field)) {
+                i = null;
+                if (field.indexOf('startValue') === 0) {
+                    i = parseInt(field.slice(10), 10);
+                    j = 0;
+                } else if (field.indexOf('endValue') === 0) {
+                    i = parseInt(field.slice(8), 10);
+                    j = 1;
                 }
-                ranges[i][j] = options[field];
+                if (i !== null) {
+                    if (!ranges[i]) {
+                        ranges[i] = [];
+                    }
+                    ranges[i][j] = options[field];
+                }
             }
         }
         return ranges;
@@ -209,16 +222,23 @@ class ModuleClass {
     }
 
     private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
-        let selectionType:SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months,
-            start = newRange[0],
-            end = newRange[1],
-            oldStart = ranges[rangeIndex][0],
-            oldEnd = ranges[rangeIndex][1],
-            respRanges = [],
-            periodType, periodLength, oldPeriodType, oldPeriodLength,
-            step, capacityChanged, control, lastDate, i;
+        let selectionType: SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months;
+        const start = newRange[0];
+        const end = newRange[1];
+        const oldStart = ranges[rangeIndex][0];
+        const oldEnd = ranges[rangeIndex][1];
+        const respRanges = [];
+        let periodType;
+        let periodLength;
+        let oldPeriodType;
+        let oldPeriodLength;
+        let step;
+        let capacityChanged;
+        let control;
+        let lastDate;
+        let i;
 
-        const getStep = (number) => {
+        const getStep = (value) => {
             let newStep;
             if (selectionType === SLIDE_DATE_TYPE.days) {
                 return periodLength;
@@ -228,7 +248,7 @@ class ModuleClass {
             // and the month of the periods differ or step is not aligned to the new capacity,
             // then we also set adjacent periods.
             const isStepDivides = (stepLength: number) => {
-                return steps[number] % stepLength === 0;
+                return steps[value] % stepLength === 0;
             };
 
             const monthsAreEqual = start.getMonth() === oldStart?.getMonth();
@@ -239,7 +259,7 @@ class ModuleClass {
                     periodLength > oldPeriodLength &&  (!monthsAreEqual || !isStepDivides(periodLength)))) {
                 newStep = periodLength;
             } else {
-                newStep = steps[number] || periodLength;
+                newStep = steps[value] || periodLength;
             }
 
             if (newStep < periodLength) {
@@ -335,7 +355,9 @@ class ModuleClass {
         if (selectionType === SLIDE_DATE_TYPE.days) {
             return new this._dateConstructor(date.getFullYear(), date.getMonth(), date.getDate() + delta);
         } else if (selectionType === SLIDE_DATE_TYPE.years) {
-            return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta, date.getDate() + periodLength - 1);
+            return new this._dateConstructor(
+                date.getFullYear(), date.getMonth() + delta, date.getDate() + periodLength - 1
+            );
         }
         return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta + 1, 0);
     }

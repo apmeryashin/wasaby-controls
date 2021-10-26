@@ -10,7 +10,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetCol
         { width: '100px' }
     ];
     const owner = {
-        getNavigation: () => {},
+        getNavigation: () => {/* FIXME: sinon mock */},
         getItems: () => ([groupRow]),
         getCount: () => 1,
         getRootLevel: () => 0,
@@ -56,7 +56,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetCol
     it('multiSelectVisibility=visible, total columns count should be 2', () => {
         multiSelectVisibility = 'visible';
         groupRow = getGroupRow();
-        assert.equal(groupRow.getColumnsCount(),2);
+        assert.equal(groupRow.getColumnsCount(), 2);
     });
 
     // 2, потому что колонка multiSelect не колспанится, а добавляется пустая

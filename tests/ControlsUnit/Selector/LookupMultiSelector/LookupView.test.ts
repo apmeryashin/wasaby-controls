@@ -27,15 +27,15 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       const placeholder = 'testPlaceholder';
       // Избавимся от работы с версткой
       delete getWidthUtil.getWidth;
-      getWidthUtil.getWidth = function() {
+      getWidthUtil.getWidth = () => {
          return placeholderWidth;
       };
       delete lookupView._getFieldWrapperWidth;
-      lookupView._getFieldWrapperWidth = function() {
+      lookupView._getFieldWrapperWidth = () => {
          return  fieldWrapperWidth;
       };
       delete lookupView._initializeConstants;
-      lookupView._initializeConstants = () => {};
+      lookupView._initializeConstants = () => {/* FIXME: sinon mock */};
 
       lookupView._items =  getItems(3);
       strictEqual(lookupView._getAvailableWidthCollection({
@@ -51,12 +51,11 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       getWidthUtil.getWidth = originGetWidth;
    });
 
-   it('_calculateSizes', function() {
-      var
-         availableWidthCollection = 200,
-         lookupView = new Lookup();
+   it('_calculateSizes', () => {
+      const availableWidthCollection = 200;
+      const lookupView = new Lookup({});
 
-      lookupView._getAvailableWidthCollection = function() {
+      lookupView._getAvailableWidthCollection = () => {
          return availableWidthCollection;
       };
       lookupView._items = getItems(2);
@@ -67,8 +66,8 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       strictEqual(lookupView._availableWidthCollection, availableWidthCollection);
    });
 
-   it('_isInputVisible', function() {
-      var lookupView = new Lookup();
+   it('_isInputVisible', () => {
+      const lookupView = new Lookup();
 
       lookupView._items = getItems(5);
       lookupView._options.maxVisibleItems = 5;
@@ -81,8 +80,8 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       ok(!!!lookupView._isInputVisible(lookupView._options));
    });
 
-   it('_isNeedCalculatingSizes', function() {
-      var lookupView = new Lookup();
+   it('_isNeedCalculatingSizes', () => {
+      const lookupView = new Lookup();
 
       lookupView._items = getItems(0);
       ok(!lookupView._isNeedCalculatingSizes({}));
@@ -115,4 +114,3 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       ok(suggestClosed);
    });
 });
-

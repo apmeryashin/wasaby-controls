@@ -10,7 +10,9 @@ import {SyntheticEvent} from 'UI/Vdom';
 import TileCollectionItem from 'Controls/_tile/display/TileCollectionItem';
 
 describe('Controls/_tile/TileView', () => {
-    let tileView, model, cfg;
+    let tileView;
+    let model;
+    let cfg;
     beforeEach(() => {
         model = new TileCollection({
             tileMode: 'static',
@@ -101,12 +103,12 @@ describe('Controls/_tile/TileView', () => {
             tileView.saveOptions({...cfg, needShowEmptyTemplate: false});
             CssClassesAssert.include(tileView._getViewClasses(), 'controls-TileView__itemPaddingContainer');
         });
-    })
+    });
 
     describe('_getItemsPaddingContainerClasses', () => {
         it('_getItemsPaddingContainerClasses', () => {
             tileView.saveOptions({});
-            let classes = tileView._getItemsPaddingContainerClasses();
+            const classes = tileView._getItemsPaddingContainerClasses();
             CssClassesAssert.include(classes, 'controls-TileView__itemPaddingContainer');
             CssClassesAssert.include(classes, 'controls-TileView__itemsPaddingContainer_spacingLeft_default');
             CssClassesAssert.include(classes, 'controls-TileView__itemsPaddingContainer_spacingRight_default');

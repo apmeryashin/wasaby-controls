@@ -5,7 +5,7 @@ import * as ParallelDeferred from 'Core/ParallelDeferred';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
-import {ValidationStatus} from "Controls/interface";
+import {ValidationStatus} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import 'css!Controls/validate';
 import {SyntheticEvent} from 'UI/Vdom';
@@ -209,9 +209,12 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     }
 
     private _callValidators(validators: Function[], validateConfig?: IValidateConfig) {
-        let validationResult = null,
-            errors = [],
-            validatorResult, validator, resultDeferred, index;
+        let validationResult = null;
+        let errors = [];
+        let validatorResult;
+        let validator;
+        let resultDeferred;
+        let index;
 
         const parallelDeferred = new ParallelDeferred();
         const validatorsForCheck = [].concat(validators);
@@ -416,7 +419,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     }
 
     protected _getValidStatus(contentActive: boolean): ValidationStatus {
-        //ie is not support focus-within
+        // ie is not support focus-within
         if (this._isValidResult()) {
             return contentActive ? 'invalidAccent' : 'invalid';
         }

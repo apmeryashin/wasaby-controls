@@ -2,9 +2,9 @@ import displayLib = require('Controls/display');
 import cInstance = require('Core/core-instance');
 import Utils = require('Types/util');
 
-var ItemsUtil = {
-    getDefaultDisplayFlat: function(items, cfg, filter) {
-        var projCfg = {};
+const ItemsUtil = {
+    getDefaultDisplayFlat(items, cfg, filter) {
+        const projCfg = {};
         projCfg.keyProperty = cfg.keyProperty;
         if (cfg.groupingKeyCallback) {
             projCfg.group = cfg.groupingKeyCallback;
@@ -26,7 +26,7 @@ var ItemsUtil = {
         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
     },
 
-    getPropertyValue: function(itemContents, field) {
+    getPropertyValue(itemContents, field) {
         if (!(itemContents instanceof Object)) {
             return itemContents;
         } else {
@@ -34,15 +34,15 @@ var ItemsUtil = {
         }
     },
 
-    //TODO это наверное к Лехе должно уехать
-    getDisplayItemById: function(display, id, keyProperty) {
-        var list = display.getCollection();
+    // TODO это наверное к Лехе должно уехать
+    getDisplayItemById(display, id, keyProperty) {
+        const list = display.getCollection();
         if (cInstance.instanceOfModule(list, 'Types/collection:RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
         } else {
-            var resItem;
-            display.each(function(item, i) {
-                if (ItemsUtil.getPropertyValue(item.getContents(), keyProperty) == id) {
+            let resItem;
+            display.each((item) => {
+                if (String(ItemsUtil.getPropertyValue(item.getContents(), keyProperty)) === String(id)) {
                     resItem = item;
                 }
             });
@@ -50,11 +50,10 @@ var ItemsUtil = {
         }
     },
 
-    getFirstItem: function(display) {
-        var
-            itemIdx = 0,
-            item,
-            itemsCount = display.getCount();
+    getFirstItem(display) {
+        let itemIdx = 0;
+        let item;
+        const itemsCount = display.getCount();
         while (itemIdx < itemsCount) {
             item = display.at(itemIdx).getContents();
             if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
@@ -64,10 +63,9 @@ var ItemsUtil = {
         }
     },
 
-    getLastItem: function(display) {
-        var
-            itemIdx = display.getCount() - 1,
-            item;
+    getLastItem(display) {
+        let itemIdx = display.getCount() - 1;
+        let item;
         while (itemIdx >= 0) {
             item = display.at(itemIdx).getContents();
             if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
@@ -77,7 +75,7 @@ var ItemsUtil = {
         }
     },
 
-    getDisplayItemKey: function(dispItem, keyProperty) {
+    getDisplayItemKey(dispItem, keyProperty) {
         let contents = dispItem.getContents();
 
         if (contents instanceof Array) {

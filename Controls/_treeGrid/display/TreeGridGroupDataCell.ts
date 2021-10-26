@@ -4,6 +4,7 @@ import {mixin} from 'Types/util';
 import {GridGroupCellMixin, IGridRowOptions} from 'Controls/grid';
 import TreeGridDataCell, {ITreeGridDataCellOptions} from 'Controls/_treeGrid/display/TreeGridDataCell';
 import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
+import {TFontColorStyle, TFontSize, TFontWeight, TTextTransform} from 'Controls/interface';
 
 const GROUP_CELL_TEMPLATE = 'Controls/treeGrid:GroupColumnTemplate';
 
@@ -62,7 +63,34 @@ export default class TreeGridGroupDataCell<T extends Model = Model> extends mixi
         }
         classes += this._getContentAlignClasses();
         classes += ' controls-ListView__groupContent';
+
+        classes += ' controls-ListView__groupContent_height';
+        if (this.shouldDisplayItemActions()) {
+            classes += '_withItemActions';
+        }
         return classes;
+    }
+
+    /**
+     * Добавляет CSS классы для стилизации текста в заголовке группы
+     * Настройки из groupNodeConfig по умолчанию имеют больший приоритет, т.к. это настройки заголовка группы
+     * Настройки из конфига колонки в этом случае на втором месте
+     * Настройки из шаблона в этом случае имеют самый низкий приолритет, т.к. это настройки Controls/treeGrid:ItemTemplate
+     * @param templateFontColorStyle Цвет шрифта
+     * @param templateFontSize Размер шрифта
+     * @param templateFontWeight жирность шрифта
+     * @param templateTextTransform Преобразование шрифта
+     */
+    getContentTextStylingClasses(templateFontColorStyle?: TFontColorStyle,
+                                 templateFontSize?: TFontSize,
+                                 templateFontWeight?: TFontWeight,
+                                 templateTextTransform?: TTextTransform): string {
+        const config = this.getColumnConfig() as IGroupNodeColumn;
+        const fontColorStyle = config.groupNodeConfig?.fontSize || config.fontColorStyle || templateFontColorStyle;
+        const fontSize = config.groupNodeConfig?.fontSize || config.fontSize || templateFontSize;
+        const fontWeight = config.groupNodeConfig?.fontWeight || config.fontWeight || templateFontWeight;
+        const textTransform = config.groupNodeConfig?.textTransform || templateTextTransform;
+        return super.getContentTextStylingClasses(fontColorStyle, fontSize, fontWeight, textTransform);
     }
 
     // region Аспект "Ячейка группы"

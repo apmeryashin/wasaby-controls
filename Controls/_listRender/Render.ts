@@ -6,7 +6,7 @@ import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {CollectionItem, Collection} from 'Controls/display';
 import {constants} from 'Env/Env';
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
 import 'css!Controls/list';
 import 'css!Controls/itemActions';
 import 'css!Controls/CommonClasses';
@@ -132,7 +132,9 @@ export default class Render extends Control<IRenderOptions> {
         }
     }
 
-    protected _onItemActionMouseDown(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {
+    protected _onItemActionMouseDown(e: SyntheticEvent<MouseEvent>,
+                                     action: unknown,
+                                     item: CollectionItem<unknown>): void {
         e.stopPropagation();
         this._notify('itemActionMouseDown', [item, action, e]);
     }

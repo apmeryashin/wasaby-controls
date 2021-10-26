@@ -1,5 +1,7 @@
 /**
  * @library Controls/treeGrid
+ * @includes ITreeGrid Controls/_treeGrid/interface/ITreeGrid
+ * @includes IColumn Controls/_treeGrid/interface/IColumn
  * @includes IGroupNodeColumn Controls/_treeGrid/interface/IGroupNodeColumn
  * @includes ItemTemplate Controls/_treeGrid/interface/ItemTemplate
  * @public
@@ -15,14 +17,15 @@ import * as GridItemTemplate from 'wml!Controls/_treeGrid/render/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_treeGrid/render/table/Item';
 import * as NodeFooterTemplate from 'wml!Controls/_treeGrid/render/NodeFooterTemplate';
 
-// FIXME: при обычном условном присвоении шаблона tmpl = isAny ? tmpl1 : tmpl2, переменной один раз присвоится значение и не будет меняться.
-//  В таком случае возникает ошибка при открытии одной страницы из разных браузеров (Chrome и IE), с сервера всегда будет возвращаться один и тот же шаблон,
-//  для того браузера, который первый открыл страницу.
-//  Данным хахом мы подменяем шаблонную функцию и возвращаем правильную. Тоже самое, что вынести в отдельный шаблон и там условно вызвать паршл,
+// FIXME: при обычном условном присвоении шаблона tmpl = isAny ? tmpl1 : tmpl2, переменной один раз
+//  присвоится значение и не будет меняться. В таком случае возникает ошибка при открытии одной
+//  страницы из разных браузеров (Chrome и IE), с сервера всегда будет возвращаться один и тот же шаблон,
+//  для того браузера, который первый открыл страницу. Данным хахом мы подменяем шаблонную функцию и
+//  возвращаем правильную. Тоже самое, что вынести в отдельный шаблон и там условно вызвать паршл,
 //  но быстрее по времени.
 //  По словам Макса Крылова это ничего не сломает, если на функцию навесить флаги ядра.
 //  Найти нормальное решение по https://online.sbis.ru/opendoc.html?guid=41a8dbab-93bb-4bc0-8533-6b12c0ec6d8d
-const ItemTemplate = function () {
+const ItemTemplate = function() {
     return isFullGridSupport() ? GridItemTemplate.apply(this, arguments) : TableItemTemplate.apply(this, arguments);
 };
 ItemTemplate.stable = true;
@@ -52,7 +55,8 @@ import TreeGridGroupDataRow from 'Controls/_treeGrid/display/TreeGridGroupDataRo
 import TreeGridGroupDataCell from 'Controls/_treeGrid/display/TreeGridGroupDataCell';
 import TreeGridViewTable from './_treeGrid/TreeGridViewTable';
 import {IGroupNodeColumn} from 'Controls/_treeGrid/interface/IGroupNodeColumn';
-import {TGroupNodeVisibility} from 'Controls/_treeGrid/interface/ITreeGrid';
+import ITreeGrid, {TGroupNodeVisibility} from 'Controls/_treeGrid/interface/ITreeGrid';
+import {IColumn} from 'Controls/_treeGrid/interface/IColumn';
 import TreeGridHeaderRow from 'Controls/_treeGrid/display/TreeGridHeaderRow';
 import TreeGridHeaderCell from 'Controls/_treeGrid/display/TreeGridHeaderCell';
 import TreeGridTableHeaderRow from 'Controls/_treeGrid/display/TreeGridTableHeaderRow';
@@ -60,6 +64,8 @@ import TreeGridHeader from 'Controls/_treeGrid/display/TreeGridHeader';
 import TreeGridTableHeader from 'Controls/_treeGrid/display/TreeGridTableHeader';
 
 export {
+    ITreeGrid,
+    IColumn,
     TreeGridFooterCell,
     TreeGridCollection,
     TreeGridDataRow,

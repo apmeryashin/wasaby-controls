@@ -42,22 +42,22 @@ export default class OperationsPanelContainer extends Control<IOperationsPanelCo
         if (!isEqual(this._options.selectedKeys, newOptions.selectedKeys) ||
             this._options.listMarkedKey !== newOptions.listMarkedKey ||
             this._selectedKeysCount !== newOptions.selectedKeysCount ||
-            (!newOptions.items?.getCount() && (this._selectedKeys.length || newOptions.listMarkedKey !== null))) {
+            (!newOptions.items?.getCount() && (this._selectedKeys?.length || newOptions.listMarkedKey !== null))) {
             this._selectedKeys = this._getSelectedKeys(newOptions);
             this._selectedKeysCount = this._getSelectedKeysCount(newOptions, this._selectedKeys);
         }
     }
 
     protected _afterMount(): void {
-        this._notify('operationsPanelOpen', [],{bubbling: true});
+        this._notify('operationsPanelOpen', [], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
-        this._notify('operationsPanelClose', [],{bubbling: true});
+        this._notify('operationsPanelClose', [], {bubbling: true});
     }
 
     private _getSelectedKeysCount(options: IOperationsPanelContainerOptions, selectedKeys: number[]|string[]): number {
-        return options.selectedKeys.length ?
+        return options.selectedKeys?.length ?
             options.selectedKeysCount :
             0;
     }
@@ -65,7 +65,7 @@ export default class OperationsPanelContainer extends Control<IOperationsPanelCo
     private _getSelectedKeys(options: IOperationsPanelContainerOptions): TKeys {
         let result;
 
-        if (!options.selectedKeys.length && options.listMarkedKey !== null &&
+        if (!options.selectedKeys?.length && options.listMarkedKey !== null &&
             (!options.items || options.items.getCount())) {
             result = [options.listMarkedKey];
         } else {

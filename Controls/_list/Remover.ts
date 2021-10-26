@@ -4,7 +4,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 import {Remove as RemoveAction} from 'Controls/listCommands';
 import {getItemsBySelection} from 'Controls/baseList';
 import {Logger} from 'UI/Utils';
-import {ISelectionObject} from "Controls/_interface/ISelectionType";
+import {ISelectionObject} from 'Controls/_interface/ISelectionType';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
@@ -14,11 +14,11 @@ interface IOptions {
     items?: RecordSet;
 }
 
-var _private = {
-    removeFromItems: function (self, keys) {
-        var item;
+const _private = {
+    removeFromItems(self, keys) {
+        let item;
         self._items.setEventRaising(false, true);
-        for (var i = 0; i < keys.length; i++) {
+        for (let i = 0; i < keys.length; i++) {
             item = self._items.getRecordById(keys[i]);
             if (item) {
                 self._items.remove(item);
@@ -27,20 +27,21 @@ var _private = {
         self._items.setEventRaising(true, true);
     },
 
-    beforeItemsRemove: function (self, keys) {
+    beforeItemsRemove(self, keys) {
         const beforeItemsRemoveResult = self._notify('beforeItemsRemove', [keys]);
         return beforeItemsRemoveResult instanceof Deferred || beforeItemsRemoveResult instanceof Promise ?
             beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
     },
 
-    afterItemsRemove: function (self, keys, result) {
-        var afterItemsRemoveResult = self._notify('afterItemsRemove', [keys, result]);
+    afterItemsRemove(self, keys, result) {
+        const afterItemsRemoveResult = self._notify('afterItemsRemove', [keys, result]);
 
-        //According to the standard, after moving the items, you need to unselect all in the table view.
-        //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
-        //The only way to affect the selection in the table view is to send the selectedTypeChanged event.
-        //You need a schema in which Mover will not work directly with the selection.
-        //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
+        // According to the standard, after moving the items, you need to unselect all in the table view.
+        // The table view and Mover are in a common container (Control.Container.MultiSelector)
+        // and do not know about each other.
+        // The only way to affect the selection in the table view is to send the selectedTypeChanged event.
+        // You need a schema in which Mover will not work directly with the selection.
+        // Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
         self._notify('selectedTypeChanged', ['unselectAll'], {
             bubbling: true
         });
@@ -62,7 +63,14 @@ var _private = {
         // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         return keys instanceof Array
             ? Promise.resolve(keys)
-            : getItemsBySelection(keys, self._source, self._items, self._filter, null, self._options.selectionTypeForAllSelected);
+            : getItemsBySelection(
+                keys,
+                self._source,
+                self._items,
+                self._filter,
+                null,
+                self._options.selectionTypeForAllSelected
+            );
     }
 };
 
@@ -97,14 +105,15 @@ var _private = {
  * @author Авраменко А.С.
  */
 
-var Remover = BaseAction.extend({
-    _beforeMount: function (options, context) {
+const Remover = BaseAction.extend({
+    _beforeMount(options, context) {
         _private.updateDataOptions(this, options, context.dataOptions);
         Logger.warn('Controls/list:Remover: Класс устарел и будет удалён.' +
-            ' Используйте методы интерфейса Controls/list:IRemovableList, который по умолчанию подключен в списки.', this);
+            ' Используйте методы интерфейса Controls/list:IRemovableList, который ' +
+            'по умолчанию подключен в списки.', this);
     },
 
-    _beforeUpdate: function (options, context) {
+    _beforeUpdate(options, context) {
         _private.updateDataOptions(this, options, context.dataOptions);
     },
 
@@ -163,10 +172,8 @@ FIXME: Нельзя отсюда убирать контекст и заменя
   </div>
 </Controls.list:DataContainer>
  */
-Remover.contextTypes = function () {
-    return {
-        dataOptions: dataOptions
-    };
-};
+Remover.contextTypes = () => ({
+    dataOptions
+});
 
 export = Remover;

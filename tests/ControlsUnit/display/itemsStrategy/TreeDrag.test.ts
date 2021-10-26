@@ -90,6 +90,7 @@ describe('Controls/_display/itemsStrategy/TreeDrag', () => {
    });
 
    it('setPosition', () => {
+       // tslint:disable-next-line:no-unused-expression
       strategy.items;
       assert.equal(strategy.avatarItem.getParent(), display.getItemBySourceKey(2));
 
@@ -98,6 +99,7 @@ describe('Controls/_display/itemsStrategy/TreeDrag', () => {
    });
 
    it('setPosition on group', () => {
+       // tslint:disable-next-line:no-unused-expression
       strategy.items;
       strategy.setPosition({index: 1, position: 'before', dispItem: display.getItemBySourceKey(222)});
       assert.equal(strategy.avatarItem.getParent(), display.getRoot());
@@ -112,6 +114,7 @@ describe('Controls/_display/itemsStrategy/TreeDrag', () => {
          targetIndex: 2
       });
 
+       // tslint:disable-next-line:no-unused-expression
       strategy.items;
       assert.equal(strategy.avatarItem.getParent(), display.getItemBySourceKey(1));
    });

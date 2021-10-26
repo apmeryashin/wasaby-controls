@@ -34,11 +34,18 @@ function convertToFilterStructure(items) {
 
 function convertToSourceDataArray(filterStructure, visibilitiesObject?) {
     const dataArray = [];
-    chain.factory(filterStructure).each(function (item) {
+    chain.factory(filterStructure).each((item) => {
         const rsItem = {};
         for (const i in recordToSructureElemMap) {
-            if (Utils.object.getPropertyValue(item, recordToSructureElemMap[i]) !== undefined && recordToSructureElemMap.hasOwnProperty(i)) {
-                if (i === 'visibility' && visibilitiesObject && !visibilitiesObject.hasOwnProperty(item.internalValueField)) {
+            if (
+                Utils.object.getPropertyValue(item, recordToSructureElemMap[i]) !== undefined &&
+                recordToSructureElemMap.hasOwnProperty(i)
+            ) {
+                if (
+                    i === 'visibility' &&
+                    visibilitiesObject &&
+                    !visibilitiesObject.hasOwnProperty(item.internalValueField)
+                ) {
                     continue;
                 }
                 rsItem[i] = Utils.object.getPropertyValue(item, recordToSructureElemMap[i]);

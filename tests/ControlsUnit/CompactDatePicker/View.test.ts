@@ -47,7 +47,7 @@ describe('Controls/_compactDatePicker/View', () => {
             const currentDate = new Date(2019, 7);
             const clock = sinon.useFakeTimers(currentDate.getTime(), 'Date');
             const displayedRanges = [
-                [new Date(2018, 0),new Date(2019, 5)],
+                [new Date(2018, 0), new Date(2019, 5)],
                 [new Date(2020, 1), new Date(2021, 0)]
             ];
             component._updateTodayIconVisible(true, displayedRanges);
@@ -59,7 +59,7 @@ describe('Controls/_compactDatePicker/View', () => {
             const currentDate = new Date(2018, 7);
             const clock = sinon.useFakeTimers(currentDate.getTime(), 'Date');
             const displayedRanges = [
-                [new Date(2018, 0),new Date(2019, 5)],
+                [new Date(2018, 0), new Date(2019, 5)],
                 [new Date(2020, 1), new Date(2021, 0)]
             ];
             component._updateTodayIconVisible(true, displayedRanges);

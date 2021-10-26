@@ -11,7 +11,6 @@ const baseStackConfig = {
 
 class RestrictiveContainer extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
-    static _styles: string[] = ['Controls-demo/Popup/Dialog/RestrictiveContainer/Index', 'Controls-demo/Controls-demo'];
     private _dialogOpener: DialogOpener;
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
@@ -26,5 +25,6 @@ class RestrictiveContainer extends Control<IControlOptions> {
         const config = {...baseStackConfig, ...{restrictiveContainer: '.ControlsDemo-Popup-Dialog__globalContainer'}};
         this._dialogOpener.open(config);
     }
+    static _styles: string[] = ['Controls-demo/Popup/Dialog/RestrictiveContainer/Index', 'Controls-demo/Controls-demo'];
 }
 export default RestrictiveContainer;

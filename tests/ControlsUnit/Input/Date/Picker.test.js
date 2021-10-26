@@ -21,15 +21,14 @@ define([
          it('should open opener with default options', function() {
             const component = calendarTestUtils.createComponent(date.Input, options);
             component._children = {
-               opener: {
-                  open: sinon.fake()
-               },
                linkView: {
                   getPopupTarget: sinon.stub().returns()
                }
             };
+            sinon.stub(component._stickyOpener, 'open');
             component.openPopup();
-            sinon.assert.called(component._children.opener.open);
+            sinon.assert.called(component._stickyOpener.open);
+            sinon.restore();
          });
          it('should open dialog with passed dialog options', function() {
             const
@@ -47,14 +46,16 @@ define([
                   getPopupTarget: sinon.fake()
                }
             };
+            sinon.stub(component._stickyOpener, 'open');
             component.openPopup();
-            sinon.assert.called(component._children.opener.open);
-            sinon.assert.calledWith(component._children.opener.open, sinon.match({
+            sinon.assert.called(component._stickyOpener.open);
+            sinon.assert.calledWith(component._stickyOpener.open, sinon.match({
                className: 'controls-PeriodDialog__picker controls_datePicker_theme-default',
                templateOptions: {
                   readOnly: extOptions.readOnly
                }
             }));
+            sinon.restore();
          });
       });
 
@@ -65,17 +66,15 @@ define([
                component = calendarTestUtils.createComponent(date.Input, options),
                value = new Date(2017, 11, 1);
 
-            component._children = {}
-            component._children.opener = {
-               close: sinon.fake()
-            };
+            component._children = {};
+            sandbox.stub(component._stickyOpener, 'close');
             sandbox.stub(component, '_notify');
 
             component._onResult(value);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
-            sinon.assert.called(component._children.opener.close);
+            sinon.assert.called(component._stickyOpener.close);
             sandbox.restore();
          });
       });
@@ -88,16 +87,14 @@ define([
                value = new Date(2017, 11, 1);
 
             component._children = {}
-            component._children.opener = {
-               close: sinon.fake()
-            };
+            sandbox.stub(component._stickyOpener, 'close');
             sandbox.stub(component, '_notify');
 
             component._onResultWS3(null, value);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
-            sinon.assert.called(component._children.opener.close);
+            sinon.assert.called(component._stickyOpener.close);
             sandbox.restore();
          });
       });

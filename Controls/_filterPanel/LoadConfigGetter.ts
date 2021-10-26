@@ -27,7 +27,7 @@ function getFilter(
 }
 
 function prepareDescription(
-    description: IPropertyFilterItem[],
+    description: IPropertyFilterItem[]
 ): IPropertyFilterItem[] {
     const resultDescription = object.clone(description);
     return resultDescription.map((property) => {

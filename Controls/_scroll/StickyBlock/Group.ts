@@ -7,7 +7,7 @@ import {
     POSITION,
     IOffset,
     IFixedEventData,
-    TRegisterEventData,
+    IRegisterEventData,
     SHADOW_VISIBILITY_BY_CONTROLLER,
     MODE
 } from 'Controls/_scroll/StickyBlock/Utils';
@@ -17,7 +17,7 @@ import {RegisterClass} from 'Controls/event';
 import fastUpdate from './FastUpdate';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 
-interface IHeaderData extends TRegisterEventData {
+interface IHeaderData extends IRegisterEventData {
     top: number;
     bottom: number;
 }
@@ -71,7 +71,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         bottom: 0
     };
     protected _isShadowVisible: boolean = false;
-    protected _isShadowVisibleByController: { top: SHADOW_VISIBILITY_BY_CONTROLLER; bottom: SHADOW_VISIBILITY_BY_CONTROLLER; } = {
+    protected _isShadowVisibleByController: {
+        top: SHADOW_VISIBILITY_BY_CONTROLLER;
+        bottom: SHADOW_VISIBILITY_BY_CONTROLLER;
+    } = {
         top: SHADOW_VISIBILITY_BY_CONTROLLER.auto,
         bottom: SHADOW_VISIBILITY_BY_CONTROLLER.auto
     };
@@ -98,7 +101,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     resetSticky(): void {
         for (const id in this._headers) {
-            this._headers[id].inst.resetSticky();
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.resetSticky();
+            }
         }
     }
 
@@ -109,7 +114,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     get offsetTop(): number {
-        return this._options.offsetTop
+        return this._options.offsetTop;
     }
 
     set top(value: number) {
@@ -123,12 +128,14 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     get shadowVisibility(): SHADOW_VISIBILITY {
         // TODO: сделать чтобы видимость теней явно задавалась через опцию на группе.
         // https://online.sbis.ru/opendoc.html?guid=4e5cd2c6-a2ec-4619-b9c4-fafbb21fc4b8
-        for (let id in this._headers) {
-            const shadowVisibility = this._headers[id].inst.shadowVisibility;
-            if (shadowVisibility === SHADOW_VISIBILITY.visible ||
-                shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
-                shadowVisibility === SHADOW_VISIBILITY.initial) {
-                return shadowVisibility;
+        for (const id in this._headers) {
+            if (this._headers.hasOwnProperty(id)) {
+                const shadowVisibility = this._headers[id].inst.shadowVisibility;
+                if (shadowVisibility === SHADOW_VISIBILITY.visible ||
+                    shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                    shadowVisibility === SHADOW_VISIBILITY.initial) {
+                    return shadowVisibility;
+                }
             }
         }
         return SHADOW_VISIBILITY.hidden;
@@ -138,14 +145,20 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         return this._index;
     }
 
-    getChildrenHeaders(): TRegisterEventData[] {
-        return Object.keys(this._headers).map(id => this._headers[id]);
+    get container(): HTMLElement {
+        return this._container;
+    }
+
+    getChildrenHeaders(): IRegisterEventData[] {
+        return Object.keys(this._headers).map((id) => this._headers[id]);
     }
 
     setSyncDomOptimization(value: boolean): void {
         if (this._syncDomOptimization !== value) {
-            for (let id in this._headers) {
-                this._headers[id].inst.setSyncDomOptimization(value);
+            for (const id in this._headers) {
+                if (this._headers.hasOwnProperty(id)) {
+                    this._headers[id].inst.setSyncDomOptimization(value);
+                }
             }
         }
     }
@@ -155,9 +168,11 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         this._offset[position] = value;
 
         if (this._initialized || !this._options.calculateHeadersOffsets) {
-            for (let id in this._headers) {
-                const positionValue: number = this._headers[id][position] + value;
-                this._headers[id].inst[position] = positionValue;
+            for (const id in this._headers) {
+                if (this._headers.hasOwnProperty(id)) {
+                    const positionValue: number = this._headers[id][position] + value;
+                    this._headers[id].inst[position] = positionValue;
+                }
             }
         }
 
@@ -172,7 +187,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     setFixedPosition(position: string): void {
         for (const id in this._headers) {
-            this._headers[id].inst.setFixedPosition(position);
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.setFixedPosition(position);
+            }
         }
     }
 
@@ -180,7 +197,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         event.stopImmediatePropagation();
         if (!fixedHeaderData.isFakeFixed) {
             if (!!fixedHeaderData.fixedPosition) {
-                const headersIds: number[] = this._stickyHeadersIds[fixedHeaderData.fixedPosition]
+                const headersIds: number[] = this._stickyHeadersIds[fixedHeaderData.fixedPosition];
                 headersIds.push(fixedHeaderData.id);
                 // Если это не первый заголовок в группе, то группа уже знает надо ли отображить тень,
                 // сообщим это заголовку.
@@ -191,8 +208,13 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                         this._headers[fixedHeaderData.id].inst.updateShadowVisible([]);
                     }
                 }
-            } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
-                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
+            } else if (
+                !!fixedHeaderData.prevPosition &&
+                this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1
+            ) {
+                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(
+                    this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1
+                );
             }
         }
 
@@ -219,7 +241,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         if (this._isShadowVisible !== isShadowVisible) {
             this._isShadowVisible = isShadowVisible;
             if (isShadowVisible) {
-               this._updateShadowVisible(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom), needFakeFixedNotify);
+               this._updateShadowVisible(
+                   this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom), needFakeFixedNotify
+               );
             } else {
                this._updateShadowVisible([], needFakeFixedNotify);
             }
@@ -228,14 +252,18 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     _updateShadowVisible(ids: number[], needFakeFixedNotify: boolean = true): void {
         for (const id in this._headers) {
-            this._headers[id].inst.updateShadowVisible(ids, needFakeFixedNotify);
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.updateShadowVisible(ids, needFakeFixedNotify);
+            }
         }
     }
 
     // Необходимость в "фейковом" событии fixed описана в интерфейсе IFixedEventData (scroll/StickyBlock/Utils.ts)
     fakeFixedNotifier(isFixed: boolean): void {
         for (const id in this._headers) {
-            this._headers[id].inst.fakeFixedNotifier(isFixed);
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.fakeFixedNotifier(isFixed);
+            }
         }
     }
 
@@ -243,7 +271,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         if (this._isShadowVisibleByController[position] !== visibility) {
             this._isShadowVisibleByController[position] = visibility;
             for (const id in this._headers) {
-                this._headers[id].inst.updateShadowVisibility(visibility, position);
+                if (this._headers.hasOwnProperty(id)) {
+                    this._headers[id].inst.updateShadowVisibility(visibility, position);
+                }
             }
         }
     }
@@ -252,7 +282,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         return this._container;
     }
 
-    protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+    protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: IRegisterEventData, register: boolean): void {
         event.stopImmediatePropagation();
         if (register) {
             this._headers[data.id] = {
@@ -286,7 +316,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                     id: this._index,
                     inst: this,
                     position: data.position,
-                    mode: data.mode,
+                    mode: data.mode
                 }, true], {bubbling: true});
                 this._isRegistry = true;
             }
@@ -322,7 +352,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         event.stopPropagation();
     }
 
-    private _addDelayedHeaders(data: TRegisterEventData): void {
+    private _addDelayedHeaders(data: IRegisterEventData): void {
         // Проблема в том, что чтобы узнать положение заголовка относительно группы нам надо снять position: sticky.
         // Это приводит к layout. И так для каждой ячейки для заголвков в таблице. Создадим список всех заголовков
         // которые надо обсчитать в этом синхронном участке кода и обсчитаем их за раз в микротаске,
@@ -347,7 +377,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             bottom: {}
         };
         let offset: number;
-        let header: TRegisterEventData;
+        let header: IRegisterEventData;
         this.resetSticky();
 
         fastUpdate.measure(() => {

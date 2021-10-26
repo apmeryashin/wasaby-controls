@@ -22,7 +22,7 @@ import {
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import fastUpdate from './StickyBlock/FastUpdate';
 import StickyHeaderController from './StickyBlock/Controller';
-import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS, MODE} from './StickyBlock/Utils';
+import {IFixedEventData, IRegisterEventData, TYPE_FIXED_HEADERS, MODE} from './StickyBlock/Utils';
 import StickyBlock from './StickyBlock';
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
@@ -175,6 +175,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
         this._containerLoadedResolve();
         this._containerLoaded = true;
+
+        if (detection.isMac) {
+            // ResizeObserver на Mac не реагирует на изменение padding, если не задана высота через height из-за этого
+            // не происходит обновления пейджинга.
+            this._paging?.update(this._scrollModel);
+        }
     }
 
     protected _isPagingVisible(options: IContainerOptions): boolean {
@@ -363,7 +369,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         event.stopImmediatePropagation();
 
         let isChanged: boolean = false;
-        for (let position in shadowsVisibility) {
+        for (const position in shadowsVisibility) {
             if (this._shadows[position] &&
                 this._shadows[position].getVisibilityByInnerComponents() !== shadowsVisibility[position]) {
                 isChanged = true;
@@ -648,7 +654,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
-    _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+    _stickyRegisterHandler(event: SyntheticEvent<Event>, data: IRegisterEventData, register: boolean): void {
         // Синхронно Посчитаем и обновим информацию о фиксации заголовков только если известно,
         // что надо отображать тень сверху. Что бы лишний раз не лазить в дом, в других сценариях,
         // состояние заголовков обновится асинхронно по срабатыванию IntersectionObserver.
@@ -682,6 +688,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                      considerOffsetTop: boolean = true): number {
         return this._stickyHeaderController.getHeadersHeight(position, type, considerOffsetTop);
     }
+
+    getFirstReplaceableHeader(position: POSITION): object {
+        return this._stickyHeaderController.getFirstReplaceableHeader(position);
+    }
+
     // FIXME: костыль для input:Area, чтобы она напрямую в детей не лазала
     getScrollTop(): number {
         return this._children.content.scrollTop;

@@ -1,6 +1,6 @@
 /**
  * Шаблон, который используется для настройки отображения элемента контрола {@link Controls/grid:View Таблица} в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ режиме редактирования}.
- * 
+ *
  * @class Controls/_grid/interface/RowEditor
  * @author Авраменко А.С.
  * @see Controls/grid:View#itemTemplate
@@ -22,7 +22,7 @@
  * @deprecated Для редактирования строк используйте {@link /docs/js/Controls/grid/IGridControl/options/colspanCallback/ механизм объединения колонок строки (колспана)}.
  *
  */
- 
+
 export default interface IRowEditorOptions {
    /**
     * @name Controls/_grid/interface/RowEditor#content

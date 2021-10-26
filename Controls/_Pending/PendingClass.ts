@@ -145,14 +145,14 @@ class PendingClass {
         }
     }
 
-
     finishPendingOperations(forceFinishValue: boolean, root: string = null): Promise<unknown> {
-        let pendingResolver, pendingReject;
+        let pendingResolver;
+        let pendingReject;
         const resultPromise = new Promise((resolve, reject) => {
             pendingResolver = resolve;
             pendingReject = reject;
         });
-        //Используем ParallelDeferred т.к. нем нужен метод cancel, который отсутствует у Promise.
+        // Используем ParallelDeferred т.к. нем нужен метод cancel, который отсутствует у Promise.
         const parallelDef = new ParallelDeferred();
         const pendingResults = [];
 
@@ -162,7 +162,7 @@ class PendingClass {
             let isValid = true;
             if (pending.validate) {
                 isValid = pending.validate();
-            } else if (pending.validateCompatible) { //todo compatible
+            } else if (pending.validateCompatible) { // todo compatible
                 isValid = pending.validateCompatible();
             }
             if (isValid) {

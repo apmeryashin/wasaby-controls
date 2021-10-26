@@ -25,7 +25,7 @@ function getMockedDisplay(): Object {
         isStickyHeader: () => false,
         getTheme: () => '',
         getStyle: () => ''
-    }
+    };
 }
 
 describe('Controls/_display/itemsStrategy/Group', () => {
@@ -507,8 +507,8 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                             id
                         },
                         multiSelectVisibility: 'hidden'
-                     }
-                }
+                     };
+                };
                 const items = [
                     new CollectionItem(createItem(1)),
                     new CollectionItem(createItem(2)),
@@ -541,8 +541,8 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                             id
                         },
                         multiSelectVisibility: 'hidden'
-                     }
-                }
+                     };
+                };
                 const items = [
                     new CollectionItem(createItem(1, 'one')),
                     new CollectionItem(createItem(2)),

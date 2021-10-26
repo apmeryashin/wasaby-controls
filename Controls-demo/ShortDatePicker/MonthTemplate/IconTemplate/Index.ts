@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require("wml!Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/IconTemplate");
+import template = require('wml!Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/IconTemplate');
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;

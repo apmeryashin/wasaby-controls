@@ -21,12 +21,12 @@ describe('Controls/grid_clean/Display/DataCell/textOverflow', () => {
         getMultiSelectVisibility: () => 'hidden',
         editArrowIsVisible: () => editArrowIsVisible,
         getDefaultDisplayValue: () => 'value',
-        getContents: () => ({ key: 'key'}),
+        getContents: () => ({ key: 'key'})
     };
 
     beforeEach(() => {
         editArrowIsVisible = false;
-    })
+    });
 
     describe('getTextOverflowClasses', () => {
 

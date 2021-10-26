@@ -104,7 +104,8 @@ class DialogController extends BaseController {
     }
 
     popupDragStart(item: IDialogItem, container: HTMLElement, offset: IDragOffset, sizes: IPopupSizes = {}): void {
-        const horizontalProperty = item.position.left !== undefined ? HORIZONTAL_DIRECTION.LEFT : HORIZONTAL_DIRECTION.RIGHT;
+        const horizontalProperty =
+            item.position.left !== undefined ? HORIZONTAL_DIRECTION.LEFT : HORIZONTAL_DIRECTION.RIGHT;
         const verticalProperty = item.position.top !== undefined ? VERTICAL_DIRECTION.TOP : VERTICAL_DIRECTION.BOTTOM;
 
         const horizontalOffset = horizontalProperty === HORIZONTAL_DIRECTION.LEFT ? offset.x : -offset.x;
@@ -141,7 +142,7 @@ class DialogController extends BaseController {
         }
         // ресайз страницы это также смена ориентации устройства
         // если окно открыто на полный экран, то после переворота оно должно остаться на весь экран
-        //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=1b290673-5722-41cb-8120-ad6af46e64aa
+        // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=1b290673-5722-41cb-8120-ad6af46e64aa
         if (window.innerWidth >= IPAD_MIN_WIDTH && item.popupOptions.maximize) {
             return this.elementUpdatedWrapper(item, container);
         }

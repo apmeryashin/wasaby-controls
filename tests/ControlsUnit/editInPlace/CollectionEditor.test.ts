@@ -36,7 +36,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
     describe('updateOptions', () => {
         it('should use old collection if new is undefined', () => {
             collectionEditor.updateOptions({});
-            //@ts-ignore
+            // @ts-ignore
             const currentCollection = collectionEditor._options.collection;
             assert.equal(currentCollection, collection);
         });
@@ -48,7 +48,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             });
 
             collectionEditor.updateOptions({collection: newCollection});
-            //@ts-ignore
+            // @ts-ignore
             const currentCollection = collectionEditor._options.collection;
             assert.equal(currentCollection, newCollection);
         });
@@ -65,7 +65,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
                 collectionEditor.updateOptions({collection: newCollection});
             }, ERROR_MSG.SOURCE_COLLECTION_MUST_BE_RECORDSET);
 
-            //@ts-ignore
+            // @ts-ignore
             const currentCollection = collectionEditor._options.collection;
             assert.equal(currentCollection, collection);
         });
@@ -73,10 +73,10 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('should not update equal options', () => {
             let wasCollectionUpdated = false;
             Object.defineProperty(collectionEditor._options, 'collection', {
-                get: function () {
+                get() {
                     return collection;
                 },
-                set: function () {
+                set() {
                     wasCollectionUpdated = true;
                 },
                 enumerable: false,

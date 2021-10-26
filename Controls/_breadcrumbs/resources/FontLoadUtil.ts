@@ -27,7 +27,7 @@ function _isLoaded(className: string): boolean {
     return fallbackFontWidth !== loadedFontWidth;
 }
 
-export const __loadedFonts = LOADED_FONTS_FOR_CLASS;
+export const LOADED_FONTS = LOADED_FONTS_FOR_CLASS;
 
 export function waitForFontLoad(className: string, isLoaded: Function = _isLoaded): Deferred {
     const def = new Deferred();

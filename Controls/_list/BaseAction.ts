@@ -8,7 +8,7 @@ import {ISelectionObject} from 'Controls/interface';
  *
  * @class Controls/_list/BaseAction
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -16,14 +16,14 @@ import {ISelectionObject} from 'Controls/interface';
 export default Control.extend({
     /**
      * Производит проверку переданных параметров. Если массив значений пуст, возвращает false и выводит окно с текстом, иначе возвращает true.
-     * 
+     *
      * @remark
      * При необходимости метод нужно вызывать вручную из наследника.
-     * 
+     *
      * @function
      * @name Controls/_list/BaseAction#validate
      */
-   validate(items: Array|ISelectionObject): boolean {
+   validate(items: any[]|ISelectionObject): boolean {
       let resultValidate: boolean = true;
 
       if (items instanceof Array && !items.length || items.selected && !items.selected.length) {

@@ -6,7 +6,7 @@ import {EventUtils} from 'UI/Events';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
-import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IIconOptions, IHeightOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {isLeftMouseButton, IStickyPopupOptions, CalmTimer} from 'Controls/popup';
@@ -15,13 +15,25 @@ import * as Merge from 'Core/core-merge';
 import 'css!Controls/dropdown';
 import 'css!Controls/CommonClasses';
 
+export interface IMenuPopupTriggerOptions {
+    /**
+     * @name Controls/dropdown:IMenuPopupTrigger#menuPopupTrigger
+     * @cfg {String} Название события, которое запускает открытие или закрытие меню.
+     * @variant click Открытие кликом по контенту. Закрытие кликом "мимо" — не по контенту или шаблону.
+     * @variant hover Открытие по ховеру — по наведению курсора на контент. Закрытие по ховеру — по навердению курсора на контент или шаблон.
+     * @default click
+     * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
+     */
+    menuPopupTrigger?: 'click' | 'hover';
+}
+
 /**
  * Интерфейс опций для {@link Controls/dropdown:Button}.
  * @interface Controls/dropdown:IButton
  * @public
  * @author Герасимов А.М.
  */
-export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
+export interface IButtonBaseOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
     additionalProperty?: string;
     /**
      * @name Controls/dropdown:IButton#lazyItemsLoading
@@ -72,15 +84,6 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
      * @default true
      */
     showHeader?: boolean;
-    /**
-     * @name Controls/dropdown:IButton#menuPopupTrigger
-     * @cfg {String} Название события, которое запускает открытие или закрытие меню.
-     * @variant click Открытие кликом по контенту. Закрытие кликом "мимо" — не по контенту или шаблону.
-     * @variant hover Открытие по ховеру — по наведению курсора на контент. Закрытие по ховеру — по навердению курсора на контент или шаблон.
-     * @default click
-     * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
-     */
-    menuPopupTrigger?: 'click' | 'hover';
 
     /**
      * @name Controls/_dropdown/Button#reloadOnOpen
@@ -114,6 +117,7 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
     reloadOnOpen?: boolean;
 }
 
+export interface IButtonOptions extends IButtonBaseOptions, IMenuPopupTriggerOptions {}
 /**
  * Контрол "Кнопка с меню".
  *
@@ -136,6 +140,7 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
  * @mixes Controls/dropdown:IBaseDropdown
  * @mixes Controls/dropdown:IGrouped
  * @mixes Controls/dropdown:IButton
+ * @mixes Controls/dropdown:IMenuPopupTrigger
  * @implements Controls/interface:ISource
  * @implements Controls/interface:IIconStyle
  * @implements Controls/interface:IFontColorStyle
@@ -194,7 +199,7 @@ export default class Button extends BaseDropdown {
 
     _beforeMount(options: IButtonOptions,
                  context: object,
-                 receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
+                 receivedState: IDropdownReceivedState): void | Promise<IDropdownReceivedState> {
         this._offsetClassName = cssStyleGeneration(options);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._controller = new Controller(this._getControllerOptions(options));
@@ -238,7 +243,7 @@ export default class Button extends BaseDropdown {
             hasIconPin: this._hasIconPin,
             allowPin: true,
             markerVisibility: 'hidden',
-            trigger: options.menuPopupTrigger,
+            trigger: options.menuPopupTrigger
         }
         };
     }
@@ -257,7 +262,8 @@ export default class Button extends BaseDropdown {
     }
 
     _onItemClickHandler(result, nativeEvent) {
-        //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
+        // onMenuItemActivate will deleted by task
+        // https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
         const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0], nativeEvent]);
         const menuItemActivateResult = this._notify('menuItemActivate', [result[0], nativeEvent]);
         let handlerResult;
@@ -286,8 +292,8 @@ export default class Button extends BaseDropdown {
     }
 
     _handleMouseMove(event: SyntheticEvent<MouseEvent>): void {
-        const isOpenMenuPopup = !(event.nativeEvent.relatedTarget
-            && event.nativeEvent.relatedTarget.closest('.controls-Menu__popup'));
+        const isOpenMenuPopup = !(event.nativeEvent.relatedTarget &&
+            event.nativeEvent.relatedTarget.closest('.controls-Menu__popup'));
         if (this._options.menuPopupTrigger === 'hover' && isOpenMenuPopup) {
             this._calmTimer.start();
         }
@@ -321,14 +327,6 @@ export default class Button extends BaseDropdown {
                 break;
             case 'rightTemplateClick':
                 this._rightTemplateClick(data);
-                break;
-            /**
-             * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера
-             * переделать по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
-             */
-            case 'menuOpened':
-            case 'menuClosed':
-                this._notify(action, [], {bubbling: true});
                 break;
         }
     }

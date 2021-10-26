@@ -14,7 +14,8 @@ import 'css!Controls/input';
 
 type TFontColorStyle = 'label' | 'unaccented';
 
-export interface ILabelOptions extends IControlOptions, ICaptionOptions, IFontSizeOptions, IHrefOptions, IUnderlineOptions {
+export interface ILabelOptions extends IControlOptions,
+    ICaptionOptions, IFontSizeOptions, IHrefOptions, IUnderlineOptions {
     required?: boolean;
     fontColorStyle?: TFontColorStyle;
 }

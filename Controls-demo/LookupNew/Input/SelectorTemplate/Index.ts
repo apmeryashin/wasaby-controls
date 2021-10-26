@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/LookupNew/Input/SelectorTemplate/Index');
 import dialogTemplate = require('wml!Controls-demo/LookupNew/Input/SelectorTemplate/resources/SelectorTemplate');
 import {Memory} from 'Types/source';

@@ -4,7 +4,7 @@
 import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
-import {constants, IoC} from 'Env/Env';
+import {constants, IoC, cookie} from 'Env/Env';
 import { getGeneratorConfig } from 'UI/Base';
 
 const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
@@ -17,7 +17,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
  */
 
    // Convert node to jsonML array.
-   function nodeToJson(node) {
+function nodeToJson(node) {
       // Text node, in jsonML it is just a string.
       if (node.nodeType === Node.TEXT_NODE) {
          return node.nodeValue;
@@ -25,30 +25,30 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
 
       // Element node, in jsonML it is an array.
       if (node.nodeType === Node.ELEMENT_NODE) {
-         var json = [];
+         let json = [];
 
          // json[0] is a tag name.
-         var tagName = node.nodeName.toLowerCase();
+         const tagName = node.nodeName.toLowerCase();
          json[0] = tagName;
 
          // If node has attributes, they are located in json[1].
-         var nodeAttributes = node.attributes;
+         const nodeAttributes = node.attributes;
          if (nodeAttributes.length) {
-            var jsonAttributes = {};
-            for (var i = 0; i < nodeAttributes.length; ++i) {
+            const jsonAttributes = {};
+            for (let i = 0; i < nodeAttributes.length; ++i) {
                jsonAttributes[nodeAttributes[i].name] = nodeAttributes[i].value;
             }
             json[1] = jsonAttributes;
          }
 
          // After that convert child nodes and push them to array.
-         var firstChild;
+         let firstChild;
          if (node.hasChildNodes()) {
-            var childNodes = node.childNodes,
-               child;
+            const childNodes = node.childNodes;
+            let child;
 
             // Recursive converting of children.
-            for (var i = 0; i < childNodes.length; ++i) {
+            for (let i = 0; i < childNodes.length; ++i) {
                child = nodeToJson(childNodes[i]);
                if (!i) {
                   firstChild = child;
@@ -83,10 +83,10 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @param html {String}
     * @returns {Array}
     */
-   var htmlToJson = function(html) {
+const htmlToJson = (html) => {
       if (!constants.isBrowserPlatform) {
          IoC.resolve('ILogger')
-            .error('Controls/_decorator/Markup/Converter' ,'htmlToJson method doesn\'t work on server-side');
+            .error('Controls/_decorator/Markup/Converter' , 'htmlToJson method doesn\'t work on server-side');
          return [];
       }
 
@@ -94,15 +94,15 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
          // Пришла строка без тега, значит, это текст, а не HTML.
          // TODO: во время рефактора написать функцию textToJson, и писать в консоль ошибку, если текст пришёл в
          // htmlToJson, а не в textToJson. https://online.sbis.ru/opendoc.html?guid=0ae06fe3-d773-4094-be9c-c365f4329d39
-         return [[], html]
+         return [[], html];
       }
 
-      let div = document.createElement('div'),
-         rootNode,
-         rootNodeTagName,
-         rootNodeAttributes,
-         hasRootTag,
-         result;
+      let div = document.createElement('div');
+      let rootNode;
+      let rootNodeTagName;
+      let rootNodeAttributes;
+      let hasRootTag;
+      let result;
       div.innerHTML = html.trim();
       hasRootTag = div.innerHTML[0] === '<';
       result = nodeToJson(div).slice(1);
@@ -135,7 +135,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
    /**
     * Преобразует json-строки в строки формата html.
     * @name Controls/_decorator/Markup/Converter#jsonToHtml
-    * @function 
+    * @function
     * @param json {Array} Json на основе JsonML.
     * @param tagResolver {Function} точно как в {@link Controls/_decorator/Markup#tagResolver}.
     * @param resolverParams {Object} точно как в {@link Controls/_decorator/Markup#resolverParams}.
@@ -150,24 +150,32 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
     * @returns {String}
     */
-   var jsonToHtml = function(json, tagResolver?, resolverParams?) {
-      var generatorConfig = getGeneratorConfig();
-      var result = template({
+const jsonToHtml = (json, tagResolver?, resolverParams?) => {
+      // Вычисление шаблона должно производиться без слоя совместимости
+      // https://online.sbis.ru/opendoc.html?guid=9108459a-bd21-48cb-8c1a-1d847e29f33a
+      const prevDisableCompat = cookie.get('disableCompat');
+      cookie.set('disableCompat', 'true');
+
+      const generatorConfig = getGeneratorConfig();
+      const result = template({
          _options: {
             value: json,
-            tagResolver: tagResolver,
-            resolverParams: resolverParams
+            tagResolver,
+            resolverParams
          },
          _isMarkupConverter: true,
          _moduleName: 'Controls/decorator:Converter'
       }, {}, {}, false, undefined, false, generatorConfig);
+
+      cookie.set('disableCompat', prevDisableCompat);
+
       return result;
    };
 
    /**
     * Преобразует json-массив в его копию по значению во всех узлах.
     * @name Controls/_decorator/Markup/Converter#deepCopyJson
-    * @function 
+    * @function
     * @param json
     * @return {Array}
     */
@@ -178,15 +186,14 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @param json
     * @return {Array}
     */
-   var deepCopyJson = function(json) {
+const deepCopyJson = (json) => {
       return objectMerge([], json, { clone: true });
    };
 
-   var MarkupConverter = {
-      htmlToJson: htmlToJson,
-      jsonToHtml: jsonToHtml,
-      deepCopyJson: deepCopyJson
+const MarkupConverter = {
+      htmlToJson,
+      jsonToHtml,
+      deepCopyJson
    };
 
-   export = MarkupConverter;
-
+export = MarkupConverter;

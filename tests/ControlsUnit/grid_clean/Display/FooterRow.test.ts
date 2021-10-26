@@ -13,11 +13,15 @@ describe('Controls/grid_clean/Display/FooterRow', () => {
             isStickyFooter: () => false
         };
 
-        const footerColumnsConfig = [{ startColumn: 1, endColumn: 3 }, { startColumn: 3, endColumn: 5 }, { startColumn: 5, endColumn: 6 }];
+        const footerColumnsConfig = [
+            {startColumn: 1, endColumn: 3},
+            {startColumn: 3, endColumn: 5},
+            {startColumn: 5, endColumn: 6}
+        ];
         const footerRow = new GridFooterRow({
             owner: mockedCollection,
             columnsConfig: footerColumnsConfig,
-            gridColumnsConfig: gridColumnsConfig
+            gridColumnsConfig
         });
 
         assert.equal(footerRow.getColumns().length, 3);

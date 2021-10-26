@@ -14,10 +14,10 @@ export default class extends Control {
             data: options.items,
             filter: (item, queryFilter) => {
                 if (queryFilter.selection) {
-                    var itemId = String(item.get('id'));
-                    var marked = queryFilter.selection.get('marked');
-                    var isSelected = false;
-                    marked.forEach(function (selectedId) {
+                    const itemId = String(item.get('id'));
+                    const marked = queryFilter.selection.get('marked');
+                    let isSelected = false;
+                    marked.forEach((selectedId) => {
                         if (String(selectedId) === itemId) {
                             isSelected = true;
                         }

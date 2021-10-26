@@ -2,14 +2,14 @@ import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
 import {addWordCheck, escapeSpecialChars} from 'Controls/_decorator/inputUtils/RegExp';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-//@ts-ignore
+// @ts-ignore
 import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 import 'css!Controls/decorator';
 
 /**
  * @typedef Controls/_decorator/IHighlight/HighlightMode
  * @variant word Подсветка осуществляется по словам.
- * Слово - это набор символов,  длина не менее 2. Слова разделяются пробелом и пунктуацией.
+ * Слово - это набор символов, длина не менее 2. Слова разделяются пробелом и пунктуацией.
  * @variant substring Подсветка осуществляется по подстрокам.
  */
 export type HighlightMode = 'word' | 'substring';
@@ -236,7 +236,7 @@ class Highlight extends Control<IHighlightOptions> {
         if (foundLength === 0) {
             result.push({
                 type: 'plain',
-                value: value
+                value
             });
 
             return result;

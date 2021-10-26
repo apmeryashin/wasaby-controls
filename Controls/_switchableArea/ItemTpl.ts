@@ -85,7 +85,7 @@ class SwitchableAreaItem extends Control<IControlOptions> {
          _bubbling: true
       };
 
-      //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=2775b943-3936-4107-955a-02ecb296a38e
+      // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=2775b943-3936-4107-955a-02ecb296a38e
       if (!this._container) {
          return;
       }

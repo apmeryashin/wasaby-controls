@@ -33,6 +33,7 @@
            on:mousemove="_onItemMouseMove(item)"
            on:mouseleave="_onItemMouseLeave(item)"
            on:wheel="_onItemWheel(item)"
+           on:fixed="_onFixedItemChanged(item)"
            __notExcessiveRender="{{ true }}">
       <ws:itemActionsTemplate>
          <!-- We have to support setting of "itemActionsClass" option in BaseControl and while using Controls/list:ItemTemplate -->
@@ -58,7 +59,7 @@
 <ws:for data="index, item in collection.getViewIterator()">
    <ws:if data="{{ item.isEditing() }}">
       <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
-      <Controls._baseList.EditInPlace.EditingRow name="editingRow" on:deactivated="_onRowDeactivated()">
+      <Controls._baseList.EditInPlace.EditingRow name="editingRow" on:deactivated="_onRowDeactivated()" keepEnter="{{ item.getEditingConfig() && item.getEditingConfig().sequentialEditingMode === 'cell' }}">
          <ws:partial template="localItemTemplate" on:editingItemClick="_onEditingItemClick(item)"/>
       </Controls._baseList.EditInPlace.EditingRow>
    </ws:if>

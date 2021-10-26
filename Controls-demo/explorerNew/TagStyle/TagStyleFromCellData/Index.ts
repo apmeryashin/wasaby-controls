@@ -15,7 +15,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     protected _viewSource: Memory;
     protected _columns: IColumn[];
     protected _root: null | number = null;
-    protected _header: Array<{title: string}>
+    protected _header: Array<{title: string}>;
 
     // Название свойства, из которого следует брать стильдля тега
     protected _tagStyleProperty: string;

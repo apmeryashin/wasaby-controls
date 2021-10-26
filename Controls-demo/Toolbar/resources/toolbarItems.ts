@@ -154,7 +154,7 @@ export const data = {
             contrastBackground: true,
             title: 'Обсудить',
             '@parent': true,
-            parent: null,
+            parent: null
         }, {
             id: '7',
             showType: showType.MENU,
@@ -456,6 +456,43 @@ export const data = {
             '@parent': true,
             parent: null,
             additional: true
+        }, {
+            id: '21',
+            showType: showType.MENU,
+            title: 'Проекту',
+            viewMode: 'link',
+            '@parent': false,
+            parent: '2'
+        }, {
+            id: '22',
+            showType: showType.MENU,
+            title: 'Этапу',
+            '@parent': false,
+            parent: '2'
+        }, {
+            id: '81',
+            showType: showType.MENU,
+            title: 'Согласование',
+            '@parent': true,
+            parent: '8'
+        }, {
+            id: '811',
+            showType: showType.MENU,
+            title: 'Срок',
+            '@parent': false,
+            parent: '81'
+        }, {
+            id: '812',
+            showType: showType.MENU,
+            title: 'План',
+            '@parent': false,
+            parent: '81'
+        }, {
+            id: '82',
+            showType: showType.MENU,
+            title: 'Задача',
+            '@parent': false,
+            parent: '8'
         }
-    ]),
+    ])
 };

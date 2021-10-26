@@ -15,8 +15,12 @@ describe('Controls/grid_clean/Display/ColumnScrollViewMixin', () => {
         it('expanded items updated', () => {
             const oldExpandedItems = [1];
             const newExpandedItems = [1, 2];
-            assert.isFalse(isSizeAffectsOptionsChanged({expandedItems: oldExpandedItems}, {expandedItems: oldExpandedItems}));
-            assert.isTrue(isSizeAffectsOptionsChanged({expandedItems: oldExpandedItems}, {expandedItems: newExpandedItems}));
+            assert.isFalse(
+                isSizeAffectsOptionsChanged({expandedItems: oldExpandedItems}, {expandedItems: oldExpandedItems})
+            );
+            assert.isTrue(
+                isSizeAffectsOptionsChanged({expandedItems: oldExpandedItems}, {expandedItems: newExpandedItems})
+            );
         });
     });
 });

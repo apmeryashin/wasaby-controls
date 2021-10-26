@@ -6,7 +6,7 @@ import template = require('wml!Controls/_suggestPopup/Layer/__ContentLayer');
 import 'css!Controls/suggestPopup';
 import 'css!Controls/suggest';
 
-var _private = {
+const _private = {
    getSizes(self, dropDownContainer?: HTMLElement): object {
       const boundingClientToJSON = (bc) => {
          let resultObj = {};
@@ -30,7 +30,7 @@ var _private = {
       let container = self._container;
       let targetContainer = self._options.target;
 
-      //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+      // TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
       if (container.get) {
          container = container.get(0);
       }
@@ -40,8 +40,8 @@ var _private = {
 
       const oldHeight = container.style.height;
 
-      //reset height to get real height of content
-      //the only solution is to get height avoiding synchronization
+      // reset height to get real height of content
+      // the only solution is to get height avoiding synchronization
       container.style.height = '';
 
       const suggestBCR = boundingClientToJSON(container.getBoundingClientRect());
@@ -60,7 +60,7 @@ var _private = {
          container: fixSizesByDDContainer(containerBCR)
       };
 
-      //after reset height need to return old height, new height will be set by VDOM after synchronization
+      // after reset height need to return old height, new height will be set by VDOM after synchronization
       container.style.height = oldHeight;
       return result;
    },
@@ -126,7 +126,7 @@ var _private = {
    }
 };
 
-var __ContentLayer = Control.extend({
+const ContentLayer = Control.extend({
 
    _template: template,
    _height: '0px',
@@ -176,6 +176,6 @@ var __ContentLayer = Control.extend({
    }
 
 });
-__ContentLayer._private = _private;
+ContentLayer._private = _private;
 
-export default __ContentLayer;
+export default ContentLayer;

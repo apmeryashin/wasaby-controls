@@ -4,7 +4,7 @@ import GridViewTable from 'Controls/_grid/GridViewTable';
 import { isFullGridSupport } from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
 import { IOptions as IGridOptions } from './display/mixins/Grid';
-import {Logger} from "UICommon/Utils";
+import {Logger} from 'UICommon/Utils';
 
 /**
  * Контрол "Таблица" позволяет отображать данные из различных источников в виде таблицы.
@@ -23,6 +23,7 @@ import {Logger} from "UICommon/Utils";
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/grid:IGridControl
  * @implements Controls/interface/IGridItemTemplate
@@ -107,15 +108,13 @@ export default class Grid extends List {
     }
 }
 
-Grid.getDefaultOptions = function () {
-   return {
-       stickyHeader: true,
-       stickyColumnsCount: 1,
-       rowSeparatorSize: null,
-       columnSeparatorSize: null,
-       isFullGridSupport: isFullGridSupport()
-   };
-};
+Grid.getDefaultOptions = () => ({
+    stickyHeader: true,
+    stickyColumnsCount: 1,
+    rowSeparatorSize: null,
+    columnSeparatorSize: null,
+    isFullGridSupport: isFullGridSupport()
+});
 
 Object.defineProperty(Grid, 'defaultProps', {
    enumerable: true,

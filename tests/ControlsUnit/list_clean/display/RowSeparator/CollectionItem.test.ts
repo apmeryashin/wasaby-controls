@@ -87,7 +87,10 @@ describe('Controls/list/display/RowSeparator/CollectionItem', () => {
 
             assert.isTrue(collection.at(1).isBottomSeparatorEnabled());
 
-            recordSet.merge(new RecordSet({ rawData: [{id: 3}, {id: 4}], keyProperty: 'id' }), {remove: false, inject: true });
+            recordSet.merge(
+                new RecordSet({rawData: [{id: 3}, {id: 4}], keyProperty: 'id'}),
+                {remove: false, inject: true}
+            );
 
             assert.isFalse(collection.at(1).isBottomSeparatorEnabled());
             assert.isTrue(collection.at(3).isBottomSeparatorEnabled());
@@ -145,7 +148,6 @@ describe('Controls/list/display/RowSeparator/CollectionItem', () => {
             assert.isTrue(initialFirstItem.isTopSeparatorEnabled()); // not changed
             assert.isTrue(collection.at(0).isTopSeparatorEnabled()); // set true
         });
-
 
         // 2.4 Записи добавились через prepend
         it('RecordSet + prepend + newDesign', () => {

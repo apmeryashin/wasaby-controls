@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/treeGridNew/Header/LongHeader/LongH
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;

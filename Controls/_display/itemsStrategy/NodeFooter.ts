@@ -2,19 +2,19 @@ import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import TreeItem from '../TreeItem';
 import Tree, { TNodeFooterVisibilityCallback } from '../Tree';
 import {Model} from 'Types/entity';
-import {TemplateFunction} from "UI/Base";
+import {TemplateFunction} from 'UI/Base';
 
 interface IOptions<S, T extends TreeItem<S>> {
     source: IItemsStrategy<S, T>;
     display: Tree<S, T>;
-    itemModule?: string;
+    nodeFooterModule?: string;
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
 }
 
 interface ISortOptions<S, T extends TreeItem<S>> {
     display: Tree<S, T>;
-    itemModule?: string;
-    nodeFooters: Array<T>;
+    nodeFooterModule?: string;
+    nodeFooters: T[];
     hasNodeFooterViewConfig: boolean;
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
 }
@@ -39,7 +39,8 @@ export function shouldDisplayNodeFooterTemplate(
     return !nodeFooterVisibilityCallback || nodeFooterVisibilityCallback(item.getContents());
 }
 
-export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> implements IItemsStrategy<S, T> {
+export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>>
+    implements IItemsStrategy<S, T> {
     readonly '[Controls/_display/IItemsStrategy]': boolean;
 
     protected _count: number;
@@ -170,7 +171,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
     protected _createItemsOrder(): number[] {
         return NodeFooter.sortItems<S, T>(this.source.items, {
             display: this.options.display,
-            itemModule: this.options.itemModule,
+            nodeFooterModule: this.options.nodeFooterModule,
             nodeFooters: this._nodeFooters,
             hasNodeFooterViewConfig: this._hasNodeFooterViewConfig(this.options),
             nodeFooterVisibilityCallback: this.options.nodeFooterVisibilityCallback
@@ -213,7 +214,7 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             if (nodeFooterContents.indexOf(nodeFooterContent) === -1) {
                 const item = nodesWithFooters[index];
                 const nodeFooter = options.display.createItem({
-                    itemModule: options.itemModule || 'Controls/treeGrid:TreeGridNodeFooterRow',
+                    itemModule: options.nodeFooterModule,
                     contents: nodeFooterContent,
                     parent: item,
                     hasMore: item.hasMoreStorage(),
@@ -244,7 +245,10 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             items.forEach((item) => {
                 // TODO: Убрать в константу или определить getLevel для группы дерева
                 //  https://online.sbis.ru/opendoc.html?guid=ca34d365-26db-453d-b05a-eb6c708c59ee
-                if ((item['[Controls/_display/GroupItem]'] ? 1 : item.getLevel()) > node.getLevel() && oneOfParentsIsEqualNode(item)) {
+                if (
+                    (item['[Controls/_display/GroupItem]'] ? 1 : item.getLevel()) > node.getLevel() &&
+                    oneOfParentsIsEqualNode(item)
+                ) {
                     count++;
                 }
             });
@@ -293,7 +297,10 @@ export default class NodeFooter<S extends Model = Model, T extends TreeItem<S> =
             // Проверяем что в узле есть еще записи или определен футер темплейт и прикладники разрешили его показывать
             // nodeFooterVisibilityCallback вызываем только когда будем отображать прикладной темплейт,
             // если отображаем Еще, то всегда показываем nodeFooter
-            if (item.hasMoreStorage() || shouldDisplayNodeFooterTemplate(item, hasNodeFooterViewConfig, nodeFooterVisibilityCallback)) {
+            if (
+                item.hasMoreStorage() ||
+                shouldDisplayNodeFooterTemplate(item, hasNodeFooterViewConfig, nodeFooterVisibilityCallback)
+            ) {
                 nodesWithFooter.push(item);
             }
         }

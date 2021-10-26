@@ -12,7 +12,7 @@ class TagEvents extends Control<IControlOptions> {
             message: 'Hello world!!!'
         };
 
-        this._notify('openInfoBox', [config], {bubbling: true})
+        this._notify('openInfoBox', [config], {bubbling: true});
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

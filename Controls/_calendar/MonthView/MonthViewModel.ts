@@ -38,8 +38,8 @@ export default class MonthViewModel extends VersionableMixin {
     }
 
     updateOptions(options) {
-        let state = this._normalizeState(options),
-            changed = this._isStateChanged(state);
+        const state = this._normalizeState(options);
+        const changed = this._isStateChanged(state);
         this._state = state;
         if (changed) {
             this._validateWeeksArray();
@@ -52,10 +52,10 @@ export default class MonthViewModel extends VersionableMixin {
     }
 
     _prepareClass(scope, fontColorStyle, backgroundStyle, borderStyle, fontWeight): string {
-        let textColorClass = 'controls-MonthView__textColor',
-            backgroundColorClass = 'controls-MonthView__backgroundColor',
-            backgroundColorClassRangeHovered,
-            css = [];
+        let textColorClass = 'controls-MonthView__textColor';
+        let backgroundColorClass = 'controls-MonthView__backgroundColor';
+        let backgroundColorClassRangeHovered;
+        const css = [];
 
         if (scope.isCurrentMonth) {
             textColorClass += '-currentMonthDay';
@@ -222,16 +222,16 @@ export default class MonthViewModel extends VersionableMixin {
         return !DateUtil.isDatesEqual(state.month, this._state.month) || state.daysData !== this._state.daysData;
     }
 
-    protected _getDayObject(date, state) {
+    protected _getDayObject(date, state, dayIndex) {
         state = state || this._state;
         /* Опция _date устаналивается только(!) в демках, для возможности протестировать
          визуальное отображение текущей даты */
-        let obj = {},
-            today = this._state._date ?
-                DateUtil.normalizeDate(this._state._date) :
-                DateUtil.normalizeDate(new this._state.dateConstructor()),
-            firstDateOfMonth = DateUtil.getStartOfMonth(date),
-            lastDateOfMonth = DateUtil.getEndOfMonth(date);
+        const obj = {};
+        const today = this._state._date ?
+            DateUtil.normalizeDate(this._state._date) :
+            DateUtil.normalizeDate(new this._state.dateConstructor());
+        const firstDateOfMonth = DateUtil.getStartOfMonth(date);
+        const lastDateOfMonth = DateUtil.getEndOfMonth(date);
 
         obj.readOnly = state.readOnly;
         if (!obj.readOnly && this._isDayAvailable) {
@@ -263,7 +263,13 @@ export default class MonthViewModel extends VersionableMixin {
         }
 
         if (state.daysData) {
-            obj.extData = state.daysData.at ? state.daysData.at(obj.day - 1) : state.daysData[obj.day - 1];
+            let dayDataIndex;
+            if (obj.mode === 'extended') {
+                dayDataIndex = dayIndex;
+            } else {
+                dayDataIndex = obj.day - 1;
+            }
+            obj.extData = state.daysData.at ? state.daysData.at(dayDataIndex) : state.daysData[dayDataIndex];
         }
         obj.selectionBase = DateUtil.isDatesEqual(date, state.selectionBaseValue);
 
@@ -277,10 +283,13 @@ export default class MonthViewModel extends VersionableMixin {
     private _getDaysArray(state?) {
         state = state || this._state;
         const weeks = calendarUtils.getWeeksArray(state.month, state.mode, state.dateConstructor);
+        let dayIndex = 0;
 
         return weeks.map((weekArray) => {
             return weekArray.map((day) => {
-                return this._getDayObject(day, state);
+                const dayObject = this._getDayObject(day, state, dayIndex);
+                dayIndex += 1;
+                return dayObject;
             }, this);
         }, this);
     }

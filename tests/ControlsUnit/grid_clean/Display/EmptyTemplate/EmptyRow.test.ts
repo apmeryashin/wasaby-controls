@@ -1,4 +1,4 @@
-import {assert} from "chai";
+import {assert} from 'chai';
 import {GridCollection, GridEmptyRow} from 'Controls/grid';
 
 describe('Controls/grid_clean/Display/EmptyTemplate/EmptyRow', () => {
@@ -13,7 +13,7 @@ describe('Controls/grid_clean/Display/EmptyTemplate/EmptyRow', () => {
             owner: {
                 getGridColumnsConfig: () => columns,
                 hasMultiSelectColumn: () => true,
-                getStickyColumnsCount: () => {},
+                getStickyColumnsCount: () => {/* FIXME: sinon mock */},
                 isFullGridSupport: () => true,
                 hasItemActionsSeparatedCell: () => false,
                 hasColumnScroll: () => false

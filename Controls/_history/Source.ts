@@ -343,7 +343,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                     item.set(this._$parentProperty, this._$root);
                 }
 
-                //removing group allows items to be shown in history items
+                // removing group allows items to be shown in history items
                 this._prepareHistoryItem(item, historyType);
                 item.set('HistoryId', historyId);
                 item.set(COPY_ORIG_ID, String(historyItem.getId()));
@@ -497,7 +497,9 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                     }
 
                     this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
-                    resolve(this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(historyData, meta));
+                    resolve(
+                        this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(historyData, meta)
+                    );
                 } else {
                     resolve(false);
                 }
@@ -593,7 +595,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
             return Promise.resolve(this._updatePinned(data, meta));
         }
         if (meta.hasOwnProperty('$_history')) {
-            return Promise.resolve(this._updateRecent(data, meta).catch(() => {}));
+            return Promise.resolve(this._updateRecent(data, meta).catch(() => undefined));
         }
         return this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(data, meta);
     }

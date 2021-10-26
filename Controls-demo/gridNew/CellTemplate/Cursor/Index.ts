@@ -5,7 +5,7 @@ import * as CountryCellTemplate from 'wml!Controls-demo/gridNew/CellTemplate/Cur
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
-import {Countries} from "Controls-demo/gridNew/DemoHelpers/Data/Countries";
+import {Countries} from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

@@ -7,7 +7,7 @@ describe('Controls/Utils/DependencyTimer', (): void => {
 
     it('callback should called', (): void => {
         const clock = sinon.useFakeTimers({
-            now: now,
+            now,
             toFake: ['setTimeout']
         });
         const callbackFunction = sinon.stub();
@@ -22,7 +22,7 @@ describe('Controls/Utils/DependencyTimer', (): void => {
 
     it('timer should stop', (): void => {
         const clock = sinon.useFakeTimers({
-            now: now,
+            now,
             toFake: ['setTimeout', 'clearTimeout']
         });
         const callbackFunction = sinon.stub();

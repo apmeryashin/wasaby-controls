@@ -10,6 +10,5 @@
             useNewNodeFooters="{{ true }}"
             columns="{{ _columns }}"
             bind:expandedItems="_expandedItems"
-            bind:collapsedItems="_collapsedItems">
-    </Controls.treeGrid:View>
+            bind:collapsedItems="_collapsedItems"/>
 </div>

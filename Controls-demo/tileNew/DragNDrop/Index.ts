@@ -29,18 +29,18 @@ export default class extends Control {
    }
 
    protected _dragStart(_, items: number[]): RecordSet {
-      var firstItem = this._itemsFirst.getRecordById(items[0]);
+      const firstItem = this._itemsFirst.getRecordById(items[0]);
 
       return new Dnd.ItemsEntity({
-         items: items,
+         items,
          title: firstItem.get('title'),
-         image: firstItem.get('image'),
+         image: firstItem.get('image')
       });
-   };
+   }
 
    protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
       this._children.listMover.moveItems(entity.getItems(), target, position);
-   };
+   }
 
    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

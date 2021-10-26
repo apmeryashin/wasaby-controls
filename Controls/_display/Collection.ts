@@ -44,7 +44,9 @@ import {Logger} from 'UI/Utils';
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
-const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
+const VERSION_UPDATE_ITEM_PROPERTIES = [
+    'editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'
+];
 const REBUILD_ITEM_PROPERTIES = ['expanded', 'contents'];
 
 /**
@@ -224,6 +226,8 @@ export interface IHasMoreData {
  */
 type TEditingMode = 'cell' | 'row';
 
+type TSequentialEditingMode = 'row' | 'none';
+
 /**
  * @typedef {Object} IEditingConfig
  * @property {TEditingMode} [mode='row'] Режим редактирования раписей в таблице.
@@ -231,6 +235,7 @@ type TEditingMode = 'cell' | 'row';
  * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже сущестсвующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
  * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
  * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
+ * @property {TSequentialEditingMode} [sequentialEditingMode=row] Следует ли автоматически запускаеть редактирование следующего элемента списка после окончания редактирования любого элемента, кроме последнего.
  * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
  * @property {AddPosition} [addPosition] Позиция редактирования по месту.
  * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
@@ -241,7 +246,6 @@ type TEditingMode = 'cell' | 'row';
  * @property {TEditingMode} [mode='row'] Items editing mode.
  * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
  * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
- * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
  * @property {Boolean} [toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
  * @property {AddPosition} [addPosition] Editing in place position.
  * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
@@ -250,6 +254,7 @@ export interface IEditingConfig {
     mode?: 'row' | 'cell';
     editOnClick?: boolean;
     sequentialEditing?: boolean;
+    sequentialEditingMode?: TSequentialEditingMode;
     addPosition?: 'top' | 'bottom';
     item?: Model;
     autoAdd?: boolean;
@@ -2618,7 +2623,9 @@ export default class Collection<
 
         if (lastItem !== this._lastItem || force) {
             if (this._$rowSeparatorSize && this._$rowSeparatorSize !== 'null') {
-                this._updateBottomItemSeparator(this._lastItem, lastItem, noMoreData && this._shouldAddEdgeSeparator(), silent);
+                this._updateBottomItemSeparator(
+                    this._lastItem, lastItem, noMoreData && this._shouldAddEdgeSeparator(), silent
+                );
             }
             this._updateLastItem(this._lastItem, lastItem, silent);
         }
@@ -2646,7 +2653,10 @@ export default class Collection<
         this._firstItem = newItem;
     }
 
-    private _updateBottomItemSeparator(oldItem: CollectionItem, newItem: CollectionItem, newState: boolean, silent?: boolean): void {
+    private _updateBottomItemSeparator(oldItem: CollectionItem,
+                                       newItem: CollectionItem,
+                                       newState: boolean,
+                                       silent?: boolean): void {
         if (oldItem) {
             oldItem.setBottomSeparatorEnabled(false, silent);
         }
@@ -2655,7 +2665,10 @@ export default class Collection<
         }
     }
 
-    private _updateTopItemSeparator(oldItem: CollectionItem, newItem: CollectionItem, newState: boolean, silent?: boolean): void {
+    private _updateTopItemSeparator(oldItem: CollectionItem,
+                                    newItem: CollectionItem,
+                                    newState: boolean,
+                                    silent?: boolean): void {
         if (oldItem) {
             oldItem.setTopSeparatorEnabled(true, silent);
         }
@@ -3294,7 +3307,8 @@ export default class Collection<
                                    silent?: boolean): boolean {
         let wasUpdated = false;
         this._getItems().forEach((item: CollectionItem<S>) => {
-            // todo Разобраться, почему item === undefined по https://online.sbis.ru/opendoc.html?guid=9018fdea-5de1-4b89-9f48-fb8ded0673cd
+            // todo Разобраться, почему item === undefined по
+            //  https://online.sbis.ru/opendoc.html?guid=9018fdea-5de1-4b89-9f48-fb8ded0673cd
             if (item && (!conditionProperty || item[conditionProperty])) {
                 item[updateMethodName](newPropertyValue, silent);
                 wasUpdated = true;
@@ -3388,7 +3402,7 @@ export default class Collection<
             contentTemplate: options.footerTemplate,
             style: this.getStyle(),
             theme: this.getTheme()
-        }
+        };
     }
     //endregion
 
@@ -3692,7 +3706,8 @@ export default class Collection<
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
-                const isAddingItem = this.getStrategyInstance(AddStrategy) && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                const isAddingItem = this.getStrategyInstance(AddStrategy)
+                    && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
                 result = isAddingItem || filter(
                     item.getContents(),
                     index,
@@ -4204,9 +4219,11 @@ export default class Collection<
         this._updateEdgeItems();
     }
 
-    protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}
+    protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {
+        /* For override  */
+    }
 
-    protected _handleCollectionActionChange(newItems: T[]): void {}
+    protected _handleCollectionActionChange(newItems: T[]): void {/* For override  */}
 
     // region ItemsChanges
 
@@ -4214,11 +4231,11 @@ export default class Collection<
     // Используется, чтобы сделать дополнительные изменения в одной сессии.
     // В этом случае мы отправим только одно событие об изменении - это требование скролл контроллера
 
-    protected _handleCollectionChangeAdd(): void {}
+    protected _handleCollectionChangeAdd(): void {/* For override  */}
 
-    protected _handleCollectionChangeRemove(): void {}
+    protected _handleCollectionChangeRemove(): void {/* For override  */}
 
-    protected _handleCollectionChangeReplace(): void {}
+    protected _handleCollectionChangeReplace(): void {/* For override  */}
 
     // endregion ItemsChanges
 

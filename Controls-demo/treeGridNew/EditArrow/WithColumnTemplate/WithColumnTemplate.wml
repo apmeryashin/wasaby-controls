@@ -8,7 +8,6 @@
             editArrowVisibilityCallback="{{ _editArrowVisibilityCallback }}"
             displayProperty="title"
             columns="{{ _columns }}"
-            on:editArrowClick="_editArrowClick()"
             header="{{ _header }}"
             source="{{ _source }}">
     </Controls.treeGrid:View>

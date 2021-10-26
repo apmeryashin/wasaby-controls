@@ -33,7 +33,9 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
             Utils.getNativeEventPageX(nativeEvent);
         const box = this._children.area.getBoundingClientRect();
         const windowDimensions = DimensionsMeasurer.getWindowDimensions(this._children.area);
-        const ratio = this._getRatio(this._options.direction, target, box, windowDimensions.pageXOffset, windowDimensions.pageYOffset);
+        const ratio = this._getRatio(
+            this._options.direction, target, box, windowDimensions.pageXOffset, windowDimensions.pageYOffset
+        );
         return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
     }
 
@@ -49,7 +51,7 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
 
     _mouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
-            //На мобильных устройствах положение подсказки и ползунка всегда совпадает
+            // На мобильных устройствах положение подсказки и ползунка всегда совпадает
             this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._getValue(event);
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
                 : this._tooltipPosition;
@@ -86,7 +88,9 @@ class SliderBase<TSliderBaseOptions extends ISliderBaseOptions> extends Control<
         this._onDragNDropHandler(e, dragObject);
     }
 
-    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {}
+    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {
+        /* For override */
+    }
 
     static getDefaultOptions() {
         return {

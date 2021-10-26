@@ -7,8 +7,8 @@ const mockedCollection = {
     hasMultiSelectColumn: () => false,
     hasItemActionsSeparatedCell: () => false,
     getIndex: () => 0,
-    notifyItemChange: () => {},
-    getItemEditorTemplate: () => {},
+    notifyItemChange: () => {/* FIXME: sinon mock */},
+    getItemEditorTemplate: () => {/* FIXME: sinon mock */},
     isFullGridSupport: () => true,
     hasColumnScroll: () => false
 } as GridCollection<Model>;
@@ -35,10 +35,10 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     ...mockedCollection,
                     getGridColumnsConfig: () => columnsConfig
                 },
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 stickyLadder: {
-                    'prop1': {headingStyle: 'style'},
-                    'prop2': {headingStyle: 'style'}
+                    prop1: {headingStyle: 'style'},
+                    prop2: {headingStyle: 'style'}
                 },
                 gridColumnsConfig: columnsConfig,
                 contents: record
@@ -47,7 +47,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
             assert.isArray(gridRow.getColumns());
             assert.equal(gridRow.getColumns().length, 0);
         });
-    })
+    });
 
     describe('.setColumnsConfig()', () => {
         it('[DATA] => [DATA]', () => {
@@ -57,7 +57,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     ...mockedCollection,
                     getGridColumnsConfig: () => columnsConfig
                 },
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 gridColumnsConfig: columnsConfig,
                 contents: record
             });
@@ -84,7 +84,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     getGridColumnsConfig: () => columnsConfig
                 },
                 gridColumnsConfig: columnsConfig,
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 contents: record
             });
 
@@ -106,7 +106,7 @@ describe('Controls/grid_clean/Display/columns/Row', () => {
                     ...mockedCollection,
                     getGridColumnsConfig: () => columnsConfig
                 },
-                columnsConfig: columnsConfig,
+                columnsConfig,
                 gridColumnsConfig: columnsConfig,
                 contents: record
             });

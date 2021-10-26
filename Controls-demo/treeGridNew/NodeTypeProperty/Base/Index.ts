@@ -69,7 +69,7 @@ export default class extends Control {
         });
     }
 
-    protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+    protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number): TColspanCallbackResult {
         if (item.get('nodeType') === 'group' && columnIndex === 0) {
             return 3;
         }

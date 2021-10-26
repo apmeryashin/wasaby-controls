@@ -31,7 +31,7 @@ import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
 import {DependencyTimer} from 'Controls/popup';
-import {ISearchControllerOptions} from "../_search/ControllerClass";
+import {ISearchControllerOptions} from '../_search/ControllerClass';
 import 'css!Controls/suggest';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
@@ -661,12 +661,14 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
             if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
-               this._searchResolverController && this._searchResolverController.clearTimer();
+               if (this._searchResolverController) {
+                  this._searchResolverController.clearTimer();
+               }
                this._loadDependencies(newOptions).addCallback(() => {
-                  this._resolveLoad(this._searchValue, newOptions).then(() => {
+                  this._resolveLoad(this._searchValue, newOptions).then((result) => {
                      // Проверка нужна из-за асинхронщины, которая возникает при моментальном расфокусе поля ввода, что
                      // вызывает setCloseState, но загрузка все равно выполняется и появляется невидимый попап.
-                     if (this._inputActive) {
+                     if (this._inputActive && !(result instanceof Error)) {
                         this._suggestOpened = newOptions.suggestState;
                      }
                   }).catch((error) => {
@@ -813,7 +815,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._resolveLoad();
    }
 
-   private async _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet | void> {
+   private _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet | void> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
@@ -824,7 +826,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                        .then((recordSet) => {
                           this._loadEnd(recordSet);
 
-                          if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
+                          if (
+                              recordSet instanceof RecordSet &&
+                              this._shouldShowSuggest(recordSet) &&
+                              (this._inputActive || this._tabsSelectedKey !== null)
+                          ) {
                              this._setItems(recordSet);
                              if (this._options.dataLoadCallback) {
                                 this._options.dataLoadCallback(recordSet);
@@ -845,6 +851,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
              .catch((error) => {
                 this._hideIndicator();
                 this._searchErrback(error);
+                return error;
              });
       } else {
          return this._performLoad(options);
@@ -870,7 +877,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                return recordSet as RecordSet;
             }
          }
-      }).catch((e) => this._searchErrback(e));
+      }).catch((e) => {
+         this._searchErrback(e);
+         return e;
+      });
    }
 
    private _getSearchResolverOptions(options: IInputControllerOptions): ISearchResolverOptions {
@@ -1007,6 +1017,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._tabsSelectedKey !== tabId) {
          this._sourceController = null;
          this._searchController = null;
+         this._showIndicator();
          this._setFilterAndLoad(this._options.filter, this._options, tabId)
              .finally(() => {
                 changeTabCallback();
@@ -1038,11 +1049,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _loadStart(): void {
       this._loading = true;
-      // Обновим таймер, т.к. могут прерывать поиск новыми запросами
-      if (this._children.indicator) {
-         this._children.indicator.hide();
-         this._children.indicator.show();
-      }
       if (this._options.searchStartCallback) {
          this._options.searchStartCallback();
       }
@@ -1061,6 +1067,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._processResultData(result);
       if (this._options.searchEndCallback) {
          this._options.searchEndCallback();
+      }
+   }
+
+   _showIndicator(): void {
+      if (this._children.indicator) {
+         this._children.indicator.hide();
+         this._children.indicator.show();
       }
    }
 

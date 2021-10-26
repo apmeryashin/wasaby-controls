@@ -10,7 +10,7 @@ interface IResultsRowOptions extends IBaseRowOptions<null> {
     metaResults: EntityModel;
     resultsPosition?: TResultsPosition;
 
-    //TODO: Здась другой тип, нужно внутри библиотеки переписать тип, добавить какой то абстрактный
+    // TODO: Здась другой тип, нужно внутри библиотеки переписать тип, добавить какой то абстрактный
     // колбек или поиграться с типом входных параметров.
     colspanCallback: TResultsColspanCallback;
 }
@@ -80,7 +80,7 @@ class ResultsRow extends Row<null> {
     protected _initializeColumns(): void {
         super._initializeColumns({
             colspanStrategy: 'skipColumns',
-            shouldAddStickyLadderCells: !this._$rowTemplate,
+            prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' : 'colspan',
             addEmptyCellsForStickyLadder: true,
             extensionCellsConstructors: {
                 stickyLadderCell: ResultsCell,
@@ -93,17 +93,17 @@ class ResultsRow extends Row<null> {
         super.setColspanCallback(ResultsRow._convertColspanCallback(colspanCallback));
     }
 
-    private static _convertColspanCallback(colspanCallback: TResultsColspanCallback): TColspanCallback {
-        return colspanCallback ? (item, column, columnIndex, isEditing) => {
-            return colspanCallback(column, columnIndex);
-        } : undefined;
-    }
-
     protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IResultsRowOptions> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             metaResults: this.getMetaResults()
         };
+    }
+
+    private static _convertColspanCallback(colspanCallback: TResultsColspanCallback): TColspanCallback {
+        return colspanCallback ? (item, column, columnIndex, isEditing) => {
+            return colspanCallback(column, columnIndex);
+        } : undefined;
     }
 
     //endregion

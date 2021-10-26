@@ -99,7 +99,7 @@ describe('Controls/suggest', () => {
          inputContainer._notify = (eventName, args) => {
             stateNotifyed = true;
          };
-         inputContainer._forceUpdate = () => {};
+         inputContainer._forceUpdate = () => {/* FIXME: sinon mock */};
          inputContainer._suggestStateNotify( true);
          assert.isFalse(stateNotifyed);
 
@@ -156,7 +156,7 @@ describe('Controls/suggest', () => {
          };
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
-         suggestComponent.activate = () => {};
+         suggestComponent.activate = () => {/* FIXME: sinon mock */};
 
          suggestComponent._closeHandler(event);
          assert.isTrue(propagationStopped);
@@ -174,7 +174,7 @@ describe('Controls/suggest', () => {
          inputContainer._notify = (eventName, args) => {
             state = args[0];
          };
-         inputContainer._forceUpdate = () => {};
+         inputContainer._forceUpdate = () => {/* FIXME: sinon mock */};
          inputContainer._open();
          inputContainer._dependenciesDeferred.addCallback(() => {
             assert.isTrue(state);
@@ -295,8 +295,6 @@ describe('Controls/suggest', () => {
 
          inputContainer._loadStart();
          assert.isTrue(inputContainer._loading);
-         assert.isTrue(isCallShowIndicator);
-         assert.isTrue(isCallHideIndicator);
 
          inputContainer._children = {};
          try {
@@ -352,7 +350,7 @@ describe('Controls/suggest', () => {
             }
          });
          let isIndicatorVisible = true;
-         inputContainer._forceUpdate = () => {};
+         inputContainer._forceUpdate = () => {/* FIXME: sinon mock */};
          inputContainer._children = {};
          inputContainer._children.indicator = {
             hide: () => {
@@ -442,7 +440,7 @@ describe('Controls/suggest', () => {
          let isNotifyShowSelector = false;
          const suggest = getComponentObject();
 
-         Stack.openPopup = () => {};
+         Stack.openPopup = () => {/* FIXME: sinon mock */};
 
          suggest._options.suggestTemplate = {
             templateName: 'test',
@@ -539,7 +537,7 @@ describe('Controls/suggest', () => {
          });
          let suggestState = false;
          const event = {
-            stopPropagation: () => {}
+            stopPropagation: () => {/* FIXME: sinon mock */}
          };
 
          const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
@@ -559,8 +557,8 @@ describe('Controls/suggest', () => {
          }
 
          inputContainer._setFilter({}, inputContainer._options);
-         inputContainer._notify = (event, val) => {
-            if (event === 'suggestStateChanged') {
+         inputContainer._notify = (nEvent, val) => {
+            if (nEvent === 'suggestStateChanged') {
                suggestState = val[0] as boolean;
             }
          };
@@ -670,9 +668,9 @@ describe('Controls/suggest', () => {
 
          beforeEach(() => {
             inputContainer = getComponentObject({
-               searchStartCallback: () => {},
+               searchStartCallback: () => {/* FIXME: sinon mock */},
                searchParam: 'testtt',
-               dataLoadCallback: () => {}
+               dataLoadCallback: () => {/* FIXME: sinon mock */}
             });
             searchCallbackSpy = sandbox.spy(inputContainer._options, 'searchStartCallback');
             dataLoadCallbackSpy = sandbox.spy(inputContainer._options, 'dataLoadCallback');
@@ -688,7 +686,7 @@ describe('Controls/suggest', () => {
             inputContainer._inputActive = true;
             inputContainer._children = {
                indicator: {
-                  show: () => {},
+                  show: () => {/* FIXME: sinon mock */},
                   hide: () => {
                      inidicatorHidden = true;
                   }
@@ -902,7 +900,7 @@ describe('Controls/suggest', () => {
             keyProperty: 'id'
          });
 
-         inputContainer._notify = () => {};
+         inputContainer._notify = () => {/* FIXME: sinon mock */};
          inputContainer._searchValue = 'notEmpty';
          inputContainer._inputActive = true;
          inputContainer._errorConfig = {errorField: 'errorValue'};

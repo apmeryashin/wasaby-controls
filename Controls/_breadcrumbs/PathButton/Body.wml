@@ -1,8 +1,9 @@
-<div class="controls-breadcrumbsMenuButton__menu">
+<div class="controls-breadcrumbsMenuButton__menu" data-qa="controls-breadcrumbsMenuButton__menu">
    <!-- Шапка -->
-   <div class="controls-breadcrumbsMenuButton__menu-header">
+   <div class="controls-breadcrumbsMenuButton__menu-header" data-qa="controls-breadcrumbsMenuButton__menuHeader">
       <!-- На главную -->
       <Controls.buttons:Button
+         attr:data-qa="controls-breadcrumbsMenuButton__menuHeaderHome"
          viewMode="link"
          icon="icon-Home2"
          iconSize="s"
@@ -18,7 +19,7 @@
    </div>
 
    <!-- Список -->
-   <Controls.scroll:Container attr:class="controls-breadcrumbsMenuButton__menu-body">
+   <Controls.scroll:Container attr:class="controls-breadcrumbsMenuButton__menu-body" data-qa="controls-breadcrumbsMenuButton__menuBody">
       <Controls.treeGrid:View
          name="treeGrid"
          filter="{{_filter}}"
@@ -27,6 +28,7 @@
          keyProperty="{{_options.keyProperty}}"
          nodeProperty="{{_options.nodeProperty}}"
          parentProperty="{{_options.parentProperty}}"
+         hasChildrenProperty="{{_options.hasChildrenProperty}}"
 
          expanderIcon="hiddenNode"
          expanderVisibility="hasChildren"

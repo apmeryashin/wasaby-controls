@@ -113,6 +113,9 @@ class Container extends Control<IContainerOptions> {
     private _draggedKey: string = null;
 
     protected _template: TemplateFunction = template;
+    // после начала драга event.target может меняться и zoom соответственно тоже.
+    // Смена zoom после начала драга для расчетов недопустима, запоминаем значение в самом начале.
+    private _draggingZoom: number;
 
     private _registerMouseMove(): void {
         this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
@@ -188,7 +191,9 @@ class Container extends Control<IContainerOptions> {
     private _onMove(nativeEvent: MouseEvent): void {
         if (this._startEvent) {
             const dragObject: IDragObject = this._getDragObject(nativeEvent, this._startEvent);
-            const dragStarted: boolean = Container._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
+            const dragStarted: boolean = Container._isDragStarted(
+                this._startEvent, nativeEvent, this._startImmediately
+            );
             if (!this._documentDragging && dragStarted) {
                 this._insideDragging = true;
                 this._notify('_documentDragStart', [dragObject], {bubbling: true});
@@ -197,7 +202,11 @@ class Container extends Control<IContainerOptions> {
                 this._currentEvent = nativeEvent;
                 this._notify('dragMove', [dragObject]);
                 if (this._options.draggingTemplate) {
-                    this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+                    this._notify(
+                        '_updateDraggingTemplate',
+                        [dragObject, this._options.draggingTemplate],
+                        {bubbling: true}
+                    );
                 }
             }
         }
@@ -209,6 +218,8 @@ class Container extends Control<IContainerOptions> {
         } else {
             this._dragEntity = dragObject.entity;
         }
+        const target = dragObject?.domEvent?.target;
+        this._draggingZoom = DimensionsMeasurer.getZoomValue(target);
         this._documentDragging = true;
         this._notifyDragEvent('documentDragStart', [dragObject]);
         ControllerClass._dragStart();
@@ -240,8 +251,8 @@ class Container extends Control<IContainerOptions> {
         };
         if (mouseEvent && startEvent) {
             dragObject.domEvent = mouseEvent;
-            dragObject.position = Container._getPageXY(mouseEvent);
-            dragObject.offset = Container._getDragOffset(mouseEvent, startEvent);
+            dragObject.position = Container._getPageXY(mouseEvent, this._draggingZoom);
+            dragObject.offset = Container._getDragOffset(mouseEvent, startEvent, this._draggingZoom);
             dragObject.draggingTemplateOffset = this._options.draggingTemplateOffset;
         }
         return dragObject;
@@ -372,8 +383,8 @@ class Container extends Control<IContainerOptions> {
     private static SHIFT_LIMIT: number = 4;
     private static IE_MOUSEMOVE_FIX_DELAY: number = 50;
 
-    private static _getPageXY(event: MouseEvent | TouchEvent): ICords {
-        return DimensionsMeasurer.getRelativeMouseCoordsByMouseEvent(event);
+    private static _getPageXY(event: MouseEvent | TouchEvent, zoom?: number): ICords {
+        return DimensionsMeasurer.getRelativeMouseCoordsByMouseEvent(event,  zoom);
     }
 
     private static _isDragStarted(startEvent: MouseEvent, moveEvent: MouseEvent, immediately: boolean): boolean {
@@ -403,9 +414,9 @@ class Container extends Control<IContainerOptions> {
         }
     }
 
-    private static _getDragOffset(moveEvent: MouseEvent, startEvent: MouseEvent): ICords {
-        const moveEventXY = Container._getPageXY(moveEvent);
-        const startEventXY = Container._getPageXY(startEvent);
+    private static _getDragOffset(moveEvent: MouseEvent, startEvent: MouseEvent, zoom?: number): ICords {
+        const moveEventXY = Container._getPageXY(moveEvent, zoom);
+        const startEventXY = Container._getPageXY(startEvent, zoom);
 
         return {
             y: moveEventXY.y - startEventXY.y,
@@ -487,7 +498,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnd
  */
 
-
 /**
  * @event Происходит при завершении перемещения объекта на странице.
  * @name Controls/_dragnDrop/Container#documentDragEnd
@@ -538,7 +548,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnd
  */
 
-
 /**
  * @event Происходит, когда пользователь начинает перемещение объект в текущем контроллере.
  * @name Controls/_dragnDrop/Container#dragStart
@@ -585,7 +594,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnd
  */
 
-
 /**
  * @event Происходит после того, как пользователь закончил перемещение объекта в текущем контроллере.
  * @name Controls/_dragnDrop/Container#dragEnd
@@ -630,7 +638,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see documentDragEnd
  * @see dragStart
  */
-
 
 /**
  * @event Происходит после перемещения объекта внутри контроллера.
@@ -680,7 +687,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragMove
  */
 
-
 /**
  * @event Происходит после перемещения объекта за пределы контроллера.
  * @name Controls/_dragnDrop/Container#dragLeave
@@ -728,7 +734,6 @@ Object.defineProperty(Container, 'defaultProps', {
  * @see dragEnter
  * @see dragMove
  */
-
 
 /**
  * @event Происходит при перемещении объекта на странице.

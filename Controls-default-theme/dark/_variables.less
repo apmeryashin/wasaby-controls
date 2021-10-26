@@ -2,7 +2,7 @@
 
    //common
    --background-color: #424851;
-   --unaccented_background-color: #424851;
+   --unaccented_background-color: #383d44;
    --hover_background-color: #464d57;
    --readonly_color: #6b6b6b;
    --text-color: #ccc;
@@ -20,13 +20,28 @@
    --readonly_marker-color: var(--readonly_color);
    --page_background-image: url('/cdn/OnlineCDN/themes/1.0.0/background-dark.jpg');
    --page_background-color: #575e64;
+   --label_icon-color: #999;
+   --link_icon-color: #6ed4d0;
+   --hover_link_icon-color: #ff7033;
+   --marker_color: #ff7033;
 
    // Палитра
    --primary_text-color: #ccc;
+   --primary_hover_text-color: #db6330;
+   --primary_border-color: #eb6c65;
+   --primary_background-color: #4f3d39;
+   --primary_hover_background-color: #6e4642;
+   --primary_active_background-color: #98553c;
+   --primary_same_background-color: #744c3f;
+   --primary_hover_same_background-color: #98553c;
+   --primary_active_same_background-color: #a7a5a3;
+   --primary_contrast_background-color: #c76840;
+   --primary_hover_contrast_background-color: #ad5b38;
+   --primary_active_contrast_background-color: #a8512c;
 
    --secondary_color: #6ed4d0;
    --secondary_text-color: #ccc;
-   --secondary_hover_text-color: #ff7033;
+   --secondary_hover_text-color: #ededed;
    --secondary_icon-color: var(--secondary_color);
    --secondary_hover_icon-color: #ff7033;
    --secondary_border-color: var(--secondary_color);
@@ -35,24 +50,72 @@
    --secondary_active_contrast_background-color: var(--secondary_hover_contrast_background-color);
 
    --success_color: #72be44;
+   --success_border-color: #66944a;
    --success_icon-color: var(--success_color);
    --success_text-color: var(--success_color);
-   --success_contrast_background-color: #62ac62;
-   --success_hover_contrast_background-color: #539253;
-   --success_active_contrast_background-color: var(--success_hover_contrast_background-color);
+   --success_hover_text-color: #4f9425;
+   --success_hover_icon-color: #4f9425;
+   --success_contrast_background-color: #4e8030;
+   --success_hover_contrast_background-color: #436b2b;
+   --success_active_contrast_background-color: #40612c;
+   --success_background-color: #415d44;
+   --success_hover_background-color: #475d44;
+   --success_active_background-color: #597a49;
+   --success_same_background-color: #3e4a44;
+   --success_hover_same_background-color: #496444;
+   --success_active_same_background-color: #3f6639;
 
    --danger_color: #d04d4d;
-   --danger_text-color: var(--danger_color);
-   --danger_icon-color: var(--danger_color);
-   --danger_contrast_background-color: var(--danger_color);
-   --danger_hover_contrast_background-color: #d36b6b;
-   --danger_active_contrast_background-color: var(--danger_hover_contrast_background-color);
-   --danger_border-color: var(--danger_color);
+   --danger_text-color: #e6525a;
+   --danger_hover_text-color: #dc3840;
+   --danger_icon-color: var(--danger_text-color);
+   --danger_hover_icon-color: var(--danger_hover_text-color);
+   --danger_contrast_background-color: #d04949;
+   --danger_hover_contrast_background-color: #b84040;
+   --danger_active_contrast_background-color: #a33939;
+   --danger_border-color: #d14950;
+   --danger_background-color: #524d47;
+   --danger_hover_background-color: #6c434b;
+   --danger_active_background-color: #854d48;
+   --danger_same_background-color: #5b4148;
+   --danger_hover_same_background-color: #75444c;
+   --danger_active_same_background-color: #944141;
 
    --warning_color: #fec63f;
+   --warning_border-color: #ad8626;
    --warning_text-color: var(--warning_color);
+   --warning_hover_text-color: #bd932f;
    --warning_icon-color: var(--warning_color);
-   --warning_contrast_background-color: var(--warning_color);
+   --warning__hover_icon-color: var(--warning_hover_text-color);
+   --warning_contrast_background-color: #b2820e;
+   --warning_hover_contrast_background-color: #946d0f;
+   --warning_active_contrast_background-color: #7a5a0c;
+   --warning_background-color: #4d4639;
+   --warning_hover_background-color: #5c5037;
+   --warning_active_background-color: #a68b49;
+   --warning_same_background-color: #504d40;
+   --warning_hover_same_background-color: #73643b;
+   --warning_active_same_background-color: #997e38;
+   --info_border-color: #6f86ab;
+   --info_text-color: #bccde5;
+   --info_hover_text-color: #7d95b2;
+   --info_icon-color: #bccde5;
+   --info_hover_icon-color: #7d95b2;
+   --info_background-color: #707b8c;
+   --info_hover_background-color: #636f80;
+   --info_active_background-color: #4f5b6b;
+   --info_same_background-color: #4d535e;
+   --info_hover_same_background-color: #515e70;
+   --info_active_same_background-color: #485261;
+   --info_contrast_background-color: #465975;
+   --info_hover_contrast_background-color: #3b485c;
+   --info_active_contrast_background-color: #344257;
+   --unaccented_hover_text-color: #797979;
+   --unaccented_hover_icon-color: #797979;
+   --unaccented_border-color: #4d535e;
+   --pale_same_background-color: #4d535e;
+   --pale_hover_same_background-color: #535c68;
+   --pale_active_same_background-color: #535c68;
 
    //button
    --primary_border-color_button: #eb6c65;
@@ -63,6 +126,7 @@
    --border-color_hover_button_toolButton: #535c68;
    --background-color_hover_button_toolButton: #535c68;
    --readonly_border-color_button_toolButton: #6b6b6b;
+   --unaccented_active_background-color: #2d3138;
    --unaccented_contrast_background-color: #6ed4d0;
    --unaccented_hover_contrast_background-color: #5eb4b1;
    --unaccented_active_contrast_background-color: #5eb4b1;

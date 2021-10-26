@@ -11,7 +11,7 @@ import * as notScrollableCell from 'wml!Controls-demo/gridNew/ColumnScroll/DragS
 import * as notDraggableCell from 'wml!Controls-demo/gridNew/ColumnScroll/DragScrolling/notDraggableCell';
 import * as dragScrollPopulationCell from 'wml!Controls-demo/gridNew/ColumnScroll/DragScrolling/populationCell';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
-import {ItemsEntity} from "Controls/dragnDrop";
+import {ItemsEntity} from 'Controls/dragnDrop';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

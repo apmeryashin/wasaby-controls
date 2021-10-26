@@ -15,12 +15,12 @@ import {getStore} from 'Application/Env';
 const HISTORY_SOURCE_STORAGE_ID = 'CONTROLS_HISTORY_SOURCE_STORE';
 
 function createHistorySource(cfg) {
-   var historySourceData = {
+   const historySourceData = {
       historyId: cfg.historyId,
       pinned: true,
 
-      /* A record about resets filters is stored in the history, but it is not necessary to display it in the history list.
-         We request one more record, so that the number of records remains equal to 10 */
+      /* A record about resets filters is stored in the history, but it is not necessary to display it in the
+         history list.We request one more record, so that the number of records remains equal to 10 */
       recent: (Constants[cfg.recent] || Constants.MAX_HISTORY) + 1,
       favorite: cfg.favorite,
       dataLoaded: true
@@ -65,7 +65,7 @@ function isHistorySource(source) {
 }
 
 function deleteHistorySourceFromConfig(initConfig, sourceField) {
-   let configs = CoreClone(initConfig);
+   const configs = CoreClone(initConfig);
    factory(configs).each((config) => {
       if (isHistorySource(config[sourceField])) {
          delete config[sourceField];
@@ -88,7 +88,7 @@ function getUniqItems(items1, items2, keyProperty) {
    const resultItems = items1.clone();
    resultItems.prepend(items2);
 
-   let uniqItems = factory(resultItems).filter((item, index) => {
+   const uniqItems = factory(resultItems).filter((item, index) => {
       if (resultItems.getIndexByValue(keyProperty, item.get(keyProperty)) === index) {
          return item;
       }

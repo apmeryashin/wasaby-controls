@@ -206,7 +206,7 @@ describe('Controls/list/HoverFreeze', () => {
         });
 
         it ('should call unFreezeHoverCallback deferred when cursor position is in bottom of the moveArea', () => {
-            hoverFreeze.startFreezeHoverTimeout('key_1', startEvent,0, 0);
+            hoverFreeze.startFreezeHoverTimeout('key_1', startEvent, 0, 0);
             clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
 
             const event = createFakeMouseEvent(100, 80);

@@ -13,24 +13,25 @@
             <ws:partial template="Controls/_popupTemplate/Sticky/Template/Header"
                         scope="{{_options}}"
                         close="{{close}}"
-                        theme="{{_headerTheme}}"
+                        verticalDirection="{{_verticalDirection}}"
                         closeBtnPosition="{{_closeBtnPosition}}"
                         stickyOptions="{{_options}}"
-                        attr:class="{{_headerTheme && (_options.theme !== _headerTheme) ?
-                                       'controls_popupTemplate_theme-' + _headerTheme}}"
                         on:click="_proxyEvent('headerClick')"/>
         </ws:if>
         <ws:else>
             <ws:if data="{{_options.closeButtonVisibility}}">
                 <Controls._popupTemplate.CloseButton attr:class="controls-StickyTemplate__close_button
                 controls-StickyTemplate__close_button_position-{{_closeBtnPosition}}
-                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header"
+                controls-StickyTemplate__close_button-{{_options.closeButtonViewMode !== 'link' ? 'external' : 'default'}}-without-header_top-spacing-{{ _options.closeButtonTopSpacing === 'none' ? 'none' : 'default' }} "
                                                      viewMode="{{_options.closeButtonViewMode}}"
+                                                     name="closeButton"
                                                      on:click="close()"/>
             </ws:if>
         </ws:else>
         <ws:if data="{{_options.bodyContentTemplate}}">
-            <div class="controls-StickyTemplate__content-area controls-background-{{_options.backgroundStyle}} {{_getRoundClass()}}">
+            <div class="controls-StickyTemplate__content-area {{_getRoundClass()}}
+                        {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
+                                                                   'controls-background-' + _options.backgroundStyle}}">
                 <ws:partial template="{{_options.bodyContentTemplate}}"
                             attr:class="{{_getRoundClass()}}"
                             isDragging="{{_dragging}}"
@@ -40,7 +41,10 @@
         <ws:if data="{{_options.footerContentTemplate}}">
             <ws:partial template="{{_options.footerContentTemplate}}"
                         scope="{{_options}}"
-                        attr:class="controls-StickyTemplate__footer controls-StickyTemplate__bottom_roundBorder"
+                        attr:class="controls-StickyTemplate__footer
+                                    controls-StickyTemplate__bottom_roundBorder
+                                    {{_options.backgroundStyle === 'default' ? 'controls-StickyTemplate-backgroundColor' :
+                                                                   'controls-background-' + _options.backgroundStyle}}"
                         on:click="_proxyEvent('footerClick')"></ws:partial>
         </ws:if>
     </div>

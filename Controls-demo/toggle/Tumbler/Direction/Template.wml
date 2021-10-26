@@ -5,6 +5,10 @@
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label controlsDemo_widthFit">direction='vertical'</div>
-        <Controls.toggle:Tumbler items="{{_items1}}" direction="vertical" bind:selectedKey="_selectedKey2" attr:class="ControlsDemo-Tumbler__vertical"/>
+        <Controls.toggle:Tumbler items="{{_items1}}" direction="vertical" bind:selectedKey="_selectedKey2" attr:class="ControlsDemo-Tumbler__vertical">
+            <ws:itemTemplate>
+                <span class="controls-icon controls-icon_size-s controls-icon_style-secondary {{itemTemplate.item.get('icon')}}"></span>
+            </ws:itemTemplate>
+        </Controls.toggle:Tumbler>
     </div>
 </div>

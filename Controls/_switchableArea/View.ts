@@ -21,7 +21,7 @@ export interface ISwitchableAreaItem {
  * Контрол для переключения контентных областей.
  * @class Controls/_switchableArea/View
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/SwitchableArea/DemoSwitchableArea
@@ -29,7 +29,7 @@ export interface ISwitchableAreaItem {
 
 class View extends Control<ISwitchableOptions> {
     protected _template: TemplateFunction = template;
-    protected _viewModel: any; //TODO: заменить, когда переведем ViewModel на ts
+    protected _viewModel: any; // TODO: заменить, когда переведем ViewModel на ts
     protected _selectedKey: number | string = null;
 
     protected _beforeMount(options: ISwitchableOptions): void {
@@ -98,10 +98,10 @@ Object.defineProperty(View, 'defaultProps', {
  * @typedef {Object} SwitchableAreaItem
  * @property {String|Number} key Ключ элемента.
  * @property {Function} itemTemplate Шаблон элемента (контентной области).
- * 
+ *
  * Шаблон, который указан в настройках этого свойства, нужно предварительно импортировать в родительский контрол.
  * Т.к. загрузка шаблонов происходит синхронно, то длительность инициализации контрола может быть увеличена.
- * 
+ *
  * Чтобы инициализация контрола происходила быстрее, шаблоны можно подгружать по необходимости, т.е. только при переключении на шаблон.
  * Для этого в конфигурации свойства **itemTemplate** рекомендуется использовать контрол-контейнер {@link Controls/Container/Async}.
  * Он позволяет реализовать отложенную загрузку шаблонов для {@link Controls/switchableArea:View}.

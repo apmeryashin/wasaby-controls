@@ -25,7 +25,7 @@ export interface IHeaderCell extends IControlOptions, IRowspanParams, IColspanPa
      * @variant none Текст разбивается на несколько строк.
      * @default none
      */
-    textOverflow?: 'none' | 'ellipsis'
+    textOverflow?: 'none' | 'ellipsis';
     /**
      * @cfg Выравнивание содержимого ячейки по горизонтали.
      * @variant left По левому краю.

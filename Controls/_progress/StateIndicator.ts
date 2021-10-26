@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {Logger} from 'UI/Utils';
+import * as Utils from 'Controls/_progress/Utils';
 import stateIndicatorTemplate = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!Controls/progress';
@@ -12,7 +12,6 @@ const defaultColors = [
 ];
 const defaultScaleValue = 10;
 const maxPercentValue = 100;
-
 
 /**
  * Интерфейс опций для конфигурации категорий.
@@ -33,7 +32,8 @@ export interface IIndicatorCategory {
     * @cfg {String} Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
     * @default ''
     */
-   /*Name of css class, that will be applied to sectors of this category. If not specified, default color will be used */
+   /*Name of css class, that will be applied to sectors of this category.
+   If not specified, default color will be used */
    className: string;
    /**
     * @name Controls/progress:IIndicatorCategory#title
@@ -127,7 +127,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @public
  * @demo Controls-demo/progress/StateIndicator/Base/Index.ts
  */
-class StateIndicator extends Control<IStateIndicatorOptions>{
+class StateIndicator extends Control<IStateIndicatorOptions> {
    protected _template: TemplateFunction = stateIndicatorTemplate;
    protected _colorState: number[];
    private _colors: string[];
@@ -135,24 +135,9 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    private _percentageDifferences: number[] = [];
 
    private _checkData(opts: IStateIndicatorOptions): void {
-      let sum = 0;
-      if (isNaN(opts.scale)) {
-          Logger.error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it is non-numeric value', this);
-      }
-      if (opts.scale > maxPercentValue || opts.scale < 1) {
-          Logger.error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it must be in range (0..100]', this);
-      }
-
-      sum = opts.data.map(Object).reduce((curSum, d) => {
-         return curSum + Math.max(d.value, 0);
-      }, 0);
-
-      if (isNaN(sum)) {
-          Logger.error('StateIndicator', 'Data is incorrect, it contains non-numeric values', this);
-      }
-      if (sum > maxPercentValue) {
-          Logger.error('StateIndicator', 'Data is incorrect. Values total is greater than 100%', this);
-      }
+      Utils.isNumeric(opts.scale, 'StateIndicator', 'Scale');
+      Utils.isValueInRange(opts.scale, 1, maxPercentValue, 'StateIndicator', 'Scale');
+      Utils.isSumInRange(opts.data, maxPercentValue, 'StateIndicator');
    }
 
    private _setColors(data: IIndicatorCategory[]): string[] {
@@ -166,7 +151,6 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    private _calculateColorState(opts: IStateIndicatorOptions, _colors: string[], _numSectors: number): number[] {
       const colorValues = [];
       let correctScale: number = opts.scale;
-      let sectorSize: number;
       let curSector = 0;
       let totalSectorsUsed = 0;
       let maxSectorsPerValue = 0;
@@ -176,7 +160,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       let excess;
       this._percentageDifferences = [];
 
-      if (opts.scale <= 0 || opts.scale > maxPercentValue) {
+      if (!Utils.isValueInRange(opts.scale, 1, maxPercentValue)) {
          correctScale = defaultScaleValue;
       }
       for (let i = 0; i < Math.min(opts.data.length); i++) {
@@ -204,13 +188,15 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       // if we count more sectors, than we have in indicator, trim the longest value
       if (totalSectorsUsed  > _numSectors ) {
          excess = totalSectorsUsed - _numSectors;
+         totalSectorsUsed -= excess;
          colorValues.splice(longestValueStart, excess);
       }
       let sum: number = 0;
       opts.data.forEach((item) => {
          sum += item.value;
       });
-      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то будем прибавлять сектор к такому элементу, у которого процентное отклонение больше остальных.
+      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то будем
+      // прибавлять сектор к такому элементу, у которого процентное отклонение больше остальных.
       if (totalSectorsUsed < _numSectors && sum === maxPercentValue) {
          while (totalSectorsUsed !== _numSectors) {
             const maxDeviationIndex = this._getMaxPercentageDeviationIndex();
@@ -218,6 +204,10 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
             totalSectorsUsed++;
             this._percentageDifferences[maxDeviationIndex] -= correctScale;
          }
+      } else if (sum !== maxPercentValue && totalSectorsUsed === _numSectors) {
+         // При округлении в расчетах может быть ситуация, когда все сектора заполнены,
+         // но сумма не равна максимальной, в этом случае 1 сектор оставляем пустым
+         colorValues.splice(longestValueStart, 1);
       }
       return colorValues;
    }
@@ -237,7 +227,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    private _applyNewState(opts: IStateIndicatorOptions): void {
       let correctScale: number = opts.scale;
       this._checkData(opts);
-      if (opts.scale <= 0 || opts.scale > maxPercentValue) {
+      if (!Utils.isValueInRange(opts.scale, 1, maxPercentValue)) {
          correctScale = defaultScaleValue;
       }
       this._numSectors = Math.floor(maxPercentValue / correctScale);
@@ -258,7 +248,6 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
          this._applyNewState(opts);
       }
    }
-
 
    static getDefaultOptions(): object {
       return {

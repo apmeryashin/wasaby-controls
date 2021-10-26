@@ -8,8 +8,7 @@
                               searchStartingWith="{{_searchStartingWith}}"
                               parentProperty="parent"
                               bind:expandedItems="_expandedItems"
-                              bind:markedKey="_markedKey"
-                              on:markedKeyChanged="_markedKeyChangedHandler()">
+                              bind:markedKey="_markedKey">
         <div>
             <Controls.search:InputContainer>
                 <Controls.search:Input

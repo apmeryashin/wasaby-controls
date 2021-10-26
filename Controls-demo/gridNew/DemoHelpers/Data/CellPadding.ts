@@ -83,4 +83,4 @@ export const CellPadding = {
             populationDensity: 21.86
         }
     ]
-}
+};

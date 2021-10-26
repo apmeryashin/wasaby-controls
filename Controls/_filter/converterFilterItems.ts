@@ -4,16 +4,17 @@ import CoreClone = require('Core/core-clone');
 const differentFields = ['id', 'visibility'];
 
 function convertToFilterSource(detailPanelItems) {
-    let filterSource = CoreClone(detailPanelItems);
-    factory(filterSource).each(function(filterSourceItem, index) {
-        for (var property in filterSourceItem) {
+    const filterSource = CoreClone(detailPanelItems);
+    factory(filterSource).each((filterSourceItem, index) => {
+        for (const property in filterSourceItem) {
             if (filterSourceItem.hasOwnProperty(property)) {
                 if (differentFields.indexOf(property) !== -1) {
                     delete filterSourceItem[property];
                 }
             }
         }
-        filterSourceItem.name = detailPanelItems[index].id ? detailPanelItems[index].id : detailPanelItems[index].name; // items from history have a field 'name' instead of 'id'
+        // items from history have a field 'name' instead of 'id'
+        filterSourceItem.name = detailPanelItems[index].id ? detailPanelItems[index].id : detailPanelItems[index].name;
         if (detailPanelItems[index].visibility !== undefined) {
             filterSourceItem.visibility = detailPanelItems[index].visibility;
         }
@@ -22,9 +23,9 @@ function convertToFilterSource(detailPanelItems) {
 }
 
 function convertToDetailPanelItems(filterSource) {
-    let detailPanelItems = CoreClone(filterSource);
-    factory(detailPanelItems).each(function(detailPanelItem, index) {
-        for (var property in detailPanelItem) {
+    const detailPanelItems = CoreClone(filterSource);
+    factory(detailPanelItems).each((detailPanelItem, index) => {
+        for (const property in detailPanelItem) {
             if (detailPanelItem.hasOwnProperty(property)) {
                 if (differentFields.indexOf(property) !== -1) {
                     delete detailPanelItem[property];
@@ -32,12 +33,13 @@ function convertToDetailPanelItems(filterSource) {
             }
         }
         detailPanelItem.id = filterSource[index].name;
-        detailPanelItem.visibility = filterSource[index].viewMode === 'extended' ? filterSource[index].visibility : undefined;
+        detailPanelItem.visibility =
+            filterSource[index].viewMode === 'extended' ? filterSource[index].visibility : undefined;
     });
     return detailPanelItems;
 }
 
 export = {
-    convertToFilterSource: convertToFilterSource,
-    convertToDetailPanelItems: convertToDetailPanelItems
+    convertToFilterSource,
+    convertToDetailPanelItems
 };

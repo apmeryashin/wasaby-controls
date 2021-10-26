@@ -1,5 +1,7 @@
 import {IColumn, IHeaderCell} from 'Controls/grid';
 
+// tslint:disable:max-line-length
+
 import * as fontColorSuccess from 'wml!Controls-demo/gridNew/Results/FontColorStyle/cellTemplate/fontColorSuccess';
 import * as fontColorLink from 'wml!Controls-demo/gridNew/Results/FontColorStyle/cellTemplate/fontColorLink';
 import * as fontColorPrimary from 'wml!Controls-demo/gridNew/Results/FontColorStyle/cellTemplate/fontColorPrimary';

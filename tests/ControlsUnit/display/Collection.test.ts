@@ -19,7 +19,7 @@ import {
     Model,
     functor,
     Record
-} from 'Types/entity'
+} from 'Types/entity';
 
 const ComputeFunctor = functor.Compute;
 
@@ -91,11 +91,11 @@ describe('Controls/_display/Collection', () => {
 
     describe('.constructor()', () => {
         it('should use filter from options', () => {
-            const list = new List({
+            list = new List({
                 items: [1, 2, 3, 4]
             });
 
-            const display = new CollectionDisplay({
+            display = new CollectionDisplay({
                 collection: list,
                 filter: (item) => item === 3
             });
@@ -109,7 +109,7 @@ describe('Controls/_display/Collection', () => {
         });
 
         it('should use group from options', () => {
-            const list = new List({
+            list = new List({
                 items: [
                     {id: 1, group: 1},
                     {id: 2, group: 2},
@@ -117,7 +117,7 @@ describe('Controls/_display/Collection', () => {
                     {id: 4, group: 3}
                 ]
             });
-            const display = new CollectionDisplay({
+            display = new CollectionDisplay({
                 collection: list,
                 group: (item) => item.group
             });
@@ -2553,7 +2553,7 @@ describe('Controls/_display/Collection', () => {
                     newItems: itemsNew,
                     oldAt: 0,
                     oldItems: []
-                },
+                }
                 // {
                 //     method: 'clear',
                 //     action: IBindCollection.ACTION_RESET,
@@ -4032,7 +4032,7 @@ describe('Controls/_display/Collection', () => {
         assert.strictEqual(
             collection.getMultiSelectVisibility(),
             multiSelectVisibility,
-            `multiSelectVisibility should get initialized from options`
+            'multiSelectVisibility should get initialized from options'
         );
 
         const prevVersion = collection.getVersion();
@@ -4046,7 +4046,7 @@ describe('Controls/_display/Collection', () => {
             collection.getVersion(),
             prevVersion,
             '.setMultiSelectVisibility() should increase collection version'
-        )
+        );
     });
 
     it('.getPadding()', () => {
@@ -4084,7 +4084,7 @@ describe('Controls/_display/Collection', () => {
             collection.getVersion(),
             prevVersion,
             '.setEditingConfig() should increase collection version'
-        )
+        );
     });
 
     it('.setSearchValue()', () => {
@@ -4196,7 +4196,7 @@ describe('Controls/_display/Collection', () => {
                 }),
                 isAdd: true,
                 addPosition: 'bottom'
-            })
+            });
         });
     });
 
@@ -4461,7 +4461,7 @@ describe('Controls/_display/Collection', () => {
     });
 
     describe('setDisplayProperty, getDisplayProperty', () => {
-        let display = new CollectionDisplay({
+        const display = new CollectionDisplay({
             collection: new RecordSet({
                 rawData: items,
                 keyProperty: 'id'
@@ -4486,7 +4486,7 @@ describe('Controls/_display/Collection', () => {
 
     describe('hoverBackgroundStyle', () => {
         it('exists in options', () => {
-            let display = new CollectionDisplay({
+            const display = new CollectionDisplay({
                 collection: new RecordSet({
                     rawData: items,
                     keyProperty: 'id'
@@ -4497,7 +4497,7 @@ describe('Controls/_display/Collection', () => {
         });
 
         it('not exists in options', () => {
-            let display = new CollectionDisplay({
+            const display = new CollectionDisplay({
                 collection: new RecordSet({
                     rawData: items,
                     keyProperty: 'id'
@@ -4507,7 +4507,7 @@ describe('Controls/_display/Collection', () => {
         });
 
         it('not exists in options but exists style in options', () => {
-            let display = new CollectionDisplay({
+            const display = new CollectionDisplay({
                 collection: new RecordSet({
                     rawData: items,
                     keyProperty: 'id'

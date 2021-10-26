@@ -6,7 +6,7 @@ import {TColumns} from './interface/IColumn';
 import Collection from './Collection';
 import ColgroupCell from './ColgroupCell';
 
-type TColgroupCells<T extends Model = Model> = ColgroupCell<T>[];
+type TColgroupCells<T extends Model = Model> = Array<ColgroupCell<T>>;
 
 export interface IOptions<T extends Model = Model> {
     owner: Collection<T>;

@@ -15,7 +15,11 @@ import {
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
-import { getOffsetTop, getDimensionsByRelativeParent as uDimension } from '../sizeUtils';
+import {
+    getOffsetTop,
+    getDimensionsByRelativeParent as uDimension,
+    getDimensions
+} from '../sizeUtils';
 import { getStickyHeadersHeight } from '../scroll';
 import {IVirtualScrollConfig} from 'Controls/_baseList/interface/IVirtualScroll';
 
@@ -85,11 +89,11 @@ export default class ScrollController {
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
     // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
-    // tslint:disable-next-line
+    // tslint:disable-next-line:no-any
     protected _options: any;
 
     // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
-    // tslint:disable-next-line
+    // tslint:disable-next-line:no-any
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
         if (options.needScrollCalculation && options.virtualScrollConfig) {
@@ -225,7 +229,10 @@ export default class ScrollController {
         firstItemIndex = Math.min(firstItemIndex, this._options.collection.getStopIndex());
 
         // TODO: Отрефакторить. Задача: https://online.sbis.ru/opendoc.html?guid=0c097079-0143-4b19-9f43-dc38c68ba3bc
-        if (this._options.collection.getStartIndex() && this._options.collection.at(0)['[Controls/_display/GroupItem]'] ) {
+        if (
+            this._options.collection.getStartIndex() &&
+            this._options.collection.at(0)['[Controls/_display/GroupItem]']
+        ) {
             firstItemIndex--;
         }
         return this._options.collection.at(firstItemIndex);
@@ -248,7 +255,8 @@ export default class ScrollController {
      * @private
      */
     private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
+        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
+            ? this._virtualScroll.getRange().start : 0;
         const itemsCount = items.length;
         let itemsHeight = firstElementIndex;
         let i = 0;
@@ -263,7 +271,8 @@ export default class ScrollController {
     }
 
     private _getTopOffsetForItemsContainer(listViewContainer: HTMLElement, baseControlContainer: HTMLElement): number {
-        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide' ? this._virtualScroll.getRange().start : 0;
+        const firstElementIndex = this._options.virtualScrollConfig.mode === 'hide'
+            ? this._virtualScroll.getRange().start : 0;
         let offsetTop = uDimension(listViewContainer.children[firstElementIndex], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
         offsetTop += container.offsetTop - uDimension(container).top;
@@ -606,21 +615,30 @@ export default class ScrollController {
         }
     }
 
-    saveEdgeItem(direction: IDirection, itemsContainer: HTMLElement): void {
+    saveEdgeItem(direction: IDirection, itemsContainer: HTMLElement, itemsContainerSelector: string): void {
         const viewportHeight = this._viewportHeight;
 
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
         const scrollContent = itemsContainer.closest('.controls-Scroll-ContainerBase__content');
         const topCompensation = scrollContent ?
-            (scrollContent.getBoundingClientRect().top - itemsContainer.getBoundingClientRect().top) :
+            (scrollContent.getBoundingClientRect().top - getDimensions(itemsContainer).top) :
             getOffsetTop(itemsContainer);
         const scrollTop = this.getScrollTop();
 
-        const items = Array.from(itemsContainer.querySelectorAll(`:scope > ${ this._options.itemsSelector }`));
+        const items = Array.from(itemsContainer.querySelectorAll(`.${itemsContainerSelector} > ${ this._options.itemsSelector }`));
         let edgeItemParams: IEdgeItemParams;
 
         items.some((item: HTMLElement) => {
             if (item.className.includes('controls-ListView__hiddenContainer')) {
+                return false;
+            }
+
+            // Если элемент застикан, то пропускаем его, граничным будет элемент следующий за ним
+            // https://online.sbis.ru/opendoc.html?guid=9a0d939d-a08b-478b-b981-ccd1577fb184
+            if (
+                window.getComputedStyle(item).position === 'sticky' ||
+                (item.children[0] && window.getComputedStyle(item.children[0]).position === 'sticky')
+            ) {
                 return false;
             }
 
@@ -672,12 +690,12 @@ export default class ScrollController {
         }
     }
 
-    getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement): number {
+    getScrollTopToEdgeItem(direction: IDirection, itemsContainer: HTMLElement, itemsContainerSelector: string): number {
         // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
         // const compensation = getOffsetTop(itemsContainer);
 
         if (this._edgeItemParams) {
-            const item = itemsContainer.querySelector(`[item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
+            const item = itemsContainer.querySelector(`.${itemsContainerSelector} > ${this._options.itemsSelector}[item-key="${this._edgeItemParams.key}"]`) as HTMLElement;
             if (item) {
                 const itemOffsetTop = getOffsetTop(item);
                 if (direction === 'up') {
@@ -728,7 +746,11 @@ export default class ScrollController {
         return !!this._virtualScroll;
     }
 
-    handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
+    handleMoveItems(addIndex: number,
+                    addedItems: object[],
+                    removeIndex: number,
+                    removedIitems: object[],
+                    direction?: IDirection): IScrollControllerResult {
         let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(
@@ -763,7 +785,10 @@ export default class ScrollController {
      * @param shift автоматически сдвинуть диапазон в направлении direction
      * @private
      */
-    handleAddItems(addIndex: number, items: object[], direction?: IDirection, shift: boolean = false): IScrollControllerResult {
+    handleAddItems(addIndex: number,
+                   items: object[],
+                   direction?: IDirection,
+                   shift: boolean = false): IScrollControllerResult {
         let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(
@@ -835,8 +860,10 @@ export default class ScrollController {
         this._resetInEnd = resetInEnd;
     }
 
-    destroy() {
-        this._options.collection && this._options.collection.setIndexes(0, 0);
+    destroy(): void {
+        if (this._options.collection) {
+            this._options.collection.setIndexes(0, 0);
+        }
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {

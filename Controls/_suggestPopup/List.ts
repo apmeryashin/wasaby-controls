@@ -91,8 +91,6 @@ const _private = {
  *       'UI/Base',
  *       'wml!myControl/SuggestList'
  *    ], function(Base, template) {
- *       'use strict';
- *
  *       return class MyControl extends Control<IControlOptions> {
  *          _template: template
  *       });
@@ -253,19 +251,19 @@ const List = Control.extend({
    },
 
    _inputKeydown(event, domEvent) {
-      const
-         items = this._items,
-         itemsCount = items && items.getCount();
+      const items = this._items;
+      const itemsCount = items && items.getCount();
 
       if (this._markedKey === null && itemsCount && domEvent.nativeEvent.keyCode === constants.key.up) {
          this._markedKey = items.at(itemsCount - 1).getId();
       } else {
-         /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
-          remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
-         const
-            list = this._children.list,
-            listContainer = list._container[0] || list._container,
-            customEvent = _private.getEvent('keydown');
+         /* TODO will refactor on the project
+             https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
+          remove list._container[0] after
+          https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
+         const list = this._children.list;
+         const listContainer = list._container[0] || list._container;
+         const customEvent = _private.getEvent('keydown');
 
          _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
       }

@@ -31,7 +31,8 @@ export default class extends Control {
     }
 
     _beginAdd(e, addPosition: 'top' | 'bottom') {
-        const targetKey = this._targetItemName === 'null' || this._targetItemName === '' ? null : this._targetItemName.replace('item', 'key');
+        const targetKey = this._targetItemName === 'null' || this._targetItemName === '' ?
+            null : this._targetItemName.replace('item', 'key');
         const targetItem = targetKey === null ? undefined : this._children.treeGrid.getItems().getRecordById(targetKey);
         const parentKey = targetItem ? targetItem.get('parent') : null;
         const group = targetItem ? targetItem.get('group') : 'group_1';
@@ -55,7 +56,7 @@ export default class extends Control {
                 parent,
                 type: null
             }
-        })
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

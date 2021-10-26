@@ -69,7 +69,7 @@ export interface IControllerOptions extends
     ISourceOptions,
     IPromiseSelectableOptions,
     INavigationOptions<INavigationSourceConfig>,
-    ISelectFieldsOptions{
+    ISelectFieldsOptions {
     dataLoadErrback?: Function;
     dataLoadCallback?: Function;
     nodeLoadCallback?: Function;
@@ -154,7 +154,6 @@ const OPTIONS_FOR_UPDATE_AFTER_LOAD = [
  * @description Конфигурация навигации ({@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#cursor по курсору} или {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#page постраничная}).
  * Также, в конфигурации можно передать опцию multiNavigation, если метод БЛ поддерживает работу с {@link /doc/platform/developmentapl/interface-development/controls/list/tree-column/node/managing-node-expand/#multi-navigation множественной навигацией}.
  */
-
 
 /**
  * Класс-загрузчик данных
@@ -950,7 +949,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
         options: IControllerOptions,
         root: TKey = this._root,
         isFirstLoad: boolean,
-        direction: Direction): Promise<QueryWhereExpression<unknown>>{
+        direction: Direction): Promise<QueryWhereExpression<unknown>> {
         const parentProperty = this._parentProperty;
         let resultFilter: QueryWhereExpression<unknown>;
 
@@ -1069,7 +1068,7 @@ export default class Controller extends mixin<ObservableMixin>(ObservableMixin) 
             this._nodeDataMoreLoadCallback();
         }
 
-        if (loadedInCurrentRoot || direction) {
+        if (loadedInCurrentRoot) {
             dataLoadCallbackResult = this._notify('dataLoad', result, direction);
         }
 

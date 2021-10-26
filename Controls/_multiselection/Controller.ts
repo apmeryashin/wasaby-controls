@@ -14,7 +14,7 @@ import {
 import { CrudEntityKey } from 'Types/source';
 import clone = require('Core/core-clone');
 import { isEqual } from 'Types/object';
-import {TreeSelectionStrategy} from "Controls/_multiselection/SelectionStrategy/Tree";
+import {TreeSelectionStrategy} from 'Controls/_multiselection/SelectionStrategy/Tree';
 
 /**
  * Контроллер множественного выбора

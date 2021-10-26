@@ -47,5 +47,3 @@ export default interface IIcon {
  * </pre>
  * @see iconStyle
  */
-
-

@@ -5,4 +5,4 @@ export function getOptionTypes() {
       displayProperty: descriptor(String).required(),
       searchParam: descriptor(String).required()
    };
-};
+}

@@ -8,8 +8,8 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
        * @private
        * @author Красильников А.С.
        */
-      var _private = {
-         updateFormatMaskChars: function(self, formatMaskChars) {
+const _private = {
+         updateFormatMaskChars(self, formatMaskChars) {
             if (self._formatMaskChars === formatMaskChars) {
                return;
             }
@@ -18,21 +18,21 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
             self.formatMaskCharsRegExp = new RegExp('[' + Object.keys(formatMaskChars).join('') + ']', 'g');
          },
 
-         prepareSplitValue: function(result) {
-            var position = result.position;
-            var before = result.value.substring(0, position);
-            var after = result.value.substring(position, result.value.length);
+         prepareSplitValue(result) {
+            const position = result.position;
+            const before = result.value.substring(0, position);
+            const after = result.value.substring(position, result.value.length);
 
             return {
-               before: before,
-               after: after,
+               before,
+               after,
                insert: '',
                delete: ''
             };
-         },
+         }
       };
 
-      class ViewModel extends BaseViewModel {
+class ViewModel extends BaseViewModel {
          constructor(...args: any[]) {
             super(...args);
             this.setCarriageDefaultPosition(0);
@@ -59,7 +59,7 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
          }
 
          _convertToDisplayValue(value) {
-            let mask = this._getMask(value);
+            const mask = this._getMask(value);
             this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             const fValue = value === null ? '' : value;
@@ -167,12 +167,14 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
             this._format = FormatBuilder.getFormat(mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            const result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format, this.newValue);
+            const result = InputProcessor.input(
+                splitValue, inputType, this.options.replacer, this._format, this._format, this.newValue
+            );
             return result;
          }
 
          setCarriageDefaultPosition(currentPosition?: number) {
-             let selection = this._getCarriageDefaultPosition(currentPosition);
+             const selection = this._getCarriageDefaultPosition(currentPosition);
              if (selection !== currentPosition || selection !== this.selection.start) {
                 this.selection = selection;
                 this._nextVersion();
@@ -181,9 +183,8 @@ import isMaskFormatValid from 'Controls/_input/Mask/isFormatValid';
          }
 
          private _getCarriageDefaultPosition(currentPosition?: number): number {
-            let
-               position,
-               isFiled;
+            let position;
+            let isFiled;
 
             if (this.options.replacer) {
                position = this.displayValue.indexOf(this.options.replacer);

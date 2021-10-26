@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения подвала {@link Controls/list:View плоского списка}.
- * 
+ *
  * @class Controls/_list/interface/FooterTemplate
  * @author Авраменко А.С.
  * @see Controls/list:View#footerTemplate
@@ -28,4 +28,3 @@ export default interface IFooterTemplateOptions {
      */
     contentTemplate?: string;
  }
- 

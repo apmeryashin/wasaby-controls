@@ -33,7 +33,9 @@ import {IGridAbstractColumn} from './../interface/IGridAbstractColumn';
 export type THeaderVisibility = 'visible' | 'hasdata';
 export type TResultsVisibility = 'visible' | 'hasdata' | 'hidden';
 
-export type ISortItem = { [p: string]: string };
+export interface ISortItem {
+    [p: string]: string;
+}
 
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
 
@@ -46,7 +48,9 @@ export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => 
 
 export type TColumnScrollViewMode = IScrollBarOptions['mode'];
 
-export interface IEmptyTemplateColumn extends IGridAbstractColumn {}
+export {
+    IGridAbstractColumn as IEmptyTemplateColumn
+};
 
 export interface IOptions extends ICollectionOptions {
     columns: TColumns;
@@ -68,7 +72,7 @@ export interface IOptions extends ICollectionOptions {
     columnScrollViewMode?: TColumnScrollViewMode;
     stickyColumnsCount?: number;
     sorting?: ISortItem[];
-    emptyTemplateColumns?: IEmptyTemplateColumn[];
+    emptyTemplateColumns?: IGridAbstractColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
 }
 
@@ -102,13 +106,17 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     protected _$emptyGridRow: EmptyRow<S>;
     protected _$emptyTemplate: TemplateFunction;
     protected _$sorting: ISortItem[];
-    protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
+    protected _$emptyTemplateColumns: IGridAbstractColumn[];
     protected _$colspanGroup: boolean;
     protected _$backgroundStyle: string;
     protected _$newDesign: boolean;
 
     protected _isFullGridSupport: boolean = isFullGridSupport();
     protected _footer: FooterRow;
+
+    protected abstract _$emptyTemplateOptions: object;
+
+    protected abstract _$itemActionsPosition: TItemActionsPosition;
 
     protected constructor(options: IOptions) {
         const supportLadder = GridLadderUtil.isSupportLadder(this._$ladderProperties);
@@ -681,10 +689,6 @@ export default abstract class Grid<S extends Model = Model, T extends GridRowMix
     abstract getTheme(): string;
 
     abstract getItems(): T[];
-
-    protected abstract _$emptyTemplateOptions: object;
-
-    protected abstract _$itemActionsPosition: TItemActionsPosition;
 
     protected abstract _nextVersion(): void;
 

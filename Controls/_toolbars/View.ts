@@ -62,7 +62,7 @@ export interface IMenuOptions {
     template: string;
 }
 
- export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
+export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions, IFilterOptions, IHeightOptions {
     /**
@@ -459,12 +459,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _openMenu(config: IStickyPopupOptions): void {
-        /**
-         * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
-         * по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
-         */
-        this._notify('menuOpened', [], {bubbling: true});
-
         if (!this._sticky) {
             this._sticky = new StickyOpener();
         }
@@ -480,7 +474,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
         this._setState(options);
 
-        //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=7d618623-243a-4aa2-a533-215f06e137e1
+        // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=7d618623-243a-4aa2-a533-215f06e137e1
         this._isShowToolbar = this._isShowToolbar.bind(this);
 
         if (options.source) {
@@ -549,7 +543,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _closeHandler(): void {
-        this._notify('menuClosed', [], {bubbling: true});
         this._setStateByItems(this._items, this._options.source);
         this._setMenuSource();
     }
@@ -657,6 +650,13 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _getFirstToolbarItem(): void | TItem {
         if (this._items) {
             const count = this._items.getCount();
+            if (count === 1) {
+                // Если элемент один, покажем его только в тулбаре.
+                const isFirstItemShowTypeToolbar = this._items.at(0).get('showType') === showType.TOOLBAR;
+                if (!isFirstItemShowTypeToolbar) {
+                    this._items.at(0).set('showType', showType.TOOLBAR);
+                }
+            }
             for (let i = 0; i < count; i++) {
                 const item = this._items.at(i) as TItem;
                 const isToolbarItem = this._isShowToolbar(item, this._parentProperty);
@@ -773,6 +773,22 @@ Object.defineProperty(Toolbar, 'defaultProps', {
  * @name Controls/_toolbars/View#itemTemplate
  * @cfg {String | TemplateFunction} Пользовательский шаблон отображения элемента внутри тулбара.
  * Для того чтобы задать шаблон элемента и в тулбаре и в выпадающем списке, используйте опцию {@link Controls/interface/IItemTemplate itemTemplateProperty}.
+ * Для определения внутри шаблона места построения(тулбар или меню) используйте переменную type="toolbar"
+ * внутри шаблона.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <div class="wrapper">
+ *    <div class="cell">
+ *        <ws:if data="{{type === 'toolbar'}}">
+ *            {{toolbarContent}}
+ *        </ws:if>
+ *        <ws:else>
+ *            {{menuContent}}}
+ *        </ws:else>
+ *    </div>
+ * </div>
+ * </pre>
  *
  * @example
  * <pre class="brush: html">

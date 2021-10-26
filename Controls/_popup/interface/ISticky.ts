@@ -8,7 +8,7 @@ interface ITargetPosition {
     x: number;
     y: number;
 }
-export type TTarget = HTMLElement | EventTarget | ITargetPosition | Control<{}, void>;
+export type TTarget = HTMLElement | EventTarget | ITargetPosition | Control<{}>;
 
 export interface IStickyPopupPosition {
     targetPoint?: IStickyPosition;
@@ -199,7 +199,6 @@ export interface IStickyOpener extends IOpener {
  * @cfg {Controls/_popup/interface/IStickyOpener/Offset.typedef} Sets the offset of the targetPoint.
  */
 
-
 /**
  * @name Controls/_popup/interface/IStickyOpener#backgroundStyle
  * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
@@ -224,7 +223,6 @@ export interface IStickyOpener extends IOpener {
  * @variant overflow Координаты точки позиционирования меняются (блок сдвигается относительно целевого элемента настолько, насколько не помещается в области видимости экрана, причем блок, возможно, будет перекрывать целевой элемент.) Если блок имеет размеры больше экрана, то ширина и высота уменьшаются так, чтобы блок поместился.
  * @variant adaptive Координаты точки позиционирования (см. {@link Controls/_popup/interface/IStickyOpener#targetPoint targetPoint}) и выравнивание (см. {@link Controls/_popup/interface/IStickyOpener#direction direction}) меняются на противоположные. Если и в этом случае блок не помещается на экран, выбирается тот способ позиционирования (изначальный или инвертируемый), при котором на экране помещается наибольшая часть контента. Например, если поле ввода с автодополнением находится внизу экрана, то список автодополнения раскроется вверх от поля. Ширина и высота при этом уменьшаются так, чтобы блок поместился на экран.
  */
-
 
 /**
  * Метод для закрытия прилипающего блока.

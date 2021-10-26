@@ -136,4 +136,3 @@ export default interface IMultiSelectable {
  * @see Controls/_interface/ISource#keyProperty
  * @see selectedKeys
  */
-

@@ -1,6 +1,6 @@
-<div class="{{_options.theme.indexOf('default') !== -1 ? 'controlsDemo_fixedWidth800'}} controlsDemo__ml1">
+<div class="{{_options.theme.indexOf('default') !== -1 ? 'controlsDemo__maxWidth1200'}} controlsDemo__ml1">
     <div attr:style="margin-bottom: 15px">
-        <div attr:style="text-align: center;" class="controls-text-secondary">1. -</div>
+        <div attr:style="text-align: center;" class="controls-text-secondary">1. default</div>
         <div class="demo-TabButtons">
             <Controls.tabs:Buttons
                     bind:selectedKey='SelectedKey2'
@@ -34,6 +34,14 @@
                     items="{{_items4}}"
                     keyProperty="id"/>
         </div>
+        <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
+            <span attr:style="white-space: nowrap">caption-counter-icon-additionalCaption</span>
+            <Controls.tabs:Buttons
+                    bind:selectedKey='SelectedKey1'
+                    itemRightTemplate="Controls/tabs:TextCounterTabTemplate"
+                    items="{{_items5}}"
+                    keyProperty="id"/>
+        </div>
     </div>
     <div attr:style="text-align: center;" class="controls-text-secondary">3. IconCounterTabTemplate</div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -41,7 +49,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items5}}"
+                items="{{_items6}}"
                 keyProperty="id"/>
     </div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -49,7 +57,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items6}}"
+                items="{{_items7}}"
                 keyProperty="id"/>
     </div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -57,7 +65,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items7}}"
+                items="{{_items8}}"
                 keyProperty="id"/>
     </div>
     <div attr:style="display: flex;align-items: flex-end" class="demo-TabButtons">
@@ -65,7 +73,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey3'
                 itemTemplate="Controls/tabs:IconCounterTabTemplate"
-                items="{{_items8}}"
+                items="{{_items9}}"
                 keyProperty="id"/>
     </div>
 </div>

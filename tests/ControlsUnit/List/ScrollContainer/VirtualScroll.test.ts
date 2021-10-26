@@ -121,7 +121,15 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         let instance: controller;
 
         beforeEach(() => {
-            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            instance = new controller({
+                pageSize: 5,
+                segmentSize: 1
+            }, {
+                viewport: 200,
+                topTrigger: 10,
+                bottomTrigger: 10,
+                scroll: 300
+            });
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             // tslint:disable-next-line:ban-ts-ignore
@@ -180,7 +188,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         let instance: controller;
 
         beforeEach(() => {
-            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             // tslint:disable-next-line:ban-ts-ignore
@@ -220,7 +231,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
 
         beforeEach(() => {
             // tslint:disable-next-line:no-magic-numbers
-            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 4);
             // tslint:disable-next-line:ban-ts-ignore
@@ -246,7 +260,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
     });
     describe('.shiftRange', () => {
         // tslint:disable-next-line:no-magic-numbers
-        const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 60, bottomTrigger: 60, scroll: 240});
+        const instance = new controller(
+            {pageSize: 5, segmentSize: 1},
+            {viewport: 200, topTrigger: 60, bottomTrigger: 60, scroll: 240}
+        );
 
         it('to up', () => {
             // tslint:disable-next-line:no-magic-numbers
@@ -281,7 +298,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
     describe('.isNeedToRestorePosition', () => {
         it('after shift range', () => {
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 600});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 600}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 10, {itemsHeights: [60, 60, 60, 60, 60, 60, 60, 60, 60, 60]});
             instance.shiftRange('down');
@@ -290,7 +310,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         });
         it('after insert', () => {
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             // tslint:disable-next-line:ban-ts-ignore
@@ -303,7 +326,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         });
         it('after insert with predicted direction', () => {
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             // tslint:disable-next-line:ban-ts-ignore
@@ -315,7 +341,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
             assert.isTrue(instance.isNeedToRestorePosition);
         });
         it('after remove', () => {
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             // tslint:disable-next-line:ban-ts-ignore
@@ -328,7 +357,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
     });
     describe('insertItemsHeights', () => {
         it('addItems', () => {
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             instance.resetRange(0, 5);
             // @ts-ignore
             instance.updateItemsHeights(getItemsHeightsData([60, 60, 60, 60, 60]));
@@ -342,7 +374,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
     });
     describe('.canScrollToItem', () => {
         // tslint:disable-next-line:no-magic-numbers
-        const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 600});
+        const instance = new controller(
+            {pageSize: 5, segmentSize: 1},
+            {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 600}
+        );
         // tslint:disable-next-line:no-magic-numbers
         instance.resetRange(0, 10);
         // tslint:disable-next-line:ban-ts-ignore
@@ -615,7 +650,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
     describe('.getDirectionToRestoreScroll()', () => {
         it('after shift', () => {
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 60, bottomTrigger: 60, scroll: 240});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 60, bottomTrigger: 60, scroll: 240}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 10, {itemsHeights: [60, 60, 60, 60, 60, 60, 60, 60, 60, 60]});
             instance.shiftRange('down');
@@ -630,7 +668,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         });
         it('after insert with predicted direction', () => {
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             // tslint:disable-next-line:ban-ts-ignore
@@ -644,7 +685,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         it('after shift with recalculate indexes to both direction', () => {
             // test for task https://online.sbis.ru/opendoc.html?guid=d739f7ec-36e2-4386-8b17-f39d135f4656
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 10, segmentSize: 5}, {viewport: 3, topTrigger: 1, bottomTrigger: 1, scroll: 30});
+            const instance = new controller(
+                {pageSize: 10, segmentSize: 5},
+                {viewport: 3, topTrigger: 1, bottomTrigger: 1, scroll: 30}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(1, 40);
             // tslint:disable-next-line:ban-ts-ignore
@@ -671,7 +715,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         });
         it('after shifting and adding items in opposite directiond', () => {
             // test for task https://online.sbis.ru/opendoc.html?guid=9040b3b7-eb6c-4a1f-b16a-7cf917bf6137
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             instance.resetRange(0, 10);
             // @ts-ignore
             instance.shiftRange('down');
@@ -684,7 +731,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
     describe('.updateItemsHeights()', () => {
         it('range changed switch off', () => {
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             assert.isTrue(instance.rangeChanged);
@@ -696,7 +746,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
         });
         it('do not update if count is less than range', () => {
             // tslint:disable-next-line:no-magic-numbers
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300});
+            const instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 300}
+            );
             // tslint:disable-next-line:no-magic-numbers
             instance.resetRange(0, 5);
             assert.isTrue(instance.rangeChanged);
@@ -712,7 +765,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
 
         beforeEach(() => {
             // tslint:disable-next-line:no-magic-numbers
-            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 200});
+            instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 10, bottomTrigger: 10, scroll: 200}
+            );
         });
 
         it('range changed keeps value', () => {
@@ -745,7 +801,10 @@ describe('Controls/_baseList/ScrollContainer/VirtualScroll', () => {
 
         beforeEach(() => {
             // tslint:disable-next-line:no-magic-numbers
-            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, topTrigger: 60, bottomTrigger: 60, scroll: 300});
+            instance = new controller(
+                {pageSize: 5, segmentSize: 1},
+                {viewport: 200, topTrigger: 60, bottomTrigger: 60, scroll: 300}
+            );
         });
 
         it('range changed keeps value', () => {

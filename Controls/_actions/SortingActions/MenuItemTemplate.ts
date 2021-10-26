@@ -1,7 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_actions/SortingActions/MenuItemTemplate');
-import {SyntheticEvent} from "UI/Vdom";
-import {Record} from "Types/entity";
+import {SyntheticEvent} from 'UI/Vdom';
+import {Record} from 'Types/entity';
 
 type Order = 'ASC' | 'DESC';
 

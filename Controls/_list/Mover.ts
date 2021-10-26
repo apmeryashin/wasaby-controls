@@ -8,7 +8,6 @@ import {Move as MoveAction, IMoveActionOptions} from 'Controls/listCommands';
 import {Model} from 'Types/entity';
 import {LOCAL_MOVE_POSITION} from 'Types/source';
 
-
 // @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
 //   selectedTypeChanged даже от MultiSelect
 //  https://online.sbis.ru/doc/0445b971-8675-42ef-b2bc-e68d7f82e0ac
@@ -21,27 +20,27 @@ import {BEFORE_ITEMS_MOVE_RESULT, IMoveItemsParams} from './interface/IMoverAndR
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
-var _private = {
+const _private = {
     moveItems(self, items, target, position) {
         const useAction = _private.useAction(items);
-        const afterItemsMove = function (result) {
+        const afterItemsMove = (result) => {
             _private.afterItemsMove(self, items, target, position, result);
             return result;
-        }
-        return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
+        };
+        return _private.beforeItemsMove(self, items, target, position).addCallback((beforeItemsMoveResult) => {
             if (useAction) {
                 return self._action.execute({
                     selection: _private.convertItemsToISelectionObject(items),
                     filter: _private.extractFilter(items),
                     targetKey: _private.getIdByItem(self, target),
-                    position: position,
+                    position,
                     providerName: 'Controls/listCommands:MoveProvider'
                 });
             }
             if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
                 return _private.moveInItems(self, items, target, position);
             } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-                return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
+                return _private.moveInSource(self, items, target, position).addCallback((moveResult) => {
                     _private.moveInItems(self, items, target, position);
                     return moveResult;
                 });
@@ -49,25 +48,27 @@ var _private = {
         }).addBoth(afterItemsMove);
     },
 
-    beforeItemsMove: function (self, items, target, position) {
-        var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
-        return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
+    beforeItemsMove(self, items, target, position) {
+        const beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
+        return beforeItemsMoveResult instanceof Promise ?
+            beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
-    afterItemsMove: function (self, items, target, position, result) {
+    afterItemsMove(self, items, target, position, result) {
         self._notify('afterItemsMove', [items, target, position, result]);
 
-        //According to the standard, after moving the items, you need to unselect all in the table view.
-        //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
-        //The only way to affect the selection in the table view is to send the selectedTypeChanged event.
-        //You need a schema in which Mover will not work directly with the selection.
-        //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
+        // According to the standard, after moving the items, you need to unselect all in the table view.
+        // The table view and Mover are in a common container (Control.Container.MultiSelector)
+        // and do not know about each other.
+        // The only way to affect the selection in the table view is to send the selectedTypeChanged event.
+        // You need a schema in which Mover will not work directly with the selection.
+        // Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
         self._notify('selectedTypeChanged', ['unselectAll'], {
             bubbling: true
         });
     },
 
-    moveInItems: function (self, items, target, position) {
+    moveInItems(self, items, target, position) {
         if (position === LOCAL_MOVE_POSITION.On) {
             _private.hierarchyMove(self, items, target);
         } else {
@@ -75,16 +76,15 @@ var _private = {
         }
     },
 
-    reorderMove: function (self, items, target, position) {
-        var
-           movedIndex,
-           movedItem,
-           parentProperty = self._options.parentProperty,
-           targetId = _private.getIdByItem(self, target),
-           targetItem = _private.getModelByItem(self, targetId),
-           targetIndex = self._items.getIndex(targetItem);
+    reorderMove(self, items, target, position) {
+        let movedIndex;
+        let movedItem;
+        const parentProperty = self._options.parentProperty;
+        const targetId = _private.getIdByItem(self, target);
+        const targetItem = _private.getModelByItem(self, targetId);
+        let targetIndex = self._items.getIndex(targetItem);
 
-        items.forEach(function (item) {
+        items.forEach((item) => {
             movedItem = _private.getModelByItem(self, item);
             if (movedItem) {
                 if (position === LOCAL_MOVE_POSITION.Before) {
@@ -98,7 +98,8 @@ var _private = {
                 }
 
                 if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
-                    //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
+                    // if the movement was in order and hierarchy at the same time,
+                    // then you need to update parentProperty
                     movedItem.set(parentProperty, targetItem.get(parentProperty));
                 }
 
@@ -112,9 +113,9 @@ var _private = {
         });
     },
 
-    hierarchyMove: function (self, items, target) {
-        var targetId = _private.getIdByItem(self, target);
-        items.forEach(function (item) {
+    hierarchyMove(self, items, target) {
+        const targetId = _private.getIdByItem(self, target);
+        items.forEach((item) => {
             item = _private.getModelByItem(self, item);
             if (item) {
                 item.set(self._options.parentProperty, targetId);
@@ -122,13 +123,13 @@ var _private = {
         });
     },
 
-    moveInSource: function (self, items, target, position) {
+    moveInSource(self, items, target, position) {
         const targetId = _private.getIdByItem(self, target);
-        const idArray = items.map(function (item) {
+        const idArray = items.map((item) => {
             return _private.getIdByItem(self, item);
         });
 
-        //If reverse sorting is set, then when we call the move on the source, we invert the position.
+        // If reverse sorting is set, then when we call the move on the source, we invert the position.
         if (position !== LOCAL_MOVE_POSITION.On && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
             position = position === LOCAL_MOVE_POSITION.After ? LOCAL_MOVE_POSITION.Before : LOCAL_MOVE_POSITION.After;
         }
@@ -138,7 +139,7 @@ var _private = {
         });
     },
 
-    moveItemToSiblingPosition: function (self, item, position) {
+    moveItemToSiblingPosition(self, item, position) {
         const target = _private.getTargetItem(self, item, position);
         return target ? self.moveItems([item], target, position) : Deferred.success();
     },
@@ -152,18 +153,17 @@ var _private = {
      * @private
      */
     getTargetItem(self, item, position: LOCAL_MOVE_POSITION): Model {
-        var
-            result,
-            display,
-            itemIndex,
-            siblingItem,
-            itemFromProjection;
+        let result;
+        let display;
+        let itemIndex;
+        let siblingItem;
+        let itemFromProjection;
 
-        //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
-        //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
-        //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
-        //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
-        //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+        // В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
+        // В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
+        // а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
+        // Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
+        // Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
         if (self._options.parentProperty) {
             display = new Tree({
                 collection: self._items,
@@ -173,7 +173,8 @@ var _private = {
                 root: self._options.root !== undefined ? self._options.root : null
             });
             itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
-            siblingItem = display[position === LOCAL_MOVE_POSITION.Before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            siblingItem =
+                display[position === LOCAL_MOVE_POSITION.Before ? 'getPrevious' : 'getNext'](itemFromProjection);
             result = siblingItem ? siblingItem.getContents() : null;
         } else {
             itemIndex = self._items.getIndex(_private.getModelByItem(self, item));
@@ -183,10 +184,10 @@ var _private = {
         return result;
     },
 
-    updateDataOptions: function (self, newOptions, contextDataOptions) {
+    updateDataOptions(self, newOptions, contextDataOptions) {
         self._items = newOptions.items || contextDataOptions?.items;
 
-        let controllerOptions: Partial<IMoveActionOptions> = {
+        const controllerOptions: Partial<IMoveActionOptions> = {
             parentProperty: newOptions.parentProperty
         };
         if (contextDataOptions) {
@@ -218,17 +219,16 @@ var _private = {
         self._action = new MoveAction(controllerOptions as IMoveActionOptions);
     },
 
-    checkItem: function (self, item, target, position) {
-        var
-            key,
-            parentsMap,
-            movedItem = _private.getModelByItem(self, item);
+    checkItem(self, item, target, position) {
+        let key;
+        let parentsMap;
+        const movedItem = _private.getModelByItem(self, item);
 
         if (target !== null) {
             target = _private.getModelByItem(self, target);
         }
 
-        //Check for a item to be moved because it may not be in the current recordset
+        // Check for a item to be moved because it may not be in the current recordset
         if (self._options.parentProperty && movedItem) {
             if (target && position === LOCAL_MOVE_POSITION.On && target.get(self._options.nodeProperty) === null) {
                 return false;
@@ -242,12 +242,11 @@ var _private = {
         return true;
     },
 
-    getParentsMap: function (self, id) {
-        var
-            item,
-            toMap = [],
-            items = self._items,
-            path = items.getMetaData().path;
+    getParentsMap(self, id) {
+        let item;
+        const toMap = [];
+        const items = self._items;
+        const path = items.getMetaData().path;
 
         item = items.getRecordById(id);
         while (item) {
@@ -261,7 +260,7 @@ var _private = {
             item = items.getRecordById(id);
         }
         if (path) {
-            path.forEach(function (elem) {
+            path.forEach((elem) => {
                 if (toMap.indexOf(elem.get(self._keyProperty)) === -1) {
                     toMap.push('' + elem.get(self._keyProperty));
                 }
@@ -270,11 +269,11 @@ var _private = {
         return toMap;
     },
 
-    getModelByItem: function (self, item) {
+    getModelByItem(self, item) {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item : self._items.getRecordById(item);
     },
 
-    getIdByItem: function (self, item) {
+    getIdByItem(self, item) {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
@@ -296,8 +295,8 @@ var _private = {
     },
 
     prepareMovedItems(self, items) {
-        let result = [];
-        items.forEach(function(item) {
+        const result = [];
+        items.forEach((item) => {
             result.push(_private.getIdByItem(self, item));
         });
         return result;
@@ -332,7 +331,7 @@ var _private = {
                 templateOptions,
                 eventHandlers: {
                     onResult: (target: Model) => {
-                        resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On))
+                        resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On));
                     }
                 }
             });
@@ -340,19 +339,19 @@ var _private = {
     },
 
     convertItemsToISelectionObject(item): ISelectionObject {
-        let selectionObject: ISelectionObject
+        let selectionObject: ISelectionObject;
         if (item.selected) {
             selectionObject = item;
         } else if (item.selectedKeys) {
             selectionObject = {
                 selected: item.selectedKeys,
-                excluded: item.excludedKeys,
-            }
+                excluded: item.excludedKeys
+            };
         } else if (item.forEach) {
             selectionObject = {
                 selected: item,
                 excluded: undefined
-            }
+            };
         }
         return selectionObject;
     },
@@ -402,26 +401,27 @@ var _private = {
  * @author Авраменко А.С.
  */
 
-var Mover = BaseAction.extend({
+const Mover = BaseAction.extend({
     _action: null,
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
     _template: Template,
-    _beforeMount: function (options) {
+    _beforeMount(options) {
         _private.updateDataOptions(this, options, options._dataOptionsValue);
         Logger.warn('Controls/list:Mover: Класс устарел и буден удалён.' +
-            ' Используйте методы интерфейса Controls/list:IMovableList, который по умолчанию подключен в списки.', this);
+            ' Используйте методы интерфейса Controls/list:IMovableList, ' +
+            'который по умолчанию подключен в списки.', this);
     },
 
-    _beforeUpdate: function (options) {
+    _beforeUpdate(options) {
         _private.updateDataOptions(this, options, options._dataOptionsValue);
     },
 
-    moveItemUp: function (item) {
+    moveItemUp(item) {
         return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.Before);
     },
 
-    moveItemDown: function (item) {
+    moveItemDown(item) {
         return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.After);
     },
 
@@ -433,7 +433,7 @@ var Mover = BaseAction.extend({
         if (_private.useAction(items)) {
             return _private.moveItems(self, items, target, position);
         } else {
-            return _private.getItemsBySelection.call(this, items).addCallback(function (items) {
+            return _private.getItemsBySelection.call(this, items).addCallback((items) => {
                 items = items.filter((item) => {
                     return _private.checkItem(self, item, target, position);
                 });
@@ -464,11 +464,9 @@ var Mover = BaseAction.extend({
     }
 });
 
-Mover.getDefaultOptions = function () {
-    return {
-        sortingOrder: DEFAULT_SORTING_ORDER
-    };
-};
+Mover.getDefaultOptions = () => ({
+    sortingOrder: DEFAULT_SORTING_ORDER
+});
 
 Object.defineProperty(Mover, 'defaultProps', {
    enumerable: true,

@@ -15,7 +15,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @mixes Controls/toolbars:IToolbarSource
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/interface:IHierarchy
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/OperationsPanelNew/Base/Index
@@ -77,7 +77,6 @@ export default class Panel extends Control<IControlOptions> {
  * @name Controls/_operations/Panel#operationsPanelOpened
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  */
-
 
 /**
  * @event Происходит при клике на элемент.

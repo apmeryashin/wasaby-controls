@@ -8,7 +8,7 @@ import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
 import * as Env from 'Env/Env';
 
-var global = (function() { return this || (0,eval)('this') })();
+const global = (function() { return this || (0 || eval)('this'); })();
 
 function getBoundingClientRectMock() {
    return { height: 30, width: 50};
@@ -79,7 +79,6 @@ describe('Controls/scroll:ContainerBase', () => {
          assert.strictEqual(control._children.content.scrollTop, 10);
       });
 
-
       it('should restore flex-direction and set scrollTop to end. vertical: end.', () => {
          const testOptions = {
             ...options,
@@ -128,7 +127,7 @@ describe('Controls/scroll:ContainerBase', () => {
          };
          control._container = {
             dataset: {}
-         }
+         };
          control._componentDidMount();
          assert.strictEqual(control._children.content.scrollLeft, 100);
          sinonAssert.calledWith(control._children.content.classList.remove,
@@ -145,13 +144,13 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          sinon.stub(control._resizeObserver, 'observe');
-         control._controlResizeHandler = () => {};
+         control._controlResizeHandler = () => {/* FIXME: sinon mock */};
          control._children = {
             content: {
                getBoundingClientRect: getBoundingClientRectMock
             },
             userContent: {
-               children: children
+               children
             }
          };
          control._afterMount();
@@ -187,7 +186,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control._state = {
          };
          control._children = {
-            content: content,
+            content,
             userContent: {
                children: [{
                   classList: {
@@ -299,7 +298,7 @@ describe('Controls/scroll:ContainerBase', () => {
          };
 
          control._children = {
-            content: content,
+            content,
             userContent: {
                children: [{
                   classList: {
@@ -342,10 +341,10 @@ describe('Controls/scroll:ContainerBase', () => {
          control._container = {
             closest: sinon.stub().returns(true),
             className: ''
-         }
+         };
 
          const getComputedStyle = global.getComputedStyle;
-         global.getComputedStyle = () => { return {} };
+         global.getComputedStyle = () => ({});
 
          sinon.stub(control, '_updateStateAndGenerateEvents');
 
@@ -677,7 +676,7 @@ describe('Controls/scroll:ContainerBase', () => {
       });
 
       it('should not update state if unchanged state arrives', () => {
-         const inst:ContainerBase = new ContainerBase();
+         const inst: ContainerBase = new ContainerBase();
          inst._children = {
             content: {
                scrollTop: 0,
@@ -752,7 +751,7 @@ describe('Controls/scroll:ContainerBase', () => {
                scrollHeight: 100,
                clientWidth: 100,
                scrollWidth: 100,
-               getBoundingClientRect: () => { return { height: 100, width: 100 }}
+               getBoundingClientRect: () => ({ height: 100, width: 100 })
             },
             userContent: {
                children: [{
@@ -762,7 +761,7 @@ describe('Controls/scroll:ContainerBase', () => {
                }]
             }
          };
-          control._resizeObserver = {
+         control._resizeObserver = {
               isResizeObserverSupported: () => {
                   return true;
               },
@@ -770,10 +769,10 @@ describe('Controls/scroll:ContainerBase', () => {
                   return 0;
               }
           };
-          sinon.stub(control, '_resizeObserver');
-          sinon.stub(control, '_observeContentSize');
+         sinon.stub(control, '_resizeObserver');
+         sinon.stub(control, '_observeContentSize');
          sinon.stub(control, '_isHorizontalScroll');
-          control._afterMount();
+         control._afterMount();
 
          sinon.stub(control._registrars.listScroll, 'startOnceTarget');
          control._onRegisterNewListScrollComponent(registeredControl);
@@ -792,7 +791,7 @@ describe('Controls/scroll:ContainerBase', () => {
 
       it('should set value from scroll state', () => {
          const control: ContainerBase = new ContainerBase(options);
-         control._scrollModel = { scrollTop: 10 }
+         control._scrollModel = { scrollTop: 10 };
          control._lockScrollPositionUntilKeyboardShown();
          assert.strictEqual(control._scrollLockedPosition, control._scrollModel.scrollTop);
       });
@@ -805,14 +804,14 @@ describe('Controls/scroll:ContainerBase', () => {
       ].forEach((method) => {
          it('should stop event propagation', () => {
             const control: ContainerBase = new ContainerBase(options);
-            control._beforeMount(options)
+            control._beforeMount(options);
             const event = {
                stopImmediatePropagation: fake()
-            }
+            };
             control[method](event);
             sinonAssert.calledOnce(event.stopImmediatePropagation);
          });
-      })
+      });
    });
 
    describe('_logScrollPosition', () => {

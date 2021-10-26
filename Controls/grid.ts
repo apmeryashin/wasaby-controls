@@ -7,14 +7,17 @@ import * as GridItemTemplate from 'wml!Controls/_grid/Render/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_grid/Render/table/Item';
 
 import * as TableTemplate from 'wml!Controls/_grid/Render/table/GridView';
-// FIXME: при обычном условном присвоении шаблона tmpl = isAny ? tmpl1 : tmpl2, переменной один раз присвоится значение и не будет меняться.
-//  В таком случае возникает ошибка при открытии одной страницы из разных браузеров (Chrome и IE), с сервера всегда будет возвращаться один и тот же шаблон,
+// FIXME: при обычном условном присвоении шаблона tmpl = isAny ? tmpl1 : tmpl2, переменной
+//  один раз присвоится значение и не будет меняться.
+//  В таком случае возникает ошибка при открытии одной страницы из разных браузеров (Chrome и IE), с
+//  сервера всегда будет возвращаться один и тот же шаблон,
 //  для того браузера, который первый открыл страницу.
-//  Данным хахом мы подменяем шаблонную функцию и возвращаем правильную. Тоже самое, что вынести в отдельный шаблон и там условно вызвать паршл,
+//  Данным хахом мы подменяем шаблонную функцию и возвращаем правильную. Тоже самое, что вынести в
+//  отдельный шаблон и там условно вызвать паршл,
 //  но быстрее по времени.
 //  По словам Макса Крылова это ничего не сломает, если на функцию навесить флаги ядра.
 //  Найти нормальное решение по https://online.sbis.ru/opendoc.html?guid=41a8dbab-93bb-4bc0-8533-6b12c0ec6d8d
-const ItemTemplate = function () {
+const ItemTemplate = function() {
     return isFullGridSupport() ? GridItemTemplate.apply(this, arguments) : TableItemTemplate.apply(this, arguments);
 };
 ItemTemplate.stable = true;
@@ -36,6 +39,7 @@ import * as TableIndicatorTemplate from 'wml!Controls/_grid/Render/TableIndicato
 
 import * as MoneyTypeRender from 'wml!Controls/_grid/Render/types/money';
 import * as NumberTypeRender from 'wml!Controls/_grid/Render/types/number';
+import * as DateTypeRender from 'wml!Controls/_grid/Render/types/date';
 import * as StringTypeRender from 'wml!Controls/_grid/Render/types/string';
 import * as StringSearchTypeRender from 'wml!Controls/_grid/Render/types/StringSearch';
 import * as TypesLadderWrapper from 'wml!Controls/_grid/Render/types/ladderWrapper';
@@ -93,6 +97,7 @@ export {
     EmptyColumnTemplate,
     MoneyTypeRender,
     NumberTypeRender,
+    DateTypeRender,
     StringTypeRender,
     StringSearchTypeRender,
     TableTemplate,

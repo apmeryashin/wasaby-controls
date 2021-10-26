@@ -188,7 +188,7 @@ class FormController extends Control<IControlOptions> {
         return this._children.formControllerInst.delete();
     }
     _errorHandler(event, error) {
-        let cfg = {
+        const cfg = {
             message: event.type,
             details: error.message,
             style: 'error',

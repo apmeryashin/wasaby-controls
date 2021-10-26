@@ -192,9 +192,15 @@ export default class FilterControllerClass extends mixin<
     }
 
     updateFilterItems(items: IFilterItem[]): void {
+        const currentFilterButtonItems = this._$filterButtonItems;
+        const currentFastFilterItems = this._$fastFilterItems;
+
         this._updateFilterItems(items);
         this._applyItemsToFilter(this._$filter, items);
-        this._notify('filterSourceChanged', this._$filterButtonItems);
+
+        if (!isEqual(currentFilterButtonItems, this._$filterButtonItems) || !isEqual(currentFastFilterItems, this._$fastFilterItems)) {
+            this._notify('filterSourceChanged', this._$filterButtonItems);
+        }
 
         if (this._options.historyId) {
             if (this._options.prefetchParams) {
@@ -388,7 +394,8 @@ export default class FilterControllerClass extends mixin<
 
         result = this._findItemInHistory(historyId, items);
 
-        // Метод используется для поиска элемента для удаления и последующего сохранения нового элемента с новыми данными
+        // Метод используется для поиска элемента для удаления и последующего
+        // сохранения нового элемента с новыми данными
         // Если элемент запинен или добавлен в избранное, его нельзя удалять.
         if (result) {
             const isPinned = result.item.get('pinned');
@@ -579,10 +586,12 @@ export default class FilterControllerClass extends mixin<
         const filter = {};
 
         function processItems(elem) {
-            // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
+            // The filter can be changed by another control, in which case
+            // the value is set to the filter button, but textValue is not set.
             if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) &&
                 getPropValue(elem, 'textValue') !== undefined && getPropValue(elem, 'textValue') !== null) {
-                filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
+                const idx = getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name');
+                filter[idx] = getPropValue(elem, 'value');
             }
         }
 
@@ -849,7 +858,9 @@ function getCalculatedFilter(config) {
         this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items);
         let calculatedFilter;
         try {
-            calculatedFilter = this._calculateFilterByItems(config.filter, this._$filterButtonItems, this._$fastFilterItems);
+            calculatedFilter = this._calculateFilterByItems(
+                config.filter, this._$filterButtonItems, this._$fastFilterItems
+            );
 
             if (config.prefetchParams && config.historyId) {
                 const history = this._findItemInHistory(config.historyId, this._$filterButtonItems);
@@ -870,7 +881,7 @@ function getCalculatedFilter(config) {
             fastFilterItems: this._$fastFilterItems
         });
         return items;
-    }).addErrback(function(err) {
+    }).addErrback((err) => {
         def.errback(err);
         return err;
     });

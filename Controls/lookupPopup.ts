@@ -23,8 +23,8 @@
  */
 
 import Container = require('wml!Controls/_lookupPopup/WrappedContainer');
-import ListContainer = require("Controls/_lookupPopup/List/Container");
-import Collection = require("Controls/_lookupPopup/SelectedCollection/Popup");
+import ListContainer = require('Controls/_lookupPopup/List/Container');
+import Collection = require('Controls/_lookupPopup/SelectedCollection/Popup');
 import listMemorySourceFilter = require('Controls/_lookupPopup/List/Utils/memorySourceFilter');
 
 export {default as Controller} from './_lookupPopup/Controller';

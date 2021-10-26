@@ -12,7 +12,6 @@ class ControllerClass {
     _draggingTemplateOptions: object;
     _draggingTemplate: object;
     _dialogOpener: DialogOpener;
-    private static _isDragging: boolean;
 
     constructor() {
         this.createRegisters();
@@ -61,6 +60,7 @@ class ControllerClass {
     updateDraggingTemplate(draggingTemplateOptions: IDragObject, draggingTpl: TemplateFunction): void {
         this._dialogOpener.open({
             topPopup: true,
+            fittingMode: 'overflow',
             opener: null,
             autofocus: false,
             template: 'Controls/dragnDrop:DraggingTemplateWrapper',
@@ -76,6 +76,7 @@ class ControllerClass {
     removeDraggingTemplate(): void {
         this._dialogOpener.close();
     }
+    private static _isDragging: boolean;
 
     static _dragStart(): void {
         this._isDragging = true;

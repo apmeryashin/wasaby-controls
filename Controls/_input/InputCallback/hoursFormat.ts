@@ -18,9 +18,10 @@ const hoursFormat: ICallback<TimeInterval> = (data: ICallbackData<TimeInterval>)
 };
 
 function toFormat(original: number, type: string): string {
+    const space = ' ';
     const formatTime = () => {
         if (type === 'hours') {
-            return ` ${original}`;
+            return `${space}${original}`;
         } else {
             return `0${original}`;
         }

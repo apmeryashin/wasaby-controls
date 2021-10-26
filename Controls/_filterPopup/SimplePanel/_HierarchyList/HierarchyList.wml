@@ -13,6 +13,7 @@
               selectorDialogResult="{{_options.selectorDialogResult}}"
               displayProperty="{{_options.displayProperty}}"
               nodeProperty="{{_options.nodeProperty}}"
+              parentProperty="{{_options.parentProperty}}"
               itemTemplate="{{_options.itemTemplate}}"
               itemTemplateProperty="{{_options.itemTemplateProperty}}"
               hasMoreButton="{{_hasMoreButton(item)}}"

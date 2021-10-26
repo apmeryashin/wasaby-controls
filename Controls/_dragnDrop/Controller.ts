@@ -17,9 +17,9 @@ import {IDragObject} from './Container';
  *
  * @class Controls/_dragnDrop/Controller
  * @extends UI/Base:Control
- * 
+ *
  * @public
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  */
 
 /*
@@ -30,9 +30,9 @@ import {IDragObject} from './Container';
  * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
  * @class Controls/_dragnDrop/Controller
  * @extends UI/Base:Control
- * 
+ *
  * @public
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  */
 
 class Controller extends Control<IControlOptions> {

@@ -4,11 +4,11 @@ import controlTemplate = require('wml!Controls-demo/Input/SyncFakeArea/SyncFakeA
 class SyncFakeArea extends Control<IControlOptions> {
     protected _areaValue: '';
 
+    protected _template: TemplateFunction = controlTemplate;
+
     protected _change(): void {
         this._areaValue = 'Маленький текст';
     }
-
-    protected _template: TemplateFunction = controlTemplate;
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/LoadingIndicator/contentPopup/contentPopup');
 
-class contentPopup extends Control<IControlOptions> {
+export default class extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
 
    protected _beforeMount() {
@@ -13,4 +13,3 @@ class contentPopup extends Control<IControlOptions> {
         });
     }
 }
-export default contentPopup;

@@ -1022,7 +1022,7 @@ export default abstract class TileItem<T extends Model = Model> {
     getImageWrapperDataQa() {
         return this.isAnimated() && this.getTileMode() === 'dynamic'
             ? 'controls-TileView__item_animated'
-            : 'controls-TileView__item_not_animated'
+            : 'controls-TileView__item_not_animated';
     }
 
     /**
@@ -1417,7 +1417,7 @@ export default abstract class TileItem<T extends Model = Model> {
      * @param {TTileItem} itemType Тип элемента
      */
     getWrapperStyles(itemType: TTileItem = 'default'): string {
-        let styles = this.getFixedPositionStyle() || '';
+        const styles = this.getFixedPositionStyle() || '';
 
         switch (itemType) {
             case 'default':
@@ -1579,7 +1579,9 @@ export default abstract class TileItem<T extends Model = Model> {
      * Должен ли отрисоваться заголовок
      * @param {TTileItem} itemType Тип элемента
      */
-    shouldDisplayTitle(itemType: TTileItem = 'default', titlePosition: TTitlePosition = 'underImage', imageViewMode: TImageViewMode = 'rectangle'): boolean {
+    shouldDisplayTitle(itemType: TTileItem = 'default',
+                       titlePosition: TTitlePosition = 'underImage',
+                       imageViewMode: TImageViewMode = 'rectangle'): boolean {
         switch (itemType) {
             case 'default':
                 return !!this.getDisplayValue() || this.hasVisibleActions() || this.isEditing();

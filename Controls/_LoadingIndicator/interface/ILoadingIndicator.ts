@@ -3,7 +3,7 @@ import {IControlOptions} from 'UI/Base';
 export interface ILoadingIndicatorOptions extends IControlOptions {
     delay?: number;
     message?: string;
-    mods?: Array<string> | string;
+    mods?: string[] | string;
     overlay?: string;
     scroll?: string;
     small?: string;

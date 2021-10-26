@@ -51,4 +51,11 @@ export interface IHeadingPath extends IBreadCrumbsOptions {
      * @cfg {String} Имя поля записи содержащее её отображаемое значение.
      */
     pathButtonDisplayProperty: string;
+
+    /**
+     * @cfg {String} Имя поля записи, в котором хранится информация о наличии дочерних элементов в узле {@link Controls/treeGrid:View дерева}.
+     */
+    pathButtonHasChildrenProperty: string;
+
+    displayMode: 'default' | 'multiline';
 }

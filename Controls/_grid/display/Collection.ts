@@ -4,7 +4,8 @@ import {
     Collection as BaseCollection,
     ItemsFactory,
     IItemActionsTemplateConfig,
-    GridLadderUtil, IHasMoreData
+    GridLadderUtil, IHasMoreData,
+    IEditingConfig
 } from 'Controls/display';
 
 import GroupRow from './GroupRow';
@@ -14,9 +15,7 @@ import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 
-export interface IOptions<S extends Model = Model,
-    T extends Row<S> = Row<S>> extends IGridMixinOptions {
-}
+export type IOptions<S extends Model = Model, T extends Row<S> = Row<S>> = IGridMixinOptions;
 
 /**
  * @public
@@ -111,9 +110,8 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
 
         // Сбрасываем модель заголовка если его видимость зависит от наличия данных и текущее действие
         // это смена записей.
-        // При headerVisibility === 'visible' вроде как пока не требуется перерисовывать заголовок, т.к.
-        // он есть всегда. Но если потребуется, то нужно поправить это условие
-        if (this._$headerVisibility === 'hasdata' && changeAction === IObservable.ACTION_RESET) {
+        const headerIsVisible = this._headerIsVisible(this._$header);
+        if (changeAction === IObservable.ACTION_RESET && !headerIsVisible) {
             this._$headerModel = null;
         }
 
@@ -179,6 +177,11 @@ export default class Collection<S extends Model = Model, T extends Row<S> = Row<
             this._$headerModel = null;
         }
         this._nextVersion();
+    }
+
+    setEditingConfig(config: IEditingConfig): void {
+        super.setEditingConfig(config);
+        this._updateItemsProperty('setEditingConfig', config, 'setEditingConfig');
     }
 
     // endregion

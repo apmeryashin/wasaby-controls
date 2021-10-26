@@ -45,7 +45,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
  * @public
  */
 
- export default interface IColumnTemplateOptions {
+export default interface IColumnTemplateOptions {
    /**
     * @cfg {String|TemplateFunction} Пользовательский шаблон для отображения содержимого ячейки.
     * @see Controls/grid:IGridControl#showEditArrow
@@ -69,19 +69,19 @@ export type TCursor = 'default' | 'pointer' | 'right';
     * }
     * </pre>
     * где:
-    * 
+    *
     * * prop1, ... , propN — поля, для которых рассчитывается лесенка.
     * * ladderLength — количество записей с одинаковым значением текущего поля подряд. ladderLength присутствует только у первой записи в ряде (это та запись, у которой отображается значение).
-    * 
+    *
     * Переменная **column** позволяет получить доступ к следующими свойствам:
-    * 
+    *
     * * **config** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
-    * * **index** — порядковый номер колонки. Отсчет от 0. 
+    * * **index** — порядковый номер колонки. Отсчет от 0.
     *
     * Переменная **editArrowTemplate** позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в прикладном шаблоне для первой колонки. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 4.
     *
     * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку-экспандер в произвольном месте элемента. При этом опцию {@link Controls/treeGrid:View#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
-    * 
+    *
     * Переменная **itemActionsTemplate** — панель с [опциями записи](/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/).
     * @example
     * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.

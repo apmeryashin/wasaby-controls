@@ -15,7 +15,7 @@
 .controls-ListView__itemV_marker_default {
    position: absolute;
    width: var(--marker_thickness_list);
-   background-color: var(--marker_color_list);
+   background-color: var(--marker_color);
    top: 0;
    max-height: 100%;
    z-index: 1;
@@ -164,7 +164,6 @@
    align-self: center;
    display: inline-block;
    flex-shrink: 0;
-   width: var(--icon-size_2xs);
    top: 0;
 }
 
@@ -185,7 +184,7 @@
 }
 
 .controls-ListView__multiSelect__borderCircle {
-   fill: transparent;
+   fill: var(--unaccented_background-color);
 }
 
 .ws-is-hover .controls-ListView__itemV:hover {
@@ -508,8 +507,12 @@
 
 /* endregion ItemActions display */
 
-.controls-ListView__group_min_height {
+.controls-ListView__groupContent_height {
    min-height: var(--grouping_height_list);
+}
+
+.controls-ListView__groupContent_height_withItemActions {
+   min-height: var(--height_itemActions);
 }
 
 .controls-ListView__groupContent {
@@ -518,7 +521,6 @@
    min-width: 0;
    flex-grow: 1;
    line-height: 1;
-   min-height: var(--grouping_height_list);
 }
 
 .controls-ListView__groupSeparator {
@@ -542,14 +544,29 @@
    font-size: var(--grouping_expander_font-size_list);
 }
 
+.controls-ListView__groupContent-text_color_default {
+   color: var(--grouping_expander_text-color_list);
+}
+
 .controls-ListView__groupContent-text {
    display: inline-block;
-   color: var(--grouping_expander_text-color_list);
    white-space: nowrap;
    flex-shrink: 1;
    user-select: none;
    overflow: hidden;
    text-overflow: ellipsis;
+}
+
+.controls-ListView__groupContent_textTransform_uppercase {
+   text-transform: uppercase;
+
+   @variants: xs 1.25px, s 1.25px, m 1.25px, l 1.5px, xl 1.5px, 2xl 1.75px, 3xl 1.75px;
+   .for(@variants, {
+      @letter-spacing-value: extract(@_item, 1);
+      &_@{letter-spacing-value} {
+         letter-spacing: extract(@_item, 2);
+      }
+   });
 }
 
 .controls-ListView__groupContent_left {
@@ -617,12 +634,34 @@
    }});
 }
 
-.ws-is-hover .controls-ListView__groupExpander:hover {
+.ws-is-hover .controls-ListView__groupExpander:hover,
+.ws-is-hover .controls-ListView__groupExpander:hover::before,
+.ws-is-hover .controls-ListView__groupExpander:hover::after {
    color: var(--grouping_expander_hover_text-color_list);
 }
 
-.controls-ListView__groupExpander:active {
+.controls-ListView__groupExpander:active,
+.controls-ListView__groupExpander:active::before,
+.controls-ListView__groupExpander:active::after {
    color: var(--grouping_expander_hover_text-color_list);
+}
+
+.controls-ListView__groupExpander-iconStyle_default {
+   &::before,
+   &::after {
+      color: var(--grouping_expander_text-color_list);
+   }
+}
+
+.controls-ListView__groupExpander-iconStyle_ {
+   @variants: primary, secondary, success, warning, danger, info, label, contrast, unaccented;
+   .for(@variants, { &@{_item}, &@{_item}:hover {
+      &::before,
+      &::after {
+         color: ~"var(--controls-icon_style-@{_item})";
+         fill: ~"var(--controls-icon_style-@{_item})";
+      }
+   }});
 }
 
 .controls-ListView__groupExpander_collapsed_left:before {
@@ -782,7 +821,7 @@
 
 .controls-ListView__itemV_marker_master::after {
    content: '';
-   background-color: var(--master-marker_color_list);
+   background-color: var(--marker_color);
    width: var(--master-marker_thickness_list);
    border-radius: var(--marker_border-radius_list);
    height: 100%;
@@ -866,6 +905,12 @@
 //TODO это должно уехать в BaseControl после задачи https://online.sbis.ru/opendoc.html?guid=92bedbf7-6038-4c1f-826e-b096b4cddd6d
 .controls-CheckboxMarker_inList {
    height: var(--checkbox_height_list);
+
+   &::before {
+      content: '\200b';
+      font-size: var(--font-size_2xl);
+      width: 0;
+   }
 }
 /// decorator:money in list, grid
 .controls-text-group{

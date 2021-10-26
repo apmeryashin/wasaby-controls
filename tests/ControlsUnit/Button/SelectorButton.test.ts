@@ -23,9 +23,9 @@ describe('Controls/_lookup/Button/', (): void => {
       maxVisibleItems: 2
    };
 
-   const getButton = (config: ITestOptions): SelectorButton => {
-      const selButton: SelectorButton = new SelectorButton(config);
-      selButton.saveOptions(config);
+   const getButton = (cfg: ITestOptions): SelectorButton => {
+      const selButton: SelectorButton = new SelectorButton(cfg);
+      selButton.saveOptions(cfg);
       return selButton;
    };
 
@@ -49,7 +49,7 @@ describe('Controls/_lookup/Button/', (): void => {
          }
       };
       // @ts-ignore
-      button._children = { 'selectorOpener': { open: setTrue.bind(this, assert) } };
+      button._children = { selectorOpener: { open: setTrue.bind(this, assert) } };
       // @ts-ignore
       button._itemClickHandler();
       assert.isFalse(isShowSelector);
@@ -63,7 +63,7 @@ describe('Controls/_lookup/Button/', (): void => {
 
    it('_itemClickHandler check notify itemClick', (): void => {
       const button = getButton(config);
-      let item: object = {id : 1};
+      const item: object = {id : 1};
       let dataItemClick: object[] = null;
 
       // @ts-ignore
@@ -74,13 +74,13 @@ describe('Controls/_lookup/Button/', (): void => {
       };
       // @ts-ignore
       button._itemClickHandler(null, item);
-      assert.equal(dataItemClick[0], item)
+      assert.equal(dataItemClick[0], item);
 
       dataItemClick = null;
       // @ts-ignore
       button._options.readOnly = true;
       // @ts-ignore
       button._itemClickHandler(null, item);
-      assert.equal(dataItemClick[0], item)
+      assert.equal(dataItemClick[0], item);
    });
 });

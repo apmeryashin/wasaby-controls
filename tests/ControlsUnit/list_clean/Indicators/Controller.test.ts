@@ -86,7 +86,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 hasHiddenItemsByVirtualScroll: () => false
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
+            controller.setViewportFilled(true);
             controller.displayTopIndicator(false, false); // верхний индикатор показывается по маусЭнтер
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -110,7 +112,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 hasHiddenItemsByVirtualScroll: () => false
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
+            controller.setViewportFilled(true);
             controller.displayTopIndicator(false, false); // верхний индикатор показывается по маусЭнтер
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -131,6 +135,68 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             }, false);
             assert.isFalse(collection.getTopIndicator().isDisplayed());
             assert.isFalse(collection.getBottomIndicator().isDisplayed());
+        });
+
+        // Возможен след кейс: список пустой, зовется релоад с итеративной загрузкой.
+        // Событие rs не сработает и items не пересоздастся. Единственное, что случится это поменяется опция loading
+        // Из-за этого мы попадем в updateOptions, в котором по hasMoreData вызовем пересчет ромашки.
+        // И именно здесь определим по флагу iterative, показывать порционный поиск или просто ромашку.
+        it('display portioned search to bottom by change hasMoreData', () => {
+            const options = {
+                isInfinityNavigation: true,
+                hasMoreDataToTop: false,
+                hasMoreDataToBottom: false,
+                attachLoadTopTriggerToNull: true,
+                attachLoadDownTriggerToNull: true,
+                hasHiddenItemsByVirtualScroll: () => false
+            } as unknown as IIndicatorsControllerOptions;
+            const {collection, controller} = initTest([{id: 1}], options);
+
+            const items = collection.getCollection() as unknown as RecordSet;
+            items.setMetaData({iterative: true});
+            controller.updateOptions({
+                ...options,
+                items,
+                model: collection,
+                hasMoreDataToBottom: true
+            }, false);
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            fakeTimer.tick(2001);
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
+
+        it('display portioned search to top by change hasMoreData', () => {
+            const options = {
+                isInfinityNavigation: true,
+                hasMoreDataToTop: false,
+                hasMoreDataToBottom: false,
+                attachLoadTopTriggerToNull: true,
+                attachLoadDownTriggerToNull: true,
+                hasHiddenItemsByVirtualScroll: () => false
+            } as unknown as IIndicatorsControllerOptions;
+            const {collection, controller} = initTest([{id: 1}], options);
+
+            const items = collection.getCollection() as unknown as RecordSet;
+            items.setMetaData({iterative: true});
+            controller.updateOptions({
+                ...options,
+                items,
+                model: collection,
+                hasMoreDataToTop: true
+            }, false);
+            assert.isFalse(collection.getTopIndicator().isDisplayed());
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            fakeTimer.tick(2001);
+            assert.isTrue(collection.getTopIndicator().isDisplayed());
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            controller.destroy(); // уничтожаем все таймеры
         });
     });
 
@@ -161,7 +227,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionReset();
@@ -174,7 +240,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             const {collection, controller} = initTest([{id: 1}], {});
             controller.startDisplayPortionedSearch('bottom');
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.onCollectionReset();
@@ -192,7 +258,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -226,7 +292,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится глобальный индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.onCollectionAdd();
@@ -246,7 +312,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isFalse(collection.getBottomIndicator().isDisplayed()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -263,7 +329,9 @@ describe('Controls/list_clean/Indicators/Controller', () => {
                 scrollToFirstItem: (afterScroll) => afterScroll()
             } as unknown as IIndicatorsControllerOptions;
             const {collection, controller} = initTest([{id: 1}], options);
+            controller.setViewportFilled(true);
             controller.displayTopIndicator(false);
+            controller.displayBottomIndicator();
             assert.isTrue(collection.getTopIndicator().isDisplayed());
             assert.isTrue(collection.getBottomIndicator().isDisplayed());
 
@@ -332,11 +400,32 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
 
             // ждем пока отобразится индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
-        })
+        });
+
+        it('display global and display bottom indicator', async () => {
+            const {collection, controller} = initTest([{id: 1}], {});
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.displayGlobalIndicator(0);
+
+            assert.isNotOk(collection.getGlobalIndicator()); // индикатор покажется только через 2с
+
+            // ждем пока отобразится индикатор
+            fakeTimer.tick(1000);
+            controller.displayBottomIndicator();
+            assert.isFalse(collection.getBottomIndicator().isDisplayed());
+
+            fakeTimer.tick(2001);
+
+            assert.isTrue(collection.getBottomIndicator().isDisplayed());
+            assert.isNotOk(collection.getGlobalIndicator());
+
+            controller.destroy(); // уничтожаем все таймеры
+        });
     });
 
     describe('shouldHideGlobalIndicator', () => {
@@ -350,13 +439,13 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.destroy(); // уничтожаем все таймеры
         });
 
-        it('should hide indicator if it was displayed',async () => {
+        it('should hide indicator if it was displayed', async () => {
             const {controller} = initTest([{id: 1}], {});
             // запустили таймер
             controller.displayGlobalIndicator(0);
 
             // ждем пока отобразится индикатор порционного поиска
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
 
             // олжно вернуть false, т.к. индикатор отображен
             assert.isTrue(controller.shouldHideGlobalIndicator());
@@ -384,7 +473,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
 
             controller.displayGlobalIndicator(0);
             // ждем пока отобразится индикатор
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isOk(collection.getGlobalIndicator());
 
             controller.hideGlobalIndicator();
@@ -393,7 +482,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.destroy(); // уничтожаем все таймеры
         });
 
-        it('should reset timer of display indicator', async() => {
+        it('should reset timer of display indicator', async () => {
             const {collection, controller} = initTest([{id: 1}], {});
             assert.isNotOk(collection.getGlobalIndicator());
 
@@ -401,7 +490,7 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             controller.hideGlobalIndicator(); // прерываем таймер
 
             // дожидается 2с и убеждаемся что индикатор так и не показался
-            fakeTimer.tick(2001)
+            fakeTimer.tick(2001);
             assert.isNotOk(collection.getGlobalIndicator());
 
             controller.destroy(); // уничтожаем все таймеры
@@ -469,6 +558,32 @@ describe('Controls/list_clean/Indicators/Controller', () => {
             assert.equal(mockedIndicatorElement.style.display, '');
             assert.equal(mockedIndicatorElement.style.position, '');
             assert.equal(mockedIndicatorElement.style.top, '');
+        });
+    });
+
+    describe('shouldDisplayBottomIndicator', () => {
+        it('not display if collection is empty', () => {
+            const options: IIndicatorsControllerOptions = {
+                isInfinityNavigation: true,
+                hasMoreDataToBottom: true,
+                attachLoadDownTriggerToNull: true,
+                hasHiddenItemsByVirtualScroll: () => false
+            } as unknown as IIndicatorsControllerOptions;
+            const {controller} = initTest([], options);
+            assert.isFalse(controller.shouldDisplayBottomIndicator());
+        });
+    });
+
+    describe('shouldDisplayTopIndicator', () => {
+        it('not display if collection is empty', () => {
+            const options: IIndicatorsControllerOptions = {
+                isInfinityNavigation: true,
+                hasMoreDataToTop: true,
+                attachLoadTopTriggerToNull: true,
+                hasHiddenItemsByVirtualScroll: () => false
+            } as unknown as IIndicatorsControllerOptions;
+            const {controller} = initTest([], options);
+            assert.isFalse(controller.shouldDisplayTopIndicator());
         });
     });
 });

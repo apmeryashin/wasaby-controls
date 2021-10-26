@@ -1,13 +1,30 @@
 .controls-ArrowButton {
-   border-width: var(--border-thickness_button);
-   box-shadow: var(--box-shadow_ArrowButton);
-   border-color: var(--border-color_ArrowButton);
-   background-color: var(--background-color_ArrowButton);
-   border-style: solid;
    border-radius: 50%;
    display: flex;
    justify-content: center;
    align-items: center;
+}
+
+.controls-ArrowButton-active__style-translucent {
+   background-color: var(--translucent_background-color_button);
+   backdrop-filter: blur(var(--translucent_backdrop-filter-blur_button));
+}
+
+.controls-ArrowButton-readOnly__style-default,
+.controls-ArrowButton-active__style-default {
+   background-color: var(--background-color_ArrowButton);
+   border-width: var(--border-thickness_button);
+   box-shadow: var(--box-shadow_ArrowButton);
+   border-color: var(--border-color_ArrowButton);
+   border-style: solid;
+}
+
+.controls-ArrowButton_shadow-none {
+   box-shadow: var(--box-shadow_ArrowButton);
+}
+
+.controls-ArrowButton_shadow-small {
+   box-shadow: var(--box-shadow_contrast-button);
 }
 
 .controls-ArrowButton_inlineHeight-default {
@@ -30,41 +47,61 @@
    height: calc(var(--inline_height_l) - 2 * var(--border-thickness_button));
 }
 
-.controls-ArrowButton_icon {
+.controls-ArrowButton_icon__style-default {
    fill: var(--icon-color_ArrowButton);
+}
+
+.controls-ArrowButton_icon__style-translucent {
+   fill: var(--contrast_icon-color);
 }
 
 .controls-ArrowButton_icon_direction-down, .controls-ArrowButton_icon_direction-left {
    transform: rotate(180deg);
 }
 
-.controls-ArrowButton-readOnly {
+.controls-ArrowButton-readOnly__style-default {
    border-color: var(--readonly_border-color_ArrowButton);
    background-color: var(--readonly_background-color_button);
 
-   .controls-ArrowButton_icon {
+   .controls-ArrowButton_icon__style-default {
       fill: var(--readonly_icon-color_ArrowButton);
+   }
+
+   .controls-ArrowButton_icon__translucent {
+      fill: var(--contrast_icon-color);
    }
 }
 
-.controls-ArrowButton-active:active {
+.controls-ArrowButton-active__style-default:active {
    border-color: var(--border-color_hover_ArrowButton);
    background-color: var(--background-color_hover_ArrowButton);
    box-shadow: none;
 
-   .controls-ArrowButton_icon {
+   .controls-ArrowButton_icon__style-default {
       fill: var(--hover_icon-color_ArrowButton);
    }
 }
 
+.controls-ArrowButton-active__style-translucent:active {
+   background-color: var(--translucent_active_background-color_button);
+}
+
 .ws-is-hover {
-   .controls-ArrowButton-active:hover {
+   .controls-ArrowButton-active__style-translucent:hover,
+   .controls-ArrowButton-active__style-default:hover {
       cursor: pointer;
+   }
+
+   .controls-ArrowButton-active__style-default:hover {
       border-color: var(--border-color_hover_ArrowButton);
       background-color: var(--background-color_hover_ArrowButton);
 
-      .controls-ArrowButton_icon {
+      .controls-ArrowButton_icon__style-default {
          fill: var(--hover_icon-color_ArrowButton);
       }
+   }
+
+   .controls-ArrowButton-active__style-translucent:hover {
+      background-color: var(--translucent_hover_background-color_button);
    }
 }

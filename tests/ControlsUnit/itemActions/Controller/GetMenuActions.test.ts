@@ -3,7 +3,13 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-import {IItemAction, TItemActionShowType, IItemActionsCollection, IItemActionsItem, Controller as ItemActionsController} from 'Controls/itemActions';
+import {
+    IItemAction,
+    TItemActionShowType,
+    IItemActionsCollection,
+    IItemActionsItem,
+    Controller as ItemActionsController
+} from 'Controls/itemActions';
 import {IControllerOptions} from '../../../../Controls/_itemActions/Controller';
 import {ICollectionOptions, Collection} from 'Controls/display';
 
@@ -77,12 +83,12 @@ describe('_getMenuActions cases', () => {
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : null,
-            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
-            contextMenuConfig: options ? options.contextMenuConfig: null,
-            iconSize: options ? options.iconSize: 'm',
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback : null,
+            contextMenuConfig: options ? options.contextMenuConfig : null,
+            iconSize: options ? options.iconSize : 'm',
             editingItem: options ? options.editingItem : null,
             itemActionsVisibility: options ? options.itemActionsVisibility : 'onhover',
-            actionMode: "strict"
+            actionMode: 'strict'
         };
     }
 
@@ -332,7 +338,7 @@ describe('_getMenuActions cases', () => {
                 title: 'Development',
                 showType: TItemActionShowType.MENU_TOOLBAR,
                 parent: 4
-            },
+            }
         ];
         const parentAction = {
             id: null,
@@ -393,7 +399,7 @@ describe('_getMenuActions cases', () => {
                 title: 'Development',
                 showType: TItemActionShowType.MENU_TOOLBAR,
                 parent: 4
-            },
+            }
         ];
         const parentAction = {
             id: null,

@@ -17,7 +17,12 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
 
             it('tileSize priority tileWidthProperty, tileWidth ', () => {
                 const contents = {width: 250};
-                let item = new TileCollectionItem({tileWidth: 200, contents, tileWidthProperty: 'width', tileSize: 's'});
+                let item = new TileCollectionItem({
+                    tileWidth: 200,
+                    contents,
+                    tileWidthProperty: 'width',
+                    tileSize: 's'
+                });
                 assert.equal(item.getTileWidth(), 160);
 
                 item = new TileCollectionItem({tileWidth: 200, contents, tileWidthProperty: 'width', tileSize: 's'});
@@ -28,7 +33,12 @@ describe('Controls/_tile/display/mixins/TileItem', () => {
         describe('tileMode is dynamic', () => {
             it('count by image size', () => {
                 const contents = {imageHeight: 200, imageWidth: 150};
-                const item = new TileCollectionItem({tileMode: 'dynamic', contents, imageWidthProperty: 'imageWidth', imageHeightProperty: 'imageHeight'});
+                const item = new TileCollectionItem({
+                    tileMode: 'dynamic',
+                    contents,
+                    imageWidthProperty: 'imageWidth',
+                    imageHeightProperty: 'imageHeight'
+                });
                 assert.equal(item.getTileWidth(), 250);
             });
 

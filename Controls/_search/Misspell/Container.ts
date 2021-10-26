@@ -8,9 +8,9 @@ import * as template from 'wml!Controls/_search/Misspell/Container';
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/variables/_search.less переменные тем оформления}
- * 
+ *
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Крайнов Д.О.
  */

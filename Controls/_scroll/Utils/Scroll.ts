@@ -1,4 +1,4 @@
-import {IScrollState} from "./ScrollState";
+import {IScrollState} from './ScrollState';
 import {DimensionsMeasurer} from 'Controls/sizeUtils';
 
 export const enum SCROLL_DIRECTION {
@@ -6,7 +6,9 @@ export const enum SCROLL_DIRECTION {
     HORIZONTAL = 'horizontal'
 }
 
-export function scrollTo(container: HTMLElement, position: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
+export function scrollTo(container: HTMLElement,
+                         position: number,
+                         direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
     if (direction === SCROLL_DIRECTION.VERTICAL) {
         container.scrollTop = position;
     } else if (direction === SCROLL_DIRECTION.HORIZONTAL) {
@@ -14,7 +16,7 @@ export function scrollTo(container: HTMLElement, position: number, direction: SC
     }
 }
 
-export function getScrollPositionByState(state:IScrollState, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL) {
+export function getScrollPositionByState(state: IScrollState, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL) {
     let position: number;
     if (direction === SCROLL_DIRECTION.VERTICAL) {
         position = state.scrollTop || 0;
@@ -24,7 +26,7 @@ export function getScrollPositionByState(state:IScrollState, direction: SCROLL_D
     return position;
 }
 
-export function getViewportSizeByState(state:IScrollState, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL) {
+export function getViewportSizeByState(state: IScrollState, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL) {
     let viewportSize: number;
     if (direction === SCROLL_DIRECTION.VERTICAL) {
         viewportSize = state.clientHeight;
@@ -34,7 +36,7 @@ export function getViewportSizeByState(state:IScrollState, direction: SCROLL_DIR
     return viewportSize;
 }
 
-export function getContentSizeByState(state:IScrollState, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL) {
+export function getContentSizeByState(state: IScrollState, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL) {
     let contentSize: number;
     if (direction === SCROLL_DIRECTION.VERTICAL) {
         contentSize = state.scrollHeight;
@@ -47,12 +49,14 @@ export function getContentSizeByState(state:IScrollState, direction: SCROLL_DIRE
 export const enum SCROLL_POSITION {
     START = 'start',
     END = 'end',
-    MIDDLE = 'middle',
+    MIDDLE = 'middle'
 }
 
 const SCALE_ROUNDING_ERROR_FIX = 1.5;
 
-export function getScrollPositionType(scrollPosition: number, viewportSize: number, contentSize: number): SCROLL_POSITION {
+export function getScrollPositionType(scrollPosition: number,
+                                      viewportSize: number,
+                                      contentSize: number): SCROLL_POSITION {
     let curPosition: SCROLL_POSITION;
     if (scrollPosition <= 0) {
         curPosition = SCROLL_POSITION.START;

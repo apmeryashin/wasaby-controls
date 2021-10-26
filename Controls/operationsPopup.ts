@@ -17,4 +17,4 @@ import ReportDialog = require('Controls/_operationsPopup/ReportDialog');
 
 export {
    ReportDialog
-}
+};

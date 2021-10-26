@@ -4,7 +4,7 @@ import {Memory} from 'Types/source';
 import 'wml!Controls-demo/gridNew/Header/Multiheader/GridCaption/GridCaptionHeaderCell';
 import { IColumn } from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
-import {MultiHeader} from "Controls-demo/gridNew/DemoHelpers/Data/MultiHeader";
+import {MultiHeader} from 'Controls-demo/gridNew/DemoHelpers/Data/MultiHeader';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 export default class extends Control {

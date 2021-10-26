@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/list:View плоском списке}.
- * 
+ *
  * @class Controls/_list/interface/ItemTemplate
  * @implements Controls/list:IBaseItemTemplate
  * @implements Controls/list:IContentTemplate
@@ -14,7 +14,7 @@
  * <!-- WML -->
  * <Controls.list:View source="{{_viewSource}}">
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}"> 
+ *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}">
  *          <ws:contentTemplate>
  *             {{contentTemplate.item.contents.title}}
  *          </ws:contentTemplate>

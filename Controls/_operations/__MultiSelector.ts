@@ -153,20 +153,24 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
    }
 
-   private _getAdditionalMenuItems({selectedKeys, selectionViewMode, isAllSelected, selectedKeysCount}: IMultiSelectorOptions): MultiSelectorMenuItems {
+   private _getAdditionalMenuItems(
+       {selectedKeys, selectionViewMode, isAllSelected, selectedKeysCount}: IMultiSelectorOptions
+   ): MultiSelectorMenuItems {
       const additionalItems = [];
       const hasSelected = !!selectedKeys.length;
 
       if (selectionViewMode === 'selected') {
          additionalItems.push(SHOW_ALL_ITEM);
          // Показываем кнопку если есть выбранные и невыбранные записи
-      } else if (selectionViewMode === 'all' && hasSelected && !isAllSelected) {
-         additionalItems.push(SHOW_SELECTED_ITEM);
-      } else if (selectionViewMode === 'partial') {
-         if (hasSelected && (selectedKeysCount > 0 || selectedKeysCount === null)) {
-            additionalItems.push(...SHOW_SELECT_COUNT_SELECTED_ITEMS);
-         } else {
-            additionalItems.push(...SHOW_SELECT_COUNT);
+      } else if (!isAllSelected) {
+         if (selectionViewMode === 'all' && hasSelected) {
+            additionalItems.push(SHOW_SELECTED_ITEM);
+         } else if (selectionViewMode === 'partial') {
+            if (hasSelected && (selectedKeysCount > 0 || selectedKeysCount === null)) {
+               additionalItems.push(...SHOW_SELECT_COUNT_SELECTED_ITEMS);
+            } else {
+               additionalItems.push(...SHOW_SELECT_COUNT);
+            }
          }
       }
 
@@ -184,7 +188,8 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       });
    }
 
-   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions, counterConfigChanged?: boolean): Promise<TCount> {
+   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions,
+                                       counterConfigChanged?: boolean): Promise<TCount> {
       const {selectedKeys, excludedKeys, selectedKeysCount, operationsController, selectedCountConfig} = options;
       const selection = this._getSelection(selectedKeys, excludedKeys);
       const count = (counterConfigChanged && selectedKeysCount !== 0) ? null : selectedKeysCount;
@@ -193,7 +198,8 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
          this._sizeChanged = true;
          operationsController?.setSelectedKeysCount(count);
       };
-      const needUpdateCount = !selectedCountConfig || !counterConfigChanged || this._isCorrectCount(count) || !options.isAllSelected;
+      const needUpdateCount = !selectedCountConfig || !counterConfigChanged ||
+          this._isCorrectCount(count) || !options.isAllSelected;
 
       if (needUpdateCount) {
          const getCountResult = this._getCount(selection, count, options);
@@ -301,7 +307,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    }
 
    protected _onMenuItemActivate(event: SyntheticEvent<'menuItemActivate'>, item: Model): void {
-      let itemId: string = item.get('id');
+      const itemId: string = item.get('id');
 
       this._notify('selectedTypeChanged', [itemId], {
          bubbling: true
@@ -329,3 +335,19 @@ Object.defineProperty(MultiSelector, 'defaultProps', {
       return MultiSelector.getDefaultOptions();
    }
 });
+
+/**
+ * @name Controls/_operations/SimpleMultiSelector#selectedKeysCount
+ * @cfg {Number} Счётчик отмеченных записей.
+ * @example
+ * <pre class="brush: html">
+ *    <Controls.operations:SimpleMultiSelector selectedKeysCount="{{10}}"/>
+ * </pre>
+ */
+
+/**
+ * @event Происходит при выборе из выпадающего списка, который открывается при клике на кнопку "Отметить".
+ * @name Controls/_operations/SimpleMultiSelector#selectedTypeChanged
+ * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} selectedType Идентификатор выбранного пункта
+ */

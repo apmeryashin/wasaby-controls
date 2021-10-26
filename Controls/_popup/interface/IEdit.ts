@@ -28,7 +28,7 @@ export interface IEditOpener {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener">Demo-example</a>
  * {@link /doc/platform/developmentapl/interface-development/controls/list/actions/editing-dialog/ Подробнее}
  * @class Controls/_popup/interface/IEditOpener
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Edit/Opener

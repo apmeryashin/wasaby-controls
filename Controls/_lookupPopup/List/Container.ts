@@ -14,15 +14,15 @@ export enum showType {
    TOOLBAR
 }
 
-let SELECT_ACTION_ID = 'selector.action';
-let ACTION_TITLE = rk('Выбрать');
-let ACTION = {
+const SELECT_ACTION_ID = 'selector.action';
+const ACTION_TITLE = rk('Выбрать');
+const ACTION = {
    id: SELECT_ACTION_ID,
    title: ACTION_TITLE,
    showType: showType.TOOLBAR
 };
 
-let _private = {
+const _private = {
    getItemActivateResult(itemKey: Key, keys: Key[], multiSelect: boolean): SelectionChangedEventResult {
       const added = [];
       const removed = [];
@@ -95,7 +95,7 @@ let _private = {
    },
 
    getItemActionVisibilityCallback(options) {
-      return function(action, item) {
+      return (action, item) => {
          let showByOptions;
          let showByItemType;
 
@@ -169,7 +169,7 @@ let _private = {
  * @public
  * @author Герасимов Александр Максимович
  */
-let Container = Control.extend({
+const Container = Control.extend({
 
    _template: template,
    _selectedKeys: null,
@@ -188,8 +188,8 @@ let Container = Control.extend({
    },
 
    _beforeUpdate(newOptions) {
-      let selectionTypeChanged = newOptions.selectionType !== this._options.selectionType;
-      let selectedKeysChanged = newOptions.selectedKeys !== this._options.selectedKeys;
+      const selectionTypeChanged = newOptions.selectionType !== this._options.selectionType;
+      const selectedKeysChanged = newOptions.selectedKeys !== this._options.selectedKeys;
 
       if (selectedKeysChanged) {
          this._selectedKeys = newOptions.selectedKeys;
@@ -373,4 +373,3 @@ Object.defineProperty(Container, 'defaultProps', {
  */
 
 export = Container;
-

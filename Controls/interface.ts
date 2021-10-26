@@ -16,10 +16,11 @@ export {default as IItemTemplate, IItemTemplateOptions} from './_interface/IItem
 export {default as IIconStyle, IIconStyleOptions, TIconStyle} from './_interface/IIconStyle';
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
 export {default as IIcon, IIconOptions} from './_interface/IIcon';
-export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';
+export {default as IIconSize, IIconSizeOptions, TIconSize} from './_interface/IIconSize';
 export {default as IFontColorStyle, IFontColorStyleOptions, TFontColorStyle} from './_interface/IFontColorStyle';
 export {default as IFontSize, IFontSizeOptions, TFontSize} from './_interface/IFontSize';
 export {default as IFontWeight, IFontWeightOptions, TFontWeight} from './_interface/IFontWeight';
+export {default as ITextTransform, ITextTransformOptions, TTextTransform} from './_interface/ITextTransform';
 export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions, TSelectedKey} from './_interface/ISingleSelectable';
 export {default as IMultiSelectable, IMultiSelectableOptions, TSelectedKeys} from './_interface/IMultiSelectable';
@@ -72,7 +73,11 @@ export {
     TNavigationButtonSize,
     TNavigationButtonView
 } from './_interface/INavigation';
-export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
+export {
+    default as IDisplayedRanges,
+    IDisplayedRangesOptions,
+    TDisplayedRangesItem
+} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch, ISearchOptions} from './_interface/ISearch';
 export {default as ISearchValue, ISearchValueOptions} from './_interface/ISearchValue';
@@ -92,3 +97,5 @@ export {default as ITextValue} from './_interface/ITextValue';
 export {default as ISelectField, ISelectFieldsOptions} from './_interface/ISelectFields';
 export {IRoundBorder} from 'Controls/_interface/IRoundBorder';
 export {TPaddingSize} from 'Controls/_interface/TPaddingSize';
+export {IItemPaddingOptions, default as IItemPadding} from 'Controls/_interface/IItemPadding';
+export {default as IResetValue, IResetValueOptions} from 'Controls/_interface/IResetValue';

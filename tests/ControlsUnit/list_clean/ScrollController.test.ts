@@ -288,7 +288,12 @@ describe('Controls/list_clean/ScrollController', () => {
             const controller = new ScrollController(options);
             let applyScrollTopCallbackCalled = false;
             const applyScrollTopCallback = () => applyScrollTopCallbackCalled = true;
-            controller.scrollPositionChange({scrollTop: 0, scrollHeight: 100, clientHeight: 50, applyScrollTopCallback}, true);
+            controller.scrollPositionChange({
+                scrollTop: 0,
+                scrollHeight: 100,
+                clientHeight: 50,
+                applyScrollTopCallback
+            }, true);
             assert.isFalse(applyScrollTopCallbackCalled);
         });
     });
@@ -327,7 +332,6 @@ describe('Controls/list_clean/ScrollController', () => {
         });
     });
 
-
     describe('inertialScrolling', () => {
         let clock;
         beforeEach(() => {
@@ -346,7 +350,7 @@ describe('Controls/list_clean/ScrollController', () => {
         const collection = new Collection({
             collection: items
         });
-        let options = {
+        const options = {
             collection,
             virtualScrollConfig: {},
             needScrollCalculation: false
@@ -360,7 +364,7 @@ describe('Controls/list_clean/ScrollController', () => {
         it('callAfterScrollStopped', () => {
 
             let callbackCalled = false;
-            let callback = () => {
+            const callback = () => {
                 callbackCalled = true;
             };
             controller.callAfterScrollStopped(callback);

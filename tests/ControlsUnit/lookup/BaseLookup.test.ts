@@ -6,15 +6,16 @@ import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as sinon from 'sinon';
 
-async function getBaseLookup(options?: Partial<ILookupOptions>): Promise<Lookup> {
-    const lookupOptions = options || {
+async function getBaseLookup(options?: Partial<ILookupOptions>, receivedState?: RecordSet): Promise<Lookup> {
+    const lookupOptions = {
         source: getSource(),
-        selectedKeys: []
+        selectedKeys: [],
+        ...options
     };
-    const lookup = new Lookup(lookupOptions);
+    const lookup = new Lookup();
     // tslint:disable-next-line:ban-ts-ignore
     // @ts-ignore
-    await lookup._beforeMount(lookupOptions);
+    await lookup._beforeMount(lookupOptions, undefined, receivedState);
     lookup.saveOptions(lookupOptions);
     return lookup;
 }
@@ -113,6 +114,19 @@ describe('Controls/lookup:Input', () => {
             assert.deepStrictEqual(lookup._items.getCount(), data.length);
         });
 
+        it('with dataLoadCallback', async () => {
+            let isDataLoadCallbackCalled = false;
+            const items = new RecordSet({
+                keyProperty: 'id'
+            });
+            const dataLoadCallback = () => {
+                isDataLoadCallbackCalled = true;
+            };
+
+            await getBaseLookup({dataLoadCallback} as unknown as ILookupOptions, items);
+            assert.ok(isDataLoadCallbackCalled);
+        });
+
     });
 
     describe('handlers', () => {
@@ -129,9 +143,10 @@ describe('Controls/lookup:Input', () => {
 
         it('item added', async () => {
             const lookup = await getBaseLookup();
-            let added, deleted;
+            let added;
+            let deleted;
             lookup._options.selectedKeys = [1];
-            lookup._lookupController.getSelectedKeys = () => { return [1, 3]};
+            lookup._lookupController.getSelectedKeys = () => [1, 3];
             lookup._notify = (action, data) => {
                 if (action === 'selectedKeysChanged') {
                     added = data[1];
@@ -145,9 +160,10 @@ describe('Controls/lookup:Input', () => {
 
         it('item deleted and added', async () => {
             const lookup = await getBaseLookup();
-            let added, deleted;
+            let added;
+            let deleted;
             lookup._options.selectedKeys = [1, 4, 5];
-            lookup._lookupController.getSelectedKeys = () => { return [1, 4, 6]};
+            lookup._lookupController.getSelectedKeys = () => [1, 4, 6];
             lookup._notify = (action, data) => {
                 if (action === 'selectedKeysChanged') {
                     added = data[1];
@@ -161,12 +177,12 @@ describe('Controls/lookup:Input', () => {
 
     });
 
-    describe('_selectCallback', function () {
+    describe('_selectCallback', () => {
         it('_selectCallback with items', async () => {
             const lookup = await getBaseLookup({
                 multiSelect: true
             });
-            sinon.replace(lookup, '_itemsChanged', () => {});
+            sinon.replace(lookup, '_itemsChanged', () => {/* FIXME: sinon mock */});
             const items = new RecordSet({
                 rawData: getData(),
                 keyProperty: 'id'
@@ -179,7 +195,7 @@ describe('Controls/lookup:Input', () => {
             const lookup = await getBaseLookup({
                 multiSelect: true
             });
-            sinon.replace(lookup, '_itemsChanged', () => {});
+            sinon.replace(lookup, '_itemsChanged', () => {/* FIXME: sinon mock */});
             const items = new RecordSet({
                 rawData: getData(),
                 keyProperty: 'id'

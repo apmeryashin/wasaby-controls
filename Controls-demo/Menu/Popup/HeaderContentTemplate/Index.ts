@@ -17,7 +17,6 @@ class HeaderContentTemplate extends Control {
         });
     }
 
-
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default HeaderContentTemplate;

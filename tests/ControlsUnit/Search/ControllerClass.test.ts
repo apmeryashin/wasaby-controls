@@ -5,7 +5,7 @@ import {Memory, QueryWhereExpression} from 'Types/source';
 import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
 import {RecordSet} from 'Types/collection';
-import {ISearchControllerOptions} from "Controls/_search/ControllerClass";
+import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 
 const getMemorySource = (): Memory => {
    return new Memory({
@@ -144,7 +144,7 @@ describe('Controls/search:ControllerClass', () => {
    });
 
    it('search with searchStartCallback', async () => {
-      const sourceController = getSourceController({
+      sourceController = getSourceController({
          source: new Memory()
       });
       let searchStarted = false;
@@ -183,7 +183,7 @@ describe('Controls/search:ControllerClass', () => {
       });
 
       it('filter with "Разворот"', async () => {
-         const sourceController = getSourceController();
+         sourceController = getSourceController();
          const searchController = getSearchController({
             parentProperty: 'Раздел',
             sourceController
@@ -194,11 +194,11 @@ describe('Controls/search:ControllerClass', () => {
          });
 
          await searchController.search('testSearchValue');
-         assert.ok(searchController.getFilter()['Разворот']);
+         assert.ok(searchController.getFilter().Разворот);
 
          const filter = searchController.reset(true);
-         assert.ok(filter['Разворот']);
-         assert.ok(filter['usePages']);
+         assert.ok(filter.Разворот);
+         assert.ok(filter.usePages);
 
          sourceController.setFilter({
             Разворот: 'Без разворота'
@@ -206,7 +206,7 @@ describe('Controls/search:ControllerClass', () => {
 
          await searchController.search('testSearchValue');
          const filter = searchController.reset(true);
-         assert.ok(!filter['usePages']);
+         assert.ok(!filter.usePages);
       });
 
       describe('startingWith: root', () => {
@@ -233,9 +233,9 @@ describe('Controls/search:ControllerClass', () => {
             });
          }
 
-         it('root before search should saved after reset search', async() => {
-            const sourceController = getSourceController(getHierarchyOptions());
-            let searchControllerOptions = {
+         it('root before search should saved after reset search', async () => {
+            sourceController = getSourceController(getHierarchyOptions());
+            const searchControllerOptions = {
                sourceController,
                ...getHierarchyOptions()
             };
@@ -244,14 +244,14 @@ describe('Controls/search:ControllerClass', () => {
             await searchController.search('testSearchValue');
             assert.ok(sourceController.getRoot() === null);
             assert.ok(searchController.getRoot() === null);
-            assert.ok(sourceController.getFilter()['parentProperty'] === null);
+            assert.ok(sourceController.getFilter().parentProperty === null);
 
             searchController.reset(true);
             assert.ok(searchController.getRoot() === 'testRoot');
          });
 
-         it('update root while searching', async() => {
-            const sourceController = getSourceController(getHierarchyOptions());
+         it('update root while searching', async () => {
+            sourceController = getSourceController(getHierarchyOptions());
             let searchControllerOptions = {
                sourceController,
                ...getHierarchyOptions()
@@ -266,8 +266,8 @@ describe('Controls/search:ControllerClass', () => {
             assert.ok(searchController.getRoot() === 'myRoot');
          });
 
-         it('update with same root while searching', async() => {
-            const sourceController = getSourceController(getHierarchyOptions());
+         it('update with same root while searching', async () => {
+            sourceController = getSourceController(getHierarchyOptions());
             let searchControllerOptions = {
                sourceController,
                ...getHierarchyOptions()
@@ -429,7 +429,7 @@ describe('Controls/search:ControllerClass', () => {
    it('search with filterOnSearchCallback option', async () => {
       const filter = {};
       const source = getMemorySource();
-      const sourceController = new NewSourceController({
+      sourceController = new NewSourceController({
          source
       });
       await sourceController.reload();
@@ -454,11 +454,11 @@ describe('Controls/search:ControllerClass', () => {
          source.query = () => {
             return Promise.reject();
          };
-         const sourceController = getSourceController({
+         sourceController = getSourceController({
             source
          });
          const searchController = getSearchController({sourceController});
-         await searchController.search('testSearchValue').catch(() => {});
+         await searchController.search('testSearchValue').catch(() => {/* FIXME: sinon mock */});
          assert.deepStrictEqual(
              sourceController.getFilter(),
              {
@@ -483,7 +483,7 @@ describe('Controls/search:ControllerClass', () => {
             root: 'testRoot',
             startingWith: 'root'
          };
-         const sourceController = getSourceController({
+         sourceController = getSourceController({
             source: new Memory(),
             ...hierarchyOptions
          });
@@ -504,7 +504,7 @@ describe('Controls/search:ControllerClass', () => {
       });
 
       it('search with expandedItems', async () => {
-         let sourceController = getSourceController({
+         sourceController = getSourceController({
             source: new Memory(),
             expandedItems: ['test']
          });
@@ -522,7 +522,7 @@ describe('Controls/search:ControllerClass', () => {
       });
 
       it('inputSearchValue changed while search is in process', async () => {
-         const sourceController = getSourceController();
+         sourceController = getSourceController();
          const searchController = getSearchController({sourceController});
          const searchPromise = searchController.search('testSearchValue');
          searchController.setInputSearchValue('newInputSearchValue');
@@ -530,6 +530,21 @@ describe('Controls/search:ControllerClass', () => {
          return searchPromise.catch((error) => {
             assert.ok(error.isCanceled);
          });
+      });
+
+      it('search with searchValueTrim option', async () => {
+         const searchController = getSearchController({
+            sourceController: getSourceController({filter: {}}),
+            searchValueTrim: true,
+            searchParam: 'title'
+         });
+
+         let searchResult = await searchController.search('   test    ');
+         assert.ok((searchResult as RecordSet).getCount() === 2);
+
+         await searchController.reset();
+         searchResult = await searchController.search('     ');
+         assert.ok(searchResult === null);
       });
    });
 });

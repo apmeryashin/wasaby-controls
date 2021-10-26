@@ -106,7 +106,7 @@ class Password extends Base {
     }
 
     protected _toggleVisibilityHandler(): void {
-        let passwordVisible = !this._passwordVisible;
+        const passwordVisible = !this._passwordVisible;
 
         this._passwordVisible = passwordVisible;
         this._forceUpdate();
@@ -181,7 +181,7 @@ export default Password;
  * @cfg
  * @example
  * Сохраняем данные о пользователе и текущее время при отправке формы.
- * 
+ *
  * <pre class="brush: html; highlight: [4]">
  * <!-- WML -->
  * <form action="Auth.php" name="form">
@@ -190,7 +190,7 @@ export default Password;
  *     <Controls.buttons:Button on:click="_saveUser()" caption="Отправить"/>
  * </form>
  * </pre>
- * 
+ *
  * <pre class="brush: js; highlight: [4,11]">
  * // TypeScript
  * export class Form extends Control<IControlOptions, void> {

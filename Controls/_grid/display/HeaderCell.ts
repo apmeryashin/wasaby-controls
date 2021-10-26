@@ -217,9 +217,9 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
         const isStickySupport = this._$owner.isStickyHeader();
 
         if (isMultilineHeader) {
-            wrapperClasses += ` controls-Grid__multi-header-cell_min-height`;
+            wrapperClasses += ' controls-Grid__multi-header-cell_min-height';
         } else {
-            wrapperClasses += ` controls-Grid__header-cell_min-height`;
+            wrapperClasses += ' controls-Grid__header-cell_min-height';
         }
         if (!isStickySupport) {
             wrapperClasses += ' controls-Grid__header-cell_static';
@@ -251,9 +251,9 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
         let contentClasses = 'controls-Grid__header-cell__content';
         contentClasses += this._getContentSeparatorClasses();
         if (isMultiLineHeader) {
-            contentClasses += ` controls-Grid__row-multi-header__content_baseline`;
+            contentClasses += ' controls-Grid__row-multi-header__content_baseline';
         } else {
-            contentClasses += ` controls-Grid__row-header__content_baseline`;
+            contentClasses += ' controls-Grid__row-header__content_baseline';
         }
         if (this.contentOrientation.align) {
             contentClasses += ` controls-Grid__header-cell_justify_content_${this.contentOrientation.align}`;
@@ -262,12 +262,12 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
     }
 
     protected _getContentSeparatorClasses(): string {
-        let headerEndRow = this._$owner.getBounds().row.end;
+        const headerEndRow = this._$owner.getBounds().row.end;
         const isMultiLineHeader = this._$owner.isMultiline();
         let classes = '';
         if (isMultiLineHeader) {
             if (this._$column.endRow !== headerEndRow && this._$column.endRow - this._$column.startRow === 1) {
-                classes += ` controls-Grid__cell_header-content_border-bottom`;
+                classes += ' controls-Grid__cell_header-content_border-bottom';
             }
         }
         return classes;
@@ -283,8 +283,10 @@ export default class HeaderCell extends Cell<null, HeaderRow> {
     }
 
     setSorting(sorting: string): void {
-        this._$sorting = sorting;
-        this._nextVersion();
+        if (this._$sorting !== sorting) {
+            this._$sorting = sorting;
+            this._nextVersion();
+        }
     }
 
     getSorting(): string {

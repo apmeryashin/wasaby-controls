@@ -23,7 +23,7 @@ import Collection, {IEditingConfig} from 'Controls/_display/Collection';
 import IItemActionsItem from './interface/IItemActionsItem';
 import IEnumerableItem from './interface/IEnumerableItem';
 import IEdgeRowSeparatorItem from './interface/IEdgeRowSeparatorItem';
-import {IRoundBorder} from 'Controls/interface';
+import {IRoundBorder, TFontColorStyle, TFontSize, TFontWeight} from 'Controls/interface';
 
 export interface IOptions<T extends Model = Model> {
     itemModule?: string;
@@ -74,7 +74,6 @@ const ITEMACTIONS_POSITION_CLASSES = {
     topRight: 'controls-itemActionsV_position_topRight'
 };
 
-
 /**
  * Элемент коллекции
  * @mixes Types/entity:DestroyableMixin
@@ -96,7 +95,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     InstantiableMixin,
     SerializableMixin,
     ItemCompatibilityListViewModel
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable, IItemActionsItem, IEnumerableItem, IEdgeRowSeparatorItem {
+) implements IInstantiable, IVersionable, ICollectionItem,
+    ICollectionItemStyled, IItemCompatibilityListViewModel,
+    IEditableCollectionItem, IMarkable, IItemActionsItem,
+    IEnumerableItem, IEdgeRowSeparatorItem {
 
     // region IInstantiable
 
@@ -407,7 +409,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     protected _getMultiSelectAccessibility(): boolean|null {
-        const value = object.getPropertyValue<boolean|null>(this.getContents(), this._$multiSelectAccessibilityProperty);
+        const value = object.getPropertyValue<boolean|null>(
+            this.getContents(), this._$multiSelectAccessibilityProperty
+        );
         return value === undefined ? true : value;
     }
 
@@ -557,7 +561,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         classes += ` controls-EditingTemplateText_size_${params.size || 'default'}`;
         classes += ` controls-EditingTemplateText_style_${params.style || 'default'}`;
 
-        if (params.withPadding || this.getEditingConfig().mode !== 'cell') {
+        if (params.withPadding || !this.getEditingConfig() || this.getEditingConfig().mode !== 'cell') {
             classes += ' controls-EditingTemplateText_withPadding';
         }
 
@@ -772,7 +776,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         const stickyVerticalPosition = stickyCallback ? 'top' : 'topBottom';
         return {
             vertical: stickyVerticalPosition
-        }
+        };
     }
 
     protected _isSupportSticky(): boolean {
@@ -997,6 +1001,28 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     /**
+     * Добавляет CSS классы для стилизации текста в записи списка
+     * @param fontColorStyle Цвет шрифта
+     * @param fontSize Размер шрифта
+     * @param fontWeight Насыщенность шрифта
+     */
+    getContentTextStylingClasses(fontColorStyle?: TFontColorStyle,
+                                 fontSize?: TFontSize,
+                                 fontWeight?: TFontWeight): string {
+        let contentClasses = '';
+        if (fontColorStyle) {
+            contentClasses += ` controls-text-${fontColorStyle}`;
+        }
+        if (fontSize) {
+            contentClasses += ` controls-fontsize-${fontSize}`;
+        }
+        if (fontWeight) {
+            contentClasses += ` controls-fontweight-${fontWeight}`;
+        }
+        return contentClasses;
+    }
+
+    /**
      * Возвращает Класс для позиционирования опций записи.
      * Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку
      * Если новая модель, то в любом случае не считается класс, добавляющий padding
@@ -1009,14 +1035,16 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param itemActionsClass
      * @param itemPadding @deprecated
      */
-    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}): string {
+    getItemActionPositionClasses(itemActionsPosition: string,
+                                 itemActionsClass: string,
+                                 itemPadding: {top?: string, bottom?: string}): string {
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
         const result: string[] = [];
         if (itemPadding === undefined) {
             itemPadding = {
                 top: this.getOwner().getTopPadding().toLowerCase(),
                 bottom: this.getOwner().getBottomPadding().toLowerCase()
-            }
+            };
         }
         if (itemActionsPosition !== 'outside') {
             result.push(classes);
@@ -1134,7 +1162,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _getLeftSpacingContentClasses(): string {
         if (this._isDefaultRenderMultiSelect()) {
-            return ` controls-ListView__itemContent_withCheckboxes`;
+            return ' controls-ListView__itemContent_withCheckboxes';
         } else {
             return ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}`;
         }

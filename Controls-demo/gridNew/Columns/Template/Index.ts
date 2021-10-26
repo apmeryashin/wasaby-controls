@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/Columns/Template/Template';
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
 import * as countryRatingNumber from 'wml!Controls-demo/gridNew/resources/CellTemplates/CountryRatingNumber';
-import {Countries} from "Controls-demo/gridNew/DemoHelpers/Data/Countries";
+import {Countries} from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

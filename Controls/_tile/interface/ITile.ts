@@ -290,7 +290,7 @@
  * </pre>
  */
 
- /**
+/**
  * @name Controls/_tile/interface/ITile#tileMode
  * @cfg {String} Режим отображения плитки с динамической/фиксированной шириной.
  * @variant static Отображается плитка с фиксированной шириной.

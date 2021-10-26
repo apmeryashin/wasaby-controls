@@ -3,7 +3,6 @@ import { assert } from 'chai';
 import { TreeItem } from 'Controls/display';
 import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
 
-
 describe('Controls/_display/TreeItemDecorator', () => {
     describe('.getSource()', () => {
         it('should return undefined by default', () => {

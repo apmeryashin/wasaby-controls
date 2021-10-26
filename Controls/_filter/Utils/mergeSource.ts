@@ -7,13 +7,15 @@ export default function mergeSource(target: IFilterItem[] = [], source: IFilterI
         source.forEach((historyItem) => {
             if (isEqualItems(item, historyItem)) {
                 for (const fieldName in historyItem) {
-                    const value = historyItem[fieldName];
-                    const allowMerge = fieldName === 'viewMode' ?
-                        value !== undefined :
-                        historyItem.hasOwnProperty(fieldName);
+                    if (historyItem.hasOwnProperty(fieldName)) {
+                        const value = historyItem[fieldName];
+                        const allowMerge = fieldName === 'viewMode' ?
+                            value !== undefined :
+                            historyItem.hasOwnProperty(fieldName);
 
-                    if (item.hasOwnProperty(fieldName) && allowMerge) {
-                        object.setPropertyValue(item, fieldName, value);
+                        if (item.hasOwnProperty(fieldName) && allowMerge) {
+                            object.setPropertyValue(item, fieldName, value);
+                        }
                     }
                 }
             }

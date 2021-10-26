@@ -62,7 +62,6 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     private _endDragNDropTimer: number = null;
     private _draggedKey: string = null;
     private _instanceId: string = 'inst_' + Guid.create();
-    static contextType = DragNDropContext;
 
     constructor(props) {
         super(props);
@@ -146,7 +145,9 @@ class ReactContainer extends React.Component<IReactContainerProps> {
     private _onMove(nativeEvent: MouseEvent): void {
         if (this._startEvent) {
             const dragObject: IDragObject = this._getDragObject(nativeEvent, this._startEvent);
-            const dragStarted: boolean = ReactContainer._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
+            const dragStarted: boolean = ReactContainer._isDragStarted(
+                this._startEvent, nativeEvent, this._startImmediately
+            );
             if (!this._documentDragging && dragStarted) {
                 this._insideDragging = true;
                 this.context.documentDragStart(dragObject);
@@ -193,7 +194,7 @@ class ReactContainer extends React.Component<IReactContainerProps> {
         } else if (this.props.onDocumentDragStart) {
             this.props.onDocumentDragStart(eventName, ...args);
         }
-        
+
         EventBus.channel('dragnDrop').notify(eventName, ...args);
     }
 
@@ -297,6 +298,11 @@ class ReactContainer extends React.Component<IReactContainerProps> {
         this._registerMouseUp();
     }
 
+    getInstanceId() {
+        return this._instanceId;
+    }
+    static contextType = DragNDropContext;
+
     private static SHIFT_LIMIT: number = 4;
     private static IE_MOUSEMOVE_FIX_DELAY: number = 50;
 
@@ -329,10 +335,6 @@ class ReactContainer extends React.Component<IReactContainerProps> {
                 selection.empty();
             }
         }
-    }
-
-    getInstanceId() {
-        return this._instanceId;
     }
 
     private static _getDragOffset(moveEvent: MouseEvent, startEvent: MouseEvent): ICords {

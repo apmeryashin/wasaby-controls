@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 
 import { GridCollection } from 'Controls/grid';
 import { RecordSet } from 'Types/collection';
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
 
 const RAW_DATA = [
     { id: 1, name: 'Ivan', surname: 'Kashitsyn' },

@@ -13,28 +13,36 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
    if (obj1.length !== obj2.length) {
       return false;
    }
-   for (var i = 0; i < obj1.length; i++) {
+   for (let i = 0; i < obj1.length; i++) {
       const props = [];
       for (const field1 in obj1[i]) {
-         props.push(field1);
+          if (obj1[i].hasOwnProperty(field1)) {
+              props.push(field1);
+          }
       }
       for (const field2 in obj2[i]) {
-         if (props.indexOf(field2) === -1) {
-            props.push(field2);
+          if (obj2[i].hasOwnProperty(field2)) {
+              if (props.indexOf(field2) === -1) {
+                  props.push(field2);
+              }
          }
       }
       for (const j of props) {
-         const shouldSkip = fieldsOptions[j] instanceof Function ? fieldsOptions[j](obj1[i][j], obj2[i][j]) === true : false;
-         if ((!shouldSkip || !(obj1[i][j] instanceof Object)) && (obj1[i].hasOwnProperty(j) || obj2[i].hasOwnProperty(j))) {
-            if (obj1[i][j] !== obj2[i][j]) {
-                return false;
-            }
-         }
+          const shouldSkip = fieldsOptions[j] instanceof Function
+              ? fieldsOptions[j](obj1[i][j], obj2[i][j]) === true
+              : false;
+          if (
+              (!shouldSkip || !(obj1[i][j] instanceof Object)) &&
+              (obj1[i].hasOwnProperty(j) || obj2[i].hasOwnProperty(j))
+          ) {
+              if (obj1[i][j] !== obj2[i][j]) {
+                  return false;
+              }
+          }
       }
    }
    return true;
 }
-
 
 /**
  * Сравнивает две шаблонные опции Wasaby шаблона. Проверяет все опции, от которых зависит шаблон, аналогично проверке синхронизатора.
@@ -42,7 +50,9 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
  * @param newTemplate
  * @param flatComparator
  */
-function isEqualTemplates(oldTemplate: TemplateFunction, newTemplate: TemplateFunction, flatComparator?: (oldValue, newValue) => boolean): boolean {
+function isEqualTemplates(oldTemplate: TemplateFunction,
+                          newTemplate: TemplateFunction,
+                          flatComparator?: (oldValue, newValue) => boolean): boolean {
    // @ts-ignore
    const isWasabyTemplate = (tmpl) => tmpl instanceof Array && tmpl.isWasabyTemplate;
 
@@ -55,7 +65,7 @@ function isEqualTemplates(oldTemplate: TemplateFunction, newTemplate: TemplateFu
       if (flatComparator) {
          return flatComparator(oldTemplate, newTemplate);
       } else {
-         return oldTemplate === newTemplate
+         return oldTemplate === newTemplate;
       }
    } else {
       if (oldTemplate.length !== newTemplate.length) {
@@ -93,10 +103,10 @@ function isEqualWithSkip(obj1: object, obj2: object, fieldsOptions?: Record<stri
    if (fieldsOptions) {
       Object.keys(fieldsOptions).forEach((key) => {
          _fieldsOptions[key] = () => true;
-      })
+      });
    }
 
-   return isEqual(obj1, obj2, _fieldsOptions)
+   return isEqual(obj1, obj2, _fieldsOptions);
 }
 
 export {

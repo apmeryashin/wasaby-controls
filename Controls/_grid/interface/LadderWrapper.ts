@@ -1,6 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для построения {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ лесенки} в {@link Controls/grid:View таблице}.
- *  
+ *
  * @class Controls/_grid/interface/LadderWrapper
  * @author Авраменко А.С.
  * @see Controls/grid:View#ladderProperties

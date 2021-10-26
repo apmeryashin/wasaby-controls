@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require("wml!Controls-demo/Calendar/MonthList/DisplayedRanges/ViewModeMonth/ViewModeMonth");
+import template = require('wml!Controls-demo/Calendar/MonthList/DisplayedRanges/ViewModeMonth/ViewModeMonth');
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;

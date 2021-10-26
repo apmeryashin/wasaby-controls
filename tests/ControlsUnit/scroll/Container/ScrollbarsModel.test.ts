@@ -20,7 +20,7 @@ describe('Controls/scroll:Container ScrollbarsModel', () => {
                     scrollOrientation: test.scrollOrientation
                 });
                 assert.hasAllKeys(model._models, test.direction);
-                for (let direction of test.direction) {
+                for (const direction of test.direction) {
                     assert.isFalse(model._models[direction].isVisible);
                     assert.strictEqual(model._models[direction].position, 0);
                     assert.isUndefined(model._models[direction].contentSize);
@@ -59,7 +59,7 @@ describe('Controls/scroll:Container ScrollbarsModel', () => {
                 model: ScrollbarsModel = new ScrollbarsModel({
                     ...getScrollbarsDefaultOptions(),
                     scrollOrientation: SCROLL_MODE.VERTICAL_HORIZONTAL
-                })
+                });
             const scrollState = {
                 scrollTop: 0,
                 scrollLeft: 0,
@@ -120,8 +120,12 @@ describe('Controls/scroll:Container ScrollbarsModel', () => {
                 model.updateScrollState(scrollState, { offsetHeight: 50 });
                 model.updatePlaceholdersSize(test.placeholders);
 
-                assert.strictEqual(model._models.vertical.position, scrollState.scrollTop + (test.placeholders.top || 0));
-                assert.strictEqual(model._models.horizontal.position, scrollState.scrollLeft + (test.placeholders.left || 0));
+                assert.strictEqual(
+                    model._models.vertical.position,
+                    scrollState.scrollTop + (test.placeholders.top || 0)
+                );
+                assert.strictEqual(model._models.horizontal.position,
+                    scrollState.scrollLeft + (test.placeholders.left || 0));
                 assert.strictEqual(model._models.vertical.contentSize,
                     scrollState.scrollHeight + (test.placeholders.top || 0) + (test.placeholders.bottom || 0));
                 assert.strictEqual(model._models.horizontal.contentSize,

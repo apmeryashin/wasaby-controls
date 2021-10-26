@@ -7,7 +7,7 @@
                     horizontal='left'/>
             <ws:targetPoint vertical="bottom" horizontal="left"/>
         </Controls.popup:Sticky>
-        <div class="popup-page-buttons" style="margin: 300px 0">
+        <div class="popup-page-buttons" style="margin: 300px 0 500px">
             <div>
                 <Controls.buttons:Button attr:class="demo-StackDemo__stickyClose" caption="Open Sticky(close on scroll)"
                                          name="stickyButton" on:click="openStickyScroll()"/>

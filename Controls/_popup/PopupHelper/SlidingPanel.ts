@@ -16,7 +16,7 @@ const OPENER_BY_DESKTOP_MODE = {
     sticky: StickyOpener
 };
 
-type TDesktopOpener = StackOpener | DialogOpener;
+type TDesktopOpener = StackOpener | DialogOpener | StickyOpener;
 
 class SlidingPanelOpener extends BaseOpener {
     static _openPopup(config: ISlidingPanelPopupOptions, popupController: string = POPUP_CONTROLLER): Promise<string> {
@@ -54,7 +54,7 @@ export default class SlidingPanel extends Base {
         const adaptivePopupOptions = this._getPopupOptionsWithSizes(popupOptions);
         const desktopMode = this._getDesktopMode(adaptivePopupOptions);
         this._validateOptions(popupOptions);
-        if (detection.isPhone) {
+        if (this._isMobileMode()) {
             return super.open(adaptivePopupOptions, POPUP_CONTROLLER);
         } else {
             return this._getDesktopOpener(desktopMode).open(adaptivePopupOptions);
@@ -73,6 +73,10 @@ export default class SlidingPanel extends Base {
         return this._callMethodAdaptive('isOpened', ...args) as boolean;
     }
 
+    private _isMobileMode(): boolean {
+        return this._options?.isAdaptive === false || detection.isPhone;
+    }
+
     /**
      * Выполняет метод для десктопного или мобильного опенера,
      * в зависимости от того, на каком устройстве открывают попап.
@@ -82,7 +86,7 @@ export default class SlidingPanel extends Base {
      * @private
      */
     private _callMethodAdaptive(methodName: string, ...args: unknown[]): unknown {
-        if (detection.isPhone) {
+        if (this._isMobileMode() || !this._desktopOpener) {
             return super[methodName](...args);
         } else {
             return this._getDesktopOpener()[methodName](...args);
@@ -126,13 +130,13 @@ export default class SlidingPanel extends Base {
      * @private
      */
     private _getPopupOptionsWithSizes(popupOptions: ISlidingPanelPopupOptions): ISlidingPanelPopupOptions {
-        const isPhone = detection.isPhone;
+        const isMobileMode = this._isMobileMode();
         const slidingPanelOptions = {
             position: 'bottom',
             desktopMode: DEFAULT_DESKTOP_MODE,
             ...popupOptions.slidingPanelOptions
         };
-        const options = isPhone ? slidingPanelOptions : popupOptions.dialogOptions;
+        const options = isMobileMode ? slidingPanelOptions : popupOptions.dialogOptions;
         const mergedConfig = BaseOpenerUtil.getConfig(this._options, popupOptions) as ISlidingPanelPopupOptions;
         const resultPopupOptions = {
             desktopMode: DEFAULT_DESKTOP_MODE,
@@ -145,7 +149,7 @@ export default class SlidingPanel extends Base {
             Если открываемся на десктопе, то открываемся другим опенером и в контроллер SlidingPanel не попадаем,
             соответственно slidingPanelOptions никто не прокинет, прокидываем сами через templateOptions
          */
-        if (!isPhone) {
+        if (!isMobileMode) {
             if (!resultPopupOptions.templateOptions) {
                 resultPopupOptions.templateOptions = {};
             }

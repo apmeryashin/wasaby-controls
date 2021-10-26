@@ -2,6 +2,7 @@
  * Created by kraynovdo on 25.01.2018.
  */
 import {Control, TemplateFunction} from 'UI/Base';
+import {isContentOption} from 'UICommon/Vdom';
 import {CrudWrapper} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
@@ -36,10 +37,6 @@ export interface ITabsTemplate {
     readonly '[Controls/_tabs/ITabsTemplate]': boolean;
 }
 
-interface ITabsTemplateFunction extends TemplateFunction {
-    func?: Function;
-}
-
 export interface ITabsTemplateOptions extends IItemTemplateOptions {
     leftTemplateProperty?: string;
     rightTemplateProperty?: string;
@@ -58,18 +55,6 @@ interface IReceivedState {
     lastRightOrder: number;
     itemsArray: ITabButtonItem[];
 }
-
-const isTemplate = (tmpl: ITabsTemplateFunction): boolean => {
-    return !!(tmpl && typeof tmpl.func === 'function' && tmpl.hasOwnProperty('internal'));
-};
-
-const isTemplateArray = (templateArray: ITabsTemplateFunction[] | ITabsTemplateFunction): boolean => {
-    return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl));
-};
-
-const isTemplateObject = (tmpl: ITabsTemplateFunction): boolean => {
-    return isTemplate(tmpl);
-};
 
 const MARKER_ANIMATION_TIMEOUT: number = 100;
 
@@ -320,7 +305,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
      * @private
      */
     private _tabCanShrink(item: ITabButtonItem): boolean {
-        if(typeof item.canShrink !== 'undefined'){
+        if (typeof item.canShrink !== 'undefined') {
             return item.canShrink;
         } else if (item.width !== undefined || !this._options.canShrink) {
             return false;
@@ -401,6 +386,7 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
         }
         if (minWidth !== undefined) {
             style += `min-width: ${this._getWidthValue(minWidth)};`;
+            style += 'text-align: center';
         }
         return style;
     }
@@ -434,8 +420,12 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
     }
 
     protected _prepareItemMinWidthClass(item: ITabButtonItem): string {
-        const isLeftTemplate = this._getTemplate(this._options.itemLeftTemplate, item, this._options.leftTemplateProperty);
-        const isRightTemplate = this._getTemplate(this._options.itemRightTemplate, item, this._options.rightTemplateProperty);
+        const isLeftTemplate = this._getTemplate(
+            this._options.itemLeftTemplate, item, this._options.leftTemplateProperty
+        );
+        const isRightTemplate = this._getTemplate(
+            this._options.itemRightTemplate, item, this._options.rightTemplateProperty
+        );
         if (detection.isIE && (!isLeftTemplate && !isRightTemplate)) {
             return 'controls-Tabs__itemClickableArea_minWidth';
         }
@@ -572,16 +562,9 @@ class TabsButtons extends Control<ITabsOptions, IReceivedState> implements ITabs
             for (let i = 0; i < length; i++) {
                 const item = items[i];
                 for (const key in item) {
-                    /* TODO: will be fixed by
-                     * https://online.sbis.ru/opendoc.html?guid=225bec8b-71f5-462d-b566-0ebda961bd95
-                     */
                     if (
-                        item.hasOwnProperty(key) && (
-                            isTemplateObject(item[key]) ||
-                            isTemplateArray(item[key])
-                        )
-                    ) {
-                        return true;
+                        item.hasOwnProperty(key) && isContentOption(item[key])) {
+                            return true;
                     }
                 }
             }

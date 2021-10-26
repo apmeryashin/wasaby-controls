@@ -6,7 +6,7 @@ const SELECTION_MARKED_FIELD = 'marked';
 /**
  * Модуль возвращает функцию, которую можно использовать в опции {@link Types/_source/Local#filter filter} для локальных источников данных,
  * используемых для списочных контролов на окнах выбора.
- * 
+ *
  * @remark
  * Аргументы функции:
  *
@@ -47,14 +47,14 @@ const SELECTION_MARKED_FIELD = 'marked';
  */
 
 function filter(item: Model, filter: object, idProperty: string): boolean {
-   let result: Boolean = true;
-   let hasIdInMarked: Boolean = false;
+   let result: boolean = true;
+   let hasIdInMarked: boolean = false;
 
    if (filter[FILTER_SELECTION_FIELD]) {
       const itemId = item.get(idProperty);
 
       filter[FILTER_SELECTION_FIELD].get(SELECTION_MARKED_FIELD).forEach((markedId: string|number) => {
-         if (!hasIdInMarked && markedId == itemId) {
+         if (!hasIdInMarked && String(markedId) === String(itemId)) {
             hasIdInMarked = true;
          }
       });

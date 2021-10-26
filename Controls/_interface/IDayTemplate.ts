@@ -20,7 +20,7 @@ export default interface IDayTemplate {
  * @cfg {String|TemplateFunction} Шаблон дня.
  * @remark
  * В шаблон передается объект value, в котором хранятся:
- * 
+ *
  * * date — дата дня.
  * * day — порядковый номер дня.
  * * today — определяет, является ли день сегодняшним.

@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_search/Input/WrappedSearch';
 import Search from 'Controls/_search/Input/Search';
 
 /**
- * Контрол "Строка поиска". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
+ * Контрол "Строка поиска". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
  * Функционал контрола идентичен полям ввода из библиотеки {@link Controls/input}, однако в отличие от них имеет собственное визуальное оформление.
  *
  * @remark
@@ -94,7 +94,7 @@ export default class WrappedSearch extends Control {
  *       //Не закрываем автодополнение при клике на лупу, если введено больше 3 символов
  *       return this._value.length < 3;
  *     }
- * <pre>
+ * </pre>
  * @default true
  */
 
@@ -125,11 +125,10 @@ export default class WrappedSearch extends Control {
  * TS:
  * <pre>
  *     protected _value: string = '';
- *
  *     private _searchClick():boolean {
  *       return this._value.length < 3;
  *     }
- * <pre>
+ * </pre>
  */
 
 /*

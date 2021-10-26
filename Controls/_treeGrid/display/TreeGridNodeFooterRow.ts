@@ -62,6 +62,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return !!content || this.needMoreButton();
     }
 
+    isSticked(): boolean {
+        return false;
+    }
+
     getMoreFontColorStyle(): string {
         return this._$moreFontColorStyle;
     }
@@ -94,14 +98,15 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
         return !needHide;
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         if (this.needMoreButton() && !this.getRowTemplate() && !this.getOwner().hasNodeFooterColumns()) {
             this.setRowTemplate('Controls/treeGrid:NodeFooterTemplate');
         }
 
         super._initializeColumns({
             colspanStrategy: 'consistently',
-            shouldAddStickyLadderCells: !this._$rowTemplate,
+            prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' :
+                (this.getStickyLadderCellsCount() ? 'offset' : 'colspan'),
             shouldAddMultiSelectCell: !this._$rowTemplate,
             extensionCellsConstructors: {
                 multiSelectCell: this.getColumnsFactory({column: {}})

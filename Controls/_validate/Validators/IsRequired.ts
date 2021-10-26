@@ -8,7 +8,7 @@ import cInstance = require('Core/core-instance');
  * @author Красильников А.С.
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
- * 
+ *
  * Аргументы функции:
  *
  * * value — проверяемое значение.
@@ -32,13 +32,14 @@ import cInstance = require('Core/core-instance');
  * </pre>
  *
  */
-export = function (args) {
-   //Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
+function validate(args) {
+   // Если передали в аргументах doNotValidate, значит возвращаем true
+   // (параметр нужен для опционального включения/отключения валидатора)
    if (args.doNotValidate) {
       return true;
    }
 
-   var isEmpty = false;
+   let isEmpty = false;
 
    switch (typeof args.value) {
       case 'string':
@@ -68,4 +69,6 @@ export = function (args) {
    return isEmpty ?
       rk('Поле обязательно для заполнения') :
       true;
-};
+}
+
+export = validate;

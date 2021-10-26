@@ -57,7 +57,7 @@ import 'css!Controls/suggest';
  * @demo Controls-demo/Suggest_new/Input/DisplayProperty/DisplayProperty
  * @author Gerasimov A.M.
  */
-var Suggest = Control.extend({
+const Suggest = Control.extend({
 
    _template: template,
    _notifyHandler: EventUtils.tmplNotify,
@@ -66,7 +66,7 @@ var Suggest = Control.extend({
 
    // <editor-fold desc="LifeCycle">
 
-   _beforeMount: function(options) {
+   _beforeMount(options) {
       this._searchStart = this._searchStart.bind(this);
       this._searchEnd = this._searchEnd.bind(this);
       this._searchError = this._searchError.bind(this);
@@ -75,21 +75,21 @@ var Suggest = Control.extend({
 
    // </editor-fold>
 
-   openSuggest: function() {
+   openSuggest() {
       this._suggestState = true;
    },
 
-   closeSuggest: function() {
+   closeSuggest() {
       this._suggestState = false;
    },
 
    // <editor-fold desc="handlers">
 
-   _changeValueHandler: function(event, value) {
+   _changeValueHandler(event, value) {
       this._notify('valueChanged', [value]);
    },
 
-   _choose: function(event, item) {
+   _choose(event, item) {
       /* move focus to input after select, because focus will be lost after closing popup  */
       this.activate({enableScreenKeyboard: true});
       this._notify('valueChanged', [item.get(this._options.displayProperty || '')]);
@@ -99,43 +99,40 @@ var Suggest = Control.extend({
       event.stopPropagation();
    },
 
-   _clearClick: function() {
+   _clearClick() {
       /* move focus to input after clear text, because focus will be lost after hiding cross  */
       this.activate({enableScreenKeyboard: true});
       this._suggestState = this._options.autoDropDown;
       this._notify('valueChanged', ['']);
    },
 
-   _deactivated: function() {
+   _deactivated() {
       this._suggestState = false;
    },
 
-   _searchStart: function() {
+   _searchStart() {
       this._searchState = true;
       this._forceUpdate();
    },
 
-   _searchEnd: function() {
+   _searchEnd() {
       this._searchState = false;
       this._forceUpdate();
    },
 
-   _searchError: function() {
+   _searchError() {
       this._searchState = false;
    }
    // </editor-fold>
 
 });
 
-
 // <editor-fold desc="OptionsDesc">
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

@@ -1,8 +1,14 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
-import {ButtonTemplate, IButtonOptions, defaultHeight, defaultFontColorStyle, getDefaultOptions} from 'Controls/buttons';
+import {
+    ButtonTemplate,
+    IButtonOptions,
+    defaultHeight,
+    defaultFontColorStyle,
+    getDefaultOptions
+} from 'Controls/buttons';
 import {Abstract as ChainAbstract, factory} from 'Types/chain';
-import {ICrudPlus} from "Types/source";
+import {ICrudPlus} from 'Types/source';
 import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {CrudWrapper} from 'Controls/dataSource';
@@ -30,7 +36,8 @@ export function hasSourceChanged(newSource?: ICrudPlus, oldSource?: ICrudPlus): 
     return newSource && currentSource !== newSource;
 }
 
-export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
+export function getSimpleButtonTemplateOptionsByItem(item: TItem,
+                                                     toolbarOptions: IControlOptions = {}): IButtonOptions {
     const cfg: IButtonOptions = {};
     const defaultOptions = getDefaultOptions();
     const icon = getIcon(item.get('icon'));
@@ -42,11 +49,12 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const viewMode = isVerticalDirection ? 'toolButton' : item.get('viewMode');
     const caption = item.get('caption');
 
-    if (!icon && !caption) {
+    if (typeof icon === 'undefined' && typeof caption === 'undefined') {
         Logger.error('Controls.toolbars.View: У элемента не задан "icon" и "caption". Элемент тулбара может отображаться некорректно');
     }
 
-    const buttonStyle = (viewMode === 'toolButton' ? 'default' : (item.get('buttonStyle') || defaultOptions.buttonStyle));
+    const buttonStyle =
+        (viewMode === 'toolButton' ? 'default' : (item.get('buttonStyle') || defaultOptions.buttonStyle));
 
     // todo: https://online.sbis.ru/opendoc.html?guid=244a5058-47c1-4896-a494-318ba2422497
     const inlineHeight = isVerticalDirection ? 'xl' :

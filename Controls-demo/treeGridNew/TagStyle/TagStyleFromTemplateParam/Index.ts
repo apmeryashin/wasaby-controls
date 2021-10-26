@@ -4,8 +4,8 @@ import {CollectionItem} from 'Controls/display';
 import {Record} from 'Types/entity';
 
 import * as template from 'wml!Controls-demo/treeGridNew/TagStyle/TagStyleFromTemplateParam/TagStyleFromTemplateParam';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
-import {IData} from "Controls-demo/treeGridNew/DemoHelpers/Interface";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
+import {IData} from 'Controls-demo/treeGridNew/DemoHelpers/Interface';
 
 const MAXITEM = 7;
 

@@ -8,13 +8,12 @@ import DateRangeSelectorConsumer from 'Controls/_dateRange/_DateRangeSelectorCon
  * @class Controls/_dateRange/RangeShortSelectorConsumer
  * @extends UI/Base:Control
  * @implements Controls/interface:IResetValues
- * @implements Controls/dateRange:ILinkView
+ * @implements Controls/date:ILinkView
  * @mixes Controls/dateRange:IPeriodLiteDialog
  * @implements Controls/dateRange:IDateRange
  * @implements Controls/interface:IDisplayedRanges
  * @implements Controls/interface:IOpenPopup
  * @implements Controls/interface:IFontSize
- * @implements Controls/interface:IUnderline
  * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/dateRange:ICaptionFormatter
@@ -42,6 +41,10 @@ export default class RangeShortSelectorConsumer extends Control {
         dateRange: RangeShortSelector
         consumer: DateRangeSelectorConsumer
     };
+
+    openPopup(): void {
+        this._children.dateRange.openPopup();
+    }
 
     protected _afterMount(options: IControlOptions): void {
         const shiftPeriod = this._children.dateRange.shiftPeriod;

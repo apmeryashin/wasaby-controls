@@ -20,7 +20,7 @@ export default class Move implements IAction {
     private _options: IMoveActionOptions;
 
     constructor(options: IMoveActionOptions) {
-        this._options = options
+        this._options = options;
     }
 
     execute(meta: Partial<IMoveActionOptions>): Promise<void | DataSet> {
@@ -33,7 +33,9 @@ export default class Move implements IAction {
         });
     }
 
-    private _getProvider(providerName: string = 'Controls/listCommands:MoveProviderWithDialog'): Promise<IMoveProvider> {
+    private _getProvider(
+        providerName: string = 'Controls/listCommands:MoveProviderWithDialog'
+    ): Promise<IMoveProvider> {
         return ModulesLoader.loadAsync(providerName).then((provider) => {
            return new provider();
         });

@@ -1,5 +1,7 @@
 import * as MemorySourceData from 'Controls-demo/Utils/MemorySourceData';
 
+// tslint:disable:max-line-length
+
 const _departmentsDataLong = MemorySourceData.departments.concat(getLongData());
 const _departments = [
    { id: 1, title: 'Разработка', department: 'Разработка', owner: 'Новиков Д.В.' },
@@ -103,8 +105,8 @@ const _companies = [
 function getLongData() {
    const data = [];
 
-   for (var id = 10; id < 100; id++) {
-      data.push({id: id, department: 'Разработка', owner: 'Новиков Д.В.', title: 'Разработка'});
+   for (let id = 10; id < 100; id++) {
+      data.push({id, department: 'Разработка', owner: 'Новиков Д.В.', title: 'Разработка'});
    }
 
    return data;
@@ -114,4 +116,4 @@ export {
    _departments,
    _equipment,
    _companies
-}
+};

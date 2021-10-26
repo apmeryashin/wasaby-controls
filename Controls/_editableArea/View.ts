@@ -10,7 +10,6 @@ import 'css!Controls/CommonClasses';
 import 'css!Controls/editableArea';
 import 'css!Controls/list';
 
-'use strict';
 /**
  * Контроллер для <a href="/doc/platform/developmentapl/interface-development/controls/input-elements/input/edit/">редактирования по месту в полях ввода</a>.
  *
@@ -113,7 +112,8 @@ export default class View extends Control<IViewControlOptions> {
    }
 
     protected _cloneEditObject(editObject: Record<any>): void {
-        // При любом изменении данных будет обновляться editObject, что может приводить к ошибкам. Чтобы этого избежать, клонируем его
+        // При любом изменении данных будет обновляться editObject,
+        // что может приводить к ошибкам. Чтобы этого избежать, клонируем его
         this._editObject = editObject.clone();
         // Если опция editObject изменилась, то она ждет подтверждения изменения, делаем подтверждение у клона.
         this._editObject.acceptChanges();
@@ -210,7 +210,7 @@ export default class View extends Control<IViewControlOptions> {
        */
       const changedFields = this._editObject.getChanged();
       if (changedFields) {
-         changedFields.forEach((field) =>{
+         changedFields.forEach((field) => {
             this._options.editObject.set(field, this._editObject.get(field));
          });
       }

@@ -1,27 +1,27 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import { HierarchicalMemory, DataSet, Query } from 'Types/source';
 import * as Template from 'wml!Controls-demo/treeGridNew/_tests/BreakNodeLoading/BreakNodeLoading';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 class HierarchicalMemoryWithBreakNodeLoading extends HierarchicalMemory {
     protected _restoreLoadingFn: Function;
 
-    public restoreLoading(): void {
+    restoreLoading(): void {
         if (this._restoreLoadingFn) {
             this._restoreLoadingFn();
             this._restoreLoadingFn = null;
         }
     }
 
-    public breakLoading(restoreLoadingFn: Function): void {
+    breakLoading(restoreLoadingFn: Function): void {
         this._restoreLoadingFn = restoreLoadingFn;
     }
 
-    public isLoadingBreak(): boolean {
+    isLoadingBreak(): boolean {
         return !!this._restoreLoadingFn;
     }
 
-    public query(query?: Query): Promise<DataSet> {
+    query(query?: Query): Promise<DataSet> {
         const superResult = super.query(query);
         if (query.getWhere().parent !== null) {
             return new Promise((resolve, reject) => {

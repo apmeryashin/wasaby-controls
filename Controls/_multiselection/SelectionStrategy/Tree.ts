@@ -99,7 +99,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (key !== this._rootId && item && this._selectAncestors) {
          this._unselectParentNodes(cloneSelection, item.getParent());
       }
-      if (searchValue && this._isAllSelectedInRoot(cloneSelection) && this._isAllChildrenExcluded(cloneSelection, this._getRoot())) {
+      if (
+          searchValue &&
+          this._isAllSelectedInRoot(cloneSelection) &&
+          this._isAllChildrenExcluded(cloneSelection, this._getRoot())
+      ) {
          cloneSelection.selected.length = 0;
          cloneSelection.excluded.length = 0;
       }
@@ -266,11 +270,18 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          } else {
             const isNode = this._isNode(item);
             if (!this._selectAncestors && !this._selectDescendants) {
-               // В этом случае мы вообще не смотри на узлы, т.к. выбранность элемента не зависит от выбора родительского узла
+               // В этом случае мы вообще не смотри на узлы, т.к. выбранность элемента не
+                // зависит от выбора родительского узла
                // или выбранность узла не зависит от его детей
-               isSelected = this._canBeSelected(item, false) && !inExcluded && (inSelected || this._isAllSelectedInRoot(selectionWithEntryPath));
+               isSelected = this._canBeSelected(item, false) &&
+                   !inExcluded && (inSelected || this._isAllSelectedInRoot(selectionWithEntryPath));
             } else {
-               isSelected = this._canBeSelected(item, false) && (!inExcluded && (inSelected || this._isAllSelected(selectionWithEntryPath, parentId)) || isNode && this._isAllSelected(selectionWithEntryPath, key));
+               isSelected = this._canBeSelected(item, false) && (
+                   !inExcluded &&
+                   (inSelected || this._isAllSelected(selectionWithEntryPath, parentId)) ||
+                   isNode &&
+                   this._isAllSelected(selectionWithEntryPath, key)
+               );
 
                if ((this._selectAncestors || searchValue) && isNode) {
                   isSelected = this._getStateNode(item, isSelected, selectionWithEntryPath);
@@ -487,7 +498,12 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [itemId]);
       }
 
-      if (this._isAllChildrenExcluded(selection, parent) && this._selectAncestors && parentId !== this._rootId && !parent['[Controls/_display/BreadcrumbsItem]']) {
+      if (
+          this._isAllChildrenExcluded(selection, parent) &&
+          this._selectAncestors &&
+          parentId !== this._rootId &&
+          !parent['[Controls/_display/BreadcrumbsItem]']
+      ) {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [parentId]);
          ArraySimpleValuesUtil.removeSubArray(selection.selected, [parentId]);
       }
@@ -688,16 +704,18 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
     * @private
     */
    private _getRecursiveChildesInEntryPath(parentId: CrudEntityKey): TKeys {
-      const childrenIds = [];
+      let childrenIds = [];
 
       const childesFromEntryPath = this._entryPath
           .filter((item) => item.parent === parentId)
-          .map((item) => {
-             childrenIds.concat(this._getRecursiveChildesInEntryPath(item.id));
-             return item.id;
-          });
+          .map((item) => item.id);
 
-      return childrenIds.concat(childesFromEntryPath);
+      childrenIds = childrenIds.concat(childesFromEntryPath);
+      childesFromEntryPath.forEach((childKey) => {
+         childrenIds = childrenIds.concat(this._getRecursiveChildesInEntryPath(childKey));
+      });
+
+      return childrenIds;
    }
 
    /**
@@ -710,13 +728,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       if (this._entryPath) {
          const nodeId = this._getKey(node);
-         this._entryPath.forEach((entryPath) => {
-            if ((childrenIds.includes(entryPath.parent) || nodeId === entryPath.parent)
-                && !childrenIds.includes(entryPath.id)) {
-               childrenIds.push(entryPath.id);
-               childrenIds = childrenIds.concat(this._getRecursiveChildesInEntryPath(entryPath.id));
-            }
-         });
+         childrenIds = childrenIds.concat(this._getRecursiveChildesInEntryPath(nodeId));
       }
 
       return childrenIds;

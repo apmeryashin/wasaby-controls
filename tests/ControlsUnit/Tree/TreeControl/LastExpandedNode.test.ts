@@ -16,21 +16,21 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
 
     const fakeSourceController = {
         hasMoreData: (direction: string, root: string) => root != null && root !== '3',
-        setDataLoadCallback: () => {},
+        setDataLoadCallback: () => {/* FIXME: sinon mock */},
         getState: () => ({}),
         getItems: () => new RecordSet({
             keyProperty: 'id',
             rawData: data
         }),
-        getCollapsedGroups: () => {},
+        getCollapsedGroups: () => {/* FIXME: sinon mock */},
         getLoadError: () => false,
-        updateOptions: () => {},
+        updateOptions: () => {/* FIXME: sinon mock */},
         hasLoaded: (key: string) => true,
         load: (direction: string, root: string) => {
             const query = new Query().where({root});
             return source.query(query);
         },
-        setExpandedItems: () => {},
+        setExpandedItems: () => {/* FIXME: sinon mock */},
         getExpandedItems: () => ([]),
         isDeepReload: () => false,
         setNodeDataMoreLoadCallback: () => false,
@@ -178,7 +178,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
 
         const spyQuery = spy(source, 'query');
         const treeControl = initTreeControl({
-            nodeFooterTemplate: () => {}
+            nodeFooterTemplate: () => {/* FIXME: sinon mock */}
         });
         treeControl.toggleExpanded('1');
 
@@ -195,7 +195,7 @@ describe('Controls/Tree/TreeControl/LastExpandedNode', () => {
 
         const spyQuery = spy(source, 'query');
         const treeControl = initTreeControl({
-            nodeFooterTemplate: () => {}
+            nodeFooterTemplate: () => {/* FIXME: sinon mock */}
         });
         treeControl.toggleExpanded('2');
 

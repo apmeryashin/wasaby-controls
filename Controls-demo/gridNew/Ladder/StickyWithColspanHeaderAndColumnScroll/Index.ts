@@ -92,7 +92,7 @@ const DATA = [
         total: '100:10',
         name: 'Леонид'
     }
-]
+];
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;

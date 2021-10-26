@@ -1,17 +1,20 @@
-<Controls.treeTile:View
-   attr:class="demo-Tile__static demo-Tile__staticGroup"
-   tileMode="static"
-   parentProperty="parent"
-   nodeProperty="type"
-   displayProperty="title"
-   imageProperty="image"
-   keyProperty="id"
-   source="{{_viewSource}}"
-   groupingKeyCallback="{{_groupingKeyCallback}}">
-   <ws:itemTemplate>
-      <ws:partial
-         shadowVisibility="onhover"
-         template="Controls/tile:ItemTemplate"
-         hasTitle="{{itemTemplate.item.contents.isDocument}}"/>
-   </ws:itemTemplate>
-</Controls.treeTile:View>
+<Controls.scroll:Container attr:class="controlsDemo__height400">
+   <Controls.treeTile:View
+           attr:class="demo-Tile__static demo-Tile__staticGroup"
+           tileMode="static"
+           parentProperty="parent"
+           nodeProperty="type"
+           displayProperty="title"
+           imageProperty="image"
+           keyProperty="id"
+           stickyHeader="{{true}}"
+           source="{{_viewSource}}"
+           groupingKeyCallback="{{_groupingKeyCallback}}">
+      <ws:itemTemplate>
+         <ws:partial
+                 shadowVisibility="onhover"
+                 template="Controls/tile:ItemTemplate"
+                 hasTitle="{{itemTemplate.item.contents.isDocument}}"/>
+      </ws:itemTemplate>
+   </Controls.treeTile:View>
+</Controls.scroll:Container>

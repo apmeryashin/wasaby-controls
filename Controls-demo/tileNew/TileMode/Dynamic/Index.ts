@@ -33,9 +33,9 @@ export default class extends Control {
         reader.onload = (event): void => {
             newItem.image = event.target.result;
             const image = new Image();
-            image.onload = (event) => {
-                newItem.imageHeight = event.currentTarget.height;
-                newItem.imageWidth = event.currentTarget.width;
+            image.onload = (loadEvent) => {
+                newItem.imageHeight = loadEvent.currentTarget.height;
+                newItem.imageWidth = loadEvent.currentTarget.width;
                 newItems.push(newItem);
                 this._currentItems = newItems;
                 this._viewSource = new HierarchicalMemory({

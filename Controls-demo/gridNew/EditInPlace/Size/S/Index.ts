@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/Size/S/S';
 import {Memory} from 'Types/source';
 import 'wml!Controls-demo/gridNew/EditInPlace/Size/S/_cellEditor';
 import {RecordSet} from 'Types/collection';
-import {Editing} from "Controls-demo/gridNew/DemoHelpers/Data/Editing";
+import {Editing} from 'Controls-demo/gridNew/DemoHelpers/Data/Editing';
 import { IColumnRes } from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 
 export default class extends Control {

@@ -17,7 +17,7 @@ export default class extends Control {
    }
 
    protected _filterFunc(item, query): object {
-      var filter = memorySourceFilter('department');
+      const filter = memorySourceFilter('department');
       return filter(item, query);
    }
 

@@ -5,7 +5,7 @@ import {TColspanCallbackResult} from 'Controls/grid';
 import {IGroupNodeColumn} from 'Controls/treeGrid';
 
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeHistoryId/NodeHistoryType/NodeHistoryType';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 // Патч нужен, чтобы демка не выдавала ошибки
 import 'Controls-demo/Utils/WebApiScopePatch';
@@ -47,7 +47,7 @@ export default class extends Control {
         });
     }
 
-    protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+    protected _colspanCallback(item: Model): TColspanCallbackResult {
         if (item.get('nodeType') === 'group' || typeof item === 'string') {
             return 'end';
         }

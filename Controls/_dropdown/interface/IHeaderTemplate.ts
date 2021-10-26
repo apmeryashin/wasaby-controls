@@ -21,7 +21,7 @@
  * По умолчанию для отрисовки шапки меню используется базовый шаблон {@link Controls/dropdown:HeaderTemplate}.
  * Изменяя параметры базового шаблона вы можете задать собственное отображение шапки меню.
  * Параметры шаблона:
- * 
+ *
  * * caption — текст заголовка. Когда значение параметра не задано, оно наследуется из опции {@link Controls/interface:ICaption#caption caption}.
  * * icon — иконка. Когда значение параметра не задано, оно наследуется из опции {@link Controls/interface:IIcon#icon icon}.
  * * headContentTemplate — пользовательский контент шапки. Контентная опция. В области видимости доступны параметры caption и icon.
@@ -61,7 +61,8 @@
 * @remark
 * To determine the template, you should call the base template 'Controls/dropdown:HeaderTemplate'.
 * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-* By default, the base template 'Controls/dropdown:HeaderTemplate' will display caption and icon, if they are set. You can change the following options:
+* By default, the base template 'Controls/dropdown:HeaderTemplate'
+* will display caption and icon, if they are set. You can change the following options:
 * <ul>
 *     <li>caption - header text,</li>
 *     <li>icon - header icon.</li>
@@ -113,9 +114,9 @@
  * _beforeMount: function() {
  *    this._source = new source.Memory ({
  *       data: [{ key: 1, title: 'Task', '@parent': true, parent: null },
-                { key: 2, title: 'Error in the development', '@parent': false, parent: null },
-                { key: 3, title: 'Commission', parent: 1 },
-                { key: 4, title: 'Coordination', parent: 1, '@parent': true, caption: 'Node header caption' }
+ *              { key: 2, title: 'Error in the development', '@parent': false, parent: null },
+ *              { key: 3, title: 'Commission', parent: 1 },
+ *              { key: 4, title: 'Coordination', parent: 1, '@parent': true, caption: 'Node header caption' }
  *       ],
  *       keyProperty: 'key'
  *    });

@@ -10,6 +10,7 @@ interface ILoaderParams {
 }
 
 class Loader {
+    // tslint:disable-next-line:variable-name
     private __uid: string = 'RecordLoader';
 
     init(): void { /**/

@@ -210,6 +210,13 @@
    height: 1em;
    padding-right: var(--offset_3xs);
 }
+
+.ws-is-ie {
+   // ie не умеет автоматически сайзить ширину svg элемента относительно его высоты
+   .controls-Back_new-icon {
+      width: calc(1em / 2);
+   }
+}
 //endregion
 
 .controls-Back__wrapper {
@@ -225,12 +232,5 @@
 }
 
 .controls-ButtonBack__caption {
-   .text-overflow();
-}
-
-//fix for ie10 or ie11 in compatibility mode
-//https://stackoverflow.com/questions/22008135/internet-explorer-10-does-not-apply-flexbox-on-inline-elements
-.controls-Back__caption__wrapper {
-   max-width: 100%;
    .text-overflow();
 }

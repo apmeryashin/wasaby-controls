@@ -13,15 +13,17 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {detection} from 'Env/Env';
 import 'css!Controls/deprecatedFilter';
 
-var _private = {
-   getText: function(items) {
-      var textArr = [];
+// tslint:disable
+
+const _private = {
+   getText(items) {
+      const textArr = [];
 
       chain.factory(items).each(function(item) {
          if (_private.isItemChanged(item) && !Utils.object.getPropertyValue(item, 'isFast')
              && (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))) {
-            let textValue = Utils.object.getPropertyValue(item, 'textValue');
-            let resetTextValue = Utils.object.getPropertyValue(item, 'resetTextValue');
+            const textValue = Utils.object.getPropertyValue(item, 'textValue');
+            const resetTextValue = Utils.object.getPropertyValue(item, 'resetTextValue');
 
             if (textValue && textValue !== resetTextValue) {
                textArr.push(textValue);
@@ -32,8 +34,8 @@ var _private = {
       return textArr.join(', ');
    },
 
-   isItemsChanged: function(items) {
-      var isChanged = false;
+   isItemsChanged(items) {
+      let isChanged = false;
 
       chain.factory(items).each(function(item) {
          if (!isChanged) {
@@ -44,16 +46,16 @@ var _private = {
       return isChanged;
    },
 
-   isItemChanged: function(item) {
+   isItemChanged(item) {
       return !isEqual(Utils.object.getPropertyValue(item, 'value'), Utils.object.getPropertyValue(item, 'resetValue'));
    },
 
-   resolveItems: function(self, items) {
+   resolveItems(self, items) {
       self._items = items;
       self._text = _private.getText(items);
       self._isItemsChanged = _private.isItemsChanged(items);
    },
-   setPopupOptions: function(self, alignment, theme) {
+   setPopupOptions(self, alignment, theme) {
       self._popupOptions = {
          closeOnOutsideClick: true,
          className: 'controls-FilterButton-popup-orientation-' + (alignment === 'right' ? 'left' : 'right') + ` controls_popupTemplate_theme-${theme} controls_filterPopup_theme-${theme}`
@@ -70,7 +72,7 @@ var _private = {
       }
    },
 
-   requireDeps: function(self) {
+   requireDeps(self) {
       if (!self._depsDeferred) {
          self._depsDeferred = new Deferred();
          if (typeof self._options.templateName === 'string') {
@@ -85,7 +87,7 @@ var _private = {
 
    },
 
-   resetItems: function(self, items) {
+   resetItems(self, items) {
       let textValue;
       let resetValue;
 
@@ -107,7 +109,7 @@ var _private = {
          }
       });
    },
-   getPopupConfig: function(self) {
+   getPopupConfig(self) {
       return {
          templateOptions: {
             template: self._options.templateName,
@@ -159,7 +161,7 @@ var _private = {
  * @author Герасимов А.М.
  *
  */
-var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype */{
+const FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype */{
 
    _template: template,
    _oldPanelOpener: null,
@@ -169,18 +171,18 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
    _popupOptions: null,
    _depsDeferred: null,
 
-   _beforeMount: function(options) {
+   _beforeMount(options) {
       if (options.items) {
          _private.resolveItems(this, options.items);
       }
       _private.setPopupOptions(this, options.alignment, options.theme);
    },
 
-   _beforeUnmount: function() {
+   _beforeUnmount() {
       UnregisterUtil(this, 'scroll', {listenAll: true});
    },
 
-   _beforeUpdate: function(options) {
+   _beforeUpdate(options) {
       if (!isEqual(this._options.items, options.items)) {
          _private.resolveItems(this, options.items);
       }
@@ -189,26 +191,26 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       }
    },
 
-   _getFilterState: function() {
+   _getFilterState() {
       return this._options.readOnly ? 'disabled' : 'default';
    },
 
-   reset: function() {
+   reset() {
       FilterUtils.resetFilter(this._items);
       this._notify('filterChanged', [{}]);
       this._notify('itemsChanged', [this._items]);
       this._text = '';
    },
 
-   _clearClick: function() {
+   _clearClick() {
       _private.resetItems(this, this._items);
       this._notify('filterChanged', [{}]);
       this._notify('itemsChanged', [this._items]);
       this._text = '';
    },
 
-   openDetailPanel: function() {
-      var self = this;
+   openDetailPanel() {
+      const self = this;
       if (!this._options.readOnly) {
          if (!detection.isMobileIOS) {
             RegisterUtil(this, 'scroll', this._handleScroll.bind(this), {listenAll: true});
@@ -227,7 +229,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       }
    },
 
-   _onFilterChanged: function(event, data) {
+   _onFilterChanged(event, data) {
       this._notify('filterChanged', [data.filter]);
       if (data.history) {
          this._notify('historyApply', [data.history,  {bubbling: true}]);

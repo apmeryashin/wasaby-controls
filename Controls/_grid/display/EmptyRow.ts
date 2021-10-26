@@ -23,7 +23,7 @@ class EmptyRow extends Row<null> {
     //region Аспект "Колонки. Создание, колспан."
     _initializeColumns(): void {
         super._initializeColumns({
-            shouldAddStickyLadderCells: !this._$rowTemplate,
+            prepareStickyLadderCellsStrategy: !this._$rowTemplate ? 'add' : 'colspan',
             shouldAddMultiSelectCell: !this._$rowTemplate,
             extensionCellsConstructors: {
                 multiSelectCell: this.getColumnsFactory({column: {}})

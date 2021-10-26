@@ -236,44 +236,6 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
-    /**
-     * Constructor options
-     */
-    protected _options: IOptions<S, T>;
-
-    /**
-     * Result elements
-     */
-    protected _items: T[];
-
-    /**
-     * Source elements
-     */
-    protected _sourceItems: T[];
-
-    /**
-     * An array with "Result index -> source index" scheme.
-     */
-    protected _itemsOrder: number[];
-
-    /**
-     * An array with "Child index -> parent index" scheme.
-     */
-    protected _parentsMap: number[];
-
-    constructor(options: IOptions<S, T>) {
-        super();
-        this._options = options;
-
-        if (!options.keyProperty) {
-            warning(`${this._moduleName}::constructor(): option "keyProperty" is not defined. ` +
-            'Only root elements will be presented');
-        }
-    }
-
-    // region IItemsStrategy
-
-    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
     /**
      * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор
@@ -308,6 +270,44 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
             items[$initialized] = true;
         }
         return items;
+    }
+    /**
+     * Constructor options
+     */
+    protected _options: IOptions<S, T>;
+
+    /**
+     * Result elements
+     */
+    protected _items: T[];
+
+    /**
+     * Source elements
+     */
+    protected _sourceItems: T[];
+
+    /**
+     * An array with "Result index -> source index" scheme.
+     */
+    protected _itemsOrder: number[];
+
+    /**
+     * An array with "Child index -> parent index" scheme.
+     */
+    protected _parentsMap: number[];
+
+    // region IItemsStrategy
+
+    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
+
+    constructor(options: IOptions<S, T>) {
+        super();
+        this._options = options;
+
+        if (!options.keyProperty) {
+            warning(`${this._moduleName}::constructor(): option "keyProperty" is not defined. ` +
+            'Only root elements will be presented');
+        }
     }
 
     at(index: number): T {
@@ -367,7 +367,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         source.splice(start, deleteCount, added);
 
         // There is the one and only case to move items with two in turn splices
-        if ((<ISplicedArray> added).hasBeenRemoved) {
+        if ((added as ISplicedArray).hasBeenRemoved) {
             added.forEach((item, index) => {
                 // Actual index of added items in source
                 const startInSource = source.getDisplayIndex(start + index - deleteCount);
@@ -419,7 +419,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
             });
 
             // Set removed flag to use in possible move operation
-            (<ISplicedArray> removed).hasBeenRemoved = true;
+            (removed as ISplicedArray).hasBeenRemoved = true;
         }
 
         this._itemsOrder = itemsOrder;

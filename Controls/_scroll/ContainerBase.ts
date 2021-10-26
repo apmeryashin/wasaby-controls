@@ -21,7 +21,6 @@ import {Entity} from 'Controls/dragnDrop';
 import {Logger} from 'UICommon/Utils';
 import 'css!Controls/scroll';
 
-
 interface IInitialScrollPosition {
     vertical: SCROLL_POSITION.START | SCROLL_POSITION.END;
     horizontal: SCROLL_POSITION.START | SCROLL_POSITION.END;
@@ -114,6 +113,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _scrollMoveTimer: number;
 
+    private _isFirstUpdateState: boolean = true;
+    private _scrollToElementCalled: boolean = false;
+
     // Состояние для логирования сохраняем отдельно, т.к. состояние положения скрола в некоторых сценариях
     // обновляется синхронно, и невозможно узнать старое состояние в обработчике.
     private _lastLogState: {top: number, left: number} = { top: 0, left: 0 };
@@ -157,7 +159,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         // может быть сразу проскролен. Исправляем эту ситуацию.
         // Не будем скроллить в случае, если на странице есть нативные якоря для скролла,
         // т.е. в ссылке присутсвует хэш
-        if (isInitialScrollPositionStart && (!location.hash && this._container.dataset?.scrollContainerNode)) {
+        if (isInitialScrollPositionStart && (!location.hash && this._container.dataset?.scrollContainerNode) &&
+            !this._scrollToElementCalled) {
             this._children.content.scrollTop = 0;
         }
         this._initialScrollPositionResetAfterInitialization();
@@ -344,8 +347,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             return;
         }
         this.onScrollContainer({
-            scrollTop: scrollTop,
-            scrollLeft: scrollLeft
+            scrollTop,
+            scrollLeft
         });
     }
 
@@ -429,13 +432,23 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     //     // console.log(edge);
     // }
 
-    /*
-       * Scrolls to the given position from the top of the container.
-       * @function Controls/_scroll/Container#scrollTo
-       * @param {Number} Offset
-       */
-    scrollTo(scrollPosition: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
-        scrollTo(this._children.content, scrollPosition, direction);
+    /**
+     * Прокручивает до указанных координат контейнера.
+     * @name Controls/_scroll/Container#scrollTo
+     * @function
+     * @param {String} direction - направление (vertical - по вертикали, horizontal - по горизонтали).
+     * @param {Boolean} smooth - плавная прокрутка, по умолчанию false (необязательный).
+     * @example
+     * <pre class="brush: js">
+     * _scrollTo(): void {
+     *    this._children.scrollContainer.scrollTo(50, 'vertical');
+     * }
+     * </pre>
+     */
+    scrollTo(scrollPosition: number,
+             direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL,
+             smooth: boolean = false): void {
+        this._scrollTo(scrollPosition, direction, smooth);
     }
 
     /**
@@ -634,6 +647,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             }
 
             this._generateCompatibleEvents();
+        } else if (this._isFirstUpdateState) {
+            // При первом обновлении scrollState кидаем scrollStateChanged, чтобы можно было знать, с какими размерами
+            // построился скролл контейнер.
+            this._isFirstUpdateState = false;
+            this._generateEvent('scrollStateChanged', [scrollState, oldScrollState]);
         }
     }
 
@@ -908,7 +926,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 clearTimeout(this._scrollMoveTimer);
             }
 
-            this._scrollMoveTimer = setTimeout(() => {
+        this._scrollMoveTimer = setTimeout(() => {
                 // Т.к код выполняется асинхронно, может получиться, что контрол к моменту вызова функции уже
                 // уничтожился
                 if (!this._isUnmounted) {
@@ -960,6 +978,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): Promise<void> {
+        // Есть кейсы, когда scrollToElement вызывается до componentDidMount. По этому флагу не будем сбрасывать
+        // scrollTop в componentDidMount.
+        this._scrollToElementCalled = true;
         event.stopPropagation();
         const promise = scrollToElement(itemContainer, toBottom, force, true);
         /**
@@ -1054,24 +1075,21 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    private _isScrollSmoothSupported(): boolean {
-        if (detection.chrome || detection.firefox || detection.isIE12) {
-            return true;
-        }
-        return false;
-    }
-
-    private _scrollTo(scrollTop: number, smoothSrc: boolean): void {
+    private _scrollTo(scrollPosition: number,
+                      direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL,
+                      smooth: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
-        const smooth = smoothSrc && this._isScrollSmoothSupported();
+        let scrollOrientation;
 
         if (smooth) {
+            scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'top' : 'left';
             scrollContainer.scrollTo({
-                top: scrollTop,
+                [scrollOrientation]: scrollPosition,
                 behavior: 'smooth'
             });
         } else {
-            scrollContainer.scrollTop = scrollTop;
+            scrollOrientation = direction === SCROLL_DIRECTION.VERTICAL ? 'scrollTop' : 'scrollLeft';
+            scrollContainer[scrollOrientation] = scrollPosition;
         }
     }
 
@@ -1085,10 +1103,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
                 // нужный scrollTop будет отличным от realScrollTop, если изменился _topPlaceholderSize.
                 // Вычисляем его по месту
-                this._scrollTo(cachedScrollTop - this._topPlaceholderSize, smooth);
+                this._scrollTo(cachedScrollTop - this._topPlaceholderSize, SCROLL_DIRECTION.VERTICAL, smooth);
             };
             if (realScrollTop >= 0 && !scrollTopOverflow) {
-                this._scrollTo(realScrollTop, smooth);
+                this._scrollTo(realScrollTop, SCROLL_DIRECTION.VERTICAL, smooth);
             } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow
                 && this._bottomPlaceholderSize === 0) {
                 applyScrollTop();
@@ -1111,7 +1129,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                     });
             }
         } else {
-            this._scrollTo(scrollTop, smooth);
+            this._scrollTo(scrollTop, SCROLL_DIRECTION.VERTICAL, smooth);
             this._updateStateAndGenerateEvents({
                 scrollTop
             });
@@ -1137,7 +1155,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     private _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string,
-                           correctingHeight: number = 0): void {
+                                   correctingHeight: number = 0): void {
         // На это событие должен реагировать только ближайший скролл контейнер.
         // В противном случае произойдет подскролл в ненужном контейнере
         event.stopPropagation();
@@ -1187,7 +1205,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _logScrollPosition(scrollTop: number, scrollLeft: number): void {
         if (ContainerBase._debug) {
-            let msg:string = `Controls/scroll:ContainerBase: изменение положения скролла.`;
+            let msg: string = 'Controls/scroll:ContainerBase: изменение положения скролла.';
 
             if (this._lastLogState.top !== scrollTop) {
                 msg += ` По вертикали: новое ${scrollTop}, старое ${this._lastLogState.top}.`;
@@ -1203,9 +1221,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         }
     }
 
-    private _logSizes(state:IScrollState, oldState: IScrollState): void {
+    private _logSizes(state: IScrollState, oldState: IScrollState): void {
         if (ContainerBase._debug) {
-            let msg:string = '';
+            let msg: string = '';
 
             for (const field of ['clientHeight', 'scrollHeight', 'clientWidth', 'scrollWidth']) {
                 if (state[field] !== oldState[field]) {
@@ -1223,7 +1241,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     static setDebug(debug: boolean): void {
         ContainerBase._debug = debug;
     }
-
 
     static getOptionTypes(): object {
         return {

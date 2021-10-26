@@ -45,9 +45,11 @@ export function getWidth(element: HTMLElement | string): number {
     // clientWidth width returns integer, but real width is fractional
     width = measurer.getBoundingClientRect().width;
 
-    //Откладываем удаление элемента, чтобы не пересчитвывать лишний раз DOM и быстрее отобразить страницу
+    // Откладываем удаление элемента, чтобы не пересчитвывать лишний раз DOM и быстрее отобразить страницу
     setTimeout(() => {
-        constants.isBrowserPlatform && document.body.removeChild(measurer);
+        if (constants.isBrowserPlatform) {
+            document.body.removeChild(measurer);
+        }
     });
     return width;
 }

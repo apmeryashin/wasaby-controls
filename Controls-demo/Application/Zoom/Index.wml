@@ -4,6 +4,7 @@
             Выбор значения zoom на body:&nbsp;
             <Controls.dropdown:Selector
                     bind:selectedKeys="_zoom"
+                    on:selectedKeysChanged="_selectedKeysChangedHandler()"
                     keyProperty="key"
                     displayProperty="key"
                     source="{{_zoomDdlSource}}">

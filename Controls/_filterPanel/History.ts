@@ -78,7 +78,11 @@ export default class History extends Control<IHistoryOptions> {
             const textValue = getPropValue(elem, 'textValue');
             const visibility = getPropValue(elem, 'visibility');
 
-            if (!isEqual(value, getPropValue(sourceItem, 'textValue')) && (visibility === undefined || visibility) && textValue) {
+            if (
+                !isEqual(value, getPropValue(sourceItem, 'textValue')) &&
+                (visibility === undefined || visibility) &&
+                textValue
+            ) {
                 textArr.push(textValue);
             }
         });

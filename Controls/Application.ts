@@ -184,7 +184,11 @@ export default class Application extends Control<IApplication> {
 
       if (Application._isIOS13()) {
          window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
-         window.addEventListener('orientationchange', this._orientationChange);
+
+         // Хак актуален только для телефона с Ios и мета тегом viewport
+         if (options.isAdaptive) {
+            window.addEventListener('orientationchange', this._orientationChange);
+         }
       }
       window.addEventListener('resize', this._resizePage.bind(this));
       window.document.addEventListener('scroll', this._scrollPage.bind(this));
@@ -396,8 +400,8 @@ export default class Application extends Control<IApplication> {
             if (bodyClassesToUpdate[key] === this._bodyClasses[key]) {
                continue;
             }
-            classesToAdd = classesToAdd.concat(bodyClassesToUpdate[key].split(' ').filter(Application._isExist))
-            classesToDelete = classesToDelete.concat(this._bodyClasses[key].split(' ').filter(Application._isExist))
+            classesToAdd = classesToAdd.concat(bodyClassesToUpdate[key].split(' ').filter(Application._isExist));
+            classesToDelete = classesToDelete.concat(this._bodyClasses[key].split(' ').filter(Application._isExist));
             this._bodyClasses[key] = bodyClassesToUpdate[key];
          }
       }
@@ -561,7 +565,7 @@ export default class Application extends Control<IApplication> {
       this._globalPopup.closePreviewerHandler(event, type);
    }
    protected _popupEventHandler(event, action): void {
-      let args = Array.prototype.slice.call(arguments, 2);
+      const args = Array.prototype.slice.call(arguments, 2);
       this._popupManager.eventHandler.apply(this._popupManager, [action, args]);
    }
 

@@ -1,5 +1,5 @@
 import {IMoneyOptions} from 'Controls/decorator';
-import IEditingTemplateOptions from './EditingTemplate'
+import IEditingTemplateOptions from './EditingTemplate';
 
 /**
  * Шаблон для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту} денежных полей в {@link /doc/platform/developmentapl/interface-development/controls/list/ списках}.
@@ -36,4 +36,4 @@ import IEditingTemplateOptions from './EditingTemplate'
  */
 export default interface IMoneyEditingTemplateOptions extends IEditingTemplateOptions, IMoneyOptions {
     readonly '[Controls/_list/interface/IMoneyEditingTemplateOptions]': boolean;
-};
+}

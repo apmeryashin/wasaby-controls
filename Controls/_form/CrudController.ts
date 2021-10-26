@@ -35,13 +35,15 @@ export interface ICrudConfig {
  * @see Types/source:Memory
  */
 export default class CrudController {
+    // tslint:disable-next-line:max-line-length
     private readonly _crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void = null;
     private readonly _notifyRegisterPending: (args: [Promise<Model>, object]) => void = null;
     private readonly _notifyHandler: (eventName: string, args: [Model]) => void = null;
 
     private _dataSource: Memory | SbisService = null;
 
-    constructor(dataSource: Memory | SbisService, crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void,
+    constructor(dataSource: Memory | SbisService,
+                crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void,
                 notifyRegisterPending: (args: [Promise<Model>, object]) => void = null,
                 notifyHandler: (eventName: string, args: [Model]) => void = null) {
         this._dataSource = dataSource;
@@ -55,7 +57,8 @@ export default class CrudController {
     }
 
     protected _registerPending(promise: Promise<Model>, config?: ICrudConfig): boolean {
-        const showLoadingIndicator = typeof config?.showLoadingIndicator === 'undefined' ? true : config.showLoadingIndicator;
+        const showLoadingIndicator =
+            typeof config?.showLoadingIndicator === 'undefined' ? true : config.showLoadingIndicator;
         this._notifyRegisterPending([promise, {showLoadingIndicator}]);
     }
     /**

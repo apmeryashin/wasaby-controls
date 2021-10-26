@@ -91,7 +91,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected small: string = '';
     protected theme: string = '';
     protected overlay: string = 'default';
-    protected mods: Array<string> | string;
+    protected mods: string[] | string;
     protected delay: number;
     protected delayTimeout: number;
     private _blockedEvents: string[];
@@ -272,7 +272,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _isOpened(config?: ILoadingIndicatorOptions): boolean {
-        // config is not required parameter. If config object is empty we should always create new Indicator due to absence of ID field in config
+        // config is not required parameter. If config object is empty we should
+        // always create new Indicator due to absence of ID field in config
         if (!config) {
             return false;
         }
@@ -312,7 +313,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             config.waitPromise = waitPromise;
             config.waitPromise
                 .then(this._waitPromiseHandler.bind(this, config))
-                .catch(this._waitPromiseHandler.bind(this, config))
+                .catch(this._waitPromiseHandler.bind(this, config));
         }
         return config;
     }

@@ -221,22 +221,22 @@ class Manager {
         const item = this.find(id);
         if (item) {
             const itemContainer = this._getItemContainer(id);
-            // TODO: https://online.sbis.ru/opendoc.html?guid=7a963eb8-1566-494f-903d-f2228b98f25c
-            item.controller.beforeElementDestroyed(item, itemContainer);
-            return new Promise((resolve) => {
-                this._closeChilds(item).then(() => {
-                    this._finishPendings(id, null, null, () => {
-                        this._removeElement(item, itemContainer).then(() => {
-                            resolve();
-                            const parentItem = this.find(item.parentId);
-                            this._closeChildHandler(parentItem);
+            const needClose = item.controller.beforeElementDestroyed(item, itemContainer);
+            if (needClose) {
+                return new Promise((resolve) => {
+                    this._closeChilds(item).then(() => {
+                        this._finishPendings(id, null, null, () => {
+                            this._removeElement(item, itemContainer).then(() => {
+                                resolve();
+                                const parentItem = this.find(item.parentId);
+                                this._closeChildHandler(parentItem);
+                            });
                         });
                     });
                 });
-            });
-        } else {
-            return Promise.resolve();
+            }
         }
+        return Promise.resolve();
     }
 
     /**
@@ -815,12 +815,14 @@ class Manager {
         const registrator = this._getPopupContainer().getPending();
         const item = this._findItemById(popupId);
         if (item && registrator) {
-            popupCallback && popupCallback();
+            if (popupCallback) {
+                popupCallback();
+            }
 
             if (registrator) {
                 const hasRegisterPendings = registrator.hasRegisteredPendings(popupId);
-                if (hasRegisterPendings) {
-                    pendingCallback && pendingCallback();
+                if (hasRegisterPendings && pendingCallback) {
+                    pendingCallback();
                 }
                 if (item.removePending) {
                     return item.removePending;
@@ -837,7 +839,9 @@ class Manager {
                 }
                 item.removePending.addCallbacks(() => {
                     item.removePending = null;
-                    pendingsFinishedCallback && pendingsFinishedCallback();
+                    if (pendingsFinishedCallback) {
+                        pendingsFinishedCallback();
+                    }
                 }, (e) => {
                     item.removePending = null;
                     // Change popupState from 'destroyed' to 'created' after cancelFinishPending
@@ -846,12 +850,16 @@ class Manager {
                         Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: ' +
                             '(name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')',
                             undefined, e);
-                        pendingsFinishedCallback && pendingsFinishedCallback();
+                        if (pendingsFinishedCallback) {
+                            pendingsFinishedCallback();
+                        }
                     }
                 });
             }
         } else {
-            pendingsFinishedCallback && pendingsFinishedCallback();
+            if (pendingsFinishedCallback) {
+                pendingsFinishedCallback();
+            }
         }
     }
 

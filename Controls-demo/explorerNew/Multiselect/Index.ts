@@ -28,15 +28,15 @@ export default class extends Control {
             data: [
                 {
                     id: 'visible',
-                    title: 'multiSelectVisibility = visible',
+                    title: 'multiSelectVisibility = visible'
                 },
                 {
                     id: 'hidden',
-                    title: 'multiSelectVisibility = hidden',
+                    title: 'multiSelectVisibility = hidden'
                 },
                 {
                     id: 'onhover',
-                    title: 'multiSelectVisibility = onhover',
+                    title: 'multiSelectVisibility = onhover'
                 }
             ]
         });

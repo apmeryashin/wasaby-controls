@@ -26,7 +26,7 @@ export const BEFORE_ITEMS_MOVE_RESULT = {
  * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
  */
 export interface IMover extends Control {
-    moveItems(items: []|IMoveItemsParams, target, position): Promise<any>
+    moveItems(items: []|IMoveItemsParams, target, position): Promise<any>;
     moveItemsWithDialog(items: []|IMoveItemsParams): Promise<any>;
     moveItemDown(item: any): Promise<any>;
     moveItemUp(item: any): Promise<any>;

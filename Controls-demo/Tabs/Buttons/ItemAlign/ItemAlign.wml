@@ -15,6 +15,14 @@
                 source="{{_sourceLeft }}"
         />
     </div>
+    <div class="separator">Задан minWidth</div>
+    <div class="demo-TabButtons ControlsDemo-Tabs__leftAlign">
+        <Controls.tabs:Buttons
+                bind:selectedKey="SelectedKeyCenter"
+                keyProperty="id"
+                source="{{ _sourceCenter }}"
+        />
+    </div>
     <div class="separator">Главная вкладка отдельно от остальных вкладок</div>
     <div class="demo-TabButtons ControlsDemo-Tabs__mainSeparate">
         <Controls.tabs:Buttons

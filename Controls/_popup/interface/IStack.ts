@@ -133,6 +133,16 @@ export interface IStackOpener extends IOpener {
  */
 
 /**
+ * @name Controls/_popup/interface/IStackOpener#minimizedWidth
+ * @cfg {Number} Ширина стекового окна в свернутом состоянии. Необходимо для работы механизма
+ * сворачивания/разворачивания панели.
+ * @demo Controls-demo/Popup/Stack/Index
+ * @see minWidth
+ * @see maxWidth
+ * @see propStorageId
+ */
+
+/**
  * @name Controls/_popup/interface/IStackOpener#minWidth
  * @cfg {Number} Минимально допустимая ширина стекового окна.
  * @remark
@@ -156,7 +166,7 @@ export interface IStackOpener extends IOpener {
 * @cfg {Number} Width of popup.
 */
 
-    /**
+/**
  * @name Controls/_popup/interface/IStackOpener#maxWidth
  * @cfg {Number} Максимально допустимая ширина стекового окна.
  * @remark

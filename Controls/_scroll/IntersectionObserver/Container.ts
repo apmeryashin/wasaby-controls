@@ -9,11 +9,11 @@ export interface IIntersectionObserverContainerOptions extends IControlOptions, 
 
 /**
  * Контейнер, позволяющий отслеживать пересечение с внешним контейнером.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less переменные тем оформления}
- * 
+ *
  * @author Красильников А.С.
  * @see Controls/_scroll/IntersectionObserver
  * @public
@@ -22,7 +22,7 @@ class  IntersectionObserverContainer extends Control<IIntersectionObserverContai
    protected _template: TemplateFunction = template;
 
    protected _afterMount(): void {
-      //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+      // TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
       const container = this._container.get ? this._container.get(0) : this._container;
       this._notify(
          'intersectionObserverRegister',
@@ -43,7 +43,9 @@ class  IntersectionObserverContainer extends Control<IIntersectionObserverContai
    }
 
    protected _beforeUnmount(): void {
-      this._notify('intersectionObserverUnregister', [this.getInstanceId(), this._options.observerName], { bubbling: true });
+      this._notify(
+          'intersectionObserverUnregister', [this.getInstanceId(), this._options.observerName], {bubbling: true}
+      );
    }
 }
 

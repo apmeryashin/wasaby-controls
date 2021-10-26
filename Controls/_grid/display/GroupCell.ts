@@ -61,6 +61,7 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
 
         classes += this._getContentAlignClasses();
         classes += ' controls-ListView__groupContent';
+        classes += ' controls-ListView__groupContent_height';
         return classes;
     }
 
@@ -91,7 +92,7 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
     getRightTemplateClasses(separatorVisibility: boolean,
                             textVisible: boolean,
                             columnAlignGroup: number): string {
-        let classes = `controls-ListView__groupContent-rightTemplate`;
+        let classes = 'controls-ListView__groupContent-rightTemplate';
         const groupPaddingClasses = this._$owner.getGroupPaddingClasses('right');
 
         if (!this._shouldFixGroupOnColumn(columnAlignGroup, textVisible)) {

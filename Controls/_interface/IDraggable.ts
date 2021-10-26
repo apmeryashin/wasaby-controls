@@ -1,4 +1,4 @@
-import { TemplateFunction } from "UI/Base";
+import { TemplateFunction } from 'UI/Base';
 
 export interface IDraggableOptions {
     itemsDragNDrop?: boolean;
@@ -236,7 +236,7 @@ export default interface IDraggable {
  * @name Controls/_interface/IDraggable#dragEnd
  * @param {UICommon/Events:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
- * @param {Types/entity:Record} target Объект перемещения.
+ * @param {Types/entity:Record} target Область, в которую перемещают объект.
  * @param {MovePosition} position Положение перемещения.
  * @example
  * В следующем примере показано, как перемещать элементы с помощью {@link Controls/list:Mover}.

@@ -32,7 +32,8 @@
                         controls-Menu__footer-{{_moreButtonVisible ? 'moreButton' : 'additionalButton'}}-height"
                     on:mouseenter="_footerMouseEnter()">
                   <ws:if data="{{_moreButtonVisible}}">
-                     <div class="controls-Menu__footer-moreButton">
+                     <div class="controls-Menu__footer-moreButton
+                                 controls-Menu_{{_options.markerVisibility !== 'hidden' ? 'withMarker' : 'withoutMarker'}}__footer-moreButton">
                         <Controls.buttons:Button viewMode="link"
                                                  fontColorStyle="menuMore"
                                                  caption="{{_options.moreButtonCaption}}"

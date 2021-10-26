@@ -2,11 +2,8 @@ import {Control} from 'UI/Base';
 import * as template from 'wml!Controls/_suggest/Input/Search/Suggest';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
 import {constants} from 'Env/Env';
-import {SyntheticEvent} from "Vdom/Vdom";
+import {SyntheticEvent} from 'Vdom/Vdom';
 import 'Controls/search';
-
-
-'use strict';
 
 /**
  * Строка поиска с автодополнением, позволяет пользователю вводить однострочный текст.
@@ -45,40 +42,42 @@ import 'Controls/search';
  * @public
  */
 
-var Suggest = Control.extend({
+const Suggest = Control.extend({
 
    _template: template,
    _suggestState: false,
    _markedKeyChanged: false,
 
-   _changeValueHandler: function(event, value) {
+   _changeValueHandler(event, value) {
       this._notify('valueChanged', [value]);
    },
 
-   _choose: function(event, item) {
+   _choose(event, item) {
       this.activate();
       this._notify('valueChanged', [item.get(this._options.displayProperty) || '']);
    },
 
-   _close: function() {
-      /* need clear text on close button click (by standart http://axure.tensor.ru/standarts/v7/строка_поиска__версия_01_.html).
-         Notify event only if value is not empty, because event listeners expect, that the value is really changed */
+   _close() {
+      /* need clear text on close button click
+       * (by standart http://axure.tensor.ru/standarts/v7/строка_поиска__версия_01_.html).
+       * Notify event only if value is not empty, because event listeners expect, that the value is really changed
+       * */
       if (this._options.value) {
          this._notify('valueChanged', ['']);
       }
    },
 
-   _beforeUpdate: function(newOptions) {
+   _beforeUpdate(newOptions) {
       if (this._options.suggestState !== newOptions.suggestState) {
          this._suggestState = newOptions.suggestState;
       }
    },
 
-   _suggestStateChanged: function(event, value) {
+   _suggestStateChanged(event, value) {
       this._notify('suggestStateChanged', [value]);
    },
 
-   _deactivated: function() {
+   _deactivated() {
       this._suggestState = false;
       this._notify('suggestStateChanged', [false]);
    },
@@ -87,7 +86,7 @@ var Suggest = Control.extend({
       this._markedKeyChanged = key !== null;
    },
 
-   searchClick: function(event: SyntheticEvent, nativeEvent: Event) {
+   searchClick(event: SyntheticEvent, nativeEvent: Event) {
       if (!this._markedKeyChanged || nativeEvent.which !== constants.key.enter) {
          const eventResult = this._notify('searchClick');
 
@@ -99,7 +98,7 @@ var Suggest = Control.extend({
       }
    },
 
-   _resetClick: function() {
+   _resetClick() {
       if (!this._options.autoDropDown) {
          this._suggestState = false;
       }
@@ -109,12 +108,10 @@ var Suggest = Control.extend({
 });
 
 Suggest.getOptionTypes = getOptionTypes;
-Suggest.getDefaultOptions = function() {
-   return {
-      minSearchLength: 3,
-      suggestState: false
-   };
-};
+Suggest.getDefaultOptions = () => ({
+    minSearchLength: 3,
+    suggestState: false
+});
 
 Object.defineProperty(Suggest, 'defaultProps', {
    enumerable: true,

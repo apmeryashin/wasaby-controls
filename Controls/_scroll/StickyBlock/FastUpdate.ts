@@ -66,7 +66,7 @@ class FastUpdate {
     }
 
     protected _resetSticky() {
-        for (let stickyHeader of this._stickyContainersForReset) {
+        for (const stickyHeader of this._stickyContainersForReset) {
             // Устаналиваем relative вместо static, т.к в safari почему-то после сброса в static и
             // обратной установкой position: sticky тень думает, что заголовок все еще static.
             // Попытка "дёрнуть" тень установкой display none и обратно display block успехом не увенчалась.
@@ -83,7 +83,7 @@ class FastUpdate {
     }
 
     protected _restoreSticky() {
-        for (let stickyHeader of this._stickyContainersForReset) {
+        for (const stickyHeader of this._stickyContainersForReset) {
             stickyHeader.container.style.position = '';
             this._restorePosition(stickyHeader);
         }
@@ -99,4 +99,4 @@ class FastUpdate {
 
 const fastUpdate = new FastUpdate();
 
-export default fastUpdate
+export default fastUpdate;

@@ -5,10 +5,9 @@ import * as linkDecorateUtils from './Markup/resources/linkDecorateUtils';
 import {delay} from 'Types/function';
 import 'css!Controls/decorator';
 
-
    /**
     * Контрол служит для вставки вёрстки в формате JsonML в шаблон.
-    * 
+    *
     * <a href="/doc/platform/developmentapl/service-development/service-contract/logic/json-markup-language/markup/">Руководство разработчика.</a>
     * @remark
     * Полезные ссылки:
@@ -30,7 +29,7 @@ import 'css!Controls/decorator';
     * @public
     */
 
-   class MarkupDecorator extends Control<IControlOptions> {
+class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
 
       _contextMenuHandler(event: SyntheticEvent<MouseEvent>): void {
@@ -46,7 +45,8 @@ import 'css!Controls/decorator';
             const decoratedLinkImage = decoratedLink.getElementsByTagName('img')[0].cloneNode(true);
             const span = document.createElement('span');
             span.innerHTML = decoratedLink.href;
-            // FIXME: код нерабочий, так как клонированная картинка однозначно не будет присутствовать в скопированном тексте
+            // FIXME: код нерабочий, так как клонированная картинка однозначно
+            //  не будет присутствовать в скопированном тексте
             // Необходимо попробовать:
             // 1. Удалить обработчик и смириться с тем, что в ворд будет вставляться картинка
             // 2. Придумать, как сделать, чтобы в ворд ссылка вставлялась в виде текста
@@ -85,25 +85,24 @@ import 'css!Controls/decorator';
     * @cfg {Object} Внешние данные для tagResolver.
     */
 
-
    /**
     * @typedef {Object}
     * @name ValidHtml
     * @property {Object} validNodes Набор тегов, которые будут вставляться версткой. Формат: {tagName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
-    * @property {Object} validAttributes Набор разрешенных атрибутов, которые попадут в результат. Формат: {attributeName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>. 
+    * @property {Object} validAttributes Набор разрешенных атрибутов, которые попадут в результат. Формат: {attributeName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
     */
 
    /**
     * @name Controls/_decorator/Markup#validHtml
     * @cfg {ValidHtml} Опция для переопределения разрешённых тегов и атрибутов. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
     * @example
-    * Рассмотрим пример, в котором вставляется верстка с картинкой и текстом. 
-    * 
+    * Рассмотрим пример, в котором вставляется верстка с картинкой и текстом.
+    *
     * <pre>
     * <!-- Control.wml -->
     * <Controls.decorator:Markup value="{{ json }}" validHtml="{{ validHtml }}" />
     * </pre>
-    * 
+    *
     * <pre>
     * // Control.js
     * ...
@@ -114,7 +113,7 @@ import 'css!Controls/decorator';
     *          <p>some text</p>
     *       </div>
     *    `);
-    * 
+    *
     *    this.validHtml = {
     *       validNodes: {
     *          img: true,
@@ -130,8 +129,8 @@ import 'css!Controls/decorator';
     * }
     * ...
     * </pre>
-    * 
+    *
     * В данном примере опция validHtml разрешает в качестве верстки использовать только блочные теги div и картинки img, а также указан набор разрешенных атрибутов: src, alt, height и width. Это значит, что картинка будет вставлена версткой, а параграф будет экранирован и вставлен строкой.
     *
     */
-   export default MarkupDecorator;
+export default MarkupDecorator;

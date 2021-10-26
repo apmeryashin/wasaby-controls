@@ -156,8 +156,8 @@ export default class OperationsController extends mixin<SerializableMixin, Optio
     }
 
     executeAction(params: IExecuteCommandParams): Promise<void> | void {
-        if (params.action) {
-            params.action.execute && params.action.execute(params);
+        if (params.action && params.action.execute) {
+             params.action.execute(params);
         }
     }
 

@@ -5,7 +5,7 @@
 export const enum SHADOW_VISIBILITY {
    /**
     * Тень всегда скрыта.
-    */ 
+    */
    HIDDEN = 'hidden',
    /**
     * Тень всегда видима.

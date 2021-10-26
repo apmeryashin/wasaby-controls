@@ -4,24 +4,25 @@ import {Logger} from 'UI/Utils';
 import {constants} from 'Env/Env';
 import { _FocusAttrs } from 'UI/Focus';
 
+/* tslint:disable */
 const lowerValidNodes = Object.assign(
-	...Object.keys(validHtml.validNodes).map((key) => {
-		return { [key.toLowerCase()]: validHtml.validNodes[key] };
-	})
+    ...Object.keys(validHtml.validNodes).map((key) => {
+        return { [key.toLowerCase()]: validHtml.validNodes[key] };
+    })
 );
 
 const lowerValidAttributes = Object.assign(
-	...Object.keys(validHtml.validAttributes).map((key) => {
-		return { [key.toLowerCase()]: validHtml.validAttributes[key] };
-	})
+    ...Object.keys(validHtml.validAttributes).map((key) => {
+        return { [key.toLowerCase()]: validHtml.validAttributes[key] };
+    })
 );
 
 const lowerValidHtml = {
-	validNodes: lowerValidNodes,
-	validAttributes: lowerValidAttributes
+    validNodes: lowerValidNodes,
+    validAttributes: lowerValidAttributes
 };
 
-   var markupGenerator,
+let markupGenerator,
       defCollection,
       control,
       resolver,
@@ -29,19 +30,19 @@ const lowerValidHtml = {
       resolverMode,
       currentValidHtml,
       linkAttributesMap = {
-         'action': true,
-         'background': true,
-         'cite': true,
-         'codebase': true,
-         'formaction': true,
-         'href': true,
-         'icon': true,
-         'longdesc': true,
-         'manifest': true,
-         'poster': true,
-         'profile': true,
-         'src': true,
-         'usemap': true
+         action: true,
+         background: true,
+         cite: true,
+         codebase: true,
+         formaction: true,
+         href: true,
+         icon: true,
+         longdesc: true,
+         manifest: true,
+         poster: true,
+         profile: true,
+         src: true,
+         usemap: true
       },
       startOfGoodLinks = [
          'data:image(//|\/)[^;]+;base64[^"]+',
@@ -65,19 +66,19 @@ const lowerValidHtml = {
       dataAttributeRegExp = /^data-(?!component$|bind$)([\w-]*[\w])+$/,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
-   const attributesWhiteListForEscaping = ['style'];
+const attributesWhiteListForEscaping = ['style'];
 
-   function isString(value) {
+function isString(value) {
       return typeof value === 'string' || value instanceof String;
    }
 
-   function isKeyExist(obj: object, find: string = ''): boolean {
+function isKeyExist(obj: object, find: string = ''): boolean {
       const keys = Object.keys(obj);
       const soughtKey = find.toLowerCase();
       return keys.includes(soughtKey) ? obj[soughtKey] : false;
    }
 
-   function logError(text: string, node?: any[]|string|object) {
+function logError(text: string, node?: any[]|string|object) {
        let strNode: string;
        try {
            strNode = JSON.stringify(node);
@@ -88,7 +89,7 @@ const lowerValidHtml = {
        Logger.error('UI/Executor:TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`, control);
    }
 
-   function generateEventSubscribeObject(handlerName) {
+function generateEventSubscribeObject(handlerName) {
       return {
          name: 'event',
          args: [],
@@ -105,23 +106,23 @@ const lowerValidHtml = {
       };
    }
 
-   function addEventListener(events, eventName, handlerName) {
+function addEventListener(events, eventName, handlerName) {
       if (!events[eventName]) {
          events[eventName] = [];
       }
       events[eventName].push(generateEventSubscribeObject(handlerName));
    }
 
-   function isBadLinkAttribute(attributeName, attributeValue) {
+function isBadLinkAttribute(attributeName, attributeValue) {
       return linkAttributesMap[attributeName] && !goodLinkAttributeRegExp.test(attributeValue);
    }
 
-   function validAttributesInsertion(targetAttributes: object,
-                                     sourceAttributes: object,
-                                     additionalValidAttributes?: object
+function validAttributesInsertion(targetAttributes: object,
+                                  sourceAttributes: object,
+                                  additionalValidAttributes?: object
    ) {
       const validAttributes: Object = currentValidHtml.validAttributes;
-      for (let attributeName in sourceAttributes) {
+      for (const attributeName in sourceAttributes) {
          if (!sourceAttributes.hasOwnProperty(attributeName)) {
             continue;
          }
@@ -149,8 +150,8 @@ const lowerValidHtml = {
       }
    }
 
-   function recursiveMarkup(value, attrsToDecorate, key, parent?) {
-      var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
+function recursiveMarkup(value, attrsToDecorate, key, parent?) {
+      let valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
       if (isString(valueToBuild)) {
@@ -163,12 +164,12 @@ const lowerValidHtml = {
          return [];
       }
       if (!Array.isArray(valueToBuild)) {
-         logError(`Узел в JsonML должен быть строкой или массивом`, valueToBuild);
+         logError('Узел в JsonML должен быть строкой или массивом', valueToBuild);
          return [];
       }
       wasResolved = value !== valueToBuild;
       resolverMode ^= wasResolved;
-      var children = [];
+      const children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
             children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild));
@@ -181,7 +182,7 @@ const lowerValidHtml = {
       const attrs = {
             attributes: {},
             events: {},
-            key: key
+            key
          };
       const validNodesValue = isKeyExist(currentValidHtml.validNodes, tagName);
       let additionalValidAttributes;
@@ -203,7 +204,7 @@ const lowerValidHtml = {
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 
-   var template = function(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
+const template = function(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
       markupGenerator = thelpers.createGenerator(isVdom, forceCompatible, generatorConfig);
       defCollection = {
          id: [],
@@ -220,11 +221,11 @@ const lowerValidHtml = {
          addEventListener(events, 'on:contextmenu', '_contextMenuHandler');
          addEventListener(events, 'on:copy', '_copyHandler');
       }
-      var elements = [],
+      let elements = [],
          key = (attr && attr.key) || '_',
          attrsToDecorate = {
             attributes: attr.attributes,
-            events: events,
+            events,
             context: attr.context
          },
          oldEscape,
@@ -277,8 +278,6 @@ const lowerValidHtml = {
    };
 
    // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
-   template.stable = true;
+template.stable = true;
 
-
-   export = template;
-
+export = template;

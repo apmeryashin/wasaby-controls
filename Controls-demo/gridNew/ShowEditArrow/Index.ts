@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/ShowEditArrow/ShowEditArrow';
 import {Memory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {ChangeSourceData} from "Controls-demo/gridNew/DemoHelpers/Data/ChangeSource";
+import {ChangeSourceData} from 'Controls-demo/gridNew/DemoHelpers/Data/ChangeSource';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

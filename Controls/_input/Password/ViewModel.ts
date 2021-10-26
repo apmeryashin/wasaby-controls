@@ -1,5 +1,4 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
-      
 
       /**
        * @class Controls/_input/Password/ViewModel
@@ -10,24 +9,24 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
        * @author Красильников А.С.
        */
 
-      var _private = {
-         replaceOnAsterisks: function(value) {
+const _private = {
+         replaceOnAsterisks(value) {
             return '•'.repeat(value.length);
          },
-         isReplaceWithAsterisks: function(options) {
+         isReplaceWithAsterisks(options) {
             return !(options.autoComplete || options.passwordVisible) || options.readOnly;
          },
-         adjustSplitValue: function(splitValue, value) {
+         adjustSplitValue(splitValue, value) {
             splitValue.before = value.substring(0, splitValue.before.length);
             splitValue.after = value.substring(value.length - splitValue.after.length);
          },
-         calcDisplayValue: function(replaceWithAsterisks, value) {
+         calcDisplayValue(replaceWithAsterisks, value) {
             return replaceWithAsterisks ? _private.replaceOnAsterisks(value) : value;
          }
       };
 
-      var ViewModel = BaseViewModel.extend({
-         _convertToDisplayValue: function(value: string | null) {
+const ViewModel = BaseViewModel.extend({
+         _convertToDisplayValue(value: string | null) {
             const curValue = ViewModel.superclass._convertToDisplayValue.call(this, value);
             const replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
             const displayValue = ViewModel.superclass._convertToDisplayValue.call(this, curValue);
@@ -35,24 +34,23 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             return _private.calcDisplayValue(replaceWithAsterisks, displayValue);
          },
 
-         handleInput: function(splitValue, inputType) {
-            var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
+         handleInput(splitValue, inputType) {
+            const replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
 
             if (replaceWithAsterisks) {
                _private.adjustSplitValue(splitValue, this._value || '');
             }
 
-            var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
+            const result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
 
             this._displayValue = _private.calcDisplayValue(replaceWithAsterisks, this._value);
             this._nextVersion();
 
             return result;
          },
-         isValueChanged: function(oldDisplayValue: string, oldValue?: string) {
+         isValueChanged(oldDisplayValue: string, oldValue?: string) {
             return oldValue !== this._value;
          }
       });
 
-      export = ViewModel;
-   
+export = ViewModel;

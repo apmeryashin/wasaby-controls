@@ -2,8 +2,8 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/ItemTemplate/WithPhoto/WithPhoto';
 import {HierarchicalMemory} from 'Types/source';
 import { IColumn } from 'Controls/grid';
-import {WithPhoto} from "Controls-demo/treeGridNew/DemoHelpers/Data/WithPhoto";
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {WithPhoto} from 'Controls-demo/treeGridNew/DemoHelpers/Data/WithPhoto';
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
@@ -30,5 +30,8 @@ export default class extends Control {
 
    }
 
-   static _styles: string[] = ['Controls-demo/treeGridNew/ItemTemplate/WithPhoto/styles', 'Controls-demo/Controls-demo'];
+   static _styles: string[] = [
+       'Controls-demo/treeGridNew/ItemTemplate/WithPhoto/styles',
+       'Controls-demo/Controls-demo'
+   ];
 }

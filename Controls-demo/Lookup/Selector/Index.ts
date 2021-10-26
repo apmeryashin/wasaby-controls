@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import {_companies} from 'Controls-demo/Lookup/DemoHelpers/DataCatalog';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
@@ -26,20 +26,22 @@ export default class extends Control {
    protected _beforeMount() {
       this._source = new Memory({
          data: _companies,
-         filter: function(item, queryFilter) {
-            var selectionFilterFn = function(item, filter) {
-               var isSelected = false;
-               var itemId = item.get('id');
+         filter(item, queryFilter) {
+            const selectionFilterFn = (optItem, filter) => {
+               let isSelected = false;
+               const itemId = optItem.get('id');
 
-               filter.selection.get('marked').forEach(function(selectedId) {
-                  if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
+               filter.selection.get('marked').forEach((selectedId) => {
+                  if (selectedId === itemId ||
+                      (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)
+                  ) {
                      isSelected = true;
                   }
                });
 
                return isSelected;
             };
-            var normalFilterFn = MemorySourceFilter();
+            const normalFilterFn = MemorySourceFilter();
             return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
          },
          idProperty: 'id'
@@ -55,7 +57,7 @@ export default class extends Control {
       this._selectedKeys4 = [];
       this._selectedKeys5 = [];
       this._selectedKeys6 = ['Альфа Директ сервис, ОАО'];
-      this._selectedKeysAll = factory(_companies).map(function(item) {
+      this._selectedKeysAll = factory(_companies).map((item) => {
          return item.id;
       }).value();
       this._selectedKeysAll2 = this._selectedKeysAll.slice();

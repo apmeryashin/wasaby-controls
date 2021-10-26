@@ -6,14 +6,14 @@ import {
     POSITION,
     SHADOW_VISIBILITY,
     SHADOW_VISIBILITY_BY_CONTROLLER,
-    TRegisterEventData,
+    IRegisterEventData,
     TYPE_FIXED_HEADERS
 } from './Utils';
 import {SHADOW_VISIBILITY as SCROLL_SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
 import StickyBlock from 'Controls/_scroll/StickyBlock';
 import fastUpdate from './FastUpdate';
 import {IPositionOrientation} from './StickyBlock/Utils';
-import SizeAndVisibilityObserver, {STACK_OPERATION} from "Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver";
+import SizeAndVisibilityObserver, {STACK_OPERATION} from 'Controls/_scroll/StickyBlock/Controller/SizeAndVisibilityObserver';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 // @ts-ignore
@@ -29,7 +29,7 @@ interface IStickyHeaderController {
 }
 
 function isLastVisibleModes(shadowVisibility: SHADOW_VISIBILITY): boolean {
-    return shadowVisibility === SHADOW_VISIBILITY.lastVisible || shadowVisibility === SHADOW_VISIBILITY.initial
+    return shadowVisibility === SHADOW_VISIBILITY.lastVisible || shadowVisibility === SHADOW_VISIBILITY.initial;
 }
 
 class StickyHeaderController {
@@ -41,7 +41,7 @@ class StickyHeaderController {
     private _fixedHeadersStack: object;
     // Если созданный заголвок невидим, то мы не можем посчитать его позицию.
     // Учтем эти заголовки после ближайшего события ресайза.
-    private _delayedHeaders: TRegisterEventData[] = [];
+    private _delayedHeaders: IRegisterEventData[] = [];
     private _initialized: boolean = false;
     private _syncUpdate: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
@@ -72,7 +72,9 @@ class StickyHeaderController {
         this._options.resizeCallback = options.resizeCallback;
         this._headers = {};
         this._resizeHandlerDebounced = debounce(this.resizeHandler.bind(this), 50);
-        this._sizeObserver = new SizeAndVisibilityObserver(this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers);
+        this._sizeObserver = new SizeAndVisibilityObserver(
+            this._headersResizeHandler.bind(this), this.resizeHandler.bind(this), this._headers
+        );
     }
 
     init(container: HTMLElement): Promise<void> {
@@ -111,6 +113,14 @@ class StickyHeaderController {
         return false;
     }
 
+    getFirstReplaceableHeader(position: POSITION): object {
+        for (const headerId of this._headersStack[position]) {
+            if (this._headers[headerId].mode === MODE.replaceable) {
+                return this._headers[headerId];
+            }
+        }
+    }
+
     /**
      * Возвращает высоты заголовков.
      * @function
@@ -123,13 +133,12 @@ class StickyHeaderController {
                      considerOffsetTop: boolean = true): number {
         // type, предпологается, в будущем будет иметь еще одно значение, при котором будет высчитываться
         // высота всех зафиксированных на текущий момент заголовков.
-        let
-            height: number = 0,
-            replaceableHeight: number = 0,
-            header;
+        let height: number = 0;
+        let replaceableHeight: number = 0;
+        let header;
         let hasOffsetTop: boolean = false;
         const headers = this._headersStack;
-        for (let headerId of headers[position]) {
+        for (const headerId of headers[position]) {
             header = this._headers[headerId];
 
             if (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden) {
@@ -142,7 +151,8 @@ class StickyHeaderController {
             let ignoreHeight: boolean = type !== TYPE_FIXED_HEADERS.allFixed &&
                 !this._fixedHeadersStack[position].includes(headerId);
 
-            // В режиме изначально зафиксированных заголовков не считаем заголовки которые не были изначально зафскированы
+            // В режиме изначально зафиксированных заголовков не считаем заголовки
+            // которые не были изначально зафскированы
             ignoreHeight = ignoreHeight || (type === TYPE_FIXED_HEADERS.initialFixed && !header.fixedInitially);
 
             // Если у заголовка задан offsetTop, то учитываем его во всех ражимах в любом случае.
@@ -182,7 +192,8 @@ class StickyHeaderController {
         return Promise.resolve();
     }
 
-    setShadowVisibility(topShadowVisibility: SCROLL_SHADOW_VISIBILITY, bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
+    setShadowVisibility(topShadowVisibility: SCROLL_SHADOW_VISIBILITY,
+                        bottomShadowVisibility: SCROLL_SHADOW_VISIBILITY): void {
         this._shadowVisibility[POSITION.top] = topShadowVisibility;
         this._shadowVisibility[POSITION.bottom] = bottomShadowVisibility;
         this._updateShadowsVisibility();
@@ -199,12 +210,12 @@ class StickyHeaderController {
             const lastHeaderId = this._getLastFixedHeaderWithShadowId(position);
             for (const headerId of headersStack) {
                 if (this._fixedHeadersStack[position].includes(headerId)) {
-                    const header: TRegisterEventData = this._headers[headerId];
+                    const header: IRegisterEventData = this._headers[headerId];
                     let visibility: SHADOW_VISIBILITY_BY_CONTROLLER = SHADOW_VISIBILITY_BY_CONTROLLER.auto;
 
                     if (header.inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
                         if (this._shadowVisibility[position] === SCROLL_SHADOW_VISIBILITY.HIDDEN) {
-                            visibility = SHADOW_VISIBILITY_BY_CONTROLLER.hidden
+                            visibility = SHADOW_VISIBILITY_BY_CONTROLLER.hidden;
                         } else if (this._shadowVisibility[position] === SCROLL_SHADOW_VISIBILITY.VISIBLE) {
                             // Если снаружи включили отбражать тени всегда, то для заголовков сконфигурированных
                             // отображать тень только у последнего, принудительно отключим тени на всех заголовках
@@ -230,7 +241,11 @@ class StickyHeaderController {
         }
     }
 
-    registerHandler(event, data: TRegisterEventData, register: boolean, syncUpdate: boolean = false, syncDomOptimization: boolean = true): Promise<void> {
+    registerHandler(event,
+                    data: IRegisterEventData,
+                    register: boolean,
+                    syncUpdate: boolean = false,
+                    syncDomOptimization: boolean = true): Promise<void> {
         if (!syncDomOptimization && register) {
             data.inst.setSyncDomOptimization(syncDomOptimization);
         }
@@ -243,7 +258,7 @@ class StickyHeaderController {
         return promise;
     }
 
-    _register(data: TRegisterEventData, register: boolean, syncUpdate: boolean = false): Promise<void> {
+    _register(data: IRegisterEventData, register: boolean, syncUpdate: boolean = false): Promise<void> {
         if (register) {
             this._headers[data.id] = {
                 ...data,
@@ -281,8 +296,8 @@ class StickyHeaderController {
         this.resizeHandler();
 
         const addedHeaders = Object.entries(headers)
-            .filter(([, header]) => { return header.operation === STACK_OPERATION.add })
-            .map(([headerId, header]) => {return parseInt(headerId, 10)});
+            .filter(([, header]) => header.operation === STACK_OPERATION.add)
+            .map(([headerId, header]) => parseInt(headerId, 10));
 
         if (addedHeaders.length) {
             this._updateHeadersFixedPositions(addedHeaders);
@@ -299,10 +314,11 @@ class StickyHeaderController {
             const headerPosition = this._headers[header.id].position;
             const positions = this._getDecomposedPosition(headerPosition);
 
-            positions.forEach(position => {
-                const inHeadersStack = this._headersStack[position].some(headerId => headerId === header.id);
-                // В operations panel при инициализации контент намеренно скрывают, вешая нулевую высоту. Из-за этого вначале заголовок
-                // во время обсчета оффсетов запишет себе height = 0, а после, когда он покажется, по ресайз обсёрверу будет опять добавление
+            positions.forEach((position) => {
+                const inHeadersStack = this._headersStack[position].some((headerId) => headerId === header.id);
+                // В operations panel при инициализации контент намеренно скрывают, вешая нулевую высоту.
+                // Из-за этого вначале заголовок во время обсчета оффсетов запишет себе height = 0,
+                // а после, когда он покажется, по ресайз обсёрверу будет опять добавление
                 // в headersStack, т.к предыдущая высота была равна 0.
                 if (!inHeadersStack) {
                     this._addToHeadersStack(header.id, headerPosition, true);
@@ -332,10 +348,12 @@ class StickyHeaderController {
 
         if (!isSingleHeader) {
             for (const id in this._headers) {
-                this._headers[id].inst.updateShadowVisible([
-                    this._getLastFixedHeaderWithShadowId(POSITION.top),
-                    this._getLastFixedHeaderWithShadowId(POSITION.bottom)
-                ], false);
+                if (this._headers.hasOwnProperty(id)) {
+                    this._headers[id].inst.updateShadowVisible([
+                        this._getLastFixedHeaderWithShadowId(POSITION.top),
+                        this._getLastFixedHeaderWithShadowId(POSITION.bottom)
+                    ], false);
+                }
             }
         }
         // Если зафиксировался (отфиксировался) replaceable заголовок, значит другой replaceable заголовок
@@ -423,7 +441,9 @@ class StickyHeaderController {
 
     private _resetSticky(): void {
         for (const id in this._headers) {
-            this._headers[id].inst.resetSticky();
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].inst.resetSticky();
+            }
         }
     }
 
@@ -438,7 +458,7 @@ class StickyHeaderController {
 
         return fastUpdate.measure(() => {
             const newHeaders: [] = [];
-            this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
+            this._delayedHeaders = this._delayedHeaders.filter((header: IRegisterEventData) => {
                 if (!isHidden(header.inst.getHeaderContainer())) {
                     this._sizeObserver.observe(header.inst);
                     const headerPosition = header.position;
@@ -565,12 +585,16 @@ class StickyHeaderController {
      * @private
      */
     private _clearOffsetCache() {
-        for (let headerId: number in this._headers) {
-            this._headers[headerId].offset = {};
+        for (const id in this._headers) {
+            if (this._headers.hasOwnProperty(id)) {
+                this._headers[id].offset = {};
+            }
         }
     }
 
-    private _addToHeadersStack(id: number, headerPosition: IPositionOrientation, needUpdateOffset: boolean = false): void {
+    private _addToHeadersStack(id: number,
+                               headerPosition: IPositionOrientation,
+                               needUpdateOffset: boolean = false): void {
         const positions = this._getDecomposedPosition(headerPosition);
         positions.forEach((position) => {
             const headersStack = this._headersStack[position];
@@ -623,17 +647,15 @@ class StickyHeaderController {
     }
 
     private _updateFixedInitially(position: POSITION): void {
-        const
-            container: HTMLElement = this._container,
-            headersStack: number[] = this._headersStack[position],
-            content: HTMLCollection = container.children,
-            contentContainer: HTMLElement = position === POSITION.top ? content[0] : content[content.length - 1];
+        const container: HTMLElement = this._container;
+        const headersStack: number[] = this._headersStack[position];
+        const content: HTMLCollection = container.children;
+        const contentContainer: Element = position === POSITION.top ? content[0] : content[content.length - 1];
 
-        let
-            headersHeight: number = 0,
-            headerInst: StickyBlock;
+        let headersHeight: number = 0;
+        let headerInst: StickyBlock;
 
-        for (let headerId: number of headersStack) {
+        for (const headerId: number of headersStack) {
             headerInst = this._headers[headerId].inst;
             let headerOffset = this._getHeaderOffsetByContainer(contentContainer, headerId, position);
             if (headerOffset !== 0) {
@@ -653,15 +675,15 @@ class StickyHeaderController {
 
     private _removeFromStack(id: number, stack: object): void {
         let isUpdated = false;
-        let index = stack['top'].indexOf(id);
+        let index = stack.top.indexOf(id);
 
         if (index !== -1) {
-            stack['top'].splice(index, 1);
+            stack.top.splice(index, 1);
             isUpdated = true;
         }
-        index = stack['bottom'].indexOf(id);
+        index = stack.bottom.indexOf(id);
         if (index !== -1) {
-            stack['bottom'].splice(index, 1);
+            stack.bottom.splice(index, 1);
             isUpdated = true;
         }
         if (isUpdated) {
@@ -697,7 +719,7 @@ class StickyHeaderController {
         return index === (srcArray.length - 1);
     }
 
-    private _getGeneralParentNode(header0: TRegisterEventData, header1: TRegisterEventData): Node {
+    private _getGeneralParentNode(header0: IRegisterEventData, header1: IRegisterEventData): Node {
         let parentElementOfHeader0 = header0.inst.getHeaderContainer().parentElement;
         const parentElementOfHeader1 = header1.inst.getHeaderContainer().parentElement;
         while (parentElementOfHeader0 !== parentElementOfHeader1 && parentElementOfHeader0 !== document.body) {
@@ -717,9 +739,9 @@ class StickyHeaderController {
         this._resetSticky();
 
         fastUpdate.measure(() => {
-            let header: TRegisterEventData,
-                curHeader: TRegisterEventData,
-                prevHeader: TRegisterEventData;
+            let header: IRegisterEventData;
+            let curHeader: IRegisterEventData;
+            let prevHeader: IRegisterEventData;
 
             // Проверяем, имеет ли заголовок в родителях прямых родителей предыдущих заголовков.
             // Если имеет, значит заголовки находятся в одном контейнере -> высчитываем offset и добавляем к заголовку.
@@ -771,7 +793,9 @@ class StickyHeaderController {
             for (const position of [POSITION.top, POSITION.bottom, POSITION.left, POSITION.right]) {
                 const positionOffsets = offsets[position];
                 for (const headerId in offsets[position]) {
-                    this._headers[headerId].inst[position] = positionOffsets[headerId];
+                    if (offsets[position].hasOwnProperty(headerId)) {
+                        this._headers[headerId].inst[position] = positionOffsets[headerId];
+                    }
                 }
             }
         });
@@ -780,7 +804,7 @@ class StickyHeaderController {
         return promise;
     }
 
-    private _getHeaderSize(header: TRegisterEventData, position: POSITION): number {
+    private _getHeaderSize(header: IRegisterEventData, position: POSITION): number {
         if (position === POSITION.left || position === POSITION.right) {
             return header.inst.width + header.inst.offsetLeft;
         } else {

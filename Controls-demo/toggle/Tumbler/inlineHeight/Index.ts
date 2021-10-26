@@ -10,6 +10,10 @@ export default class extends Control {
     protected _selectedKey3: string | null = '1';
     protected _selectedKey4: string | null = '1';
     protected _selectedKey5: string | null = '1';
+    protected _selectedKey6: string | null = '1';
+    protected _selectedKey7: string | null = '1';
+    protected _selectedKey8: string | null = '1';
+    protected _selectedKey9: string | null = '1';
     protected _beforeMount(): void {
         this._items1 = new RecordSet({
             rawData: [

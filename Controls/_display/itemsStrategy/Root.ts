@@ -12,7 +12,7 @@ interface IOptions<S, T> {
  * @class Controls/_display/ItemsStrategy/Root
  * @mixes Types/entity:DestroyableMixin
  * @mixes Types/entity:SerializableMixin
- * 
+ *
  * @author Авраменко А.С.
  * @private
  */
@@ -23,21 +23,6 @@ export default class Root<S, T> extends mixin<
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
-    /**
-     * @typedef {Object} Options
-     * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
-     * @property {Function:Controls/_display/TreeItem} root Функция, возвращающая корень дерева
-     */
-
-    /**
-     * Опции конструктора
-     */
-    protected _options: IOptions<S, T>;
-
-    constructor(options: IOptions<S, T>) {
-        super();
-        this._options = options;
-    }
 
     /**
      * Корень дерева
@@ -45,10 +30,6 @@ export default class Root<S, T> extends mixin<
     get root(): T {
         return this._options.root();
     }
-
-    // region IItemsStrategy
-
-    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
     get source(): IItemsStrategy<S, T> {
         return this._options.source;
@@ -64,6 +45,25 @@ export default class Root<S, T> extends mixin<
 
     get items(): T[] {
         return [this.root].concat(this.source.items);
+    }
+    /**
+     * @typedef {Object} Options
+     * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+     * @property {Function:Controls/_display/TreeItem} root Функция, возвращающая корень дерева
+     */
+
+    /**
+     * Опции конструктора
+     */
+    protected _options: IOptions<S, T>;
+
+    // region IItemsStrategy
+
+    readonly '[Controls/_display/IItemsStrategy]': boolean = true;
+
+    constructor(options: IOptions<S, T>) {
+        super();
+        this._options = options;
     }
 
     at(index: number): T {

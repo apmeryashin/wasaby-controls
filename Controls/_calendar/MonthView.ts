@@ -9,7 +9,7 @@ import MonthViewModel from './MonthView/MonthViewModel';
 import dotTplFn = require('wml!Controls/_calendar/MonthView/MonthView');
 import dayTemplate = require('wml!Controls/_calendar/MonthView/dayTemplate');
 import dayHeaderTemplate = require('wml!Controls/_calendar/MonthView/dayHeaderTemplate');
-import captionTemplate = require("wml!Controls/_calendar/MonthView/captionTemplate");
+import captionTemplate = require('wml!Controls/_calendar/MonthView/captionTemplate');
 
 import IMonth from './interfaces/IMonth';
 
@@ -41,9 +41,9 @@ import 'css!Controls/calendar';
 
 const defaultOptions = {
    ...IMonth.getDefaultOptions(),
-   dayTemplate: dayTemplate,
-   dayHeaderTemplate: dayHeaderTemplate,
-   captionTemplate: captionTemplate,
+   dayTemplate,
+   dayHeaderTemplate,
+   captionTemplate,
    dateConstructor: WSDate,
    newMode: true
 };
@@ -114,7 +114,7 @@ export default class MonthView extends Control<IControlOptions> {
     }
 
    private _updateView(options): void {
-      var newMonth = options.month || new options.dateConstructor();
+      const newMonth = options.month || new options.dateConstructor();
 
       // localization can change in runtime, take the actual translation of the months each time the component
       // is initialized. In the array, the days of the week are in the same order as the return values
@@ -130,7 +130,6 @@ export default class MonthView extends Control<IControlOptions> {
       this._month = DateUtil.normalizeMonth(this._month);
       this._showWeekdays = options.showWeekdays;
    }
-
 
    static getOptionTypes(): object {
       return IMonth.getOptionTypes();

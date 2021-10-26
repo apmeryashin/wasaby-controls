@@ -9,7 +9,7 @@ import template = require('wml!Controls/_validate/DateRange');
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/DateRange
  * @extends Controls/_validate/Container
- * 
+ *
  * @public
  */
 

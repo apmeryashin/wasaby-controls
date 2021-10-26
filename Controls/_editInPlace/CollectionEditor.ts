@@ -215,7 +215,8 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         return this._getNextEditableItem(fromItem, 'before');
     }
 
-    private _getNextEditableItem(fromItem: IEditableCollectionItem, direction: 'before' | 'after'): IEditableCollectionItem {
+    private _getNextEditableItem(fromItem: IEditableCollectionItem,
+                                 direction: 'before' | 'after'): IEditableCollectionItem {
         let next: IEditableCollectionItem;
         const collection = this._options.collection;
 

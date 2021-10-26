@@ -7,14 +7,15 @@ import {IGroupNodeColumn} from 'Controls/treeGrid';
 import {data} from '../data/NodeTypePropertyData';
 
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeTypeProperty/AlignedByColumn/AlignedByColumn';
-import * as PriceColumnTemplate from 'wml!Controls-demo/treeGridNew/NodeTypeProperty/resources/PriceColumnTemplate';
 
 const columns: IGroupNodeColumn[] = [
     {
         width: '300px',
         displayProperty: 'title',
         groupNodeConfig: {
-            textAlign: 'right'
+            textAlign: 'right',
+            iconStyle: 'secondary',
+            textTransform: 'uppercase'
         }
     },
     {
@@ -26,7 +27,7 @@ const columns: IGroupNodeColumn[] = [
         width: '100px',
         displayProperty: 'price',
         align: 'right',
-        template: PriceColumnTemplate,
+        displayType: 'money',
         groupNodeConfig: {
             textVisible: false
         }
@@ -35,13 +36,13 @@ const columns: IGroupNodeColumn[] = [
         width: '100px',
         displayProperty: 'price1',
         align: 'right',
-        template: PriceColumnTemplate
+        displayType: 'money'
     },
     {
         width: '100px',
         displayProperty: 'price2',
         align: 'right',
-        template: PriceColumnTemplate
+        displayType: 'money'
     },
     {
         width: '50px',
@@ -52,7 +53,7 @@ const columns: IGroupNodeColumn[] = [
         width: '100px',
         displayProperty: 'price3',
         align: 'right',
-        template: PriceColumnTemplate,
+        displayType: 'money',
         fontSize: 's'
     }
 ];
@@ -73,7 +74,7 @@ export default class extends Control {
         });
     }
 
-    protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+    protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number): TColspanCallbackResult {
         if (item.get('nodeType') === 'group' && columnIndex === 0) {
             return 2;
         }

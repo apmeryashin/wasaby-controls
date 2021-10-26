@@ -4,10 +4,9 @@ import {IPreviewer, IPreviewerOptions} from 'Controls/_popup/interface/IPreviewe
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import PreviewerOpener from './Opener/Previewer';
-import {goUpByControlTree} from 'UI/Focus';
 import 'css!Controls/popup';
 import template = require('wml!Controls/_popup/Previewer/Previewer');
-import {CalmTimer} from 'Controls/_popup/fastOpenUtils/FastOpen';
+import {CalmTimer} from 'Controls/_popup/utils/FastOpen';
 
 const CALM_DELAY: number = 300; // During what time should not move the mouse to start opening the popup.
 /**
@@ -30,7 +29,6 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     _previewerId: IPreviewerPopupOptions;
     _calmTimer: CalmTimer;
     _isOpened: boolean = false;
-    _enableClose: boolean = true;
 
     protected _beforeMount(options: IPreviewerOptions): void {
         this._resultHandler = this._resultHandler.bind(this);
@@ -166,7 +164,10 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMouseleaveHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (!this._options.readOnly && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
+        if (
+            !this._options.readOnly &&
+            (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')
+        ) {
             this._calmTimer.stop();
             if (this._isPopupOpened()) {
                 this._debouncedAction('_close', [event]);
@@ -177,8 +178,12 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMousemoveHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (!this._options.readOnly && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
-            // Устанавливаем старое значение таймера, так при небольших значениях, окно может открыться когда этого не нужно
+        if (
+            !this._options.readOnly &&
+            (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')
+        ) {
+            // Устанавливаем старое значение таймера, так при небольших значениях,
+            // окно может открыться когда этого не нужно
             // https://online.sbis.ru/opendoc.html?guid=55ca4037-ae40-44f4-a10f-ac93ddf990b1
             this._calmTimer.start(CALM_DELAY, event);
         }
@@ -212,34 +217,16 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
 
     private _resultHandler(event: SyntheticEvent<MouseEvent>): void {
         switch (event.type) {
-            case 'menuclosed':
-                this._enableClose = true;
-                event.stopPropagation();
-                break;
-            case 'menuopened':
-                this._enableClose = false;
-                event.stopPropagation();
-                break;
             case 'mouseenter':
                 this._debouncedAction('_cancel', [event, 'closing']);
                 break;
             case 'mouseleave':
                 const isHoverType = this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick';
-                if (isHoverType && this._enableClose && !this._isLinkedPreviewer(event)) {
+                if (isHoverType) {
                     this._debouncedAction('_close', [event]);
                 }
                 break;
         }
-    }
-
-    private _isLinkedPreviewer(event: SyntheticEvent<MouseEvent>): boolean {
-        const parentControls = goUpByControlTree(event.nativeEvent.relatedTarget);
-        for (let i = 0; i < parentControls.length; i++) {
-            if (parentControls[i] === this) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private _closeHandler(): void {

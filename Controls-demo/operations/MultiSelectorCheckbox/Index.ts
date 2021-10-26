@@ -3,7 +3,7 @@ import * as template from 'wml!Controls-demo/operations/MultiSelectorCheckbox/Te
 import {HierarchicalMemory} from 'Types/source';
 import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
-export default class MultiSelectorCheckboxDemo extends Control{
+export default class MultiSelectorCheckboxDemo extends Control {
     _template: TemplateFunction = template;
     _viewSource: HierarchicalMemory = null;
     _gridColumns = null;

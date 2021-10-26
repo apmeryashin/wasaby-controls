@@ -88,6 +88,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
                     backgroundStyle: 'secondary',
                     hoverBackgroundStyle: 'secondary',
                     itemTemplateProperty: 'itemTemplate'
+                },
+                popupOptions: {
+                    autofocus: false
                 }
             };
         } else {
@@ -109,7 +112,9 @@ export default class ActionsContainer extends Control<IContainerOptions> {
     protected _prepareActionsOrder(actions: IAction[]): IAction[] {
         const resultActions = [...actions];
         return resultActions.map((action) => {
-            action.order = action.order ? action.order + START_ORDER_NOT_DEFAULT_ACTIONS : START_ORDER_NOT_DEFAULT_ACTIONS;
+            action.order = action.order
+                ? action.order + START_ORDER_NOT_DEFAULT_ACTIONS
+                : START_ORDER_NOT_DEFAULT_ACTIONS;
             return action;
         });
     }

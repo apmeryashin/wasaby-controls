@@ -44,7 +44,19 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
     it('getContentClasses should return group cell content classes', () => {
         CssClassesAssert.include(getGroupCell().getContentClasses(), [
             'controls-Grid__row-cell__content_baseline_default',
-            'controls-ListView__groupContent']);
+            'controls-ListView__groupContent',
+            'controls-ListView__groupContent_height']);
+    });
+
+    it('should contain styling classes when styling options are set', () => {
+        const classes = getGroupCell().getContentTextStylingClasses('secondary', 's', 'bold', 'uppercase');
+        CssClassesAssert.include(classes, [
+            'controls-fontsize-s',
+            'controls-text-secondary',
+            'controls-fontweight-bold',
+            'controls-ListView__groupContent_textTransform_uppercase',
+            'controls-ListView__groupContent_textTransform_uppercase_s'
+        ]);
     });
 
     it('getExpanderClasses should include expander js-class', () => {
@@ -57,7 +69,6 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () 
             'controls-Grid__row-cell',
             'controls-Grid__cell_default',
             'controls-Grid__row-cell_default',
-            'controls-ListView__group_min_height',
             'controls-Grid__no-rowSeparator',
             'controls-Grid__row-cell_withRowSeparator_size-null'
         ]);

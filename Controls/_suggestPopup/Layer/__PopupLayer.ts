@@ -9,7 +9,7 @@ import {detection} from 'Env/Env';
 import 'css!Controls/suggestPopup';
 import 'css!Controls/suggest';
 
-var _private = {
+const _private = {
    openPopup(self, opener, options): void {
        // !!closeOnOutsideClick не добавлять, иначе саггест закрывается при клике на саггест
       const dynamicConfig = {
@@ -21,7 +21,7 @@ var _private = {
       opener.open({...dynamicConfig, ...self._popupOptions});
    },
 
-   setPopupOptions: function(self, options) {
+   setPopupOptions(self, options) {
       const config =  {
          autofocus: false,
          direction: {
@@ -36,20 +36,20 @@ var _private = {
    }
 };
 
-var __PopupLayer = Control.extend({
+const PopupLayer = Control.extend({
 
    _template: template,
 
-   _beforeMount: function(options) {
+   _beforeMount(options) {
       this._resizeCallback = this._resizeCallback.bind(this);
       _private.setPopupOptions(this, options);
    },
 
-   _afterMount: function(options) {
+   _afterMount(options) {
       _private.openPopup(this, this._children.suggestPopup, options);
    },
 
-   _afterUpdate: function(oldOptions) {
+   _afterUpdate(oldOptions) {
       if (this._options.searchValue !== oldOptions.searchValue ||
          this._options.filter !== oldOptions.filter ||
          this._options.showContent !== oldOptions.showContent ||
@@ -60,7 +60,7 @@ var __PopupLayer = Control.extend({
       }
    },
 
-   close: function() {
+   close() {
       this._children.suggestPopup.close();
    },
 
@@ -90,6 +90,6 @@ var __PopupLayer = Control.extend({
    }
 });
 
-__PopupLayer._private = _private;
+PopupLayer._private = _private;
 
-export default __PopupLayer;
+export default PopupLayer;

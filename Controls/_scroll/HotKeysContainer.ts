@@ -4,12 +4,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контрол настраивает Controls/scroll:Container на перехват клавиш "up", "down", "page up", "page down", "home", "end" по умолчанию.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less переменные тем оформления}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/scroll/keyboard/ руководство разработчика}
- * 
+ *
  * @extends UI/Base:Control
  * @author Шипин А.А.
  * @public
@@ -24,7 +24,9 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  */
 class HotKeysContainer extends Control<IControlOptions> {
     protected _template: Function = template;
-    protected _defaultActions = [{keyCode: 33}, {keyCode: 34}, {keyCode: 35}, {keyCode: 36}, {keyCode: 38}, {keyCode: 40}];
+    protected _defaultActions = [
+        {keyCode: 33}, {keyCode: 34}, {keyCode: 35}, {keyCode: 36}, {keyCode: 38}, {keyCode: 40}
+    ];
     // Этого кода не будет, когда добавится еще один хук жизненного цикла - "заморозка".
     // https://online.sbis.ru/opendoc.html?guid=ba32a992-5f5b-4f00-9b6a-73f62871a193
     protected _afterMount(): void {

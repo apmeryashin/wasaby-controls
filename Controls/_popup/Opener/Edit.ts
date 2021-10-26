@@ -6,7 +6,6 @@ import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
 
-
 interface IEditOpenerOptions extends IEditOptions, IControlOptions {}
 /**
  * Контрол, который открывает всплывающее окно с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/editing-dialog/ диалогом редактирования записи}.
@@ -44,7 +43,7 @@ class Edit extends Control<IEditOpenerOptions> implements IEditOpener {
     }
 
     open(meta, popupOptions) {
-        let config = this._getConfig(meta || {}, popupOptions);
+        const config = this._getConfig(meta || {}, popupOptions);
         this._children.Opener.open(config);
     }
 
@@ -152,8 +151,8 @@ class Edit extends Control<IEditOpenerOptions> implements IEditOpener {
         }
     }
     private _loadSynchronizer(): Promise<Control> {
-        let synchronizedModule = 'Controls/Utils/RecordSynchronizer';
-        let loadDef = new Deferred();
+        const synchronizedModule = 'Controls/Utils/RecordSynchronizer';
+        const loadDef = new Deferred();
         if (requirejs.defined(synchronizedModule)) {
             loadDef.callback(requirejs(synchronizedModule));
         } else {

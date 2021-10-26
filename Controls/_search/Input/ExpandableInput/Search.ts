@@ -6,7 +6,7 @@ import {IRenderOptions, IPaddingOptions, ITagOptions} from 'Controls/interface';
 import {Input} from 'Controls/search';
 import 'css!Controls/search';
 
- interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
+interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
  IRenderOptions, IPaddingOptions, ITagOptions {
    /**
     * @name Controls/_search/Input/ExpandableInput/ExpandableInput#inlineWidth
@@ -35,7 +35,7 @@ import 'css!Controls/search';
     searchInputContrastBackground?: string;
 }
 /**
- * Контрол "Разворачиваемый поиск". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
+ * Контрол "Разворачиваемый поиск". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
  *
  * @extends UI/Base:Control
  * @implements Controls/search:Input

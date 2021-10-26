@@ -114,12 +114,12 @@ class Index extends Control<IControlOptions> {
             opener: this,
             templateOptions: {
                 record,
-                saveCallback: (record: Model): void => {
+                saveCallback: (crecord: Model): void => {
                     const items = this._children.grid.getItems();
                     if (isCreate) {
-                        addRecord(record, {}, items);
+                        addRecord(crecord, {}, items);
                     } else {
-                        mergeRecord(record, items, record.getKey());
+                        mergeRecord(crecord, items, crecord.getKey());
                     }
                 }
             }

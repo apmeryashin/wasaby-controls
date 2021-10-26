@@ -36,7 +36,8 @@ export function isAllGroupsCollapsed(collection: IGroupingModel): boolean {
     return collection.isAllGroupsCollapsed();
 }
 
-export function prepareFilterCollapsedGroups(collapsedGroups: TArrayGroupId, filter: IHashMap<unknown> | undefined): IHashMap<unknown> {
+export function prepareFilterCollapsedGroups(collapsedGroups: TArrayGroupId,
+                                             filter: IHashMap<unknown> | undefined): IHashMap<unknown> {
     if (collapsedGroups && collapsedGroups.length) {
         filter.collapsedGroups = collapsedGroups;
     }

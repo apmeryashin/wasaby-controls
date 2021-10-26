@@ -1,13 +1,13 @@
 import {Control, IControlOptions} from 'UI/Base';
 import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {RecordSet} from 'Types/collection';
-import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IStickyPosition} from 'Controls/popup';
 import {Model} from 'Types/entity';
 export type TKey = string|number|null;
 
 export default interface IDropdownController {
-    loadItems(): Promise<DropdownReceivedState>;
+    loadItems(): Promise<IDropdownReceivedState>;
     reload(): Promise<RecordSet>;
     setItems(items?: RecordSet): Promise<RecordSet>;
     setHistoryItems(history?: RecordSet): void;

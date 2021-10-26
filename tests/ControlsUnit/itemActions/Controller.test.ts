@@ -193,12 +193,12 @@ describe('Controls/_itemActions/Controller', () => {
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : null,
-            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
-            contextMenuConfig: options ? options.contextMenuConfig: null,
-            iconSize: options ? options.iconSize: 'm',
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback : null,
+            contextMenuConfig: options ? options.contextMenuConfig : null,
+            iconSize: options ? options.iconSize : 'm',
             editingItem: options ? options.editingItem : null,
             itemActionsVisibility: options ? options.itemActionsVisibility : 'onhover',
-            actionMode: "strict"
+            actionMode: 'strict'
         };
     }
 
@@ -410,7 +410,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should assign itemActions for editig item that is not in collection', () => {
             const list = new RecordSet({
                 keyProperty: 'id',
-                rawData: [{id: 100, name: 'Philip J. Fry', gender: 'M', itemActions: []},]
+                rawData: [{id: 100, name: 'Philip J. Fry', gender: 'M', itemActions: []}]
             });
             const editingItem = new CollectionItem<Record>({contents: list.at(0)});
             editingItem.setEditing(true, editingItem.getContents());
@@ -643,7 +643,7 @@ describe('Controls/_itemActions/Controller', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',
                 icon: '',
-                showType: TItemActionShowType.TOOLBAR,
+                showType: TItemActionShowType.TOOLBAR
             };
             let recordWithCorrectType = false;
             const editArrowVisibilityCallback = (record: Model) => {
@@ -667,12 +667,12 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
 
-        //T2.10.1 При свайпе editArrow добавляется в набор операций также и при itemActionsPosition: 'outside'
+        // T2.10.1 При свайпе editArrow добавляется в набор операций также и при itemActionsPosition: 'outside'
         it('should add editArrow when itemActionsPosition: \'outside\'', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',
                 icon: '',
-                showType: TItemActionShowType.TOOLBAR,
+                showType: TItemActionShowType.TOOLBAR
             };
             const editArrowVisibilityCallback = () => true;
             itemActionsController.update(initializeControllerOptions({
@@ -687,7 +687,7 @@ describe('Controls/_itemActions/Controller', () => {
             const item = itemActionsController.getSwipeItem();
             assert.exists(item, 'Swipe activation should set swiped item');
             assert.equal(item.getActions().showed[0].id, 'view', 'First action should be \'editArrow\'');
-        })
+        });
 
         // T2.12 При вызове getSwipeItem() контроллер должен возвращать true
         // вне зависимости оттипа анимации и направления свайпа.
@@ -730,7 +730,7 @@ describe('Controls/_itemActions/Controller', () => {
                     return true;
                 }
             };
-            itemActionsClone.splice(3, 0,{
+            itemActionsClone.splice(3, 0, {
                 id: 9,
                 icon: 'icon-SuperIcon',
                 title: 'Super puper',
@@ -1048,7 +1048,8 @@ describe('Controls/_itemActions/Controller', () => {
                 }
             }));
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            const config =
+                itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             // @ts-ignore
             assert.equal(config.templateOptions.iconSize, 'm', 'default iconSize has not been applied');
         });
@@ -1089,6 +1090,7 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T3.9. Для Контекстного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list
+        // tslint:disable-next-line:max-line-length
         it('should set config.className with value controls-ItemActions__popup__list when parentAction isn\'t set', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
@@ -1097,6 +1099,7 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T3.10. Для Дополнительного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list
+        // tslint:disable-next-line:max-line-length
         it('should set config.className with value controls-ItemActions__popup__list when parentAction.isMenu===true', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();

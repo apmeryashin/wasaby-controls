@@ -41,7 +41,7 @@ describe('Controls/grid_clean/Display/Group/ColumnScroll/GroupCell', () => {
         const groupRow = new GridGroupRow({
             owner: mockedCollection,
             columnsConfig: gridColumnsConfig,
-            gridColumnsConfig: gridColumnsConfig,
+            gridColumnsConfig,
             colspanGroup: false
         });
 
@@ -61,7 +61,7 @@ describe('Controls/grid_clean/Display/Group/ColumnScroll/GroupCell', () => {
         const groupRow = new GridGroupRow({
             owner: mockedCollection,
             columnsConfig: gridColumnsConfig,
-            gridColumnsConfig: gridColumnsConfig,
+            gridColumnsConfig,
             colspanGroup: false
         });
 
@@ -78,7 +78,7 @@ describe('Controls/grid_clean/Display/Group/ColumnScroll/GroupCell', () => {
         const groupRow = new GridGroupRow({
             owner: mockedCollection,
             columnsConfig: gridColumnsConfig,
-            gridColumnsConfig: gridColumnsConfig,
+            gridColumnsConfig
         });
 
         const columns = groupRow.getColumns();
@@ -91,7 +91,7 @@ describe('Controls/grid_clean/Display/Group/ColumnScroll/GroupCell', () => {
         const groupRow = new GridGroupRow({
             owner: mockedCollection,
             columnsConfig: gridColumnsConfig,
-            gridColumnsConfig: gridColumnsConfig,
+            gridColumnsConfig,
             colspanGroup: false
         });
 
@@ -109,7 +109,7 @@ describe('Controls/grid_clean/Display/Group/ColumnScroll/GroupCell', () => {
         const groupRow = new GridGroupRow({
             owner: mockedCollection,
             columnsConfig: gridColumnsConfig,
-            gridColumnsConfig: gridColumnsConfig,
+            gridColumnsConfig,
             colspanGroup: true
         });
 

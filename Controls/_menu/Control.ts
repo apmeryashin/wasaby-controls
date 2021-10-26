@@ -137,7 +137,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (newOptions.sourceController && newOptions.searchParam &&
-            newOptions.searchValue && searchValueChanged) {
+            (newOptions.searchValue && searchValueChanged || newOptions.viewMode !== this._options.viewMode)) {
             this._notifyResizeAfterRender = true;
             this._closeSubMenu();
             this._updateItems(newOptions.sourceController.getItems(), newOptions);
@@ -191,7 +191,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    public closeSubMenu(): void {
+    closeSubMenu(): void {
         this._closeSubMenu();
     }
 
@@ -626,8 +626,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const markerController = this._getMarkerController(this._options);
         const markedKey = markerController.getMarkedKey();
         const selectedItem = this._listModel.getItemBySourceKey(markedKey);
-        if (selectedItem &&
-            (MenuControl._isFixedItem(selectedItem.getContents()) || this._isSingleSelectionItem(selectedItem.getContents()))) {
+        if (
+            selectedItem &&
+            (
+                MenuControl._isFixedItem(selectedItem.getContents()) ||
+                this._isSingleSelectionItem(selectedItem.getContents())
+            )
+        ) {
             markerController.setMarkedKey(undefined);
         }
         const selection = selectionController.toggleItem(key);
@@ -651,7 +656,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 
+    private _dataLoadCallback(items, options): void {
+        if (options.dataLoadCallback) {
+            options.dataLoadCallback(items);
+        }
+    }
+
     private _setItems(items: RecordSet, options: IMenuControlOptions): void {
+        this._dataLoadCallback(items, options);
         this._setStateByItems(items, options);
         this._createControllers(options);
     }
@@ -864,8 +876,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (options.nodeProperty) {
             data[options.nodeProperty] = false;
         }
-        for (let field in data) {
-            this._addField(field, emptyItem, emptyItem.getFormat());
+        for (const field in data) {
+            if (data.hasOwnProperty(field)) {
+                this._addField(field, emptyItem, emptyItem.getFormat());
+            }
         }
         emptyItem.set(data);
         items.prepend([emptyItem]);
@@ -890,7 +904,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getLeftPadding(options: IMenuControlOptions, items: RecordSet): string {
-        let leftSpacing = 'm';
+        let leftSpacing = options.markerVisibility !== 'hidden' ? 's' : 'm';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
         } else if (options.itemAlign === 'left' && MenuControl._hasNodesAtLevel(items, options)) {
@@ -955,10 +969,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         return sourceController.load().then(
             (items: RecordSet): RecordSet => {
-                if (options.dataLoadCallback) {
-                    options.dataLoadCallback(items);
-                }
-
                 return items;
             },
             (error: Error): Promise<void | ErrorViewConfig> => {
@@ -1097,6 +1107,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 itemPadding: null,
                 draggable: false,
                 source,
+                sourceController: !source ? this._options.sourceController : undefined,
                 items: isLoadedChildItems ? this._options.items : null,
                 ...item.getContents().get('menuOptions'),
                 subMenuLevel: this._options.subMenuLevel ? this._options.subMenuLevel + 1 : 1,
@@ -1185,7 +1196,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             theme: options.theme,
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            itemActionsClass: `controls-Menu__itemActions_position_rightCenter`,
+            itemActionsClass: 'controls-Menu__itemActions_position_rightCenter',
             iconSize: editingConfig ? 's' : 'm'
         });
     }
@@ -1217,6 +1228,20 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
         return this._errorController;
     }
+
+    static defaultProps: object = {
+        selectedKeys: [],
+        root: null,
+        historyRoot: null,
+        emptyKey: null,
+        moreButtonCaption: rk('Еще') + '...',
+        groupTemplate,
+        itemPadding: {},
+        markerVisibility: 'hidden',
+        hoverBackgroundStyle: 'default',
+        subMenuDirection: 'right',
+        itemAlign: 'right'
+    };
 
     private static _isPinIcon(target: EventTarget): boolean {
         return !!((target as HTMLElement)?.closest('.controls-Menu__iconPin'));
@@ -1278,20 +1303,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const parent = item.get(options.parentProperty);
         return parent === options.root || !parent && options.root === null;
     }
-
-    static defaultProps: object = {
-        selectedKeys: [],
-        root: null,
-        historyRoot: null,
-        emptyKey: null,
-        moreButtonCaption: rk('Еще') + '...',
-        groupTemplate,
-        itemPadding: {},
-        markerVisibility: 'onactivated',
-        hoverBackgroundStyle: 'default',
-        subMenuDirection: 'right',
-        itemAlign: 'right'
-    };
 }
 /**
  * @name Controls/_menu/MenuControl#multiSelect

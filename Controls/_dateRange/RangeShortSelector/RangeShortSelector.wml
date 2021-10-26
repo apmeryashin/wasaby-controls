@@ -1,4 +1,4 @@
-<Controls._dateRange.RangeShortSelectorLink
+<Controls._dateRange.LinkView
         name="linkView"
         scope="{{_options}}"
         startValue="{{_rangeModel.startValue}}"

@@ -68,7 +68,7 @@ describe('Controls/_treeGrid/display/TreeGridNodeFooterRow', () => {
          nodeFooterTemplate: () => '',
          ...options
       });
-   }
+   };
 
    let treeGridCollection;
    let nodeFooterRow;

@@ -16,7 +16,7 @@ import {object} from 'Types/util';
  * @implements Controls/interface:ITextValue
  * @implements Controls/interface:IMultiSelectable
  * @implements Controls/interface/IItemTemplate
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -27,7 +27,7 @@ import {object} from 'Types/util';
  * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @class Controls/_filterPopup/Panel/Select
  * @extends UI/Base:Control
- * 
+ *
  * @implements Controls/interface:ITextValue
  * @implements Controls/interface:IMultiSelectable
  * @public
@@ -115,4 +115,3 @@ Object.defineProperty(FilterSelect, 'defaultProps', {
  * </pre>
  */
 export default FilterSelect;
-

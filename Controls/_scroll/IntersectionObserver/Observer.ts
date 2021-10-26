@@ -39,8 +39,8 @@ export default class StickyHeaderResizeObserver {
         const item: IIntersectionObserverObject = {
             ...intersectionObserverObject,
             threshold: intersectionObserverObject.threshold || this._options.threshold,
-            rootMargin: intersectionObserverObject.rootMargin || this._options.rootMargin,
-        }
+            rootMargin: intersectionObserverObject.rootMargin || this._options.rootMargin
+        };
         this._items[intersectionObserverObject.instId] = item;
         this._observe(root, item.element, item.threshold, item.rootMargin);
     }
@@ -81,14 +81,14 @@ export default class StickyHeaderResizeObserver {
    }
 
    private _getObserverKey(threshold: number[], rootMargin: string): string {
-      return `t${threshold.join('_')}_rm${rootMargin.replace(REPLACE_SPACE_IN_KEY_REGEXP, '_')}`
+      return `t${threshold.join('_')}_rm${rootMargin.replace(REPLACE_SPACE_IN_KEY_REGEXP, '_')}`;
    }
 
    private _createObserver(root: HTMLElement, threshold: number[], rootMargin: string): IntersectionObserver {
       return new IntersectionObserver(this._intersectionObserverHandler.bind(this), {
-         root: root,
-         threshold: threshold,
-         rootMargin: rootMargin
+         root,
+         threshold,
+         rootMargin
       });
    }
 
@@ -99,7 +99,7 @@ export default class StickyHeaderResizeObserver {
          itemId = Object.keys(this._items).find((key) => this._items[key].element === entry.target);
          // don't handle unregistered containers
          if (itemId) {
-            const eventEntry = new SyntheticEntry(entry, this._items[itemId].data)
+            const eventEntry = new SyntheticEntry(entry, this._items[itemId].data);
             items.push(eventEntry);
             this._items[itemId].handler(eventEntry);
          }

@@ -21,7 +21,21 @@
                                                   {{index === (_options.lookupsOptions.length - 1) ? 'controls-MultipleInputNew__lookup_last'}}
                                                   {{index !== (_options.lookupsOptions.length - 1) && !_selectedKeys[lookupOptions.name].length && !_lookupSizes[lookupOptions.name] ? 'controls-MultipleInputNew__lookup-withoutSize'}}
                                                   {{!_selectedKeys[lookupOptions.name].length ? 'controls-MultipleInputNew__lookup-notSelected'}}"
-                                       attr:style="width: {{_lookupSizes[lookupOptions.name]}}px"/>
+                                       attr:style="width: {{_lookupSizes[lookupOptions.name]}}px">
+         <ws:placeholder>
+             <ws:if data="{{lookupOptions.placeholder}}">
+                 <ws:partial template="{{lookupOptions.placeholder}}" scope="{{lookupOptions}}"/>
+             </ws:if>
+         </ws:placeholder>
+         <ws:itemTemplate>
+             <ws:if data="{{lookupOptions.itemTemplate || _options.itemTemplate}}">
+                 <ws:partial template="{{lookupOptions.itemTemplate || _options.itemTemplate}}" scope="{{lookupOptions}}"/>
+             </ws:if>
+             <ws:else>
+                 <ws:partial template="wml!Controls/_lookup/SelectedCollection/ItemTemplate"/>
+             </ws:else>
+         </ws:itemTemplate>
+     </Controls._lookup.BaseLookupInput>
      <ws:if data="{{index !== (_options.lookupsOptions.length - 1)}}">
         <div class="controls-MultipleInputNew__separator"></div>
      </ws:if>

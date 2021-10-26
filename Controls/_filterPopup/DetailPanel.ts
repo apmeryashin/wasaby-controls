@@ -324,6 +324,7 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
          headingStyle: 'secondary',
          orientation: 'vertical',
          applyButtonCaption: rk('Отобрать'),
+         applyButtonStyle: 'primary',
          additionalPanelTemplate: 'Controls/filterPopup:AdditionalPanelTemplate'
       };
    }

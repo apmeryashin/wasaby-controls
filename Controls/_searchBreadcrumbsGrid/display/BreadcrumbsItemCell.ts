@@ -8,7 +8,8 @@ export interface IOptions<T> extends IDataCellOptions<T> {
    breadCrumbsMode?: 'row' | 'cell';
 }
 
-export default class BreadcrumbsItemCell<S extends Model, TOwner extends BreadcrumbsItemRow<S>> extends GridDataCell<any, any> {
+export default class BreadcrumbsItemCell<S extends Model, TOwner extends BreadcrumbsItemRow<S>>
+    extends GridDataCell<any, any> {
    protected _$breadCrumbsMode: 'row' | 'cell';
 
    readonly listInstanceName: string = 'controls-SearchBreadcrumbsGrid';
@@ -48,7 +49,11 @@ export default class BreadcrumbsItemCell<S extends Model, TOwner extends Breadcr
       return this.getOwner().getKeyProperty();
    }
 
-   getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover?: boolean, templateHoverBackgroundStyle?: string): string {
+   getWrapperClasses(theme: string,
+                     backgroundColorStyle: string,
+                     style: string = 'default',
+                     templateHighlightOnHover?: boolean,
+                     templateHoverBackgroundStyle?: string): string {
       return super.getWrapperClasses(backgroundColorStyle, templateHighlightOnHover, templateHoverBackgroundStyle)
          + ' controls-TreeGrid__row__searchBreadCrumbs js-controls-ListView__notEditable';
    }

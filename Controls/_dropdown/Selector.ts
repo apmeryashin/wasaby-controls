@@ -10,7 +10,7 @@ import {prepareEmpty, loadItems, loadSelectedItems, isSingleSelectionItem} from 
 import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import {TKey} from './interface/IDropdownController';
-import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
@@ -31,7 +31,6 @@ interface IInputOptions extends IBaseDropdownOptions, IValidationStatusOptions {
 }
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
-
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
@@ -60,7 +59,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:ISearch
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
@@ -83,7 +82,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface:ISelectorDialog
  * @mixes Controls/dropdown:IGrouped
  * @implements Controls/interface:ITextValue
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/dropdown_new/Input/Source/Index
@@ -109,7 +108,7 @@ export default class Selector extends BaseDropdown {
 
    _beforeMount(options: IInputOptions,
                 context: object,
-                receivedState: DropdownReceivedState): void | Promise<void|DropdownReceivedState> {
+                receivedState: IDropdownReceivedState): void | Promise<void|IDropdownReceivedState> {
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (options.navigation && options.selectedKeys &&  options.selectedKeys.length) {
@@ -126,6 +125,7 @@ export default class Selector extends BaseDropdown {
    _getControllerOptions(options: IInputOptions): object {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
+            markerVisibility: 'onactivated',
             dataLoadCallback: this._dataLoadCallback.bind(this),
             selectorOpener: this,
             selectedKeys: options.selectedKeys || [],
@@ -182,7 +182,9 @@ export default class Selector extends BaseDropdown {
          this._selectedItems = items;
          this._needInfobox = options.readOnly && this._selectedItems.length > 1;
          this._isEmptyItem = isSingleSelectionItem(items[0], options.emptyText, options.keyProperty, options.emptyKey);
-         this._isAllSelectedItem = isSingleSelectionItem(items[0], options.selectedAllText, options.keyProperty, options.selectedAllKey);
+         this._isAllSelectedItem = isSingleSelectionItem(
+             items[0], options.selectedAllText, options.keyProperty, options.selectedAllKey
+         );
          this._item = this._isAllSelectedItem || this._isEmptyItem ? null : items[0];
          this._icon = this._isEmptyItem || this._isAllSelectedItem ? null : getPropValue(this._item, 'icon');
          this._text = this._getText(items, options);
@@ -269,9 +271,13 @@ export default class Selector extends BaseDropdown {
 
    private _getSelectedKeys(items: Model[], keyProperty: string): TKey[] {
       const keys = [];
-      if (isSingleSelectionItem(items[0], this._options.selectedAllText, this._options.keyProperty, this._options.selectedAllKey)) {
+      if (isSingleSelectionItem(
+          items[0], this._options.selectedAllText, this._options.keyProperty, this._options.selectedAllKey
+      )) {
          keys.push(this._options.selectedAllKey);
-      } else if (isSingleSelectionItem(items[0], this._options.emptyText, this._options.keyProperty, this._options.emptyKey)) {
+      } else if (isSingleSelectionItem(
+          items[0], this._options.emptyText, this._options.keyProperty, this._options.emptyKey
+      )) {
          keys.push(this._options.emptyKey);
       } else {
          factory(items).each((item) => {
@@ -375,7 +381,7 @@ export default class Selector extends BaseDropdown {
 
 /**
  * @name Controls/_dropdown/Selector#contentTemplate
- * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
+ * @cfg {Function} Шаблон отображения вызывающего элемента.
  * @remark
  * Для определения шаблона вызовите базовый шаблон - "Controls/dropdown:inputDefaultContentTemplate".
  * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
@@ -548,41 +554,41 @@ export default class Selector extends BaseDropdown {
  */
 
 /**
-* @name Controls/_dropdown/Selector#fontSize
-* @cfg
-* @demo Controls-demo/dropdown_new/Input/FontSize/Index
-*/
+ * @name Controls/_dropdown/Selector#fontSize
+ * @cfg
+ * @demo Controls-demo/dropdown_new/Input/FontSize/Index
+ */
 
 /**
-* @name Controls/_dropdown/Selector#source
-* @cfg {Controls/_dropdown/interface/IBaseDropdown/SourceCfg.typedef}
-* @default undefined
-* @remark
-* Запись может иметь следующие {@link Controls/_dropdown/interface/IBaseDropdown/Item.typedef свойства}.
-* @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
-* @example
-* Записи будут отображены из источника _source.
-* <pre class="brush: html">
-* <!-- WML -->
-* <Controls.dropdown:Selector
-*    keyProperty="key"
-*    source="{{_source}}"
-*    viewMode="link"
-*    iconSize="m" />
-* </pre>
-* <pre class="brush: js">
-* // JavaScript
-* _source: new source.Memory({
-*    keyProperty: 'key',
-*    data: [
-*       {key: '1', icon: 'icon-EmptyMessage', iconStyle: 'info', title: 'Message'},
-*       {key: '2', icon: 'icon-TFTask', title: 'Task'},
-*       {key: '3', title: 'Report'},
-*       {key: '4', title: 'News', readOnly: true}
-*    ]
-* })
-* </pre>
-*/
+ * @name Controls/_dropdown/Selector#source
+ * @cfg {Controls/_dropdown/interface/IBaseDropdown/SourceCfg.typedef}
+ * @default undefined
+ * @remark
+ * Запись может иметь следующие {@link Controls/_dropdown/interface/IBaseDropdown/Item.typedef свойства}.
+ * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
+ * @example
+ * Записи будут отображены из источника _source.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Selector
+ *    keyProperty="key"
+ *    source="{{_source}}"
+ *    viewMode="link"
+ *    iconSize="m" />
+ * </pre>
+ * <pre class="brush: js">
+ * // JavaScript
+ * _source: new source.Memory({
+ *    keyProperty: 'key',
+ *    data: [
+ *       {key: '1', icon: 'icon-EmptyMessage', iconStyle: 'info', title: 'Message'},
+ *       {key: '2', icon: 'icon-TFTask', title: 'Task'},
+ *       {key: '3', title: 'Report'},
+ *       {key: '4', title: 'News', readOnly: true}
+ *    ]
+ * })
+ * </pre>
+ */
 
 Object.defineProperty(Selector, 'defaultProps', {
    enumerable: true,

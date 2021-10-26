@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
@@ -7,7 +7,7 @@ import controlTemplate = require('wml!Controls-demo/Lookup/SuggestTemplate/Looku
 import selectorTemplate = require('Controls-demo/Lookup/FlatListSelector/FlatListSelector');
 import suggestTemplate = require('wml!Controls-demo/Lookup/SuggestTemplate/resources/SuggestTemplate');
 
-export default class extends Control{
+export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;
    protected _suggestTemplate: TemplateFunction = suggestTemplate;
    protected _source: Memory;

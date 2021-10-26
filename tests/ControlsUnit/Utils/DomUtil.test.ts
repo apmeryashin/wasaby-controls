@@ -2,7 +2,7 @@ import {stub} from 'sinon';
 import {assert} from 'chai';
 import {DOMUtil} from 'Controls/sizeUtils';
 
-function ClassList(): void {};
+function ClassList(): void {/* FIXME: sinon mock */}
 ClassList.prototype = [];
 // @ts-ignore
 ClassList.prototype.add = ClassList.prototype.push;
@@ -27,13 +27,13 @@ describe('Controls/sizeUtils:DOMUtil', () => {
             if (isNode) {
                 global.document = {
                     body: {
-                        appendChild: () => {},
-                        removeChild: () => {}
+                        appendChild: () => {/* FIXME: sinon mock */},
+                        removeChild: () => {/* FIXME: sinon mock */}
                     },
-                    createElement: () => {}
+                    createElement: () => {/* FIXME: sinon mock */}
                 };
                 global.window = {
-                    getComputedStyle: () => {}
+                    getComputedStyle: () => {/* FIXME: sinon mock */}
                 };
             }
         });
@@ -59,7 +59,7 @@ describe('Controls/sizeUtils:DOMUtil', () => {
                 },
                 // @ts-ignore
                 classList: new ClassList(),
-                setAttribute: () => {},
+                setAttribute: () => {/* FIXME: sinon mock */},
                 getElementsByClassName: () => [fakeChild, fakeChild],
                 appendChild: (child) => stub(),
                 getBoundingClientRect: () => ({

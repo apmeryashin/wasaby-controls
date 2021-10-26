@@ -12,13 +12,14 @@ let cachedDisplay;
 let cachedVersion;
 
 function getDisplay(items, parentProperty, nodeProperty, root) {
-   //Кешируем проекцию, т.к. её создание тежеловесная операция, а данный метод будет вызываться для каждой записи в списке.
+   // Кешируем проекцию, т.к. её создание тежеловесная операция,
+   // а данный метод будет вызываться для каждой записи в списке.
    if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedVersion !== items.getVersion()) {
       cachedDisplay = new Tree({
           collection: items,
           keyProperty: items.getKeyProperty(),
-          parentProperty: parentProperty,
-          nodeProperty: nodeProperty,
+          parentProperty,
+          nodeProperty,
           root: root !== undefined ? root : null
       });
       cachedVersion = items.getVersion();
@@ -30,18 +31,17 @@ function getDisplay(items, parentProperty, nodeProperty, root) {
 }
 
 function getSiblingItem(direction, item, items, parentProperty, nodeProperty, root) {
-    var
-       result,
-       display,
-       itemIndex,
-       siblingItem,
-       itemFromProjection;
+    let result;
+    let display;
+    let itemIndex;
+    let siblingItem;
+    let itemFromProjection;
 
-    //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
-    //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
-    //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
-    //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
-    //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+    // В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
+    // В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
+    // а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
+    // Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
+    // Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
     if (parentProperty) {
         display = getDisplay(items, parentProperty, nodeProperty, root);
         itemFromProjection = display.getItemBySourceItem(items.getRecordById(item.getId()));
@@ -181,8 +181,10 @@ const helpers = {
         const siblingItem = getSiblingItem(direction, item, items, parentProperty, nodeProperty, root);
 
         return !!siblingItem &&
-            (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) && //items in the same folder
-            (!nodeProperty || siblingItem.get(nodeProperty) === item.get(nodeProperty)); //items of the same type
+            // items in the same folder
+            (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) &&
+            // items of the same type
+            (!nodeProperty || siblingItem.get(nodeProperty) === item.get(nodeProperty));
     }
 };
 

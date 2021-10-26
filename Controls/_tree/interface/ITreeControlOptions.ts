@@ -3,7 +3,6 @@ import { Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { ISelectionCountModeOptions } from 'Controls/interface';
 
-
 type TNodeFooterVisibilityCallback = (item: Model) => boolean;
 
 type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
@@ -276,7 +275,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
 
 /**
  * @name Controls/_tree/interface/ITreeControl#deepReload
- * @cfg {Boolean} Опередяет, нужно ли выполнять перезагрузку с сохранением развернутых узлов.
+ * @cfg {Boolean} Определяет, нужно ли выполнять перезагрузку с сохранением развернутых узлов.
  * @remark
  * Перезагрузка выполняется с сохранением развернутых узлов, даже при изменении опций filter, source, sorting и тд.
  * В поле фильтра, указанное в parentProperty будет отправлен массив развернутых узлов.
@@ -427,9 +426,9 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.tree:View
-      source="{{_viewSource}}"
-      parentProperty="parent"
-      nodeProperty="type" />
+ *    source="{{_viewSource}}"
+ *    parentProperty="parent"
+ *    nodeProperty="type" />
  * </pre>
  *
  * <pre class="brush: js">
@@ -454,7 +453,7 @@ export interface ITreeControlOptions extends IControlOptions, ISelectionCountMod
  *                 title: 'Smartphones1',
  *                 parent: 1,
  *                 type: true,
-                   rating: '9.2',hasChild: true
+ *                 rating: '9.2',hasChild: true
  *             },
  *         ]
  *     });

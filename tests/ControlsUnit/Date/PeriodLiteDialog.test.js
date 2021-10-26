@@ -278,35 +278,6 @@ define([
                assert.isTrue(component._isExpandButtonVisible);
             });
          });
-         it('_updateCloseBtnPosition', function() {
-            const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {
-               stickyPosition: {
-                  targetPosition: {
-                     left: 10
-                  }
-               }
-            });
-            component.getWindowInnerWidth = () => 400;
-            component._updateCloseBtnPosition(component._options);
-            assert.deepEqual(component._closeBtnPosition, 'right');
-
-            const component2 = calendarTestUtils.createComponent(PeriodLiteDialog.View, {
-               stickyPosition: {
-                  targetPosition: {
-                     left: 900,
-                     width: 200
-                  },
-                  sizes: {
-                     width: 100
-                  },
-                  position: {
-                     left: 40
-                  }
-               }
-            });
-            component2._updateCloseBtnPosition(component2._options);
-            assert.deepEqual(component2._closeBtnPosition, 'left');
-         });
       });
 
       describe('_onYearMouseEnter', function() {

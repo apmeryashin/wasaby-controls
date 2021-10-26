@@ -31,7 +31,7 @@ export function getRangeValueValidators(validators?: Function[] | object[], rang
             }
             return _validator.bind(null, {
                 ...(args || {}),
-                value: value
+                value
             });
         })
     ];
@@ -52,7 +52,7 @@ export const dateMaskConstants = {
  * @param direction Shift direction.
  * @param selectionType
  */
-export function shiftPeriod(start: Date, end: Date, direction: number, selectionType?: string): Date[] {
+export function shiftPeriod(start: Date, end: Date, direction: number, selectionType?: string): [Date, Date] {
     let result;
     if (compare.isFullInterval(start, end, compare.DateUnits.Month)) {
         result = shiftPeriodByMonth(start, end, direction * getPeriodLengthInMonths(start, end));
@@ -74,7 +74,7 @@ export function shiftPeriod(start: Date, end: Date, direction: number, selection
  * @param end {Date} End date of the period.
  * @param monthDelta The number of whole months on which the period shifts.
  */
-export function shiftPeriodByMonth(start: Date, end: Date, monthDelta: number): Date[] {
+export function shiftPeriodByMonth(start: Date, end: Date, monthDelta: number): [Date, Date] {
     return [
         new Date(start.getFullYear(), start.getMonth() + monthDelta, 1),
         new Date(end.getFullYear(), end.getMonth() + monthDelta + 1, 0)
@@ -87,7 +87,7 @@ export function shiftPeriodByMonth(start: Date, end: Date, monthDelta: number): 
  * @param end {Date} End date of the period.
  * @param dayDelta The number of whole days on which the period shifts.
  */
-export function shiftPeriodByDays(start: Date, end: Date, dayDelta: number): Date[] {
+export function shiftPeriodByDays(start: Date, end: Date, dayDelta: number): [Date, Date] {
     return [
         new Date(start.getFullYear(), start.getMonth(), start.getDate() + dayDelta),
         new Date(end.getFullYear(), end.getMonth(), end.getDate() + dayDelta)
@@ -115,7 +115,7 @@ export function getPeriodLengthInDays(start: Date, end: Date): number {
     return Math.ceil(Math.abs((start.getTime() - end.getTime()) / (oneDay))) + 1;
 }
 
-//кривое название метода используется в прикладных репозиториях
+// кривое название метода используется в прикладных репозиториях
 export function gePeriodLengthInDays(start: Date, end: Date): number {
     return getPeriodLengthInDays(start, end);
 }
@@ -130,9 +130,10 @@ export function getResetButtonVisible(startValue: Date, endValue: Date, resetSta
             date.setMilliseconds(0);
         }
     };
-
-    setTimeToZero(resetStartValue);
-    setTimeToZero(resetEndValue);
+    const values = [startValue, endValue, resetStartValue, resetEndValue];
+    for (const value of values) {
+        setTimeToZero(value);
+    }
     const hasResetStartValue = resetStartValue || resetStartValue === null;
     const hasResetEndValue = resetEndValue || resetEndValue === null;
 

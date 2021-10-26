@@ -25,7 +25,7 @@ function getDataArray(): object[] {
             title: 'Aleksey'
         }
     ];
-};
+}
 
 function getSource(): Memory {
     return new Memory({
@@ -36,7 +36,7 @@ function getSource(): Memory {
 
 describe('Controls/dataSource:requestDataUtil', () => {
 
-    it('requestDataUtil', async() => {
+    it('requestDataUtil', async () => {
         const loadDataConfig = {
             source: getSource()
         };

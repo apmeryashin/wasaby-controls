@@ -54,15 +54,14 @@ define(
 
       describe('Controls/_popup/Manager', function() {
          let id, element;
-         let Manager = getManager();
 
          it('initialize', function() {
-            Manager = getManager();
+            const Manager = getManager();
             assert.equal(Manager._popupItems.getCount(), 0);
          });
 
          it('append popup', function() {
-            Manager = getManager();
+            const Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -89,7 +88,7 @@ define(
          });
 
          it('find popup', () => {
-            Manager = getManager();
+            const Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -101,7 +100,7 @@ define(
          });
 
          it('update popup', function() {
-            Manager = getManager();
+            const Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -126,7 +125,7 @@ define(
          });
 
          it('fireEventHandler', function() {
-            Manager = getManager();
+            const Manager = getManager();
             let eventOnCloseFired = false;
             id = Manager.show({
                testOption: 'created'
@@ -160,7 +159,7 @@ define(
          });
 
          it('remove popup', function(done) {
-            Manager = getManager();
+            const Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -173,7 +172,7 @@ define(
          });
 
          it('remove popup with pendings', function(done) {
-            Manager = getManager();
+            const Manager = getManager();
             let id1 = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -222,7 +221,7 @@ define(
          });
 
          it('remove popup and check event', function(done) {
-            Manager = getManager();
+            const Manager = getManager();
             let eventCloseFired = false;
             let eventOnCloseFired = false;
             id = Manager.show({
@@ -245,7 +244,7 @@ define(
          });
 
          it('add modal popup', function(done) {
-            Manager = getManager();
+            const Manager = getManager();
             let id1 = Manager.show({
                modal: false,
                testOption: 'created'
@@ -273,7 +272,7 @@ define(
                maximize: false,
                testOption: 'created'
             };
-            Manager = getManager();
+            const Manager = getManager();
             var isMaximizeNotified;
             const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isMaximizeNotified = event === 'managerPopupMaximized';
@@ -290,7 +289,7 @@ define(
                maximize: false,
                testOption: 'created'
             };
-            Manager = getManager();
+            const Manager = getManager();
             var isUpdateNotified;
             const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isUpdateNotified = event === 'managerPopupUpdated';
@@ -308,7 +307,7 @@ define(
             let popupOptions = {
                testOption: 'created'
             };
-            Manager = getManager();
+            const Manager = getManager();
             var isDestroyNotified;
             const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isDestroyNotified = event === 'managerPopupDestroyed';
@@ -336,7 +335,7 @@ define(
                }
             };
             let focusedArea = {};
-            Manager = getManager();
+            const Manager = getManager();
             var firstResult = Manager._isIgnoreActivationArea(focusedContainer);
             assert.equal(firstResult, true);
             var secondResult = Manager._isIgnoreActivationArea(focusedArea);
@@ -344,7 +343,7 @@ define(
          });
          describe('mousedownHandler', function() {
             it('closeOnOutsideClick', () => {
-               Manager = getManager();
+               const Manager = getManager();
                let removedCount = 0;
                Manager.remove = () => removedCount++;
                Manager._isIgnoreActivationArea = () => false;
@@ -375,7 +374,7 @@ define(
                Manager.destroy();
             });
             it('closeOnOverlayClick', () => {
-               Manager = getManager();
+               const Manager = getManager();
                let popupRemoved = false;
                Manager.remove = () => popupRemoved = true;
                Manager._isIgnoreActivationArea = () => false;
@@ -401,7 +400,7 @@ define(
             });
          });
          it('Linked Popups', function(done) {
-            Manager = getManager();
+            const Manager = getManager();
 
             let id1 = Manager.show({
             }, new BaseController());
@@ -437,7 +436,7 @@ define(
          });
 
          it('removeFromParentConfig', function() {
-            Manager = getManager();
+            const Manager = getManager();
 
             let id1 = Manager.show({
             }, new BaseController());
@@ -464,7 +463,7 @@ define(
                   }
                }
             };
-            Manager = getManager();
+            const Manager = getManager();
             var isCreateNotified;
             const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isCreateNotified = event === 'managerPopupCreated';
@@ -483,13 +482,14 @@ define(
                maxWidth: 800,
                minWidth: 300
             };
-            Manager = getManager();
+            const Manager = getManager();
             let offset = 100;
             let id0 = Manager.show(popupOptions, new BaseController());
             let element = Manager._popupResizingLine(id0, offset);
             assert.isTrue(element);
          });
          it('managerPopupAnimated', () => {
+            const Manager = getManager();
             let id0 = Manager.show({}, new BaseController());
             let hasError = false;
             try {
@@ -501,7 +501,7 @@ define(
          });
 
          it('calculateZIndex', () => {
-            Manager = getManager();
+            const Manager = getManager();
             const controller = {
                getDefaultConfig: () => {}
             };
@@ -536,7 +536,7 @@ define(
          });
 
          it('update popup poisition by scroll and resize', () => {
-            Manager = getManager();
+            const Manager = getManager();
             let isResetRootContainerCalled = false;
             let isControllerCalled = false;
             const BaseController = {
@@ -573,7 +573,7 @@ define(
          });
 
          it('moveToTop', () => {
-            Manager = getManager();
+            const Manager = getManager();
             const item1 = {
                id: 1
             };
@@ -599,7 +599,7 @@ define(
          });
 
          it('finishPendings', () => {
-            Manager = getManager();
+            const Manager = getManager();
             let popupId = Manager.show({
                closeOnOutsideClick: true
             }, new BaseController());
@@ -627,7 +627,7 @@ define(
          });
 
          it('isDestroying', () => {
-            Manager = getManager();
+            const Manager = getManager();
             let popupId = Manager.show({
                closeOnOutsideClick: true
             }, new BaseController());

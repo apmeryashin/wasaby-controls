@@ -5,7 +5,6 @@ export {default as RelationController} from './_dateRange/RelationController';
 export {default as RelationWrapper} from './_dateRange/RelationWrapper';
 export {default as RelationButton} from './_dateRange/RelationButton';
 export {default as Utils} from './_dateRange/Utils';
-export {default as DateSelector} from './_dateRange/DateSelector';
 export {default as LinkView} from './_dateRange/LinkView';
 export {default as RangeSelectionController} from './_dateRange/Controllers/RangeSelectionController';
 export {default as DateRangeSelectionController} from './_dateRange/Controllers/DateRangeSelectionController';
@@ -15,26 +14,20 @@ export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
 export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelectable';
 export {default as IDayTemplate} from './_interface/IDayTemplate';
 export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteDialog';
-export {default as ILinkView} from './_dateRange/interfaces/ILinkView';
 export {default as WeekdayFormatter} from './_dateRange/WeekdayFormatter';
 export {default as keyboardPeriodController} from './_dateRange/Utils/keyboardPeriodController';
-export {default as getPopupName} from './_dateRange/Utils/getPopupName';
 export {default as DateRangeContextProvider} from './_dateRange/DateRangeContextProvider';
 export {default as ArrowButtonConsumer} from './_dateRange/ArrowButtonConsumer';
 export {default as RangeSelectorConsumer} from './_dateRange/RangeSelectorConsumer';
 export {default as DateSelectorConsumer} from './_dateRange/DateSelectorConsumer';
 export {default as RangeShortSelectorConsumer} from './_dateRange/RangeShortSelectorConsumer';
 export {IDateRangeSelectableOptions, IRangeSelectableOptions, TSelectionType} from 'Controls/_dateRange/interfaces/IDateRangeSelectable';
-export {default as IMonthCaptionTemplate, IMonthCaptionTemplateOptions} from 'Controls/_dateRange/interfaces/IMonthCaptionTemplate';
 export {IDateRangeOptions} from 'Controls/_dateRange/interfaces/IDateRange';
-export {IDatePopupTypeOptions} from 'Controls/_dateRange/interfaces/IDatePopupType';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
-import * as MonthCaptionTemplate from 'wml!Controls/_dateRange/DateSelector/monthCaptionTemplate';
 export {default as ICaptionFormatter} from 'Controls/_dateRange/interfaces/ICaptionFormatter';
 
 export {
-    IDateRangeSelectable,
-    MonthCaptionTemplate
+    IDateRangeSelectable
 };
 
 /**
@@ -47,21 +40,17 @@ export {
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
  * @includes IInput Controls/_dateRange/interfaces/IInput
- * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
  * @includes IRangeSelectable Controls/_dateRange/interfaces/IRangeSelectable
  * @includes ICaptionFormatter Controls/_dateRange/interfaces/ICaptionFormatter
  * @includes Utils Controls/_dateRange/Utils
- * @includes DateSelector Controls/_dateRange/DateSelector
  * @includes RangeSelectionController Controls/_dateRange/Controllers/RangeSelectionController
  * @includes DateRangeSelectionController Controls/_dateRange/Controllers/DateRangeSelectionController
  * @includes IDatePickerSelectors Controls/_dateRange/interfaces/IDatePickerSelectors
  * @includes IDateRange Controls/_dateRange/interfaces/IDateRange
  * @includes IDayTemplate Controls/_interface/IDayTemplate
  * @includes IRangeInputTag Controls/_dateRange/interfaces/IRangeInputTag
- * @includes IDateSelector Controls/_dateRange/interfaces/IDateSelector
- * @includes IDatePopupType Controls/_dateRange/interfaces/IDatePopupType
  * @public
  * @author Красильников А.С.
  */
@@ -76,11 +65,9 @@ export {
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
  * @includes IInput Controls/_dateRange/interfaces/IInput
- * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
  * @includes Utils Controls/_dateRange/Utils
- * @includes DateSelector Controls/_dateRange/DateSelector
  * @includes RangeSelectionController Controls/_dateRange/Controllers/RangeSelectionController
  * @includes DateRangeSelectionController Controls/_dateRange/Controllers/DateRangeSelectionController
  * @includes IRangeSelectable Controls/_dateRange/interfaces/IRangeSelectable
@@ -88,8 +75,6 @@ export {
  * @includes IDateRange Controls/_dateRange/interfaces/IDateRange
  * @includes IDayTemplate Controls/_interface/IDayTemplate
  * @includes IRangeInputTag Controls/_dateRange/interfaces/IRangeInputTag
- * @includes IDateSelector Controls/_dateRange/interfaces/IDateSelector
  * @public
  * @author Красильников А.С.
  */
-

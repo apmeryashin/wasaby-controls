@@ -3,10 +3,8 @@ import IActionOptions from '../interface/IActionOptions';
 import {RemoveController} from 'Controls/list';
 import {loadSync, loadAsync, isLoaded} from 'WasabyLoader/ModulesLoader';
 
-interface IRemoveProviderOptions extends IActionOptions {}
-
 export interface IRemoveProvider {
-    execute(meta: Partial<IRemoveProviderOptions>): void;
+    execute(meta: Partial<IActionOptions>): void;
 }
 
 const CONTROLLER_MODULE_NAME = 'Controls/list:RemoveController';
@@ -24,7 +22,7 @@ export default class RemoveProvider implements IAction, IRemoveProvider {
         } else {
             return loadAsync(CONTROLLER_MODULE_NAME).then((removeController) => {
                 return this._remove(removeController, meta);
-            })
+            });
         }
     }
 

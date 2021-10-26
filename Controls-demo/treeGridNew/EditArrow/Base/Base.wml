@@ -3,7 +3,6 @@
             keyProperty="key"
             attr:style="width: 500px;"
             parentProperty="parent"
-            on:editArrowClick="_editArrowClick()"
             nodeProperty="parent@"
             showEditArrow="{{ true }}"
             displayProperty="title"

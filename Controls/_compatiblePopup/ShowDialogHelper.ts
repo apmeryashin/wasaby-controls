@@ -3,9 +3,9 @@ import moduleStubs = require('Core/moduleStubs');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {Logger} from 'UI/Utils';
 
-var _private = {
-   prepareDeps: function(config) {
-      var dependencies = ['Controls/popup'];
+const _private = {
+   prepareDeps(config) {
+      const dependencies = ['Controls/popup'];
       if (config.isStack === true) {
          dependencies.push('Controls/popupTemplate');
          config._path = 'StackController';
@@ -20,32 +20,34 @@ var _private = {
          config._type = 'dialog';
       }
       // В номенклатуре написали свою recordFloatArea, отнаследовавшись от платформенной.
-      // В слое совместимости нам как-то нужно понимать, какое окно сейчас хотят открыть, чтобы грузить нужные зависимости
-      // Договорились понимать по опции _mode
+      // В слое совместимости нам как-то нужно понимать, какое окно сейчас хотят открыть,
+      // чтобы грузить нужные зависимости. Договорились понимать по опции _mode
       config._popupComponent = config._mode || 'floatArea';
       dependencies.push(config.template);
       return dependencies;
    }
 };
 
-var DialogHelper = {
-   open: function(path, config) {
-      var result = moduleStubs.requireModule(path).addCallback(function(Component) {
+const DialogHelper = {
+   open(path, config) {
+      const result = moduleStubs.requireModule(path).addCallback((Component) => {
          if (isNewEnvironment()) {
-            var dfr = new Deferred();
-            var deps = _private.prepareDeps(config);
-            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], function(CompatiblePopup) {
-               CompatiblePopup.load().addCallback(function() {
-                  require(deps, function(popup, Strategy) {
-                     var CoreTemplate = require(config.template);
-                     config._initCompoundArea = function(compoundArea) {
-                        dfr && dfr.callback(compoundArea);
+            let dfr = new Deferred();
+            const deps = _private.prepareDeps(config);
+            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (CompatiblePopup) => {
+               CompatiblePopup.load().addCallback(() => {
+                  require(deps, (popup, Strategy) => {
+                     const CoreTemplate = require(config.template);
+                     config._initCompoundArea = (compoundArea) => {
+                        if (dfr) {
+                            dfr.callback(compoundArea);
+                        }
                         dfr = null;
                      };
                      popup.BaseOpener.showDialog(
                         CoreTemplate, config, config._path ? Strategy[config._path] : Strategy
                      );
-                  }, function(err) {
+                  }, (err) => {
                      Logger.error(`Не удалось загрузить модули для открытия окна: ${err.requireModules.join(',')}`);
                   });
                });

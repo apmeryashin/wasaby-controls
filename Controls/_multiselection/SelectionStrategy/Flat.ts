@@ -137,7 +137,8 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
          const itemsCount = this._model.getItems().filter((it) => this._canBeSelected(it)).length;
          if (limit) {
             if (hasMoreData && limit > itemsCount) {
-               countItemsSelected = limit;
+               // нельзя сказать что кол-во выбранных записей = limit, т.к. на БЛ возможно данных меньше лимита.
+               countItemsSelected = null;
             } else {
                countItemsSelected = limit < itemsCount ? itemsCount - selection.excluded.length : itemsCount;
             }
@@ -173,7 +174,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return isAllSelected;
    }
 
-   reset() {}
+   reset() {
+       /* For override */
+   }
 
    /**
     * Проверяет присутствует ли в selected значение "Выбрано все"

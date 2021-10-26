@@ -54,7 +54,9 @@ export default class extends Control {
         this._updateMetaData();
     }
 
-    protected _colspanCallback(item: Model, column: IGroupNodeColumn, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+    protected _colspanCallback(
+        item: Model, column: IGroupNodeColumn, columnIndex: number, isEditing: boolean
+    ): TColspanCallbackResult {
         if (typeof item === 'string' || item.get('nodeType') === 'group') {
             return 'end';
         }

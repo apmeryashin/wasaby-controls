@@ -13,8 +13,8 @@ import 'css!Controls/lookup';
  * @extends UI/Base:Control
  * @implements Controls/interface:ICaption
  * @implements Controls/interface:IHeight
- * @implements Controls/interface:IUnderlineOptions
- * 
+ * @implements Controls/interface:IUnderline
+ *
  * @demo Controls-demo/Lookup/MultipleInputNew/MultipleInputNew
  *
  * @public

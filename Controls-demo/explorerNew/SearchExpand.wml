@@ -5,7 +5,6 @@
                               bind:expandedItems="_expandedItems"
                               root="{{null}}"
                               bind:markedKey="_markedKey"
-                              on:markedKeyChanged="_markedKeyChangedHandler()"
                               searchParam="title"
                               minSearchLength="{{3}}"
                               searchStartingWith="{{_searchStartingWith}}"

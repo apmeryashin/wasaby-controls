@@ -1,4 +1,5 @@
 import {TMarkerClassName} from 'Controls/display';
+import {IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions} from 'Controls/interface';
 
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/TCursor
@@ -8,7 +9,7 @@ import {TMarkerClassName} from 'Controls/display';
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
-export default interface IBaseItemTemplateOptions {
+export default interface IBaseItemTemplateOptions extends IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions {
    highlightOnHover?: boolean;
    cursor?: TCursor;
    marker?: boolean;
@@ -25,14 +26,14 @@ export default interface IBaseItemTemplateOptions {
  * @public
  */
 /**
-* @name Controls/_list/interface/IBaseItemTemplate#highlightOnHover
-* @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
-* @remark
-* В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
-* Дополнительно о подсветке строки читайте {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight здесь}.
-* @default true
-* @demo Controls-demo/list_new/ItemTemplate/NoHighlightOnHover/Index
-*/
+ * @name Controls/_list/interface/IBaseItemTemplate#highlightOnHover
+ * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
+ * @remark
+ * В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
+ * Дополнительно о подсветке строки читайте {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight здесь}.
+ * @default true
+ * @demo Controls-demo/list_new/ItemTemplate/NoHighlightOnHover/Index
+ */
 /**
  * @name Controls/_list/interface/IBaseItemTemplate#cursor
  * @cfg {Controls/_list/interface/IBaseItemTemplate/TCursor.typedef} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
@@ -40,14 +41,14 @@ export default interface IBaseItemTemplateOptions {
  * @demo Controls-demo/list_new/ItemTemplate/Clickable/Index
  */
 /**
-* @name Controls/_list/interface/IBaseItemTemplate#marker
-* @cfg {Boolean} Позволяет отключить видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера} для отдельной записи списка.
-* @default true
-* @demo Controls-demo/list_new/ItemTemplate/Marker/Index В следующем примере выделение маркером отключено для первой записи.
-* @remark Отключение видимости маркера для всех записей описано {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/#all здесь}.
-* @see markerClassName
-* @see Controls/marker:IMarkerList#markerVisibility
-*/
+ * @name Controls/_list/interface/IBaseItemTemplate#marker
+ * @cfg {Boolean} Позволяет отключить видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера} для отдельной записи списка.
+ * @default true
+ * @demo Controls-demo/list_new/ItemTemplate/Marker/Index В следующем примере выделение маркером отключено для первой записи.
+ * @remark Отключение видимости маркера для всех записей описано {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/#all здесь}.
+ * @see markerClassName
+ * @see Controls/marker:IMarkerList#markerVisibility
+ */
 /**
  * @typedef {String} Controls/_list/interface/IBaseItemTemplate/ItemActionsClass
  * @description Классы, с помощью которых задается {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ позиционирование панели опций записи} внутри элемента.
@@ -61,6 +62,24 @@ export default interface IBaseItemTemplateOptions {
  * @remark
  * Дополнительно об использовании опции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#inside здесь}.
  * @demo Controls-demo/list_new/ItemTemplate/ItemActionsClass/Index
+ */
+/**
+ * @name Controls/_interface/IBaseGroupTemplate#fontColorStyle
+ * @cfg {TFontColorStyle} Стиль цвета текста записи.
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+ */
+/**
+ * @name Controls/_list/interface/IBaseItemTemplate#fontSize
+ * @cfg {TFontSize} Размер шрифта записи.
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
+ * @default l
+ */
+/**
+ * @name Controls/_list/interface/IBaseItemTemplate#fontWeight
+ * @cfg {TFontWeight} Насыщенность шрифта.
+ * @default "default".
  */
 /*
  * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.

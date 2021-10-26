@@ -1,10 +1,10 @@
 define([
    'Core/core-merge',
-   'Controls/dateRange',
+   'Controls/date',
    'ControlsUnit/Calendar/Utils'
 ], function(
    cMerge,
-   dateRange,
+   date,
    calendarTestUtils
 ) {
    'use strict';
@@ -15,11 +15,11 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/dateRange/DateSelector', function() {
+   describe('Controls/date/DateSelector', function() {
 
       describe('openPopup', function() {
          it('should open opener', function() {
-            const component = calendarTestUtils.createComponent(dateRange.DateSelector, options);
+            const component = calendarTestUtils.createComponent(date.Selector, options);
             component._stickyOpener = {
                open: sinon.fake()
             };
@@ -37,7 +37,7 @@ define([
          it('should generate valueChangedEvent and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.DateSelector, options),
+               component = calendarTestUtils.createComponent(date.Selector, options),
                value = new Date(2018, 11, 10);
 
             component._stickyOpener = {
@@ -56,7 +56,7 @@ define([
          it('should generate valueChangedEvent', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.DateSelector, options),
+               component = calendarTestUtils.createComponent(date.Selector, options),
                value = new Date(2018, 11, 10);
 
             component._stickyOpener = {
@@ -73,7 +73,7 @@ define([
 
       describe('_getPopupOptions', () => {
          it('should set undefined instead of null', () => {
-            const component = calendarTestUtils.createComponent(dateRange.DateSelector, options);
+            const component = calendarTestUtils.createComponent(date.Selector, options);
             component._children = {
                opener: {
                   open: sinon.fake()

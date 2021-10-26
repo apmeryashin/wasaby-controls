@@ -1,0 +1,42 @@
+<div class="controls-DateLinkView controls_shortDatePicker_theme-{{_options.theme}}">
+    <ws:if data="{{ !_options.readOnly }}">
+        <Controls.buttons:Button
+                on:mousedown="_mouseDownHandler()"
+                attr:data-qa="DateLinkView__template"
+                attr:class="controls-DateLinkView__button-value controls-DateLinkView__value_fontWeight-{{ _fontWeight }}"
+                caption="{{ _caption }}"
+                viewMode="link"
+                fontColorStyle="{{ _fontColorStyle }}"
+                fontSize="{{ _fontSize }}"
+                tootltip="{{ _options.tooltip }}"
+                name="openPopupTarget"
+        />
+    </ws:if>
+    <ws:else>
+        <span
+                attr:data-qa="DateLinkView__template"
+                class="controls-DateLinkView__button-value controls-DateLinkView__value controls-DateLinkView__value_fontWeight-{{ _fontWeight }}
+                        {{_fontSize? 'controls-fontsize-' + _fontSize}}
+                        {{_fontColorStyle? 'controls-text-' + _fontColorStyle}}
+                        {{ styleClass }}">
+            {{ _caption }}
+        </span>
+    </ws:else>
+    <ws:if data="{{ _resetButtonVisible }}">
+        <span class="controls-DateLinkView__resetButton
+                        controls-icon icon-Close"
+              on:click="_resetButtonClickHandler()"></span>
+    </ws:if>
+    <ws:if data="{{ _options.prevArrowVisibility && !_options.readOnly}}">
+        <Controls.buttons:ArrowButton attr:class="controls-DateLinkView__arrow controls-DateLinkView__prev
+        controls-RangeShortSelectorLink__arrow-prev"
+                                      direction="left"
+                                      on:click="shiftBack()"/>
+    </ws:if>
+    <ws:if data="{{ _options.nextArrowVisibility && !_options.readOnly}}">
+        <Controls.buttons:ArrowButton attr:class="controls-DateLinkView__arrow controls-DateLinkView__next
+        controls-RangeShortSelectorLink__arrow-next"
+                                      direction="right"
+                                      on:click="shiftForward()"/>
+    </ws:if>
+</div>

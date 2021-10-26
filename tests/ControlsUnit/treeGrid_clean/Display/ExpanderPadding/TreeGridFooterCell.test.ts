@@ -13,7 +13,7 @@ describe('Controls/treeGrid_clean/Display/ExpanderPadding/TreeGridFooterCell', (
             getExpanderIcon: () => '',
             getExpanderPosition: () => 'default',
             getExpanderVisibility: () => 'hasChildren',
-            getActionsTemplateConfig: () => {},
+            getActionsTemplateConfig: () => {/* FIXME: sinon mock */},
             hasMultiSelectColumn: () => false,
             getMultiSelectVisibility: () => 'visible',
             hasColumnScroll: () => false,

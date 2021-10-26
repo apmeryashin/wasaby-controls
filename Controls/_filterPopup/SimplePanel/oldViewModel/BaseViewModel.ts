@@ -12,25 +12,25 @@ import entity = require('Types/entity');
  * @author Авраменко А.С.
  * @private
  */
-var BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
-    constructor: function (cfg) {
+const BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
+    constructor(cfg) {
         this._options = cfg;
     },
 
-    isCachedItemData: function(itemKey) {
+    isCachedItemData(itemKey) {
         throw new Error(`BaseViewModel#isCachedItemData is not implemented for ${this._moduleName}`);
     },
-    getCachedItemData: function(itemKey) {
+    getCachedItemData(itemKey) {
         throw new Error(`BaseViewModel#getCachedItemData is not implemented for ${this._moduleName}`);
     },
-    setCachedItemData: function(itemKey, cache) {
+    setCachedItemData(itemKey, cache) {
         throw new Error(`BaseViewModel#setCachedItemData is not implemented for ${this._moduleName}`);
     },
-    resetCachedItemData: function(itemKey) {
+    resetCachedItemData(itemKey) {
         throw new Error(`BaseViewModel#resetCachedItemData is not implemented for ${this._moduleName}`);
     },
 
-    destroy: function () {
+    destroy() {
         entity.ObservableMixin.prototype.destroy.apply(this, arguments);
         this._options = null;
     }

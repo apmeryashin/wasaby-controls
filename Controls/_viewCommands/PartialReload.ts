@@ -11,7 +11,7 @@ interface IReloadOptions extends IOptions {
     source?: ICrudPlus;
     items: RecordSet;
     sorting?: QueryOrderSelector;
-    beforeLoadCallback?: Function; //TODO должна быть строка
+    beforeLoadCallback?: Function; // TODO должна быть строка
 }
 
 const SORT_DESC = 'DESC';
@@ -71,12 +71,13 @@ export default class Reload {
            oldItem = oldItems.getRecordById(key);
            newItem = selectedItems.getRecordById(key);
            if (oldItem && newItem) {
-               // oldItem.merge(newItem) не работает https://online.sbis.ru/opendoc.html?guid=3ab98669-85b6-484c-b0de-1df6a83b4d02
+               // oldItem.merge(newItem) не работает
+               // https://online.sbis.ru/opendoc.html?guid=3ab98669-85b6-484c-b0de-1df6a83b4d02
                this._merge(oldItems, oldItem, newItem, options);
            } else if (oldItem) {
                 this._removeItem(options, key);
            } else if (newItem) {
-               this._addItem(options, newItem)
+               this._addItem(options, newItem);
            }
         });
         oldItems.setEventRaising(true, true);
@@ -95,7 +96,7 @@ export default class Reload {
                 const entryPath = oldItems.getMetaData()?.ENTRY_PATH;
                 // После перемещения записи восстановим позицию в entryPath для selection'a
                 if (entryPath) {
-                    const currentPosition = entryPath.find((item) => item.id == newItem.getKey());
+                    const currentPosition = entryPath.find((item) => String(item.id) === String(newItem.getKey()));
                     currentPosition.parent = newParentId;
                 }
             }
@@ -122,7 +123,7 @@ export default class Reload {
         const oldItems = options.items;
         const sorting = options.sorting;
         if (sorting) {
-            let index = this._sortItems(oldItems, sorting, newItem);
+            const index = this._sortItems(oldItems, sorting, newItem);
             oldItems.add(newItem, index);
         } else {
             oldItems.add(newItem, 0);
@@ -130,8 +131,8 @@ export default class Reload {
     }
 
     private _sortItems(items, sorting, newItem): void {
-        let orderMap = this._getOrderMap(sorting);
-        let dataMap = this._getDataMap(items, orderMap);
+        const orderMap = this._getOrderMap(sorting);
+        const dataMap = this._getDataMap(items, orderMap);
         let resultIndex = -1;
 
         const order = dataMap.find((a) => {
@@ -154,14 +155,14 @@ export default class Reload {
     }
 
     private _getOrderMap(sorting) {
-        let orderMap = [];
+        const orderMap = [];
         let field;
         sorting.forEach((sortingConfig) => {
             field = Object.keys(sortingConfig)[0];
             orderMap.push({
                 field,
                 order: sortingConfig[field].toUpperCase() === SORT_DESC ? -1 : 1
-            })
+            });
         });
         return orderMap;
     }
@@ -195,6 +196,7 @@ export default class Reload {
             // Считаем любое не-null больше null
             return 1;
         }
+        // tslint:disable-next-line:triple-equals
         if (a == b) {
             return 0;
         }

@@ -1,8 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/Searching/PortionedSearchUp/PortionedSearchUp';
 import PortionedSearchMemory from './PortionedSearchMemory';
-import {SyntheticEvent} from "UI/Vdom";
-import {Memory} from "Types/source";
+import {SyntheticEvent} from 'UI/Vdom';
+import {Memory} from 'Types/source';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -37,10 +37,6 @@ export default class extends Control {
             },
             viewMode: 'frequent'
         }];
-    }
-
-    protected _afterRender(): void {
-        this._children.list.scrollToItem
     }
 
     protected _longLoadChangedHandler(event: SyntheticEvent, newValue: boolean): void {

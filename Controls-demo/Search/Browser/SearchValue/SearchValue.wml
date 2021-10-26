@@ -15,7 +15,6 @@
         keyProperty="id"
         searchParam="title"
         minSearchLength="{{3}}"
-        bind:filter="_filter"
         bind:searchValue="_searchValue">
       <div>
         <Controls.search:InputContainer>

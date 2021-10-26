@@ -13,7 +13,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  *
  * @extends UI/Base:Control
  * @implements Controls/propertyGrid:IEditor
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -22,7 +22,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * Editor for enum type.
  * @extends UI/Base:Control
  * @implements Controls/propertyGrid:IEditor
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */

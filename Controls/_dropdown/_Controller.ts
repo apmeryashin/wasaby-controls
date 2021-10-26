@@ -1,7 +1,7 @@
 import {StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
-import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {IDropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {process} from 'Controls/error';
 import {IndicatorOpener} from 'Controls/LoadingIndicator';
@@ -36,7 +36,16 @@ import {TSelectedKeys} from 'Controls/interface';
  *
  * @private
  */
-export default class _Controller implements IDropdownController {
+
+const DEPEND_TEMPLATES = [
+   'headTemplate',
+   'headerTemplate',
+   'headerContentTemplate',
+   'itemTemplate',
+   'footerContentTemplate'
+];
+
+export default class Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
    protected _options: IDropdownControllerOptions = null;
@@ -54,7 +63,7 @@ export default class _Controller implements IDropdownController {
       this._sticky = new StickyOpener();
    }
 
-   loadItems(): Promise<DropdownReceivedState> {
+   loadItems(): Promise<IDropdownReceivedState> {
       return new Promise((resolve, reject) => {
          this._loadItems(this._options).then(
              (items) => {
@@ -75,7 +84,7 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   loadSelectedItems(): Promise<DropdownReceivedState> {
+   loadSelectedItems(): Promise<IDropdownReceivedState> {
       return this._loadSelectedItems(this._options).then((newItems) => {
          this._selectedItems = newItems;
          this._sourceController = null;
@@ -140,7 +149,12 @@ export default class _Controller implements IDropdownController {
       if (selectedKeysChanged && newOptions.navigation) {
          newKeys = this._getUnloadedKeys(this._items, newOptions);
       }
-      if ((newOptions.source && (sourceChanged || !this._sourceController)) || navigationChanged || filterChanged) {
+      if (
+          !newOptions.sourceController &&
+          (newOptions.source && (sourceChanged || !this._sourceController)) ||
+          navigationChanged ||
+          filterChanged
+      ) {
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
@@ -163,7 +177,7 @@ export default class _Controller implements IDropdownController {
             if (this._updateHistoryPromise) {
                this._updateHistoryPromise.then(() => {
                   return this.reload();
-               })
+               });
             } else {
                return this.reload();
             }
@@ -287,7 +301,8 @@ export default class _Controller implements IDropdownController {
    handleSelectorResult(selectedItems: RecordSet): void {
       const newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
 
-      // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
+      // From selector dialog records may return not yet been loaded,
+       // so we save items in the history and then load data.
       if (isHistorySource(this._source)) {
          if (newItems.length) {
             this._sourceController = null;
@@ -376,7 +391,7 @@ export default class _Controller implements IDropdownController {
          this._setItemsAndMenuSource(this._items);
          this._loadItemsPromise = Promise.resolve();
       } else if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
-         if (this._options.source && !this._items) {
+         if ((this._options.source || this._options.sourceController) && !this._items) {
             this._loadItemsPromise = this._loadItems(this._options, source);
          } else {
             this._loadItemsPromise = Promise.resolve();
@@ -401,7 +416,7 @@ export default class _Controller implements IDropdownController {
             adapter: 'Types/entity:adapter.RecordSet',
             keyProperty: this._options.keyProperty
          });
-      } else {
+      } else if (this._source) {
          this._menuSource = new PrefetchProxy({
             target: this._source,
             data: {
@@ -475,16 +490,22 @@ export default class _Controller implements IDropdownController {
    }
 
    private _loadItems(options: IDropdownControllerOptions, source?: ICrudPlus): Promise<RecordSet|Error> {
-      return this._getSourceController(options, source).then((sourceController) => {
-          return sourceController.load().then((items) => {
-             return this._resolveLoadedItems(options, items);
-          }, (error) => {
-             if (!error.isCanceled) {
-                this._loadError(error);
-                return Promise.reject(error);
-             }
-          });
-       });
+      if (options.sourceController) {
+         this._source = options.source;
+         this._sourceController = options.sourceController;
+         return Promise.resolve(this._resolveLoadedItems(options, options.sourceController.getItems()));
+      } else {
+         return this._getSourceController(options, source).then((sourceController) => {
+            return sourceController.load().then((items) => {
+               return this._resolveLoadedItems(options, items);
+            }, (error) => {
+               if (!error.isCanceled) {
+                  this._loadError(error);
+                  return Promise.reject(error);
+               }
+            });
+         });
+      }
    }
 
    private _loadSelectedItems(options: IDropdownControllerOptions): Promise<RecordSet> {
@@ -645,9 +666,7 @@ export default class _Controller implements IDropdownController {
          return typeof newOptions[tplOption] === 'string' && newOptions[tplOption] !== options[tplOption];
       };
 
-      if (isTemplateChanged('headTemplate') ||
-          isTemplateChanged('itemTemplate') ||
-          isTemplateChanged('footerContentTemplate')) {
+      if (DEPEND_TEMPLATES.find((template) => isTemplateChanged(template))) {
          return true;
       }
    }
@@ -662,9 +681,8 @@ export default class _Controller implements IDropdownController {
 
    private _loadMenuTemplates(options: object): Promise<any> {
       if (!this._loadMenuTempPromise) {
-         let templatesToLoad = ['Controls/menu'];
-         let templates = ['headTemplate', 'headerTemplate', 'itemTemplate', 'footerContentTemplate'];
-         templates.forEach((template) => {
+         const templatesToLoad = ['Controls/menu'];
+         DEPEND_TEMPLATES.forEach((template) => {
             if (typeof options[template] === 'string') {
                templatesToLoad.push(options[template]);
             }
@@ -677,13 +695,12 @@ export default class _Controller implements IDropdownController {
    }
 
    private _getItemsTemplates(options) {
-      let
-          templates = {},
-          itemTemplateProperty = options.itemTemplateProperty;
+      const templates = {};
+      const itemTemplateProperty = options.itemTemplateProperty;
 
       if (itemTemplateProperty) {
-         this._items.each(function(item) {
-            let itemTemplate = item.get(itemTemplateProperty);
+         this._items.each((item) => {
+            const itemTemplate = item.get(itemTemplateProperty);
 
             if (typeof itemTemplate === 'string') {
                templates[itemTemplate] = true;
@@ -699,7 +716,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _getPopupOptions(popupOptions?): object {
-      let baseConfig = {...this._options};
+      const baseConfig = {...this._options};
       const ignoreOptions = [
          'iWantBeWS3',
          '_$createdFromCode',
@@ -716,7 +733,7 @@ export default class _Controller implements IDropdownController {
             delete baseConfig[option];
          }
       }
-      let templateOptions = {
+      const templateOptions = {
          selectedKeys: this._selectedKeys,
          dataLoadCallback: null,
          closeButtonVisibility: false,
@@ -728,6 +745,7 @@ export default class _Controller implements IDropdownController {
          footerContentTemplate: this._options.footerContentTemplate,
          items: !this._isHistoryMenu() ? this._items : null,
          source: this._menuSource,
+         sourceController: this._options.sourceController ? this._sourceController : undefined,
          filter: this._filter,
          // FIXME this._container[0] delete after
          // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
@@ -738,7 +756,7 @@ export default class _Controller implements IDropdownController {
          draggable: this._options.menuDraggable
       };
       const config = {
-         templateOptions: Object.assign(baseConfig, templateOptions),
+         templateOptions: {...baseConfig, ...templateOptions},
          className: this._options.popupClassName + ` controls_dropdownPopup_theme-${this._options.theme}
           controls_popupTemplate_theme-${this._options.theme}`,
          template: 'Controls/menu:Popup',
@@ -770,7 +788,7 @@ export default class _Controller implements IDropdownController {
    }
 }
 
-_Controller.getDefaultOptions = function getDefaultOptions() {
+Controller.getDefaultOptions = function getDefaultOptions() {
    return {
       filter: {},
       selectedKeys: [],
@@ -778,16 +796,16 @@ _Controller.getDefaultOptions = function getDefaultOptions() {
    };
 };
 
-Object.defineProperty(_Controller, 'defaultProps', {
+Object.defineProperty(Controller, 'defaultProps', {
    enumerable: true,
    configurable: true,
 
    get(): object {
-      return _Controller.getDefaultOptions();
+      return Controller.getDefaultOptions();
    }
 });
 
-_Controller.getOptionTypes = function getOptionTypes() {
+Controller.getOptionTypes = function getOptionTypes() {
    return {
       selectedKeys: descriptor(Array)
    };

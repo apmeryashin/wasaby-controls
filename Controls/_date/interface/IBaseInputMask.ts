@@ -83,13 +83,13 @@ export interface IBaseInputMask {
  */
 
 export default {
-    getDefaultOptions: function () {
+    getDefaultOptions() {
         return {
             mask: 'DD.MM.YY'
         };
     },
 
-    getOptionTypes: function () {
+    getOptionTypes() {
         return {
             mask: descriptor(String).oneOf([
                 'DD.MM.YYYY',

@@ -1,6 +1,6 @@
 import DimensionsMeasurer from 'Controls/_utils/sizeUtils/DimensionsMeasurer';
 
-function getVisibleChildren(element: HTMLElement): Array<HTMLElement> {
+function getVisibleChildren(element: HTMLElement): HTMLElement[] {
     return Array.prototype.filter.call(element.children, (child: HTMLElement) => {
         // https://drafts.csswg.org/cssom-view/#dom-htmlelement-offsetparent
         // offsetParent is null if:
@@ -64,8 +64,8 @@ function getContentsVerticalDimensions(element: HTMLElement, clear?: boolean): I
         const bottom = getOffsetTop(bottomItem) + getBoundingClientRect(bottomItem, clear).height;
         return {
             height: bottom - top,
-            top: top,
-            bottom: bottom
+            top,
+            bottom
         };
     }
 }

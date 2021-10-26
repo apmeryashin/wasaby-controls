@@ -101,7 +101,6 @@ export interface IOptions extends IControlOptions, ISourceOptions {
      */
     wrapDetailInScroll: boolean;
 
-
     /**
      * @cfg
      * Пользовательский режим отображения списка. Если задан, то является

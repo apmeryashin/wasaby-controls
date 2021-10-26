@@ -6,7 +6,7 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import { IColumn } from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

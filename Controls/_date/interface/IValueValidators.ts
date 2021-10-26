@@ -1,11 +1,11 @@
 import {descriptor} from 'Types/entity';
 
-export interface ValueValidatorObject {
+export interface IValueValidatorObject {
    validator: Function;
    arguments: object;
 }
 
-export type TValueValidators = ValueValidatorObject[] | Function[];
+export type TValueValidators = IValueValidatorObject[] | Function[];
 
 export interface IValueValidatorsOptions {
     valueValidators: TValueValidators;
@@ -16,7 +16,7 @@ export function getDefaultOptions() {
     return {
         valueValidators: [],
         validateByFocusOut: true
-    }
+    };
 }
 
 export function getOptionTypes() {

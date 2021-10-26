@@ -5,7 +5,13 @@ import {RecordSet} from 'Types/collection';
 import {GridCollection} from 'Controls/grid';
 
 describe('Controls/_grid/display/DataCell', () => {
-    let shouldDisplayMarker, hasMultiSelectColumn, columnsCount, columnIndex, editingMode, isEditing, editingColumnIndex;
+    let shouldDisplayMarker;
+    let hasMultiSelectColumn;
+    let columnsCount;
+    let columnIndex;
+    let editingMode;
+    let isEditing;
+    let editingColumnIndex;
 
     const owner = {
         shouldDisplayMarker: () => shouldDisplayMarker,

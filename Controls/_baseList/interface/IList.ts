@@ -1,8 +1,8 @@
 import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
-import { IItemPadding } from 'Controls/display';
-import {Direction, IFontColorStyle, IItemTemplateOptions, TKey} from 'Controls/interface';
+import { IItemPaddingOptions } from 'Controls/interface';
+import {Direction, IFontColorStyle, IItemTemplateOptions} from 'Controls/interface';
 import {IMovableOptions} from './IMovableList';
 import {RecordSet} from 'Types/collection';
 
@@ -25,7 +25,12 @@ type TListStyle = 'master'|'default';
  * @author Авраменко А.С.
  */
 
-export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovableOptions, IItemTemplateOptions {
+export interface IList extends
+    IItemActionsOptions,
+    IMarkerListOptions,
+    IMovableOptions,
+    IItemTemplateOptions,
+    IItemPaddingOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
@@ -40,7 +45,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
     style?: TListStyle;
     backgroundStyle?: string;
     hoverBackgroundStyle?: string;
-    itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 
     pagingContentTemplate?: TemplateFunction | string;
@@ -247,7 +251,7 @@ export interface IReloadItemOptions {
 /**
  * @name Controls/_list/interface/IList#multiSelectTemplate
  * @cfg {TemplateFunction|String} Пользовательский шаблон множественного выбора.
- * @demo Controls-demo/list_new/Multiselect/CircleTemplate/Index
+ * @demo Controls-demo/list_new/MultiSelect/CircleTemplate/Index
  * @description
  * Доступны следующие платформенные шаблоны множественного выбора:
  * 1. Controls/list:MultiSelectTemplate - множественный выбор при помощи чекбоксов (по умолчанию)
@@ -446,73 +450,6 @@ export interface IReloadItemOptions {
  */
 
 /**
- * @typedef {String} Controls/_list/interface/IList/VerticalItemPaddingEnum
- * @description Допустимые значения для свойств {@link Controls/list:IList/ItemPadding.typedef ItemPadding}.
- * @variant null Нулевой отступ. Значение передается строкой.
- * @variant s Маленький отступ.
- * @variant l Большой отступ.
- */
-
-/*ENG
- * @typedef {String} Controls/_list/interface/IList/VerticalItemPaddingEnum
- * @variant null Without padding.
- * @variant s Small padding.
- * @variant l Large padding.
- */
-
-/**
- * @typedef {String} Controls/_list/interface/IList/HorizontalItemPaddingEnum
- * @description Допустимые значения для свойств {@link Controls/list:IList/ItemPadding.typedef ItemPadding}.
- * @variant null Нулевой отступ. Значение передается строкой.
- * @variant xs Минимальный отступ.
- * @variant s Маленький отступ.
- * @variant m Средний отступ.
- * @variant l Большой отступ.
- * @variant xl Очень большой оступ.
- * @variant xxl Максимальный отступ.
- */
-
-/*ENG
- * @typedef {Object} Controls/_list/interface/IList/HorizontalItemPaddingEnum
- * @variant null Without padding.
- * @variant xs Extra small padding.
- * @variant s Small padding.
- * @variant m Medium padding.
- * @variant l Large padding.
- * @variant xl Extra large padding.
- * @variant xxl Extra extra large padding.
- */
-
-/**
- * @typedef {Object} Controls/_list/interface/IList/ItemPadding
- * @description Свойства для конфигурации опции {@link Controls/list:IList#itemPadding itemPadding}.
- * @property {Controls/_list/interface/IList/VerticalItemPaddingEnum.typedef} [top=s] Отступ от содержимого до верхней границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- * @property {Controls/_list/interface/IList/VerticalItemPaddingEnum.typedef} [bottom=s] Отступ от содержимого до нижней границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- * @property {Controls/_list/interface/IList/HorizontalItemPaddingEnum.typedef} [left=m] Отступ от содержимого до левой границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- * @property {Controls/_list/interface/IList/HorizontalItemPaddingEnum.typedef} [right=m] Отступ от содержимого до правой границы элемента. Если свойство принимает значение null, то отступ отсутствует.
- */
-
-/*ENG
- * @typedef {Object} Controls/_list/interface/IList/ItemPadding
- * @property {VerticalItemPaddingEnum} [top=s] Padding from item content to top item border.
- * @property {VerticalItemPaddingEnum} [bottom=s] Padding from item content to bottom item border.
- * @property {HorizontalItemPaddingEnum} [left=m] Padding from item content to left item border.
- * @property {HorizontalItemPaddingEnum} [right=m] Padding from item content to right item border.
- */
-
-/**
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Конфигурация отступов внутри элементов списка.
- * @name Controls/_list/interface/IList#itemPadding
- * @demo Controls-demo/gridNew/ItemPaddingNull/Index
- */
-
-/*ENG
- * @cfg {Controls/_list/interface/IList/ItemPadding.typedef} Configuration inner paddings in the item.
- * @name Controls/_list/interface/IList#itemPadding
- */
-
-
-/**
  * @name Controls/_list/interface/IList#backgroundStyle
  * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/ Префикс стиля для настройки фона} внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
  * @variant master Предназначен для настройки фона masterDetail (Берётся из свойства style)
@@ -588,7 +525,7 @@ export interface IReloadItemOptions {
 
 /**
  * @name Controls/_list/interface/IList#stickyFooter
- * @cfg {String} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ подвал} списка.
+ * @cfg {Boolean} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ подвал} списка.
  * @default false
  */
 

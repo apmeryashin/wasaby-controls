@@ -79,7 +79,7 @@ class Popup extends Control<IPopupControlOptions> {
         }
     }
 
-    //TODO: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
+    // TODO: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
     private _getCompatibleTemplateName(options: IPopupOptions): string {
         if (options.isCompoundTemplate) {
             return options.templateOptions.template;
@@ -361,8 +361,10 @@ class Popup extends Control<IPopupControlOptions> {
 
     // TODO Compatible
     // Для совместимости новых окон и старого индикатора:
-    // Чтобы событие клавиатуры в окне не стопилось, нужно правильно рассчитать индексы в методе getMaxZWindow WS.Core/core/WindowManager.js
-    // В старых окнах есть метод getZIndex, а в новых нет. Поэтому, чтобы метод находил правильный максимальный z-index, добавляю геттер
+    // Чтобы событие клавиатуры в окне не стопилось, нужно правильно
+    // рассчитать индексы в методе getMaxZWindow WS.Core/core/WindowManager.js
+    // В старых окнах есть метод getZIndex, а в новых нет. Поэтому, чтобы метод находил
+    // правильный максимальный z-index, добавляю геттер
 
     getZIndex(): number {
         return this._options.zIndex;

@@ -4,6 +4,7 @@ import * as template from 'wml!Controls/_explorer/View/View';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import {EventUtils} from 'UI/Events';
+import { addPageDeps } from 'UICommon/Deps';
 import * as randomId from 'Core/helpers/Number/randomId';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
@@ -124,8 +125,7 @@ interface IExplorerOptions
     /**
      * Задает режим вывода строки с хлебными крошками в результатах поиска
      *  * row - все ячейки строки с хлебными крошками объединяются в одну ячейку в которой выводятся хлебные крошки.
-     *  * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок.
-     *      При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
+     *  * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
      */
     breadCrumbsMode?: 'row' | 'cell';
     useColumns?: boolean;
@@ -300,6 +300,14 @@ export default class Explorer extends Control<IExplorerOptions> {
         // TODO: для 20.5100. в 20.6000 можно удалить
         if (cfg.displayMode) {
             Logger.error(`${this._moduleName}: Для задания многоуровневых хлебных крошек вместо displayMode используйте опцию breadcrumbsDisplayMode`, this);
+        }
+
+        // Это нужно для попадания стилей плитки в bundle на сервере
+        // https://online.sbis.ru/opendoc.html?guid=f9cf5faa-15cf-4286-9721-a2e4439c0b5d
+        if (cfg.viewMode === 'tile') {
+            addPageDeps(['css!Controls/tile']);
+        } else if (cfg.viewMode === 'list' && cfg.useColumns) {
+            addPageDeps(['css!Controls/columns']);
         }
 
         return this._setViewMode(cfg.viewMode, cfg);
@@ -717,7 +725,9 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     scrollToItem(key: string | number, toBottom?: boolean): void {
-        this._children.treeControl.scrollToItem(key, toBottom);
+        if (this._children.treeControl) {
+            this._children.treeControl.scrollToItem(key, toBottom);
+        }
     }
 
     getLastVisibleItemKey(): number | string | void {
@@ -1017,7 +1027,7 @@ export default class Explorer extends Control<IExplorerOptions> {
 
         if (action instanceof Promise) {
             return action.then(() => {
-                this._setViewModeSync(viewMode, cfg)
+                this._setViewModeSync(viewMode, cfg);
             });
         }
 
@@ -1309,6 +1319,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @implements Controls/interface:INavigation
  * @implements Controls/interface:IFilterChanged
  * @implements Controls/list:IList
+ * @implements Controls/interface:IItemPadding
  * @implements Controls/itemActions:IItemActions
  * @implements Controls/interface:IHierarchy
  * @implements Controls/tree:ITreeControl
@@ -1495,9 +1506,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @typedef {String} Controls/_explorer/View/TBreadCrumbsMode
  * @description Допустимые зачения для опции {@link breadCrumbsMode}.
  * @variant row Все ячейки строки с хлебными крошками объединяются в одну ячейку, в которой выводятся хлебные крошки.
- * @variant cell Ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной
- * конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек
- * строки с хлебными крошками.
+ * @variant cell Ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
  */
 
 /**
@@ -1509,9 +1518,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * Данная опция позволяет сконфигурировать вывод строки с хлебными крошками. Возможны 2 варианта:
  *
  * * row - все ячейки строки с хлебными крошками объединяются в одну ячейку в которой выводятся хлебные крошки.
- * * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной
- * конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек
- * строки с хлебными крошками.
+ * * cell - ячейки строки с хлебными крошками не объединяются, выводятся в соответствии с заданной конфигурацией колонок. При таком режиме прикладной разработчик может задать кастомное содержимое для ячеек строки с хлебными крошками.
  */
 
 /**

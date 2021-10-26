@@ -5,8 +5,8 @@ import {Record} from 'Types/entity';
 import {IColumn, TCellAlign} from 'Controls/grid';
 
 import * as template from 'wml!Controls-demo/treeGridNew/TagStyle/TagStyleFromCellData/TagStyleFromCellData';
-import {Flat} from "Controls-demo/treeGridNew/DemoHelpers/Data/Flat";
-import {IData} from "Controls-demo/treeGridNew/DemoHelpers/Interface";
+import {Flat} from 'Controls-demo/treeGridNew/DemoHelpers/Data/Flat';
+import {IData} from 'Controls-demo/treeGridNew/DemoHelpers/Interface';
 
 const MAXITEM = 7;
 

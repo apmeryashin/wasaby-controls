@@ -17,12 +17,14 @@ import {HistoryUtils as FilterHistoryUtils} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import 'css!Controls/deprecatedFilter';
 
-var getPropValue = Utils.object.getPropertyValue.bind(Utils);
-var setPropValue = Utils.object.setPropertyValue.bind(Utils);
+// tslint:disable
 
-var _private = {
+const getPropValue = Utils.object.getPropertyValue.bind(Utils);
+const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
-   prepareItems: function(self, items) {
+const _private = {
+
+   prepareItems(self, items) {
       if (!cInstance.instanceOfModule(items, 'Types/collection:List')) {
          // TODO need to support serialization of History/Source, will be done on the task https://online.sbis.ru/opendoc.html?guid=60a7e58e-44ff-4d82-857f-356e7c9007c9
          self._items = new collection.List({
@@ -33,12 +35,12 @@ var _private = {
       }
    },
 
-   createSourceController: function(self, source, navigation, keyProperty) {
+   createSourceController(self, source, navigation, keyProperty) {
       if (!self._sourceController) {
          self._sourceController = new SourceController({
-            source: source,
-            navigation: navigation,
-            keyProperty: keyProperty
+            source,
+            navigation,
+            keyProperty
          });
       }
       return self._sourceController;
@@ -58,15 +60,15 @@ var _private = {
       return collection;
    },
 
-    getSourceController: function(self, options) {
+    getSourceController(self, options) {
        return historyUtils.getSource(options.source, options).addCallback((source) => {
            self._source = source;
            return _private.createSourceController(self, self._source, options.navigation, options.keyProperty);
        });
     },
 
-   getItemPopupConfig: function(properties) {
-      var itemConfig = {};
+   getItemPopupConfig(properties) {
+      const itemConfig = {};
       itemConfig.keyProperty = properties.keyProperty;
       itemConfig.displayProperty = properties.displayProperty;
       itemConfig.itemTemplate = properties.itemTemplate;
@@ -80,10 +82,10 @@ var _private = {
       return itemConfig;
    },
 
-   loadItemsFromSource: function(instance, {source, keyProperty, filter, navigation, historyId, dataLoadCallback}, withHistory = true) {
+   loadItemsFromSource(instance, {source, keyProperty, filter, navigation, historyId, dataLoadCallback}, withHistory = true) {
       // As the data source can be history source, then you need to merge the filter
       return _private.getSourceController(instance, {source, navigation, keyProperty, historyId}).addCallback((sourceController) => {
-         let queryFilter = withHistory ? historyUtils.getSourceFilter(filter, instance._source) : filter;
+         const queryFilter = withHistory ? historyUtils.getSourceFilter(filter, instance._source) : filter;
          sourceController.setFilter(queryFilter);
          return sourceController.load().addCallback((items) => {
              instance._items = items;
@@ -95,8 +97,8 @@ var _private = {
       });
    },
 
-   loadItems: function(self, item, index) {
-      var properties = getPropValue(item, 'properties');
+   loadItems(self, item, index) {
+      const properties = getPropValue(item, 'properties');
 
       self._configs[index] = Merge(self._configs[index] || {}, _private.getItemPopupConfig(properties));
 
@@ -113,14 +115,14 @@ var _private = {
       }
    },
 
-   reload: function(self, needDeleteProperties: boolean = false) {
+   reload(self, needDeleteProperties: boolean = false) {
       if (self._loadDeferred && !self._loadDeferred.isReady()) {
          self._loadDeferred.cancel();
          self._loadDeferred = null;
       }
-      var pDef = new pDeferred();
+      const pDef = new pDeferred();
       chain.factory(self._items).each(function(item, index) {
-         var result = _private.loadItems(self, item, index);
+         const result = _private.loadItems(self, item, index);
          pDef.push(result);
       });
       self._loadDeferred = pDef.done().getResult();
@@ -138,13 +140,13 @@ var _private = {
       });
    },
 
-   notifyChanges: function(self, items) {
+   notifyChanges(self, items) {
       self._notify('filterChanged', [_private.getFilter(items)]);
       self._notify('itemsChanged', [items]);
    },
 
-   getFilter: function(items) {
-      var filter = {};
+   getFilter(items) {
+      const filter = {};
       chain.factory(items).each(function(item) {
          if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
             filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
@@ -153,7 +155,7 @@ var _private = {
       return filter;
    },
 
-   setValue: function(self, selectedKeys) {
+   setValue(self, selectedKeys) {
       const resetValue = getPropValue(self._items.at(self.lastOpenIndex), 'resetValue');
       if (!selectedKeys.length || isEqual(selectedKeys, resetValue)) {
          setPropValue(self._items.at(self.lastOpenIndex), 'value', resetValue);
@@ -164,13 +166,13 @@ var _private = {
       }
    },
 
-   selectItems: function(items) {
-      var self = this,
-         selectedKeys = [];
+   selectItems(items) {
+      const self = this;
+      const selectedKeys = [];
 
       // Get keys of selected items
       chain.factory(items).each(function(item) {
-         var key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
+         const key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
          if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue') &&
              // select empty item
              !(self._configs[self.lastOpenIndex].emptyText && key === null)) {
@@ -183,10 +185,10 @@ var _private = {
       this._setText();
    },
 
-   getNewItems: function(config, selectedItems) {
-      var newItems = [],
-         curItems = config._items,
-         keyProperty = config.keyProperty;
+   getNewItems(config, selectedItems) {
+      const newItems = [];
+      const curItems = config._items;
+      const keyProperty = config.keyProperty;
 
       chain.factory(selectedItems).each(function(item) {
          if (!curItems.getRecordById(item.get(keyProperty))) {
@@ -196,7 +198,7 @@ var _private = {
       return newItems;
    },
 
-   updateHistory: function(currentFilter, items) {
+   updateHistory(currentFilter, items) {
        if (historyUtils.isHistorySource(currentFilter._source)) {
            currentFilter._source.update(items, historyUtils.getMetaHistory());
 
@@ -206,8 +208,8 @@ var _private = {
        }
    },
 
-   onSelectorResult: function (curConfig, selectedItems) {
-      var newItems = _private.getNewItems(curConfig, selectedItems);
+   onSelectorResult(curConfig, selectedItems) {
+      const newItems = _private.getNewItems(curConfig, selectedItems);
       _private.updateHistory(curConfig, chain.factory(selectedItems).toArray());
       _private.setItems(curConfig, newItems);
 
@@ -217,7 +219,7 @@ var _private = {
       }
    },
 
-   onResult: function(event, action, data) {
+   onResult(event, action, data) {
        if (action === 'footerClick') {
            this._children.DropdownOpener.close();
        } else if (data && action !== 'menuOpened' && action !== 'menuClosed') {
@@ -238,14 +240,14 @@ var _private = {
        }
    },
 
-   setTextValue: function(item, textValue) {
+   setTextValue(item, textValue) {
       if (getPropValue(item, 'textValue') !== undefined) {
          setPropValue(item, 'textValue', textValue);
       }
    },
 
-   isNeedReload: function(oldItems, newItems) {
-      var isChanged = false;
+   isNeedReload(oldItems, newItems) {
+      let isChanged = false;
 
       if (newItems.length !== oldItems.length) {
          isChanged = true;
@@ -264,7 +266,7 @@ var _private = {
 
    // TODO: DropdownList can not work with source.
    // Remove after execution: https://online.sbis.ru/opendoc.html?guid=96f11250-4bbd-419f-87dc-3a446ffa20ed
-   calculateStateSourceControllers: function(configs, items) {
+   calculateStateSourceControllers(configs, items) {
       chain.factory(configs).each(function(config, index) {
 
          // History/Source does not support serialization.
@@ -281,8 +283,8 @@ var _private = {
       });
    },
 
-   getKeysLoad: function(config, keys) {
-      let result = [];
+   getKeysLoad(config, keys) {
+      const result = [];
       chain.factory(keys).each(function(key) {
          if (key !== undefined && !config._items.getRecordById(key) && !(key === null && config.emptyText)) {
             result.push(key);
@@ -291,22 +293,22 @@ var _private = {
       return result;
    },
 
-   setItems: function(config, newItems) {
+   setItems(config, newItems) {
       config.popupItems = FilterHistoryUtils.getItemsWithHistory(config.popupItems || config._items, newItems,
           config._sourceController, config._source, config.keyProperty);
       config._items = FilterHistoryUtils.getUniqItems(config._items, newItems, config.keyProperty);
    },
 
-   loadNewItems: function(self, items, configs) {
-      let pDef = new pDeferred();
+   loadNewItems(self, items, configs) {
+      const pDef = new pDeferred();
       chain.factory(items).each(function(item, index) {
-         let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
+         const keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value : [item.value]);
          if (keys.length) {
-            let itemProperties = clone(getPropValue(item, 'properties'));
-            let properties = {source: itemProperties.source};
+            const itemProperties = clone(getPropValue(item, 'properties'));
+            const properties = {source: itemProperties.source};
             properties.filter = itemProperties.filter || {};
             properties.filter[itemProperties.keyProperty] = keys;
-            let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
+            const result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
                // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
                if (itemProperties.dataLoadCallback) {
                   itemProperties.dataLoadCallback(items);
@@ -323,8 +325,8 @@ var _private = {
       });
    },
 
-   hasSelectorTemplate: function(configs) {
-      let hasSelectorTemplate = configs.find((config) => {
+   hasSelectorTemplate(configs) {
+      const hasSelectorTemplate = configs.find((config) => {
          if (config.selectorTemplate) {
             return true;
          }
@@ -332,7 +334,7 @@ var _private = {
       return !!hasSelectorTemplate;
    },
 
-   loadConfigFromSource: function(self, options) {
+   loadConfigFromSource(self, options) {
       return _private.loadItemsFromSource(self, options).addCallback(() => {
          return _private.reload(self).addCallback((result) => {
             self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
@@ -341,7 +343,7 @@ var _private = {
       });
    },
 
-   isNeedHistoryReload: function(configs) {
+   isNeedHistoryReload(configs) {
       let needReload = false;
       chain.factory(configs).each((config) => {
          if (!config._sourceController) {
@@ -382,7 +384,7 @@ var _private = {
  * @public
  * @author Герасимов А.М.
  */
-var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
+const Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
    _template: template,
    _configs: null,
    _items: null,
@@ -395,12 +397,12 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       });
    },
 
-   _beforeMount: function(options, context, receivedState) {
+   _beforeMount(options, context, receivedState) {
       this._configs = [];
       this._onResult = _private.onResult.bind(this);
       this._selectorOpenCallback = this._selectorOpenCallback.bind(this);
 
-      var resultDef;
+      let resultDef;
 
       if (receivedState) {
          this._deleteSourceControllersFromConfigs(receivedState.configs);
@@ -423,7 +425,7 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
    _selectorOpenCallback() {
       const value = getPropValue(this._items.at(this.lastOpenIndex), 'value');
       const selectedKeys = value instanceof Array ? value : [value];
-      let selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
+      const selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
          const itemId = item.getKey();
          return itemId !== null && selectedKeys.includes(itemId);
       }).value();
@@ -432,8 +434,8 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       });
    },
 
-   _beforeUpdate: function(newOptions) {
-      var resultDef;
+   _beforeUpdate(newOptions) {
+      let resultDef;
       if (newOptions.items && (newOptions.items !== this._options.items)) {
          _private.prepareItems(this, newOptions.items);
          if (_private.isNeedReload(this._options.items, newOptions.items) || _private.isNeedHistoryReload(this._configs)) {
@@ -451,7 +453,7 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       return resultDef;
    },
 
-   _open: function(event, item, index) {
+   _open(event, item, index) {
       const sourceController = this._configs[index]._sourceController;
 
       if (this._options.readOnly || sourceController.isLoading()) {
@@ -462,8 +464,8 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
          this._children.DropdownOpener.open(config, this);
       };
 
-      var selectedKeys = getPropValue(this._items.at(index), 'value');
-      var templateOptions = {
+      const selectedKeys = getPropValue(this._items.at(index), 'value');
+      const templateOptions = {
          source: new PrefetchProxy({
             target: this._configs[index]._source,
             data: {
@@ -482,7 +484,7 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       };
       const className = (this._options.popupClassName || (this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup')) +
           ` controls_popupTemplate_theme-${this._options.theme} controls_dropdownPopup_theme-${this._options.theme} controls_filter_theme-${this._options.theme}`;
-      var config = {
+      const config = {
          templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
          className,
          fittingMode: {
@@ -509,22 +511,22 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       }
    },
 
-   _onSelectorTemplateResult: function(event, items) {
-      let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._indexOpenedFilter].initSelectorItems, items, this._indexOpenedFilter]) || items;
+   _onSelectorTemplateResult(event, items) {
+      const resultSelectedItems = this._notify('selectorCallback', [this._configs[this._indexOpenedFilter].initSelectorItems, items, this._indexOpenedFilter]) || items;
       this._onResult(event, 'selectorResult', resultSelectedItems);
    },
 
-   _afterSelectorOpenCallback: function(selectedItems) {
+   _afterSelectorOpenCallback(selectedItems) {
       this._indexOpenedFilter = this.lastOpenIndex;
       this._configs[this._indexOpenedFilter].initSelectorItems = selectedItems;
       this._children.DropdownOpener.close();
    },
 
-   _setText: function() {
-      var self = this;
+   _setText() {
+      const self = this;
       chain.factory(this._configs).each(function(config, index) {
-         var sKey = getPropValue(self._items.at(index), 'value'),
-            text = [];
+         let sKey = getPropValue(self._items.at(index), 'value');
+         const text = [];
          if (!(sKey instanceof Array)) {
             sKey = [sKey];
          }
@@ -549,15 +551,15 @@ var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
       this._forceUpdate();
    },
 
-   _needShowCross: function(item) {
+   _needShowCross(item) {
       return !this._options.readOnly && getPropValue(item, 'resetValue') !== undefined && !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'));
    },
 
-   _reset: function(event, item, index) {
+   _reset(event, item, index) {
       if (this._children.DropdownOpener.isOpened()) {
          this._children.DropdownOpener.close();
       }
-      var newValue = getPropValue(this._items.at(index), 'resetValue');
+      const newValue = getPropValue(this._items.at(index), 'resetValue');
       setPropValue(this._items.at(index), 'value', newValue);
       _private.setTextValue(this._items.at(index), '');
       _private.notifyChanges(this, this._items);

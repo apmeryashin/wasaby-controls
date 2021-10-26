@@ -13,10 +13,10 @@ function getContainer() {
 
 function getHeader() {
     return {
-        getOffset: function () {
+        getOffset() {
             return 0;
         },
-        getHeaderContainer: function () {
+        getHeaderContainer() {
             return this._container;
         },
         _id: getNextStickyId(),
@@ -31,9 +31,10 @@ function getHeader() {
 }
 
 describe('SizeAndVisibilityObserver', () => {
-    let component, container;
+    let component;
+    let container;
 
-    beforeEach(function () {
+    beforeEach(() => {
         global.document = {
             body: {}
         };
@@ -49,37 +50,37 @@ describe('SizeAndVisibilityObserver', () => {
         // sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
     });
 
-    afterEach(function () {
+    afterEach(() => {
         sinon.restore();
         global.document = undefined;
     });
 
-    describe('constructor', function () {
-        it('should set _headers', function () {
+    describe('constructor', () => {
+        it('should set _headers', () => {
             component = new SizeAndVisibilityObserver(() => undefined, () => undefined, {1: 'test'});
             assert.equal(component._headers[1], 'test');
         });
     });
 
-    describe('_getStickyHeaderElements', function () {
+    describe('_getStickyHeaderElements', () => {
 
-        it('should returns [header.container]', function () {
+        it('should returns [header.container]', () => {
             const header = getHeader();
             component._getStickyHeaderElements(header);
             assert.deepEqual(component._getStickyHeaderElements(header), [header.getHeaderContainer()]);
         });
-        it('should returns array of all headers in group', function () {
+        it('should returns array of all headers in group', () => {
             const header = getHeader();
-            header.getChildrenHeaders = function () {
+            header.getChildrenHeaders = () => {
                 return [{
                     inst: {
-                        getHeaderContainer: function () {
+                        getHeaderContainer() {
                             return 'container1';
                         }
                     }
                 }, {
                     inst: {
-                        getHeaderContainer: function () {
+                        getHeaderContainer() {
                             return 'container2';
                         }
                     }
@@ -112,10 +113,10 @@ describe('SizeAndVisibilityObserver', () => {
             assert.equal(component._elementsHeight.length, entries.length);
         });
 
-        it('should call _getGroupByHeader and resizeHandler if header is group', function () {
+        it('should call _getGroupByHeader and resizeHandler if header is group', () => {
             const header = {
                 id: 1,
-                getHeaderContainer: function() {
+                getHeaderContainer() {
                     return this._container;
                 }
             };
@@ -149,7 +150,7 @@ describe('SizeAndVisibilityObserver', () => {
         it('should call _resizeHeadersCallback with correct operation', () => {
             const header = {
                 index: 1,
-                getHeaderContainer: function() {
+                getHeaderContainer() {
                     return this._container;
                 }
             };

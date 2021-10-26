@@ -6,7 +6,7 @@ import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetItemClasses', () => {
     let groupRow: TreeGridGroupDataRow<Model>;
     const owner = {
-        getNavigation: () => {},
+        getNavigation: () => {/* FIXME: sinon mock */},
         getItems: () => ([groupRow]),
         getCount: () => 1,
         getRootLevel: () => 0

@@ -343,7 +343,13 @@ describe('Controls/grid/Display/Cell/backgroundColorStyle', () => {
             // + backgroundColorStyle
             // = backgroundColorStyle
             it('-backgroundStyle!=default, +style!=default, +backgroundColorStyle', () => {
-                cell = new GridCell({ owner, column: { width: ''}, isSticked: true, theme: 'default', style: 'master' });
+                cell = new GridCell({
+                    owner,
+                    column: {width: ''},
+                    isSticked: true,
+                    theme: 'default',
+                    style: 'master'
+                });
                 cAssert.include(cell.getWrapperClasses( 'blue',  false),
                     'controls-Grid__row-cell_background_blue');
                 cAssert.notInclude(cell.getWrapperClasses( 'blue',  false),

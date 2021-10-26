@@ -2,7 +2,8 @@ import coreInstance = require('Core/core-instance');
 import Merge = require('Core/core-merge');
 import * as Deferred from 'Core/Deferred';
 
-let HistorySource, HistoryService;
+let HistorySource;
+let HistoryService;
 
 function getMetaHistory() {
    return {
@@ -25,7 +26,7 @@ function createHistorySource(source, options) {
 }
 
 function getSource(source, options) {
-   let historyLoad = new Deferred();
+   const historyLoad = new Deferred();
    const historyId = options.historyId;
 
    if (!historyId || isHistorySource(source)) {
@@ -44,7 +45,8 @@ function getSource(source, options) {
 }
 
 function getFilter(filter, source) {
-   // TODO: Избавиться от проверки, когда будет готово решение задачи https://online.sbis.ru/opendoc.html?guid=e6a1ab89-4b83-41b1-aa5e-87a92e6ff5e7
+   // TODO: Избавиться от проверки, когда будет готово решение задачи
+   //  https://online.sbis.ru/opendoc.html?guid=e6a1ab89-4b83-41b1-aa5e-87a92e6ff5e7
    if (isHistorySource(source)) {
       return Merge(getMetaHistory(), filter || {});
    }
@@ -53,7 +55,7 @@ function getFilter(filter, source) {
 
 export = {
    getSourceFilter: getFilter,
-   isHistorySource: isHistorySource,
-   getSource: getSource,
-   getMetaHistory: getMetaHistory
+   isHistorySource,
+   getSource,
+   getMetaHistory
 };

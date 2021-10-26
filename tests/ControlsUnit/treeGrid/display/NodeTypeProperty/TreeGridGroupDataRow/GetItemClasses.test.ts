@@ -6,7 +6,7 @@ import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetItemClasses', () => {
     let groupRow: TreeGridGroupDataRow<Model>;
     const owner = {
-        getNavigation: () => {},
+        getNavigation: () => {/* FIXME: sinon mock */},
         getItems: () => ([groupRow]),
         getCount: () => 1,
         getRootLevel: () => 0,
@@ -38,6 +38,7 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetIte
             'controls-Grid__row_default',
             'controls-ListView__itemV_cursor-pointer',
             'controls-ListView__item_showActions',
+            'controls-Grid__row_highlightOnHover_default',
             'controls-ListView__group'].join(' '));
     });
 });

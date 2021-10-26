@@ -2,7 +2,7 @@ import {assert} from 'chai';
 
 import {TileCollectionItem} from 'Controls/tile';
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
 
 describe('Controls/_tile/display/mixins/TileItem', () => {
     describe('getTitleWrapperClasses', () => {

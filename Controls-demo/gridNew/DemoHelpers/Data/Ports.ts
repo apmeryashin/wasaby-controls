@@ -1,5 +1,5 @@
-import {IColumn} from "Controls/_grid/display/interface/IColumn";
-import {IData} from "Controls-demo/gridNew/DemoHelpers/DataCatalog";
+import {IColumn} from 'Controls/_grid/display/interface/IColumn';
+import {IData} from 'Controls-demo/gridNew/DemoHelpers/DataCatalog';
 
 export const Ports = {
     getData: (): IData[] => [
@@ -97,4 +97,4 @@ export const Ports = {
             title: 'ТД не предусмотрено'
         }
     ]
-}
+};

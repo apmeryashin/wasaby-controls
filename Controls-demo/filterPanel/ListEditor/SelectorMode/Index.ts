@@ -18,7 +18,7 @@ export default class extends Control {
             { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
             { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
             { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
-            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
+            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' }
         ];
         this._navigation = {
             source: 'page',
@@ -42,8 +42,10 @@ export default class extends Control {
                     if (queryFilter.hasOwnProperty(filterField) && item.get(filterField) && addToData) {
                         const filterValue = queryFilter[filterField];
                         const itemValue = item.get(filterField);
-                        addToData = (itemValue >= filterValue[0] && itemValue <= filterValue[1]) || filterValue.includes(itemValue);
-                        if (emptyFields && isEqual(filterValue, emptyFields[filterField]) || filterValue[0] === null || filterValue[1] === null) {
+                        addToData = (itemValue >= filterValue[0] && itemValue <= filterValue[1])
+                            || filterValue.includes(itemValue);
+                        if (emptyFields && isEqual(filterValue, emptyFields[filterField]) ||
+                            filterValue[0] === null || filterValue[1] === null) {
                             addToData = true;
                         }
                     }

@@ -1,5 +1,4 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import * as template from 'wml!Controls-demo/explorerNew/SearchExpand';
 
 import * as ExplorerMemory from 'Controls-demo/explorerNew/ExplorerMemory';
@@ -135,10 +134,6 @@ export default class SearchExpand extends Control<IControlOptions> {
          keyProperty: 'id',
          data
       });
-   }
-
-   protected _markedKeyChangedHandler(e: SyntheticEvent, markedKey: string): void {
-      console.log('markedKey: ', markedKey);
    }
 
    static _styles: string[] = ['Controls-demo/explorerNew/Search'];

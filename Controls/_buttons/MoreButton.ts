@@ -8,12 +8,12 @@ export interface IMoreButtonOptions extends IControlOptions, IFontSizeOptions {
     /**
      * Определяет контрастность фона кнопки по отношению к ее окружению.
      * @default true
-     * @demo Controls-demo/Buttons/MoreButton/ContrastBackground/Index
+     * @demo Controls-demo/Buttons/MoreButton/Index
      */
     contrastBackground?: boolean;
     /**
      * Значение счетчика.
-     * @demo Controls-demo/Buttons/MoreButton/Base/Index
+     * @demo Controls-demo/Buttons/MoreButton/Index
      */
     count?: number;
 }
@@ -28,6 +28,7 @@ export interface IMoreButtonOptions extends IControlOptions, IFontSizeOptions {
  *
  * @class Controls/_buttons/MoreButton
  * @extends UI/Base:Control
+ * @implements Controls/buttons:IMoreButtonOptions
  *
  * @public
  * @author Красильников А.С.

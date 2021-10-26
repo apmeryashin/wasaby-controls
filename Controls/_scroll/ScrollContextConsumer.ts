@@ -51,12 +51,6 @@ export default class ScrollContextConsumer extends Control {
       this._pagingVisible = newContext.scrollContext.pagingVisible;
    }
 
-   static contextTypes(): object {
-      return {
-         scrollContext: ScrollContext
-      };
-   }
-
    canScrollTo(
       ...args: Parameters<ScrollContainer['canScrollTo']>
    ): ReturnType<ScrollContainer['canScrollTo']> {
@@ -99,10 +93,21 @@ export default class ScrollContextConsumer extends Control {
       return this._children.scrollContainer.scrollTo(...args);
    }
 
+   /**
+    * Возвращает количество пикселей, прокрученных от верха скролл контейнера.
+    * @name Controls/_scroll/Container#getScrollTop
+    * @function
+    */
    getScrollTop(
       ...args: Parameters<ScrollContainer['getScrollTop']>
    ): ReturnType<ScrollContainer['getScrollTop']> {
       return this._children.scrollContainer.getScrollTop(...args);
+   }
+
+   static contextTypes(): object {
+      return {
+         scrollContext: ScrollContext
+      };
    }
 
    /**

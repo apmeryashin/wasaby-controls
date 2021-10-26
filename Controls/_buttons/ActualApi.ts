@@ -90,15 +90,16 @@ const ActualApi = {
       };
       if (deprecatedClassesOfButton.hasOwnProperty(style)) {
           Logger.warn('Button: Используются устаревшие стили (style = ' + style + ')');
-         currentButtonClass.viewMode = deprecatedClassesOfButton[style].type;
-         currentButtonClass.style = deprecatedClassesOfButton[style].style;
-         if (style === 'linkMain2' || style === 'linkMain3') {
+          currentButtonClass.viewMode = deprecatedClassesOfButton[style].type;
+          currentButtonClass.style = deprecatedClassesOfButton[style].style;
+          if (style === 'linkMain2' || style === 'linkMain3') {
              Logger.warn('Button: Используются устаревшие стили. Используйте компонент Controls/Label c опцией underline: hovered и fixed');
          } else if (style === 'buttonAdd') {
             currentButtonClass.buttonAdd = true;
-             Logger.warn('Button: Используются устаревшие стили. Используйте опцию iconStyle в различных значениях для изменения по наведению');
+            Logger.warn('Button: Используются устаревшие стили. Используйте опцию iconStyle в различных значениях для изменения по наведению');
          } else {
-             Logger.warn('Button: Используются устаревшие стили. Используйте опции: viewMode = ' + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style);
+             Logger.warn('Button: Используются устаревшие стили. Используйте опции: viewMode = '
+                 + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style);
          }
       }
       return currentButtonClass;
@@ -137,9 +138,10 @@ const ActualApi = {
       return newIconStyle;
    },
 
-   // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+   // TODO: убрать когда полностью откажемся от поддержки задавания цвета
+   //  в опции иконки. icon: icon-error, icon-done и т.д.
    // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
-   iconColorFromOptIconToIconStyle: function (icon) {
+   iconColorFromOptIconToIconStyle(icon) {
       const iconStyleFromIconOpt = /icon-[eadhp][a-z]+/.exec(icon);
       let newIconStyle = '';
       if (iconStyleFromIconOpt) {
@@ -151,7 +153,7 @@ const ActualApi = {
       }
       return '';
    },
-   itemsSetOldIconStyle: function(items) {
+   itemsSetOldIconStyle(items) {
       items.forEach((item) => {
          if (item.get('icon') && !item.get('iconStyle')) {
             const newIconStyle = this.iconColorFromOptIconToIconStyle(item.get('icon'));
@@ -177,7 +179,11 @@ const ActualApi = {
          }
       }
    },
-   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string, optionReadonly: boolean, hasMsg: boolean = false): string {
+   buttonStyle(calcStyle: string,
+               optionStyle: string,
+               optionButtonStyle: string,
+               optionReadonly: boolean,
+               hasMsg: boolean = false): string {
       if (optionReadonly) {
          return 'readonly';
       } else if (optionButtonStyle) {
@@ -265,7 +271,7 @@ const ActualApi = {
                } else {
                   result = 'm';
                }
-            } else if (options.viewMode === 'link'){
+            } else if (options.viewMode === 'link') {
                // для ссылок все сложнее
                switch (options.size) {
                   case 's':
@@ -286,7 +292,7 @@ const ActualApi = {
             }
             return result || 'm';
          } else {
-            return 'm'
+            return 'm';
          }
       }
    },

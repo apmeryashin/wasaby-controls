@@ -1,8 +1,8 @@
-import {Collection} from "Controls/display";
-import {RecordSet} from "Types/collection";
+import {Collection} from 'Controls/display';
+import {RecordSet} from 'Types/collection';
 import {assert} from 'chai';
-import * as sinon from "sinon";
-import {Model} from "Types/entity";
+import * as sinon from 'sinon';
+import {Model} from 'Types/entity';
 
 describe('Controls/_display/collection/UpdateMetaData', () => {
     let sandbox: sinon.SinonSandbox;

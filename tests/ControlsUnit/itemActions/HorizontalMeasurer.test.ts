@@ -155,6 +155,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         });
 
         // Если кол-во записей > 3 и видимые записи не влезли в контейнер, показываем столько, сколько влезло
+        // tslint:disable-next-line:max-line-length
         it('should show only item actions that are smaller than container by their summarized width when total > 3', () => {
             const showed = [...actions];
             showed.splice(-1, 1, {
@@ -189,6 +190,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         });
 
         // Если кол-во записей <= 3 и видимые записи не влезли в контейнер, показываем столько, сколько влезло
+        // tslint:disable-next-line:max-line-length
         it('should show only item actions that are smaller than container by their summarized width when total <= 3', () => {
             stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
                 itemsHtml.map((item, index) => 25 + index)

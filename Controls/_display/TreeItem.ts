@@ -404,7 +404,8 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         expanderClasses += ' js-controls-ListView__notEditable';
 
         if (expanderPosition === 'default') {
-            expanderClasses += ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')}`;
+            expanderClasses +=
+                ` controls-TreeGrid__row_${this.getStyle()}-expander_size_${(expanderSize || 'default')}`;
         } else if (expanderPosition === 'right') {
             expanderClasses += ' controls-TreeGrid__row_expander_position_right';
         }

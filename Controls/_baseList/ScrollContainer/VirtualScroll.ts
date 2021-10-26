@@ -202,7 +202,9 @@ export default class VirtualScroll {
      * @param bottomTriggerHeight
      */
     viewportResize(viewportHeight: number, topTriggerHeight: number, bottomTriggerHeight: number): void {
-        this.applyContainerHeightsData({viewport: viewportHeight, topTrigger: topTriggerHeight, bottomTrigger: bottomTriggerHeight});
+        this.applyContainerHeightsData(
+            {viewport: viewportHeight, topTrigger: topTriggerHeight, bottomTrigger: bottomTriggerHeight}
+        );
     }
 
     /**
@@ -212,7 +214,9 @@ export default class VirtualScroll {
      * @param bottomTriggerHeight
      */
     viewResize(viewHeight: number, topTriggerHeight: number, bottomTriggerHeight: number): void {
-        this.applyContainerHeightsData({scroll: viewHeight, topTrigger: topTriggerHeight, bottomTrigger: bottomTriggerHeight});
+        this.applyContainerHeightsData(
+            {scroll: viewHeight, topTrigger: topTriggerHeight, bottomTrigger: bottomTriggerHeight}
+        );
     }
 
     /**

@@ -92,7 +92,6 @@ export interface IInputMaskValueOptions {
  * @see value
  */
 
-
 /**
  * Интерфейс для ввода текста в поле с маской.
  * @public

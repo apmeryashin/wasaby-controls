@@ -634,7 +634,7 @@ describe('Controls/_source/NavigationController', () => {
                     ],
                     keyProperty: 'id'
                 });
-                let nextPositionRs = new RecordSet({
+                const nextPositionRs = new RecordSet({
                     rawData: [
                         {
                             id: 0,
@@ -1149,7 +1149,7 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({more: metaRS});
                 assert.equal(2, nc.updateQueryProperties(rs).length, 'Wrong query properties');
 
-                let metaRS = new RecordSet({
+                const metaRS = new RecordSet({
                     rawData: [
                         {
                             id: 1,
@@ -1247,7 +1247,7 @@ describe('Controls/_source/NavigationController', () => {
                     }
                 });
 
-                let params = nc.getQueryParams(
+                const params = nc.getQueryParams(
                     {filter: {}, sorting: []},
                     null,
                     {

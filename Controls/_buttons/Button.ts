@@ -301,6 +301,36 @@ Object.defineProperty(Button, 'defaultProps', {
  */
 
 /**
+ * @name Controls/_buttons/Button#fontColorStyle
+ * @cfg
+ * @demo Controls-demo/Buttons/FontStyles/Index
+ */
+
+/**
+ * @name Controls/_buttons/Button#href
+ * @cfg
+ * @demo Controls-demo/Buttons/Href/Index
+ */
+
+/**
+ * @name Controls/_buttons/Button#iconStyle
+ * @cfg
+ * @demo Controls-demo/Buttons/IconStyles/Index
+ */
+
+/**
+ * @name Controls/_buttons/Button#tooltip
+ * @cfg
+ * @demo Controls-demo/Buttons/Tooltip/Index
+ */
+
+/**
+ * @name Controls/_buttons/Button#translucent
+ * @cfg
+ * @demo Controls-demo/Buttons/Translucent/Index
+ */
+
+/**
  * @name Controls/_buttons/Button#captionPosition
  * @cfg {String} Определяет, с какой стороны расположен текст кнопки относительно иконки.
  * @variant left Текст расположен перед иконкой.

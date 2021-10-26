@@ -50,7 +50,7 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
                 getGridColumnsConfig: () => columns,
                 hasMultiSelectColumn: () => false,
                 hasItemActionsSeparatedCell: () => false,
-                getItemEditorTemplate: () => {},
+                getItemEditorTemplate: () => {/* FIXME: sinon mock */},
                 isFullGridSupport: () => true,
                 hasColumnScroll: () => false
             } as any,
@@ -59,7 +59,7 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
         });
 
         const sandbox = sinon.createSandbox();
-        let columnItems = gridDataRow.getColumns();
+        const columnItems = gridDataRow.getColumns();
         columnItems.forEach((column) => {
             sandbox.spy(column, 'setSearchValue');
         });
@@ -83,7 +83,7 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
                 getGridColumnsConfig: () => columns,
                 hasMultiSelectColumn: () => true,
                 hasItemActionsSeparatedCell: () => false,
-                getItemEditorTemplate: () => {},
+                getItemEditorTemplate: () => {/* FIXME: sinon mock */},
                 isFullGridSupport: () => true,
                 hasColumnScroll: () => false
             } as any,
@@ -92,7 +92,7 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
         });
 
         const sandbox = sinon.createSandbox();
-        let columnItems = gridDataRow.getColumns();
+        const columnItems = gridDataRow.getColumns();
         columnItems.forEach((column) => {
             if (column.hasOwnProperty('setSearchValue')) {
                 sandbox.spy(column, 'setSearchValue');

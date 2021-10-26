@@ -22,13 +22,14 @@ export default class extends Control {
             data: departments,
             keyProperty: 'id',
             filter: (item, queryFilter) => {
-                const emptyField = []
+                const emptyField = [];
                 let addToData = true;
                 for (const filterField in queryFilter) {
                     if (queryFilter.hasOwnProperty(filterField) && addToData) {
                         const filterValue = queryFilter[filterField];
                         const itemValue = item.get('owner');
-                        addToData = filterValue.includes(itemValue) || isEqual(filterValue, emptyField) || filterValue[0] === null || filterValue[1] === null;
+                        addToData = filterValue.includes(itemValue) ||
+                            isEqual(filterValue, emptyField) || filterValue[0] === null || filterValue[1] === null;
                     }
                 }
                 return addToData;

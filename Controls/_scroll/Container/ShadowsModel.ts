@@ -3,10 +3,9 @@ import {IVersionable, VersionableMixin} from 'Types/entity';
 import {POSITION} from './Type';
 import ShadowModel from './ShadowModel';
 import {IShadowsOptions, IShadowsVisibilityByInnerComponents, SHADOW_VISIBILITY} from './Interface/IShadows';
-import {IScrollState} from "../Utils/ScrollState";
-import {Offsets} from "./ScrollbarModel";
+import {IScrollState} from '../Utils/ScrollState';
+import {Offsets} from './ScrollbarModel';
 import ContainerBase from 'Controls/_scroll/ContainerBase';
-
 
 export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': true;
@@ -28,13 +27,13 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
     }
 
     updateOptions(options: IShadowsOptions): void {
-        for (let shadow of Object.keys(this._models)) {
+        for (const shadow of Object.keys(this._models)) {
             this._models[shadow].updateOptions(options);
         }
     }
 
     updateScrollState(scrollState: IScrollState, needUpdate: boolean = true): void {
-        for (let shadow of Object.keys(this._models)) {
+        for (const shadow of Object.keys(this._models)) {
             const isStateChanged = this._models[shadow].updateScrollState(scrollState);
             if (isStateChanged && needUpdate) {
                 this._nextVersion();
@@ -42,12 +41,14 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
-    updateVisibilityByInnerComponents(shadowsVisibility: IShadowsVisibilityByInnerComponents, needUpdate: boolean = true): void {
+    updateVisibilityByInnerComponents(shadowsVisibility: IShadowsVisibilityByInnerComponents,
+                                      needUpdate: boolean = true): void {
         let isChanged: boolean = false;
         for (const shadowPosition of Object.keys(this._models)) {
             const shadowVisibility: SHADOW_VISIBILITY = shadowsVisibility[shadowPosition];
             if (shadowVisibility) {
-                isChanged = this._models[shadowPosition].updateVisibilityByInnerComponents(shadowVisibility) || isChanged;
+                isChanged =
+                    this._models[shadowPosition].updateVisibilityByInnerComponents(shadowVisibility) || isChanged;
             }
         }
         if (isChanged && needUpdate) {
@@ -67,12 +68,14 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
         // Возможна ситуация когда, до события фиксации заголовков, список говорит что надо всегда отображать
         // тень сверху, и состояние рассчитывается без информации о том, что есть зафиксированные заголовки.
         // В этом случае нам нужна синхронизация.
+        // tslint:disable:max-line-length
         if ((isTopStateChanged || isBottomStateChanged) &&
             (needUpdate ||
                 (this._models.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE && isTopStateChanged) ||
                 (this._models.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE && isBottomStateChanged))) {
             this._nextVersion();
         }
+        // tslint:enable:max-line-length
     }
 
     hasVisibleShadow(): boolean {

@@ -24,21 +24,23 @@ class HierarchyLookup extends Control {
     protected _selectedKeys: number[] | string[];
 
     protected _beforeMount(options): void {
-        this._selectedKeys = options.selectedKeys ? factory(options.selectedKeys).flatten().value() : options.selectedKeys;
+        this._selectedKeys = options.selectedKeys ?
+            factory(options.selectedKeys).flatten().value() : options.selectedKeys;
     }
 
     protected _beforeUpdate(newOptions): void {
         if (newOptions.selectedKeys && this._options.selectedKeys !== newOptions.selectedKeys) {
-            this._selectedKeys = newOptions.selectedKeys ? factory(newOptions.selectedKeys).flatten().value() : newOptions.selectedKeys;
+            this._selectedKeys = newOptions.selectedKeys ?
+                factory(newOptions.selectedKeys).flatten().value() : newOptions.selectedKeys;
         }
     }
 
     protected _itemsChanged(event, items): void {
         if (items) {
-            let self = this;
-            let selectedKeys = {};
+            const self = this;
+            const selectedKeys = {};
             factory(items).each((item) => {
-                let parentId = item.get(self._options.parentProperty) || item.get(self._options.keyProperty);
+                const parentId = item.get(self._options.parentProperty) || item.get(self._options.keyProperty);
                 selectedKeys[parentId] = selectedKeys[parentId] || [];
                 selectedKeys[parentId].push(item.get(self._options.keyProperty));
             });

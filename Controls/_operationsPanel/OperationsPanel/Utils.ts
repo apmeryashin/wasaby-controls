@@ -10,17 +10,17 @@ import {Record} from 'Types/entity';
 import {DOMUtil, getWidth} from 'Controls/sizeUtils';
 import {constants} from 'Env/Env';
 
-   var MENU_WIDTH = 0;
+let MENU_WIDTH = 0;
 
-   var _private = {
-      initializeConstants: function(theme: string) {
+const _private = {
+      initializeConstants(theme: string) {
          if (!MENU_WIDTH) {
             const iconClass = `icon-medium icon-SettingsNew controls-Toolbar__menu_spacing-small_theme-${theme}`;
             MENU_WIDTH = constants.isBrowserPlatform && getWidth(`<i class="${iconClass}"/></span>`);
          }
       },
 
-      getContentTemplate: function(item, itemTemplate, itemTemplateProperty) {
+      getContentTemplate(item, itemTemplate, itemTemplateProperty) {
          let contentTemplate = null;
          if (itemTemplateProperty && item) {
             contentTemplate = item.get(itemTemplateProperty);
@@ -31,7 +31,7 @@ import {constants} from 'Env/Env';
          return contentTemplate;
       },
 
-      getItemsSizes: function(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
+      getItemsSizes(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
          const itemsMark = [];
          let item;
          let buttonTemplateOptions;
@@ -70,23 +70,27 @@ import {constants} from 'Env/Env';
          return buttonOptions;
       },
 
-      setShowType: function(items, type) {
-         items.each(function (item) {
+      setShowType(items, type) {
+         items.each((item) => {
             item.set('showType', type);
          });
       }
    };
 
-   export = {
-      fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
-         var
-            itemsSizes,
-            currentWidth,
-            visibleItemsKeys = [];
+export = {
+      fillItemsType(keyProperty,
+                    parentProperty,
+                    items, availableWidth,
+                    theme, defaultItemTemplate,
+                    itemTemplateProperty
+      ) {
+         let itemsSizes;
+         let currentWidth;
+         const visibleItemsKeys = [];
 
          actualItems(items);
 
-         items.each(function(item) {
+         items.each((item) => {
             if (!item.get(parentProperty)) {
                visibleItemsKeys.push(item.get(keyProperty));
             }
@@ -95,8 +99,10 @@ import {constants} from 'Env/Env';
          if (visibleItemsKeys.length <= 1) {
             _private.setShowType(items, showType.TOOLBAR);
          } else {
-            itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
-            currentWidth = itemsSizes.reduce(function (acc, width) {
+            itemsSizes = _private.getItemsSizes(
+                items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty
+            );
+            currentWidth = itemsSizes.reduce((acc, width) => {
                return acc + width;
             }, 0);
 
@@ -105,8 +111,10 @@ import {constants} from 'Env/Env';
                _private.setShowType(items, showType.MENU);
                currentWidth += MENU_WIDTH;
 
-               for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
-                  items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
+               for (let i = visibleItemsKeys.length - 1; i >= 0; i--) {
+                  items
+                      .getRecordById(visibleItemsKeys[i])
+                      .set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
                   currentWidth -= itemsSizes[i];
                }
             } else {

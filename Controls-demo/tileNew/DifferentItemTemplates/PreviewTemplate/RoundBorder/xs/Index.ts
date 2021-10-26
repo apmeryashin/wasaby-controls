@@ -9,8 +9,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory = null;
     protected _selectedKeys: string[] = [];
-    protected _roundBorder = {'tl': 'xs', 'tr': 'xs', 'br': 'xs', 'bl': 'xs'};
-
+    protected _roundBorder = {tl: 'xs', tr: 'xs', br: 'xs', bl: 'xs'};
 
     protected _itemActions: any[] = Gadgets.getPreviewActions();
 

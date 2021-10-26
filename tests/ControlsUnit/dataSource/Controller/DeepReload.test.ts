@@ -2,7 +2,7 @@ import * as sinon from 'sinon';
 import {assert} from 'chai';
 import {Memory, Query} from 'Types/source';
 import {ISourceControllerOptions, NewSourceController} from 'Controls/dataSource';
-import DataSet from "Types/_source/DataSet";
+import DataSet from 'Types/_source/DataSet';
 
 const hierarchyItems = [
     {

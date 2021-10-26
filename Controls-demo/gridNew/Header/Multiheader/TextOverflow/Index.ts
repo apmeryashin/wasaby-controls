@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/gridNew/Header/Multiheader/TextOver
 import {Memory} from 'Types/source';
 import {IColumn} from 'Controls/grid';
 import { IHeaderCell } from 'Controls/grid';
-import {Sorting} from "Controls-demo/gridNew/DemoHelpers/Data/Sorting";
+import {Sorting} from 'Controls-demo/gridNew/DemoHelpers/Data/Sorting';
 import { Countries } from 'Controls-demo/gridNew/DemoHelpers/Data/Countries';
 
 export default class extends Control {

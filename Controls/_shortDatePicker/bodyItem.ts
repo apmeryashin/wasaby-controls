@@ -112,10 +112,6 @@ class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstruc
         this._halfYearHovered = null;
     }
 
-    protected _onHeaderClick(): void {
-        this._notify('close', [], {bubbling: true});
-    }
-
     protected _onYearClick(event: Event, year: number): void {
         const lastMonth: number = 11;
         const lastDay: number = 31;

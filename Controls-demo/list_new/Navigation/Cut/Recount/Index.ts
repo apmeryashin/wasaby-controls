@@ -2,8 +2,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {CrudEntityKey, DataSet, Memory, Query} from 'Types/source';
 import {INavigationOptionValue, INavigationPageSourceConfig} from 'Controls/interface';
 import * as template from 'wml!Controls-demo/list_new/Navigation/Cut/Recount/Recount';
-import {RecordSet} from "Types/collection";
-import {Model} from "Types/entity";
+import {RecordSet} from 'Types/collection';
+import {Model} from 'Types/entity';
 
 interface IItem {
     key: number;
@@ -44,9 +44,9 @@ export default class Index extends Control {
         this._source = new SortingMemory({
             keyProperty: 'key',
             data: [
-                {key: 1, title: `Запись #1`},
-                {key: 2, title: `Запись #2`},
-                {key: 3, title: `Запись #3`}
+                {key: 1, title: 'Запись #1'},
+                {key: 2, title: 'Запись #2'},
+                {key: 3, title: 'Запись #3'}
             ]
         });
         this._navigation = {
@@ -80,6 +80,12 @@ export default class Index extends Control {
        this._children.list.removeItems({selected: [firstItemKey], excluded: []})
            .then(() => this._children.list.reload());
    }
+
+    protected _onChangeItem(): void {
+        const firstItem = this._items.at(0);
+        firstItem.set('title', firstItem.get('title') + ' upd');
+        this._source.update(firstItem);
+    }
 
    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -548,9 +548,11 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         const readOnlyField: HTMLElement | void = this._getReadOnlyField();
 
         if (field) {
-            // Если ничего не введено в поле ввода, то вычисляем размеры placeholder, и если он больше ширины поля ввода, добавляем tooltip
+            // Если ничего не введено в поле ввода, то вычисляем размеры placeholder, и если он
+            // больше ширины поля ввода, добавляем tooltip
             // Сейчас нельзя использовать одинаковую логику для определения необходимости отображения tooltip,
-            // так как при введенном значении, происходит поиск наличия скролла, а для placeholder, текс обрезается через overflow
+            // так как при введенном значении, происходит поиск наличия скролла, а
+            // для placeholder, текст обрезается через overflow
             if (!tooltip && typeof this._options.placeholder === 'string') {
                 if (field._container) {
                     tooltip = this._options.placeholder;
@@ -578,7 +580,9 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         // в SabyGet немоноширинный шрифт, из-за этого поле ввода прыгает. Возьмем самый широкий символ, чтобы по по
         // максимуму растянуть инпут https://online.sbis.ru/opendoc.html?guid=9d278ed9-792c-4287-ad37-0f288fbf63e7
         let result = this._viewModel.displayValue.replace(/[0-9]/g, '0');
-        result = result.replace(/ /g, '0');
+        const space = ' ';
+        const regExp = new RegExp('/' + space + '/g');
+        result = result.replace(regExp, '0');
         return result;
     }
 

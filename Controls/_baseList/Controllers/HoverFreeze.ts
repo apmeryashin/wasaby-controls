@@ -92,7 +92,10 @@ export default class HoverFreeze {
      * @param itemIndex
      * @param startIndex
      */
-    startFreezeHoverTimeout(itemKey: CrudEntityKey, nativeEvent: SyntheticEvent, itemIndex: number, startIndex: number): void {
+    startFreezeHoverTimeout(itemKey: CrudEntityKey,
+                            nativeEvent: SyntheticEvent,
+                            itemIndex: number,
+                            startIndex: number): void {
         this._startFreezeHoverTimeout(itemKey, nativeEvent, itemIndex, startIndex, HOVER_FREEZE_TIMEOUT);
     }
 
@@ -135,7 +138,10 @@ export default class HoverFreeze {
      * @param itemIndex
      * @param startIndex
      */
-    setDelayedHoverItem(itemKey: CrudEntityKey, nativeEvent: SyntheticEvent, itemIndex: number, startIndex: number): void {
+    setDelayedHoverItem(itemKey: CrudEntityKey,
+                        nativeEvent: SyntheticEvent,
+                        itemIndex: number,
+                        startIndex: number): void {
         if (this._itemData !== null && !!this._itemUnfreezeHoverTimeout) {
             this._setDelayedItemData(itemKey, nativeEvent, itemIndex, startIndex);
         }
@@ -169,7 +175,11 @@ export default class HoverFreeze {
         }
     }
 
-    private _startFreezeHoverTimeout(itemKey: CrudEntityKey, nativeEvent: SyntheticEvent, itemIndex: number, startIndex: number, timeout: number): void {
+    private _startFreezeHoverTimeout(itemKey: CrudEntityKey,
+                                     nativeEvent: SyntheticEvent,
+                                     itemIndex: number,
+                                     startIndex: number,
+                                     timeout: number): void {
         if (this._itemData === null || this._itemData?.key === itemKey) {
             // если уже были таймеры разлипания/залипания, то глушим их
             this._clearUnfreezeHoverTimeout();
@@ -201,7 +211,10 @@ export default class HoverFreeze {
         this._itemData = { key, index };
     }
 
-    private _setDelayedItemData(key: CrudEntityKey, nativeEvent: SyntheticEvent, index: number, startIndex: number): void {
+    private _setDelayedItemData(key: CrudEntityKey,
+                                nativeEvent: SyntheticEvent,
+                                index: number,
+                                startIndex: number): void {
         this._delayedItemData = { key, index, startIndex, nativeEvent };
     }
 
@@ -277,7 +290,8 @@ export default class HoverFreeze {
         );
 
         if (hoveredContainers.length) {
-            // zero element in grid will be row itself; it doesn't have any background color, then lets take the last one
+            // zero element in grid will be row itself;
+            // it doesn't have any background color, then lets take the last one
             const lastContainer = hoveredContainers[hoveredContainers.length - 1];
             const hoverBackgroundColor = getComputedStyle(lastContainer).backgroundColor;
 

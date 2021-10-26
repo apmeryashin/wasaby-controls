@@ -1,7 +1,7 @@
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 
-import {IData} from "Controls-demo/treeGridNew/DemoHelpers/Interface";
-import {IColumn} from "Controls/grid";
+import {IData} from 'Controls-demo/treeGridNew/DemoHelpers/Interface';
+import {IColumn} from 'Controls/grid';
 
 export const VirtualScrollHasMore = {
     // 70 записей. У первой записи 100 детей.

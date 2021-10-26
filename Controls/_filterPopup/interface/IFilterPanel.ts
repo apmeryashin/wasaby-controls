@@ -1,5 +1,6 @@
 import {IControlOptions} from 'UI/Base';
 import {IFilterItem} from 'Controls/filter';
+import {TButtonStyle} from 'Controls/buttons';
 
 export type THistorySaveMode = 'favorite'|'pinned';
 type TOrientation = 'vertical'|'horizontal';
@@ -19,6 +20,7 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  headingCaption: string;
  headingStyle: string;
  applyButtonCaption: string;
+ applyButtonStyle?: TButtonStyle;
 }
 
 /**
@@ -339,7 +341,7 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * <!-- MyModule/addTemplateDeleted.wml -->
  * <Controls.filterPopup:Link caption="item.textValue"/>
  * </pre>
- * 
+ *
  * <pre class="brush: js; highlight: [23]">
  * // JavaScript
  * this._items = [
@@ -386,7 +388,13 @@ export interface IFilterDetailPanelOptions extends IControlOptions {
  * @cfg {String} Текст на кнопке применения фильтрации.
  */
 
- /**
+/**
+ * @name Controls/_filterPopup/interface/IFilterPanel#applyButtonStyle
+ * @default primary
+ * @cfg {Controls/buttons:TButtonStyle} Стиль отображения кнопки применения фильтрации.
+ */
+
+/**
  * @name Controls/_filterPopup/interface/IFilterPanel#groupProperty
  * @cfg {String} Имя параметра, содержащего название группы элемента. Поддерживается группировка только в блоке "Еще можно отобрать".
  * @demo Controls-demo/Filter_new/DetailPanel/GroupProperty/Index

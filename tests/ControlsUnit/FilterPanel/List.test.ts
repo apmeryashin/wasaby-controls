@@ -9,11 +9,12 @@ describe('Controls/filterPanel:ListEditor', () => {
         const navigation = {
             pageSize: 3
         };
+        const keyProperty = 'id';
         const getEditorOptions = () => {
             return {
                 propertyValue: [1],
                 filter: {},
-                keyProperty: 'id',
+                keyProperty,
                 navigation
             };
         };
@@ -22,7 +23,7 @@ describe('Controls/filterPanel:ListEditor', () => {
             return {
                 propertyValue: [],
                 filter: {},
-                keyProperty: 'id',
+                keyProperty,
                 navigation
             };
         };
@@ -38,6 +39,15 @@ describe('Controls/filterPanel:ListEditor', () => {
             const listEditor = new ListEditor({});
             listEditor._beforeMount(getEditorOptions());
             assert.isNull(listEditor._navigation);
+            assert.deepEqual(listEditor._filter[keyProperty], [1]);
+        });
+
+        it('propertyValue is equal to resetValue', () => {
+            const listEditor = new ListEditor({});
+            const options = getEditorOptions();
+            options.resetValue = [1];
+            listEditor._beforeMount(options);
+            assert.isUndefined(listEditor._filter[keyProperty]);
         });
 
         it('propertyValue is empty', () => {
@@ -80,7 +90,7 @@ describe('Controls/filterPanel:ListEditor', () => {
             options.filter = listEditor._options.filter;
             options.multiSelect = true;
             listEditor._beforeUpdate(options);
-            assert.notEqual(listEditor._filter['id'], newPropertyValue);
+            assert.notEqual(listEditor._filter.id, newPropertyValue);
         });
 
         it('_beforeUpdate with same value in propertyValue', () => {
@@ -91,7 +101,7 @@ describe('Controls/filterPanel:ListEditor', () => {
 
             listEditor._selectedKeys = [2];
             listEditor._beforeUpdate(options);
-            assert.notEqual(listEditor._filter['id'], newPropertyValue);
+            assert.notEqual(listEditor._filter.id, newPropertyValue);
         });
     });
 
@@ -136,6 +146,22 @@ describe('Controls/filterPanel:ListEditor', () => {
             assert.deepEqual(listEditor._selectedKeys, [2, 1]);
         });
 
+        it('selectedKeys includes selectedItem', () => {
+            const listEditor = getEditor(true);
+            listEditor._getTextValue = () => '';
+            const nativeEvent = {
+                target: {
+                    closest: () => true
+                }
+            };
+            const item = new Model({
+                rawData: { id: 1, title: 'first'},
+                keyProperty: 'id'
+            });
+            listEditor._handleItemClick(null, item, nativeEvent);
+            assert.deepEqual(listEditor._selectedKeys, []);
+        });
+
         it('multiSelect is false', () => {
             const listEditor = getEditor(false);
             listEditor._getTextValue = () => '';
@@ -154,6 +180,7 @@ describe('Controls/filterPanel:ListEditor', () => {
 
         it('empty _selectedKeys', () => {
             const listEditor = new ListEditor({});
+            listEditor._selectedKeys = [];
             const options = getEditorOptionsWithMultiSelet();
             options.propertyValue = null;
             listEditor._beforeMount(options);

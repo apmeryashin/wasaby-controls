@@ -2,7 +2,7 @@ import {Model, Record} from 'Types/entity';
 import {DataSet, SbisService, Memory, Query, QueryOrderSelector} from 'Types/source';
 import {Logger} from 'UI/Utils';
 import {ISelectionObject} from 'Controls/interface';
-import {Confirmation, Dialog, IBasePopupOptions} from 'Controls/popup';
+import {Confirmation, IBasePopupOptions, DialogOpener} from 'Controls/popup';
 import * as rk from 'i18n!*';
 
 import {IHashMap} from 'Types/declarations';
@@ -87,8 +87,12 @@ export class MoveController {
     // Стратегия поиска следующего/предыдущего элемента в списке
     private _siblingStrategy: ISiblingStrategy;
 
+    // Менеджер диалоговых окон
+    private _dialogOpener: DialogOpener;
+
     constructor(options: IMoveControllerOptions) {
         this.updateOptions(options);
+        this._dialogOpener = new DialogOpener();
     }
 
     /**
@@ -184,7 +188,7 @@ export class MoveController {
         };
 
         return new Promise((resolve) => {
-            Dialog.openPopup({
+            this._dialogOpener.open({
                 opener: this._popupOptions.opener,
                 templateOptions,
                 closeOnOutsideClick: true,

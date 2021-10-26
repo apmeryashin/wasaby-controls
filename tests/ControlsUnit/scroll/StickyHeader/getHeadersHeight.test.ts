@@ -1,6 +1,6 @@
 import {getStickyHeadersHeight} from 'Controls/scroll';
 
-describe('Controls/scroll/getStickyHeadersHeight', function() {
+describe('Controls/scroll/getStickyHeadersHeight', () => {
     // it('should return proper height', () => {
     //     const
     //         POSITION = 'top',

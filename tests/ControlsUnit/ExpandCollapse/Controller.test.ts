@@ -53,7 +53,11 @@ describe('ExpandCollapse/Controller', () => {
                 {id: 2, parent: null, node: true},
                 {id: 3, parent: null, node: true}
             ];
-            const {controller, model, recordSet} = initTest(data, {expandedItems: [ALL_EXPANDED_VALUE], collapsedItems: [1, 2]});
+            const {
+                controller,
+                model,
+                recordSet
+            } = initTest(data, {expandedItems: [ALL_EXPANDED_VALUE], collapsedItems: [1, 2]});
             const removedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
             recordSet.remove(recordSet.getRecordById(1));
             recordSet.remove(recordSet.getRecordById(2));

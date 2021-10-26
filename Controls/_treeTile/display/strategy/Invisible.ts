@@ -55,14 +55,14 @@ export default class InvisibleStrategy<
             const nextItemIsLeaf = hasNextItem && !nextItemIsGroup && nextItem.isNode() === null;
 
             if (nextItemIsGroup) {
-                newInvisibleItems.push(super._createInvisibleItems(options.display, item,{
+                newInvisibleItems.push(super._createInvisibleItems(options.display, item, {
                     isNodeItems: itemIsNode
                 }));
                 // invisible-элементы нужно добавлять ПЕРЕД группой
                 insertIndexForNewInvisibleItems.push(itemIndex + 1);
             } else {
                 if (itemIsNode && (!hasNextItem || nextItemIsLeaf)) {
-                    newInvisibleItems.push(super._createInvisibleItems(options.display, item,{
+                    newInvisibleItems.push(super._createInvisibleItems(options.display, item, {
                         isNodeItems: true
                     }));
                     // invisible-элементы нужно добавлять ПОСЛЕ узла

@@ -37,7 +37,7 @@ class Performance extends Control<IControlOptions> {
     protected _recreateControl(): void {
         this._displayedControl = null;
         setTimeout(() => {
-            this._displayedControl = this._chosenControl
+            this._displayedControl = this._chosenControl;
         }, 300);
     }
 }

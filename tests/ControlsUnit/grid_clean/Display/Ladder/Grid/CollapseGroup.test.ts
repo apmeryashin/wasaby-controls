@@ -120,7 +120,7 @@ function checkCollectionItems(collection: GridCollection<any>, resultItems: any[
                 throw new Error(originalError + `. itemIndex: ${index}, columnIndex: ${columnIndex}`);
             }
         });
-    })
+    });
 
     // check items count
     assert.strictEqual(itemsCount, expectedItemsCount);

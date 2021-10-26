@@ -49,9 +49,8 @@ const BaseOpener = {
    _prepareConfigForOldTemplate(cfg, templateClass): void {
       let rightOffset = cfg.isStack ? this._getTargetRightCoords() : 0;
       rightOffset += RIGHT_PANEL_WIDTH;
-      let
-         templateOptions = this._getTemplateOptions(templateClass),
-         parentContext;
+      const templateOptions = this._getTemplateOptions(templateClass);
+      let parentContext;
 
       cfg.templateOptions = {
          templateOptions: cfg.templateOptions || cfg.componentOptions || {},
@@ -84,7 +83,7 @@ const BaseOpener = {
       if (cfg.closeButtonStyle || cfg.closeButtonViewMode) {
          cfg.templateOptions.closeButtonViewMode = cfg.closeButtonStyle || cfg.closeButtonViewMode;
       }
-      if (cfg.hasOwnProperty('closeButtonTransparent')){
+      if (cfg.hasOwnProperty('closeButtonTransparent')) {
          cfg.templateOptions.closeButtonTransparent = cfg.closeButtonTransparent;
       }
       if (cfg.record) { // от RecordFloatArea
@@ -177,7 +176,8 @@ const BaseOpener = {
       cfg.autofocus = cfg.catchFocus;
       cfg.templateOptions.catchFocus = cfg.catchFocus;
 
-      // задаю опцию ignoreTabCycles для окна, в FloatArea она тоже стояла. Так переходы по табу не будут выскакивать за пределы окна.
+      // задаю опцию ignoreTabCycles для окна, в FloatArea она тоже стояла.
+      // Так переходы по табу не будут выскакивать за пределы окна.
       cfg.templateOptions.ignoreTabCycles = false;
 
       cfg.template = 'Controls/compatiblePopup:CompoundArea';
@@ -203,7 +203,11 @@ const BaseOpener = {
       // если не хватает места, не показываем кнопку расширения/сужения панели
       const contentData = ManagerController.getContentData();
       const availableWithForMaximize = (contentData?.width + contentData?.left) || document?.body.clientWidth;
-      if (cfg.canMaximize && cfg.templateOptions.type === 'stack' && ((cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) > availableWithForMaximize)) {
+      if (
+          cfg.canMaximize &&
+          cfg.templateOptions.type === 'stack' &&
+          ((cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) > availableWithForMaximize)
+      ) {
          cfg.canMaximize = false;
       }
       if (cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth > cfg.minWidth) {
@@ -232,8 +236,8 @@ const BaseOpener = {
    },
 
    _prepareContext(cfg, parentContext) {
-      let destroyDef = new Deferred(),
-         destrFunc = function() {
+      let destroyDef = new Deferred();
+      const destrFunc = function() {
             // Защита от двойного вызова обработчика
             // Обработчик зовется два раза:
             // Сначала из _notifyCompound, а потом из eventBus
@@ -346,7 +350,10 @@ const BaseOpener = {
          }
       }
 
-      if ((!cfg.hasOwnProperty('corner') && !cfg.hasOwnProperty('targetPoint')) || (typeof cfg.corner !== 'object' && typeof cfg.targetPoint !== 'object')) {
+      if (
+          (!cfg.hasOwnProperty('corner') && !cfg.hasOwnProperty('targetPoint'))
+          || (typeof cfg.corner !== 'object' && typeof cfg.targetPoint !== 'object')
+      ) {
          cfg.targetPoint = {};
          if (cfg.hasOwnProperty('side')) {
             cfg.targetPoint.horizontal = cfg.side;

@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/reload/Template';
 import { Memory } from 'Types/source';
-import {generateData} from "Controls-demo/list_new/DemoHelpers/DataCatalog";
+import {generateData} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 
 interface IItem {
     title: string;
