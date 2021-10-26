@@ -122,7 +122,6 @@ export {
     TResultsVisibility
 } from 'Controls/_grid/display/mixins/Grid';
 export {default as GridRowMixin, IInitializeColumnsOptions} from 'Controls/_grid/display/mixins/Row';
-export {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/GroupCell';
 export {IItemTemplateParams} from 'Controls/_grid/display/mixins/Row';
 
 export {

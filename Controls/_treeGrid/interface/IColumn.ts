@@ -23,14 +23,14 @@ export interface IColumn extends IGridColumn, IGroupNodeColumn {
  * @default "l". Для контрола {@link Controls/treeGrid:View}: "m" (для листа), "xl" (для скрытого узла) и "2xl" (для узла).
  * @remark
  * Размер шрифта ячейки имеет больший приоритет, чем {@link Controls/_treeGrid/interface/ItemTemplate#fontSize размер шрифта записи}.
- * Размер шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}..
+ * Размер шрифта применяется ко всем записям дерева с колонками, включая {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}, но на базовую линию не влияет.
  */
 /**
  * @name Controls/_treeGrid/interface/IColumn#fontColorStyle
  * @cfg {TFontColorStyle} Стиль цвета текста ячейки.
  * @remark
  * Стиль цвета текста ячейки имеет больший приоритет, чем {@link Controls/_treeGrid/interface/ItemTemplate#fontColorStyle стиль цвета текста записи}.
- * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ * Стиль цвета текста применяется ко всем записям дерева с колонками, включая {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
  */
 /**
  * @name Controls/_treeGrid/interface/IColumn#fontWeight
@@ -38,5 +38,5 @@ export interface IColumn extends IGridColumn, IGroupNodeColumn {
  * @default "default".
  * @remark
  * Насыщенность шрифта ячейки имеет больший приоритет, чем {@link Controls/_treeGrid/interface/ItemTemplate#fontWeight Насыщенность шрифта записи}.
- * Насыщенность шрифта применяется ко всем записям дерева с колонками, включая {@kink https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
+ * Насыщенность шрифта применяется ко всем записям дерева с колонками, включая {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree-column/node/group/ узлы, отображаемые в виде групп}.
  */

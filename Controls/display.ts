@@ -103,6 +103,7 @@ export { NodeFooter };
 import Indicator from 'Controls/_display/Indicator';
 export {default as Indicator, EIndicatorState, TIndicatorState} from 'Controls/_display/Indicator';
 export {default as IndicatorsMixin, ITriggerOffset} from 'Controls/_display/IndicatorsMixin';
+export {default as GroupMixin} from 'Controls/_display/GroupMixin';
 
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
