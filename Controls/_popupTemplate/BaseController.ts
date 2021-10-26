@@ -99,8 +99,9 @@ abstract class BaseController implements IPopupController {
         return false;
     }
 
-    beforeElementDestroyed(item: IPopupItem, container: HTMLElement): void {
+    beforeElementDestroyed(item: IPopupItem, container: HTMLElement): boolean {
         item.popupState = this.POPUP_STATE_START_DESTROYING;
+        return true;
     }
 
     elementDestroyedWrapper(item: IPopupItem, container: HTMLElement): Promise<void> {
