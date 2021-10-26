@@ -233,6 +233,7 @@ export interface IBaseGroupTemplate extends IFontColorStyleOptions, IFontSizeOpt
  * @cfg {TFontSize} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/text/#font-size текста заголовка группы}.
  * @default xs
  * @remark
+ * Данное значение влияет на базовую линию в группе.
  * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @default l
  * @see textAlign
