@@ -1,5 +1,11 @@
 import { Control } from 'UI/Base';
-import { CollectionItem, Collection, TItemKey } from 'Controls/display';
+import {
+    CollectionItem,
+    Collection,
+    TItemKey,
+    VirtualScrollHideController,
+    VirtualScrollController
+} from 'Controls/display';
 import { Model } from 'Types/entity';
 import { IObservable } from 'Types/collection';
 import type { IVirtualScrollConfig } from 'Controls/_baseList/interface/IVirtualScroll';
@@ -20,6 +26,8 @@ import {
 } from 'Controls/_baseList/Controllers/ScrollController/ScrollController';
 import { SyntheticEvent } from 'UI/Vdom';
 import { CrudEntityKey } from 'Types/source';
+import type { IItemsSizes } from 'Controls/_baseList/Controllers/ScrollController/ItemsSizeController';
+import type {ITriggersVisibility} from 'Controls/_baseList/Controllers/ScrollController/ObserversController';
 
 export interface IShadowVisibility {
     backward: boolean;
@@ -31,7 +39,6 @@ type IDoScrollUtil = (scrollTop: number) => void;
 type IUpdateShadowsUtil = (hasItems: IHasItemsOutRange) => void;
 type IUpdatePlaceholdersUtil = (placeholders: IPlaceholders) => void;
 type IUpdateVirtualNavigationUtil = (hasItems: IHasItemsOutRange) => void;
-type IHasMoreUtil = (direction: IDirection) => boolean;
 
 interface IListVirtualScrollControllerOptions {
     collection: Collection;
@@ -48,9 +55,13 @@ interface IListVirtualScrollControllerOptions {
     updateShadowsUtil: IUpdateShadowsUtil;
     updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
+
+    triggersVisibility: ITriggersVisibility;
+    topTriggerOffsetCoefficient: number;
+    bottomTriggerOffsetCoefficient: number;
+
     scrollToElementUtil: IScrollToElementUtil;
     doScrollUtil: IDoScrollUtil;
-    hasMoreUtil: IHasMoreUtil;
 
     itemsEndedCallback: IItemsEndedCallback;
     activeElementChangedCallback: IActiveElementChangedChangedCallback;
@@ -58,13 +69,13 @@ interface IListVirtualScrollControllerOptions {
 
 export class ListVirtualScrollController {
     private _collection: Collection;
+    private _itemSizeProperty: string;
 
     private readonly _scrollToElementUtil: IScrollToElementUtil;
     private readonly _doScrollUtil: IDoScrollUtil;
     private readonly _updateShadowsUtil: IUpdateShadowsUtil;
     private readonly _updatePlaceholdersUtil: IUpdatePlaceholdersUtil;
     private readonly _updateVirtualNavigationUtil: IUpdateVirtualNavigationUtil;
-    private _hasMoreUtil: IHasMoreUtil;
 
     private _scrollController: ScrollController;
 
@@ -80,14 +91,15 @@ export class ListVirtualScrollController {
 
     constructor(options: IListVirtualScrollControllerOptions) {
         this._collection = options.collection;
+        this._itemSizeProperty = options.virtualScrollConfig.itemHeightProperty;
 
         this._scrollToElementUtil = options.scrollToElementUtil;
         this._doScrollUtil = options.doScrollUtil;
-        this._hasMoreUtil = options.hasMoreUtil;
         this._updateShadowsUtil = options.updateShadowsUtil;
         this._updatePlaceholdersUtil = options.updatePlaceholdersUtil;
         this._updateVirtualNavigationUtil = options.updateVirtualNavigationUtil;
 
+        this._setCollectionIterator(options.virtualScrollConfig.mode);
         this._createScrollController(options);
     }
 
@@ -97,15 +109,6 @@ export class ListVirtualScrollController {
 
     setListContainer(listContainer: HTMLElement): void {
         this._scrollController.setListContainer(listContainer);
-    }
-
-    afterMountListControl(): void {
-        if (
-            !this._collection.getCount() ||
-            !this._hasMoreUtil('forward') && this._hasMoreUtil('backward')
-        ) {
-            this._scrollController.displayTrigger('backward');
-        }
     }
 
     afterRenderListControl(hasNotRenderedChanges: boolean): void {
@@ -150,11 +153,8 @@ export class ListVirtualScrollController {
                 break;
             }
             case IObservable.ACTION_RESET: {
-                this._scrollController.resetItems(
-                    totalCount,
-                    this._hasMoreUtil('backward'),
-                    this._hasMoreUtil('forward')
-                );
+                this._scrollController.updateGivenItemsSizes(this._getGivenItemsSizes());
+                this._scrollController.resetItems(totalCount);
                 break;
             }
         }
@@ -205,6 +205,10 @@ export class ListVirtualScrollController {
         this._scrollController.viewportResized(viewportSize);
     }
 
+    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
+        this._scrollController.setTriggersVisibility(triggersVisibility);
+    }
+
     private _createScrollController(options: IListVirtualScrollControllerOptions): void {
         const totalCount = this._collection.getCount();
         this._scrollController = new ScrollController({
@@ -217,13 +221,15 @@ export class ListVirtualScrollController {
             itemsQuerySelector: options.itemsQuerySelector,
             triggersQuerySelector: options.triggersQuerySelector,
 
-            topTriggerOffsetCoefficient: 0,
-            bottomTriggerOffsetCoefficient: 0,
+            triggersVisibility: options.triggersVisibility,
+            topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
+            bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
 
             scrollPosition: 0,
-            viewportSize: 0,
+            viewportSize: options.virtualScrollConfig.viewportHeight || 0,
             contentSize: 0,
             totalCount,
+            givenItemsSizes: this._getGivenItemsSizes(),
 
             indexesInitializedCallback: (range: IItemsRange): void => {
                 this._scheduleUpdateItemsSizes({
@@ -244,11 +250,7 @@ export class ListVirtualScrollController {
             itemsEndedCallback: options.itemsEndedCallback
         });
 
-        this._scrollController.resetItems(
-            totalCount,
-            this._hasMoreUtil('backward'),
-            this._hasMoreUtil('forward')
-        );
+        this._scrollController.resetItems(totalCount);
     }
 
     private _indexesChangedCallback(params: IIndexesChangedParams): void {
@@ -361,5 +363,42 @@ export class ListVirtualScrollController {
         const item = this._collection.getItemBySourceIndex(itemIndex);
         const itemKey = item.getContents().getKey();
         return this.scrollToItem(itemKey).then(() => itemKey);
+    }
+
+    private _setCollectionIterator(mode: 'remove' | 'hide'): void {
+        switch (mode) {
+            case 'hide':
+                VirtualScrollHideController.setup(
+                    this._collection as unknown as VirtualScrollHideController.IVirtualScrollHideCollection
+                );
+                break;
+            default:
+                VirtualScrollController.setup(
+                    this._collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+                break;
+        }
+    }
+
+    private _getGivenItemsSizes(): IItemsSizes|null {
+        if (!this._itemSizeProperty) {
+            return null;
+        }
+
+        const itemsSizes: IItemsSizes = this._collection.getItems()
+            .map((it) => {
+                const itemSize = {
+                    size: it.getContents().get(this._itemSizeProperty),
+                    offset: 0
+                }
+
+                if (!itemSize.size) {
+                    throw new Error(`Controls/baseList:BaseControl | Задана опция itemHeightProperty, но для записи с ключом "${it.getContents().getKey()}" высота не определена!`);
+                }
+
+                return itemSize;
+            });
+
+        return itemsSizes;
     }
 }

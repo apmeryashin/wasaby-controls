@@ -1,8 +1,8 @@
-import { IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
+import {IItemsSizes, IItemsSizesControllerOptions, ItemsSizesController} from './ItemsSizeController';
 import {
     TIntersectionEvent,
     IObserversControllerBaseOptions,
-    ObserversController
+    ObserversController, ITriggersVisibility
 } from './ObserversController';
 import {
     Calculator,
@@ -125,6 +125,7 @@ export class ScrollController {
             listContainer: options.listContainer,
             triggersQuerySelector: options.triggersQuerySelector,
             viewportSize: options.viewportSize,
+            triggersVisibility: options.triggersVisibility,
             topTriggerOffsetCoefficient: options.topTriggerOffsetCoefficient,
             bottomTriggerOffsetCoefficient: options.bottomTriggerOffsetCoefficient,
             observersCallback: this._observersCallback.bind(this)
@@ -137,7 +138,8 @@ export class ScrollController {
             totalCount: options.totalCount,
             virtualScrollConfig: options.virtualScrollConfig,
             viewportSize: options.viewportSize,
-            contentSize: options.contentSize
+            contentSize: options.contentSize,
+            givenItemsSizes: options.givenItemsSizes
         });
 
         this._indexesInitializedCallback(this._calculator.getRange());
@@ -157,8 +159,8 @@ export class ScrollController {
 
     // region Triggers
 
-    displayTrigger(direction: IDirection): void {
-        this._observersController.displayTrigger(direction);
+    setTriggersVisibility(triggersVisibility: ITriggersVisibility): void {
+        this._observersController.setTriggersVisibility(triggersVisibility);
     }
 
     // endregion Triggers
@@ -211,6 +213,10 @@ export class ScrollController {
 
     updateItemsSizes(itemsRange: IItemsRange): void {
         this._updateItemsSizes(itemsRange);
+    }
+
+    updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
+        this._calculator.updateGivenItemsSizes(itemsSizes);
     }
 
     contentResized(contentSize: number): void {
@@ -272,11 +278,9 @@ export class ScrollController {
     /**
      * Обрабатывает пересоздание всех элементов коллекции.
      * @param totalCount Общее кол-во элементов в коллекции
-     * @param hasMoreToBackward
-     * @param hasMoreToForward
      */
-    resetItems(totalCount: number, hasMoreToBackward: boolean, hasMoreToForward: boolean): void {
-        const triggerOffsets = this._observersController.resetItems(totalCount, hasMoreToBackward, hasMoreToForward);
+    resetItems(totalCount: number): void {
+        const triggerOffsets = this._observersController.resetItems(totalCount);
         this._calculator.setTriggerOffsets(triggerOffsets);
 
         const itemsSizes = this._itemsSizesController.resetItems(totalCount);

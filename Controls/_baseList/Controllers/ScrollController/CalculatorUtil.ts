@@ -10,6 +10,13 @@ export interface IGetRangeByIndexParams {
     totalCount: number;
 }
 
+export interface IGetRangeByItemsSizesParams {
+    start: number;
+    totalCount: number;
+    viewportSize: number;
+    itemsSizes: IItemsSizes;
+}
+
 export interface IShiftRangeBySegmentParams {
     pageSize: number;
     totalCount: number;
@@ -93,6 +100,51 @@ export function getRangeByIndex(params: IGetRangeByIndexParams): IItemsRange {
 }
 
 /**
+ * Расчет видимых индексов от заранее высчитанных высот.
+ * @remark
+ * Используется для оптимизаций частных случаев, когда построить один лишний элемент будет очень дорого,
+ * например если один элемент это огромный пункт с кучей контролов внутри)
+ * @param {IGetRangeByItemsSizesParams} params
+ */
+export function getRangeByItemsSizes(params: IGetRangeByItemsSizesParams): IItemsRange {
+    const itemsSizes = params.itemsSizes;
+    let sumHeight = 0;
+    let start: number = params.start;
+    let end: number;
+
+    // Пытаемся посчитать endIndex взяв за начало переданный startIndex
+    for (let i = start; i < params.totalCount; i++) {
+        const itemSize = itemsSizes[i].size;
+        if (sumHeight + itemSize <= params.viewportSize) {
+            sumHeight += itemSize;
+        } else {
+            end = i;
+            break;
+        }
+    }
+
+    // Если endIndex не посчитался или равен последнему элементу, то
+    // считаем наоборот - startIndex исходя из того что endIndex указывает на последний элемент
+    if (typeof end === 'undefined' || end === params.totalCount - 1) {
+        end = params.totalCount - 1;
+        sumHeight = 0;
+
+        for (let i = end; i > 0; i--) {
+            const itemSize = itemsSizes[i].size;
+
+            if (sumHeight + itemSize <= params.viewportSize) {
+                sumHeight += itemSize;
+            } else {
+                start = i;
+                break;
+            }
+        }
+    }
+
+    return { startIndex: start, endIndex: end};
+}
+
+/**
  * Рассчет видимых индексов от позиции скролла
  * @param {IGetByPositionParams} params
  */
@@ -103,8 +155,8 @@ export function getRangeByScrollPosition(params: IGetByPositionParams): IItemsRa
     let end: number;
     let tempPlaceholderSize = 0;
 
-    while (tempPlaceholderSize + itemsSizes[start].height <= scrollPosition - triggerOffset) {
-        tempPlaceholderSize += itemsSizes[start].height;
+    while (tempPlaceholderSize + itemsSizes[start].size <= scrollPosition - triggerOffset) {
+        tempPlaceholderSize += itemsSizes[start].size;
         start++;
     }
     if (pageSize) {
@@ -166,7 +218,7 @@ export function getActiveElementIndexByScrollPosition(params: IGetActiveElementI
         const indexLine = Math.max(MIN_RATIO_INDEX_LINE, Math.min(MAX_RATIO_INDEX_LINE, indexLineRatio));
 
         for (let i = currentRange.startIndex ; i < currentRange.endIndex; i++) {
-            if (itemsSizes[i].offsetTop < (fixedScrollPosition + viewportSize * indexLine)) {
+            if (itemsSizes[i].offset < (fixedScrollPosition + viewportSize * indexLine)) {
                 activeElementIndex = i;
             } else {
                 break;

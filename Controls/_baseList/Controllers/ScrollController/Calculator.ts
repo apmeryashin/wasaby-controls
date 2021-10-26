@@ -1,6 +1,6 @@
 import {
     getActiveElementIndexByScrollPosition,
-    getRangeByIndex,
+    getRangeByIndex, getRangeByItemsSizes,
     getRangeByScrollPosition,
     shiftRangeBySegment,
     getPlaceholdersByRange
@@ -40,6 +40,12 @@ export interface ICalculatorBaseOptions {
     contentSize: number;
     totalCount: number;
 
+    /**
+     * Размеры элементов заданные прикладниками.
+     * Берем их из рекордсета по itemHeightProperty.
+     */
+    givenItemsSizes: IItemsSizes;
+
     virtualScrollConfig: IVirtualScrollConfig;
 }
 
@@ -55,6 +61,7 @@ export interface ICalculatorOptions extends ICalculatorBaseOptions {
     triggersOffsets: ITriggersOffsets;
 }
 
+const RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT = 4;
 /**
  * Класс предназначен для:
  *  - сбора, хранения и актуализации любых параметров scroll: scrollTop, размер viewPort, элементов и контента;
@@ -63,6 +70,7 @@ export interface ICalculatorOptions extends ICalculatorBaseOptions {
  */
 export class Calculator {
     private _itemsSizes: IItemsSizes;
+    private _givenItemsSizes: IItemsSizes;
     private _triggersOffsets: ITriggersOffsets;
     private _virtualScrollConfig: IVirtualScrollConfig;
     private _scrollPosition: number;
@@ -75,6 +83,7 @@ export class Calculator {
 
     constructor(options: ICalculatorOptions) {
         this._itemsSizes = options.itemsSizes;
+        this._givenItemsSizes = options.givenItemsSizes;
         this._triggersOffsets = options.triggersOffsets;
         this._scrollPosition = options.scrollPosition;
         this._totalCount = options.totalCount;
@@ -118,23 +127,24 @@ export class Calculator {
         this._itemsSizes = itemsSizes;
     }
 
-    getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
-        // компенсируем расчёты в соответствии с размерами контента до контейнера с итемами
-        // const compensation = getOffsetTop(itemsContainer);
+    updateGivenItemsSizes(itemsSizes: IItemsSizes): void {
+        this._givenItemsSizes = itemsSizes;
+    }
 
+    getScrollTopToEdgeItem(edgeItem: IEdgeItem): number {
         let scrollTop = 0;
 
         const item = this._itemsSizes[edgeItem.index];
         if (item) {
             if (edgeItem.direction === 'backward') {
                 if (edgeItem.border === 'forward') {
-                    scrollTop = item.offsetTop + (item.height - edgeItem.borderDistance);
+                    scrollTop = item.offset + (item.size - edgeItem.borderDistance);
                 } else {
-                    scrollTop = item.offsetTop + edgeItem.borderDistance;
+                    scrollTop = item.offset + edgeItem.borderDistance;
                 }
             } else {
                 const viewportHeight = this._viewportSize;
-                scrollTop = item.offsetTop + edgeItem.borderDistance - viewportHeight;
+                scrollTop = item.offset + edgeItem.borderDistance - viewportHeight;
             }
         }
 
@@ -160,7 +170,7 @@ export class Calculator {
         let edgeItemParams: IEdgeItem;
 
         this._itemsSizes.some((item, index) => {
-            const itemBorderBottom = Math.round(item.offsetTop) + Math.round(item.height);
+            const itemBorderBottom = Math.round(item.offset) + Math.round(item.size);
 
             // при скроле вверх - на границе тот элемент, нижняя граница которого больше чем scrollTop
             let edgeBorder = scrollPosition + topCompensation;
@@ -178,15 +188,15 @@ export class Calculator {
                     // считаем так, из нижней границы viewPort вычитаем верхнюю границу элемента
                     const bottomViewportBorder = scrollPosition + viewportHeight;
                     border = 'backward';
-                    borderDistance = bottomViewportBorder - item.offsetTop;
+                    borderDistance = bottomViewportBorder - item.offset;
                 } else {
                     // запись - выше, чем верхняя граница viewPort
-                    if (scrollPosition >= item.offsetTop) {
+                    if (scrollPosition >= item.offset) {
                         border = 'forward';
                         borderDistance = itemBorderBottom - scrollPosition;
                     } else {
                         border = 'backward';
-                        borderDistance = scrollPosition - item.offsetTop;
+                        borderDistance = scrollPosition - item.offset;
                     }
                 }
                 edgeItemParams = {
@@ -222,7 +232,7 @@ export class Calculator {
                 currentRange: this._range,
                 direction,
                 pageSize: this._virtualScrollConfig.pageSize,
-                segmentSize: this._virtualScrollConfig.segmentSize,
+                segmentSize: this._getSegmentSize(),
                 totalCount: this._totalCount
             });
 
@@ -287,7 +297,7 @@ export class Calculator {
             pageSize: this._virtualScrollConfig.pageSize,
             scrollPosition,
             totalCount: this._totalCount,
-            triggerOffset: this._triggersOffsets.top
+            triggerOffset: this._triggersOffsets.backward
         });
 
         placeholdersChanged = this._updatePlaceholders();
@@ -430,11 +440,20 @@ export class Calculator {
 
         this._totalCount = totalCount;
 
-        this._range = getRangeByIndex({
-            pageSize: this._virtualScrollConfig.pageSize,
-            start: 0,
-            totalCount: this._totalCount
-        });
+        if (this._givenItemsSizes) {
+            this._range = getRangeByItemsSizes({
+                start: 0,
+                totalCount: this._totalCount,
+                viewportSize: this._viewportSize,
+                itemsSizes: this._givenItemsSizes
+            });
+        } else {
+            this._range = getRangeByIndex({
+                pageSize: this._virtualScrollConfig.pageSize,
+                start: 0,
+                totalCount: this._totalCount
+            });
+        }
 
         const placeholdersChanged = this._updatePlaceholders();
 
@@ -489,6 +508,17 @@ export class Calculator {
             backwardPlaceholderSize: this._placeholders.backward,
             placeholdersChanged
         };
+    }
+
+    private _getSegmentSize(): number {
+        const virtualScrollConfig = this._virtualScrollConfig;
+        let segmentSize = virtualScrollConfig.segmentSize;
+        if (!segmentSize) {
+            if (!segmentSize) {
+                segmentSize = Math.ceil(virtualScrollConfig.pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT);
+            }
+        }
+        return segmentSize;
     }
 
     /**
