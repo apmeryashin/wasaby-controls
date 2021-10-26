@@ -3,7 +3,7 @@ import {Model as EntityModel, OptionsToPropertyMixin} from 'Types/entity';
 import {mixin} from 'Types/util';
 
 import {IColumn} from './interface/IColumn';
-import {default as GridGroupCellMixin} from 'Controls/_grid/display/mixins/GroupCell';
+import {GroupMixin} from 'Controls/display';
 
 import DataCell from './DataCell';
 import GroupRow from './GroupRow';
@@ -11,6 +11,7 @@ import {TFontColorStyle} from 'Controls/_interface/IFontColorStyle';
 import {TFontSize} from 'Controls/_interface/IFontSize';
 import {TFontWeight} from 'Controls/_interface/IFontWeight';
 import {TTextTransform} from 'Controls/_interface/ITextTransform';
+import {TIconSize, TIconStyle} from 'Controls/interface';
 
 export interface IOptions<T> {
     owner: GroupRow<T>;
@@ -30,8 +31,8 @@ const FIXED_GROUP_CELL_Z_INDEX = 4;
  */
 export default class GroupCell<TContents extends EntityModel = EntityModel> extends mixin<
     DataCell<TContents, GroupRow<TContents>>,
-    GridGroupCellMixin<TContents>
->(DataCell, GridGroupCellMixin) {
+    GroupMixin
+>(DataCell, GroupMixin) {
     protected _$columnsLength: number;
     protected _$contents: string;
     protected _$zIndex: number;
@@ -143,6 +144,33 @@ export default class GroupCell<TContents extends EntityModel = EntityModel> exte
         return textVisible !== false &&
             columnAlignGroup !== undefined &&
             columnAlignGroup < this._$columnsLength - (this._$owner.hasMultiSelectColumn() ? 1 : 0);
+    }
+
+    getExpanderClasses(expanderVisible: boolean = true,
+                       expanderAlign: 'right' | 'left' = 'left',
+                       iconSize: TIconSize,
+                       iconStyle: TIconStyle): string {
+        let classes = super.getExpanderClasses(expanderVisible, expanderAlign, iconSize, iconStyle);
+        if (expanderVisible !== false) {
+            classes += ' js-controls-Tree__row-expander';
+        }
+        return classes;
+    }
+
+    protected _getWrapperSeparatorClasses(): string {
+        let classes = ' controls-Grid__no-rowSeparator';
+        classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
+        return classes;
+    }
+
+    protected _getWrapperBaseClasses(templateHighlightOnHover: boolean): string {
+        let classes = ` controls-Grid__row-cell controls-Grid__cell_${this.getStyle()}`;
+        classes += ` controls-Grid__row-cell_${this.getStyle()}`;
+        return classes;
+    }
+
+    isContentCell(): boolean {
+        return !(this._$owner.hasColumnScroll() && !this._$isFixed);
     }
 
     // endregion Аспект "Ячейка группы"
