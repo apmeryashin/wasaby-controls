@@ -181,7 +181,11 @@ describe('Controls/filter:ControllerClass', () => {
 
     it('updateFilterItems', () => {
         const filterController = new ControllerClass({});
+        let eventFired = false;
         filterController._$filterButtonItems = getFilterButtonItems();
+        filterController.subscribe('filterSourceChanged', () => {
+            eventFired = true;
+        });
         const newFilterItems = [
             {
                 id: 'testId1',
@@ -199,6 +203,11 @@ describe('Controls/filter:ControllerClass', () => {
             testId2: 'value2'
         });
         assert.deepEqual(filterController.getFilterButtonItems(), newFilterItems);
+        assert.ok(eventFired);
+
+        eventFired = false;
+        filterController.updateFilterItems(newFilterItems);
+        assert.ok(!eventFired);
     });
 
     describe('setFilterItems', () => {
