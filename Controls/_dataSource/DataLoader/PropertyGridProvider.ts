@@ -8,13 +8,15 @@ export interface ILoadPropertyGridDataConfig extends IBaseLoadDataConfig {
     typeDescription: IProperty[];
 }
 
+const LOAD_DATA_TIMEOUT = 5000;
+
 /**
  * Provider обеспечивающих предзагрузку данных для propertyGrid'a
  */
 class PropertyGridProvider implements IDataLoadProvider<ILoadPropertyGridDataConfig, IProperty[]> {
     load(
         loadConfig: ILoadPropertyGridDataConfig,
-        loadDataTimeout?: number
+        loadDataTimeout: number = LOAD_DATA_TIMEOUT
     ): Promise<IProperty[]> {
         const loadPromises = this._getLoadPromisesFromDescription(loadConfig.typeDescription);
         const loadPromise = Promise.all(loadPromises);

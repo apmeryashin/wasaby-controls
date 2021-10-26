@@ -158,7 +158,9 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
                 filterHistoryItems,
                 operationsController
             );
-            if (this._isNeedLoadFilterData(filterController.getFilterButtonItems())) {
+            if (!!loadConfig.filterButtonSource &&
+                this._isNeedLoadFilterData(filterController.getFilterButtonItems())
+            ) {
                 loadFilterDataPromise = this._loadFilterData(
                     filterController.getFilterButtonItems(),
                     loadConfig.historyId
@@ -168,7 +170,7 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
             if (loadFilterDataPromise) {
                 loadPromises.push(loadFilterDataPromise);
             }
-            return Promise.all(loadPromises).then(([dataResult, filterResult]) => {
+            return Promise.all(loadPromises).then(([dataResult]) => {
                 return dataResult;
             });
         });
@@ -182,7 +184,7 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
                 typeDescription: filterStructure,
                 afterLoadCallback: null
             });
-        })
+        });
     }
 
     private _loadData(
@@ -232,7 +234,7 @@ class ListProvider implements IDataLoadProvider<ILoadDataConfig, ILoadDataResult
 
     private _isNeedLoadFilterData(filterSource: IFilterItem[]): boolean {
         return filterSource.some((item: IFilterItem) => {
-            return item?.editorOptions.editorTemplateName === 'Controls/filterPanel:ListEditor';
+            return item.type === 'list' || item.editorTemplateName === 'Controls/filterPanel:ListEditor';
         });
     }
 

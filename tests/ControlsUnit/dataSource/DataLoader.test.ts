@@ -6,6 +6,7 @@ import {createSandbox, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 import {RecordSet} from 'Types/collection';
 import {HTTPStatus} from 'Browser/Transport';
+import {assert} from "chai";
 
 function getDataArray(): object[] {
     return [
@@ -281,6 +282,58 @@ describe('Controls/dataSource:loadData', () => {
                 resolve();
             });
         });
+    });
+
+    it('load filter data with history ids in filter', async () => {
+        const filterDescription = [{
+            name: 'tasks',
+            type: 'list',
+            value: [],
+            resetValue: [],
+            textValue: '',
+            editorOptions: {
+                historyId: 'history',
+                filter: {
+                    myTasks: true
+                }
+            }
+        },
+            {
+                name: 'contacts',
+                type: 'list',
+                value: ['1'],
+                resetValue: ['2'],
+                textValue: '',
+                editorOptions: {
+                    historyId: 'history',
+                    keyProperty: 'id',
+                    filter: {
+                        myContacts: true
+                    }
+                }
+            }];
+        const loadDataConfigWithFilter = {
+            type: 'list',
+            source: getSource(),
+            filter: {},
+            filterButtonSource: filterDescription
+        } as ILoadDataConfig;
+        const dataLoader = getDataLoader();
+        await dataLoader.load<ILoadDataResult>([loadDataConfigWithFilter]);
+        const filterController = dataLoader.getFilterController();
+        const tasksFilter = filterController.getFilterButtonItems()[0].editorOptions.filter;
+        const expectedTasksFilter = {
+            myTasks: true,
+            historyIds: ['history']
+        };
+        const contactsFilter = filterController.getFilterButtonItems()[1].editorOptions.filter;
+        const expectedContactsFilter = {
+            myContacts: true,
+            historyIds: ['history'],
+            id: ['1']
+        };
+        assert.deepStrictEqual(expectedTasksFilter, tasksFilter);
+        assert.deepStrictEqual(expectedContactsFilter, contactsFilter);
     });
 
     it('load with timeout', async () => {
